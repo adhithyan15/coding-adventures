@@ -1918,8 +1918,30 @@ fn emit_for_swift(
         Some(idx) => (
             // With index: iterate over enumerated tuples and id on the
             // offset slot of `EnumeratedSequence.Element`.
+            //
+            // The closure parameter binds the offset as the
+            // **Swift-shadowed** name `_swiftIdx<idx>` (an `Int`),
+            // and we immediately re-bind `<idx>` itself to a `Double`
+            // cast inside the body.  This sidesteps the Swift
+            // type-checker's strict Int-vs-Double comparison: the
+            // moslayout author typically writes expressions like
+            // `( r == editRow && c == editCol )` where `editRow` is
+            // a Double-typed `number` slot.  `Array.enumerated()`
+            // yields an `Int` offset; Swift refuses
+            // `Int == Double` without an explicit cast.  Shadowing
+            // the binding as a Double lets the author's verbatim
+            // expression text compile across every backend without
+            // per-backend rewriting.
+            //
+            // The `_swiftIdx<idx>` binding is referenced exactly
+            // once (in the `Double(...)` cast on the next line); the
+            // moslayout NAME grammar `[a-zA-Z][a-zA-Z0-9]*(-...)*`
+            // cannot produce a leading-underscore identifier, so
+            // `_swiftIdx<idx>` is collision-free against any
+            // author-supplied name.
             format!(
-                "{pad}ForEach(Array({coll}.enumerated()), id: \\.offset) {{ ({idx}, {asn}) in\n",
+                "{pad}ForEach(Array({coll}.enumerated()), id: \\.offset) {{ (_swiftIdx{idx}, {asn}) in\n\
+                 {pad}    let {idx}: Double = Double(_swiftIdx{idx})\n",
                 coll = coll_expr,
                 idx = idx,
                 asn = as_name,
@@ -3781,10 +3803,82 @@ mod tests {
         )
         .unwrap()
         .output;
+        // The closure parameter binds the offset under a
+        // Swift-shadowed name and the body re-binds the
+        // moslayout-author's `index:` identifier (here `r`) to a
+        // `Double` cast.  See `emit_for_swift` for the rationale —
+        // Swift refuses `Int == Double` so we lift the index into
+        // `Double` to make verbatim Expr text like
+        // `( r == editRow && c == editCol )` compile across every
+        // backend.
         assert!(
-            out.contains("ForEach(Array(rows.enumerated()), id: \\.offset) { (r, row) in"),
-            "expected enumerated ForEach with \\.offset id, got:\n{out}"
+            out.contains("ForEach(Array(rows.enumerated()), id: \\.offset) { (_swiftIdxr, row) in"),
+            "expected enumerated ForEach with shadowed Int offset, got:\n{out}"
         );
+        assert!(
+            out.contains("let r: Double = Double(_swiftIdxr)"),
+            "expected explicit Double cast of index binding, got:\n{out}"
+        );
+    }
+
+    /// The Int→Double cast lets a verbatim Expr referencing both
+    /// the index and a `number` slot compile cleanly.  Pins the
+    /// fix on the visicalc-style cell-edit predicate shape.
+    #[test]
+    fn for_with_index_and_double_slot_comparison_compiles() {
+        let cell = node_with_props(
+            "Box",
+            vec![LayoutProp {
+                name: "state-when-editing".to_string(),
+                value: LayoutPropValue::Expr(
+                    "( r == editRow && c == editCol )".to_string(),
+                ),
+            }],
+            vec![],
+        );
+        let inner = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "row"),
+                prop_keyword("as", "v"),
+                prop_keyword("index", "c"),
+            ],
+            vec![cell],
+        );
+        let outer = node_with_props(
+            "For",
+            vec![
+                prop_slot_ref("each", "rows"),
+                prop_keyword("as", "row"),
+                prop_keyword("index", "r"),
+            ],
+            vec![inner],
+        );
+        let layout = layout_with("Grid", container_node("Box", vec![outer]));
+        let out = from_pipeline(
+            &component(
+                "Grid",
+                vec![
+                    slot("edit-row", SlotType::Number, true),
+                    slot("edit-col", SlotType::Number, true),
+                    slot(
+                        "rows",
+                        SlotType::List(Box::new(ListInnerType::Text)),
+                        true,
+                    ),
+                ],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Grid"),
+        )
+        .unwrap()
+        .output;
+        // Both outer and inner indices must be cast to Double so the
+        // expression's `r == editRow && c == editCol` compares
+        // Double-to-Double on both sides.
+        assert!(out.contains("let r: Double = Double(_swiftIdxr)"));
+        assert!(out.contains("let c: Double = Double(_swiftIdxc)"));
     }
 
     // -----------------------------------------------------------------
