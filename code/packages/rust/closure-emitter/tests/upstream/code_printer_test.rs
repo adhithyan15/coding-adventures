@@ -126,13 +126,15 @@ fn test_trailing_comma_in_array_and_object_with_pretty_print() {
 ///
 ///   assertPrintSame("var x = [];");
 ///
-/// Empty array literal. Our typed AST does have ArrayExpression but
-/// hand-constructing a VariableDeclaration here is verbose; the
-/// behaviour belongs in a dedicated declaration-emitter port.
+/// **gap-023 routed in CLOC12.30** — the declarations-focused port file
+/// landed at
+/// `closure-emitter/tests/upstream/code_printer_declarations_test.rs`.
+/// This specific upstream test is covered there by
+/// `var_with_empty_array_init`.
 #[test]
-#[ignore = "blocked on gap-023: VariableDeclaration round-trip ports deferred"]
+#[ignore = "routed in CLOC12.30 to code_printer_declarations_test.rs (gap-023)"]
 fn test_no_trailing_comma_in_empty_array_literal() {
-    // Belongs in a future declarations-focused port file.
+    // Routed. See doc comment above for the new home.
 }
 
 /// Upstream `assertPrint("2 + 3", "2+3")` — `+` binary expression at

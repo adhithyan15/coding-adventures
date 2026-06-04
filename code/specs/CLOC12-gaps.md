@@ -175,11 +175,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-023 — `VariableDeclaration` round-trip ports deferred
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.30 — landed the focused declarations port file at `closure-emitter/tests/upstream/code_printer_declarations_test.rs` with 14 hand-built ports covering var/let/const, bare vs. with-init, single vs. multi-declarator, and the canonical `var x = [];` / `var x = [1];` / `var x = [1, 2, 3];` shapes (which also covers upstream's `testNoTrailingCommaInEmptyArrayLiteral` from the original code-printer port file). The original stub in `code_printer_test.rs` is reannotated to point at the new home. Verbosity is contained to one file behind two small helpers (`var_decl_single` / `var_decl_multi`). One pin documents existing emitter behaviour where it diverges from upstream's compact form (`a + b` vs `a+b` around binary `+`) — that style-policy delta is its own follow-up and not part of this gap.
 - **Upstream test:** Most `assertPrintSame("var x = …")` lines in `CodePrinterTest`
-- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Hand-constructing `VariableDeclaration` ASTs (with `VariableDeclarator`s, `id`, `init`, `kind`) for every upstream test is verbose. Deferred to a dedicated future port file that focuses on declaration round-trips.
-- **What it needs:** Either a parser bridge (so the upstream `var x = ...` source string can be used directly), or a focused declarations-port-file that pays the verbosity cost. Likely the former.
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_declarations_test.rs`
 
 ### gap-024 — `ExpressionStatement` paren-wrapping diverges from upstream
 
