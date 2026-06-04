@@ -25,7 +25,21 @@
 // can actually lower it depends on which U29-K-* PR has landed.
 
 layout Cell {
-  Box [ cell ] {
+  // The Box's `state-when-*` predicates wire the call-site's
+  // `is-selected` / `is-editing` slots into mosstyle's sub-part
+  // state mechanism (Task #35 / UI28-1).  When the host (typically
+  // Grid) supplies `is-selected: ( r == selectedRow && c == selectedCol )`
+  // at the Cell call site, the boolean propagates to this Box and
+  // the React / SwiftUI / Qt emitters fold the `cell:selected`
+  // mosstyle block into the cell's rendered style attribute.  The
+  // `editing` predicate is the same idea — the Cell visually
+  // highlights while the host has it promoted to edit mode, in
+  // ADDITION to the structural If branch that swaps Text for
+  // HostInput.
+  Box [ cell ] (
+    state-when-selected: ( is-selected ) ,
+    state-when-editing:  ( is-editing )
+  ) {
     If ( when: slot: is-editing ) {
       HostInput (
         value:    slot: value ,
