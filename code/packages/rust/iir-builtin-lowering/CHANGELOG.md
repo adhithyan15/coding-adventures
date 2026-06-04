@@ -4,6 +4,35 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.6.0] — 2026-06-04
+
+### Added (LANG77 — ATOM/EQ predicates + COND truthiness, McCarthy L3b-2c-2)
+
+- **`heap::lower_heap_builtins_runtime`** now also renames the *unambiguous*
+  predicates `pair?` → `lispy_pair_p` and `equal?` → `lispy_equal`
+  (`EQ` = `equal?`). `not` is **not** renamed here — it is also a *numeric*
+  builtin (Twig's machine boolean-not), so renaming it unconditionally would
+  hijack Twig. Instead `lisp_repr` renames `not` → `lispy_not` **type-directed**
+  (`rename_lisp_not`): only when its argument is a `lispy_*` result — exactly
+  the `ATOM` = `not(pair?)` shape — leaving Twig's `not` for the numeric pass.
+- **`lisp_repr::lower_lisp_repr`** extended:
+  - The predicate builtins join the lisp-arg set, so an integer atom flowing
+    into `(ATOM 5)` / `(EQ 5 5)` boxes.
+  - The tagged-register classification is now a **bidirectional `mov`
+    fixpoint** — a `COND` funnels every clause's value into one register, so a
+    raw integer-literal clause result `mov`-tied to the (tagged) nil
+    fallthrough is itself boxed, keeping the funnel register uniformly tagged
+    (and the exit-unbox correct).
+  - New `wrap_tagged_conditions`: a `jmp_if_false` whose condition holds a
+    tagged `LispyValue` (a `COND` predicate's `#t`/`#f`) is rewritten to test
+    `lispy_truthy(cond)` (raw `0`/`1`), so the branch follows lisp truthiness.
+    A raw machine condition (Twig's `cmp` result) is left untouched.
+- 6 new unit tests: predicate-arg boxing, truthy-wrap of a tagged condition,
+  raw condition left unwrapped, `mov` propagation for unbox, and the
+  COND-mixing (literal + nil) bidirectional-box case.
+
+---
+
 ## [0.5.0] — 2026-06-04
 
 ### Added (LANG77 — type-directed lisp-value representation, McCarthy L3b-2c-1)

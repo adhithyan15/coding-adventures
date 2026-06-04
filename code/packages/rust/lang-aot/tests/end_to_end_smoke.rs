@@ -1623,3 +1623,60 @@ fn end_to_end_mccarthy_cons_car_returns_7_via_lang_aot() {
     let out = Command::new(&exe).output().expect("launch");
     assert_eq!(out.status.code(), Some(7));
 }
+
+// ---------------------------------------------------------------------------
+// McCarthy Lisp ATOM/EQ + COND (L3b-2c-2) — tagged predicates drive a branch.
+//
+// `(ATOM x)` lowers to `not(pair?(x))` → `__twig_lispy_not(__twig_lispy_pair_p)`;
+// a `COND` predicate's tagged `#t`/`#f` is normalised by `__twig_lispy_truthy`
+// for `jmp_if_false`.  The integer atoms box (`5` → 40) so `pair?` reads the
+// int tag, not the heap tag.  Two programs distinguish the branches:
+//   (COND ((ATOM 5) 7) (5 9))          → ATOM of an int is true  → 7
+//   (COND ((ATOM (CONS 1 2)) 7) (5 9)) → ATOM of a pair is false → 9
+// Gated to Linux/Windows like the other native smoke tests (macOS-exe gap).
+// ---------------------------------------------------------------------------
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_mccarthy_atom_cond_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let cases = [
+        ("(COND ((ATOM 5) 7) (5 9))", 7i32),
+        ("(COND ((ATOM (CONS 1 2)) 7) (5 9))", 9),
+    ];
+    for (i, (program, expected)) in cases.iter().enumerate() {
+        let src = dir.path().join(format!("atom_{i}.mcl"));
+        let exe = dir.path().join(format!("atom_{i}"));
+        std::fs::write(&src, program).unwrap();
+        lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+            .unwrap_or_else(|e| panic!("McCarthy ATOM/COND compile failed for {program:?}: {e}"));
+        let out = Command::new(&exe).output().expect("launch");
+        assert_eq!(
+            out.status.code(), Some(*expected),
+            "{program} should exit {expected}; got {:?}", out.status.code(),
+        );
+    }
+}
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_mccarthy_atom_cond_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let cases = [
+        ("(COND ((ATOM 5) 7) (5 9))", 7i32),
+        ("(COND ((ATOM (CONS 1 2)) 7) (5 9))", 9),
+    ];
+    for (i, (program, expected)) in cases.iter().enumerate() {
+        let src = dir.path().join(format!("atom_{i}.mcl"));
+        let exe = dir.path().join(format!("atom_{i}.exe"));
+        std::fs::write(&src, program).unwrap();
+        lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+            .unwrap_or_else(|e| panic!("McCarthy ATOM/COND compile failed for {program:?}: {e}"));
+        let out = Command::new(&exe).output().expect("launch");
+        assert_eq!(out.status.code(), Some(*expected), "{program}");
+    }
+}

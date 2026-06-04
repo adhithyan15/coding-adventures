@@ -106,9 +106,15 @@ use-sites, not the language, so a non-lisp arithmetic program is untouched:
 
 ```rust
 use iir_builtin_lowering::{lower_heap_builtins_runtime, lower_lisp_repr};
-lower_heap_builtins_runtime(&mut module); // cons/car/cdr → lispy_*
-lower_lisp_repr(&mut module);             // box atoms, tag nil, unbox result
+lower_heap_builtins_runtime(&mut module); // cons/car/cdr + pair?/not/equal? → lispy_*
+lower_lisp_repr(&mut module);             // box atoms, tag nil, COND truthiness, unbox result
 ```
+
+`lower_lisp_repr` also normalises `COND`: a `jmp_if_false` whose condition is
+a tagged boolean (from `ATOM`/`EQ`) is rewritten to test `lispy_truthy(cond)`
+(raw `0`/`1`), and a clause literal funnelled by `mov` alongside the tagged
+nil fallthrough is boxed too (a bidirectional `mov` fixpoint) so the funnel
+register is uniformly tagged.
 
 ### Error types
 

@@ -34,7 +34,7 @@ two translation units:
 - `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
   `__twig_putchar`, `__twig_alloc_bytes`, …).
 - `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
-  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`make_symbol`/`nil`
+  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`truthy`/`make_symbol`/`nil`
   plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
   `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
   McCarthy Lisp, future lisps) compile cons cells and interned symbols to a

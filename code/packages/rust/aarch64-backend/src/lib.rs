@@ -206,6 +206,12 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     // LANG77 L3b-2c — unbox a tagged integer to a raw machine word at the
     // program-exit boundary.  `int64_t __twig_lispy_unbox_int(uint64_t)`.
     BuiltinSig { name: "lispy_unbox_int", n_args: 1, returns: true },
+    // LANG77 L3b-2c-2 — the ATOM/EQ predicates (return tagged #t/#f) and the
+    // COND truthiness normaliser (returns a raw 0/1 for jmp_if_false).
+    BuiltinSig { name: "lispy_pair_p",    n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
+    BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
+    BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1431,6 +1437,30 @@ mod tests {
         assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
         let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
         for want in ["__twig_lispy_cons", "__twig_lispy_car", "__twig_lispy_unbox_int"] {
+            assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
+        }
+    }
+
+    #[test]
+    fn lispy_atom_eq_predicates_and_truthy_lower() {
+        // L3b-2c-2: `(ATOM 5)` = not(pair?(5)), normalised for a branch via
+        // lispy_truthy; plus equal? (EQ). All four predicates must lower.
+        let cir = vec![
+            const_u64("x", 5 << 3),
+            call_builtin(Some("p"), "lispy_pair_p", &["x"]),
+            call_builtin(Some("a"), "lispy_not", &["p"]),
+            call_builtin(Some("t"), "lispy_truthy", &["a"]),
+            call_builtin(Some("e"), "lispy_equal", &["x", "x"]),
+            ret_u64("e"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("preds", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("predicates must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        for want in [
+            "__twig_lispy_pair_p", "__twig_lispy_not",
+            "__twig_lispy_truthy", "__twig_lispy_equal",
+        ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
     }
