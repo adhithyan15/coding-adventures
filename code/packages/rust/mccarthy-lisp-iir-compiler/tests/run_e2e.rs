@@ -254,3 +254,61 @@ fn lambda_result_feeds_a_primitive() {
     // (CDR ((LAMBDA (X) X) '(A B C))) → (B C); car of that → B
     assert_eq!(sym_name(eval("(CAR (CDR ((LAMBDA (X) X) '(A B C))))")), "B");
 }
+
+// ============================================================
+// LABEL — named / recursive functions (L2c-2)
+// ============================================================
+
+#[test]
+fn label_identity_applied() {
+    // A trivial (non-recursive) labelled lambda still works.
+    assert_eq!(sym_name(eval("((LABEL F (LAMBDA (X) X)) 'A)")), "A");
+}
+
+#[test]
+fn label_ff_first_atom_mccarthy_canonical() {
+    // McCarthy's `ff`: the first atom found by descending `car`s.
+    //   ff[x] = [atom[x] → x; T → ff[car[x]]]
+    // ff[((A B) C)] descends (A B) then A → A.
+    let src = "((LABEL FF (LAMBDA (X) \
+                  (COND ((ATOM X) X) \
+                        ('T (FF (CAR X)))))) \
+                '((A B) C))";
+    assert_eq!(sym_name(eval(src)), "A");
+}
+
+#[test]
+fn label_last_walks_the_cdr_spine() {
+    // last[l] = [atom[cdr[l]] → car[l]; T → last[cdr[l]]]
+    // last[(A B C)] → C (nil is an atom, so it stops at the final cell).
+    let src = "((LABEL LAST (LAMBDA (L) \
+                  (COND ((ATOM (CDR L)) (CAR L)) \
+                        ('T (LAST (CDR L)))))) \
+                '(A B C))";
+    assert_eq!(sym_name(eval(src)), "C");
+}
+
+#[test]
+fn label_single_element_base_case() {
+    // last[(A)] → A immediately: cdr[(A)] = nil, atom[nil] = T.
+    let src = "((LABEL LAST (LAMBDA (L) \
+                  (COND ((ATOM (CDR L)) (CAR L)) \
+                        ('T (LAST (CDR L)))))) \
+                '(A))";
+    assert_eq!(sym_name(eval(src)), "A");
+}
+
+#[test]
+fn label_nonterminating_recursion_errors_cleanly() {
+    // A self-call that never shrinks its argument must hit the VM's
+    // call-depth guard (a clean error), never a native stack overflow.
+    let src = "((LABEL LOOP (LAMBDA (X) (LOOP X))) 'A)";
+    let module = compile_source(src, "e2e").expect("compile");
+    let err = run(&module).expect_err("must not terminate");
+    // CallDepthExceeded (or, defensively, the instruction-budget backstop).
+    let msg = err.to_string();
+    assert!(
+        msg.contains("call depth") || msg.contains("instruction budget"),
+        "unexpected error: {msg}"
+    );
+}
