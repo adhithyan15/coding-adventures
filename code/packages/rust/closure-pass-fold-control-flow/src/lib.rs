@@ -457,6 +457,69 @@ fn fold_if_statement(s: &IfStatement, st: &mut FoldState) -> Statement {
                 }
             }
 
+            // (CLOC12.26 / gap-019): when both branches reduce to a
+            // ReturnStatement-with-argument, hoist the return out and
+            // wrap the argument expressions in a ternary:
+            //
+            //   if (x) return E1; else return E2;
+            //                              → return x ? E1 : E2;
+            //   if (x) { return E1; } else { return E2; }
+            //                              → return x ? E1 : E2;
+            //
+            // Upstream Closure performs the same rewrite under
+            // `PeepholeMinimizeConditions.tryFoldReturns`.
+            //
+            // Why this is safe:
+            //
+            //   * The if-else evaluates `x` once, then takes exactly
+            //     one branch and runs `return E1` or `return E2`. The
+            //     ternary form also evaluates `x` once, then takes
+            //     exactly one of `E1` / `E2`, then returns. The set of
+            //     values evaluated and the function's exit value match.
+            //   * Side-effect ordering preserved: `x` runs first; then
+            //     exactly the chosen branch's argument expression runs.
+            //   * Control flow preserved: in both forms the function
+            //     returns immediately after the chosen argument
+            //     evaluates. No fall-through possible because both
+            //     branches were terminal returns.
+            //
+            // Why we require both arguments to be `Some`: a bare
+            // `return;` with no value is equivalent to `return undefined;`
+            // but we can't synthesise an `undefined` expression on the
+            // typed AST cleanly without `UndefinedLiteral` care that
+            // belongs in its own follow-up. Conservative: bail when
+            // either side is bare-return.
+            //
+            // Why we don't fire on `if (x) return E;` (no alternate
+            // with a return): the fall-through case after a missing
+            // alternate has implicit `return undefined` (or the next
+            // statement's behaviour), which doesn't compose cleanly
+            // with a ternary in statement position. The caller-supplied
+            // gap-016 path also doesn't apply here (returns aren't
+            // expression statements). Tracked separately.
+            if let Some(alt) = &alternate {
+                if let (Some(c_arg), Some(a_arg)) =
+                    (single_return_with_arg(&consequent), single_return_with_arg(alt))
+                {
+                    st.record_fold(
+                        &s.cv,
+                        "if-else-returns-to-ternary-return",
+                        "if (<test>) return <e1>; else return <e2>;",
+                        "return <test> ? <e1> : <e2>;",
+                    );
+                    let cond = Expression::ConditionalExpression(ConditionalExpression {
+                        cv: None,
+                        test: Box::new(test),
+                        consequent: Box::new(c_arg),
+                        alternate: Box::new(a_arg),
+                    });
+                    return Statement::return_statement(ReturnStatement {
+                        cv: s.cv.clone(),
+                        argument: Some(cond),
+                    });
+                }
+            }
+
             // (CLOC12.24 / gap-016): when there's *no* alternate and
             // the consequent reduces to a single ExpressionStatement,
             // rewrite the IfStatement to `<test> && <consequent>` as
@@ -555,6 +618,25 @@ fn single_expr_stmt(stmt: &Statement) -> Option<Expression> {
         }
         Statement::Tagged(TaggedStatement::BlockStatement(b)) if b.body.len() == 1 => {
             single_expr_stmt(&b.body[0])
+        }
+        _ => None,
+    }
+}
+
+/// Helper for the return-then-return fold (gap-019). Returns the
+/// `argument` expression when `stmt` is exactly one ReturnStatement
+/// whose argument is `Some` (possibly wrapped in single-statement
+/// BlockStatement layers); returns `None` for everything else,
+/// including `return;` (bare return with no value).
+///
+/// Mirrors `single_expr_stmt`'s shape — both recurse through
+/// single-statement BlockStatement layers but bail on anything that
+/// changes statement count.
+fn single_return_with_arg(stmt: &Statement) -> Option<Expression> {
+    match stmt {
+        Statement::Tagged(TaggedStatement::ReturnStatement(rs)) => rs.argument.clone(),
+        Statement::Tagged(TaggedStatement::BlockStatement(b)) if b.body.len() == 1 => {
+            single_return_with_arg(&b.body[0])
         }
         _ => None,
     }

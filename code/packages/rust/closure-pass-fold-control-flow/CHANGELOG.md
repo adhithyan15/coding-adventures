@@ -2,6 +2,64 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.7.0] - 2026-06-04
+
+### Added — CLOC12.26: gap-019 return-then-return through if-else → ternary return
+
+Closes `gap-019`. `fold_if_statement` now hoists terminal
+`return` branches through an if-else into a single ternary-returning
+return:
+
+```
+if (x) return E1; else return E2;       →   return x ? E1 : E2;
+if (x) { return E1; } else { return E2; } →   return x ? E1 : E2;
+```
+
+Composes with the same-pass folds:
+
+* gap-018 De Morgan: `if (!x) return E1; else return E2;` →
+  (gap-018) `if (x) return E2; else return E1;` → (gap-019)
+  `return x ? E2 : E1;`.
+* literal_truthy: `if (true) return E1; else return E2;` →
+  (literal_truthy) `return E1;` (still wins because literal_truthy
+  fires before gap-019).
+
+Both arguments must be `Some` — `if (x) return; else return E;`
+stays unchanged. Synthesising an `undefined` expression for the
+bare-return case requires `UndefinedLiteral` plumbing in this
+pass and is tracked separately.
+
+### Why this is safe
+
+The if-else evaluates `test` once, takes exactly one branch, and
+runs that branch's `return`. The ternary form also evaluates `test`
+once, picks exactly one of `E1`/`E2`, then returns. The set of
+values evaluated and the function's exit value match identically.
+
+Control-flow preserved: in both forms the function returns
+immediately after the chosen argument evaluates. No fall-through
+possible because both branches were terminal returns.
+
+### New helper
+
+`single_return_with_arg(stmt: &Statement) -> Option<Expression>` —
+mirror of `single_expr_stmt`. Returns the argument expression when
+`stmt` is a single ReturnStatement with `argument: Some`; recurses
+through single-statement BlockStatement layers; returns None on
+multi-statement blocks, bare returns, or any other shape.
+
+### Tests
+
+* `tests/upstream/peephole_minimize_conditions_test.rs::test_fold_returns_into_ternary`
+  un-ignored — exercises 3 shapes: bare return both sides, block-
+  wrapped returns, and the conservative bail on `return;` (no arg).
+* Upstream test count: 12 → 13.
+* Inline tests: 20 → 20 (unchanged).
+* closurec e2e (`diff_minify`): unaffected (no fixture uses returns).
+* closure-pass-pipeline: 21 passed, 0 failed.
+
+No public API change. No AST change.
+
 ## [0.6.0] - 2026-06-04
 
 ### Added — CLOC12.25: gap-018 De Morgan negation-swap
