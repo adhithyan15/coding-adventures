@@ -67,12 +67,13 @@ use coding_adventures_closure_pass_pipeline::{
 };
 use coding_adventures_correlation_vector::{CVLog, Contribution};
 use coding_adventures_javascript_ast::{
-    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BinaryExpression,
-    BlockStatement, CallExpression, ConditionalExpression, Declaration, Expression,
-    ExpressionStatement, ForInit, ForStatement, FunctionDeclaration, IfStatement,
-    LogicalExpression, MemberExpression, ObjectExpression, Program, ProgramItem, Property,
-    PropertyKey, ReturnStatement, Statement, UnaryExpression, VarKind, VariableDeclaration,
-    VariableDeclarator, WhileStatement,
+    statement::TaggedStatement, ArrayExpression, AssignmentExpression, BigIntLiteral,
+    BinaryExpression, BlockStatement, BooleanLiteral, CallExpression, ConditionalExpression,
+    Declaration, EmptyStatement, Expression, ExpressionStatement, ForInit, ForStatement,
+    FunctionDeclaration, IfStatement, LogicalExpression, MemberExpression, NullLiteral,
+    NumericLiteral, ObjectExpression, Program, ProgramItem, Property, PropertyKey,
+    ReturnStatement, Statement, StringLiteral, UnaryExpression, UndefinedLiteral, VarKind,
+    VariableDeclaration, VariableDeclarator, WhileStatement,
 };
 use serde_json::json;
 
@@ -174,6 +175,30 @@ impl DceState<'_> {
     fn visit(&mut self) {
         self.nodes_touched += 1;
     }
+}
+
+/// Is `expr` a leaf literal we can guarantee has no observable side
+/// effects when evaluated?
+///
+/// Conservative: only the seven primitive-literal node types qualify.
+/// Identifier reads can throw under TDZ (for unitialized `let` /
+/// `const`), and we don't do scope analysis here. Member / call /
+/// binary / unary / etc. can all have effects. So we bail.
+///
+/// Used by gap-014 step 2's empty-switch elimination: when the
+/// switch has no observable side effects (pure discriminant +
+/// pure tests + empty consequents), the entire switch can drop to
+/// `;`. Anything non-literal: leave alone.
+fn is_pure_leaf(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::NumericLiteral(NumericLiteral { .. })
+            | Expression::StringLiteral(StringLiteral { .. })
+            | Expression::BooleanLiteral(BooleanLiteral { .. })
+            | Expression::NullLiteral(NullLiteral { .. })
+            | Expression::UndefinedLiteral(UndefinedLiteral { .. })
+            | Expression::BigIntLiteral(BigIntLiteral { .. })
+    )
 }
 
 // =====================================================================
@@ -284,27 +309,58 @@ fn dce_tagged_statement(stmt: &TaggedStatement, st: &mut DceState) -> TaggedStat
         }
         TaggedStatement::SwitchStatement(s) => {
             // Recurse into discriminant, each case's test, and each
-            // statement in each consequent. No peephole rule yet —
-            // the "empty switch removal" and "constant-discriminant
-            // → single matching case body" optimisations are gap-014
-            // follow-ups; this PR ships the structural walk so they
-            // have a place to land.
+            // statement in each consequent first — peephole rules
+            // run on the folded shape so we catch switches whose
+            // bodies *became* empty after constant-fold +
+            // fold-control-flow ran earlier in the pipeline.
+            let new_disc = dce_expression(&s.discriminant, st);
+            let new_cases: Vec<_> = s
+                .cases
+                .iter()
+                .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                    cv: c.cv.clone(),
+                    test: c.test.as_ref().map(|e| dce_expression(e, st)),
+                    consequent: c
+                        .consequent
+                        .iter()
+                        .map(|s| dce_statement(s, st))
+                        .collect(),
+                })
+                .collect();
+
+            // gap-014 step 2 / CLOC12.34 — empty-switch elimination.
+            //
+            // If every case's consequent is empty (or there are no
+            // cases at all) AND both the discriminant and every
+            // case-test are leaf literals (no side-effect risk),
+            // collapse the whole switch to `;`. The block-walker
+            // (`dce_block_statement`) will drop the EmptyStatement
+            // in its next sweep.
+            //
+            // Conservative bail: anything else (Identifier
+            // discriminant, computed test, non-empty consequent)
+            // keeps the switch intact. The "drop after pure
+            // discriminant with side-effecting tests" rule is a
+            // future slice that needs a proper effect analysis.
+            let all_consequents_empty = new_cases.iter().all(|c| c.consequent.is_empty());
+            let discriminant_pure = is_pure_leaf(&new_disc);
+            let all_tests_pure_or_none = new_cases
+                .iter()
+                .all(|c| c.test.as_ref().map_or(true, is_pure_leaf));
+            if all_consequents_empty && discriminant_pure && all_tests_pure_or_none {
+                st.record(
+                    &s.cv,
+                    "switch_eliminated",
+                    "SwitchStatement{<empty body>}",
+                    "EmptyStatement",
+                );
+                return TaggedStatement::EmptyStatement(EmptyStatement { cv: s.cv.clone() });
+            }
+
             TaggedStatement::SwitchStatement(coding_adventures_javascript_ast::SwitchStatement {
                 cv: s.cv.clone(),
-                discriminant: dce_expression(&s.discriminant, st),
-                cases: s
-                    .cases
-                    .iter()
-                    .map(|c| coding_adventures_javascript_ast::SwitchCase {
-                        cv: c.cv.clone(),
-                        test: c.test.as_ref().map(|e| dce_expression(e, st)),
-                        consequent: c
-                            .consequent
-                            .iter()
-                            .map(|s| dce_statement(s, st))
-                            .collect(),
-                    })
-                    .collect(),
+                discriminant: new_disc,
+                cases: new_cases,
             })
         }
         TaggedStatement::BreakStatement(_)
@@ -614,7 +670,7 @@ mod tests {
     use coding_adventures_closure_pass_pipeline::{PassPipeline, PipelineOutput};
     use coding_adventures_javascript_ast::{
         statement::TaggedStatement, BinaryOperator, BooleanLiteral, EmptyStatement, Identifier,
-        NumericLiteral, SourceType,
+        NumericLiteral, SourceType, SwitchCase, SwitchStatement,
     };
     use coding_adventures_javascript_tokens::EsVersion;
     use coding_adventures_type_sidecar::Sidecar;
@@ -1018,5 +1074,122 @@ mod tests {
             &final_block.body[0],
             Statement::Tagged(TaggedStatement::ReturnStatement(_))
         ));
+    }
+
+    // =====================================================================
+    // gap-014 step 2 / CLOC12.34 — empty-switch elimination
+    // =====================================================================
+
+    fn switch_stmt(disc: Expression, cases: Vec<SwitchCase>) -> Statement {
+        Statement::switch_statement(SwitchStatement {
+            cv: Some("sw.1".to_string()),
+            discriminant: disc,
+            cases,
+        })
+    }
+
+    fn case_empty(test: Option<Expression>) -> SwitchCase {
+        SwitchCase {
+            cv: None,
+            test,
+            consequent: vec![],
+        }
+    }
+
+    /// `function f() { switch (1) {} }` → `function f() {}`.
+    /// Empty switch with literal discriminant collapses; the
+    /// resulting EmptyStatement is then dropped by the block
+    /// walker, so the function body ends up empty.
+    #[test]
+    fn empty_switch_with_literal_discriminant_drops_entirely() {
+        let body = vec![switch_stmt(num(1.0), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, changed, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(changed);
+        assert!(
+            contribs.iter().any(|c| c.tag == "switch_eliminated"),
+            "expected switch_eliminated contribution"
+        );
+    }
+
+    /// `function f() { switch (1) { case 2: ; default: ; } }` →
+    /// `function f() {}`. All cases empty, literal tests, literal
+    /// discriminant — drops.
+    #[test]
+    fn empty_switch_with_pure_cases_drops_entirely() {
+        let cases = vec![
+            case_empty(Some(num(2.0))),
+            case_empty(None), // default
+        ];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty(), "expected empty body; got {:?}", block.body);
+        assert!(contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Conservative bail: Identifier discriminant might TDZ-throw
+    /// for an uninitialised `let` / `const`. Keep the switch.
+    #[test]
+    fn empty_switch_with_identifier_discriminant_keeps_switch() {
+        let body = vec![switch_stmt(ident("x"), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, contribs, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        // SwitchStatement preserved.
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+        assert!(!contribs.iter().any(|c| c.tag == "switch_eliminated"));
+    }
+
+    /// Non-empty consequent keeps the switch even with a pure
+    /// discriminant — the consequent's statements have effect
+    /// potential we don't analyse.
+    #[test]
+    fn switch_with_non_empty_consequent_keeps_switch() {
+        let cases = vec![SwitchCase {
+            cv: None,
+            test: Some(num(1.0)),
+            consequent: vec![expr_stmt(ident("y"))],
+        }];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Identifier case-test (not pure under TDZ) keeps the
+    /// switch even though discriminant is pure and consequents
+    /// are empty.
+    #[test]
+    fn empty_switch_with_identifier_case_test_keeps_switch() {
+        let cases = vec![case_empty(Some(ident("k")))];
+        let body = vec![switch_stmt(num(1.0), cases)];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(matches!(
+            &block.body[0],
+            Statement::Tagged(TaggedStatement::SwitchStatement(_))
+        ));
+    }
+
+    /// Boolean / Null discriminants are pure too.
+    #[test]
+    fn empty_switch_with_boolean_discriminant_drops() {
+        let body = vec![switch_stmt(boolean(true), vec![])];
+        let prog = program_with_function(body, Some("fn.1"));
+        let (out, _, _, _) = run_pass(prog);
+        let block = extract_function_body(&out);
+        assert!(block.body.is_empty());
     }
 }

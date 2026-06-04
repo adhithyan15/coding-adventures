@@ -2,6 +2,72 @@
 
 All notable changes to the `coding-adventures-closure-pass-dce` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-04
+
+### Added — CLOC12.34: empty-switch elimination (gap-014 step 2/N)
+
+First peephole on top of the SwitchStatement AST that CLOC12.33
+landed. Drops `switch(<x>){}` (and equivalent shapes) entirely
+when **all** of the following hold:
+
+1. Every case's `consequent` is empty (or no cases at all).
+2. The discriminant is a leaf literal — one of
+   `NumericLiteral` / `StringLiteral` / `BooleanLiteral` /
+   `NullLiteral` / `UndefinedLiteral` / `BigIntLiteral`.
+3. Every case's `test` is either `None` (the `default:` clause)
+   or also a leaf literal.
+
+When the switch matches, the pass rewrites it to
+`EmptyStatement`. The block walker drops that on its next sweep,
+so the whole switch disappears from the output. One
+`Contribution { tag: "switch_eliminated", before: ..., after:
+"EmptyStatement" }` lands per elimination, tagged against the
+switch's own `cv`.
+
+### Why the conservative-bail design
+
+The rule deliberately treats `Identifier` as not-pure. Reading
+an `Identifier` can throw under TDZ for an uninitialised `let` /
+`const`. Without scope analysis (which is `closure-scope-analyzer`'s
+territory), we can't prove the read is safe to drop, so we leave
+the switch intact. The same reasoning applies to member access,
+calls, binary/unary, etc.
+
+This means we DO eliminate `switch(1){}` / `switch("k"){}` /
+`switch(true){}` / `switch(null){}` / `switch(void 0){}` /
+`switch(2n){}` and the same shapes with all-empty case clauses,
+but NOT `switch(x){}` or `switch(a.b){}` — those keep the switch.
+A future "switch-with-pure-effect-analysis-cleared-discriminant"
+slice can replace this when the broader effect-analysis pass
+lands.
+
+### Helper
+
+`is_pure_leaf(expr: &Expression) -> bool` — private helper used
+only by the switch rule. Six match-arms over the literal types
+listed above. Documented inline.
+
+### Tests (6 new inline, 14 → 20 total)
+
+| Test | Pins |
+|------|------|
+| `empty_switch_with_literal_discriminant_drops_entirely` | `switch(1){}` → `;` (then dropped) |
+| `empty_switch_with_pure_cases_drops_entirely` | `switch(1){case 2:;default:;}` → drop |
+| `empty_switch_with_identifier_discriminant_keeps_switch` | `switch(x){}` → unchanged (TDZ conservative) |
+| `switch_with_non_empty_consequent_keeps_switch` | `switch(1){case 1:y;}` → unchanged |
+| `empty_switch_with_identifier_case_test_keeps_switch` | `switch(1){case k:;}` → unchanged |
+| `empty_switch_with_boolean_discriminant_drops` | `switch(true){}` → drop |
+
+closurec's `diff_minify` and other e2e suites stay green — no
+existing fixture exercises empty-switch shapes, so behaviour is
+purely additive.
+
+### Version bump
+
+`0.5.2` → `0.6.0` (new behaviour; not a strict semver minor
+since the public `DcePass` impl is unchanged, but the
+`Contribution` stream gains a new `tag`).
+
 ## [0.5.2] - 2026-06-01
 
 ### Changed — CLOC12.16: handle new `UndefinedLiteral` Expression variant
