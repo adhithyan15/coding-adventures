@@ -30,7 +30,7 @@ use mccarthy_lisp_vm::run;
 let value = run(&module).unwrap();   // → the symbol A
 ```
 
-## Lowering (through L2b)
+## Lowering (through L2c-1)
 
 | Form               | IIR                                                     |
 |--------------------|---------------------------------------------------------|
@@ -43,6 +43,7 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(ATOM X)`         | `(not (pair? X))` — two `call_builtin`s                 |
 | `(EQ A B)`         | `call_builtin "equal?" [A, B]` (identity on atoms)      |
 | `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
+| `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args (params bound by name; no free-variable capture) |
 
 These are the conventions of the shared `lispy-runtime` value model
 (tagged-`i64` symbols, cons cells, nil) — so the same IIR runs on
@@ -63,11 +64,14 @@ crate dev-depends on it only to run the end-to-end tests.
 
 ## Not yet (later phases)
 
-- **L2c** — `LAMBDA` / `LABEL` / user-defined function application.
+- **L2c-2** — `LABEL` (named / recursive functions).
+- **Closures** — a lambda used as a *value* (passed or returned) and
+  free-variable capture. For now a lambda body may reference only its own
+  parameters; an unapplied `LAMBDA` is rejected.
 
 A bare (unquoted) symbol in value position is an *unbound variable*
-(there are no bindings until LAMBDA/LABEL) and is reported as a
-`CompileError`.
+unless it is a parameter of the enclosing lambda, and is otherwise
+reported as a `CompileError`.
 
 ## API
 

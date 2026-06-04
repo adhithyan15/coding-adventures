@@ -20,7 +20,7 @@
 //! pair? / not / equal?` builtins.  So McCarthy Lisp gets its *own* small
 //! VM built directly on that foundation — exactly what this crate is.
 //!
-//! ## The instruction set it executes (through L2b)
+//! ## The instruction set it executes (through L2c-1)
 //!
 //! `mccarthy-lisp-iir-compiler` emits a deliberately tiny IIR:
 //!
@@ -28,15 +28,18 @@
 //! |---------------|----------------------------------------------------------------|
 //! | `const`       | materialise a literal: `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 //! | `call_builtin`| `srcs[0]` is the builtin name (a `Var`), the rest are argument registers; dispatched to a `lispy-runtime` builtin |
+//! | `call`        | `srcs[0]` is the callee function name; the rest are arguments. Runs the callee in a fresh frame (params bound to args), returns into `dest` |
 //! | `mov`         | copy a register (`dest ← srcs[0]`)                             |
 //! | `jmp`         | unconditional branch to the label in `srcs[0]`                |
 //! | `jmp_if_false`| branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
 //! | `label`       | branch-target marker (`srcs[0]` is its name)                  |
 //! | `ret`         | return the value in `srcs[0]`                                  |
 //!
-//! `mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b).
-//! User-function `call` (for `LAMBDA` / `LABEL`) arrives with L2c; this
-//! VM grows to match the compiler phase by phase.
+//! `mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b);
+//! `call` is what lambda application lowers to (L2c-1).  Call nesting is
+//! bounded by [`MAX_CALL_DEPTH`] and the shared instruction budget, so an
+//! untrusted self-recursive module errors cleanly rather than overflowing
+//! the native stack.
 //!
 //! ## Quick start
 //!
@@ -105,6 +108,20 @@ pub enum VmError {
     /// A `jmp` / `jmp_if_false` targeted a label the function doesn't
     /// define.
     UnknownLabel(String),
+    /// A `call` was made to a function whose parameter count doesn't match
+    /// the number of arguments supplied.
+    ArityMismatch {
+        /// The callee's name.
+        function: String,
+        /// How many parameters it declares.
+        expected: usize,
+        /// How many arguments the `call` supplied.
+        got: usize,
+    },
+    /// User-function call recursion exceeded [`MAX_CALL_DEPTH`].  Guards
+    /// against a stack overflow from a self-calling (or mutually
+    /// recursive) `IIRModule` on untrusted input.
+    CallDepthExceeded(usize),
 }
 
 impl std::fmt::Display for VmError {
@@ -126,6 +143,13 @@ impl std::fmt::Display for VmError {
                 "integer literal {n} is outside lispy-runtime's tagged-int range [-2^60, 2^60-1]"
             ),
             VmError::UnknownLabel(l) => write!(f, "branch to undefined label {l:?}"),
+            VmError::ArityMismatch { function, expected, got } => write!(
+                f,
+                "function {function:?} expects {expected} argument(s), got {got}"
+            ),
+            VmError::CallDepthExceeded(d) => {
+                write!(f, "call depth exceeded {d} — possible unbounded recursion")
+            }
         }
     }
 }
@@ -140,6 +164,18 @@ impl std::error::Error for VmError {}
 /// step count, but a hard backstop against a runaway loop (once `jmp`
 /// arrives in L2b) blocking the interpreter forever.
 pub const DEFAULT_INSTRUCTION_BUDGET: u64 = 10_000_000;
+
+/// Maximum user-function call-nesting depth.  `call` recurses in native
+/// Rust (one [`run_function`] frame per active call), so an untrusted
+/// `IIRModule` with a self-calling function could otherwise overflow the
+/// OS thread stack.  256 is deep enough for any realistic McCarthy
+/// program yet far below the stack ceiling.
+pub const MAX_CALL_DEPTH: usize = 256;
+
+/// Maximum number of arguments a single `call` may carry.  Bounds the
+/// up-front argument-vector allocation so a hand-crafted `call` with
+/// millions of operands can't OOM before the instruction budget fires.
+pub const MAX_CALL_ARGS: usize = 4096;
 
 /// Execute `module`'s entry-point function and return its result value.
 ///
@@ -163,7 +199,8 @@ pub fn run_with_budget(module: &IIRModule, budget: u64) -> Result<LispyValue, Vm
         .get_function(entry)
         .ok_or_else(|| VmError::UnknownFunction(entry.to_string()))?;
     let mut steps: u64 = 0;
-    run_function(func, &mut steps, budget)
+    // The entry point takes no arguments and starts at call depth 0.
+    run_function(module, func, &[], &mut steps, budget, 0)
 }
 
 // ===========================================================================
@@ -174,8 +211,31 @@ pub fn run_with_budget(module: &IIRModule, budget: u64) -> Result<LispyValue, Vm
 /// VM independent of any register-numbering scheme the compiler uses.
 type Frame = HashMap<String, LispyValue>;
 
-fn run_function(func: &IIRFunction, steps: &mut u64, budget: u64) -> Result<LispyValue, VmError> {
+fn run_function(
+    module: &IIRModule,
+    func: &IIRFunction,
+    args: &[LispyValue],
+    steps: &mut u64,
+    budget: u64,
+    depth: usize,
+) -> Result<LispyValue, VmError> {
+    if depth > MAX_CALL_DEPTH {
+        return Err(VmError::CallDepthExceeded(MAX_CALL_DEPTH));
+    }
+
+    // Bind the arguments to the callee's parameter registers.  Arity must
+    // match exactly — McCarthy Lisp has no variadics.
+    if args.len() != func.params.len() {
+        return Err(VmError::ArityMismatch {
+            function: func.name.clone(),
+            expected: func.params.len(),
+            got: args.len(),
+        });
+    }
     let mut frame: Frame = HashMap::new();
+    for ((pname, _ty), val) in func.params.iter().zip(args.iter()) {
+        frame.insert(pname.clone(), *val);
+    }
     let mut pc: usize = 0;
 
     // Resolve every `label NAME` to its instruction index once, so a jump
@@ -236,6 +296,41 @@ fn run_function(func: &IIRFunction, steps: &mut u64, budget: u64) -> Result<Lisp
                 } else {
                     pc = resolve_label(&labels, label)?;
                 }
+            }
+            // `call FN, args…` — invoke a user function.  srcs[0] =
+            // Var(callee name); the rest are argument registers.  The
+            // callee runs in a fresh frame (its params bound to the
+            // argument values) at depth+1; its return value lands in
+            // `dest`.  The instruction budget is shared across the whole
+            // call tree (passed by `&mut`), and `depth` is bounded by
+            // `MAX_CALL_DEPTH`, so neither the budget nor the native stack
+            // can be exhausted by recursion.
+            "call" => {
+                let callee_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.as_str(),
+                    _ => {
+                        return Err(VmError::Malformed(
+                            "`call` requires srcs[0] = Var(function name)".into(),
+                        ))
+                    }
+                };
+                if instr.srcs.len() > MAX_CALL_ARGS + 1 {
+                    return Err(VmError::Malformed(format!(
+                        "`call` has too many arguments ({})",
+                        instr.srcs.len() - 1
+                    )));
+                }
+                let callee = module
+                    .get_function(callee_name)
+                    .ok_or_else(|| VmError::UnknownFunction(callee_name.to_string()))?;
+                let mut call_args: Vec<LispyValue> = Vec::with_capacity(instr.srcs.len() - 1);
+                for src in &instr.srcs[1..] {
+                    call_args.push(read_operand(src, &frame)?);
+                }
+                let result =
+                    run_function(module, callee, &call_args, steps, budget, depth + 1)?;
+                bind_dest(instr, result, &mut frame)?;
+                pc += 1;
             }
             // `label` is a no-op marker; its only role is as a jump target.
             "label" => pc += 1,
@@ -593,6 +688,91 @@ mod tests {
     fn jump_to_undefined_label_errors() {
         let m = module(vec![jmp("nowhere")]);
         assert!(matches!(run(&m), Err(VmError::UnknownLabel(_))));
+    }
+
+    // ---- user-function calls (L2c) ----
+
+    /// Build a module from a `main` body plus extra (callee) functions.
+    fn module_with(funcs: Vec<IIRFunction>, main_body: Vec<IIRInstr>) -> IIRModule {
+        let mut m = IIRModule::new("test", "mccarthy-lisp");
+        m.functions = funcs;
+        m.functions.push(IIRFunction::new("main", Vec::new(), "any", main_body));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    fn func(name: &str, params: &[&str], body: Vec<IIRInstr>) -> IIRFunction {
+        let params = params.iter().map(|p| (p.to_string(), "any".to_string())).collect();
+        IIRFunction::new(name, params, "any", body)
+    }
+
+    fn call(dest: &str, callee: &str, args: &[&str]) -> IIRInstr {
+        let mut srcs = vec![Operand::Var(callee.into())];
+        srcs.extend(args.iter().map(|a| Operand::Var((*a).into())));
+        IIRInstr::new("call", Some(dest.into()), srcs, "any")
+    }
+
+    #[test]
+    fn call_binds_param_and_returns() {
+        // f(X) = X ; main = f(42)
+        let f = func("f", &["X"], vec![ret("X")]);
+        let m = module_with(vec![f], vec![konst("a", Operand::Int(42), "i64"), call("r", "f", &["a"]), ret("r")]);
+        assert_eq!(run(&m).unwrap().as_int(), Some(42));
+    }
+
+    #[test]
+    fn call_runs_builtin_in_callee() {
+        // head(X) = (CAR X) ; main = head( (CONS 'A 'B) ) → A
+        let head = func(
+            "head",
+            &["X"],
+            vec![
+                IIRInstr::new(
+                    "call_builtin",
+                    Some("h".into()),
+                    vec![Operand::Var("car".into()), Operand::Var("X".into())],
+                    "any",
+                ),
+                ret("h"),
+            ],
+        );
+        let main = vec![
+            konst("a", Operand::Var("A".into()), "symbol"),
+            konst("b", Operand::Var("B".into()), "symbol"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("p".into()),
+                vec![Operand::Var("cons".into()), Operand::Var("a".into()), Operand::Var("b".into())],
+                "ref<LispyPair>",
+            ),
+            call("r", "head", &["p"]),
+            ret("r"),
+        ];
+        let v = run(&module_with(vec![head], main)).unwrap();
+        assert_eq!(name_of(v.as_symbol().unwrap()).as_deref(), Some("A"));
+    }
+
+    #[test]
+    fn call_arity_mismatch_errors() {
+        let f = func("f", &["X", "Y"], vec![ret("X")]);
+        // Only one argument supplied for a two-param function.
+        let m = module_with(vec![f], vec![konst("a", Operand::Int(1), "i64"), call("r", "f", &["a"]), ret("r")]);
+        assert!(matches!(run(&m), Err(VmError::ArityMismatch { .. })));
+    }
+
+    #[test]
+    fn call_to_unknown_function_errors() {
+        let m = module_with(vec![], vec![konst("a", Operand::Int(1), "i64"), call("r", "ghost", &["a"]), ret("r")]);
+        assert!(matches!(run(&m), Err(VmError::UnknownFunction(_))));
+    }
+
+    #[test]
+    fn unbounded_recursion_hits_call_depth_guard() {
+        // loop() = loop()  — a self-calling function must hit the call-depth
+        // guard (a clean error), never a native stack overflow.
+        let loop_fn = func("loop", &[], vec![call("r", "loop", &[]), ret("r")]);
+        let m = module_with(vec![loop_fn], vec![call("r", "loop", &[]), ret("r")]);
+        assert!(matches!(run(&m), Err(VmError::CallDepthExceeded(_))));
     }
 
     // ---- error paths ----

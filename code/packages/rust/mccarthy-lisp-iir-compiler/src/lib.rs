@@ -14,7 +14,7 @@
 //! the value of the **last** form (an empty program returns `nil`).
 //! The module's `entry_point` is `"main"`.
 //!
-//! ## Which Lisp we can lower *today* (through L2b)
+//! ## Which Lisp we can lower *today* (through L2c-1)
 //!
 //! | Form                | Lowering                                             |
 //! |---------------------|------------------------------------------------------|
@@ -27,6 +27,7 @@
 //! | `(ATOM X)`          | `call_builtin "pair?" [X]` then `call_builtin "not"` |
 //! | `(EQ A B)`          | `call_builtin "equal?" [A, B]`                       |
 //! | `(COND (p e) …)`    | chained `jmp_if_false` + `label`s; `mov` funnels each clause's value into one register; no match → nil |
+//! | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args |
 //!
 //! `QUOTE` materialises a literal S-expression as runtime values:
 //! a symbol `A` becomes `const v, Var("A")` (the IIR convention the
@@ -55,10 +56,14 @@
 //!
 //! ## Not yet (later phases)
 //!
-//! - **L2c** — `LAMBDA` / `LABEL` / user-defined function application.
+//! - **L2c-2** — `LABEL` (named / recursive functions).
+//! - **Closures** — a lambda as a *value* (passed / returned) and
+//!   free-variable capture.  For now a lambda body sees only its own
+//!   parameters, and an unapplied `LAMBDA` is rejected.
 //!
-//! A bare (unquoted) symbol in value position is therefore an *unbound
-//! variable* — there are no bindings yet — and is reported as a
+//! A bare (unquoted) symbol in value position is an *unbound variable*
+//! unless it is a parameter of the enclosing lambda, and is otherwise
+//! reported as a
 //! [`CompileError`] rather than silently mis-lowered.
 //!
 //! ## Quick start
@@ -72,6 +77,8 @@
 //! ```
 
 #![warn(missing_docs)]
+
+use std::collections::HashSet;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use mccarthy_lisp_parser::{parse, LispExpr};
@@ -142,11 +149,13 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
         "main",
         Vec::new(),       // no parameters
         "any",            // a Lisp value of any shape
-        c.instrs,
+        std::mem::take(&mut c.instrs),
     );
     main.register_count = c.tmp;
 
     let mut module = IIRModule::new(module_name, "mccarthy-lisp");
+    // The `LAMBDA` functions first, then the `main` entry point.
+    module.functions = c.functions;
     module.functions.push(main);
     module.entry_point = Some("main".to_string());
 
@@ -170,18 +179,39 @@ pub fn compile_forms(forms: &[LispExpr], module_name: &str) -> Result<IIRModule,
 /// `call_builtin "cons"` into a fresh pair.
 const REF_PAIR: &str = "ref<LispyPair>";
 
-/// Accumulates the instruction stream for the `main` function.
+/// Accumulates the instruction stream of the function currently being
+/// lowered (the top-level `main` body, or — temporarily, while lowering
+/// a `LAMBDA` — that lambda's body).
 struct Compiler {
+    /// Instructions of the function under construction.
     instrs: Vec<IIRInstr>,
+    /// Completed `LAMBDA` functions, to be added to the module alongside
+    /// `main`.
+    functions: Vec<IIRFunction>,
     /// Monotonic counter for fresh SSA temp names (`v0`, `v1`, …).
     tmp: usize,
     /// Monotonic counter for fresh, unique branch-label names.
     label: usize,
+    /// Monotonic counter for gensym `LAMBDA` function names.
+    fn_ctr: usize,
+    /// The parameter names visible in the function currently being
+    /// lowered.  A bare symbol resolves to a register read **only** if it
+    /// is one of these — McCarthy Lisp lambdas in L2c-1 do not capture
+    /// free variables (no closures yet), so an out-of-scope symbol is an
+    /// unbound-variable error.
+    params: HashSet<String>,
 }
 
 impl Compiler {
     fn new() -> Self {
-        Compiler { instrs: Vec::new(), tmp: 0, label: 0 }
+        Compiler {
+            instrs: Vec::new(),
+            functions: Vec::new(),
+            tmp: 0,
+            label: 0,
+            fn_ctr: 0,
+            params: HashSet::new(),
+        }
     }
 
     /// Allocate a fresh, never-reused temp register name.
@@ -227,9 +257,16 @@ impl Compiler {
         match expr {
             LispExpr::Int(n) => Ok(self.emit_int(*n)),
             LispExpr::Nil => Ok(self.emit_nil()),
+            // A bare symbol is a variable reference.  It resolves to a
+            // register read *only* if it is a parameter of the function
+            // currently being lowered; the VM binds each parameter to a
+            // register named after it, so the register name *is* the
+            // parameter name.
+            LispExpr::Symbol(name) if self.params.contains(name) => Ok(name.clone()),
             LispExpr::Symbol(name) => Err(CompileError::new(format!(
-                "unbound variable `{name}`: bare symbols need a binding, which arrives \
-                 with LAMBDA/LABEL in a later phase. Did you mean to quote it as `'{name}`?"
+                "unbound variable `{name}`: it is not a parameter in scope. \
+                 (Lambdas don't capture free variables yet — closures are a later phase.) \
+                 Did you mean to quote it as `'{name}`?"
             ))),
             LispExpr::Cons(..) => self.lower_application(expr),
         }
@@ -248,6 +285,14 @@ impl Compiler {
             CompileError::new("empty application `()` cannot be evaluated (quote it as `'()` for nil)")
         })?;
 
+        // A `LAMBDA` form in head position is a *direct application*:
+        // `((LAMBDA (p …) body) a …)`.  (A bare, unapplied `LAMBDA` is
+        // handled as a `Symbol("LAMBDA")` head below — it's an error,
+        // since lambda-as-a-value needs closures.)
+        if is_lambda_form(head) {
+            return self.lower_lambda_application(head, args);
+        }
+
         let name = match head {
             LispExpr::Symbol(s) => s.as_str(),
             // Describe the head by *kind*, never via `Display` — a quoted
@@ -256,7 +301,8 @@ impl Compiler {
             // cdr-spine (a huge flat list would overflow formatting it).
             other => {
                 return Err(CompileError::new(format!(
-                    "the head of a call must be a primitive symbol in L2a, got a {}",
+                    "the head of a call must be a primitive, a LAMBDA form, or (later) a \
+                     function name — got a {}",
                     kind_of(other)
                 )))
             }
@@ -301,14 +347,86 @@ impl Compiler {
                 Ok(self.emit_builtin("equal?", &[va, vb], "bool"))
             }
             "COND" => self.lower_cond(args),
-            "LAMBDA" | "LABEL" => Err(CompileError::new(format!(
-                "`{name}` is not supported yet — user functions land in L2c"
-            ))),
+            // A bare `LAMBDA` reached here means it is in *value* position
+            // (not applied) — that requires first-class functions
+            // (closures), which L2c-1 does not have.
+            "LAMBDA" => Err(CompileError::new(
+                "a LAMBDA must be applied directly — `((LAMBDA (params) body) args …)`. \
+                 Using a lambda as a value (passing or returning it) needs closures, \
+                 which are a later phase.",
+            )),
+            "LABEL" => Err(CompileError::new(
+                "`LABEL` (named/recursive functions) is not supported yet — it lands in L2c-2",
+            )),
             other => Err(CompileError::new(format!(
-                "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, EQ, COND \
-                 (LAMBDA/LABEL→L2c)"
+                "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, EQ, COND, \
+                 and direct LAMBDA application (LABEL → L2c-2)"
             ))),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // LAMBDA application (L2c-1)
+    // -----------------------------------------------------------------------
+
+    /// Lower a direct lambda application
+    /// `((LAMBDA (p1 … pn) body) a1 … an)`.
+    ///
+    /// The lambda becomes a fresh top-level [`IIRFunction`] (a gensym
+    /// name) whose parameters are `p1…pn` and whose body is lowered with
+    /// **only those** parameters in scope — McCarthy Lisp lambdas do not
+    /// capture free variables in L2c-1 (closures are a later phase), so a
+    /// body reference to anything other than its own params is an
+    /// unbound-variable error.  The application itself lowers its
+    /// arguments in the *caller's* scope and emits a `call` to the new
+    /// function.
+    fn lower_lambda_application(
+        &mut self,
+        lambda: &LispExpr,
+        args: &[&LispExpr],
+    ) -> Result<String, CompileError> {
+        let (params, body) = lambda_parts(lambda)?;
+        if args.len() != params.len() {
+            return Err(CompileError::new(format!(
+                "lambda expects {} argument(s), got {}",
+                params.len(),
+                args.len()
+            )));
+        }
+
+        let fn_name = format!("lambda_{}", self.fn_ctr);
+        self.fn_ctr += 1;
+
+        // Build the lambda's body in a fresh instruction buffer with a
+        // fresh parameter scope, then restore the caller's buffer + scope.
+        let saved_instrs = std::mem::take(&mut self.instrs);
+        let saved_params =
+            std::mem::replace(&mut self.params, params.iter().map(|p| p.to_string()).collect());
+        let body_reg = self.lower_expr(body)?;
+        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
+        let body_instrs = std::mem::replace(&mut self.instrs, saved_instrs);
+        self.params = saved_params;
+
+        let mut f = IIRFunction::new(
+            fn_name.clone(),
+            params.iter().map(|p| (p.to_string(), "any".to_string())).collect(),
+            "any",
+            body_instrs,
+        );
+        f.register_count = self.tmp;
+        self.functions.push(f);
+
+        // Back in the caller: lower the arguments, then emit the call.
+        let mut arg_regs = Vec::with_capacity(args.len());
+        for a in args {
+            arg_regs.push(self.lower_expr(a)?);
+        }
+        let dest = self.fresh();
+        let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
+        srcs.push(Operand::Var(fn_name));
+        srcs.extend(arg_regs.into_iter().map(Operand::Var));
+        self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "any"));
+        Ok(dest)
     }
 
     // -----------------------------------------------------------------------
@@ -517,6 +635,47 @@ fn kind_of(expr: &LispExpr) -> &'static str {
     }
 }
 
+/// True iff `expr` is a `(LAMBDA …)` form (a list whose head is the
+/// symbol `LAMBDA`).
+fn is_lambda_form(expr: &LispExpr) -> bool {
+    matches!(expr, LispExpr::Cons(car, _) if matches!(car.as_ref(), LispExpr::Symbol(s) if s == "LAMBDA"))
+}
+
+/// Destructure a `(LAMBDA (p1 … pn) body)` form into its parameter names
+/// and body.  The caller guarantees `is_lambda_form(lambda)`.
+fn lambda_parts(lambda: &LispExpr) -> Result<(Vec<&str>, &LispExpr), CompileError> {
+    let items = proper_list(lambda)
+        .ok_or_else(|| CompileError::new("malformed LAMBDA (improper list)"))?;
+    if items.len() != 3 {
+        return Err(CompileError::new(format!(
+            "a LAMBDA must be `(LAMBDA (params) body)` — 3 elements, got {}",
+            items.len()
+        )));
+    }
+    let param_list = proper_list(items[1]).ok_or_else(|| {
+        CompileError::new("a LAMBDA parameter list must be a proper list `(p1 p2 …)`")
+    })?;
+    let mut params: Vec<&str> = Vec::with_capacity(param_list.len());
+    for p in &param_list {
+        match p {
+            LispExpr::Symbol(s) => params.push(s.as_str()),
+            other => {
+                return Err(CompileError::new(format!(
+                    "a LAMBDA parameter must be a symbol, got a {}",
+                    kind_of(other)
+                )))
+            }
+        }
+    }
+    let mut seen = HashSet::new();
+    for p in &params {
+        if !seen.insert(*p) {
+            return Err(CompileError::new(format!("duplicate LAMBDA parameter `{p}`")));
+        }
+    }
+    Ok((params, items[2]))
+}
+
 /// Flatten a proper list (`Cons` chain terminated by `Nil`) into its
 /// elements.  Returns `None` if the chain is improper (ends in a dotted
 /// tail) — those are data, never callable forms.
@@ -696,8 +855,53 @@ mod tests {
     }
 
     #[test]
-    fn lambda_is_deferred() {
-        assert!(compile_source("(LAMBDA (X) X)", "t").unwrap_err().message.contains("L2c"));
+    fn applied_lambda_emits_a_function_and_a_call() {
+        // ((LAMBDA (X) (CAR X)) '(A B)) → a `lambda_0` function + a `call`.
+        let m = compile_source("((LAMBDA (X) (CAR X)) '(A B))", "t").unwrap();
+        // Two functions: the lambda and `main`.
+        assert_eq!(m.functions.len(), 2);
+        assert!(m.functions.iter().any(|f| f.name == "lambda_0"));
+        let lam = m.functions.iter().find(|f| f.name == "lambda_0").unwrap();
+        assert_eq!(lam.param_names(), vec!["X"]);
+        // main contains a `call` to the lambda.
+        let main = m.get_function("main").unwrap();
+        assert!(main.instructions.iter().any(|i| i.op == "call"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "lambda_0")));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn lambda_param_is_in_scope_in_its_body() {
+        // The body may reference its own param `X` (a register read).
+        assert!(compile_source("((LAMBDA (X) X) 'A)", "t").is_ok());
+    }
+
+    #[test]
+    fn lambda_body_free_variable_is_unbound() {
+        // `Y` is not a parameter — no closures yet, so it is unbound.
+        let e = compile_source("((LAMBDA (X) Y) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("unbound variable"));
+    }
+
+    #[test]
+    fn lambda_arity_is_checked() {
+        assert!(compile_source("((LAMBDA (X Y) X) 'A)", "t").unwrap_err().message.contains("argument"));
+    }
+
+    #[test]
+    fn duplicate_lambda_param_rejected() {
+        assert!(compile_source("((LAMBDA (X X) X) 'A 'B)", "t").unwrap_err().message.contains("duplicate"));
+    }
+
+    #[test]
+    fn bare_lambda_value_is_rejected() {
+        // An unapplied LAMBDA (lambda-as-value) needs closures — deferred.
+        assert!(compile_source("(LAMBDA (X) X)", "t").unwrap_err().message.contains("must be applied"));
+    }
+
+    #[test]
+    fn label_is_deferred() {
+        assert!(compile_source("(LABEL F (LAMBDA (X) X))", "t").unwrap_err().message.contains("L2c-2"));
     }
 
     #[test]

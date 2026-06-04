@@ -28,21 +28,24 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (through L2b)
+## Instruction set (through L2c-1)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
 | `const`        | `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 | `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `lispy-runtime` builtin |
+| `call`         | `srcs[0]` is the callee function name; the rest are arguments. Runs the callee in a fresh frame (params bound to args) and returns its value into `dest` |
 | `mov`          | copy a register (`dest ← srcs[0]`)                                |
 | `jmp`          | unconditional branch to the label in `srcs[0]`                   |
 | `jmp_if_false` | branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
 | `label`        | branch-target marker (`srcs[0]` is its name)                    |
 | `ret`          | return the value in `srcs[0]`                                     |
 
-`mov` / `jmp` / `jmp_if_false` / `label` are what `COND` lowers to
-(L2b). User-function `call` (for `LAMBDA` / `LABEL`) lands with L2c — the
-VM grows to match the compiler phase by phase.
+`mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b);
+`call` is what lambda application lowers to (L2c-1). Call nesting is
+bounded by `MAX_CALL_DEPTH` (256) and the shared instruction budget, so
+an untrusted self-recursive module errors cleanly rather than
+overflowing the stack.
 
 ## Usage
 

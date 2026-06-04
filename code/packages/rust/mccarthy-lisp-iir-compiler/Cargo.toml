@@ -1,6 +1,6 @@
 [package]
 name = "mccarthy-lisp-iir-compiler"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. L2a v0.1.0 handles integer/nil literals, QUOTE (symbols + nested lists), and the primitives CONS/CAR/CDR/ATOM/EQ, emitting IIR over the `lispy-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. COND, LAMBDA, and LABEL land in L2b/L2c."
 

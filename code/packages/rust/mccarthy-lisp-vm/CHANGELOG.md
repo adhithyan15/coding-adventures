@@ -1,5 +1,25 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.3.0 — 2026-06-04 — user-function calls (L2c-1)
+
+* Added the `call FN, args…` opcode: looks the callee up in the module
+  by name (`srcs[0]` = `Var(name)`), evaluates the argument registers,
+  runs the callee in a fresh frame with its parameters bound to the
+  argument values, and stores the return value in `dest`.
+* `run_function` now takes the module, the call arguments, and a call
+  `depth`; the entry point runs at depth 0 with no arguments. Parameters
+  are bound by name (the VM frame register named after each parameter).
+  Arity must match exactly → `VmError::ArityMismatch`.
+* **DoS guards for untrusted IIR:**
+  * Call nesting is bounded by `MAX_CALL_DEPTH` (256) — a self-calling
+    function trips `VmError::CallDepthExceeded` instead of overflowing
+    the native stack. (The instruction budget is shared across the whole
+    call tree, so it also bounds total work.)
+  * A `call` carrying more than `MAX_CALL_ARGS` (4096) operands is
+    rejected before the argument vector is allocated.
+* 5 new unit tests (param passthrough, builtin-in-callee, arity mismatch,
+  unknown callee, and a self-recursive function hitting the depth guard).
+
 ## v0.2.0 — 2026-06-04 — control flow for COND (L2b)
 
 * Added the control-flow opcodes the `COND` lowering needs:
