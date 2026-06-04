@@ -1,24 +1,35 @@
-# minify_empty — empty input → empty output (KNOWN DIVERGENCE)
+# minify_empty — empty input round-trips to a single `\n`
 
 The simplest possible end-to-end fixture: zero bytes in. Under
-`--compilation_level WHITESPACE_ONLY` the question is what
+`--compilation_level WHITESPACE_ONLY` the question was what
 trailing bytes (if any) the compiler appends to a body it didn't
 write.
 
-**closurec today emits a single `\n` (0x0a)**. We don't yet have
-a captured upstream golden for the empty-input case to know
-whether upstream Closure emits the same `\n`, zero bytes, or
-something else (some compilers emit a sourceMap comment header
-even on empty input).
-
-This fixture is in the **IGNORE_FIXTURES** list in
-`tests/diff_minify.rs` pending a captured golden. When a real
-upstream run lands the `expected.stdout` should be replaced
-with the actual byte sequence and the fixture removed from the
-ignore list.
+**Resolved in CLOC14.1**: upstream Google Closure Compiler
+v20240317 emits a single `\n` (0x0a) for empty input. Our
+closurec also emits exactly that. The fixture now flips from
+IGNORED to **PASS** — it pins the empty-input round-trip
+agreement with upstream.
 
 The reason this case matters at all: a closurec user running it
 on a generated source file that happens to be empty (e.g. a
 build artefact for an empty input module) should get the same
 exact output upstream Closure would produce — not a stray
 newline byte that differs from upstream.
+
+## Provenance
+
+Captured from upstream Google Closure Compiler **v20240317**
+(downloaded from Maven Central
+`com.google.javascript:closure-compiler:v20240317`) by CLOC14.1
+(PR pending).
+
+Capture command:
+
+```
+java -jar closure-compiler-v20240317.jar \
+  --compilation_level WHITESPACE_ONLY \
+  --js tests/diff/minify_empty/input/empty.js
+```
+
+Output: exactly 1 byte, `0x0a` (`\n`).

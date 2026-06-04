@@ -1,6 +1,6 @@
 # CLOC14 — End-to-end byte-identity test harness
 
-**Status:** v0.1 shipped. Harness + 3 PASS + 1 IGNORED seed fixtures.
+**Status:** v0.2 shipped (CLOC14.1). Harness + **4 PASS** seed fixtures, **all goldens captured from upstream Closure v20240317**. IGNORE_FIXTURES is empty. The marathon goal — "drop-in binary-compatible closurec, measured against real upstream" — is now exercised end-to-end on every PR.
 **Layer:** Above CLOC11 (CLI compat) and CLOC12 (upstream test ports), below CLOC15+ (whatever comes next).
 **Depends on:** closurec CLI being runnable end-to-end.
 **Unblocks:** Every future gap-fix can be *measured* against upstream Closure's output instead of unit-tested in isolation.
@@ -51,9 +51,9 @@ Each fixture's `README.md` documents:
 2. The exact command line used to capture the golden.
 3. Any caveats — e.g. "trailing-newline behaviour assumed; replace with a fresh capture once available".
 
-The seed fixtures shipped in v0.1 are **hand-traced**, not captured from a running upstream JAR — the inputs are constrained enough (`var x=1;`, `var x="hi";`, `var x=null;var y=1;`) that upstream's WHITESPACE_ONLY output is unambiguous. A future PR should replace each hand-traced golden with a real capture and remove the "hand-traced" caveat from the README.
+The seed fixtures were initially **hand-traced**. **CLOC14.1 captured real upstream goldens** by downloading `closure-compiler-v20240317.jar` from Maven Central and running it against each fixture's `flags.txt` + `input/`. The three originally-PASS hand-traced goldens were confirmed byte-identical to upstream — the constrained inputs (`var x=1;`, `var x="hi";`, `var x=null;var y=1;`) really are unambiguous under WHITESPACE_ONLY. Their READMEs now document the real capture details and removed the "hand-traced" caveat.
 
-The `minify_empty` fixture is shipped as **IGNORED** specifically because the empty-input trailing-byte behaviour of upstream Closure is *not* unambiguous — we don't know without running it whether upstream emits `\n` or zero bytes. closurec today emits `\n`. The first capture run should resolve this.
+The `minify_empty` fixture had been **IGNORED** specifically because the empty-input trailing-byte behaviour of upstream Closure was unknown. CLOC14.1's capture run resolved it: upstream emits a single `\n` (0x0a) byte, exactly what closurec emits. `minify_empty` flipped from IGNORED to PASS and the entry was removed from `IGNORE_FIXTURES`.
 
 ## 5. The seed fixture set (v0.1)
 
@@ -62,7 +62,7 @@ The `minify_empty` fixture is shipped as **IGNORED** specifically because the em
 | `minify_minimal_var` | PASS | A single `var x=1;` round-trips verbatim under WHITESPACE_ONLY. Pins the trailing-newline contract and lex/parse/emit identity. |
 | `minify_string_literal` | PASS | A `"hi"` string literal preserves its quote style and content. Catches quote-flip / escape-double regressions. |
 | `minify_two_statements` | PASS | Two consecutive top-level statements emit on a single line with no inserted separator. Catches statement-separator drift. |
-| `minify_empty` | IGNORED | Empty input. Pending captured upstream golden to confirm whether upstream emits `\n` or zero bytes. |
+| `minify_empty` | PASS | Empty input round-trips to a single `\n` byte. CLOC14.1 captured upstream — emits `\n`, same as closurec; flipped from IGNORED to PASS. |
 
 ## 6. The PR cadence going forward
 
