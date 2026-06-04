@@ -1,5 +1,21 @@
 # Changelog — `twig-aot`
 
+## 0.11.0 — 2026-06-04 — tag native lisp integers (LANG77 / McCarthy L3b-2c-1)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::lower_lisp_repr`
+right after `lower_heap_builtins_runtime`. This **type-directed** pass boxes
+the integer atoms that flow into `lispy_*` calls (`n << 3`, so their NaN-box
+tag is `000` rather than the heap tag a raw int's low bits would collide
+with), tags the nil sentinel, and inserts an unbox at the program-exit
+boundary — so `(CAR (CONS 7 9))` still exits 7, now through fully **tagged**
+`LispyValue`s. This lays the representation the `pair?`/`ATOM`/`EQ`
+predicates (L3b-2c-2) require.
+
+Gate-free: the pass keys on use-sites, not the source language, so every
+Twig/Nib/Brainfuck program (whose integers feed `add`/`print_i64`, never a
+`lispy_*` call) is left byte-for-byte unchanged. No new opcodes — the unbox
+is a `call_builtin "lispy_unbox_int"` resolved from the runtime archive.
+
 ## 0.10.0 — 2026-06-04 — route native cons through the lisp runtime (LANG77 / McCarthy L3b-2b)
 
 `prepare_module_for_aot` now calls

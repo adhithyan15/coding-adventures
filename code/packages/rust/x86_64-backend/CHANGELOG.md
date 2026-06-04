@@ -1,5 +1,17 @@
 # Changelog — `x86_64-backend`
 
+## 0.9.0 — 2026-06-04 — lisp int unbox helper (LANG77 / McCarthy L3b-2c-1)
+
+Adds one `V1_BUILTINS` row — `lispy_unbox_int` (1 arg, returns) → `CALL
+__twig_lispy_unbox_int` — the helper the new `lower_lisp_repr` pass inserts
+at the program-exit boundary to turn a tagged integer back into a raw
+machine word for the process exit code. No new opcodes; the generic
+`call_builtin` dispatch handles it.
+
+New host-independent test: the full boxed `(CAR (CONS 7 9))` sequence (boxed
+atoms → `lispy_cons` → `lispy_car` → `lispy_unbox_int` → ret) lowers and
+emits external relocs to all three runtime symbols.
+
 ## 0.8.0 — 2026-06-04 — lisp runtime calls (LANG77 / McCarthy L3b-2b)
 
 Adds three rows to the `V1_BUILTINS` helper table — `lispy_cons` (2 args),
