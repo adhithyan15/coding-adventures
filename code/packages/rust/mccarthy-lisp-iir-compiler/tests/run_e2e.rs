@@ -150,3 +150,53 @@ fn dotted_pair_literal() {
     // (CDR '(A . B)) → B
     assert_eq!(sym_name(eval("(CDR '(A . B))")), "B");
 }
+
+// ============================================================
+// COND (L2b)
+// ============================================================
+
+#[test]
+fn cond_first_true_clause_wins() {
+    // 'X is an atom → first clause fires → 'A.
+    assert_eq!(sym_name(eval("(COND ((ATOM 'X) 'A) ('T 'B))")), "A");
+}
+
+#[test]
+fn cond_falls_through_to_later_clause() {
+    // '(X) is a cons (not an atom) → first clause false → catch-all → 'B.
+    assert_eq!(sym_name(eval("(COND ((ATOM '(X)) 'A) ('T 'B))")), "B");
+}
+
+#[test]
+fn cond_uses_eq_predicate() {
+    assert_eq!(sym_name(eval("(COND ((EQ 'A 'A) 'YES) ('T 'NO))")), "YES");
+    assert_eq!(sym_name(eval("(COND ((EQ 'A 'B) 'YES) ('T 'NO))")), "NO");
+}
+
+#[test]
+fn cond_with_no_matching_clause_is_nil() {
+    // No clause's predicate is true → the total extension returns nil.
+    assert!(eval("(COND ((EQ 'A 'B) 'YES))").is_nil());
+}
+
+#[test]
+fn cond_value_feeds_an_enclosing_form() {
+    // (CAR (COND ('T '(A B C)))) → A
+    assert_eq!(sym_name(eval("(CAR (COND ('T '(A B C))))")), "A");
+}
+
+#[test]
+fn nested_cond() {
+    // Inner COND yields 'B (since '(X) is not an atom), outer matches on EQ.
+    let src = "(COND ((EQ (COND ((ATOM '(X)) 'A) ('T 'B)) 'B) 'MATCHED) ('T 'NOPE))";
+    assert_eq!(sym_name(eval(src)), "MATCHED");
+}
+
+#[test]
+fn cond_returns_a_list_value() {
+    // A clause expression can be any expression, including one that
+    // builds a cons structure.
+    let v = eval("(COND ('T (CONS 'A 'B)))");
+    assert_eq!(sym_name(car(v)), "A");
+    assert_eq!(sym_name(cdr(v)), "B");
+}

@@ -28,18 +28,21 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (L2a)
+## Instruction set (through L2b)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
 | `const`        | `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 | `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `lispy-runtime` builtin |
+| `mov`          | copy a register (`dest ← srcs[0]`)                                |
+| `jmp`          | unconditional branch to the label in `srcs[0]`                   |
+| `jmp_if_false` | branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
+| `label`        | branch-target marker (`srcs[0]` is its name)                    |
 | `ret`          | return the value in `srcs[0]`                                     |
-| `label`        | no-op marker (a jump target once L2b lands)                      |
 
-Control flow (`jmp` / `jmp_if_false`, for `COND`) and user-function
-`call` (for `LAMBDA` / `LABEL`) land with L2b / L2c — the VM grows to
-match the compiler phase by phase.
+`mov` / `jmp` / `jmp_if_false` / `label` are what `COND` lowers to
+(L2b). User-function `call` (for `LAMBDA` / `LABEL`) lands with L2c — the
+VM grows to match the compiler phase by phase.
 
 ## Usage
 

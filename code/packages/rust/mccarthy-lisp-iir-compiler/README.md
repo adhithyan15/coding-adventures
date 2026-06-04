@@ -30,7 +30,7 @@ use mccarthy_lisp_vm::run;
 let value = run(&module).unwrap();   // → the symbol A
 ```
 
-## Lowering (L2a scope)
+## Lowering (through L2b)
 
 | Form               | IIR                                                     |
 |--------------------|---------------------------------------------------------|
@@ -42,6 +42,7 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(CDR X)`          | `call_builtin "cdr" [X]`                                |
 | `(ATOM X)`         | `(not (pair? X))` — two `call_builtin`s                 |
 | `(EQ A B)`         | `call_builtin "equal?" [A, B]` (identity on atoms)      |
+| `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
 
 These are the conventions of the shared `lispy-runtime` value model
 (tagged-`i64` symbols, cons cells, nil) — so the same IIR runs on
@@ -62,11 +63,10 @@ crate dev-depends on it only to run the end-to-end tests.
 
 ## Not yet (later phases)
 
-- **L2b** — `COND` (chained `jmp_if_false` + labels).
 - **L2c** — `LAMBDA` / `LABEL` / user-defined function application.
 
-A bare (unquoted) symbol in value position is an *unbound variable* in
-L2a (there are no bindings until LAMBDA/LABEL) and is reported as a
+A bare (unquoted) symbol in value position is an *unbound variable*
+(there are no bindings until LAMBDA/LABEL) and is reported as a
 `CompileError`.
 
 ## API

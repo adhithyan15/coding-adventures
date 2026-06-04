@@ -14,7 +14,7 @@
 //! the value of the **last** form (an empty program returns `nil`).
 //! The module's `entry_point` is `"main"`.
 //!
-//! ## Which Lisp we can lower *today* (L2a scope)
+//! ## Which Lisp we can lower *today* (through L2b)
 //!
 //! | Form                | Lowering                                             |
 //! |---------------------|------------------------------------------------------|
@@ -26,6 +26,7 @@
 //! | `(CDR X)`           | `call_builtin "cdr" [X]`                             |
 //! | `(ATOM X)`          | `call_builtin "pair?" [X]` then `call_builtin "not"` |
 //! | `(EQ A B)`          | `call_builtin "equal?" [A, B]`                       |
+//! | `(COND (p e) …)`    | chained `jmp_if_false` + `label`s; `mov` funnels each clause's value into one register; no match → nil |
 //!
 //! `QUOTE` materialises a literal S-expression as runtime values:
 //! a symbol `A` becomes `const v, Var("A")` (the IIR convention the
@@ -54,11 +55,10 @@
 //!
 //! ## Not yet (later phases)
 //!
-//! - **L2b** — `COND` (chained `jmp_if_false` + labels).
 //! - **L2c** — `LAMBDA` / `LABEL` / user-defined function application.
 //!
 //! A bare (unquoted) symbol in value position is therefore an *unbound
-//! variable* in L2a — there are no bindings yet — and is reported as a
+//! variable* — there are no bindings yet — and is reported as a
 //! [`CompileError`] rather than silently mis-lowered.
 //!
 //! ## Quick start
@@ -175,17 +175,26 @@ struct Compiler {
     instrs: Vec<IIRInstr>,
     /// Monotonic counter for fresh SSA temp names (`v0`, `v1`, …).
     tmp: usize,
+    /// Monotonic counter for fresh, unique branch-label names.
+    label: usize,
 }
 
 impl Compiler {
     fn new() -> Self {
-        Compiler { instrs: Vec::new(), tmp: 0 }
+        Compiler { instrs: Vec::new(), tmp: 0, label: 0 }
     }
 
     /// Allocate a fresh, never-reused temp register name.
     fn fresh(&mut self) -> String {
         let name = format!("v{}", self.tmp);
         self.tmp += 1;
+        name
+    }
+
+    /// Allocate a fresh, never-reused label name (for `COND` branches).
+    fn fresh_label(&mut self, hint: &str) -> String {
+        let name = format!("L_{hint}_{}", self.label);
+        self.label += 1;
         name
     }
 
@@ -291,17 +300,83 @@ impl Compiler {
                 let vb = self.lower_expr(a[1])?;
                 Ok(self.emit_builtin("equal?", &[va, vb], "bool"))
             }
-            "COND" => Err(CompileError::new(
-                "`COND` is not supported yet — it lands in L2b (chained jmp_if_false + labels)",
-            )),
+            "COND" => self.lower_cond(args),
             "LAMBDA" | "LABEL" => Err(CompileError::new(format!(
                 "`{name}` is not supported yet — user functions land in L2c"
             ))),
             other => Err(CompileError::new(format!(
-                "unknown form `{other}`: L2a supports QUOTE, CONS, CAR, CDR, ATOM, EQ \
-                 (COND→L2b, LAMBDA/LABEL→L2c)"
+                "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, EQ, COND \
+                 (LAMBDA/LABEL→L2c)"
             ))),
         }
+    }
+
+    // -----------------------------------------------------------------------
+    // COND lowering (control flow)
+    // -----------------------------------------------------------------------
+
+    /// Lower `(COND (p1 e1) (p2 e2) … (pn en))`.
+    ///
+    /// Evaluate each predicate in turn; the value of the COND is the `ei`
+    /// of the first `pi` that is true (non-`nil`, non-`#f`).  If no clause
+    /// matches, the result is `nil` (McCarthy's 1960 `cond` is undefined
+    /// in that case; returning `nil` is the conventional total extension).
+    ///
+    /// The lowering is a chain of `jmp_if_false` + labels, with every
+    /// clause's value funnelled into one `result` register via `mov`:
+    ///
+    /// ```text
+    ///       <lower p1> → vp1
+    ///       jmp_if_false vp1, L_next_0
+    ///       <lower e1>  → ve1
+    ///       mov result, ve1
+    ///       jmp L_end_0
+    ///   L_next_0:
+    ///       <lower p2> → vp2
+    ///       jmp_if_false vp2, L_next_1
+    ///       <lower e2>  → ve2
+    ///       mov result, ve2
+    ///       jmp L_end_0
+    ///   L_next_1:
+    ///       const result, nil          ; no clause matched
+    ///   L_end_0:
+    ///       ; result holds the value
+    /// ```
+    ///
+    /// The catch-all clause is written with a truthy predicate — e.g.
+    /// `('T …)`.  A bare `T` would be an unbound variable (bindings arrive
+    /// with `LAMBDA`/`LABEL` in L2c), so quote it.
+    fn lower_cond(&mut self, clauses: &[&LispExpr]) -> Result<String, CompileError> {
+        let result = self.fresh();
+        let end_label = self.fresh_label("cond_end");
+
+        for clause in clauses {
+            // Each clause is a proper list `(predicate expression)`.
+            let parts = proper_list(clause).ok_or_else(|| {
+                CompileError::new("a COND clause must be a list `(predicate expression)`")
+            })?;
+            if parts.len() != 2 {
+                return Err(CompileError::new(format!(
+                    "a COND clause must be `(predicate expression)` — 2 elements, got {}",
+                    parts.len()
+                )));
+            }
+            let (predicate, expression) = (parts[0], parts[1]);
+
+            let next_label = self.fresh_label("cond_next");
+            let vp = self.lower_expr(predicate)?;
+            self.emit_jmp_if_false(&vp, &next_label);
+            let ve = self.lower_expr(expression)?;
+            self.emit_mov(&result, &ve);
+            self.emit_jmp(&end_label);
+            self.emit_label(&next_label);
+        }
+
+        // Fell past every clause → nil.
+        let nil = self.emit_nil();
+        self.emit_mov(&result, &nil);
+        self.emit_label(&end_label);
+        Ok(result)
     }
 
     // -----------------------------------------------------------------------
@@ -390,6 +465,40 @@ impl Compiler {
         instr.may_alloc = builtin == "cons";
         self.emit(instr);
         v
+    }
+
+    // -----------------------------------------------------------------------
+    // Control-flow emitters (COND)
+    // -----------------------------------------------------------------------
+
+    /// `mov dest, src` — copy a register's value.
+    fn emit_mov(&mut self, dest: &str, src: &str) {
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.to_string()),
+            vec![Operand::Var(src.to_string())],
+            "any",
+        ));
+    }
+
+    /// `label NAME` — a branch-target marker.
+    fn emit_label(&mut self, name: &str) {
+        self.emit(IIRInstr::new("label", None, vec![Operand::Var(name.to_string())], "void"));
+    }
+
+    /// `jmp NAME` — unconditional branch.
+    fn emit_jmp(&mut self, target: &str) {
+        self.emit(IIRInstr::new("jmp", None, vec![Operand::Var(target.to_string())], "void"));
+    }
+
+    /// `jmp_if_false cond, NAME` — branch to `NAME` when `cond` is falsy.
+    fn emit_jmp_if_false(&mut self, cond: &str, target: &str) {
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.to_string()), Operand::Var(target.to_string())],
+            "void",
+        ));
     }
 }
 
@@ -559,8 +668,31 @@ mod tests {
     }
 
     #[test]
-    fn cond_is_deferred() {
-        assert!(compile_source("(COND ('T 'A))", "t").unwrap_err().message.contains("L2b"));
+    fn cond_emits_branch_and_funnel_ops() {
+        // (COND ((ATOM 'X) 'A) ('T 'B)) — two clauses → two jmp_if_false,
+        // and every clause path funnels into one register via `mov`.
+        let m = compile_source("(COND ((ATOM 'X) 'A) ('T 'B))", "t").unwrap();
+        let ops: Vec<&str> =
+            m.functions[0].instructions.iter().map(|i| i.op.as_str()).collect();
+        assert_eq!(ops.iter().filter(|o| **o == "jmp_if_false").count(), 2);
+        assert!(ops.contains(&"jmp"));
+        assert!(ops.contains(&"label"));
+        assert!(ops.contains(&"mov"));
+        // The emitted IIR is well-formed (all branch targets are defined).
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn cond_clause_must_be_a_pair() {
+        assert!(compile_source("(COND ('T))", "t").unwrap_err().message.contains("2 elements"));
+        assert!(compile_source("(COND ('T 'A 'B))", "t").unwrap_err().message.contains("2 elements"));
+    }
+
+    #[test]
+    fn empty_cond_is_nil() {
+        // (COND) with no clauses lowers to a nil result — and validates.
+        let m = compile_source("(COND)", "t").unwrap();
+        assert!(m.validate().is_empty());
     }
 
     #[test]

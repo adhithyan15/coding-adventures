@@ -1,5 +1,24 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.2.0 — 2026-06-04 — COND (L2b)
+
+* Lowers `(COND (p1 e1) … (pn en))` to a chain of `jmp_if_false` +
+  `label`s, with each clause's value funnelled into one `result`
+  register via `mov`. The value is the `ei` of the first true `pi`; if no
+  clause matches, the result is `nil` (the total extension of McCarthy's
+  otherwise-undefined `cond`).
+* Each clause must be a 2-element list `(predicate expression)` —
+  malformed clauses are a `CompileError`. The catch-all clause uses a
+  truthy predicate such as `('T …)` (a bare `T` is still an unbound
+  variable until bindings arrive in L2c).
+* New emitters: `mov` / `label` / `jmp` / `jmp_if_false`, plus a
+  fresh-label generator. The emitted IIR passes `IIRModule::validate`
+  (all branch targets are defined).
+* 3 new unit tests (branch/funnel op shape, clause-arity errors, empty
+  `COND`) + 7 new end-to-end tests on `mccarthy-lisp-vm` (first-true
+  clause, fall-through, `EQ` predicates, no-match→nil, COND value feeding
+  an enclosing form, nested COND, COND returning a cons).
+
 ## v0.1.0 — 2026-06-03 — initial release (L2a)
 
 First IIR lowering for McCarthy 1960 Lisp — the L2a slice of the

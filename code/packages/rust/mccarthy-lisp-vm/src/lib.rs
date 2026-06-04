@@ -20,19 +20,23 @@
 //! pair? / not / equal?` builtins.  So McCarthy Lisp gets its *own* small
 //! VM built directly on that foundation — exactly what this crate is.
 //!
-//! ## The instruction set it executes (L2a)
+//! ## The instruction set it executes (through L2b)
 //!
-//! `mccarthy-lisp-iir-compiler` v0.1 emits a deliberately tiny IIR:
+//! `mccarthy-lisp-iir-compiler` emits a deliberately tiny IIR:
 //!
 //! | Op            | Meaning                                                        |
 //! |---------------|----------------------------------------------------------------|
 //! | `const`       | materialise a literal: `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 //! | `call_builtin`| `srcs[0]` is the builtin name (a `Var`), the rest are argument registers; dispatched to a `lispy-runtime` builtin |
+//! | `mov`         | copy a register (`dest ← srcs[0]`)                             |
+//! | `jmp`         | unconditional branch to the label in `srcs[0]`                |
+//! | `jmp_if_false`| branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
+//! | `label`       | branch-target marker (`srcs[0]` is its name)                  |
 //! | `ret`         | return the value in `srcs[0]`                                  |
 //!
-//! Control flow (`jmp` / `jmp_if_false` / `label`, for `COND`) and
-//! user-function `call` (for `LAMBDA` / `LABEL`) arrive with L2b / L2c;
-//! this VM grows to match the compiler phase by phase.
+//! `mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b).
+//! User-function `call` (for `LAMBDA` / `LABEL`) arrives with L2c; this
+//! VM grows to match the compiler phase by phase.
 //!
 //! ## Quick start
 //!
@@ -98,6 +102,9 @@ pub enum VmError {
     /// (`[-2^60, 2^60 - 1]`).  Caught here so it surfaces as a clean
     /// error rather than being silently truncated by `LispyValue::int`.
     IntegerOutOfRange(i64),
+    /// A `jmp` / `jmp_if_false` targeted a label the function doesn't
+    /// define.
+    UnknownLabel(String),
 }
 
 impl std::fmt::Display for VmError {
@@ -118,6 +125,7 @@ impl std::fmt::Display for VmError {
                 f,
                 "integer literal {n} is outside lispy-runtime's tagged-int range [-2^60, 2^60-1]"
             ),
+            VmError::UnknownLabel(l) => write!(f, "branch to undefined label {l:?}"),
         }
     }
 }
@@ -170,6 +178,11 @@ fn run_function(func: &IIRFunction, steps: &mut u64, budget: u64) -> Result<Lisp
     let mut frame: Frame = HashMap::new();
     let mut pc: usize = 0;
 
+    // Resolve every `label NAME` to its instruction index once, so a jump
+    // is an O(1) lookup.  (`COND` lowering emits forward jumps to labels
+    // it also defines, so every target is present.)
+    let labels = label_table(func);
+
     while pc < func.instructions.len() {
         *steps += 1;
         if *steps > budget {
@@ -194,8 +207,37 @@ fn run_function(func: &IIRFunction, steps: &mut u64, budget: u64) -> Result<Lisp
                 })?;
                 return read_operand(src, &frame);
             }
-            // `label` is a no-op marker; it only matters as a jump target
-            // (which lands with L2b's control-flow support).
+            // `mov dest, src` — copy a register (used by `COND` to funnel
+            // each clause's value into one result register).
+            "mov" => {
+                let src = instr.srcs.first().ok_or_else(|| {
+                    VmError::Malformed("`mov` requires a source operand".into())
+                })?;
+                let value = read_operand(src, &frame)?;
+                bind_dest(instr, value, &mut frame)?;
+                pc += 1;
+            }
+            // `jmp LABEL` — unconditional branch.  srcs[0] = Var(label).
+            "jmp" => {
+                let label = label_operand(instr, 0)?;
+                pc = resolve_label(&labels, label)?;
+            }
+            // `jmp_if_false COND, LABEL` — branch to LABEL when COND is
+            // falsy (`#f` or `nil`); otherwise fall through.  srcs[0] =
+            // Var(cond register), srcs[1] = Var(label).
+            "jmp_if_false" => {
+                let cond_src = instr.srcs.first().ok_or_else(|| {
+                    VmError::Malformed("`jmp_if_false` requires srcs[0] (the condition)".into())
+                })?;
+                let cond = read_operand(cond_src, &frame)?;
+                let label = label_operand(instr, 1)?;
+                if cond.is_truthy() {
+                    pc += 1;
+                } else {
+                    pc = resolve_label(&labels, label)?;
+                }
+            }
+            // `label` is a no-op marker; its only role is as a jump target.
             "label" => pc += 1,
             other => return Err(VmError::UnsupportedOp(other.to_string())),
         }
@@ -283,6 +325,38 @@ fn resolve_builtin(name: &str) -> Option<BuiltinFn> {
         "equal?" => Some(builtins::equal_p),
         _ => None,
     }
+}
+
+/// Map each `label NAME` instruction to its index in the function body.
+fn label_table(func: &IIRFunction) -> HashMap<String, usize> {
+    let mut labels = HashMap::new();
+    for (i, instr) in func.instructions.iter().enumerate() {
+        if instr.op == "label" {
+            if let Some(Operand::Var(name)) = instr.srcs.first() {
+                labels.insert(name.clone(), i);
+            }
+        }
+    }
+    labels
+}
+
+/// Read the label-name operand at `idx` from a branch instruction.
+fn label_operand(instr: &IIRInstr, idx: usize) -> Result<&str, VmError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Var(name)) => Ok(name.as_str()),
+        _ => Err(VmError::Malformed(format!(
+            "`{}` requires a label name (a Var) at srcs[{idx}]",
+            instr.op
+        ))),
+    }
+}
+
+/// Resolve a label name to its instruction index.
+fn resolve_label(labels: &HashMap<String, usize>, name: &str) -> Result<usize, VmError> {
+    labels
+        .get(name)
+        .copied()
+        .ok_or_else(|| VmError::UnknownLabel(name.to_string()))
 }
 
 /// Build a tagged integer, rejecting values outside `lispy-runtime`'s
@@ -433,6 +507,92 @@ mod tests {
         };
         assert!(run(&eq("A", "A")).unwrap().is_true());
         assert!(run(&eq("A", "B")).unwrap().is_false());
+    }
+
+    // ---- control flow (L2b) ----
+
+    fn label(name: &str) -> IIRInstr {
+        IIRInstr::new("label", None, vec![Operand::Var(name.into())], "void")
+    }
+    fn jmp(target: &str) -> IIRInstr {
+        IIRInstr::new("jmp", None, vec![Operand::Var(target.into())], "void")
+    }
+    fn jmp_if_false(cond: &str, target: &str) -> IIRInstr {
+        IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.into()), Operand::Var(target.into())],
+            "void",
+        )
+    }
+    fn mov(dest: &str, src: &str) -> IIRInstr {
+        IIRInstr::new("mov", Some(dest.into()), vec![Operand::Var(src.into())], "any")
+    }
+
+    #[test]
+    fn mov_copies_a_register() {
+        let m = module(vec![konst("v0", Operand::Int(7), "i64"), mov("r", "v0"), ret("r")]);
+        assert_eq!(run(&m).unwrap().as_int(), Some(7));
+    }
+
+    #[test]
+    fn unconditional_jmp_skips_instructions() {
+        // jmp over a `mov result, wrong` to the right answer.
+        let m = module(vec![
+            konst("right", Operand::Int(1), "i64"),
+            konst("wrong", Operand::Int(2), "i64"),
+            jmp("skip"),
+            mov("result", "wrong"), // jumped over
+            label("skip"),
+            mov("result", "right"),
+            ret("result"),
+        ]);
+        assert_eq!(run(&m).unwrap().as_int(), Some(1));
+    }
+
+    #[test]
+    fn jmp_if_false_branches_on_falsy_and_falls_through_on_truthy() {
+        // A two-clause COND skeleton: if `cond` is truthy → 1, else → 2.
+        let cond_program = |cond_is_true: bool| {
+            module(vec![
+                IIRInstr::new("const", Some("c".into()), vec![Operand::Bool(cond_is_true)], "bool"),
+                jmp_if_false("c", "elsewhere"),
+                konst("t", Operand::Int(1), "i64"),
+                mov("result", "t"),
+                jmp("end"),
+                label("elsewhere"),
+                konst("e", Operand::Int(2), "i64"),
+                mov("result", "e"),
+                label("end"),
+                ret("result"),
+            ])
+        };
+        assert_eq!(run(&cond_program(true)).unwrap().as_int(), Some(1));
+        assert_eq!(run(&cond_program(false)).unwrap().as_int(), Some(2));
+    }
+
+    #[test]
+    fn nil_is_falsy_for_jmp_if_false() {
+        // nil branches (it is falsy), so this lands on the else value.
+        let m = module(vec![
+            konst("c", Operand::Int(0), "ref<LispyPair>"), // nil
+            jmp_if_false("c", "els"),
+            konst("t", Operand::Int(1), "i64"),
+            mov("result", "t"),
+            jmp("end"),
+            label("els"),
+            konst("e", Operand::Int(2), "i64"),
+            mov("result", "e"),
+            label("end"),
+            ret("result"),
+        ]);
+        assert_eq!(run(&m).unwrap().as_int(), Some(2));
+    }
+
+    #[test]
+    fn jump_to_undefined_label_errors() {
+        let m = module(vec![jmp("nowhere")]);
+        assert!(matches!(run(&m), Err(VmError::UnknownLabel(_))));
     }
 
     // ---- error paths ----

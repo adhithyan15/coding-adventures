@@ -1,6 +1,6 @@
 # McCarthy Lisp on the LANG VM chain — plan
 
-**Status:** Active.  **L1 complete and grammar-driven as of 2026-06-03** (the lexer/parser were initially merged hand-written in #4967 and then rewritten to wrap the shared `GrammarLexer`/`GrammarParser` — see the "L1 divergence" note below).  **L2 in progress** — decomposed into L2a/L2b/L2c (see the L2 note below); L2a (literals + `QUOTE` + `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`) lands first.  Confirmed decisions: **Lisp 1.0** (1960 paper), **IBM 704** as historical arch target, **no-CONS at runtime** on the historical-arch backends in v0.1.0.  Crate naming follows the existing `*-lexer` / `*-parser` / `*-iir-compiler` pattern.
+**Status:** Active.  **L1 complete and grammar-driven as of 2026-06-03** (the lexer/parser were initially merged hand-written in #4967 and then rewritten to wrap the shared `GrammarLexer`/`GrammarParser` — see the "L1 divergence" note below).  **L2 in progress** — decomposed into L2a/L2b/L2c (see the L2 note below).  **L2a ✓** (literals + `QUOTE` + `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`, run on the new `mccarthy-lisp-vm`) and **L2b ✓** (`COND`) are merged; **L2c** (`LAMBDA`/`LABEL`/user calls) is next.  Confirmed decisions: **Lisp 1.0** (1960 paper), **IBM 704** as historical arch target, **no-CONS at runtime** on the historical-arch backends in v0.1.0.  Crate naming follows the existing `*-lexer` / `*-parser` / `*-iir-compiler` pattern.
 **Predecessors:** [`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md), [`MULTILANG-ARCHITECTURE-BACKENDS.md`](MULTILANG-ARCHITECTURE-BACKENDS.md).
 
 ## Goal
@@ -217,8 +217,8 @@ Same single-PR-per-phase cadence the historical-arch migration used.
 | Phase | Scope |
 |-------|-------|
 | **L1** ✓ | `mccarthy-lisp-lexer` + `mccarthy-lisp-parser` — **grammar-driven** (wrap `GrammarLexer`/`GrammarParser`; grammar in `code/grammars/mccarthy_lisp.tokens`+`.grammar`).  Tests pin S-expression round-trips + dialect errors.  *Done; rewritten from the hand-written #4967 merge — see L1 divergence note.* |
-| **L2a** | `mccarthy-lisp-iir-compiler` v0.1.0 + **`mccarthy-lisp-vm` v0.1.0** — literals + `QUOTE` + `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`.  Compiles `(CAR '(A B C))` → `A`, `(CDR '(A B C))` → `(B C)`, `(CONS 'A 'B)` → `(A . B)`, etc., end-to-end on McCarthy Lisp's **own `lispy-runtime`-backed VM** (`vm-core` is scalar-only; `twig-vm` is Twig-specific — see the execution-VM correction). |
-| **L2b** | `COND` — chained `jmp_if_false` + labels. |
+| **L2a** ✓ | `mccarthy-lisp-iir-compiler` + **`mccarthy-lisp-vm`** — literals + `QUOTE` + `CONS`/`CAR`/`CDR`/`ATOM`/`EQ`.  Compiles `(CAR '(A B C))` → `A`, `(CDR '(A B C))` → `(B C)`, `(CONS 'A 'B)` → `(A . B)`, etc., end-to-end on McCarthy Lisp's **own `lispy-runtime`-backed VM** (`vm-core` is scalar-only; `twig-vm` is Twig-specific — see the execution-VM correction). |
+| **L2b** ✓ | `COND` — compiler lowers to chained `jmp_if_false` + `label`s (+ `mov` to funnel clause values); VM gains `jmp`/`jmp_if_false`/`mov`.  `(COND ((ATOM 'X) 'A) ('T 'B))` → `A`; no-match → `nil`. |
 | **L2c** | `LAMBDA` / `LABEL` / user-defined function application. |
 | **L3** | Wire `mccarthy-lisp` into `lang-aot` as a new `Language` variant.  All 10 existing backends light up automatically (CARSON the migration architecture). |
 | **L4** | `ibm704-encoder` + `ibm704-backend` v0.1.0 (minimal viable: `const_*` + `ret_*`, just like the Phase 5/6 minimal-viable backends). |
