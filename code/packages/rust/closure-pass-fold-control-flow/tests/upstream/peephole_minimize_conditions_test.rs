@@ -34,7 +34,7 @@ use coding_adventures_correlation_vector::CVLog;
 use coding_adventures_javascript_ast::{
     statement::TaggedStatement, BooleanLiteral, EmptyStatement, Expression, ExpressionStatement,
     Identifier, IfStatement, NullLiteral, NumericLiteral, Program, ProgramItem, SourceType,
-    Statement, StringLiteral,
+    Statement, StringLiteral, UnaryExpression, UnaryOperator,
 };
 use coding_adventures_javascript_tokens::EsVersion;
 use coding_adventures_type_sidecar::Sidecar;
@@ -392,13 +392,59 @@ fn test_if_non_literal_test_left_alone() {
 ///   fold("if (!a) { foo() } else { bar() }",
 ///        "if (a) { bar() } else { foo() }");
 ///
-/// De Morgan rewrites — pushing negation through the test and
-/// swapping branches — are not implemented.
+/// **gap-018 closed in CLOC12.25**: `fold_if_statement` now strips
+/// a top-level `!` from the test and swaps consequent/alternate when
+/// an alternate is present. The mirrored ternary case is in
+/// `fold_conditional`. Both rules require that the operand is moved
+/// (not cloned) — no second runtime evaluation of `<inner>` is
+/// introduced.
 #[test]
-#[ignore = "blocked on gap-018: De Morgan / negation-swap rewrites not implemented"]
 fn test_fold_conditional_de_morgan() {
-    // Would assert `if (!x) foo(); else bar();` becomes
-    // `if (x) bar(); else foo();`.
+    use coding_adventures_javascript_ast::{BlockStatement, CallExpression};
+    let call = |name: &str| {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    };
+    let block = |s: Statement| {
+        Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![s],
+        })
+    };
+
+    // Upstream literal-form: `if (!a) { foo() } else { bar() }` →
+    // `if (a) { bar() } else { foo() }`. Our AST builder makes the
+    // input slightly more granular; the semantic check is the same.
+    let not_a = Expression::UnaryExpression(UnaryExpression {
+        cv: None,
+        operator: UnaryOperator::Not,
+        argument: Box::new(ident("a")),
+        prefix: true,
+    });
+    let inp = if_stmt(
+        not_a,
+        block(expr_stmt(call("foo"))),
+        Some(block(expr_stmt(call("bar")))),
+    );
+    // After the swap, gap-017 ternary fires on the now-single-expr
+    // arms, so the final shape is `a ? bar() : foo();` —
+    // observationally equivalent to upstream's
+    // `if (a) { bar() } else { foo() }`.
+    let expected = Statement::expression_statement(ExpressionStatement {
+        cv: None,
+        expression: Expression::ConditionalExpression(
+            coding_adventures_javascript_ast::ConditionalExpression {
+                cv: None,
+                test: Box::new(ident("a")),
+                consequent: Box::new(call("bar")),
+                alternate: Box::new(call("foo")),
+            },
+        ),
+    });
+    assert_fold(inp, expected);
 }
 
 /// Upstream `testFoldReturns`:

@@ -2,6 +2,57 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.6.0] - 2026-06-04
+
+### Added — CLOC12.25: gap-018 De Morgan negation-swap
+
+Closes `gap-018` from the CLOC12 gap tracker. Both `fold_if_statement`
+and `fold_conditional` now strip a top-level `!` from the test and
+swap consequent ↔ alternate when both branches exist:
+
+```
+if (!x) C; else A;     →   if (x) A; else C;
+!x ? C : A             →   x ? A : C
+```
+
+Composes with previously-shipped folds in the same pass:
+
+* gap-017 ternary: `if (!a) { foo() } else { bar() }` → (gap-018)
+  `if (a) { bar() } else { foo() }` → (gap-017) `a ? bar() : foo();`.
+* Literal-truthy: `if (!true) C; else A;` → (gap-018) `if (false) A; else C;`
+  → (literal_truthy) `C;`. The swap runs BEFORE literal_truthy so
+  the literal case is picked up in the same iteration.
+
+### Why this is safe
+
+`!x` and `x` make the same single `ToBoolean(x)` decision, just
+flipped bit-wise. After the rewrite, the swapped branches produce
+observationally identical control flow. The unary's argument is
+*moved* (not cloned) into the new test position — no second runtime
+evaluation of the operand is introduced. No side-effect reordering:
+`x` evaluates before branch selection in both forms.
+
+### Why the IfStatement case requires `alternate.is_some()`
+
+Without an alternate the rewrite would have to synthesise an empty
+branch (`if (x) ; else C;`), adding an EmptyStatement node — wrong
+shape for minification. The gap-016 (CLOC12.24) `!x && C;` rewrite
+already handles the no-alternate case better, and runs in the same
+pass.
+
+### Tests
+
+* `tests/upstream/peephole_minimize_conditions_test.rs::test_fold_conditional_de_morgan`
+  un-ignored — input `if (!a) { foo() } else { bar() }` folds through
+  gap-018 + gap-017 to `a ? bar() : foo();`.
+* Upstream test count: 11 → 12.
+* Inline test count: 20 → 20 (unchanged).
+* closurec e2e (`diff_minify`): unaffected (no fixture uses `!` in
+  if/ternary tests).
+* closure-pass-pipeline: 21 passed, 0 failed.
+
+No public API change. No AST change.
+
 ## [0.5.0] - 2026-06-04
 
 ### Added — CLOC12.24: gap-016 `if (x) S` → `x && S` rewrite
