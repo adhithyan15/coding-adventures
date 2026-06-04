@@ -6631,6 +6631,58 @@ pub fn s_parameters_corners(
     })
 }
 
+pub fn s_parameters_corners_parallel(
+    circuit: &Circuit,
+    port1_source: &str,
+    port2_source: &str,
+    frequencies_hz: &[f64],
+    reference_impedance_ohms: f64,
+    corners: &[CornerSpec],
+) -> Result<CornerSParameterResult, SpiceError> {
+    let points = thread::scope(|scope| {
+        let handles = corners
+            .iter()
+            .cloned()
+            .map(|corner| {
+                let circuit = circuit.clone();
+                let port1_source = port1_source.to_string();
+                let port2_source = port2_source.to_string();
+                let frequencies_hz = frequencies_hz.to_vec();
+                scope.spawn(move || -> Result<CornerSParameterPoint, SpiceError> {
+                    let corner_circuit = circuit_with_corner(&circuit, &corner)?;
+                    Ok(CornerSParameterPoint {
+                        corner_name: corner.name,
+                        result: s_parameters(
+                            &corner_circuit,
+                            &port1_source,
+                            &port2_source,
+                            &frequencies_hz,
+                            reference_impedance_ohms,
+                        )?,
+                    })
+                })
+            })
+            .collect::<Vec<_>>();
+
+        let mut points = Vec::with_capacity(handles.len());
+        for handle in handles {
+            let point = handle.join().map_err(|_| SpiceError::InvalidElement {
+                name: "s_parameters_corners_parallel".to_string(),
+                reason: "parallel S-parameter corner worker panicked".to_string(),
+            })??;
+            points.push(point);
+        }
+        Ok(points)
+    })?;
+
+    Ok(CornerSParameterResult {
+        port1_source: port1_source.to_string(),
+        port2_source: port2_source.to_string(),
+        reference_impedance_ohms,
+        points,
+    })
+}
+
 fn validate_sparameter_ports(circuit: &Circuit, ports: &[&str; 2]) -> Result<(), SpiceError> {
     for port in ports {
         let found = circuit.elements().iter().any(

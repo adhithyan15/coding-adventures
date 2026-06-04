@@ -419,6 +419,9 @@ Status:
 - AC noise named-corner runs can now be evaluated with an order-preserving
   parallel helper in the live Rust SPICE package, preserving total output PSD,
   input-referred PSD, and per-source contribution ordering.
+- S-parameter named-corner runs can now be evaluated with an order-preserving
+  parallel helper in the live Rust SPICE package, preserving two-port
+  frequency rows and S11/S21/S12/S22 ordering.
 - Selected `.options` keys are wired into engine-call helpers across Python,
   TypeScript, and Rust, covering DC solver tolerances/iteration limits and
   transient method/adaptive-step options.
