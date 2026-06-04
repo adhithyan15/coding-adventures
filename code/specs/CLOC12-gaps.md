@@ -167,11 +167,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-022 — Array/object trailing-comma policy not modelled
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.32. **What the gap actually needed**: a focused port file demonstrating that our emitter never emits a trailing comma before `]` or `}` in either compact or pretty mode. Upstream's `assertPrettyPrint("var x = [1,];", "var x = [1];\n")` family relies on the parse step stripping the trailing comma (it's purely syntactic in ES2017, NOT an elision) and the emitter simply never writing one. Our `ArrayExpression.elements: Vec<Option<Expression>>` doesn't preserve trailing-comma input — a parsed `[1,]` collapses to `[Some(1)]`, identical to `[1]`. So the `trailing_comma: bool` AST flag the original gap entry asked for is unnecessary; the output-side invariant is what matters, and the emitter already obeys it. 16 hand-built ports in `closure-emitter/tests/upstream/code_printer_trailing_comma_test.rs` pin the array/object/nested cases in both compact and pretty modes, plus the "elision is NOT a trailing comma" edge case.
 - **Upstream test:** `CodePrinterTest::testTrailingCommaInArrayAndObjectWithPrettyPrint` and ~6 sibling tests
-- **Ported file:** `closure-emitter/tests/upstream/code_printer_test.rs`
-- **Why it fails:** Our emitter doesn't model whether trailing commas are present in `[1,]` / `{a:1,}` — there's no `trailing_comma: bool` flag on the relevant AST nodes, and the emitter doesn't insert / preserve them.
-- **What it needs:** AST flag + emitter rule + (optional) pretty-print toggle.
+- **Ported file:** `closure-emitter/tests/upstream/code_printer_trailing_comma_test.rs` (new home); placeholder in `closure-emitter/tests/upstream/code_printer_test.rs` re-annotated to point at the new file.
 
 ### gap-023 — `VariableDeclaration` round-trip ports deferred
 

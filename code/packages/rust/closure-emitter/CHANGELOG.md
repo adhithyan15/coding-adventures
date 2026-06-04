@@ -2,6 +2,18 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [Unreleased] — CLOC12.32: trailing-comma ports (gap-022)
+
+Test-only. Closes `gap-022`.
+
+* New port file `tests/upstream/code_printer_trailing_comma_test.rs` — 16 hand-built tests pinning that the emitter never emits a trailing comma before `]` or `}`, covering empty / single / multi / nested arrays and objects in **both** compact and pretty modes, plus the elision-isn't-a-trailing-comma edge case.
+* Re-annotated the old gap-022 placeholder in `tests/upstream/code_printer_test.rs::test_trailing_comma_in_array_and_object_with_pretty_print` to route to the new home.
+* Added the `[[test]]` entry in `Cargo.toml` (Cargo only auto-discovers `tests/*.rs` one level deep).
+
+The original gap entry asked for a `trailing_comma: bool` AST flag and an emitter rule. Reviewing the upstream test family showed the flag is unnecessary: upstream's `assertPrettyPrint("var x = [1,];", "var x = [1];\n")` relies on parse-side trailing-comma stripping (it's purely syntactic in ES2017, not an elision) and emitter-side never-write. Our AST already collapses `[1,]` to `[Some(1)]` (identical to `[1]`) at parse time, and the emitter loop only writes `,` between elements. Spec gap-022 → RESOLVED with that note.
+
+No source-incompatible change. No production code touched.
+
 ## [0.10.0] - 2026-06-01
 
 ### Added — CLOC12.16: emit `UndefinedLiteral` as `void 0` (gap-001)

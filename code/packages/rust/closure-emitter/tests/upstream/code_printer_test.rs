@@ -114,12 +114,17 @@ fn test_big_int() {
 ///   assertPrettyPrint("var x = [1,];", "var x = [1];\n");
 ///   ...
 ///
-/// Pretty-print + array/object trailing-comma policy. Our emitter
-/// doesn't model trailing commas explicitly yet.
+/// **gap-022 routed in CLOC12.32** — the trailing-comma-focused
+/// port file landed at
+/// `closure-emitter/tests/upstream/code_printer_trailing_comma_test.rs`.
+/// Both array and object cases live there, in compact and pretty
+/// modes. See that file's module doc for the full reasoning on
+/// why our AST doesn't need a `trailing_comma: bool` flag to
+/// pass this upstream test family.
 #[test]
-#[ignore = "blocked on gap-022: array/object trailing-comma policy not modelled"]
+#[ignore = "routed in CLOC12.32 to code_printer_trailing_comma_test.rs (gap-022)"]
 fn test_trailing_comma_in_array_and_object_with_pretty_print() {
-    // ArrayExpression / ObjectExpression trailing-comma cases.
+    // Routed. See doc comment above for the new home.
 }
 
 /// Upstream `testNoTrailingCommaInEmptyArrayLiteral`:
