@@ -1,0 +1,14 @@
+[
+  {"id":"f0","finding":"prior","state":"base_rate","desc":"pretest prevalence of PE among ED/outpatients formally worked up for SUSPECTED PE (the base rate before any test)","lr_type":"prevalence"},
+  {"id":"f1","finding":"d_dimer","state":"elevated","desc":"D-dimer above the assay cutoff (highly sensitive quantitative ELISA)","lr_type":"LR+"},
+  {"id":"f2","finding":"d_dimer","state":"normal","desc":"D-dimer below the assay cutoff","lr_type":"LR-"},
+  {"id":"f3","finding":"clinical_signs_of_dvt","state":"present","desc":"objective clinical signs/symptoms of DVT (leg swelling + pain on palpation of deep veins) — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f4","finding":"pe_is_leading_diagnosis","state":"present","desc":"PE judged as likely as or more likely than any alternative diagnosis — the Wells gestalt criterion","lr_type":"OR_or_LR"},
+  {"id":"f5","finding":"heart_rate","state":"over_100","desc":"tachycardia, heart rate > 100/min — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f6","finding":"recent_immobilization_or_surgery","state":"present","desc":"immobilization >=3 days or surgery in the previous 4 weeks — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f7","finding":"previous_vte","state":"present","desc":"previously objectively diagnosed DVT or PE — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f8","finding":"hemoptysis","state":"present","desc":"hemoptysis — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f9","finding":"active_malignancy","state":"present","desc":"malignancy on treatment, treated within 6 months, or palliative — a Wells criterion","lr_type":"OR_or_LR"},
+  {"id":"f10","finding":"ctpa","state":"filling_defect_positive","desc":"CT pulmonary angiography showing an intraluminal filling defect (the confirmatory test)","lr_type":"LR+"},
+  {"id":"f11","finding":"ctpa","state":"negative","desc":"CT pulmonary angiography negative for PE on an adequate study","lr_type":"LR-"}
+]

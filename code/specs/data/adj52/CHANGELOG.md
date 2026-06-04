@@ -2,6 +2,34 @@
 
 All notable changes to the ADJ52 experiment runner.
 
+## [0.3.0] — 2026-06-04
+
+### Added
+
+- **ADJ55 — provenance-first corpus construction (MYCIN-2026).** The byte-provenance
+  invariant — *every magnitude must point at a datum* — built into a forward
+  corpus-construction pipeline, proven end-to-end on pulmonary embolism.
+  - **`provenance/` — the byte-provenance method.** A recursive crawler ("spider")
+    that, per quantitative claim, follows citations to primary data and grades the
+    magnitude `grounded` / `direction_only` / `fabricated`. Backward audit
+    (`provenance/spider.workflow.js`) on case-5 urology: **0/19 grounded**, the
+    decisive clause `fabricated`. Forward construction
+    (`provenance/pe/ground.workflow.js`) on PE: **12/12 grounded** to PIOPED II /
+    Christopher / D-dimer meta-analyses.
+  - **`corpus/` — the grounded knowledge base (the product).** Canonical
+    `corpus/pulmonary_embolism/corpus.json`: every LR carries a byte-anchored
+    provenance chain; ungroundable links are explicit data-gaps. `build_corpus.py`
+    assembles it; `eval_case.py` runs a deterministic sequential Bayesian update where
+    every multiplier prints its source.
+  - **End-to-end proof (PMC11999957, Wells-0 patient who had PE):** grounded corpus →
+    0.28 pretest → 0.89 after CTPA (correct, fully auditable); ungrounded invent-LRs
+    deriver → 0.01 "excluded" (missed a real PE). Byte provenance is the variable that
+    flips it. See [ADJ55](../../ADJ55-provenance-first-corpus.md).
+  - **`provenance/` (case-5 tree experiment):** a tree-JSON rulebook + direct evaluator
+    (`build_tree.py` / `eval_tree.py`) reproducing the engine exactly, with
+    `grounded_only` mode dissolving case-5's confident-wrong 0.99 to a base-rate
+    differential once fabricated LRs are stripped.
+
 ## [0.2.0] — 2026-06-03
 
 ### Added
