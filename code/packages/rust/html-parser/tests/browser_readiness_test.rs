@@ -1,16 +1,16 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
-    BrowserDatalistOption, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
-    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
-    BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint,
-    BrowserScript, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
+    BrowserEmbeddedContext, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
+    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
+    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
+    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -70,6 +70,8 @@ struct ExpectedBrowserDocument {
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
     #[serde(default)]
     interactive_elements: Vec<ExpectedInteractiveElement>,
+    #[serde(default)]
+    disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -713,6 +715,35 @@ struct ExpectedInteractiveElement {
     command_for: Option<String>,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDisclosure {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    summary_text: Option<String>,
+    #[serde(default)]
+    open: bool,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_modal: Option<String>,
+    #[serde(default)]
+    closedby: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2555,6 +2586,26 @@ fn browser_aria_state_relation_metadata_tracks_composite_and_live_states() {
 }
 
 #[test]
+fn browser_disclosure_descriptor_metadata_tracks_details_and_dialogs() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.disclosures,
+        case.expected.into_browser_document().disclosures,
+        "disclosure summaries should preserve details summary text and dialog naming metadata",
+    );
+}
+
+#[test]
 fn browser_navigation_attribution_metadata_tracks_links_areas_and_form_targets() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -2680,6 +2731,11 @@ impl ExpectedBrowserDocument {
                 .interactive_elements
                 .into_iter()
                 .map(ExpectedInteractiveElement::into_browser_interactive_element)
+                .collect(),
+            disclosures: self
+                .disclosures
+                .into_iter()
+                .map(ExpectedDisclosure::into_browser_disclosure)
                 .collect(),
             component_hydration_targets: self
                 .component_hydration_targets
@@ -3242,6 +3298,26 @@ impl ExpectedInteractiveElement {
             command: self.command,
             command_for: self.command_for,
             disabled: self.disabled,
+        }
+    }
+}
+
+impl ExpectedDisclosure {
+    fn into_browser_disclosure(self) -> BrowserDisclosure {
+        BrowserDisclosure {
+            element: self.element,
+            id: self.id,
+            name: self.name,
+            text: self.text,
+            summary_text: self.summary_text,
+            open: self.open,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_modal: self.aria_modal,
+            closedby: self.closedby,
         }
     }
 }
