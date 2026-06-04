@@ -731,6 +731,10 @@
         "headings": [
           { "level": 2, "text": "Widget Pro" }
         ],
+        "text_semantics": [
+          { "element": "data", "role": "data", "text": "Widget SKU", "data_value": "WID-001" },
+          { "element": "time", "role": "time", "text": "today", "datetime": "2026-05-25" }
+        ],
         "links": [
           { "href": "../products/widget", "resolved_href": "https://example.test/products/widget", "name": null, "target": null, "rel": null, "title": null, "text": "Product page" }
         ],
@@ -785,6 +789,55 @@
         "resources": [],
         "anchors": [],
         "headings": [],
+        "text_semantics": [
+          { "element": "blockquote", "role": "quote_block", "text": "Quote part", "quote_cite": "notes/ref.html", "resolved_quote_cite": "https://example.test/docs/notes/ref.html" },
+          { "element": "q", "role": "quote", "text": "part", "quote_cite": "#part", "resolved_quote_cite": "https://example.test/docs/page.html#part" }
+        ],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "inline-semantic-metadata-page",
+      "description": "Browser document summaries expose machine-readable text, edit annotations, inline quotes, ruby annotations, and bidi overrides as a flat text semantic inventory.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Version <data id=version value=\"2.1\">two point one</data> shipped <time id=date datetime=\"2026-05-25\">today</time>. <q id=quote cite=notes/ref.html>quoted</q> <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> <mark id=highlight>Important</mark></p><ruby id=term><rb>kanji</rb><rt>kan</rt><rp>(</rp><rtc><rt>group</rt></rtc></ruby> then <bdi id=name dir=auto lang=ja>Name</bdi> and <bdo id=rtl dir=rtl>abc</bdo>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/docs/page.html",
+        "base_target": null,
+        "body_text": "Version two point one shipped today. quoted Added Removed Important kanji kan ( group then Name and abc",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "version", "name": null, "text": "two point one" },
+          { "id": "date", "name": null, "text": "today" },
+          { "id": "quote", "name": null, "text": "quoted" },
+          { "id": "add", "name": null, "text": "Added" },
+          { "id": "remove", "name": null, "text": "Removed" },
+          { "id": "highlight", "name": null, "text": "Important" },
+          { "id": "term", "name": null, "text": "kanji kan ( group" },
+          { "id": "name", "name": null, "text": "Name" },
+          { "id": "rtl", "name": null, "text": "abc" }
+        ],
+        "headings": [],
+        "text_semantics": [
+          { "element": "data", "id": "version", "role": "data", "text": "two point one", "data_value": "2.1" },
+          { "element": "time", "id": "date", "role": "time", "text": "today", "datetime": "2026-05-25" },
+          { "element": "q", "id": "quote", "role": "quote", "text": "quoted", "quote_cite": "notes/ref.html", "resolved_quote_cite": "https://example.test/docs/notes/ref.html" },
+          { "element": "ins", "id": "add", "role": "inserted", "text": "Added", "edit_cite": "changes.html", "resolved_edit_cite": "https://example.test/docs/changes.html", "edit_datetime": "2026-05-25T06:00:00Z" },
+          { "element": "del", "id": "remove", "role": "deleted", "text": "Removed", "edit_cite": "#old", "resolved_edit_cite": "https://example.test/docs/page.html#old", "edit_datetime": "2026-05-24" },
+          { "element": "mark", "id": "highlight", "role": "mark", "text": "Important" },
+          { "element": "ruby", "id": "term", "role": "ruby", "text": "kanji kan ( group", "ruby_kind": "ruby" },
+          { "element": "rb", "role": "ruby_base", "text": "kanji", "ruby_kind": "base" },
+          { "element": "rt", "role": "ruby_text", "text": "kan", "ruby_kind": "text" },
+          { "element": "rp", "role": "ruby_fallback", "text": "(", "ruby_kind": "fallback" },
+          { "element": "rtc", "role": "ruby_text_container", "text": "group", "ruby_kind": "text_container" },
+          { "element": "rt", "role": "ruby_text", "text": "group", "ruby_kind": "text" },
+          { "element": "bdi", "id": "name", "role": "bidi_isolate", "text": "Name", "lang": "ja", "dir": "auto", "bidi_kind": "isolate" },
+          { "element": "bdo", "id": "rtl", "role": "bidi_override", "text": "abc", "dir": "rtl", "bidi_kind": "override" }
+        ],
         "links": [],
         "images": [],
         "forms": [],

@@ -11,7 +11,7 @@ use coding_adventures_html_parser::{
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
     BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
     BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserTable, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -63,6 +63,8 @@ struct ExpectedBrowserDocument {
     stylesheets: Vec<ExpectedStylesheet>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
+    #[serde(default)]
+    text_semantics: Vec<ExpectedTextSemantic>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -430,6 +432,37 @@ struct ExpectedAnchor {
 struct ExpectedHeading {
     level: u8,
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedTextSemantic {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    lang: Option<String>,
+    #[serde(default)]
+    dir: Option<String>,
+    #[serde(default)]
+    quote_cite: Option<String>,
+    #[serde(default)]
+    resolved_quote_cite: Option<String>,
+    #[serde(default)]
+    data_value: Option<String>,
+    #[serde(default)]
+    datetime: Option<String>,
+    #[serde(default)]
+    edit_cite: Option<String>,
+    #[serde(default)]
+    resolved_edit_cite: Option<String>,
+    #[serde(default)]
+    edit_datetime: Option<String>,
+    #[serde(default)]
+    ruby_kind: Option<String>,
+    #[serde(default)]
+    bidi_kind: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1648,6 +1681,26 @@ fn browser_image_map_descriptor_metadata_tracks_area_navigation() {
 }
 
 #[test]
+fn browser_text_semantic_descriptor_metadata_tracks_inline_annotations() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "inline-semantic-metadata-page")
+        .expect("inline semantic fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("inline semantic fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.text_semantics, expected.text_semantics,
+        "text semantics should preserve machine-readable values, edits, quotes, ruby annotations, and bidi metadata",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -2786,6 +2839,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedHeading::into_browser_heading)
                 .collect(),
+            text_semantics: self
+                .text_semantics
+                .into_iter()
+                .map(ExpectedTextSemantic::into_browser_text_semantic)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3170,6 +3228,28 @@ impl ExpectedHeading {
         BrowserHeading {
             level: self.level,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedTextSemantic {
+    fn into_browser_text_semantic(self) -> BrowserTextSemantic {
+        BrowserTextSemantic {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            lang: self.lang,
+            dir: self.dir,
+            quote_cite: self.quote_cite,
+            resolved_quote_cite: self.resolved_quote_cite,
+            data_value: self.data_value,
+            datetime: self.datetime,
+            edit_cite: self.edit_cite,
+            resolved_edit_cite: self.resolved_edit_cite,
+            edit_datetime: self.edit_datetime,
+            ruby_kind: self.ruby_kind,
+            bidi_kind: self.bidi_kind,
         }
     }
 }
