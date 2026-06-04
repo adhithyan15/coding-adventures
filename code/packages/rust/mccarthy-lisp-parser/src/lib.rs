@@ -130,6 +130,40 @@ impl fmt::Display for LispExpr {
     }
 }
 
+/// Iterative destructor — drops the tree without recursing.
+///
+/// The default (compiler-generated) `Drop` for a recursive boxed enum
+/// unwinds one stack frame per `Cons` cell.  A *flat* list `(A A … A)`
+/// of N elements is only paren-depth 1 (so it slips past the parser's
+/// `MAX_PAREN_DEPTH` guard) yet is N cons cells long, so default-dropping
+/// it would recurse N native frames deep and overflow the stack — a
+/// cheap single-line DoS on any consumer that builds and drops such an
+/// AST (including [`parse`] itself).
+///
+/// We instead dismantle the tree iteratively: replace each `Cons`'s
+/// children with `Nil`, pushing the real children onto a heap-allocated
+/// work stack, and let each detached node drop trivially (its remaining
+/// children are `Nil`).  Stack usage is O(1); the work list lives on the
+/// heap.
+impl Drop for LispExpr {
+    fn drop(&mut self) {
+        // Only `Cons` owns heap children worth dismantling.
+        let mut stack: Vec<LispExpr> = Vec::new();
+        if let LispExpr::Cons(car, cdr) = self {
+            stack.push(std::mem::replace(car.as_mut(), LispExpr::Nil));
+            stack.push(std::mem::replace(cdr.as_mut(), LispExpr::Nil));
+        }
+        while let Some(mut node) = stack.pop() {
+            if let LispExpr::Cons(car, cdr) = &mut node {
+                stack.push(std::mem::replace(car.as_mut(), LispExpr::Nil));
+                stack.push(std::mem::replace(cdr.as_mut(), LispExpr::Nil));
+            }
+            // `node` is now a leaf or a `Cons(Nil, Nil)`; dropping it here
+            // recurses at most one level (into two `Nil`s) — never deep.
+        }
+    }
+}
+
 // ===========================================================================
 // Errors
 // ===========================================================================

@@ -236,9 +236,14 @@ impl Compiler {
 
         let name = match head {
             LispExpr::Symbol(s) => s.as_str(),
+            // Describe the head by *kind*, never via `Display` — a quoted
+            // head like `('(A A …) …)` could be an arbitrarily large
+            // structure, and `LispExpr`'s `Display` recurses on the
+            // cdr-spine (a huge flat list would overflow formatting it).
             other => {
                 return Err(CompileError::new(format!(
-                    "the head of a call must be a primitive symbol in L2a, got `{other}`"
+                    "the head of a call must be a primitive symbol in L2a, got a {}",
+                    kind_of(other)
                 )))
             }
         };
@@ -301,17 +306,37 @@ impl Compiler {
     /// Materialise a quoted datum as runtime values.  Unlike
     /// [`lower_expr`], a `Symbol` here is *data* (a symbol literal), not
     /// a variable reference, and a `Cons` is a literal pair, not a call.
+    ///
+    /// The **cdr-spine is walked iteratively**, not recursively: a flat
+    /// quoted list `'(A A … A)` of N elements has paren-depth 1, so it
+    /// sails past the parser's nesting cap (which bounds *depth*, not
+    /// list *length*) — a recursive `cdr` walk would then recurse N
+    /// native frames deep and overflow the stack on large N (a cheap
+    /// single-line DoS).  We instead collect the spine's `car`s in a
+    /// loop, lower the final tail, then fold the `cons` cells from the
+    /// tail back.  `car` positions still recurse, but each nested list
+    /// there requires a paren and so is bounded by the parser's
+    /// `MAX_PAREN_DEPTH`.
     fn lower_quote(&mut self, datum: &LispExpr) -> Result<String, CompileError> {
-        match datum {
-            LispExpr::Int(n) => Ok(self.emit_int(*n)),
-            LispExpr::Nil => Ok(self.emit_nil()),
-            LispExpr::Symbol(s) => Ok(self.emit_symbol(s)),
-            LispExpr::Cons(car, cdr) => {
-                let vcar = self.lower_quote(car)?;
-                let vcdr = self.lower_quote(cdr)?;
-                Ok(self.emit_builtin("cons", &[vcar, vcdr], REF_PAIR))
+        let mut cars: Vec<String> = Vec::new();
+        let mut cur = datum;
+        let tail = loop {
+            match cur {
+                LispExpr::Cons(car, cdr) => {
+                    cars.push(self.lower_quote(car)?); // car-nesting bounded by paren depth
+                    cur = cdr.as_ref();
+                }
+                LispExpr::Int(n) => break self.emit_int(*n),
+                LispExpr::Nil => break self.emit_nil(),
+                LispExpr::Symbol(s) => break self.emit_symbol(s),
             }
+        };
+        // Fold: cons(car_0, cons(car_1, … cons(car_{k-1}, tail))).
+        let mut acc = tail;
+        for car in cars.into_iter().rev() {
+            acc = self.emit_builtin("cons", &[car, acc], REF_PAIR);
         }
+        Ok(acc)
     }
 
     // -----------------------------------------------------------------------
@@ -366,6 +391,17 @@ impl Compiler {
 // ===========================================================================
 // AST helpers
 // ===========================================================================
+
+/// A short, allocation-free description of an expression's *kind*, for
+/// error messages — never recurses into the structure (unlike `Display`).
+fn kind_of(expr: &LispExpr) -> &'static str {
+    match expr {
+        LispExpr::Nil => "empty list",
+        LispExpr::Symbol(_) => "symbol",
+        LispExpr::Int(_) => "integer",
+        LispExpr::Cons(..) => "list",
+    }
+}
 
 /// Flatten a proper list (`Cons` chain terminated by `Nil`) into its
 /// elements.  Returns `None` if the chain is improper (ends in a dotted
@@ -541,5 +577,24 @@ mod tests {
     #[test]
     fn lexer_parse_errors_propagate() {
         assert!(compile_source("car", "t").is_err()); // lowercase → parse error
+    }
+
+    #[test]
+    fn huge_flat_quoted_list_does_not_overflow() {
+        // Regression: a flat quoted list has paren-depth 1, so it bypasses
+        // the parser's nesting cap. The cdr-spine walk must be iterative,
+        // or N tens-of-thousands recurses the stack to death. 50k elements
+        // is well past the overflow point of a recursive walk.
+        let n = 50_000;
+        let mut src = String::with_capacity(2 * n + 4);
+        src.push('\'');
+        src.push('(');
+        for _ in 0..n {
+            src.push_str("A ");
+        }
+        src.push(')');
+        let m = compile_source(&src, "t").expect("should compile without overflow");
+        // n cons cells + n symbol consts + 1 nil const + 1 ret.
+        assert_eq!(m.functions[0].instructions.len(), 2 * n + 2);
     }
 }
