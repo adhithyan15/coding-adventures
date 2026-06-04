@@ -164,8 +164,21 @@
       ],
       selectedRow: 1,
       selectedCol: 1,
-      editRow:    -1,
-      editCol:    -1,
+      // No edit-row / edit-col set on initial mount: the per-cell
+      // editing predicate is `r == editRow && c == editCol`.  The
+      // WC emitter's default initializer for Number-typed slots
+      // (PR #4999) reads an absent attribute as `NaN`, and `NaN`'s
+      // `==` is always `false` — so no cell renders the input
+      // editor on initial paint.  To enter edit mode, the host
+      // calls `grid.setAttribute("edit-row", String(r))` etc.;
+      // until then the editor stays hidden everywhere.
+      //
+      // Before #4999 this demo had to set `edit-row="-1"` as a
+      // sentinel because the emitter defaulted Number slots to
+      // `""`, and JS `0 == ""` is `true` — so cell (0, 0) would
+      // mistakenly render its editor by default.  The emitter
+      // fix moves the sentinel into the generated code, so the
+      // host can simply omit the attribute.
       editContent: "",
     };
     const grid = document.getElementById("grid");
@@ -174,8 +187,6 @@
     grid.setAttribute("viewport-rows",  JSON.stringify(SAMPLE.viewportRows));
     grid.setAttribute("selected-row",   String(SAMPLE.selectedRow));
     grid.setAttribute("selected-col",   String(SAMPLE.selectedCol));
-    grid.setAttribute("edit-row",       String(SAMPLE.editRow));
-    grid.setAttribute("edit-col",       String(SAMPLE.editCol));
     grid.setAttribute("edit-content",   SAMPLE.editContent);
 
     // Post-process: paint the selected-cell highlight.  The
