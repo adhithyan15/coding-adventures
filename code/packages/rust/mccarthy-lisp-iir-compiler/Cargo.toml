@@ -1,0 +1,21 @@
+[package]
+name = "mccarthy-lisp-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers a McCarthy 1960 Lisp (Lisp 1.0) AST into an IIRModule. L2a v0.1.0 handles integer/nil literals, QUOTE (symbols + nested lists), and the primitives CONS/CAR/CDR/ATOM/EQ, emitting IIR over the `lispy-runtime` value model so the module runs end-to-end on `mccarthy-lisp-vm` and feeds every IIR backend. COND, LAMBDA, and LABEL land in L2b/L2c."
+
+[lib]
+name = "mccarthy_lisp_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+mccarthy-lisp-parser = { path = "../mccarthy-lisp-parser" }
+interpreter-ir       = { path = "../interpreter-ir" }
+
+[dev-dependencies]
+# McCarthy Lisp's own VM (built on lispy-runtime) is the reference
+# interpreter for the emitted IIR — used only to run the end-to-end
+# tests.  Deliberately NOT twig-vm (that VM is Twig-specific); the two
+# languages share only the lispy-runtime value model.
+mccarthy-lisp-vm = { path = "../mccarthy-lisp-vm" }
+lispy-runtime    = { path = "../lispy-runtime" }

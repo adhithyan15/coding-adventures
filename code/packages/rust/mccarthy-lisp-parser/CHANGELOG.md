@@ -1,5 +1,21 @@
 # Changelog — mccarthy-lisp-parser
 
+## v0.2.1 — 2026-06-03 — iterative Drop (DoS hardening)
+
+* **Fix (DoS):** added an iterative `Drop` impl for `LispExpr`.  The
+  compiler-generated recursive drop unwinds one stack frame per `Cons`
+  cell, so dropping a *flat* list `(A A … A)` of N elements — which is
+  only paren-depth 1 and therefore slips past the parser's
+  `MAX_PAREN_DEPTH` guard — would recurse N frames deep and overflow the
+  stack (a cheap single-line DoS on any consumer that builds and drops
+  such an AST).  The new `Drop` dismantles the tree using a heap work
+  list, so stack usage is O(1).  Found while building the L2a IIR
+  compiler; regression-tested with a 100k-element flat list.
+* Note: `LispExpr`'s `Display` is still recursive on the cdr-spine, so
+  formatting a huge flat list would overflow.  `Display` is not on the
+  parse path; consumers must avoid formatting untrusted ASTs (the L2a
+  compiler describes expressions by *kind*, never via `Display`).
+
 ## v0.2.0 — 2026-06-03 — grammar-driven rewrite (L1)
 
 **Breaking:** replaced the hand-written recursive-descent parser with a

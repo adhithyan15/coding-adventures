@@ -185,6 +185,8 @@ members = [
     "lisp-vm",
     "mccarthy-lisp-lexer",
     "mccarthy-lisp-parser",
+    "mccarthy-lisp-iir-compiler",
+    "mccarthy-lisp-vm",
     "macsyma-lexer",
     "macsyma-parser",
     "macsyma-compiler",

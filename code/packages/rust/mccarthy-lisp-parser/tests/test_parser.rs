@@ -234,6 +234,25 @@ fn pathological_nesting_does_not_crash() {
     assert!(parse(&format!("{}X", "'".repeat(10_000))).is_err());
 }
 
+#[test]
+fn huge_flat_list_builds_and_drops_without_overflow() {
+    // A flat list `(A A … A)` is only paren-depth 1, so it bypasses the
+    // nesting cap, yet it builds an N-deep Cons chain. Both building it
+    // (parser) and dropping it (LispExpr's iterative Drop) must avoid
+    // recursing to a stack overflow. 100k elements is well past the
+    // recursive-drop overflow point.
+    let n = 100_000;
+    let mut src = String::with_capacity(2 * n + 2);
+    src.push('(');
+    for _ in 0..n {
+        src.push_str("A ");
+    }
+    src.push(')');
+    let forms = parse(&src).expect("huge flat list should parse");
+    assert_eq!(forms.len(), 1);
+    drop(forms); // force the iterative Drop here — passing means no overflow
+}
+
 // ============================================================
 // 8. Multi-form programs
 // ============================================================
