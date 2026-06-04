@@ -4,6 +4,56 @@ All notable changes to `mosaic-pkg-grid` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/) and
 the package follows semantic versioning.
 
+## 0.2.1 — 2026-06-04 — UI34 package-resolver compatibility
+
+End-to-end resolver compatibility: with UI34 PRs #4969 (resolver) +
+#4974 + #4972 merged, a consumer's `.mll` can now write
+`pkg::mosaic-pkg-grid::Grid (…)` and have it byte-identically
+expand to the same kernel-primitive composition the visicalc
+demo used to inline by hand.  All eight VisiCalc demos (React,
+HTML, WebComponent, SwiftUI, Qt, Flutter, Compose-Desktop,
+Android) now consume the package directly via `mosaic-compile
+--package-search-path`.
+
+### Added
+
+- **`Cell.mil`** gains a `slot edit-content : text` and an
+  `emit onChange ( value : text )`.  `edit-content` carries the
+  host's live edit buffer, and `onChange` fires per keystroke
+  so a host reducer can keep it in sync — this is the missing
+  half of the controlled-`<input>` round-trip that a bare
+  `slot: value` could not complete (React rejects keystrokes on
+  a controlled input without an `onChange`).  Landed in
+  PR #4974.
+- **`Grid.mil`** gains a matching `emit onFormulaChange ( value :
+  text )` so consumers can route per-keystroke cell-edit events
+  out to a FormulaBar-style sibling.  PR #4974.
+- **`Cell.mll`** wires `state-when-selected: slot: is-selected`
+  and `state-when-editing: slot: is-editing` on the Box so the
+  `cell:selected` / `cell:editing` mosstyle blocks fire when the
+  host (or Grid) passes the matching boolean.  Earlier draft
+  used the expression form `( is-selected )`; the slot-ref form
+  routes through the UI34 resolver's `rewrite_bindings` step so
+  the call-site predicate (e.g. `r == selectedRow && c ==
+  selectedCol`) ends up inlined verbatim instead of leaving the
+  literal identifier `is-selected` (an invalid JS identifier
+  because of the hyphen) in the emitted code.  PRs #4972,
+  #4974.
+- **`Cell.dark.msl`** gains a `state selected { … }` block
+  matching the visicalc palette (#264f78 background, #007acc
+  accent outline, #ffffff text) so consumers that style the
+  grid via `pkg::mosaic-pkg-grid::Cell` get a sensible
+  selection highlight default without re-declaring it at every
+  call site.  PR #4972.
+
+### Changed
+
+- **`Grid.mll`** Cell call site now passes `edit-content` and
+  `onChange` through to Cell, and drops the previously-unused
+  `[ body ]` part-name label so Cell's own `cell` part flows
+  through to the consumer's `.msl` (per UI34 §5.1, a call-site
+  part-name shadows the resolved root's).  PR #4974.
+
 ## 0.2.0 — 2026-05-25 — UI28-1 cell-and-column composition complete
 
 The v0.1.0 scaffold finishes. The two declared v0.1.0 follow-ups
