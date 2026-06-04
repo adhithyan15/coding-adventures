@@ -12,11 +12,21 @@ Run: python make_judge.py <crossdomain-results.json>
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+
+
+def _safe_domain(domain: str) -> str:
+    """`domain` comes from agent-generated JSON and is interpolated into output
+    filenames — validate it to a safe charset so it can never escape the directory
+    (no `..`, `/`, NUL). Defense-in-depth against an arbitrary-file-write primitive."""
+    if not re.fullmatch(r"[a-z0-9_-]+", domain):
+        raise ValueError(f"unsafe domain id: {domain!r}")
+    return domain
 
 
 def framework_report(domain: str, rec: dict) -> str:
@@ -41,7 +51,7 @@ def main() -> None:
     res = json.loads(Path(sys.argv[1]).read_text())
     res = res.get("result", res)
     for i, rec in enumerate(res["per_domain"]):
-        domain = rec["domain"]
+        domain = _safe_domain(rec["domain"])
         fr = framework_report(domain, rec)
         pl = plain_report(rec)
         framework_is = "A" if i % 2 == 0 else "B"   # deterministic blinding, alternating
