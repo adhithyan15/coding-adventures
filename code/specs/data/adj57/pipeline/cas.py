@@ -24,8 +24,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
+
+_HEX64 = re.compile(r"[0-9a-f]{64}")
+
+
+def _require_hash(h: str) -> str:
+    """A CAS key is always a sha256 hexdigest. Reject anything else so a hash can
+    never become a path-traversal fragment, even if a future caller passes a raw
+    JSON-supplied identifier straight into get()/cite()/add_onward()."""
+    if not _HEX64.fullmatch(h):
+        raise ValueError(f"not a valid CAS hash: {h!r}")
+    return h
 
 CAS_DIR = Path(__file__).resolve().parent.parent / "cas"
 OBJECTS = CAS_DIR / "objects"
@@ -63,7 +75,7 @@ def intern(content: str, url: str = "", title: str = "", interned_at: str = "") 
 
 
 def get(h: str) -> dict:
-    return json.loads((OBJECTS / f"{h}.json").read_text())
+    return json.loads((OBJECTS / f"{_require_hash(h)}.json").read_text())
 
 
 def _put(obj: dict) -> None:
