@@ -242,6 +242,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "stylesheets", errors)
     require_object_list(f"{case_path}.expected", expected, "anchors", errors)
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "text_semantics", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -454,6 +455,30 @@ def check_browser_expected_lists(
         heading_path = f"{case_path}.expected.headings[{index}]"
         require_integer(heading_path, heading, "level", errors)
         require_string(heading_path, heading, "text", errors)
+
+    for index, semantic in enumerate(object_list_items(expected, "text_semantics")):
+        semantic_path = f"{case_path}.expected.text_semantics[{index}]"
+        for field in (
+            "element",
+            "role",
+            "text",
+        ):
+            require_string(semantic_path, semantic, field, errors)
+        for field in (
+            "id",
+            "lang",
+            "dir",
+            "quote_cite",
+            "resolved_quote_cite",
+            "data_value",
+            "datetime",
+            "edit_cite",
+            "resolved_edit_cite",
+            "edit_datetime",
+            "ruby_kind",
+            "bidi_kind",
+        ):
+            require_optional_nullable_string(semantic_path, semantic, field, errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
