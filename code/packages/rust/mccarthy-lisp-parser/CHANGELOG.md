@@ -1,5 +1,41 @@
 # Changelog — mccarthy-lisp-parser
 
+## v0.2.0 — 2026-06-03 — grammar-driven rewrite (L1)
+
+**Breaking:** replaced the hand-written recursive-descent parser with a
+thin wrapper over the shared `GrammarParser` plus a CST → typed-AST
+extractor.  The S-expression grammar now lives in
+`code/grammars/mccarthy_lisp.grammar`, compiled to Rust at build time
+via a `build.rs` (the `twig-parser` pattern).
+
+* The `LispExpr` AST (`Nil`, `Symbol`, `Int`, `Cons`) and its helpers
+  (`sym`, `list`, `quote`, `Display`) are **unchanged** — downstream L2
+  consumes the same shape.
+* Sugar expansions (`'X` → `(QUOTE X)`, list nesting via NIL
+  terminator, direct dotted-pair `Cons`) are preserved, now applied in
+  the extractor.
+* **Structural validation moved into the grammar.**  The bespoke
+  `ParseError` variants (`StrayDot`, `MultipleDotsInList`,
+  `DotWithoutCdr`, `ExtraAfterDottedTail`, `UnexpectedToken`,
+  `UnexpectedEof`, `NestingTooDeep`) are gone; malformed dotted forms
+  and unbalanced parens are now rejected by the `GrammarParser`
+  itself.  `ParseError` is a flat `{ message, line, column }` struct
+  (the `twig-parser` shape).
+* **API changes:**
+  * `parse(src) -> Result<Vec<LispExpr>, ParseError>` — unchanged
+    signature.
+  * **Added** `parse_to_cst`, `extract_program`,
+    `create_mccarthy_parser_from_tokens`, `mccarthy_grammar`.
+  * **Removed** `parse_tokens` (the lexer no longer produces the old
+    `TokenWithLoc`; use `parse` or `create_mccarthy_parser_from_tokens`).
+* **DoS hardening retained:** `MAX_PAREN_DEPTH` is now **64** (down from
+  256) because the shared `GrammarParser` uses far more stack per paren
+  than the old hand-written descent did; sources deeper than that are
+  rejected before parsing.  A second `MAX_AST_DEPTH` guard bounds the
+  extractor.  Integer overflow remains a `ParseError`, not a panic.
+* New deps: `grammar-tools`, `lexer`, `parser` (+ `grammar-tools`
+  build-dep); still depends on `mccarthy-lisp-lexer`.
+
 ## v0.1.0 — 2026-06-03 — initial release (L1)
 
 McCarthy 1960 Lisp parser.

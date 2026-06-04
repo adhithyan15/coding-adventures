@@ -1,15 +1,30 @@
 //! Integration tests for `mccarthy-lisp-lexer`.
 //!
-//! Test groups:
-//!   1. Single-token shapes
-//!   2. Canonical McCarthy 1960 paper expressions
-//!   3. Whitespace + comments
-//!   4. Error paths
+//! Since this crate is a thin wrapper over the shared, separately-tested
+//! `GrammarLexer`, these tests focus on the *McCarthy dialect contract*
+//! that lives in `code/grammars/mccarthy_lisp.tokens`:
+//!
+//!   1. Each token kind is recognised with the right name + value.
+//!   2. The canonical McCarthy 1960 paper expressions tokenize cleanly.
+//!   3. Whitespace and `;` comments are skipped.
+//!   4. The dialect restrictions (no lowercase, no operator symbols)
+//!      surface as lex errors.
 
-use mccarthy_lisp_lexer::{tokenize, LexError, Loc, Token};
+use mccarthy_lisp_lexer::{tokenize_mccarthy, TokenType};
 
-fn toks(src: &str) -> Vec<Token> {
-    tokenize(src).expect("tokenize").into_iter().map(|t| t.tok).collect()
+/// Token (name, value) pairs, excluding the trailing EOF.
+fn pairs(src: &str) -> Vec<(String, String)> {
+    tokenize_mccarthy(src)
+        .expect("tokenize")
+        .into_iter()
+        .filter(|t| t.type_ != TokenType::Eof)
+        .map(|t| (t.effective_type_name().to_string(), t.value))
+        .collect()
+}
+
+/// Just the token names, excluding EOF.
+fn names(src: &str) -> Vec<String> {
+    pairs(src).into_iter().map(|(n, _)| n).collect()
 }
 
 // ============================================================
@@ -17,54 +32,29 @@ fn toks(src: &str) -> Vec<Token> {
 // ============================================================
 
 #[test]
-fn lparen_alone() {
-    assert_eq!(toks("("), vec![Token::LParen]);
+fn single_tokens() {
+    assert_eq!(names("("), vec!["LPAREN"]);
+    assert_eq!(names(")"), vec!["RPAREN"]);
+    assert_eq!(names("'"), vec!["QUOTE"]);
+    assert_eq!(names("."), vec!["DOT"]);
+    assert_eq!(names("CAR"), vec!["SYMBOL"]);
+    assert_eq!(names("42"), vec!["INTEGER"]);
 }
 
 #[test]
-fn rparen_alone() {
-    assert_eq!(toks(")"), vec![Token::RParen]);
+fn integer_values_round_trip() {
+    assert_eq!(pairs("0"), vec![("INTEGER".into(), "0".into())]);
+    assert_eq!(pairs("42"), vec![("INTEGER".into(), "42".into())]);
+    assert_eq!(pairs("-1"), vec![("INTEGER".into(), "-1".into())]);
 }
 
 #[test]
-fn quote_alone() {
-    assert_eq!(toks("'"), vec![Token::Quote]);
-}
-
-#[test]
-fn dot_alone() {
-    assert_eq!(toks("."), vec![Token::Dot]);
-}
-
-#[test]
-fn single_symbol_uppercase() {
-    assert_eq!(toks("CAR"), vec![Token::Symbol("CAR".into())]);
-}
-
-#[test]
-fn symbol_with_digit_and_hyphen() {
-    assert_eq!(toks("X-1"), vec![Token::Symbol("X-1".into())]);
-}
-
-#[test]
-fn single_int_zero() {
-    assert_eq!(toks("0"), vec![Token::Int(0)]);
-}
-
-#[test]
-fn single_int_positive() {
-    assert_eq!(toks("42"), vec![Token::Int(42)]);
-}
-
-#[test]
-fn single_int_negative() {
-    assert_eq!(toks("-42"), vec![Token::Int(-42)]);
-}
-
-#[test]
-fn single_int_large() {
-    // McCarthy didn't bound integer size; we cap at i64::MAX.
-    assert_eq!(toks("9223372036854775807"), vec![Token::Int(i64::MAX)]);
+fn symbol_values_round_trip() {
+    assert_eq!(pairs("CAR"), vec![("SYMBOL".into(), "CAR".into())]);
+    assert_eq!(pairs("FF"), vec![("SYMBOL".into(), "FF".into())]);
+    assert_eq!(pairs("LIST-OF-3"), vec![("SYMBOL".into(), "LIST-OF-3".into())]);
+    // Digits are allowed inside (but not at the start of) a symbol.
+    assert_eq!(pairs("A1"), vec![("SYMBOL".into(), "A1".into())]);
 }
 
 // ============================================================
@@ -72,78 +62,34 @@ fn single_int_large() {
 // ============================================================
 
 #[test]
-fn car_of_quoted_list() {
-    // (CAR '(A B C)) — McCarthy 1960, §3 example 1.
+fn car_of_a_literal_list() {
     assert_eq!(
-        toks("(CAR '(A B C))"),
-        vec![
-            Token::LParen,
-            Token::Symbol("CAR".into()),
-            Token::Quote,
-            Token::LParen,
-            Token::Symbol("A".into()),
-            Token::Symbol("B".into()),
-            Token::Symbol("C".into()),
-            Token::RParen,
-            Token::RParen,
-        ]
+        names("(CAR '(A B C))"),
+        vec!["LPAREN", "SYMBOL", "QUOTE", "LPAREN", "SYMBOL", "SYMBOL", "SYMBOL", "RPAREN", "RPAREN"]
     );
 }
 
 #[test]
-fn identity_lambda() {
-    // (LAMBDA (X) X) — McCarthy 1960, §5.
+fn the_identity_lambda() {
     assert_eq!(
-        toks("(LAMBDA (X) X)"),
-        vec![
-            Token::LParen,
-            Token::Symbol("LAMBDA".into()),
-            Token::LParen,
-            Token::Symbol("X".into()),
-            Token::RParen,
-            Token::Symbol("X".into()),
-            Token::RParen,
-        ]
+        names("(LAMBDA (X) X)"),
+        vec!["LPAREN", "SYMBOL", "LPAREN", "SYMBOL", "RPAREN", "SYMBOL", "RPAREN"]
     );
 }
 
 #[test]
-fn label_named_recursion() {
-    // (LABEL FF (LAMBDA (X) (COND ((ATOM X) X) (T (FF (CAR X)))))) — McCarthy 1960, §6.
-    let toks = toks("(LABEL FF (LAMBDA (X) (COND ((ATOM X) X) (T (FF (CAR X))))))");
-    // 30 tokens — confirm the count rather than re-write the full vec.
-    assert_eq!(toks.len(), 30);
-    assert_eq!(toks[0], Token::LParen);
-    assert_eq!(toks[1], Token::Symbol("LABEL".into()));
-    assert_eq!(toks[2], Token::Symbol("FF".into()));
+fn a_dotted_pair() {
+    assert_eq!(names("(A . B)"), vec!["LPAREN", "SYMBOL", "DOT", "SYMBOL", "RPAREN"]);
 }
 
 #[test]
-fn cons_of_two_atoms() {
+fn the_label_recursive_definition_header() {
+    // (LABEL FF (LAMBDA (X) ...)) — just the token shape of the header.
     assert_eq!(
-        toks("(CONS 'A 'B)"),
+        names("(LABEL FF (LAMBDA (X) X))"),
         vec![
-            Token::LParen,
-            Token::Symbol("CONS".into()),
-            Token::Quote,
-            Token::Symbol("A".into()),
-            Token::Quote,
-            Token::Symbol("B".into()),
-            Token::RParen,
-        ]
-    );
-}
-
-#[test]
-fn dotted_pair_literal() {
-    assert_eq!(
-        toks("(A . B)"),
-        vec![
-            Token::LParen,
-            Token::Symbol("A".into()),
-            Token::Dot,
-            Token::Symbol("B".into()),
-            Token::RParen,
+            "LPAREN", "SYMBOL", "SYMBOL", "LPAREN", "SYMBOL", "LPAREN", "SYMBOL", "RPAREN",
+            "SYMBOL", "RPAREN", "RPAREN"
         ]
     );
 }
@@ -153,80 +99,40 @@ fn dotted_pair_literal() {
 // ============================================================
 
 #[test]
-fn empty_source_yields_nothing() {
-    assert_eq!(toks(""), Vec::<Token>::new());
+fn comments_are_skipped() {
+    assert_eq!(names("CAR ; comment\nCDR"), vec!["SYMBOL", "SYMBOL"]);
 }
 
 #[test]
-fn whitespace_only() {
-    assert_eq!(toks("   \t\n  \r\n  "), Vec::<Token>::new());
+fn newlines_and_tabs_are_skipped() {
+    assert_eq!(names("\t( A\n\tB )"), vec!["LPAREN", "SYMBOL", "SYMBOL", "RPAREN"]);
 }
 
 #[test]
-fn comment_to_end_of_line() {
-    assert_eq!(
-        toks("; this is a comment\nCAR"),
-        vec![Token::Symbol("CAR".into())]
-    );
-}
-
-#[test]
-fn comment_at_eof_no_newline() {
-    assert_eq!(toks("X ; trailing"), vec![Token::Symbol("X".into())]);
+fn only_whitespace_and_comments_is_empty() {
+    assert!(names("  \n ; nothing here\n").is_empty());
 }
 
 // ============================================================
-// 4. Locations
+// 4. Dialect-restriction error paths
 // ============================================================
 
 #[test]
-fn first_token_starts_at_1_1() {
-    let toks = tokenize("(CAR X)").expect("tokenize");
-    assert_eq!(toks[0].loc, Loc { line: 1, column: 1 });
-    assert_eq!(toks[1].loc, Loc { line: 1, column: 2 });
+fn lowercase_symbol_rejected() {
+    assert!(tokenize_mccarthy("car").is_err());
+    assert!(tokenize_mccarthy("(CAR x)").is_err());
 }
 
 #[test]
-fn newline_advances_line() {
-    let toks = tokenize("(\nCAR)").expect("tokenize");
-    assert_eq!(toks[0].loc, Loc { line: 1, column: 1 });
-    assert_eq!(toks[1].loc, Loc { line: 2, column: 1 });
-}
-
-// ============================================================
-// 5. Error paths
-// ============================================================
-
-#[test]
-fn lone_minus_is_lex_error() {
-    let err = tokenize("(- X)").expect_err("`-` is not a valid Lisp 1.0 token");
-    assert!(matches!(err, LexError::LoneMinus { .. }));
+fn bare_operator_symbols_rejected() {
+    // Lisp 1.0 has no operator symbols — these all match no token rule.
+    assert!(tokenize_mccarthy("+").is_err());
+    assert!(tokenize_mccarthy("-").is_err());
+    assert!(tokenize_mccarthy("<=").is_err());
 }
 
 #[test]
-fn lowercase_is_lex_error() {
-    let err = tokenize("car").expect_err("lowercase not allowed");
-    assert!(matches!(err, LexError::LowercaseInSymbol { .. }));
-}
-
-#[test]
-fn unknown_byte_is_lex_error() {
-    // `+` is an operator symbol — Lisp 1.0 has none.
-    let err = tokenize("+").expect_err("`+` is not a valid Lisp 1.0 token");
-    assert!(matches!(err, LexError::InvalidByte { .. }));
-}
-
-#[test]
-fn integer_overflow_is_caught() {
-    // i64::MAX + 1
-    let err = tokenize("9223372036854775808").expect_err("overflow");
-    assert!(matches!(err, LexError::IntegerOverflow { .. }));
-}
-
-#[test]
-fn error_display_includes_location() {
-    let err = tokenize("(- X)").expect_err("lone minus");
-    let msg = format!("{err}");
-    assert!(msg.contains("1:2"), "expected 1:2 in {msg}");
-    assert!(msg.contains("not a valid Lisp 1.0 token"), "{msg}");
+fn strings_are_rejected() {
+    // No string literals in Lisp 1.0 — the `"` matches nothing.
+    assert!(tokenize_mccarthy("\"hello\"").is_err());
 }
