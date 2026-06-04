@@ -36,10 +36,19 @@ OUT_DIR="$DEMO_DIR/src/components"
 mkdir -p "$OUT_DIR"
 
 echo "Compiling Grid..."
+# UI34 PR-4 — Grid.desktop.mll is now a one-liner that references
+# `pkg::mosaic-pkg-grid::Grid`.  We pass --package-search-path
+# explicitly so the build works regardless of the directory the
+# script is invoked from; the resolver locates the package,
+# recursively compiles its Grid + Cell triple, and substitutes
+# the resolved sub-tree into the demo's layout before the React
+# emitter runs.  The generated Grid.tsx is byte-identical to the
+# pre-UI34 inlined-kernel-primitives output.
 "$MOSAIC_COMPILE" --backend react \
-  --interface "$DEMO_DIR/mosaic/Grid.mil" \
-  --layout    "$DEMO_DIR/mosaic/Grid.desktop.mll" \
-  --style     "$DEMO_DIR/mosaic/Grid.dark.msl" \
+  --interface           "$DEMO_DIR/mosaic/Grid.mil" \
+  --layout              "$DEMO_DIR/mosaic/Grid.desktop.mll" \
+  --style               "$DEMO_DIR/mosaic/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
   -o "$OUT_DIR/Grid.tsx"
 
 echo "Compiling FormulaBar..."
