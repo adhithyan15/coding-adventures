@@ -106,11 +106,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-013 — useless-loop-body folding not in DCE
 
-- **Status:** ROUTING (not a missing feature)
+- **Status:** RESOLVED in CLOC12.28 — the upstream `testFoldUselessFor` / `testFoldUselessDo` / `testFoldEmptyDo` / `testMinimizeLoop_*` tests were re-routed to `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs::test_fold_useless_loop_body_routing` (an `#[ignore]`-d stub) and the DCE port file's `test_fold_useless_loop_body` was reannotated to point at the new home. The literal-test loop-collapse cases (`while(false) { ... }` → `;`) are already covered by `fold_while_statement` + `literal_truthy` in the fold-control-flow crate's inline tests. The body-pure-no-effects rewrites (`while(x){pure(...)}` → `while(x);`) are *not* a fold-rule gap but an effect-analysis gap — they require a pass that can prove "this statement has no observable side effects" before the body can be dropped. Tracked separately as a future "effect analysis" gap, *not* under any CLOC12 gap-NNN entry, because the missing piece is a primary analysis rather than a fold rule.
 - **Upstream test:** `PeepholeRemoveDeadCodeTest::testFoldUselessFor`, `testFoldUselessDo`, `testFoldEmptyDo`, `testMinimizeLoop_*`
-- **Ported file:** `closure-pass-dce/tests/upstream/peephole_remove_dead_code_test.rs`
-- **Why it fails:** `while(x()){x}` → `while(x());` and friends belong in `closure-pass-fold-control-flow`.
-- **What it needs:** Re-port into `closure-pass-fold-control-flow/tests/upstream/` once that crate's port file lands.
+- **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs` (re-routed in CLOC12.28); the original DCE port file points to the new home via a doc comment.
 
 ### gap-014 — `SwitchStatement` not in Phase 1 AST
 

@@ -417,12 +417,20 @@ fn test_hook_cleanup() {
 ///
 ///   fold("while(x()){x}", "while(x());");
 ///
-/// Useless-body-of-loop folding (replacing the body with an empty
-/// statement when it's pure) is fold-control-flow territory.
+/// **gap-013 routed in CLOC12.28**: useless-loop-body folding is
+/// `closure-pass-fold-control-flow`'s territory. The routing test
+/// stub lives at
+/// `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs::test_fold_useless_loop_body_routing`.
+/// Literal-test loop-collapse (`while(false) { ... }` → `;`) is
+/// already covered by `fold_while_statement` inline tests; the
+/// effect-analysis-dependent rewrites are tracked separately under
+/// a future "effect analysis" gap rather than under any CLOC12
+/// gap-NNN entry — the missing piece is a primary analysis, not a
+/// fold rule.
 #[test]
-#[ignore = "blocked on gap-013: useless-loop-body folding not in DCE"]
+#[ignore = "routed in CLOC12.28 to closure-pass-fold-control-flow (gap-013); effect-analysis-dependent shapes deferred to future analysis work"]
 fn test_fold_useless_loop_body() {
-    // Belongs in fold-control-flow's tests/upstream/.
+    // Routed. See doc comment above for the new home.
 }
 
 /// Upstream `testOptimizeSwitch`:
