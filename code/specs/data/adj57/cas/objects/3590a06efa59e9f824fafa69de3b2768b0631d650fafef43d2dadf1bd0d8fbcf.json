@@ -1,0 +1,21 @@
+{
+  "hash": "3590a06efa59e9f824fafa69de3b2768b0631d650fafef43d2dadf1bd0d8fbcf",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4815191/",
+  "title": "Does this patient have Pheochromocytoma? a systematic review of clinical signs and symptoms (Soltani et al., J Diabetes Metab Disord 2016)",
+  "interned_at": "",
+  "content": "The most prevalent signs and symptoms reported in pheochromocytoma patients were hypertension (pooled sensitivity of 80.7 %), headache, palpitation and diaphoresis. Hypertension had a positive LR of 0.762 (0.562-1.033) and negative LR of 1.682 (1.093-2.589) based on 5 studies with control groups. The authors note that hypertension was not important in clinical suspicion of pheochromocytoma, and even normotension increased the probability of the disease. Seven of these articles had control groups; five of which the control groups were the patients with suspected but excluded pheochromocytoma surgically or by follow-up, and in two others, the control group was hypertensive patients.",
+  "citations": [
+    {
+      "start": 165,
+      "end": 297,
+      "quote": "Hypertension had a positive LR of 0.762 (0.562-1.033) and negative LR of 1.682 (1.093-2.589) based on 5 studies with control groups.",
+      "used_for": "blood_pressure(160/100) [sustained hypertension]->pheochromocytoma"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "Changes in energy metabolism in pheochromocytoma (PMID 23436923) \u2014 quantifies hypermetabolism (REE +10.4% above predicted) but not weight loss as a diagnostic predictor.",
+      "interned_hash": ""
+    }
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "ingest": {
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11521393/",
+    "ground_truth": "Pheochromocytoma (left adrenal, 4 cm). Established by markedly elevated plasma metanephrines (11.7 nmol/L; ref <0.5) and normetanephrines (22.5 nmol/L; ref <0.9), a 4 cm heterogeneous left adrenal mass on CT, and ultimately histopathologic confirmation after referral/surgery.",
+    "case_text": "A 28-year-old woman with no significant medical history initially presented with intermittent palpitations that had been ongoing for two months. She described these episodes as sudden and irregular heartbeats but denied any associated symptoms such as chest pain, shortness of breath, or syncope. An initial electrocardiogram (ECG) showed sinus rhythm with occasional premature ventricular contractions (PVCs), which were considered benign given the absence of other concerning signs or risk factors. Routine blood tests, including a complete blood count (CBC) and thyroid function tests (TFTs), were normal. Based on her age and lack of underlying risk factors, she was diagnosed with likely benign ventricular ectopy and started on metoprolol 25 mg twice daily. This provided partial, temporary relief.\n\nHowever, two months later, she returned with worsening symptoms. She reported more frequent and severe palpitations, now occurring at rest, along with new symptoms including night sweats and unintended weight loss of 5 kg over a few weeks. On examination, her heart rate was elevated at 120 beats per minute (bpm), and her blood pressure (BP) was significantly high at 160/100 mmHg. Apart from this, her physical exam was unremarkable, with no signs of heart failure or other abnormalities.\n\nGiven the worsening symptoms, a more thorough evaluation was conducted. A repeat ECG showed episodes of nonsustained ventricular tachycardia (NSVT), raising concern for a more serious underlying cause.",
+    "segments": [
+      {
+        "text": "A 28-year-old woman",
+        "kind": "fact",
+        "term": "age(28) sex(female)"
+      },
+      {
+        "text": " with ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "no significant medical history",
+        "kind": "fact",
+        "term": "past_medical_history(none_significant)"
+      },
+      {
+        "text": " initially presented with ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "intermittent palpitations",
+        "kind": "fact",
+        "term": "palpitations(intermittent)"
+      },
+      {
+        "text": " that had been ongoing for ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "two months",
+        "kind": "fact",
+        "term": "symptom_duration(2_months)"
+      },
+      {
+        "text": ". She described these episodes as ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "sudden and irregular heartbeats",
+        "kind": "fact",
+        "term": "palpitations(sudden_irregular)"
+      },
+      {
+        "text": " but denied any associated symptoms such as ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "chest pain",
+        "kind": "fact",
+        "term": "chest_pain(absent)"
+      },
+      {
+        "text": ", ",
+        "kind": "discard",
+        "reason": "list separator"
+      },
+      {
+        "text": "shortness of breath",
+        "kind": "fact",
+        "term": "dyspnea(absent)"
+      },
+      {
+        "text": ", or ",
+        "kind": "discard",
+        "reason": "list separator"
+      },
+      {
+        "text": "syncope",
+        "kind": "fact",
+        "term": "syncope(absent)"
+      },
+      {
+        "text": ". An initial ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "electrocardiogram (ECG) showed sinus rhythm",
+        "kind": "fact",
+        "term": "ecg_rhythm(sinus)"
+      },
+      {
+        "text": " with occasional ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "premature ventricular contractions (PVCs)",
+        "kind": "fact",
+        "term": "ecg_finding(occasional_pvcs)"
+      },
+      {
+        "text": ", which were considered benign given the absence of other concerning signs or risk factors",
+        "kind": "discard",
+        "reason": "clinical interpretation/narrative, not a new fact"
+      },
+      {
+        "text": ". ",
+        "kind": "discard",
+        "reason": "sentence boundary"
+      },
+      {
+        "text": "Routine blood tests, including a complete blood count (CBC) and thyroid function tests (TFTs), were normal",
+        "kind": "fact",
+        "term": "cbc_and_tft(normal)"
+      },
+      {
+        "text": ". Based on her age and lack of underlying risk factors, she was ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "diagnosed with likely benign ventricular ectopy",
+        "kind": "fact",
+        "term": "prior_working_diagnosis(benign_ventricular_ectopy)"
+      },
+      {
+        "text": " and ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "started on metoprolol 25 mg twice daily",
+        "kind": "fact",
+        "term": "medication(metoprolol_25mg_bid)"
+      },
+      {
+        "text": ". This provided ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "partial, temporary relief",
+        "kind": "fact",
+        "term": "treatment_response(partial_temporary)"
+      },
+      {
+        "text": ".\n\nHowever, two months later, she returned with ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "worsening symptoms",
+        "kind": "fact",
+        "term": "clinical_course(worsening)"
+      },
+      {
+        "text": ". She reported ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "more frequent and severe palpitations, now occurring at rest",
+        "kind": "fact",
+        "term": "palpitations(more_frequent_severe_at_rest)"
+      },
+      {
+        "text": ", along with new symptoms including ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "night sweats",
+        "kind": "fact",
+        "term": "night_sweats(present)"
+      },
+      {
+        "text": " and ",
+        "kind": "discard",
+        "reason": "list separator"
+      },
+      {
+        "text": "unintended weight loss of 5 kg over a few weeks",
+        "kind": "fact",
+        "term": "weight_loss(5kg_unintended_weeks)"
+      },
+      {
+        "text": ". On examination, her ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "heart rate was elevated at 120 beats per minute (bpm)",
+        "kind": "fact",
+        "term": "heart_rate(120)"
+      },
+      {
+        "text": ", and her ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "blood pressure (BP) was significantly high at 160/100 mmHg",
+        "kind": "fact",
+        "term": "blood_pressure(160/100)"
+      },
+      {
+        "text": ". Apart from this, ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "her physical exam was unremarkable, with no signs of heart failure or other abnormalities",
+        "kind": "fact",
+        "term": "physical_exam(unremarkable_no_heart_failure)"
+      },
+      {
+        "text": ".\n\nGiven the worsening symptoms, a more thorough evaluation was conducted. A ",
+        "kind": "discard",
+        "reason": "narrative connective"
+      },
+      {
+        "text": "repeat ECG showed episodes of nonsustained ventricular tachycardia (NSVT)",
+        "kind": "fact",
+        "term": "ecg_finding(nonsustained_vt)"
+      },
+      {
+        "text": ", raising concern for a more serious underlying cause",
+        "kind": "discard",
+        "reason": "narrative framing, not a new fact"
+      },
+      {
+        "text": ".",
+        "kind": "discard",
+        "reason": "sentence terminator"
+      }
+    ],
+    "candidate_diagnoses": [
+      "pheochromocytoma",
+      "hyperthyroidism",
+      "secondary_hypertension",
+      "primary_arrhythmia_ventricular_ectopy",
+      "paraganglioma",
+      "panic_disorder",
+      "carcinoid_syndrome"
+    ]
+  },
+  "derived": {
+    "links": [
+      {
+        "finding": "blood_pressure(160/100)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": true,
+        "rationale": "Sustained hypertension in a 28yo female with no prior PMH, co-occurring with paroxysmal palpitations, is a core catecholamine-excess signature. Hypertension in this age group is itself a secondary-HTN flag, and combined with the paroxysmal pattern it strongly raises pheochromocytoma to the top of the differential."
+      },
+      {
+        "finding": "blood_pressure(160/100)",
+        "target_diagnosis": "secondary_hypertension",
+        "expected_metric": "prevalence",
+        "decisive": false,
+        "rationale": "New hypertension (160/100) in a previously healthy 28yo raises the pretest prevalence of an identifiable secondary cause versus essential hypertension; secondary_hypertension is the umbrella under which pheo/paraganglioma sit, so this finding sets the base rate rather than discriminating among catecholamine causes."
+      },
+      {
+        "finding": "night_sweats(present)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": true,
+        "rationale": "Episodic diaphoresis/night sweats is part of the classic pheochromocytoma symptom cluster (palpitations + sweating + hypertension). With thyroid function normal, the catecholamine-driven sweating explanation is strongly favored, making this a load-bearing positive for the top diagnosis."
+      },
+      {
+        "finding": "weight_loss(5kg_unintended_weeks)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": true,
+        "rationale": "Unintended weight loss reflects the hypermetabolic state of sustained catecholamine excess and shifts probability toward pheochromocytoma once hyperthyroidism is excluded by normal TFT. It is decisive because it separates an organic hypermetabolic process from benign arrhythmia and from panic disorder."
+      },
+      {
+        "finding": "weight_loss(5kg_unintended_weeks)",
+        "target_diagnosis": "hyperthyroidism",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Unintended weight loss is a hallmark of hyperthyroidism and would normally raise it; this link must be encoded so that it can be cancelled by the normal TFT. It is non-decisive here only because a directly measured competing finding (normal TFT) overrides it."
+      },
+      {
+        "finding": "cbc_and_tft(normal)",
+        "target_diagnosis": "hyperthyroidism",
+        "expected_metric": "LR-",
+        "decisive": true,
+        "rationale": "Normal thyroid function tests are a strong negative likelihood ratio for hyperthyroidism. Given that weight loss, palpitations, tachycardia, sweats, and tremor-like presentation otherwise mimic thyrotoxicosis, this normal TFT is decisive in removing hyperthyroidism from the top of the differential."
+      },
+      {
+        "finding": "heart_rate(120)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Resting tachycardia co-occurring with hypertension supports a catecholamine-excess state. It is supportive rather than decisive because tachycardia is nonspecific (also seen in panic, hyperthyroidism, carcinoid), but it adds weight to pheo when paired with the sustained hypertension."
+      },
+      {
+        "finding": "palpitations(more_frequent_severe_at_rest)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": true,
+        "rationale": "At-rest, paroxysmal, escalating palpitations are characteristic of intermittent catecholamine surges rather than exertion-triggered primary arrhythmia. The at-rest paroxysmal quality is a key discriminator that elevates pheochromocytoma and downweights exertional primary ventricular ectopy."
+      },
+      {
+        "finding": "palpitations(more_frequent_severe_at_rest)",
+        "target_diagnosis": "panic_disorder",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Paroxysmal at-rest palpitations are also typical of panic attacks, so this finding raises panic_disorder as the principal mimic. It is non-decisive because panic cannot account for the sustained hypertension, objective weight loss, or NSVT, which are needed to separate the two."
+      },
+      {
+        "finding": "treatment_response(partial_temporary)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": true,
+        "rationale": "A beta-blocker (metoprolol) producing only partial, temporary benefit followed by worsening is a recognized pheochromocytoma signature: beta-blockade without alpha-blockade leaves unopposed alpha-mediated vasoconstriction and can aggravate hypertensive surges. This refractory/worsening response is load-bearing for reclassifying the prior benign-ectopy diagnosis."
+      },
+      {
+        "finding": "clinical_course(worsening)",
+        "target_diagnosis": "primary_arrhythmia_ventricular_ectopy",
+        "expected_metric": "LR-",
+        "decisive": true,
+        "rationale": "Progressive worsening despite rate-controlling therapy argues against benign primary ventricular ectopy, which is typically stable or rate-suppressible. The worsening course is decisive in demoting the prior working diagnosis of benign_ventricular_ectopy and forcing a search for a secondary driver."
+      },
+      {
+        "finding": "ecg_finding(nonsustained_vt)",
+        "target_diagnosis": "pheochromocytoma",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Escalation from occasional PVCs to nonsustained VT in the setting of catecholamine excess supports arrhythmia secondary to pheochromocytoma. Supportive rather than decisive because NSVT is etiology-nonspecific, but its emergence alongside the systemic findings fits a catecholamine-driven secondary arrhythmia."
+      },
+      {
+        "finding": "ecg_finding(nonsustained_vt)",
+        "target_diagnosis": "primary_arrhythmia_ventricular_ectopy",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "NSVT on its own raises a primary ventricular arrhythmia, so this link keeps that diagnosis alive in the differential. It is non-decisive because the accompanying hypertension, weight loss, and sweats point to the arrhythmia being secondary rather than primary."
+      },
+      {
+        "finding": "ecg_finding(occasional_pvcs)",
+        "target_diagnosis": "primary_arrhythmia_ventricular_ectopy",
+        "expected_metric": "prevalence",
+        "decisive": false,
+        "rationale": "Occasional PVCs on a sinus-rhythm ECG set the initial pretest probability for benign ventricular ectopy and anchored the prior working diagnosis. This establishes the base rate that subsequent findings (worsening, NSVT, hypertension) must then revise."
+      },
+      {
+        "finding": "night_sweats(present)",
+        "target_diagnosis": "carcinoid_syndrome",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Episodic vasomotor/diaphoretic symptoms plus weight loss keep carcinoid_syndrome in the differential as a competing neuroendocrine cause. Non-decisive because the absent flushing/diarrhea and the prominent sustained hypertension favor pheochromocytoma over carcinoid."
+      },
+      {
+        "finding": "weight_loss(5kg_unintended_weeks)",
+        "target_diagnosis": "carcinoid_syndrome",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Unintended weight loss with paroxysmal vasomotor symptoms is compatible with a carcinoid hypermetabolic/secretory state, justifying carcinoid_syndrome as a secondary candidate. Non-decisive given the catecholamine-specific hypertension pattern points elsewhere."
+      },
+      {
+        "finding": "blood_pressure(160/100)",
+        "target_diagnosis": "paraganglioma",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Catecholamine-secreting paraganglioma produces the same hypertension-plus-paroxysm picture as pheochromocytoma and shares its likelihood profile. It is encoded as a near-tie alternative to pheochromocytoma rather than a decisive separate top diagnosis, since the findings cannot distinguish adrenal from extra-adrenal location."
+      },
+      {
+        "finding": "night_sweats(present)",
+        "target_diagnosis": "paraganglioma",
+        "expected_metric": "LR+",
+        "decisive": false,
+        "rationale": "Episodic diaphoresis from catecholamine surges applies equally to paraganglioma as to pheochromocytoma, keeping it as a co-leading catecholamine-excess candidate. Non-decisive because it does not localize the tumor."
+      },
+      {
+        "finding": "syncope(absent)",
+        "target_diagnosis": "primary_arrhythmia_ventricular_ectopy",
+        "expected_metric": "LR-",
+        "decisive": false,
+        "rationale": "Absence of syncope despite documented NSVT lowers the probability that the ventricular arrhythmia is a high-risk primary electrical disorder. Supportive only; it nudges interpretation toward a reversible secondary cause rather than a malignant primary channelopathy."
+      },
+      {
+        "finding": "age(28)",
+        "target_diagnosis": "secondary_hypertension",
+        "expected_metric": "prevalence",
+        "decisive": false,
+        "rationale": "Young age sharply raises the prior probability that new hypertension is secondary rather than essential, which is the framing that brings pheochromocytoma/paraganglioma into the leading differential. This sets the base rate that the symptom cluster then sharpens."
+      }
+    ]
+  },
+  "decisive": [
+    {
+      "finding": "blood_pressure(160/100)",
+      "target_diagnosis": "pheochromocytoma",
+      "expected_metric": "LR+",
+      "decisive": true,
+      "rationale": "Sustained hypertension in a 28yo female with no prior PMH, co-occurring with paroxysmal palpitations, is a core catecholamine-excess signature. Hypertension in this age group is itself a secondary-HTN flag, and combined with the paroxysmal pattern it strongly raises pheochromocytoma to the top of the differential."
+    },
+    {
+      "finding": "night_sweats(present)",
+      "target_diagnosis": "pheochromocytoma",
+      "expected_metric": "LR+",
+      "decisive": true,
+      "rationale": "Episodic diaphoresis/night sweats is part of the classic pheochromocytoma symptom cluster (palpitations + sweating + hypertension). With thyroid function normal, the catecholamine-driven sweating explanation is strongly favored, making this a load-bearing positive for the top diagnosis."
+    },
+    {
+      "finding": "weight_loss(5kg_unintended_weeks)",
+      "target_diagnosis": "pheochromocytoma",
+      "expected_metric": "LR+",
+      "decisive": true,
+      "rationale": "Unintended weight loss reflects the hypermetabolic state of sustained catecholamine excess and shifts probability toward pheochromocytoma once hyperthyroidism is excluded by normal TFT. It is decisive because it separates an organic hypermetabolic process from benign arrhythmia and from panic disorder."
+    }
+  ],
+  "spidered": {
+    "grounded_links": [
+      {
+        "finding": "blood_pressure(160/100) [sustained hypertension]",
+        "target_diagnosis": "pheochromocytoma",
+        "computed_lr": 0.762,
+        "lr_formula": "LR+ reported directly by meta-analysis = 0.762 (95% CI 0.562-1.033). Equivalently LR+ = sens/(1-spec); pooled sensitivity of hypertension = 80.7%. The published LR+ < 1 because hypertension is nearly as common in the suspected-but-excluded control population, so its presence does NOT raise the probability of pheochromocytoma.",
+        "verdict": "grounded",
+        "reached_root": true,
+        "target_diagnosis_note": "",
+        "chain": [
+          {
+            "hop": 1,
+            "source_title": "Does this patient have Pheochromocytoma? a systematic review of clinical signs and symptoms (Soltani et al., J Diabetes Metab Disord 2016)",
+            "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4815191/",
+            "content_excerpt": "The most prevalent signs and symptoms reported in pheochromocytoma patients were hypertension (pooled sensitivity of 80.7 %), headache, palpitation and diaphoresis. Hypertension had a positive LR of 0.762 (0.562-1.033) and negative LR of 1.682 (1.093-2.589) based on 5 studies with control groups. The authors note that hypertension was not important in clinical suspicion of pheochromocytoma, and even normotension increased the probability of the disease. Seven of these articles had control groups; five of which the control groups were the patients with suspected but excluded pheochromocytoma surgically or by follow-up, and in two others, the control group was hypertensive patients.",
+            "cited_quote": "Hypertension had a positive LR of 0.762 (0.562-1.033) and negative LR of 1.682 (1.093-2.589) based on 5 studies with control groups.",
+            "gives_root_data": true,
+            "onward_citation": ""
+          }
+        ]
+      },
+      {
+        "finding": "night_sweats(present) [diaphoresis as diagnostic analog]",
+        "target_diagnosis": "pheochromocytoma",
+        "computed_lr": 2.184,
+        "lr_formula": "LR+ reported directly by meta-analysis for diaphoresis = 2.184 (95% CI 1.411-3.382); pooled sensitivity 52.4%. NOTE: the diagnostic literature quantifies 'diaphoresis/sweating' generically, not 'night sweats' specifically; no separate LR exists for nocturnal sweating, so diaphoresis is used as the closest measured proxy.",
+        "verdict": "grounded",
+        "reached_root": true,
+        "target_diagnosis_note": "",
+        "chain": [
+          {
+            "hop": 1,
+            "source_title": "Does this patient have Pheochromocytoma? a systematic review of clinical signs and symptoms (Soltani et al., J Diabetes Metab Disord 2016)",
+            "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4797176/",
+            "content_excerpt": "diaphoresis (pooled sensitivity of 52.4 %). Diaphoresis in Table 5 shows: Number of studies: 2 with LR+ (95%CI): 2.184 (1.411-3.382) and LR- (95%CI): 0.451(0.310-0.657). Seven of these articles had control groups; five of which the control groups were the patients with suspected but excluded pheochromocytoma surgically or by follow-up, and in two others, the control group was hypertensive patients.",
+            "cited_quote": "Diaphoresis in Table 5 shows: Number of studies: 2 with LR+ (95%CI): 2.184 (1.411-3.382) and LR- (95%CI): 0.451(0.310-0.657).",
+            "gives_root_data": false,
+            "onward_citation": "Stein PP, Black HR. A simplified diagnostic approach to pheochromocytoma: a review of the literature and report of one institution's experience. Medicine (Baltimore) 1991;70(1):46-66. (PMID 1988766) \u2014 one of the control-group primary studies pooled for the diaphoresis LR."
+          },
+          {
+            "hop": 2,
+            "source_title": "A simplified diagnostic approach to pheochromocytoma. A review of the literature and report of one institution's experience (Stein & Black, Medicine Baltimore 1991)",
+            "source_url": "https://pubmed.ncbi.nlm.nih.gov/1988766/",
+            "content_excerpt": "Symptoms in a group of patients in whom a pheochromocytoma was seriously considered but excluded overlap symptoms in patients with a pheochromocytoma. Certain symptoms are useful: flushing to suggest a non-pheochromocytoma illness; visual symptoms, flank pain, and pallor to suggest that a pheochromocytoma is more likely. Combinations of symptoms can be of value: 2 or more symptoms from the triad of headache, palpitations, and diaphoresis were present in the majority of pheochromocytoma patients, but in a smaller number of non-pheochromocytoma patients. The presence of the entire triad is more specific, but less sensitive.",
+            "cited_quote": "Combinations of symptoms can be of value: 2 or more symptoms from the triad of headache, palpitations, and diaphoresis were present in the majority of pheochromocytoma patients, but in a smaller number of non-pheochromocytoma patients.",
+            "gives_root_data": true,
+            "onward_citation": ""
+          }
+        ]
+      },
+      {
+        "finding": "weight_loss(5kg_unintended_weeks)",
+        "target_diagnosis": "pheochromocytoma",
+        "computed_lr": 0,
+        "lr_formula": "No likelihood ratio can be computed: the diagnostic literature provides NO sensitivity, specificity, LR, OR, or prevalence figure (with an N) for weight loss as a predictor of pheochromocytoma. Weight loss appears only as descriptive pathophysiology (catecholamine-driven hypermetabolism / raised resting energy expenditure). Direction is plausible (weight loss can occur) but there is no usable measured number to anchor an LR.",
+        "verdict": "direction_only",
+        "reached_root": false,
+        "target_diagnosis_note": "",
+        "chain": [
+          {
+            "hop": 1,
+            "source_title": "Does this patient have Pheochromocytoma? a systematic review of clinical signs and symptoms (Soltani et al., J Diabetes Metab Disord 2016)",
+            "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4815191/",
+            "content_excerpt": "Weight loss is not separately analyzed as a clinical predictor in this systematic review. The document mentions weight loss only in pathophysiology context: Hypermetabolism caused by catecholamines can cause weakness, fatigue and weight loss, but provides no sensitivity, specificity, likelihood ratios, or prevalence data for weight loss as a diagnostic sign. Weight loss does not appear in Tables 3 or 5, which compile sensitivity and likelihood ratios.",
+            "cited_quote": "Hypermetabolism caused by catecholamines can cause weakness, fatigue and weight loss, but provides no sensitivity, specificity, likelihood ratios, or prevalence data for weight loss as a diagnostic sign.",
+            "gives_root_data": false,
+            "onward_citation": "Changes in energy metabolism in pheochromocytoma (PMID 23436923) \u2014 quantifies hypermetabolism (REE +10.4% above predicted) but not weight loss as a diagnostic predictor."
+          },
+          {
+            "hop": 2,
+            "source_title": "Weight loss / hypermetabolism in pheochromocytoma (energy metabolism literature, via search synthesis)",
+            "source_url": "https://pubmed.ncbi.nlm.nih.gov/23436923/",
+            "content_excerpt": "Catecholamine overproduction in pheochromocytoma affects basal metabolism, resulting in weight loss despite normal food intake. Resting energy expenditure (REE) measured in pheochromocytoma patients was 10.4% higher than the predicted value, which explains the metabolic basis for weight loss. The prevalence of weight loss as a specific presenting symptom is not explicitly quantified in the available literature.",
+            "cited_quote": "The prevalence of weight loss as a specific presenting symptom is not explicitly quantified in the available literature.",
+            "gives_root_data": false,
+            "onward_citation": "No primary diagnostic-accuracy study reporting weight-loss sens/spec/LR/prevalence with an N exists; chain cannot reach a diagnostic root."
+          }
+        ]
+      }
+    ]
+  }
+}

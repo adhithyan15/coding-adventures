@@ -1,0 +1,16 @@
+{
+  "hash": "51c8f2ae371fe4ac51ee676d68b22f3136d316d6443685612449767d5017cd29",
+  "url": "https://pubmed.ncbi.nlm.nih.gov/1988766/",
+  "title": "A simplified diagnostic approach to pheochromocytoma. A review of the literature and report of one institution's experience (Stein & Black, Medicine Baltimore 1991)",
+  "interned_at": "",
+  "content": "Symptoms in a group of patients in whom a pheochromocytoma was seriously considered but excluded overlap symptoms in patients with a pheochromocytoma. Certain symptoms are useful: flushing to suggest a non-pheochromocytoma illness; visual symptoms, flank pain, and pallor to suggest that a pheochromocytoma is more likely. Combinations of symptoms can be of value: 2 or more symptoms from the triad of headache, palpitations, and diaphoresis were present in the majority of pheochromocytoma patients, but in a smaller number of non-pheochromocytoma patients. The presence of the entire triad is more specific, but less sensitive.",
+  "citations": [
+    {
+      "start": 323,
+      "end": 558,
+      "quote": "Combinations of symptoms can be of value: 2 or more symptoms from the triad of headache, palpitations, and diaphoresis were present in the majority of pheochromocytoma patients, but in a smaller number of non-pheochromocytoma patients.",
+      "used_for": "night_sweats(present) [diaphoresis as diagnostic analog]->pheochromocytoma"
+    }
+  ],
+  "onward_citations": []
+}
