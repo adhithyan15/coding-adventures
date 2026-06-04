@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closure-pass-constant-fold` crate will be documented in this file.
 
+## [0.10.1] - 2026-06-04
+
+### Added — CLOC12.23: gap-006 unary plus / minus on identifier bookkeeping
+
+Closes `gap-006` from the CLOC12 gap tracker. Pure test-only change —
+no production code modified.
+
+The pass already does the right thing structurally: `fold_unary` only
+folds `+<literal>` / `-<literal>` (the runtime value of `+x` is
+unknown when `x` is an identifier), and `try_fold_binary_op` declines
+when either side isn't a recognised literal. So `+x > +y` and friends
+pass through verbatim. gap-006 was waiting on bookkeeping — port the
+upstream `testSame("+x > +y")` / `testSame("+x == +y")` lines from
+`PeepholeFoldConstantsTest::testNumberNumberComparison`.
+
+The new `test_same_unary_on_identifier_in_comparison` test in
+`peephole_fold_constants_test.rs` pins:
+
+* `+x > +y`, `+x == +y`, `+x === +y` survive unchanged.
+* `-x < -y` survives (Negate variant — same reasoning).
+* Asymmetric `0 < +x` survives (literal on one side, unary-of-
+  identifier on the other — fold must bail because identifier side
+  can't be resolved).
+* `+x == +x` survives even with the same identifier on both sides:
+  `x` could be NaN at runtime, and `NaN == NaN` is `false`.
+
+Upstream test count: 13 → 14.
+
 ## [0.10.0] - 2026-06-04
 
 ### Added — CLOC12.22: gap-004 Number/String cross-type abstract equality + relational comparison

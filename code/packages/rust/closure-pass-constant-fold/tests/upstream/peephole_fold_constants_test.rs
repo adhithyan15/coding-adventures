@@ -498,9 +498,17 @@ fn test_basic_arithmetic_folds() {
 ///   testSame("+x > +y");
 ///   testSame("+x == +y");
 ///
-/// Identifier-bearing expressions stay put. Lines that use `+x` (unary
-/// plus on identifier) are deferred to gap-006; we cover the plain
+/// Identifier-bearing expressions stay put. We cover the plain
 /// identifier shape here to lock in the "don't touch identifiers" rule.
+///
+/// **gap-006 closed in CLOC12.23** — the `+x > +y` / `-x > -y` / `+x ==
+/// +y` shapes are now covered explicitly in
+/// `test_same_unary_on_identifier_in_comparison` below. `fold_unary`
+/// already declines to fold `+<identifier>` (or `-<identifier>`) because
+/// the runtime value is unknown, so the wrapped UnaryExpression survives
+/// into `try_fold_binary_op` — which then declines because neither side
+/// is a recognised literal. The fix was purely test bookkeeping; no
+/// production code changed.
 #[test]
 fn test_same_when_either_side_has_an_identifier_subset() {
     use coding_adventures_javascript_ast::Identifier;
@@ -514,4 +522,84 @@ fn test_same_when_either_side_has_an_identifier_subset() {
     assert_same(b(ident("x"), BinaryOperator::Eq, ident("y")));
     assert_same(b(ident("x"), BinaryOperator::StrictEq, ident("y")));
     assert_same(b(ident("x"), BinaryOperator::Gt, ident("x")));
+}
+
+/// Upstream `testNumberNumberComparison` (closes gap-006):
+///
+///   testSame("+x > +y");
+///   testSame("+x == +y");
+///
+/// Pins that unary plus / minus over an identifier survives, both
+/// individually and on both sides of a comparison. The desired
+/// production behaviour is that the pass leaves the whole expression
+/// alone — `+x` cannot be folded because `x`'s runtime value is
+/// unknown, and the surrounding comparison can't be folded because
+/// neither side is a recognised literal.
+///
+/// We verify each operand-level UnaryExpression survives (no
+/// accidental coercion to NumericLiteral(0) or similar), then assert
+/// the parent BinaryExpression survives under several operators.
+#[test]
+fn test_same_unary_on_identifier_in_comparison() {
+    use coding_adventures_javascript_ast::Identifier;
+    let ident = |name: &str| {
+        Expression::Identifier(Identifier {
+            cv: None,
+            name: name.to_string(),
+        })
+    };
+    let unary = |op: UnaryOperator, inner: Expression| {
+        Expression::UnaryExpression(UnaryExpression {
+            cv: None,
+            operator: op,
+            argument: Box::new(inner),
+            prefix: true,
+        })
+    };
+
+    // Both sides wrapped in unary plus.
+    assert_same(b(
+        unary(UnaryOperator::Plus, ident("x")),
+        BinaryOperator::Gt,
+        unary(UnaryOperator::Plus, ident("y")),
+    ));
+    assert_same(b(
+        unary(UnaryOperator::Plus, ident("x")),
+        BinaryOperator::Eq,
+        unary(UnaryOperator::Plus, ident("y")),
+    ));
+    assert_same(b(
+        unary(UnaryOperator::Plus, ident("x")),
+        BinaryOperator::StrictEq,
+        unary(UnaryOperator::Plus, ident("y")),
+    ));
+
+    // Unary negate variant — same reasoning.
+    assert_same(b(
+        unary(UnaryOperator::Negate, ident("x")),
+        BinaryOperator::Lt,
+        unary(UnaryOperator::Negate, ident("y")),
+    ));
+
+    // Asymmetric: literal on one side, unary-of-identifier on the
+    // other. The fold must still bail because the identifier side
+    // can't be resolved.
+    assert_same(b(
+        Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: 0.0,
+            raw: "0".to_string(),
+        }),
+        BinaryOperator::Lt,
+        unary(UnaryOperator::Plus, ident("x")),
+    ));
+
+    // Same identifier on both sides (the structural form `+x == +x`).
+    // Even though x is the same identifier, we still don't fold —
+    // `x` could be NaN at runtime, and `NaN == NaN` is `false`.
+    assert_same(b(
+        unary(UnaryOperator::Plus, ident("x")),
+        BinaryOperator::Eq,
+        unary(UnaryOperator::Plus, ident("x")),
+    ));
 }
