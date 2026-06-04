@@ -47,11 +47,19 @@ echo "Compiling FormulaBar (Flutter)..."
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/formula_bar.dart"
 
-# TODO(VC2-flutter-grid): switch to compiled Grid when the
-# mosaic-emit-flutter pipeline learns the `Grid` built-in primitive.
-# Today the Flutter emitter produces a placeholder SizedBox.shrink()
-# for `Grid`, so lib/generated/grid.dart is hand-written to mirror
-# what the eventual auto-generated widget should look like.
+echo "Compiling Grid (Flutter)..."
+# UI34 — Grid is now generated from the shared visicalc/mosaic/
+# Grid.{mil,desktop.mll,dark.msl} triple (same source the React +
+# HTML + WebComponent + SwiftUI + Qt demos consume).
+# Grid.desktop.mll is a UI34 `pkg::mosaic-pkg-grid::Grid` one-liner;
+# we pass --package-search-path so the resolver substitutes the
+# package's full composition before the Flutter emitter runs.
+"$MOSAIC_COMPILE" --backend flutter \
+  --interface           "$SRC/Grid.mil" \
+  --layout              "$SRC/Grid.desktop.mll" \
+  --style               "$SRC/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/grid.dart"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"

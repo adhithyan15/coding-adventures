@@ -1,11 +1,16 @@
 // main.dart — VisiCalc Flutter host (VC2-flutter).
 //
-// Mounts the auto-generated `FormulaBar` (from lib/generated/
-// formula_bar.dart, produced by mosaic-compile --backend flutter) and
-// the hand-written `Grid` (lib/generated/grid.dart — Flutter Grid
-// emitter is a follow-up). State is held in a tiny `_AppState` ValueNotifier
-// that pretends to be the host's reducer: it owns the formula text,
-// the selected cell, and a hard-coded 5×5 sample spreadsheet.
+// Mounts the auto-generated `FormulaBar` AND `Grid` widgets, both
+// produced by `mosaic-compile --backend flutter` from the shared
+// `demo/visicalc/mosaic/{FormulaBar,Grid}.{mil,desktop.mll,dark.msl}`
+// triples.  Grid.desktop.mll is a UI34
+// `pkg::mosaic-pkg-grid::Grid` one-liner, so the widget's structure
+// comes from the authoritative `mosaic-pkg-grid` composition.  No
+// hand-written widgets in this file.
+//
+// State is held in a tiny `_AppState` ValueNotifier that pretends
+// to be the host's reducer: it owns the formula text, the selected
+// cell, the edit buffer, and a hard-coded 5×5 sample spreadsheet.
 //
 // Run:
 //   flutter pub get
@@ -61,12 +66,21 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
   ];
 
   String _formula = '=SUM(B1:B5)';
-  int _selectedRow = 0;
-  int _selectedCol = 0;
+  // The generated Grid widget uses `double` for every numeric
+  // coordinate (the Flutter emitter lowers `number` slots to
+  // `double` so verbatim expressions like
+  // `r == editRow && c == editCol` line up across backends).
+  // The host mirrors that on its state so the dispatch wiring
+  // is a clean pass-through.
+  double _selectedRow = 0;
+  double _selectedCol = 0;
+  double _editRow = -1;
+  double _editCol = -1;
+  String _editContent = '';
 
   String get _cellAddress {
-    final colLetter = String.fromCharCode(65 + _selectedCol);
-    return '$colLetter${_selectedRow + 1}';
+    final colLetter = String.fromCharCode(65 + _selectedCol.toInt());
+    return '$colLetter${_selectedRow.toInt() + 1}';
   }
 
   void _onFormulaBarEvent(FormulaBarEvent event) {
@@ -80,7 +94,7 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
           break;
         case FormulaBarEventCancel():
           // Reset to the cell's stored value.
-          _formula = _sampleRows[_selectedRow][_selectedCol];
+          _formula = _sampleRows[_selectedRow.toInt()][_selectedCol.toInt()];
       }
     });
   }
@@ -89,9 +103,18 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
     setState(() {
       switch (event) {
         case GridEventNavigate(:final row, :final col):
-          _selectedRow = row;
-          _selectedCol = col;
-          _formula = _sampleRows[row][col];
+          _selectedRow = row.toDouble();
+          _selectedCol = col.toDouble();
+          _formula = _sampleRows[row.toInt()][col.toInt()];
+        case GridEventFormulaChange(:final value):
+          _editContent = value;
+        case GridEventEditCommit():
+          _editRow = -1;
+          _editCol = -1;
+        case GridEventEditCancel():
+          _editRow = -1;
+          _editCol = -1;
+          _editContent = '';
       }
     });
   }
@@ -132,8 +155,9 @@ class _VisiCalcHomeState extends State<VisiCalcHome> {
                     totalHeight: 400,
                     selectedRow: _selectedRow,
                     selectedCol: _selectedCol,
-                    editRow: -1,
-                    editCol: -1,
+                    editRow: _editRow,
+                    editCol: _editCol,
+                    editContent: _editContent,
                     dispatch: _onGridEvent,
                   ),
                 ),
