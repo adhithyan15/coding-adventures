@@ -720,8 +720,39 @@ fn emit_html_tree(
         return Ok(out);
     }
 
-    // Text node with a `content: slot: x` prop lowers to a `<span>` whose
-    // text is `{{x}}`. A literal-string content becomes escaped text.
+    // Text node with a `content: …` prop.  Lowers depending on the
+    // prop-value shape:
+    //
+    //   * `SlotRef(x)`  → `<span>{{x}}</span>` — host's template
+    //     engine (or the demo's JS shim) substitutes the camelCased
+    //     slot name.
+    //   * `String(lit)` → `<span>escaped-literal</span>`.
+    //   * `Expr(e)`     → `<span>{{e}}</span>` — same mustache shape
+    //     as the slot-ref path so the runtime template engine can
+    //     evaluate the expression against the current loop / slot
+    //     scope.  Without this case, layouts like the visicalc grid
+    //     (which use `Text ( content: ( v ) )` to render a `For`-
+    //     loop binding) would lower to an empty `<span></span>` and
+    //     the demo would show empty cells.
+    //
+    //     The expression text passes through `escape_html_text` AND
+    //     `escape_mustache_braces` — the second pass turns any
+    //     literal `{` / `}` inside the expression into the HTML
+    //     entity sequence `&#123;` / `&#125;`.  Without that step, a
+    //     STRING literal inside the parsed expression (e.g.
+    //     `Text ( content: ( "}}…{{" ) )` — `reconstruct_expr_text`
+    //     keeps the STRING's body in the Expr text) could close the
+    //     mustache placeholder early and confuse the runtime
+    //     template engine.  The HTML browser decodes the entities
+    //     back to `{` / `}` after parsing, so the rendered DOM is
+    //     visually unchanged on legitimate inputs (which contain
+    //     neither brace); the template engine sees the entities in
+    //     the raw HTML string and treats them as opaque.
+    //   * `Keyword(k)`  → `<span>{{k}}</span>` — a bare NAME in
+    //     prop-value position is typically a loop binding or
+    //     value keyword; emit the same mustache so the runtime
+    //     resolves it.  This was previously dropped to an empty
+    //     `<span>` for the same reason as Expr.
     if node.tag == "Text" && node.children.is_empty() {
         match find_prop(node, "content") {
             Some(LayoutPropValue::SlotRef(s)) => {
@@ -738,6 +769,40 @@ fn emit_html_tree(
                     out,
                     "{pad}<{tag_name}{extra_attrs}{style_attr}>{esc}</{tag_name}>",
                     esc = escape_html_text(lit)
+                )
+                .unwrap();
+                return Ok(out);
+            }
+            Some(LayoutPropValue::Expr(e)) => {
+                // Strip whitespace + outer parens so `( v )` reduces
+                // to `v` in the mustache — the runtime expander
+                // then resolves the bare identifier in the active
+                // loop scope.  Complex expressions (`row.cells`,
+                // `r == editRow`) survive the strip and reach the
+                // expander as the original text.
+                let trimmed = strip_outer_parens(e.trim());
+                let safe = escape_mustache_braces(&escape_html_text(trimmed));
+                writeln!(
+                    out,
+                    "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{e}}}}}</{tag_name}>",
+                    e = safe,
+                )
+                .unwrap();
+                return Ok(out);
+            }
+            Some(LayoutPropValue::Keyword(k)) => {
+                // Symmetry with the Expr path — even though the
+                // moslayout NAME grammar admits only
+                // `[a-zA-Z][a-zA-Z0-9-]*` today (so no braces can
+                // sneak in), routing through the same escape
+                // discipline keeps the contract identical and
+                // future-proofs against grammar widening or
+                // programmatically constructed nodes.
+                let safe = escape_mustache_braces(&escape_html_text(k));
+                writeln!(
+                    out,
+                    "{pad}<{tag_name}{extra_attrs}{style_attr}>{{{{{k}}}}}</{tag_name}>",
+                    k = safe
                 )
                 .unwrap();
                 return Ok(out);
@@ -2090,6 +2155,84 @@ fn merge_styles(builtin: &str, author: &str) -> String {
 // =====================================================================
 // Name conversion
 // =====================================================================
+
+/// Escape `{` / `}` in interpolated content so a STRING literal
+/// inside a parsed expression cannot close a surrounding mustache
+/// placeholder.
+///
+/// The moslayout grammar admits STRING tokens inside expressions
+/// (UI29 §3.3 — `primary = … | STRING | …`).  `reconstruct_expr_text`
+/// keeps the STRING body in the Expr text without re-escaping, so a
+/// `.mll` author who wrote `Text ( content: ( "}}…{{" ) )` would —
+/// without this step — produce output that closes the surrounding
+/// `<span>{{ … }}</span>` early.
+///
+/// Escaping to `&#123;` / `&#125;` is HTML-entity neutral: the
+/// browser decodes the entities back to the literal characters
+/// when parsing the DOM, so legitimate content (which never
+/// contains `{` / `}`) renders unchanged visually.  The runtime
+/// template engine — which processes the raw HTML string before
+/// browser parsing — sees the entities and ignores them as
+/// non-delimiters.
+fn escape_mustache_braces(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '{' => out.push_str("&#123;"),
+            '}' => out.push_str("&#125;"),
+            _ => out.push(c),
+        }
+    }
+    out
+}
+
+/// Strip a single layer of surrounding parentheses + interior
+/// whitespace from an expression text.
+///
+/// `( v )`  → `v`
+/// `( a + b )` → `a + b`
+/// `(((nested)))` → `((nested))` (one layer only — the runtime
+///   evaluator handles further unwrapping if it wants to)
+/// `a + b` → `a + b` (no change when there is no outer pair)
+/// `(a) + (b)` → `(a) + (b)` (the outer characters are `(` and
+///   `)` but they are NOT a matching pair — guarded by the
+///   walk-depth check)
+///
+/// Used by the Text-with-Expr-content lowering so a bare
+/// parenthesised identifier (which is by far the most common
+/// shape from a `For`-loop binding pass-through like
+/// `Text ( content: ( v ) )`) reaches the mustache marker as a
+/// clean `{{v}}` instead of `{{( v )}}`.  Complex expressions
+/// (`r == editRow`) survive — the strip only fires when the
+/// first/last characters are matching parens.
+fn strip_outer_parens(s: &str) -> &str {
+    let bytes = s.as_bytes();
+    if bytes.len() < 2 || bytes[0] != b'(' || bytes[bytes.len() - 1] != b')' {
+        return s;
+    }
+    // Verify the outer `(` actually matches the outer `)` (not, say,
+    // `(a) + (b)` where the outer chars happen to be parens but the
+    // pair isn't matched).
+    let mut depth = 0i32;
+    for (i, &b) in bytes.iter().enumerate() {
+        match b {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                // If depth hits zero BEFORE the last char, the outer
+                // parens aren't a matched pair.
+                if depth == 0 && i + 1 < bytes.len() {
+                    return s;
+                }
+            }
+            _ => {}
+        }
+    }
+    if depth != 0 {
+        return s; // unbalanced — leave alone
+    }
+    s[1..s.len() - 1].trim()
+}
 
 /// Convert kebab-case to camelCase (first letter lowered). Used to
 /// produce the slot-reference identifier inside `{{...}}` placeholders.
@@ -4369,6 +4512,144 @@ mod tests {
             "trailing sibling must render — the if/else pair must \
              not swallow it. Got:\n{out}"
         );
+    }
+
+    // ── Text content with Expr / Keyword value (bug fix) ─────────
+
+    /// `Text ( content: ( v ) )` — where the For loop binding `v`
+    /// would have produced an empty `<span></span>` previously —
+    /// now renders `{{v}}` so the runtime template engine (or the
+    /// demo's JS shim) can substitute the cell value.
+    #[test]
+    fn text_with_paren_expr_content_emits_mustache_placeholder() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( v )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("{{v}}"),
+            "expected `{{{{v}}}}` placeholder, got:\n{out}"
+        );
+        // The empty-span regression — fail loudly if it ever
+        // returns.
+        assert!(
+            !out.contains("<span></span>"),
+            "Text with Expr content must NOT emit empty <span></span>:\n{out}"
+        );
+    }
+
+    /// A bare-NAME prop value parses as `Keyword`, not `Expr` (see
+    /// the moslayout grammar discussion in UI29 §3.3).  Same fix:
+    /// emit `{{name}}` instead of an empty `<span>`.
+    #[test]
+    fn text_with_keyword_content_emits_mustache_placeholder() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Keyword("h".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(out.contains("{{h}}"), "expected `{{{{h}}}}`:\n{out}");
+        assert!(!out.contains("<span></span>"));
+    }
+
+    /// Complex expressions reach the runtime intact — only the
+    /// outer wrapping `( … )` is stripped.
+    #[test]
+    fn text_with_complex_expr_content_preserves_expression() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::Expr("( row.cells )".to_string()),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        assert!(
+            out.contains("{{row.cells}}"),
+            "expected `{{{{row.cells}}}}`:\n{out}"
+        );
+    }
+
+    /// Brace injection via a STRING literal inside the parsed
+    /// expression — confirmed structurally possible per the
+    /// security review.  This test pins the mitigation:
+    /// `escape_mustache_braces` neutralises `{` / `}` to
+    /// `&#123;` / `&#125;` so the mustache placeholder around
+    /// the expression text remains a single matched pair.
+    #[test]
+    fn text_with_string_literal_expr_cannot_break_mustache() {
+        let layout_def = layout(
+            "X",
+            node_with_props(
+                "Text",
+                vec![LayoutProp {
+                    name: "content".to_string(),
+                    // The author's expression text is the literal
+                    // STRING `"}}…{{"` wrapped in parens.  Without
+                    // brace escaping the output would close the
+                    // surrounding mustache early.
+                    value: LayoutPropValue::Expr(
+                        "( \"}}<b>oops</b>{{\" )".to_string(),
+                    ),
+                }],
+            ),
+        );
+        let out = from_pipeline(&component("X", vec![]), &layout_def, &empty_style("X"))
+            .unwrap()
+            .output;
+        // The literal `}}` and `{{` must be entity-escaped so the
+        // outer mustache `{{ … }}` stays a single pair.
+        assert!(
+            out.contains("&#125;&#125;") && out.contains("&#123;&#123;"),
+            "expected mustache-brace entities, got:\n{out}"
+        );
+        // The XSS-dangerous chars are also escaped (existing
+        // behaviour, but checked here to lock both layers in).
+        assert!(out.contains("&lt;b&gt;"));
+        assert!(!out.contains("<b>oops</b>"));
+        // Exactly one open + one close `{{`/`}}` pair survives in
+        // the output line for the Text node.  Strip the
+        // entity-escaped braces and count what's left.
+        let line = out.lines().find(|l| l.contains("{{")).unwrap_or("");
+        let stripped = line.replace("&#123;", "").replace("&#125;", "");
+        assert_eq!(stripped.matches("{{").count(), 1);
+        assert_eq!(stripped.matches("}}").count(), 1);
+    }
+
+    /// `strip_outer_parens` only fires when the outer parens are
+    /// a matched pair — `(a) + (b)` survives intact so the runtime
+    /// gets the full expression for evaluation.
+    #[test]
+    fn strip_outer_parens_only_when_matched_pair() {
+        assert_eq!(strip_outer_parens("( v )"), "v");
+        assert_eq!(strip_outer_parens("(a + b)"), "a + b");
+        assert_eq!(strip_outer_parens("(a) + (b)"), "(a) + (b)");
+        assert_eq!(strip_outer_parens("a + b"), "a + b");
+        assert_eq!(strip_outer_parens(""), "");
+        assert_eq!(strip_outer_parens("("), "(");
+        assert_eq!(strip_outer_parens(")"), ")");
     }
 
     /// A bare `If` without an Else sibling still works — the
