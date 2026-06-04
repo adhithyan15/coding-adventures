@@ -1,0 +1,738 @@
+{
+  "summary": "ADJ61+ADJ62 end-to-end on a FRESH case. INPUT: decompose (coverage) -> account for every fact extracted/inferred with the bytes + justification -> input justification gate + kickback. OUTPUT: derive the answer as evidence/conclusion claims grounded by COMBINING input bytes -> output justification gate + kickback. Picks a brand-new documented case (prefer a non-medical identification domain) to test that the bidirectional justification gate generalizes.",
+  "agentCount": 5,
+  "logs": [
+    "domain=materials-failure-analysis (metallurgical fractography); coverage OK (1975 bytes)"
+  ],
+  "result": {
+    "domain": "materials-failure-analysis (metallurgical fractography)",
+    "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12387781/",
+    "ground_truth": "The investigation concluded the axles suffered HIGH-STRESS FATIGUE FRACTURE (a bending-fatigue failure driven by operating stress exceeding the material's fatigue strength), NOT a material-defect or manufacturing-flaw (e.g., inclusion/porosity) failure. Established by: (a) macro/SEM fractography showing dual bending-fatigue initiation sites at the transition rounded corners with beach marks and a mixed ductile/cleavage final-fracture zone; (b) clean metallography/chemistry conforming to EA1N (UIC 811-1) with good inclusion ratings and no porosity/slag/decarburization at the crack source, ruling out material defects; (c) FEA-calculated operating stress (~272.8-298.7 MPa) exceeding the measured rotating-bending fatigue limit (~265-273 MPa); (d) surface tensile residual stress (~71-99 MPa) plus rough machining marks, ~342 um roughness, ~0.95 mm blade marks, V-shaped notches and corrosion pits at the wheel-seat transition arc providing the stress concentration that nucleated the cracks. Root cause: design/finish at the wheel-seat transition arc letting service stress exceed fatigue strength. Published in Materials (MDPI), article PMC12387781.",
+    "case_text": "During the development of a prototype PMDD electric locomotive, the newly designed axles exhibited premature failures during wheel-seat–axle fatigue testing, failing to meet validation requirements. After 3 million fatigue tests, axle 1# broke at the transition corner. After 3.5 million fatigue tests, it was found that magnetic marks gathered on both sides of the transition corners of axle 2#. After 1.6 million tests, accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle. The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns. Beach marks are present at both the top and bottom regions of the fracture section. The final fracture exhibits mixed modes: ductile shear lips at edges and cleavage-dominated brittle fracture in the central zone. Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist. The width of the blade marks on the surface is about 0.95 mm, and there are parallel processing textures at the bottom. The height difference between the highest point and the lowest point near the transition zone is 342 μm. There are small V-shaped notches in this section. The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1. The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite. The grain size is grade 7, and no characteristics of oxidation, decarburization, and overheated microstructure are found. No defects, such as porosity, slag inclusion, and repair welding, were found in this area. The surface of the arc region is manifested as tensile stress in both circumferential and axial directions. The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction.",
+    "segments": [
+      {
+        "text": "During the development of a prototype PMDD electric locomotive, the newly designed axles exhibited premature failures during wheel-seat–axle fatigue testing, failing to meet validation requirements. ",
+        "kind": "fact",
+        "reason": "Context: component (railway axle), service condition (wheel-seat fatigue testing), and the failure event being investigated."
+      },
+      {
+        "text": "After 3 million fatigue tests, axle 1# broke at the transition corner. ",
+        "kind": "fact",
+        "reason": "Fracture location (transition corner/wheel-seat arc) and life-to-failure (3M cycles) — key fatigue-life datum and stress-concentration locus."
+      },
+      {
+        "text": "After 3.5 million fatigue tests, it was found that magnetic marks gathered on both sides of the transition corners of axle 2#. ",
+        "kind": "fact",
+        "reason": "Magnetic-particle indication of cracking at the same transition geometry on a second specimen — reproducibility of the initiation site."
+      },
+      {
+        "text": "After 1.6 million tests, accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle. ",
+        "kind": "fact",
+        "reason": "Third specimen cracking at the same transition angle, at lower cycle count — confirms a systematic, geometry-driven failure, not a one-off."
+      },
+      {
+        "text": "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns. ",
+        "kind": "fact",
+        "reason": "Multiple initiation sites with bending-fatigue morphology localized at the transition radius — primary fractographic signature."
+      },
+      {
+        "text": "Beach marks are present at both the top and bottom regions of the fracture section. ",
+        "kind": "fact",
+        "reason": "Beach (crack-arrest) marks are the diagnostic macro feature of progressive fatigue crack growth."
+      },
+      {
+        "text": "The final fracture exhibits mixed modes: ductile shear lips at edges and cleavage-dominated brittle fracture in the central zone. ",
+        "kind": "fact",
+        "reason": "Final-overload zone morphology indicating direction/sequence of fracture and that overload completed a fatigue-initiated crack."
+      },
+      {
+        "text": "Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist. ",
+        "kind": "fact",
+        "reason": "Surface condition at the initiation site: machining roughness and corrosion pits as candidate crack nucleation features."
+      },
+      {
+        "text": "The width of the blade marks on the surface is about 0.95 mm, and there are parallel processing textures at the bottom. ",
+        "kind": "fact",
+        "reason": "Quantified machining-mark geometry — stress-concentration/surface-finish evidence at the crack source."
+      },
+      {
+        "text": "The height difference between the highest point and the lowest point near the transition zone is 342 μm. ",
+        "kind": "fact",
+        "reason": "Quantified surface roughness (342 μm relief) at the transition — magnitude of the surface-finish stress raiser."
+      },
+      {
+        "text": "There are small V-shaped notches in this section. ",
+        "kind": "fact",
+        "reason": "Sharp V-notches act as local stress concentrators favoring fatigue initiation."
+      },
+      {
+        "text": "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1. ",
+        "kind": "fact",
+        "reason": "Material chemistry conforms to spec — rules out wrong/off-spec alloy as cause."
+      },
+      {
+        "text": "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite. ",
+        "kind": "fact",
+        "reason": "Uniform expected microstructure with no abnormal local structure at initiation — argues against metallurgical defect origin."
+      },
+      {
+        "text": "The grain size is grade 7, and no characteristics of oxidation, decarburization, and overheated microstructure are found. ",
+        "kind": "fact",
+        "reason": "Normal grain size and absence of thermal-processing anomalies — excludes heat-treatment/overheating defects."
+      },
+      {
+        "text": "No defects, such as porosity, slag inclusion, and repair welding, were found in this area. ",
+        "kind": "fact",
+        "reason": "Explicitly excludes internal material defects at the crack source — eliminates the defect-origin hypothesis, pointing to stress/surface origin."
+      },
+      {
+        "text": "The surface of the arc region is manifested as tensile stress in both circumferential and axial directions. ",
+        "kind": "fact",
+        "reason": "Surface residual stress is tensile (not protective compressive) — promotes crack opening/initiation."
+      },
+      {
+        "text": "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction.",
+        "kind": "fact",
+        "reason": "Quantified tensile residual stress magnitude at the initiation site — adds to applied service stress to exceed fatigue limit."
+      }
+    ],
+    "coverage_ok": true,
+    "input_facts": [
+      {
+        "fact": "The case concerns a prototype PMDD electric locomotive.",
+        "kind": "extracted",
+        "grounded_by": [
+          "During the development of a prototype PMDD electric locomotive"
+        ],
+        "justification": "The bytes directly state the subject is a 'prototype PMDD electric locomotive'.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Cited bytes state 'a prototype PMDD electric locomotive' verbatim.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The locomotive's axles were newly designed.",
+        "kind": "extracted",
+        "grounded_by": [
+          "the newly designed axles"
+        ],
+        "justification": "The text directly describes the axles as 'newly designed'.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'the newly designed axles' directly supports 'axles were newly designed.'",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The axles failed prematurely during wheel-seat–axle fatigue testing.",
+        "kind": "extracted",
+        "grounded_by": [
+          "the newly designed axles exhibited premature failures during wheel-seat–axle fatigue testing"
+        ],
+        "justification": "The bytes directly state premature failures during this specific fatigue testing.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state premature failures during wheel-seat-axle fatigue testing verbatim.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The axles did not meet validation requirements.",
+        "kind": "extracted",
+        "grounded_by": [
+          "failing to meet validation requirements"
+        ],
+        "justification": "The text directly states they failed to meet validation requirements.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'failing to meet validation requirements' directly supports the fact.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Axle 1# broke at the transition corner after 3 million fatigue tests.",
+        "kind": "extracted",
+        "grounded_by": [
+          "After 3 million fatigue tests, axle 1# broke at the transition corner"
+        ],
+        "justification": "The bytes directly state the cycle count, axle, and fracture location.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state 3 million tests, axle 1#, broke at transition corner.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "After 3.5 million fatigue tests, magnetic marks gathered on both sides of the transition corners of axle 2#.",
+        "kind": "extracted",
+        "grounded_by": [
+          "After 3.5 million fatigue tests, it was found that magnetic marks gathered on both sides of the transition corners of axle 2#"
+        ],
+        "justification": "The bytes directly state the cycle count, axle, and observation of magnetic marks.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state 3.5 million, axle 2#, magnetic marks on both sides of transition corners.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "After 1.6 million tests, accumulated magnetic marks were found on both sides of axle 3#'s transition angle.",
+        "kind": "extracted",
+        "grounded_by": [
+          "After 1.6 million tests, accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle"
+        ],
+        "justification": "The bytes directly state the cycle count, axle 3#, and accumulated magnetic marks.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state 1.6 million tests, axle 3#, accumulated magnetic marks on both sides of transition angle.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Magnetic marks (from magnetic particle inspection) indicate the presence of surface cracks at the transition corners of axles 2# and 3#.",
+        "kind": "inferred",
+        "grounded_by": [
+          "magnetic marks gathered on both sides of the transition corners of axle 2#",
+          "accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle"
+        ],
+        "justification": "Magnetic marks gathering/accumulating is the conventional signature of magnetic particle inspection detecting cracks; this reading is warranted but the text does not literally call them cracks.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Magnetic marks accumulating is the standard MPI signature of cracks; warranted interpretive reading, text does not literally say cracks. Appropriately marked inferred.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "There were dual fatigue initiation sites, located on surfaces A and B at the transition's rounded corners.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners"
+        ],
+        "justification": "The bytes directly state two fatigue initiation sites at surfaces A and B at the rounded corners.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state dual fatigue initiation sites on surfaces A and B at transition's rounded corners.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The fracture exhibits characteristic bending fatigue patterns.",
+        "kind": "extracted",
+        "grounded_by": [
+          "exhibit characteristic bending fatigue patterns"
+        ],
+        "justification": "The text directly identifies the patterns as bending fatigue.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'exhibit characteristic bending fatigue patterns' directly supports the fact.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The failure mode is bending fatigue.",
+        "kind": "inferred",
+        "grounded_by": [
+          "The identified dual fatigue initiation sites on surfaces A and B",
+          "exhibit characteristic bending fatigue patterns",
+          "Beach marks are present at both the top and bottom regions of the fracture section"
+        ],
+        "justification": "Dual opposite-side initiation, bending fatigue patterns, and beach marks at both top and bottom together warrant the interpretation that the loading mode is reversed bending fatigue; this is a synthesized reading, not stated verbatim.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Dual opposite-side initiation + beach marks top and bottom + bending fatigue patterns warrant reversed bending fatigue loading mode as a synthesized reading. Defensible inference.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Beach marks are present at both the top and bottom regions of the fracture section.",
+        "kind": "extracted",
+        "grounded_by": [
+          "Beach marks are present at both the top and bottom regions of the fracture section"
+        ],
+        "justification": "The bytes directly state beach marks at top and bottom regions.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state beach marks at both top and bottom regions of the fracture section.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The final fracture exhibits mixed modes: ductile shear lips at the edges and cleavage-dominated brittle fracture in the central zone.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The final fracture exhibits mixed modes: ductile shear lips at edges and cleavage-dominated brittle fracture in the central zone"
+        ],
+        "justification": "The bytes directly describe the mixed-mode final fracture with these two features.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes describe mixed modes: ductile shear lips at edges and cleavage-dominated brittle fracture in central zone.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Parallel distributions of rough machining textures are observed on the side of the crack source.",
+        "kind": "extracted",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source"
+        ],
+        "justification": "The bytes directly state parallel rough machining textures at the crack source side.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state parallel distributions of rough machining textures on the crack source side.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Local corrosion pits exist at the crack source side.",
+        "kind": "extracted",
+        "grounded_by": [
+          "and local corrosion pits exist"
+        ],
+        "justification": "The text directly states local corrosion pits exist (in the context of the crack source side).",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'and local corrosion pits exist' supports; same sentence context as crack source side.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The width of the blade (machining) marks on the surface is about 0.95 mm.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The width of the blade marks on the surface is about 0.95 mm"
+        ],
+        "justification": "The bytes directly state the blade mark width as about 0.95 mm.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state blade marks width about 0.95 mm. 'blade (machining)' gloss is reasonable.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "There are parallel processing (machining) textures at the bottom of the blade marks.",
+        "kind": "extracted",
+        "grounded_by": [
+          "and there are parallel processing textures at the bottom"
+        ],
+        "justification": "The bytes directly state parallel processing textures at the bottom.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state parallel processing textures at the bottom.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The height difference between the highest and lowest point near the transition zone is 342 μm.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The height difference between the highest point and the lowest point near the transition zone is 342 μm"
+        ],
+        "justification": "The bytes directly state the 342 μm height difference near the transition zone.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state 342 um height difference between highest and lowest point near transition zone.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "There are small V-shaped notches in the transition section.",
+        "kind": "extracted",
+        "grounded_by": [
+          "There are small V-shaped notches in this section"
+        ],
+        "justification": "The bytes directly state small V-shaped notches are present in this section.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'There are small V-shaped notches in this section' directly supports.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The rough machining, blade marks, surface roughness (342 μm height difference), V-shaped notches, and corrosion pits act as stress concentrators / crack-initiation sites.",
+        "kind": "inferred",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source",
+          "local corrosion pits exist",
+          "The width of the blade marks on the surface is about 0.95 mm",
+          "The height difference between the highest point and the lowest point near the transition zone is 342 μm",
+          "There are small V-shaped notches in this section"
+        ],
+        "justification": "Co-location of these surface defects with the crack source warrants the engineering interpretation that they are stress raisers promoting fatigue initiation; the text describes them but does not explicitly label them as the cause.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Co-location of surface defects with crack source warrants stress-concentrator interpretation; text describes but does not label them as initiators. Properly inferred.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The chemical composition meets the standard requirements of EA1N in UIC 811-1.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1"
+        ],
+        "justification": "The bytes directly state the chemistry conforms to EA1N in UIC 811-1.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state chemical composition in line with EA1N in UIC 811-1.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Material defects in chemical composition are ruled out as a cause of failure.",
+        "kind": "inferred",
+        "grounded_by": [
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1"
+        ],
+        "justification": "Conformance to the standard warrants excluding chemistry as a failure cause; this is an interpretive conclusion not literally stated.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Conformance to standard warrants excluding chemistry as a cause; interpretive conclusion not stated. Properly inferred.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The microstructures at the crack source are the same as at the core: flake pearlite plus ferrite.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite"
+        ],
+        "justification": "The bytes directly state the microstructure identity and composition.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state microstructures at crack source same as core, flake pearlite + ferrite.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The grain size is grade 7.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The grain size is grade 7"
+        ],
+        "justification": "The bytes directly state grain size grade 7.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "'The grain size is grade 7' directly supports.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "No characteristics of oxidation, decarburization, or overheated microstructure were found.",
+        "kind": "extracted",
+        "grounded_by": [
+          "no characteristics of oxidation, decarburization, and overheated microstructure are found"
+        ],
+        "justification": "The bytes directly state none of these features were found.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state no oxidation, decarburization, overheated microstructure found.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "No defects such as porosity, slag inclusion, or repair welding were found in this area.",
+        "kind": "extracted",
+        "grounded_by": [
+          "No defects, such as porosity, slag inclusion, and repair welding, were found in this area"
+        ],
+        "justification": "The bytes directly state the absence of these defects.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state no porosity, slag inclusion, repair welding defects in this area.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "Metallurgical and material-quality defects are excluded as the cause; the failure originates from surface/manufacturing condition rather than material.",
+        "kind": "inferred",
+        "grounded_by": [
+          "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite",
+          "no characteristics of oxidation, decarburization, and overheated microstructure are found",
+          "No defects, such as porosity, slag inclusion, and repair welding, were found in this area",
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1"
+        ],
+        "justification": "The combined negatives on microstructure, heat-treatment anomalies, internal defects, and chemistry warrant the conclusion that material quality is not the cause; this synthesis is interpretive, not stated verbatim.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Combined negatives on microstructure, heat treatment, internal defects, chemistry warrant excluding material quality as cause; synthesis is interpretive. Defensible.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The surface of the arc region exhibits tensile stress in both circumferential and axial directions.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The surface of the arc region is manifested as tensile stress in both circumferential and axial directions"
+        ],
+        "justification": "The bytes directly state tensile stress in both directions at the arc region surface.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state arc region surface manifests tensile stress in both circumferential and axial directions.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The arc transition zone has residual tensile stress of 72–99 MPa circumferentially and 71–92 MPa axially.",
+        "kind": "extracted",
+        "grounded_by": [
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction"
+        ],
+        "justification": "The bytes directly state both residual tensile stress ranges.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bytes state 72-99 MPa circumferential and 71-92 MPa axial residual tensile stress.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The residual tensile stress at the transition is detrimental and promotes fatigue crack initiation/growth.",
+        "kind": "inferred",
+        "grounded_by": [
+          "The surface of the arc region is manifested as tensile stress in both circumferential and axial directions",
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction"
+        ],
+        "justification": "Surface residual tensile stress (rather than the desirable compressive stress) is known to accelerate fatigue; concluding it is detrimental is an interpretive reading warranted by the stress being tensile, not stated outright.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Surface residual tensile stress being detrimental to fatigue is standard engineering knowledge; concluding it promotes initiation/growth is warranted interpretation, not stated. Properly inferred.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "The root cause is improper machining/manufacturing of the transition fillet — rough surface, blade marks, notches, and tensile residual stress — rather than material defect.",
+        "kind": "inferred",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source",
+          "There are small V-shaped notches in this section",
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction",
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1",
+          "No defects, such as porosity, slag inclusion, and repair welding, were found in this area"
+        ],
+        "justification": "The overall case synthesis — surface manufacturing flaws and tensile residual stress at the fillet combined with ruled-out material defects — warrants attributing failure to manufacturing/machining of the transition; this is an inferred root-cause conclusion, not a verbatim statement.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Root-cause synthesis: surface manufacturing flaws + tensile residual stress at fillet with ruled-out material defects warrants attributing failure to machining of the transition. Defensible inferred conclusion, not verbatim.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "fact": "All three axles failed/showed cracks at the same location: the transition corner/fillet.",
+        "kind": "inferred",
+        "grounded_by": [
+          "axle 1# broke at the transition corner",
+          "magnetic marks gathered on both sides of the transition corners of axle 2#",
+          "accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle"
+        ],
+        "justification": "Each of the three axles is described with cracking/failure at the transition corner/angle; concluding a common failure location across all three is a warranted synthesis across the three separate statements.",
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Each of the three axles is described with cracking/failure at the transition corner/angle; common-location synthesis is warranted across the three statements.",
+        "grounded": true,
+        "reason": ""
+      }
+    ],
+    "input_attempts": [
+      {
+        "attempt": 1,
+        "n": 32,
+        "n_rejected": 0
+      }
+    ],
+    "leading_answer": "The axle failures are most plausibly a case of bending-fatigue cracking initiated at the machined transition fillet, where the leading hypothesis is that the failure was driven by manufacturing/surface condition rather than material defect: rough machining textures, blade marks, surface notches/roughness, corrosion pits, and detrimental residual tensile stress at the fillet acted together as stress concentrators that nucleated dual fatigue cracks, while chemical composition and microstructure were normal and conforming.",
+    "output_claims": [
+      {
+        "claim": "The failures occurred in newly designed axles of a prototype PMDD electric locomotive during wheel-seat-axle fatigue testing, and the axles failed prematurely and did not meet validation requirements.",
+        "kind": "evidence",
+        "grounded_by": [
+          "During the development of a prototype PMDD electric locomotive, the newly designed axles exhibited premature failures during wheel-seat–axle fatigue testing, failing to meet validation requirements."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Cited sentence states prototype PMDD locomotive, newly designed axles, premature failures during wheel-seat-axle fatigue testing, and failure to meet validation requirements. Direct restatement.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "All three axles showed damage at the same location — the transition corner/fillet: axle 1# broke there, and magnetic-particle marks accumulated at the transition corners of axles 2# and 3#.",
+        "kind": "evidence",
+        "grounded_by": [
+          "After 3 million fatigue tests, axle 1# broke at the transition corner.",
+          "After 3.5 million fatigue tests, it was found that magnetic marks gathered on both sides of the transition corners of axle 2#.",
+          "After 1.6 million tests, accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "All three cited bytes locate damage at the same feature: 1# broke at transition corner; 2# magnetic marks at transition corners; 3# marks at transition angle. Same-location claim directly supported.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The magnetic marks accumulating at the transition corners of axles 2# and 3# indicate the presence of surface cracks at those fillets (magnetic particle inspection responds to surface/near-surface discontinuities).",
+        "kind": "conclusion",
+        "grounded_by": [
+          "it was found that magnetic marks gathered on both sides of the transition corners of axle 2#.",
+          "accumulated magnetic marks were also found on both sides of the # 3 axle's transition angle."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Magnetic-particle marks gathering at a feature is the warranted MPI reading of surface/near-surface discontinuity; conclusion hedged ('indicate'). Standard and not over-asserted.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The fracture has dual fatigue initiation sites (surfaces A and B) at the rounded transition corners and shows characteristic bending fatigue patterns with beach marks at both the top and bottom of the fracture section.",
+        "kind": "evidence",
+        "grounded_by": [
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns.",
+          "Beach marks are present at both the top and bottom regions of the fracture section."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Dual initiation sites A/B at rounded corners, characteristic bending fatigue patterns, and beach marks at top and bottom are all stated verbatim in the cited bytes.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The operative failure mechanism is most plausibly bending fatigue, evidenced by the characteristic bending fatigue patterns, dual opposed initiation sites, and beach marks at both top and bottom of the section.",
+        "kind": "conclusion",
+        "grounded_by": [
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns.",
+          "Beach marks are present at both the top and bottom regions of the fracture section."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Bending fatigue is the warranted reading from explicit 'characteristic bending fatigue patterns,' dual opposed sites, and top/bottom beach marks; hedged 'most plausibly.'",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The final (fast) fracture region is mixed-mode: ductile shear lips at the edges and cleavage-dominated brittle fracture in the central zone.",
+        "kind": "evidence",
+        "grounded_by": [
+          "The final fracture exhibits mixed modes: ductile shear lips at edges and cleavage-dominated brittle fracture in the central zone."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Cited byte states mixed-mode final fracture: ductile shear lips at edges, cleavage-dominated brittle central zone. Verbatim.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The crack-source surface carries multiple stress-raising features: parallel rough machining textures, blade marks about 0.95 mm wide with parallel processing textures at the bottom, a near-transition surface height difference of 342 micrometers, small V-shaped notches, and local corrosion pits.",
+        "kind": "evidence",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist.",
+          "The width of the blade marks on the surface is about 0.95 mm, and there are parallel processing textures at the bottom.",
+          "The height difference between the highest point and the lowest point near the transition zone is 342 μm.",
+          "There are small V-shaped notches in this section."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Each listed feature (rough machining textures, ~0.95mm blade marks with bottom textures, 342um height difference, V-notches, corrosion pits) is stated in cited bytes.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "These surface features (rough machining, blade marks, 342 micrometer roughness, V-notches, corrosion pits) most plausibly act as stress concentrators that promote fatigue crack initiation at the fillet.",
+        "kind": "conclusion",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist.",
+          "There are small V-shaped notches in this section.",
+          "The height difference between the highest point and the lowest point near the transition zone is 342 μm.",
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "That machining textures, V-notches, roughness, and corrosion pits at the crack source act as stress concentrators promoting fillet fatigue initiation is warranted standard reasoning; hedged.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The chemical composition conforms to EA1N in UIC 811-1, and the microstructure at the crack source matches the core (flake pearlite plus ferrite), grade 7 grain size, with no oxidation, decarburization, overheating, porosity, slag inclusion, or repair welding.",
+        "kind": "evidence",
+        "grounded_by": [
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1.",
+          "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite.",
+          "The grain size is grade 7, and no characteristics of oxidation, decarburization, and overheated microstructure are found.",
+          "No defects, such as porosity, slag inclusion, and repair welding, were found in this area."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Composition conforming to EA1N UIC 811-1, crack-source microstructure matching core (pearlite+ferrite), grade 7 grain, and absence of oxidation/decarb/overheating/porosity/slag/repair weld all stated.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "Because composition is conforming and the microstructure is normal and defect-free, material/metallurgical defects can most plausibly be excluded as the cause, pointing instead to surface/manufacturing condition.",
+        "kind": "conclusion",
+        "grounded_by": [
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1.",
+          "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite.",
+          "no characteristics of oxidation, decarburization, and overheated microstructure are found.",
+          "No defects, such as porosity, slag inclusion, and repair welding, were found in this area."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Excluding metallurgical defects from conforming, normal, defect-free material is warranted; redirect to surface/manufacturing supported by text's surface findings; hedged 'most plausibly.'",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The arc transition zone surface is in tensile residual stress in both directions: 72-99 MPa circumferentially and 71-92 MPa axially.",
+        "kind": "evidence",
+        "grounded_by": [
+          "The surface of the arc region is manifested as tensile stress in both circumferential and axial directions.",
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Cited bytes state tensile residual stress both directions, 72-99 MPa circumferential and 71-92 MPa axial. Verbatim.",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The residual tensile stress at the transition is most plausibly detrimental, superimposing on service bending stress to aid fatigue crack initiation and growth at the fillet.",
+        "kind": "conclusion",
+        "grounded_by": [
+          "The surface of the arc region is manifested as tensile stress in both circumferential and axial directions.",
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction.",
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Tensile residual stress being detrimental to fatigue initiation/growth is warranted standard reasoning; bending established in bytes; hedged 'most plausibly.'",
+        "grounded": true,
+        "reason": ""
+      },
+      {
+        "claim": "The most plausible root cause is improper machining/manufacturing of the transition fillet — rough surface finish, blade marks, notches, corrosion pits and residual tensile stress combining as stress concentrators to drive bending-fatigue initiation — rather than any material defect, consistent with all three axles cracking at the same fillet location.",
+        "kind": "conclusion",
+        "grounded_by": [
+          "Parallel distributions of rough machining textures can be observed on the side of the crack source, and local corrosion pits exist.",
+          "There are small V-shaped notches in this section.",
+          "The arc transition zone exhibits residual tensile stress values of 72–99 MPa in the circumferential direction and 71–92 MPa in the axial direction.",
+          "The chemical composition test results are in line with the standard requirements of EA1N in UIC 811-1.",
+          "The microstructures at the crack source are the same as those at the core, all of which are flake pearlite + ferrite.",
+          "After 3 million fatigue tests, axle 1# broke at the transition corner.",
+          "The identified dual fatigue initiation sites on surfaces A and B at the transition's rounded corners exhibit characteristic bending fatigue patterns."
+        ],
+        "anchored": true,
+        "justified": true,
+        "verifier_note": "Root-cause synthesis (machining/manufacturing surface features + residual tensile stress as concentrators driving bending fatigue, not material defect, same fillet across all axles) is the warranted combined reading; each component byte-supported and hedged.",
+        "grounded": true,
+        "reason": ""
+      }
+    ],
+    "output_attempts": [
+      {
+        "attempt": 1,
+        "leading_answer": "The axle failures are most plausibly a case of bending-fatigue cracking initiated at the machined transition fillet, where the leading hypothesis is that the failure was driven by manufacturing/surface condition rather than material defect: rough machining textures, blade marks, surface notches/roughness, corrosion pits, and detrimental residual tensile stress at the fillet acted together as stress concentrators that nucleated dual fatigue cracks, while chemical composition and microstructure were normal and conforming.",
+        "n": 13,
+        "n_rejected": 0
+      }
+    ],
+    "input_rejected": 0,
+    "output_rejected": 0
+  }
+}

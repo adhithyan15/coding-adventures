@@ -1,5 +1,36 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.7.0] — 2026-06-04
+
+### Added
+
+- **ADJ63 — bidirectional justification end-to-end** (`pipeline/bidirectional.workflow.js`,
+  `pipeline/run_bidirectional.py`). The ADJ61 (output) + ADJ62 (input) gates wired into one
+  pipeline and run on a fresh, non-medical case the agent found itself — railway-axle
+  metallurgical failure analysis (MDPI PMC12387781). All four provenance corners held:
+  coverage 100% (17 facts / 1975 bytes), input extraction 32/32 (24 extracted + 8 inferred),
+  output grounding 13/13 (7 evidence + 6 conclusion), 0 rejected. **Finding —
+  faithfulness ≠ completeness:** the byte-faithful answer ("manufacturing/surface cause")
+  diverged from the held-aside truth ("operating stress exceeded the fatigue limit")
+  because the decisive datum (the stress-vs-fatigue-limit comparison) was never in the
+  bytes. The framework did not fabricate it — it gave the answer the bytes support and the
+  gap stayed visible. Spec: [ADJ63](../../ADJ63-bidirectional-end-to-end.md).
+- **ADJ64 — the underdetermination gate** (`pipeline/underdetermination.py`,
+  `pipeline/underdetermination.workflow.js`, `pipeline/run_underdetermination.py`). The dual
+  of invention: stops a conclusion from singling out one cause when the datum that would
+  distinguish it from the rivals is **absent**. For each rival fitting the same bytes, the
+  model gives the discriminating observation + whether it is present (verbatim citation) or
+  absent; a rival is *resolved* iff present-and-cited, else *open* (its observation is a
+  **named provenance hole** — a query for the spider/CAS). Conclusion is *underdetermined*
+  iff any rival is open. 5 unit tests (`pipeline/test_underdetermination.py`). **Run** on
+  the ADJ63 axle conclusion: 7 rivals, 5 open → **UNDERDETERMINED**; the gate named five
+  missing measurements, including the **operating-stress-vs-fatigue-limit comparison — the
+  ground-truth root cause** — and replaced the single-cause answer with a disjunction that
+  keeps every grounded finding. **Honest limit:** the "resolved" verdict is an LLM judgment
+  (a citation being present ≠ it discriminating); read conservatively the 2 "resolved"
+  rivals are also open, making the safe verdict only stronger. Spec:
+  [ADJ64](../../ADJ64-underdetermination-gate.md).
+
 ## [0.6.0] — 2026-06-04
 
 ### Added
