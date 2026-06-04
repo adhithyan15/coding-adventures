@@ -1,0 +1,92 @@
+{
+  "clean_deblinded_scorecard": [
+    {
+      "domain": "engineering",
+      "framework_correct": "correct",
+      "plain_correct": "correct",
+      "winner": "tie"
+    },
+    {
+      "domain": "astronomy",
+      "framework_correct": "correct",
+      "plain_correct": "partial",
+      "winner": "framework"
+    },
+    {
+      "domain": "cybersecurity",
+      "framework_correct": "correct",
+      "plain_correct": "correct",
+      "winner": "framework"
+    },
+    {
+      "domain": "geology",
+      "framework_correct": "correct",
+      "plain_correct": "partial",
+      "winner": "framework"
+    },
+    {
+      "domain": "paleontology",
+      "framework_correct": "correct",
+      "plain_correct": "incorrect",
+      "winner": "framework"
+    },
+    {
+      "domain": "linguistics",
+      "framework_correct": "correct",
+      "plain_correct": "correct",
+      "winner": "plain_claude"
+    }
+  ],
+  "round1_verdicts": [
+    {
+      "domain": "engineering",
+      "winner": "tie",
+      "a_correct": "correct",
+      "b_correct": "correct",
+      "more_trustworthy": "B",
+      "rationale": "Both reports reach the correct top-line answer matching ground truth: high-cycle bending fatigue fracture initiated at the wheel-seat-to-axle-body transition arc, driven by a surface/geometry stress concentration, with material exonerated (chemistry meets UIC 811-1 EA1N, no porosity/slag/inclusions at crack source). Both correctly cite the decisive fractographic evidence: beach marks, dual fatigue initiation sites at the transition's rounded corners, and propagation parallel to machining/extrusion marks. So both are CORRECT on the question that matters.\n\nOutput A: Top-line answer is exactly right (\"fatigue_from_transition_arc_geometry_stress_concentration\") and every fact is byte-traced to the case text, which is genuinely auditable. Strength: tight provenance, no overreach \u2014 it does not invent sub-causes. Weaknesses: the answer is buried in a heavy audit-trail/CAS framework wrapper that adds noise and truncated evidence strings; the \"1/5 findings reached root data\" grounding note is candid but the format obscures the actual engineering conclusion. It correctly foregrounds the machining/extrusion-mark surface-finish element, which is closest to ground truth's true cause (rough blade marks ~0.95mm pitch acting as stress raisers).\n\nOutput B: Top-line answer is right and the reasoning is the most readable and physically literate of the two \u2014 it walks evidence to conclusion clearly and explicitly exonerates material. Importantly, it is well-calibrated: it gives ~70% on the core fatigue/stress-concentration claim but drops to ~50% on the specific dominant sub-cause and explicitly notes \"the case likely identifies one specifically.\" Minor weakness: it speculates on sub-causes (\"fillet radius too small,\" \"press-fit fretting\") that ground truth does NOT actually establish (ground truth attributes it to rough machining marks + residual tensile stress + FEA-confirmed stress concentration at the arc, not an undersized radius or fretting) \u2014 but B flags these as lower-confidence rather than asserting them, so the speculation is appropriately hedged.\n\nNeither report could derive the quantitative corroboration (FEA 298.7 MPa vs 200 MPa limit, 72-99 MPa residual stress, machining-mark dimensions) because those figures are absent from the case_text \u2014 so neither is penalized for omitting them.\n\nWinner: tie on correctness \u2014 both nail the decisive answer. More trustworthy: B, because its reasoning is transparently traceable in plain engineering terms and its confidence is explicitly and appropriately calibrated (correctly distinguishing the high-confidence core claim from the uncertain sub-cause), whereas A's correct answer is harder to audit through its framework wrapper and its speculative-sub-cause restraint, while admirable, comes at the cost of readability. A's byte-provenance is a real strength, but B's calibrated hedging on exactly the point where ground truth is more specific makes it the more defensible read."
+    },
+    {
+      "domain": "astronomy",
+      "winner": "B",
+      "a_correct": "partial",
+      "b_correct": "correct",
+      "more_trustworthy": "B",
+      "rationale": "Ground truth: PS15cjr is classified as a Type IIb supernova; the authors explicitly favor IIb over II, disfavoring the II-P (SN 2006bp) alternative because the young age implied by the rising light curve and high 13,300 km/s velocity is inconsistent with a IIP two weeks past max.\n\nOutput B (correct): Leading answer is type_iib_supernova, matching the ground truth definitively. Its evidential basis reproduces the ground-truth logic precisely \u2014 SN1993J flagged as the canonical IIb prototype/best match, the SN2006bp IIP match flagged as secondary/competing, He I present-but-weaker reading consistent with a transitional IIb, and high velocity + rising light curve cited as the youth argument. Every fact is tied back to case bytes (byte-provenanced, citation-counted), making it highly auditable. Caveats: noisy truncated formatting, a flagged derive-stage coverage overlap, and an \"audit trail has holes\" warning \u2014 but these are transparency artifacts, and B even surfaces its own grounding limits (0/3 findings reached root data, direction-only), which is honest calibration rather than overclaiming.\n\nOutput A (partial): Correctly infers the SN is young, high-velocity, core-collapse, and 1993J-like, and correctly completes the cut-off \"young\" sentence. But it stops short of the actual answer: it treats IIb-vs-IIP as genuinely unresolved and assigns only ~50% confidence to whether the classification settled on IIb vs II, whereas the source telegram (and ground truth) explicitly resolves it in favor of IIb using the very rising-light-curve/high-velocity argument A itself describes. A deliberately declines to retrieve the published classification and spends most of its effort on the ancillary sentence-completion rather than the classification, so it lands on the right flavor but the wrong (over-hedged) bottom line.\n\nMore trustworthy: B \u2014 it reaches the right answer with explicit, per-claim provenance back to the case text and transparently reports its own gaps, making it more defensible and auditable. A's reasoning is readable but its key conclusion is under-committed relative to the evidence in the passage."
+    },
+    {
+      "domain": "cybersecurity",
+      "winner": "A",
+      "a_correct": "correct",
+      "b_correct": "correct",
+      "more_trustworthy": "A",
+      "rationale": "Both reach the right answer. Ground truth: malware = AcidRain modem wiper (Viasat KA-SAT); attribution = Sandworm/Russian GRU at MEDIUM confidence, established via code/developmental overlap with the Sandworm-linked VPNFilter 'dstr' plugin (55% TLSH, identical Section Header Strings Tables, shared MEMGETINFO/MEMUNLOCK/MEMERASE IOCTLs).\n\nOutput A (acidrain_sandworm_gru): correctly identifies the malware AND the threat-actor attribution chain \u2014 names the VPNFilter dstr plugin as the 55% TLSH match, the shared-compiler signal (identical section header strings tables), and the shared MTD-erase IOCTL overlap, all anchored to the Viasat window. It is the more complete answer because it explicitly delivers the attribution (Sandworm/GRU) rather than just the malware name. Crucially, its calibration matches ground truth: it runs in QUALITATIVE mode, flags grounding as 'direction_only' with no published likelihood ratio, and avoids overclaiming \u2014 consistent with SentinelOne's medium-confidence caution. Every claim is byte-traced to the case via an explicit audit trail, making it highly defensible/auditable. Minor weakness: it does not name the syscall-number-storing developer quirk and its truncated evidence strings are slightly hard to read.\n\nOutput B (AcidRain): correct on the core facts \u2014 names AcidRain, Viasat KA-SAT, Sandworm, and correctly identifies the 55% match as the VPNFilter dstr plugin \u2014 but it is terse and presents the attribution only as a parenthetical aside rather than reasoning through the overlap evidence. Its main flaw is calibration: it asserts 'CONFIDENCE: High', which directly contradicts the ground-truth's explicit medium-confidence attribution caution. It also offers no traceability beyond a one-line assertion, so it is far less auditable.\n\nBoth are substantively correct, so this is close on the answer, but A edges it on completeness of the attribution chain. A is clearly more trustworthy: better-calibrated (medium-confidence-aligned hedging vs B's overconfident 'High') and fully auditable."
+    }
+  ],
+  "round2_verdicts": [
+    {
+      "domain": "geology",
+      "winner": "A",
+      "a_correct": "correct",
+      "b_correct": "partial",
+      "more_trustworthy": "B",
+      "rationale": "Ground truth: the material is \"tremolitized diopside anorthosite\" \u2014 anorthite (plagioclase) base with minor diopside, tremolite, uvarovite, etc.; white basal mineral = anorthite; green high-RI (>1.78) hexagonal euhedral crystals = uvarovite garnet/diopside; explicitly NOT Dushan jade.\n\nOUTPUT A reaches the exact ground-truth name: leading answer = tremolitized_diopside_anorthosite. It correctly derives the anorthite/calcic-plagioclase base from RI 1.57/SG 2.77/H~6.4 and well-developed basal \"fly-wing\" cleavage, reads green spots/plaques as a pyroxene/amphibole phase, and frames Dushan jade as a zoisite/plagioclase anorthosite that this imitates. So on the bottom-line answer A is correct, including the \"tremolitized\" and \"diopside\" qualifiers B never produces.\n\nOUTPUT B is partial: it correctly nails the anorthite/calcic-plagioclase base rock and the Dushan-jade-imitation framing, with good calibration (~70%/55%). But it stops at \"anorthosite-type / anorthite-rich rock\" and names the green phase as pyroxene (diopside/omphacite), missing tremolite entirely and not matching the uvarovite/diopside green-mineral identity (it even flags that >1.78 exceeds pyroxene but doesn't follow that to garnet). It never produces the full rock name. Right family, incomplete identification \u2014 partial.\n\nTrustworthiness diverges from correctness. A's audit-trail format claims byte-level provenance, but the decisive \"tremolitized\"/\"diopside\" specificity is carried by the pre-set leading-dx label, not derived from the case bytes (the case_text contains no FTIR/Raman/tremolite evidence). Its prose is terse, templated, and the grounding section admits \"0/2 findings reached root data,\" so a reader cannot audit how it got the exact name \u2014 it reads like the answer was supplied rather than reasoned. B is fully transparent: it states it reasoned from properties not paper recall, walks each property (cleavage geometry, RI/SG/hardness ranges) to its mineral conclusion, gives honest per-claim confidences, and openly notes uncertainty on the green phase. B is the more defensible/auditable report even though A got the more complete answer. Winner on correctness: A; more trustworthy: B."
+    },
+    {
+      "domain": "paleontology",
+      "winner": "B",
+      "a_correct": "incorrect",
+      "b_correct": "correct",
+      "more_trustworthy": "B",
+      "rationale": "Ground truth: MMS/VBN-02-102 is the holotype of Matheronodon provincialis, a rhabdodontid ORNITHOPOD (Godefroit et al. 2017). Diagnostic signature = reduction to 4 maxillary tooth families / only eight alveoli, interalveolar septa alternately resorbed so a functional tooth sits in two paired/fused alveoli, shortened rostral process, broad rostrodorsal shelf.\n\nOutput A: INCORRECT. Concludes abelisaurid theropod, 'almost certainly Arcovenator escotae,' at high confidence (~90% clade, ~85% species). Wrong on every axis \u2014 wrong clade (theropod vs ornithopod), wrong family, wrong genus/species. Its error is a classic locality trap: Arcovenator IS a Velaux abelisaurid, so A anchored on the shared 'MMS/VBN' museum prefix and locality and back-rationalized the morphology, reinterpreting the very features that DIAGNOSE Matheronodon (short rostral process, eight alveoli, paired fused alveoli/resorbed septa) as generic abelisaurid carnivore traits. The reasoning reads fluent and structured, but it is confidently wrong with no hedge toward the actual answer \u2014 the worst calibration failure: high confidence on a false ID. Not defensible because the chain rests on a misattributed specimen identity.\n\nOutput B: CORRECT. Names matheronodon_provincialis and maps each case fact (holotype designation, locality, short rostral process, rostrodorsal shelf, eight alveoli, alternately resorbed septa forming paired alveoli) to the taxon's diagnosis. The output format is verbose/templated (byte-accounting audit trail, CAS metadata) and somewhat cluttered, but every evidential claim is tied back to a source span and the conclusion matches ground truth. It also appropriately flags qualitative mode and 'direction_only' grounding rather than fabricating a posterior \u2014 honest calibration. More trustworthy because the answer is right AND the reasoning is auditable; A is both wrong and overconfident."
+    },
+    {
+      "domain": "linguistics",
+      "winner": "B",
+      "a_correct": "correct",
+      "b_correct": "correct",
+      "more_trustworthy": "B",
+      "rationale": "Both reports reach the correct answer: Wearside/Sunderland, narrowed to the Castletown/Southwick area, matching the ground truth (Stanley Ellis with Jack Windsor Lewis, excluding Tyneside Geordie and North Yorkshire, matching via Survey of English Dialects recordings including Washington). Output A's leading answer \"wearside_sunderland_castletown\" is correct, and its evidential traces correctly capture the exclusions (Tyneside, Newcastle, West Yorkshire) and the decisive Wearside/Washington match. But A's format is opaque: the evidence strings are truncated mid-sentence, the actual reasoning chain is buried in byte-accounting machinery, and the hoax conclusion is only implicit in an \"authenticity_judgment\" token rather than stated. A does honestly flag weak external grounding (0/3 findings reached root data, prior \"direction_only\"), which is good calibration. Output B is also correct and is more defensible: it gives the answer in clean prose, attaches calibrated confidence (~90% region, ~75% specific district), and walks through each discriminating signal (the PRICE \"banana vowel\" excluding Tyneside/North Yorkshire, the MOUTH set and 'strike', the Washington comparison set, the systematic elimination of every rival). B also correctly surfaces the historical vindication \u2014 the \"Wearside Jack\" hoax and the 2005 DNA identification of John Humble from the Ford Estate/Sunderland \u2014 matching the ground truth's \"how established\" section, which A omits entirely. B's one minor imprecision (\"Wearside area of County Durham\") is historically accurate (pre-1974 Sunderland/Washington were County Durham) and it correctly says Sunderland too. On correctness both tie, but B is more trustworthy because its reasoning is fully traceable and human-auditable while A's is correct-but-truncated and structurally opaque."
+    }
+  ]
+}

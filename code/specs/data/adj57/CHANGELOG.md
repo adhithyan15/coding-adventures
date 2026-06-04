@@ -1,5 +1,30 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.3.0] — 2026-06-04
+
+### Added
+
+- **ADJ59 — cross-domain validation + the qualitative verdict.** Ran the framework
+  head-to-head vs plain Claude with a blind judge across SIX non-medical domains
+  (engineering, astronomy, cybersecurity, geology, paleontology, linguistics).
+  - **Qualitative verdict** (`pipeline/run.py`): when no quantified posterior is
+    groundable (no published likelihood ratios — the norm outside medicine), commit
+    to the derive-stage leading answer with its byte-provenanced evidential basis
+    instead of abstaining. This flipped the framework from **0–3 to 4 wins / 1 tie /
+    1 loss** (correct in all 6 domains; plain Claude 3 correct / 2 partial / 1 wrong).
+  - **Head-to-head harness:** `crossdomain.workflow.js` + `crossdomain2.workflow.js`
+    (3 domains each, framework pipeline + plain-Claude arm), `make_judge.py` (builds
+    blinded A/B contexts + framework reports via run.py), `judge*.workflow.js` (blind
+    expert judge). Results in `pipeline/crossdomain-judge-results.json`.
+  - **Methodology bug caught + fixed:** `run.py` printed the held-aside ground truth,
+    which `make_judge.py` leaked into the framework's report; the blind judge flagged
+    it; stripped and re-judged clean.
+  - **CAS accumulation:** 8 (pheo+KFD) → 17 → 23 sources across runs, deduplicated.
+  - Two open weaknesses (spec §4/§6): (1) over-specification beyond byte evidence —
+    the missing **output-grounding gate** (the dual invariant: nothing dropped AND
+    nothing invented); (2) answer-first report format. Spec:
+    [ADJ59](../../ADJ59-cross-domain-validation.md).
+
 ## [0.2.0] — 2026-06-04
 
 ### Added
