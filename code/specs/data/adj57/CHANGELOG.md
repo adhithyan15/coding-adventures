@@ -1,5 +1,38 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.10.0] — 2026-06-04
+
+### Added
+
+- **ADJ67 — does the grounding discipline help? (blind HLE head-to-head + weak-model
+  ladder).** Two experiments, reported honestly including where the framework did NOT help.
+  - **Blind HLE head-to-head** (`hle-headtohead.json`): plain Claude vs a grounding-discipline
+    agent, both blind + closed-book, on real Humanity's Last Exam questions with
+    independently-verified answers held aside.
+    - *Round 1 (Palmyrene, RIB 1065):* **framework win** — coverage forced engagement with
+      the `ḤRY` token; plain Claude pattern-matched `BT…BR` to "daughter of… son of…" and
+      committed the wrong literal (dropping freedwoman-of-Barates). Both knew the inscription —
+      a reasoning-faithfulness/commitment win, not knowledge.
+    - *Round 2 (Nicolaou endiandric-acid cascade):* **tie; plain cleaner** — both reached
+      `[8π]-con, [6π]-dis, [4+2]`, but the framework's derive-from-rules discipline tangled on
+      the step *order* (which W-H does not determine), where plain holistic recall was clean.
+  - **Weak local model on the HLE chemistry item** (`pipeline/ollama_hle_chem.py`): fed
+    atomic + grounded, a ~Gemma-class local model reaches `[8π]-con, [6π]-dis, [4+2]` — the
+    answer Opus-framework got tangled on. The framework supplies the π-counts/order/rule
+    (stand-in for spider/CAS grounding); the weak model does only rule-application. The
+    structural fact Opus slipped on (ordering) is exactly what the grounded decomposition
+    hands over.
+  - **Atomic-feed ladder** (`pipeline/ollama_atomic.py`, `pipeline/atomic_haiku.workflow.js`)
+    on a marine-forensics trap case with blind controls: atomic decomposition defeats the
+    holistic exposure-prior trap even at 0.5B; grounded per-atom criteria fix a mid-size
+    model's wrong domain knowledge (Gemma net→propeller); a **capability floor** exists (0.5B
+    degenerate), and a **discrimination gate** detects ~zero-variance verdicts and refuses to
+    launder them into a confident answer (analog of ADJ65's "margin rests on assumed").
+  - **Honest conclusions:** n=2 (anecdote, likely-contaminated); the framework is NOT
+    uniformly better (1 win, 1 tie); it helps the pattern-match-and-drop class and can
+    over-formalize recall-dependent steps; a real number needs the screening harness. Spec:
+    [ADJ67](../../ADJ67-grounding-discipline-headtohead.md).
+
 ## [0.9.0] — 2026-06-04
 
 ### Added
