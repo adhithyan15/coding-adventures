@@ -839,6 +839,7 @@ pub struct BrowserDocument {
     pub media: Vec<BrowserMedia>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
+    pub disclosures: Vec<BrowserDisclosure>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
@@ -1607,6 +1608,23 @@ pub struct BrowserInteractiveElement {
     pub command: Option<String>,
     pub command_for: Option<String>,
     pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDisclosure {
+    pub element: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub text: String,
+    pub summary_text: Option<String>,
+    pub open: bool,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_modal: Option<String>,
+    pub closedby: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9253,6 +9271,9 @@ fn collect_browser_facts(
         if let Some(interactive) = browser_interactive_element(element, labels, id_texts) {
             summary.interactive_elements.push(interactive);
         }
+        if let Some(disclosure) = browser_disclosure_element(element, id_texts) {
+            summary.disclosures.push(disclosure);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -9933,6 +9954,54 @@ fn browser_interactive_element(
         command_for: browser_command_for(element),
         disabled: element.attribute("disabled").is_some(),
     })
+}
+
+fn browser_disclosure_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserDisclosure> {
+    if !matches!(element.name.as_str(), "details" | "dialog") {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let summary_text = browser_details_summary_text(element);
+    let accessible_name = browser_accessible_name(element, role, &[], id_texts)
+        .or_else(|| summary_text.clone().filter(|_| element.name == "details"));
+
+    Some(BrowserDisclosure {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        summary_text,
+        open: browser_open(element),
+        accessible_name,
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_modal: browser_aria_state(element, "aria-modal"),
+        closedby: browser_dialog_closedby(element),
+    })
+}
+
+fn browser_details_summary_text(element: &Element) -> Option<String> {
+    if element.name != "details" {
+        return None;
+    }
+
+    find_first_element_in_nodes(&element.children, "summary")
+        .map(|summary| collapse_html_whitespace(&visible_text_for_nodes(&summary.children)))
+        .filter(|text| !text.is_empty())
+}
+
+fn browser_dialog_closedby(element: &Element) -> Option<String> {
+    if element.name == "dialog" {
+        element.attribute("closedby").map(ToOwned::to_owned)
+    } else {
+        None
+    }
 }
 
 fn is_browser_interactive_summary_element(element: &Element, event_handlers: &[String]) -> bool {
@@ -15528,6 +15597,60 @@ mod tests {
         );
         assert_eq!(rendered.children[3].role, "slot");
         assert_eq!(rendered.children[3].display, "inline");
+    }
+
+    #[test]
+    fn browser_disclosure_descriptor_metadata_tracks_details_and_dialogs() {
+        let document = parse_html(
+            "<body>\
+             <details id=shipping name=checkout open aria-describedby=ship-help>\
+               <summary>Shipping options</summary><p id=ship-help>Choose speed</p>\
+             </details>\
+             <details id=billing name=checkout><summary>Billing</summary><p>Cards</p></details>\
+             <h2 id=dialog-title>Confirm order</h2>\
+             <p id=dialog-help>Review totals</p>\
+             <dialog id=confirm open aria-labelledby=dialog-title aria-describedby=dialog-help aria-modal=true closedby=any>\
+               <p>Confirm copy</p>\
+             </dialog>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.disclosures.len(), 3);
+        let shipping = &summary.disclosures[0];
+        assert_eq!(shipping.element, "details");
+        assert_eq!(shipping.id.as_deref(), Some("shipping"));
+        assert_eq!(shipping.name.as_deref(), Some("checkout"));
+        assert!(shipping.open);
+        assert_eq!(shipping.summary_text.as_deref(), Some("Shipping options"));
+        assert_eq!(
+            shipping.accessible_name.as_deref(),
+            Some("Shipping options")
+        );
+        assert_eq!(
+            shipping.accessible_description.as_deref(),
+            Some("Choose speed")
+        );
+
+        let billing = &summary.disclosures[1];
+        assert_eq!(billing.element, "details");
+        assert_eq!(billing.name.as_deref(), Some("checkout"));
+        assert!(!billing.open);
+        assert_eq!(billing.summary_text.as_deref(), Some("Billing"));
+        assert_eq!(billing.accessible_name.as_deref(), Some("Billing"));
+
+        let dialog = &summary.disclosures[2];
+        assert_eq!(dialog.element, "dialog");
+        assert_eq!(dialog.id.as_deref(), Some("confirm"));
+        assert!(dialog.open);
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Confirm order"));
+        assert_eq!(
+            dialog.accessible_description.as_deref(),
+            Some("Review totals")
+        );
+        assert_eq!(dialog.aria_modal.as_deref(), Some("true"));
+        assert_eq!(dialog.closedby.as_deref(), Some("any"));
+        assert_eq!(dialog.text, "Confirm copy");
     }
 
     #[test]

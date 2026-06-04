@@ -844,6 +844,10 @@
           { "element": "p", "id": "secret", "role": "paragraph", "text": "Hidden copy", "hidden": true },
           { "element": "span", "id": "decorative", "role": "inline", "text": "Decorative", "aria_hidden": true }
         ],
+        "disclosures": [
+          { "element": "dialog", "id": "dialog", "text": "Dialog copy", "open": true, "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true" },
+          { "element": "details", "id": "more", "text": "More Extra", "summary_text": "More", "open": true, "accessible_name": "More" }
+        ],
         "forms": [],
         "tables": []
       }
