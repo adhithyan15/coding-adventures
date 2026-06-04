@@ -712,6 +712,9 @@
           { "element": "menu", "id": "actions", "role": "list", "text": "Open Save", "accessible_name": "Actions", "aria_label": "Actions", "list_kind": "menu", "item_count": 2 },
           { "element": "ol", "id": "steps", "role": "list", "text": "Review Ship", "list_kind": "ordered", "item_count": 2, "list_start": "2", "list_marker_type": "A", "list_reversed": true }
         ],
+        "section_landmarks": [
+          { "element": "nav", "id": "site-nav", "role": "navigation", "text": "Home Docs API", "accessible_name": "Site", "aria_labelledby": ["nav-title"], "section_kind": "navigation", "landmark_kind": "navigation" }
+        ],
         "links": [
           { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
         ],
@@ -744,6 +747,15 @@
         "navigation_groups": [
           { "element": "nav", "role": "navigation", "text": "Nav Home", "landmark_kind": "navigation", "item_count": 0 }
         ],
+        "section_landmarks": [
+          { "element": "header", "role": "header", "text": "Site", "section_kind": "header", "landmark_kind": "header", "heading_level": 1, "heading_text": "Site" },
+          { "element": "nav", "role": "navigation", "text": "Nav Home", "section_kind": "navigation", "landmark_kind": "navigation", "heading_level": 2, "heading_text": "Nav" },
+          { "element": "main", "role": "main", "text": "Post Chapter Related", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Post" },
+          { "element": "article", "id": "post", "role": "article", "text": "Post Chapter", "section_kind": "article", "heading_level": 2, "heading_text": "Post" },
+          { "element": "section", "role": "section", "text": "Chapter", "accessible_name": "Chapter", "aria_label": "Chapter", "section_kind": "section", "heading_level": 3, "heading_text": "Chapter" },
+          { "element": "aside", "role": "aside", "text": "Related", "section_kind": "aside", "landmark_kind": "complementary", "heading_level": 2, "heading_text": "Related" },
+          { "element": "footer", "role": "footer", "text": "Fine print", "section_kind": "footer", "landmark_kind": "footer" }
+        ],
         "links": [
           { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
         ],
@@ -775,6 +787,9 @@
         "text_semantics": [
           { "element": "data", "role": "data", "text": "Widget SKU", "data_value": "WID-001" },
           { "element": "time", "role": "time", "text": "today", "datetime": "2026-05-25" }
+        ],
+        "section_landmarks": [
+          { "element": "article", "id": "product", "role": "article", "text": "Widget Pro Product page Widget SKU today 19.99", "section_kind": "article", "heading_level": 2, "heading_text": "Widget Pro" }
         ],
         "links": [
           { "href": "../products/widget", "resolved_href": "https://example.test/products/widget", "name": null, "target": null, "rel": null, "title": null, "text": "Product page" }
@@ -907,6 +922,9 @@
           { "id": "app", "name": null, "text": "Save" }
         ],
         "headings": [],
+        "section_landmarks": [
+          { "element": "main", "id": "app", "role": "main", "text": "Save", "section_kind": "main", "landmark_kind": "main" }
+        ],
         "links": [],
         "images": [
           { "src": "hero.jpg", "resolved_src": null, "alt": "Hero" }
@@ -952,6 +970,10 @@
         ],
         "headings": [
           { "level": 2, "text": "Settings" }
+        ],
+        "section_landmarks": [
+          { "element": "main", "id": "app", "role": "main", "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative", "accessible_name": "App shell", "aria_label": "App shell", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Settings" },
+          { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "aria_labelledby": ["panel-title"], "section_kind": "section", "heading_level": 2, "heading_text": "Settings" }
         ],
         "links": [],
         "images": [],
@@ -1136,6 +1158,9 @@
           { "id": "chart", "name": null, "text": "Chart fallback" }
         ],
         "headings": [],
+        "section_landmarks": [
+          { "element": "article", "role": "article", "text": "Untitled Body", "section_kind": "article" }
+        ],
         "links": [],
         "images": [],
         "templates": [

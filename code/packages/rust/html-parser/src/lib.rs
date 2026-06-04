@@ -836,6 +836,7 @@ pub struct BrowserDocument {
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
+    pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1479,6 +1480,22 @@ pub struct BrowserNavigationGroup {
     pub list_start: Option<String>,
     pub list_marker_type: Option<String>,
     pub list_reversed: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSectionLandmark {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub heading_text: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9353,6 +9370,9 @@ fn collect_browser_facts(
         if let Some(navigation_group) = browser_navigation_group_element(element, id_texts) {
             summary.navigation_groups.push(navigation_group);
         }
+        if let Some(section_landmark) = browser_section_landmark_element(element, id_texts) {
+            summary.section_landmarks.push(section_landmark);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -10998,6 +11018,59 @@ fn browser_direct_list_item_count(element: &Element) -> usize {
         .iter()
         .filter(|node| matches!(node, Node::Element(child) if child.name == "li"))
         .count()
+}
+
+fn browser_section_landmark_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserSectionLandmark> {
+    let section_kind = browser_section_kind(element);
+    let landmark_kind = browser_landmark_kind(element);
+    if section_kind.is_none() && landmark_kind.is_none() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let heading = browser_first_heading(element);
+
+    Some(BrowserSectionLandmark {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        authored_role: browser_authored_role(element),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        section_kind,
+        landmark_kind,
+        heading_level: heading.as_ref().map(|(level, _)| *level),
+        heading_text: heading.map(|(_, text)| text),
+    })
+}
+
+fn browser_first_heading(element: &Element) -> Option<(u8, String)> {
+    find_first_heading_in_nodes(&element.children).map(|heading| {
+        (
+            heading_level(&heading.name).expect("heading helper only returns heading elements"),
+            visible_text_for_nodes(&heading.children),
+        )
+    })
+}
+
+fn find_first_heading_in_nodes(nodes: &[Node]) -> Option<&Element> {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if heading_level(&element.name).is_some() {
+            return Some(element);
+        }
+        if let Some(heading) = find_first_heading_in_nodes(&element.children) {
+            return Some(heading);
+        }
+    }
+    None
 }
 
 fn should_collect_browser_content_children(name: &str) -> bool {
