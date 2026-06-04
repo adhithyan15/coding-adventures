@@ -117,24 +117,50 @@ def main() -> None:
     # ---- THE TRAIL + THE VERDICT ----
     print("\n" + trail.summary())
 
-    print("\n## Verdict (every multiplier byte-anchored; abstentions logged above):")
-    if logodds is None:
-        print("   prior not grounded — no defensible posterior.")
-    else:
+    # The verdict reports the STRONGEST defensible conclusion available, never less.
+    # QUANTITATIVE when a grounded prior + >=1 root-grounded finding give a posterior.
+    # Otherwise QUALITATIVE: commit to the derive-stage leading hypothesis and present
+    # its byte-provenanced evidential basis (each used fact traces to case bytes via
+    # decompose) — an auditable ANSWER, explicitly marked as having no quantified
+    # posterior because the domain publishes no usable likelihood ratios. The byte-
+    # provenance invariant holds either way; we just stop requiring a NUMBER to count
+    # as an answer (the abstain-on-no-number policy lost 0-3 outside medicine).
+    quantitative = (logodds is not None) and (len(used_steps) >= 1)
+    gf = spidered["grounded_findings"]
+    n_grounded = sum(1 for x in gf if x.get("verdict") == "grounded")
+    posterior = sigmoid(logodds) if logodds is not None else None
+
+    print("\n## Verdict")
+    if quantitative:
+        print("   mode: QUANTITATIVE (grounded prior x root-grounded likelihood ratios)")
         print(f"   prior P({lead}) = {p0:.3f}")
         for fn, lr, p in used_steps:
             print(f"   x LR {lr:<6} ({fn:40s}) -> P = {p:.3f}")
-        posterior = sigmoid(logodds)
         print(f"\n   >>> P({lead}) = {posterior:.4f}   "
               f"({len(used_steps)} byte-grounded findings; {len(agg_disc)} abstained)")
+    else:
+        print("   mode: QUALITATIVE (no quantified posterior groundable in this domain —")
+        print("         the answer is the byte-provenanced evidential conclusion from the IR)")
+        print(f"\n   >>> LEADING ANSWER: {lead}")
+        print("   evidential basis (each fact traces to case bytes via the decompose stage):")
+        for d in derived.get("fact_dispositions", []):
+            if d.get("used"):
+                print(f"     - {d['fact'][:44]:44s} -> {(d.get('role') or '')[:74]}")
+        print(f"   grounding status: prior '{prior.get('verdict')}'; "
+              f"{n_grounded}/{len(gf)} findings reached root data "
+              f"(rest direction_only — no published likelihood ratio).")
+
     print(f"\n   ground truth (held aside): {ingest.get('ground_truth','')[:180]}")
     print(f"   CAS: {json.dumps(cas.stats())}")
     print(f"\n   >>> AUDIT TRAIL {'UNBROKEN — every stage accounted for 100% of its input' if trail.ok() else 'HAS HOLES (see above)'}")
 
-    out = {"leading_diagnosis": lead, "posterior": sigmoid(logodds) if logodds is not None else None,
+    out = {"leading_answer": lead, "verdict_mode": "quantitative" if quantitative else "qualitative",
+           "posterior": posterior if quantitative else None,
            "trail_ok": trail.ok(), "holes": trail.holes(),
            "trail": json.loads(trail.to_json()),
-           "verdict_steps": [{"finding": f, "lr": lr} for f, lr, _ in used_steps]}
+           "verdict_steps": [{"finding": f, "lr": lr} for f, lr, _ in used_steps],
+           "evidential_basis": [{"fact": d["fact"], "role": d.get("role")}
+                                for d in derived.get("fact_dispositions", []) if d.get("used")]}
     (HERE / "run.json").write_text(json.dumps(out, indent=2))
     sys.exit(0 if trail.ok() else 3)
 

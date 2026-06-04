@@ -1,0 +1,34 @@
+{
+  "hash": "008a95f32ec3f21f8e6dd7ea974697f2ad87a3583c286701b1253c22586e8471",
+  "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC5658417/",
+  "title": "Godefroit et al. 2017, Extreme tooth enlargement in a new Late Cretaceous rhabdodontid dinosaur from Southern France, Scientific Reports 7:13160 (PMC5658417)",
+  "interned_at": "",
+  "content": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France). ... Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France. ... 'Begudian' (local stage) sandstones, late Campanian, Late Cretaceous.",
+  "citations": [
+    {
+      "start": 0,
+      "end": 116,
+      "quote": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France).",
+      "used_for": "prior:matheronodon_provincialis"
+    },
+    {
+      "start": 121,
+      "end": 203,
+      "quote": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France.",
+      "used_for": "PRIOR: base rate of Matheronodon provincialis among rhabdodontid ornithopod maxillae from the Late Cretaceous Ibero-Armorican / southern France domain. No published quantitative base rate exists. Matheronodon is monospecific and, for maxillary material, is essentially the single holotype maxilla (MMS/VBN-02-102) from one locality (Velaux), whereas the same Ibero-Armorican domain yields comparatively abundant Rhabdodon (R. priscus, R. septimanicus) maxillary material. A reasoned (non-measured) prior of roughly 0.1 reflects that Matheronodon is the rarer of the regional rhabdodontid taxa. Graded direction_only: the literature supports the direction (Matheronodon rare, Rhabdodon common) but supplies no counted frequency.->matheronodon_provincialis"
+    },
+    {
+      "start": 0,
+      "end": 116,
+      "quote": "MMS/VBN-02-102, a right maxilla; housed in the collections of the Musee du Moulin seigneurial (MMS, Velaux, France).",
+      "used_for": "holotype(right_maxilla, specimen_mms_vbn_02_102): MMS/VBN-02-102 is the explicitly designated holotype right maxilla of M. provincialis. A specimen that IS the name-bearing type matches the species with near-certainty (numerator ~1.0); the probability that this exact catalogued holotype belongs to any other taxon is negligible (denominator ~0.01 or lower, accounting only for hypothetical future taxonomic reassignment). LR is very large; capped conservatively.->matheronodon_provincialis"
+    },
+    {
+      "start": 121,
+      "end": 203,
+      "quote": "Velaux-La Bastide Neuve, Aix-en-Provence Basin, Bouches-du-Rhone, southern France.",
+      "used_for": "locality(velaux_la_bastide_neuve, aix_en_provence_basin, southern_france): Velaux-La Bastide Neuve is the type locality of Matheronodon and lies in the Ibero-Armorican domain of southern France. Zalmoxes is endemic to the Hateg Basin of Romania (East-European / Transylvanian domain) and is geographically excluded from this site; thus the locality strongly favors a regional rhabdodontid (Matheronodon or Rhabdodon) over Zalmoxes. Locality alone does NOT discriminate Matheronodon from co-occurring Rhabdodon, so its LR for the species M. provincialis specifically is only mildly favorable. Graded grounded for the geographic root datum; the LR magnitude (~2) is a reasoned estimate of its discriminating weight at species level.->matheronodon_provincialis"
+    }
+  ],
+  "onward_citations": []
+}

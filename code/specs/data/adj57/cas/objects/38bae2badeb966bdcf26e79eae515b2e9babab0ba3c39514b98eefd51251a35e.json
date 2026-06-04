@@ -1,0 +1,22 @@
+{
+  "hash": "38bae2badeb966bdcf26e79eae515b2e9babab0ba3c39514b98eefd51251a35e",
+  "url": "https://www.mdpi.com/2075-163X/11/2/152",
+  "title": "Ye, Bai, Li & Sun (2021). Gemology, Mineralogy, and Spectroscopy of an Attractive Tremolitized Diopside Anorthosite Gem Material from the Philippines: A New Type of Material with Similarities to Dushan Jade. Minerals 11(2):152.",
+  "interned_at": "",
+  "content": "In recent years, a new type of material called Philippines \u201cDushan jade\u201d has appeared in the gemstone market in China. This new type of material, very similar in appearance and physical properties to Dushan jade ... is causing confusion in the market and poses identification difficulties. ... At present, few studies have been undertaken on Philippines rock, and only the green rock variety has been studied ... Philippines rock should be called \u201ctremolitized diopside anorthosite\u201d.",
+  "citations": [],
+  "onward_citations": [
+    {
+      "citation": "No quantitative base-rate is reported. The paper is the root primary source defining the material but publishes no count of how many dushan-jade-like submissions turn out to be tremolitized diopside anorthosite vs. other materials (true dushan jade, nephrite, serpentine, dyed quartzite, etc.).",
+      "interned_hash": ""
+    },
+    {
+      "citation": "None \u2014 this is the root primary measurement table. RI/SG/H reference constants for nephrite, jadeite, serpentine and uvarovite used on the 'not' side are standard gemological textbook values, not measured in or cited by this paper, and no paper publishes a likelihood ratio for this discrimination.",
+      "interned_hash": ""
+    },
+    {
+      "citation": "None \u2014 root primary petrographic and microprobe observation. No downstream source publishes a likelihood ratio for this texture; the contrast with monomineralic nephrite/jadeite/serpentine relies on standard mineralogical knowledge, not on a measured frequency in any source.",
+      "interned_hash": ""
+    }
+  ]
+}
