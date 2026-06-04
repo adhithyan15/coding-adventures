@@ -244,6 +244,7 @@ def check_browser_readiness_case(
     require_object_list(f"{case_path}.expected", expected, "headings", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "media", errors)
     require_optional_object_list(
         f"{case_path}.expected", expected, "embedded_contexts", errors
@@ -506,6 +507,41 @@ def check_browser_expected_lists(
             source_path = f"{image_path}.sources[{source_index}]"
             for field in ("srcset", "resolved_srcset", "sizes", "media", "type_hint"):
                 require_optional_nullable_string(source_path, source, field, errors)
+
+    for index, image_map in enumerate(object_list_items(expected, "image_maps")):
+        image_map_path = f"{case_path}.expected.image_maps[{index}]"
+        for field in ("id", "name"):
+            require_optional_nullable_string(image_map_path, image_map, field, errors)
+        require_optional_object_list(image_map_path, image_map, "areas", errors)
+        for area_index, area in enumerate(object_list_items(image_map, "areas")):
+            area_path = f"{image_map_path}.areas[{area_index}]"
+            for field in (
+                "id",
+                "shape",
+                "coords",
+                "href",
+                "resolved_href",
+                "alt",
+                "target",
+                "effective_target",
+                "rel",
+                "download",
+                "hreflang",
+                "referrerpolicy",
+            ):
+                require_optional_nullable_string(area_path, area, field, errors)
+            require_optional_string_list(area_path, area, "rel_tokens", errors)
+            require_optional_string_list(area_path, area, "ping", errors)
+            require_optional_string_list(area_path, area, "resolved_ping", errors)
+            require_optional_string_list(area_path, area, "attributionsrc", errors)
+            require_optional_string_list(area_path, area, "resolved_attributionsrc", errors)
+            for field in (
+                "rel_external",
+                "rel_nofollow",
+                "rel_noopener",
+                "rel_noreferrer",
+            ):
+                require_optional_boolean(area_path, area, field, errors)
 
     for index, media in enumerate(object_list_items(expected, "media")):
         media_path = f"{case_path}.expected.media[{index}]"

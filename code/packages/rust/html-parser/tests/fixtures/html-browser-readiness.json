@@ -167,6 +167,31 @@
             ]
           }
         ],
+        "image_maps": [
+          {
+            "name": "hero-map",
+            "areas": [
+              {
+                "shape": "rect",
+                "coords": "0,0,120,60",
+                "href": "details.html",
+                "resolved_href": "https://example.test/gallery/details.html",
+                "alt": "Details",
+                "target": "preview",
+                "effective_target": "preview",
+                "rel": "nofollow external",
+                "rel_tokens": ["nofollow", "external"],
+                "rel_external": true,
+                "rel_nofollow": true,
+                "ping": ["track.html"],
+                "resolved_ping": ["https://example.test/gallery/track.html"],
+                "attributionsrc": ["area-attr.html"],
+                "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"],
+                "hreflang": "en"
+              }
+            ]
+          }
+        ],
         "forms": [],
         "tables": []
       }

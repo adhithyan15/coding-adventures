@@ -836,6 +836,7 @@ pub struct BrowserDocument {
     pub headings: Vec<BrowserHeading>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
+    pub image_maps: Vec<BrowserImageMap>,
     pub media: Vec<BrowserMedia>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
@@ -1496,6 +1497,38 @@ pub struct BrowserImageSource {
     pub sizes: Option<String>,
     pub media: Option<String>,
     pub type_hint: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMap {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub areas: Vec<BrowserImageMapArea>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMapArea {
+    pub id: Option<String>,
+    pub shape: String,
+    pub coords: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub alt: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub download: Option<String>,
+    pub hreflang: Option<String>,
+    pub referrerpolicy: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9318,6 +9351,11 @@ fn collect_browser_facts(
                     picture_sources
                 },
             )),
+            "map" => summary.image_maps.push(browser_image_map_element(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            )),
             "audio" | "video" => summary
                 .media
                 .push(browser_media_element(element, summary.base_href.as_deref())),
@@ -11182,6 +11220,70 @@ fn resolve_browser_srcset_candidate(candidate: &str, base_href: Option<&str>) ->
         resolved_url
     } else {
         format!("{resolved_url} {descriptor}")
+    }
+}
+
+fn browser_image_map_element(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserImageMap {
+    BrowserImageMap {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        name: element.attribute("name").map(ToOwned::to_owned),
+        areas: element
+            .children
+            .iter()
+            .filter_map(|child| match child {
+                Node::Element(child_element) if child_element.name == "area" => Some(
+                    browser_image_map_area_element(child_element, base_href, base_target),
+                ),
+                _ => None,
+            })
+            .collect(),
+    }
+}
+
+fn browser_image_map_area_element(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> BrowserImageMapArea {
+    let rel_tokens = browser_rel_tokens(element);
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    BrowserImageMapArea {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        shape: browser_image_map_shape(element).unwrap_or_else(|| "rect".to_string()),
+        coords: browser_image_map_coords(element),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        alt: element.attribute("alt").map(ToOwned::to_owned),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        resolved_ping: browser_anchor_ping(element)
+            .into_iter()
+            .filter_map(|ping| resolve_browser_url(&ping, base_href))
+            .collect(),
+        ping: browser_anchor_ping(element),
+        resolved_attributionsrc: browser_anchor_attributionsrc(element)
+            .into_iter()
+            .filter_map(|attributionsrc| resolve_browser_url(&attributionsrc, base_href))
+            .collect(),
+        attributionsrc: browser_anchor_attributionsrc(element),
+        download: browser_anchor_download(element),
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
     }
 }
 
@@ -15167,6 +15269,45 @@ mod tests {
         );
 
         let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.image_maps.len(), 1);
+        let image_map = &summary.image_maps[0];
+        assert_eq!(image_map.id.as_deref(), Some("map-node"));
+        assert_eq!(image_map.name.as_deref(), Some("hero-map"));
+        assert_eq!(image_map.areas.len(), 2);
+        assert_eq!(image_map.areas[0].id.as_deref(), Some("cta"));
+        assert_eq!(image_map.areas[0].shape, "rect");
+        assert_eq!(image_map.areas[0].coords.as_deref(), Some("0,0,120,60"));
+        assert_eq!(image_map.areas[0].href.as_deref(), Some("details.html"));
+        assert_eq!(
+            image_map.areas[0].resolved_href.as_deref(),
+            Some("https://example.test/gallery/details.html")
+        );
+        assert_eq!(image_map.areas[0].alt.as_deref(), Some("Details"));
+        assert_eq!(image_map.areas[0].target.as_deref(), Some("preview"));
+        assert_eq!(
+            image_map.areas[0].effective_target.as_deref(),
+            Some("preview")
+        );
+        assert_eq!(
+            image_map.areas[0].rel_tokens,
+            vec!["nofollow".to_string(), "external".to_string()]
+        );
+        assert!(image_map.areas[0].rel_nofollow);
+        assert!(image_map.areas[0].rel_external);
+        assert_eq!(image_map.areas[0].ping, vec!["track.html".to_string()]);
+        assert_eq!(
+            image_map.areas[0].resolved_ping,
+            vec!["https://example.test/gallery/track.html".to_string()]
+        );
+        assert_eq!(image_map.areas[0].hreflang.as_deref(), Some("en"));
+        assert_eq!(image_map.areas[1].shape, "rect");
+        assert_eq!(image_map.areas[1].coords.as_deref(), Some("10,10,40,40"));
+        assert_eq!(image_map.areas[1].href.as_deref(), Some("#logo"));
+        assert_eq!(
+            image_map.areas[1].resolved_href.as_deref(),
+            Some("https://example.test/gallery/index.html#logo")
+        );
+
         assert_eq!(summary.links.len(), 2);
         assert_eq!(summary.links[0].element, "area");
         assert_eq!(summary.links[0].id.as_deref(), Some("cta"));

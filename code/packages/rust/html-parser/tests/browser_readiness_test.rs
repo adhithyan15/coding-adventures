@@ -7,10 +7,11 @@ use coding_adventures_html_parser::{
     BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
     BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSelectOption, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
+    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
+    BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -64,6 +65,8 @@ struct ExpectedBrowserDocument {
     headings: Vec<ExpectedHeading>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
+    #[serde(default)]
+    image_maps: Vec<ExpectedImageMap>,
     #[serde(default)]
     media: Vec<ExpectedMedia>,
     #[serde(default)]
@@ -515,6 +518,62 @@ struct ExpectedImageSource {
     media: Option<String>,
     #[serde(default)]
     type_hint: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedImageMap {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    areas: Vec<ExpectedImageMapArea>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedImageMapArea {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default = "default_image_map_area_shape")]
+    shape: String,
+    #[serde(default)]
+    coords: Option<String>,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_external: bool,
+    #[serde(default)]
+    rel_nofollow: bool,
+    #[serde(default)]
+    rel_noopener: bool,
+    #[serde(default)]
+    rel_noreferrer: bool,
+    #[serde(default)]
+    ping: Vec<String>,
+    #[serde(default)]
+    resolved_ping: Vec<String>,
+    #[serde(default)]
+    attributionsrc: Vec<String>,
+    #[serde(default)]
+    resolved_attributionsrc: Vec<String>,
+    #[serde(default)]
+    download: Option<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1565,6 +1624,26 @@ fn browser_link_descriptor_metadata_tracks_icon_and_alternate_fields() {
     assert_eq!(
         actual.resources, expected.resources,
         "link resources should preserve icon sizes, mask colors, and alternate language descriptors",
+    );
+}
+
+#[test]
+fn browser_image_map_descriptor_metadata_tracks_area_navigation() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "responsive-image-metadata-page")
+        .expect("responsive image fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("responsive image fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.image_maps, expected.image_maps,
+        "image maps should preserve area geometry, link policy, and resolved navigation metadata",
     );
 }
 
@@ -2717,6 +2796,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedImage::into_browser_image)
                 .collect(),
+            image_maps: self
+                .image_maps
+                .into_iter()
+                .map(ExpectedImageMap::into_browser_image_map)
+                .collect(),
             media: self
                 .media
                 .into_iter()
@@ -3128,6 +3212,10 @@ fn default_track_kind() -> String {
     "subtitles".to_string()
 }
 
+fn default_image_map_area_shape() -> String {
+    "rect".to_string()
+}
+
 impl ExpectedImage {
     fn into_browser_image(self) -> BrowserImage {
         BrowserImage {
@@ -3163,6 +3251,48 @@ impl ExpectedImageSource {
             sizes: self.sizes,
             media: self.media,
             type_hint: self.type_hint,
+        }
+    }
+}
+
+impl ExpectedImageMap {
+    fn into_browser_image_map(self) -> BrowserImageMap {
+        BrowserImageMap {
+            id: self.id,
+            name: self.name,
+            areas: self
+                .areas
+                .into_iter()
+                .map(ExpectedImageMapArea::into_browser_image_map_area)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedImageMapArea {
+    fn into_browser_image_map_area(self) -> BrowserImageMapArea {
+        BrowserImageMapArea {
+            id: self.id,
+            shape: self.shape,
+            coords: self.coords,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            alt: self.alt,
+            target: self.target,
+            effective_target: self.effective_target,
+            rel: self.rel,
+            rel_tokens: self.rel_tokens,
+            rel_external: self.rel_external,
+            rel_nofollow: self.rel_nofollow,
+            rel_noopener: self.rel_noopener,
+            rel_noreferrer: self.rel_noreferrer,
+            ping: self.ping,
+            resolved_ping: self.resolved_ping,
+            attributionsrc: self.attributionsrc,
+            resolved_attributionsrc: self.resolved_attributionsrc,
+            download: self.download,
+            hreflang: self.hreflang,
+            referrerpolicy: self.referrerpolicy,
         }
     }
 }
