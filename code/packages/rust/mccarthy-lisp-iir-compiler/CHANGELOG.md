@@ -1,5 +1,46 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.5.0 — 2026-06-04 — closures as values + dynamic apply (L2c-3a)
+
+First half of closures (L2c-3 is split into 3a/3b).  A `LAMBDA` is now a
+**first-class value**, and a value can be **applied**.
+
+* **Lambda as a value.**  A `LAMBDA` in value position (an argument, a
+  returned form, or standing alone) lowers to a **closure value** — the
+  tagged cons `(*CLOSURE* fn-name)` built from existing `cons`es over the
+  shared `lispy-runtime` model (the captured environment is empty in 3a).
+  The tag `*CLOSURE*` is **un-forgeable from source**: a McCarthy symbol is
+  `[A-Z][A-Z0-9-]*`, so the lexer can never produce `*CLOSURE*` and no
+  `QUOTE` can fabricate a value the VM will accept as a closure.
+* **Dynamic apply.**  A call whose head is a **parameter** (`(F a…)`) or a
+  **nested application** (`((g…) a…)`) lowers to the new VM `apply` opcode:
+  the head is evaluated to a closure value and dispatched at run time
+  (arity is checked by the VM, since the callee isn't known statically).
+  Higher-order functions now work: `((LAMBDA (F) (F 'A)) (LAMBDA (X) X))`
+  → `A`; a returned lambda can be applied: `(((LAMBDA (X) (LAMBDA (Y) Y))
+  'Z) 'W)` → `W`.
+* **No `lispy-runtime` change** (closure conversion + encode-in-cons), so
+  the per-PR Miri obligation still does not apply.  Each lambda lifts to a
+  top-level `IIRFunction` exactly as in L2c-1 (now via a shared
+  `lift_lambda` helper used by both direct application and lambda-value);
+  the only new IIR is the closure `cons`es and the `apply` op.
+* **Still deferred to L2c-3b:** free-variable capture — a lambda body still
+  sees only its own parameters, so a reference to an enclosing binding is
+  an unbound-variable error.  `LABEL`-as-value (a *recursive* closure) is
+  also 3b; a bare `LABEL` value now reports "→ L2c-3b".  Applying a
+  non-function (an integer / empty list) is a compile error; applying a
+  runtime non-closure is the VM's clean `NotAClosure`.
+* Dispatch precedence in `lower_application` is now: labelled name
+  (recursion) → parameter (dynamic apply) → primitive table → `LAMBDA`
+  value → unknown.  A parameter therefore lexically shadows a primitive of
+  the same spelling (correct scoping).
+* 7 new compiler unit tests (bare-lambda→closure shape, un-forgeable tag,
+  apply-a-parameter emits `apply` on the param register, apply-a-nested-
+  application, cannot-apply-an-integer, label-value→3b) + 6 new end-to-end
+  tests on `mccarthy-lisp-vm` (higher-order identity, higher-order
+  primitive closure, returned-then-applied, bare-lambda-is-a-closure-pair,
+  apply-non-closure → clean error, Ω combinator → call-depth guard).
+
 ## v0.4.0 — 2026-06-04 — LABEL: named / recursive functions (L2c-2)
 
 * Lowers a direct application of a *named* lambda

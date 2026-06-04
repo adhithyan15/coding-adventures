@@ -28,13 +28,14 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (through L2c-2)
+## Instruction set (through L2c-3a)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
 | `const`        | `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 | `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `lispy-runtime` builtin |
-| `call`         | `srcs[0]` is the callee function name; the rest are arguments. Runs the callee in a fresh frame (params bound to args) and returns its value into `dest` |
+| `call`         | `srcs[0]` is the callee function *name*; the rest are arguments. Runs the callee in a fresh frame (params bound to args) and returns its value into `dest` |
+| `apply`        | `srcs[0]` is a register holding a *closure value* `(*CLOSURE* fn-name . env)`; the rest are arguments. Destructures the closure, looks the function up by name, runs it in a fresh frame — **dynamic** dispatch |
 | `mov`          | copy a register (`dest ← srcs[0]`)                                |
 | `jmp`          | unconditional branch to the label in `srcs[0]`                   |
 | `jmp_if_false` | branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
@@ -54,6 +55,16 @@ from the module and runs it in a fresh frame. So recursion "just works",
 with the same `MAX_CALL_DEPTH` + instruction-budget guards turning a
 non-terminating recursion into a clean `CallDepthExceeded` rather than a
 native stack overflow.
+
+**`apply` (L2c-3a) is the one new opcode for closures.** A `LAMBDA` used
+as a value compiles to a closure `(*CLOSURE* fn-name . env)`; applying it
+dispatches *dynamically* (the callee isn't a static name). The tag
+`*CLOSURE*` is not a lexable McCarthy symbol, so a value the VM accepts as
+a closure can only have been built by the compiler — never forged via
+`QUOTE`; applying anything else is a clean `NotAClosure`. `apply` shares
+`call`'s depth/budget guards, so the Ω combinator
+`((LAMBDA (X) (X X)) (LAMBDA (X) (X X)))` terminates with
+`CallDepthExceeded` rather than a stack overflow.
 
 ## Usage
 
