@@ -51,9 +51,22 @@ echo "Compiling FormulaBar (WebComponent)..."
   --style     "$SRC/FormulaBar.dark.msl" \
   -o "$OUT_DIR/FormulaBar.js"
 
-# TODO(VC2-webcomp-grid): wire Grid once the WebComponent pipeline
-# emitter supports the `Grid` built-in primitive. Until then,
-# index.html uses a hand-written static-HTML <table> placeholder.
+echo "Compiling Grid (WebComponent)..."
+# UI34 PR — Grid is now generated from the shared visicalc/mosaic/
+# Grid.{mil,desktop.mll,dark.msl} triple (same source the React +
+# HTML demos consume).  Grid.desktop.mll is a UI34
+# `pkg::mosaic-pkg-grid::Grid (...)` one-liner; we pass
+# --package-search-path so the resolver locates the package and
+# substitutes its full composition before the WebComponent emitter
+# runs.  The output registers `<mos-grid>` as a Custom Element with
+# shadow DOM that reads list-typed slots via JSON.parse (so attribute
+# values like `column-headers='["A","B","C"]'` work).
+"$MOSAIC_COMPILE" --backend webcomponent \
+  --interface           "$SRC/Grid.mil" \
+  --layout              "$SRC/Grid.desktop.mll" \
+  --style               "$SRC/Grid.dark.msl" \
+  --package-search-path "$REPO_ROOT/code/packages" \
+  -o "$OUT_DIR/Grid.js"
 
 echo "Done. Generated:"
 ls -la "$OUT_DIR"
