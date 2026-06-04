@@ -14,7 +14,7 @@
 //! the value of the **last** form (an empty program returns `nil`).
 //! The module's `entry_point` is `"main"`.
 //!
-//! ## Which Lisp we can lower *today* (through L2c-1)
+//! ## Which Lisp we can lower *today* (through L2c-2)
 //!
 //! | Form                | Lowering                                             |
 //! |---------------------|------------------------------------------------------|
@@ -28,6 +28,7 @@
 //! | `(EQ A B)`          | `call_builtin "equal?" [A, B]`                       |
 //! | `(COND (p e) …)`    | chained `jmp_if_false` + `label`s; `mov` funnels each clause's value into one register; no match → nil |
 //! | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args |
+//! | `((LABEL F (LAMBDA (p…) body)) a…)` | like a lambda, but `F` is bound — inside `body` a call `(F …)` lowers to a `call` to the same function, so `F` can **recurse** |
 //!
 //! `QUOTE` materialises a literal S-expression as runtime values:
 //! a symbol `A` becomes `const v, Var("A")` (the IIR convention the
@@ -54,17 +55,39 @@
 //! builtin rejects symbols, so `equal?` — identity on atoms — is the
 //! right choice).
 //!
+//! ## `LABEL` and recursion (L2c-2)
+//!
+//! `(LABEL F (LAMBDA (p…) body))` is a *named* lambda: the name `F` is in
+//! scope **inside `body`**, so the body can call itself.  We lower it like
+//! a lambda — one fresh `IIRFunction` — but first bind `F` to that
+//! function's (internal) name in a *function scope*.  A call `(F a…)`
+//! whose head is a function-scope name lowers to a `call` to that
+//! function.  A self-call therefore compiles to a `call` back into the
+//! same function, and the **VM already handles that**: its `call` opcode
+//! looks the callee up by name and runs it in a fresh frame, bounded by
+//! `MAX_CALL_DEPTH` + the shared instruction budget.  So recursion needed
+//! **no new VM opcode** — only the compiler learned to bind `F`.
+//!
+//! ```text
+//! ;; first atom of a structure — McCarthy's canonical recursive example
+//! ((LABEL FF (LAMBDA (X)
+//!     (COND ((ATOM X) X)
+//!           ('T (FF (CAR X))))))
+//!  '((A B) C))                       ;; ⇒ A
+//! ```
+//!
 //! ## Not yet (later phases)
 //!
-//! - **L2c-2** — `LABEL` (named / recursive functions).
-//! - **Closures** — a lambda as a *value* (passed / returned) and
-//!   free-variable capture.  For now a lambda body sees only its own
-//!   parameters, and an unapplied `LAMBDA` is rejected.
+//! - **Closures (L2c-3)** — a lambda or a labelled function used as a
+//!   *value* (passed / returned) and free-variable capture.  For now a
+//!   body sees only its own parameters (plus any labelled function names
+//!   in scope, which it may *call* but not use as values); an unapplied
+//!   `LAMBDA` / `LABEL` is rejected.
 //!
 //! A bare (unquoted) symbol in value position is an *unbound variable*
-//! unless it is a parameter of the enclosing lambda, and is otherwise
-//! reported as a
-//! [`CompileError`] rather than silently mis-lowered.
+//! unless it is a parameter of the enclosing lambda; a labelled function
+//! name used in value position is reported as needing closures.  Either
+//! way it is a [`CompileError`] rather than silently mis-lowered.
 //!
 //! ## Quick start
 //!
@@ -78,7 +101,7 @@
 
 #![warn(missing_docs)]
 
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use mccarthy_lisp_parser::{parse, LispExpr};
@@ -196,10 +219,18 @@ struct Compiler {
     fn_ctr: usize,
     /// The parameter names visible in the function currently being
     /// lowered.  A bare symbol resolves to a register read **only** if it
-    /// is one of these — McCarthy Lisp lambdas in L2c-1 do not capture
-    /// free variables (no closures yet), so an out-of-scope symbol is an
+    /// is one of these — McCarthy Lisp lambdas do not capture free
+    /// variables (no closures yet), so an out-of-scope symbol is an
     /// unbound-variable error.
     params: HashSet<String>,
+    /// `LABEL`-bound function names in lexical scope: source name →
+    /// (internal IIR function name, parameter count).  When a call
+    /// `(F a…)` has a head `F` in this map, it lowers to a `call` to the
+    /// internal function — this is exactly what lets a `LABEL` body
+    /// recurse (`F` calls itself).  Cloned/restored around each `LABEL`
+    /// body so the binding is visible only inside that body (plus any
+    /// nested forms), matching lexical scope.
+    functions_in_scope: HashMap<String, (String, usize)>,
 }
 
 impl Compiler {
@@ -211,6 +242,7 @@ impl Compiler {
             label: 0,
             fn_ctr: 0,
             params: HashSet::new(),
+            functions_in_scope: HashMap::new(),
         }
     }
 
@@ -263,6 +295,17 @@ impl Compiler {
             // register named after it, so the register name *is* the
             // parameter name.
             LispExpr::Symbol(name) if self.params.contains(name) => Ok(name.clone()),
+            // A labelled function name used in *value* position (not
+            // called) would be a first-class function value — that needs
+            // closures (L2c-3).  Calls `(F …)` are handled in
+            // `lower_application`, which consults the same scope.
+            LispExpr::Symbol(name) if self.functions_in_scope.contains_key(name) => {
+                Err(CompileError::new(format!(
+                    "`{name}` is a function (a LABEL-bound name); using it as a value — \
+                     passing or returning it — needs closures, which are a later phase. \
+                     You can only *call* it: `({name} …)`."
+                )))
+            }
             LispExpr::Symbol(name) => Err(CompileError::new(format!(
                 "unbound variable `{name}`: it is not a parameter in scope. \
                  (Lambdas don't capture free variables yet — closures are a later phase.) \
@@ -292,6 +335,13 @@ impl Compiler {
         if is_lambda_form(head) {
             return self.lower_lambda_application(head, args);
         }
+        // A `LABEL` form in head position is a *direct application* of a
+        // named (recursive) lambda: `((LABEL F (LAMBDA (p …) body)) a …)`.
+        // (A bare, unapplied `LABEL` falls through to the `"LABEL"` arm
+        // below — also an error, for the same closures reason.)
+        if is_label_form(head) {
+            return self.lower_label_application(head, args);
+        }
 
         let name = match head {
             LispExpr::Symbol(s) => s.as_str(),
@@ -307,6 +357,21 @@ impl Compiler {
                 )))
             }
         };
+
+        // A call whose head is a `LABEL`-bound name in scope is a
+        // (possibly recursive) user-function call — lower it to a `call`.
+        // We check this *before* the primitive table so a labelled name
+        // lexically shadows a primitive of the same spelling, which is the
+        // correct scoping rule (and how a body refers to its own `F`).
+        if let Some((internal, arity)) = self.functions_in_scope.get(name).cloned() {
+            if args.len() != arity {
+                return Err(CompileError::new(format!(
+                    "function `{name}` expects {arity} argument(s), got {}",
+                    args.len()
+                )));
+            }
+            return self.lower_call_to(&internal, args);
+        }
 
         match name {
             "QUOTE" => {
@@ -355,12 +420,19 @@ impl Compiler {
                  Using a lambda as a value (passing or returning it) needs closures, \
                  which are a later phase.",
             )),
+            // A bare `LABEL` reached here is in *value* position (not
+            // applied), e.g. `(LABEL F (LAMBDA …))` on its own.  Like a
+            // bare LAMBDA, using the labelled function as a value needs
+            // closures.  Applied directly — `((LABEL F (LAMBDA …)) a…)` —
+            // it is intercepted by `is_label_form` above and works.
             "LABEL" => Err(CompileError::new(
-                "`LABEL` (named/recursive functions) is not supported yet — it lands in L2c-2",
+                "a LABEL must be applied directly — `((LABEL name (LAMBDA (params) body)) args …)`. \
+                 Using a labelled function as a value (passing or returning it) needs closures, \
+                 which are a later phase.",
             )),
             other => Err(CompileError::new(format!(
                 "unknown form `{other}`: supported forms are QUOTE, CONS, CAR, CDR, ATOM, EQ, COND, \
-                 and direct LAMBDA application (LABEL → L2c-2)"
+                 and direct LAMBDA / LABEL application"
             ))),
         }
     }
@@ -417,13 +489,102 @@ impl Compiler {
         self.functions.push(f);
 
         // Back in the caller: lower the arguments, then emit the call.
+        self.lower_call_to(&fn_name, args)
+    }
+
+    // -----------------------------------------------------------------------
+    // LABEL application (L2c-2) — named / recursive functions
+    // -----------------------------------------------------------------------
+
+    /// Lower a direct application of a *named* lambda
+    /// `((LABEL F (LAMBDA (p1 … pn) body)) a1 … an)`.
+    ///
+    /// This is exactly [`lower_lambda_application`], with one addition: the
+    /// name `F` is bound to the new function in `functions_in_scope`
+    /// **before** the body is lowered, so a call `(F …)` inside `body`
+    /// resolves to a `call` back into the same function — i.e. `F` can
+    /// recurse (or call itself indirectly through nested forms).  The
+    /// binding is scoped to the body: we save the previously-bound entry
+    /// (if any) and restore it afterwards, so `F` is invisible outside.
+    ///
+    /// No new VM machinery is needed — a self-call is an ordinary `call`,
+    /// and the VM bounds call nesting with `MAX_CALL_DEPTH` + the shared
+    /// instruction budget, so even a non-terminating recursion errors
+    /// cleanly instead of overflowing the native stack.
+    ///
+    /// [`lower_lambda_application`]: Self::lower_lambda_application
+    fn lower_label_application(
+        &mut self,
+        label: &LispExpr,
+        args: &[&LispExpr],
+    ) -> Result<String, CompileError> {
+        let (name, lambda) = label_parts(label)?;
+        let (params, body) = lambda_parts(lambda)?;
+        if args.len() != params.len() {
+            return Err(CompileError::new(format!(
+                "labelled function `{name}` expects {} argument(s), got {}",
+                params.len(),
+                args.len()
+            )));
+        }
+
+        let fn_name = format!("label_{}", self.fn_ctr);
+        self.fn_ctr += 1;
+
+        // Build the body in a fresh instruction buffer + parameter scope,
+        // with `F` bound to this function so the body can recurse.  Save
+        // and restore all three pieces of mutable state.
+        let saved_instrs = std::mem::take(&mut self.instrs);
+        let saved_params =
+            std::mem::replace(&mut self.params, params.iter().map(|p| p.to_string()).collect());
+        let shadowed = self
+            .functions_in_scope
+            .insert(name.to_string(), (fn_name.clone(), params.len()));
+
+        let body_reg = self.lower_expr(body)?;
+        self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
+
+        let body_instrs = std::mem::replace(&mut self.instrs, saved_instrs);
+        self.params = saved_params;
+        match shadowed {
+            Some(prev) => {
+                self.functions_in_scope.insert(name.to_string(), prev);
+            }
+            None => {
+                self.functions_in_scope.remove(name);
+            }
+        }
+
+        let mut f = IIRFunction::new(
+            fn_name.clone(),
+            params.iter().map(|p| (p.to_string(), "any".to_string())).collect(),
+            "any",
+            body_instrs,
+        );
+        f.register_count = self.tmp;
+        self.functions.push(f);
+
+        // Back in the caller: lower the arguments, then emit the call.
+        self.lower_call_to(&fn_name, args)
+    }
+
+    /// Lower a call to an already-registered IIR function `fn_name`:
+    /// evaluate `args` in the *current* scope and emit
+    /// `call dest, [Var(fn_name), arg_regs…]`.  Shared by direct `LAMBDA`
+    /// application, `LABEL` application, and in-body calls to a labelled
+    /// name (recursion).
+    fn lower_call_to(
+        &mut self,
+        fn_name: &str,
+        args: &[&LispExpr],
+    ) -> Result<String, CompileError> {
         let mut arg_regs = Vec::with_capacity(args.len());
         for a in args {
             arg_regs.push(self.lower_expr(a)?);
         }
         let dest = self.fresh();
         let mut srcs = Vec::with_capacity(arg_regs.len() + 1);
-        srcs.push(Operand::Var(fn_name));
+        srcs.push(Operand::Var(fn_name.to_string()));
         srcs.extend(arg_regs.into_iter().map(Operand::Var));
         self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "any"));
         Ok(dest)
@@ -676,6 +837,42 @@ fn lambda_parts(lambda: &LispExpr) -> Result<(Vec<&str>, &LispExpr), CompileErro
     Ok((params, items[2]))
 }
 
+/// True iff `expr` is a `(LABEL …)` form (a list whose head is the symbol
+/// `LABEL`).
+fn is_label_form(expr: &LispExpr) -> bool {
+    matches!(expr, LispExpr::Cons(car, _) if matches!(car.as_ref(), LispExpr::Symbol(s) if s == "LABEL"))
+}
+
+/// Destructure a `(LABEL name (LAMBDA (params) body))` form into the
+/// labelled name and the inner `LAMBDA` form.  The caller guarantees
+/// `is_label_form(label)`; the `LAMBDA` is destructured separately by
+/// [`lambda_parts`].
+fn label_parts(label: &LispExpr) -> Result<(&str, &LispExpr), CompileError> {
+    let items = proper_list(label)
+        .ok_or_else(|| CompileError::new("malformed LABEL (improper list)"))?;
+    if items.len() != 3 {
+        return Err(CompileError::new(format!(
+            "a LABEL must be `(LABEL name (LAMBDA (params) body))` — 3 elements, got {}",
+            items.len()
+        )));
+    }
+    let name = match items[1] {
+        LispExpr::Symbol(s) => s.as_str(),
+        other => {
+            return Err(CompileError::new(format!(
+                "a LABEL name must be a symbol, got a {}",
+                kind_of(other)
+            )))
+        }
+    };
+    if !is_lambda_form(items[2]) {
+        return Err(CompileError::new(
+            "the body of a LABEL must be a LAMBDA form — `(LABEL name (LAMBDA (params) body))`",
+        ));
+    }
+    Ok((name, items[2]))
+}
+
 /// Flatten a proper list (`Cons` chain terminated by `Nil`) into its
 /// elements.  Returns `None` if the chain is improper (ends in a dotted
 /// tail) — those are data, never callable forms.
@@ -900,8 +1097,92 @@ mod tests {
     }
 
     #[test]
-    fn label_is_deferred() {
-        assert!(compile_source("(LABEL F (LAMBDA (X) X))", "t").unwrap_err().message.contains("L2c-2"));
+    fn bare_label_value_is_rejected() {
+        // An unapplied LABEL (labelled-function-as-value) needs closures.
+        assert!(compile_source("(LABEL F (LAMBDA (X) X))", "t")
+            .unwrap_err()
+            .message
+            .contains("must be applied directly"));
+    }
+
+    #[test]
+    fn applied_label_emits_a_function_and_a_call() {
+        // ((LABEL F (LAMBDA (X) X)) 'A) → a `label_0` function + a `call`.
+        let m = compile_source("((LABEL F (LAMBDA (X) X)) 'A)", "t").unwrap();
+        assert!(m.functions.iter().any(|f| f.name == "label_0"));
+        let lam = m.functions.iter().find(|f| f.name == "label_0").unwrap();
+        assert_eq!(lam.param_names(), vec!["X"]);
+        let main = m.get_function("main").unwrap();
+        assert!(main.instructions.iter().any(|i| i.op == "call"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "label_0")));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn label_body_can_call_itself_recursively() {
+        // The body references `FF` in call position — it must lower to a
+        // `call` back into the same `label_0` function (recursion), and
+        // the module must validate (the call target exists).
+        let src = "((LABEL FF (LAMBDA (X) (COND ((ATOM X) X) ('T (FF (CAR X)))))) '((A) B))";
+        let m = compile_source(src, "t").unwrap();
+        let body = m.get_function("label_0").unwrap();
+        // Exactly one self `call` to `label_0` inside the body.
+        let self_calls = body
+            .instructions
+            .iter()
+            .filter(|i| i.op == "call"
+                && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "label_0"))
+            .count();
+        assert_eq!(self_calls, 1);
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn label_name_in_value_position_needs_closures() {
+        // Using `F` as a value (not calling it) is a first-class function
+        // value → closures error, with a clear message.
+        let e = compile_source("((LABEL F (LAMBDA (X) F)) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("needs closures"));
+    }
+
+    #[test]
+    fn label_recursive_call_arity_is_checked() {
+        // `(FF X Y)` — two args to a one-param labelled function.
+        let e =
+            compile_source("((LABEL FF (LAMBDA (X) (FF X X))) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("expects 1 argument"));
+    }
+
+    #[test]
+    fn label_application_arity_is_checked() {
+        let e = compile_source("((LABEL F (LAMBDA (X Y) X)) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("argument"));
+    }
+
+    #[test]
+    fn label_name_must_be_a_symbol() {
+        let e = compile_source("((LABEL (F) (LAMBDA (X) X)) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("LABEL name must be a symbol"));
+    }
+
+    #[test]
+    fn label_body_must_be_a_lambda() {
+        let e = compile_source("((LABEL F 'A) 'B)", "t").unwrap_err();
+        assert!(e.message.contains("body of a LABEL must be a LAMBDA"));
+    }
+
+    #[test]
+    fn label_wrong_element_count_rejected() {
+        let e = compile_source("((LABEL F) 'A)", "t").unwrap_err();
+        assert!(e.message.contains("3 elements"));
+    }
+
+    #[test]
+    fn label_name_is_out_of_scope_after_its_body() {
+        // `FF` is bound only inside the LABEL body. A *sibling* top-level
+        // reference to it must be unbound (lexical scope).
+        let e = compile_source("((LABEL FF (LAMBDA (X) X)) 'A) (FF 'B)", "t").unwrap_err();
+        assert!(e.message.contains("unknown form") || e.message.contains("unbound"));
     }
 
     #[test]

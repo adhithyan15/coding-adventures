@@ -28,7 +28,7 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (through L2c-1)
+## Instruction set (through L2c-2)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
@@ -42,10 +42,18 @@ cousin. Same value model, separate VMs.)
 | `ret`          | return the value in `srcs[0]`                                     |
 
 `mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b);
-`call` is what lambda application lowers to (L2c-1). Call nesting is
+`call` is what `LAMBDA` application lowers to (L2c-1). Call nesting is
 bounded by `MAX_CALL_DEPTH` (256) and the shared instruction budget, so
 an untrusted self-recursive module errors cleanly rather than
 overflowing the stack.
+
+**`LABEL` recursion (L2c-2) needed no new opcode.** A named recursive
+function `(LABEL F (LAMBDA … (F …) …))` compiles to a function whose body
+simply `call`s itself by name — and `call` already resolves the callee
+from the module and runs it in a fresh frame. So recursion "just works",
+with the same `MAX_CALL_DEPTH` + instruction-budget guards turning a
+non-terminating recursion into a clean `CallDepthExceeded` rather than a
+native stack overflow.
 
 ## Usage
 

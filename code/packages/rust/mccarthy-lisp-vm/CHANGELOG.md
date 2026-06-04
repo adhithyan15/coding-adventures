@@ -1,5 +1,25 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.3.1 — 2026-06-04 — recursion (L2c-2): no new opcode, docs + tests
+
+* **`LABEL` recursion required no VM change.**  A named recursive function
+  `(LABEL F (LAMBDA … (F …) …))` compiles to a function whose body simply
+  `call`s itself by name, and the existing `call` opcode already resolves
+  the callee from the module and runs it in a fresh frame.  Call nesting
+  stays bounded by `MAX_CALL_DEPTH` + the shared instruction budget, so a
+  non-terminating recursion still errors cleanly (`CallDepthExceeded`)
+  rather than overflowing the native stack.
+* Docs: the instruction-set table and the `call` notes now describe
+  `LABEL` recursion explicitly (through L2c-2).
+* Tests: added `terminating_recursion_computes_correctly` — a hand-built
+  recursive `last` (the IIR shape a `LABEL` lowers to) that walks a
+  cdr-spine to its final element and returns the right value — proving the
+  `call` opcode genuinely supports recursion.  The existing
+  `unbounded_recursion_hits_call_depth_guard` test is the DoS regression
+  for the non-terminating case.
+* No source/behaviour change; `lispy-runtime` / `lang-runtime-core` remain
+  untouched, so the per-PR Miri obligation still does not apply.
+
 ## v0.3.0 — 2026-06-04 — user-function calls (L2c-1)
 
 * Added the `call FN, args…` opcode: looks the callee up in the module

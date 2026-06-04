@@ -1,5 +1,39 @@
 # Changelog — mccarthy-lisp-iir-compiler
 
+## v0.4.0 — 2026-06-04 — LABEL: named / recursive functions (L2c-2)
+
+* Lowers a direct application of a *named* lambda
+  `((LABEL F (LAMBDA (p1 … pn) body)) a1 … an)`.  It compiles exactly like
+  a direct `LAMBDA` application (one fresh top-level `IIRFunction`, gensym
+  `label_<n>`, a `call` from the caller) **plus** one thing: the name `F`
+  is bound — in a new *function scope* — to that function *before* the
+  body is lowered.  A call `(F …)` whose head is a function-scope name
+  lowers to a `call` to that function, so a body that calls `F` **recurses**.
+* **No new VM opcode.**  A self-call is an ordinary `call`; the VM already
+  resolves the callee by name and runs it in a fresh frame, bounded by
+  `MAX_CALL_DEPTH` + the shared instruction budget — so a non-terminating
+  `LABEL` errors cleanly (`CallDepthExceeded`) instead of overflowing the
+  native stack.  `mccarthy-lisp-vm` is unchanged except for docs and tests.
+* The function scope is **lexically scoped**: `F`'s binding is saved/
+  restored around the body, so `F` is invisible outside the `LABEL` (a
+  sibling reference is unbound), and an inner binding shadows an outer one
+  (and shadows a primitive of the same spelling — the correct rule).
+* **Still no closures (L2c-3):** a labelled name used in *value* position
+  (passed or returned, not called) is rejected with a clear
+  closures-needed message; a bare, unapplied `LABEL` is rejected the same
+  way a bare `LAMBDA` is.  Recursive-call arity, malformed `LABEL` shape
+  (wrong element count, non-symbol name, non-`LAMBDA` body) are
+  `CompileError`s; the emitted multi-function module passes
+  `IIRModule::validate`.
+* Internal refactor: direct `LAMBDA` and `LABEL` application now share a
+  `lower_call_to` emitter for the argument-lowering + `call` tail.
+* 11 new compiler unit tests (function+call shape, recursive self-call
+  lowering, value-position rejection, recursive-call/application arity,
+  malformed-`LABEL` paths, lexical scope) + 5 new end-to-end tests on
+  `mccarthy-lisp-vm` (identity, McCarthy's canonical `ff` first-atom,
+  `last` over a cdr-spine + its single-element base case, and a
+  non-terminating recursion hitting the call-depth guard).
+
 ## v0.3.0 — 2026-06-04 — direct LAMBDA application (L2c-1)
 
 * Lowers direct lambda application `((LAMBDA (p1 … pn) body) a1 … an)`:

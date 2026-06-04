@@ -30,7 +30,7 @@ use mccarthy_lisp_vm::run;
 let value = run(&module).unwrap();   // → the symbol A
 ```
 
-## Lowering (through L2c-1)
+## Lowering (through L2c-2)
 
 | Form               | IIR                                                     |
 |--------------------|---------------------------------------------------------|
@@ -44,6 +44,18 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(EQ A B)`         | `call_builtin "equal?" [A, B]` (identity on atoms)      |
 | `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
 | `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args (params bound by name; no free-variable capture) |
+| `((LABEL F (LAMBDA (p…) body)) a…)` | like the lambda case, but `F` is bound to the new function while `body` is lowered — so a call `(F …)` inside `body` becomes a `call` back into it, i.e. **recursion**.  No new VM opcode: a self-call is an ordinary `call`, bounded by `MAX_CALL_DEPTH`. |
+
+### Recursion example (L2c-2)
+
+McCarthy's canonical `ff` — the first atom found by descending `car`s:
+
+```lisp
+((LABEL FF (LAMBDA (X)
+    (COND ((ATOM X) X)
+          ('T (FF (CAR X))))))
+ '((A B) C))                       ; ⇒ A
+```
 
 These are the conventions of the shared `lispy-runtime` value model
 (tagged-`i64` symbols, cons cells, nil) — so the same IIR runs on
@@ -64,14 +76,16 @@ crate dev-depends on it only to run the end-to-end tests.
 
 ## Not yet (later phases)
 
-- **L2c-2** — `LABEL` (named / recursive functions).
-- **Closures** — a lambda used as a *value* (passed or returned) and
-  free-variable capture. For now a lambda body may reference only its own
-  parameters; an unapplied `LAMBDA` is rejected.
+- **Closures (L2c-3)** — a lambda or a labelled function used as a *value*
+  (passed or returned) and free-variable capture. For now a body may
+  reference only its own parameters (plus any labelled function names in
+  scope, which it may *call* but not use as values); an unapplied `LAMBDA`
+  or `LABEL` is rejected.
 
-A bare (unquoted) symbol in value position is an *unbound variable*
-unless it is a parameter of the enclosing lambda, and is otherwise
-reported as a `CompileError`.
+A bare (unquoted) symbol in value position is an *unbound variable* unless
+it is a parameter of the enclosing lambda; a labelled function name used
+in value position is reported as needing closures. Either way it is a
+`CompileError` rather than silently mis-lowered.
 
 ## API
 

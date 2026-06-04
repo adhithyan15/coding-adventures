@@ -20,7 +20,7 @@
 //! pair? / not / equal?` builtins.  So McCarthy Lisp gets its *own* small
 //! VM built directly on that foundation — exactly what this crate is.
 //!
-//! ## The instruction set it executes (through L2c-1)
+//! ## The instruction set it executes (through L2c-2)
 //!
 //! `mccarthy-lisp-iir-compiler` emits a deliberately tiny IIR:
 //!
@@ -36,10 +36,16 @@
 //! | `ret`         | return the value in `srcs[0]`                                  |
 //!
 //! `mov`/`jmp`/`jmp_if_false`/`label` are what `COND` lowers to (L2b);
-//! `call` is what lambda application lowers to (L2c-1).  Call nesting is
-//! bounded by [`MAX_CALL_DEPTH`] and the shared instruction budget, so an
-//! untrusted self-recursive module errors cleanly rather than overflowing
-//! the native stack.
+//! `call` is what `LAMBDA` application lowers to (L2c-1).
+//!
+//! **`LABEL` recursion (L2c-2) needed no new opcode.**  A named recursive
+//! function `(LABEL F (LAMBDA … (F …) …))` compiles to a function whose
+//! body simply `call`s itself by name — and `call` already resolves the
+//! callee from the module and runs it in a fresh frame.  Because call
+//! nesting is bounded by [`MAX_CALL_DEPTH`] and the shared instruction
+//! budget, even a *non-terminating* recursion errors cleanly
+//! ([`VmError::CallDepthExceeded`]) rather than overflowing the native
+//! stack.
 //!
 //! ## Quick start
 //!
@@ -769,10 +775,66 @@ mod tests {
     #[test]
     fn unbounded_recursion_hits_call_depth_guard() {
         // loop() = loop()  — a self-calling function must hit the call-depth
-        // guard (a clean error), never a native stack overflow.
+        // guard (a clean error), never a native stack overflow.  This is
+        // the DoS regression for L2c-2 recursion: a non-terminating `LABEL`
+        // compiles to exactly this shape (a function whose body `call`s
+        // itself), so the guard here is what protects the native stack.
         let loop_fn = func("loop", &[], vec![call("r", "loop", &[]), ret("r")]);
         let m = module_with(vec![loop_fn], vec![call("r", "loop", &[]), ret("r")]);
         assert!(matches!(run(&m), Err(VmError::CallDepthExceeded(_))));
+    }
+
+    #[test]
+    fn terminating_recursion_computes_correctly() {
+        // A hand-built recursive `LABEL` body: `last`, which walks the
+        // cdr-spine to the final element.  This is what
+        // `((LABEL LAST (LAMBDA (L)
+        //     (COND ((ATOM (CDR L)) (CAR L)) ('T (LAST (CDR L)))))) '(A B))`
+        // lowers to — proving the VM's existing `call` opcode supports
+        // recursion (no new opcode was needed for L2c-2):
+        //
+        //   last(L):
+        //     t      = cdr(L)
+        //     ip     = pair?(t)
+        //     isatom = not(ip)            ; (ATOM (CDR L))
+        //     jmp_if_false isatom, recur  ; not an atom → recurse
+        //     ret car(L)                  ; cdr is nil → L is the last cell
+        //   recur:
+        //     r = last(cdr(L))
+        //     ret r
+        let builtin = |dest: &str, name: &str, args: &[&str]| {
+            let mut srcs = vec![Operand::Var(name.into())];
+            srcs.extend(args.iter().map(|a| Operand::Var((*a).into())));
+            IIRInstr::new("call_builtin", Some(dest.into()), srcs, "any")
+        };
+        let last = func(
+            "last",
+            &["L"],
+            vec![
+                builtin("t", "cdr", &["L"]),
+                builtin("ip", "pair?", &["t"]),
+                builtin("isatom", "not", &["ip"]),
+                jmp_if_false("isatom", "recur"),
+                builtin("h", "car", &["L"]),
+                ret("h"),
+                label("recur"),
+                builtin("t2", "cdr", &["L"]),
+                call("r", "last", &["t2"]),
+                ret("r"),
+            ],
+        );
+        // main: build (A B) = cons(A, cons(B, nil)), then last((A B)) → B.
+        let main = vec![
+            konst("a", Operand::Var("A".into()), "symbol"),
+            konst("b", Operand::Var("B".into()), "symbol"),
+            konst("nil", Operand::Int(0), "ref<LispyPair>"),
+            builtin("inner", "cons", &["b", "nil"]),
+            builtin("lst", "cons", &["a", "inner"]),
+            call("r", "last", &["lst"]),
+            ret("r"),
+        ];
+        let v = run(&module_with(vec![last], main)).unwrap();
+        assert_eq!(name_of(v.as_symbol().unwrap()).as_deref(), Some("B"));
     }
 
     // ---- error paths ----
