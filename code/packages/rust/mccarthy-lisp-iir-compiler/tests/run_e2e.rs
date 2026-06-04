@@ -371,3 +371,59 @@ fn omega_combinator_terminates_with_a_depth_error() {
         "unexpected error: {msg}"
     );
 }
+
+// ============================================================
+// Free-variable capture (L2c-3b)
+// ============================================================
+
+#[test]
+fn closure_captures_then_applied_later() {
+    // Curry: the inner lambda captures X, is returned as a closure, and is
+    // applied later — the captured X must survive in the closure's env.
+    //   (((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B) ⇒ (A . B)
+    let p = eval("(((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B)");
+    assert_eq!(sym_name(car(p)), "A");
+    assert_eq!(sym_name(cdr(p)), "B");
+}
+
+#[test]
+fn direct_application_captures_enclosing_param() {
+    // The inner lambda is directly applied (not returned), still capturing X.
+    //   ((LAMBDA (X) ((LAMBDA (Y) (CONS X Y)) 'B)) 'A) ⇒ (A . B)
+    let p = eval("((LAMBDA (X) ((LAMBDA (Y) (CONS X Y)) 'B)) 'A)");
+    assert_eq!(sym_name(car(p)), "A");
+    assert_eq!(sym_name(cdr(p)), "B");
+}
+
+#[test]
+fn transitive_capture_through_two_levels() {
+    // The innermost lambda references X (outermost) and Z (middle) — both
+    // must thread through the lifting chain.
+    //   ((LAMBDA (X) ((LAMBDA (Z) ((LAMBDA (Y) (CONS X (CONS Z Y))) '()))
+    //                 'B)) 'A) ⇒ (A B)
+    let p = eval(
+        "((LAMBDA (X) ((LAMBDA (Z) ((LAMBDA (Y) (CONS X (CONS Z Y))) '())) 'B)) 'A)",
+    );
+    assert_eq!(sym_name(car(p)), "A"); // X
+    assert_eq!(sym_name(car(cdr(p))), "B"); // Z
+    assert!(cdr(cdr(p)).is_nil());
+}
+
+#[test]
+fn captured_closure_passed_to_a_higher_order_function() {
+    // Build an adder-ish closure that captures X, pass it to a function
+    // that applies it.
+    //   ((LAMBDA (G) (G 'B)) ((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A))
+    //     ⇒ (A . B)
+    let p = eval("((LAMBDA (G) (G 'B)) ((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A))");
+    assert_eq!(sym_name(car(p)), "A");
+    assert_eq!(sym_name(cdr(p)), "B");
+}
+
+#[test]
+fn shadowing_param_is_not_captured() {
+    // The inner lambda's own param X shadows the outer X — the body sees the
+    // inner X, not the captured one.
+    //   ((LAMBDA (X) ((LAMBDA (X) X) 'INNER)) 'OUTER) ⇒ INNER
+    assert_eq!(sym_name(eval("((LAMBDA (X) ((LAMBDA (X) X) 'INNER)) 'OUTER)")), "INNER");
+}

@@ -43,10 +43,10 @@ let value = run(&module).unwrap();   // → the symbol A
 | `(ATOM X)`         | `(not (pair? X))` — two `call_builtin`s                 |
 | `(EQ A B)`         | `call_builtin "equal?" [A, B]` (identity on atoms)      |
 | `(COND (p e) …)`   | chained `jmp_if_false` + `label`s; each clause's value funnels into one register via `mov`; no match → `nil` |
-| `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it with the lowered args (params bound by name; no free-variable capture) |
+| `((LAMBDA (p…) body) a…)` | a fresh `IIRFunction` for the lambda + a `call` to it; **captured free variables** are forwarded as leading args (L2c-3b lambda lifting) |
 | `((LABEL F (LAMBDA (p…) body)) a…)` | like the lambda case, but `F` is bound to the new function while `body` is lowered — so a call `(F …)` inside `body` becomes a `call` back into it, i.e. **recursion**.  No new VM opcode: a self-call is an ordinary `call`, bounded by `MAX_CALL_DEPTH`. |
-| `(LAMBDA (p…) body)` *as a value* | lift the lambda + materialise a **closure value** `(*CLOSURE* fn-name)` — a tagged cons (empty env in L2c-3a; the tag is un-forgeable since `*CLOSURE*` isn't a lexable symbol) |
-| `(F a…)` (`F` a parameter) / `((g…) a…)` | **dynamic apply**: evaluate the head to a closure, then the `apply` opcode runs it (arity checked at run time) |
+| `(LAMBDA (p…) body)` *as a value* | lift the lambda + materialise a **closure value** `(*CLOSURE* fn-name v1 … vk)` — a tagged cons whose `env` holds the captured free-variable values (empty when nothing is captured; the tag is un-forgeable since `*CLOSURE*` isn't a lexable symbol) |
+| `(F a…)` (`F` a parameter) / `((g…) a…)` | **dynamic apply**: evaluate the head to a closure, then the `apply` opcode binds its captured `env` + the args and runs it (arity checked at run time) |
 
 ### Recursion example (L2c-2)
 
@@ -57,6 +57,14 @@ McCarthy's canonical `ff` — the first atom found by descending `car`s:
     (COND ((ATOM X) X)
           ('T (FF (CAR X))))))
  '((A B) C))                       ; ⇒ A
+```
+
+### Capture example (L2c-3b)
+
+The inner lambda closes over `X`, is returned, then applied later:
+
+```lisp
+(((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B)   ; ⇒ (A . B)
 ```
 
 ### Higher-order example (L2c-3a)
@@ -86,16 +94,17 @@ crate dev-depends on it only to run the end-to-end tests.
 
 ## Not yet (later phases)
 
-- **Free-variable capture (L2c-3b)** — a lambda body still sees only its
-  own parameters; a reference to an enclosing binding is an
-  unbound-variable error until capture threads it through the closure's
-  environment (the `env` slot, empty in L2c-3a). **`LABEL` as a value** (a
-  recursive closure) also lands in L2c-3b.
+- **`LABEL` capture + `LABEL`-as-value (L2c-3c)** — a `LABEL` body still
+  sees only its own params (it does not capture enclosing free variables
+  the way a `LAMBDA` now does), and a `LABEL` used as a *value* (a
+  recursive closure) is still rejected. Both land in L2c-3c.
 
-A bare (unquoted) symbol in value position is an *unbound variable* unless
-it is a parameter of the enclosing lambda; a labelled function name used
-in value position is reported as needing L2c-3b. Either way it is a
-`CompileError` rather than silently mis-lowered.
+`LAMBDA` free-variable capture works as of L2c-3b (precise capture /
+lambda lifting). A bare (unquoted) symbol in value position is still an *unbound
+variable* unless it is a parameter of the enclosing lambda **or captured
+from an enclosing scope**; a labelled function name used in value position
+is reported as needing L2c-3c. Either way it is a `CompileError` rather
+than silently mis-lowered.
 
 ## API
 

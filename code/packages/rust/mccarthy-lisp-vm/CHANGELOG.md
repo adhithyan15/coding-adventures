@@ -1,5 +1,26 @@
 # Changelog — mccarthy-lisp-vm
 
+## v0.5.0 — 2026-06-04 — `apply` binds the captured environment (L2c-3b)
+
+* **`apply` now binds the closure's captured environment.**  A closure
+  value is `(*CLOSURE* fn-name . env)` where `env = (v1 … vk)` is the list
+  of captured free-variable values (L2c-3b).  `apply` flattens `env` into
+  the **leading** call arguments (matching the lifted function's parameter
+  order `captured ∪ own`), then appends the supplied arguments, then runs
+  the callee.  L2c-3a closures (empty `env`) are unchanged.
+* New helper `flatten_env` walks the env list with the `lispy-runtime`
+  `car`/`cdr` builtins.  It is bounded by `MAX_CALL_ARGS` (defensive: the
+  compiler only ever builds finite acyclic envs, and McCarthy source has no
+  mutation so cannot create cycles, but a hand-crafted module can't make
+  `apply` allocate without limit) and rejects a non-proper-list `env` as
+  `NotAClosure`.
+* No new opcode and no `lispy-runtime` change; the per-PR Miri obligation
+  still does not apply.
+* 2 new unit tests (apply binds a captured env value to the leading
+  parameter then the supplied arg → `(A . B)`; a closure with a malformed
+  non-list env → clean `NotAClosure`, no loop/panic).  The Ω self-apply
+  call-depth test remains the recursion DoS regression.
+
 ## v0.4.0 — 2026-06-04 — the `apply` opcode: dynamic dispatch on closures (L2c-3a)
 
 * Added the **`apply CLOSURE, args…`** opcode.  Unlike `call` (whose

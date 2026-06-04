@@ -28,14 +28,14 @@ What both languages genuinely share is the **value model**:
 foundation — this crate. (Twig is a typed Lisp; McCarthy is its untyped
 cousin. Same value model, separate VMs.)
 
-## Instruction set (through L2c-3a)
+## Instruction set (through L2c-3b)
 
 | Op             | Meaning                                                           |
 |----------------|------------------------------------------------------------------|
 | `const`        | `Int(n)`→int, `Int(0):ref<LispyPair>`→nil, `Var(name)`→interned symbol, `Bool(b)`→bool |
 | `call_builtin` | `srcs[0]` is the builtin name (a `Var`), the rest are args; dispatched to a `lispy-runtime` builtin |
 | `call`         | `srcs[0]` is the callee function *name*; the rest are arguments. Runs the callee in a fresh frame (params bound to args) and returns its value into `dest` |
-| `apply`        | `srcs[0]` is a register holding a *closure value* `(*CLOSURE* fn-name . env)`; the rest are arguments. Destructures the closure, looks the function up by name, runs it in a fresh frame — **dynamic** dispatch |
+| `apply`        | `srcs[0]` is a register holding a *closure value* `(*CLOSURE* fn-name . env)`; the rest are arguments. Destructures the closure, flattens the captured `env` into the **leading** call args (then appends the supplied args), looks the function up by name, runs it in a fresh frame — **dynamic** dispatch with captured-variable binding |
 | `mov`          | copy a register (`dest ← srcs[0]`)                                |
 | `jmp`          | unconditional branch to the label in `srcs[0]`                   |
 | `jmp_if_false` | branch to the label in `srcs[1]` when `srcs[0]` is falsy (`#f`/`nil`); else fall through |
@@ -65,6 +65,13 @@ a closure can only have been built by the compiler — never forged via
 `call`'s depth/budget guards, so the Ω combinator
 `((LAMBDA (X) (X X)) (LAMBDA (X) (X X)))` terminates with
 `CallDepthExceeded` rather than a stack overflow.
+
+**Captured variables (L2c-3b).** A closure's `env = (v1 … vk)` holds the
+values of the captured free variables. `apply` flattens `env` into the
+leading call arguments (the lifted function's parameters are
+`captured ∪ own`, captured first), so a closure built in one scope and
+applied in another still sees the values it closed over —
+`(((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) 'B)` ⇒ `(A . B)`.
 
 ## Usage
 

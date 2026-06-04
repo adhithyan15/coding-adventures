@@ -121,7 +121,7 @@
 
 #![warn(missing_docs)]
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use mccarthy_lisp_parser::{parse, LispExpr};
@@ -482,14 +482,16 @@ impl Compiler {
     /// Lower a direct lambda application
     /// `((LAMBDA (p1 … pn) body) a1 … an)`.
     ///
-    /// The lambda becomes a fresh top-level [`IIRFunction`] (a gensym
-    /// name) whose parameters are `p1…pn` and whose body is lowered with
-    /// **only those** parameters in scope — McCarthy Lisp lambdas do not
-    /// capture free variables in L2c-1 (closures are a later phase), so a
-    /// body reference to anything other than its own params is an
-    /// unbound-variable error.  The application itself lowers its
-    /// arguments in the *caller's* scope and emits a `call` to the new
-    /// function.
+    /// The lambda becomes a fresh top-level [`IIRFunction`] via
+    /// [`lift_lambda`], whose parameters are its **captured free variables
+    /// followed by** `p1…pn` (L2c-3b lambda lifting).  The application
+    /// lowers its arguments in the *caller's* scope and emits a `call`
+    /// forwarding the captured registers as the leading arguments, then the
+    /// lowered `a1…an`.  The user-facing arity check is against the declared
+    /// parameters `p1…pn` only — the captured leading arguments are supplied
+    /// implicitly by the compiler.
+    ///
+    /// [`lift_lambda`]: Self::lift_lambda
     fn lower_lambda_application(
         &mut self,
         lambda: &LispExpr,
@@ -503,19 +505,39 @@ impl Compiler {
                 args.len()
             )));
         }
-        // A direct application knows its target statically, so it can emit a
-        // plain `call` (no closure value needed).
-        let fn_name = self.lift_lambda(&params, body)?;
-        self.lower_call_to(&fn_name, args)
+        // A direct application knows its target statically, so it emits a
+        // plain `call` (no closure value).  Captured free variables (L2c-3b)
+        // are forwarded as **leading** call arguments — matching the lifted
+        // function's parameter order (captured ∪ own).
+        let (fn_name, captured) = self.lift_lambda(&params, body)?;
+        self.lower_call_with_captures(&fn_name, &captured, args)
     }
 
     /// Lift a `(params, body)` lambda to a fresh top-level [`IIRFunction`]
-    /// (gensym `lambda_<n>`) and return its name.  The body is lowered in a
-    /// **fresh parameter scope** — only `params` are visible — so a
-    /// reference to anything else is an unbound-variable error (McCarthy
-    /// lambdas do not capture free variables until L2c-3b).  Shared by
-    /// direct application ([`lower_lambda_application`]) and lambda-as-value
-    /// ([`lower_lambda_value`]).
+    /// (gensym `lambda_<n>`) and return its name **and the captured free
+    /// variables** (sorted).
+    ///
+    /// **Free-variable capture (L2c-3b), by precise analysis.**  The lambda
+    /// body may reference variables from the enclosing scope; we capture
+    /// exactly those it actually uses: the body's **free symbols**
+    /// (references not bound by this lambda's own parameters or by a nested
+    /// `LAMBDA`/`LABEL`, and not inside a `QUOTE`) intersected with the
+    /// enclosing scope `self.params`.  Capturing only what's referenced —
+    /// rather than the whole enclosing frame — keeps the emitted IIR
+    /// **linear in the source** (a sibling lambda that uses one outer
+    /// variable captures one, not all of them; the alternative "capture
+    /// everything" makes a flat fan-out of `k` lambdas over `m` enclosing
+    /// vars emit `O(m·k)` IIR — a compile-time DoS).  The captured names
+    /// become **extra leading parameters** of the lifted function (classic
+    /// lambda lifting), so the body lowers with `captured ∪ own` in scope;
+    /// the captured *values* are supplied by the caller — as leading `call`
+    /// args for a direct application, or out of the closure's `env` (via
+    /// `apply`) for a lambda used as a value.  Captures come from a
+    /// `BTreeSet`, so they are **sorted** and the emitted IIR is
+    /// deterministic.
+    ///
+    /// Shared by direct application ([`lower_lambda_application`]) and
+    /// lambda-as-value ([`lower_lambda_value`]).
     ///
     /// [`lower_lambda_application`]: Self::lower_lambda_application
     /// [`lower_lambda_value`]: Self::lower_lambda_value
@@ -523,60 +545,103 @@ impl Compiler {
         &mut self,
         params: &[&str],
         body: &LispExpr,
-    ) -> Result<String, CompileError> {
+    ) -> Result<(String, Vec<String>), CompileError> {
+        let own: HashSet<String> = params.iter().map(|p| p.to_string()).collect();
+        // Precise capture: the body's free symbols (respecting own params +
+        // nested binders + quote) that are actually in the enclosing scope.
+        // `BTreeSet` keeps `free` — and hence `captured` — sorted.
+        let mut free: BTreeSet<String> = BTreeSet::new();
+        collect_free_symbols(body, &own, &mut free);
+        let captured: Vec<String> =
+            free.into_iter().filter(|s| self.params.contains(s)).collect();
+
         let fn_name = format!("lambda_{}", self.fn_ctr);
         self.fn_ctr += 1;
 
-        // Build the lambda's body in a fresh instruction buffer with a
-        // fresh parameter scope, then restore the caller's buffer + scope.
+        // The lifted function's scope is `captured ∪ own`; lower the body
+        // with that scope, in a fresh instruction buffer, then restore.
+        let mut scope: HashSet<String> = own;
+        scope.extend(captured.iter().cloned());
         let saved_instrs = std::mem::take(&mut self.instrs);
-        let saved_params =
-            std::mem::replace(&mut self.params, params.iter().map(|p| p.to_string()).collect());
+        let saved_params = std::mem::replace(&mut self.params, scope);
         let body_reg = self.lower_expr(body)?;
         self.emit(IIRInstr::new("ret", None, vec![Operand::Var(body_reg)], "any"));
         let body_instrs = std::mem::replace(&mut self.instrs, saved_instrs);
         self.params = saved_params;
 
-        let mut f = IIRFunction::new(
-            fn_name.clone(),
-            params.iter().map(|p| (p.to_string(), "any".to_string())).collect(),
-            "any",
-            body_instrs,
-        );
+        // Parameter order: captured (sorted) first, then own (declaration
+        // order) — the same order the caller supplies the values in.
+        let mut param_pairs: Vec<(String, String)> =
+            Vec::with_capacity(captured.len() + params.len());
+        for c in &captured {
+            param_pairs.push((c.clone(), "any".to_string()));
+        }
+        for p in params {
+            param_pairs.push((p.to_string(), "any".to_string()));
+        }
+        let mut f = IIRFunction::new(fn_name.clone(), param_pairs, "any", body_instrs);
         f.register_count = self.tmp;
         self.functions.push(f);
-        Ok(fn_name)
+        Ok((fn_name, captured))
     }
 
-    /// Lower a `LAMBDA` used in **value** position into a *closure value*:
-    /// `((LAMBDA (p…) body))` → `(*CLOSURE* fn-name)`.  The lambda is lifted
-    /// exactly as for a direct application, but instead of a `call` we
-    /// materialise a tagged cons that the VM's `apply` opcode can dispatch
-    /// on at runtime.  In L2c-3a the captured environment is empty (nil) —
-    /// the body still sees only its own parameters; free-variable capture is
-    /// L2c-3b.
+    /// Emit `call fn_name [captured_regs…, arg_regs…]` for a direct lambda
+    /// application.  The captured registers are read from the **caller's**
+    /// scope (each is live there — captures are a subset of the enclosing
+    /// scope) and go first, matching the lifted function's parameter order.
+    fn lower_call_with_captures(
+        &mut self,
+        fn_name: &str,
+        captured: &[String],
+        args: &[&LispExpr],
+    ) -> Result<String, CompileError> {
+        let mut arg_regs = Vec::with_capacity(args.len());
+        for a in args {
+            arg_regs.push(self.lower_expr(a)?);
+        }
+        let dest = self.fresh();
+        let mut srcs = Vec::with_capacity(captured.len() + arg_regs.len() + 1);
+        srcs.push(Operand::Var(fn_name.to_string()));
+        srcs.extend(captured.iter().map(|c| Operand::Var(c.clone())));
+        srcs.extend(arg_regs.into_iter().map(Operand::Var));
+        self.emit(IIRInstr::new("call", Some(dest.clone()), srcs, "any"));
+        Ok(dest)
+    }
+
+    /// Lower a `LAMBDA` used in **value** position into a *closure value*
+    /// `(*CLOSURE* fn-name . env)`, where `env` is the list of captured
+    /// free-variable values.  The lambda is lifted exactly as for a direct
+    /// application; instead of a `call` we materialise a tagged cons the
+    /// VM's `apply` opcode dispatches on, with the captured values packed
+    /// into `env` so they're restored when the closure is later applied.
     fn lower_lambda_value(&mut self, lambda: &LispExpr) -> Result<String, CompileError> {
         let (params, body) = lambda_parts(lambda)?;
-        let fn_name = self.lift_lambda(&params, body)?;
-        Ok(self.emit_closure(&fn_name))
+        let (fn_name, captured) = self.lift_lambda(&params, body)?;
+        Ok(self.emit_closure(&fn_name, &captured))
     }
 
-    /// Materialise a closure value `(*CLOSURE* fn-name . env)` for the
-    /// already-lifted function `fn_name`.  In L2c-3a `env` is nil, so the
-    /// value is the 2-element list `(*CLOSURE* fn-name)` =
-    /// `cons(*CLOSURE*, cons(fn-name, nil))`.
+    /// Materialise a closure value `(*CLOSURE* fn-name v1 … vk)` for the
+    /// already-lifted `fn_name` with captured values `v1…vk` — i.e.
+    /// `cons(*CLOSURE*, cons(fn-name, env))` where `env = (v1 … vk)` is
+    /// built from the captured registers (read in the caller's scope).  When
+    /// `captured` is empty, `env` is nil and the value is the 2-element list
+    /// `(*CLOSURE* fn-name)` — exactly the L2c-3a shape.
     ///
-    /// The tag is the interned symbol `*CLOSURE*`.  It is deliberately
+    /// The tag is the interned symbol `*CLOSURE*`, deliberately
     /// **un-forgeable from source**: a McCarthy symbol is `[A-Z][A-Z0-9-]*`,
     /// so `*CLOSURE*` cannot be produced by the lexer — a user program can
     /// never `QUOTE` one into existence, so a value the VM accepts as a
     /// closure was always built here.
-    fn emit_closure(&mut self, fn_name: &str) -> String {
+    fn emit_closure(&mut self, fn_name: &str, captured: &[String]) -> String {
         let tag = self.emit_symbol(CLOSURE_TAG);
         let fnsym = self.emit_symbol(fn_name);
-        let nil = self.emit_nil();
-        let env_cell = self.emit_builtin("cons", &[fnsym, nil], REF_PAIR);
-        self.emit_builtin("cons", &[tag, env_cell], REF_PAIR)
+        // env = (v1 v2 … vk), built tail-first from the captured registers.
+        let mut env = self.emit_nil();
+        for c in captured.iter().rev() {
+            env = self.emit_builtin("cons", &[c.clone(), env], REF_PAIR);
+        }
+        let inner = self.emit_builtin("cons", &[fnsym, env], REF_PAIR);
+        self.emit_builtin("cons", &[tag, inner], REF_PAIR)
     }
 
     /// Lower a *dynamic application* — a call whose head is an expression
@@ -1003,6 +1068,76 @@ fn proper_list(expr: &LispExpr) -> Option<Vec<&LispExpr>> {
     }
 }
 
+/// Collect the **free symbols** of `expr` — every symbol referenced in a
+/// variable position that is not in `bound` — into `out`.  Used to compute
+/// a lambda's captured free variables (see [`Compiler::lift_lambda`]).
+///
+/// Binders are respected: a nested `(LAMBDA (p…) body)` adds `p…` to the
+/// bound set for `body`; a `(LABEL F (LAMBDA …))` adds `F`; a `QUOTE`
+/// subtree contributes nothing (quoted data has no variable references).
+/// Primitive heads like `CONS` are collected as "free" too, but the caller
+/// intersects with the enclosing scope, so a primitive (never an enclosing
+/// variable) is naturally filtered out.
+///
+/// Traversal depth follows the AST nesting, which the parser caps
+/// (`MAX_PAREN_DEPTH`); the cdr-spine of an improper list is walked
+/// **iteratively** so a long dotted tail cannot recurse the native stack.
+fn collect_free_symbols(expr: &LispExpr, bound: &HashSet<String>, out: &mut BTreeSet<String>) {
+    match expr {
+        LispExpr::Int(_) | LispExpr::Nil => {}
+        LispExpr::Symbol(s) => {
+            if !bound.contains(s) {
+                out.insert(s.clone());
+            }
+        }
+        LispExpr::Cons(..) => {
+            let Some(items) = proper_list(expr) else {
+                // Improper/dotted list: walk the car-spine iteratively; each
+                // `car` is paren-bounded, the spine itself is the loop.
+                let mut cur = expr;
+                while let LispExpr::Cons(car, cdr) = cur {
+                    collect_free_symbols(car, bound, out);
+                    cur = cdr;
+                }
+                collect_free_symbols(cur, bound, out);
+                return;
+            };
+            // Recognise the binding / quoting forms by their head symbol.
+            if let LispExpr::Symbol(head) = items[0] {
+                match head.as_str() {
+                    "QUOTE" => return, // quoted data: no variable references
+                    "LAMBDA" if items.len() == 3 => {
+                        let mut inner = bound.clone();
+                        if let Some(ps) = proper_list(items[1]) {
+                            for p in ps {
+                                if let LispExpr::Symbol(pn) = p {
+                                    inner.insert(pn.clone());
+                                }
+                            }
+                        }
+                        collect_free_symbols(items[2], &inner, out);
+                        return;
+                    }
+                    "LABEL" if items.len() == 3 => {
+                        let mut inner = bound.clone();
+                        if let LispExpr::Symbol(n) = items[1] {
+                            inner.insert(n.clone());
+                        }
+                        collect_free_symbols(items[2], &inner, out);
+                        return;
+                    }
+                    _ => {}
+                }
+            }
+            // Generic form (application, COND, primitive call, clause list):
+            // every element is a subexpression to scan.
+            for it in items {
+                collect_free_symbols(it, bound, out);
+            }
+        }
+    }
+}
+
 /// Check that `args` has exactly `n` elements, returning them as a slice
 /// of references.
 fn expect_arity<'a>(
@@ -1226,6 +1361,72 @@ mod tests {
     fn cannot_apply_an_integer() {
         let e = compile_source("(5 'A)", "t").unwrap_err();
         assert!(e.message.contains("cannot apply"));
+    }
+
+    // ---- L2c-3b: free-variable capture ----
+
+    #[test]
+    fn inner_lambda_captures_enclosing_param_as_leading_param() {
+        // ((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A) — the inner lambda-value
+        // captures X, so its lifted function `lambda_1` has parameters
+        // [X, Y] (captured first, then own), and the closure built in the
+        // outer body conses the captured X into the env.
+        let m = compile_source("((LAMBDA (X) (LAMBDA (Y) (CONS X Y))) 'A)", "t").unwrap();
+        let inner = m.get_function("lambda_1").expect("inner lambda");
+        assert_eq!(inner.param_names(), vec!["X", "Y"]);
+        // The outer lambda (lambda_0) builds the closure: it conses the
+        // captured register `X` into the env list before tagging it.
+        let outer = m.get_function("lambda_0").expect("outer lambda");
+        assert!(outer.instructions.iter().any(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "cons")
+            && i.srcs.iter().any(|o| matches!(o, Operand::Var(s) if s == "X"))));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn direct_inner_application_forwards_captured_register() {
+        // ((LAMBDA (X) ((LAMBDA (Y) (CONS X Y)) 'B)) 'A) — the inner lambda
+        // is *directly applied*, so the outer body emits a `call` to it that
+        // forwards the captured `X` register as the leading argument.
+        let m = compile_source("((LAMBDA (X) ((LAMBDA (Y) (CONS X Y)) 'B)) 'A)", "t").unwrap();
+        let inner = m.get_function("lambda_1").expect("inner lambda");
+        assert_eq!(inner.param_names(), vec!["X", "Y"]);
+        let outer = m.get_function("lambda_0").expect("outer lambda");
+        // a `call lambda_1, [X, <B>]` — X is the captured leading arg.
+        let call = outer
+            .instructions
+            .iter()
+            .find(|i| i.op == "call"
+                && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "lambda_1"))
+            .expect("call to lambda_1");
+        assert!(matches!(call.srcs.get(1), Some(Operand::Var(s)) if s == "X"));
+        assert!(m.validate().is_empty());
+    }
+
+    #[test]
+    fn top_level_lambda_captures_nothing() {
+        // A lambda with no enclosing scope captures nothing — its lifted
+        // function has exactly its own params (the L2c-3a shape, unchanged).
+        let m = compile_source("(LAMBDA (X) X)", "t").unwrap();
+        let f = m.get_function("lambda_0").unwrap();
+        assert_eq!(f.param_names(), vec!["X"]);
+    }
+
+    #[test]
+    fn capture_is_precise_not_over_capture() {
+        // The inner lambda references only its own `Y`, not the enclosing
+        // `X`, so it must capture NOTHING — its lifted function has exactly
+        // `[Y]`.  (Over-capture would wrongly give `[X, Y]`; precise capture
+        // is what keeps the emitted IIR linear in the source and avoids the
+        // quadratic-fan-out compile-time DoS.)
+        let m = compile_source("((LAMBDA (X) (LAMBDA (Y) Y)) 'A)", "t").unwrap();
+        let inner = m.get_function("lambda_1").expect("inner lambda");
+        assert_eq!(inner.param_names(), vec!["Y"]);
+        // And the closure built for it has an empty env (no captured cons of X).
+        let outer = m.get_function("lambda_0").expect("outer lambda");
+        assert!(!outer.instructions.iter().any(|i| i.op == "call_builtin"
+            && matches!(i.srcs.first(), Some(Operand::Var(s)) if s == "cons")
+            && i.srcs.iter().any(|o| matches!(o, Operand::Var(s) if s == "X"))));
     }
 
     #[test]
