@@ -11,7 +11,8 @@ The initial slices implement:
 - DC source sweeps over independent voltage and current sources, including
   order-preserving parallel named corner source sweeps.
 - DC sensitivity analysis for output-node voltage changes with respect to
-  resistor and independent source parameters, including named corner sweeps.
+  resistor and independent source parameters, including order-preserving
+  parallel named corner sweeps.
 - Seeded DC Monte Carlo analysis for linear element tolerances with Gaussian
   and uniform distributions, including order-preserving parallel named corner
   sweeps.
