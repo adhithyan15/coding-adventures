@@ -24,6 +24,28 @@ echo $?    # → main()'s return value modulo 256
 The final `ld` invocation is what makes the binary actually launch on
 modern macOS — see CHANGELOG for the trust-model background.
 
+## The runtime archive
+
+AOT-compiled programs call into a small static runtime that `build.rs`
+compiles (via the `cc` crate) and embeds in the `twig-aot` binary, then
+writes to a temp file and hands to the system linker at compile time. It has
+two translation units:
+
+- `runtime/twig_runtime.c` — portable I/O + heap helpers (`__twig_print_i64`,
+  `__twig_putchar`, `__twig_alloc_bytes`, …).
+- `runtime/lispy_runtime.c` — the **shared lisp value model** (LANG77):
+  `__twig_lispy_cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/`make_symbol`/`nil`
+  plus int box/unbox, implementing `lispy-runtime`'s 3-bit-tagged 64-bit
+  `LispyValue` ABI. This is what lets *any* lisp-family frontend (Twig,
+  McCarthy Lisp, future lisps) compile cons cells and interned symbols to a
+  native binary — it is a language-agnostic primitive, not tied to one
+  frontend.
+
+The C lisp runtime and the Rust `lispy-runtime` crate (used by the VM/JIT)
+are two implementations of one documented ABI. The `lispy_runtime_golden`
+unit test pins the C side to the Rust `pub const`s/constructors so they can
+never silently diverge. See `code/specs/LANG77-lisp-native-runtime.md`.
+
 ## Requirements
 
 - Apple Silicon Mac running macOS 15+ (Sequoia / Tahoe)

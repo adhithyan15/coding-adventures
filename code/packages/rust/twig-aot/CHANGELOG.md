@@ -1,5 +1,37 @@
 # Changelog — `twig-aot`
 
+## 0.9.0 — 2026-06-04 — the shared lisp-native runtime (LANG77 / McCarthy L3b-2a)
+
+Adds `runtime/lispy_runtime.c` — a portable C implementation of
+`lispy-runtime`'s tagged-value model (`cons`/`car`/`cdr`/`pair?`/`equal?`/
+`not`/interned `symbol`s/`nil`, plus int box/unbox) — to the existing runtime
+archive.  `build.rs` compiles it into `libtwig_aot_runtime` alongside
+`twig_runtime.c` with one extra `.file(...)`, reusing the whole
+embed/link path unchanged.
+
+This is the **reusable primitive** that lets *any* lisp-family frontend
+(Twig and McCarthy Lisp today, future lisps tomorrow) compile its heap +
+symbol value model to a native executable — not a McCarthy-specific feature.
+It supersedes the raw-word cons of 0.8.0 (which had no type tag, so `pair?`/
+`ATOM`/`EQ`/symbols were impossible): values are now NaN-box **tagged**,
+exactly as the VM/JIT sees them.
+
+**This release ships the runtime + its divergence guard only — no lowering
+or backend changes**, so existing native compilation is byte-for-byte
+unchanged.  A new lib unit-test module `lispy_runtime_golden` links the C
+archive into the test binary and asserts every tag constant and encoding
+matches `lispy-runtime`'s canonical `pub const`s and constructors
+(`LispyValue::int(_).bits()`, `TAG_INT`, …).  If the Rust ABI ever changes,
+the C runtime fails `cargo test` — the two implementations cannot silently
+drift.  `lispy-runtime` is added as a **dev-dependency** for that test only;
+the AOT binary never links the Rust crate.
+
+Subsequent slices (L3b-2b/c, tracked in
+`code/specs/LANG77-lisp-native-runtime.md`) wire the shared
+`lower_heap_builtins` pass + the backends' `V1_BUILTINS` tables to *call*
+these `__twig_lispy_*` symbols, so `(CAR (CONS 7 9))` runs through tagged
+values and `(CAR '(A B C))` → `A` lights up.
+
 ## 0.8.0 — 2026-06-04 — run heap-builtin lowering (McCarthy Lisp L3b)
 
 `prepare_module_for_aot` now runs `iir_builtin_lowering::lower_heap_builtins`
