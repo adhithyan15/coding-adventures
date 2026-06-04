@@ -1,0 +1,25 @@
+{
+  "hash": "e7fbee489f3acb0c3a02a41077e9dc7d6e0b731b4a9d6def66a15c8ab5e72086",
+  "url": "https://www.ncbi.nlm.nih.gov/books/NBK430830/",
+  "title": "Kikuchi-Fujimoto Disease - StatPearls (NCBI Bookshelf)",
+  "interned_at": "",
+  "content": "The most prevalent manifestation is unilateral tender posterior cervical lymphadenopathy, observed in 60% to 90% of cases, with occasional involvement of the supraclavicular and axillary nodes. In approximately half of cases, the affected lymph nodes are typically mobile, solitary, nonsuppurative, and painful.",
+  "citations": [
+    {
+      "start": 194,
+      "end": 311,
+      "quote": "In approximately half of cases, the affected lymph nodes are typically mobile, solitary, nonsuppurative, and painful.",
+      "used_for": "cervical_lymphadenopathy(non_tender) LR+ for Kikuchi-Fujimoto disease->kikuchi_fujimoto_disease"
+    }
+  ],
+  "onward_citations": [
+    {
+      "citation": "StatPearls cites refs [4][30][31] (review/textbook sources); no primary specificity data for non-tender nodes among the competing differential (lymphoma, TB, SLE) exists. Sensitivity side (~50% painful, hence ~50% non-tender) is the only quantity traceable; LR+ requires specificity which is absent.",
+      "interned_hash": ""
+    },
+    {
+      "citation": "Node-size and posterior-cervical (level V) frequency are review statements [31][4][30]. A 2cm, left, level-V node matches the modal KFD presentation, but no primary study reports P(this node profile | competing diagnoses), so specificity and hence LR+ cannot be derived. Distribution-of-lymphadenopathy primary paper (S1684118219301525) was paywalled (403).",
+      "interned_hash": ""
+    }
+  ]
+}
