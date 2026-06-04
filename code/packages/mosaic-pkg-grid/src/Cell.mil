@@ -53,14 +53,29 @@
 //   onCancel      fired when an in-progress edit is abandoned
 
 component Cell {
-  slot value       : text ;
-  slot editable    : bool ;
-  slot is-editing  : bool ;
-  slot is-selected : bool ;
-  slot alignment   : text ;
-  slot cell-type   : text ;
+  slot value        : text ;
+  // edit-content — the host's live edit buffer (UI28-1 v0.3.0).  When
+  // the cell is promoted to editing, the HostInput's `value=` is
+  // wired to this slot rather than the underlying `value` so the
+  // input actually accepts keystrokes.  A controlled
+  // `<input value={X}>` without an `onChange` companion freezes
+  // (React rejects keystrokes); pairing edit-content with onChange
+  // restores the writable round-trip.  Hosts typically maintain a
+  // single edit-content string in their state and thread the SAME
+  // buffer through every Cell — at most one Cell edits at a time.
+  slot edit-content : text ;
+  slot editable     : bool ;
+  slot is-editing   : bool ;
+  slot is-selected  : bool ;
+  slot alignment    : text ;
+  slot cell-type    : text ;
 
   emit onClick ;
+  // onChange fires every keystroke while editing.  Carries the new
+  // input value so the host's reducer can update `edit-content`.
+  // Paired with the `edit-content` slot to complete the
+  // controlled-input round-trip.
+  emit onChange ( value : text ) ;
   emit onCommit ( value : text ) ;
   emit onCancel ;
 }

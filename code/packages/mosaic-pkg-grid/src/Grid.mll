@@ -128,14 +128,34 @@ layout Grid {
       For ( each: slot: viewport-rows , as: row , index: r ) {
         Row [ data-row ] {
           For ( each: row , as: v , index: c ) {
-            Cell [ body ] (
+            // No call-site part name here.  Earlier drafts used
+            // `Cell [body]` to give the call site its own
+            // addressable part, but Grid.dark.msl never targets
+            // `body` and the consumer-side part-name override
+            // (UI34 §5.1) would then shadow Cell's own `cell` part,
+            // breaking any consumer .msl that styles `cell`.
+            // Dropping the label lets Cell.mll's root `Box [cell]`
+            // flow through after resolution.
+            Cell (
               value:        ( v ) ,
+              // edit-content forwards the host's live edit buffer
+              // (the same buffer the FormulaBar drives) into every
+              // cell.  Only the cell with `is-editing: true` will
+              // actually render a HostInput pointed at it; the
+              // others receive the buffer but never display it.
+              edit-content: slot: edit-content ,
               is-editing:   ( r == editRow && c == editCol ) ,
               is-selected:  ( r == selectedRow && c == selectedCol ) ,
               editable:     true ,
               alignment:    "left" ,
               cell-type:    "text" ,
               onClick:      emit: onNavigate ,
+              // onChange propagates per-keystroke updates to the
+              // host as `onFormulaChange` so the host's reducer can
+              // update edit-content.  Without this round-trip the
+              // controlled HostInput in Cell freezes — see Cell.mll
+              // for the rationale.
+              onChange:     emit: onFormulaChange ,
               onCommit:     emit: onEditCommit ,
               onCancel:     emit: onEditCancel
             )
