@@ -102,7 +102,7 @@ static RUNTIME_WINDOWS_X86_64: &[u8] =
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
-use iir_builtin_lowering::lower_global_io;
+use iir_builtin_lowering::{lower_global_io, lower_heap_builtins};
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
 
@@ -1484,6 +1484,15 @@ fn default_any_to_i64(func: &mut IIRFunction) {
 fn prepare_module_for_aot(module: &mut IIRModule) {
     // Phase 0: lower global_set / global_get → global_store / global_load.
     lower_global_io(module);
+
+    // Phase 0a: lower lispy heap builtins → `alloc` / `field_store` /
+    // `field_load` / `is_null`.  A Lisp frontend (McCarthy Lisp, Twig)
+    // emits `call_builtin "cons"/"car"/"cdr"/"null?"`; this rewrite turns a
+    // cons cell into a 2-word heap allocation the native backends can lower
+    // (see the `alloc`/`field_*` arms in aarch64-backend / x86_64-backend).
+    // It only touches those exact builtin names, so a module without them —
+    // every Twig/Nib/Brainfuck program today — is left unchanged.
+    lower_heap_builtins(module);
 
     for func in &mut module.functions {
         // Phase 0b: remove dead name-register `const` instructions.

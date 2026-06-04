@@ -1,5 +1,26 @@
 # Changelog — `twig-aot`
 
+## 0.8.0 — 2026-06-04 — run heap-builtin lowering (McCarthy Lisp L3b)
+
+`prepare_module_for_aot` now runs `iir_builtin_lowering::lower_heap_builtins`
+(right after `lower_global_io`), so a Lisp frontend's `call_builtin
+"cons"/"car"/"cdr"/"null?"` is rewritten to `alloc`/`field_store`/
+`field_load`/`is_null` before infer/specialise.  The native backends
+(aarch64 0.5.0 / x86_64 0.7.0) lower those to a `__twig_alloc_bytes` cell +
+word loads/stores, so a McCarthy cons-of-integers program — e.g.
+`(CAR (CONS 7 9))` — compiles to a native executable that exits 7.
+
+The pass only rewrites those exact builtin names, so a module without them
+(every Twig / Nib / Brainfuck program today) is left byte-for-byte
+unchanged — no regression (the existing `macos_arm64_smoke` Twig native
+tests still pass).
+
+> **Note:** the macOS-executable path still can't link the runtime
+> archive's C helpers (`__twig_alloc_bytes` etc.) — a pre-existing
+> limitation shared with Brainfuck's tape — so cons programs run natively
+> on Linux/Windows; macOS native + runtime helpers is a separate
+> build-system fix.  See `lessons.md`.
+
 ## 0.7.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
 
 Runtime archive gains one new helper:

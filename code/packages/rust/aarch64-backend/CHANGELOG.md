@@ -1,5 +1,24 @@
 # Changelog — `aarch64-backend`
 
+## 0.5.0 — 2026-06-04 — heap cons cells (McCarthy Lisp L3b)
+
+Lower the four word-granular heap ops that
+`iir_builtin_lowering::lower_heap_builtins` produces from a Lisp frontend's
+`cons`/`car`/`cdr`/`null?`, so a cons-of-integers program compiles to native:
+
+* **`alloc -> dest`** — a fresh 2-word (16-byte) `LispyPair` cell, via the
+  same `__twig_alloc_bytes` runtime helper `alloc_bytes` uses (V1 leaks; no
+  GC).
+* **`field_store ptr, idx, val`** / **`field_load ptr, idx -> dest`** —
+  word load/store at byte offset `idx*8` (field 0 = car, field 1 = cdr).
+  The index is a compile-time `Int` immediate; a non-literal index or a
+  `field_store` with a dest is a `MalformedInstr`.
+* **`is_null x -> dest`** — `dest = (x == 0)` (nil is the 0 word), via
+  `cmp` + `cset eq`.
+* Values are **raw 64-bit words** — no NaN-boxing — so `(CAR (CONS 7 9))`
+  round-trips to a raw `7`.  3 new unit tests (cons/car lowers; is_null
+  lowers; field_store-with-dest and non-literal-index rejected).
+
 ## 0.4.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
 
 Three new CIR opcodes mirroring the LANG76 work in `x86_64-backend`

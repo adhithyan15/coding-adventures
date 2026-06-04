@@ -865,6 +865,75 @@ fn emit_instr(
         return Ok(());
     }
 
+    // ---- Heap cons cells (lispy `ref<LispyPair>`) — L3b -------------------
+    //
+    // `iir_builtin_lowering::lower_heap_builtins` rewrites a Lisp frontend's
+    // `call_builtin "cons"/"car"/"cdr"/"null?"` into these word-granular heap
+    // ops.  A pair is a 2-word (16-byte) cell: field 0 = car/head, field 1 =
+    // cdr/tail.  We allocate it with `__twig_alloc_bytes` (the helper
+    // `alloc_bytes` uses) and read/write fields with plain 64-bit moves at
+    // byte displacement `idx*8`.  Values are raw 64-bit words — no NaN-boxing
+    // — so `(CAR (CONS 7 9))` round-trips to a raw `7`.  (V1 leaks; no GC.)
+
+    // `alloc -> <dest>` — a fresh 2-word LispyPair cell.
+    if op == "alloc" {
+        let dest = require_dest(instr)?;
+        asm.mov_r64_imm32(abi.arg_regs()[0], 16); // 2 fields × 8 bytes
+        asm.call_rel32("__twig_alloc_bytes", ExternalRelocKind::PltRel32);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `field_store <ptr>, <idx>, <value>` — `[ptr + idx*8] = value`.  No dest.
+    if op == "field_store" {
+        if instr.dest.is_some() {
+            return Err(BackendError::MalformedInstr(
+                "field_store: must not have a dest".into(),
+            ));
+        }
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        let val_src = instr.srcs.get(2).ok_or_else(|| {
+            BackendError::MalformedInstr("field_store: needs srcs[2]=value".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        load_operand(asm, alloc, Reg::Rcx, val_src);
+        asm.mov_mem_r64(Reg::Rax, disp, Reg::Rcx);
+        return Ok(());
+    }
+
+    // `field_load <ptr>, <idx> -> <dest>` — `dest = [ptr + idx*8]`.
+    if op == "field_load" {
+        let dest = require_dest(instr)?;
+        let ptr_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("field_load: needs srcs[0]=ptr".into())
+        })?;
+        let disp = field_disp(instr, 1)?;
+        load_operand(asm, alloc, Reg::Rax, ptr_src);
+        asm.mov_r64_mem(Reg::Rax, Reg::Rax, disp);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
+    // `is_null <x> -> <dest>` — `dest = (x == 0)` (nil is the 0 word).
+    if op == "is_null" {
+        let dest = require_dest(instr)?;
+        let x_src = instr.srcs.first().ok_or_else(|| {
+            BackendError::MalformedInstr("is_null: needs srcs[0]".into())
+        })?;
+        load_operand(asm, alloc, Reg::Rax, x_src);
+        asm.cmp_imm32(Reg::Rax, 0);
+        asm.setcc(Cond::E, Reg::Rax);
+        asm.movzx_r64_r8(Reg::Rax, Reg::Rax);
+        let slot = alloc.slot_of(dest);
+        asm.mov_mem_r64(Reg::Rbp, RegAlloc::rbp_offset(slot), Reg::Rax);
+        return Ok(());
+    }
+
     // --- LANG38-parity additions ---
 
     // div_<ty> / mod_<ty> — signed types use IDIV, unsigned use DIV.
@@ -1159,6 +1228,35 @@ fn require_dest(instr: &CIRInstr) -> Result<&str, BackendError> {
             format!("{} needs a dest", instr.op)))
 }
 
+/// Largest field byte-displacement the heap ops accept.  Bounds the offset
+/// **in the backend** rather than relying on the lowering pass only ever
+/// emitting field index 0/1, so a future producer with a larger index gets
+/// a clean `MalformedInstr`, never a wrapped/oversized displacement.
+const MAX_FIELD_DISP: u64 = 0x7FF8;
+
+/// Read a `field_load`/`field_store` field-index operand (a compile-time
+/// `Int`) and convert it to a byte displacement (`idx * 8`).  Pair fields
+/// are word-sized: index 0 → disp 0 (car), index 1 → disp 8 (cdr).  A
+/// negative, non-literal, or out-of-range index is a `MalformedInstr`.
+fn field_disp(instr: &CIRInstr, i: usize) -> Result<i32, BackendError> {
+    match instr.srcs.get(i) {
+        Some(CIROperand::Int(n)) if *n >= 0 => (*n as u64)
+            .checked_mul(8)
+            .filter(|off| *off <= MAX_FIELD_DISP)
+            .map(|off| off as i32)
+            .ok_or_else(|| {
+                BackendError::MalformedInstr(format!(
+                    "{}: field index {n} is out of range",
+                    instr.op
+                ))
+            }),
+        _ => Err(BackendError::MalformedInstr(format!(
+            "{}: field index at srcs[{i}] must be a non-negative integer literal",
+            instr.op
+        ))),
+    }
+}
+
 fn label_name(instr: &CIRInstr) -> Option<&str> {
     match instr.srcs.first()? {
         CIROperand::Var(s) => Some(s.as_str()),
@@ -1187,6 +1285,51 @@ mod tests {
 
     fn fn_ctx<'a>(name: &'a str, params: &'a [(String, String)], return_type: &'a str) -> FunctionContext<'a> {
         FunctionContext { name, params, return_type }
+    }
+
+    // ---- L3b: cons heap ops (alloc / field_store / field_load / is_null) ----
+
+    #[test]
+    fn cons_car_heap_ops_lower() {
+        // CIR for `(CAR (CONS 7 9))`: allocate a 2-word cell, store 7/9 into
+        // fields 0/1, load field 0 back.
+        let ir = vec![
+            instr("const_u64", Some("h"), vec![Op::Int(7)]),
+            instr("const_u64", Some("t"), vec![Op::Int(9)]),
+            instr("alloc", Some("cell"), vec![]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())]),
+            instr("field_store", None, vec![Op::Var("cell".into()), Op::Int(1), Op::Var("t".into())]),
+            instr("field_load", Some("r"), vec![Op::Var("cell".into()), Op::Int(0)]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("cons_car", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("cons/car heap ops must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    #[test]
+    fn is_null_lowers() {
+        let ir = vec![
+            instr("const_u64", Some("x"), vec![Op::Int(0)]),
+            instr("is_null", Some("r"), vec![Op::Var("x".into())]),
+            instr("ret_u64", None, vec![Op::Var("r".into())]),
+        ];
+        let bytes = compile_function(&fn_ctx("isnull", &[], "u64"), &ir, X86_64Abi::SysV)
+            .expect("is_null must lower");
+        assert!(!bytes.is_empty());
+    }
+
+    #[test]
+    fn field_store_rejects_dest_and_non_literal_index() {
+        let bad_dest = vec![instr("field_store", Some("oops"),
+            vec![Op::Var("cell".into()), Op::Int(0), Op::Var("h".into())])];
+        assert!(compile_function(&fn_ctx("bad", &[], "u64"), &bad_dest, X86_64Abi::SysV).is_err());
+        let bad_idx = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Var("i".into())])];
+        assert!(compile_function(&fn_ctx("bad2", &[], "u64"), &bad_idx, X86_64Abi::SysV).is_err());
+        let huge = vec![instr("field_load", Some("r"),
+            vec![Op::Var("cell".into()), Op::Int(1 << 40)])];
+        assert!(compile_function(&fn_ctx("bad3", &[], "u64"), &huge, X86_64Abi::SysV).is_err());
     }
 
     // ---- Prologue + epilogue shape ----

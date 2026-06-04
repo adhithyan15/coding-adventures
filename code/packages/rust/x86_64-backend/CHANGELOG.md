@@ -1,5 +1,19 @@
 # Changelog — `x86_64-backend`
 
+## 0.7.0 — 2026-06-04 — heap cons cells (McCarthy Lisp L3b)
+
+Mirror of the aarch64-backend 0.5.0 change: lower `alloc` / `field_store` /
+`field_load` / `is_null` (the heap ops `lower_heap_builtins` produces from
+`cons`/`car`/`cdr`/`null?`) on x86-64.
+
+* **`alloc`** — `mov arg0, 16; call __twig_alloc_bytes; mov [rbp+slot], rax`.
+* **`field_store ptr, idx, val`** — `mov [ptr + idx*8], val` (`mov_mem_r64`).
+* **`field_load ptr, idx -> dest`** — `mov dest, [ptr + idx*8]`
+  (`mov_r64_mem`); field 0 = car, field 1 = cdr.
+* **`is_null x -> dest`** — `cmp x, 0; sete al; movzx rax, al`.
+* Raw-word values (no NaN-boxing); `(CAR (CONS 7 9))` → raw `7`.  3 new
+  unit tests mirroring the aarch64 ones.
+
 ## 0.6.0 — 2026-05-20 (LANG76 — byte memory ops + heap allocation)
 
 Three new CIR opcodes that complete the substrate for Brainfuck and
