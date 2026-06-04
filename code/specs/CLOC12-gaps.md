@@ -151,11 +151,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-019 — return-then-return through `if-else` → ternary return
 
-- **Status:** OPEN
+- **Status:** RESOLVED in CLOC12.26 — `fold_if_statement` now has a fourth rewriting branch (after gap-018 swap, literal_truthy, gap-017 ternary, and now gap-019 — gap-016 stays after, gated on no alternate). When both branches reduce to a single `ReturnStatement` whose `argument` is `Some` (recursing through single-statement `BlockStatement` layers via the new `single_return_with_arg` helper), the IfStatement is replaced with `return test ? E1 : E2;`. The conservative `Some`-on-both-sides guard skips the `return;` (no argument) case — synthesising an `undefined` expression for it requires `UndefinedLiteral` plumbing in this pass and is tracked separately. `test_fold_returns_into_ternary` un-ignored. Composes with the gap-018 De Morgan swap so `if (!x) return E1; else return E2;` → (gap-018) `if (x) return E2; else return E1;` → (gap-019) `return x ? E2 : E1;`.
 - **Upstream test:** `PeepholeMinimizeConditionsTest::testFoldReturns`
 - **Ported file:** `closure-pass-fold-control-flow/tests/upstream/peephole_minimize_conditions_test.rs`
-- **Why it fails:** Upstream rewrites `if(x) return 1; else return 2;` to `return x ? 1 : 2;` — needs gap-017 (the ternary rewrite) plus a special case that recognises `ReturnStatement` branches.
-- **What it needs:** Land gap-017 first, then add a `ReturnStatement`-aware shape recogniser on top.
 
 ### gap-020 — `ThrowStatement` not in Phase 1 AST
 

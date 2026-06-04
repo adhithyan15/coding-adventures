@@ -455,11 +455,84 @@ fn test_fold_conditional_de_morgan() {
 /// Hoisting two return statements through an if-else into a single
 /// ternary-returning return needs the ternary rewrite from gap-017
 /// plus return-statement-aware rewriting.
+/// **gap-019 closed in CLOC12.26**: `fold_if_statement` now hoists
+/// terminal `return E1; / return E2;` branches into a single
+/// `return test ? E1 : E2;`. See `single_return_with_arg` for the
+/// helper that recognises the single-ReturnStatement-with-argument
+/// shape (recurses through single-statement BlockStatement layers).
 #[test]
-#[ignore = "blocked on gap-019: return-then-return through if-else into ternary not implemented"]
 fn test_fold_returns_into_ternary() {
-    // Would assert `function f(){if(x)return 1;else return 2;}` becomes
-    // `function f(){return x?1:2;}`.
+    use coding_adventures_javascript_ast::{
+        BlockStatement, ConditionalExpression, ReturnStatement,
+    };
+    let block = |s: Statement| {
+        Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![s],
+        })
+    };
+    let ret = |arg: Expression| {
+        Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: Some(arg),
+        })
+    };
+    let num_lit = |v: f64| {
+        Expression::NumericLiteral(NumericLiteral {
+            cv: None,
+            value: v,
+            raw: format!("{}", v as i64),
+        })
+    };
+
+    // Bare returns on both branches: `if (x) return 1; else return 2;`
+    // → `return x ? 1 : 2;`.
+    let inp = if_stmt(
+        ident("x"),
+        ret(num_lit(1.0)),
+        Some(ret(num_lit(2.0))),
+    );
+    let expected = Statement::return_statement(ReturnStatement {
+        cv: None,
+        argument: Some(Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("x")),
+            consequent: Box::new(num_lit(1.0)),
+            alternate: Box::new(num_lit(2.0)),
+        })),
+    });
+    assert_fold(inp, expected);
+
+    // Block-wrapped returns: `if (x) { return 1; } else { return 2; }`
+    // → `return x ? 1 : 2;`. Same shape after fold.
+    let inp_blocks = if_stmt(
+        ident("x"),
+        block(ret(num_lit(1.0))),
+        Some(block(ret(num_lit(2.0)))),
+    );
+    let expected_again = Statement::return_statement(ReturnStatement {
+        cv: None,
+        argument: Some(Expression::ConditionalExpression(ConditionalExpression {
+            cv: None,
+            test: Box::new(ident("x")),
+            consequent: Box::new(num_lit(1.0)),
+            alternate: Box::new(num_lit(2.0)),
+        })),
+    });
+    assert_fold(inp_blocks, expected_again);
+
+    // Bare-return on one side should NOT fold (the helper bails
+    // when argument is None). Verifies the conservative guard.
+    let inp_bare = if_stmt(
+        ident("x"),
+        Statement::return_statement(ReturnStatement {
+            cv: None,
+            argument: None,
+        }),
+        Some(ret(num_lit(2.0))),
+    );
+    let inp_bare_clone = inp_bare.clone();
+    assert_fold(inp_bare, inp_bare_clone);
 }
 
 /// Upstream `testMinimizeIfWithThrow`:
