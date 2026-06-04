@@ -105,10 +105,15 @@ sentinel, and unboxes the program result at the exit boundary. It keys on
 use-sites, not the language, so a non-lisp arithmetic program is untouched:
 
 ```rust
-use iir_builtin_lowering::{lower_heap_builtins_runtime, lower_lisp_repr};
+use iir_builtin_lowering::{lower_heap_builtins_runtime, intern_symbols, lower_lisp_repr};
 lower_heap_builtins_runtime(&mut module); // cons/car/cdr + pair?/not/equal? → lispy_*
+intern_symbols(&mut module);              // const Var(name):symbol → (id<<32)|TAG_SYMBOL
 lower_lisp_repr(&mut module);             // box atoms, tag nil, COND truthiness, unbox result
 ```
+
+`intern_symbols` assigns each distinct symbol name a module-wide id and emits
+the finished tagged immediate, so native `EQ`/`equal?` on symbols is word
+equality with no runtime interning or string constants.
 
 `lower_lisp_repr` also normalises `COND`: a `jmp_if_false` whose condition is
 a tagged boolean (from `ATOM`/`EQ`) is rewritten to test `lispy_truthy(cond)`

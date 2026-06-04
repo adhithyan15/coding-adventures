@@ -102,7 +102,9 @@ static RUNTIME_WINDOWS_X86_64: &[u8] =
 use interpreter_ir::function::IIRFunction;
 use interpreter_ir::instr::{IIRInstr, Operand};
 use interpreter_ir::module::IIRModule;
-use iir_builtin_lowering::{lower_global_io, lower_heap_builtins_runtime, lower_lisp_repr};
+use iir_builtin_lowering::{
+    intern_symbols, lower_global_io, lower_heap_builtins_runtime, lower_lisp_repr,
+};
 use iir_refinement_pass::{check_module as check_refinements, RefinementMode};
 use jit_core::backend::FunctionContext;
 
@@ -1497,6 +1499,14 @@ fn prepare_module_for_aot(module: &mut IIRModule) {
     // touches those exact builtin names, so a module without them — every
     // Twig/Nib/Brainfuck program today — is left unchanged.
     lower_heap_builtins_runtime(module);
+
+    // Phase 0a″: compile-time symbol interning (LANG77 / L3b-2c-3).
+    // Rewrite each `const Var(name):symbol` to the finished tagged immediate
+    // `(id << 32) | TAG_SYMBOL`, with module-wide ids (so the same name → the
+    // same id → `EQ` is word equality). Runs before `lower_lisp_repr` so the
+    // representation pass sees finished symbol immediates. A no-op for modules
+    // without symbol literals.
+    intern_symbols(module);
 
     // Phase 0a′: type-directed lisp-value representation (LANG77 / L3b-2c).
     // After cons/car/cdr are `lispy_*` calls, box the integer atoms that flow

@@ -115,6 +115,7 @@ pub mod error;
 pub mod numeric;
 pub mod heap;
 pub mod lisp_repr;
+pub mod symbol_intern;
 pub mod global_io;
 pub mod closure;
 
@@ -138,6 +139,11 @@ pub use heap::lower_heap_builtins_runtime;
 // result, so native lisp values carry their NaN-box tag.  Runs after
 // `lower_heap_builtins_runtime`; a no-op for non-lisp modules.
 pub use lisp_repr::lower_lisp_repr;
+// Re-export the compile-time symbol interning pass (LANG77 / L3b-2c-3):
+// rewrites `const Var(name):symbol` → the tagged immediate `(id<<32)|TAG_SYMBOL`
+// so native symbols carry identity (for `EQ`) without runtime interning.
+// Runs before `lower_lisp_repr`.
+pub use symbol_intern::intern_symbols;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).
