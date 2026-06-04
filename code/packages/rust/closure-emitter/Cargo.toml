@@ -28,3 +28,7 @@ path = "tests/upstream/code_printer_test.rs"
 [[test]]
 name = "upstream_code_printer_declarations"
 path = "tests/upstream/code_printer_declarations_test.rs"
+
+[[test]]
+name = "upstream_code_printer_trailing_comma"
+path = "tests/upstream/code_printer_trailing_comma_test.rs"
