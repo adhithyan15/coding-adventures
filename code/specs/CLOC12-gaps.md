@@ -211,11 +211,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-028 — VLQ encoder for source-map `mappings` field not implemented
 
-- **Status:** OPEN
+- **Status:** PARTIALLY RESOLVED in CLOC12.29 — step 1 of 2 landed. The base64-VLQ encoding primitives (`encode_vlq_int(i32) -> String` and `encode_vlq_segment(&[i32]) -> String`) now live in `closure-source-map/src/vlq.rs` and are re-exported from the crate root. Cross-checked against Mozilla's `source-map` library, Google Closure Compiler's `Base64VLQ.java`, and the worked examples in the source-map v3 spec; 13 inline tests pin canonical values from each. **Step 2 (still OPEN)**: wire the primitives into `SourceMapBuilder::build()` — resolve `cv_id` → `(source_index, original_line, original_column[, name_index])` via the CVLog, group mappings by generated_line, sort each line by generated_column, compute per-axis deltas against the prior segment of the same type, and emit the `;`/`,`-joined `mappings` string plus populate the `sources` and `names` lists. The 7 `#[ignore]`-d ports in `source_map_generator_v3_test.rs` flip to live assertions in that step.
 - **Upstream test:** `SourceMapGeneratorV3Test::testBasicMapping*`, `testLiteralMappings*`, `testMultilineMapping*`, `testMultiFunctionMapping`, `testGoldenOutput*` (almost the entire upstream file)
 - **Ported file:** `closure-source-map/tests/upstream/source_map_generator_v3_test.rs`
-- **Why it fails:** Our `SourceMapBuilder` v0.1.0 accumulates raw `(line, column, cv_id)` mappings but the `build()` step produces a `SourceMap` with `mappings: String::new()` — VLQ encoding is documented as v2 work in the crate's source. Upstream tests assert specific VLQ strings like `"A,aAAAA,QAASA,UAAS,EAAG;"` and need the encoder to produce them.
-- **What it needs:** Implement the VLQ encoder per the source-map v3 spec. The encoder receives per-token `(generated_line, generated_column)` paired with `cv_id`, resolves each `cv_id` to `(source_index, original_line, original_column)` via the `CVLog`, and emits the standard base64-VLQ delta-encoded `mappings` string. Once it lands, the seven `#[ignore]`-ed ports in `source_map_generator_v3_test.rs` flip to real assertions and we re-port the rest of upstream's `SourceMapGeneratorV3Test`.
 
 ### gap-029 — identity-of-typeof-same-identifier fold not implemented
 
