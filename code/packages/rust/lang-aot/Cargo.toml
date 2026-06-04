@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, and Oct to native executables through the shared IIR pipeline.  v0.12.0 (Migration Phase 7, FINAL lane): routes `--emit=riscv32` through aot_core::infer + aot_core::specialise + riscv_backend::compile (Backend trait over CIR) instead of iir_to_riscv (now deprecated).  This closes the historical-arch backend migration — every arch backend now consumes typed CIR via the Backend trait.  Previous: v0.11.0 (Phase 6 intel8008 migration), v0.10.0 (A4+++ intel4004), v0.9.0 (A3+++ armv7)."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -11,6 +11,7 @@ nib-iir-compiler      = { path = "../nib-iir-compiler" }
 brainfuck-iir-compiler = { path = "../brainfuck-iir-compiler" }
 dartmouth-basic-iir-compiler = { path = "../dartmouth-basic-iir-compiler" }
 oct-iir-compiler     = { path = "../oct-iir-compiler" }
+mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }

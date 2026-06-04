@@ -59,6 +59,9 @@ pub enum Language {
     DartmouthBasic,
     /// Oct — placeholder; no Rust frontend yet (Python only).
     Oct,
+    /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
+    /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
+    McCarthyLisp,
 }
 
 impl fmt::Display for Language {
@@ -69,6 +72,7 @@ impl fmt::Display for Language {
             Language::Brainfuck => write!(f, "brainfuck"),
             Language::DartmouthBasic => write!(f, "dartmouth-basic"),
             Language::Oct => write!(f, "oct"),
+            Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
         }
     }
 }
@@ -82,9 +86,11 @@ impl Language {
             "brainfuck" | "bf" => Ok(Self::Brainfuck),
             "dartmouth-basic" | "basic" | "bas" => Ok(Self::DartmouthBasic),
             "oct" => Ok(Self::Oct),
+            "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
-                 brainfuck (or bf), dartmouth-basic (or basic / bas), oct")),
+                 brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
+                 mccarthy-lisp (or mccarthy / mcl / lisp)")),
         }
     }
 }
@@ -100,6 +106,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "bf" | "b" => Some(Language::Brainfuck),
         "bas" | "basic" => Some(Language::DartmouthBasic),
         "oct" => Some(Language::Oct),
+        "mcl" | "lisp" => Some(Language::McCarthyLisp),
         _ => None,
     }
 }
@@ -242,6 +249,13 @@ pub fn compile_source_to_iir(
         }
         Language::Oct => {
             oct_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::McCarthyLisp => {
+            mccarthy_lisp_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
@@ -886,7 +900,20 @@ mod tests {
         assert_eq!(Language::parse("bf").unwrap(), Language::Brainfuck);
         assert_eq!(Language::parse("basic").unwrap(), Language::DartmouthBasic);
         assert_eq!(Language::parse("oct").unwrap(), Language::Oct);
+        assert_eq!(Language::parse("mccarthy-lisp").unwrap(), Language::McCarthyLisp);
+        assert_eq!(Language::parse("mccarthy").unwrap(), Language::McCarthyLisp);
+        assert_eq!(Language::parse("mcl").unwrap(), Language::McCarthyLisp);
+        assert_eq!(Language::parse("lisp").unwrap(), Language::McCarthyLisp);
         assert!(Language::parse("bogus").is_err());
+    }
+
+    #[test]
+    fn mccarthy_language_displays_and_round_trips() {
+        assert_eq!(Language::McCarthyLisp.to_string(), "mccarthy-lisp");
+        assert_eq!(
+            Language::parse(&Language::McCarthyLisp.to_string()).unwrap(),
+            Language::McCarthyLisp
+        );
     }
 
     #[test]
@@ -899,8 +926,37 @@ mod tests {
         assert_eq!(detect_language_from_path(&p("foo.bas")),
                    Some(Language::DartmouthBasic));
         assert_eq!(detect_language_from_path(&p("foo.oct")), Some(Language::Oct));
+        assert_eq!(detect_language_from_path(&p("foo.mcl")), Some(Language::McCarthyLisp));
+        assert_eq!(detect_language_from_path(&p("foo.lisp")), Some(Language::McCarthyLisp));
         assert_eq!(detect_language_from_path(&p("foo.txt")), None);
         assert_eq!(detect_language_from_path(&p("README")), None);
+    }
+
+    #[test]
+    fn mccarthy_lisp_compiles_to_iir() {
+        // `lang-aot` routes McCarthy source through
+        // `mccarthy-lisp-iir-compiler`.  We exercise a spread of the
+        // language — a scalar literal, the symbol/cons-returning worked
+        // example, and a closure — and check each yields a valid module
+        // with a `main` entry point.  (Whether a *backend* can lower a
+        // symbol/cons program is a separate, per-backend concern — L3b.)
+        for src in ["42", "(CAR '(A B C))", "(CONS 'A 'B)", "((LAMBDA (X) X) 'Q)"] {
+            let iir = compile_source_to_iir(Language::McCarthyLisp, src, "mcl")
+                .unwrap_or_else(|e| panic!("McCarthy {src:?} must compile: {e:?}"));
+            assert_eq!(iir.entry_point.as_deref(), Some("main"), "{src:?}");
+            assert!(iir.validate().is_empty(), "{src:?} must validate");
+        }
+    }
+
+    #[test]
+    fn mccarthy_lisp_frontend_error_is_surfaced() {
+        // A lex/parse error (lowercase is not a McCarthy symbol) comes back
+        // as a `FrontendError` tagged with the language, not a panic.
+        let err = compile_source_to_iir(Language::McCarthyLisp, "car", "mcl").unwrap_err();
+        assert!(matches!(
+            err,
+            LangAotError::FrontendError { language: Language::McCarthyLisp, .. }
+        ));
     }
 
     #[test]

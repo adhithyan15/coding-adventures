@@ -1526,3 +1526,49 @@ fn end_to_end_basic_print_documents_call_builtin_gap() {
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// McCarthy Lisp (L3a) — the language drives the AOT native pipeline.
+//
+// McCarthy 1960 Lisp has integer literals, so a scalar program exercises the
+// full source → IIR → infer → specialise → x86_64/aarch64 → executable path
+// exactly like the Nib smoke test.  (Symbol/cons-returning programs need
+// value-model runtime glue in each backend — that is L3b, not wired here.)
+// ---------------------------------------------------------------------------
+
+#[cfg(target_os = "windows")]
+#[test]
+fn end_to_end_mccarthy_returns_42_via_lang_aot() {
+    if !linker_available_windows() {
+        eprintln!("skipping: no Windows linker");
+        return;
+    }
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.mcl");
+    let exe = dir.path().join("smoke.exe");
+    std::fs::write(&src, "42").unwrap();
+
+    lang_aot::compile_file_to_windows_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+        .unwrap_or_else(|e| panic!("McCarthy compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(
+        out.status.code(), Some(42),
+        "McCarthy program `42` should exit 42; got {:?}", out.status.code(),
+    );
+}
+
+#[cfg(target_os = "linux")]
+#[test]
+fn end_to_end_mccarthy_returns_42_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.mcl");
+    let exe = dir.path().join("smoke");
+    std::fs::write(&src, "42").unwrap();
+
+    lang_aot::compile_file_to_linux_executable(&src, &exe, lang_aot::Language::McCarthyLisp)
+        .unwrap_or_else(|e| panic!("McCarthy compile failed: {e}"));
+
+    let out = Command::new(&exe).output().expect("launch");
+    assert_eq!(out.status.code(), Some(42));
+}
