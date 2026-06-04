@@ -546,6 +546,55 @@
       }
     },
     {
+      "id": "media-source-track-page",
+      "description": "Media summaries expose nested source candidates and timed-text track descriptors.",
+      "input": "<base href=\"https://example.test/watch/index.html\"><body><video controls><source src=movie.webm type=video/webm media=\"(min-width: 700px)\"><source src=movie.mp4 type=video/mp4><track kind=captions src=captions.vtt srclang=en label=English default><track src=descriptions.vtt label=Descriptions></video><audio controls><source src=theme.ogg type=audio/ogg></audio>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/watch/index.html",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "source", "url": "movie.webm", "resolved_url": "https://example.test/watch/movie.webm", "rel": null, "type_hint": "video/webm", "media": "(min-width: 700px)", "title": null, "async_script": false, "defer_script": false },
+          { "kind": "source", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "rel": null, "type_hint": "video/mp4", "media": null, "title": null, "async_script": false, "defer_script": false },
+          { "kind": "track", "url": "captions.vtt", "resolved_url": "https://example.test/watch/captions.vtt", "rel": null, "type_hint": null, "media": null, "title": null, "track_kind": "captions", "srclang": "en", "track_label": "English", "default_track": true, "async_script": false, "defer_script": false },
+          { "kind": "track", "url": "descriptions.vtt", "resolved_url": "https://example.test/watch/descriptions.vtt", "rel": null, "type_hint": null, "media": null, "title": null, "track_kind": "subtitles", "track_label": "Descriptions", "async_script": false, "defer_script": false },
+          { "kind": "source", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "rel": null, "type_hint": "audio/ogg", "media": null, "title": null, "async_script": false, "defer_script": false }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "media": [
+          {
+            "kind": "video",
+            "src": null,
+            "controls": true,
+            "sources": [
+              { "src": "movie.webm", "resolved_src": "https://example.test/watch/movie.webm", "type_hint": "video/webm", "media": "(min-width: 700px)" },
+              { "src": "movie.mp4", "resolved_src": "https://example.test/watch/movie.mp4", "type_hint": "video/mp4" }
+            ],
+            "tracks": [
+              { "kind": "captions", "src": "captions.vtt", "resolved_src": "https://example.test/watch/captions.vtt", "srclang": "en", "label": "English", "default_track": true },
+              { "kind": "subtitles", "src": "descriptions.vtt", "resolved_src": "https://example.test/watch/descriptions.vtt", "label": "Descriptions" }
+            ]
+          },
+          {
+            "kind": "audio",
+            "src": null,
+            "controls": true,
+            "sources": [
+              { "src": "theme.ogg", "resolved_src": "https://example.test/watch/theme.ogg", "type_hint": "audio/ogg" }
+            ],
+            "tracks": []
+          }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "script-style-loading-page",
       "description": "Browser document summaries expose stylesheet and script security/loading metadata for CSP, early fetch, execution, and style planning.",
       "input": "<base href=\"https://example.test/app/index.html\"><link rel=\"stylesheet preload\" href=app.css media=screen title=main integrity=sha256-css crossorigin=anonymous nonce=styleNonce referrerpolicy=no-referrer fetchpriority=high blocking=render><link rel=\"alternate stylesheet\" href=print.css title=print disabled><style media=print title=print nonce=inlineStyleNonce>body { color: black; }</style><script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials nonce=moduleNonce referrerpolicy=origin fetchpriority=low blocking=render></script><script nomodule defer nonce=legacyNonce>legacy();</script><body><script src=late.js defer nonce=lateNonce></script>",

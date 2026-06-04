@@ -7,10 +7,10 @@ use coding_adventures_html_parser::{
     BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMeta, BrowserMetadataDirective,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserThemeColor,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
+    BrowserMeta, BrowserMetadataDirective, BrowserRefresh, BrowserResource, BrowserResourceHint,
+    BrowserScript, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTemplate, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -551,6 +551,38 @@ struct ExpectedMedia {
     disableremoteplayback: bool,
     #[serde(default)]
     disablepictureinpicture: bool,
+    #[serde(default)]
+    sources: Vec<ExpectedMediaSource>,
+    #[serde(default)]
+    tracks: Vec<ExpectedMediaTrack>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMediaSource {
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMediaTrack {
+    #[serde(default = "default_track_kind")]
+    kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    srclang: Option<String>,
+    #[serde(default)]
+    label: Option<String>,
+    #[serde(default)]
+    default_track: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2426,6 +2458,30 @@ fn browser_media_policy_metadata_tracks_controls_and_remote_playback_hints() {
 }
 
 #[test]
+fn browser_media_descriptor_metadata_tracks_sources_and_tracks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "media-source-track-page")
+        .expect("media source and track fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("media source and track fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.resources, expected.resources,
+        "media child resources should preserve source candidates and track metadata",
+    );
+    assert_eq!(
+        actual.media, expected.media,
+        "media summaries should preserve nested source and track descriptors",
+    );
+}
+
+#[test]
 fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3012,6 +3068,10 @@ fn default_browser_link_element() -> String {
     "a".to_string()
 }
 
+fn default_track_kind() -> String {
+    "subtitles".to_string()
+}
+
 impl ExpectedImage {
     fn into_browser_image(self) -> BrowserImage {
         BrowserImage {
@@ -3072,6 +3132,40 @@ impl ExpectedMedia {
             controlslist_tokens: self.controlslist_tokens,
             disableremoteplayback: self.disableremoteplayback,
             disablepictureinpicture: self.disablepictureinpicture,
+            sources: self
+                .sources
+                .into_iter()
+                .map(ExpectedMediaSource::into_browser_media_source)
+                .collect(),
+            tracks: self
+                .tracks
+                .into_iter()
+                .map(ExpectedMediaTrack::into_browser_media_track)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedMediaSource {
+    fn into_browser_media_source(self) -> BrowserMediaSource {
+        BrowserMediaSource {
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            media: self.media,
+        }
+    }
+}
+
+impl ExpectedMediaTrack {
+    fn into_browser_media_track(self) -> BrowserMediaTrack {
+        BrowserMediaTrack {
+            kind: self.kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            srclang: self.srclang,
+            label: self.label,
+            default_track: self.default_track,
         }
     }
 }
