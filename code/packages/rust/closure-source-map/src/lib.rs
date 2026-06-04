@@ -83,6 +83,14 @@
 //!   `source_root` getter pair and the integration with the
 //!   future non-identity `closure-emitter`.
 
+mod vlq;
+// Re-export so downstream tests / debug tooling can verify their
+// expectations against the canonical encoder, without spelling the
+// `closure_source_map::vlq::...` path. The full VLQ-encoded
+// `mappings` field still belongs to the builder; these are the
+// encoding primitives only.
+pub use vlq::{encode_vlq_int, encode_vlq_segment};
+
 use coding_adventures_correlation_vector::CVLog;
 use serde::Serialize;
 

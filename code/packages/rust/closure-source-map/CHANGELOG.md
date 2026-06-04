@@ -2,6 +2,60 @@
 
 All notable changes to the `coding-adventures-closure-source-map` crate will be documented in this file.
 
+## [0.3.0] - 2026-06-04
+
+### Added — CLOC12.29: base64-VLQ encoding primitive (gap-028 step 1/2)
+
+Lands the encoder primitives that the source-map v3 `mappings` field
+needs. Step 1 of 2 for `gap-028`:
+
+* `src/vlq.rs` (new module):
+  * `encode_vlq_int(value: i32) -> String` — encode one signed
+    integer as its base64-VLQ digit sequence. Implements the
+    sign-encoding (LSB carries sign, remaining bits carry
+    magnitude), 5-bits-per-digit pumping loop, and continuation-bit
+    marking documented in the source-map v3 spec.
+  * `encode_vlq_segment(fields: &[i32]) -> String` — concatenate a
+    `[generated_column]` (1 field), 4-field, or 5-field segment's
+    VLQ-encoded digits.
+* `src/lib.rs`: declare the new `mod vlq` and `pub use` both
+  helpers so downstream callers (and debug tooling) can verify
+  expectations against the canonical encoder without spelling the
+  `closure_source_map::vlq::...` path.
+
+What's NOT in this PR (deferred to gap-028 step 2):
+
+* The `SourceMapBuilder::build()` step still produces
+  `mappings: String::new()`. Resolving `cv_id` → `(source_index,
+  original_line, original_column[, name_index])` quadruples /
+  quintuples via the CV graph and computing per-axis deltas
+  against the prior segment lives in the builder's `build()` step.
+  This PR ships the encoding primitives the builder will use; the
+  integration is a separate, larger PR that needs careful design
+  of the CVLog-side resolution API.
+* The 7 `#[ignore]`-d upstream tests in
+  `source_map_generator_v3_test.rs` will flip to live assertions
+  in that follow-up PR.
+
+Implementation notes:
+
+* The encoder works in `u32` after sign encoding to side-step
+  implementation-defined signed-right-shift territory.
+* `i32::MIN` is handled via `wrapping_neg` so the edge case can't
+  panic. Realistic source-map values never hit this, but the helper
+  shouldn't be a sharp edge.
+* Cross-checked against Mozilla's `source-map` library, Google
+  Closure Compiler's `Base64VLQ.java`, and the worked examples at
+  https://sourcemaps.info/spec.html.
+
+Tests: 13 new inline tests (12 → 25 total in `lib + vlq`):
+zero, ±1, ±15 (last single-digit value), ±16 (first two-digit
+value), ±32, ±123, ±1000, ±9999, `i32::MIN` / `i32::MAX` smoke,
+plus segment-shape (1, 4, 5 fields).
+
+No public API change to `SourceMapBuilder`, `SourceMap`, or
+`PendingMapping`. Pure addition.
+
 ## [0.2.0] - 2026-06-01
 
 ### Added — CLOC12.08: port subset of upstream `SourceMapGeneratorV3Test`
