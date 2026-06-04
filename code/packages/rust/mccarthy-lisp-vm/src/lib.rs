@@ -64,6 +64,7 @@ use std::collections::HashMap;
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use lang_runtime_core::RuntimeError;
+use lispy_runtime::value::{INT_MAX, INT_MIN};
 use lispy_runtime::{builtins, intern, LispyValue};
 
 // ===========================================================================
@@ -93,6 +94,10 @@ pub enum VmError {
     Runtime(String),
     /// The per-run instruction budget was exhausted (a runaway program).
     InstructionBudgetExceeded(u64),
+    /// An integer literal outside `lispy-runtime`'s tagged-int range
+    /// (`[-2^60, 2^60 - 1]`).  Caught here so it surfaces as a clean
+    /// error rather than being silently truncated by `LispyValue::int`.
+    IntegerOutOfRange(i64),
 }
 
 impl std::fmt::Display for VmError {
@@ -109,6 +114,10 @@ impl std::fmt::Display for VmError {
             VmError::InstructionBudgetExceeded(n) => {
                 write!(f, "instruction budget ({n}) exceeded — possible infinite loop")
             }
+            VmError::IntegerOutOfRange(n) => write!(
+                f,
+                "integer literal {n} is outside lispy-runtime's tagged-int range [-2^60, 2^60-1]"
+            ),
         }
     }
 }
@@ -221,7 +230,7 @@ fn eval_const(instr: &IIRInstr) -> Result<LispyValue, VmError> {
         .ok_or_else(|| VmError::Malformed("`const` requires a source operand".into()))?;
     match src {
         Operand::Int(0) if instr.type_hint == "ref<LispyPair>" => Ok(LispyValue::NIL),
-        Operand::Int(n) => Ok(LispyValue::int(*n)),
+        Operand::Int(n) => lispy_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Var(name) => Ok(LispyValue::symbol(intern(name))),
         Operand::Float(_) => Err(VmError::Malformed(
@@ -276,6 +285,17 @@ fn resolve_builtin(name: &str) -> Option<BuiltinFn> {
     }
 }
 
+/// Build a tagged integer, rejecting values outside `lispy-runtime`'s
+/// 61-bit tagged-int range rather than letting `LispyValue::int` silently
+/// truncate them in release builds.
+fn lispy_int(n: i64) -> Result<LispyValue, VmError> {
+    if (INT_MIN..=INT_MAX).contains(&n) {
+        Ok(LispyValue::int(n))
+    } else {
+        Err(VmError::IntegerOutOfRange(n))
+    }
+}
+
 /// Read an operand in *value* position: a `Var` is a register read; an
 /// `Int` / `Bool` is an immediate.  (`const` handles its `Var` specially —
 /// see [`eval_const`].)
@@ -285,8 +305,7 @@ fn read_operand(op: &Operand, frame: &Frame) -> Result<LispyValue, VmError> {
             .get(name)
             .copied()
             .ok_or_else(|| VmError::UndefinedRegister(name.clone())),
-        Operand::Int(0) => Ok(LispyValue::int(0)),
-        Operand::Int(n) => Ok(LispyValue::int(*n)),
+        Operand::Int(n) => lispy_int(*n),
         Operand::Bool(b) => Ok(LispyValue::bool(*b)),
         Operand::Float(_) => Err(VmError::Malformed("unexpected Float operand".into())),
         Operand::Str(_) => Err(VmError::Malformed("unexpected Str operand".into())),
@@ -463,6 +482,17 @@ mod tests {
     fn undefined_register() {
         let m = module(vec![ret("never_written")]);
         assert!(matches!(run(&m), Err(VmError::UndefinedRegister(_))));
+    }
+
+    #[test]
+    fn integer_out_of_tagged_range_is_rejected() {
+        // i64::MAX is well outside lispy's 61-bit tagged-int range and
+        // must surface as a clean error, not a silently-truncated value.
+        let m = module(vec![konst("v0", Operand::Int(i64::MAX), "i64"), ret("v0")]);
+        assert!(matches!(run(&m), Err(VmError::IntegerOutOfRange(_))));
+        // The boundary value is accepted.
+        let ok = module(vec![konst("v0", Operand::Int((1 << 60) - 1), "i64"), ret("v0")]);
+        assert_eq!(run(&ok).unwrap().as_int(), Some((1 << 60) - 1));
     }
 
     #[test]
