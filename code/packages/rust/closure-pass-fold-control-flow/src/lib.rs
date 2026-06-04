@@ -261,6 +261,33 @@ fn fold_tagged_statement(stmt: &TaggedStatement, st: &mut FoldState) -> Statemen
                 },
             ))
         }
+        TaggedStatement::SwitchStatement(s) => {
+            // Walk the discriminant + each case's test + consequent
+            // through fold_expression / fold_statement. No peephole
+            // rule yet — the "empty switch", "constant discriminant
+            // → single case body" optimisations are gap-014
+            // follow-ups; this PR ships the AST + recursive walk so
+            // those rules have a place to land.
+            Statement::Tagged(TaggedStatement::SwitchStatement(
+                coding_adventures_javascript_ast::SwitchStatement {
+                    cv: s.cv.clone(),
+                    discriminant: fold_expression(&s.discriminant, st),
+                    cases: s
+                        .cases
+                        .iter()
+                        .map(|c| coding_adventures_javascript_ast::SwitchCase {
+                            cv: c.cv.clone(),
+                            test: c.test.as_ref().map(|e| fold_expression(e, st)),
+                            consequent: c
+                                .consequent
+                                .iter()
+                                .map(|s| fold_statement(s, st))
+                                .collect(),
+                        })
+                        .collect(),
+                },
+            ))
+        }
         TaggedStatement::BreakStatement(_)
         | TaggedStatement::ContinueStatement(_)
         | TaggedStatement::EmptyStatement(_) => Statement::Tagged(stmt.clone()),

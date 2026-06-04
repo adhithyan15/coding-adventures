@@ -645,6 +645,22 @@ fn walk_tagged_statement(
         TaggedStatement::ThrowStatement(ts) => {
             walk_expression(&ts.argument, ctx, analysis, pending);
         }
+        TaggedStatement::SwitchStatement(ss) => {
+            // Visit the discriminant in the enclosing scope, then
+            // each case's test expression and consequent. Per
+            // ECMAScript §13.12, switch bodies share a single
+            // lexical scope spanning all cases, so we keep `ctx`
+            // unchanged across consequents.
+            walk_expression(&ss.discriminant, ctx, analysis, pending);
+            for case in &ss.cases {
+                if let Some(test) = &case.test {
+                    walk_expression(test, ctx, analysis, pending);
+                }
+                for s in &case.consequent {
+                    walk_statement(s, ctx, analysis, pending);
+                }
+            }
+        }
         TaggedStatement::BreakStatement(_) => {}
         TaggedStatement::ContinueStatement(_) => {}
         TaggedStatement::EmptyStatement(_) => {}
