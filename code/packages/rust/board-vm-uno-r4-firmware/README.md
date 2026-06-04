@@ -82,7 +82,10 @@ also classifies that status as ran, store-only skip, validation failure, or
 runtime failure, keeping optional-field interpretation inside the firmware crate.
 Firmware smoke errors expose a compact kind for board-facing reports, so callers
 can group validation, runtime, metadata, CRC, capability, format, and boot-policy
-failures without matching every detailed error payload themselves.
+failures without matching every detailed error payload themselves. Those status
+and error-kind values also provide stable snake_case labels for compact serial,
+CLI, or host logs without duplicating Rust enum formatting outside the firmware
+crate.
 
 The ejected artifact stays board-agnostic; this firmware binary is the Uno R4
 backend that decides how to validate and execute it.
