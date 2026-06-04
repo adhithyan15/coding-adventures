@@ -1,5 +1,34 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.5.0] — 2026-06-04
+
+### Added
+
+- **ADJ61 — the justification gate (combine bytes → justified fact).** Replaces
+  ADJ60's *substring* output gate, which was both too tight (an honest fact built from
+  several bytes has no single verbatim span; the conclusion name is never a byte) and
+  too loose (it checked a citation *exists*, never that it *supports* the claim).
+  - **`pipeline/justify_gate.py`** — two layers: (1) **byte-anchor** (deterministic) —
+    *every* cited span must be verbatim (no fabricated citations; strictly stronger than
+    ADJ60); (2) **justification** (an adversarial verifier verdict) — the cited bytes,
+    *combined*, must justify the claim. Claims are typed **evidence** (statement about
+    the input — strict) vs **conclusion** (inference from the evidence — allowed as a
+    hedged hypothesis). 10 unit tests (`pipeline/test_justify_gate.py`).
+  - **`pipeline/justified.workflow.js`** — derive typed claims → adversarial
+    justification verifier → two-layer gate with kickback loop.
+  - **`pipeline/run_justified.py`** — reports the gate, the evidence/conclusion split,
+    and each claim's combined cited bytes.
+  - **Run (same neurobrucellosis bytes as ADJ60):** 20/20 grounded (16 evidence + 4
+    conclusion), 0 rejected, clean first pass. The framework now **names the diagnosis**
+    — *"most likely … disseminated brucellosis (neurobrucellosis)"* — as a hedged
+    inference grounded by **combining seven bytes**, with rickettsial/atypical-mycobacterial
+    held as alternatives, **without inventing a single evidence byte**. ADJ60 refused to
+    name it and drifted to a "vector-borne" red herring.
+  - **Honest limitations:** layer 2 is an LLM verdict (only as strict as the verifier —
+    it flagged-but-passed one mild evidence overstatement); the live reject/kickback path
+    was not exercised (clean first pass — covered by unit tests only). Spec:
+    [ADJ61](../../ADJ61-justification-gate.md).
+
 ## [0.4.0] — 2026-06-04
 
 ### Added
