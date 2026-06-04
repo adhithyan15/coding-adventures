@@ -2,6 +2,89 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.8.0] - 2026-06-04
+
+### Added — CLOC12.37: var hoisting (gap-015)
+
+Closes **gap-015**. After folding each `FunctionDeclaration`
+body, lift `var x = expr;` declarations from inside nested
+blocks up to the function-body top:
+
+```js
+function f() { if (cond) { var y = 1; } }
+↓
+function f() { var y; if (cond) y = 1; }
+```
+
+This matches upstream Closure's syntactically-visible hoist
+and lets downstream rename / dce see all function-scoped
+bindings at the body's top.
+
+### Scope
+
+- **Recurses into**: nested `BlockStatement`, `IfStatement`
+  consequent/alternate, `WhileStatement` body,
+  `ForStatement` body, `LabeledStatement` body,
+  `SwitchStatement` case consequents.
+- **Does NOT recurse into**: nested `FunctionDeclaration` /
+  `FunctionExpression` bodies — they have their own
+  function-scope and own hoisting (handled by their own
+  dispatch through `fold_declaration`).
+- **Does NOT touch**: `for(var x = 0; ...; ...)` init slots
+  (already at hoistable position); `let` / `const`
+  (block-scoped — hoisting doesn't apply).
+- **Conservative bail**: pure passthrough when the function
+  body contains no hoistable vars — no allocations,
+  no `changed` signal.
+
+### Rewrite shape
+
+Each `var x = expr;` site collapses to:
+
+- `[bare]` (no init): `EmptyStatement` at the original site;
+  the name is hoisted to the prepended declaration.
+- `[single init]`: `ExpressionStatement(x = expr)` at the
+  original site.
+- `[multiple inits]`: `BlockStatement` containing one
+  assignment-statement per declarator-with-init. The
+  block-flatten step of DCE may splice it back into the
+  parent.
+
+Names accumulate into a single `var x, y, z;` prepended to the
+function body. One `var-hoisted` `Contribution` per function
+body (tagged against the body's CV) — not per identifier.
+
+### Helpers (private)
+
+- `hoist_function_body_vars(body, st) -> BlockStatement` —
+  the top-level entry called from
+  `Declaration::FunctionDeclaration` arm.
+- `hoist_visit_stmt(stmt, collected) -> Statement` —
+  recursive walker over compound statements; does NOT enter
+  inner function bodies.
+- `hoist_visit_block(b, collected) -> BlockStatement` —
+  block-body recursion helper.
+- `hoist_rewrite_var_decl(v, collected) -> Statement` —
+  collapses one `var ...;` site to its replacement statement.
+
+### Tests (6 new, 20 → 26 inline)
+
+| Test | Pins |
+|------|------|
+| `var_inside_if_consequent_block_hoists` | `if (cond) { var y = 1; }` → `var y; if (cond) y = 1;` |
+| `var_at_top_of_function_body_is_split` | `var x = 1;` → `var x; x = 1;` (uniform split) |
+| `let_declaration_is_not_hoisted` | `let` stays block-scoped (no `var-hoisted` contribution) |
+| `nested_function_body_vars_are_isolated` | outer hoister doesn't touch inner function's vars |
+| `empty_function_body_does_nothing` | `function f() {}` → no work, no contribution |
+| `bare_var_no_init_collapses_to_empty_at_site` | `var y;` inside block → site becomes `EmptyStatement` |
+
+closurec's e2e suites stay green — purely additive structural
+rewrite that produces a more canonical form.
+
+### Version bump
+
+`0.7.0` → `0.8.0`.
+
 ## [0.7.0] - 2026-06-04
 
 ### Added — CLOC12.26: gap-019 return-then-return through if-else → ternary return
