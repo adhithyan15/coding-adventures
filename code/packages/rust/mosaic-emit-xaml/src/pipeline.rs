@@ -726,10 +726,83 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
     let mut parts: Vec<String> = Vec::with_capacity(props.len());
     for p in props {
         let key = css_property_to_xaml_setter(&p.name);
-        let escaped = p.value.replace('\\', "\\\\").replace('"', "\\\"");
+        // Color-typed setters (`Background`, `Foreground`, `BorderBrush`)
+        // need a normalization pass so CSS-style lowercase color names
+        // (`transparent`, `red`, …) survive the XAML markup compiler.
+        // WinUI 3's `Background="transparent"` is rejected as invalid —
+        // the markup compiler wants `Transparent` (PascalCase) or the
+        // hex form `#00000000`.  Non-color setters (FontSize, Padding,
+        // CornerRadius, …) pass through unchanged.  See toolkit-multi-
+        // demo's `ISSUES.md` X4 for the surfacing repro.
+        let value = if is_color_setter(&key) {
+            normalize_xaml_color_value(&p.value)
+        } else {
+            p.value.clone()
+        };
+        let escaped = value.replace('\\', "\\\\").replace('"', "\\\"");
         parts.push(format!("{key}=\"{escaped}\""));
     }
     parts.join(" ")
+}
+
+/// Which XAML setter properties take a `Brush` (the WinUI color type).
+/// Used by `build_style_fragment` to scope `normalize_xaml_color_value`
+/// to the values that actually flow to a brush — everything else
+/// (lengths, fonts, weights) passes through verbatim.
+fn is_color_setter(setter: &str) -> bool {
+    matches!(setter, "Background" | "Foreground" | "BorderBrush")
+}
+
+/// Normalize a mosstyle color value into a form the WinUI 3 XAML markup
+/// compiler accepts.
+///
+/// Mosstyle's `.msl` source treats colors as opaque strings.  CSS-style
+/// lowercase names (`"transparent"`, `"red"`) are valid input, but XAML
+/// expects either a hex literal (`#RRGGBB` / `#AARRGGBB`) or a *Pascal-
+/// cased* named color (`Transparent`, `Red`).  This function:
+///
+/// - Pass-through for hex literals (`#…`) — XAML accepts these as-is.
+/// - Pass-through for already-PascalCased names (first letter upper)
+///   — assumed XAML-native.
+/// - PascalCase known CSS color names — `transparent`→`Transparent`,
+///   etc.
+/// - For anything else, return unchanged.  Better to emit a stale
+///   value the markup compiler can flag than to silently mangle a
+///   user-supplied identifier.
+///
+/// The named-color table mirrors the CSS3 / SVG palette intersected
+/// with the WinUI 3 `Microsoft.UI.Colors` set.  Most of them are
+/// identical PascalCased forms (`red`→`Red`); a few — `darkgray`
+/// vs `DarkGray` — also normalise to PascalCase.
+fn normalize_xaml_color_value(s: &str) -> String {
+    let trimmed = s.trim();
+    if trimmed.starts_with('#') {
+        return s.to_string();
+    }
+    // `{x:Bind …}` / `{Binding …}` markup extensions or any string with
+    // braces — keep verbatim.  These aren't color literals.
+    if trimmed.starts_with('{') {
+        return s.to_string();
+    }
+    // Already PascalCased (or starts with an uppercase letter)?  Treat
+    // as XAML-native and pass through.
+    let first = trimmed.chars().next();
+    if matches!(first, Some(c) if c.is_ascii_uppercase()) {
+        return s.to_string();
+    }
+    // All-lowercase identifier — PascalCase it.  `transparent` →
+    // `Transparent`, `red` → `Red`, etc.  We don't gate on a known
+    // CSS-color whitelist: the markup compiler will reject anything
+    // that isn't a real named color, and over-pascalCasing is the
+    // failure mode we want (it just shifts which compiler complains).
+    if trimmed.chars().all(|c| c.is_ascii_lowercase()) {
+        let mut chars = trimmed.chars();
+        match chars.next() {
+            Some(c) => return c.to_ascii_uppercase().to_string() + chars.as_str(),
+            None => return s.to_string(),
+        }
+    }
+    s.to_string()
 }
 
 /// Map a mosstyle CSS property name to its XAML setter property name.
@@ -8521,6 +8594,70 @@ mod tests {
             "no text-style props should mean no Resources block, got:\n{}",
             r.xaml
         );
+    }
+
+    // ── X4: color-value normalization for WinUI 3 ──────────────────
+
+    /// X4: `background: "transparent"` in `.msl` must emit
+    /// `Background="Transparent"` (PascalCase) — WinUI 3's markup
+    /// compiler rejects the lowercase form.  Caught by the toolkit
+    /// Alert demo's close-button background.
+    #[test]
+    fn x4_color_value_transparent_is_pascalcased() {
+        let props = vec![
+            StyleProp { name: "background".to_string(), value: "transparent".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(
+            frag.contains("Background=\"Transparent\""),
+            "expected PascalCased Transparent, got:\n{frag}"
+        );
+        assert!(
+            !frag.contains("Background=\"transparent\""),
+            "lowercase transparent must NOT survive normalization, got:\n{frag}"
+        );
+    }
+
+    /// X4 negative: hex literals (`#…`) pass through verbatim.
+    /// PascalCasing a hex value would be wrong (`#abc` isn't a name).
+    #[test]
+    fn x4_color_value_hex_passes_through_unchanged() {
+        let props = vec![
+            StyleProp { name: "background".to_string(), value: "#cff4fc".to_string() },
+            StyleProp { name: "color".to_string(),      value: "#055160".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(frag.contains("Background=\"#cff4fc\""), "got:\n{frag}");
+        assert!(frag.contains("Foreground=\"#055160\""), "got:\n{frag}");
+    }
+
+    /// X4 scope: non-color setters (FontSize, Padding) must NOT
+    /// be PascalCased — `"normal"` font-weight is a real CSS keyword
+    /// that XAML happens to accept verbatim, and we mustn't shift
+    /// `"600"` into `"600"` either (no-op for numerics).
+    #[test]
+    fn x4_non_color_setters_pass_through_unchanged() {
+        let props = vec![
+            StyleProp { name: "font-size".to_string(),   value: "12".to_string() },
+            StyleProp { name: "font-weight".to_string(), value: "normal".to_string() },
+            StyleProp { name: "padding".to_string(),     value: "6".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(frag.contains("FontSize=\"12\""), "got:\n{frag}");
+        assert!(frag.contains("FontWeight=\"normal\""), "got:\n{frag}");
+        assert!(frag.contains("Padding=\"6\""), "got:\n{frag}");
+    }
+
+    /// X4: already-PascalCased color names (`Transparent`,
+    /// `DarkGray`) pass through.  Authors who write XAML-native
+    /// names in their `.msl` aren't double-cased.
+    #[test]
+    fn x4_pascalcased_color_value_passes_through_unchanged() {
+        let props = vec![
+            StyleProp { name: "background".to_string(), value: "Transparent".to_string() },
+        ];
+        let frag = build_style_fragment(&props);
+        assert!(frag.contains("Background=\"Transparent\""), "got:\n{frag}");
     }
 
     /// X1 round-trip: `parse_style_fragment` reverses
