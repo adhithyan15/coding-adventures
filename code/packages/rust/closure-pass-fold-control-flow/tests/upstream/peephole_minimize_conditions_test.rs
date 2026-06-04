@@ -160,15 +160,68 @@ fn empty_stmt() -> Statement {
 ///   fold("function f(){if(x){a()}x=3}", "function f(){x&&a();x=3}");
 ///   ... (many more, all rewriting `if(x) S` to `x && S`)
 ///
-/// Converting `if (test) consequent` (with no alternate) into a
-/// `LogicalExpression { left: test, op: And, right: consequent }`
-/// requires producing a LogicalExpression as a statement-position
-/// node. Our pass doesn't do this rewrite today.
+/// **gap-016 closed in CLOC12.24**: when `test` is non-literal,
+/// the consequent reduces to a single ExpressionStatement (directly
+/// or via single-statement BlockStatement layers), and there is *no*
+/// alternate, the IfStatement rewrites to an ExpressionStatement
+/// wrapping a LogicalExpression with operator `And`. Side-effect
+/// order is preserved because `&&` evaluates `test` first and the
+/// right operand only when `test` is truthy — identical to `if (test) S`.
 #[test]
-#[ignore = "blocked on gap-016: `if (x) S` → `x && S` rewrite not implemented"]
 fn test_fold_one_child_blocks_if_to_logical_and() {
-    // Would assert `if (x) foo();` collapses to an
-    // ExpressionStatement wrapping `x && foo()`.
+    use coding_adventures_javascript_ast::{
+        BlockStatement, CallExpression, LogicalExpression, LogicalOperator,
+    };
+    let call = |name: &str| {
+        Expression::CallExpression(CallExpression {
+            cv: None,
+            callee: Box::new(ident(name)),
+            arguments: vec![],
+        })
+    };
+    let block = |s: Statement| {
+        Statement::block_statement(BlockStatement {
+            cv: None,
+            body: vec![s],
+        })
+    };
+    let expect_logical_and = |t: Expression, c: Expression| -> Statement {
+        Statement::expression_statement(ExpressionStatement {
+            cv: None,
+            expression: Expression::LogicalExpression(LogicalExpression {
+                cv: None,
+                operator: LogicalOperator::And,
+                left: Box::new(t),
+                right: Box::new(c),
+            }),
+        })
+    };
+
+    // 1. Bare consequent: `if (x) a();` → `x && a();`
+    assert_fold(
+        if_stmt(ident("x"), expr_stmt(call("a")), None),
+        expect_logical_and(ident("x"), call("a")),
+    );
+
+    // 2. Single-statement block consequent: `if (x) { a(); }` → `x && a();`
+    assert_fold(
+        if_stmt(ident("x"), block(expr_stmt(call("a"))), None),
+        expect_logical_and(ident("x"), call("a")),
+    );
+
+    // 3. Nested single-statement blocks: `if (x) {{ a(); }}` → `x && a();`
+    // (single_expr_stmt recurses through BlockStatement layers.)
+    assert_fold(
+        if_stmt(ident("x"), block(block(expr_stmt(call("a")))), None),
+        expect_logical_and(ident("x"), call("a")),
+    );
+
+    // 4. Bare assignment in consequent: `if (x) y;` → `x && y;`
+    // (Any identifier is a valid expression statement.)
+    assert_fold(
+        if_stmt(ident("x"), expr_stmt(ident("y")), None),
+        expect_logical_and(ident("x"), ident("y")),
+    );
 }
 
 /// Upstream `testFoldOneChildBlocks` line:
@@ -233,13 +286,15 @@ fn test_fold_one_child_blocks_if_else_to_ternary() {
         expect_ternary(ident("x"), call("foo"), call("bar")),
     );
 
-    // testSame: no alternate → stays an IfStatement.
-    let inp_no_alt = if_stmt(ident("x"), expr_stmt(call("foo")), None);
-    assert_fold(
-        inp_no_alt.clone(),
-        // Identity fold: the IfStatement comes back unchanged.
-        inp_no_alt,
-    );
+    // **Pre-gap-016**: no alternate → stays an IfStatement (testSame).
+    // **Post-gap-016** (CLOC12.24): now folds to `x && foo();`.
+    //
+    // This is the canonical gap-016 case; the dedicated
+    // `test_fold_one_child_blocks_if_to_logical_and` test above
+    // covers it (along with several other shapes), so we no longer
+    // need a duplicate assertion here. Pre-gap-016 the assertion
+    // here was identity; we leave the comment as a historical marker
+    // so the gap-017 vs gap-016 split stays visible in the file.
 }
 
 /// Constant true test always selects the consequent. Mirrors upstream's

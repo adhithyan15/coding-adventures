@@ -2,6 +2,86 @@
 
 All notable changes to the `coding-adventures-closure-pass-fold-control-flow` crate will be documented in this file.
 
+## [0.5.0] - 2026-06-04
+
+### Added — CLOC12.24: gap-016 `if (x) S` → `x && S` rewrite
+
+Closes `gap-016` from the CLOC12 gap tracker. `fold_if_statement` now
+has a third rewriting branch (after literal-truthy/falsy collapse and
+gap-017 if-else→ternary): when the test is non-literal, the
+consequent reduces to a single ExpressionStatement (directly or via
+single-statement BlockStatement layers), and there is **no**
+alternate, the IfStatement is rewritten to:
+
+```
+ExpressionStatement {
+  LogicalExpression { left: test, op: And, right: consequent_expr }
+}
+```
+
+Worked examples now folding:
+
+```
+if (x) a();              →  x && a();
+if (x) { a(); }          →  x && a();   (single-expr block unwraps)
+if (x) {{ a(); }}        →  x && a();   (nested single-stmt blocks)
+if (x) y;                →  x && y;     (any expression statement)
+```
+
+Worked examples that stay as IfStatement (pre-conditions don't hold):
+
+```
+if (x) a(); else b();    →  x ? a() : b();   (gap-017 ternary fires
+                                              first because alternate
+                                              exists)
+if (x) return 1;         →  unchanged (return is not an expression
+                                       statement; gap-019's territory)
+if (x) { a; b; }         →  unchanged (multi-stmt consequent doesn't
+                                       reduce to one expression)
+if (x) ;                 →  unchanged (empty consequent would require
+                                       synthesising undefined; deferred)
+```
+
+### Why this is safe
+
+`x && consequent` and `if (x) S` have observably identical evaluation
+order:
+
+* `x` is evaluated first (the short-circuit gate).
+* If `x` is falsy → `&&` returns `x` without evaluating the right
+  operand; `if (x) S` likewise skips `S`. Behaviour match.
+* If `x` is truthy → `&&` evaluates the right operand; `if (x) S`
+  likewise executes `S` for its side effects. The wrapper
+  ExpressionStatement discards the result of `&&`, so the *value*
+  is irrelevant — only the side effects matter. Behaviour match.
+
+No second evaluation of `x` is introduced. `consequent`'s side
+effects fire when and only when `x` is truthy.
+
+### What changed in tests
+
+* `tests/upstream/peephole_minimize_conditions_test.rs::test_fold_one_child_blocks_if_to_logical_and`
+  — un-ignored, now exercises 4 shapes: bare `if (x) a();`,
+  single-stmt block, nested blocks, and `if (x) y;`.
+* `tests/upstream/peephole_minimize_conditions_test.rs::test_fold_one_child_blocks_if_else_to_ternary`
+  — the trailing "testSame: no alternate" assertion was removed
+  (it's now covered by the new gap-016 test) with a comment
+  marking the historical pre-gap-016 behaviour.
+* `src/lib.rs::if_non_literal_test_with_no_alternate_passes_through`
+  — renamed to `..._with_multi_statement_consequent_passes_through`
+  and the test body switched from `if (flag) x;` (now folds) to
+  a 2-statement consequent block (still doesn't fold).
+* `src/lib.rs::if_with_unresolved_comparison_doesnt_fold_alone`
+  — renamed to `..._folds_via_gap016` and updated to assert the
+  new `(1<2) && A` fold shape, while still pinning that the inner
+  `1 < 2` BinaryExpression is NOT folded (fold-control-flow alone
+  doesn't do binary-comparison folding; that's constant-fold).
+
+Inline tests: 20 → 20 (two pre-existing tests renamed + updated).
+Upstream tests: 10 → 11 (un-ignored gap-016 placeholder).
+
+No public API change. No AST change. CV plumbing unchanged.
+
 ## [0.4.2] - 2026-06-01
 
 ### Changed — CLOC12.16: handle new `UndefinedLiteral` Expression variant
