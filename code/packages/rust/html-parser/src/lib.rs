@@ -838,6 +838,7 @@ pub struct BrowserDocument {
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub command_elements: Vec<BrowserCommandElement>,
+    pub aria_collections: Vec<BrowserAriaCollection>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1535,6 +1536,49 @@ pub struct BrowserCommandElement {
     pub event_handlers: Vec<String>,
     pub focusable: bool,
     pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollection {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_multiselectable: Option<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_owns: Vec<String>,
+    pub item_count: usize,
+    pub selected_item_count: usize,
+    pub checked_item_count: usize,
+    pub current_item_count: usize,
+    pub disabled_item_count: usize,
+    pub items: Vec<BrowserAriaCollectionItem>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaCollectionItem {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_selected: Option<String>,
+    pub aria_checked: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_level: Option<String>,
+    pub aria_posinset: Option<String>,
+    pub aria_setsize: Option<String>,
+    pub aria_rowindex: Option<String>,
+    pub aria_colindex: Option<String>,
+    pub aria_controls: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9421,6 +9465,9 @@ fn collect_browser_facts(
         ) {
             summary.command_elements.push(command_element);
         }
+        if let Some(aria_collection) = browser_aria_collection_element(element, id_texts) {
+            summary.aria_collections.push(aria_collection);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -11286,6 +11333,143 @@ fn browser_command_focusable(element: &Element) -> bool {
     }
 
     matches!(element.name.as_str(), "button" | "input" | "summary")
+}
+
+fn browser_aria_collection_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaCollection> {
+    let role = browser_authored_collection_role(element)?;
+    let items = browser_aria_collection_items(element, id_texts);
+    let selected_item_count = items
+        .iter()
+        .filter(|item| item.aria_selected.as_deref() == Some("true"))
+        .count();
+    let checked_item_count = items
+        .iter()
+        .filter(|item| {
+            matches!(
+                item.aria_checked.as_deref(),
+                Some("true") | Some("mixed")
+            )
+        })
+        .count();
+    let current_item_count = items
+        .iter()
+        .filter(|item| {
+            item.aria_current
+                .as_deref()
+                .is_some_and(|current| !current.eq_ignore_ascii_case("false"))
+        })
+        .count();
+    let disabled_item_count = items
+        .iter()
+        .filter(|item| item.aria_disabled.as_deref() == Some("true"))
+        .count();
+
+    Some(BrowserAriaCollection {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_orientation: browser_aria_state(element, "aria-orientation"),
+        aria_multiselectable: browser_aria_state(element, "aria-multiselectable"),
+        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
+        aria_owns: browser_aria_idrefs(element, "aria-owns"),
+        item_count: items.len(),
+        selected_item_count,
+        checked_item_count,
+        current_item_count,
+        disabled_item_count,
+        role,
+        items,
+    })
+}
+
+fn browser_authored_collection_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "grid" | "listbox" | "menu" | "menubar" | "radiogroup" | "tablist" | "tree" | "treegrid"
+    )
+    .then_some(role)
+}
+
+fn browser_aria_collection_items(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Vec<BrowserAriaCollectionItem> {
+    let mut items = Vec::new();
+    collect_browser_aria_collection_items(&element.children, id_texts, &mut items);
+    items
+}
+
+fn collect_browser_aria_collection_items(
+    nodes: &[Node],
+    id_texts: &[(String, String)],
+    items: &mut Vec<BrowserAriaCollectionItem>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if let Some(item) = browser_aria_collection_item(element, id_texts) {
+            items.push(item);
+        }
+        if browser_authored_collection_role(element).is_none() {
+            collect_browser_aria_collection_items(&element.children, id_texts, items);
+        }
+    }
+}
+
+fn browser_aria_collection_item(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaCollectionItem> {
+    let role = browser_authored_collection_item_role(element)?;
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserAriaCollectionItem {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        role,
+        text,
+        aria_selected: browser_aria_state(element, "aria-selected"),
+        aria_checked: browser_aria_state(element, "aria-checked"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_level: browser_aria_state(element, "aria-level"),
+        aria_posinset: browser_aria_state(element, "aria-posinset"),
+        aria_setsize: browser_aria_state(element, "aria-setsize"),
+        aria_rowindex: browser_aria_state(element, "aria-rowindex"),
+        aria_colindex: browser_aria_state(element, "aria-colindex"),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+    })
+}
+
+fn browser_authored_collection_item_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "columnheader"
+            | "gridcell"
+            | "menuitem"
+            | "menuitemcheckbox"
+            | "menuitemradio"
+            | "option"
+            | "radio"
+            | "row"
+            | "rowheader"
+            | "tab"
+            | "treeitem"
+    )
+    .then_some(role)
 }
 
 fn should_collect_browser_content_children(name: &str) -> bool {
