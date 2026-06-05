@@ -1,5 +1,30 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.12.0] — 2026-06-04
+
+### Added
+
+- **ADJ69 — defensible output on a contested question (worked example).** Runs the ADJ68
+  open-book defensibility pipeline on a user-chosen question whose honest answer is *not a
+  single name*: *"who was Jason's maternal great-grandfather?"* — two independent ambiguities
+  (definitional: father of the maternal grandfather vs grandmother; source: Apollonius'
+  Alcimede vs Apollodorus' Polymede).
+  - **`pipeline/jason.workflow.js`** — spider+ground each genealogical link in a verbatim
+    source, flag contested links, surface both ambiguities; vs a bare closed-book recall
+    answer; adversarial auditor scores defensibility (every link sourced AND ambiguities
+    surfaced — not single-name correctness).
+  - **Result** (`pipeline/jason-results.json`): **bare recall hallucinated** — led with
+    "Cretheus" (Jason's *paternal* grandfather: wrong side AND wrong generation), zero
+    citations → **NOT_DEFENSIBLE** (6/6 links unsupported). **The grounded trace** produced a
+    cited map — Deion (Apollonius), Hermes (Apollodorus), Minyas (grandmother line) — 6/6
+    links cited, contested mother split per source, both ambiguities surfaced →
+    **DEFENSIBLE**, refusing to collapse.
+  - **Both pillars on one case:** accounting (bare committed commission "Cretheus" + omission
+    of the grandmother branch; grounded did neither) and correctability (every branch a
+    citable editable node — incl. a real findable imprecision, "his sister Alcimede", for a
+    human to correct). **Honest limit:** document-granularity citations (citation-precision
+    verifier is the next build). Spec: [ADJ69](../../ADJ69-contested-question-worked-example.md).
+
 ## [0.11.0] — 2026-06-04
 
 ### Added

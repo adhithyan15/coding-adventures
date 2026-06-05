@@ -1,0 +1,80 @@
+{
+  "summary": "Open-book defensibility run on a contested genealogy question: \"who was Jason's maternal great-grandfather?\" The framework spiders + grounds each link of the maternal lineage in a verbatim source, EXPLICITLY surfacing (a) the definitional ambiguity of \"maternal great-grandfather\" and (b) the source disagreement over Jason's mother — vs a bare closed-book recall answer. An adversarial auditor scores whether every link is sourced AND whether the ambiguities are surfaced rather than papered over.",
+  "agentCount": 3,
+  "logs": [],
+  "result": {
+    "question": "In Greek mythology, who was Jason's (the Argonaut's) maternal great-grandfather?",
+    "grounded": {
+      "interpretation_note": "Father of the maternal grandfather (default) versus father of the maternal grandmother (gives Minyas). Mother contested.",
+      "answer": "No single answer. A (Apollonius): Deion. B (Apollodorus): Hermes. Grandmother reading: Minyas. Do not collapse Deion and Hermes.",
+      "links": [
+        {
+          "claim": "Mother contested: Alcimede vs Polymede",
+          "source_url": "https://www.theoi.com/Text/ApolloniusRhodius1.html",
+          "quote": "the son of Alcimede who was born of Clymene the daughter of Minyas",
+          "contested": true,
+          "note": "B: Apollodorus, Polymede dau Autolycus."
+        },
+        {
+          "claim": "A grandfather: Alcimede daughter of Phylacus",
+          "source_url": "https://www.theoi.com/Text/ApolloniusRhodius1.html",
+          "quote": "Aeson had wedded his sister Alcimede, daughter of Phylacus",
+          "contested": false,
+          "note": ""
+        },
+        {
+          "claim": "A great-grandfather: Phylacus son of Deion",
+          "source_url": "https://www.theoi.com/Text/Apollodorus1.html",
+          "quote": "sons, Aenetus, Actor, Phylacus, and Cephalus",
+          "contested": false,
+          "note": "Deion son of Aeolus."
+        },
+        {
+          "claim": "A grandmother: Clymene daughter of Minyas",
+          "source_url": "https://www.theoi.com/Text/ApolloniusRhodius1.html",
+          "quote": "born of Clymene the daughter of Minyas",
+          "contested": false,
+          "note": ""
+        },
+        {
+          "claim": "B grandfather: Polymede daughter of Autolycus",
+          "source_url": "https://www.theoi.com/Text/Apollodorus1.html",
+          "quote": "a son Jason by Polymede, daughter of Autolycus",
+          "contested": true,
+          "note": ""
+        },
+        {
+          "claim": "B great-grandfather: Autolycus son of Hermes",
+          "source_url": "https://www.theoi.com/Text/Apollodorus1.html",
+          "quote": "Autolycus, son of Hermes",
+          "contested": false,
+          "note": ""
+        }
+      ]
+    },
+    "bare_recall": {
+      "answer": "Cretheus (king and founder of Iolcus).\n\nJason's mother was a woman commonly named Alcimede (daughter of Phylacus, in one tradition) or, in some accounts, Polymede. The cleanest and most standard line traces through his father Aeson, but the question asks specifically about the *maternal* line. In the most widely cited genealogy, Jason's father Aeson was the son of Cretheus and Tyro. Following the maternal great-grandfather strictly: Jason → mother Alcimede → her father Phylacus → his father Deion (or, in the Polymede tradition, the line leads back to Autolycus). Because the maternal genealogy is variant and inconsistent across sources, the most reliable named answer in the dominant tradition is **Cretheus**, with **Autolycus** appearing in the version where Jason's mother is Polymede, daughter of Autolycus.",
+      "reasoning": "Jason's genealogy is recorded inconsistently in ancient sources. His father Aeson is consistently the son of Cretheus (founder of Iolcus) and Tyro. His mother is named variously: Alcimede (daughter of Phylacus), Polymede (daughter of Autolycus), Polypheme, or Amphinome. In the most prominent variant where his mother is Polymede, daughter of Autolycus, son of Hermes — the maternal grandfather is Autolycus, making the maternal great-grandfather Hermes. In the Alcimede-daughter-of-Phylacus tradition, the maternal grandfather is Phylacus and the great-grandfather is Deion. Given the variant traditions, the single best-supported named maternal great-grandfather is Autolycus's father Hermes (via Polymede), or Deion (via Alcimede). I flagged Cretheus but corrected to the maternal line in reasoning."
+    },
+    "audit": [
+      {
+        "label": "Answer 1",
+        "links_total": 6,
+        "links_unsupported": 6,
+        "surfaces_source_disagreement": true,
+        "surfaces_definitional_ambiguity": false,
+        "verdict": "NOT_DEFENSIBLE",
+        "note": "Bare recall with zero citations on any of its ~6 genealogical links (Jason->Alcimede, Alcimede->Phylacus, Phylacus->Deion, Polymede->Autolycus, Autolycus->Hermes, Aeson->Cretheus). It does surface mother-disagreement, naming Alcimede/Polymede/Polypheme/Amphinome, but undercuts itself: the headline answer field says 'Cretheus' (the PATERNAL grandfather, not on the maternal line at all), then the reasoning contradicts it and tries to land on a single 'best-supported' name (Hermes or Deion), papering over the dispute. It captures the mother/great-grandfather variant split but never raises the grandfather-vs-grandmother definitional ambiguity (Clymene/Minyas branch). Not defensible: every link is unsupported and one ambiguity is unsurfaced."
+      },
+      {
+        "label": "Answer 2",
+        "links_total": 6,
+        "links_unsupported": 0,
+        "surfaces_source_disagreement": true,
+        "surfaces_definitional_ambiguity": true,
+        "verdict": "DEFENSIBLE",
+        "note": "Grounded trace: all 6 links carry a checkable cited source (theoi.com Apollonius Rhodius 1 and Apollodorus 1), with the contested mother links explicitly flagged contested=true and split into A (Apollonius)/B (Apollodorus) traditions. Surfaces source disagreement on the mother directly (Alcimede vs Polymede, attributed per-source). Surfaces the definitional ambiguity explicitly in the interpretation field: 'Father of the maternal grandfather (default) versus father of the maternal grandmother (gives Minyas)', and refuses to collapse the divergent answers ('Do not collapse Deion and Hermes'; 'No single answer'). This is the defensible shape: it declines a single confident name and attributes each branch to a specific citable source. Note: citations are at source-document granularity (not line-level), but every link is checkable, satisfying the criterion."
+      }
+    ]
+  }
+}
