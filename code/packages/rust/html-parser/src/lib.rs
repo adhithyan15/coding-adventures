@@ -837,6 +837,7 @@ pub struct BrowserDocument {
     pub text_semantics: Vec<BrowserTextSemantic>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
+    pub command_elements: Vec<BrowserCommandElement>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1496,6 +1497,44 @@ pub struct BrowserSectionLandmark {
     pub landmark_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub heading_text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCommandElement {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub command_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub control_type: Option<String>,
+    pub form_owner: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub focusable: bool,
+    pub disabled: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9373,6 +9412,15 @@ fn collect_browser_facts(
         if let Some(section_landmark) = browser_section_landmark_element(element, id_texts) {
             summary.section_landmarks.push(section_landmark);
         }
+        if let Some(command_element) = browser_command_element(
+            element,
+            labels,
+            id_texts,
+            summary.base_href.as_deref(),
+            summary.base_target.as_deref(),
+        ) {
+            summary.command_elements.push(command_element);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -11071,6 +11119,173 @@ fn find_first_heading_in_nodes(nodes: &[Node]) -> Option<&Element> {
         }
     }
     None
+}
+
+fn browser_command_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> Option<BrowserCommandElement> {
+    let command_kind = browser_command_kind(element)?;
+    let role = browser_command_role(element);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let form_action = browser_control_form_action(element);
+    let target = browser_anchor_target(element).or_else(|| browser_control_form_target(element));
+
+    Some(BrowserCommandElement {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_command_accessible_name(
+            element,
+            role.as_str(),
+            &control_labels,
+            id_texts,
+            &text,
+        ),
+        accessible_description: browser_accessible_description(element, id_texts),
+        role,
+        authored_role: browser_authored_role(element),
+        command_kind,
+        text,
+        href: element.attribute("href").map(ToOwned::to_owned),
+        resolved_href: element
+            .attribute("href")
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        control_type: browser_content_control_type(element),
+        form_owner: browser_form_owner(element),
+        resolved_form_action: form_action
+            .as_deref()
+            .and_then(|action| resolve_browser_url(action, base_href)),
+        form_action,
+        form_method: browser_control_form_method(element),
+        form_target: browser_control_form_target(element),
+        form_novalidate: browser_control_form_novalidate(element),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        aria_haspopup: browser_aria_state(element, "aria-haspopup"),
+        aria_pressed: browser_aria_state(element, "aria-pressed"),
+        aria_current: browser_aria_state(element, "aria-current"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey: browser_accesskey(element),
+        event_handlers: browser_event_handlers(element),
+        focusable: browser_command_focusable(element),
+        disabled: element.attribute("disabled").is_some(),
+    })
+}
+
+fn browser_command_role(element: &Element) -> String {
+    browser_authored_role(element).unwrap_or_else(|| {
+        browser_content_role(&element.name)
+            .unwrap_or(element.name.as_str())
+            .to_string()
+    })
+}
+
+fn browser_command_kind(element: &Element) -> Option<String> {
+    if element.attribute("command").is_some() || element.attribute("commandfor").is_some() {
+        return Some("command".to_string());
+    }
+    if element.attribute("popovertarget").is_some() {
+        return Some("popover".to_string());
+    }
+    if let Some(role) = browser_authored_command_role(element) {
+        return Some(role);
+    }
+    if element.name == "summary" {
+        return Some("disclosure".to_string());
+    }
+
+    match (
+        element.name.as_str(),
+        browser_content_control_type(element).as_deref(),
+    ) {
+        ("button", Some("submit")) | ("input", Some("submit" | "image"))
+            if browser_has_command_state(element) =>
+        {
+            Some("submit".to_string())
+        }
+        ("button", Some("reset")) | ("input", Some("reset"))
+            if browser_has_command_state(element) =>
+        {
+            Some("reset".to_string())
+        }
+        ("button", Some("button")) | ("input", Some("button"))
+            if browser_has_command_state(element) =>
+        {
+            Some("button".to_string())
+        }
+        _ => None,
+    }
+}
+
+fn browser_has_command_state(element: &Element) -> bool {
+    element.attribute("aria-controls").is_some()
+        || element.attribute("aria-expanded").is_some()
+        || element.attribute("aria-haspopup").is_some()
+        || element.attribute("aria-pressed").is_some()
+        || element.attribute("aria-current").is_some()
+        || element.attribute("aria-disabled").is_some()
+}
+
+fn browser_authored_command_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "button"
+            | "link"
+            | "menuitem"
+            | "menuitemcheckbox"
+            | "menuitemradio"
+            | "option"
+            | "tab"
+            | "treeitem"
+    )
+    .then_some(role)
+}
+
+fn browser_command_accessible_name(
+    element: &Element,
+    role: &str,
+    control_labels: &[String],
+    id_texts: &[(String, String)],
+    text: &str,
+) -> Option<String> {
+    browser_accessible_name(element, role, control_labels, id_texts)
+        .or_else(|| browser_content_value(element).map(|value| collapse_html_whitespace(&value)))
+        .or_else(|| element.attribute("alt").map(collapse_html_whitespace))
+        .or_else(|| (!text.is_empty()).then(|| text.to_string()))
+        .filter(|name| !name.is_empty())
+}
+
+fn browser_command_focusable(element: &Element) -> bool {
+    if let Some(focusable) = browser_focusable(element) {
+        return focusable;
+    }
+    if element.attribute("disabled").is_some()
+        || browser_hidden(element)
+        || browser_inert(element)
+        || browser_aria_hidden(element)
+    {
+        return false;
+    }
+
+    if is_browser_document_link(element) {
+        return true;
+    }
+
+    matches!(element.name.as_str(), "button" | "input" | "summary")
 }
 
 fn should_collect_browser_content_children(name: &str) -> bool {
