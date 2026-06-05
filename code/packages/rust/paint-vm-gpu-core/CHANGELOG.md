@@ -21,3 +21,4 @@
 - Added dashed `PaintRect` stroke lowering around the rectangle perimeter.
 - Added dashed `PaintEllipse` stroke lowering around the sampled ellipse
   perimeter.
+- Added square and round `PaintLine` cap lowering for GPU mesh plans.

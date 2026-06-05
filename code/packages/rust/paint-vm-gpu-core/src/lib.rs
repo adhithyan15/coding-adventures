@@ -10,7 +10,8 @@ use std::collections::HashMap;
 use paint_instructions::{
     BlendMode, FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse,
     PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine,
-    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, Transform2D, IDENTITY_TRANSFORM,
+    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap, Transform2D,
+    IDENTITY_TRANSFORM,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -464,6 +465,7 @@ impl PlanBuilder {
             point(line.x1, line.y1),
             point(line.x2, line.y2),
             line.stroke_width.unwrap_or(1.0).max(1.0) as f32,
+            line.stroke_cap.as_ref(),
             line.stroke_dash.as_deref(),
             line.stroke_dash_offset.unwrap_or(0.0) as f32,
             transform,
@@ -1039,14 +1041,16 @@ impl PlanBuilder {
         p0: GpuPoint,
         p1: GpuPoint,
         width: f32,
+        cap: Option<&StrokeCap>,
         dash: Option<&[f64]>,
         dash_offset: f32,
         transform: Transform2D,
         color: GpuColor,
         label: &'static str,
     ) {
+        let cap = cap.unwrap_or(&StrokeCap::Butt);
         let Some(pattern) = normalized_dash_pattern(dash) else {
-            self.add_line_quad(p0, p1, width, transform, color, label);
+            self.add_capped_line_segment(p0, p1, width, cap, transform, color, label);
             return;
         };
         let (mut dash_index, mut dash_offset) = dash_start(&pattern, dash_offset);
@@ -1057,6 +1061,7 @@ impl PlanBuilder {
             &pattern,
             &mut dash_index,
             &mut dash_offset,
+            cap,
             transform,
             color,
             "line.dash",
@@ -1071,21 +1076,117 @@ impl PlanBuilder {
         dash: &[f32],
         dash_index: &mut usize,
         dash_offset: &mut f32,
+        cap: &StrokeCap,
         transform: Transform2D,
         color: GpuColor,
         label: &'static str,
     ) {
-        self.add_dashed_line_segment(
-            p0,
-            p1,
-            width,
-            dash,
-            dash_index,
-            dash_offset,
-            transform,
-            color,
-            label,
-        );
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let ux = dx / len;
+        let uy = dy / len;
+        let mut distance = 0.0f32;
+        while distance < len {
+            let remaining_dash = dash[*dash_index] - *dash_offset;
+            let run = remaining_dash.min(len - distance);
+            if *dash_index % 2 == 0 && run > f32::EPSILON {
+                let start = GpuPoint {
+                    x: p0.x + ux * distance,
+                    y: p0.y + uy * distance,
+                };
+                let end = GpuPoint {
+                    x: p0.x + ux * (distance + run),
+                    y: p0.y + uy * (distance + run),
+                };
+                self.add_capped_line_segment(start, end, width, cap, transform, color, label);
+            }
+            distance += run;
+            if run < remaining_dash {
+                *dash_offset += run;
+            } else {
+                *dash_index = (*dash_index + 1) % dash.len();
+                *dash_offset = 0.0;
+            }
+        }
+    }
+
+    fn add_capped_line_segment(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        width: f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let ux = dx / len;
+        let uy = dy / len;
+        let half_width = width / 2.0;
+        match cap {
+            StrokeCap::Butt => self.add_line_quad(p0, p1, width, transform, color, label),
+            StrokeCap::Square => {
+                let start = GpuPoint {
+                    x: p0.x - ux * half_width,
+                    y: p0.y - uy * half_width,
+                };
+                let end = GpuPoint {
+                    x: p1.x + ux * half_width,
+                    y: p1.y + uy * half_width,
+                };
+                self.add_line_quad(start, end, width, transform, color, label);
+            }
+            StrokeCap::Round => {
+                self.add_line_quad(p0, p1, width, transform, color, label);
+                self.add_round_line_cap(p0, -ux, -uy, half_width, transform, color, label);
+                self.add_round_line_cap(p1, ux, uy, half_width, transform, color, label);
+            }
+        }
+    }
+
+    fn add_round_line_cap(
+        &mut self,
+        center: GpuPoint,
+        out_x: f32,
+        out_y: f32,
+        radius: f32,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        if radius <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let segments = (self.options.ellipse_segments / 4).max(6);
+        let perp_x = -out_y;
+        let perp_y = out_x;
+        let mut vertices = Vec::with_capacity(segments + 2);
+        vertices.push(vertex(apply_transform(center, transform), color));
+        for i in 0..=segments {
+            let theta =
+                -std::f32::consts::FRAC_PI_2 + std::f32::consts::PI * i as f32 / segments as f32;
+            let point = GpuPoint {
+                x: center.x + out_x * theta.cos() * radius + perp_x * theta.sin() * radius,
+                y: center.y + out_y * theta.cos() * radius + perp_y * theta.sin() * radius,
+            };
+            vertices.push(vertex(apply_transform(point, transform), color));
+        }
+        let mut indices = Vec::with_capacity(segments * 3);
+        for i in 1..=segments {
+            indices.extend_from_slice(&[0, i as u32, i as u32 + 1]);
+        }
+        self.add_mesh(vertices, indices, None, label);
     }
 
     fn add_dashed_line_segment(
@@ -1833,6 +1934,60 @@ mod tests {
         let plan = plan_scene(&scene);
         assert_eq!(plan.meshes[0].vertices.len(), 4);
         assert_eq!(plan.meshes[0].label, "line");
+    }
+
+    #[test]
+    fn lowers_square_line_caps_by_extending_segment() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 4.0,
+            y1: 6.0,
+            x2: 12.0,
+            y2: 6.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Square),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(plan.meshes.len(), 1);
+        assert_eq!(plan.meshes[0].vertices[0].position.x, 2.0);
+        assert_eq!(plan.meshes[0].vertices[1].position.x, 14.0);
+    }
+
+    #[test]
+    fn lowers_round_line_caps_to_endpoint_fans() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Line(PaintLine {
+            base: PaintBase::default(),
+            x1: 4.0,
+            y1: 6.0,
+            x2: 12.0,
+            y2: 6.0,
+            stroke: "#000000".to_string(),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices.len(), 4);
+        assert!(plan.meshes[1].vertices.len() > 4);
+        assert!(plan.meshes[2].vertices.len() > 4);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "line"));
     }
 
     #[test]
