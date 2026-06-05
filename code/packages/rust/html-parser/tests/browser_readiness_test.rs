@@ -9,7 +9,7 @@ use coding_adventures_html_parser::{
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserAriaCollection, BrowserAriaCollectionItem, BrowserCommandElement,
+    BrowserAriaCollection, BrowserAriaCollectionItem, BrowserAriaRange, BrowserCommandElement,
     BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
     BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
@@ -75,6 +75,8 @@ struct ExpectedBrowserDocument {
     command_elements: Vec<ExpectedCommandElement>,
     #[serde(default)]
     aria_collections: Vec<ExpectedAriaCollection>,
+    #[serde(default)]
+    aria_ranges: Vec<ExpectedAriaRange>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -664,6 +666,45 @@ struct ExpectedAriaCollectionItem {
     aria_colindex: Option<String>,
     #[serde(default)]
     aria_controls: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaRange {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_valuenow: Option<String>,
+    #[serde(default)]
+    aria_valuemin: Option<String>,
+    #[serde(default)]
+    aria_valuemax: Option<String>,
+    #[serde(default)]
+    aria_valuetext: Option<String>,
+    #[serde(default)]
+    aria_orientation: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    aria_readonly: Option<String>,
+    #[serde(default)]
+    aria_required: Option<String>,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    text_value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1982,6 +2023,26 @@ fn browser_aria_collection_descriptor_metadata_tracks_grouped_composites() {
 }
 
 #[test]
+fn browser_aria_range_descriptor_metadata_tracks_value_widgets() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "aria-range-descriptor-page")
+        .expect("ARIA range fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA range fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.aria_ranges, expected.aria_ranges,
+        "ARIA range descriptors should preserve value bounds, value text, orientation, and value widget states",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3145,6 +3206,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedAriaCollection::into_browser_aria_collection)
                 .collect(),
+            aria_ranges: self
+                .aria_ranges
+                .into_iter()
+                .map(ExpectedAriaRange::into_browser_aria_range)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3684,6 +3750,32 @@ impl ExpectedAriaCollectionItem {
             aria_rowindex: self.aria_rowindex,
             aria_colindex: self.aria_colindex,
             aria_controls: self.aria_controls,
+        }
+    }
+}
+
+impl ExpectedAriaRange {
+    fn into_browser_aria_range(self) -> BrowserAriaRange {
+        BrowserAriaRange {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_valuenow: self.aria_valuenow,
+            aria_valuemin: self.aria_valuemin,
+            aria_valuemax: self.aria_valuemax,
+            aria_valuetext: self.aria_valuetext,
+            aria_orientation: self.aria_orientation,
+            aria_disabled: self.aria_disabled,
+            aria_readonly: self.aria_readonly,
+            aria_required: self.aria_required,
+            tabindex: self.tabindex,
+            text_value: self.text_value,
         }
     }
 }

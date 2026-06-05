@@ -1058,6 +1058,46 @@
       }
     },
     {
+      "id": "aria-range-descriptor-page",
+      "description": "Browser document summaries expose authored ARIA range value widgets with value bounds, labels, and state hints.",
+      "input": "<body><h2 id=range-title>Settings</h2><p id=volume-help>Loud</p><div id=volume role=slider aria-labelledby=range-title aria-describedby=volume-help aria-valuemin=0 aria-valuemax=10 aria-valuenow=7 aria-valuetext=\"7 of 10\" aria-orientation=vertical tabindex=0></div><div id=stepper role=spinbutton aria-label=Retries aria-valuemin=1 aria-valuemax=5 aria-valuenow=2 aria-required=true tabindex=0></div><div id=load role=progressbar aria-label=\"Load progress\" aria-valuemin=0 aria-valuemax=100 aria-valuenow=40>Loading</div><div id=scroll role=scrollbar aria-label=Timeline aria-valuemin=0 aria-valuemax=300 aria-valuenow=120 aria-disabled=true aria-readonly=true>Scroll</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Settings Loud Loading Scroll",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "range-title", "name": null, "text": "Settings" },
+          { "id": "volume-help", "name": null, "text": "Loud" },
+          { "id": "volume", "name": null, "text": "" },
+          { "id": "stepper", "name": null, "text": "" },
+          { "id": "load", "name": null, "text": "Loading" },
+          { "id": "scroll", "name": null, "text": "Scroll" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Settings" }
+        ],
+        "aria_ranges": [
+          { "element": "div", "id": "volume", "role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "aria_valuenow": "7", "aria_valuemin": "0", "aria_valuemax": "10", "aria_valuetext": "7 of 10", "aria_orientation": "vertical", "tabindex": "0" },
+          { "element": "div", "id": "stepper", "role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_valuenow": "2", "aria_valuemin": "1", "aria_valuemax": "5", "aria_required": "true", "tabindex": "0" },
+          { "element": "div", "id": "load", "role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress", "aria_valuenow": "40", "aria_valuemin": "0", "aria_valuemax": "100", "text_value": "Loading" },
+          { "element": "div", "id": "scroll", "role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_valuenow": "120", "aria_valuemin": "0", "aria_valuemax": "300", "aria_disabled": "true", "aria_readonly": "true", "text_value": "Scroll" }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [
+          { "element": "div", "id": "volume", "role": "block", "authored_role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "tabindex": "0", "focusable": true },
+          { "element": "div", "id": "stepper", "role": "block", "authored_role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_required": "true", "tabindex": "0", "focusable": true },
+          { "element": "div", "id": "load", "role": "block", "authored_role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress" },
+          { "element": "div", "id": "scroll", "role": "block", "authored_role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_disabled": "true" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "form-measurement-descriptor-page",
       "description": "Browser document form summaries expose in-form meter and progress descriptors without adding them to submission controls.",
       "input": "<form id=telemetry><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter><p id=disk-help>Capacity used</p><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=sync max=1 aria-label=Sync>Loading</progress><input name=token value=ok></form><meter id=outside value=1>Outside</meter>",

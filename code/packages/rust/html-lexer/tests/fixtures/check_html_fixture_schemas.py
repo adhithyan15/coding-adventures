@@ -247,6 +247,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "section_landmarks", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "command_elements", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_collections", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "aria_ranges", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -633,6 +634,37 @@ def check_browser_expected_lists(
             ):
                 require_optional_nullable_string(item_path, item, field, errors)
             require_optional_string_list(item_path, item, "aria_controls", errors)
+
+    for index, aria_range in enumerate(object_list_items(expected, "aria_ranges")):
+        range_path = f"{case_path}.expected.aria_ranges[{index}]"
+        for field in (
+            "element",
+            "role",
+            "text",
+        ):
+            require_string(range_path, aria_range, field, errors)
+        for field in (
+            "id",
+            "accessible_name",
+            "accessible_description",
+            "aria_label",
+            "aria_valuenow",
+            "aria_valuemin",
+            "aria_valuemax",
+            "aria_valuetext",
+            "aria_orientation",
+            "aria_disabled",
+            "aria_readonly",
+            "aria_required",
+            "tabindex",
+            "text_value",
+        ):
+            require_optional_nullable_string(range_path, aria_range, field, errors)
+        for field in (
+            "aria_labelledby",
+            "aria_describedby",
+        ):
+            require_optional_string_list(range_path, aria_range, field, errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
