@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - `ZclAttributeReportSummary` plus `attribute_report_summary()` for compact
   parsed-report shape and D23 state-delta coverage diagnostics.
+- `encode_attribute_reports()` and `report_attributes_frame()` for generating
+  typed ZCL Report Attributes payloads and foundation frames.
 
 ## [0.1.0] - 2026-05-06
 
