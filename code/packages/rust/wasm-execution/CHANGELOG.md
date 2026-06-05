@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.0] — 2026-06-05
+
+### Added — WasmGC `i31` execution (LANG77 / McCarthy L3b-3a-3a)
+
+First step of executing WebAssembly **GC** opcodes (so the McCarthy-Lisp → wasm
+value model can be run in-repo, not just emitted):
+
+- **`decode_function_body`** now decodes the two-byte `0xFB` GC prefix: it reads
+  the sub-opcode byte and carries it in the instruction's operand (the MVP
+  opcode table is single-byte and doesn't know `0xFB`). Previously a `0xFB`
+  stream would be mis-decoded as separate single-byte instructions.
+- The engine executes the `i31` boxing pair: **`i31.new`** (`0xFB 0x1C`) and
+  **`i31.get_s`** (`0xFB 0x1D`). An `i31ref` is represented as its plain `i32`
+  payload on the value stack (the small lisp integers we box never need the
+  reference identity), so both are stack-identity no-ops — the integer passes
+  straight through. `i32.const 42 → i31.new → i31.get_s` returns `42`.
+- Unimplemented GC sub-opcodes (`struct.*`, `ref.*`) are a clean `Err`, not a
+  panic — they land with the GC-object-heap slice (L3b-3a-3b).
+
+3 new tests: the two-byte decode, the i31 box/unbox round-trip executed on the
+engine, and the unsupported-opcode clean error.
+
 ## [0.1.1] — 2026-05-13
 
 ### Fixed

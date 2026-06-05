@@ -776,6 +776,29 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         let opcode_byte = code[offset];
         offset += 1;
 
+        // ── WasmGC two-byte opcodes: `0xFB <sub-opcode> [immediates]` ──────────
+        //
+        // The MVP opcode table (`get_opcode`) is single-byte and doesn't know
+        // the `0xFB` GC prefix, so we decode it explicitly: read the sub-opcode
+        // byte and carry it in the operand as `Int(sub)`; the engine's `0xFB`
+        // handler dispatches on it. `i31.new` (0x1C) and `i31.get_s` (0x1D) take
+        // no immediates (LANG77 L3b-3a-3a); the `struct.*` sub-opcodes — which
+        // carry type/field indices — land with the GC-heap slice (L3b-3a-3b).
+        if opcode_byte == 0xFB {
+            let sub = if offset < code.len() {
+                let s = code[offset];
+                offset += 1;
+                s
+            } else {
+                0
+            };
+            instructions.push(DecodedInstruction {
+                opcode: 0xFB,
+                operand: DecodedOperand::Int(sub as i64),
+            });
+            continue;
+        }
+
         let info = get_opcode(opcode_byte);
         let operand = if let Some(info) = info {
             let (op, size) = decode_immediates(code, offset, info.immediates);
@@ -1282,6 +1305,32 @@ fn register_numeric_i64(vm: &mut GenericVM) {
     vm.register_context_opcode(0x42, |vm, instr, _code, _ctx| {
         let val = operand_int(instr);
         push_wasm(vm, WasmValue::I64(val));
+        vm.advance_pc();
+        Ok(None)
+    });
+
+    // WasmGC prefix (0xFB) — LANG77 / McCarthy L3b-3a-3a.
+    //
+    // The decoder carries the GC sub-opcode in the operand. For now we execute
+    // the `i31` boxing pair:
+    //   - `i31.new`   (0x1C): box an i32 into an `i31ref`.
+    //   - `i31.get_s` (0x1D): read the i32 back, sign-extended.
+    // We represent an `i31ref` as its plain `i32` payload on the value stack
+    // (the small lisp integers we box never need the reference identity), so
+    // both are stack-identity **no-ops** — the i32 passes straight through.
+    // The `struct.*` / `ref.*` sub-opcodes (which need a GC object heap) land
+    // in the next slice (L3b-3a-3b).
+    vm.register_context_opcode(0xFB, |vm, instr, _code, _ctx| {
+        let sub = operand_int(instr);
+        match sub {
+            0x1C | 0x1D => { /* i31.new / i31.get_s: i31ref ≡ its i32 payload */ }
+            other => {
+                return Err(VMError::GenericError(format!(
+                    "unsupported WasmGC opcode 0xFB 0x{other:02X} (only i31.new/i31.get_s \
+                     are implemented; struct/ref ops are a follow-up slice)"
+                )));
+            }
+        }
         vm.advance_pc();
         Ok(None)
     });
@@ -2919,6 +2968,65 @@ mod tests {
             .call_function(0, &[WasmValue::I32(3), WasmValue::I32(7)])
             .unwrap();
         assert_eq!(result, vec![WasmValue::I32(10)]);
+    }
+
+    // ── WasmGC i31 execution (LANG77 / McCarthy L3b-3a-3a) ────────────────────
+
+    #[test]
+    fn test_decode_gc_i31_two_byte_opcodes() {
+        // The decoder must group `0xFB <sub>` into ONE instruction carrying the
+        // sub-opcode, not two single-byte instructions.
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0xFB, 0x1C, 0xFB, 0x1D, 0x0B], // i31.new, i31.get_s, end
+        };
+        let instrs = decode_function_body(&body);
+        assert_eq!(instrs.len(), 3, "0xFB-prefixed pairs must collapse to one instr each");
+        assert_eq!(instrs[0].opcode, 0xFB);
+        assert!(matches!(instrs[0].operand, DecodedOperand::Int(0x1C)));
+        assert_eq!(instrs[1].opcode, 0xFB);
+        assert!(matches!(instrs[1].operand, DecodedOperand::Int(0x1D)));
+        assert_eq!(instrs[2].opcode, 0x0B, "end");
+    }
+
+    #[test]
+    fn test_i31_box_unbox_round_trip() {
+        // fn() -> i32 { i31.get_s(i31.new(i32.const 42)) }  → 42
+        // bytes: i32.const 42 (0x41 0x2A), i31.new (0xFB 0x1C), i31.get_s (0xFB 0x1D), end (0x0B)
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody {
+            locals: vec![],
+            code: vec![0x41, 0x2A, 0xFB, 0x1C, 0xFB, 0x1D, 0x0B],
+        };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]).unwrap();
+        assert_eq!(result, vec![WasmValue::I32(42)], "i31 box/unbox must round-trip the integer");
+    }
+
+    #[test]
+    fn test_unsupported_gc_opcode_is_clean_error() {
+        // A `struct.*` sub-opcode (e.g. struct.new = 0xFB 0x00) is not yet
+        // implemented — it must be a clean Err, not a panic.
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code: vec![0xFB, 0x00, 0x0B] };
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memory: None,
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        assert!(engine.call_function(0, &[]).is_err());
     }
 
     #[test]
