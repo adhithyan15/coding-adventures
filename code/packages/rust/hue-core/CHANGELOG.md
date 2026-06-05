@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   helpers for local physical-presence pairing flows.
 - Hue command summaries and command-plan rollups for payload-free write-surface
   telemetry.
+- Hue command planning from normalized D23 `StateDelta` records for direct and
+  grouped light writes.
 - Hue scene summaries for recall planning and read-model telemetry, including
   room/zone scope and projected action coverage.
 - Hue state update summaries for read models and event-stream telemetry across

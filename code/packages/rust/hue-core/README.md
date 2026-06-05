@@ -9,6 +9,7 @@ packages a typed surface for:
 - CLIP v2 resource paths
 - event stream path constants
 - structured Hue command intents
+- Hue command planning from normalized D23 state deltas
 - Hue command summaries for payload-free command planning and read-model
   telemetry
 - Hue application registration requests and discovered-bridge pairing plans
