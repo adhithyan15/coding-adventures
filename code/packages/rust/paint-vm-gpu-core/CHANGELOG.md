@@ -22,3 +22,5 @@
 - Added dashed `PaintEllipse` stroke lowering around the sampled ellipse
   perimeter.
 - Added square and round `PaintLine` cap lowering for GPU mesh plans.
+- Added square and round open-contour `PaintPath` cap lowering, including caps
+  on dashed path segments.
