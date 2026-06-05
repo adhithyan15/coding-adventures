@@ -8,6 +8,7 @@ This crate starts D27 below Thread MLE:
 - mesh header hop-limit and short/extended address parsing
 - LOWPAN_IPHC first/second byte parsing
 - LOWPAN_IPHC optional context identifier extension parsing
+- LOWPAN_IPHC inline field length accounting for compressed IPv6 fields
 - LOWPAN_NHC UDP port compression and checksum-elision parsing
 - fragment first/next header parse and encode
 - fragment payload parsing and deterministic reassembly buffers
