@@ -500,8 +500,18 @@ impl PlanBuilder {
         }
 
         if let Some(color) = self.stroke_color(ellipse.stroke.as_deref(), opacity) {
-            self.warn_stroke_dash(ellipse.stroke_dash.as_deref());
             let stroke_width = ellipse.stroke_width.unwrap_or(1.0).max(1.0) as f32;
+            if let Some(dash) = normalized_dash_pattern(ellipse.stroke_dash.as_deref()) {
+                self.add_dashed_ellipse_stroke(
+                    ellipse,
+                    stroke_width,
+                    &dash,
+                    ellipse.stroke_dash_offset.unwrap_or(0.0) as f32,
+                    transform,
+                    color,
+                );
+                return;
+            }
             let mut vertices = Vec::with_capacity(self.options.ellipse_segments * 2);
             let mut indices = Vec::with_capacity(self.options.ellipse_segments * 6);
             let outer_rx = ellipse.rx as f32 + stroke_width / 2.0;
@@ -961,6 +971,39 @@ impl PlanBuilder {
         }
     }
 
+    fn add_dashed_ellipse_stroke(
+        &mut self,
+        ellipse: &PaintEllipse,
+        stroke_width: f32,
+        dash: &[f32],
+        dash_offset: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if ellipse.rx <= 0.0 || ellipse.ry <= 0.0 {
+            return;
+        }
+        let (mut dash_index, mut dash_offset) = dash_start(dash, dash_offset);
+        let segments = self.options.ellipse_segments.max(4);
+        let mut previous = ellipse_point(ellipse, 0.0);
+        for i in 1..=segments {
+            let t = i as f32 / segments as f32 * std::f32::consts::TAU;
+            let next = ellipse_point(ellipse, t);
+            self.add_dashed_line_segment(
+                previous,
+                next,
+                stroke_width,
+                dash,
+                &mut dash_index,
+                &mut dash_offset,
+                transform,
+                color,
+                "ellipse.stroke.dash",
+            );
+            previous = next;
+        }
+    }
+
     fn add_rect_mesh(
         &mut self,
         x: f64,
@@ -1233,16 +1276,6 @@ impl PlanBuilder {
         }
         push_contour(&mut contours, &mut current, closed);
         contours
-    }
-
-    fn warn_stroke_dash(&mut self, dash: Option<&[f64]>) {
-        if dash.is_some_and(|dash| !dash.is_empty()) {
-            self.diagnostic(
-                GpuPlanSeverity::Degraded,
-                "stroke_dash",
-                "dashed strokes are currently lowered as solid strokes",
-            );
-        }
     }
 
     fn diagnostic(
@@ -1563,6 +1596,13 @@ fn point(x: f64, y: f64) -> GpuPoint {
     }
 }
 
+fn ellipse_point(ellipse: &PaintEllipse, t: f32) -> GpuPoint {
+    GpuPoint {
+        x: ellipse.cx as f32 + ellipse.rx as f32 * t.cos(),
+        y: ellipse.cy as f32 + ellipse.ry as f32 * t.sin(),
+    }
+}
+
 fn vertex(position: GpuPoint, color: GpuColor) -> GpuVertex {
     vertex_uv(position, [0.0, 0.0], color)
 }
@@ -1638,8 +1678,8 @@ fn cubic_point(p0: GpuPoint, p1: GpuPoint, p2: GpuPoint, p3: GpuPoint, t: f32) -
 mod tests {
     use super::*;
     use paint_instructions::{
-        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintGradient, PaintGroup,
-        PaintImage, PaintInstruction, PaintRect, PixelContainer,
+        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintEllipse, PaintGradient,
+        PaintGroup, PaintImage, PaintInstruction, PaintRect, PixelContainer,
     };
 
     #[test]
@@ -1689,6 +1729,43 @@ mod tests {
         assert_eq!(plan.meshes[1].vertices[1].position.y, 6.0);
         assert_eq!(plan.meshes[2].vertices[0].position.x, 6.0);
         assert_eq!(plan.meshes[2].vertices[1].position.x, 2.0);
+        assert!(!plan
+            .diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.feature == "stroke_dash"));
+    }
+
+    #[test]
+    fn lowers_dashed_ellipse_stroke_to_segments() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 10.0,
+                cy: 10.0,
+                rx: 6.0,
+                ry: 4.0,
+                fill: None,
+                stroke: Some("#000000".to_string()),
+                stroke_width: Some(2.0),
+                stroke_dash: Some(vec![4.0, 4.0]),
+                stroke_dash_offset: None,
+            }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert!(plan.meshes.len() > 1);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "ellipse.stroke.dash"));
         assert!(!plan
             .diagnostics
             .iter()
