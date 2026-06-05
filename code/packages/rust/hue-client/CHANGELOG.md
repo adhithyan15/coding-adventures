@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   state reads through the facade.
 - Unified Hue state update extraction from full snapshots and event-stream
   batches, plus `HueClient::get_state_updates` for a single aggregate read.
+- `HueClient::send_command_plan` and `send_command_plan()` for serially
+  executing planned Hue commands and collecting per-command envelopes.
 
 ## [0.1.0] - 2026-05-06
 

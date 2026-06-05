@@ -16,6 +16,7 @@ Included surfaces:
   state projection coverage
 - resource-specific reads
 - structured command request bodies from `hue-core`
+- command-plan execution through the `HueClient` facade
 - event-stream request shape
 - event-stream batch parsing from Server-Sent Events data frames
 - event-stream summaries for retry hints, record coverage, resource items, and
