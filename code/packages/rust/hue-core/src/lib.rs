@@ -392,6 +392,66 @@ pub fn hue_commands_from_state_deltas<'a>(
     Ok(commands)
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueCommandPlan {
+    pub target: HueResourceRef,
+    pub commands: Vec<HueCommand>,
+    pub ignored_capability_ids: Vec<CapabilityId>,
+}
+
+impl HueCommandPlan {
+    pub fn empty(target: HueResourceRef) -> Self {
+        Self {
+            target,
+            commands: Vec::new(),
+            ignored_capability_ids: Vec::new(),
+        }
+    }
+
+    pub fn from_state_deltas<'a>(
+        target: &HueResourceRef,
+        deltas: impl IntoIterator<Item = &'a StateDelta>,
+    ) -> Result<Self, HueError> {
+        hue_command_plan_from_state_deltas(target, deltas)
+    }
+
+    pub fn summary(&self) -> HueCommandPlanSummary {
+        HueCommandPlanSummary::from_commands(&self.commands)
+    }
+
+    pub fn requests(&self) -> Vec<HueRequest> {
+        self.commands.iter().map(HueCommand::to_request).collect()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.commands.is_empty()
+    }
+
+    pub fn has_ignored_deltas(&self) -> bool {
+        !self.ignored_capability_ids.is_empty()
+    }
+
+    pub fn ignored_delta_count(&self) -> usize {
+        self.ignored_capability_ids.len()
+    }
+}
+
+pub fn hue_command_plan_from_state_deltas<'a>(
+    target: &HueResourceRef,
+    deltas: impl IntoIterator<Item = &'a StateDelta>,
+) -> Result<HueCommandPlan, HueError> {
+    let mut plan = HueCommandPlan::empty(target.clone());
+    for delta in deltas {
+        if let Some(command) = hue_command_from_state_delta(target, delta)? {
+            plan.commands.push(command);
+        } else {
+            plan.ignored_capability_ids
+                .push(delta.capability_id.clone());
+        }
+    }
+    Ok(plan)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HueCommandTarget {
     Light,
@@ -1720,6 +1780,76 @@ mod tests {
                 HueCommand::SetGroupedLightBrightness {
                     grouped_light_id: HueResourceId::trusted("grouped-light-1"),
                     brightness: 20,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn hue_command_plans_keep_requests_and_ignored_capabilities() {
+        let light = HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1"));
+        let deltas = vec![
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(true),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.occupancy"),
+                value: Value::Bool(false),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.brightness"),
+                value: Value::Percentage(25),
+            },
+        ];
+
+        let plan = HueCommandPlan::from_state_deltas(&light, &deltas).unwrap();
+
+        assert_eq!(plan.target, light);
+        assert_eq!(
+            plan.commands,
+            vec![
+                HueCommand::SetLightOn {
+                    light_id: HueResourceId::trusted("light-1"),
+                    on: true,
+                },
+                HueCommand::SetLightBrightness {
+                    light_id: HueResourceId::trusted("light-1"),
+                    brightness: 25,
+                },
+            ]
+        );
+        assert_eq!(
+            plan.ignored_capability_ids,
+            vec![CapabilityId::trusted("sensor.occupancy")]
+        );
+        assert!(plan.has_ignored_deltas());
+        assert_eq!(plan.ignored_delta_count(), 1);
+        assert_eq!(
+            plan.summary(),
+            HueCommandPlanSummary {
+                total_commands: 2,
+                light_commands: 2,
+                grouped_light_commands: 0,
+                scene_commands: 0,
+                on_off_commands: 1,
+                brightness_commands: 1,
+                color_temperature_commands: 0,
+                scene_recall_commands: 0,
+            }
+        );
+        assert_eq!(
+            plan.requests(),
+            vec![
+                HueRequest {
+                    method: HueMethod::Put,
+                    path: "/clip/v2/resource/light/light-1".to_string(),
+                    body: Some(HueRequestBody::SetOn { on: true }),
+                },
+                HueRequest {
+                    method: HueMethod::Put,
+                    path: "/clip/v2/resource/light/light-1".to_string(),
+                    body: Some(HueRequestBody::SetBrightness { brightness: 25 }),
                 },
             ]
         );

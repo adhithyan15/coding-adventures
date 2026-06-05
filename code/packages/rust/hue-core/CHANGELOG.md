@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   telemetry.
 - Hue command planning from normalized D23 `StateDelta` records for direct and
   grouped light writes.
+- `HueCommandPlan` for bundling generated Hue commands, request projections,
+  and ignored D23 capabilities from reconciliation passes.
 - Hue scene summaries for recall planning and read-model telemetry, including
   room/zone scope and projected action coverage.
 - Hue state update summaries for read models and event-stream telemetry across
