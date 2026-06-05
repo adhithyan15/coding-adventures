@@ -1568,3 +1568,85 @@ fn g2_unknown_builtin_still_rejected() {
     assert!(!errs.is_empty(),
         "G2: unknown builtin must still be rejected; got no errors");
 }
+
+// ---------------------------------------------------------------------------
+// ── Group: WasmGC i31ref box / unbox (LANG77 / McCarthy L3b-3a) ────────────
+//
+// The boxing primitives the uniform-anyref lisp value model needs: a lisp
+// integer atom is boxed into an `i31ref` (a WasmGC tagged 31-bit integer
+// reference) so it can live in a cons cell's `anyref` field, and unboxed back
+// to a machine `i32` at the numeric boundary.
+//
+// Verified at the opcode-byte level (the repo has no WasmGC runtime/validator
+// to execute the module — see the lang-aot wasm CHANGELOG):
+//   ref.i31   = 0xFB 0x1C   (GcInstruction::I31New)
+//   i31.get_s = 0xFB 0x1D   (GcInstruction::I31GetS)
+// ---------------------------------------------------------------------------
+
+/// True iff `needle` appears as a contiguous subsequence of `haystack`.
+fn contains_subseq(haystack: &[u8], needle: &[u8]) -> bool {
+    haystack.windows(needle.len()).any(|w| w == needle)
+}
+
+#[test]
+fn box_unbox_round_trip_lowers_and_emits_i31_opcodes() {
+    // fn main() -> i32 { unbox(box(const 7)) }
+    let m = module_one(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("b".into()), vec![Operand::Var("v".into())], "ref<any>"),
+            IIRInstr::new("unbox", Some("u".into()), vec![Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("u".into())], "i32"),
+        ],
+    );
+    // lower_and_encode runs validation internally — its success proves box/unbox
+    // are now accepted (no longer in UNSUPPORTED_OPS).
+    let bytes = lower_and_encode(&m);
+    assert!(
+        contains_subseq(&bytes, &[0xFB, 0x1C]),
+        "box must emit ref.i31 (0xFB 0x1C)",
+    );
+    assert!(
+        contains_subseq(&bytes, &[0xFB, 0x1D]),
+        "unbox must emit i31.get_s (0xFB 0x1D)",
+    );
+}
+
+#[test]
+fn box_and_unbox_are_no_longer_rejected_by_validation() {
+    for (op, dest_ty) in [("box", "ref<any>"), ("unbox", "i32")] {
+        let m = module_one(
+            "main",
+            vec![],
+            "void",
+            vec![
+                IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new(op, Some("d".into()), vec![Operand::Var("v".into())], dest_ty),
+                IIRInstr::new("ret_void", None, vec![], "void"),
+            ],
+        );
+        let errs = validate_for_wasm(&m);
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedOp")),
+            "{op} must not be an UnsupportedOp anymore; got {errs:?}",
+        );
+    }
+}
+
+#[test]
+fn box_without_dest_is_rejected() {
+    let m = module_one(
+        "main",
+        vec![],
+        "void",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("box", None, vec![Operand::Var("v".into())], "ref<any>"),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    assert!(lower_iir_to_wasm(&m, &IIRWasmConfig::default()).is_err());
+}

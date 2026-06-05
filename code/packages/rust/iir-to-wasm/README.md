@@ -105,7 +105,7 @@ tests/
 | `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
 | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
-| `UnsupportedOp` | op is `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`, `alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, or `safepoint` |
+| `UnsupportedOp` | op is `io_in`, `cast`, or `safepoint` (and `call_builtin` with a non-whitelisted name). Note: `alloc`/`field_load`/`field_store`/`is_null` are accepted for `ref<LispyPair>`; `box`/`unbox` are accepted and lower to WasmGC `ref.i31`/`i31.get_s` (LANG77 L3b-3a); `io_out`/`global_*`/`load_mem`/`store_mem` are supported |
 
 > **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
 > closure opcodes) are BEAM-only.  Using them in a WASM module returns a clear

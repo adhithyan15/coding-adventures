@@ -1444,6 +1444,59 @@ fn emit_instr(
             code.extend(encode_local_set(rd));
         }
 
+        // ── WasmGC: box dest src — i32 → i31ref (LANG77 L3b-3a) ────────────────
+        //
+        // Box a 31-bit integer into an `i31ref` (a WasmGC tagged reference), so
+        // a lisp integer atom can live in an `anyref` cons-cell field / be held
+        // uniformly as a reference. The uniform-anyref value model boxes every
+        // lisp integer this way (mirroring the native NaN-box `(n << 3)` tag).
+        //
+        // ```wasm
+        // local.get $src     ;; i32
+        // ref.i31            ;; → (ref i31)
+        // local.set $dest    ;; anyref
+        // ```
+        //
+        // (`i31ref` carries 31 bits; the retype/box pass is responsible for
+        // narrowing a wider integer before boxing — out of scope for this op.)
+        "box" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "box must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let src_reg = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(src_reg));
+            encode_gc_instruction(code, &GcInstruction::I31New);
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── WasmGC: unbox dest src — i31ref → i32 (LANG77 L3b-3a) ──────────────
+        //
+        // Read the 31-bit integer back out of an `i31ref`, sign-extended to an
+        // i32. This is the inverse of `box`, applied at the boundary where a
+        // boxed lisp integer re-enters the numeric world (e.g. the program's
+        // return value), mirroring the native `unbox` (arithmetic `>> 3`).
+        //
+        // ```wasm
+        // local.get $src     ;; i31ref
+        // i31.get_s          ;; → i32 (sign-extended)
+        // local.set $dest    ;; i32
+        // ```
+        "unbox" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "unbox must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let src_reg = get_src_reg(&instr.srcs, 0, reg_map, fn_name)?;
+
+            code.extend(encode_local_get(src_reg));
+            encode_gc_instruction(code, &GcInstruction::I31GetS);
+            code.extend(encode_local_set(rd));
+        }
+
         // ── global_store → global.set N ──────────────────────────────────────
         //
         // `global_store Str("name"), Var("%v")`

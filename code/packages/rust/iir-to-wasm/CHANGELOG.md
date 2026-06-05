@@ -3,6 +3,31 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] — 2026-06-04 (LANG77 / McCarthy L3b-3a — i31ref `box`/`unbox`)
+
+### Added — WasmGC integer boxing
+
+- `box` and `unbox` are no longer in `UNSUPPORTED_OPS`. They now lower to the
+  WasmGC i31 reference ops:
+  - **`box dest, src`** → `ref.i31` (`GcInstruction::I31New`, bytes `0xFB 0x1C`):
+    box an `i32` into an `i31ref` (a tagged 31-bit integer reference).
+  - **`unbox dest, src`** → `i31.get_s` (`GcInstruction::I31GetS`, bytes
+    `0xFB 0x1D`): read it back as a sign-extended `i32`.
+- These are the boxing primitives the **uniform-anyref lisp value model**
+  needs: a lisp integer atom becomes an `i31ref` so it can live in a
+  `$LispyPair`'s `anyref` field alongside heap pairs, and is unboxed only at
+  the numeric boundary (the program's return value) — mirroring the native
+  NaN-box `(n << 3)` / arithmetic `>> 3` discipline. The retype/box pass that
+  *emits* these ops for a McCarthy module is the next slice (L3b-3a-2).
+
+### Verification note
+
+The repo has no WasmGC runtime or validator (its `wasm-simulator` is MVP-only;
+`wasm-validator` is structural-only), so these are verified at the **opcode-byte
+level** — the new tests assert the emitted code contains `0xFB 0x1C` / `0xFB
+0x1D` and that `box`/`unbox` pass validation. End-to-end execution of WasmGC
+output remains out of scope (documented like the macOS-native-exe gap).
+
 ## [0.8.0] — 2026-06-01 (G2 — whitelist `call_builtin "print_i64"`)
 
 ### Changed — `call_builtin "print_i64"` now reaches real wasm bytecode

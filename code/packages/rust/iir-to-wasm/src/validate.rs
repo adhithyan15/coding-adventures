@@ -115,8 +115,12 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     // "load_mem"     — Brainfuck: now supported (i32.load8_u over linear memory).
     // "store_mem"    — Brainfuck: now supported (i32.store8 over linear memory).
-    "box",
-    "unbox",
+    // "box" / "unbox" — LANG77 L3b-3a: now supported. `box` lowers to `ref.i31`
+    //   (I31New — box an i32 into an `i31ref`, a WasmGC tagged 31-bit integer
+    //   reference) and `unbox` to `i31.get_s` (I31GetS — read it back as a
+    //   sign-extended i32). These are the boxing primitives the uniform-anyref
+    //   lisp value model needs: a lisp integer atom becomes an `i31ref` so it
+    //   can live in a cons cell's `anyref` field alongside heap pairs.
     "safepoint",
 ];
 
@@ -524,8 +528,6 @@ mod tests {
         for op in &[
             "io_in",
             "cast",
-            "box",
-            "unbox",
             "safepoint",
         ] {
             let errs = validate_for_wasm(&module_with(vec![IIRInstr::new(
