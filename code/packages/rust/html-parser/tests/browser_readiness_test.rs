@@ -9,8 +9,9 @@ use coding_adventures_html_parser::{
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserCommandElement, BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh,
+    BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
+    BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
     BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
@@ -70,6 +71,8 @@ struct ExpectedBrowserDocument {
     navigation_groups: Vec<ExpectedNavigationGroup>,
     #[serde(default)]
     section_landmarks: Vec<ExpectedSectionLandmark>,
+    #[serde(default)]
+    command_elements: Vec<ExpectedCommandElement>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -519,6 +522,74 @@ struct ExpectedSectionLandmark {
     heading_level: Option<u8>,
     #[serde(default)]
     heading_text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedCommandElement {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    #[serde(default)]
+    authored_role: Option<String>,
+    command_kind: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    form_action: Option<String>,
+    #[serde(default)]
+    resolved_form_action: Option<String>,
+    #[serde(default)]
+    form_method: Option<String>,
+    #[serde(default)]
+    form_target: Option<String>,
+    #[serde(default)]
+    form_novalidate: bool,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_pressed: Option<String>,
+    #[serde(default)]
+    aria_current: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    disabled: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1797,6 +1868,26 @@ fn browser_section_landmark_descriptor_metadata_tracks_outline_roles_and_names()
 }
 
 #[test]
+fn browser_command_element_descriptor_metadata_tracks_activation_surfaces() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive element fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive element fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.command_elements, expected.command_elements,
+        "command descriptors should preserve routed, ARIA, popover, and disclosure activation metadata",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -2950,6 +3041,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedSectionLandmark::into_browser_section_landmark)
                 .collect(),
+            command_elements: self
+                .command_elements
+                .into_iter()
+                .map(ExpectedCommandElement::into_browser_command_element)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3395,6 +3491,47 @@ impl ExpectedSectionLandmark {
             landmark_kind: self.landmark_kind,
             heading_level: self.heading_level,
             heading_text: self.heading_text,
+        }
+    }
+}
+
+impl ExpectedCommandElement {
+    fn into_browser_command_element(self) -> BrowserCommandElement {
+        BrowserCommandElement {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            command_kind: self.command_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            target: self.target,
+            effective_target: self.effective_target,
+            control_type: self.control_type,
+            form_owner: self.form_owner,
+            form_action: self.form_action,
+            resolved_form_action: self.resolved_form_action,
+            form_method: self.form_method,
+            form_target: self.form_target,
+            form_novalidate: self.form_novalidate,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            aria_controls: self.aria_controls,
+            aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_pressed: self.aria_pressed,
+            aria_current: self.aria_current,
+            aria_disabled: self.aria_disabled,
+            tabindex: self.tabindex,
+            accesskey: self.accesskey,
+            event_handlers: self.event_handlers,
+            focusable: self.focusable,
+            disabled: self.disabled,
         }
     }
 }

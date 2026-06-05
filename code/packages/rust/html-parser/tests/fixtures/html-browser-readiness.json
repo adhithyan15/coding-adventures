@@ -975,6 +975,11 @@
           { "element": "main", "id": "app", "role": "main", "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative", "accessible_name": "App shell", "aria_label": "App shell", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Settings" },
           { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "aria_labelledby": ["panel-title"], "section_kind": "section", "heading_level": 2, "heading_text": "Settings" }
         ],
+        "command_elements": [
+          { "element": "button", "id": "menu", "role": "control", "command_kind": "command", "text": "Menu", "accessible_name": "Menu", "control_type": "submit", "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "focusable": true },
+          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown"] },
+          { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
+        ],
         "links": [],
         "images": [],
         "interactive_elements": [

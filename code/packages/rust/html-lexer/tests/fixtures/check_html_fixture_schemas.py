@@ -245,6 +245,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "text_semantics", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "navigation_groups", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "section_landmarks", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "command_elements", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -524,6 +525,55 @@ def check_browser_expected_lists(
             require_optional_nullable_string(section_path, section, field, errors)
         require_optional_string_list(section_path, section, "aria_labelledby", errors)
         require_optional_integer(section_path, section, "heading_level", errors)
+
+    for index, command in enumerate(object_list_items(expected, "command_elements")):
+        command_path = f"{case_path}.expected.command_elements[{index}]"
+        for field in (
+            "element",
+            "role",
+            "command_kind",
+            "text",
+        ):
+            require_string(command_path, command, field, errors)
+        for field in (
+            "id",
+            "authored_role",
+            "accessible_name",
+            "accessible_description",
+            "href",
+            "resolved_href",
+            "target",
+            "effective_target",
+            "control_type",
+            "form_owner",
+            "form_action",
+            "resolved_form_action",
+            "form_method",
+            "form_target",
+            "command",
+            "command_for",
+            "popover_target",
+            "popover_target_action",
+            "aria_expanded",
+            "aria_haspopup",
+            "aria_pressed",
+            "aria_current",
+            "aria_disabled",
+            "tabindex",
+        ):
+            require_optional_nullable_string(command_path, command, field, errors)
+        for field in (
+            "aria_controls",
+            "accesskey",
+            "event_handlers",
+        ):
+            require_optional_string_list(command_path, command, field, errors)
+        for field in (
+            "form_novalidate",
+            "focusable",
+            "disabled",
+        ):
+            require_optional_boolean(command_path, command, field, errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
