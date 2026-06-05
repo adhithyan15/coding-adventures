@@ -1337,6 +1337,15 @@ impl WasmRuntime {
                 WasmValue::I64(v) => *v,
                 WasmValue::F32(v) => *v as i64,
                 WasmValue::F64(v) => *v as i64,
+                // A WasmGC reference result (LANG77 L3b-3a-3b).  In the lisp
+                // value model the return boundary unboxes integer results to
+                // i64, so a *reference* reaching here is a structural result
+                // (a cons or nil).  This i64 path can't represent one yet:
+                // surface a deterministic, non-panicking placeholder — null
+                // (nil) as 0, a heap reference as its raw handle.  Proper
+                // reference-return handling lands with the cons e2e (L3b-3a-3c).
+                WasmValue::Ref(None) => 0,
+                WasmValue::Ref(Some(h)) => *h as i64,
             })
             .collect())
     }
