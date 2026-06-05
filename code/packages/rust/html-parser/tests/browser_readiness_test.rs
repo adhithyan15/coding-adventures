@@ -9,9 +9,9 @@ use coding_adventures_html_parser::{
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserCommandElement, BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh,
-    BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
-    BrowserSelectOption,
+    BrowserAriaCollection, BrowserAriaCollectionItem, BrowserCommandElement,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
     BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
@@ -73,6 +73,8 @@ struct ExpectedBrowserDocument {
     section_landmarks: Vec<ExpectedSectionLandmark>,
     #[serde(default)]
     command_elements: Vec<ExpectedCommandElement>,
+    #[serde(default)]
+    aria_collections: Vec<ExpectedAriaCollection>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -590,6 +592,78 @@ struct ExpectedCommandElement {
     focusable: bool,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaCollection {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_orientation: Option<String>,
+    #[serde(default)]
+    aria_multiselectable: Option<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
+    aria_owns: Vec<String>,
+    #[serde(default)]
+    item_count: usize,
+    #[serde(default)]
+    selected_item_count: usize,
+    #[serde(default)]
+    checked_item_count: usize,
+    #[serde(default)]
+    current_item_count: usize,
+    #[serde(default)]
+    disabled_item_count: usize,
+    #[serde(default)]
+    items: Vec<ExpectedAriaCollectionItem>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaCollectionItem {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_selected: Option<String>,
+    #[serde(default)]
+    aria_checked: Option<String>,
+    #[serde(default)]
+    aria_current: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_level: Option<String>,
+    #[serde(default)]
+    aria_posinset: Option<String>,
+    #[serde(default)]
+    aria_setsize: Option<String>,
+    #[serde(default)]
+    aria_rowindex: Option<String>,
+    #[serde(default)]
+    aria_colindex: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -1888,6 +1962,26 @@ fn browser_command_element_descriptor_metadata_tracks_activation_surfaces() {
 }
 
 #[test]
+fn browser_aria_collection_descriptor_metadata_tracks_grouped_composites() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "aria-collection-descriptor-page")
+        .expect("ARIA collection fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA collection fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.aria_collections, expected.aria_collections,
+        "ARIA collection descriptors should preserve composite roles, active descendants, item roles, and item states",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3046,6 +3140,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedCommandElement::into_browser_command_element)
                 .collect(),
+            aria_collections: self
+                .aria_collections
+                .into_iter()
+                .map(ExpectedAriaCollection::into_browser_aria_collection)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3532,6 +3631,59 @@ impl ExpectedCommandElement {
             event_handlers: self.event_handlers,
             focusable: self.focusable,
             disabled: self.disabled,
+        }
+    }
+}
+
+impl ExpectedAriaCollection {
+    fn into_browser_aria_collection(self) -> BrowserAriaCollection {
+        BrowserAriaCollection {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_orientation: self.aria_orientation,
+            aria_multiselectable: self.aria_multiselectable,
+            aria_activedescendant: self.aria_activedescendant,
+            aria_owns: self.aria_owns,
+            item_count: self.item_count,
+            selected_item_count: self.selected_item_count,
+            checked_item_count: self.checked_item_count,
+            current_item_count: self.current_item_count,
+            disabled_item_count: self.disabled_item_count,
+            items: self
+                .items
+                .into_iter()
+                .map(ExpectedAriaCollectionItem::into_browser_aria_collection_item)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedAriaCollectionItem {
+    fn into_browser_aria_collection_item(self) -> BrowserAriaCollectionItem {
+        BrowserAriaCollectionItem {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_selected: self.aria_selected,
+            aria_checked: self.aria_checked,
+            aria_current: self.aria_current,
+            aria_disabled: self.aria_disabled,
+            aria_expanded: self.aria_expanded,
+            aria_level: self.aria_level,
+            aria_posinset: self.aria_posinset,
+            aria_setsize: self.aria_setsize,
+            aria_rowindex: self.aria_rowindex,
+            aria_colindex: self.aria_colindex,
+            aria_controls: self.aria_controls,
         }
     }
 }

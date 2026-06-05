@@ -1002,6 +1002,62 @@
       }
     },
     {
+      "id": "aria-collection-descriptor-page",
+      "description": "Browser document summaries expose explicit ARIA collection roles and their owned item state as a flat descriptor inventory.",
+      "input": "<body><h2 id=tabs-title>Pages</h2><div id=tabs role=tablist aria-labelledby=tabs-title aria-orientation=horizontal aria-activedescendant=tab-settings><button id=tab-home role=tab aria-selected=true aria-controls=panel-home>Home</button><button id=tab-settings role=tab aria-selected=false aria-controls=panel-settings aria-disabled=true>Settings</button></div><div id=panel-home>Home panel</div><div id=panel-settings>Settings panel</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Pages Home Settings Home panel Settings panel",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "tabs-title", "name": null, "text": "Pages" },
+          { "id": "tabs", "name": null, "text": "Home Settings" },
+          { "id": "tab-home", "name": null, "text": "Home" },
+          { "id": "tab-settings", "name": null, "text": "Settings" },
+          { "id": "panel-home", "name": null, "text": "Home panel" },
+          { "id": "panel-settings", "name": null, "text": "Settings panel" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Pages" }
+        ],
+        "command_elements": [
+          { "element": "button", "id": "tab-home", "role": "tab", "authored_role": "tab", "command_kind": "tab", "text": "Home", "accessible_name": "Home", "control_type": "submit", "aria_controls": ["panel-home"], "focusable": true },
+          { "element": "button", "id": "tab-settings", "role": "tab", "authored_role": "tab", "command_kind": "tab", "text": "Settings", "accessible_name": "Settings", "control_type": "submit", "aria_controls": ["panel-settings"], "aria_disabled": "true", "focusable": true }
+        ],
+        "aria_collections": [
+          {
+            "element": "div",
+            "id": "tabs",
+            "role": "tablist",
+            "text": "Home Settings",
+            "accessible_name": "Pages",
+            "aria_labelledby": ["tabs-title"],
+            "aria_orientation": "horizontal",
+            "aria_activedescendant": "tab-settings",
+            "item_count": 2,
+            "selected_item_count": 1,
+            "disabled_item_count": 1,
+            "items": [
+              { "element": "button", "id": "tab-home", "role": "tab", "text": "Home", "accessible_name": "Home", "aria_selected": "true", "aria_controls": ["panel-home"] },
+              { "element": "button", "id": "tab-settings", "role": "tab", "text": "Settings", "accessible_name": "Settings", "aria_selected": "false", "aria_disabled": "true", "aria_controls": ["panel-settings"] }
+            ]
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [
+          { "element": "div", "id": "tabs", "role": "block", "authored_role": "tablist", "text": "Home Settings", "accessible_name": "Pages", "aria_labelledby": ["tabs-title"], "aria_activedescendant": "tab-settings" },
+          { "element": "button", "id": "tab-home", "role": "control", "authored_role": "tab", "text": "Home", "accessible_name": "Home", "aria_controls": ["panel-home"], "aria_selected": "true" },
+          { "element": "button", "id": "tab-settings", "role": "control", "authored_role": "tab", "text": "Settings", "accessible_name": "Settings", "aria_controls": ["panel-settings"], "aria_selected": "false", "aria_disabled": "true" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "form-measurement-descriptor-page",
       "description": "Browser document form summaries expose in-form meter and progress descriptors without adding them to submission controls.",
       "input": "<form id=telemetry><label for=disk>Disk</label><meter id=disk value=0.72 min=0 max=1 low=0.25 high=0.9 optimum=0.7 aria-describedby=disk-help>72%</meter><p id=disk-help>Capacity used</p><label for=upload>Upload</label><progress id=upload value=30 max=100>30%</progress><progress id=sync max=1 aria-label=Sync>Loading</progress><input name=token value=ok></form><meter id=outside value=1>Outside</meter>",

@@ -246,6 +246,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "navigation_groups", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "section_landmarks", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "command_elements", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "aria_collections", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
@@ -574,6 +575,64 @@ def check_browser_expected_lists(
             "disabled",
         ):
             require_optional_boolean(command_path, command, field, errors)
+
+    for index, collection in enumerate(object_list_items(expected, "aria_collections")):
+        collection_path = f"{case_path}.expected.aria_collections[{index}]"
+        for field in (
+            "element",
+            "role",
+            "text",
+        ):
+            require_string(collection_path, collection, field, errors)
+        for field in (
+            "id",
+            "accessible_name",
+            "accessible_description",
+            "aria_label",
+            "aria_orientation",
+            "aria_multiselectable",
+            "aria_activedescendant",
+        ):
+            require_optional_nullable_string(collection_path, collection, field, errors)
+        for field in (
+            "aria_labelledby",
+            "aria_describedby",
+            "aria_owns",
+        ):
+            require_optional_string_list(collection_path, collection, field, errors)
+        for field in (
+            "item_count",
+            "selected_item_count",
+            "checked_item_count",
+            "current_item_count",
+            "disabled_item_count",
+        ):
+            require_optional_integer(collection_path, collection, field, errors)
+        require_optional_object_list(collection_path, collection, "items", errors)
+        for item_index, item in enumerate(object_list_items(collection, "items")):
+            item_path = f"{collection_path}.items[{item_index}]"
+            for field in (
+                "element",
+                "role",
+                "text",
+            ):
+                require_string(item_path, item, field, errors)
+            for field in (
+                "id",
+                "accessible_name",
+                "aria_selected",
+                "aria_checked",
+                "aria_current",
+                "aria_disabled",
+                "aria_expanded",
+                "aria_level",
+                "aria_posinset",
+                "aria_setsize",
+                "aria_rowindex",
+                "aria_colindex",
+            ):
+                require_optional_nullable_string(item_path, item, field, errors)
+            require_optional_string_list(item_path, item, "aria_controls", errors)
 
     for index, link in enumerate(object_list_items(expected, "links")):
         link_path = f"{case_path}.expected.links[{index}]"
