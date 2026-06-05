@@ -24,8 +24,16 @@ pub const HUE_APPLICATION_REGISTRATION_PATH: &str = "/api";
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HueError {
     EmptyResourceId,
-    UnsupportedCommandTarget { resource_type: HueResourceType },
-    InvalidBrightness { value: u16 },
+    UnsupportedCommandTarget {
+        resource_type: HueResourceType,
+    },
+    InvalidBrightness {
+        value: u16,
+    },
+    InvalidCommandValue {
+        capability_id: CapabilityId,
+        expected: &'static str,
+    },
 }
 
 impl fmt::Display for HueError {
@@ -38,6 +46,14 @@ impl fmt::Display for HueError {
             Self::InvalidBrightness { value } => {
                 write!(f, "Hue brightness {value} is outside 0..=100")
             }
+            Self::InvalidCommandValue {
+                capability_id,
+                expected,
+            } => write!(
+                f,
+                "Hue command value for capability {} must be {expected}",
+                capability_id.as_str()
+            ),
         }
     }
 }
@@ -282,6 +298,98 @@ impl HueCommand {
     pub fn summary(&self) -> HueCommandSummary {
         HueCommandSummary::from_command(self)
     }
+
+    pub fn from_state_delta(
+        target: &HueResourceRef,
+        delta: &StateDelta,
+    ) -> Result<Option<Self>, HueError> {
+        hue_command_from_state_delta(target, delta)
+    }
+}
+
+pub fn hue_command_from_state_delta(
+    target: &HueResourceRef,
+    delta: &StateDelta,
+) -> Result<Option<HueCommand>, HueError> {
+    match delta.capability_id.as_str() {
+        "light.on_off" => {
+            let Value::Bool(on) = &delta.value else {
+                return Err(HueError::InvalidCommandValue {
+                    capability_id: delta.capability_id.clone(),
+                    expected: "a boolean",
+                });
+            };
+            match &target.resource_type {
+                HueResourceType::Light => Ok(Some(HueCommand::SetLightOn {
+                    light_id: target.id.clone(),
+                    on: *on,
+                })),
+                HueResourceType::GroupedLight => Ok(Some(HueCommand::SetGroupedLightOn {
+                    grouped_light_id: target.id.clone(),
+                    on: *on,
+                })),
+                _ => Err(HueError::UnsupportedCommandTarget {
+                    resource_type: target.resource_type.clone(),
+                }),
+            }
+        }
+        "light.brightness" => {
+            let Value::Percentage(brightness) = &delta.value else {
+                return Err(HueError::InvalidCommandValue {
+                    capability_id: delta.capability_id.clone(),
+                    expected: "a percentage",
+                });
+            };
+            match &target.resource_type {
+                HueResourceType::Light => Ok(Some(HueCommand::SetLightBrightness {
+                    light_id: target.id.clone(),
+                    brightness: *brightness,
+                })),
+                HueResourceType::GroupedLight => Ok(Some(HueCommand::SetGroupedLightBrightness {
+                    grouped_light_id: target.id.clone(),
+                    brightness: *brightness,
+                })),
+                _ => Err(HueError::UnsupportedCommandTarget {
+                    resource_type: target.resource_type.clone(),
+                }),
+            }
+        }
+        "light.color_temperature" => {
+            let Value::Integer(mirek) = &delta.value else {
+                return Err(HueError::InvalidCommandValue {
+                    capability_id: delta.capability_id.clone(),
+                    expected: "an integer mirek value",
+                });
+            };
+            let mirek = u16::try_from(*mirek).map_err(|_| HueError::InvalidCommandValue {
+                capability_id: delta.capability_id.clone(),
+                expected: "an integer in 0..=65535",
+            })?;
+            if target.resource_type != HueResourceType::Light {
+                return Err(HueError::UnsupportedCommandTarget {
+                    resource_type: target.resource_type.clone(),
+                });
+            }
+            Ok(Some(HueCommand::SetLightColorTemperature {
+                light_id: target.id.clone(),
+                mirek,
+            }))
+        }
+        _ => Ok(None),
+    }
+}
+
+pub fn hue_commands_from_state_deltas<'a>(
+    target: &HueResourceRef,
+    deltas: impl IntoIterator<Item = &'a StateDelta>,
+) -> Result<Vec<HueCommand>, HueError> {
+    let mut commands = Vec::new();
+    for delta in deltas {
+        if let Some(command) = hue_command_from_state_delta(target, delta)? {
+            commands.push(command);
+        }
+    }
+    Ok(commands)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1543,6 +1651,133 @@ mod tests {
         assert!(empty.is_empty());
         assert!(!empty.has_lighting_writes());
         assert!(!empty.touches_multiple_surfaces());
+    }
+
+    #[test]
+    fn hue_commands_can_be_planned_from_normalized_light_deltas() {
+        let light = HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1"));
+        let grouped_light = HueResourceRef::new(
+            HueResourceType::GroupedLight,
+            HueResourceId::trusted("grouped-light-1"),
+        );
+        let light_deltas = vec![
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(true),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.brightness"),
+                value: Value::Percentage(42),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.color_temperature"),
+                value: Value::Integer(366),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.occupancy"),
+                value: Value::Bool(false),
+            },
+        ];
+        let grouped_deltas = vec![
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(false),
+            },
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.brightness"),
+                value: Value::Percentage(20),
+            },
+        ];
+
+        let light_commands = hue_commands_from_state_deltas(&light, &light_deltas).unwrap();
+        let grouped_commands =
+            hue_commands_from_state_deltas(&grouped_light, &grouped_deltas).unwrap();
+
+        assert_eq!(
+            light_commands,
+            vec![
+                HueCommand::SetLightOn {
+                    light_id: HueResourceId::trusted("light-1"),
+                    on: true,
+                },
+                HueCommand::SetLightBrightness {
+                    light_id: HueResourceId::trusted("light-1"),
+                    brightness: 42,
+                },
+                HueCommand::SetLightColorTemperature {
+                    light_id: HueResourceId::trusted("light-1"),
+                    mirek: 366,
+                },
+            ]
+        );
+        assert_eq!(
+            grouped_commands,
+            vec![
+                HueCommand::SetGroupedLightOn {
+                    grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                    on: false,
+                },
+                HueCommand::SetGroupedLightBrightness {
+                    grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                    brightness: 20,
+                },
+            ]
+        );
+    }
+
+    #[test]
+    fn hue_command_delta_planning_rejects_wrong_shapes_and_targets() {
+        let light = HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1"));
+        let grouped_light = HueResourceRef::new(
+            HueResourceType::GroupedLight,
+            HueResourceId::trusted("grouped-light-1"),
+        );
+        let room = HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1"));
+
+        assert!(matches!(
+            hue_command_from_state_delta(
+                &light,
+                &StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Text("true".to_string()),
+                },
+            ),
+            Err(HueError::InvalidCommandValue { .. })
+        ));
+        assert_eq!(
+            hue_command_from_state_delta(
+                &room,
+                &StateDelta {
+                    capability_id: CapabilityId::trusted("light.brightness"),
+                    value: Value::Percentage(80),
+                },
+            ),
+            Err(HueError::UnsupportedCommandTarget {
+                resource_type: HueResourceType::Room
+            })
+        );
+        assert_eq!(
+            hue_command_from_state_delta(
+                &grouped_light,
+                &StateDelta {
+                    capability_id: CapabilityId::trusted("light.color_temperature"),
+                    value: Value::Integer(366),
+                },
+            ),
+            Err(HueError::UnsupportedCommandTarget {
+                resource_type: HueResourceType::GroupedLight
+            })
+        );
+        assert!(matches!(
+            hue_command_from_state_delta(
+                &light,
+                &StateDelta {
+                    capability_id: CapabilityId::trusted("light.color_temperature"),
+                    value: Value::Integer(-1),
+                },
+            ),
+            Err(HueError::InvalidCommandValue { .. })
+        ));
     }
 
     #[test]
