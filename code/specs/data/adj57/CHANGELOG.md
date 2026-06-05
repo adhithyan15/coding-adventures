@@ -1,5 +1,35 @@
 # Changelog — adj57 byte-provenance pipeline
 
+## [0.11.0] — 2026-06-04
+
+### Added
+
+- **ADJ68 — open-book defensibility audit (verifiability, not recall).** Corrects ADJ67's
+  methodological error: the framework is **open-book always** and targets **auditable,
+  defensible work, not recall** — so this scores an adversarial *fault-finding* audit, not
+  final-answer correctness, on the same Nicolaou endiandric-acid chemistry question.
+  - **`pipeline/audit.workflow.js`** — (1) spider+ground the needed facts open-book, each in
+    a verbatim source passage (CAS-style); (2) build the answer as a defensible CHAIN (every
+    node cites a grounded fact / cited rule / arithmetic / prior node) vs a bare closed-book
+    recall answer; (3) an adversarial auditor scores **verifiability** (PASS = a reader can
+    verify every link). **`pipeline/run_audit.py`** reports it + a deterministic
+    defensibility fraction.
+  - **Run:** the spider grounded the **step ORDER** (8π closes first, then 6π) verbatim from
+    PMC2766600 — the exact fact ADJ67-closed-book got tangled *deriving*. This settles the
+    open question: **byte provenance CAN catch the established order; the ADJ67 tangle was an
+    artifact of running closed-book, not a grounding failure.**
+  - **Defensibility:** both answers were correct, but bare recall scored **3/9 verifiable
+    (33%) — indefensible** (synthesis identity, step structures, and the W-H rule itself
+    asserted from memory, zero citations), while the grounded chain scored **6/7 (86%)**. The
+    audit **has teeth** — it faulted the framework too (node 6: the cited page confirms
+    Diels–Alder=[4+2] but not the appended diene=4/dienophile=2 atom assignment — a
+    citation-precision miss). Both binary-FAIL (every link must verify), but the scores are
+    night and day.
+  - **Lesson:** a correct answer can be indefensible; defensibility is the product, and it is
+    measurable. Next: a **citation-precision verifier** (the cited passage must establish the
+    *whole* claim — would make 6/7 → 7/7) and the screening harness re-scoped to the
+    defensibility fraction. Spec: [ADJ68](../../ADJ68-defensibility-audit.md).
+
 ## [0.10.0] — 2026-06-04
 
 ### Added
