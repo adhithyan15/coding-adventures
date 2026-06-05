@@ -1,0 +1,94 @@
+{
+  "summary": "ADJ68 — open-book, audit-scored. The framework is NOT a recall engine; it produces auditable, defensible work. So: (1) spider+ground the facts a question needs, each in a verbatim source passage (CAS-style); (2) build the answer as a defensible CHAIN where every node cites a grounded fact, a cited rule, arithmetic, or a prior node; (3) an adversarial auditor tries to FAULT each chain, scoring VERIFIABILITY not correctness. Compared against a bare closed-book recall answer. A correct-but-unverifiable answer FAILS the audit; a grounded chain PASSES — measuring the axis the framework actually targets.",
+  "agentCount": 4,
+  "logs": [],
+  "result": {
+    "question": "The thermal pericyclic cascade converting the heptaene into endiandric acid B methyl ester involves three steps: two electrocyclizations then a cycloaddition. Give each electrocyclization as [nπ]-con or [nπ]-dis (n = π electrons, con/dis = conrotatory/disrotatory) and the cycloaddition as [m+n] (atoms on each component).",
+    "grounded_facts": [
+      {
+        "fact": "In the Nicolaou endiandric-acid cascade, the 8π electrocyclization closes FIRST (conrotatory, forming the cyclooctatriene), and the 6π electrocyclization closes SECOND (disrotatory, forming the bicyclic system), before the final Diels-Alder. So the order is: [8π]-con then [6π]-dis.",
+        "kind": "literature-fact",
+        "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2766600/",
+        "quote": "polyunsaturated carboxylic acids 10 and 11 might suffer spontaneous conrotatory 8π e electrocyclization to form cyclooctatriene systems ... these proposed intermediates (12 and 13) were expected to readily undergo a disrotatory 6π e electrocyclization to furnish the bicyclic structures ... could further react to generate endiandric acids A, B, and C through intramolecular Diels–Alder cycloadditions"
+      },
+      {
+        "fact": "Woodward–Hoffmann thermal selection rule for electrocyclizations: a polyene with 4n π electrons closes conrotatory under thermal conditions, while a polyene with 4n+2 π electrons closes disrotatory under thermal conditions. (Hence 8π = 4n → conrotatory = [8π]-con; 6π = 4n+2 → disrotatory = [6π]-dis.)",
+        "kind": "rule",
+        "source_url": "https://en.wikipedia.org/wiki/Woodward%E2%80%93Hoffmann_rules",
+        "quote": "If a generalized electrocyclic ring closure occurs in a polyene of 4n π-electrons, then it is conrotatory under thermal conditions and disrotatory under photochemical conditions. Conversely in a polyene of 4n + 2 π-electrons, an electrocyclic ring closure is disrotatory under thermal conditions and conrotatory under photochemical conditions."
+      },
+      {
+        "fact": "The final step of the cascade is a Diels–Alder reaction, which is a [4+2] cycloaddition — the diene contributes 4 atoms and the dienophile contributes 2 atoms.",
+        "kind": "rule",
+        "source_url": "https://en.wikipedia.org/wiki/Cycloaddition",
+        "quote": "the standard Diels-Alder reaction is a [4+2]-cycloaddition ... An older but still common notation is based on the size of linear arrangements of atoms in the reactants. It uses parentheses: (i + j + …) where the variables are the numbers of linear atoms in each reactant."
+      }
+    ],
+    "arm_A_bare": {
+      "answer": "First electrocyclization: [8π]-con (conrotatory)\nSecond electrocyclization: [6π]-dis (disrotatory)\nCycloaddition: [4+2] (intramolecular Diels–Alder)",
+      "reasoning": "This is the classic Nicolaou biomimetic synthesis of the endiandric acids (Black's hypothesis). The fully conjugated tetraene/heptaene undergoes a thermal pericyclic cascade governed by the Woodward–Hoffmann rules.\n\nStep 1 — 8π electrocyclization: A conjugated octatetraene unit closes to a cyclooctatriene. Under thermal conditions an 8π-electron electrocyclization (4n electrons, n=2) proceeds conrotatory. → [8π]-con.\n\nStep 2 — 6π electrocyclization: The newly formed cyclooctatriene contains a 1,3,5-hexatriene unit that closes to a cyclohexadiene (forming the bicyclo[4.2.0] system). A thermal 6π-electron electrocyclization (4n+2 electrons, n=1) proceeds disrotatory. → [6π]-dis.\n\nStep 3 — cycloaddition: The resulting bicyclic diene engages a pendant dienophile (the styryl/acrylate-type alkene) in an intramolecular Diels–Alder reaction, a [4+2] cycloaddition (4 atoms from the diene + 2 atoms from the dienophile), building the final tetracyclic framework of endiandric acid B methyl ester.\n\nSo the sequence is 8π-conrotatory → 6π-disrotatory → [4+2]. Thermal pericyclic selection rules: 8π thermal = conrotatory (4n), 6π thermal = disrotatory (4n+2), Diels–Alder = thermally allowed [4+2]."
+    },
+    "arm_B_chain": {
+      "answer": "Step 1 — [8π]-con (conrotatory 8π electrocyclization forming the cyclooctatriene); Step 2 — [6π]-dis (disrotatory 6π electrocyclization forming the bicyclic system); Step 3 — [4+2] (intramolecular Diels–Alder cycloaddition: diene contributes 4 atoms, dienophile contributes 2).",
+      "chain": [
+        {
+          "claim": "In the Nicolaou endiandric-acid cascade the FIRST step is an 8π electrocyclization (forming the cyclooctatriene) and the SECOND step is a 6π electrocyclization (forming the bicyclic system), preceding the final cycloaddition.",
+          "support": "grounded-fact: https://pmc.ncbi.nlm.nih.gov/articles/PMC2766600/"
+        },
+        {
+          "claim": "Under thermal conditions, a polyene with 4n π electrons closes conrotatory, and a polyene with 4n+2 π electrons closes disrotatory.",
+          "support": "rule: https://en.wikipedia.org/wiki/Woodward%E2%80%93Hoffmann_rules"
+        },
+        {
+          "claim": "8 = 4n with n = 2, so 8 π electrons is a 4n count; 6 = 4n+2 with n = 1, so 6 π electrons is a 4n+2 count.",
+          "support": "arithmetic"
+        },
+        {
+          "claim": "The first electrocyclization (8π = 4n) is therefore conrotatory under thermal conditions, i.e. [8π]-con.",
+          "support": "derivation from prior nodes"
+        },
+        {
+          "claim": "The second electrocyclization (6π = 4n+2) is therefore disrotatory under thermal conditions, i.e. [6π]-dis.",
+          "support": "derivation from prior nodes"
+        },
+        {
+          "claim": "The final step of the cascade is a Diels–Alder reaction, which is a [4+2] cycloaddition with the diene contributing 4 atoms and the dienophile contributing 2 atoms.",
+          "support": "grounded-fact: https://en.wikipedia.org/wiki/Cycloaddition"
+        },
+        {
+          "claim": "Combining the ordered, characterized steps yields: step 1 = [8π]-con, step 2 = [6π]-dis, step 3 = [4+2].",
+          "support": "derivation from prior nodes"
+        }
+      ]
+    },
+    "audit": [
+      {
+        "label": "Answer 1",
+        "claims_total": 9,
+        "claims_unsupported": 6,
+        "unsupported_list": [
+          "\"This is the classic Nicolaou biomimetic synthesis of the endiandric acids (Black's hypothesis)\" — identity of the synthesis asserted from memory with no citation.",
+          "Step 1: that a conjugated octatetraene unit closes to a cyclooctatriene as the first step — stated with no citation a reader could check.",
+          "Step 2: that the cyclooctatriene contains a 1,3,5-hexatriene unit that closes to a cyclohexadiene forming the bicyclo[4.2.0] system — asserted from memory, no citation.",
+          "Step 3: that the bicyclic diene engages a pendant dienophile in an intramolecular Diels-Alder building the tetracyclic framework of endiandric acid B methyl ester — asserted with no citation.",
+          "The Woodward-Hoffmann thermal selection rule (8pi thermal = conrotatory / 4n; 6pi thermal = disrotatory / 4n+2) — stated as fact but attributed to no checkable source.",
+          "Electron-count assignments (8 = 4n, n=2; 6 = 4n+2, n=1) are arithmetic and self-checkable, but the application to rotatory outcome depends on the uncited WH rule above, so the conclusions [8pi]-con and [6pi]-dis are not independently verifiable."
+        ],
+        "verdict": "FAIL",
+        "note": "Answer 1 contains zero citations. Every factual claim — the synthesis identity, which polyene units close in which step, and the Woodward-Hoffmann thermal selection rule itself — is asserted from apparent memory. The only self-checkable links are the bare arithmetic (8=4n, 6=4n+2), but the rotatory conclusions rest on an uncited rule, so a reader cannot verify the chain end-to-end. Correctness is irrelevant to the verdict; defensibility fails."
+      },
+      {
+        "label": "Answer 2",
+        "claims_total": 7,
+        "claims_unsupported": 1,
+        "unsupported_list": [
+          "Node 6: the sub-claim that in the Diels-Alder [4+2] \"the diene contributes 4 atoms and the dienophile contributes 2\" is NOT supported by the cited Cycloaddition Wikipedia page. That page confirms only that Diels-Alder is a [4+2]-cycloaddition; it does not state the specific diene=4 / dienophile=2 atom assignment. The citation is partially mismatched to the claim it backs."
+        ],
+        "unsupported_list_note": "",
+        "verdict": "FAIL",
+        "note": "Nodes 1-5 and 7 are fully verifiable: node 1 (step order 8pi -> 6pi -> Diels-Alder) is confirmed verbatim by the PMC source, which even states 'conrotatory 8pi' and 'disrotatory 6pi'; node 2's Woodward-Hoffmann rule matches the cited Wikipedia text exactly; node 3 is valid arithmetic; nodes 4, 5, 7 are sound derivations from prior nodes. The single break is node 6: the '[4+2]' label is supported by the cited page, but the appended 'diene contributes 4 atoms / dienophile contributes 2' assignment is not stated on that page, so that specific link cannot be verified against its citation. One unsupported link => FAIL, though Answer 2 is far more defensible than Answer 1 (6 of 7 links verifiable vs. 0 of 9 cited)."
+      }
+    ],
+    "ground_truth": "[8π]-con, [6π]-dis, [4+2] (order established: 8π conrotatory first, then 6π disrotatory; Nicolaou JACS 1982)"
+  }
+}
