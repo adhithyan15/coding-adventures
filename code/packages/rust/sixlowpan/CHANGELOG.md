@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - Payload-free reassembly buffer and table summaries for received/missing bytes,
   pending datagrams, contiguous ranges, and largest pending datagram size.
 - LOWPAN_IPHC context identifier extension parsing and encoding helpers.
+- LOWPAN_IPHC inline field length accounting and payload splitting helpers for
+  compressed IPv6 field parsing.
 
 ## [0.1.0] - 2026-05-06
 
