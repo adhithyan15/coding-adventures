@@ -168,6 +168,13 @@ pub enum LangAotError {
     /// unsupported op/type/operand).  The GE-225 (1959) was the
     /// mainframe where Dartmouth BASIC was designed in 1964.
     Ge225BackendError(String),
+    /// The WebAssembly backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-wasm` (a validation failure, or an
+    /// op/type its WasmGC lowering does not yet handle).  WASM is the first of
+    /// the modern *managed* targets the worked example reaches (LANG77 /
+    /// McCarthy L3b-3).
+    WasmBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -180,6 +187,7 @@ impl fmt::Display for LangAotError {
             LangAotError::AotError(e) => write!(f, "{e}"),
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
+            LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
@@ -304,6 +312,101 @@ pub fn compile_file_to_llvm_ir(
         .map_err(|e| LangAotError::LlvmBackendError(format!("{e}")))?;
 
     std::fs::write(out, ll)?;
+    Ok(())
+}
+
+/// Concretise the polymorphic `"any"`/`"polymorphic"` type hints of a **purely
+/// scalar** function to `"i64"`, so it can flow through the typed WASM backend
+/// (LANG77 / McCarthy L3b-3a-2).
+///
+/// `iir-to-wasm` requires concrete types — it rejects `"any"` (a lisp
+/// `LispyValue`, which on the native path is just a tagged machine word but on
+/// WasmGC is `anyref`). For a function with **no heap / reference ops**
+/// (`alloc`/`field_*`/`is_null` or any `lispy_*`/`cons`/`car`/`cdr` builtin),
+/// every value is a machine integer, so `"any"` safely means `"i64"`. We do
+/// **not** touch functions that use the heap (cons cells, symbols) — those
+/// need the boxed-`anyref` value model, a follow-up slice (L3b-3a-3).
+fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+
+    for func in &mut module.functions {
+        // Does this function touch the lisp heap / reference model?
+        let uses_heap = func.instructions.iter().any(|i| {
+            HEAP_OPS.contains(&i.op.as_str())
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                || i.type_hint.starts_with("ref<")
+        });
+        if uses_heap {
+            continue; // boxed-anyref value model — out of scope for the scalar slice.
+        }
+        // Pure scalar function: every `any`/`polymorphic` value is an i64.
+        if func.return_type == "any" || func.return_type == "polymorphic" {
+            func.return_type = "i64".to_string();
+        }
+        for instr in &mut func.instructions {
+            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → **WebAssembly** module bytes (LANG77 / L3b-3a).
+///
+/// The first of the modern *managed* `--emit` targets. Unlike the native
+/// pipeline — which routes the lisp value model through the linked C runtime
+/// (tagged `LispyValue`s) — the managed backends have their own typed object
+/// model, so we run the **structural** heap lowering
+/// (`iir_builtin_lowering::lower_heap_builtins`: `cons`/`car`/`cdr`/`null?` →
+/// `alloc`/`field_*`/`is_null`, materialised by `iir-to-wasm` as WasmGC
+/// `$LispyPair` structs), then concretise scalar `"any"` values to `i64`.
+///
+/// **As of L3b-3a-2, scalar McCarthy programs emit a runnable `.wasm`** (e.g.
+/// `42` → a module whose `main` returns `i64 42`, verified by running it on the
+/// in-repo `wasm-runtime`). Cons/symbol programs need the boxed-`anyref` value
+/// model (a follow-up slice) and are not yet supported here.
+///
+/// Emitting bytes is platform-agnostic — no `cfg(target_os = ...)` gate.
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `WasmBackendError` — `iir-to-wasm` rejected the (lowered) IIR.
+pub fn compile_source_to_wasm(
+    language: Language,
+    source: &str,
+    module_name: &str,
+) -> Result<Vec<u8>, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, module_name)?;
+    // Managed backends consume the structural cons form (not the native
+    // runtime-call form). A no-op for a module without cons builtins.
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    concretize_scalar_any_for_wasm(&mut module);
+
+    let config = iir_to_wasm::IIRWasmConfig::default();
+    let wasm = iir_to_wasm::lower_iir_to_wasm(&module, &config)
+        .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))?;
+    iir_to_wasm::encode_module(&wasm)
+        .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))
+}
+
+/// Cross-platform: source file → IIR → WebAssembly binary (`.wasm`) on disk.
+///
+/// Thin wrapper over [`compile_source_to_wasm`]. Pair with `--emit=wasm`. No
+/// `cfg` gate (emitting bytes is platform-agnostic).
+pub fn compile_file_to_wasm(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let bytes = compile_source_to_wasm(language, &source, stem)?;
+    std::fs::write(out, bytes)?;
     Ok(())
 }
 

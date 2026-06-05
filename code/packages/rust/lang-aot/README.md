@@ -26,6 +26,15 @@ right frontend based on the input file's extension or an explicit
 `--lang` flag, then hand the resulting `IIRModule` to twig-aot for the
 rest of the chain.
 
+Besides native executables, `lang-aot` also exposes text/bytecode emit
+pipelines — `compile_file_to_llvm_ir`, `compile_file_to_riscv32_bin`, …, and
+(LANG77 / McCarthy L3b-3a) **`compile_source_to_wasm` / `compile_file_to_wasm`**.
+The wasm path currently handles **scalar** programs (a polymorphic lisp
+`"any"` value is concretised to `i64` for functions with no heap ops); a
+scalar McCarthy `42` emits a `.wasm` whose `main` returns `i64 42`, verified by
+running it on the in-repo `wasm-runtime`. Cons/symbol programs (the
+boxed-`anyref` WasmGC value model) are a follow-up.
+
 ## CLI
 
 ```text

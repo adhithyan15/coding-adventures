@@ -1,6 +1,6 @@
 [package]
 name = "lang-aot"
-version = "0.13.2"
+version = "0.14.0"
 edition = "2021"
 description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
 
@@ -15,6 +15,8 @@ mccarthy-lisp-iir-compiler = { path = "../mccarthy-lisp-iir-compiler" }
 interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
 riscv-backend         = { path = "../riscv-backend" }
 riscv-encoder         = { path = "../riscv-encoder" }
 intel8008-backend     = { path = "../intel8008-backend" }
@@ -34,3 +36,7 @@ path = "bin/lang_aot.rs"
 
 [dev-dependencies]
 tempfile = "3"
+# In-repo wasm module runtime — used to RUN emitted wasm in tests and assert
+# the computed result (LANG77 / McCarthy L3b-3a-2). Keeps wasm verification
+# zero-external-dep.
+wasm-runtime = { path = "../wasm-runtime" }
