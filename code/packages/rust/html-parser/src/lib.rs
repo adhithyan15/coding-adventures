@@ -839,6 +839,7 @@ pub struct BrowserDocument {
     pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub command_elements: Vec<BrowserCommandElement>,
     pub aria_collections: Vec<BrowserAriaCollection>,
+    pub aria_ranges: Vec<BrowserAriaRange>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1579,6 +1580,29 @@ pub struct BrowserAriaCollectionItem {
     pub aria_rowindex: Option<String>,
     pub aria_colindex: Option<String>,
     pub aria_controls: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaRange {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_valuenow: Option<String>,
+    pub aria_valuemin: Option<String>,
+    pub aria_valuemax: Option<String>,
+    pub aria_valuetext: Option<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_readonly: Option<String>,
+    pub aria_required: Option<String>,
+    pub tabindex: Option<String>,
+    pub text_value: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9468,6 +9492,9 @@ fn collect_browser_facts(
         if let Some(aria_collection) = browser_aria_collection_element(element, id_texts) {
             summary.aria_collections.push(aria_collection);
         }
+        if let Some(aria_range) = browser_aria_range_element(element, id_texts) {
+            summary.aria_ranges.push(aria_range);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -11468,6 +11495,45 @@ fn browser_authored_collection_item_role(element: &Element) -> Option<String> {
             | "rowheader"
             | "tab"
             | "treeitem"
+    )
+    .then_some(role)
+}
+
+fn browser_aria_range_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaRange> {
+    let role = browser_authored_range_role(element)?;
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserAriaRange {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_valuenow: browser_aria_state(element, "aria-valuenow"),
+        aria_valuemin: browser_aria_state(element, "aria-valuemin"),
+        aria_valuemax: browser_aria_state(element, "aria-valuemax"),
+        aria_valuetext: browser_aria_state(element, "aria-valuetext"),
+        aria_orientation: browser_aria_state(element, "aria-orientation"),
+        aria_disabled: browser_aria_state(element, "aria-disabled"),
+        aria_readonly: browser_aria_state(element, "aria-readonly"),
+        aria_required: browser_aria_state(element, "aria-required"),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        text_value: (!text.is_empty()).then(|| text.clone()),
+        role,
+        text,
+    })
+}
+
+fn browser_authored_range_role(element: &Element) -> Option<String> {
+    let role = browser_authored_role(element)?.to_ascii_lowercase();
+    matches!(
+        role.as_str(),
+        "meter" | "progressbar" | "scrollbar" | "separator" | "slider" | "spinbutton"
     )
     .then_some(role)
 }
