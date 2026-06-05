@@ -584,6 +584,7 @@ impl PlanBuilder {
         if let Some(color) = self.stroke_color(path.stroke.as_deref(), opacity) {
             let stroke_width = path.stroke_width.unwrap_or(1.0).max(1.0) as f32;
             let dash = normalized_dash_pattern(path.stroke_dash.as_deref());
+            let cap = path.stroke_cap.as_ref().unwrap_or(&StrokeCap::Butt);
             for contour in &contours {
                 let mut dash_cursor = dash
                     .as_deref()
@@ -599,6 +600,7 @@ impl PlanBuilder {
                             dash,
                             dash_index,
                             dash_offset,
+                            cap,
                             transform,
                             color,
                             "path.stroke.dash",
@@ -625,6 +627,7 @@ impl PlanBuilder {
                             dash,
                             dash_index,
                             dash_offset,
+                            cap,
                             transform,
                             color,
                             "path.stroke.dash",
@@ -639,6 +642,9 @@ impl PlanBuilder {
                             "path.stroke",
                         );
                     }
+                }
+                if dash.is_none() && !contour.closed {
+                    self.add_open_contour_caps(contour, stroke_width, cap, transform, color);
                 }
             }
         }
@@ -966,6 +972,7 @@ impl PlanBuilder {
                 dash,
                 &mut dash_index,
                 &mut dash_offset,
+                &StrokeCap::Butt,
                 transform,
                 color,
                 "rect.stroke.dash",
@@ -998,6 +1005,7 @@ impl PlanBuilder {
                 dash,
                 &mut dash_index,
                 &mut dash_offset,
+                &StrokeCap::Butt,
                 transform,
                 color,
                 "ellipse.stroke.dash",
@@ -1189,6 +1197,88 @@ impl PlanBuilder {
         self.add_mesh(vertices, indices, None, label);
     }
 
+    fn add_open_contour_caps(
+        &mut self,
+        contour: &Contour,
+        stroke_width: f32,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if contour.points.len() < 2 || matches!(cap, StrokeCap::Butt) {
+            return;
+        }
+
+        let start = contour.points[0];
+        let after_start = contour.points[1];
+        self.add_line_endpoint_cap(
+            start,
+            after_start,
+            stroke_width,
+            true,
+            cap,
+            transform,
+            color,
+        );
+
+        let end = *contour.points.last().unwrap();
+        let before_end = contour.points[contour.points.len() - 2];
+        self.add_line_endpoint_cap(before_end, end, stroke_width, false, cap, transform, color);
+    }
+
+    fn add_line_endpoint_cap(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        stroke_width: f32,
+        at_start: bool,
+        cap: &StrokeCap,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        let dx = p1.x - p0.x;
+        let dy = p1.y - p0.y;
+        let len = (dx * dx + dy * dy).sqrt();
+        if len <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+        let ux = dx / len;
+        let uy = dy / len;
+        let half_width = stroke_width / 2.0;
+        let (center, out_x, out_y) = if at_start {
+            (p0, -ux, -uy)
+        } else {
+            (p1, ux, uy)
+        };
+
+        match cap {
+            StrokeCap::Butt => {}
+            StrokeCap::Square => {
+                let outside = GpuPoint {
+                    x: center.x + out_x * half_width,
+                    y: center.y + out_y * half_width,
+                };
+                self.add_line_quad(
+                    center,
+                    outside,
+                    stroke_width,
+                    transform,
+                    color,
+                    "path.stroke",
+                );
+            }
+            StrokeCap::Round => self.add_round_line_cap(
+                center,
+                out_x,
+                out_y,
+                half_width,
+                transform,
+                color,
+                "path.stroke",
+            ),
+        }
+    }
+
     fn add_dashed_line_segment(
         &mut self,
         p0: GpuPoint,
@@ -1197,6 +1287,7 @@ impl PlanBuilder {
         dash: &[f32],
         dash_index: &mut usize,
         dash_offset: &mut f32,
+        cap: &StrokeCap,
         transform: Transform2D,
         color: GpuColor,
         label: &'static str,
@@ -1223,7 +1314,7 @@ impl PlanBuilder {
                     x: p0.x + ux * (distance + run),
                     y: p0.y + uy * (distance + run),
                 };
-                self.add_line_quad(start, end, width, transform, color, label);
+                self.add_capped_line_segment(start, end, width, cap, transform, color, label);
             }
             distance += run;
             if run < remaining_dash {
@@ -2139,6 +2230,127 @@ mod tests {
             },
         );
         assert_eq!(plan.meshes.len(), 4);
+    }
+
+    #[test]
+    fn lowers_square_path_caps_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 4.0, y: 6.0 },
+                PathCommand::LineTo { x: 12.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Square),
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let min_x = plan
+            .meshes
+            .iter()
+            .flat_map(|mesh| mesh.vertices.iter())
+            .map(|vertex| vertex.position.x)
+            .fold(f32::INFINITY, f32::min);
+        let max_x = plan
+            .meshes
+            .iter()
+            .flat_map(|mesh| mesh.vertices.iter())
+            .map(|vertex| vertex.position.x)
+            .fold(f32::NEG_INFINITY, f32::max);
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(min_x, 2.0);
+        assert_eq!(max_x, 14.0);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "path.stroke"));
+    }
+
+    #[test]
+    fn lowers_round_path_caps_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 4.0, y: 6.0 },
+                PathCommand::LineTo { x: 12.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 3);
+        assert_eq!(plan.meshes[0].vertices.len(), 4);
+        assert!(plan.meshes[1].vertices.len() > 4);
+        assert!(plan.meshes[2].vertices.len() > 4);
+        assert!(plan.meshes.iter().all(|mesh| mesh.label == "path.stroke"));
+    }
+
+    #[test]
+    fn lowers_dashed_path_caps_on_dash_segments() {
+        let mut scene = PaintScene::new(20.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: None,
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+
+        assert_eq!(plan.meshes.len(), 6);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
+        assert_eq!(
+            plan.meshes
+                .iter()
+                .filter(|mesh| mesh.vertices.len() == 4)
+                .count(),
+            2
+        );
+        assert_eq!(
+            plan.meshes
+                .iter()
+                .filter(|mesh| mesh.vertices.len() > 4)
+                .count(),
+            4
+        );
     }
 
     #[test]
