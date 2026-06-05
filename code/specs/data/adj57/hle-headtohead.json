@@ -1,0 +1,44 @@
+{
+  "experiment": "ADJ67 — blind head-to-head: does the byte-provenance grounding discipline help on real Humanity's Last Exam questions, and can the atomic+grounded harness lift a weak local model?",
+  "method": "Each HLE question sourced from a public source with an independently-verified answer held aside. Two BLIND closed-book Claude subagents per question: Arm A (plain, one-shot) and Arm B (grounding discipline: cover every token/condition, ground each step, flag what it cannot ground, calibrated answer). Scored against external ground truth. Plus a weak-local-model arm via Ollama (atomic feed: one decomposed fact at a time, harness aggregates).",
+  "hle_round1_palmyrene": {
+    "subject": "Classics / Palmyrene epigraphy",
+    "question": "Translate the Palmyrene script; transliteration: RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL",
+    "ground_truth": "Regina, the freedwoman of Barates, alas. (RIB 1065; grading rule rejects answers that drop the freedwoman-of-Barates relationship)",
+    "armA_plain": {"committed": "Regina, daughter of Ḥari, son of ʿAta. Alas! (mentioned the correct reading as 'the sense usually given' but elevated the literal as the 'strict' answer)", "score": "WRONG — committed answer drops freedwoman-of-Barates"},
+    "armB_framework": {"committed": "Regina, the freedwoman of Barates. Alas! (flagged ḤRY as the ungroundable token; calibrated ~60%)", "score": "CORRECT"},
+    "verdict": "FRAMEWORK WIN. Coverage discipline forced engagement with the ḤRY (free/freed) token instead of pattern-matching BT…BR to the familiar 'daughter of… son of…' filiation formula. Not a knowledge gap — both knew the inscription; a reasoning-faithfulness/commitment win."
+  },
+  "hle_round2_chemistry": {
+    "subject": "Organic chemistry / pericyclic cascade (Nicolaou endiandric acid, JACS 1982)",
+    "question": "Thermal cascade: two electrocyclizations then a cycloaddition. Give [nπ]-con/dis for each electrocyclization and [m+n] for the cycloaddition.",
+    "ground_truth": "[8π]-con, [6π]-dis, [4+2]",
+    "armA_plain": {"committed": "[8π]-con, [6π]-dis, [4+2]", "score": "CORRECT — clean, coherent, correct order (holistic recall)"},
+    "armB_framework": {"committed": "[8π]-con, [6π]-dis, [4+2]", "score": "CORRECT — but working got tangled on the step ordering (initially assigned step1=6π-dis), then reconciled; honestly flagged that the ORDER is not derivable from Woodward-Hoffmann (only con/dis is)"},
+    "verdict": "TIE on final answer; plain Claude had cleaner reasoning. The framework's derive-from-rules discipline over-formalized a step that needed holistic structural recall — but it correctly localized the genuinely non-rule-derivable part (the ordering)."
+  },
+  "hle_round2_weak_model": {
+    "model": "gemma4 (local, ~9.6GB) via Ollama, atomic + grounded",
+    "result": "[8π]-con, [6π]-dis, [4+2] — CORRECT",
+    "division_of_labor": "The framework's decomposition supplied the π-electron COUNTS, their ORDER, and the W-H RULE (a stand-in for spider/CAS grounding from the Nicolaou literature). Gemma did ONLY the local rule-applications (8π,4n→con; 6π,4n+2→dis; diene4+dienophile2→[4+2]). The structural fact frontier-Opus-framework slipped on (the ordering) is exactly what the grounded decomposition hands over, so the weak model cannot make that error. Honest boundary: a fully autonomous result needs the spider to ground the counts/order from sources, which we confirmed are documented but did not run for this item."
+  },
+  "weak_model_ladder_seal": {
+    "case": "marine forensics — gray seal flank wounds; truth = propeller strike; trap = shark (exposure prior)",
+    "blind_no_framework": {"opus": "propeller ✓", "haiku": "propeller ✓", "gemma": "'gear or vessel' (not trapped, not specific)", "qwen0.5b": "SHARK ✗ (trapped)"},
+    "atomic_from_memory": {"haiku": "propeller ✓", "gemma": "fishing net ✗ (shark suppressed)", "qwen0.5b": "degenerate"},
+    "atomic_plus_grounded": {"gemma": "propeller ✓", "qwen0.5b": "degenerate — BELOW FLOOR"},
+    "findings": [
+      "Atomic decomposition (structural) defeats the holistic exposure-prior trap even at 0.5B (shark suppressed).",
+      "Grounded per-atom criteria (knowledge) fix a mid-size model's wrong domain knowledge (Gemma net→propeller). Both ingredients needed; neither alone suffices for Gemma.",
+      "There is a capability FLOOR: 0.5B emits non-discriminating verdicts even with criteria. The discrimination gate (ollama_atomic.py) detects ~zero-variance verdicts and refuses to launder them into a confident answer — the analog of ADJ65's 'margin rests on assumed weights'.",
+      "Aggregate is robust to a single noisy atom (errors stay independent and small), unlike one holistic leap."
+    ]
+  },
+  "honest_conclusions": [
+    "n=2 HLE questions — anecdote, not a measurement; both are public/likely-contaminated samples.",
+    "The framework is NOT uniformly better: 1 clear win (Palmyrene, reasoning-faithfulness/commitment) and 1 tie where plain was cleaner (chemistry, where holistic recall beat derive-from-rules).",
+    "It helps where the failure is 'pattern-match and drop a detail' (coverage catches it); it can over-formalize where the answer needs holistic recall the rules underdetermine.",
+    "The atomic+grounded harness can reduce a hard HLE step to rule-applications a weak local model performs correctly — but the intelligence is in the framework's grounded decomposition, not the weak model.",
+    "A real number requires the screening harness: many HLE items, scoring committed-answer correctness AND calibration, plain vs framework, ideally less-contaminated items."
+  ]
+}
