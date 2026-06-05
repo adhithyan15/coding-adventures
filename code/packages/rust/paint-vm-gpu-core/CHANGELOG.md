@@ -7,7 +7,7 @@
 - Added PaintScene lowering for rects, lines, ellipses, flattened paths, clips,
   groups, layers, images, text, and glyph runs.
 - Added diagnostics for degraded GPU-core gaps such as path arcs, gradients,
-  filters, blend modes, dashed strokes, and exact fill rules.
+  filters, blend modes, stroke caps/joins, and exact fill rules.
 - Added linear gradient ramp textures with linear sampling metadata for GPU
   backends that support texture sampling.
 - Added radial gradient 2D textures with radial UV lowering for GPU backends
@@ -19,3 +19,5 @@
 - Added dashed `PaintPath` stroke lowering that carries dash state across
   flattened path segments.
 - Added dashed `PaintRect` stroke lowering around the rectangle perimeter.
+- Added dashed `PaintEllipse` stroke lowering around the sampled ellipse
+  perimeter.
