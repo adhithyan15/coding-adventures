@@ -375,6 +375,16 @@ pub struct IphcPayloadSlices<'a> {
     pub carried_payload: &'a [u8],
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct IphcInlineFieldSlices<'a> {
+    pub traffic_class_flow_label: &'a [u8],
+    pub next_header: Option<u8>,
+    pub hop_limit: Option<u8>,
+    pub source_address: &'a [u8],
+    pub destination_address: &'a [u8],
+    pub carried_payload: &'a [u8],
+}
+
 impl IphcHeader {
     pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
         if bytes.len() < 2 {
@@ -418,6 +428,53 @@ impl IphcHeader {
         Ok(Some(IphcPayloadSlices {
             inline_fields: &self.payload[..inline_len],
             carried_payload: &self.payload[inline_len..],
+        }))
+    }
+
+    pub fn split_inline_fields(&self) -> Result<Option<IphcInlineFieldSlices<'_>>, SixlowpanError> {
+        let Some(destination_address_len) = self.encoding.destination_address_inline_len() else {
+            return Ok(None);
+        };
+        let inline_len = self.encoding.fixed_inline_fields_len()
+            + self.encoding.source_address_inline_len()
+            + destination_address_len;
+        if self.payload.len() < inline_len {
+            return Err(SixlowpanError::Truncated {
+                needed: inline_len,
+                remaining: self.payload.len(),
+            });
+        }
+
+        let mut pos = 0;
+        let traffic_class_flow_label = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.traffic_class_flow_label.inline_len(),
+        )?;
+        let next_header = if self.encoding.next_header_compressed {
+            None
+        } else {
+            Some(read_u8(&self.payload, &mut pos)?)
+        };
+        let hop_limit = if self.encoding.hop_limit == IphcHopLimit::Inline {
+            Some(read_u8(&self.payload, &mut pos)?)
+        } else {
+            None
+        };
+        let source_address = take_slice(
+            &self.payload,
+            &mut pos,
+            self.encoding.source_address_inline_len(),
+        )?;
+        let destination_address = take_slice(&self.payload, &mut pos, destination_address_len)?;
+
+        Ok(Some(IphcInlineFieldSlices {
+            traffic_class_flow_label,
+            next_header,
+            hop_limit,
+            source_address,
+            destination_address,
+            carried_payload: &self.payload[pos..],
         }))
     }
 
@@ -1087,6 +1144,23 @@ fn read_u8(bytes: &[u8], pos: &mut usize) -> Result<u8, SixlowpanError> {
     Ok(read_array::<1>(bytes, pos)?[0])
 }
 
+fn take_slice<'a>(
+    bytes: &'a [u8],
+    pos: &mut usize,
+    len: usize,
+) -> Result<&'a [u8], SixlowpanError> {
+    let remaining = bytes.len().saturating_sub(*pos);
+    if remaining < len {
+        return Err(SixlowpanError::Truncated {
+            needed: len,
+            remaining,
+        });
+    }
+    let out = &bytes[*pos..*pos + len];
+    *pos += len;
+    Ok(out)
+}
+
 fn read_array<const N: usize>(bytes: &[u8], pos: &mut usize) -> Result<[u8; N], SixlowpanError> {
     let remaining = bytes.len().saturating_sub(*pos);
     if remaining < N {
@@ -1341,6 +1415,40 @@ mod tests {
     }
 
     #[test]
+    fn iphc_header_splits_structured_inline_fields() {
+        let header = IphcHeader {
+            encoding: IphcEncoding {
+                traffic_class_flow_label: IphcTrafficClassFlowLabel::Inline,
+                next_header_compressed: false,
+                hop_limit: IphcHopLimit::Inline,
+                context_identifier_extension: false,
+                source_address_compression: false,
+                source_address_mode: IphcAddressMode::Compressed64,
+                multicast_destination: false,
+                destination_address_compression: false,
+                destination_address_mode: IphcAddressMode::Compressed16,
+            },
+            context_identifier: None,
+            payload: vec![
+                0xaa, 0xbb, 0xcc, 0xdd, 0x11, 0x40, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                0xfe, 0xed, 0xf0, 0x12,
+            ],
+        };
+
+        let fields = header.split_inline_fields().unwrap().unwrap();
+
+        assert_eq!(fields.traffic_class_flow_label, &[0xaa, 0xbb, 0xcc, 0xdd]);
+        assert_eq!(fields.next_header, Some(0x11));
+        assert_eq!(fields.hop_limit, Some(0x40));
+        assert_eq!(
+            fields.source_address,
+            &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
+        );
+        assert_eq!(fields.destination_address, &[0xfe, 0xed]);
+        assert_eq!(fields.carried_payload, &[0xf0, 0x12]);
+    }
+
+    #[test]
     fn iphc_inline_lengths_flag_reserved_address_modes() {
         let encoding = IphcEncoding {
             traffic_class_flow_label: IphcTrafficClassFlowLabel::Elided,
@@ -1381,6 +1489,16 @@ mod tests {
                 needed: 16,
                 remaining: 1
             })
+        );
+        assert_eq!(
+            IphcHeader {
+                encoding,
+                context_identifier: None,
+                payload: Vec::new()
+            }
+            .split_inline_fields()
+            .unwrap(),
+            None
         );
     }
 
