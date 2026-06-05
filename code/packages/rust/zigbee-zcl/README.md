@@ -9,6 +9,7 @@ coordinator policy. It provides:
 - foundation and cluster-specific frame control parsing/encoding
 - read-attributes, on/off, level, and color-temperature command frame builders
 - typed attribute report parsing
+- typed attribute report encoding and Report Attributes frame builders
 - compact attribute report summaries for parsed report shape and D23 delta
   coverage
 - D23 capability projection for common clusters

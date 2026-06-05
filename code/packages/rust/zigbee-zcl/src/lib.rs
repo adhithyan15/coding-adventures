@@ -372,6 +372,8 @@ pub enum ZclError {
     Truncated { needed: usize, remaining: usize },
     ManufacturerCodeMismatch,
     InvalidString,
+    ValueTooLong { len: usize },
+    ValueTypeMismatch { data_type: ZclDataType },
 }
 
 impl fmt::Display for ZclError {
@@ -385,6 +387,15 @@ impl fmt::Display for ZclError {
                 write!(f, "manufacturer-specific flag does not match code field")
             }
             Self::InvalidString => write!(f, "ZCL character string is not valid UTF-8"),
+            Self::ValueTooLong { len } => {
+                write!(
+                    f,
+                    "ZCL value length {len} exceeds the one-byte length field"
+                )
+            }
+            Self::ValueTypeMismatch { data_type } => {
+                write!(f, "ZCL value does not match data type {data_type:?}")
+            }
         }
     }
 }
@@ -442,6 +453,28 @@ pub fn move_to_color_temperature_frame(
         ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID,
         payload,
     )
+}
+
+pub fn report_attributes_frame(
+    transaction_sequence_number: u8,
+    reports: &[ZclAttributeReport],
+) -> Result<ZclFrame, ZclError> {
+    let payload = encode_attribute_reports(reports)?;
+    Ok(ZclFrame::foundation_command(
+        transaction_sequence_number,
+        ZCL_REPORT_ATTRIBUTES_COMMAND_ID,
+        payload,
+    ))
+}
+
+pub fn encode_attribute_reports(reports: &[ZclAttributeReport]) -> Result<Vec<u8>, ZclError> {
+    let mut out = Vec::new();
+    for report in reports {
+        out.extend_from_slice(&report.attribute_id.0.to_le_bytes());
+        out.push(report.data_type.encode());
+        encode_zcl_value(report.data_type, &report.value, &mut out)?;
+    }
+    Ok(out)
 }
 
 pub fn parse_attribute_reports(
@@ -608,6 +641,32 @@ fn read_zcl_value(cursor: &mut Cursor<'_>, data_type: ZclDataType) -> Result<Zcl
         }
         ZclDataType::Unknown(_) => Ok(ZclValue::Raw(cursor.read_remaining_bytes().to_vec())),
     }
+}
+
+fn encode_zcl_value(
+    data_type: ZclDataType,
+    value: &ZclValue,
+    out: &mut Vec<u8>,
+) -> Result<(), ZclError> {
+    match (data_type, value) {
+        (ZclDataType::Bool, ZclValue::Bool(value)) => out.push(u8::from(*value)),
+        (ZclDataType::Bitmap8, ZclValue::Bitmap8(value)) => out.push(*value),
+        (ZclDataType::U8, ZclValue::U8(value)) => out.push(*value),
+        (ZclDataType::U16, ZclValue::U16(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::U32, ZclValue::U32(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::I16, ZclValue::I16(value)) => out.extend_from_slice(&value.to_le_bytes()),
+        (ZclDataType::Enum8, ZclValue::Enum8(value)) => out.push(*value),
+        (ZclDataType::CharacterString, ZclValue::CharacterString(value)) => {
+            if value.len() > u8::MAX as usize {
+                return Err(ZclError::ValueTooLong { len: value.len() });
+            }
+            out.push(value.len() as u8);
+            out.extend_from_slice(value.as_bytes());
+        }
+        (ZclDataType::Unknown(_), ZclValue::Raw(value)) => out.extend_from_slice(value),
+        _ => return Err(ZclError::ValueTypeMismatch { data_type }),
+    }
+    Ok(())
 }
 
 struct Cursor<'a> {
@@ -787,6 +846,90 @@ mod tests {
                 data_type: ZclDataType::CharacterString,
                 value: ZclValue::CharacterString("Signify".to_string()),
             }
+        );
+    }
+
+    #[test]
+    fn report_attributes_frame_encodes_and_round_trips_reports() {
+        let reports = vec![
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::ON_OFF,
+                data_type: ZclDataType::Bool,
+                value: ZclValue::Bool(true),
+            },
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId(0x0001),
+                data_type: ZclDataType::U16,
+                value: ZclValue::U16(0x1234),
+            },
+            ZclAttributeReport {
+                cluster_id: ZclClusterId::ON_OFF,
+                attribute_id: ZclAttributeId::MANUFACTURER_NAME,
+                data_type: ZclDataType::CharacterString,
+                value: ZclValue::CharacterString("Acme".to_string()),
+            },
+        ];
+
+        let frame = report_attributes_frame(0x56, &reports).unwrap();
+
+        assert_eq!(frame.command_id, ZCL_REPORT_ATTRIBUTES_COMMAND_ID);
+        assert_eq!(
+            frame.encode().unwrap(),
+            vec![
+                0x10, 0x56, 0x0a, 0x00, 0x00, 0x10, 0x01, 0x01, 0x00, 0x21, 0x34, 0x12, 0x04, 0x00,
+                0x42, 0x04, b'A', b'c', b'm', b'e',
+            ]
+        );
+        assert_eq!(
+            parse_attribute_reports(ZclClusterId::ON_OFF, &frame.payload).unwrap(),
+            reports
+        );
+    }
+
+    #[test]
+    fn attribute_report_encoder_preserves_unknown_raw_values() {
+        let reports = vec![ZclAttributeReport {
+            cluster_id: ZclClusterId::BASIC,
+            attribute_id: ZclAttributeId(0x0099),
+            data_type: ZclDataType::Unknown(0xff),
+            value: ZclValue::Raw(vec![0xde, 0xad]),
+        }];
+
+        let payload = encode_attribute_reports(&reports).unwrap();
+
+        assert_eq!(payload, vec![0x99, 0x00, 0xff, 0xde, 0xad]);
+        assert_eq!(
+            parse_attribute_reports(ZclClusterId::BASIC, &payload).unwrap(),
+            reports
+        );
+    }
+
+    #[test]
+    fn attribute_report_encoder_rejects_wrong_value_shapes() {
+        let wrong_shape = [ZclAttributeReport {
+            cluster_id: ZclClusterId::ON_OFF,
+            attribute_id: ZclAttributeId::ON_OFF,
+            data_type: ZclDataType::Bool,
+            value: ZclValue::U8(1),
+        }];
+        let long_string = [ZclAttributeReport {
+            cluster_id: ZclClusterId::BASIC,
+            attribute_id: ZclAttributeId::MANUFACTURER_NAME,
+            data_type: ZclDataType::CharacterString,
+            value: ZclValue::CharacterString("x".repeat(256)),
+        }];
+
+        assert_eq!(
+            encode_attribute_reports(&wrong_shape),
+            Err(ZclError::ValueTypeMismatch {
+                data_type: ZclDataType::Bool,
+            })
+        );
+        assert_eq!(
+            encode_attribute_reports(&long_string),
+            Err(ZclError::ValueTooLong { len: 256 })
         );
     }
 
