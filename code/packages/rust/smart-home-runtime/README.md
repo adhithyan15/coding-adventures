@@ -41,6 +41,8 @@ Included surfaces:
 - discovery worker-run ingest that records preferred batch results, reconciles
   accepted candidates into the registry, and returns inserted/replaced/ignored
   catalog counts
+- runtime-owned discovery worker schedules with source/interface scope, due-run
+  plans, run-status tracking, and cadence advancement after scheduled ingest
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and
@@ -73,7 +75,8 @@ Included surfaces:
   planned work with actual pairing expiry, state expiry, reconciliation, and
   restart actions
 - non-mutating supervision plans that preview due refreshes, desired-state
-  drift, pairing expiry, and worker restarts before a tick performs any writes
+  drift, pairing expiry, bridge-worker restarts, and scheduled discovery worker
+  runs before a tick performs any writes
 - compact supervision plan summaries for read-side due-work counts without
   walking every planned target
 - read-only supervision observations that combine due action counts with worker

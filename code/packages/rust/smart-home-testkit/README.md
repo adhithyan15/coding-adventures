@@ -12,6 +12,8 @@ a shared way to build:
   discovery-seeded runtime fixtures
 - deterministic Hue mDNS scan and discovery worker-run fixtures that feed the
   runtime discovery catalog without opening network sockets
+- deterministic Hue discovery worker schedules that exercise runtime due-run
+  planning and scheduled ingest without opening network sockets
 - registry seeding helpers for installing fixture records into
   `smart-home-registry`
 - confirmed, stale, and optimistic state snapshots

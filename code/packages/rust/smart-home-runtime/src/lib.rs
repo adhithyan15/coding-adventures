@@ -17,7 +17,8 @@ use smart_home_core::{
 };
 use smart_home_discovery::{
     DiscoveryCatalog, DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary,
-    DiscoverySource, DiscoveryUpsert, DiscoveryWorkerRun, DiscoveryWorkerRunSummary,
+    DiscoverySource, DiscoveryUpsert, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
+    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary,
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
@@ -35,8 +36,21 @@ pub enum RuntimeError {
     UnknownEntity(EntityId),
     UnknownPairingSession(RuntimePairingSessionId),
     UnknownSubscription(RuntimeSubscriptionId),
+    UnknownDiscoveryWorker(DiscoveryWorkerId),
     DuplicatePairingSession(RuntimePairingSessionId),
     DuplicateSubscription(RuntimeSubscriptionId),
+    InvalidDiscoveryWorkerSchedule {
+        worker_id: DiscoveryWorkerId,
+        field: &'static str,
+        message: String,
+    },
+    DiscoveryWorkerRunMismatch {
+        worker_id: DiscoveryWorkerId,
+        expected_integration_id: IntegrationId,
+        actual_integration_id: IntegrationId,
+        expected_kind: DiscoveryWorkerKind,
+        actual_kind: DiscoveryWorkerKind,
+    },
     PairingSessionExpired {
         session_id: RuntimePairingSessionId,
         expired_at_ms: u64,
@@ -81,8 +95,27 @@ impl fmt::Display for RuntimeError {
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
             Self::UnknownPairingSession(id) => write!(f, "unknown runtime pairing session {id}"),
             Self::UnknownSubscription(id) => write!(f, "unknown runtime subscription {id}"),
+            Self::UnknownDiscoveryWorker(id) => write!(f, "unknown discovery worker {id}"),
             Self::DuplicatePairingSession(id) => write!(f, "duplicate runtime pairing session {id}"),
             Self::DuplicateSubscription(id) => write!(f, "duplicate runtime subscription {id}"),
+            Self::InvalidDiscoveryWorkerSchedule {
+                worker_id,
+                field,
+                message,
+            } => write!(
+                f,
+                "discovery worker {worker_id} has invalid schedule field `{field}`: {message}"
+            ),
+            Self::DiscoveryWorkerRunMismatch {
+                worker_id,
+                expected_integration_id,
+                actual_integration_id,
+                expected_kind,
+                actual_kind,
+            } => write!(
+                f,
+                "discovery worker {worker_id} expected `{expected_integration_id}` {expected_kind} run but received `{actual_integration_id}` {actual_kind}"
+            ),
             Self::PairingSessionExpired {
                 session_id,
                 expired_at_ms,
@@ -1598,6 +1631,463 @@ impl RuntimeSupervisorSnapshot {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScheduledDiscoveryWorker {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub next_due_at_ms: u64,
+    pub last_started_at_ms: Option<u64>,
+    pub last_completed_at_ms: Option<u64>,
+    pub last_run_status: Option<DiscoveryWorkerRunStatus>,
+    pub last_record_count: usize,
+    pub last_failure_count: usize,
+    pub last_catalog_change_count: usize,
+    pub total_run_count: u64,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScheduledDiscoveryWorker {
+    pub fn new(
+        worker_id: DiscoveryWorkerId,
+        integration_id: IntegrationId,
+        kind: DiscoveryWorkerKind,
+        interval_ms: u64,
+        run_timeout_ms: u64,
+        first_due_at_ms: u64,
+    ) -> Self {
+        Self {
+            worker_id,
+            integration_id,
+            kind,
+            sources: Vec::new(),
+            network_interfaces: Vec::new(),
+            status: WorkerStatus::Starting,
+            interval_ms,
+            run_timeout_ms,
+            next_due_at_ms: first_due_at_ms,
+            last_started_at_ms: None,
+            last_completed_at_ms: None,
+            last_run_status: None,
+            last_record_count: 0,
+            last_failure_count: 0,
+            last_catalog_change_count: 0,
+            total_run_count: 0,
+            consecutive_failure_count: 0,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_source(mut self, source: DiscoverySource) -> Self {
+        if !self.sources.contains(&source) {
+            self.sources.push(source);
+        }
+        self
+    }
+
+    pub fn with_network_interface(mut self, network_interface: impl Into<String>) -> Self {
+        let network_interface = network_interface.into();
+        if !self
+            .network_interfaces
+            .iter()
+            .any(|existing| existing == &network_interface)
+        {
+            self.network_interfaces.push(network_interface);
+        }
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn is_due_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.next_due_at_ms
+    }
+
+    pub fn overdue_by_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.next_due_at_ms)
+    }
+
+    pub fn due_instruction_at(&self, now_ms: u64) -> Option<DiscoveryWorkerRunInstruction> {
+        if !self.is_due_at(now_ms) {
+            return None;
+        }
+        Some(DiscoveryWorkerRunInstruction {
+            worker_id: self.worker_id.clone(),
+            integration_id: self.integration_id.clone(),
+            kind: self.kind,
+            sources: self.sources.clone(),
+            network_interfaces: self.network_interfaces.clone(),
+            status: self.status,
+            due_at_ms: self.next_due_at_ms,
+            planned_at_ms: now_ms,
+            interval_ms: self.interval_ms,
+            run_timeout_ms: self.run_timeout_ms,
+            consecutive_failure_count: self.consecutive_failure_count,
+            metadata: self.metadata.clone(),
+        })
+    }
+
+    pub fn mark_started_at(&mut self, now_ms: u64) {
+        self.status = WorkerStatus::Running;
+        self.last_started_at_ms = Some(now_ms);
+    }
+
+    pub fn record_run_summary(&mut self, summary: &DiscoveryWorkerRunSummary) {
+        self.total_run_count = self.total_run_count.saturating_add(1);
+        self.last_started_at_ms = Some(summary.started_at_ms);
+        self.last_completed_at_ms = Some(summary.completed_at_ms);
+        self.last_run_status = Some(summary.status);
+        self.last_record_count = summary.record_count;
+        self.last_failure_count = summary.failure_count;
+        self.last_catalog_change_count = summary.accepted_count();
+        self.next_due_at_ms = summary.completed_at_ms.saturating_add(self.interval_ms);
+
+        match summary.status {
+            DiscoveryWorkerRunStatus::Completed => {
+                self.status = WorkerStatus::Running;
+                self.consecutive_failure_count = 0;
+            }
+            DiscoveryWorkerRunStatus::Partial | DiscoveryWorkerRunStatus::Failed => {
+                self.status = WorkerStatus::Unhealthy;
+                self.consecutive_failure_count = self.consecutive_failure_count.saturating_add(1);
+            }
+        }
+    }
+
+    pub fn validate(&self) -> Result<(), RuntimeError> {
+        if self.interval_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "interval_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.run_timeout_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "run_timeout_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.sources.is_empty() {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "sources",
+                "must include at least one discovery source",
+            ));
+        }
+        if self.sources.contains(&DiscoverySource::Mdns) && self.network_interfaces.is_empty() {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "network_interfaces",
+                "mDNS schedules must name the selected interfaces",
+            ));
+        }
+        if self
+            .network_interfaces
+            .iter()
+            .any(|network_interface| network_interface.trim().is_empty())
+        {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "network_interfaces",
+                "interface names must not be empty",
+            ));
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRunInstruction {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub due_at_ms: u64,
+    pub planned_at_ms: u64,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl DiscoveryWorkerRunInstruction {
+    pub fn overdue_by_ms(&self) -> u64 {
+        self.planned_at_ms.saturating_sub(self.due_at_ms)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRunPlan {
+    pub generated_at_ms: u64,
+    pub instructions: Vec<DiscoveryWorkerRunInstruction>,
+}
+
+impl DiscoveryWorkerRunPlan {
+    pub fn is_empty(&self) -> bool {
+        self.instructions.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.instructions.len()
+    }
+
+    pub fn instructions_for_worker(
+        &self,
+        worker_id: &DiscoveryWorkerId,
+    ) -> Vec<&DiscoveryWorkerRunInstruction> {
+        self.instructions
+            .iter()
+            .filter(|instruction| &instruction.worker_id == worker_id)
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DiscoveryWorkerSort {
+    WorkerId,
+    NextDueAt,
+    StatusThenWorkerId,
+    ConsecutiveFailuresDesc,
+}
+
+impl Default for DiscoveryWorkerSort {
+    fn default() -> Self {
+        Self::WorkerId
+    }
+}
+
+/// Read-side query for scheduled discovery workers.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DiscoveryWorkerQuery {
+    pub worker_id: Option<DiscoveryWorkerId>,
+    pub integration_id: Option<IntegrationId>,
+    pub kinds: Vec<DiscoveryWorkerKind>,
+    pub sources: Vec<DiscoverySource>,
+    pub statuses: Vec<WorkerStatus>,
+    pub due_before_ms: Option<u64>,
+    pub overdue_at_ms: Option<u64>,
+    pub min_consecutive_failure_count: Option<u32>,
+    pub sort: DiscoveryWorkerSort,
+    pub limit: Option<usize>,
+}
+
+impl DiscoveryWorkerQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_worker(mut self, worker_id: DiscoveryWorkerId) -> Self {
+        self.worker_id = Some(worker_id);
+        self
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn with_kind(mut self, kind: DiscoveryWorkerKind) -> Self {
+        self.kinds.push(kind);
+        self
+    }
+
+    pub fn with_source(mut self, source: DiscoverySource) -> Self {
+        self.sources.push(source);
+        self
+    }
+
+    pub fn with_status(mut self, status: WorkerStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn due_before(mut self, due_before_ms: u64) -> Self {
+        self.due_before_ms = Some(due_before_ms);
+        self
+    }
+
+    pub fn overdue_at(mut self, overdue_at_ms: u64) -> Self {
+        self.overdue_at_ms = Some(overdue_at_ms);
+        self
+    }
+
+    pub fn min_consecutive_failure_count(mut self, count: u32) -> Self {
+        self.min_consecutive_failure_count = Some(count);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: DiscoveryWorkerSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct DiscoveryWorkerSchedulerSnapshot {
+    pub generated_at_ms: u64,
+    pub worker_count: usize,
+    pub due_worker_count: usize,
+    pub starting_count: usize,
+    pub running_count: usize,
+    pub unhealthy_count: usize,
+    pub restarting_count: usize,
+    pub stopped_count: usize,
+    pub workers_with_failures: usize,
+}
+
+impl DiscoveryWorkerSchedulerSnapshot {
+    pub fn has_due_work(&self) -> bool {
+        self.due_worker_count > 0
+    }
+
+    pub fn has_worker_pressure(&self) -> bool {
+        self.due_worker_count > 0 || self.unhealthy_count > 0 || self.workers_with_failures > 0
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct RuntimeDiscoveryScheduler {
+    workers: BTreeMap<DiscoveryWorkerId, ScheduledDiscoveryWorker>,
+}
+
+impl RuntimeDiscoveryScheduler {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn register_worker(
+        &mut self,
+        worker: ScheduledDiscoveryWorker,
+    ) -> Result<Option<ScheduledDiscoveryWorker>, RuntimeError> {
+        worker.validate()?;
+        Ok(self.workers.insert(worker.worker_id.clone(), worker))
+    }
+
+    pub fn worker(&self, worker_id: &DiscoveryWorkerId) -> Option<&ScheduledDiscoveryWorker> {
+        self.workers.get(worker_id)
+    }
+
+    pub fn mark_started(
+        &mut self,
+        worker_id: &DiscoveryWorkerId,
+        now_ms: u64,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        let worker = self
+            .workers
+            .get_mut(worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(worker_id.clone()))?;
+        worker.mark_started_at(now_ms);
+        Ok(worker.clone())
+    }
+
+    pub fn record_run_summary(
+        &mut self,
+        summary: &DiscoveryWorkerRunSummary,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        let worker = self
+            .workers
+            .get_mut(&summary.worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(summary.worker_id.clone()))?;
+        worker.record_run_summary(summary);
+        Ok(worker.clone())
+    }
+
+    pub fn query_workers(&self, query: &DiscoveryWorkerQuery) -> Vec<&ScheduledDiscoveryWorker> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut workers = self
+            .workers
+            .values()
+            .filter(|worker| scheduled_discovery_worker_matches_query(worker, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            DiscoveryWorkerSort::WorkerId => {
+                workers.sort_by(|left, right| left.worker_id.cmp(&right.worker_id));
+            }
+            DiscoveryWorkerSort::NextDueAt => workers.sort_by(|left, right| {
+                left.next_due_at_ms
+                    .cmp(&right.next_due_at_ms)
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+            DiscoveryWorkerSort::StatusThenWorkerId => workers.sort_by(|left, right| {
+                left.status
+                    .as_str()
+                    .cmp(right.status.as_str())
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+            DiscoveryWorkerSort::ConsecutiveFailuresDesc => workers.sort_by(|left, right| {
+                right
+                    .consecutive_failure_count
+                    .cmp(&left.consecutive_failure_count)
+                    .then_with(|| left.worker_id.cmp(&right.worker_id))
+            }),
+        }
+        apply_limit(&mut workers, query.limit);
+        workers
+    }
+
+    pub fn run_plan_at(&self, now_ms: u64) -> DiscoveryWorkerRunPlan {
+        let mut instructions = self
+            .workers
+            .values()
+            .filter_map(|worker| worker.due_instruction_at(now_ms))
+            .collect::<Vec<_>>();
+        instructions.sort_by(|left, right| {
+            left.due_at_ms
+                .cmp(&right.due_at_ms)
+                .then_with(|| left.worker_id.cmp(&right.worker_id))
+        });
+        DiscoveryWorkerRunPlan {
+            generated_at_ms: now_ms,
+            instructions,
+        }
+    }
+
+    pub fn snapshot_at(&self, now_ms: u64) -> DiscoveryWorkerSchedulerSnapshot {
+        let mut snapshot = DiscoveryWorkerSchedulerSnapshot {
+            generated_at_ms: now_ms,
+            worker_count: self.workers.len(),
+            ..DiscoveryWorkerSchedulerSnapshot::default()
+        };
+        for worker in self.workers.values() {
+            if worker.is_due_at(now_ms) {
+                snapshot.due_worker_count += 1;
+            }
+            if worker.consecutive_failure_count > 0 {
+                snapshot.workers_with_failures += 1;
+            }
+            match worker.status {
+                WorkerStatus::Starting => snapshot.starting_count += 1,
+                WorkerStatus::Running => snapshot.running_count += 1,
+                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
+                WorkerStatus::Restarting => snapshot.restarting_count += 1,
+                WorkerStatus::Stopped => snapshot.stopped_count += 1,
+            }
+        }
+        snapshot
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReconciliationReason {
     MissingState,
@@ -1933,6 +2423,7 @@ pub struct RuntimeSupervisionPlan {
     pub state_refresh_plan: StateRefreshPlan,
     pub desired_state_drifts: Vec<DesiredStateDriftPlan>,
     pub worker_restart_plan: WorkerRestartPlan,
+    pub discovery_worker_run_plan: DiscoveryWorkerRunPlan,
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -1948,6 +2439,7 @@ pub struct RuntimeSupervisionPlanSummary {
     pub desired_stale_state_count: usize,
     pub desired_drifted_state_count: usize,
     pub worker_restart_count: usize,
+    pub discovery_worker_run_count: usize,
 }
 
 impl RuntimeSupervisionPlanSummary {
@@ -1973,6 +2465,10 @@ impl RuntimeSupervisionPlanSummary {
     pub fn has_worker_restart_work(&self) -> bool {
         self.worker_restart_count > 0
     }
+
+    pub fn has_discovery_worker_work(&self) -> bool {
+        self.discovery_worker_run_count > 0
+    }
 }
 
 impl RuntimeSupervisionPlan {
@@ -1981,6 +2477,7 @@ impl RuntimeSupervisionPlan {
             && self.state_refresh_plan.is_empty()
             && self.desired_state_drifts.is_empty()
             && self.worker_restart_plan.is_empty()
+            && self.discovery_worker_run_plan.is_empty()
     }
 
     pub fn action_count(&self) -> usize {
@@ -1988,6 +2485,7 @@ impl RuntimeSupervisionPlan {
             + self.state_refresh_plan.len()
             + self.desired_state_drifts.len()
             + self.worker_restart_plan.len()
+            + self.discovery_worker_run_plan.len()
     }
 
     pub fn summary(&self) -> RuntimeSupervisionPlanSummary {
@@ -1998,6 +2496,7 @@ impl RuntimeSupervisionPlan {
             state_refresh_count: self.state_refresh_plan.len(),
             desired_state_drift_count: self.desired_state_drifts.len(),
             worker_restart_count: self.worker_restart_plan.len(),
+            discovery_worker_run_count: self.discovery_worker_run_plan.len(),
             ..RuntimeSupervisionPlanSummary::default()
         };
 
@@ -2057,6 +2556,10 @@ impl RuntimeSupervisionObservation {
 
     pub fn worker_restart_count(&self) -> usize {
         self.plan.worker_restart_plan.len()
+    }
+
+    pub fn discovery_worker_run_count(&self) -> usize {
+        self.plan.discovery_worker_run_plan.len()
     }
 
     pub fn due_worker_deadline_count(&self) -> usize {
@@ -2170,6 +2673,8 @@ impl SupervisionTickReport {
 pub struct RuntimeReadSnapshot {
     pub generated_at_ms: u64,
     pub registry_counts: RegistryCounts,
+    pub discovery_record_count: usize,
+    pub discovery_scheduler: DiscoveryWorkerSchedulerSnapshot,
     pub event_bus: RuntimeEventBusSnapshot,
     pub supervisor: RuntimeSupervisorSnapshot,
     pub pairing_session_count: usize,
@@ -2186,6 +2691,8 @@ impl RuntimeReadSnapshot {
         RuntimePendingWorkSummary {
             event_backlog_count: self.event_bus.pending_delivery_count,
             backlogged_subscription_count: self.event_bus.backlogged_subscription_count,
+            discovery_worker_due_count: self.discovery_scheduler.due_worker_count,
+            unhealthy_discovery_worker_count: self.discovery_scheduler.unhealthy_count,
             restart_due_count: self.supervisor.restart_due_count,
             unhealthy_worker_count: self.supervisor.unhealthy_count,
             expiring_pairing_session_count: self.expiring_pairing_session_count,
@@ -2203,6 +2710,8 @@ impl RuntimeReadSnapshot {
 pub struct RuntimePendingWorkSummary {
     pub event_backlog_count: usize,
     pub backlogged_subscription_count: usize,
+    pub discovery_worker_due_count: usize,
+    pub unhealthy_discovery_worker_count: usize,
     pub restart_due_count: usize,
     pub unhealthy_worker_count: usize,
     pub expiring_pairing_session_count: usize,
@@ -2219,6 +2728,8 @@ impl RuntimePendingWorkSummary {
         self.event_backlog_count
             + self.restart_due_count
             + self.unhealthy_worker_count
+            + self.discovery_worker_due_count
+            + self.unhealthy_discovery_worker_count
             + self.expiring_pairing_session_count
             + self.stale_optimistic_state_count
             + self.state_refresh_target_count
@@ -2231,6 +2742,8 @@ impl RuntimePendingWorkSummary {
     pub fn has_supervision_pressure(&self) -> bool {
         self.restart_due_count > 0
             || self.unhealthy_worker_count > 0
+            || self.discovery_worker_due_count > 0
+            || self.unhealthy_discovery_worker_count > 0
             || self.expiring_pairing_session_count > 0
             || self.stale_optimistic_state_count > 0
             || self.state_refresh_target_count > 0
@@ -2504,6 +3017,7 @@ pub struct RuntimePairBridgeToolOutput {
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
     discovery: DiscoveryCatalog,
+    discovery_scheduler: RuntimeDiscoveryScheduler,
     event_bus: RuntimeEventBus,
     supervisor: RuntimeSupervisor,
     pairing_sessions: BTreeMap<RuntimePairingSessionId, RuntimePairingSession>,
@@ -2516,6 +3030,7 @@ impl SmartHomeRuntime {
         Self {
             registry: InMemorySmartHomeRegistry::new(),
             discovery: DiscoveryCatalog::new(),
+            discovery_scheduler: RuntimeDiscoveryScheduler::new(),
             event_bus: RuntimeEventBus::new(),
             supervisor: RuntimeSupervisor::new(),
             pairing_sessions: BTreeMap::new(),
@@ -2538,6 +3053,14 @@ impl SmartHomeRuntime {
 
     pub fn discovery_mut(&mut self) -> &mut DiscoveryCatalog {
         &mut self.discovery
+    }
+
+    pub fn discovery_scheduler(&self) -> &RuntimeDiscoveryScheduler {
+        &self.discovery_scheduler
+    }
+
+    pub fn discovery_scheduler_mut(&mut self) -> &mut RuntimeDiscoveryScheduler {
+        &mut self.discovery_scheduler
     }
 
     pub fn event_bus(&self) -> &RuntimeEventBus {
@@ -2572,6 +3095,8 @@ impl SmartHomeRuntime {
         RuntimeReadSnapshot {
             generated_at_ms: now_ms,
             registry_counts: self.registry.counts(),
+            discovery_record_count: self.discovery.len(),
+            discovery_scheduler: self.discovery_scheduler.snapshot_at(now_ms),
             event_bus: self.event_bus.snapshot(),
             supervisor: self.supervisor.snapshot_at(now_ms),
             pairing_session_count: self.pairing_sessions.len(),
@@ -2755,6 +3280,64 @@ impl SmartHomeRuntime {
             replaced_count,
             ignored_count,
         ))
+    }
+
+    pub fn register_discovery_worker_schedule(
+        &mut self,
+        worker: ScheduledDiscoveryWorker,
+    ) -> Result<Option<ScheduledDiscoveryWorker>, RuntimeError> {
+        self.discovery_scheduler.register_worker(worker)
+    }
+
+    pub fn discovery_worker_schedule(
+        &self,
+        worker_id: &DiscoveryWorkerId,
+    ) -> Option<&ScheduledDiscoveryWorker> {
+        self.discovery_scheduler.worker(worker_id)
+    }
+
+    pub fn query_discovery_worker_schedules(
+        &self,
+        query: &DiscoveryWorkerQuery,
+    ) -> Vec<&ScheduledDiscoveryWorker> {
+        self.discovery_scheduler.query_workers(query)
+    }
+
+    pub fn discovery_worker_run_plan_at(&self, now_ms: u64) -> DiscoveryWorkerRunPlan {
+        self.discovery_scheduler.run_plan_at(now_ms)
+    }
+
+    pub fn mark_discovery_worker_started(
+        &mut self,
+        worker_id: &DiscoveryWorkerId,
+        now_ms: u64,
+    ) -> Result<ScheduledDiscoveryWorker, RuntimeError> {
+        self.discovery_scheduler.mark_started(worker_id, now_ms)
+    }
+
+    pub fn record_scheduled_discovery_worker_run(
+        &mut self,
+        run: &DiscoveryWorkerRun,
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> Result<DiscoveryWorkerRunSummary, RuntimeError> {
+        let scheduled = self
+            .discovery_scheduler
+            .worker(&run.worker_id)
+            .ok_or_else(|| RuntimeError::UnknownDiscoveryWorker(run.worker_id.clone()))?;
+        if scheduled.integration_id != run.integration_id || scheduled.kind != run.kind {
+            return Err(RuntimeError::DiscoveryWorkerRunMismatch {
+                worker_id: run.worker_id.clone(),
+                expected_integration_id: scheduled.integration_id.clone(),
+                actual_integration_id: run.integration_id.clone(),
+                expected_kind: scheduled.kind,
+                actual_kind: run.kind,
+            });
+        }
+
+        let summary = self.record_discovery_worker_run(run, now_ms, ttl_ms)?;
+        self.discovery_scheduler.record_run_summary(&summary)?;
+        Ok(summary)
     }
 
     pub fn discovery_record_count(&self) -> usize {
@@ -3371,6 +3954,7 @@ impl SmartHomeRuntime {
             state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
             desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
             worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
+            discovery_worker_run_plan: self.discovery_scheduler.run_plan_at(now_ms),
         })
     }
 
@@ -3730,6 +4314,48 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
     })
 }
 
+fn invalid_discovery_worker_schedule(
+    worker_id: &DiscoveryWorkerId,
+    field: &'static str,
+    message: impl Into<String>,
+) -> RuntimeError {
+    RuntimeError::InvalidDiscoveryWorkerSchedule {
+        worker_id: worker_id.clone(),
+        field,
+        message: message.into(),
+    }
+}
+
+fn scheduled_discovery_worker_matches_query(
+    worker: &ScheduledDiscoveryWorker,
+    query: &DiscoveryWorkerQuery,
+) -> bool {
+    query
+        .worker_id
+        .as_ref()
+        .is_none_or(|worker_id| &worker.worker_id == worker_id)
+        && query
+            .integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &worker.integration_id == integration_id)
+        && (query.kinds.is_empty() || query.kinds.contains(&worker.kind))
+        && (query.sources.is_empty()
+            || query
+                .sources
+                .iter()
+                .all(|source| worker.sources.contains(source)))
+        && (query.statuses.is_empty() || query.statuses.contains(&worker.status))
+        && query
+            .due_before_ms
+            .is_none_or(|deadline| worker.next_due_at_ms <= deadline)
+        && query
+            .overdue_at_ms
+            .is_none_or(|now_ms| worker.is_due_at(now_ms))
+        && query
+            .min_consecutive_failure_count
+            .is_none_or(|minimum| worker.consecutive_failure_count >= minimum)
+}
+
 fn supervised_worker_matches_query(
     worker: &SupervisedBridgeWorker,
     query: &SupervisedWorkerQuery,
@@ -3963,6 +4589,21 @@ mod tests {
         .with_address("https://192.0.2.20")
         .with_confidence(DiscoveryConfidence::Candidate)
         .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+    }
+
+    fn hue_mdns_discovery_worker(first_due_at_ms: u64) -> ScheduledDiscoveryWorker {
+        ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            first_due_at_ms,
+        )
+        .with_source(DiscoverySource::Mdns)
+        .with_network_interface("en0")
+        .with_network_interface("bridge0")
+        .with_metadata("smart_home.discovery.service_type", "_hue._tcp.local")
     }
 
     fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {
@@ -4971,6 +5612,205 @@ mod tests {
                 .as_deref(),
             Some("https://192.0.2.10")
         );
+    }
+
+    #[test]
+    fn runtime_supervision_plan_previews_due_discovery_workers_without_mutating() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+
+        let early = runtime.supervision_plan_at(1_099).unwrap();
+        assert!(early.discovery_worker_run_plan.is_empty());
+
+        let plan = runtime.supervision_plan_at(1_125).unwrap();
+        let observation = runtime.observe_supervision_at(1_125).unwrap();
+        let summary = plan.summary();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        let snapshot = runtime.read_snapshot_at(1_125);
+        let pending = snapshot.pending_work_summary();
+        let queried = runtime.query_discovery_worker_schedules(
+            &DiscoveryWorkerQuery::new()
+                .for_integration(IntegrationId::trusted("hue"))
+                .with_source(DiscoverySource::Mdns)
+                .due_before(1_125)
+                .sorted_by(DiscoveryWorkerSort::NextDueAt),
+        );
+
+        assert_eq!(plan.action_count(), 1);
+        assert_eq!(plan.discovery_worker_run_plan.len(), 1);
+        assert_eq!(
+            plan.discovery_worker_run_plan
+                .instructions_for_worker(&worker_id)
+                .len(),
+            1
+        );
+        assert!(matches!(
+            plan.discovery_worker_run_plan.instructions.as_slice(),
+            [instruction] if instruction.worker_id == worker_id
+                && instruction.integration_id == IntegrationId::trusted("hue")
+                && instruction.kind == DiscoveryWorkerKind::MdnsScan
+                && instruction.sources == vec![DiscoverySource::Mdns]
+                && instruction.network_interfaces == vec!["en0".to_string(), "bridge0".to_string()]
+                && instruction.due_at_ms == 1_100
+                && instruction.planned_at_ms == 1_125
+                && instruction.overdue_by_ms() == 25
+                && instruction.run_timeout_ms == 250
+        ));
+        assert_eq!(summary.total_actions, 1);
+        assert_eq!(summary.discovery_worker_run_count, 1);
+        assert!(summary.has_discovery_worker_work());
+        assert_eq!(observation.discovery_worker_run_count(), 1);
+        assert_eq!(scheduled.status, WorkerStatus::Starting);
+        assert_eq!(scheduled.total_run_count, 0);
+        assert_eq!(snapshot.discovery_scheduler.worker_count, 1);
+        assert_eq!(snapshot.discovery_scheduler.due_worker_count, 1);
+        assert_eq!(pending.discovery_worker_due_count, 1);
+        assert!(pending.has_supervision_pressure());
+        assert_eq!(queried.len(), 1);
+        assert_eq!(queried[0].worker_id, worker_id);
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn runtime_records_scheduled_discovery_worker_runs_and_advances_schedule() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_100)
+            .unwrap();
+
+        let mut run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_100,
+            1_180,
+        );
+        run.push_record(hue_discovery_record("001788fffescheduled", 1_175))
+            .unwrap();
+
+        let summary = runtime
+            .record_scheduled_discovery_worker_run(&run, 1_200, 500)
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Completed);
+        assert_eq!(summary.inserted_count, 1);
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(scheduled.last_started_at_ms, Some(1_100));
+        assert_eq!(scheduled.last_completed_at_ms, Some(1_180));
+        assert_eq!(scheduled.last_record_count, 1);
+        assert_eq!(scheduled.last_failure_count, 0);
+        assert_eq!(scheduled.last_catalog_change_count, 1);
+        assert_eq!(scheduled.total_run_count, 1);
+        assert_eq!(scheduled.consecutive_failure_count, 0);
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(runtime.discovery_worker_run_plan_at(6_179).len(), 0);
+        assert_eq!(runtime.discovery_worker_run_plan_at(6_180).len(), 1);
+
+        let mut failed_run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            6_180,
+            6_220,
+        );
+        failed_run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "timed out waiting for replies")
+                .unwrap(),
+        );
+
+        let failed_summary = runtime
+            .record_scheduled_discovery_worker_run(&failed_run, 6_250, 500)
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(failed_summary.status, DiscoveryWorkerRunStatus::Failed);
+        assert_eq!(scheduled.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Failed)
+        );
+        assert_eq!(scheduled.last_record_count, 0);
+        assert_eq!(scheduled.last_failure_count, 1);
+        assert_eq!(scheduled.last_catalog_change_count, 0);
+        assert_eq!(scheduled.total_run_count, 2);
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.next_due_at_ms, 11_220);
+        assert_eq!(
+            runtime
+                .query_discovery_worker_schedules(
+                    &DiscoveryWorkerQuery::new()
+                        .with_status(WorkerStatus::Unhealthy)
+                        .min_consecutive_failure_count(1),
+                )
+                .len(),
+            1
+        );
+    }
+
+    #[test]
+    fn scheduled_discovery_workers_validate_scope_and_run_identity() {
+        let mut runtime = SmartHomeRuntime::new();
+        let invalid = ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            1_100,
+        )
+        .with_source(DiscoverySource::Mdns);
+
+        let error = runtime
+            .register_discovery_worker_schedule(invalid)
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "network_interfaces",
+                ..
+            }
+        ));
+
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+
+        let unknown_run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("unknown-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_100,
+            1_125,
+        );
+        assert!(matches!(
+            runtime.record_scheduled_discovery_worker_run(&unknown_run, 1_125, 500),
+            Err(RuntimeError::UnknownDiscoveryWorker(_))
+        ));
+
+        let wrong_kind = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::CloudFallback,
+            1_100,
+            1_125,
+        );
+        assert!(matches!(
+            runtime.record_scheduled_discovery_worker_run(&wrong_kind, 1_125, 500),
+            Err(RuntimeError::DiscoveryWorkerRunMismatch { .. })
+        ));
     }
 
     #[test]
@@ -6048,6 +6888,7 @@ mod tests {
                 desired_stale_state_count: 1,
                 desired_drifted_state_count: 0,
                 worker_restart_count: 1,
+                discovery_worker_run_count: 0,
             }
         );
         assert!(!summary.is_idle());
@@ -6128,6 +6969,7 @@ mod tests {
                 desired_stale_state_count: 0,
                 desired_drifted_state_count: 0,
                 worker_restart_count: 1,
+                discovery_worker_run_count: 0,
             }
         );
         assert_eq!(observation.heartbeat_schedule.len(), 2);

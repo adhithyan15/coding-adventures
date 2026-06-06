@@ -8,13 +8,15 @@ All notable changes to this package will be documented in this file.
 
 - Deterministic Hue mDNS scan fixtures, with discovery worker-run fixtures now
   flowing through `MdnsScanResult` before seeding runtime discovery catalogs.
+- Deterministic Hue discovery worker schedule fixtures, with discovery runtime
+  seeding now flowing through `SmartHomeRuntime::record_scheduled_discovery_worker_run`.
 - Deterministic fixture clock for freshness and supervisor tests.
 - Normalized Hue-like bridge, device, light entity, and sensor entity fixtures.
 - Deterministic Hue discovery record and discovery-runtime fixtures built
   through `hue-core` mDNS normalization for testing unpaired bridge candidates
   without network I/O.
 - Deterministic Hue discovery worker-run fixtures that seed discovery runtime
-  candidates through `SmartHomeRuntime::record_discovery_worker_run`.
+  candidates through scheduled runtime ingest.
 - Registry seeding helpers for installing normalized fixture records into the
   in-memory smart-home registry.
 - Helpers for confirmed, stale, and optimistic state snapshots.
