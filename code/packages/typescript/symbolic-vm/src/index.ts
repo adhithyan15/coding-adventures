@@ -4838,8 +4838,9 @@ function isLinearIn(expr: IRNode, x: IRNode): boolean {
  *   1. The polynomial quotient Q is integrated term-by-term.
  *   2. For the remainder R (deg R < deg D), two patterns are tried:
  *      Case A: R = c · D′  →  c · log(D)
- *      Case B: R is a constant and D = a₂x² + a₀ with rational √(a₀/a₂)
- *              →  R/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
+ *      Case B: R is linear and D = a₂x² + a₁x + a₀ with rational
+ *              √(4a₂a₀-a₁²). Split off the D′ log term, then close the
+ *              remaining constant-over-quadratic term with atan.
  *
  * Returns ``undefined`` when no pattern matches (caller falls through).
  */
@@ -4901,28 +4902,44 @@ function closeRemainderOverD(
     }
   }
 
-  // Case B: R is a non-zero constant and D is a quadratic a₂x² + a₀ (no linear
-  // term) with a₂, a₀ > 0 and √(a₀/a₂) rational.
+  // Case B: linear remainder over a positive shifted quadratic.
+  //
+  // Let R = r1*x + r0 and D = a2*x^2 + a1*x + a0.  Split
+  // R = c*D' + k, where c = r1/(2*a2) and k = r0 - c*a1. Then:
+  //   ∫ R/D dx = c*log(D) + (2k/sqrt(4*a2*a0-a1^2))
+  //              * atan((2*a2*x+a1)/sqrt(4*a2*a0-a1^2)).
   const dR = rpDeg(R);
   const dD = rpDeg(D);
-  if (dR === 0 && dD === 2) {
+  if ((dR === 0 || dR === 1) && dD === 2) {
+    const r1 = rpCoeff(R, 1);
     const r0 = rpCoeff(R, 0);
     const a2 = rpCoeff(D, 2);
     const a1 = rpCoeff(D, 1);
     const a0 = rpCoeff(D, 0);
-    if (
-      !rcIsZero(r0) &&
-      !rcIsZero(a2) && a2.numer > 0n &&
-      !rcIsZero(a0) && a0.numer > 0n &&
-      rcIsZero(a1)
-    ) {
-      // ∫ r₀/(a₂x² + a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x / √(a₀/a₂))
-      const ba = rcDiv(a0, a2);
-      const sqBa = rcSqrt(ba);
-      if (sqBa !== undefined && !rcIsZero(sqBa)) {
-        const coeff = rcDiv(r0, rcMul(a2, sqBa));
-        const arg: IRNode = rcIsOne(sqBa) ? x : app(DIV, [x, rcToIR(sqBa)]);
-        return app(MUL, [rcToIR(coeff), app(ATAN, [arg])]);
+    const two = rcFromBigInt(2n);
+    const four = rcFromBigInt(4n);
+    if (!rcIsZero(a2) && a2.numer > 0n) {
+      const c = rcDiv(r1, rcMul(two, a2));
+      const k = rcSub(r0, rcMul(c, a1));
+      const delta = rcSub(rcMul(four, rcMul(a2, a0)), rcMul(a1, a1));
+      const sqrtDelta = delta.numer > 0n ? rcSqrt(delta) : undefined;
+      if (sqrtDelta !== undefined && !rcIsZero(sqrtDelta)) {
+        const terms: IRNode[] = [];
+        if (!rcIsZero(c)) {
+          terms.push(app(MUL, [rcToIR(c), app(LOG, [D_ir])]));
+        }
+        if (!rcIsZero(k)) {
+          const atanCoeff = rcDiv(rcMul(two, k), sqrtDelta);
+          const atanNumer = app(ADD, [
+            app(MUL, [rcToIR(rcMul(two, a2)), x]),
+            rcToIR(a1),
+          ]);
+          const atanArg = rcIsOne(sqrtDelta) ? atanNumer : app(DIV, [atanNumer, rcToIR(sqrtDelta)]);
+          const atanTerm = app(MUL, [rcToIR(atanCoeff), app(ATAN, [atanArg])]);
+          terms.push(atanTerm);
+        }
+        if (terms.length === 0) return null;
+        return terms.reduce((acc, term) => app(ADD, [acc, term]));
       }
     }
   }
@@ -4996,7 +5013,8 @@ function tryLogPolyProduct(
  * IBP formula (u = atan(Q), dv = P dx):
  *   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
  *
- * Linear Q is skipped so that Phase 11 handles it instead.
+ * Handles both linear and non-linear polynomial Q.  Linear Q covers MACSYMA
+ * Phase 11; non-linear Q covers Phase 28.
  */
 function tryAtanPolyProduct(
   transcendental: IRNode,
@@ -5009,7 +5027,6 @@ function tryAtanPolyProduct(
   const Q_ir = transcendental.args[0]!;
 
   if (!dependsOn(Q_ir, x)) return undefined;
-  if (isLinearIn(Q_ir, x)) return undefined; // Phase 11 handles atan(ax+b)
 
   const Qmap = toPolynomialCoeffs(Q_ir, x);
   if (Qmap === undefined) return undefined;
