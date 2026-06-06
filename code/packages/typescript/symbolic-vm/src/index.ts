@@ -1827,9 +1827,9 @@ function nodeKey(node: IRNode): string {
 // ---------------------------------------------------------------------------
 // Apart (Track B1) — partial-fraction decomposition over Q(x).
 //
-// Phase 1 only: every root of the denominator must be a *simple* rational
-// root.  Repeated roots and irreducible quadratic factors bail to the
-// unevaluated ``Apart(...)`` (Phase 48 is out of scope for this PR).
+// Supports simple rational roots, repeated rational roots, and proper
+// irreducible denominators that are already apart.  Mixed rational-root plus
+// irreducible residual factors still bail to unevaluated ``Apart(...)``.
 //
 // Polynomials here use a coefficient-tuple representation indexed by power
 // (lowest degree first) — same convention as ``polynomial-bridge.py``:
@@ -2404,12 +2404,11 @@ function buildApartTerm(A: RatQ, r: RatQ, power: number, x: IRSymbol): IRNode {
  *  Then ``A_{r, m − j} = φ_j``.  Emits terms ``A / (x − r)^power`` for
  *  ``power = 1..m``.
  *
- *  Returns ``undefined`` when ``den`` has an irreducible factor on top of
- *  its rational roots — partial fractions over the rationals can't go
- *  further in that case. */
+ *  Returns ``undefined`` when ``den`` has an irreducible residual on top of
+ *  its rational roots — the mixed-factor decomposition is still pending. */
 function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
   const roots = polyQRationalRoots(den);
-  if (roots.length === 0) return undefined;
+  if (roots.length === 0) return properRationalToIr(num, den, x);
   const mults = polyQRootMultiplicities(den, roots);
   if (mults === undefined) return undefined;
 
@@ -2460,6 +2459,11 @@ function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
     acc = app(ADD, [acc, terms[i]]);
   }
   return acc;
+}
+
+function properRationalToIr(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode {
+  if (polyQNormalize(num).length === 0) return int(0);
+  return app(DIV, [fromPolynomial(num, x), fromPolynomial(den, x)]);
 }
 
 function apartHandler(_vm: VM, expr: IRApply): IRNode {
