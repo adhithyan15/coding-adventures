@@ -11,10 +11,10 @@ use coding_adventures_html_parser::{
     BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover, BrowserPopoverInvoker,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -74,6 +74,8 @@ struct ExpectedBrowserDocument {
     section_landmarks: Vec<ExpectedSectionLandmark>,
     #[serde(default)]
     command_elements: Vec<ExpectedCommandElement>,
+    #[serde(default)]
+    popovers: Vec<ExpectedPopover>,
     #[serde(default)]
     aria_collections: Vec<ExpectedAriaCollection>,
     #[serde(default)]
@@ -626,6 +628,53 @@ struct ExpectedCommandElement {
     focusable: bool,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedPopover {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    popover: String,
+    #[serde(default)]
+    invokers: Vec<ExpectedPopoverInvoker>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedPopoverInvoker {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    command_kind: String,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    focusable: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2116,6 +2165,26 @@ fn browser_command_element_descriptor_metadata_tracks_activation_surfaces() {
 }
 
 #[test]
+fn browser_popover_descriptor_metadata_tracks_hosts_and_invokers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "popover-command-descriptor-page")
+        .expect("popover command fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("popover command fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.popovers, expected.popovers,
+        "popover descriptors should preserve host metadata and popovertarget/commandfor invoker relationships",
+    );
+}
+
+#[test]
 fn browser_aria_collection_descriptor_metadata_tracks_grouped_composites() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3356,6 +3425,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedCommandElement::into_browser_command_element)
                 .collect(),
+            popovers: self
+                .popovers
+                .into_iter()
+                .map(ExpectedPopover::into_browser_popover)
+                .collect(),
             aria_collections: self
                 .aria_collections
                 .into_iter()
@@ -3889,6 +3963,47 @@ impl ExpectedCommandElement {
             event_handlers: self.event_handlers,
             focusable: self.focusable,
             disabled: self.disabled,
+        }
+    }
+}
+
+impl ExpectedPopover {
+    fn into_browser_popover(self) -> BrowserPopover {
+        BrowserPopover {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            popover: self.popover,
+            invokers: self
+                .invokers
+                .into_iter()
+                .map(ExpectedPopoverInvoker::into_browser_popover_invoker)
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedPopoverInvoker {
+    fn into_browser_popover_invoker(self) -> BrowserPopoverInvoker {
+        BrowserPopoverInvoker {
+            element: self.element,
+            id: self.id,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            command_kind: self.command_kind,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            aria_controls: self.aria_controls,
+            aria_expanded: self.aria_expanded,
+            focusable: self.focusable,
         }
     }
 }
