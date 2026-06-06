@@ -473,6 +473,12 @@
         "headings": [
           { "level": 3, "text": "Archive" }
         ],
+        "text_semantics": [
+          { "element": "b", "role": "bring_attention", "text": "bold", "phrase_kind": "bring_attention" },
+          { "element": "b", "role": "bring_attention", "text": "Beta italic", "phrase_kind": "bring_attention" },
+          { "element": "i", "role": "idiomatic", "text": "italic", "phrase_kind": "idiomatic" },
+          { "element": "i", "role": "idiomatic", "text": "tail", "phrase_kind": "idiomatic" }
+        ],
         "links": [
           { "href": null, "resolved_href": null, "name": "top", "target": null, "rel": null, "title": null, "text": "" },
           { "href": "#top", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Back" }
@@ -912,13 +918,13 @@
     },
     {
       "id": "inline-semantic-metadata-page",
-      "description": "Browser document summaries expose machine-readable text, edit annotations, inline quotes, ruby annotations, and bidi overrides as a flat text semantic inventory.",
-      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Version <data id=version value=\"2.1\">two point one</data> shipped <time id=date datetime=\"2026-05-25\">today</time>. <q id=quote cite=notes/ref.html>quoted</q> <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> <mark id=highlight>Important</mark></p><ruby id=term><rb>kanji</rb><rt>kan</rt><rp>(</rp><rtc><rt>group</rt></rtc></ruby> then <bdi id=name dir=auto lang=ja>Name</bdi> and <bdo id=rtl dir=rtl>abc</bdo>",
+      "description": "Browser document summaries expose machine-readable text, edit annotations, inline quotes, phrase semantics, ruby annotations, and bidi overrides as a flat text semantic inventory.",
+      "input": "<base href=\"https://example.test/docs/page.html\"><body><p>Version <data id=version value=\"2.1\">two point one</data> shipped <time id=date datetime=\"2026-05-25\">today</time>. <q id=quote cite=notes/ref.html>quoted</q> <ins id=add cite=changes.html datetime=\"2026-05-25T06:00:00Z\">Added</ins> <del id=remove cite=\"#old\" datetime=\"2026-05-24\">Removed</del> <mark id=highlight>Important</mark></p><p><abbr title=\"HyperText Markup Language\">HTML</abbr> <dfn title=Parser>parser</dfn> <cite>Spec</cite> <code>token</code> <kbd>Enter</kbd> <samp>ok</samp> <var>x</var> <sub>2</sub> <sup>n</sup> <em>care</em> <strong>must</strong> <small>note</small> <s>old</s> <u>term</u></p><ruby id=term><rb>kanji</rb><rt>kan</rt><rp>(</rp><rtc><rt>group</rt></rtc></ruby> then <bdi id=name dir=auto lang=ja>Name</bdi> and <bdo id=rtl dir=rtl>abc</bdo>",
       "expected": {
         "title": null,
         "base_href": "https://example.test/docs/page.html",
         "base_target": null,
-        "body_text": "Version two point one shipped today. quoted Added Removed Important kanji kan ( group then Name and abc",
+        "body_text": "Version two point one shipped today. quoted Added Removed Important HTML parser Spec token Enter ok x 2 n care must note old term kanji kan ( group then Name and abc",
         "metas": [],
         "resources": [],
         "anchors": [
@@ -940,6 +946,20 @@
           { "element": "ins", "id": "add", "role": "inserted", "text": "Added", "edit_cite": "changes.html", "resolved_edit_cite": "https://example.test/docs/changes.html", "edit_datetime": "2026-05-25T06:00:00Z" },
           { "element": "del", "id": "remove", "role": "deleted", "text": "Removed", "edit_cite": "#old", "resolved_edit_cite": "https://example.test/docs/page.html#old", "edit_datetime": "2026-05-24" },
           { "element": "mark", "id": "highlight", "role": "mark", "text": "Important" },
+          { "element": "abbr", "role": "abbreviation", "title": "HyperText Markup Language", "text": "HTML", "phrase_kind": "abbreviation" },
+          { "element": "dfn", "role": "definition", "title": "Parser", "text": "parser", "phrase_kind": "definition" },
+          { "element": "cite", "role": "citation", "text": "Spec", "phrase_kind": "citation" },
+          { "element": "code", "role": "code", "text": "token", "phrase_kind": "code" },
+          { "element": "kbd", "role": "keyboard_input", "text": "Enter", "phrase_kind": "keyboard_input" },
+          { "element": "samp", "role": "sample_output", "text": "ok", "phrase_kind": "sample_output" },
+          { "element": "var", "role": "variable", "text": "x", "phrase_kind": "variable" },
+          { "element": "sub", "role": "subscript", "text": "2", "phrase_kind": "subscript" },
+          { "element": "sup", "role": "superscript", "text": "n", "phrase_kind": "superscript" },
+          { "element": "em", "role": "emphasis", "text": "care", "phrase_kind": "emphasis" },
+          { "element": "strong", "role": "strong_importance", "text": "must", "phrase_kind": "strong_importance" },
+          { "element": "small", "role": "small_print", "text": "note", "phrase_kind": "small_print" },
+          { "element": "s", "role": "struck", "text": "old", "phrase_kind": "struck" },
+          { "element": "u", "role": "unarticulated_annotation", "text": "term", "phrase_kind": "unarticulated_annotation" },
           { "element": "ruby", "id": "term", "role": "ruby", "text": "kanji kan ( group", "ruby_kind": "ruby" },
           { "element": "rb", "role": "ruby_base", "text": "kanji", "ruby_kind": "base" },
           { "element": "rt", "role": "ruby_text", "text": "kan", "ruby_kind": "text" },

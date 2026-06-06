@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness text semantic summaries now include phrase-level semantics
+  for abbreviation, definition, citation, code, keyboard input, sample output,
+  variables, subscript/superscript, emphasis, importance, small print,
+  strikethrough, and unarticulated annotation elements.
 - Browser-readiness document summaries now include global-state descriptors for
   non-form elements with inert/hidden, editing, drag, spellcheck, translate,
   accesskey, autofocus, and related focus metadata.

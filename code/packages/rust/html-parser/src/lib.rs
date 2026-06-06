@@ -1495,6 +1495,7 @@ pub struct BrowserHeading {
 pub struct BrowserTextSemantic {
     pub element: String,
     pub id: Option<String>,
+    pub title: Option<String>,
     pub role: String,
     pub text: String,
     pub lang: Option<String>,
@@ -1508,6 +1509,7 @@ pub struct BrowserTextSemantic {
     pub edit_datetime: Option<String>,
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
+    pub phrase_kind: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10109,9 +10111,8 @@ fn browser_text_semantic_element(
     Some(BrowserTextSemantic {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
-        role: browser_content_role(&element.name)
-            .unwrap_or("inline")
-            .to_string(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        role: browser_text_semantic_role(element).to_string(),
         text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
         lang: element.attribute("lang").map(ToOwned::to_owned),
         dir: element.attribute("dir").map(ToOwned::to_owned),
@@ -10128,27 +10129,66 @@ fn browser_text_semantic_element(
         edit_datetime: browser_edit_datetime(element),
         ruby_kind: browser_ruby_kind(element),
         bidi_kind: browser_bidi_kind(element),
+        phrase_kind: browser_phrase_kind(element),
     })
 }
 
 fn is_browser_text_semantic_element(element: &Element) -> bool {
     matches!(
         element.name.as_str(),
-        "blockquote"
-            | "q"
+        "abbr"
+            | "b"
+            | "blockquote"
+            | "cite"
+            | "code"
             | "data"
-            | "time"
-            | "mark"
-            | "ins"
             | "del"
-            | "ruby"
+            | "dfn"
+            | "em"
+            | "i"
+            | "ins"
+            | "kbd"
+            | "mark"
+            | "q"
             | "rb"
-            | "rt"
             | "rp"
+            | "rt"
+            | "ruby"
             | "rtc"
+            | "s"
+            | "samp"
+            | "small"
+            | "strong"
+            | "sub"
+            | "sup"
+            | "time"
+            | "u"
+            | "var"
             | "bdi"
             | "bdo"
     )
+}
+
+fn browser_text_semantic_role(element: &Element) -> &'static str {
+    match element.name.as_str() {
+        "abbr" => "abbreviation",
+        "b" => "bring_attention",
+        "cite" => "citation",
+        "code" => "code",
+        "dfn" => "definition",
+        "em" => "emphasis",
+        "i" => "idiomatic",
+        "kbd" => "keyboard_input",
+        "s" => "struck",
+        "samp" => "sample_output",
+        "small" => "small_print",
+        "strong" => "strong_importance",
+        "sub" => "subscript",
+        "sup" => "superscript",
+        "u" => "unarticulated_annotation",
+        "var" => "variable",
+        _ => browser_content_role(&element.name).unwrap_or("inline"),
+    }
 }
 
 fn browser_link_resource_hint_kind(rel: Option<&str>) -> Option<String> {
@@ -12721,6 +12761,28 @@ fn browser_bidi_kind(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "bdi" => Some("isolate".to_string()),
         "bdo" => Some("override".to_string()),
+        _ => None,
+    }
+}
+
+fn browser_phrase_kind(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "abbr" => Some("abbreviation".to_string()),
+        "b" => Some("bring_attention".to_string()),
+        "cite" => Some("citation".to_string()),
+        "code" => Some("code".to_string()),
+        "dfn" => Some("definition".to_string()),
+        "em" => Some("emphasis".to_string()),
+        "i" => Some("idiomatic".to_string()),
+        "kbd" => Some("keyboard_input".to_string()),
+        "s" => Some("struck".to_string()),
+        "samp" => Some("sample_output".to_string()),
+        "small" => Some("small_print".to_string()),
+        "strong" => Some("strong_importance".to_string()),
+        "sub" => Some("subscript".to_string()),
+        "sup" => Some("superscript".to_string()),
+        "u" => Some("unarticulated_annotation".to_string()),
+        "var" => Some("variable".to_string()),
         _ => None,
     }
 }
