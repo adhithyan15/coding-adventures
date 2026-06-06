@@ -1043,6 +1043,10 @@ def _parse_a_plus_b_sincos(
     trig function of a linear-in-``x`` argument.  Phase 38 supersedes
     the bare-``x``-only predecessor.
     """
+    trig_parse = _parse_const_times_trig_linear(node, x)
+    if trig_parse is not None:
+        b, head, alpha, beta = trig_parse
+        return Fraction(0), b, head, alpha, beta
     if not isinstance(node, IRApply) or len(node.args) != 2:
         return None
     if node.head == ADD:
@@ -1187,7 +1191,10 @@ def _try_weierstrass_log_form(
 
         a·u² + 2b·u + a = a·(u − u₁)·(u − u₂)
 
-    Partial fractions give
+    When ``a = 0``, the integrand is the csc form
+    ``c/(b·sin x)`` and closes directly to ``(c/b)·log|tan(x/2)|``.
+
+    For ``a ≠ 0``, partial fractions give
 
         ∫ 2/(a·(u−u₁)(u−u₂)) du
           =  (1/D) · log| (a·u + b − D) / (a·u + b + D) | + C
@@ -1225,7 +1232,7 @@ def _try_weierstrass_log_form(
     ``b > |a|`` strictly.
 
     Returns ``None`` when the matched shape doesn't satisfy the
-    above sign preconditions (``a ≠ 0`` for sin; ``b > |a|`` for cos).
+    above sign preconditions.
     """
     # b² − a² > 0 must hold (caller passes disc = a² − b² < 0).
     disc_sq = b * b - a * a
@@ -1236,9 +1243,11 @@ def _try_weierstrass_log_form(
     abs_head = IRSymbol("Abs")
     if trig_head == SIN:
         if a == 0:
-            # Integrand reduces to c/(b·sin x); special-cased elsewhere or
-            # left for the elementary table.  Defer.
-            return None
+            # ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|, with any linear
+            # argument scaling already absorbed into c by the dispatcher.
+            coef_ir = _frac_ir(c / b)
+            log_arg = IRApply(abs_head, (tan_half,))
+            return IRApply(MUL, (coef_ir, IRApply(LOG, (log_arg,))))
         # log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
         a_tan = IRApply(MUL, (_frac_ir(a), tan_half))
         a_tan_plus_b = IRApply(ADD, (a_tan, _frac_ir(b)))

@@ -2753,6 +2753,16 @@ function weierstrassParseAPlusBSincos(
       readonly beta: Numeric;
     }
   | undefined {
+  const bareTrig = weierstrassParseConstTimesTrigLinear(node, x);
+  if (bareTrig !== undefined) {
+    return {
+      a: { kind: "int", value: 0n },
+      b: bareTrig.c,
+      trigHead: bareTrig.head,
+      alpha: bareTrig.alpha,
+      beta: bareTrig.beta,
+    };
+  }
   if (node.kind !== "apply" || node.args.length !== 2) return undefined;
   if (equals(node.head, ADD)) {
     const [left, right] = node.args;
@@ -2961,9 +2971,9 @@ function absNumeric(v: Numeric): Numeric {
  *   ∫ c/(a + b·sin x) dx  =  (c/D)·log|(a·tan(x/2)+b−D)/(a·tan(x/2)+b+D)| + C
  *   ∫ c/(a + b·cos x) dx  =  (c/D)·log|(D+(b−a)·tan(x/2))/(D−(b−a)·tan(x/2))| + C
  *
- * with ``D = √(b²−a²) > 0``.  Sin branch handles any nonzero ``a``;
- * cos branch requires ``b > |a|`` strictly (the symmetric ``b < −|a|``
- * case has a different sign pattern and is deferred).
+ * with ``D = √(b²−a²) > 0``.  The ``a = 0`` sin/csc subcase closes as
+ * ``(c/b)·log|tan(x/2)|``.  The cos branch handles both sign regimes via
+ * the Abs-wrapped Phase 37 form.
  */
 function tryWeierstrassLogForm(
   c: Numeric,
@@ -2981,7 +2991,13 @@ function tryWeierstrassLogForm(
   const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
   const absHead = sym("Abs");
   if (equals(trigHead, SIN)) {
-    if (isZeroNumeric(a)) return undefined; // 1/(b·sin x) deferred
+    if (isZeroNumeric(a)) {
+      // ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|.  Any linear argument
+      // scaling has already been absorbed into c by the dispatcher.
+      const coefIR = fromNumeric(divNumeric(c, b));
+      const logArg = app(absHead, [tanHalf]);
+      return app(MUL, [coefIR, app(LOG, [logArg])]);
+    }
     // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
     const aTan = app(MUL, [fromNumeric(a), tanHalf]);
     const aTanPlusB = app(ADD, [aTan, fromNumeric(b)]);
