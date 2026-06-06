@@ -1,19 +1,20 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserCommandElement,
-    BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDatalistOption,
-    BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
-    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea,
-    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
+    BrowserEmbeddedContext, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
+    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
+    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
+    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
+    BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -93,6 +94,8 @@ struct ExpectedBrowserDocument {
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
+    #[serde(default)]
+    data_attribute_descriptors: Vec<ExpectedDataAttributeDescriptor>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
@@ -294,6 +297,31 @@ struct ExpectedDataAttribute {
     name: String,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDataAttributeDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    custom_element: bool,
+    #[serde(default)]
+    custom_element_name: Option<String>,
+    #[serde(default)]
+    custom_element_is: Option<String>,
+    #[serde(default)]
+    slot: Option<String>,
+    #[serde(default)]
+    slot_name: Option<String>,
+    #[serde(default)]
+    part: Vec<String>,
+    #[serde(default)]
+    data_attributes: Vec<ExpectedDataAttribute>,
+    #[serde(default)]
+    text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3240,6 +3268,28 @@ fn browser_component_hydration_metadata_tracks_custom_elements_slots_parts_and_d
     );
 }
 
+#[test]
+fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_elements() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "component-template-page")
+        .expect("component template fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("component template fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.data_attribute_descriptors,
+        case.expected
+            .into_browser_document()
+            .data_attribute_descriptors,
+        "data attribute descriptors should preserve custom element, slot, part, and visible-text context for all data-* carriers",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         BrowserDocument {
@@ -3360,6 +3410,11 @@ impl ExpectedBrowserDocument {
                 .component_hydration_targets
                 .into_iter()
                 .map(ExpectedComponentHydrationTarget::into_browser_component_hydration_target)
+                .collect(),
+            data_attribute_descriptors: self
+                .data_attribute_descriptors
+                .into_iter()
+                .map(ExpectedDataAttributeDescriptor::into_browser_data_attribute_descriptor)
                 .collect(),
             structured_items: self
                 .structured_items
@@ -3577,6 +3632,28 @@ impl ExpectedDataAttribute {
         BrowserDataAttribute {
             name: self.name,
             value: self.value,
+        }
+    }
+}
+
+impl ExpectedDataAttributeDescriptor {
+    fn into_browser_data_attribute_descriptor(self) -> BrowserDataAttributeDescriptor {
+        BrowserDataAttributeDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            custom_element: self.custom_element,
+            custom_element_name: self.custom_element_name,
+            custom_element_is: self.custom_element_is,
+            slot: self.slot,
+            slot_name: self.slot_name,
+            part: self.part,
+            data_attributes: self
+                .data_attributes
+                .into_iter()
+                .map(ExpectedDataAttribute::into_browser_data_attribute)
+                .collect(),
+            text: self.text,
         }
     }
 }

@@ -1389,6 +1389,13 @@
           { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" },
           { "element": "slot", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
         ],
+        "data_attribute_descriptors": [
+          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
+          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "text": "Widget" },
+          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "text": "Chart fallback" },
+          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" }
+        ],
         "forms": [],
         "tables": []
       }

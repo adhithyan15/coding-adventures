@@ -263,6 +263,9 @@ def check_browser_readiness_case(
         f"{case_path}.expected", expected, "component_hydration_targets", errors
     )
     require_optional_object_list(
+        f"{case_path}.expected", expected, "data_attribute_descriptors", errors
+    )
+    require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
@@ -887,6 +890,25 @@ def check_browser_expected_lists(
             object_list_items(target, "data_attributes")
         ):
             data_path = f"{target_path}.data_attributes[{data_index}]"
+            require_string(data_path, data_attribute, "name", errors)
+            require_optional_nullable_string(data_path, data_attribute, "value", errors)
+
+    for index, descriptor in enumerate(
+        object_list_items(expected, "data_attribute_descriptors")
+    ):
+        descriptor_path = f"{case_path}.expected.data_attribute_descriptors[{index}]"
+        require_string(descriptor_path, descriptor, "element", errors)
+        for field in ("id", "custom_element_name", "custom_element_is", "slot", "slot_name"):
+            require_optional_nullable_string(descriptor_path, descriptor, field, errors)
+        for field in ("classes", "part"):
+            require_optional_string_list(descriptor_path, descriptor, field, errors)
+        require_optional_boolean(descriptor_path, descriptor, "custom_element", errors)
+        require_optional_string(descriptor_path, descriptor, "text", errors)
+        require_optional_object_list(descriptor_path, descriptor, "data_attributes", errors)
+        for data_index, data_attribute in enumerate(
+            object_list_items(descriptor, "data_attributes")
+        ):
+            data_path = f"{descriptor_path}.data_attributes[{data_index}]"
             require_string(data_path, data_attribute, "name", errors)
             require_optional_nullable_string(data_path, data_attribute, "value", errors)
 
