@@ -32,11 +32,16 @@ packages a typed surface for:
   motion, and button resources
 - Hue snapshot and scene desired-state values keyed by canonical D23 capability
   ids such as `light.on_off` and `light.brightness`
+- Hue mDNS and cloud-fallback discovery observations normalized into D23
+  `DiscoveryRecord` bridge candidates
+- discovery-record-to-pairing-plan handoff for local physical-presence Hue
+  pairing flows
 - integration descriptor metadata for Chief of Staff discovery
 
 ## Dependencies
 
 - `smart-home-core`
+- `smart-home-discovery`
 
 ## Development
 
