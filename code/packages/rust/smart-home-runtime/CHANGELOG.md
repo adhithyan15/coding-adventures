@@ -24,6 +24,12 @@ All notable changes to this package will be documented in this file.
   filtering, and unpaired bridge-candidate projection.
 - `SmartHomeRuntime::record_discovery_worker_run` for ingesting reported
   discovery-worker batches with inserted, replaced, and ignored catalog counts.
+- `ScheduledDiscoveryWorker`, `RuntimeDiscoveryScheduler`, and scheduled
+  discovery run-plan helpers for runtime-owned discovery cadence, selected
+  network interfaces, and last-run status.
+- `SmartHomeRuntime::record_scheduled_discovery_worker_run` for ingesting a
+  registered worker run, reconciling discovery results, and advancing the next
+  scheduled due time.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work

@@ -101,6 +101,27 @@ preserving the platform boundary:
   through the mDNS scan envelope, so runtime tests exercise the scanner handoff
   shape without opening sockets.
 
+## Current Supervised Discovery Schedule Slice
+
+This slice lets the D23 runtime own discovery cadence and scan scope without
+moving socket work into the Chief bridge:
+
+- `smart-home-runtime` can register scheduled discovery workers with
+  integration id, worker kind, discovery sources, selected network interfaces,
+  run timeout, interval, next due time, and metadata such as mDNS service type.
+- Runtime read snapshots and non-mutating supervision plans now include due
+  discovery worker runs alongside pairing expiry, state refresh, desired-state
+  drift, and bridge-worker restart pressure.
+- `SmartHomeRuntime::record_scheduled_discovery_worker_run` validates that a
+  reported run matches the registered worker id, integration, and kind before
+  ingesting records and advancing the next scheduled due time.
+- Scheduled discovery workers track last run status, record/failure counts,
+  accepted catalog changes, consecutive failures, and unhealthy status after
+  partial or failed runs.
+- `smart-home-testkit` now has a deterministic Hue scheduled-worker fixture, so
+  runtime and integration tests can exercise the scheduled handoff without
+  opening sockets or inventing another fake scheduler.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -122,8 +143,9 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Run the LAN mDNS scanner from a supervised discovery worker across selected
-  interfaces and feed scheduled runs into durable D23 runtime state.
+- Wire scheduled discovery run plans to a supervised actor or process that runs
+  per-interface LAN mDNS scans and persists schedules, results, and runtime
+  state across restarts.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

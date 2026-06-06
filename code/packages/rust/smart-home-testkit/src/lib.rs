@@ -17,7 +17,8 @@ use smart_home_core::{
     Value,
 };
 use smart_home_discovery::{
-    DiscoveryRecord, DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanResult,
+    DiscoveryRecord, DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
+    MdnsAdvertisement, MdnsScanResult,
 };
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
@@ -25,7 +26,9 @@ use smart_home_event_streams::{
 };
 use smart_home_local_http::{LocalHttpMethod, LocalHttpRequestPlan};
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
-use smart_home_runtime::{BridgeHealthReport, RuntimeError, SmartHomeRuntime};
+use smart_home_runtime::{
+    BridgeHealthReport, RuntimeError, ScheduledDiscoveryWorker, SmartHomeRuntime,
+};
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1055,6 +1058,25 @@ pub fn hue_bridge_discovery_worker_run(
     run
 }
 
+pub fn hue_bridge_discovery_worker_schedule(
+    first_due_at_ms: u64,
+    interval_ms: u64,
+    run_timeout_ms: u64,
+) -> ScheduledDiscoveryWorker {
+    ScheduledDiscoveryWorker::new(
+        DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"),
+        IntegrationId::trusted("hue"),
+        DiscoveryWorkerKind::MdnsScan,
+        interval_ms,
+        run_timeout_ms,
+        first_due_at_ms,
+    )
+    .with_source(DiscoverySource::Mdns)
+    .with_network_interface("fixture-lan0")
+    .with_metadata("fixture", "hue_bridge_discovery_worker_schedule")
+    .with_metadata("smart_home.discovery.service_type", HUE_MDNS_SERVICE_TYPE)
+}
+
 pub fn hue_device(id: &'static str, bridge_id: &BridgeId, native_id: &'static str) -> Device {
     Device {
         device_id: DeviceId::trusted(id),
@@ -1290,10 +1312,13 @@ pub fn hue_lighting_runtime() -> SmartHomeRuntime {
 
 pub fn hue_discovery_runtime() -> SmartHomeRuntime {
     let mut runtime = SmartHomeRuntime::new();
+    runtime
+        .register_discovery_worker_schedule(hue_bridge_discovery_worker_schedule(950, 5_000, 250))
+        .expect("Hue discovery fixture worker schedule can be registered");
     let run = hue_bridge_discovery_worker_run("001788fffeabcdef", 950, 1_000);
     runtime
-        .record_discovery_worker_run(&run, 1_000, 1_000)
-        .expect("Hue discovery fixture worker run can be recorded");
+        .record_scheduled_discovery_worker_run(&run, 1_000, 1_000)
+        .expect("Hue discovery fixture worker run can advance its schedule");
     runtime
 }
 
@@ -1467,7 +1492,8 @@ fn protocol_id(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use smart_home_discovery::{DiscoverySource, PairingRequirement};
+    use smart_home_discovery::{DiscoverySource, DiscoveryWorkerRunStatus, PairingRequirement};
+    use smart_home_runtime::WorkerStatus;
 
     #[test]
     fn hue_fixture_projects_normalized_bridge_device_and_entities() {
@@ -1734,6 +1760,9 @@ mod tests {
             .discovery()
             .get(&IntegrationId::trusted("hue"), "001788fffeabcdef")
             .unwrap();
+        let worker = runtime
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"))
+            .unwrap();
 
         assert_eq!(runtime.discovery_record_count(), 1);
         assert_eq!(bridge.health, Health::Unpaired);
@@ -1748,6 +1777,13 @@ mod tests {
         assert!(bridge.metadata.iter().any(|metadata| {
             metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
         }));
+        assert_eq!(worker.status, WorkerStatus::Running);
+        assert_eq!(
+            worker.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(worker.total_run_count, 1);
+        assert_eq!(worker.next_due_at_ms, 6_000);
     }
 
     #[test]
@@ -1768,6 +1804,38 @@ mod tests {
         assert!(run.metadata.iter().any(|metadata| {
             metadata.key == "hue.discovery.scan_datagram_count" && metadata.value == "1"
         }));
+    }
+
+    #[test]
+    fn hue_discovery_worker_schedule_fixture_reports_due_mdns_scope() {
+        let schedule = hue_bridge_discovery_worker_schedule(1_000, 5_000, 250);
+        let mut runtime = SmartHomeRuntime::new();
+        runtime
+            .register_discovery_worker_schedule(schedule)
+            .expect("fixture schedule can be registered");
+
+        let idle = runtime.discovery_worker_run_plan_at(999);
+        let due = runtime.discovery_worker_run_plan_at(1_000);
+        let worker = runtime
+            .discovery_worker_schedule(&DiscoveryWorkerId::trusted("fixture-hue-discovery-worker"))
+            .unwrap();
+
+        assert!(idle.is_empty());
+        assert_eq!(due.len(), 1);
+        assert!(matches!(
+            due.instructions.as_slice(),
+            [instruction] if instruction.integration_id == IntegrationId::trusted("hue")
+                && instruction.kind == DiscoveryWorkerKind::MdnsScan
+                && instruction.sources == vec![DiscoverySource::Mdns]
+                && instruction.network_interfaces == vec!["fixture-lan0".to_string()]
+                && instruction.run_timeout_ms == 250
+                && instruction.metadata.iter().any(|metadata| {
+                    metadata.key == "smart_home.discovery.service_type"
+                        && metadata.value == HUE_MDNS_SERVICE_TYPE
+                })
+        ));
+        assert_eq!(worker.interval_ms, 5_000);
+        assert_eq!(worker.status, WorkerStatus::Starting);
     }
 
     #[test]
