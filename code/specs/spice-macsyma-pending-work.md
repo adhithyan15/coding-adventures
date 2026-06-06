@@ -22,6 +22,14 @@
 > repo.  New work is feature-driven (e.g. Maple frontend) rather than
 > gap-driven.
 
+> **MACSYMA parity audit follow-up (2026-06-06).** A fresh `Apart`
+> audit found one post-finish residual gap: mixed rational-root plus
+> irreducible-denominator factors still returned unevaluated
+> `Apart(...)` even though pure irreducible and fully split repeated
+> rational factors were handled. This PR closes that gap across Python,
+> TypeScript, and Rust by subtracting rational-pole terms and emitting
+> the remaining proper irreducible residual.
+
 > **SPICE completion follow-up inventory (2026-06-06).** The 2026-06-05
 > release cut closed the planned SPICE 1970s compatibility slice, but a live
 > follow-up audit found one real parity gap: Rust had advanced named-corner
@@ -39,8 +47,9 @@
 > accuracy beyond the Phase 8 executable footholds.
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-06-06 (SPICE completion follow-up inventory, Python and
-> TypeScript advanced-corner parity, and explicit remaining roadmap).
+> Last updated: 2026-06-06 (MACSYMA `Apart` mixed residual parity, SPICE
+> completion follow-up inventory, Python and TypeScript advanced-corner
+> parity, and explicit remaining roadmap).
 >
 > **Phase 48 — Apart for repeated linear factors (Python only, so far):**
 > `symbolic-vm` 0.72.0 (PR #3927).  Extends ``Apart`` to decompose

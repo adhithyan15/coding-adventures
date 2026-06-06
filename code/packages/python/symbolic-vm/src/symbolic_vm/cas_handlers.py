@@ -143,6 +143,12 @@ from polynomial import (
 from polynomial import (
     rational_roots as _poly_rational_roots,
 )
+from polynomial import (
+    subtract as _poly_subtract,
+)
+from polynomial import (
+    multiply as _poly_multiply,
+)
 from symbolic_ir import (
     ACOS,
     ACOSH,
@@ -929,17 +935,14 @@ def _series_div(
     return tuple(q)
 
 
-def _root_multiplicities(
+def _root_multiplicities_and_residual(
     den: tuple[Fraction, ...], roots: list[Fraction]
-) -> dict[Fraction, int] | None:
-    """For each distinct rational root, count how many times ``(x − r)``
-    divides ``den``.
+) -> tuple[dict[Fraction, int], tuple[Fraction, ...]] | None:
+    """Return rational-root multiplicities and any residual factor.
 
-    Returns a dict ``{r: m}`` such that ``∏_r (x − r)^m`` equals ``den``
-    up to a nonzero constant factor.  If the multiplicities don't fully
-    account for ``deg(den)`` — i.e. ``den`` has an irreducible factor
-    on top of the rational roots — returns ``None`` so the caller can
-    fall back to the unevaluated ``Apart(...)`` form.
+    The residual is constant when ``den`` is fully split over Q.  If it has
+    positive degree, ``Apart`` keeps it as the proper irreducible residual
+    after subtracting the rational-pole terms.
     """
     multiplicities: dict[Fraction, int] = {}
     remaining: tuple[Fraction, ...] = den
@@ -955,17 +958,12 @@ def _root_multiplicities(
             else:
                 break
         if m == 0:
-            # Shouldn't happen — ``r`` was returned by rational_roots
+            # Shouldn't happen: ``r`` was returned by rational_roots
             # so (x − r) must divide ``den`` at least once.  Defensive
             # bail-out.
             return None
         multiplicities[r] = m
-    if sum(multiplicities.values()) != _poly_degree(den):
-        # ``remaining`` is a non-constant polynomial with no rational
-        # root — irreducible factor present.  Apart on rationals can't
-        # decompose this further.
-        return None
-    return multiplicities
+    return multiplicities, _poly_normalize(remaining)
 
 
 def _apart_proper(
@@ -991,36 +989,41 @@ def _apart_proper(
     ``Q(x) = den(x) / (x − r)^m``.  Then ``A_{r, m − j} = φ_j``
     (coefficient of ``t^j`` in ``φ``'s Taylor series).
 
-    Returns ``None`` when ``den`` has an irreducible residual on top
-    of the rational roots; that mixed-factor decomposition is still
-    pending.  Pure irreducible proper rationals are already apart and
-    return unchanged in canonical IR.
+    Mixed rational-root plus irreducible residual factors are decomposed into
+    rational-pole terms plus a proper residual rational term.  Pure
+    irreducible proper rationals are already apart and return unchanged in
+    canonical IR.
     """
     roots = _poly_rational_roots(den)
     if not roots:
         return _proper_rational_to_ir(num, den, x)
 
-    # Phase 48: compute each root's multiplicity, bail if irreducible
-    # factors remain on top.
-    multiplicities = _root_multiplicities(den, roots)
-    if multiplicities is None:
+    # Phase 48: compute each root's multiplicity and the residual factor.
+    split = _root_multiplicities_and_residual(den, roots)
+    if split is None:
         return None
+    multiplicities, residual_den = split
+    has_residual = _poly_degree(residual_den) >= 1
 
     # Phase 1 fast path — every root simple.  Reuses the residue
     # formula, which is cheaper than the generic Taylor expansion
     # and preserves the previous output shape for the regression
     # tests written against it.
-    if all(m == 1 for m in multiplicities.values()):
+    if not has_residual and all(m == 1 for m in multiplicities.values()):
         return _apart_simple_roots(num, den, roots, x)
 
     # Phase 48 generic path: Taylor + series-division per root.
     terms: list[IRNode] = []
+    linear_part: tuple[Fraction, ...] = (Fraction(1),)
+    residual_num: tuple[Fraction, ...] = num
     for r in roots:
         m = multiplicities[r]
         # Q(x) = den(x) / (x − r)^m.  Successive divisions are
         # exact (we verified the multiplicity above).
         q_poly: tuple[Fraction, ...] = den
         linear = (Fraction(-r), Fraction(1))
+        for _ in range(m):
+            linear_part = _poly_multiply(linear_part, linear)
         for _ in range(m):
             quotient, _rem = _poly_divmod(q_poly, linear)
             q_poly = quotient
@@ -1040,6 +1043,21 @@ def _apart_proper(
                 continue
             term = _build_apart_term(A, r, power, x)
             terms.append(term)
+            pole_denom: tuple[Fraction, ...] = (Fraction(1),)
+            for _ in range(power):
+                pole_denom = _poly_multiply(pole_denom, linear)
+            quotient, rem = _poly_divmod(den, pole_denom)
+            if _poly_normalize(rem):
+                return None
+            residual_num = _poly_subtract(residual_num, tuple(c * A for c in quotient))
+
+    if has_residual:
+        residual_quotient, residual_rem = _poly_divmod(residual_num, linear_part)
+        if _poly_normalize(residual_rem):
+            return None
+        residual_ir = _proper_rational_to_ir(residual_quotient, residual_den, x)
+        if not (isinstance(residual_ir, IRInteger) and residual_ir.value == 0):
+            terms.append(residual_ir)
 
     if not terms:
         return IRInteger(0)

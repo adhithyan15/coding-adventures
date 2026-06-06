@@ -176,15 +176,24 @@ describe("Apart — Track B3 (Phase 48 repeated linear factors)", () => {
     );
   });
 
-  it("leaves 1/((x^2+1)(x-1)^2) unevaluated (irreducible factor + repeated root)", () => {
+  it("decomposes 1/((x^2+1)(x-1)^2) into poles plus irreducible residual", () => {
     const vm = new VM(new SymbolicBackend());
     const quad = app(ADD, [app(POW, [x, int(2)]), int(1)]);
     const linSq = app(POW, [app(SUB, [x, int(1)]), int(2)]);
     const inner = app(DIV, [int(1), app(MUL, [quad, linSq])]);
     const result = vm.eval(apart(inner));
-    // x^2 + 1 has no rational roots — the rational-roots theorem only
-    // finds x = 1 (mult 2), which doesn't sum to deg(den) = 4.  Bail.
-    expect(result).toEqual(app(APART, [inner, x]));
+    expect(result).toEqual(
+      app(ADD, [
+        app(ADD, [
+          app(DIV, [rational(-1, 2), app(ADD, [int(-1), x])]),
+          app(DIV, [rational(1, 2), app(POW, [app(ADD, [int(-1), x]), int(2)])]),
+        ]),
+        app(DIV, [
+          app(MUL, [rational(1, 2), x]),
+          app(ADD, [int(1), app(POW, [x, int(2)])]),
+        ]),
+      ]),
+    );
   });
 
   it("decomposes 1/(x-2)^2 to itself (single repeated root, Q(x) = 1)", () => {

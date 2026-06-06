@@ -1828,8 +1828,8 @@ function nodeKey(node: IRNode): string {
 // Apart (Track B1) — partial-fraction decomposition over Q(x).
 //
 // Supports simple rational roots, repeated rational roots, and proper
-// irreducible denominators that are already apart.  Mixed rational-root plus
-// irreducible residual factors still bail to unevaluated ``Apart(...)``.
+// irreducible denominators that are already apart, and mixed rational-root
+// plus irreducible residual factors.
 //
 // Polynomials here use a coefficient-tuple representation indexed by power
 // (lowest degree first) — same convention as ``polynomial-bridge.py``:
@@ -2054,15 +2054,14 @@ function polyQRationalRoots(p: PolyQ): RatQ[] {
 }
 
 /** For each rational root r, count how many times (x − r) divides ``den``.
- *  Returns a Map keyed by RatQ string-key; returns ``undefined`` if the
- *  multiplicities don't sum to deg(den) (irreducible factor present). */
-function polyQRootMultiplicities(
+ *  Also returns the remaining factor, which is constant iff ``den`` fully
+ *  splits over Q. */
+function polyQRootMultiplicitiesAndResidual(
   den: PolyQ,
   roots: readonly RatQ[],
-): Map<string, { root: RatQ; mult: number }> | undefined {
+): { mults: Map<string, { root: RatQ; mult: number }>; residual: RatQ[] } | undefined {
   const out = new Map<string, { root: RatQ; mult: number }>();
   let remaining: RatQ[] = polyQNormalize(den);
-  let total = 0;
   for (const r of roots) {
     let m = 0;
     const linear: RatQ[] = [rqNeg(r), RQ_ONE]; // (x − r)
@@ -2080,10 +2079,8 @@ function polyQRootMultiplicities(
     /* eslint-enable no-constant-condition */
     if (m === 0) return undefined;
     out.set(`${r[0]}/${r[1]}`, { root: r, mult: m });
-    total += m;
   }
-  if (total !== polyQDegree(den)) return undefined;
-  return out;
+  return { mults: out, residual: polyQNormalize(remaining) };
 }
 
 // --- IR ↔ polynomial bridge -------------------------------------------------
@@ -2404,13 +2401,15 @@ function buildApartTerm(A: RatQ, r: RatQ, power: number, x: IRSymbol): IRNode {
  *  Then ``A_{r, m − j} = φ_j``.  Emits terms ``A / (x − r)^power`` for
  *  ``power = 1..m``.
  *
- *  Returns ``undefined`` when ``den`` has an irreducible residual on top of
- *  its rational roots — the mixed-factor decomposition is still pending. */
+ *  Mixed rational-root plus irreducible residual factors are decomposed into
+ *  rational-pole terms plus a proper residual rational term. */
 function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
   const roots = polyQRationalRoots(den);
   if (roots.length === 0) return properRationalToIr(num, den, x);
-  const mults = polyQRootMultiplicities(den, roots);
-  if (mults === undefined) return undefined;
+  const split = polyQRootMultiplicitiesAndResidual(den, roots);
+  if (split === undefined) return undefined;
+  const { mults, residual: residualDen } = split;
+  const hasResidual = polyQDegree(residualDen) >= 1;
 
   // Phase 1 fast path — preserves the existing output shape for the
   // regression tests written against B1.
@@ -2421,10 +2420,12 @@ function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
       break;
     }
   }
-  if (allSimple) return apartSimpleRoots(num, den, roots, x);
+  if (!hasResidual && allSimple) return apartSimpleRoots(num, den, roots, x);
 
   // Phase 48 generic path: Taylor + series-division per root.
   const terms: IRNode[] = [];
+  let linearPart: RatQ[] = [RQ_ONE];
+  let residualNum: RatQ[] = polyQNormalize(num);
   for (const r of roots) {
     const key = `${r[0]}/${r[1]}`;
     const entry = mults.get(key);
@@ -2434,6 +2435,9 @@ function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
     // we just verified the multiplicity above.
     let qPoly: RatQ[] = polyQNormalize(den);
     const linear: RatQ[] = [rqNeg(r), RQ_ONE];
+    for (let i = 0; i < m; i += 1) {
+      linearPart = polyQMul(linearPart, linear);
+    }
     for (let i = 0; i < m; i += 1) {
       const { q } = polyQDivmod(qPoly, linear);
       qPoly = q;
@@ -2450,6 +2454,24 @@ function apartProper(num: PolyQ, den: PolyQ, x: IRSymbol): IRNode | undefined {
       const A = phi[j];
       if (rqIsZero(A)) continue;
       terms.push(buildApartTerm(A, r, power, x));
+      let poleDenom: RatQ[] = [RQ_ONE];
+      for (let i = 0; i < power; i += 1) {
+        poleDenom = polyQMul(poleDenom, linear);
+      }
+      const { q, r: rem } = polyQDivmod(den, poleDenom);
+      if (polyQNormalize(rem).length !== 0) return undefined;
+      residualNum = polyQSub(
+        residualNum,
+        q.map((c) => rqMul(c, A)),
+      );
+    }
+  }
+  if (hasResidual) {
+    const { q: residualQuotient, r: residualRem } = polyQDivmod(residualNum, linearPart);
+    if (polyQNormalize(residualRem).length !== 0) return undefined;
+    const residualIr = properRationalToIr(residualQuotient, residualDen, x);
+    if (!(residualIr.kind === "integer" && residualIr.value === 0n)) {
+      terms.push(residualIr);
     }
   }
   if (terms.length === 0) return int(0);
