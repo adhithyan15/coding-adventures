@@ -312,6 +312,26 @@ describe("summation: Phase 41+42 limit-aware infinite telescope", () => {
     expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(int(1));
   });
 
+  it("standard exp(-k) telescope closes because exp(-k) vanishes", () => {
+    const k = sym("k");
+    const gK = app(EXP, [app(NEG, [k])]);
+    const gKp1 = app(EXP, [app(NEG, [app(ADD, [k, int(1)])])]);
+    const f = app(SUB, [gKp1, gK]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(
+      app(NEG, [app(EXP, [int(-1)])]),
+    );
+  });
+
+  it("antisymmetric 2^(-k) telescope closes because the magnitude vanishes", () => {
+    const k = sym("k");
+    const gK = app(POW, [int(2), app(NEG, [k])]);
+    const gKp1 = app(POW, [int(2), app(NEG, [app(ADD, [k, int(1)])])]);
+    const f = app(SUB, [gK, gKp1]);
+    expect(evaluateSum(f, k, int(1), sym("%inf"), evalNode)).toEqual(
+      app(POW, [int(2), int(-1)]),
+    );
+  });
+
   it("Phase 42 proper rational ∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = 1/2", () => {
     const k = sym("k");
     const gK = app(DIV, [k, app(ADD, [app(POW, [k, int(2)]), int(1)])]);

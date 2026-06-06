@@ -1536,7 +1536,73 @@ fn log_sqrt_poly_effective_x2_generic(node: &IRNode, k: &IRNode) -> Option<i64> 
     Some(sqrt_inner_deg_x2_sum + 2 * poly_deg_sum)
 }
 
+fn vanishes_at_infinity(node: &IRNode, k: &IRNode) -> bool {
+    if is_constant_in(node, k) {
+        return rational_value(node).is_some_and(|value| value.numer == 0);
+    }
+    let apply_node = match node {
+        IRNode::Apply(a) => a,
+        _ => return false,
+    };
+    let head_name = match &apply_node.head {
+        IRNode::Symbol(s) => s.as_str(),
+        _ => return false,
+    };
+    if head_name == NEG && apply_node.args.len() == 1 {
+        return vanishes_at_infinity(&apply_node.args[0], k);
+    }
+    if head_name == ADD {
+        return apply_node
+            .args
+            .iter()
+            .all(|arg| vanishes_at_infinity(arg, k));
+    }
+    if head_name == EXP && apply_node.args.len() == 1 {
+        let inner = &apply_node.args[0];
+        return polynomial_degree_in_k(inner, k).is_some_and(|degree| degree > 0)
+            && polynomial_leading_coeff_sign_in_k(inner, k) == Some(-1);
+    }
+    if head_name == POW && apply_node.args.len() == 2 {
+        let base = &apply_node.args[0];
+        let exp = &apply_node.args[1];
+        if is_constant_in(base, k) {
+            if let Some(base_val) = rational_value(base) {
+                let abs_numer: u64 = base_val.numer.unsigned_abs();
+                let denom_u: u64 = base_val.denom as u64;
+                if abs_numer > denom_u {
+                    return polynomial_degree_in_k(exp, k).is_some_and(|degree| degree > 0)
+                        && polynomial_leading_coeff_sign_in_k(exp, k) == Some(-1);
+                }
+            }
+        }
+    }
+    if head_name == MUL {
+        let mut has_vanishing = false;
+        for arg in &apply_node.args {
+            if is_constant_in(arg, k) {
+                if rational_value(arg).is_some_and(|value| value.numer == 0) {
+                    return true;
+                }
+                continue;
+            }
+            if is_bounded_in_k(arg, k) {
+                continue;
+            }
+            if vanishes_at_infinity(arg, k) {
+                has_vanishing = true;
+                continue;
+            }
+            return false;
+        }
+        return has_vanishing;
+    }
+    false
+}
+
 fn g_vanishes_at_infinity(g: &IRNode, k: &IRNode) -> bool {
+    if vanishes_at_infinity(g, k) {
+        return true;
+    }
     let apply_node = match g {
         IRNode::Apply(a) => a,
         _ => return false,

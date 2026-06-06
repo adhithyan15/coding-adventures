@@ -5,11 +5,14 @@
 from symbolic_ir import (
     ADD,
     DIV,
+    EXP,
     GAMMA_FUNC,
     LOG,
     MUL,
+    NEG,
     POW,
     PRODUCT,
+    SUB,
     SUM,
     IRApply,
     IRInteger,
@@ -446,6 +449,31 @@ class TestEvaluateSumPhase41InfiniteTelescope:
         )
         result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
         assert isinstance(result, IRInteger) and result.value == 1
+
+    def test_standard_exp_negative_k_telescope_closes(self):
+        """``exp(-k)`` itself vanishes, so standard orientation closes."""
+        g_k = IRApply(EXP, (IRApply(NEG, (_k,)),))
+        g_kp1 = IRApply(EXP, (IRApply(NEG, (IRApply(ADD, (_k, IRInteger(1))),)),))
+        f = IRApply(SUB, (g_kp1, g_k))
+
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+
+        expected = IRApply(NEG, (IRApply(EXP, (IRInteger(-1),)),))
+        assert result == expected
+
+    def test_antisymmetric_pow_two_negative_k_telescope_closes(self):
+        """``2^(-k)`` has magnitude tending to zero, so antisymmetric closes."""
+        g_k = IRApply(POW, (IRInteger(2), IRApply(NEG, (_k,))))
+        g_kp1 = IRApply(
+            POW,
+            (IRInteger(2), IRApply(NEG, (IRApply(ADD, (_k, IRInteger(1))),))),
+        )
+        f = IRApply(SUB, (g_k, g_kp1))
+
+        result = evaluate_sum(f, _k, IRInteger(1), IRSymbol("%inf"), _VM)
+
+        expected = IRApply(POW, (IRInteger(2), IRInteger(-1)))
+        assert result == expected
 
     def test_constant_g_falls_through(self):
         """``∑_{k=1}^∞ [c − c] = ∑ 0`` — the SUB folds to 0 first (step 1

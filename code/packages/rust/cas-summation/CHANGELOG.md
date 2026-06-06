@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.26.0 - 2026-06-06
+
+### Added
+
+- Infinite telescope limits now recognise direct decaying exponential terms:
+  ``exp(-k)`` and ``b^(-k)`` with ``|b| > 1`` are treated as vanishing at
+  infinity. This closes structurally telescoping sums such as
+  ``sum(exp(-(k+1)) - exp(-k), k, 1, inf)`` without requiring a rational
+  denominator wrapper.
+- The recogniser is conservative: growing exponentials, ambiguous exponent
+  signs, and unrecognised transcendental factors still fall through to the
+  unevaluated ``Sum`` form.
+
 ## 2.25.0 — 2026-05-28
 
 ### Added — Track B2 (Apart-retry telescope chain port: Phase 40 + Phase 46)

@@ -393,6 +393,40 @@ fn phase41_quadratic_denominator() {
 }
 
 #[test]
+fn phase41_exp_negative_k_telescope_closes() {
+    // exp(-k) itself vanishes, so standard orientation emits -g(1).
+    let k = sym("k");
+    let g_k = apply(sym(EXP), vec![apply(sym(NEG), vec![k.clone()])]);
+    let g_kp1 = apply(
+        sym(EXP),
+        vec![apply(
+            sym(NEG),
+            vec![apply(sym(ADD), vec![k.clone(), int(1)])],
+        )],
+    );
+    let f = apply(sym(SUB), vec![g_kp1, g_k]);
+    let expected = apply(sym(NEG), vec![apply(sym(EXP), vec![int(-1)])]);
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), expected);
+}
+
+#[test]
+fn phase41_pow_two_negative_k_telescope_closes() {
+    // 2^(-k) has magnitude tending to zero, so antisymmetric emits g(1).
+    let k = sym("k");
+    let g_k = apply(sym(POW), vec![int(2), apply(sym(NEG), vec![k.clone()])]);
+    let g_kp1 = apply(
+        sym(POW),
+        vec![
+            int(2),
+            apply(sym(NEG), vec![apply(sym(ADD), vec![k.clone(), int(1)])]),
+        ],
+    );
+    let f = apply(sym(SUB), vec![g_k, g_kp1]);
+    let expected = apply(sym(POW), vec![int(2), int(-1)]);
+    assert_eq!(evaluate_sum(f, k, int(1), sym("%inf"), eval), expected);
+}
+
+#[test]
 fn phase42_proper_rational_k_over_k_squared_plus_1() {
     // ∑_{k=1}^∞ [k/(k²+1) − (k+1)/((k+1)²+1)] = g(1) = 1/2.
     let k = sym("k");
