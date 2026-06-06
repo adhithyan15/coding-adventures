@@ -13,7 +13,11 @@ import {
   reverse,
   sortList,
 } from "@coding-adventures/cas-list-operations";
-import { AssumptionContext, simplify as simplifyCas } from "@coding-adventures/cas-simplify";
+import {
+  AssumptionContext,
+  radcan as radcanCas,
+  simplify as simplifyCas,
+} from "@coding-adventures/cas-simplify";
 import { MacsymaDialect, pretty } from "@coding-adventures/cas-pretty-printer";
 import { solveLinearSystem, trySolveInequality, trySolveTranscendental } from "@coding-adventures/cas-solve";
 import { subst } from "@coding-adventures/cas-substitution";
@@ -79,6 +83,7 @@ export const PROP_VARS = sym("PropVars");
 export const SIMPLIFY = sym("Simplify");
 export const EXPAND = sym("Expand");
 export const RAT_SIMPLIFY = sym("RatSimplify");
+export const RADCAN = sym("Radcan");
 export const TRIG_SIMPLIFY = sym("TrigSimplify");
 export const TRIG_EXPAND = sym("TrigExpand");
 export const TRIG_REDUCE = sym("TrigReduce");
@@ -395,6 +400,7 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(SUBST.name, substHandler);
     table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
     table.set(RAT_SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
+    table.set(RADCAN.name, unaryHandler((value) => radcanCas(value, this.assumptions)));
     table.set(TRIG_SIMPLIFY.name, unaryHandler((value) => simplifyCas(trigSimplify(value))));
     table.set(TRIG_EXPAND.name, unaryHandler((value) => expandTrig(value)));
     table.set(TRIG_REDUCE.name, unaryHandler((value) => trigReduce(value)));
@@ -424,6 +430,7 @@ export class MacsymaBackend extends SymbolicBackend {
       PROP_VARS.name,
       SOLVE.name,
       SUBST.name,
+      RADCAN.name,
       FACTOR.name,
     ]);
   }

@@ -1460,6 +1460,13 @@ def test_pipeline_radcan_sqrt_squared() -> None:
     )
 
 
+def test_pipeline_radcan_uses_nonnegative_assumption() -> None:
+    """assume(x >= 0); radcan(sqrt(x^2)) -> x."""
+    result = _eval_seq("assume(x >= 0)", "radcan(sqrt(x^2))")
+    assert isinstance(result, IRSymbol)
+    assert result.name == "x"
+
+
 # ===========================================================================
 # Section DD — Fourier transforms (cas-fourier, Phase 33)
 # ===========================================================================
