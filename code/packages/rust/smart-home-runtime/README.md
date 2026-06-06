@@ -48,6 +48,9 @@ Included surfaces:
 - supervised mDNS discovery runs that mark due workers started, execute scan
   plans through an injectable runner, adapt reports into worker runs, and
   record scheduler/catalog outcomes
+- read-side scheduled discovery worker snapshots for supervision observations,
+  including due status, last run status, record/failure counts, catalog changes,
+  and consecutive failure pressure
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and

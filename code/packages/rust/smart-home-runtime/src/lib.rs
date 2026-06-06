@@ -1829,6 +1829,63 @@ impl ScheduledDiscoveryWorker {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScheduledDiscoveryWorkerSnapshot {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub sources: Vec<DiscoverySource>,
+    pub network_interfaces: Vec<String>,
+    pub status: WorkerStatus,
+    pub interval_ms: u64,
+    pub run_timeout_ms: u64,
+    pub next_due_at_ms: u64,
+    pub is_due: bool,
+    pub overdue_by_ms: u64,
+    pub last_started_at_ms: Option<u64>,
+    pub last_completed_at_ms: Option<u64>,
+    pub last_run_status: Option<DiscoveryWorkerRunStatus>,
+    pub last_record_count: usize,
+    pub last_failure_count: usize,
+    pub last_catalog_change_count: usize,
+    pub total_run_count: u64,
+    pub consecutive_failure_count: u32,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScheduledDiscoveryWorkerSnapshot {
+    pub fn from_worker_at(worker: &ScheduledDiscoveryWorker, now_ms: u64) -> Self {
+        Self {
+            worker_id: worker.worker_id.clone(),
+            integration_id: worker.integration_id.clone(),
+            kind: worker.kind,
+            sources: worker.sources.clone(),
+            network_interfaces: worker.network_interfaces.clone(),
+            status: worker.status,
+            interval_ms: worker.interval_ms,
+            run_timeout_ms: worker.run_timeout_ms,
+            next_due_at_ms: worker.next_due_at_ms,
+            is_due: worker.is_due_at(now_ms),
+            overdue_by_ms: worker.overdue_by_ms_at(now_ms),
+            last_started_at_ms: worker.last_started_at_ms,
+            last_completed_at_ms: worker.last_completed_at_ms,
+            last_run_status: worker.last_run_status,
+            last_record_count: worker.last_record_count,
+            last_failure_count: worker.last_failure_count,
+            last_catalog_change_count: worker.last_catalog_change_count,
+            total_run_count: worker.total_run_count,
+            consecutive_failure_count: worker.consecutive_failure_count,
+            metadata: worker.metadata.clone(),
+        }
+    }
+
+    pub fn has_failure_pressure(&self) -> bool {
+        self.status == WorkerStatus::Unhealthy
+            || self.last_failure_count > 0
+            || self.consecutive_failure_count > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DiscoveryWorkerRunInstruction {
     pub worker_id: DiscoveryWorkerId,
     pub integration_id: IntegrationId,
@@ -2222,6 +2279,13 @@ impl RuntimeDiscoveryScheduler {
         }
         apply_limit(&mut workers, query.limit);
         workers
+    }
+
+    pub fn worker_snapshots_at(&self, now_ms: u64) -> Vec<ScheduledDiscoveryWorkerSnapshot> {
+        self.query_workers(&DiscoveryWorkerQuery::new().sorted_by(DiscoveryWorkerSort::NextDueAt))
+            .into_iter()
+            .map(|worker| ScheduledDiscoveryWorkerSnapshot::from_worker_at(worker, now_ms))
+            .collect()
     }
 
     pub fn run_plan_at(&self, now_ms: u64) -> DiscoveryWorkerRunPlan {
@@ -2709,6 +2773,8 @@ pub struct RuntimeSupervisionObservation {
     pub generated_at_ms: u64,
     pub plan: RuntimeSupervisionPlan,
     pub heartbeat_schedule: WorkerHeartbeatSchedule,
+    pub discovery_scheduler: DiscoveryWorkerSchedulerSnapshot,
+    pub discovery_workers: Vec<ScheduledDiscoveryWorkerSnapshot>,
 }
 
 impl RuntimeSupervisionObservation {
@@ -2738,6 +2804,25 @@ impl RuntimeSupervisionObservation {
 
     pub fn discovery_worker_run_count(&self) -> usize {
         self.plan.discovery_worker_run_plan.len()
+    }
+
+    pub fn discovery_worker_count(&self) -> usize {
+        self.discovery_scheduler.worker_count
+    }
+
+    pub fn unhealthy_discovery_worker_count(&self) -> usize {
+        self.discovery_scheduler.unhealthy_count
+    }
+
+    pub fn discovery_workers_with_failures_count(&self) -> usize {
+        self.discovery_scheduler.workers_with_failures
+    }
+
+    pub fn next_discovery_worker_due_at_ms(&self) -> Option<u64> {
+        self.discovery_workers
+            .iter()
+            .map(|worker| worker.next_due_at_ms)
+            .min()
     }
 
     pub fn due_worker_deadline_count(&self) -> usize {
@@ -4244,6 +4329,8 @@ impl SmartHomeRuntime {
             generated_at_ms: now_ms,
             plan: self.supervision_plan_at(now_ms)?,
             heartbeat_schedule: self.supervisor.heartbeat_schedule_at(now_ms),
+            discovery_scheduler: self.discovery_scheduler.snapshot_at(now_ms),
+            discovery_workers: self.discovery_scheduler.worker_snapshots_at(now_ms),
         })
     }
 
@@ -6043,6 +6130,23 @@ mod tests {
         assert_eq!(summary.discovery_worker_run_count, 1);
         assert!(summary.has_discovery_worker_work());
         assert_eq!(observation.discovery_worker_run_count(), 1);
+        assert_eq!(observation.discovery_worker_count(), 1);
+        assert_eq!(observation.unhealthy_discovery_worker_count(), 0);
+        assert_eq!(observation.discovery_workers_with_failures_count(), 0);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(1_100));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.integration_id == IntegrationId::trusted("hue")
+                && snapshot.kind == DiscoveryWorkerKind::MdnsScan
+                && snapshot.status == WorkerStatus::Starting
+                && snapshot.is_due
+                && snapshot.overdue_by_ms == 25
+                && snapshot.next_due_at_ms == 1_100
+                && snapshot.last_run_status.is_none()
+                && snapshot.total_run_count == 0
+                && !snapshot.has_failure_pressure()
+        ));
         assert_eq!(scheduled.status, WorkerStatus::Starting);
         assert_eq!(scheduled.total_run_count, 0);
         assert_eq!(snapshot.discovery_scheduler.worker_count, 1);
@@ -6243,6 +6347,25 @@ mod tests {
         assert_eq!(scheduled.last_failure_count, 1);
         assert_eq!(scheduled.consecutive_failure_count, 1);
         assert_eq!(scheduled.next_due_at_ms, 6_180);
+
+        let observation = runtime.observe_supervision_at(1_181).unwrap();
+        assert_eq!(observation.discovery_worker_count(), 1);
+        assert_eq!(observation.discovery_worker_run_count(), 0);
+        assert_eq!(observation.unhealthy_discovery_worker_count(), 1);
+        assert_eq!(observation.discovery_workers_with_failures_count(), 1);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(6_180));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.status == WorkerStatus::Unhealthy
+                && !snapshot.is_due
+                && snapshot.last_run_status == Some(DiscoveryWorkerRunStatus::Failed)
+                && snapshot.last_record_count == 0
+                && snapshot.last_failure_count == 1
+                && snapshot.total_run_count == 1
+                && snapshot.consecutive_failure_count == 1
+                && snapshot.has_failure_pressure()
+        ));
     }
 
     #[test]

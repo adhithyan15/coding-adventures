@@ -37,6 +37,10 @@ All notable changes to this package will be documented in this file.
   `MdnsDiscoveryRunAdapter` for supervised mDNS discovery passes that execute
   due scan plans through injectable runners, record scheduled run summaries,
   and convert adapter failures into deterministic failed worker runs.
+- `ScheduledDiscoveryWorkerSnapshot` and discovery scheduler details on
+  `RuntimeSupervisionObservation` for read-side inspection of due workers, last
+  run status, record/failure counts, catalog changes, and consecutive failure
+  pressure.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work
