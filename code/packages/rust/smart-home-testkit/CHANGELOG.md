@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Deterministic Hue mDNS scan fixtures, with discovery worker-run fixtures now
+  flowing through `MdnsScanResult` before seeding runtime discovery catalogs.
 - Deterministic fixture clock for freshness and supervisor tests.
 - Normalized Hue-like bridge, device, light entity, and sensor entity fixtures.
 - Deterministic Hue discovery record and discovery-runtime fixtures built

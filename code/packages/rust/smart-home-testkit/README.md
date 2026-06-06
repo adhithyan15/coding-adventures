@@ -10,8 +10,8 @@ a shared way to build:
 - normalized bridge/device/entity fixtures
 - normalized Hue discovery records, built through `hue-core` mDNS mapping, and
   discovery-seeded runtime fixtures
-- deterministic Hue discovery worker-run fixtures that feed the runtime
-  discovery catalog without opening network sockets
+- deterministic Hue mDNS scan and discovery worker-run fixtures that feed the
+  runtime discovery catalog without opening network sockets
 - registry seeding helpers for installing fixture records into
   `smart-home-registry`
 - confirmed, stale, and optimistic state snapshots

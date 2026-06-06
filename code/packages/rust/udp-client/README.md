@@ -57,6 +57,8 @@ fn main() -> Result<(), udp_client::UdpError> {
 - `send(payload)` — send one datagram to the connected peer
 - `recv_from()` — receive one datagram plus source/destination metadata
 - `send_and_receive(destination, payload, options)` — simple one-shot request/response helper
+- `send_to_and_collect(destination, payload, options, max_responses)` — send an
+  unconnected probe and collect replies until timeout or limit
 - `UdpDiscoveryEndpoint` — mDNS/SSDP multicast destinations and matching bind
   options for local device discovery probes
 
