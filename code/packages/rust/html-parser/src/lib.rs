@@ -849,6 +849,7 @@ pub struct BrowserDocument {
     pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
+    pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1072,6 +1073,21 @@ pub struct BrowserComponentHydrationTarget {
 pub struct BrowserDataAttribute {
     pub name: String,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDataAttributeDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub data_attributes: Vec<BrowserDataAttribute>,
+    pub text: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -9542,6 +9558,9 @@ fn collect_browser_facts(
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
+        if let Some(descriptor) = browser_data_attribute_descriptor(element) {
+            summary.data_attribute_descriptors.push(descriptor);
+        }
         if element.name == "template" {
             summary.templates.push(browser_template(element));
         }
@@ -11778,6 +11797,34 @@ fn browser_component_hydration_target(
         exportparts,
         data_attributes,
         canvas_fallback_text: is_canvas.then(|| visible_text_for_nodes(&element.children)),
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAttributeDescriptor> {
+    let data_attributes = browser_data_attributes(element);
+    if data_attributes.is_empty() {
+        return None;
+    }
+
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+
+    Some(BrowserDataAttributeDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot: browser_slot_assignment(element),
+        slot_name: browser_slot_name(element),
+        part: browser_part_tokens(element),
+        data_attributes,
         text: visible_text_for_nodes(&element.children),
     })
 }
