@@ -2535,16 +2535,16 @@ function integrate(): Handler {
 
 // ---------------------------------------------------------------------------
 // Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
-// ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b² (and a > 0
-// for the cos branch).  Mirrors the Python port at symbolic-vm 0.59.0.
+// ∫ c/(a + b·cos(x)) dx with numeric a, b satisfying a² > b².
+// Mirrors the Python port at symbolic-vm 0.59.0.
 //
 // Closed forms:
 //   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
 //   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
 //
 // Numerator constants c scale the result.  Discriminant cases a² ≤ b² and
-// the a ≤ 0 cos branch are deliberately deferred — they need sign analysis
-// that the assumption-free TS port cannot perform symbolically.
+// symbolic-coefficient discriminant cases are deliberately deferred — they
+// need sign analysis that the assumption-free TS port cannot perform.
 // ---------------------------------------------------------------------------
 
 /**
@@ -2844,14 +2844,16 @@ function tryWeierstrassOneOverLinearTrig(
   }
   const sqrtDiscIR = weierstrassSqrtFractionIR(disc);
   const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  let coefSign: Numeric = { kind: "int", value: 1n };
   let atanArg: IRNode;
   if (equals(trigHead, SIN)) {
     // (a·tan(arg/2) + b) / √(a²−b²)
     const top = app(ADD, [app(MUL, [fromNumeric(a), tanHalf]), fromNumeric(b)]);
     atanArg = app(DIV, [top, sqrtDiscIR]);
   } else {
-    // COS branch: requires a > 0 to avoid sign-flip; defers otherwise.
-    if (!isPositiveNumeric(a)) return undefined;
+    // COS branch: a < 0 uses the same atan argument, but the denominator
+    // quadratic has an overall negative factor.
+    if (!isPositiveNumeric(a)) coefSign = { kind: "int", value: -1n };
     // ratio = (a − b) / (a + b)
     const ratio = divNumeric(subNumeric(a, b), addNumeric(a, b));
     if (!isPositiveNumeric(ratio)) return undefined;
@@ -2859,7 +2861,7 @@ function tryWeierstrassOneOverLinearTrig(
     atanArg = app(MUL, [sqrtRatioIR, tanHalf]);
   }
   // Outer coefficient: 2c / √(a²−b²)
-  const coefFrac = mulNumeric(c, { kind: "int", value: 2n });
+  const coefFrac = mulNumeric(mulNumeric(c, { kind: "int", value: 2n }), coefSign);
   const coefIR = app(DIV, [fromNumeric(coefFrac), sqrtDiscIR]);
   return app(MUL, [coefIR, app(ATAN, [atanArg])]);
 }

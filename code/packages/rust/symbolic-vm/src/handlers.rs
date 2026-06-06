@@ -1512,15 +1512,15 @@ fn derivative_handler() -> Handler {
 
 // ---------------------------------------------------------------------------
 // Phase 34 — Weierstrass substitution for ∫ c/(a + b·sin(x)) dx and
-// ∫ c/(a + b·cos(x)) dx with rational a, b satisfying a² > b² (a > 0 for cos).
+// ∫ c/(a + b·cos(x)) dx with rational a, b satisfying a² > b².
 // Mirrors Python symbolic-vm 0.59.0 and TypeScript symbolic-vm 0.7.0.
 //
 // Closed forms:
 //   ∫ 1/(a + b·sin x) dx = (2/√(a²−b²)) · arctan((a·tan(x/2) + b)/√(a²−b²))
 //   ∫ 1/(a + b·cos x) dx = (2/√(a²−b²)) · arctan(√((a−b)/(a+b)) · tan(x/2))
 //
-// Discriminant cases a² ≤ b² and a ≤ 0 for cos are deferred — they need
-// sign analysis the assumption-free port cannot perform symbolically.
+// Symbolic-coefficient discriminant cases are deferred — they need sign
+// analysis the assumption-free port cannot perform symbolically.
 // ---------------------------------------------------------------------------
 
 /// Convert an IRNode to a `RatC` rational if it's an Integer or Rational
@@ -1940,6 +1940,7 @@ fn try_weierstrass_one_over_linear_trig(
         TAN,
         vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
     );
+    let mut coef_sign: RatC = (1, 1);
     let atan_arg = if trig_head == SIN {
         // (a·tan(x/2) + b) / √disc
         let a_ir = rc_to_ir(a_rc)?;
@@ -1950,9 +1951,10 @@ fn try_weierstrass_one_over_linear_trig(
         );
         apply_node(DIV, vec![top, sqrt_disc_ir.clone()])
     } else {
-        // cos branch — require a > 0 to avoid sign-flip.
-        if a_rc.0 <= 0 {
-            return None;
+        // cos branch — a < 0 uses the same atan argument, but the
+        // denominator quadratic has an overall negative factor.
+        if a_rc.0 < 0 {
+            coef_sign = (-1, 1);
         }
         let ratio = rc_div(rc_sub(a_rc, b_rc)?, rc_add(a_rc, b_rc)?)?;
         if ratio.0 <= 0 {
@@ -1962,7 +1964,7 @@ fn try_weierstrass_one_over_linear_trig(
         apply_node(MUL, vec![sqrt_ratio_ir, tan_half])
     };
     // Outer coefficient: 2c / √disc
-    let two_c = rc_mul(c_rc, (2, 1))?;
+    let two_c = rc_mul(rc_mul(c_rc, (2, 1))?, coef_sign)?;
     let coef_ir = apply_node(DIV, vec![rc_to_ir(two_c)?, sqrt_disc_ir]);
     Some(apply_node(MUL, vec![coef_ir, apply_node(ATAN, vec![atan_arg])]))
 }

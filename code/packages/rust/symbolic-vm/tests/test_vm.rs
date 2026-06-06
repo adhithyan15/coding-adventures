@@ -2502,6 +2502,28 @@ fn phase34_cos_five_plus_three_cos_sqrt_free() {
 }
 
 #[test]
+fn phase34_cos_negative_a_arctan_branch_closes() {
+    let integrand = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(-2), apply(sym(COS), vec![sym("x")])])],
+    );
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 34 should close 1/(-2 + cos x); got {phi:?}"
+    );
+    assert!(contains_head(&phi, ATAN), "Expected Atan in {phi:?}");
+    for &x_val in &[-1.5_f64, -0.4, 0.0, 0.4, 1.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (-2.0 + x_val.cos());
+        assert!(
+            (got - expected).abs() < 1e-4,
+            "At x={x_val}: derivative={got}, expected={expected}"
+        );
+    }
+}
+
+#[test]
 fn phase34_sin_operand_order_swapped() {
     // ∫ 1/(sin x + 2) dx — constant on the right.  Must still close.
     let integrand = apply(
