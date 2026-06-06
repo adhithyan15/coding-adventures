@@ -5004,9 +5004,10 @@ fn try_bivariate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
 // ---------------------------------------------------------------------------
 // Apart (Track B1) — partial-fraction decomposition over Q(x).
 //
-// Phase 1 only: every root of the denominator must be a *simple* rational
-// root.  Repeated roots and irreducible quadratic factors leave the
-// expression wrapped in ``Apart(...)``.  This mirrors the Python
+// Supports simple rational roots, repeated rational roots, and proper
+// irreducible denominators that are already apart.  Mixed rational-root plus
+// irreducible residual factors still leave the expression wrapped in
+// ``Apart(...)``.  This mirrors the Python
 // ``apart_handler`` / ``_apart_simple_roots`` / ``_apart_proper`` chain in
 // ``cas_handlers.py`` but stays inside the existing ``RatC`` / ``RatPoly``
 // machinery so we don't introduce a new arithmetic substrate.
@@ -5475,13 +5476,12 @@ fn build_apart_term(a: RatC, r: RatC, power: usize, x: &str) -> Option<IRNode> {
 /// ``t^(m − 1)``.  Then ``A_{r, m − j} = φ_j``.  Emits terms
 /// ``A / (x − r)^power`` for ``power = 1..=m`` in ascending order.
 ///
-/// Returns ``None`` when ``den`` has an irreducible factor on top of its
-/// rational roots (partial fractions over the rationals cannot decompose
-/// further).
+/// Returns ``None`` when ``den`` has an irreducible residual on top of its
+/// rational roots; that mixed-factor decomposition is still pending.
 fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
     let roots = rp_rational_roots(den)?;
     if roots.is_empty() {
-        return None;
+        return proper_rational_to_ir(num, den, x);
     }
     let mults = rp_root_multiplicities(den, &roots)?;
 
@@ -5529,6 +5529,16 @@ fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
             .reduce(|acc, t| apply_node(ADD, vec![acc, t]))
             .unwrap(),
     )
+}
+
+fn proper_rational_to_ir(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
+    if rp_is_zero(num) {
+        return Some(IRNode::Integer(0));
+    }
+    Some(apply_node(
+        DIV,
+        vec![rp_to_ir_apart(num, x)?, rp_to_ir_apart(den, x)?],
+    ))
 }
 
 fn apart_handler(_vm: &mut VM, expr: IRApply) -> IRNode {

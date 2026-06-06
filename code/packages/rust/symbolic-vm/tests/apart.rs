@@ -109,15 +109,43 @@ fn apart_improper_fraction_x_cubed_over_x_squared_minus_one() {
 }
 
 #[test]
-fn apart_irreducible_quadratic_stays_unevaluated() {
+fn apart_irreducible_quadratic_returns_rational() {
     let mut v = vm();
     let inner = apply(
         sym(DIV),
         vec![int(1), apply(sym(ADD), vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)])],
     );
-    let result = v.eval(apart(inner.clone()));
-    // No rational roots — Apart stays wrapped.
-    assert_eq!(result, apply(sym("Apart"), vec![inner, sym("x")]));
+    let result = v.eval(apart(inner));
+    let expected = apply(
+        sym(DIV),
+        vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])])],
+    );
+    assert_eq!(result, expected);
+}
+
+#[test]
+fn apart_improper_irreducible_quadratic_splits_polynomial_part() {
+    let mut v = vm();
+    let x2 = apply(sym(POW), vec![sym("x"), int(2)]);
+    let inner = apply(
+        sym(DIV),
+        vec![
+            apply(sym(ADD), vec![x2.clone(), int(2)]),
+            apply(sym(ADD), vec![x2, int(1)]),
+        ],
+    );
+    let result = v.eval(apart(inner));
+    let expected = apply(
+        sym(ADD),
+        vec![
+            int(1),
+            apply(
+                sym(DIV),
+                vec![int(1), apply(sym(ADD), vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])])],
+            ),
+        ],
+    );
+    assert_eq!(result, expected);
 }
 
 #[test]

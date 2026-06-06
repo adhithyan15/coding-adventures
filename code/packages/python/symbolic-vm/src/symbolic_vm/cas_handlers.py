@@ -991,14 +991,14 @@ def _apart_proper(
     ``Q(x) = den(x) / (x − r)^m``.  Then ``A_{r, m − j} = φ_j``
     (coefficient of ``t^j`` in ``φ``'s Taylor series).
 
-    Returns ``None`` when ``den`` has an irreducible quadratic factor
-    on top of the rational roots — partial fractions over the
-    rationals are insufficient in that case and we keep the
-    unevaluated ``Apart(...)`` form.
+    Returns ``None`` when ``den`` has an irreducible residual on top
+    of the rational roots; that mixed-factor decomposition is still
+    pending.  Pure irreducible proper rationals are already apart and
+    return unchanged in canonical IR.
     """
     roots = _poly_rational_roots(den)
     if not roots:
-        return None  # Pure irreducible factors — out of scope
+        return _proper_rational_to_ir(num, den, x)
 
     # Phase 48: compute each root's multiplicity, bail if irreducible
     # factors remain on top.
@@ -1049,6 +1049,21 @@ def _apart_proper(
     for t in terms[1:]:
         acc = IRApply(ADD, (acc, t))
     return acc
+
+
+def _proper_rational_to_ir(
+    num: tuple[Fraction, ...],
+    den: tuple[Fraction, ...],
+    x: IRSymbol,
+) -> IRNode:
+    """Return the canonical IR for a proper rational ``num / den``.
+
+    This is the "already apart" case for denominators with no rational
+    roots, e.g. ``Apart(1/(x²+1), x)`` over Q(x).
+    """
+    if not _poly_normalize(num):
+        return IRInteger(0)
+    return IRApply(DIV, (from_polynomial(num, x), from_polynomial(den, x)))
 
 
 def _apart_simple_roots(

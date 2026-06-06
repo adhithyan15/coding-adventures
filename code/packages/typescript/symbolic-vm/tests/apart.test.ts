@@ -85,14 +85,21 @@ describe("Apart — Track B1 (Phase 1 simple roots)", () => {
     );
   });
 
-  it("leaves 1/(x^2 + 1) unevaluated (no rational roots, Phase 48 out of scope)", () => {
+  it("returns 1/(x^2 + 1) unchanged when the denominator is irreducible over Q", () => {
     const vm = new VM(new SymbolicBackend());
     const inner = app(DIV, [int(1), app(ADD, [app(POW, [x, int(2)]), int(1)])]);
     const result = vm.eval(apart(inner));
-    // After VM args-eval, ``inner`` itself is already normalised; the
-    // handler returns ``expr`` (the Apart application) when rational
-    // roots are absent.  Result remains wrapped in Apart.
-    expect(result).toEqual(app(APART, [inner, x]));
+    expect(result).toEqual(app(DIV, [int(1), app(ADD, [int(1), app(POW, [x, int(2)])])]));
+  });
+
+  it("splits the polynomial part before returning an irreducible remainder", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x2 = app(POW, [x, int(2)]);
+    const inner = app(DIV, [app(ADD, [x2, int(2)]), app(ADD, [x2, int(1)])]);
+    const result = vm.eval(apart(inner));
+    expect(result).toEqual(
+      app(ADD, [int(1), app(DIV, [int(1), app(ADD, [int(1), app(POW, [x, int(2)])])])]),
+    );
   });
 
   it("passes a bare polynomial Apart(x+1, x) through as x+1", () => {
