@@ -16,6 +16,8 @@ venv/
 # Compiled Python C extensions (built by BUILD scripts; not committed)
 *.so
 *.pyd
+*.dylib
+*.dll
 
 # uv
 uv.lock
@@ -48,6 +50,17 @@ yarn-error.log*
 # Rust
 target/
 Cargo.lock
+
+# Swift / Xcode
+.build/
+.swiftpm/
+
+# Dart
+.dart_tool/
+
+# Gradle
+.gradle/
+gradle-build/
 
 # Devbox
 .devbox/
