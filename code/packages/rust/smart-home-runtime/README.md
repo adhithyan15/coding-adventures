@@ -42,7 +42,8 @@ Included surfaces:
   accepted candidates into the registry, and returns inserted/replaced/ignored
   catalog counts
 - runtime-owned discovery worker schedules with source/interface scope, due-run
-  plans, run-status tracking, and cadence advancement after scheduled ingest
+  plans, run-status tracking, retry/backoff policy, and cadence advancement
+  after scheduled ingest
 - executable mDNS scan-plan projection from due discovery schedules into
   per-interface IPv4/IPv6 scan requests without mutating runtime state
 - supervised mDNS discovery runs that mark due workers started, execute scan
@@ -50,7 +51,7 @@ Included surfaces:
   record scheduler/catalog outcomes
 - read-side scheduled discovery worker snapshots for supervision observations,
   including due status, last run status, record/failure counts, catalog changes,
-  and consecutive failure pressure
+  retry policy, current retry delay, and consecutive failure pressure
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and

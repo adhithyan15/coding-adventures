@@ -18,3 +18,6 @@ All notable changes to this package will be documented in this file.
 - Added scheduled discovery worker observability to
   `smart_home.observe_supervision`, including worker status, due time, last run
   counts, and failure pressure from the D23 runtime.
+- Added D23 discovery worker retry policy fields to
+  `smart_home.observe_supervision`, including configured retry delays,
+  multiplier, and the current retry delay during failure pressure.

@@ -11,7 +11,7 @@ The crate is intentionally a thin adapter:
   discover, pair, and command requests
 - `SmartHomeRuntime` still owns smart-home authorization, command validation,
   event subscriptions, pairing sessions, optimistic state, discovery scheduler
-  observability, supervision, and audit decisions
+  policy and observability, supervision, and audit decisions
 - D18D still owns tool validation, policy decisions, event streams, terminal
   results, and execution journals
 
@@ -23,7 +23,7 @@ Chief of Staff job/session/agent
   -> D18D smart_home.discover / smart_home.command tool calls
   -> smart-home runtime authorization
   -> discovery records and unpaired bridge candidates
-  -> discovery worker health in smart_home.observe_supervision
+  -> discovery worker health and retry state in smart_home.observe_supervision
   -> device command acceptance
   -> optimistic state update
   -> D18D trace and audit record
