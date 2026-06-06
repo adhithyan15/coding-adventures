@@ -542,6 +542,24 @@ describe("symbolic-vm", () => {
     );
   });
 
+  it("closes Phase 23 erf/erfi quadratic exponential integrals", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const xsq = app(POW, [x, int(2)]);
+
+    const erfOut = vm.eval(app(INTEGRATE, [app(EXP, [app(NEG, [xsq])]), x]));
+    expect(containsHeadName(erfOut as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(erfOut as unknown as ReturnType<typeof sym>, "Erf")).toBe(true);
+
+    const erfiOut = vm.eval(app(INTEGRATE, [app(EXP, [xsq]), x]));
+    expect(containsHeadName(erfiOut as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(erfiOut as unknown as ReturnType<typeof sym>, "Erfi")).toBe(true);
+
+    const scaled = vm.eval(app(INTEGRATE, [app(EXP, [app(MUL, [int(-4), xsq])]), x]));
+    expect(containsHeadName(scaled as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(scaled as unknown as ReturnType<typeof sym>, "Erf")).toBe(true);
+  });
+
   it("recognizes elliptic first-kind integrals", () => {
     const vm = new VM(new SymbolicBackend());
     const theta = sym("theta");

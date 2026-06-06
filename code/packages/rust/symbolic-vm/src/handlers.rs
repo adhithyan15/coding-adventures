@@ -2051,6 +2051,10 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         return apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]);
     };
 
+    if let Some(result) = try_erf_integral(f, x) {
+        return result;
+    }
+
     if let Some(result) = try_fresnel_integral(f, x) {
         return result;
     }
@@ -2549,6 +2553,53 @@ fn incomplete_elliptic_second_kind(f: &IRNode, x: &str) -> Option<IRNode> {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct SignedRat {
+    numer: i64,
+    denom: i64,
+}
+
+impl SignedRat {
+    fn new(mut numer: i64, mut denom: i64) -> Option<Self> {
+        if denom == 0 {
+            return None;
+        }
+        if denom < 0 {
+            numer = -numer;
+            denom = -denom;
+        }
+        if numer == 0 {
+            return None;
+        }
+        let g = gcd(numer.unsigned_abs(), denom.unsigned_abs()) as i64;
+        Some(Self {
+            numer: numer / g,
+            denom: denom / g,
+        })
+    }
+
+    fn mul(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.numer),
+            self.denom.saturating_mul(other.denom),
+        )
+        .expect("signed rational product should stay nonzero")
+    }
+
+    fn div(self, other: Self) -> Self {
+        Self::new(
+            self.numer.saturating_mul(other.denom),
+            self.denom.saturating_mul(other.numer),
+        )
+        .expect("signed rational quotient should stay nonzero")
+    }
+
+    fn abs(self) -> PositiveRat {
+        PositiveRat::new(self.numer.abs(), self.denom)
+            .expect("absolute signed rational should be positive")
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 struct PositiveRat {
     numer: i64,
     denom: i64,
@@ -2611,6 +2662,14 @@ fn exact_positive_rat(node: &IRNode) -> Option<PositiveRat> {
     }
 }
 
+fn exact_signed_rat(node: &IRNode) -> Option<SignedRat> {
+    match node {
+        IRNode::Integer(n) => SignedRat::new(*n, 1),
+        IRNode::Rational(n, d) => SignedRat::new(*n, *d),
+        _ => None,
+    }
+}
+
 fn is_square_of_integration_var(node: &IRNode, x: &str) -> bool {
     let IRNode::Apply(pow) = node else { return false };
     if pow.head != IRNode::Symbol(POW.to_string()) {
@@ -2620,6 +2679,118 @@ fn is_square_of_integration_var(node: &IRNode, x: &str) -> bool {
         return false;
     };
     base == &IRNode::Symbol(x.to_string()) && exponent == &IRNode::Integer(2)
+}
+
+#[derive(Clone, Copy)]
+struct SignedQuadraticFactors {
+    coeff: SignedRat,
+    has_x_squared: bool,
+}
+
+fn combine_signed_quadratic_factors(
+    a: SignedQuadraticFactors,
+    b: SignedQuadraticFactors,
+) -> Option<SignedQuadraticFactors> {
+    if a.has_x_squared && b.has_x_squared {
+        return None;
+    }
+    Some(SignedQuadraticFactors {
+        coeff: a.coeff.mul(b.coeff),
+        has_x_squared: a.has_x_squared || b.has_x_squared,
+    })
+}
+
+fn scan_signed_quadratic_factors(node: &IRNode, x: &str) -> Option<SignedQuadraticFactors> {
+    let one = SignedRat::new(1, 1).unwrap();
+    if is_square_of_integration_var(node, x) {
+        return Some(SignedQuadraticFactors {
+            coeff: one,
+            has_x_squared: true,
+        });
+    }
+    if let Some(coeff) = exact_signed_rat(node) {
+        return Some(SignedQuadraticFactors {
+            coeff,
+            has_x_squared: false,
+        });
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.head == IRNode::Symbol(NEG.to_string()) {
+        let [inner] = apply.args.as_slice() else {
+            return None;
+        };
+        let scanned = scan_signed_quadratic_factors(inner, x)?;
+        return Some(SignedQuadraticFactors {
+            coeff: SignedRat::new(-scanned.coeff.numer, scanned.coeff.denom)?,
+            has_x_squared: scanned.has_x_squared,
+        });
+    }
+    if apply.head == IRNode::Symbol(MUL.to_string()) {
+        let mut acc = SignedQuadraticFactors {
+            coeff: one,
+            has_x_squared: false,
+        };
+        for arg in &apply.args {
+            let scanned = scan_signed_quadratic_factors(arg, x)?;
+            acc = combine_signed_quadratic_factors(acc, scanned)?;
+        }
+        return Some(acc);
+    }
+    if apply.head == IRNode::Symbol(DIV.to_string()) {
+        let [numerator, denominator] = apply.args.as_slice() else {
+            return None;
+        };
+        let mut scanned = scan_signed_quadratic_factors(numerator, x)?;
+        let denom = exact_signed_rat(denominator)?;
+        scanned.coeff = scanned.coeff.div(denom);
+        return Some(scanned);
+    }
+    None
+}
+
+fn signed_quadratic_coeff(arg: &IRNode, x: &str) -> Option<SignedRat> {
+    let factors = scan_signed_quadratic_factors(arg, x)?;
+    if factors.has_x_squared {
+        Some(factors.coeff)
+    } else {
+        None
+    }
+}
+
+fn try_erf_integral(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(EXP.to_string()) {
+        return None;
+    }
+    let [arg] = apply.args.as_slice() else {
+        return None;
+    };
+    let c = signed_quadratic_coeff(arg, x)?;
+    let abs_c = c.abs();
+    let alpha = apply_node(SQRT, vec![abs_c.to_ir()]);
+    let special_arg = if abs_c.numer == abs_c.denom {
+        IRNode::Symbol(x.to_string())
+    } else {
+        apply_node(MUL, vec![alpha.clone(), IRNode::Symbol(x.to_string())])
+    };
+    let special_head = if c.numer < 0 { "Erf" } else { "Erfi" };
+    let sqrt_pi = apply_node(SQRT, vec![IRNode::Symbol("%pi".to_string())]);
+    let coeff = if abs_c.numer == abs_c.denom {
+        apply_node(DIV, vec![sqrt_pi, IRNode::Integer(2)])
+    } else {
+        apply_node(
+            DIV,
+            vec![sqrt_pi, apply_node(MUL, vec![IRNode::Integer(2), alpha])],
+        )
+    };
+    Some(apply_node(
+        MUL,
+        vec![coeff, apply_node(special_head, vec![special_arg])],
+    ))
 }
 
 #[derive(Clone, Copy)]

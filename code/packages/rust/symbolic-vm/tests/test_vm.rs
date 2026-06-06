@@ -1318,6 +1318,23 @@ fn integrate_constant_base_power() {
 }
 
 #[test]
+fn integrate_phase23_erf_erfi_quadratic_exponentials() {
+    let xsq = apply(sym(POW), vec![sym("x"), int(2)]);
+
+    let erf_out = integrate(apply(sym(EXP), vec![apply(sym(NEG), vec![xsq.clone()])]));
+    assert!(!is_unevaluated_integrate(&erf_out));
+    assert!(contains_head(&erf_out, "Erf"));
+
+    let erfi_out = integrate(apply(sym(EXP), vec![xsq.clone()]));
+    assert!(!is_unevaluated_integrate(&erfi_out));
+    assert!(contains_head(&erfi_out, "Erfi"));
+
+    let scaled = integrate(apply(sym(EXP), vec![apply(sym(MUL), vec![int(-4), xsq])]));
+    assert!(!is_unevaluated_integrate(&scaled));
+    assert!(contains_head(&scaled, "Erf"));
+}
+
+#[test]
 fn integrate_elliptic_first_kind_forms() {
     let theta = sym("theta");
     let k = sym("k");
