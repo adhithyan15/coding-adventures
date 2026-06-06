@@ -16,10 +16,12 @@ use smart_home_core::{
     VaultRef,
 };
 use smart_home_discovery::{
-    DiscoveryCatalog, DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary,
-    DiscoverySource, DiscoveryUpsert, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork, MdnsWorkerScanPlan,
-    MdnsWorkerScanRequest, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+    run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError, DiscoveryRecord,
+    DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource, DiscoveryUpsert,
+    DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
+    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork, MdnsWorkerScanExecutor,
+    MdnsWorkerScanPlan, MdnsWorkerScanReport, MdnsWorkerScanRequest, UdpMdnsWorkerScanExecutor,
+    MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
@@ -32,6 +34,7 @@ use std::{fmt, time::Duration};
 pub enum RuntimeError {
     Registry(Box<RegistryError>),
     Core(Box<SmartHomeError>),
+    Discovery(Box<DiscoveryError>),
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
@@ -91,6 +94,7 @@ impl fmt::Display for RuntimeError {
         match self {
             Self::Registry(error) => write!(f, "{error}"),
             Self::Core(error) => write!(f, "{error}"),
+            Self::Discovery(error) => write!(f, "{error}"),
             Self::UnknownBridge(id) => write!(f, "unknown runtime bridge {id}"),
             Self::UnknownDevice(id) => write!(f, "unknown runtime device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
@@ -172,6 +176,12 @@ impl fmt::Display for RuntimeError {
 }
 
 impl std::error::Error for RuntimeError {}
+
+impl From<DiscoveryError> for RuntimeError {
+    fn from(error: DiscoveryError) -> Self {
+        Self::Discovery(Box::new(error))
+    }
+}
 
 impl From<RegistryError> for RuntimeError {
     fn from(error: RegistryError) -> Self {
@@ -1926,6 +1936,103 @@ impl DiscoveryWorkerRunPlan {
     }
 }
 
+pub trait MdnsDiscoveryRunAdapter {
+    type Error: fmt::Display;
+
+    fn worker_run_from_mdns_scan_report(
+        &mut self,
+        report: &MdnsWorkerScanReport,
+    ) -> Result<DiscoveryWorkerRun, Self::Error>;
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySupervisorRunFailure {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySupervisorRunReport {
+    pub started_at_ms: u64,
+    pub completed_at_ms: u64,
+    pub ttl_ms: u64,
+    pub planned_instruction_count: usize,
+    pub mdns_request_count: usize,
+    pub mdns_report_count: usize,
+    pub summaries: Vec<DiscoveryWorkerRunSummary>,
+    pub failures: Vec<DiscoverySupervisorRunFailure>,
+}
+
+impl DiscoverySupervisorRunReport {
+    pub fn new(
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        planned_instruction_count: usize,
+        mdns_request_count: usize,
+        mdns_report_count: usize,
+    ) -> Self {
+        Self {
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            planned_instruction_count,
+            mdns_request_count,
+            mdns_report_count,
+            summaries: Vec::new(),
+            failures: Vec::new(),
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.planned_instruction_count == 0
+            && self.mdns_request_count == 0
+            && self.recorded_run_count() == 0
+    }
+
+    pub fn recorded_run_count(&self) -> usize {
+        self.summaries.len()
+    }
+
+    pub fn completed_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Completed)
+            .count()
+    }
+
+    pub fn partial_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Partial)
+            .count()
+    }
+
+    pub fn failed_run_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .filter(|summary| summary.status == DiscoveryWorkerRunStatus::Failed)
+            .count()
+    }
+
+    pub fn catalog_change_count(&self) -> usize {
+        self.summaries
+            .iter()
+            .map(DiscoveryWorkerRunSummary::accepted_count)
+            .sum()
+    }
+
+    pub fn has_failures(&self) -> bool {
+        !self.failures.is_empty()
+            || self
+                .summaries
+                .iter()
+                .any(|summary| summary.status != DiscoveryWorkerRunStatus::Completed)
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DiscoveryWorkerSort {
     WorkerId,
@@ -3418,6 +3525,99 @@ impl SmartHomeRuntime {
         Ok(summary)
     }
 
+    pub fn run_due_mdns_discovery_workers_with_executor<E, A>(
+        &mut self,
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        executor: &mut E,
+        adapter: &mut A,
+    ) -> Result<DiscoverySupervisorRunReport, RuntimeError>
+    where
+        E: MdnsWorkerScanExecutor + ?Sized,
+        A: MdnsDiscoveryRunAdapter,
+    {
+        let instructions = self
+            .discovery_worker_run_plan_at(started_at_ms)
+            .instructions
+            .into_iter()
+            .filter(|instruction| {
+                instruction.kind == DiscoveryWorkerKind::MdnsScan
+                    && instruction.sources.contains(&DiscoverySource::Mdns)
+            })
+            .collect::<Vec<_>>();
+        for instruction in &instructions {
+            self.mark_discovery_worker_started(&instruction.worker_id, started_at_ms)?;
+        }
+
+        let planned_instruction_count = instructions.len();
+        let mdns_scan_plan = DiscoveryWorkerRunPlan {
+            generated_at_ms: started_at_ms,
+            instructions,
+        }
+        .mdns_scan_plan()?;
+        let mdns_request_count = mdns_scan_plan.len();
+        let scan_reports = run_mdns_worker_scan_plan_with_executor(
+            &mdns_scan_plan,
+            started_at_ms,
+            completed_at_ms,
+            executor,
+        )?;
+        let mut report = DiscoverySupervisorRunReport::new(
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            planned_instruction_count,
+            mdns_request_count,
+            scan_reports.len(),
+        );
+
+        for scan_report in &scan_reports {
+            let worker_run = match adapter.worker_run_from_mdns_scan_report(scan_report) {
+                Ok(run) => run,
+                Err(error) => {
+                    let message = error.to_string();
+                    report.failures.push(DiscoverySupervisorRunFailure {
+                        worker_id: scan_report.worker_id.clone(),
+                        integration_id: scan_report.integration_id.clone(),
+                        kind: DiscoveryWorkerKind::MdnsScan,
+                        message: message.clone(),
+                    });
+                    failed_mdns_discovery_worker_run_from_report(scan_report, message)?
+                }
+            };
+            report
+                .summaries
+                .push(self.record_scheduled_discovery_worker_run(
+                    &worker_run,
+                    completed_at_ms,
+                    ttl_ms,
+                )?);
+        }
+
+        Ok(report)
+    }
+
+    pub fn run_due_mdns_discovery_workers<A>(
+        &mut self,
+        started_at_ms: u64,
+        completed_at_ms: u64,
+        ttl_ms: u64,
+        adapter: &mut A,
+    ) -> Result<DiscoverySupervisorRunReport, RuntimeError>
+    where
+        A: MdnsDiscoveryRunAdapter,
+    {
+        let mut executor = UdpMdnsWorkerScanExecutor;
+        self.run_due_mdns_discovery_workers_with_executor(
+            started_at_ms,
+            completed_at_ms,
+            ttl_ms,
+            &mut executor,
+            adapter,
+        )
+    }
+
     pub fn discovery_record_count(&self) -> usize {
         self.discovery.len()
     }
@@ -4404,6 +4604,21 @@ fn invalid_discovery_worker_schedule(
     }
 }
 
+fn failed_mdns_discovery_worker_run_from_report(
+    report: &MdnsWorkerScanReport,
+    message: impl Into<String>,
+) -> Result<DiscoveryWorkerRun, RuntimeError> {
+    let mut run = DiscoveryWorkerRun::new(
+        report.worker_id.clone(),
+        report.integration_id.clone(),
+        DiscoveryWorkerKind::MdnsScan,
+        report.started_at_ms,
+        report.completed_at_ms,
+    );
+    run.push_failure(DiscoveryWorkerFailure::new(DiscoverySource::Mdns, message)?);
+    Ok(run)
+}
+
 fn metadata_value<'a>(metadata: &'a [Metadata], key: &str) -> Option<&'a str> {
     metadata
         .iter()
@@ -4564,9 +4779,68 @@ mod tests {
     use smart_home_discovery::{
         DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert,
         DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-        DiscoveryWorkerRunStatus, PairingRequirement,
+        DiscoveryWorkerRunStatus, MdnsResponsePacket, MdnsScanResult, MdnsWorkerScanRequest,
+        PairingRequirement,
     };
     use smart_home_registry::StateRefreshReason;
+
+    #[derive(Debug)]
+    struct ScriptedMdnsExecutor {
+        outcomes: std::collections::VecDeque<Result<MdnsScanResult, DiscoveryError>>,
+        requests: Vec<MdnsWorkerScanRequest>,
+    }
+
+    impl ScriptedMdnsExecutor {
+        fn new(outcomes: impl IntoIterator<Item = Result<MdnsScanResult, DiscoveryError>>) -> Self {
+            Self {
+                outcomes: outcomes.into_iter().collect(),
+                requests: Vec::new(),
+            }
+        }
+    }
+
+    impl MdnsWorkerScanExecutor for ScriptedMdnsExecutor {
+        fn run_request(
+            &mut self,
+            request: &MdnsWorkerScanRequest,
+        ) -> Result<MdnsScanResult, DiscoveryError> {
+            self.requests.push(request.clone());
+            self.outcomes.pop_front().unwrap_or_else(|| {
+                Err(DiscoveryError::MdnsTransport {
+                    message: "missing scripted mDNS outcome".to_string(),
+                })
+            })
+        }
+    }
+
+    #[derive(Debug)]
+    struct ScriptedMdnsRunAdapter {
+        outcomes: std::collections::VecDeque<Result<DiscoveryWorkerRun, String>>,
+        reports: Vec<MdnsWorkerScanReport>,
+    }
+
+    impl ScriptedMdnsRunAdapter {
+        fn new(outcomes: impl IntoIterator<Item = Result<DiscoveryWorkerRun, String>>) -> Self {
+            Self {
+                outcomes: outcomes.into_iter().collect(),
+                reports: Vec::new(),
+            }
+        }
+    }
+
+    impl MdnsDiscoveryRunAdapter for ScriptedMdnsRunAdapter {
+        type Error = String;
+
+        fn worker_run_from_mdns_scan_report(
+            &mut self,
+            report: &MdnsWorkerScanReport,
+        ) -> Result<DiscoveryWorkerRun, Self::Error> {
+            self.reports.push(report.clone());
+            self.outcomes
+                .pop_front()
+                .unwrap_or_else(|| Err("missing scripted discovery worker run".to_string()))
+        }
+    }
 
     fn bridge(id: &str) -> Bridge {
         let mut bridge = Bridge::new(
@@ -5864,6 +6138,111 @@ mod tests {
                 .len(),
             1
         );
+    }
+
+    #[test]
+    fn runtime_supervised_mdns_discovery_run_executes_and_records_due_workers() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let outcomes = (0..4).map(|_| {
+            MdnsScanResult::from_packets("_hue._tcp.local", 1_125, Vec::<MdnsResponsePacket>::new())
+        });
+        let mut executor = ScriptedMdnsExecutor::new(outcomes);
+        let mut run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_125,
+            1_180,
+        );
+        run.push_record(hue_discovery_record("001788fffesupervised", 1_175))
+            .unwrap();
+        let mut adapter = ScriptedMdnsRunAdapter::new([Ok(run)]);
+
+        let report = runtime
+            .run_due_mdns_discovery_workers_with_executor(
+                1_125,
+                1_180,
+                500,
+                &mut executor,
+                &mut adapter,
+            )
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.requests.len(), 4);
+        assert_eq!(adapter.reports.len(), 1);
+        assert_eq!(adapter.reports[0].completed_scan_count(), 4);
+        assert_eq!(report.planned_instruction_count, 1);
+        assert_eq!(report.mdns_request_count, 4);
+        assert_eq!(report.mdns_report_count, 1);
+        assert_eq!(report.recorded_run_count(), 1);
+        assert_eq!(report.completed_run_count(), 1);
+        assert_eq!(report.partial_run_count(), 0);
+        assert_eq!(report.failed_run_count(), 0);
+        assert_eq!(report.catalog_change_count(), 1);
+        assert!(!report.has_failures());
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(scheduled.last_started_at_ms, Some(1_125));
+        assert_eq!(scheduled.last_completed_at_ms, Some(1_180));
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Completed)
+        );
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
+    }
+
+    #[test]
+    fn runtime_supervised_mdns_discovery_run_records_adapter_failures() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let outcomes = (0..4).map(|_| {
+            MdnsScanResult::from_packets("_hue._tcp.local", 1_125, Vec::<MdnsResponsePacket>::new())
+        });
+        let mut executor = ScriptedMdnsExecutor::new(outcomes);
+        let mut adapter =
+            ScriptedMdnsRunAdapter::new([Err("unsupported mDNS service type".to_string())]);
+
+        let report = runtime
+            .run_due_mdns_discovery_workers_with_executor(
+                1_125,
+                1_180,
+                500,
+                &mut executor,
+                &mut adapter,
+            )
+            .unwrap();
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.requests.len(), 4);
+        assert_eq!(adapter.reports.len(), 1);
+        assert_eq!(report.planned_instruction_count, 1);
+        assert_eq!(report.mdns_request_count, 4);
+        assert_eq!(report.mdns_report_count, 1);
+        assert_eq!(report.recorded_run_count(), 1);
+        assert_eq!(report.completed_run_count(), 0);
+        assert_eq!(report.failed_run_count(), 1);
+        assert_eq!(report.failures.len(), 1);
+        assert_eq!(report.failures[0].worker_id, worker_id);
+        assert_eq!(report.failures[0].message, "unsupported mDNS service type");
+        assert!(report.has_failures());
+        assert_eq!(runtime.discovery_record_count(), 0);
+        assert_eq!(scheduled.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            scheduled.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Failed)
+        );
+        assert_eq!(scheduled.last_record_count, 0);
+        assert_eq!(scheduled.last_failure_count, 1);
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.next_due_at_ms, 6_180);
     }
 
     #[test]
