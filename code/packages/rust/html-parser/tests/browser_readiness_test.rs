@@ -8,13 +8,14 @@ use coding_adventures_html_parser::{
     BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
     BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
     BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
-    BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover, BrowserPopoverInvoker,
-    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
+    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -98,6 +99,8 @@ struct ExpectedBrowserDocument {
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
     data_attribute_descriptors: Vec<ExpectedDataAttributeDescriptor>,
+    #[serde(default)]
+    global_state_descriptors: Vec<ExpectedGlobalStateDescriptor>,
     #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
@@ -322,6 +325,45 @@ struct ExpectedDataAttributeDescriptor {
     part: Vec<String>,
     #[serde(default)]
     data_attributes: Vec<ExpectedDataAttribute>,
+    #[serde(default)]
+    text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedGlobalStateDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    lang: Option<String>,
+    #[serde(default)]
+    dir: Option<String>,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    autofocus: bool,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    draggable: Option<String>,
+    #[serde(default)]
+    draggable_state: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    translate: Option<String>,
     #[serde(default)]
     text: String,
 }
@@ -3209,6 +3251,26 @@ fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
 }
 
 #[test]
+fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive global-state fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive global-state fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.global_state_descriptors,
+        case.expected.into_browser_document().global_state_descriptors,
+        "global-state descriptors should preserve inert, hidden, focus, editing, drag, spellcheck, translate, and accesskey metadata outside form-specific summaries",
+    );
+}
+
+#[test]
 fn browser_accessible_description_metadata_tracks_describedby_text() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3490,6 +3552,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedDataAttributeDescriptor::into_browser_data_attribute_descriptor)
                 .collect(),
+            global_state_descriptors: self
+                .global_state_descriptors
+                .into_iter()
+                .map(ExpectedGlobalStateDescriptor::into_browser_global_state_descriptor)
+                .collect(),
             structured_items: self
                 .structured_items
                 .into_iter()
@@ -3727,6 +3794,31 @@ impl ExpectedDataAttributeDescriptor {
                 .into_iter()
                 .map(ExpectedDataAttribute::into_browser_data_attribute)
                 .collect(),
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedGlobalStateDescriptor {
+    fn into_browser_global_state_descriptor(self) -> BrowserGlobalStateDescriptor {
+        BrowserGlobalStateDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            title: self.title,
+            lang: self.lang,
+            dir: self.dir,
+            hidden: self.hidden,
+            inert: self.inert,
+            tabindex: self.tabindex,
+            accesskey: self.accesskey,
+            autofocus: self.autofocus,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            draggable: self.draggable,
+            draggable_state: self.draggable_state,
+            spellcheck: self.spellcheck,
+            translate: self.translate,
             text: self.text,
         }
     }

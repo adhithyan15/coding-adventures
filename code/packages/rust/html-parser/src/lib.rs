@@ -851,6 +851,7 @@ pub struct BrowserDocument {
     pub disclosures: Vec<BrowserDisclosure>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
+    pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1088,6 +1089,28 @@ pub struct BrowserDataAttributeDescriptor {
     pub slot_name: Option<String>,
     pub part: Vec<String>,
     pub data_attributes: Vec<BrowserDataAttribute>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserGlobalStateDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub title: Option<String>,
+    pub lang: Option<String>,
+    pub dir: Option<String>,
+    pub hidden: bool,
+    pub inert: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub autofocus: bool,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub spellcheck: Option<String>,
+    pub translate: Option<String>,
     pub text: String,
 }
 
@@ -9596,6 +9619,9 @@ fn collect_browser_facts(
         if let Some(descriptor) = browser_data_attribute_descriptor(element) {
             summary.data_attribute_descriptors.push(descriptor);
         }
+        if let Some(descriptor) = browser_global_state_descriptor(element) {
+            summary.global_state_descriptors.push(descriptor);
+        }
         if element.name == "template" {
             summary.templates.push(browser_template(element));
         }
@@ -11953,6 +11979,64 @@ fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAtt
         slot_name: browser_slot_name(element),
         part: browser_part_tokens(element),
         data_attributes,
+        text: visible_text_for_nodes(&element.children),
+    })
+}
+
+fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalStateDescriptor> {
+    if matches!(
+        element.name.as_str(),
+        "button"
+            | "fieldset"
+            | "form"
+            | "input"
+            | "label"
+            | "meter"
+            | "object"
+            | "option"
+            | "output"
+            | "progress"
+            | "select"
+            | "textarea"
+    ) {
+        return None;
+    }
+
+    let accesskey = browser_accesskey(element);
+    let has_global_state = browser_hidden(element)
+        || browser_inert(element)
+        || !accesskey.is_empty()
+        || browser_autofocus(element)
+        || element.attribute("contenteditable").is_some()
+        || element.attribute("draggable").is_some()
+        || element.attribute("spellcheck").is_some()
+        || element.attribute("translate").is_some();
+
+    if !has_global_state {
+        return None;
+    }
+
+    Some(BrowserGlobalStateDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        title: element.attribute("title").map(ToOwned::to_owned),
+        lang: element.attribute("lang").map(ToOwned::to_owned),
+        dir: element.attribute("dir").map(ToOwned::to_owned),
+        hidden: browser_hidden(element),
+        inert: browser_inert(element),
+        tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        accesskey,
+        autofocus: browser_autofocus(element),
+        contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
+        editing_mode: browser_editing_mode(element),
+        draggable: element.attribute("draggable").map(ToOwned::to_owned),
+        draggable_state: browser_draggable_state(element),
+        spellcheck: browser_spellcheck_state(element),
+        translate: browser_translate_state(element),
         text: visible_text_for_nodes(&element.children),
     })
 }

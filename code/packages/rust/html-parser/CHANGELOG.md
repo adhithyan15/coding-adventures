@@ -5,6 +5,11 @@ documented in this file.
 
 ## Unreleased
 
+### Added
+- Browser-readiness document summaries now include global-state descriptors for
+  non-form elements with inert/hidden, editing, drag, spellcheck, translate,
+  accesskey, autofocus, and related focus metadata.
+
 ### Fixed
 - Test fixture generators: `COMMENT_MARKUP` regex accepts both `-->` and
   `--!>` comment end forms, and tag-axis classifier scans pass `re.I` even
