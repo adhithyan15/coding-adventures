@@ -1,5 +1,13 @@
 # Changelog — cas-limit-series (Rust)
 
+## [0.2.2] - 2026-06-06
+
+### Added
+
+- Add bounded-over-diverging limit recognition at infinity, closing
+  `limit(sin(x)/x, x, inf)` and `limit(cos(x)/(x^2+1), x, minf)` to exact
+  `0` instead of returning an unevaluated `Limit(...)`.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added

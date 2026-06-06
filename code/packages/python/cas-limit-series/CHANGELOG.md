@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.2 - 2026-06-06
+
+### Added
+
+- Limits at infinity now recognise bounded numerators divided by diverging
+  denominators. This closes MACSYMA-style cases such as `limit(sin(x)/x, x,
+  inf)` and `limit(cos(x)/(x^2+1), x, minf)` to exact `0` instead of falling
+  through to an unevaluated `Limit(...)`.
+
 ## 0.2.1 — 2026-05-14
 
 **Bug fix: `ZeroDivisionError` from direct substitution now routes to L'Hôpital.**

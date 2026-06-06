@@ -37,6 +37,13 @@
 > closing structurally telescoping exponential tails while preserving
 > conservative fallthrough for growing or sign-ambiguous exponentials.
 
+> **MACSYMA limit audit follow-up (2026-06-06).** Advanced limits at infinity
+> now recognise bounded numerators over diverging denominators across Python,
+> TypeScript, and Rust. This closes `limit(sin(x)/x, x, inf)` and
+> `limit(cos(x)/(x^2+1), x, minf)` to exact `0`, rather than accepting the
+> oscillatory numerator's direct `sin(inf)` / `cos(inf)` classification as an
+> unevaluated `Limit(...)`.
+
 > **SPICE completion follow-up inventory (2026-06-06).** The 2026-06-05
 > release cut closed the planned SPICE 1970s compatibility slice, but a live
 > follow-up audit found one real parity gap: Rust had advanced named-corner

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ADD, DIV, MUL, NEG, POW, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, COS, DIV, MUL, NEG, POW, SIN, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import { LIMIT, PolynomialError, limitAdvanced, limitDirect, taylorPolynomial } from "../src/index";
 
 function expectEqual(actual: IRNode, expected: IRNode): void {
@@ -171,6 +171,23 @@ describe("limitAdvanced", () => {
     const x = sym("x");
     const expr = app(POW, [x, x]);
     expectEqual(limitAdvanced(expr, x, int(0), { direction: "plus" }), app(sym(LIMIT), [expr, x, int(0), sym("plus")]));
+  });
+
+  it("resolves bounded oscillatory numerator over diverging denominator at infinity", () => {
+    const x = sym("x");
+    expectEqual(limitAdvanced(app(DIV, [app(SIN, [x]), x]), x, sym("inf"), {
+      differentiate: differentiateFixture,
+      evaluate: evaluateFixture,
+    }), int(0));
+  });
+
+  it("resolves bounded oscillatory numerator over quadratic denominator at negative infinity", () => {
+    const x = sym("x");
+    const denom = app(ADD, [app(POW, [x, int(2)]), int(1)]);
+    expectEqual(limitAdvanced(app(DIV, [app(COS, [x]), denom]), x, sym("minf"), {
+      differentiate: differentiateFixture,
+      evaluate: evaluateFixture,
+    }), int(0));
   });
 });
 

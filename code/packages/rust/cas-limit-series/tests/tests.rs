@@ -7,7 +7,7 @@ use cas_limit_series::{
     limit_advanced, limit_direct, taylor_polynomial, LimitAdvancedOptions, LimitDirection,
     PolynomialError, LIMIT,
 };
-use symbolic_ir::{apply, int, sym, IRNode, ADD, DIV, EXP, LOG, MUL, POW, SUB};
+use symbolic_ir::{apply, int, sym, IRNode, ADD, COS, DIV, EXP, LOG, MUL, POW, SIN, SUB};
 
 // ---------------------------------------------------------------------------
 // limit_direct
@@ -291,6 +291,44 @@ fn limit_advanced_power_rewrite_falls_back_inside_exp() {
         ],
     );
     assert_eq!(out, apply(sym(EXP), vec![expected_inner]));
+}
+
+#[test]
+fn limit_advanced_bounded_oscillatory_over_diverging_at_infinity() {
+    let x = sym("x");
+    let expr = apply(sym(DIV), vec![apply(sym(SIN), vec![x.clone()]), x.clone()]);
+    let out = limit_advanced(
+        expr,
+        &x,
+        sym("inf"),
+        LimitAdvancedOptions {
+            diff_fn: Some(&test_diff),
+            eval_fn: Some(&test_eval),
+            ..Default::default()
+        },
+    );
+    assert_eq!(out, int(0));
+}
+
+#[test]
+fn limit_advanced_bounded_oscillatory_over_quadratic_at_negative_infinity() {
+    let x = sym("x");
+    let denom = apply(
+        sym(ADD),
+        vec![apply(sym(POW), vec![x.clone(), int(2)]), int(1)],
+    );
+    let expr = apply(sym(DIV), vec![apply(sym(COS), vec![x.clone()]), denom]);
+    let out = limit_advanced(
+        expr,
+        &x,
+        sym("minf"),
+        LimitAdvancedOptions {
+            diff_fn: Some(&test_diff),
+            eval_fn: Some(&test_eval),
+            ..Default::default()
+        },
+    );
+    assert_eq!(out, int(0));
 }
 
 // ---------------------------------------------------------------------------

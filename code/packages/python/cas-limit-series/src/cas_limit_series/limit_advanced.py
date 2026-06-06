@@ -484,6 +484,25 @@ def _pow_exp_log(
     return result
 
 
+def _is_bounded_at_infinity(node: IRNode, var: IRSymbol) -> bool:
+    """Return True for shapes known to stay bounded at infinity."""
+    if isinstance(node, (IRInteger, IRRational, IRFloat)):
+        return True
+    if isinstance(node, IRSymbol):
+        return node != var
+    if not isinstance(node, IRApply):
+        return False
+    if node.head == NEG and len(node.args) == 1:
+        return _is_bounded_at_infinity(node.args[0], var)
+    if node.head == ADD:
+        return all(_is_bounded_at_infinity(arg, var) for arg in node.args)
+    if node.head == MUL:
+        return all(_is_bounded_at_infinity(arg, var) for arg in node.args)
+    if node.head in {SIN, COS, TANH, ATAN} and len(node.args) == 1:
+        return True
+    return False
+
+
 # ---------------------------------------------------------------------------
 # Section 6 — Indeterminate form dispatcher
 # ---------------------------------------------------------------------------
@@ -530,6 +549,10 @@ def _handle_form(
         is_inf_inf = (math.isinf(n_val) or abs(n_val) > _INF_THRESHOLD) and (
             math.isinf(d_val) or abs(d_val) > _INF_THRESHOLD
         )
+        if (math.isinf(d_val) or abs(d_val) > _INF_THRESHOLD) and (
+            _is_bounded_at_infinity(numer, var)
+        ):
+            return IRInteger(0)
         if (is_zero_zero or is_inf_inf) and diff_fn is not None:
             return _lhopital_step(
                 numer, denom, var, point, direction, diff_fn, eval_fn, depth
