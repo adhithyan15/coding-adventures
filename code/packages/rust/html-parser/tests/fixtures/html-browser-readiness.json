@@ -980,6 +980,9 @@
           { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown"] },
           { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
         ],
+        "aria_live_regions": [
+          { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite" }
+        ],
         "links": [],
         "images": [],
         "interactive_elements": [
@@ -1092,6 +1095,55 @@
           { "element": "div", "id": "stepper", "role": "block", "authored_role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_required": "true", "tabindex": "0", "focusable": true },
           { "element": "div", "id": "load", "role": "block", "authored_role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress" },
           { "element": "div", "id": "scroll", "role": "block", "authored_role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_disabled": "true" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "aria-live-region-descriptor-page",
+      "description": "Browser document summaries expose implicit and explicit ARIA live-region update semantics.",
+      "input": "<body><h2 id=live-title>Updates</h2><p id=status-help>Sync status</p><div id=toast role=status aria-labelledby=live-title aria-describedby=status-help aria-atomic=true aria-relevant=\"additions text\">Saved</div><div id=alert role=alert aria-label=\"Error alert\" aria-busy=true>Network down</div><div id=feed role=log aria-live=polite aria-relevant=additions><p>First</p><p>Second</p></div><div id=ticker role=marquee aria-label=Ticker>Stocks</div><div id=clock role=timer aria-live=off>12:00</div><div id=custom role=region aria-label=Notifications aria-live=assertive aria-busy=false aria-atomic=false aria-relevant=\"removals all\">Custom</div><p id=hidden role=status aria-hidden=true>Muted</p></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Updates Sync status Saved Network down First Second Stocks 12:00 Custom Muted",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "live-title", "name": null, "text": "Updates" },
+          { "id": "status-help", "name": null, "text": "Sync status" },
+          { "id": "toast", "name": null, "text": "Saved" },
+          { "id": "alert", "name": null, "text": "Network down" },
+          { "id": "feed", "name": null, "text": "First Second" },
+          { "id": "ticker", "name": null, "text": "Stocks" },
+          { "id": "clock", "name": null, "text": "12:00" },
+          { "id": "custom", "name": null, "text": "Custom" },
+          { "id": "hidden", "name": null, "text": "Muted" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Updates" }
+        ],
+        "aria_live_regions": [
+          { "element": "div", "id": "toast", "role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"], "aria_atomic": "true", "aria_relevant": ["additions", "text"], "update_kind": "polite" },
+          { "element": "div", "id": "alert", "role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true", "update_kind": "assertive" },
+          { "element": "div", "id": "feed", "role": "log", "text": "First Second", "accessible_name": "First Second", "aria_live": "polite", "aria_relevant": ["additions"], "update_kind": "polite" },
+          { "element": "div", "id": "ticker", "role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker", "update_kind": "off" },
+          { "element": "div", "id": "clock", "role": "timer", "text": "12:00", "accessible_name": "12:00", "aria_live": "off", "update_kind": "off" },
+          { "element": "div", "id": "custom", "role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false", "aria_atomic": "false", "aria_relevant": ["removals", "all"], "update_kind": "assertive" },
+          { "element": "p", "id": "hidden", "role": "status", "text": "Muted", "accessible_name": "Muted", "aria_hidden": true, "update_kind": "polite" }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [
+          { "element": "div", "id": "toast", "role": "block", "authored_role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"] },
+          { "element": "div", "id": "alert", "role": "block", "authored_role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true" },
+          { "element": "div", "id": "feed", "role": "block", "authored_role": "log", "text": "First Second", "aria_live": "polite" },
+          { "element": "div", "id": "ticker", "role": "block", "authored_role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker" },
+          { "element": "div", "id": "clock", "role": "block", "authored_role": "timer", "text": "12:00", "aria_live": "off" },
+          { "element": "div", "id": "custom", "role": "block", "authored_role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false" },
+          { "element": "p", "id": "hidden", "role": "paragraph", "authored_role": "status", "text": "Muted", "aria_hidden": true }
         ],
         "forms": [],
         "tables": []

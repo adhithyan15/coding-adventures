@@ -248,6 +248,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "command_elements", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_collections", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_ranges", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "aria_live_regions", errors)
     require_object_list(f"{case_path}.expected", expected, "links", errors)
     require_object_list(f"{case_path}.expected", expected, "images", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "image_maps", errors)
