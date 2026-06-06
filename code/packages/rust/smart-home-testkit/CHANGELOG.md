@@ -8,6 +8,9 @@ All notable changes to this package will be documented in this file.
 
 - Scripted mDNS worker scan executor fixtures that can run runtime-produced
   scan plans into deterministic reports without opening network sockets.
+- A Hue pairing fixture path that matches the application registration HTTP
+  plan, parses the scripted Hue response, simulates Vault storage, and completes
+  the runtime pairing session without raw secret values in audit metadata.
 
 ## [0.1.0] - 2026-05-08
 

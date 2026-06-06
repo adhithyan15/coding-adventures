@@ -211,6 +211,28 @@ the resulting state through existing read-side surfaces:
   the Chief end-to-end fixture proves the D18D tool output includes the policy
   fields.
 
+## Current Hue Pairing Exchange Slice
+
+This slice connects the existing D23 pairing session model to Hue's local
+physical-presence registration exchange without moving Vault ownership or
+network I/O into the Chief bridge:
+
+- `hue-core` can turn a discovered-bridge pairing plan into a local HTTP
+  registration request plan for `/api`, including the Hue `devicetype` payload
+  and user-presence metadata.
+- `hue-core` can parse Hue registration success responses into application-key
+  credentials, parse link-button rejection responses as structured errors, and
+  produce a Vault secret payload for the component that owns secret storage.
+- `hue-core` then projects only a `VaultRef` and non-secret metadata into a
+  pairing handoff; raw Hue application keys and client keys are not copied into
+  runtime audit metadata.
+- `smart-home-runtime` now accepts metadata-bearing pairing completions, stores
+  the `VaultRef`, marks the bridge online, and includes the non-secret metadata
+  in the bridge-health audit event.
+- `smart-home-testkit` proves the no-socket path end to end with a fake local
+  HTTP response, simulated Vault handoff, runtime session completion, and an
+  assertion that raw Hue credentials are absent from audit metadata.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -237,8 +259,10 @@ These items move toward retiring an existing Home Assistant install:
   runtime state across restarts. Retry/backoff policy now exists in the runtime
   scheduler, but an external actor still needs to drive durable process
   lifecycle.
-- Complete real Hue pairing: start session, user presence/link button, vault
-  credential write, bridge health update, and no-secret audit trail.
+- Finish production Hue pairing by connecting the local HTTP registration plan
+  to the worker that presses through real LAN I/O and durable Vault writes. The
+  typed request/response/VaultRef handoff and runtime no-secret audit trail now
+  exist.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers
   behind the existing runtime surfaces.
 - Persist registry, state cache, event history, command history, pairing

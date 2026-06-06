@@ -26,6 +26,8 @@ a shared way to build:
   scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs
 - fake local HTTP responses that can match planned requests without sockets
+- a deterministic Hue pairing fixture path from fake local HTTP response to
+  runtime pairing completion without raw secrets in audit metadata
 - non-consuming fake local HTTP server summaries for response-shape assertions
 - fake MQTT broker publications with retained-message and metadata markers
 - non-consuming fake MQTT broker summaries for publication-shape assertions

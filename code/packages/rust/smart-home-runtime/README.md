@@ -68,7 +68,7 @@ Included surfaces:
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
-  only to Vault references, never raw credentials
+  only to Vault references and non-secret audit metadata, never raw credentials
 - read-side queries for pairing sessions and desired-state supervision targets
 - pairing-session inventory summaries for bridge-pairing status, expiry, and
   VaultRef completion counts

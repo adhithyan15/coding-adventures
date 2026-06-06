@@ -1571,8 +1571,18 @@ fn protocol_id(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use hue_core::{
+        hue_application_credentials_from_registration_response,
+        hue_pairing_plan_for_discovered_bridge, hue_pairing_registration_request_plan,
+        DiscoveredHueBridge,
+    };
+    use smart_home_core::{AgentId, VaultRef};
     use smart_home_discovery::{DiscoverySource, DiscoveryWorkerRunStatus, PairingRequirement};
-    use smart_home_runtime::WorkerStatus;
+    use smart_home_local_http::LocalHttpEndpoint;
+    use smart_home_runtime::{
+        PairingSessionStatus, RuntimeEvent, RuntimePairingCompletion, RuntimePairingSession,
+        RuntimePairingSessionId, WorkerStatus,
+    };
 
     #[test]
     fn hue_fixture_projects_normalized_bridge_device_and_entities() {
@@ -2277,6 +2287,101 @@ mod tests {
         assert_eq!(matched, response);
         assert_eq!(matched.body_utf8(), Some(r#"{"data":[]}"#));
         assert!(server.is_empty());
+    }
+
+    #[test]
+    fn hue_pairing_fixture_completes_runtime_session_without_secret_metadata() {
+        let pairing_plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.66.1960062030".to_string()),
+            },
+            "chief-of-staff",
+            "desktop",
+        );
+        let endpoint =
+            LocalHttpEndpoint::hue_bridge(pairing_plan.bridge_id().clone(), "192.0.2.10")
+                .unwrap()
+                .accept_invalid_certs(true);
+        let request_plan = hue_pairing_registration_request_plan(&pairing_plan, &endpoint).unwrap();
+        let response = ScriptedLocalHttpResponse::ok_json(
+            LocalHttpMethod::Post,
+            request_plan.url.clone(),
+            br#"[{"success":{"username":"raw-hue-application-key","clientkey":"client-key-1"}}]"#
+                .to_vec(),
+            1_250,
+        );
+        let mut server = FakeLocalHttpServer::new().push_response(response);
+
+        let matched = server.respond_to_plan(&request_plan).unwrap();
+        let credentials =
+            hue_application_credentials_from_registration_response(&matched.body).unwrap();
+        let vault_payload = credentials.vault_secret_json();
+        let vault_payload_text = std::str::from_utf8(&vault_payload).unwrap();
+        assert!(vault_payload_text.contains("raw-hue-application-key"));
+
+        let handoff = credentials.vault_handoff(
+            &pairing_plan,
+            VaultRef::trusted("vault://smart-home/hue/001788fffeabcdef/application-key"),
+            matched.observed_at_ms,
+        );
+        assert!(handoff.metadata.iter().all(|metadata| {
+            !metadata.value.contains("raw-hue-application-key")
+                && !metadata.value.contains("client-key-1")
+        }));
+
+        let mut runtime = SmartHomeRuntime::new();
+        let mut unpaired_bridge = pairing_plan.bridge.clone();
+        unpaired_bridge.health = Health::Unpaired;
+        runtime.upsert_bridge(unpaired_bridge).unwrap();
+        let session_id = RuntimePairingSessionId::trusted("hue-pairing-1");
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                session_id.clone(),
+                &pairing_plan.bridge,
+                AgentId::trusted("chief-agent"),
+                1_200,
+                2_000,
+                vec![Metadata::new("pairing_kind", "hue_link_button")],
+            ))
+            .unwrap();
+
+        let completed = runtime
+            .complete_pairing_session_with(
+                RuntimePairingCompletion::new(
+                    session_id.clone(),
+                    handoff.vault_ref.clone(),
+                    matched.observed_at_ms,
+                )
+                .with_metadata(handoff.metadata.clone()),
+            )
+            .unwrap();
+        let bridge = runtime.registry().bridge(pairing_plan.bridge_id()).unwrap();
+
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert_eq!(completed.vault_ref, Some(handoff.vault_ref.clone()));
+        assert!(completed.metadata.iter().any(|metadata| {
+            metadata.key == "hue.pairing.credential_kind" && metadata.value == "application_key"
+        }));
+        assert_eq!(bridge.health, Health::Online);
+        assert_eq!(bridge.auth_ref.as_ref(), Some(&handoff.vault_ref));
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::Device(event), RuntimeEvent::BridgeHealth { bridge_id, health, .. }]
+                if event.event_type == DeviceEventType::Health
+                    && bridge_id == pairing_plan.bridge_id()
+                    && *health == Health::Online
+                    && event.metadata.iter().any(|metadata| {
+                        metadata.key == "hue.pairing.phase"
+                            && metadata.value == "credential_stored"
+                    })
+                    && event.metadata.iter().all(|metadata| {
+                        !metadata.value.contains("raw-hue-application-key")
+                            && !metadata.value.contains("client-key-1")
+                    })
+        ));
     }
 
     #[test]

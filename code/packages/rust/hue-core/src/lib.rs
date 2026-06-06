@@ -11,12 +11,16 @@ use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, Device, DeviceId, Entity,
     EntityId, EntityKind, Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
-    StateDelta, StateSnapshot, StateSource, Value,
+    StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerFailure,
     DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanResult,
     MdnsWorkerScanReport, PairingRequirement,
+};
+use smart_home_local_http::{
+    LocalHttpEndpoint, LocalHttpError, LocalHttpMethod, LocalHttpRequestPlan,
+    LocalHttpRequestTemplate,
 };
 use std::fmt;
 
@@ -44,10 +48,28 @@ pub enum HueError {
     MissingDiscoveryField {
         field: &'static str,
     },
+    MissingPairingCredential {
+        field: &'static str,
+    },
+    EmptyPairingCredential {
+        field: &'static str,
+    },
+    InvalidPairingResponse {
+        reason: String,
+    },
+    PairingRejected {
+        error_type: Option<i64>,
+        description: String,
+    },
+    PairingBridgeMismatch {
+        plan_bridge_id: BridgeId,
+        endpoint_bridge_id: BridgeId,
+    },
     UnsupportedDiscoveryService {
         service_type: String,
     },
     Discovery(DiscoveryError),
+    LocalHttp(LocalHttpError),
 }
 
 impl fmt::Display for HueError {
@@ -71,6 +93,32 @@ impl fmt::Display for HueError {
             Self::MissingDiscoveryField { field } => {
                 write!(f, "Hue discovery field {field} is required")
             }
+            Self::MissingPairingCredential { field } => {
+                write!(f, "Hue pairing credential field {field} is required")
+            }
+            Self::EmptyPairingCredential { field } => {
+                write!(f, "Hue pairing credential field {field} must not be empty")
+            }
+            Self::InvalidPairingResponse { reason } => {
+                write!(f, "Hue pairing response is invalid: {reason}")
+            }
+            Self::PairingRejected {
+                error_type,
+                description,
+            } => match error_type {
+                Some(error_type) => write!(
+                    f,
+                    "Hue pairing was rejected with error {error_type}: {description}"
+                ),
+                None => write!(f, "Hue pairing was rejected: {description}"),
+            },
+            Self::PairingBridgeMismatch {
+                plan_bridge_id,
+                endpoint_bridge_id,
+            } => write!(
+                f,
+                "Hue pairing plan bridge {plan_bridge_id} does not match local HTTP endpoint bridge {endpoint_bridge_id}"
+            ),
             Self::UnsupportedDiscoveryService { service_type } => {
                 write!(
                     f,
@@ -78,6 +126,7 @@ impl fmt::Display for HueError {
                 )
             }
             Self::Discovery(error) => write!(f, "{error}"),
+            Self::LocalHttp(error) => write!(f, "{error}"),
         }
     }
 }
@@ -87,6 +136,12 @@ impl std::error::Error for HueError {}
 impl From<DiscoveryError> for HueError {
     fn from(error: DiscoveryError) -> Self {
         Self::Discovery(error)
+    }
+}
+
+impl From<LocalHttpError> for HueError {
+    fn from(error: LocalHttpError) -> Self {
+        Self::LocalHttp(error)
     }
 }
 
@@ -219,6 +274,21 @@ pub enum HueMethod {
     Delete,
 }
 
+impl HueMethod {
+    pub fn as_local_http_method(self) -> LocalHttpMethod {
+        match self {
+            Self::Get => LocalHttpMethod::Get,
+            Self::Post => LocalHttpMethod::Post,
+            Self::Put => LocalHttpMethod::Put,
+            Self::Delete => LocalHttpMethod::Delete,
+        }
+    }
+
+    pub fn is_idempotent_by_default(self) -> bool {
+        matches!(self, Self::Get | Self::Put | Self::Delete)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum HueRequestBody {
     RegisterApplication {
@@ -244,6 +314,18 @@ pub enum HueRequestBodyKind {
     SetBrightness,
     SetColorTemperature,
     RecallScene,
+}
+
+impl HueRequestBodyKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::RegisterApplication => "register_application",
+            Self::SetOn => "set_on",
+            Self::SetBrightness => "set_brightness",
+            Self::SetColorTemperature => "set_color_temperature",
+            Self::RecallScene => "recall_scene",
+        }
+    }
 }
 
 impl HueRequestBody {
@@ -941,6 +1023,91 @@ impl HueBridgePairingPlan {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueApplicationCredentials {
+    pub application_key: String,
+    pub client_key: Option<String>,
+}
+
+impl HueApplicationCredentials {
+    pub fn new(
+        application_key: impl Into<String>,
+        client_key: Option<String>,
+    ) -> Result<Self, HueError> {
+        let application_key = application_key.into();
+        if application_key.trim().is_empty() {
+            return Err(HueError::EmptyPairingCredential { field: "username" });
+        }
+
+        Ok(Self {
+            application_key,
+            client_key,
+        })
+    }
+
+    pub fn has_client_key(&self) -> bool {
+        self.client_key.is_some()
+    }
+
+    pub fn vault_secret_json(&self) -> Vec<u8> {
+        let mut object = serde_json::Map::new();
+        object.insert(
+            "application_key".to_string(),
+            serde_json::Value::String(self.application_key.clone()),
+        );
+        if let Some(client_key) = &self.client_key {
+            object.insert(
+                "client_key".to_string(),
+                serde_json::Value::String(client_key.clone()),
+            );
+        }
+        serde_json::to_vec(&serde_json::Value::Object(object))
+            .expect("Hue credential vault payload is valid JSON")
+    }
+
+    pub fn vault_handoff(
+        &self,
+        plan: &HueBridgePairingPlan,
+        vault_ref: VaultRef,
+        stored_at_ms: u64,
+    ) -> HuePairingVaultHandoff {
+        HuePairingVaultHandoff {
+            bridge_id: plan.bridge_id().clone(),
+            vault_ref,
+            stored_at_ms,
+            application_key_header: plan.application_key_header.clone(),
+            event_stream_path: plan.event_stream_path.clone(),
+            metadata: vec![
+                Metadata::new("hue.pairing.phase", "credential_stored"),
+                Metadata::new("hue.pairing.credential_kind", "application_key"),
+                Metadata::new(
+                    "hue.pairing.application_key_header",
+                    plan.application_key_header.as_str(),
+                ),
+                Metadata::new(
+                    "hue.pairing.client_key_present",
+                    self.has_client_key().to_string(),
+                ),
+                Metadata::new(
+                    "hue.pairing.event_stream_path",
+                    plan.event_stream_path.as_str(),
+                ),
+                Metadata::new("hue.pairing.stored_at_ms", stored_at_ms.to_string()),
+            ],
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HuePairingVaultHandoff {
+    pub bridge_id: BridgeId,
+    pub vault_ref: VaultRef,
+    pub stored_at_ms: u64,
+    pub application_key_header: String,
+    pub event_stream_path: String,
+    pub metadata: Vec<Metadata>,
+}
+
 pub fn hue_integration_descriptor() -> IntegrationDescriptor {
     IntegrationDescriptor {
         integration_id: IntegrationId::trusted(HUE_INTEGRATION_ID),
@@ -969,6 +1136,118 @@ pub fn hue_registration_request(
             instance_name: instance_name.into(),
         }),
     }
+}
+
+pub fn hue_request_body_json(body: &HueRequestBody) -> serde_json::Value {
+    match body {
+        HueRequestBody::RegisterApplication {
+            app_name,
+            instance_name,
+        } => serde_json::json!({
+            "devicetype": format!("{app_name}#{instance_name}"),
+            "generateclientkey": true,
+        }),
+        HueRequestBody::SetOn { on } => serde_json::json!({
+            "on": { "on": on },
+        }),
+        HueRequestBody::SetBrightness { brightness } => serde_json::json!({
+            "dimming": { "brightness": brightness },
+        }),
+        HueRequestBody::SetColorTemperature { mirek } => serde_json::json!({
+            "color_temperature": { "mirek": mirek },
+        }),
+        HueRequestBody::RecallScene => serde_json::json!({
+            "recall": { "action": "active" },
+        }),
+    }
+}
+
+pub fn hue_request_body_json_bytes(body: &HueRequestBody) -> Vec<u8> {
+    serde_json::to_vec(&hue_request_body_json(body)).expect("Hue request body is valid JSON")
+}
+
+pub fn hue_request_to_local_http_plan(
+    request: &HueRequest,
+    endpoint: &LocalHttpEndpoint,
+) -> Result<LocalHttpRequestPlan, HueError> {
+    let body = request
+        .body
+        .as_ref()
+        .map(hue_request_body_json_bytes)
+        .unwrap_or_default();
+    let mut template =
+        LocalHttpRequestTemplate::new(request.method.as_local_http_method(), request.path.clone())?
+            .with_accept("application/json")
+            .with_timeout_ms(5_000)
+            .with_idempotent(request.method.is_idempotent_by_default())
+            .with_metadata(Metadata::new("hue.request.path", request.path.as_str()));
+
+    if let Some(body) = &request.body {
+        template = template
+            .with_content_type("application/json")
+            .with_metadata(Metadata::new("hue.request.body_kind", body.kind().as_str()));
+    }
+
+    Ok(template.plan(endpoint, body)?)
+}
+
+pub fn hue_pairing_registration_request_plan(
+    plan: &HueBridgePairingPlan,
+    endpoint: &LocalHttpEndpoint,
+) -> Result<LocalHttpRequestPlan, HueError> {
+    if plan.bridge_id() != &endpoint.bridge_id {
+        return Err(HueError::PairingBridgeMismatch {
+            plan_bridge_id: plan.bridge_id().clone(),
+            endpoint_bridge_id: endpoint.bridge_id.clone(),
+        });
+    }
+
+    let mut request_plan = hue_request_to_local_http_plan(&plan.registration_request, endpoint)?;
+    request_plan
+        .metadata
+        .push(Metadata::new("hue.pairing.phase", "registration"));
+    request_plan.metadata.push(Metadata::new(
+        "hue.pairing.requires_user_presence",
+        plan.requires_user_presence.to_string(),
+    ));
+    Ok(request_plan)
+}
+
+pub fn hue_application_credentials_from_registration_response(
+    body: &[u8],
+) -> Result<HueApplicationCredentials, HueError> {
+    let value: serde_json::Value =
+        serde_json::from_slice(body).map_err(|error| HueError::InvalidPairingResponse {
+            reason: error.to_string(),
+        })?;
+    let entries = value
+        .as_array()
+        .ok_or_else(|| HueError::InvalidPairingResponse {
+            reason: "expected top-level response array".to_string(),
+        })?;
+
+    for entry in entries {
+        if let Some(error) = entry.get("error") {
+            return Err(HueError::PairingRejected {
+                error_type: json_i64_field(error, "type"),
+                description: json_string_field(error, "description")
+                    .unwrap_or("unknown Hue pairing error")
+                    .to_string(),
+            });
+        }
+
+        if let Some(success) = entry.get("success") {
+            let application_key = json_string_field(success, "username")
+                .or_else(|| json_string_field(success, "application_key"))
+                .ok_or(HueError::MissingPairingCredential { field: "username" })?;
+            let client_key = json_string_field(success, "clientkey")
+                .or_else(|| json_string_field(success, "client_key"))
+                .map(str::to_string);
+            return HueApplicationCredentials::new(application_key, client_key);
+        }
+    }
+
+    Err(HueError::MissingPairingCredential { field: "success" })
 }
 
 pub fn hue_pairing_plan_for_discovered_bridge(
@@ -2015,6 +2294,14 @@ fn hue_entity_id_for_resource_ref(bridge_id: &BridgeId, resource: &HueResourceRe
     ))
 }
 
+fn json_string_field<'a>(value: &'a serde_json::Value, field: &str) -> Option<&'a str> {
+    value.get(field).and_then(serde_json::Value::as_str)
+}
+
+fn json_i64_field(value: &serde_json::Value, field: &str) -> Option<i64> {
+    value.get(field).and_then(serde_json::Value::as_i64)
+}
+
 pub fn validate_brightness(value: u16) -> Result<u8, HueError> {
     if value > 100 {
         return Err(HueError::InvalidBrightness { value });
@@ -2720,6 +3007,90 @@ mod tests {
                     app_name: "chief-of-staff".to_string(),
                     instance_name: "desk".to_string(),
                 }),
+            }
+        );
+    }
+
+    #[test]
+    fn hue_pairing_registration_builds_local_http_plan_and_parses_credentials() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        let endpoint = LocalHttpEndpoint::hue_bridge(plan.bridge_id().clone(), "192.0.2.10")
+            .unwrap()
+            .accept_invalid_certs(true);
+
+        let request_plan = hue_pairing_registration_request_plan(&plan, &endpoint).unwrap();
+
+        assert_eq!(request_plan.method, LocalHttpMethod::Post);
+        assert_eq!(request_plan.url, "https://192.0.2.10/api");
+        assert_eq!(
+            request_plan.header("Content-Type"),
+            Some("application/json")
+        );
+        assert_eq!(request_plan.header("Accept"), Some("application/json"));
+        assert!(!request_plan.idempotent);
+        assert!(request_plan.required_vault_ref().is_none());
+        assert!(request_plan.metadata.iter().any(|metadata| {
+            metadata.key == "hue.pairing.phase" && metadata.value == "registration"
+        }));
+        let body: serde_json::Value = serde_json::from_slice(&request_plan.body).unwrap();
+        assert_eq!(body["devicetype"], "chief-of-staff#desk");
+        assert_eq!(body["generateclientkey"], true);
+
+        let credentials = hue_application_credentials_from_registration_response(
+            br#"[{"success":{"username":"raw-hue-application-key","clientkey":"client-key-1"}}]"#,
+        )
+        .unwrap();
+        assert_eq!(credentials.application_key, "raw-hue-application-key");
+        assert_eq!(credentials.client_key.as_deref(), Some("client-key-1"));
+
+        let vault_payload = credentials.vault_secret_json();
+        let vault_payload_json: serde_json::Value = serde_json::from_slice(&vault_payload).unwrap();
+        assert_eq!(
+            vault_payload_json["application_key"],
+            "raw-hue-application-key"
+        );
+        assert_eq!(vault_payload_json["client_key"], "client-key-1");
+
+        let handoff = credentials.vault_handoff(
+            &plan,
+            VaultRef::trusted("vault://smart-home/hue/001788fffeabcdef/application-key"),
+            1_300,
+        );
+        assert_eq!(
+            handoff.bridge_id,
+            BridgeId::trusted("hue.bridge.001788fffeabcdef")
+        );
+        assert_eq!(handoff.application_key_header, HUE_APPLICATION_KEY_HEADER);
+        assert!(handoff.metadata.iter().any(|metadata| {
+            metadata.key == "hue.pairing.client_key_present" && metadata.value == "true"
+        }));
+        assert!(handoff.metadata.iter().all(|metadata| {
+            !metadata.value.contains("raw-hue-application-key")
+                && !metadata.value.contains("client-key-1")
+        }));
+    }
+
+    #[test]
+    fn hue_pairing_registration_surfaces_link_button_errors() {
+        let error = hue_application_credentials_from_registration_response(
+            br#"[{"error":{"type":101,"address":"/","description":"link button not pressed"}}]"#,
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error,
+            HueError::PairingRejected {
+                error_type: Some(101),
+                description: "link button not pressed".to_string(),
             }
         );
     }
