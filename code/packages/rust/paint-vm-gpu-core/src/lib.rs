@@ -10,13 +10,14 @@ use std::collections::HashMap;
 use paint_instructions::{
     BlendMode, FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse,
     PaintGlyphRun, PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine,
-    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap, Transform2D,
+    PaintPath, PaintRect, PaintScene, PaintText, PathCommand, StrokeCap, StrokeJoin, Transform2D,
     IDENTITY_TRANSFORM,
 };
 
 pub const VERSION: &str = "0.1.0";
 const GRADIENT_RAMP_WIDTH: u32 = 1024;
 const RADIAL_GRADIENT_TEXTURE_SIZE: u32 = 256;
+const DEFAULT_MITER_LIMIT: f32 = 4.0;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct GpuPaintPlan {
@@ -585,6 +586,7 @@ impl PlanBuilder {
             let stroke_width = path.stroke_width.unwrap_or(1.0).max(1.0) as f32;
             let dash = normalized_dash_pattern(path.stroke_dash.as_deref());
             let cap = path.stroke_cap.as_ref().unwrap_or(&StrokeCap::Butt);
+            let join = path.stroke_join.as_ref().unwrap_or(&StrokeJoin::Miter);
             for contour in &contours {
                 let mut dash_cursor = dash
                     .as_deref()
@@ -645,6 +647,16 @@ impl PlanBuilder {
                 }
                 if dash.is_none() && !contour.closed {
                     self.add_open_contour_caps(contour, stroke_width, cap, transform, color);
+                }
+                if dash.is_none() {
+                    self.add_contour_joins(
+                        contour,
+                        stroke_width,
+                        join,
+                        DEFAULT_MITER_LIMIT,
+                        transform,
+                        color,
+                    );
                 }
             }
         }
@@ -1279,6 +1291,198 @@ impl PlanBuilder {
         }
     }
 
+    fn add_contour_joins(
+        &mut self,
+        contour: &Contour,
+        stroke_width: f32,
+        join: &StrokeJoin,
+        miter_limit: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if stroke_width <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let logical_len = if contour.closed
+            && contour.points.len() > 1
+            && same_point(contour.points[0], *contour.points.last().unwrap())
+        {
+            contour.points.len() - 1
+        } else {
+            contour.points.len()
+        };
+        if logical_len < 3 {
+            return;
+        }
+
+        if contour.closed {
+            for index in 0..logical_len {
+                let previous = contour.points[(index + logical_len - 1) % logical_len];
+                let current = contour.points[index];
+                let next = contour.points[(index + 1) % logical_len];
+                self.add_line_join(
+                    previous,
+                    current,
+                    next,
+                    stroke_width,
+                    join,
+                    miter_limit,
+                    transform,
+                    color,
+                );
+            }
+        } else {
+            for index in 1..logical_len - 1 {
+                self.add_line_join(
+                    contour.points[index - 1],
+                    contour.points[index],
+                    contour.points[index + 1],
+                    stroke_width,
+                    join,
+                    miter_limit,
+                    transform,
+                    color,
+                );
+            }
+        }
+    }
+
+    fn add_line_join(
+        &mut self,
+        previous: GpuPoint,
+        current: GpuPoint,
+        next: GpuPoint,
+        stroke_width: f32,
+        join: &StrokeJoin,
+        miter_limit: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        let Some(in_dir) = normalized_vector(previous, current) else {
+            return;
+        };
+        let Some(out_dir) = normalized_vector(current, next) else {
+            return;
+        };
+        let turn = cross(in_dir, out_dir);
+        if turn.abs() <= f32::EPSILON {
+            return;
+        }
+
+        let half_width = stroke_width / 2.0;
+        let side = if turn > 0.0 { 1.0 } else { -1.0 };
+        let in_normal = scale_point(left_normal(in_dir), side);
+        let out_normal = scale_point(left_normal(out_dir), side);
+        let outer0 = add_points(current, scale_point(in_normal, half_width));
+        let outer1 = add_points(current, scale_point(out_normal, half_width));
+
+        match join {
+            StrokeJoin::Bevel => {
+                self.add_join_triangle(
+                    current,
+                    outer0,
+                    outer1,
+                    transform,
+                    color,
+                    "path.stroke.join",
+                );
+            }
+            StrokeJoin::Round => self.add_round_line_join(
+                current, in_normal, out_normal, turn, half_width, transform, color,
+            ),
+            StrokeJoin::Miter => {
+                let miter = line_intersection(outer0, in_dir, outer1, out_dir);
+                if let Some(miter) = miter
+                    .filter(|point| distance(*point, current) <= half_width * miter_limit.max(1.0))
+                {
+                    self.add_join_triangle(
+                        outer0,
+                        miter,
+                        outer1,
+                        transform,
+                        color,
+                        "path.stroke.join",
+                    );
+                } else {
+                    self.add_join_triangle(
+                        current,
+                        outer0,
+                        outer1,
+                        transform,
+                        color,
+                        "path.stroke.join",
+                    );
+                }
+            }
+        }
+    }
+
+    fn add_join_triangle(
+        &mut self,
+        p0: GpuPoint,
+        p1: GpuPoint,
+        p2: GpuPoint,
+        transform: Transform2D,
+        color: GpuColor,
+        label: &'static str,
+    ) {
+        self.add_mesh(
+            vec![
+                vertex(apply_transform(p0, transform), color),
+                vertex(apply_transform(p1, transform), color),
+                vertex(apply_transform(p2, transform), color),
+            ],
+            vec![0, 1, 2],
+            None,
+            label,
+        );
+    }
+
+    fn add_round_line_join(
+        &mut self,
+        center: GpuPoint,
+        in_normal: GpuPoint,
+        out_normal: GpuPoint,
+        turn: f32,
+        radius: f32,
+        transform: Transform2D,
+        color: GpuColor,
+    ) {
+        if radius <= f32::EPSILON || color.a == 0.0 {
+            return;
+        }
+
+        let start_angle = in_normal.y.atan2(in_normal.x);
+        let end_angle = out_normal.y.atan2(out_normal.x);
+        let sweep = if turn > 0.0 {
+            positive_angle_delta(start_angle, end_angle)
+        } else {
+            -positive_angle_delta(end_angle, start_angle)
+        };
+        let segments = ((sweep.abs() / (std::f32::consts::PI / 8.0)).ceil() as usize).max(2);
+        let mut vertices = Vec::with_capacity(segments + 2);
+        vertices.push(vertex(apply_transform(center, transform), color));
+        for index in 0..=segments {
+            let theta = start_angle + sweep * index as f32 / segments as f32;
+            vertices.push(vertex(
+                apply_transform(
+                    GpuPoint {
+                        x: center.x + theta.cos() * radius,
+                        y: center.y + theta.sin() * radius,
+                    },
+                    transform,
+                ),
+                color,
+            ));
+        }
+        let mut indices = Vec::with_capacity(segments * 3);
+        for index in 1..=segments {
+            indices.extend_from_slice(&[0, index as u32, index as u32 + 1]);
+        }
+        self.add_mesh(vertices, indices, None, "path.stroke.join");
+    }
+
     fn add_dashed_line_segment(
         &mut self,
         p0: GpuPoint,
@@ -1693,6 +1897,72 @@ fn same_point(a: GpuPoint, b: GpuPoint) -> bool {
     (a.x - b.x).abs() <= f32::EPSILON && (a.y - b.y).abs() <= f32::EPSILON
 }
 
+fn normalized_vector(from: GpuPoint, to: GpuPoint) -> Option<GpuPoint> {
+    let dx = to.x - from.x;
+    let dy = to.y - from.y;
+    let len = (dx * dx + dy * dy).sqrt();
+    (len > f32::EPSILON).then_some(GpuPoint {
+        x: dx / len,
+        y: dy / len,
+    })
+}
+
+fn left_normal(vector: GpuPoint) -> GpuPoint {
+    GpuPoint {
+        x: -vector.y,
+        y: vector.x,
+    }
+}
+
+fn scale_point(point: GpuPoint, scale: f32) -> GpuPoint {
+    GpuPoint {
+        x: point.x * scale,
+        y: point.y * scale,
+    }
+}
+
+fn add_points(a: GpuPoint, b: GpuPoint) -> GpuPoint {
+    GpuPoint {
+        x: a.x + b.x,
+        y: a.y + b.y,
+    }
+}
+
+fn cross(a: GpuPoint, b: GpuPoint) -> f32 {
+    a.x * b.y - a.y * b.x
+}
+
+fn distance(a: GpuPoint, b: GpuPoint) -> f32 {
+    let dx = a.x - b.x;
+    let dy = a.y - b.y;
+    (dx * dx + dy * dy).sqrt()
+}
+
+fn line_intersection(
+    origin0: GpuPoint,
+    direction0: GpuPoint,
+    origin1: GpuPoint,
+    direction1: GpuPoint,
+) -> Option<GpuPoint> {
+    let denom = cross(direction0, direction1);
+    if denom.abs() <= f32::EPSILON {
+        return None;
+    }
+    let delta = GpuPoint {
+        x: origin1.x - origin0.x,
+        y: origin1.y - origin0.y,
+    };
+    let t = cross(delta, direction1) / denom;
+    Some(GpuPoint {
+        x: origin0.x + direction0.x * t,
+        y: origin0.y + direction0.y * t,
+    })
+}
+
+fn positive_angle_delta(from: f32, to: f32) -> f32 {
+    (to - from).rem_euclid(std::f32::consts::TAU)
+}
+
 fn parse_color_with_opacity(color: &str, opacity: f32) -> GpuColor {
     let mut parsed = parse_color(color);
     parsed.a *= opacity.clamp(0.0, 1.0);
@@ -1873,6 +2143,20 @@ mod tests {
         GlyphPosition, GradientKind, GradientStop, PaintBase, PaintEllipse, PaintGradient,
         PaintGroup, PaintImage, PaintInstruction, PaintRect, PixelContainer,
     };
+
+    fn mesh_count(plan: &GpuPaintPlan, label: &str) -> usize {
+        plan.meshes
+            .iter()
+            .filter(|mesh| mesh.label == label)
+            .count()
+    }
+
+    fn mesh_has_vertex(mesh: &GpuMesh, x: f32, y: f32) -> bool {
+        mesh.vertices.iter().any(|vertex| {
+            (vertex.position.x - x).abs() <= f32::EPSILON
+                && (vertex.position.y - y).abs() <= f32::EPSILON
+        })
+    }
 
     #[test]
     fn plans_rect_as_indexed_mesh() {
@@ -2229,7 +2513,169 @@ mod tests {
                 ellipse_segments: 12,
             },
         );
-        assert_eq!(plan.meshes.len(), 4);
+        assert_eq!(mesh_count(&plan, "path.stroke"), 4);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 3);
+    }
+
+    #[test]
+    fn lowers_bevel_path_joins_on_open_contours() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Bevel),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert_eq!(join.vertices.len(), 3);
+        assert!(mesh_has_vertex(join, 10.0, 10.0));
+    }
+
+    #[test]
+    fn lowers_round_path_joins_to_arc_fans() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(4.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene_with_options(
+            &scene,
+            GpuPlanOptions {
+                ellipse_segments: 8,
+                curve_segments: 4,
+            },
+        );
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert!(join.vertices.len() > 3);
+        assert!(mesh_has_vertex(join, 10.0, 10.0));
+    }
+
+    #[test]
+    fn lowers_miter_path_joins_to_outer_corners() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 10.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: None,
+            stroke_join: Some(StrokeJoin::Miter),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+        let join = plan
+            .meshes
+            .iter()
+            .find(|mesh| mesh.label == "path.stroke.join")
+            .unwrap();
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 2);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 1);
+        assert_eq!(join.vertices.len(), 3);
+        assert!(mesh_has_vertex(join, 9.0, 9.0));
+    }
+
+    #[test]
+    fn lowers_closed_path_joins_at_each_corner() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 2.0, y: 2.0 },
+                PathCommand::LineTo { x: 10.0, y: 2.0 },
+                PathCommand::LineTo { x: 6.0, y: 10.0 },
+                PathCommand::Close,
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Bevel),
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(mesh_count(&plan, "path.stroke"), 3);
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 3);
+    }
+
+    #[test]
+    fn leaves_dashed_path_strokes_without_contour_join_meshes() {
+        let mut scene = PaintScene::new(24.0, 12.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 0.0, y: 6.0 },
+                PathCommand::LineTo { x: 10.0, y: 6.0 },
+                PathCommand::LineTo { x: 20.0, y: 6.0 },
+            ],
+            fill: None,
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(2.0),
+            stroke_cap: Some(StrokeCap::Round),
+            stroke_join: Some(StrokeJoin::Round),
+            stroke_dash: Some(vec![4.0, 4.0]),
+            stroke_dash_offset: None,
+        }));
+
+        let plan = plan_scene(&scene);
+
+        assert_eq!(mesh_count(&plan, "path.stroke.join"), 0);
+        assert!(plan
+            .meshes
+            .iter()
+            .all(|mesh| mesh.label == "path.stroke.dash"));
     }
 
     #[test]
