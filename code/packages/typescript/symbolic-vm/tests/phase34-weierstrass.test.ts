@@ -166,6 +166,19 @@ describe("Phase 34: ∫ 1/(a + b·cos x) dx (Weierstrass arctan form)", () => {
       expect(Math.abs(got - expected)).toBeLessThan(1e-4);
     }
   });
+
+  it("negative a in the cosine arctan branch closes with the correct sign", () => {
+    const vm = makeVM();
+    const integrand = app(DIV, [int(1), app(ADD, [int(-2), app(COS, [X])])]);
+    const phi = vm.eval(integrate(integrand));
+    expect(isUnevaluatedIntegrate(phi)).toBe(false);
+    expect(containsHead(phi, ATAN)).toBe(true);
+    for (const xVal of [-1.5, -0.4, 0.0, 0.4, 1.5]) {
+      const got = numericalDerivative(vm, phi, xVal);
+      const expected = 1 / (-2 + Math.cos(xVal));
+      expect(Math.abs(got - expected)).toBeLessThan(1e-4);
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------

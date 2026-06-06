@@ -201,6 +201,22 @@ def test_cos_five_plus_three_cos(vm: VM) -> None:
         assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4)
 
 
+def test_cos_negative_a_arctan_branch_closes(vm: VM) -> None:
+    """``∫ 1/(-2 + cos(x)) dx`` closes with the sign-correct atan form."""
+    integrand = IRApply(DIV, (IRInteger(1), IRApply(ADD, (IRInteger(-2), IRApply(COS, (X,))))))
+    phi = vm.eval(_integrate(integrand))
+    assert not (isinstance(phi, IRApply) and phi.head == INTEGRATE), (
+        f"Phase 34 should close ∫ 1/(-2+cos x) dx; got {phi!r}"
+    )
+    assert _contains_head(phi, ATAN)
+    for x_val in (-1.5, -0.4, 0.0, 0.4, 1.5):
+        got = _numerical_derivative(vm, phi, x_val)
+        expected = 1.0 / (-2.0 + math.cos(x_val))
+        assert math.isclose(got, expected, abs_tol=1e-4, rel_tol=1e-4), (
+            f"At x={x_val}: derivative={got!r}, expected={expected!r}"
+        )
+
+
 # ---------------------------------------------------------------------------
 # Operand-order robustness
 # ---------------------------------------------------------------------------

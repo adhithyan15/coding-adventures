@@ -1329,6 +1329,7 @@ def _try_weierstrass_one_over_linear_trig(
         return None
     sqrt_disc_ir = _sqrt_fraction_ir(disc)
     tan_half = IRApply(TAN, (IRApply(DIV, (arg_node, TWO)),))
+    coef_sign = Fraction(1)
     if trig_head == SIN:
         # arctan argument: (a·tan(x/2) + b) / √(a²−b²)
         atan_arg_top = IRApply(
@@ -1338,20 +1339,19 @@ def _try_weierstrass_one_over_linear_trig(
         atan_arg = IRApply(DIV, (atan_arg_top, sqrt_disc_ir))
     else:  # COS
         # arctan argument: √((a−b)/(a+b)) · tan(x/2)
-        # Since a² > b², we have a+b ≠ 0; sign of (a−b)/(a+b) is positive
-        # iff a > 0 (and both numerator and denominator share the sign).
-        # When a < 0 the standard form needs adjustment; rather than chase
-        # branch issues, require a > 0 here and defer the a < 0 case.
-        if a <= 0:
-            return None
+        # Since a² > b², a-b and a+b share sign(a), so the ratio is positive.
+        # When a < 0, flip the outer coefficient to account for the negative
+        # factor introduced by the tangent-half-angle denominator quadratic.
+        if a < 0:
+            coef_sign = Fraction(-1)
         ratio = (a - b) / (a + b)
         if ratio <= 0:
-            # Cannot happen when a² > b² and a > 0, but defensive.
+            # Cannot happen when a² > b² with nonzero a, but defensive.
             return None
         sqrt_ratio_ir = _sqrt_fraction_ir(ratio)
         atan_arg = IRApply(MUL, (sqrt_ratio_ir, tan_half))
     # Final result: (2c/√(a²−b²)) · arctan(...)
-    coef_frac = c * 2
+    coef_frac = c * 2 * coef_sign
     coef_ir = IRApply(DIV, (_frac_ir(coef_frac), sqrt_disc_ir))
     return IRApply(MUL, (coef_ir, IRApply(ATAN, (atan_arg,))))
 
