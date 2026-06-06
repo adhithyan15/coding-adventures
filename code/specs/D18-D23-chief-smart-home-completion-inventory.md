@@ -176,6 +176,23 @@ turning runtime into a Hue integration or process manager:
   path using local fake runners, without opening sockets or moving the Chief
   bridge boundary.
 
+## Current Discovery Observability Slice
+
+This slice makes supervised discovery runs inspectable through the existing
+D23 runtime and D18D bridge surfaces:
+
+- `smart-home-runtime` now snapshots scheduled discovery workers with due
+  status, next due time, last run status, record/failure counts, catalog change
+  counts, total run count, and consecutive failure pressure.
+- `RuntimeSupervisionObservation` now carries discovery scheduler counts and
+  per-worker snapshots alongside the existing non-mutating supervision plan and
+  bridge-worker heartbeat schedule.
+- `chief-of-staff-smart-home-tools` now includes those discovery worker details
+  in `smart_home.observe_supervision`, so Chief jobs and dashboards can triage
+  scheduled discovery health without owning D23 scheduler policy.
+- The bridge end-to-end test now proves the D18D handler can surface scheduled
+  Hue mDNS worker health while the runtime remains the source of truth.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:

@@ -15,3 +15,6 @@ All notable changes to this package will be documented in this file.
 - Added the `smart_home.discover` D18D handler over
   `RuntimeDiscoverToolRequest`, including discovery filters, bridge-candidate
   output, and end-to-end journal coverage.
+- Added scheduled discovery worker observability to
+  `smart_home.observe_supervision`, including worker status, due time, last run
+  counts, and failure pressure from the D23 runtime.

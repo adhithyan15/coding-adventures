@@ -26,7 +26,7 @@ use smart_home_runtime::{
     RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
     RuntimePairingSessionId, RuntimeReadToolOutput, RuntimeReadToolRequest,
     RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionId,
-    SmartHomeRuntime,
+    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -354,6 +354,20 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                     SchemaProperty::new("state_refresh_count", JsonSchema::Integer),
                     SchemaProperty::new("desired_state_drift_count", JsonSchema::Integer),
                     SchemaProperty::new("worker_restart_count", JsonSchema::Integer),
+                    SchemaProperty::new("discovery_worker_count", JsonSchema::Integer),
+                    SchemaProperty::new("discovery_worker_run_count", JsonSchema::Integer),
+                    SchemaProperty::new("unhealthy_discovery_worker_count", JsonSchema::Integer),
+                    SchemaProperty::new(
+                        "discovery_workers_with_failures_count",
+                        JsonSchema::Integer,
+                    ),
+                    SchemaProperty::new("next_discovery_worker_due_at_ms", JsonSchema::Any),
+                    SchemaProperty::new(
+                        "discovery_workers",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
                     SchemaProperty::new("due_worker_deadline_count", JsonSchema::Integer),
                     SchemaProperty::new("next_worker_heartbeat_due_at_ms", JsonSchema::Any),
                 ],
@@ -365,6 +379,12 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                     "state_refresh_count",
                     "desired_state_drift_count",
                     "worker_restart_count",
+                    "discovery_worker_count",
+                    "discovery_worker_run_count",
+                    "unhealthy_discovery_worker_count",
+                    "discovery_workers_with_failures_count",
+                    "next_discovery_worker_due_at_ms",
+                    "discovery_workers",
                     "due_worker_deadline_count",
                     "next_worker_heartbeat_due_at_ms",
                 ],
@@ -780,6 +800,39 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
                 integer(observation.worker_restart_count() as i64),
             ),
             (
+                "discovery_worker_count",
+                integer(observation.discovery_worker_count() as i64),
+            ),
+            (
+                "discovery_worker_run_count",
+                integer(observation.discovery_worker_run_count() as i64),
+            ),
+            (
+                "unhealthy_discovery_worker_count",
+                integer(observation.unhealthy_discovery_worker_count() as i64),
+            ),
+            (
+                "discovery_workers_with_failures_count",
+                integer(observation.discovery_workers_with_failures_count() as i64),
+            ),
+            (
+                "next_discovery_worker_due_at_ms",
+                observation
+                    .next_discovery_worker_due_at_ms()
+                    .map(|value| integer(value as i64))
+                    .unwrap_or(JsonValue::Null),
+            ),
+            (
+                "discovery_workers",
+                JsonValue::Array(
+                    observation
+                        .discovery_workers
+                        .iter()
+                        .map(discovery_worker_snapshot_json)
+                        .collect(),
+                ),
+            ),
+            (
                 "due_worker_deadline_count",
                 integer(observation.due_worker_deadline_count() as i64),
             ),
@@ -941,6 +994,80 @@ fn metadata_json(metadata: &Metadata) -> JsonValue {
     object([
         ("key", string(&metadata.key)),
         ("value", string(&metadata.value)),
+    ])
+}
+
+fn discovery_worker_snapshot_json(snapshot: &ScheduledDiscoveryWorkerSnapshot) -> JsonValue {
+    object([
+        ("worker_id", string(snapshot.worker_id.as_str())),
+        ("integration_id", string(snapshot.integration_id.as_str())),
+        ("kind", string(snapshot.kind.as_str())),
+        ("status", string(snapshot.status.as_str())),
+        (
+            "sources",
+            JsonValue::Array(
+                snapshot
+                    .sources
+                    .iter()
+                    .map(|source| string(source.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "network_interfaces",
+            JsonValue::Array(snapshot.network_interfaces.iter().map(string).collect()),
+        ),
+        ("is_due", JsonValue::Bool(snapshot.is_due)),
+        ("overdue_by_ms", integer(snapshot.overdue_by_ms as i64)),
+        ("next_due_at_ms", integer(snapshot.next_due_at_ms as i64)),
+        ("interval_ms", integer(snapshot.interval_ms as i64)),
+        ("run_timeout_ms", integer(snapshot.run_timeout_ms as i64)),
+        (
+            "last_started_at_ms",
+            snapshot
+                .last_started_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "last_completed_at_ms",
+            snapshot
+                .last_completed_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "last_run_status",
+            snapshot
+                .last_run_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "last_record_count",
+            integer(snapshot.last_record_count as i64),
+        ),
+        (
+            "last_failure_count",
+            integer(snapshot.last_failure_count as i64),
+        ),
+        (
+            "last_catalog_change_count",
+            integer(snapshot.last_catalog_change_count as i64),
+        ),
+        ("total_run_count", integer(snapshot.total_run_count as i64)),
+        (
+            "consecutive_failure_count",
+            integer(snapshot.consecutive_failure_count as i64),
+        ),
+        (
+            "has_failure_pressure",
+            JsonValue::Bool(snapshot.has_failure_pressure()),
+        ),
+        (
+            "metadata",
+            JsonValue::Array(snapshot.metadata.iter().map(metadata_json).collect()),
+        ),
     ])
 }
 
@@ -1483,6 +1610,10 @@ mod tests {
         ToolValidationReport,
     };
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use smart_home_discovery::{
+        DiscoveryWorkerId, DiscoveryWorkerKind, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+    };
+    use smart_home_runtime::ScheduledDiscoveryWorker;
     use smart_home_testkit::{hue_bridge_discovery_record, hue_lighting_runtime};
 
     const AGENT_ID: &str = "agent:chief-smart-home";
@@ -1526,6 +1657,22 @@ mod tests {
         runtime
             .borrow_mut()
             .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
+        runtime
+            .borrow_mut()
+            .register_discovery_worker_schedule(
+                ScheduledDiscoveryWorker::new(
+                    DiscoveryWorkerId::trusted("hue-mdns-worker"),
+                    IntegrationId::trusted("hue"),
+                    DiscoveryWorkerKind::MdnsScan,
+                    5_000,
+                    250,
+                    1_050,
+                )
+                .with_source(DiscoverySource::Mdns)
+                .with_network_interface("en0")
+                .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
+            )
             .unwrap();
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_all_smart_home(
@@ -1616,6 +1763,36 @@ mod tests {
             Some(&integer(1))
         );
 
+        let supervision_request = request(
+            "call-observe-supervision",
+            SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
+            object([]),
+            1_060,
+        );
+        let supervision_trace = tool_runtime.invoke_with_events(&supervision_request);
+        assert!(supervision_trace.result.ok);
+        let supervision_output = supervision_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(supervision_output, "discovery_worker_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(supervision_output, "discovery_worker_run_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(supervision_output, "unhealthy_discovery_worker_count"),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(supervision_output, "next_discovery_worker_due_at_ms"),
+            Some(&integer(1_050))
+        );
+        assert_eq!(
+            array_len(field(supervision_output, "discovery_workers").unwrap()),
+            Some(1)
+        );
+
         let subscribe_request = request(
             "call-subscribe",
             SMART_HOME_SUBSCRIBE_TOOL_ID,
@@ -1693,15 +1870,16 @@ mod tests {
         journal.record_trace(discover_request, discover_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
+        journal.record_trace(supervision_request, supervision_trace);
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(state_request, state_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 8);
-        assert_eq!(journal_summary.completed_count, 8);
-        assert_eq!(journal.audit_records().len(), 8);
+        assert_eq!(journal_summary.invocation_count, 9);
+        assert_eq!(journal_summary.completed_count, 9);
+        assert_eq!(journal.audit_records().len(), 9);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -1715,7 +1893,7 @@ mod tests {
         );
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            9,
+            10,
             "read, subscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

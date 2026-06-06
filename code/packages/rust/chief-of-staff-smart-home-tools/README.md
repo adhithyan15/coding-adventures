@@ -10,8 +10,8 @@ The crate is intentionally a thin adapter:
 - handlers translate JSON arguments into `SmartHomeRuntime` read, subscribe,
   discover, pair, and command requests
 - `SmartHomeRuntime` still owns smart-home authorization, command validation,
-  event subscriptions, pairing sessions, optimistic state, supervision, and
-  audit decisions
+  event subscriptions, pairing sessions, optimistic state, discovery scheduler
+  observability, supervision, and audit decisions
 - D18D still owns tool validation, policy decisions, event streams, terminal
   results, and execution journals
 
@@ -23,6 +23,7 @@ Chief of Staff job/session/agent
   -> D18D smart_home.discover / smart_home.command tool calls
   -> smart-home runtime authorization
   -> discovery records and unpaired bridge candidates
+  -> discovery worker health in smart_home.observe_supervision
   -> device command acceptance
   -> optimistic state update
   -> D18D trace and audit record
