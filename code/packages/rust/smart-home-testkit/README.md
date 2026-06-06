@@ -14,6 +14,8 @@ a shared way to build:
   that feed the runtime discovery catalog without opening network sockets
 - deterministic Hue discovery worker schedules that exercise runtime due-run
   planning and scheduled ingest without opening network sockets
+- scripted mDNS worker scan executors that run runtime-produced scan plans into
+  deterministic reports without opening network sockets
 - registry seeding helpers for installing fixture records into
   `smart-home-registry`
 - confirmed, stale, and optimistic state snapshots

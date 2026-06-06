@@ -11,6 +11,8 @@ this package. It gives discovery workers a shared shape for:
 - bounded IPv4/IPv6 mDNS scans that send PTR questions and collect replies
 - per-interface IPv4/IPv6 mDNS worker scan requests, plans, and aggregate
   reports for supervised discovery actors
+- injectable mDNS worker scan executors that run request/report and grouped
+  plan handoffs without coupling runtime mutation to socket I/O
 - mDNS/DNS-SD PTR/SRV/TXT/A/AAAA response parsing into advertisements
 - per-datagram scan failures for malformed mDNS responses
 - bridge candidate records with stable integration/native identifiers

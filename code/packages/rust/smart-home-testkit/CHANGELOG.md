@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## [Unreleased]
+
+### Added
+
+- Scripted mDNS worker scan executor fixtures that can run runtime-produced
+  scan plans into deterministic reports without opening network sockets.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added

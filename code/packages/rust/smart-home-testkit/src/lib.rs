@@ -18,9 +18,9 @@ use smart_home_core::{
     Value,
 };
 use smart_home_discovery::{
-    DiscoveryRecord, DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-    MdnsAdvertisement, MdnsScanNetwork, MdnsScanResult, MdnsWorkerScanReport,
-    MdnsWorkerScanRequest,
+    DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind,
+    DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanNetwork, MdnsScanResult, MdnsWorkerScanExecutor,
+    MdnsWorkerScanReport, MdnsWorkerScanRequest,
 };
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
@@ -1038,6 +1038,52 @@ pub fn hue_bridge_mdns_scan_result(
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct ScriptedMdnsWorkerScanExecutor {
+    outcomes: VecDeque<Result<MdnsScanResult, DiscoveryError>>,
+    observed_requests: Vec<MdnsWorkerScanRequest>,
+}
+
+impl ScriptedMdnsWorkerScanExecutor {
+    pub fn new(outcomes: impl IntoIterator<Item = Result<MdnsScanResult, DiscoveryError>>) -> Self {
+        Self {
+            outcomes: outcomes.into_iter().collect(),
+            observed_requests: Vec::new(),
+        }
+    }
+
+    pub fn push_outcome(mut self, outcome: Result<MdnsScanResult, DiscoveryError>) -> Self {
+        self.outcomes.push_back(outcome);
+        self
+    }
+
+    pub fn record_outcome(&mut self, outcome: Result<MdnsScanResult, DiscoveryError>) {
+        self.outcomes.push_back(outcome);
+    }
+
+    pub fn observed_requests(&self) -> &[MdnsWorkerScanRequest] {
+        &self.observed_requests
+    }
+
+    pub fn pending_outcome_count(&self) -> usize {
+        self.outcomes.len()
+    }
+}
+
+impl MdnsWorkerScanExecutor for ScriptedMdnsWorkerScanExecutor {
+    fn run_request(
+        &mut self,
+        request: &MdnsWorkerScanRequest,
+    ) -> Result<MdnsScanResult, DiscoveryError> {
+        self.observed_requests.push(request.clone());
+        self.outcomes.pop_front().unwrap_or_else(|| {
+            Err(DiscoveryError::MdnsTransport {
+                message: "missing scripted mDNS scan outcome".to_string(),
+            })
+        })
+    }
+}
+
 pub fn hue_bridge_mdns_scan_report(
     native_id: impl Into<String>,
     started_at_ms: u64,
@@ -1908,6 +1954,58 @@ mod tests {
         ));
         assert_eq!(worker.interval_ms, 5_000);
         assert_eq!(worker.status, WorkerStatus::Starting);
+    }
+
+    #[test]
+    fn scripted_mdns_worker_executor_runs_runtime_scan_plan() {
+        let schedule = hue_bridge_discovery_worker_schedule(1_000, 5_000, 250);
+        let worker_id = DiscoveryWorkerId::trusted("fixture-hue-discovery-worker");
+        let mut runtime = SmartHomeRuntime::new();
+        runtime
+            .register_discovery_worker_schedule(schedule)
+            .expect("fixture schedule can be registered");
+        let plan = runtime
+            .discovery_mdns_scan_plan_at(1_000)
+            .expect("fixture mDNS scan plan can be projected");
+        let mut executor = ScriptedMdnsWorkerScanExecutor::new([
+            Ok(hue_bridge_mdns_scan_result("001788fffescripted", 1_000)),
+            Err(DiscoveryError::MdnsTransport {
+                message: "IPv6 multicast route is unavailable".to_string(),
+            }),
+        ]);
+
+        let reports = smart_home_discovery::run_mdns_worker_scan_plan_with_executor(
+            &plan,
+            1_000,
+            1_030,
+            &mut executor,
+        )
+        .expect("scripted executor can run the fixture mDNS scan plan");
+        let run = hue_discovery_worker_run_from_mdns_scan_report(&reports[0])
+            .expect("scripted Hue report can be converted to a worker run");
+        let summary = runtime
+            .record_scheduled_discovery_worker_run(&run, 1_030, 500)
+            .expect("scripted discovery worker run can be recorded");
+        let worker = runtime.discovery_worker_schedule(&worker_id).unwrap();
+
+        assert_eq!(executor.pending_outcome_count(), 0);
+        assert_eq!(executor.observed_requests().len(), 2);
+        assert_eq!(reports.len(), 1);
+        assert_eq!(reports[0].completed_scan_count(), 1);
+        assert_eq!(reports[0].failed_scan_count(), 1);
+        assert_eq!(reports[0].advertisement_count(), 1);
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(summary.record_count, 1);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(summary.inserted_count, 1);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(worker.status, WorkerStatus::Unhealthy);
+        assert_eq!(
+            worker.last_run_status,
+            Some(DiscoveryWorkerRunStatus::Partial)
+        );
+        assert_eq!(worker.consecutive_failure_count, 1);
+        assert_eq!(worker.next_due_at_ms, 6_030);
     }
 
     #[test]

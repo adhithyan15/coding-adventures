@@ -12,6 +12,9 @@ All notable changes to this package will be documented in this file.
 - `MdnsWorkerScanRequest`, `MdnsWorkerScanPlan`, and `MdnsWorkerScanReport`
   for handing scheduled mDNS work to supervised per-interface scan actors and
   aggregating interface-level successes or failures.
+- `MdnsWorkerScanExecutor`, default UDP execution helpers, and grouped plan
+  runners for turning scheduled mDNS requests into worker scan reports while
+  keeping socket I/O injectable for tests and supervision.
 - mDNS/DNS-SD response parsing for PTR, SRV, TXT, A, and AAAA records,
   including compressed DNS names and per-datagram scan failures for malformed
   replies.
