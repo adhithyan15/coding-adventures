@@ -1,5 +1,13 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.18.0] - 2026-06-06
+
+### Added
+
+- Port the Python Phase 23 `Exp(c*x^2)` integration fallback for exact
+  rational, nonzero `c`, returning `Erf` for negative coefficients and
+  `Erfi` for positive coefficients.
+
 ## [0.17.0] — 2026-06-06
 
 ### Added

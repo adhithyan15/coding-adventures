@@ -3074,6 +3074,9 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     return undefined;
   }
 
+  const erf = tryErfIntegral(f, x);
+  if (erf !== undefined) return erf;
+
   const fresnel = tryFresnelIntegral(f, x);
   if (fresnel !== undefined) return fresnel;
 
@@ -3549,6 +3552,18 @@ function incompleteEllipticSecondKind(f: IRNode, x: IRNode): IRNode | undefined 
 }
 
 type PositiveRat = readonly [bigint, bigint];
+type SignedRat = readonly [bigint, bigint];
+
+function makeSignedRat(numer: bigint, denom: bigint): SignedRat | undefined {
+  if (denom === 0n) return undefined;
+  if (denom < 0n) {
+    numer = -numer;
+    denom = -denom;
+  }
+  if (numer === 0n) return undefined;
+  const gcd = rqGcd(numer < 0n ? -numer : numer, denom);
+  return [numer / gcd, denom / gcd];
+}
 
 function makePositiveRat(numer: bigint, denom: bigint): PositiveRat | undefined {
   if (denom === 0n) return undefined;
@@ -3576,6 +3591,23 @@ function positiveRatNode(value: PositiveRat): IRNode {
 function exactPositiveRat(node: IRNode): PositiveRat | undefined {
   const r = exactRational(node);
   return r === undefined ? undefined : makePositiveRat(r.numer, r.denom);
+}
+
+function exactSignedRat(node: IRNode): SignedRat | undefined {
+  const r = exactRational(node);
+  return r === undefined ? undefined : makeSignedRat(r.numer, r.denom);
+}
+
+function multiplySignedRat(a: SignedRat, b: SignedRat): SignedRat {
+  return makeSignedRat(a[0] * b[0], a[1] * b[1])!;
+}
+
+function divideSignedRat(a: SignedRat, b: SignedRat): SignedRat {
+  return makeSignedRat(a[0] * b[1], a[1] * b[0])!;
+}
+
+function absSignedRat(value: SignedRat): PositiveRat {
+  return makePositiveRat(value[0] < 0n ? -value[0] : value[0], value[1])!;
 }
 
 function isSquareOfIntegrationVar(node: IRNode, x: IRNode): boolean {
@@ -3652,6 +3684,96 @@ function fresnelPureQuadraticCoeff(arg: IRNode, x: IRNode): PositiveRat | undefi
 
 function ratTimesInt(value: PositiveRat, factor: bigint): PositiveRat {
   return makePositiveRat(value[0] * factor, value[1])!;
+}
+
+type SignedQuadraticFactors = {
+  readonly coeff: SignedRat;
+  readonly hasXSquared: boolean;
+};
+
+function combineSignedQuadraticFactors(
+  a: SignedQuadraticFactors,
+  b: SignedQuadraticFactors,
+): SignedQuadraticFactors | undefined {
+  if (a.hasXSquared && b.hasXSquared) return undefined;
+  return {
+    coeff: multiplySignedRat(a.coeff, b.coeff),
+    hasXSquared: a.hasXSquared || b.hasXSquared,
+  };
+}
+
+function scanSignedQuadraticFactors(node: IRNode, x: IRNode): SignedQuadraticFactors | undefined {
+  const one: SignedRat = [1n, 1n];
+  if (isSquareOfIntegrationVar(node, x)) {
+    return { coeff: one, hasXSquared: true };
+  }
+  const numeric = exactSignedRat(node);
+  if (numeric !== undefined) {
+    return { coeff: numeric, hasXSquared: false };
+  }
+  if (node.kind !== "apply") return undefined;
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    const scanned = scanSignedQuadraticFactors(node.args[0], x);
+    return scanned === undefined
+      ? undefined
+      : { coeff: makeSignedRat(-scanned.coeff[0], scanned.coeff[1])!, hasXSquared: scanned.hasXSquared };
+  }
+  if (equals(node.head, MUL)) {
+    let acc: SignedQuadraticFactors = { coeff: one, hasXSquared: false };
+    for (const arg of node.args) {
+      const scanned = scanSignedQuadraticFactors(arg, x);
+      if (scanned === undefined) return undefined;
+      const combined = combineSignedQuadraticFactors(acc, scanned);
+      if (combined === undefined) return undefined;
+      acc = combined;
+    }
+    return acc;
+  }
+  if (equals(node.head, DIV) && node.args.length === 2) {
+    const [numerator, denominator] = binaryArgs(node);
+    const scanned = scanSignedQuadraticFactors(numerator, x);
+    const denom = exactSignedRat(denominator);
+    return scanned === undefined || denom === undefined
+      ? undefined
+      : { ...scanned, coeff: divideSignedRat(scanned.coeff, denom) };
+  }
+  return undefined;
+}
+
+function signedQuadraticCoeff(arg: IRNode, x: IRNode): SignedRat | undefined {
+  const factors = scanSignedQuadraticFactors(arg, x);
+  return factors !== undefined && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function sqrtPositiveRatNode(value: PositiveRat): IRNode {
+  const rootNumer = bigIntIsqrt(value[0]);
+  const rootDenom = bigIntIsqrt(value[1]);
+  if (rootNumer !== undefined && rootDenom !== undefined) {
+    return positiveRatNode([rootNumer, rootDenom]);
+  }
+  return app(SQRT, [positiveRatNode(value)]);
+}
+
+function isOneRat(value: PositiveRat): boolean {
+  return value[0] === value[1];
+}
+
+function tryErfIntegral(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || !equals(f.head, EXP) || f.args.length !== 1) {
+    return undefined;
+  }
+  const c = signedQuadraticCoeff(f.args[0], x);
+  if (c === undefined) return undefined;
+
+  const absC = absSignedRat(c);
+  const alpha = sqrtPositiveRatNode(absC);
+  const arg = isOneRat(absC) ? x : app(MUL, [alpha, x]);
+  const specialHead = c[0] < 0n ? sym("Erf") : sym("Erfi");
+  const sqrtPi = app(SQRT, [_INV_TRIG_PI]);
+  const coeff = isOneRat(absC)
+    ? app(DIV, [sqrtPi, int(2)])
+    : app(DIV, [sqrtPi, app(MUL, [int(2), alpha])]);
+  return app(MUL, [coeff, app(specialHead, [arg])]);
 }
 
 function tryFresnelIntegral(f: IRNode, x: IRNode): IRNode | undefined {
