@@ -2702,21 +2702,36 @@ fn phase34_regression_pure_sin_unchanged() {
 }
 
 #[test]
-fn phase34_regression_one_over_cos_not_misinterpreted() {
-    // ∫ 1/cos(x) dx — denominator has no additive constant; Phase 34 must NOT
-    // fire and produce a spurious arctan of tan(x/2).
+fn phase34_regression_one_over_cos_now_closes() {
+    // ∫ 1/cos(x) dx — a = 0 cosine log branch.
     let integrand = apply(sym(DIV), vec![int(1), apply(sym(COS), vec![sym("x")])]);
     let result = integrate(integrand);
-    if let symbolic_ir::IRNode::Apply(apply) = &result {
-        if apply.head == symbolic_ir::IRNode::Symbol(ATAN.to_string()) {
-            panic!("Phase 34 incorrectly fired on ∫ 1/cos(x) dx: {result:?}");
-        }
+    assert!(!is_unevaluated_integrate(&result));
+    assert!(contains_head(&result, LOG), "Expected Log in {result:?}");
+    for &x_val in &[-1.0_f64, -0.4, 0.0, 0.4, 1.0] {
+        let got = phase34_numerical_derivative(&result, x_val);
+        let expected = 1.0 / x_val.cos();
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
     }
 }
 
 // ---------------------------------------------------------------------------
 // Phase 36 — Weierstrass log form for a² < b² (cos + edge cases)
 // ---------------------------------------------------------------------------
+
+#[test]
+fn phase36_one_over_sin_now_closes() {
+    // ∫ 1/sin(x) dx = log|tan(x/2)|.
+    let integrand = apply(sym(DIV), vec![int(1), apply(sym(SIN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi));
+    assert!(contains_head(&phi, LOG), "Expected Log in {phi:?}");
+    for &x_val in &[0.4_f64, 0.8, 1.2, 1.6, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / x_val.sin();
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
+    }
+}
 
 #[test]
 fn phase36_a_less_than_b_cos_now_closes() {
@@ -2888,6 +2903,21 @@ fn phase38_sin_two_x_closes() {
         let got = phase34_numerical_derivative(&phi, x_val);
         let expected = 1.0 / (2.0 + (2.0 * x_val).sin());
         assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase38_scaled_csc_branch_closes() {
+    // ∫ 3/(2·sin(2x+1)) dx — c, b, and alpha scaling.
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let denominator = apply(sym(MUL), vec![int(2), apply(sym(SIN), vec![arg])]);
+    let phi = integrate(apply(sym(DIV), vec![int(3), denominator]));
+    assert!(!is_unevaluated_integrate(&phi));
+    assert!(contains_head(&phi, LOG), "Expected Log in {phi:?}");
+    for &x_val in &[0.0_f64, 0.2, 0.5, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 3.0 / (2.0 * (2.0 * x_val + 1.0).sin());
+        assert!((got - expected).abs() < 1e-3, "x={x_val}: got={got}, expected={expected}");
     }
 }
 
