@@ -840,6 +840,7 @@ pub struct BrowserDocument {
     pub command_elements: Vec<BrowserCommandElement>,
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
+    pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1603,6 +1604,25 @@ pub struct BrowserAriaRange {
     pub aria_required: Option<String>,
     pub tabindex: Option<String>,
     pub text_value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaLiveRegion {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_live: Option<String>,
+    pub aria_busy: Option<String>,
+    pub aria_atomic: Option<String>,
+    pub aria_relevant: Vec<String>,
+    pub aria_hidden: bool,
+    pub update_kind: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9495,6 +9515,9 @@ fn collect_browser_facts(
         if let Some(aria_range) = browser_aria_range_element(element, id_texts) {
             summary.aria_ranges.push(aria_range);
         }
+        if let Some(aria_live_region) = browser_aria_live_region_element(element, id_texts) {
+            summary.aria_live_regions.push(aria_live_region);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -11374,12 +11397,7 @@ fn browser_aria_collection_element(
         .count();
     let checked_item_count = items
         .iter()
-        .filter(|item| {
-            matches!(
-                item.aria_checked.as_deref(),
-                Some("true") | Some("mixed")
-            )
-        })
+        .filter(|item| matches!(item.aria_checked.as_deref(), Some("true") | Some("mixed")))
         .count();
     let current_item_count = items
         .iter()
@@ -11536,6 +11554,68 @@ fn browser_authored_range_role(element: &Element) -> Option<String> {
         "meter" | "progressbar" | "scrollbar" | "separator" | "slider" | "spinbutton"
     )
     .then_some(role)
+}
+
+fn browser_aria_live_region_element(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaLiveRegion> {
+    let role = browser_aria_live_region_role(element)?;
+    let aria_live = browser_aria_state(element, "aria-live");
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    Some(BrowserAriaLiveRegion {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        accessible_name: browser_accessible_name(element, &role, &[], id_texts)
+            .or_else(|| (!text.is_empty()).then(|| text.clone())),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        aria_live: aria_live.clone(),
+        aria_busy: browser_aria_state(element, "aria-busy"),
+        aria_atomic: browser_aria_state(element, "aria-atomic"),
+        aria_relevant: browser_aria_tokens(element, "aria-relevant"),
+        aria_hidden: browser_aria_hidden(element),
+        update_kind: browser_aria_live_update_kind(&role, aria_live.as_deref()),
+        role,
+        text,
+    })
+}
+
+fn browser_aria_live_region_role(element: &Element) -> Option<String> {
+    let authored_role = browser_authored_role(element).map(|role| role.to_ascii_lowercase());
+    if let Some(role) = authored_role.as_deref() {
+        if matches!(role, "alert" | "log" | "marquee" | "status" | "timer") {
+            return Some(role.to_string());
+        }
+    }
+
+    element
+        .attribute("aria-live")
+        .or_else(|| element.attribute("aria-busy"))
+        .or_else(|| element.attribute("aria-atomic"))
+        .or_else(|| element.attribute("aria-relevant"))
+        .map(|_| {
+            authored_role.unwrap_or_else(|| {
+                browser_content_role(&element.name)
+                    .unwrap_or(element.name.as_str())
+                    .to_string()
+            })
+        })
+}
+
+fn browser_aria_live_update_kind(role: &str, aria_live: Option<&str>) -> String {
+    if let Some(aria_live) = aria_live {
+        return aria_live.to_ascii_lowercase();
+    }
+    match role {
+        "alert" => "assertive",
+        "log" | "status" => "polite",
+        "marquee" | "timer" => "off",
+        _ => "implicit",
+    }
+    .to_string()
 }
 
 fn should_collect_browser_content_children(name: &str) -> bool {
@@ -12537,6 +12617,13 @@ fn browser_aria_state(element: &Element, name: &str) -> Option<String> {
         .attribute(name)
         .map(collapse_html_whitespace)
         .filter(|state| !state.is_empty())
+}
+
+fn browser_aria_tokens(element: &Element, name: &str) -> Vec<String> {
+    element
+        .attribute(name)
+        .map(split_html_classes)
+        .unwrap_or_default()
 }
 
 fn browser_aria_hidden(element: &Element) -> bool {

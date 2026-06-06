@@ -1,19 +1,19 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserAnchor, BrowserComponentHydrationTarget, BrowserDataAttribute,
-    BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
-    BrowserEmbeddedContext, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
-    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
-    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
-    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
-    BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserAriaCollection, BrowserAriaCollectionItem, BrowserAriaRange, BrowserCommandElement,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    parse_browser_document, BrowserAnchor, BrowserAriaCollection, BrowserAriaCollectionItem,
+    BrowserAriaLiveRegion, BrowserAriaRange, BrowserCommandElement,
+    BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDatalistOption,
+    BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata, BrowserEmbeddedContext,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserHeading, BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea,
+    BrowserImageSource, BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -77,6 +77,8 @@ struct ExpectedBrowserDocument {
     aria_collections: Vec<ExpectedAriaCollection>,
     #[serde(default)]
     aria_ranges: Vec<ExpectedAriaRange>,
+    #[serde(default)]
+    aria_live_regions: Vec<ExpectedAriaLiveRegion>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -705,6 +707,36 @@ struct ExpectedAriaRange {
     tabindex: Option<String>,
     #[serde(default)]
     text_value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaLiveRegion {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_live: Option<String>,
+    #[serde(default)]
+    aria_busy: Option<String>,
+    #[serde(default)]
+    aria_atomic: Option<String>,
+    #[serde(default)]
+    aria_relevant: Vec<String>,
+    #[serde(default)]
+    aria_hidden: bool,
+    update_kind: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2043,6 +2075,26 @@ fn browser_aria_range_descriptor_metadata_tracks_value_widgets() {
 }
 
 #[test]
+fn browser_aria_live_region_descriptor_metadata_tracks_update_semantics() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "aria-live-region-descriptor-page")
+        .expect("ARIA live-region fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA live-region fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.aria_live_regions, expected.aria_live_regions,
+        "ARIA live-region descriptors should preserve live politeness, busy/atomic/relevant flags, and implicit update semantics",
+    );
+}
+
+#[test]
 fn browser_form_validation_metadata_tracks_constraint_candidates() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -3211,6 +3263,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedAriaRange::into_browser_aria_range)
                 .collect(),
+            aria_live_regions: self
+                .aria_live_regions
+                .into_iter()
+                .map(ExpectedAriaLiveRegion::into_browser_aria_live_region)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -3776,6 +3833,28 @@ impl ExpectedAriaRange {
             aria_required: self.aria_required,
             tabindex: self.tabindex,
             text_value: self.text_value,
+        }
+    }
+}
+
+impl ExpectedAriaLiveRegion {
+    fn into_browser_aria_live_region(self) -> BrowserAriaLiveRegion {
+        BrowserAriaLiveRegion {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_live: self.aria_live,
+            aria_busy: self.aria_busy,
+            aria_atomic: self.aria_atomic,
+            aria_relevant: self.aria_relevant,
+            aria_hidden: self.aria_hidden,
+            update_kind: self.update_kind,
         }
     }
 }
