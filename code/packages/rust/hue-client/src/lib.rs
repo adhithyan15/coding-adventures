@@ -11,9 +11,9 @@ use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
     validate_brightness, HueBridgeResource, HueButtonResource, HueButtonStateUpdate, HueCommand,
-    HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate, HueLightResource,
-    HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate, HueRequest,
-    HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
+    HueCommandPlan, HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate,
+    HueLightResource, HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate,
+    HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
     HueSceneAction, HueSceneResource, HueStateUpdate, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
     CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
@@ -685,6 +685,17 @@ impl<T: HueTransport> HueClient<T> {
         parse_envelope_response(response)
     }
 
+    pub fn send_command_plan(
+        &mut self,
+        plan: &HueCommandPlan,
+    ) -> Result<Vec<HueEnvelope>, HueClientError> {
+        if plan.is_empty() {
+            return Ok(Vec::new());
+        }
+        let application_key = self.application_key()?.to_string();
+        send_command_plan(&mut self.transport, &application_key, plan)
+    }
+
     pub fn event_stream_request(&self) -> Result<HueHttpRequest, HueClientError> {
         event_stream_request(self.application_key()?)
     }
@@ -768,6 +779,22 @@ pub fn event_stream_request(application_key: &str) -> Result<HueHttpRequest, Hue
         value: ACCEPT_EVENT_STREAM.to_string(),
     });
     Ok(request)
+}
+
+pub fn send_command_plan<T: HueTransport>(
+    transport: &mut T,
+    application_key: &str,
+    plan: &HueCommandPlan,
+) -> Result<Vec<HueEnvelope>, HueClientError> {
+    let mut envelopes = Vec::with_capacity(plan.commands.len());
+    for command in &plan.commands {
+        let response = transport.send(hue_request_to_http(
+            command.to_request(),
+            Some(application_key),
+        )?)?;
+        envelopes.push(parse_envelope_response(response)?);
+    }
+    Ok(envelopes)
 }
 
 pub fn hue_request_to_http(
@@ -1803,9 +1830,13 @@ mod tests {
 
     impl RecordingTransport {
         fn with_response(body: &'static str) -> Self {
+            Self::with_responses(vec![HueHttpResponse::json(200, body.as_bytes())])
+        }
+
+        fn with_responses(responses: Vec<HueHttpResponse>) -> Self {
             Self {
                 requests: Vec::new(),
-                responses: vec![HueHttpResponse::json(200, body.as_bytes())],
+                responses,
             }
         }
     }
@@ -1872,6 +1903,75 @@ mod tests {
             hue_request_to_http(command.to_request(), Some("app-key")),
             Err(HueClientError::InvalidRequest { .. })
         ));
+    }
+
+    #[test]
+    fn client_sends_command_plan_in_order() {
+        let plan = HueCommandPlan {
+            target: HueResourceRef::new(HueResourceType::Light, HueResourceId::trusted("light-1")),
+            commands: vec![
+                HueCommand::SetLightOn {
+                    light_id: HueResourceId::trusted("light-1"),
+                    on: true,
+                },
+                HueCommand::SetLightBrightness {
+                    light_id: HueResourceId::trusted("light-1"),
+                    brightness: 42,
+                },
+            ],
+            ignored_capability_ids: Vec::new(),
+        };
+        let transport = RecordingTransport::with_responses(vec![
+            HueHttpResponse::json(200, br#"{"data":[{"rid":"on"}],"errors":[]}"#.to_vec()),
+            HueHttpResponse::json(
+                200,
+                br#"{"data":[{"rid":"brightness"}],"errors":[]}"#.to_vec(),
+            ),
+        ]);
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let envelopes = client.send_command_plan(&plan).unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(envelopes.len(), 2);
+        assert_eq!(
+            object_string_field(&envelopes[0].data[0], "rid"),
+            Some("on")
+        );
+        assert_eq!(
+            object_string_field(&envelopes[1].data[0], "rid"),
+            Some("brightness")
+        );
+        assert_eq!(transport.requests.len(), 2);
+        assert_eq!(transport.requests[0].method, HueMethod::Put);
+        assert_eq!(
+            transport.requests[0].path,
+            "/clip/v2/resource/light/light-1"
+        );
+        assert_eq!(
+            std::str::from_utf8(&transport.requests[0].body).unwrap(),
+            r#"{"on":{"on":true}}"#
+        );
+        assert_eq!(
+            std::str::from_utf8(&transport.requests[1].body).unwrap(),
+            r#"{"dimming":{"brightness":42}}"#
+        );
+    }
+
+    #[test]
+    fn client_empty_command_plan_is_noop_without_application_key() {
+        let plan = HueCommandPlan::empty(HueResourceRef::new(
+            HueResourceType::Light,
+            HueResourceId::trusted("light-1"),
+        ));
+        let transport = RecordingTransport::default();
+        let mut client = HueClient::new(HueClientConfig::default(), transport);
+
+        let envelopes = client.send_command_plan(&plan).unwrap();
+        let transport = client.into_transport();
+
+        assert!(envelopes.is_empty());
+        assert!(transport.requests.is_empty());
     }
 
     #[test]
