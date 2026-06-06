@@ -28,6 +28,7 @@ import {
 import { SymbolicBackend, VM } from "../src/index.js";
 
 const X = sym("x");
+const PI = sym("%pi");
 
 function integrate(f: IRNode): IRNode {
   return app(INTEGRATE, [f, X]);
@@ -125,35 +126,35 @@ describe("Track E2 — generic tabular IBP fallback", () => {
   });
 
   // -------------------------------------------------------------------------
-  // Acceptance #5 — fallthrough: ∫ sin(x²) dx stays unevaluated (Fresnel).
-  // IBP can't help — the integrand isn't a Mul.  The engine must not
-  // fabricate a bogus elementary closed form.
+  // Acceptance #5 — Phase 23 Fresnel fallback: ∫ sin(x²) dx closes to FresnelS.
+  // IBP can't help — the integrand isn't a Mul — so this must come from the
+  // shape-specific special-function recognizer.
   // -------------------------------------------------------------------------
-  it("leaves ∫ sin(x²) dx unevaluated — IBP fabricates nothing", () => {
+  it("closes ∫ sin(x²) dx to FresnelS", () => {
     const vm = makeVM();
     const integrand = app(SIN, [app(POW, [X, int(2)])]);
     const out = vm.eval(integrate(integrand));
-    // Either the unevaluated Integrate form or a Fresnel-S head.  The
-    // critical correctness property is that tabular IBP doesn't sneak
-    // in a fake elementary antiderivative.
-    const hasUnevaluated = containsHead(out, INTEGRATE);
-    const hasFresnel = containsHead(out, sym("FresnelS"));
-    expect(hasUnevaluated || hasFresnel).toBe(true);
+    expect(containsHead(out, INTEGRATE)).toBe(false);
+    expect(containsHead(out, sym("FresnelS"))).toBe(true);
   });
 
   // -------------------------------------------------------------------------
-  // Regression #6 — previously-Fresnel-family integral ∫ cos(x²) dx still
-  // stays unevaluated after the IBP fallback ships.  The integrand is not
-  // a Mul (its head is COS), so tabular IBP short-circuits to undefined
-  // and the engine must not fabricate a bogus elementary antiderivative.
+  // Regression #6 — ∫ cos(x²) dx closes to FresnelC rather than falling
+  // through to the generic unevaluated Integrate form.
   // -------------------------------------------------------------------------
-  it("leaves ∫ cos(x²) dx unevaluated after E2 ports (Fresnel regression)", () => {
+  it("closes ∫ cos(x²) dx to FresnelC", () => {
     const vm = makeVM();
     const integrand = app(COS, [app(POW, [X, int(2)])]);
     const out = vm.eval(integrate(integrand));
-    const hasUnevaluated = containsHead(out, INTEGRATE);
-    const hasFresnel = containsHead(out, sym("FresnelC"));
-    expect(hasUnevaluated || hasFresnel).toBe(true);
+    expect(containsHead(out, INTEGRATE)).toBe(false);
+    expect(containsHead(out, sym("FresnelC"))).toBe(true);
+  });
+
+  it("uses the canonical FresnelS(x) form for ∫ sin(%pi·x²/2) dx", () => {
+    const vm = makeVM();
+    const integrand = app(SIN, [app(DIV, [app(MUL, [PI, app(POW, [X, int(2)])]), int(2)])]);
+    const out = vm.eval(integrate(integrand));
+    expect(containsHead(out, INTEGRATE)).toBe(false);
+    expect(out).toEqual(app(sym("FresnelS"), [X]));
   });
 });
-

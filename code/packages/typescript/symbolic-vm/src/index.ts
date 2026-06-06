@@ -3074,6 +3074,9 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     return undefined;
   }
 
+  const fresnel = tryFresnelIntegral(f, x);
+  if (fresnel !== undefined) return fresnel;
+
   if (equals(f.head, ADD)) {
     const pieces = f.args.map((arg) => integrateIndefinite(arg, x));
     if (pieces.some((piece) => piece === undefined)) return undefined;
@@ -3543,6 +3546,142 @@ function completeEllipticSecondKind(f: IRNode, x: IRNode, lower: IRNode, upper: 
 function incompleteEllipticSecondKind(f: IRNode, x: IRNode): IRNode | undefined {
   const modulus = ellipticSecondKindRadicand(f, x);
   return modulus === undefined ? undefined : app(sym("EllipticE"), [x, modulus]);
+}
+
+type PositiveRat = readonly [bigint, bigint];
+
+function makePositiveRat(numer: bigint, denom: bigint): PositiveRat | undefined {
+  if (denom === 0n) return undefined;
+  if (denom < 0n) {
+    numer = -numer;
+    denom = -denom;
+  }
+  if (numer <= 0n) return undefined;
+  const gcd = rqGcd(numer, denom);
+  return [numer / gcd, denom / gcd];
+}
+
+function multiplyPositiveRat(a: PositiveRat, b: PositiveRat): PositiveRat {
+  return makePositiveRat(a[0] * b[0], a[1] * b[1])!;
+}
+
+function dividePositiveRat(a: PositiveRat, b: PositiveRat): PositiveRat {
+  return makePositiveRat(a[0] * b[1], a[1] * b[0])!;
+}
+
+function positiveRatNode(value: PositiveRat): IRNode {
+  return value[1] === 1n ? int(value[0]) : rational(value[0], value[1]);
+}
+
+function exactPositiveRat(node: IRNode): PositiveRat | undefined {
+  const r = exactRational(node);
+  return r === undefined ? undefined : makePositiveRat(r.numer, r.denom);
+}
+
+function isSquareOfIntegrationVar(node: IRNode, x: IRNode): boolean {
+  if (node.kind !== "apply" || !equals(node.head, POW) || node.args.length !== 2) {
+    return false;
+  }
+  const [base, exponent] = binaryArgs(node);
+  return equals(base, x) && equals(exponent, int(2));
+}
+
+type FresnelFactors = {
+  readonly coeff: PositiveRat;
+  readonly hasPi: boolean;
+  readonly hasXSquared: boolean;
+};
+
+function combineFresnelFactors(a: FresnelFactors, b: FresnelFactors): FresnelFactors | undefined {
+  if ((a.hasPi && b.hasPi) || (a.hasXSquared && b.hasXSquared)) {
+    return undefined;
+  }
+  return {
+    coeff: multiplyPositiveRat(a.coeff, b.coeff),
+    hasPi: a.hasPi || b.hasPi,
+    hasXSquared: a.hasXSquared || b.hasXSquared,
+  };
+}
+
+function scanFresnelFactors(node: IRNode, x: IRNode): FresnelFactors | undefined {
+  const one: PositiveRat = [1n, 1n];
+  if (isSquareOfIntegrationVar(node, x)) {
+    return { coeff: one, hasPi: false, hasXSquared: true };
+  }
+  if (node.kind === "symbol" && node.name === "%pi") {
+    return { coeff: one, hasPi: true, hasXSquared: false };
+  }
+  const numeric = exactPositiveRat(node);
+  if (numeric !== undefined) {
+    return { coeff: numeric, hasPi: false, hasXSquared: false };
+  }
+  if (node.kind !== "apply") {
+    return undefined;
+  }
+  if (equals(node.head, MUL)) {
+    let acc: FresnelFactors = { coeff: one, hasPi: false, hasXSquared: false };
+    for (const arg of node.args) {
+      const scanned = scanFresnelFactors(arg, x);
+      if (scanned === undefined) return undefined;
+      const combined = combineFresnelFactors(acc, scanned);
+      if (combined === undefined) return undefined;
+      acc = combined;
+    }
+    return acc;
+  }
+  if (equals(node.head, DIV) && node.args.length === 2) {
+    const [numerator, denominator] = binaryArgs(node);
+    const scanned = scanFresnelFactors(numerator, x);
+    const denom = exactPositiveRat(denominator);
+    return scanned === undefined || denom === undefined
+      ? undefined
+      : { ...scanned, coeff: dividePositiveRat(scanned.coeff, denom) };
+  }
+  return undefined;
+}
+
+function fresnelPiQuadraticCoeff(arg: IRNode, x: IRNode): PositiveRat | undefined {
+  const factors = scanFresnelFactors(arg, x);
+  return factors !== undefined && factors.hasPi && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function fresnelPureQuadraticCoeff(arg: IRNode, x: IRNode): PositiveRat | undefined {
+  const factors = scanFresnelFactors(arg, x);
+  return factors !== undefined && !factors.hasPi && factors.hasXSquared ? factors.coeff : undefined;
+}
+
+function ratTimesInt(value: PositiveRat, factor: bigint): PositiveRat {
+  return makePositiveRat(value[0] * factor, value[1])!;
+}
+
+function tryFresnelIntegral(f: IRNode, x: IRNode): IRNode | undefined {
+  if (f.kind !== "apply" || f.args.length !== 1 || (!equals(f.head, SIN) && !equals(f.head, COS))) {
+    return undefined;
+  }
+  const [arg] = unaryArgs(f);
+  const fresnelHead = equals(f.head, SIN) ? sym("FresnelS") : sym("FresnelC");
+
+  const q = fresnelPiQuadraticCoeff(arg, x);
+  if (q !== undefined) {
+    const twoQ = ratTimesInt(q, 2n);
+    if (twoQ[0] === twoQ[1]) {
+      return app(fresnelHead, [x]);
+    }
+    const sqrtTwoQ = app(SQRT, [positiveRatNode(twoQ)]);
+    const scaleArg = app(MUL, [sqrtTwoQ, x]);
+    return app(MUL, [app(DIV, [int(1), sqrtTwoQ]), app(fresnelHead, [scaleArg])]);
+  }
+
+  const a = fresnelPureQuadraticCoeff(arg, x);
+  if (a !== undefined) {
+    const twoA = ratTimesInt(a, 2n);
+    const twoANode = positiveRatNode(twoA);
+    const sqrtPiOverTwoA = app(SQRT, [app(DIV, [_INV_TRIG_PI, twoANode])]);
+    const sqrtTwoAOverPi = app(SQRT, [app(DIV, [twoANode, _INV_TRIG_PI])]);
+    return app(MUL, [sqrtPiOverTwoA, app(fresnelHead, [app(MUL, [x, sqrtTwoAOverPi])])]);
+  }
+
+  return undefined;
 }
 
 /** Return n when bracket = Add(1, Mul(n, Pow(Sin(x), 2))), else undefined. */

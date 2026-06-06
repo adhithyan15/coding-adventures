@@ -1,5 +1,16 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.17.0] — 2026-06-06
+
+### Added
+
+- Port the Python Phase 23 Fresnel integration fallback for
+  `Integrate(Sin(a*x^2), x)` / `Integrate(Cos(a*x^2), x)` and
+  `q*%pi*x^2` variants into the Rust VM.
+- Tighten the previous IBP fallthrough tests so `sin(x^2)` and `cos(x^2)`
+  must now return `FresnelS` / `FresnelC` forms instead of accepting an
+  unevaluated `Integrate(...)`.
+
 ## [0.16.0] — 2026-05-28
 
 **Track E2 — generic tabular integration-by-parts fallback (Rust port).**

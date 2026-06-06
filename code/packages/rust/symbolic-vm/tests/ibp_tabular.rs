@@ -142,32 +142,45 @@ fn ibp_fallthrough_one_over_x_returns_log() {
 }
 
 // ---------------------------------------------------------------------------
-// Acceptance #5 — fallthrough: ∫ sin(x²) dx stays unevaluated (Fresnel).
-// The integrand isn't a Mul, so tabular IBP would also short-circuit to
-// None.  The engine must not fabricate a bogus elementary closed form.
+// Acceptance #5 — Phase 23 Fresnel fallback: ∫ sin(x²) dx closes to FresnelS.
+// The integrand isn't a Mul, so this must come from the shape-specific
+// special-function recognizer rather than generic tabular IBP.
 // ---------------------------------------------------------------------------
 #[test]
-fn ibp_fallthrough_fresnel_sin_xsq_unevaluated() {
+fn ibp_fallthrough_fresnel_sin_xsq_closes_to_fresnel_s() {
     let mut vm = make_vm();
     let integrand = apply(sym(SIN), vec![apply(sym(POW), vec![sym("x"), int(2)])]);
     let out = vm.eval(integrate(integrand));
-    let has_unevaluated = contains_head(&out, INTEGRATE);
-    let has_fresnel = contains_head(&out, "FresnelS");
-    assert!(has_unevaluated || has_fresnel, "unexpected closed form: {:?}", out);
+    assert!(!contains_head(&out, INTEGRATE), "expected closed form: {:?}", out);
+    assert!(contains_head(&out, "FresnelS"), "expected FresnelS: {:?}", out);
 }
 
 // ---------------------------------------------------------------------------
-// Regression #6 — previously-Fresnel-family integral ∫ cos(x²) dx still
-// stays unevaluated after the IBP fallback ships.  The integrand is not
-// a Mul, so tabular IBP short-circuits to None and the engine must not
-// fabricate a bogus elementary antiderivative.
+// Regression #6 — ∫ cos(x²) dx closes to FresnelC rather than falling
+// through to the generic unevaluated Integrate form.
 // ---------------------------------------------------------------------------
 #[test]
-fn ibp_regression_cos_xsq_stays_unevaluated() {
+fn ibp_regression_cos_xsq_closes_to_fresnel_c() {
     let mut vm = make_vm();
     let integrand = apply(sym(COS), vec![apply(sym(POW), vec![sym("x"), int(2)])]);
     let out = vm.eval(integrate(integrand));
-    let has_unevaluated = contains_head(&out, INTEGRATE);
-    let has_fresnel = contains_head(&out, "FresnelC");
-    assert!(has_unevaluated || has_fresnel, "unexpected closed form: {:?}", out);
+    assert!(!contains_head(&out, INTEGRATE), "expected closed form: {:?}", out);
+    assert!(contains_head(&out, "FresnelC"), "expected FresnelC: {:?}", out);
+}
+
+#[test]
+fn fresnel_pi_half_uses_canonical_fresnel_s_of_x() {
+    let mut vm = make_vm();
+    let integrand = apply(
+        sym(SIN),
+        vec![apply(
+            sym(DIV),
+            vec![
+                apply(sym(MUL), vec![sym("%pi"), apply(sym(POW), vec![sym("x"), int(2)])]),
+                int(2),
+            ],
+        )],
+    );
+    let out = vm.eval(integrate(integrand));
+    assert_eq!(out, apply(sym("FresnelS"), vec![sym("x")]));
 }
