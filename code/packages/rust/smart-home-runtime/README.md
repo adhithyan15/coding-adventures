@@ -38,6 +38,9 @@ Included surfaces:
   and queue pressure checks
 - runtime-owned discovery catalog recording that reconciles normalized
   discovery results into unpaired bridge candidates
+- discovery worker-run ingest that records preferred batch results, reconciles
+  accepted candidates into the registry, and returns inserted/replaced/ignored
+  catalog counts
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and

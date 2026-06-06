@@ -13,6 +13,8 @@ write credentials. It gives discovery workers a shared shape for:
 - manual bridge address normalization
 - mDNS advertisement endpoint helpers
 - deterministic candidate catalogs
+- first-class discovery worker runs with per-source failures, durations, and
+  catalog-ingest summaries
 - catalog-backed scan and pairing hints derived from first-party integration
   metadata
 - pairing plans that rank discovered bridges and identify the next pairing
@@ -25,6 +27,8 @@ write credentials. It gives discovery workers a shared shape for:
 - catalog-level fresh/stale/expired signal summaries with next transition time
 - catalog-level discovery record summaries by source, confidence, pairing
   requirement, address coverage, and freshness
+- worker-run summaries that separate reported records from inserted, replaced,
+  and ignored catalog outcomes
 - freshness filtering for supervisor/discovery loops
 - projection into unpaired `smart-home-core::Bridge` records
 

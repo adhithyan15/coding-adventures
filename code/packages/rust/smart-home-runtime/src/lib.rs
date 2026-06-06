@@ -17,7 +17,7 @@ use smart_home_core::{
 };
 use smart_home_discovery::{
     DiscoveryCatalog, DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary,
-    DiscoverySource, DiscoveryUpsert,
+    DiscoverySource, DiscoveryUpsert, DiscoveryWorkerRun, DiscoveryWorkerRunSummary,
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
@@ -2730,6 +2730,33 @@ impl SmartHomeRuntime {
         Ok(upsert)
     }
 
+    pub fn record_discovery_worker_run(
+        &mut self,
+        run: &DiscoveryWorkerRun,
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> Result<DiscoveryWorkerRunSummary, RuntimeError> {
+        let mut inserted_count = 0;
+        let mut replaced_count = 0;
+        let mut ignored_count = 0;
+
+        for record in &run.records {
+            match self.record_discovery(record.clone())? {
+                DiscoveryUpsert::Inserted => inserted_count += 1,
+                DiscoveryUpsert::Replaced(_) => replaced_count += 1,
+                DiscoveryUpsert::Ignored(_) => ignored_count += 1,
+            }
+        }
+
+        Ok(run.summary_at(
+            now_ms,
+            ttl_ms,
+            inserted_count,
+            replaced_count,
+            ignored_count,
+        ))
+    }
+
     pub fn discovery_record_count(&self) -> usize {
         self.discovery.len()
     }
@@ -3824,7 +3851,9 @@ mod tests {
         CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
     };
     use smart_home_discovery::{
-        DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert, PairingRequirement,
+        DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert,
+        DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
+        DiscoveryWorkerRunStatus, PairingRequirement,
     };
     use smart_home_registry::StateRefreshReason;
 
@@ -3915,6 +3944,24 @@ mod tests {
         .unwrap()
         .with_address("https://192.0.2.10")
         .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+    }
+
+    fn hue_cloud_discovery_record(
+        native_bridge_id: &str,
+        discovered_at_ms: u64,
+    ) -> DiscoveryRecord {
+        DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            native_bridge_id,
+            DiscoverySource::CloudFallback,
+            BridgeTransport::Cloud,
+            discovered_at_ms,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.20")
+        .with_confidence(DiscoveryConfidence::Candidate)
         .with_pairing_requirement(PairingRequirement::PhysicalPresence)
     }
 
@@ -4854,6 +4901,76 @@ mod tests {
         assert_eq!(output.record_summary.fresh, 1);
         assert_eq!(output.record_summary.stale, 0);
         assert_eq!(output.bridge_candidates[0].health, Health::Unpaired);
+    }
+
+    #[test]
+    fn runtime_ingests_discovery_worker_runs_as_preferred_bridge_candidates() {
+        let mut runtime = SmartHomeRuntime::new();
+        let replace_bridge_id = BridgeId::trusted("hue.bridge.001788fffereplace");
+        let ignored_bridge_id = BridgeId::trusted("hue.bridge.001788fffeignored");
+        runtime
+            .record_discovery(hue_cloud_discovery_record("001788fffereplace", 1_000))
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeignored", 1_900))
+            .unwrap();
+
+        let mut run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-composite-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::Composite,
+            1_800,
+            1_950,
+        );
+        run.push_record(hue_discovery_record("001788fffereplace", 1_900))
+            .unwrap();
+        run.push_record(hue_cloud_discovery_record("001788fffeignored", 1_950))
+            .unwrap();
+        run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "ignored malformed packet").unwrap(),
+        );
+
+        let summary = runtime
+            .record_discovery_worker_run(&run, 2_000, 500)
+            .unwrap();
+
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(summary.record_count, 2);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(summary.inserted_count, 0);
+        assert_eq!(summary.replaced_count, 1);
+        assert_eq!(summary.ignored_count, 1);
+        assert_eq!(summary.accepted_count(), 1);
+        assert!(summary.has_catalog_changes());
+        assert_eq!(summary.record_summary.total, 2);
+        assert_eq!(summary.signal_summary.fresh, 2);
+        assert_eq!(runtime.discovery_record_count(), 2);
+        assert_eq!(
+            runtime
+                .discovery()
+                .get(&IntegrationId::trusted("hue"), "001788fffereplace")
+                .unwrap()
+                .source,
+            DiscoverySource::Mdns
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&replace_bridge_id)
+                .unwrap()
+                .address
+                .as_deref(),
+            Some("https://192.0.2.10")
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&ignored_bridge_id)
+                .unwrap()
+                .address
+                .as_deref(),
+            Some("https://192.0.2.10")
+        );
     }
 
     #[test]

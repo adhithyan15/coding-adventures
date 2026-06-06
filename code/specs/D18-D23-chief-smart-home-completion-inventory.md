@@ -64,6 +64,24 @@ This slice moves the smart-home platform side forward:
 - `smart-home-testkit` now builds its deterministic Hue discovery runtime
   fixture through the canonical Hue mDNS normalization path.
 
+## Current Discovery Worker Slice
+
+This slice turns the discovery ingest shape into a worker handoff contract while
+keeping the implementation testable and D23-owned:
+
+- `smart-home-discovery` now has generic discovery worker-run envelopes with
+  worker id/kind/status, per-source failures, run duration, and ingest summary
+  counts.
+- `smart-home-runtime` can ingest a full discovery worker run, record preferred
+  catalog results, reconcile accepted records into unpaired bridge candidates,
+  and report inserted/replaced/ignored outcomes.
+- `hue-core` can wrap Hue mDNS and cloud-fallback observations into the generic
+  D23 worker-run envelope, preserving malformed or non-Hue observations as
+  worker failures instead of losing the whole scan.
+- `smart-home-testkit` now seeds its Hue discovery runtime fixture through the
+  worker-run ingest path, so runtime and Chief bridge tests exercise the same
+  platform handoff a future LAN scanner will use.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -85,8 +103,8 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Bind real D23 discovery workers to the Hue mDNS/cloud-fallback ingest path,
-  starting with LAN mDNS scanning that feeds the runtime discovery catalog.
+- Attach actual LAN mDNS socket scanning to the D23 discovery worker-run
+  contract and feed those runs into the runtime discovery catalog.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

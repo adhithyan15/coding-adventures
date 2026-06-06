@@ -14,7 +14,8 @@ use smart_home_core::{
     StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_discovery::{
-    DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, MdnsAdvertisement,
+    DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerFailure,
+    DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun, MdnsAdvertisement,
     PairingRequirement,
 };
 use std::fmt;
@@ -772,6 +773,62 @@ impl HueDiscoveryBatch {
             .iter()
             .map(DiscoveryRecord::to_bridge_candidate)
             .collect()
+    }
+}
+
+pub fn hue_discovery_worker_run_from_observations<'a>(
+    worker_id: impl Into<String>,
+    mdns_advertisements: impl IntoIterator<Item = &'a MdnsAdvertisement>,
+    cloud_bridges: impl IntoIterator<Item = HueCloudDiscoveryBridge>,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> Result<DiscoveryWorkerRun, HueError> {
+    let mdns_advertisements = mdns_advertisements.into_iter().collect::<Vec<_>>();
+    let cloud_bridges = cloud_bridges.into_iter().collect::<Vec<_>>();
+    let mut run = DiscoveryWorkerRun::new(
+        DiscoveryWorkerId::new(worker_id)?,
+        IntegrationId::trusted(HUE_INTEGRATION_ID),
+        hue_discovery_worker_kind(!mdns_advertisements.is_empty(), !cloud_bridges.is_empty()),
+        started_at_ms,
+        completed_at_ms,
+    )
+    .with_metadata("hue.discovery.worker", "true")
+    .with_metadata("hue.discovery.worker_version", env!("CARGO_PKG_VERSION"));
+
+    for advertisement in mdns_advertisements {
+        match hue_discovery_record_from_mdns(advertisement) {
+            Ok(record) => run.push_record(record)?,
+            Err(error) => run.push_failure(
+                DiscoveryWorkerFailure::new(DiscoverySource::Mdns, error.to_string())?
+                    .with_metadata("hue.discovery.service_type", &advertisement.service_type)
+                    .with_metadata("hue.discovery.instance_name", &advertisement.instance_name)
+                    .with_metadata("hue.discovery.host_name", &advertisement.host_name),
+            ),
+        }
+    }
+
+    for bridge in cloud_bridges {
+        let bridge_id = bridge.bridge_id.clone();
+        let internal_ip_address = bridge.internal_ip_address.clone();
+        match bridge.into_record() {
+            Ok(record) => run.push_record(record)?,
+            Err(error) => run.push_failure(
+                DiscoveryWorkerFailure::new(DiscoverySource::CloudFallback, error.to_string())?
+                    .with_metadata("hue.discovery.bridge_id", bridge_id)
+                    .with_metadata("hue.discovery.internal_ip_address", internal_ip_address),
+            ),
+        }
+    }
+
+    Ok(run)
+}
+
+fn hue_discovery_worker_kind(has_mdns: bool, has_cloud: bool) -> DiscoveryWorkerKind {
+    match (has_mdns, has_cloud) {
+        (true, true) => DiscoveryWorkerKind::Composite,
+        (true, false) => DiscoveryWorkerKind::MdnsScan,
+        (false, true) => DiscoveryWorkerKind::CloudFallback,
+        (false, false) => DiscoveryWorkerKind::Composite,
     }
 }
 
@@ -1874,6 +1931,7 @@ pub fn validate_brightness(value: u16) -> Result<u8, HueError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use smart_home_discovery::DiscoveryWorkerRunStatus;
 
     #[test]
     fn resource_paths_match_clip_v2_shape() {
@@ -2300,6 +2358,73 @@ mod tests {
             batch.bridge_candidates()[0].bridge_id.as_str(),
             "hue.bridge.001788fffeabcdef"
         );
+    }
+
+    #[test]
+    fn hue_discovery_worker_run_preserves_records_and_partial_failures() {
+        let mdns = MdnsAdvertisement::new(
+            HUE_MDNS_SERVICE_TYPE,
+            "Philips Hue - ABCDEF",
+            "hue-bridge.local",
+            443,
+            1_000,
+        )
+        .unwrap()
+        .with_address("192.0.2.10")
+        .unwrap()
+        .with_txt("bridgeid", "001788fffeabcdef")
+        .unwrap();
+        let non_hue = MdnsAdvertisement::new(
+            "_matter._tcp.local",
+            "Matter Bridge",
+            "matter.local",
+            5540,
+            1_005,
+        )
+        .unwrap();
+        let cloud = HueCloudDiscoveryBridge::new("001788fffecloud", "192.0.2.11", 1_010).unwrap();
+
+        let run = hue_discovery_worker_run_from_observations(
+            "hue-discovery-worker",
+            [&mdns, &non_hue],
+            [cloud],
+            990,
+            1_020,
+        )
+        .unwrap();
+        let summary = run.summary_at(1_100, 500, 2, 0, 0);
+
+        assert_eq!(
+            run.worker_id,
+            DiscoveryWorkerId::trusted("hue-discovery-worker")
+        );
+        assert_eq!(run.kind, DiscoveryWorkerKind::Composite);
+        assert_eq!(run.status(), DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(run.len(), 2);
+        assert_eq!(run.failure_count(), 1);
+        assert_eq!(run.duration_ms(), 30);
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.worker" && metadata.value == "true"
+        }));
+        assert_eq!(run.records[0].source, DiscoverySource::Mdns);
+        assert_eq!(run.records[1].source, DiscoverySource::CloudFallback);
+        assert_eq!(run.failures[0].source, DiscoverySource::Mdns);
+        assert!(run.failures[0].message.contains("not a Hue bridge service"));
+        assert_eq!(summary.record_count, 2);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(
+            summary
+                .record_summary
+                .count_for_source(DiscoverySource::Mdns),
+            1
+        );
+        assert_eq!(
+            summary
+                .record_summary
+                .count_for_source(DiscoverySource::CloudFallback),
+            1
+        );
+        assert_eq!(summary.signal_summary.fresh, 2);
     }
 
     #[test]
