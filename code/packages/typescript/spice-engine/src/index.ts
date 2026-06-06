@@ -560,6 +560,16 @@ export interface McResult {
   readonly stdDev: number;
 }
 
+export interface CornerMcPoint {
+  readonly cornerName: string;
+  readonly result: McResult;
+}
+
+export interface CornerMcResult {
+  readonly outputNode: string;
+  readonly points: readonly CornerMcPoint[];
+}
+
 export interface TfResult {
   readonly transferRatio: number;
   readonly inputImpedanceOhms: number;
@@ -593,6 +603,16 @@ export interface SensResult {
   entry(elementName: string, parameter: string): SensEntry | undefined;
 }
 
+export interface CornerSensPoint {
+  readonly cornerName: string;
+  readonly result: SensResult;
+}
+
+export interface CornerSensResult {
+  readonly outputNode: string;
+  readonly points: readonly CornerSensPoint[];
+}
+
 export interface Complex {
   readonly real: number;
   readonly imag: number;
@@ -621,6 +641,18 @@ export interface SParameterResult {
   readonly points: readonly SParameterPoint[];
 }
 
+export interface CornerSParameterPoint {
+  readonly cornerName: string;
+  readonly result: SParameterResult;
+}
+
+export interface CornerSParameterResult {
+  readonly port1Source: string;
+  readonly port2Source: string;
+  readonly referenceImpedanceOhms: number;
+  readonly points: readonly CornerSParameterPoint[];
+}
+
 export type NoiseType = "thermal";
 
 export interface NoiseEntry {
@@ -642,6 +674,17 @@ export interface NoiseResult {
   readonly inputSource: string;
   readonly temperatureKelvin: number;
   readonly points: readonly NoisePoint[];
+}
+
+export interface CornerNoisePoint {
+  readonly cornerName: string;
+  readonly result: NoiseResult;
+}
+
+export interface CornerNoiseResult {
+  readonly outputNode: string;
+  readonly inputSource: string;
+  readonly points: readonly CornerNoisePoint[];
 }
 
 export interface TransientPoint {
@@ -2340,6 +2383,293 @@ export function formatTfTable(result: TfResult): string {
   ].join("\n");
 }
 
+export function formatMcTable(result: McResult): string {
+  const rows = [["Trial", "OutputNode", "OutputValue", "Mean", "StdDev", "Converged"].join("\t")];
+  result.points.forEach((point) => {
+    const outputValue = point.converged
+      ? formatTableNumber(point.voltage(result.outputNode) ?? 0.0)
+      : "";
+    rows.push(
+      [
+        String(point.trial),
+        result.outputNode,
+        outputValue,
+        formatTableNumber(result.mean),
+        formatTableNumber(result.stdDev),
+        String(point.converged),
+      ].join("\t"),
+    );
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerMcTable(result: CornerMcResult): string {
+  const rows = [["Corner", "Trial", "OutputNode", "OutputValue", "Mean", "StdDev", "Converged"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point) => {
+      const outputValue = point.converged
+        ? formatTableNumber(point.voltage(result.outputNode) ?? 0.0)
+        : "";
+      rows.push(
+        [
+          corner.cornerName,
+          String(point.trial),
+          result.outputNode,
+          outputValue,
+          formatTableNumber(corner.result.mean),
+          formatTableNumber(corner.result.stdDev),
+          String(point.converged),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatSensTable(result: SensResult): string {
+  const rows = [[
+    "OutputNode",
+    "NominalVoltage",
+    "Element",
+    "Parameter",
+    "NominalValue",
+    "Sensitivity",
+    "RelativeSensitivity",
+  ].join("\t")];
+  result.entries.forEach((entry) => {
+    rows.push(
+      [
+        result.outputNode,
+        formatTableNumber(result.nominalVoltage),
+        entry.elementName,
+        entry.parameter,
+        formatTableNumber(entry.nominalValue),
+        formatTableNumber(entry.sensitivity),
+        formatTableNumber(entry.relativeSensitivity),
+      ].join("\t"),
+    );
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerSensTable(result: CornerSensResult): string {
+  const rows = [[
+    "Corner",
+    "OutputNode",
+    "NominalVoltage",
+    "Element",
+    "Parameter",
+    "NominalValue",
+    "Sensitivity",
+    "RelativeSensitivity",
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.entries.forEach((entry) => {
+      rows.push(
+        [
+          corner.cornerName,
+          result.outputNode,
+          formatTableNumber(corner.result.nominalVoltage),
+          entry.elementName,
+          entry.parameter,
+          formatTableNumber(entry.nominalValue),
+          formatTableNumber(entry.sensitivity),
+          formatTableNumber(entry.relativeSensitivity),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+function sParameterValues(point: SParameterPoint): readonly (readonly [string, Complex])[] {
+  return [
+    ["S11", point.s11],
+    ["S21", point.s21],
+    ["S12", point.s12],
+    ["S22", point.s22],
+  ];
+}
+
+export function formatSParameterTable(result: SParameterResult): string {
+  const rows = [[
+    "Index",
+    "Frequency",
+    "Port1",
+    "Port2",
+    "Parameter",
+    "Real",
+    "Imaginary",
+    "Magnitude",
+    "Phase",
+  ].join("\t")];
+  result.points.forEach((point, index) => {
+    sParameterValues(point).forEach(([parameter, value]) => {
+      rows.push(
+        [
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          result.port1Source,
+          result.port2Source,
+          parameter,
+          formatTableNumber(value.real),
+          formatTableNumber(value.imag),
+          formatTableNumber(complexAbs(value)),
+          formatTableNumber(complexPhase(value) * 180.0 / Math.PI),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerSParameterTable(result: CornerSParameterResult): string {
+  const rows = [[
+    "Corner",
+    "Index",
+    "Frequency",
+    "Port1",
+    "Port2",
+    "Parameter",
+    "Real",
+    "Imaginary",
+    "Magnitude",
+    "Phase",
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point, index) => {
+      sParameterValues(point).forEach(([parameter, value]) => {
+        rows.push(
+          [
+            corner.cornerName,
+            String(index),
+            formatTableNumber(point.frequencyHz),
+            result.port1Source,
+            result.port2Source,
+            parameter,
+            formatTableNumber(value.real),
+            formatTableNumber(value.imag),
+            formatTableNumber(complexAbs(value)),
+            formatTableNumber(complexPhase(value) * 180.0 / Math.PI),
+          ].join("\t"),
+        );
+      });
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatNoiseTable(result: NoiseResult): string {
+  const rows = [[
+    "Index",
+    "Frequency",
+    "OutputNode",
+    "InputSource",
+    "OutputPSD",
+    "InputReferredPSD",
+    "Element",
+    "Type",
+    "SourcePSD",
+    "ContributionPSD",
+  ].join("\t")];
+  result.points.forEach((point, index) => {
+    if (point.entries.length === 0) {
+      rows.push([
+        String(index),
+        formatTableNumber(point.frequencyHz),
+        result.outputNode,
+        result.inputSource,
+        formatTableNumber(point.outputPsd),
+        formatTableNumber(point.inputReferredPsd),
+        "",
+        "",
+        "",
+        "",
+      ].join("\t"));
+      return;
+    }
+    point.entries.forEach((entry) => {
+      rows.push(
+        [
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          result.outputNode,
+          result.inputSource,
+          formatTableNumber(point.outputPsd),
+          formatTableNumber(point.inputReferredPsd),
+          entry.elementName,
+          entry.noiseType,
+          formatTableNumber(entry.sourcePsd),
+          formatTableNumber(entry.outputPsd),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerNoiseTable(result: CornerNoiseResult): string {
+  const rows = [[
+    "Corner",
+    "Index",
+    "Frequency",
+    "OutputNode",
+    "InputSource",
+    "OutputPSD",
+    "InputReferredPSD",
+    "Element",
+    "Type",
+    "SourcePSD",
+    "ContributionPSD",
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point, index) => {
+      if (point.entries.length === 0) {
+        rows.push([
+          corner.cornerName,
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          result.outputNode,
+          result.inputSource,
+          formatTableNumber(point.outputPsd),
+          formatTableNumber(point.inputReferredPsd),
+          "",
+          "",
+          "",
+          "",
+        ].join("\t"));
+        return;
+      }
+      point.entries.forEach((entry) => {
+        rows.push(
+          [
+            corner.cornerName,
+            String(index),
+            formatTableNumber(point.frequencyHz),
+            result.outputNode,
+            result.inputSource,
+            formatTableNumber(point.outputPsd),
+            formatTableNumber(point.inputReferredPsd),
+            entry.elementName,
+            entry.noiseType,
+            formatTableNumber(entry.sourcePsd),
+            formatTableNumber(entry.outputPsd),
+          ].join("\t"),
+        );
+      });
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatPoleZeroTable(result: PoleZeroResult): string {
   const rows = [["Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
   result.entries.forEach((entry, index) => {
@@ -2720,6 +3050,27 @@ export function mcDc(
   );
 }
 
+export function mcDcCorners(
+  circuit: Circuit,
+  outputNode: string,
+  corners: readonly CornerSpec[],
+  nTrials = 100,
+  options: McOptions = {},
+): CornerMcResult {
+  return {
+    outputNode,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: mcDc(
+        circuitWithCorner(circuit, corner),
+        outputNode,
+        nTrials,
+        options,
+      ),
+    })),
+  };
+}
+
 export function tf(
   circuit: Circuit,
   outputNode: string,
@@ -2845,6 +3196,20 @@ export function sensDc(circuit: Circuit, outputNode: string): SensResult {
   return makeSensResult(outputNode, nominalVoltage, entries);
 }
 
+export function sensDcCorners(
+  circuit: Circuit,
+  outputNode: string,
+  corners: readonly CornerSpec[],
+): CornerSensResult {
+  return {
+    outputNode,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: sensDc(circuitWithCorner(circuit, corner), outputNode),
+    })),
+  };
+}
+
 export function acSweep(
   circuit: Circuit,
   startHz: number,
@@ -2945,6 +3310,31 @@ export function sParameters(
     port2Source,
     referenceImpedanceOhms,
     points,
+  };
+}
+
+export function sParametersCorners(
+  circuit: Circuit,
+  port1Source: string,
+  port2Source: string,
+  frequenciesHz: readonly number[],
+  corners: readonly CornerSpec[],
+  referenceImpedanceOhms = 50.0,
+): CornerSParameterResult {
+  return {
+    port1Source,
+    port2Source,
+    referenceImpedanceOhms,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: sParameters(
+        circuitWithCorner(circuit, corner),
+        port1Source,
+        port2Source,
+        frequenciesHz,
+        referenceImpedanceOhms,
+      ),
+    })),
   };
 }
 
@@ -3060,6 +3450,30 @@ export function noiseAc(
     inputSource,
     temperatureKelvin,
     points,
+  };
+}
+
+export function noiseAcCorners(
+  circuit: Circuit,
+  outputNode: string,
+  inputSource: string,
+  corners: readonly CornerSpec[],
+  frequenciesHz: readonly number[] = defaultNoiseFrequencies(),
+  temperatureKelvin = 300.0,
+): CornerNoiseResult {
+  return {
+    outputNode,
+    inputSource,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: noiseAc(
+        circuitWithCorner(circuit, corner),
+        outputNode,
+        inputSource,
+        frequenciesHz,
+        temperatureKelvin,
+      ),
+    })),
   };
 }
 

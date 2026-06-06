@@ -36,6 +36,10 @@ Included surfaces:
   subscribers without draining their delivery queues
 - subscription inventory summaries for read-side event-stream filter coverage
   and queue pressure checks
+- runtime-owned discovery catalog recording that reconciles normalized
+  discovery results into unpaired bridge candidates
+- D18D-facing discover tool facade for authorized discovery reads, freshness
+  filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and
   current queue pressure checks
 - command validation against entity capabilities and command modes
@@ -85,6 +89,7 @@ Included surfaces:
 ## Dependencies
 
 - smart-home-core
+- smart-home-discovery
 - smart-home-registry
 
 ## Development

@@ -16,12 +16,15 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus, CommandType,
-    Device, EntityId, Health, Metadata, StateConfidence, StateSnapshot, StateSource, Value,
+    Device, EntityId, Health, IntegrationId, Metadata, StateConfidence, StateSnapshot, StateSource,
+    Value,
 };
+use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
 use smart_home_runtime::{
-    PairingSessionStatus, RuntimeCommandToolRequest, RuntimeError, RuntimeEventCheckpoint,
-    RuntimeEventFilter, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
-    RuntimePairingSession, RuntimePairingSessionId, RuntimeReadToolOutput, RuntimeReadToolRequest,
+    PairingSessionStatus, RuntimeCommandToolRequest, RuntimeDiscoverToolOutput,
+    RuntimeDiscoverToolRequest, RuntimeError, RuntimeEventCheckpoint, RuntimeEventFilter,
+    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
+    RuntimePairingSessionId, RuntimeReadToolOutput, RuntimeReadToolRequest,
     RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionId,
     SmartHomeRuntime,
 };
@@ -29,6 +32,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
+pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
 pub const SMART_HOME_COMMAND_TOOL_ID: &str = "smart_home.command";
@@ -87,6 +91,13 @@ impl SmartHomeToolBridge {
             let mut runtime = runtime.borrow_mut();
 
             match tool_id.as_str() {
+                SMART_HOME_DISCOVER_TOOL_ID => {
+                    let request = discover_request(&arguments)?;
+                    let output = runtime
+                        .execute_discover_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(discover_output_handler_output(output))
+                }
                 SMART_HOME_LIST_BRIDGES_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
                     let output = runtime
@@ -197,6 +208,59 @@ impl SmartHomeToolBridge {
 /// Return the D18D definitions for the first smart-home runtime bridge tools.
 pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
     vec![
+        read_definition(
+            SMART_HOME_DISCOVER_TOOL_ID,
+            "Discover smart-home bridges",
+            "List normalized D23 discovery candidates recorded by the smart-home runtime.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("integration_id", JsonSchema::String),
+                    SchemaProperty::new("source", JsonSchema::String),
+                    SchemaProperty::new("fresh_only", JsonSchema::Boolean),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new(
+                        "records",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new(
+                        "bridge_candidates",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("with_address_count", JsonSchema::Integer),
+                    SchemaProperty::new("fresh_count", JsonSchema::Integer),
+                    SchemaProperty::new("stale_count", JsonSchema::Integer),
+                    SchemaProperty::new("expired_count", JsonSchema::Integer),
+                    SchemaProperty::new("next_transition_at_ms", JsonSchema::Any),
+                ],
+                vec![
+                    "generated_at_ms",
+                    "ttl_ms",
+                    "records",
+                    "bridge_candidates",
+                    "count",
+                    "with_address_count",
+                    "fresh_count",
+                    "stale_count",
+                    "expired_count",
+                    "next_transition_at_ms",
+                ],
+                false,
+            ),
+        ),
         read_definition(
             SMART_HOME_LIST_BRIDGES_TOOL_ID,
             "List smart-home bridges",
@@ -502,6 +566,27 @@ fn command_definition() -> ToolDefinition {
     }
 }
 
+fn discover_request(arguments: &JsonValue) -> Result<RuntimeDiscoverToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut request = RuntimeDiscoverToolRequest::new();
+    if let Some(integration_id) = optional_string(arguments, "integration_id")? {
+        request = request.for_integration(IntegrationId::trusted(integration_id));
+    }
+    if let Some(source) = optional_string(arguments, "source")? {
+        request = request.from_source(parse_discovery_source(&source)?);
+    }
+    if let Some(fresh_only) = optional_bool(arguments, "fresh_only")? {
+        request = request.fresh_only(fresh_only);
+    }
+    if let Some(ttl_ms) = optional_u64(arguments, "ttl_ms")? {
+        request = request.with_ttl_ms(ttl_ms);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        request = request.with_limit(limit as usize);
+    }
+    Ok(request)
+}
+
 fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
     Ok(RuntimeReadToolRequest::ListDevices {
         bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
@@ -557,6 +642,17 @@ fn pair_bridge_request(
         request = request.with_metadata(metadata);
     }
     Ok(request)
+}
+
+fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(discover_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("discover")),
+            ("count", integer(output.len() as i64)),
+            ("fresh_count", integer(output.record_summary.fresh as i64)),
+        ]),
+    )
 }
 
 fn subscribe_output_handler_output(output: RuntimeSubscribeToolOutput) -> ToolHandlerOutput {
@@ -717,6 +813,82 @@ fn pair_bridge_output_json(output: &RuntimePairBridgeToolOutput) -> JsonValue {
     pairing_session_json(&output.session)
 }
 
+fn discover_output_json(output: &RuntimeDiscoverToolOutput) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(output.generated_at_ms as i64)),
+        ("ttl_ms", integer(output.ttl_ms as i64)),
+        (
+            "records",
+            JsonValue::Array(output.records.iter().map(discovery_record_json).collect()),
+        ),
+        (
+            "bridge_candidates",
+            JsonValue::Array(output.bridge_candidates.iter().map(bridge_json).collect()),
+        ),
+        ("count", integer(output.record_summary.total as i64)),
+        (
+            "with_address_count",
+            integer(output.record_summary.with_address as i64),
+        ),
+        ("fresh_count", integer(output.record_summary.fresh as i64)),
+        ("stale_count", integer(output.record_summary.stale as i64)),
+        (
+            "expired_count",
+            integer(output.record_summary.expired as i64),
+        ),
+        (
+            "next_transition_at_ms",
+            output
+                .signal_summary
+                .next_transition_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn discovery_record_json(record: &DiscoveryRecord) -> JsonValue {
+    object([
+        ("fingerprint", string(record.fingerprint().as_str())),
+        ("bridge_id", string(record.bridge_id().as_str())),
+        ("integration_id", string(record.integration_id.as_str())),
+        ("native_bridge_id", string(&record.native_bridge_id)),
+        ("display_name", optional_string_json(&record.display_name)),
+        ("source", string(record.source.as_str())),
+        ("transport", string(record.transport.as_str())),
+        ("address", optional_string_json(&record.address)),
+        (
+            "network_interface",
+            optional_string_json(&record.network_interface),
+        ),
+        (
+            "hardware_model",
+            optional_string_json(&record.hardware_model),
+        ),
+        (
+            "firmware_version",
+            optional_string_json(&record.firmware_version),
+        ),
+        ("confidence", string(record.confidence.as_str())),
+        (
+            "pairing_requirement",
+            string(record.pairing_requirement.as_str()),
+        ),
+        ("discovered_at_ms", integer(record.discovered_at_ms as i64)),
+        (
+            "expires_at_ms",
+            record
+                .expires_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "metadata",
+            JsonValue::Array(record.metadata.iter().map(metadata_json).collect()),
+        ),
+    ])
+}
+
 fn pairing_session_json(session: &RuntimePairingSession) -> JsonValue {
     object([
         ("session_id", string(session.session_id.as_str())),
@@ -770,6 +942,10 @@ fn metadata_json(metadata: &Metadata) -> JsonValue {
         ("key", string(&metadata.key)),
         ("value", string(&metadata.value)),
     ])
+}
+
+fn optional_string_json(value: &Option<String>) -> JsonValue {
+    value.as_ref().map(string).unwrap_or(JsonValue::Null)
 }
 
 fn device_json(device: &Device) -> JsonValue {
@@ -1030,6 +1206,24 @@ fn parse_health(label: &str) -> Result<Health, ToolCallError> {
     }
 }
 
+fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError> {
+    match label {
+        "mdns" => Ok(DiscoverySource::Mdns),
+        "ssdp" => Ok(DiscoverySource::Ssdp),
+        "bluetooth" => Ok(DiscoverySource::Bluetooth),
+        "usb" => Ok(DiscoverySource::Usb),
+        "dhcp" => Ok(DiscoverySource::Dhcp),
+        "mqtt" => Ok(DiscoverySource::Mqtt),
+        "manual" => Ok(DiscoverySource::Manual),
+        "cloud_fallback" => Ok(DiscoverySource::CloudFallback),
+        "webhook" => Ok(DiscoverySource::Webhook),
+        "simulator" => Ok(DiscoverySource::Simulator),
+        _ => Err(validation_error(format!(
+            "unknown discovery source `{label}`"
+        ))),
+    }
+}
+
 fn health_label(health: Health) -> &'static str {
     match health {
         Health::Unknown => "unknown",
@@ -1148,6 +1342,14 @@ fn optional_string(value: &JsonValue, field: &str) -> Result<Option<String>, Too
         Some(JsonValue::String(value)) => Ok(Some(value.clone())),
         Some(JsonValue::Null) | None => Ok(None),
         Some(_) => Err(validation_error(format!("{field} must be a string"))),
+    }
+}
+
+fn optional_bool(value: &JsonValue, field: &str) -> Result<Option<bool>, ToolCallError> {
+    match optional_field(value, field) {
+        Some(JsonValue::Bool(value)) => Ok(Some(*value)),
+        Some(JsonValue::Null) | None => Ok(None),
+        Some(_) => Err(validation_error(format!("{field} must be a boolean"))),
     }
 }
 
@@ -1281,7 +1483,7 @@ mod tests {
         ToolValidationReport,
     };
     use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
-    use smart_home_testkit::hue_lighting_runtime;
+    use smart_home_testkit::{hue_bridge_discovery_record, hue_lighting_runtime};
 
     const AGENT_ID: &str = "agent:chief-smart-home";
 
@@ -1290,8 +1492,9 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 9);
+        assert_eq!(definitions.len(), 10);
         assert!(export.ok());
+        assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_COMMAND_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_PAIR_BRIDGE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_SUBSCRIBE_TOOL_ID));
@@ -1301,7 +1504,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            7
+            8
         );
         assert_eq!(
             export
@@ -1320,6 +1523,10 @@ mod tests {
     #[test]
     fn chief_of_staff_runtime_drives_smart_home_light_end_to_end() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
+        runtime
+            .borrow_mut()
+            .record_discovery(hue_bridge_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_all_smart_home(
                 CapabilityGrantId::trusted("grant-smart-home"),
@@ -1346,6 +1553,41 @@ mod tests {
         assert_eq!(
             field(list_trace.result.output.as_ref().unwrap(), "count"),
             Some(&integer(1))
+        );
+
+        let discover_request = request(
+            "call-discover",
+            SMART_HOME_DISCOVER_TOOL_ID,
+            object([
+                ("integration_id", string("hue")),
+                ("source", string("mdns")),
+                ("fresh_only", JsonValue::Bool(true)),
+                ("ttl_ms", integer(1_000)),
+            ]),
+            1_005,
+        );
+        let discover_trace = tool_runtime.invoke_with_events(&discover_request);
+        assert!(discover_trace.result.ok);
+        assert_eq!(
+            field(discover_trace.result.output.as_ref().unwrap(), "count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                discover_trace.result.output.as_ref().unwrap(),
+                "with_address_count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            array_len(
+                field(
+                    discover_trace.result.output.as_ref().unwrap(),
+                    "bridge_candidates"
+                )
+                .unwrap()
+            ),
+            Some(1)
         );
 
         let capabilities_request = request(
@@ -1448,6 +1690,7 @@ mod tests {
 
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
+        journal.record_trace(discover_request, discover_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
         journal.record_trace(subscribe_request, subscribe_trace);
@@ -1456,9 +1699,9 @@ mod tests {
         journal.record_trace(state_request, state_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 7);
-        assert_eq!(journal_summary.completed_count, 7);
-        assert_eq!(journal.audit_records().len(), 7);
+        assert_eq!(journal_summary.invocation_count, 8);
+        assert_eq!(journal_summary.completed_count, 8);
+        assert_eq!(journal.audit_records().len(), 8);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -1472,7 +1715,7 @@ mod tests {
         );
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            8,
+            9,
             "read, subscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }
@@ -1566,6 +1809,22 @@ mod tests {
                 .map(|error| error.kind),
             Some(ToolErrorKind::ToolValidationError)
         );
+
+        let unsupported_source = tool_runtime.invoke_with_events(&request(
+            "call-invalid-discover",
+            SMART_HOME_DISCOVER_TOOL_ID,
+            object([("source", string("radio_magic"))]),
+            1_000,
+        ));
+        assert!(!unsupported_source.result.ok);
+        assert_eq!(
+            unsupported_source
+                .result
+                .error
+                .as_ref()
+                .map(|error| error.kind),
+            Some(ToolErrorKind::ToolValidationError)
+        );
     }
 
     fn request(
@@ -1596,5 +1855,12 @@ mod tests {
         fields
             .iter()
             .find_map(|(field_name, value)| (field_name == name).then_some(value))
+    }
+
+    fn array_len(value: &JsonValue) -> Option<usize> {
+        let JsonValue::Array(values) = value else {
+            return None;
+        };
+        Some(values.len())
     }
 }

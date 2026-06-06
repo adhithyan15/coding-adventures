@@ -1733,6 +1733,9 @@ fn weierstrass_parse_a_plus_b_sincos(
     node: &IRNode,
     x: &str,
 ) -> Option<(RatC, RatC, &'static str, RatC, RatC)> {
+    if let Some((b, head, alpha, beta)) = weierstrass_parse_const_times_trig_linear(node, x) {
+        return Some(((0, 1), b, head, alpha, beta));
+    }
     let IRNode::Apply(apply) = node else {
         return None;
     };
@@ -1843,9 +1846,9 @@ fn try_weierstrass_degenerate(
 }
 
 /// Phase 36: Weierstrass log form for `a² < b²`.  Returns the closed
-/// form with `log|·|` instead of `arctan(·)`.  Sin branch handles any
-/// nonzero `a`; cos branch requires `b > |a|` strictly (the symmetric
-/// `b < −|a|` case has the opposite sign pattern and is deferred).
+/// form with `log|·|` instead of `arctan(·)`.  The `a = 0` sin/csc
+/// subcase closes as `(c/b)·log|tan(x/2)|`; the cos branch handles both
+/// sign regimes via the Abs-wrapped Phase 37 form.
 fn try_weierstrass_log_form(
     c: RatC,
     a: RatC,
@@ -1869,8 +1872,11 @@ fn try_weierstrass_log_form(
     );
     if trig_head == SIN {
         if a.0 == 0 {
-            // 1/(b·sin x) — defer to the elementary table.
-            return None;
+            // ∫ c/(b·sin u) dx = (c/b)·log|tan(u/2)|.  Any linear argument
+            // scaling has already been absorbed into c by the dispatcher.
+            let coef_ir = rc_to_ir(rc_div(c, b)?)?;
+            let log_arg = apply_node("Abs", vec![tan_half]);
+            return Some(apply_node(MUL, vec![coef_ir, apply_node(LOG, vec![log_arg])]));
         }
         // log|(a·tan(x/2) + b − D) / (a·tan(x/2) + b + D)|
         let a_tan = apply_node(MUL, vec![rc_to_ir(a)?, tan_half]);

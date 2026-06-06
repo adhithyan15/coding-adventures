@@ -4,8 +4,11 @@ import {
   SpiceError,
   capacitor,
   currentSource,
+  formatCornerNoiseTable,
+  formatNoiseTable,
   mosfet,
   noiseAc,
+  noiseAcCorners,
   resistor,
   voltageSource,
 } from "../src/index.js";
@@ -40,6 +43,10 @@ describe("noiseAc", () => {
     expect(result.points[0].inputReferredPsd).toBeCloseTo(
       4.0 * BOLTZMANN * 300.0 / 1_000.0,
       30,
+    );
+    expect(formatNoiseTable(result)).toBe(
+      "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n" +
+        "0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\tRload\tthermal\t1.656779e-23\t1.656779e-17\n",
     );
   });
 
@@ -120,6 +127,41 @@ describe("noiseAc", () => {
     expect(result.points).toHaveLength(50);
     expect(result.points[0].frequencyHz).toBeCloseTo(1.0, 12);
     expect(result.points[49].frequencyHz).toBeCloseTo(1.0e6, 6);
+  });
+
+  it("runs noise analysis at each named corner and formats stable tables", () => {
+    const circuit = new Circuit();
+    circuit.add(currentSource("Iin", "0", "out", 0.0));
+    circuit.add(resistor("Rload", "out", "0", 1_000.0));
+
+    const result = noiseAcCorners(
+      circuit,
+      "out",
+      "Iin",
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "rload-high",
+          overrides: [{ elementName: "Rload", parameter: "resistance", value: 2_000.0 }],
+        },
+      ],
+      [1_000.0],
+      300.0,
+    );
+
+    expect(result.outputNode).toBe("out");
+    expect(result.inputSource).toBe("Iin");
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "rload-high",
+    ]);
+    expect(result.points[0].result.points[0].outputPsd).toBeCloseTo(1.6567788e-17, 24);
+    expect(result.points[1].result.points[0].outputPsd).toBeCloseTo(3.3135576e-17, 24);
+    expect(formatCornerNoiseTable(result)).toBe(
+      "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD\n" +
+        "nominal\t0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\tRload\tthermal\t1.656779e-23\t1.656779e-17\n" +
+        "rload-high\t0\t1.000000e+03\tout\tIin\t3.313558e-17\t8.283894e-24\tRload\tthermal\t8.283894e-24\t3.313558e-17\n",
+    );
   });
 
   it("reports zero output noise at ground while keeping source PSDs", () => {

@@ -64,19 +64,19 @@ from dataclasses import dataclass, field, replace
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
 from spice_engine.elements import (
-    AcSource,
-    BSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcSource,
+    BSource,
     Capacitor,
     CurrentSource,
     Diode,
     Element,
     Inductor,
-    JFET,
     Mosfet,
     MutualInductor,
     Resistor,
@@ -1337,6 +1337,261 @@ def format_tf_table(result: TfResult) -> str:
     )
 
 
+def format_mc_table(result: McResult) -> str:
+    """Format Monte Carlo DC trials as a stable SPICE-style text table."""
+    rows = ["Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged"]
+    for point in result.points:
+        output_value = (
+            _format_table_number(_node_voltage(result.output_node, point.node_voltages))
+            if point.converged
+            else ""
+        )
+        rows.append(
+            "\t".join(
+                [
+                    str(point.trial),
+                    result.output_node,
+                    output_value,
+                    _format_table_number(result.mean),
+                    _format_table_number(result.std_dev),
+                    str(point.converged).lower(),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_mc_table(result: CornerMcResult) -> str:
+    """Format multi-corner Monte Carlo DC trials as a stable text table."""
+    rows = ["Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged"]
+    for corner in result.points:
+        for point in corner.result.points:
+            output_value = (
+                _format_table_number(_node_voltage(result.output_node, point.node_voltages))
+                if point.converged
+                else ""
+            )
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(point.trial),
+                        result.output_node,
+                        output_value,
+                        _format_table_number(corner.result.mean),
+                        _format_table_number(corner.result.std_dev),
+                        str(point.converged).lower(),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_sens_table(result: SensResult) -> str:
+    """Format DC sensitivity entries as a stable SPICE-style text table."""
+    rows = [
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity"
+    ]
+    for entry in result.entries:
+        rows.append(
+            "\t".join(
+                [
+                    result.output_node,
+                    _format_table_number(result.nominal_voltage),
+                    entry.element_name,
+                    entry.parameter,
+                    _format_table_number(entry.nominal_value),
+                    _format_table_number(entry.sensitivity),
+                    _format_table_number(entry.rel_sensitivity),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_sens_table(result: CornerSensResult) -> str:
+    """Format multi-corner DC sensitivity entries as a stable text table."""
+    rows = [
+        "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity"
+    ]
+    for corner in result.points:
+        for entry in corner.result.entries:
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        result.output_node,
+                        _format_table_number(corner.result.nominal_voltage),
+                        entry.element_name,
+                        entry.parameter,
+                        _format_table_number(entry.nominal_value),
+                        _format_table_number(entry.sensitivity),
+                        _format_table_number(entry.rel_sensitivity),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_s_parameter_table(result: SParameterResult) -> str:
+    """Format S-parameters as a stable SPICE-style text table."""
+    rows = ["Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase"]
+    for index, point in enumerate(result.points):
+        for parameter, value in [
+            ("S11", point.s11),
+            ("S21", point.s21),
+            ("S12", point.s12),
+            ("S22", point.s22),
+        ]:
+            rows.append(
+                "\t".join(
+                    [
+                        str(index),
+                        _format_table_number(point.freq),
+                        result.port1_source,
+                        result.port2_source,
+                        parameter,
+                        _format_table_number(value.real),
+                        _format_table_number(value.imag),
+                        _format_table_number(abs(value)),
+                        _format_table_number(math.degrees(cmath.phase(value))),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_s_parameter_table(result: CornerSParameterResult) -> str:
+    """Format multi-corner S-parameters as a stable text table."""
+    rows = [
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase"
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            for parameter, value in [
+                ("S11", point.s11),
+                ("S21", point.s21),
+                ("S12", point.s12),
+                ("S22", point.s22),
+            ]:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            str(index),
+                            _format_table_number(point.freq),
+                            result.port1_source,
+                            result.port2_source,
+                            parameter,
+                            _format_table_number(value.real),
+                            _format_table_number(value.imag),
+                            _format_table_number(abs(value)),
+                            _format_table_number(math.degrees(cmath.phase(value))),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_noise_table(result: NoiseResult) -> str:
+    """Format AC noise entries as a stable SPICE-style text table."""
+    rows = [
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"
+    ]
+    for index, point in enumerate(result.points):
+        if not point.entries:
+            rows.append(
+                "\t".join(
+                    [
+                        str(index),
+                        _format_table_number(point.freq),
+                        result.output_node,
+                        result.input_source,
+                        _format_table_number(point.output_psd),
+                        _format_table_number(point.input_referred_psd),
+                        "",
+                        "",
+                        "",
+                        "",
+                    ]
+                )
+            )
+            continue
+        for entry in point.entries:
+            rows.append(
+                "\t".join(
+                    [
+                        str(index),
+                        _format_table_number(point.freq),
+                        result.output_node,
+                        result.input_source,
+                        _format_table_number(point.output_psd),
+                        _format_table_number(point.input_referred_psd),
+                        entry.element_name,
+                        entry.noise_type,
+                        _format_table_number(entry.source_psd),
+                        _format_table_number(entry.output_psd),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_noise_table(result: CornerNoiseResult) -> str:
+    """Format multi-corner AC noise entries as a stable text table."""
+    rows = [
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\tElement\tType\tSourcePSD\tContributionPSD"
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            if not point.entries:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            str(index),
+                            _format_table_number(point.freq),
+                            result.output_node,
+                            result.input_source,
+                            _format_table_number(point.output_psd),
+                            _format_table_number(point.input_referred_psd),
+                            "",
+                            "",
+                            "",
+                            "",
+                        ]
+                    )
+                )
+                continue
+            for entry in point.entries:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            str(index),
+                            _format_table_number(point.freq),
+                            result.output_node,
+                            result.input_source,
+                            _format_table_number(point.output_psd),
+                            _format_table_number(point.input_referred_psd),
+                            entry.element_name,
+                            entry.noise_type,
+                            _format_table_number(entry.source_psd),
+                            _format_table_number(entry.output_psd),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_pole_zero_table(result: PoleZeroResult) -> str:
     """Format pole-zero entries as a stable SPICE-style text table."""
     rows = ["Index\tKind\tReal\tImaginary\tFrequency\tDamping"]
@@ -2034,6 +2289,73 @@ class CornerTfResult:
     points: list[CornerTfPoint]
     input_source: str
     output_node: str
+
+
+@dataclass(frozen=True)
+class CornerMcPoint:
+    """Monte Carlo DC result for one named analysis corner."""
+
+    corner_name: str
+    result: McResult
+
+
+@dataclass(frozen=True)
+class CornerMcResult:
+    """Multi-corner Monte Carlo DC analysis result."""
+
+    points: list[CornerMcPoint]
+    output_node: str
+
+
+@dataclass(frozen=True)
+class CornerSensPoint:
+    """DC sensitivity result for one named analysis corner."""
+
+    corner_name: str
+    result: SensResult
+
+
+@dataclass(frozen=True)
+class CornerSensResult:
+    """Multi-corner DC sensitivity analysis result."""
+
+    points: list[CornerSensPoint]
+    output_node: str
+
+
+@dataclass(frozen=True)
+class CornerNoisePoint:
+    """AC noise result for one named analysis corner."""
+
+    corner_name: str
+    result: NoiseResult
+
+
+@dataclass(frozen=True)
+class CornerNoiseResult:
+    """Multi-corner AC noise analysis result."""
+
+    points: list[CornerNoisePoint]
+    output_node: str
+    input_source: str
+
+
+@dataclass(frozen=True)
+class CornerSParameterPoint:
+    """S-parameter result for one named analysis corner."""
+
+    corner_name: str
+    result: SParameterResult
+
+
+@dataclass(frozen=True)
+class CornerSParameterResult:
+    """Multi-corner S-parameter extraction result."""
+
+    points: list[CornerSParameterPoint]
+    port1_source: str
+    port2_source: str
+    reference_impedance: float
 
 
 # ---------------------------------------------------------------------------
@@ -5634,6 +5956,36 @@ def s_parameters(
     )
 
 
+def s_parameters_corners(
+    circuit: Circuit,
+    *,
+    port1_source: str,
+    port2_source: str,
+    frequencies: list[float],
+    corners: list[CornerSpec],
+    reference_impedance: float = 50.0,
+) -> CornerSParameterResult:
+    """Extract two-port S-parameters at each named corner."""
+    return CornerSParameterResult(
+        points=[
+            CornerSParameterPoint(
+                corner_name=corner.name,
+                result=s_parameters(
+                    _circuit_with_corner(circuit, corner),
+                    port1_source=port1_source,
+                    port2_source=port2_source,
+                    frequencies=frequencies,
+                    reference_impedance=reference_impedance,
+                ),
+            )
+            for corner in corners
+        ],
+        port1_source=port1_source,
+        port2_source=port2_source,
+        reference_impedance=reference_impedance,
+    )
+
+
 # Keep the cmath import visible to callers that ``from spice_engine import cmath``
 _ = cmath  # noqa: F841
 
@@ -6382,6 +6734,36 @@ def tf_corners(
     )
 
 
+def sens_dc_corners(
+    circuit: Circuit,
+    output_node: str,
+    corners: list[CornerSpec],
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    perturbation: float = 1e-3,
+    abs_floor: float = 1e-10,
+) -> CornerSensResult:
+    """Run DC sensitivity analysis at each named corner."""
+    return CornerSensResult(
+        points=[
+            CornerSensPoint(
+                corner_name=corner.name,
+                result=sens_dc(
+                    _circuit_with_corner(circuit, corner),
+                    output_node,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                    perturbation=perturbation,
+                    abs_floor=abs_floor,
+                ),
+            )
+            for corner in corners
+        ],
+        output_node=output_node,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section 6 — DC Sensitivity Analysis (.SENS analysis)
 # ---------------------------------------------------------------------------
@@ -7099,6 +7481,40 @@ def mc_dc(
     )
 
 
+def mc_dc_corners(
+    circuit: Circuit,
+    output_node: str,
+    n_trials: int,
+    corners: list[CornerSpec],
+    *,
+    tolerance: float = 0.05,
+    distribution: str = "gaussian",
+    seed: int | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerMcResult:
+    """Run Monte Carlo DC analysis at each named corner."""
+    return CornerMcResult(
+        points=[
+            CornerMcPoint(
+                corner_name=corner.name,
+                result=mc_dc(
+                    _circuit_with_corner(circuit, corner),
+                    output_node,
+                    n_trials=n_trials,
+                    tolerance=tolerance,
+                    distribution=distribution,
+                    seed=seed,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ],
+        output_node=output_node,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Section 8 — Noise Analysis (.NOISE analysis)
 # ---------------------------------------------------------------------------
@@ -7648,4 +8064,37 @@ def noise_ac(
         input_source=input_source,
         temperature=temperature,
         points=points,
+    )
+
+
+def noise_ac_corners(
+    circuit: Circuit,
+    output_node: str,
+    input_source: str,
+    corners: list[CornerSpec],
+    freqs: list[float] | None = None,
+    *,
+    temperature: float = 300.0,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerNoiseResult:
+    """Run AC noise analysis at each named corner."""
+    return CornerNoiseResult(
+        points=[
+            CornerNoisePoint(
+                corner_name=corner.name,
+                result=noise_ac(
+                    _circuit_with_corner(circuit, corner),
+                    output_node,
+                    input_source,
+                    freqs=freqs,
+                    temperature=temperature,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ],
+        output_node=output_node,
+        input_source=input_source,
     )
