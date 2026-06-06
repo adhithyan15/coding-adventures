@@ -270,16 +270,39 @@ fn apart_mixed_simple_plus_repeated() {
 }
 
 #[test]
-fn apart_irreducible_plus_repeated_stays_unevaluated() {
+fn apart_irreducible_plus_repeated_decomposes_poles_plus_residual() {
     let mut v = vm();
     // 1 / ((x^2 + 1) * (x - 1)^2)
     let quad = apply(sym(ADD), vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)]);
     let lin_sq = apply(sym(POW), vec![apply(sym(SUB), vec![sym("x"), int(1)]), int(2)]);
     let inner = apply(sym(DIV), vec![int(1), apply(sym(MUL), vec![quad, lin_sq])]);
     let result = v.eval(apart(inner.clone()));
-    // x^2 + 1 has no rational roots; only x = 1 (mult 2) is found.  Sum of
-    // multiplicities (2) ≠ deg(den) (4) → bail to unevaluated form.
-    assert_eq!(result, apply(sym("Apart"), vec![inner, sym("x")]));
+    let expected = apply(
+        sym(ADD),
+        vec![
+            apply(
+                sym(ADD),
+                vec![
+                    apply(sym(DIV), vec![rat(-1, 2), apply(sym(ADD), vec![int(-1), sym("x")])]),
+                    apply(
+                        sym(DIV),
+                        vec![
+                            rat(1, 2),
+                            apply(sym(POW), vec![apply(sym(ADD), vec![int(-1), sym("x")]), int(2)]),
+                        ],
+                    ),
+                ],
+            ),
+            apply(
+                sym(DIV),
+                vec![
+                    apply(sym(MUL), vec![rat(1, 2), sym("x")]),
+                    apply(sym(ADD), vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])]),
+                ],
+            ),
+        ],
+    );
+    assert_eq!(result, expected);
 }
 
 #[test]

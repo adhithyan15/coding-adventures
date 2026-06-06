@@ -5006,8 +5006,8 @@ fn try_bivariate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
 //
 // Supports simple rational roots, repeated rational roots, and proper
 // irreducible denominators that are already apart.  Mixed rational-root plus
-// irreducible residual factors still leave the expression wrapped in
-// ``Apart(...)``.  This mirrors the Python
+// irreducible residual factors, emitted as rational-pole terms plus a
+// proper residual rational term.  This mirrors the Python
 // ``apart_handler`` / ``_apart_simple_roots`` / ``_apart_proper`` chain in
 // ``cas_handlers.py`` but stays inside the existing ``RatC`` / ``RatPoly``
 // machinery so we don't introduce a new arithmetic substrate.
@@ -5137,13 +5137,14 @@ fn rp_rational_roots(p: &[RatC]) -> Option<Vec<RatC>> {
 }
 
 /// For each rational root, count the multiplicity of ``(x − r)`` in ``den``.
-/// Returns ``None`` when the multiplicities don't sum to ``deg(den)``
-/// (irreducible factor present), so the caller can bail to the unevaluated
-/// form.
-fn rp_root_multiplicities(den: &[RatC], roots: &[RatC]) -> Option<Vec<(RatC, usize)>> {
+/// Returns the remaining factor after rational-root factors are removed.
+/// The residual is constant iff ``den`` fully splits over Q.
+fn rp_root_multiplicities_and_residual(
+    den: &[RatC],
+    roots: &[RatC],
+) -> Option<(Vec<(RatC, usize)>, RatPoly)> {
     let mut out: Vec<(RatC, usize)> = Vec::new();
     let mut remaining: RatPoly = rp_normalize(den);
-    let mut total = 0usize;
     for &r in roots {
         let linear: RatPoly = vec![rc_neg(r), RC_ONE]; // (x − r)
         let mut m: usize = 0;
@@ -5159,14 +5160,9 @@ fn rp_root_multiplicities(den: &[RatC], roots: &[RatC]) -> Option<Vec<(RatC, usi
         if m == 0 {
             return None;
         }
-        total += m;
         out.push((r, m));
     }
-    let deg_den = rp_deg(den)?;
-    if total != deg_den {
-        return None;
-    }
-    Some(out)
+    Some((out, rp_normalize(&remaining)))
 }
 
 /// Rational form of an IR sub-expression in variable ``x``.
@@ -5476,23 +5472,26 @@ fn build_apart_term(a: RatC, r: RatC, power: usize, x: &str) -> Option<IRNode> {
 /// ``t^(m − 1)``.  Then ``A_{r, m − j} = φ_j``.  Emits terms
 /// ``A / (x − r)^power`` for ``power = 1..=m`` in ascending order.
 ///
-/// Returns ``None`` when ``den`` has an irreducible residual on top of its
-/// rational roots; that mixed-factor decomposition is still pending.
+/// Mixed rational-root plus irreducible residual factors are decomposed into
+/// rational-pole terms plus a proper residual rational term.
 fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
     let roots = rp_rational_roots(den)?;
     if roots.is_empty() {
         return proper_rational_to_ir(num, den, x);
     }
-    let mults = rp_root_multiplicities(den, &roots)?;
+    let (mults, residual_den) = rp_root_multiplicities_and_residual(den, &roots)?;
+    let has_residual = rp_deg(&residual_den).is_some_and(|deg| deg >= 1);
 
     // Phase 1 fast path — preserves the existing output shape for the
     // regression tests written against B1.
-    if mults.iter().all(|(_, m)| *m == 1) {
+    if !has_residual && mults.iter().all(|(_, m)| *m == 1) {
         return apart_simple_roots(num, den, &roots, x);
     }
 
     // Phase 48 generic path: Taylor + series-division per root.
     let mut terms: Vec<IRNode> = Vec::new();
+    let mut linear_part: RatPoly = rp_one();
+    let mut residual_num: RatPoly = rp_normalize(num);
     for &r in &roots {
         let m = mults
             .iter()
@@ -5501,6 +5500,9 @@ fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
         // because we just verified the multiplicity above.
         let mut q_poly: RatPoly = rp_normalize(den);
         let linear: RatPoly = vec![rc_neg(r), RC_ONE];
+        for _ in 0..m {
+            linear_part = rp_mul(&linear_part, &linear)?;
+        }
         for _ in 0..m {
             let (q, _rem) = rp_div(&q_poly, &linear)?;
             q_poly = q;
@@ -5518,6 +5520,29 @@ fn apart_proper(num: &[RatC], den: &[RatC], x: &str) -> Option<IRNode> {
                 continue;
             }
             terms.push(build_apart_term(a, r, power, x)?);
+            let mut pole_denom: RatPoly = rp_one();
+            for _ in 0..power {
+                pole_denom = rp_mul(&pole_denom, &linear)?;
+            }
+            let (q, rem) = rp_div(den, &pole_denom)?;
+            if !rp_is_zero(&rem) {
+                return None;
+            }
+            let scaled: RatPoly = q
+                .iter()
+                .map(|&c| rc_mul(c, a))
+                .collect::<Option<Vec<_>>>()?;
+            residual_num = rp_sub_poly(&residual_num, &scaled)?;
+        }
+    }
+    if has_residual {
+        let (residual_quotient, residual_rem) = rp_div(&residual_num, &linear_part)?;
+        if !rp_is_zero(&residual_rem) {
+            return None;
+        }
+        let residual_ir = proper_rational_to_ir(&residual_quotient, &residual_den, x)?;
+        if residual_ir != IRNode::Integer(0) {
+            terms.push(residual_ir);
         }
     }
     if terms.is_empty() {
