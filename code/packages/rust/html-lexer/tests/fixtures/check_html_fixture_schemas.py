@@ -268,6 +268,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
     require_object_list(f"{case_path}.expected", expected, "forms", errors)
     require_object_list(f"{case_path}.expected", expected, "tables", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "table_cells", errors)
     check_browser_expected_lists(case_path, expected, errors)
 
     return errors
@@ -1272,6 +1273,27 @@ def check_browser_expected_lists(
             "header_cell_count",
         ):
             require_integer(table_path, table, field, errors)
+
+    for index, cell in enumerate(object_list_items(expected, "table_cells")):
+        cell_path = f"{case_path}.expected.table_cells[{index}]"
+        for field in ("table_index", "row_index", "column_index"):
+            require_integer(cell_path, cell, field, errors)
+        require_string(cell_path, cell, "element", errors)
+        require_string(cell_path, cell, "text", errors)
+        for field in (
+            "table_id",
+            "table_caption",
+            "section_kind",
+            "id",
+            "accessible_name",
+            "scope",
+            "abbr",
+            "rowspan",
+            "colspan",
+        ):
+            require_optional_nullable_string(cell_path, cell, field, errors)
+        require_optional_boolean(cell_path, cell, "header", errors)
+        require_optional_string_list(cell_path, cell, "headers", errors)
 
 
 def check_browser_content_tree_case(
