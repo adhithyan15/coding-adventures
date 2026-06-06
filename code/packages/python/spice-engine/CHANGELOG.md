@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **Multi-corner advanced analysis wrappers** — `mc_dc_corners()`,
+  `sens_dc_corners()`, `noise_ac_corners()`, and `s_parameters_corners()` now
+  run the corresponding analyses across named corner specs, matching the Rust
+  engine surface for these SPICE outputs.
+
+- **Advanced analysis text output tables** — `format_mc_table()`,
+  `format_sens_table()`, `format_noise_table()`, and
+  `format_s_parameter_table()` now emit stable tab-separated results, with
+  matching `format_corner_*` variants for named-corner output.
+
 ## [0.14.0] — 2026-06-05
 
 ### Added

@@ -93,7 +93,11 @@ from spice_engine import (
     Circuit,
     CornerAcSweepResult,
     CornerDcSweepResult,
+    CornerMcResult,
+    CornerNoiseResult,
     CornerOverride,
+    CornerSensResult,
+    CornerSParameterResult,
     CornerSpec,
     CornerSweepResult,
     CornerTfResult,
@@ -151,15 +155,25 @@ from spice_engine import (
     distortion_from_transient,
     estimate_period,
     format_ac_table,
+    format_corner_mc_table,
+    format_corner_noise_table,
+    format_corner_s_parameter_table,
+    format_corner_sens_table,
     format_dc_table,
     format_distortion_table,
     format_fourier_table,
+    format_mc_table,
+    format_noise_table,
     format_pole_zero_table,
+    format_s_parameter_table,
+    format_sens_table,
     format_tf_table,
     format_transient_table,
     fourier,
     mc_dc,
+    mc_dc_corners,
     noise_ac,
+    noise_ac_corners,
     pole_zero_rc_highpass,
     pole_zero_rc_lowpass,
     pole_zero_rlc_bandpass,
@@ -174,7 +188,9 @@ from spice_engine import (
     pss_residual,
     pss_residual_jacobian,
     s_parameters,
+    s_parameters_corners,
     sens_dc,
+    sens_dc_corners,
     tf,
     tf_corners,
     transient,
@@ -6863,3 +6879,183 @@ def test_tf_corners_runs_transfer_function_per_corner() -> None:
     assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
     assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
     assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])
+
+
+def test_mc_dc_corners_runs_trials_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "in", "0", 10.0),
+        Resistor("Rtop", "in", "mid", 1000.0),
+        Resistor("Rbot", "mid", "0", 1000.0),
+    ])
+
+    nominal = mc_dc(c, "mid", n_trials=2, tolerance=0.0, seed=7)
+    result = mc_dc_corners(
+        c,
+        "mid",
+        2,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+        ],
+        tolerance=0.0,
+        seed=7,
+    )
+
+    assert isinstance(result, CornerMcResult)
+    assert result.output_node == "mid"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast"]
+    assert [point.result.mean for point in result.points] == pytest.approx([5.0, 10.0 / 3.0])
+    assert format_mc_table(nominal) == (
+        "Trial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n"
+        "0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+    )
+    assert format_corner_mc_table(result) == (
+        "Corner\tTrial\tOutputNode\tOutputValue\tMean\tStdDev\tConverged\n"
+        "nominal\t0\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "nominal\t1\tmid\t5.000000e+00\t5.000000e+00\t0.000000e+00\ttrue\n"
+        "rbot-fast\t0\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n"
+        "rbot-fast\t1\tmid\t3.333333e+00\t3.333333e+00\t0.000000e+00\ttrue\n"
+    )
+
+
+def test_sens_dc_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("Vin", "vin", "0", 10.0),
+        Resistor("Rtop", "vin", "out", 1000.0),
+        Resistor("Rbot", "out", "0", 1000.0),
+    ])
+
+    nominal = sens_dc(c, "out")
+    result = sens_dc_corners(
+        c,
+        "out",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-fast", (CornerOverride("Rbot", "resistance", 500.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerSensResult)
+    assert result.output_node == "out"
+    assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast"]
+    assert [point.result.nominal_voltage for point in result.points] == pytest.approx(
+        [5.0, 10.0 / 3.0]
+    )
+    assert format_sens_table(nominal).splitlines()[0] == (
+        "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\t"
+        "Sensitivity\tRelativeSensitivity"
+    )
+    corner_table = format_corner_sens_table(result)
+    assert corner_table.splitlines()[0] == (
+        "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\t"
+        "Sensitivity\tRelativeSensitivity"
+    )
+    assert "nominal\tout\t5.000000e+00\tVin\tvoltage\t1.000000e+01" in corner_table
+    assert "rbot-fast\tout\t3.333333e+00\tVin\tvoltage\t1.000000e+01" in corner_table
+
+
+def test_noise_ac_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        CurrentSource("Iin", "0", "out", 0.0),
+        Resistor("Rload", "out", "0", 1000.0),
+    ])
+
+    nominal = noise_ac(c, "out", "Iin", freqs=[1000.0], temperature=300.0)
+    result = noise_ac_corners(
+        c,
+        "out",
+        "Iin",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rload-high", (CornerOverride("Rload", "resistance", 2000.0),)),
+        ],
+        freqs=[1000.0],
+        temperature=300.0,
+    )
+
+    assert isinstance(result, CornerNoiseResult)
+    assert result.output_node == "out"
+    assert result.input_source == "Iin"
+    assert [point.corner_name for point in result.points] == ["nominal", "rload-high"]
+    assert [point.result.points[0].output_psd for point in result.points] == pytest.approx(
+        [1.6567788e-17, 3.3135576e-17]
+    )
+    assert format_noise_table(nominal) == (
+        "Index\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+        "0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\t"
+        "Rload\tthermal\t1.656779e-23\t1.656779e-17\n"
+    )
+    assert format_corner_noise_table(result) == (
+        "Corner\tIndex\tFrequency\tOutputNode\tInputSource\tOutputPSD\tInputReferredPSD\t"
+        "Element\tType\tSourcePSD\tContributionPSD\n"
+        "nominal\t0\t1.000000e+03\tout\tIin\t1.656779e-17\t1.656779e-23\t"
+        "Rload\tthermal\t1.656779e-23\t1.656779e-17\n"
+        "rload-high\t0\t1.000000e+03\tout\tIin\t3.313558e-17\t8.283894e-24\t"
+        "Rload\tthermal\t8.283894e-24\t3.313558e-17\n"
+    )
+
+
+def test_s_parameters_corners_runs_two_port_extraction_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("P1", "p1", "0", 0.0),
+        VoltageSource("P2", "p2", "0", 0.0),
+        Resistor("Rseries", "p1", "p2", 50.0),
+    ])
+
+    nominal = s_parameters(
+        c,
+        port1_source="P1",
+        port2_source="P2",
+        frequencies=[1.0e6],
+        reference_impedance=50.0,
+    )
+    result = s_parameters_corners(
+        c,
+        port1_source="P1",
+        port2_source="P2",
+        frequencies=[1.0e6],
+        reference_impedance=50.0,
+        corners=[
+            CornerSpec("nominal"),
+            CornerSpec("series-high", (CornerOverride("Rseries", "resistance", 100.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerSParameterResult)
+    assert result.port1_source == "P1"
+    assert result.port2_source == "P2"
+    assert [point.corner_name for point in result.points] == ["nominal", "series-high"]
+    assert result.points[0].result.points[0].s21.real == pytest.approx(2.0 / 3.0)
+    assert result.points[1].result.points[0].s21.real == pytest.approx(0.5)
+    assert format_s_parameter_table(nominal) == (
+        "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n"
+        "0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+    )
+    assert format_corner_s_parameter_table(result) == (
+        "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t"
+        "6.666667e-01\t0.000000e+00\n"
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t"
+        "3.333333e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t"
+        "5.000000e-01\t0.000000e+00\n"
+    )

@@ -22,24 +22,25 @@
 > repo.  New work is feature-driven (e.g. Maple frontend) rather than
 > gap-driven.
 
-> **SPICE wrap-up inventory (2026-06-05).** The SPICE engine and netlist parser
-> now exist as Python, TypeScript, and Rust packages. The 1970s compatibility
-> plan has completed Phases 1-8 across all three language stacks for the
-> current target: JFETs, mutual inductors, ideal transmission lines, Gear-2
-> transient integration, pseudo-transient DC continuation, model-card depth,
-> classic output/control cards, and constrained distortion / pole-zero
-> footholds. This wrap-up cuts `spice-engine` 0.14.0 and
-> `spice-netlist-parser` 0.3.0 across the Python, TypeScript, and Rust
-> packages. Remaining work is now post-release expansion rather than a blocker
-> for this compatibility slice: broader parallel corner orchestration beyond
-> the current Rust helpers, full `hardware-vm` scheduler integration,
-> Verilog-A/custom compact models, production sparse/KLU and SPICE3-era
-> raw/control/BSIM surfaces, and richer nonlinear distortion accuracy beyond
-> the Phase 8 executable footholds.
+> **SPICE completion follow-up inventory (2026-06-06).** The 2026-06-05
+> release cut closed the planned SPICE 1970s compatibility slice, but a live
+> follow-up audit found one real parity gap: Rust had advanced named-corner
+> wrappers and stable tables that Python and TypeScript still lacked for
+> `.MC`, `.SENS`, `.NOISE`, and two-port S-parameters. That gap is now closed
+> in the Python and TypeScript packages with native wrappers and stable
+> tab-separated direct/corner table output. The remaining work is not a blocker
+> for the current compatibility slice, but it is still real project work:
+> Python/TypeScript parity for the wider Rust named-corner family
+> (fixed/adaptive transient samples, PSS, Fourier, distortion, constrained
+> pole-zero, and temperature operating-point corners), broader ordered parallel
+> corner orchestration outside the current Rust helpers, full `hardware-vm`
+> scheduler integration, Verilog-A/custom compact models, production sparse/KLU
+> and SPICE3-era raw/control/BSIM surfaces, and richer nonlinear distortion
+> accuracy beyond the Phase 8 executable footholds.
 
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-06-05 (SPICE wrap-up inventory, cross-language engine
-> and parser release cuts, and remaining post-release expansion list).
+> Last updated: 2026-06-06 (SPICE completion follow-up inventory, Python and
+> TypeScript advanced-corner parity, and explicit remaining roadmap).
 >
 > **Phase 48 — Apart for repeated linear factors (Python only, so far):**
 > `symbolic-vm` 0.72.0 (PR #3927).  Extends ``Apart`` to decompose
@@ -272,7 +273,7 @@ and the sparse real solver path landed in PR #3391.
 |---|---|
 | **S-parameter extraction** | Two-port network characterisation. Run AC sweep, compute Y-parameters from node voltages and port currents, convert to S-parameters. Shipped in PR #3490; direct and named-corner S-parameter text tables plus named S-parameter corners are now exposed in the live Rust SPICE package. |
 | **Periodic steady-state (PSS)** | RF / oscillator analysis. Shooting-Newton method: find the initial condition `x(0)` such that `x(T) = x(0)`. Source-period estimation for periodic `SIN` / `PULSE` waveforms shipped in PR #3524; one-period node-closure residual helpers shipped in PR #3534; tolerance-aware residual closure shipped in PR #3540; branch-current residual closure shipped in PR #3553; ordered residual vectors shipped in PR #3560; residual vector norms shipped in PR #3566; finite-difference residual Jacobians shipped in PR #3570; Newton correction helpers shipped in PR #3578; Newton candidate helpers shipped in PR #3588; one-step Newton iteration acceptance shipped in PR #3770; bounded Newton solve shipped in PR #3776; direct PSS analysis output is now exposed in the live Rust SPICE package as a steady-state text table over selected voltage/current probes. PSS can also be evaluated and rendered as stable text tables across named corners in the live Rust SPICE package. |
-| **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516; Monte Carlo DC, DC sensitivity, AC noise, S-parameters, PSS, constrained pole-zero, fixed-step and adaptive transient samples, DC temperature operating points, Fourier post-processing, and transient-projected distortion corners are now exposed in the live Rust SPICE package; DC operating-point, AC frequency sweep, DC source sweep, transfer-function, Monte Carlo DC, DC sensitivity, AC noise, S-parameter, PSS, constrained pole-zero, fixed-step and adaptive transient sample, DC temperature operating-point, Fourier, and transient-projected distortion corner results also have stable text tables. Rust DC operating-point, `.DC` source-sweep, `.AC` frequency-sweep, `.TF` transfer-function, Monte Carlo DC, DC sensitivity, AC noise, and S-parameter corners can now also be evaluated through order-preserving parallel helpers; broader parallel corner orchestration remains future work. |
+| **Multi-corner parallel sweep** | Run the same analysis at N PVT corners in parallel goroutines / subprocesses. Mostly an orchestration problem once the core engine is solid. DC operating-point corners shipped in PR #3495; DC source sweep corners shipped in PR #3501; AC frequency sweep corners shipped in PR #3511; transfer-function corners shipped in PR #3516; Monte Carlo DC, DC sensitivity, AC noise, S-parameters, PSS, constrained pole-zero, fixed-step and adaptive transient samples, DC temperature operating points, Fourier post-processing, and transient-projected distortion corners are now exposed in the live Rust SPICE package; DC operating-point, AC frequency sweep, DC source sweep, transfer-function, Monte Carlo DC, DC sensitivity, AC noise, S-parameter, PSS, constrained pole-zero, fixed-step and adaptive transient sample, DC temperature operating-point, Fourier, and transient-projected distortion corner results also have stable text tables. Python and TypeScript now expose native sequential named-corner wrappers and stable direct/corner tables for Monte Carlo DC, DC sensitivity, AC noise, and S-parameters. Rust DC operating-point, `.DC` source-sweep, `.AC` frequency-sweep, `.TF` transfer-function, Monte Carlo DC, DC sensitivity, AC noise, and S-parameter corners can now also be evaluated through order-preserving parallel helpers; Python/TypeScript parity for the wider Rust corner family and broader parallel corner orchestration remain future work. |
 | **Mixed-signal coupling with `hardware-vm`** | AMS simulation — digital events feed into analog SPICE nodes and vice versa. Long-range project; `hardware-vm.md` spec describes the interface. SPICE-side Rust footholds now expose binary digital event timelines and named digital event streams as finite-edge PWL voltage sources, derive bridge breakpoint schedules over event starts and finite-edge transition endpoints, run direct fixed-step, adaptive, and named-corner digital-input transient bridge fixtures, sample one or more transient probes back into thresholded named digital event streams, and render bridge schedules, single, named multi-signal, fixed-step bridge, adaptive bridge, and cornered bridge event streams as stable tab-separated text tables; full `hardware-vm` scheduler integration remains future work. |
 | **Verilog-A compact models** | Custom device models. Requires a Verilog-A parser (`code/specs/verilog-a-parser.md` is referenced but not written). |
 
