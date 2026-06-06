@@ -246,6 +246,7 @@ def check_browser_readiness_case(
     require_optional_object_list(f"{case_path}.expected", expected, "navigation_groups", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "section_landmarks", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "command_elements", errors)
+    require_optional_object_list(f"{case_path}.expected", expected, "popovers", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_collections", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_ranges", errors)
     require_optional_object_list(f"{case_path}.expected", expected, "aria_live_regions", errors)
@@ -581,6 +582,37 @@ def check_browser_expected_lists(
             "disabled",
         ):
             require_optional_boolean(command_path, command, field, errors)
+
+    for index, popover in enumerate(object_list_items(expected, "popovers")):
+        popover_path = f"{case_path}.expected.popovers[{index}]"
+        for field in ("element", "role", "text", "popover"):
+            require_string(popover_path, popover, field, errors)
+        for field in (
+            "id",
+            "accessible_name",
+            "accessible_description",
+            "aria_label",
+        ):
+            require_optional_nullable_string(popover_path, popover, field, errors)
+        for field in ("aria_labelledby", "aria_describedby"):
+            require_optional_string_list(popover_path, popover, field, errors)
+        require_optional_object_list(popover_path, popover, "invokers", errors)
+        for invoker_index, invoker in enumerate(object_list_items(popover, "invokers")):
+            invoker_path = f"{popover_path}.invokers[{invoker_index}]"
+            for field in ("element", "text", "command_kind"):
+                require_string(invoker_path, invoker, field, errors)
+            for field in (
+                "id",
+                "accessible_name",
+                "command",
+                "command_for",
+                "popover_target",
+                "popover_target_action",
+                "aria_expanded",
+            ):
+                require_optional_nullable_string(invoker_path, invoker, field, errors)
+            require_optional_string_list(invoker_path, invoker, "aria_controls", errors)
+            require_optional_boolean(invoker_path, invoker, "focusable", errors)
 
     for index, collection in enumerate(object_list_items(expected, "aria_collections")):
         collection_path = f"{case_path}.expected.aria_collections[{index}]"

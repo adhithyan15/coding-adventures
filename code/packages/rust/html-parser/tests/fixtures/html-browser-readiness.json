@@ -1032,6 +1032,9 @@
           { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown"] },
           { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
         ],
+        "popovers": [
+          { "element": "div", "id": "action", "role": "block", "text": "Inline action", "popover": "manual" }
+        ],
         "aria_live_regions": [
           { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite" }
         ],
@@ -1051,6 +1054,68 @@
         "disclosures": [
           { "element": "dialog", "id": "dialog", "text": "Dialog copy", "open": true, "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true" },
           { "element": "details", "id": "more", "text": "More Extra", "summary_text": "More", "open": true, "accessible_name": "More" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "popover-command-descriptor-page",
+      "description": "Browser document summaries expose popover hosts with their popovertarget and commandfor invoker relationships.",
+      "input": "<body><button id=open popovertarget=menu-pop popovertargetaction=show aria-controls=menu-pop aria-expanded=false>Open menu</button><button id=close command=hide-popover commandfor=menu-pop>Close menu</button><div id=menu-pop popover=manual aria-label=Actions><h2>Actions</h2><p>Archive</p></div><div id=note-pop popover=auto aria-labelledby=note-title><h3 id=note-title>Note</h3><p>Saved</p></div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Open menu Close menu Actions Archive Note Saved",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "open", "name": null, "text": "Open menu" },
+          { "id": "close", "name": null, "text": "Close menu" },
+          { "id": "menu-pop", "name": null, "text": "Actions Archive" },
+          { "id": "note-pop", "name": null, "text": "Note Saved" },
+          { "id": "note-title", "name": null, "text": "Note" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Actions" },
+          { "level": 3, "text": "Note" }
+        ],
+        "command_elements": [
+          { "element": "button", "id": "open", "role": "control", "command_kind": "popover", "text": "Open menu", "accessible_name": "Open menu", "control_type": "submit", "popover_target": "menu-pop", "popover_target_action": "show", "aria_controls": ["menu-pop"], "aria_expanded": "false", "focusable": true },
+          { "element": "button", "id": "close", "role": "control", "command_kind": "command", "text": "Close menu", "accessible_name": "Close menu", "control_type": "submit", "command": "hide-popover", "command_for": "menu-pop", "focusable": true }
+        ],
+        "popovers": [
+          {
+            "element": "div",
+            "id": "menu-pop",
+            "role": "block",
+            "text": "Actions Archive",
+            "accessible_name": "Actions",
+            "aria_label": "Actions",
+            "popover": "manual",
+            "invokers": [
+              { "element": "button", "id": "open", "text": "Open menu", "accessible_name": "Open menu", "command_kind": "popover", "popover_target": "menu-pop", "popover_target_action": "show", "aria_controls": ["menu-pop"], "aria_expanded": "false", "focusable": true },
+              { "element": "button", "id": "close", "text": "Close menu", "accessible_name": "Close menu", "command_kind": "command", "command": "hide-popover", "command_for": "menu-pop", "focusable": true }
+            ]
+          },
+          {
+            "element": "div",
+            "id": "note-pop",
+            "role": "block",
+            "text": "Note Saved",
+            "accessible_name": "Note",
+            "aria_labelledby": ["note-title"],
+            "popover": "auto"
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [
+          { "element": "button", "id": "open", "role": "control", "text": "Open menu", "accessible_name": "Open menu", "aria_controls": ["menu-pop"], "aria_expanded": "false", "popover_target": "menu-pop", "popover_target_action": "show" },
+          { "element": "button", "id": "close", "role": "control", "text": "Close menu", "accessible_name": "Close menu", "command": "hide-popover", "command_for": "menu-pop" },
+          { "element": "div", "id": "menu-pop", "role": "block", "text": "Actions Archive", "accessible_name": "Actions", "aria_label": "Actions", "popover": "manual" },
+          { "element": "div", "id": "note-pop", "role": "block", "text": "Note Saved", "accessible_name": "Note", "aria_labelledby": ["note-title"], "popover": "auto" }
         ],
         "forms": [],
         "tables": []

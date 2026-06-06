@@ -838,6 +838,7 @@ pub struct BrowserDocument {
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub command_elements: Vec<BrowserCommandElement>,
+    pub popovers: Vec<BrowserPopover>,
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
@@ -1840,6 +1841,37 @@ pub struct BrowserInteractiveElement {
     pub command: Option<String>,
     pub command_for: Option<String>,
     pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopover {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub popover: String,
+    pub invokers: Vec<BrowserPopoverInvoker>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPopoverInvoker {
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub command_kind: String,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub focusable: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9546,6 +9578,9 @@ fn collect_browser_facts(
         ) {
             summary.command_elements.push(command_element);
         }
+        if let Some(popover) = browser_popover_element(element, labels, id_texts, body_root) {
+            summary.popovers.push(popover);
+        }
         if let Some(aria_collection) = browser_aria_collection_element(element, id_texts) {
             summary.aria_collections.push(aria_collection);
         }
@@ -11429,6 +11464,99 @@ fn browser_command_focusable(element: &Element) -> bool {
     }
 
     matches!(element.name.as_str(), "button" | "input" | "summary")
+}
+
+fn browser_popover_element(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    body_root: &[Node],
+) -> Option<BrowserPopover> {
+    let popover = element.attribute("popover")?.to_string();
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let id = element.attribute("id").map(ToOwned::to_owned);
+    let invokers = id
+        .as_deref()
+        .map(|id| browser_popover_invokers(body_root, labels, id_texts, id))
+        .unwrap_or_default();
+
+    Some(BrowserPopover {
+        element: element.name.clone(),
+        id,
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_label: browser_aria_label(element),
+        aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
+        aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
+        popover,
+        invokers,
+    })
+}
+
+fn browser_popover_invokers(
+    nodes: &[Node],
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_id: &str,
+) -> Vec<BrowserPopoverInvoker> {
+    let mut invokers = Vec::new();
+    collect_browser_popover_invokers(nodes, labels, id_texts, target_id, &mut invokers);
+    invokers
+}
+
+fn collect_browser_popover_invokers(
+    nodes: &[Node],
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+    target_id: &str,
+    invokers: &mut Vec<BrowserPopoverInvoker>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+
+        if browser_popover_target(element).as_deref() == Some(target_id)
+            || browser_command_for(element).as_deref() == Some(target_id)
+        {
+            invokers.push(browser_popover_invoker(element, labels, id_texts));
+        }
+
+        collect_browser_popover_invokers(&element.children, labels, id_texts, target_id, invokers);
+    }
+}
+
+fn browser_popover_invoker(
+    element: &Element,
+    labels: &[(String, String)],
+    id_texts: &[(String, String)],
+) -> BrowserPopoverInvoker {
+    let role = browser_command_role(element);
+    let control_labels = browser_control_labels(element, labels, None);
+    let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+
+    BrowserPopoverInvoker {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: text.clone(),
+        accessible_name: browser_command_accessible_name(
+            element,
+            role.as_str(),
+            &control_labels,
+            id_texts,
+            &text,
+        ),
+        command_kind: browser_command_kind(element).unwrap_or_else(|| "command".to_string()),
+        command: browser_command(element),
+        command_for: browser_command_for(element),
+        popover_target: browser_popover_target(element),
+        popover_target_action: browser_popover_target_action(element),
+        aria_controls: browser_aria_idrefs(element, "aria-controls"),
+        aria_expanded: browser_aria_state(element, "aria-expanded"),
+        focusable: browser_command_focusable(element),
+    }
 }
 
 fn browser_aria_collection_element(
