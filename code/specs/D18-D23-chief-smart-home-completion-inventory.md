@@ -193,6 +193,24 @@ D23 runtime and D18D bridge surfaces:
 - The bridge end-to-end test now proves the D18D handler can surface scheduled
   Hue mDNS worker health while the runtime remains the source of truth.
 
+## Current Discovery Retry Policy Slice
+
+This slice keeps retry/backoff decisions in the D23 scheduler while exposing
+the resulting state through existing read-side surfaces:
+
+- `ScheduledDiscoveryWorker` now owns retry delay, maximum retry delay, and
+  retry multiplier settings alongside its normal interval and timeout.
+- Failed or partial scheduled discovery runs advance the next due time by the
+  capped retry delay for the current consecutive failure count; completed runs
+  reset failure pressure and return to the normal interval.
+- Runtime supervision snapshots now report the configured retry policy and the
+  current retry delay when a worker is under failure pressure.
+- `smart_home.observe_supervision` carries those runtime fields through the
+  Chief bridge without adding Chief-owned scheduler policy.
+- The runtime retry test proves capped backoff and recovery reset behavior, and
+  the Chief end-to-end fixture proves the D18D tool output includes the policy
+  fields.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -215,8 +233,10 @@ These items are Chief of Staff architecture, not smart-home platform work:
 These items move toward retiring an existing Home Assistant install:
 
 - Connect the supervised mDNS runtime pass to an actor or process that manages
-  lifecycle, retries/backoff, OS interface binding, and persistence for
-  schedules, results, and runtime state across restarts.
+  lifecycle, OS interface binding, and persistence for schedules, results, and
+  runtime state across restarts. Retry/backoff policy now exists in the runtime
+  scheduler, but an external actor still needs to drive durable process
+  lifecycle.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

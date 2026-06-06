@@ -1022,6 +1022,22 @@ fn discovery_worker_snapshot_json(snapshot: &ScheduledDiscoveryWorkerSnapshot) -
         ("next_due_at_ms", integer(snapshot.next_due_at_ms as i64)),
         ("interval_ms", integer(snapshot.interval_ms as i64)),
         ("run_timeout_ms", integer(snapshot.run_timeout_ms as i64)),
+        ("retry_delay_ms", integer(snapshot.retry_delay_ms as i64)),
+        (
+            "max_retry_delay_ms",
+            integer(snapshot.max_retry_delay_ms as i64),
+        ),
+        (
+            "retry_backoff_multiplier",
+            integer(snapshot.retry_backoff_multiplier as i64),
+        ),
+        (
+            "current_retry_delay_ms",
+            snapshot
+                .current_retry_delay_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
         (
             "last_started_at_ms",
             snapshot
@@ -1792,6 +1808,24 @@ mod tests {
             array_len(field(supervision_output, "discovery_workers").unwrap()),
             Some(1)
         );
+        let discovery_worker_output =
+            array_item(field(supervision_output, "discovery_workers").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(discovery_worker_output, "retry_delay_ms"),
+            Some(&integer(5_000))
+        );
+        assert_eq!(
+            field(discovery_worker_output, "max_retry_delay_ms"),
+            Some(&integer(5_000))
+        );
+        assert_eq!(
+            field(discovery_worker_output, "retry_backoff_multiplier"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(discovery_worker_output, "current_retry_delay_ms"),
+            Some(&JsonValue::Null)
+        );
 
         let subscribe_request = request(
             "call-subscribe",
@@ -2040,5 +2074,12 @@ mod tests {
             return None;
         };
         Some(values.len())
+    }
+
+    fn array_item(value: &JsonValue, index: usize) -> Option<&JsonValue> {
+        let JsonValue::Array(values) = value else {
+            return None;
+        };
+        values.get(index)
     }
 }
