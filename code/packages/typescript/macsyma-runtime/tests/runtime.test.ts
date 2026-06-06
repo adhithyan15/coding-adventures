@@ -601,6 +601,24 @@ describe("macsyma-runtime", () => {
     expect(result.output).toEqual(sym("y"));
   });
 
+  it("feeds assumptions into elementary abs/sqrt/log simplification", () => {
+    const session = new MacsymaSession();
+    const [, sqrtResult, logResult, absResult] = session.evalSource(
+      "assume(x >= 0); sqrt(x^2); log(x^3); abs(x);",
+    );
+
+    expect(sqrtResult.output).toEqual(sym("x"));
+    expect(logResult.output).toEqual(app(MUL, [int(3), app(LOG, [sym("x")])]));
+    expect(absResult.output).toEqual(sym("x"));
+  });
+
+  it("uses negative assumptions for abs", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("assume(y < 0); abs(y);");
+
+    expect(result.output).toEqual(app(sym("Neg"), [sym("y")]));
+  });
+
   it("properties lists declared properties deterministically", () => {
     const session = new MacsymaSession();
     const [, result] = session.evalSource("declare(n, integer, n, positive); properties(n);");

@@ -47,6 +47,7 @@ import {
   LIST,
   LOG,
   MUL,
+  NEG,
   POW,
   SIN,
   SINH,
@@ -62,11 +63,15 @@ import {
   equals,
   int,
   numberNode,
+  rational,
   stringNode,
   sym,
   toDisplayString,
   type IRApply,
+  type IRFloat,
+  type IRInteger,
   type IRNode,
+  type IRRational,
   type IRSymbol,
 } from "@coding-adventures/symbolic-ir";
 import { SymbolicBackend, VM, type Handler } from "@coding-adventures/symbolic-vm";
@@ -396,6 +401,9 @@ export class MacsymaBackend extends SymbolicBackend {
     table.set(DECLARE.name, declareHandler);
     table.set(PROPERTIES.name, propertiesHandler);
     table.set(PROP_VARS.name, propvarsHandler);
+    table.set("Abs", makeAbsHandler(this));
+    table.set(SQRT.name, makeSqrtHandler(this));
+    table.set(LOG.name, makeLogHandler(this));
     table.set(SOLVE.name, solveHandler);
     table.set(SUBST.name, substHandler);
     table.set(SIMPLIFY.name, unaryHandler((value) => simplifyCas(value)));
@@ -490,6 +498,145 @@ export class MacsymaBackend extends SymbolicBackend {
     this.bind("%i", sym("ImaginaryUnit"));
     this.bind("showtime", this.showtime ? TRUE : FALSE);
   }
+}
+
+function makeAbsHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const inner = vm.eval(expr.args[0]);
+    const numeric = numericNodeAbs(inner);
+    if (numeric !== undefined) return numeric;
+    if (inner.kind === "symbol") {
+      if (backend.assumptions.isNonneg(inner.name) === true) return inner;
+      if (backend.assumptions.signOf(inner.name) === 0) return int(0);
+      if (backend.assumptions.isNegative(inner.name) === true) return app(NEG, [inner]);
+    }
+    if (inner.kind === "apply") {
+      if (equals(inner.head, sym("Abs"))) return inner;
+      if (equals(inner.head, NEG) && inner.args.length === 1) {
+        return vm.eval(app(sym("Abs"), [inner.args[0]]));
+      }
+      if (
+        equals(inner.head, MUL) &&
+        inner.args.length === 2 &&
+        inner.args[0].kind === "integer" &&
+        inner.args[0].value === -1n
+      ) {
+        return vm.eval(app(sym("Abs"), [inner.args[1]]));
+      }
+      if (equals(inner.head, POW) && inner.args.length === 2) {
+        const expNode = inner.args[1];
+        if (expNode.kind === "integer" && expNode.value >= 2n && expNode.value % 2n === 0n) {
+          return inner;
+        }
+      }
+    }
+    return app(expr.head, [inner]);
+  };
+}
+
+function makeSqrtHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = vm.eval(expr.args[0]);
+    const numeric = sqrtNumericNode(arg);
+    if (numeric !== undefined) return numeric;
+    if (arg.kind === "apply" && equals(arg.head, POW) && arg.args.length === 2) {
+      const [base, expNode] = arg.args;
+      if (expNode.kind === "integer" && expNode.value > 0n && expNode.value % 2n === 0n) {
+        const k = expNode.value / 2n;
+        if (k === 1n && base.kind === "symbol" && backend.assumptions.isNonneg(base.name) === true) {
+          return base;
+        }
+        if (k % 2n === 0n) return app(POW, [base, int(k)]);
+        if (k === 1n) return app(sym("Abs"), [base]);
+        return app(sym("Abs"), [app(POW, [base, int(k)])]);
+      }
+    }
+    return app(expr.head, [arg]);
+  };
+}
+
+function makeLogHandler(backend: MacsymaBackend): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 1) return expr;
+    const arg = vm.eval(expr.args[0]);
+    const numeric = logNumericNode(arg);
+    if (numeric !== undefined) return numeric;
+    if (arg.kind === "apply" && equals(arg.head, EXP) && arg.args.length === 1) {
+      return arg.args[0];
+    }
+    if (arg.kind === "apply" && equals(arg.head, POW) && arg.args.length === 2) {
+      const [base, expNode] = arg.args;
+      if (base.kind === "symbol" && backend.assumptions.isNonneg(base.name) === true) {
+        return app(MUL, [expNode, app(LOG, [base])]);
+      }
+    }
+    return app(expr.head, [arg]);
+  };
+}
+
+function numericNodeAbs(node: IRNode): IRInteger | IRRational | IRFloat | undefined {
+  if (node.kind === "integer") return int(node.value < 0n ? -node.value : node.value);
+  if (node.kind === "rational") {
+    const numer = node.numer < 0n ? -node.numer : node.numer;
+    return rational(numer, node.denom) as IRInteger | IRRational;
+  }
+  if (node.kind === "float") return numberNode(Math.abs(node.value));
+  return undefined;
+}
+
+function sqrtNumericNode(node: IRNode): IRNode | undefined {
+  if (node.kind === "integer") {
+    if (node.value < 0n) return undefined;
+    if (node.value === 0n) return int(0);
+    if (node.value === 1n) return int(1);
+    const root = bigIntSqrtExact(node.value);
+    if (root !== undefined) return int(root);
+    return numberNode(Math.sqrt(Number(node.value)));
+  }
+  if (node.kind === "rational") {
+    if (node.numer < 0n) return undefined;
+    if (node.numer === 0n) return int(0);
+    const numerRoot = bigIntSqrtExact(node.numer);
+    const denomRoot = bigIntSqrtExact(node.denom);
+    if (numerRoot !== undefined && denomRoot !== undefined) return rational(numerRoot, denomRoot);
+    return numberNode(Math.sqrt(Number(node.numer) / Number(node.denom)));
+  }
+  if (node.kind === "float") {
+    if (node.value < 0) return undefined;
+    return numberNode(Math.sqrt(node.value));
+  }
+  return undefined;
+}
+
+function logNumericNode(node: IRNode): IRNode | undefined {
+  const value = node.kind === "integer"
+    ? Number(node.value)
+    : node.kind === "rational"
+      ? Number(node.numer) / Number(node.denom)
+      : node.kind === "float"
+        ? node.value
+        : undefined;
+  if (value === undefined) return undefined;
+  if (value === 1) return int(0);
+  if (value <= 0) return undefined;
+  return numberNode(Math.log(value));
+}
+
+function bigIntSqrtExact(n: bigint): bigint | undefined {
+  if (n < 0n) return undefined;
+  if (n < 2n) return n;
+  let lo = 1n;
+  let hi = n;
+  while (lo <= hi) {
+    const mid = (lo + hi) / 2n;
+    const sq = mid * mid;
+    if (sq === n) return mid;
+    if (sq < n) lo = mid + 1n;
+    else hi = mid - 1n;
+  }
+  return undefined;
 }
 
 export class MacsymaSession {
