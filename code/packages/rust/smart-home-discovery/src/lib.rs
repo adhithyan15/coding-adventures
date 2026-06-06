@@ -16,8 +16,16 @@ use std::{cmp::Ordering, collections::BTreeMap, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DiscoveryError {
-    EmptyField { field: &'static str },
-    DuplicateTxtKey { key: String },
+    EmptyField {
+        field: &'static str,
+    },
+    DuplicateTxtKey {
+        key: String,
+    },
+    WorkerIntegrationMismatch {
+        worker_integration_id: String,
+        record_integration_id: String,
+    },
 }
 
 impl fmt::Display for DiscoveryError {
@@ -27,6 +35,13 @@ impl fmt::Display for DiscoveryError {
             Self::DuplicateTxtKey { key } => {
                 write!(f, "mDNS TXT key `{key}` appears more than once")
             }
+            Self::WorkerIntegrationMismatch {
+                worker_integration_id,
+                record_integration_id,
+            } => write!(
+                f,
+                "discovery worker for `{worker_integration_id}` cannot report `{record_integration_id}` records"
+            ),
         }
     }
 }
@@ -328,6 +343,270 @@ impl DiscoveryRecordSummary {
 
     pub fn is_empty(&self) -> bool {
         self.total == 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct DiscoveryWorkerId(String);
+
+impl DiscoveryWorkerId {
+    pub fn new(value: impl Into<String>) -> Result<Self, DiscoveryError> {
+        Ok(Self(non_empty("discovery_worker_id", value)?))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Display for DiscoveryWorkerId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum DiscoveryWorkerKind {
+    MdnsScan,
+    CloudFallback,
+    ManualSeed,
+    Composite,
+    Simulator,
+}
+
+impl DiscoveryWorkerKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::MdnsScan => "mdns_scan",
+            Self::CloudFallback => "cloud_fallback",
+            Self::ManualSeed => "manual_seed",
+            Self::Composite => "composite",
+            Self::Simulator => "simulator",
+        }
+    }
+}
+
+impl fmt::Display for DiscoveryWorkerKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum DiscoveryWorkerRunStatus {
+    Completed,
+    Partial,
+    Failed,
+}
+
+impl DiscoveryWorkerRunStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Completed => "completed",
+            Self::Partial => "partial",
+            Self::Failed => "failed",
+        }
+    }
+}
+
+impl fmt::Display for DiscoveryWorkerRunStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerFailure {
+    pub source: DiscoverySource,
+    pub message: String,
+    pub metadata: Vec<Metadata>,
+}
+
+impl DiscoveryWorkerFailure {
+    pub fn new(
+        source: DiscoverySource,
+        message: impl Into<String>,
+    ) -> Result<Self, DiscoveryError> {
+        Ok(Self {
+            source,
+            message: non_empty("discovery_worker_failure.message", message)?,
+            metadata: Vec::new(),
+        })
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRun {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub started_at_ms: u64,
+    pub completed_at_ms: u64,
+    pub records: Vec<DiscoveryRecord>,
+    pub failures: Vec<DiscoveryWorkerFailure>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl DiscoveryWorkerRun {
+    pub fn new(
+        worker_id: DiscoveryWorkerId,
+        integration_id: IntegrationId,
+        kind: DiscoveryWorkerKind,
+        started_at_ms: u64,
+        completed_at_ms: u64,
+    ) -> Self {
+        Self {
+            worker_id,
+            integration_id,
+            kind,
+            started_at_ms,
+            completed_at_ms,
+            records: Vec::new(),
+            failures: Vec::new(),
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn push_record(&mut self, record: DiscoveryRecord) -> Result<(), DiscoveryError> {
+        if record.integration_id != self.integration_id {
+            return Err(DiscoveryError::WorkerIntegrationMismatch {
+                worker_integration_id: self.integration_id.as_str().to_string(),
+                record_integration_id: record.integration_id.as_str().to_string(),
+            });
+        }
+        self.records.push(record);
+        Ok(())
+    }
+
+    pub fn push_failure(&mut self, failure: DiscoveryWorkerFailure) {
+        self.failures.push(failure);
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    pub fn failure_count(&self) -> usize {
+        self.failures.len()
+    }
+
+    pub fn has_failures(&self) -> bool {
+        !self.failures.is_empty()
+    }
+
+    pub fn duration_ms(&self) -> u64 {
+        self.completed_at_ms.saturating_sub(self.started_at_ms)
+    }
+
+    pub fn status(&self) -> DiscoveryWorkerRunStatus {
+        match (self.records.is_empty(), self.failures.is_empty()) {
+            (false, true) | (true, true) => DiscoveryWorkerRunStatus::Completed,
+            (false, false) => DiscoveryWorkerRunStatus::Partial,
+            (true, false) => DiscoveryWorkerRunStatus::Failed,
+        }
+    }
+
+    pub fn summary_at(
+        &self,
+        now_ms: u64,
+        ttl_ms: u64,
+        inserted_count: usize,
+        replaced_count: usize,
+        ignored_count: usize,
+    ) -> DiscoveryWorkerRunSummary {
+        DiscoveryWorkerRunSummary::from_run_at(
+            self,
+            now_ms,
+            ttl_ms,
+            inserted_count,
+            replaced_count,
+            ignored_count,
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryWorkerRunSummary {
+    pub worker_id: DiscoveryWorkerId,
+    pub integration_id: IntegrationId,
+    pub kind: DiscoveryWorkerKind,
+    pub status: DiscoveryWorkerRunStatus,
+    pub started_at_ms: u64,
+    pub completed_at_ms: u64,
+    pub duration_ms: u64,
+    pub record_count: usize,
+    pub failure_count: usize,
+    pub inserted_count: usize,
+    pub replaced_count: usize,
+    pub ignored_count: usize,
+    pub record_summary: DiscoveryRecordSummary,
+    pub signal_summary: DiscoverySignalSummary,
+}
+
+impl DiscoveryWorkerRunSummary {
+    pub fn from_run_at(
+        run: &DiscoveryWorkerRun,
+        now_ms: u64,
+        ttl_ms: u64,
+        inserted_count: usize,
+        replaced_count: usize,
+        ignored_count: usize,
+    ) -> Self {
+        let signals = run
+            .records
+            .iter()
+            .map(|record| record.signal(ttl_ms))
+            .collect::<Vec<_>>();
+        Self {
+            worker_id: run.worker_id.clone(),
+            integration_id: run.integration_id.clone(),
+            kind: run.kind,
+            status: run.status(),
+            started_at_ms: run.started_at_ms,
+            completed_at_ms: run.completed_at_ms,
+            duration_ms: run.duration_ms(),
+            record_count: run.records.len(),
+            failure_count: run.failures.len(),
+            inserted_count,
+            replaced_count,
+            ignored_count,
+            record_summary: DiscoveryRecordSummary::from_records(
+                run.records.iter(),
+                now_ms,
+                ttl_ms,
+            ),
+            signal_summary: DiscoverySignalSummary::from_signals(&signals, now_ms),
+        }
+    }
+
+    pub fn accepted_count(&self) -> usize {
+        self.inserted_count + self.replaced_count
+    }
+
+    pub fn has_catalog_changes(&self) -> bool {
+        self.accepted_count() > 0
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failure_count > 0
     }
 }
 
@@ -1831,6 +2110,98 @@ mod tests {
                 key: "bridgeid".to_string()
             }
         );
+    }
+
+    #[test]
+    fn discovery_worker_runs_summarize_records_failures_and_catalog_outcomes() {
+        let record = ManualBridgeInput {
+            integration_id: IntegrationId::trusted("hue"),
+            protocol_family: ProtocolFamily::Hue,
+            native_bridge_id: "001788fffeabcdef".to_string(),
+            address: "https://192.0.2.10".to_string(),
+            transport: BridgeTransport::LanHttp,
+            discovered_at_ms: 1_900,
+        }
+        .into_record()
+        .unwrap()
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence);
+        let mut run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-mdns-scan"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_800,
+            1_950,
+        )
+        .with_metadata("scan", "lan");
+
+        run.push_record(record).unwrap();
+        run.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "ignored malformed TXT").unwrap(),
+        );
+        let summary = run.summary_at(2_000, 500, 1, 0, 0);
+
+        assert_eq!(run.status(), DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(run.duration_ms(), 150);
+        assert_eq!(run.len(), 1);
+        assert!(run.has_failures());
+        assert_eq!(
+            summary.worker_id,
+            DiscoveryWorkerId::trusted("hue-mdns-scan")
+        );
+        assert_eq!(summary.kind, DiscoveryWorkerKind::MdnsScan);
+        assert_eq!(summary.status, DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(summary.record_count, 1);
+        assert_eq!(summary.failure_count, 1);
+        assert_eq!(summary.inserted_count, 1);
+        assert_eq!(summary.accepted_count(), 1);
+        assert!(summary.has_catalog_changes());
+        assert_eq!(summary.record_summary.fresh, 1);
+        assert_eq!(summary.signal_summary.fresh, 1);
+        assert_eq!(
+            summary
+                .record_summary
+                .count_for_source(DiscoverySource::Manual),
+            1
+        );
+        assert_eq!(
+            summary
+                .record_summary
+                .count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            1
+        );
+    }
+
+    #[test]
+    fn discovery_worker_runs_reject_records_from_another_integration() {
+        let mut run = DiscoveryWorkerRun::new(
+            DiscoveryWorkerId::trusted("hue-mdns-scan"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_000,
+            1_100,
+        );
+        let mqtt_record = ManualBridgeInput {
+            integration_id: IntegrationId::trusted("mqtt"),
+            protocol_family: ProtocolFamily::Mqtt,
+            native_bridge_id: "broker-1".to_string(),
+            address: "mqtt://192.0.2.20".to_string(),
+            transport: BridgeTransport::LocalProcess,
+            discovered_at_ms: 1_050,
+        }
+        .into_record()
+        .unwrap();
+
+        let error = run.push_record(mqtt_record).unwrap_err();
+
+        assert_eq!(
+            error,
+            DiscoveryError::WorkerIntegrationMismatch {
+                worker_integration_id: "hue".to_string(),
+                record_integration_id: "mqtt".to_string()
+            }
+        );
+        assert!(run.is_empty());
     }
 
     #[test]

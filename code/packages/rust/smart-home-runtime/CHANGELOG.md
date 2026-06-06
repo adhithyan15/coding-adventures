@@ -22,6 +22,8 @@ All notable changes to this package will be documented in this file.
 - Runtime discovery catalog recording plus `RuntimeDiscoverToolRequest` and
   `RuntimeDiscoverToolOutput` for authorized discovery reads, freshness
   filtering, and unpaired bridge-candidate projection.
+- `SmartHomeRuntime::record_discovery_worker_run` for ingesting reported
+  discovery-worker batches with inserted, replaced, and ignored catalog counts.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work

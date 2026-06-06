@@ -34,6 +34,8 @@ packages a typed surface for:
   ids such as `light.on_off` and `light.brightness`
 - Hue mDNS and cloud-fallback discovery observations normalized into D23
   `DiscoveryRecord` bridge candidates
+- Hue discovery worker runs that bundle mDNS/cloud observations, per-source
+  failures, and generic D23 worker metadata for runtime catalog ingest
 - discovery-record-to-pairing-plan handoff for local physical-presence Hue
   pairing flows
 - integration descriptor metadata for Chief of Staff discovery

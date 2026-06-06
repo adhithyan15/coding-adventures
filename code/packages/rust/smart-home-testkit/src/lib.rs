@@ -6,7 +6,10 @@
 
 #![forbid(unsafe_code)]
 
-use hue_core::{hue_discovery_record_from_mdns, HUE_MDNS_SERVICE_TYPE};
+use hue_core::{
+    hue_discovery_record_from_mdns, hue_discovery_worker_run_from_observations,
+    HueCloudDiscoveryBridge, HUE_MDNS_SERVICE_TYPE,
+};
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
@@ -14,7 +17,7 @@ use smart_home_core::{
     ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
     Value,
 };
-use smart_home_discovery::{DiscoveryRecord, MdnsAdvertisement};
+use smart_home_discovery::{DiscoveryRecord, DiscoveryWorkerRun, MdnsAdvertisement};
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
     EventStreamStatus, MqttQos, MqttTopicError, MqttTopicFilter,
@@ -988,8 +991,17 @@ pub fn hue_bridge_discovery_record(
     native_id: impl Into<String>,
     discovered_at_ms: u64,
 ) -> DiscoveryRecord {
+    hue_discovery_record_from_mdns(&hue_bridge_mdns_advertisement(native_id, discovered_at_ms))
+        .expect("fixture Hue mDNS advertisement maps to a discovery record")
+        .with_metadata("fixture", "hue_bridge_discovery")
+}
+
+pub fn hue_bridge_mdns_advertisement(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> MdnsAdvertisement {
     let native_id = native_id.into();
-    let advertisement = MdnsAdvertisement::new(
+    MdnsAdvertisement::new(
         HUE_MDNS_SERVICE_TYPE,
         "Hue Bridge",
         "hue-bridge.local",
@@ -1004,10 +1016,30 @@ pub fn hue_bridge_discovery_record(
     .with_txt("modelid", "BSB002")
     .expect("fixture Hue model TXT is valid")
     .with_txt("swversion", "1.66.1960062030")
-    .expect("fixture Hue firmware TXT is valid");
-    hue_discovery_record_from_mdns(&advertisement)
-        .expect("fixture Hue mDNS advertisement maps to a discovery record")
-        .with_metadata("fixture", "hue_bridge_discovery")
+    .expect("fixture Hue firmware TXT is valid")
+}
+
+pub fn hue_bridge_discovery_worker_run(
+    native_id: impl Into<String>,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> DiscoveryWorkerRun {
+    let advertisement = hue_bridge_mdns_advertisement(native_id, completed_at_ms);
+    let mut run = hue_discovery_worker_run_from_observations(
+        "fixture-hue-discovery-worker",
+        [&advertisement],
+        Vec::<HueCloudDiscoveryBridge>::new(),
+        started_at_ms,
+        completed_at_ms,
+    )
+    .expect("fixture Hue discovery worker run is valid")
+    .with_metadata("fixture", "hue_bridge_discovery_worker");
+    for record in &mut run.records {
+        record
+            .metadata
+            .push(Metadata::new("fixture", "hue_bridge_discovery"));
+    }
+    run
 }
 
 pub fn hue_device(id: &'static str, bridge_id: &BridgeId, native_id: &'static str) -> Device {
@@ -1245,9 +1277,10 @@ pub fn hue_lighting_runtime() -> SmartHomeRuntime {
 
 pub fn hue_discovery_runtime() -> SmartHomeRuntime {
     let mut runtime = SmartHomeRuntime::new();
+    let run = hue_bridge_discovery_worker_run("001788fffeabcdef", 950, 1_000);
     runtime
-        .record_discovery(hue_bridge_discovery_record("001788fffeabcdef", 1_000))
-        .expect("Hue discovery fixture can be recorded");
+        .record_discovery_worker_run(&run, 1_000, 1_000)
+        .expect("Hue discovery fixture worker run can be recorded");
     runtime
 }
 
@@ -1701,6 +1734,23 @@ mod tests {
         );
         assert!(bridge.metadata.iter().any(|metadata| {
             metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
+        }));
+    }
+
+    #[test]
+    fn hue_discovery_worker_fixture_reports_canonical_mdns_records() {
+        let run = hue_bridge_discovery_worker_run("001788fffediscovered", 975, 1_000);
+
+        assert_eq!(run.worker_id.as_str(), "fixture-hue-discovery-worker");
+        assert_eq!(run.len(), 1);
+        assert!(!run.has_failures());
+        assert_eq!(run.records[0].native_bridge_id, "001788fffediscovered");
+        assert_eq!(run.records[0].source, DiscoverySource::Mdns);
+        assert!(run.records[0].metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
+        }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery_worker"
         }));
     }
 
