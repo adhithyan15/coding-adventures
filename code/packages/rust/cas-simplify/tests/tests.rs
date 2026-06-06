@@ -35,6 +35,12 @@ fn b() -> IRNode {
 fn c() -> IRNode {
     sym("c")
 }
+fn greater_zero(node: IRNode) -> IRNode {
+    apply(sym(GREATER), vec![node, int(0)])
+}
+fn greater_equal_zero(node: IRNode) -> IRNode {
+    apply(sym(GREATER_EQUAL), vec![node, int(0)])
+}
 fn zero() -> IRNode {
     int(0)
 }
@@ -510,7 +516,7 @@ fn radcan_simplifies_square_roots_and_exp_log_pairs() {
     );
 
     let mut ctx = AssumptionContext::new();
-    ctx.assume_relation(&apply(sym(GREATER), vec![x(), int(0)]));
+    ctx.assume_relation(&greater_zero(x()));
     let x_sq = apply(sym(POW), vec![x(), int(2)]);
     assert_eq!(
         radcan(apply(sym(SQRT), vec![x_sq.clone()]), Some(&ctx)),
@@ -518,8 +524,24 @@ fn radcan_simplifies_square_roots_and_exp_log_pairs() {
     );
     assert_ne!(radcan(apply(sym(SQRT), vec![x_sq]), None), x());
 
+    let mut nonneg_ctx = AssumptionContext::new();
+    nonneg_ctx.assume_relation(&greater_equal_zero(x()));
+    let x_sq = apply(sym(POW), vec![x(), int(2)]);
+    assert_eq!(radcan(apply(sym(SQRT), vec![x_sq]), Some(&nonneg_ctx)), x());
+
     let inner = apply(sym(MUL), vec![apply(sym(POW), vec![x(), int(2)]), y()]);
     let result = radcan(apply(sym(SQRT), vec![inner]), Some(&ctx));
+    match result {
+        IRNode::Apply(ap) => {
+            assert_eq!(ap.head, sym(MUL));
+            assert!(ap.args.contains(&x()));
+            assert!(ap.args.contains(&apply(sym(SQRT), vec![y()])));
+        }
+        other => panic!("expected Mul, got {other:?}"),
+    }
+
+    let inner = apply(sym(MUL), vec![apply(sym(POW), vec![x(), int(2)]), y()]);
+    let result = radcan(apply(sym(SQRT), vec![inner]), Some(&nonneg_ctx));
     match result {
         IRNode::Apply(ap) => {
             assert_eq!(ap.head, sym(MUL));

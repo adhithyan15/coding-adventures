@@ -19,6 +19,7 @@ import {
   RULE,
   SIN,
   SOLVE,
+  SQRT,
   SUB,
   SUBST,
   TRUE,
@@ -51,6 +52,7 @@ import {
   PART,
   PROP_VARS,
   PROPERTIES,
+  RADCAN,
   RAT_SIMPLIFY,
   RANGE,
   REST,
@@ -582,6 +584,21 @@ describe("macsyma-runtime", () => {
     expect(declareResult.input).toEqual(app(DECLARE, [sym("x"), sym("positive")]));
     expect(declareResult.output).toEqual(sym("done"));
     expect(query.output).toEqual(TRUE);
+  });
+
+  it("feeds nonnegative session assumptions into radcan", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("assume(x >= 0); radcan(sqrt(x^2));");
+
+    expect(result.input).toEqual(app(RADCAN, [app(SQRT, [app(POW, [sym("x"), int(2)])])]));
+    expect(result.output).toEqual(sym("x"));
+  });
+
+  it("feeds declared positivity into radcan", () => {
+    const session = new MacsymaSession();
+    const [, result] = session.evalSource("declare(y, positive); radcan(sqrt(y^2));");
+
+    expect(result.output).toEqual(sym("y"));
   });
 
   it("properties lists declared properties deterministically", () => {

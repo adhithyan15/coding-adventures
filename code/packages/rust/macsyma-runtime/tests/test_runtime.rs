@@ -6,7 +6,7 @@ use coding_adventures_macsyma_runtime::{
 use std::collections::HashMap;
 use symbolic_ir::{
     apply, int, rat, sym, ADD, AND, ASIN, COS, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
-    LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SUB,
+    LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SQRT, SUB,
 };
 
 const SUBST: &str = "Subst";
@@ -671,6 +671,36 @@ fn declare_feeds_properties_into_is_queries() {
     );
     assert_eq!(results[0].output, sym("done"));
     assert_eq!(results[1].output, sym("True"));
+}
+
+#[test]
+fn nonnegative_session_assumptions_feed_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); radcan(sqrt(x^2));")
+        .unwrap();
+
+    assert_eq!(
+        results[1].input,
+        apply(
+            sym("Radcan"),
+            vec![apply(
+                sym(SQRT),
+                vec![apply(sym(POW), vec![sym("x"), int(2)])]
+            )]
+        )
+    );
+    assert_eq!(results[1].output, sym("x"));
+}
+
+#[test]
+fn declared_positivity_feeds_radcan() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("declare(y, positive); radcan(sqrt(y^2));")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("y"));
 }
 
 #[test]

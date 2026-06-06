@@ -13,7 +13,7 @@ use cas_list_operations::{
     range_ as list_range, rest, reverse, sort_, ListOperationError, ListResult,
 };
 use cas_pretty_printer::{pretty, pretty_2d, MacsymaDialect};
-use cas_simplify::{simplify, AssumptionContext};
+use cas_simplify::{radcan, simplify, AssumptionContext};
 use cas_solve::{solve_linear_system, try_solve_inequality, try_solve_transcendental, SOLVE};
 use cas_substitution::subst;
 use cas_trig::{expand_trig, trig_reduce, trig_simplify};
@@ -58,6 +58,7 @@ const FLOAT_FUNC: &str = "Float";
 const FORGET: &str = "Forget";
 const IS: &str = "Is";
 const RAT_SIMPLIFY: &str = "RatSimplify";
+const RADCAN: &str = "Radcan";
 const SIMPLIFY: &str = "Simplify";
 const SUBST: &str = "Subst";
 const TRIG_EXPAND: &str = "TrigExpand";
@@ -512,6 +513,11 @@ impl MacsymaBackend {
         handlers.insert(SIMPLIFY.to_string(), handler_fn(simplify_handler));
         handlers.insert(SUBST.to_string(), handler_fn(subst_handler));
         handlers.insert(RAT_SIMPLIFY.to_string(), handler_fn(simplify_handler));
+        let radcan_state = state.clone();
+        handlers.insert(
+            RADCAN.to_string(),
+            Arc::new(move |_vm, expr| radcan_handler(&radcan_state, expr)),
+        );
         handlers.insert(TRIG_SIMPLIFY.to_string(), handler_fn(trig_simplify_handler));
         handlers.insert(TRIG_EXPAND.to_string(), handler_fn(trig_expand_handler));
         handlers.insert(TRIG_REDUCE.to_string(), handler_fn(trig_reduce_handler));
@@ -598,7 +604,7 @@ impl MacsymaBackend {
 
         let held = [
             ASSIGN, DEFINE, IF, KILL, EV, ASSUME, FORGET, IS, DECLARE, PROPERTIES, PROP_VARS,
-            SOLVE, SUBST,
+            SOLVE, SUBST, RADCAN,
         ]
         .into_iter()
         .map(str::to_string)
@@ -959,6 +965,14 @@ fn simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
         return IRNode::Apply(Box::new(expr));
     }
     simplify(expr.args[0].clone(), 50)
+}
+
+fn radcan_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let state = state.lock().expect("macsyma backend state poisoned");
+    radcan(expr.args[0].clone(), Some(&state.assumptions))
 }
 
 fn trig_simplify_handler(_vm: &mut VM, expr: IRApply) -> IRNode {
