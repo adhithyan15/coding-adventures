@@ -122,6 +122,24 @@ moving socket work into the Chief bridge:
   runtime and integration tests can exercise the scheduled handoff without
   opening sockets or inventing another fake scheduler.
 
+## Current Discovery Execution Handoff Slice
+
+This slice gives a future supervised discovery actor an executable mDNS work
+contract while keeping socket execution and runtime mutation separate:
+
+- `smart-home-discovery` now has per-interface IPv4/IPv6 mDNS scan requests,
+  scan plans, and aggregate scan reports that preserve both packet-level parse
+  failures and interface-level transport failures.
+- `smart-home-runtime` can project due mDNS discovery worker schedules into
+  executable scan requests without mutating scheduler state, and mDNS schedules
+  must now name the DNS-SD service type they plan to scan.
+- `hue-core` can convert an aggregate mDNS worker scan report into the existing
+  Hue D23 discovery worker-run envelope, preserving interface failure context
+  as worker failure metadata.
+- `smart-home-testkit` now seeds Hue discovery worker fixtures through the scan
+  report path, so runtime and Chief-facing tests exercise the same handoff a
+  supervised worker will report back.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -143,9 +161,9 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Wire scheduled discovery run plans to a supervised actor or process that runs
-  per-interface LAN mDNS scans and persists schedules, results, and runtime
-  state across restarts.
+- Wire the mDNS execution handoff to a supervised actor or process that opens
+  sockets, runs the requested per-interface scans, and persists schedules,
+  results, and runtime state across restarts.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

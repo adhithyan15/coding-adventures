@@ -27,6 +27,9 @@ All notable changes to this package will be documented in this file.
 - `ScheduledDiscoveryWorker`, `RuntimeDiscoveryScheduler`, and scheduled
   discovery run-plan helpers for runtime-owned discovery cadence, selected
   network interfaces, and last-run status.
+- `DiscoveryWorkerRunPlan::mdns_scan_plan` and
+  `SmartHomeRuntime::discovery_mdns_scan_plan_at` for projecting due mDNS
+  schedules into per-interface IPv4/IPv6 scan requests.
 - `SmartHomeRuntime::record_scheduled_discovery_worker_run` for ingesting a
   registered worker run, reconciling discovery results, and advancing the next
   scheduled due time.

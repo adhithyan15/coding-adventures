@@ -38,6 +38,8 @@ packages a typed surface for:
   failures, and generic D23 worker metadata for runtime catalog ingest
 - Hue discovery worker runs from generic mDNS scan results, preserving
   malformed datagram failures alongside valid bridge advertisements
+- Hue discovery worker runs from aggregate mDNS worker scan reports, preserving
+  interface-level scan failures without moving network I/O into Hue mapping code
 - discovery-record-to-pairing-plan handoff for local physical-presence Hue
   pairing flows
 - integration descriptor metadata for Chief of Staff discovery

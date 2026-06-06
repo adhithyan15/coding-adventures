@@ -6,8 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
-- Deterministic Hue mDNS scan fixtures, with discovery worker-run fixtures now
-  flowing through `MdnsScanResult` before seeding runtime discovery catalogs.
+- Deterministic Hue mDNS scan-report fixtures, with discovery worker-run
+  fixtures now flowing through `MdnsWorkerScanReport` before seeding runtime
+  discovery catalogs.
 - Deterministic Hue discovery worker schedule fixtures, with discovery runtime
   seeding now flowing through `SmartHomeRuntime::record_scheduled_discovery_worker_run`.
 - Deterministic fixture clock for freshness and supervisor tests.
