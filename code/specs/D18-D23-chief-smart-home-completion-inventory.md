@@ -157,6 +157,25 @@ without moving platform state or socket supervision into the Chief bridge:
   conversion, and scheduled runtime ingest end to end while keeping Chief of
   Staff on the existing thin `smart_home.*` tool bridge.
 
+## Current Discovery Supervisor Run Slice
+
+This slice lets D23 coordinate one deterministic supervised mDNS pass without
+turning runtime into a Hue integration or process manager:
+
+- `smart-home-runtime` now has a supervised mDNS discovery run helper that
+  marks due workers started, executes due scan plans through an injectable mDNS
+  runner, adapts reports into discovery worker runs, records scheduled ingest,
+  and returns compact run/catalog outcome counts.
+- Runtime keeps vendor-specific interpretation outside the scheduler through an
+  injected `MdnsDiscoveryRunAdapter`, so Hue report conversion stays in
+  `hue-core` or callers that compose Hue.
+- Adapter failures are converted into deterministic failed discovery-worker
+  runs, which advances schedule state and preserves failure pressure for
+  supervisor status instead of leaving workers stuck as running.
+- The new tests prove both a completed supervised mDNS pass and a failed adapter
+  path using local fake runners, without opening sockets or moving the Chief
+  bridge boundary.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -178,9 +197,9 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Wire the mDNS runner to a supervised actor or process that manages lifecycle,
-  retries, OS interface binding, and persistence for schedules, results, and
-  runtime state across restarts.
+- Connect the supervised mDNS runtime pass to an actor or process that manages
+  lifecycle, retries/backoff, OS interface binding, and persistence for
+  schedules, results, and runtime state across restarts.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

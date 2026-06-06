@@ -33,6 +33,10 @@ All notable changes to this package will be documented in this file.
 - `SmartHomeRuntime::record_scheduled_discovery_worker_run` for ingesting a
   registered worker run, reconciling discovery results, and advancing the next
   scheduled due time.
+- `SmartHomeRuntime::run_due_mdns_discovery_workers_with_executor` and
+  `MdnsDiscoveryRunAdapter` for supervised mDNS discovery passes that execute
+  due scan plans through injectable runners, record scheduled run summaries,
+  and convert adapter failures into deterministic failed worker runs.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work
