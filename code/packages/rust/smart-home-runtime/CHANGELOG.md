@@ -41,6 +41,9 @@ All notable changes to this package will be documented in this file.
   `RuntimeSupervisionObservation` for read-side inspection of due workers, last
   run status, record/failure counts, catalog changes, and consecutive failure
   pressure.
+- Scheduled discovery worker retry/backoff policy, including configurable
+  initial retry delay, capped retry delay, multiplier, failure-driven cadence,
+  and snapshot exposure of the current retry delay.
 - `RuntimeSupervisionPlanSummary` plus plan/observation helpers for compact
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work

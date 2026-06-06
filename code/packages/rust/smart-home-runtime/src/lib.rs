@@ -1652,6 +1652,9 @@ pub struct ScheduledDiscoveryWorker {
     pub status: WorkerStatus,
     pub interval_ms: u64,
     pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
     pub next_due_at_ms: u64,
     pub last_started_at_ms: Option<u64>,
     pub last_completed_at_ms: Option<u64>,
@@ -1682,6 +1685,9 @@ impl ScheduledDiscoveryWorker {
             status: WorkerStatus::Starting,
             interval_ms,
             run_timeout_ms,
+            retry_delay_ms: interval_ms,
+            max_retry_delay_ms: interval_ms,
+            retry_backoff_multiplier: 1,
             next_due_at_ms: first_due_at_ms,
             last_started_at_ms: None,
             last_completed_at_ms: None,
@@ -1719,6 +1725,18 @@ impl ScheduledDiscoveryWorker {
         self
     }
 
+    pub fn with_retry_backoff(
+        mut self,
+        retry_delay_ms: u64,
+        max_retry_delay_ms: u64,
+        retry_backoff_multiplier: u32,
+    ) -> Self {
+        self.retry_delay_ms = retry_delay_ms;
+        self.max_retry_delay_ms = max_retry_delay_ms;
+        self.retry_backoff_multiplier = retry_backoff_multiplier;
+        self
+    }
+
     pub fn is_due_at(&self, now_ms: u64) -> bool {
         now_ms >= self.next_due_at_ms
     }
@@ -1742,6 +1760,9 @@ impl ScheduledDiscoveryWorker {
             planned_at_ms: now_ms,
             interval_ms: self.interval_ms,
             run_timeout_ms: self.run_timeout_ms,
+            retry_delay_ms: self.retry_delay_ms,
+            max_retry_delay_ms: self.max_retry_delay_ms,
+            retry_backoff_multiplier: self.retry_backoff_multiplier,
             consecutive_failure_count: self.consecutive_failure_count,
             metadata: self.metadata.clone(),
         })
@@ -1760,18 +1781,35 @@ impl ScheduledDiscoveryWorker {
         self.last_record_count = summary.record_count;
         self.last_failure_count = summary.failure_count;
         self.last_catalog_change_count = summary.accepted_count();
-        self.next_due_at_ms = summary.completed_at_ms.saturating_add(self.interval_ms);
 
         match summary.status {
             DiscoveryWorkerRunStatus::Completed => {
                 self.status = WorkerStatus::Running;
                 self.consecutive_failure_count = 0;
+                self.next_due_at_ms = summary.completed_at_ms.saturating_add(self.interval_ms);
             }
             DiscoveryWorkerRunStatus::Partial | DiscoveryWorkerRunStatus::Failed => {
                 self.status = WorkerStatus::Unhealthy;
                 self.consecutive_failure_count = self.consecutive_failure_count.saturating_add(1);
+                self.next_due_at_ms = summary.completed_at_ms.saturating_add(
+                    self.retry_delay_for_failure_count(self.consecutive_failure_count),
+                );
             }
         }
+    }
+
+    pub fn retry_delay_for_failure_count(&self, consecutive_failure_count: u32) -> u64 {
+        if consecutive_failure_count == 0 {
+            return 0;
+        }
+
+        let mut delay = self.retry_delay_ms;
+        for _ in 1..consecutive_failure_count {
+            delay = delay
+                .saturating_mul(self.retry_backoff_multiplier as u64)
+                .min(self.max_retry_delay_ms);
+        }
+        delay.min(self.max_retry_delay_ms)
     }
 
     pub fn validate(&self) -> Result<(), RuntimeError> {
@@ -1786,6 +1824,34 @@ impl ScheduledDiscoveryWorker {
             return Err(invalid_discovery_worker_schedule(
                 &self.worker_id,
                 "run_timeout_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.retry_delay_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "retry_delay_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.max_retry_delay_ms == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "max_retry_delay_ms",
+                "must be greater than zero",
+            ));
+        }
+        if self.max_retry_delay_ms < self.retry_delay_ms {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "max_retry_delay_ms",
+                "must be greater than or equal to retry_delay_ms",
+            ));
+        }
+        if self.retry_backoff_multiplier == 0 {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "retry_backoff_multiplier",
                 "must be greater than zero",
             ));
         }
@@ -1838,6 +1904,10 @@ pub struct ScheduledDiscoveryWorkerSnapshot {
     pub status: WorkerStatus,
     pub interval_ms: u64,
     pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
+    pub current_retry_delay_ms: Option<u64>,
     pub next_due_at_ms: u64,
     pub is_due: bool,
     pub overdue_by_ms: u64,
@@ -1863,6 +1933,14 @@ impl ScheduledDiscoveryWorkerSnapshot {
             status: worker.status,
             interval_ms: worker.interval_ms,
             run_timeout_ms: worker.run_timeout_ms,
+            retry_delay_ms: worker.retry_delay_ms,
+            max_retry_delay_ms: worker.max_retry_delay_ms,
+            retry_backoff_multiplier: worker.retry_backoff_multiplier,
+            current_retry_delay_ms: if worker.consecutive_failure_count > 0 {
+                Some(worker.retry_delay_for_failure_count(worker.consecutive_failure_count))
+            } else {
+                None
+            },
             next_due_at_ms: worker.next_due_at_ms,
             is_due: worker.is_due_at(now_ms),
             overdue_by_ms: worker.overdue_by_ms_at(now_ms),
@@ -1897,6 +1975,9 @@ pub struct DiscoveryWorkerRunInstruction {
     pub planned_at_ms: u64,
     pub interval_ms: u64,
     pub run_timeout_ms: u64,
+    pub retry_delay_ms: u64,
+    pub max_retry_delay_ms: u64,
+    pub retry_backoff_multiplier: u32,
     pub consecutive_failure_count: u32,
     pub metadata: Vec<Metadata>,
 }
@@ -6245,6 +6326,128 @@ mod tests {
     }
 
     #[test]
+    fn runtime_applies_discovery_worker_retry_backoff_after_failures() {
+        let mut runtime = SmartHomeRuntime::new();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        runtime
+            .register_discovery_worker_schedule(
+                hue_mdns_discovery_worker(1_000).with_retry_backoff(500, 2_000, 2),
+            )
+            .unwrap();
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_000)
+            .unwrap();
+        let mut first_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_000,
+            1_100,
+        );
+        first_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "no replies before timeout")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&first_failure, 1_100, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.consecutive_failure_count, 1);
+        assert_eq!(scheduled.retry_delay_for_failure_count(1), 500);
+        assert_eq!(scheduled.next_due_at_ms, 1_600);
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 1_600)
+            .unwrap();
+        let mut second_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            1_600,
+            1_700,
+        );
+        second_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "multicast route unavailable")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&second_failure, 1_700, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.consecutive_failure_count, 2);
+        assert_eq!(scheduled.retry_delay_for_failure_count(2), 1_000);
+        assert_eq!(scheduled.next_due_at_ms, 2_700);
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 2_700)
+            .unwrap();
+        let mut third_failure = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            2_700,
+            2_800,
+        );
+        third_failure.push_failure(
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, "network still unavailable")
+                .unwrap(),
+        );
+        runtime
+            .record_scheduled_discovery_worker_run(&third_failure, 2_800, 500)
+            .unwrap();
+
+        let observation = runtime.observe_supervision_at(2_801).unwrap();
+        assert_eq!(observation.discovery_workers_with_failures_count(), 1);
+        assert_eq!(observation.next_discovery_worker_due_at_ms(), Some(4_800));
+        assert!(matches!(
+            observation.discovery_workers.as_slice(),
+            [snapshot] if snapshot.worker_id == worker_id
+                && snapshot.status == WorkerStatus::Unhealthy
+                && snapshot.retry_delay_ms == 500
+                && snapshot.max_retry_delay_ms == 2_000
+                && snapshot.retry_backoff_multiplier == 2
+                && snapshot.current_retry_delay_ms == Some(2_000)
+                && snapshot.next_due_at_ms == 4_800
+                && snapshot.consecutive_failure_count == 3
+                && snapshot.has_failure_pressure()
+        ));
+
+        runtime
+            .mark_discovery_worker_started(&worker_id, 4_800)
+            .unwrap();
+        let mut recovery_run = DiscoveryWorkerRun::new(
+            worker_id.clone(),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            4_800,
+            4_900,
+        );
+        recovery_run
+            .push_record(hue_discovery_record("001788fffebackoff", 4_850))
+            .unwrap();
+        runtime
+            .record_scheduled_discovery_worker_run(&recovery_run, 4_900, 500)
+            .unwrap();
+
+        let scheduled = runtime.discovery_worker_schedule(&worker_id).unwrap();
+        assert_eq!(scheduled.status, WorkerStatus::Running);
+        assert_eq!(scheduled.consecutive_failure_count, 0);
+        assert_eq!(scheduled.next_due_at_ms, 9_900);
+        assert_eq!(scheduled.retry_delay_for_failure_count(0), 0);
+        assert_eq!(
+            runtime
+                .observe_supervision_at(4_901)
+                .unwrap()
+                .discovery_workers[0]
+                .current_retry_delay_ms,
+            None
+        );
+    }
+
+    #[test]
     fn runtime_supervised_mdns_discovery_run_executes_and_records_due_workers() {
         let mut runtime = SmartHomeRuntime::new();
         let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
@@ -6410,6 +6613,15 @@ mod tests {
                 field: "metadata.smart_home.discovery.service_type",
                 ..
             }
+        ));
+
+        let invalid_retry = hue_mdns_discovery_worker(1_100).with_retry_backoff(1_000, 500, 2);
+        assert!(matches!(
+            runtime.register_discovery_worker_schedule(invalid_retry),
+            Err(RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "max_retry_delay_ms",
+                ..
+            })
         ));
 
         runtime
