@@ -3,6 +3,8 @@ import {
   Circuit,
   SpiceError,
   formatAcTable,
+  formatCornerSParameterTable,
+  formatSParameterTable,
   acSweep,
   acSweepCorners,
   bjt,
@@ -20,6 +22,7 @@ import {
   mutualInductor,
   resistor,
   sParameters,
+  sParametersCorners,
   transmissionLine,
   vcvs,
   voltageSource,
@@ -467,5 +470,55 @@ describe("sParameters", () => {
     expect(point.s12.real).toBeCloseTo(2.0 / 3.0, 9);
     expect(point.s11.imag).toBeCloseTo(0.0, 12);
     expect(point.s21.imag).toBeCloseTo(0.0, 12);
+    expect(formatSParameterTable(result)).toBe(
+      "Index\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n" +
+        "0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n" +
+        "0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n" +
+        "0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n",
+    );
+  });
+
+  it("runs two-port extraction at each named corner and formats stable tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("P1", "p1", "0", 0.0));
+    circuit.add(voltageSource("P2", "p2", "0", 0.0));
+    circuit.add(resistor("Rseries", "p1", "p2", 50.0));
+
+    const result = sParametersCorners(
+      circuit,
+      "P1",
+      "P2",
+      [1.0e6],
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "series-high",
+          overrides: [{ elementName: "Rseries", parameter: "resistance", value: 100.0 }],
+        },
+      ],
+      50.0,
+    );
+
+    expect(result.port1Source).toBe("P1");
+    expect(result.port2Source).toBe("P2");
+    expect(result.referenceImpedanceOhms).toBe(50.0);
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "series-high",
+    ]);
+    expect(result.points[0].result.points[0].s21.real).toBeCloseTo(2.0 / 3.0, 9);
+    expect(result.points[1].result.points[0].s21.real).toBeCloseTo(0.5, 9);
+    expect(formatCornerSParameterTable(result)).toBe(
+      "Corner\tIndex\tFrequency\tPort1\tPort2\tParameter\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS11\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n" +
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS21\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n" +
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS12\t6.666667e-01\t0.000000e+00\t6.666667e-01\t0.000000e+00\n" +
+        "nominal\t0\t1.000000e+06\tP1\tP2\tS22\t3.333333e-01\t0.000000e+00\t3.333333e-01\t0.000000e+00\n" +
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS11\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS21\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS12\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n" +
+        "series-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t5.000000e-01\t0.000000e+00\n",
+    );
   });
 });

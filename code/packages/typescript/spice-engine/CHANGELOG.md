@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add multi-corner advanced analysis wrappers with `mcDcCorners`,
+  `sensDcCorners`, `noiseAcCorners`, and `sParametersCorners`, matching the
+  Rust engine surface for these SPICE outputs in the native web package.
+- Add stable tab-separated text output helpers for Monte Carlo, sensitivity,
+  noise, and S-parameter results, including named-corner table variants.
+
 ## 0.14.0 — 2026-06-05
 
 - Add `diodeAtTemperature` and `circuitAtTemperature` helpers, which adjust

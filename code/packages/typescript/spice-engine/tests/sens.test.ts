@@ -6,8 +6,11 @@ import {
   cccs,
   ccvs,
   currentSource,
+  formatCornerSensTable,
+  formatSensTable,
   resistor,
   sensDc,
+  sensDcCorners,
   vccs,
   voltageSource,
 } from "../src/index.js";
@@ -56,6 +59,9 @@ describe("sensDc", () => {
     expectClose(
       entry(result, "Rbot", "resistanceOhms").relativeSensitivity,
       0.5,
+    );
+    expect(formatSensTable(result).split("\n")[0]).toBe(
+      "OutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity",
     );
   });
 
@@ -148,6 +154,39 @@ describe("sensDc", () => {
     expect(() => sensDc(circuit, "missing")).toThrowError(SpiceError);
     expect(() => sensDc(circuit, "missing")).toThrowError(
       "output node was not found in circuit",
+    );
+  });
+
+  it("runs sensitivity analysis at each named corner and formats stable tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "vin", "0", 10.0));
+    circuit.add(resistor("Rtop", "vin", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = sensDcCorners(circuit, "out", [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rbot-fast",
+        overrides: [{ elementName: "Rbot", parameter: "resistance", value: 500.0 }],
+      },
+    ]);
+    const cornerTable = formatCornerSensTable(result);
+
+    expect(result.outputNode).toBe("out");
+    expect(result.points.map((point) => point.cornerName)).toEqual([
+      "nominal",
+      "rbot-fast",
+    ]);
+    expect(result.points[0].result.nominalVoltage).toBeCloseTo(5.0, 9);
+    expect(result.points[1].result.nominalVoltage).toBeCloseTo(10.0 / 3.0, 9);
+    expect(cornerTable.split("\n")[0]).toBe(
+      "Corner\tOutputNode\tNominalVoltage\tElement\tParameter\tNominalValue\tSensitivity\tRelativeSensitivity",
+    );
+    expect(cornerTable).toContain(
+      "nominal\tout\t5.000000e+00\tVin\tvoltage\t1.000000e+01\t5.000000e-01\t1.000000e+00\n",
+    );
+    expect(cornerTable).toContain(
+      "rbot-fast\tout\t3.333333e+00\tVin\tvoltage\t1.000000e+01\t3.333333e-01\t1.000000e+00\n",
     );
   });
 });
