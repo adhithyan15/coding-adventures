@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `send_to_and_collect` for bounded unconnected discovery probes that gather
+  replies until the configured read timeout or response limit is reached.
 - mDNS and SSDP [`UdpDiscoveryEndpoint`] presets with matching unspecified
   bind-address helpers and option construction for local device-discovery
   probes.

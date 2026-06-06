@@ -82,6 +82,25 @@ keeping the implementation testable and D23-owned:
   worker-run ingest path, so runtime and Chief bridge tests exercise the same
   platform handoff a future LAN scanner will use.
 
+## Current LAN mDNS Scan Slice
+
+This slice attaches real LAN mDNS scan primitives to that worker handoff while
+preserving the platform boundary:
+
+- `udp-client` can send an unconnected multicast discovery probe and collect
+  replies until a bounded read timeout or response limit is reached.
+- `smart-home-discovery` can build mDNS PTR questions, run IPv4/IPv6 mDNS
+  scans through the UDP transport, and parse DNS-SD PTR/SRV/TXT/A/AAAA replies
+  with compressed names into reusable `MdnsAdvertisement` records.
+- `smart-home-discovery` keeps malformed datagrams as per-packet scan failures,
+  which lets discovery workers report partial LAN results instead of dropping a
+  whole scan.
+- `hue-core` can convert a generic `MdnsScanResult` into the D23 Hue discovery
+  worker-run envelope.
+- `smart-home-testkit` now seeds deterministic Hue discovery worker fixtures
+  through the mDNS scan envelope, so runtime tests exercise the scanner handoff
+  shape without opening sockets.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -103,8 +122,8 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Attach actual LAN mDNS socket scanning to the D23 discovery worker-run
-  contract and feed those runs into the runtime discovery catalog.
+- Run the LAN mDNS scanner from a supervised discovery worker across selected
+  interfaces and feed scheduled runs into durable D23 runtime state.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

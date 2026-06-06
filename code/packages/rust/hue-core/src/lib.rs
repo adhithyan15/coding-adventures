@@ -15,7 +15,7 @@ use smart_home_core::{
 };
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerFailure,
-    DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun, MdnsAdvertisement,
+    DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanResult,
     PairingRequirement,
 };
 use std::fmt;
@@ -818,6 +818,60 @@ pub fn hue_discovery_worker_run_from_observations<'a>(
                     .with_metadata("hue.discovery.internal_ip_address", internal_ip_address),
             ),
         }
+    }
+
+    Ok(run)
+}
+
+pub fn hue_discovery_worker_run_from_mdns_scan(
+    worker_id: impl Into<String>,
+    scan: &MdnsScanResult,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> Result<DiscoveryWorkerRun, HueError> {
+    let mut run = DiscoveryWorkerRun::new(
+        DiscoveryWorkerId::new(worker_id)?,
+        IntegrationId::trusted(HUE_INTEGRATION_ID),
+        DiscoveryWorkerKind::MdnsScan,
+        started_at_ms,
+        completed_at_ms,
+    )
+    .with_metadata("hue.discovery.worker", "true")
+    .with_metadata("hue.discovery.worker_version", env!("CARGO_PKG_VERSION"))
+    .with_metadata("hue.discovery.scan_service_type", &scan.service_type)
+    .with_metadata(
+        "hue.discovery.scan_datagram_count",
+        scan.datagram_count.to_string(),
+    )
+    .with_metadata(
+        "hue.discovery.scan_advertisement_count",
+        scan.advertisements.len().to_string(),
+    )
+    .with_metadata(
+        "hue.discovery.scan_failure_count",
+        scan.failures.len().to_string(),
+    );
+
+    for advertisement in &scan.advertisements {
+        match hue_discovery_record_from_mdns(advertisement) {
+            Ok(record) => run.push_record(record)?,
+            Err(error) => run.push_failure(
+                DiscoveryWorkerFailure::new(DiscoverySource::Mdns, error.to_string())?
+                    .with_metadata("hue.discovery.service_type", &advertisement.service_type)
+                    .with_metadata("hue.discovery.instance_name", &advertisement.instance_name)
+                    .with_metadata("hue.discovery.host_name", &advertisement.host_name),
+            ),
+        }
+    }
+
+    for failure in &scan.failures {
+        let mut worker_failure =
+            DiscoveryWorkerFailure::new(DiscoverySource::Mdns, failure.message.clone())?
+                .with_metadata("hue.discovery.scan_failure", "true");
+        if let Some(source) = &failure.source {
+            worker_failure = worker_failure.with_metadata("hue.discovery.scan_source", source);
+        }
+        run.push_failure(worker_failure);
     }
 
     Ok(run)
@@ -2425,6 +2479,65 @@ mod tests {
             1
         );
         assert_eq!(summary.signal_summary.fresh, 2);
+    }
+
+    #[test]
+    fn hue_discovery_worker_run_from_mdns_scan_keeps_scan_failures() {
+        let mdns = MdnsAdvertisement::new(
+            HUE_MDNS_SERVICE_TYPE,
+            "Philips Hue - ABCDEF",
+            "hue-bridge.local",
+            443,
+            1_000,
+        )
+        .unwrap()
+        .with_address("192.0.2.10")
+        .unwrap()
+        .with_txt("bridgeid", "001788fffeabcdef")
+        .unwrap();
+        let non_hue = MdnsAdvertisement::new(
+            "_matter._tcp.local",
+            "Matter Bridge",
+            "matter.local",
+            5540,
+            1_005,
+        )
+        .unwrap();
+        let scan = MdnsScanResult {
+            service_type: HUE_MDNS_SERVICE_TYPE.to_string(),
+            discovered_at_ms: 1_010,
+            datagram_count: 3,
+            advertisements: vec![mdns, non_hue],
+            failures: vec![smart_home_discovery::MdnsScanFailure {
+                source: Some("192.0.2.50:5353".to_string()),
+                message: "invalid mDNS message: DNS header is shorter than 12 bytes".to_string(),
+            }],
+        };
+
+        let run =
+            hue_discovery_worker_run_from_mdns_scan("hue-mdns-scan", &scan, 990, 1_020).unwrap();
+        let summary = run.summary_at(1_100, 500, 1, 0, 0);
+
+        assert_eq!(run.kind, DiscoveryWorkerKind::MdnsScan);
+        assert_eq!(run.status(), DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(run.len(), 1);
+        assert_eq!(run.failure_count(), 2);
+        assert_eq!(run.records[0].source, DiscoverySource::Mdns);
+        assert!(run
+            .failures
+            .iter()
+            .any(|failure| failure.message.contains("not a Hue bridge service")));
+        assert!(run.failures.iter().any(|failure| failure
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == "hue.discovery.scan_source"
+                && metadata.value == "192.0.2.50:5353")));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_datagram_count" && metadata.value == "3"
+        }));
+        assert_eq!(summary.record_count, 1);
+        assert_eq!(summary.failure_count, 2);
+        assert_eq!(summary.accepted_count(), 1);
     }
 
     #[test]

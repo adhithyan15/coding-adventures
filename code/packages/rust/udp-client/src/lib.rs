@@ -148,7 +148,9 @@ pub enum UdpError {
     ReceiveFailed(String),
     Timeout,
     NotConnected,
+    MissingReadTimeout,
     InvalidDatagramSize { size: usize, max: usize },
+    InvalidResponseLimit { max_responses: usize },
     TruncatedDatagram,
 }
 
@@ -161,8 +163,17 @@ impl fmt::Display for UdpError {
             Self::ReceiveFailed(message) => write!(f, "failed to receive UDP datagram: {message}"),
             Self::Timeout => write!(f, "UDP operation timed out"),
             Self::NotConnected => write!(f, "UDP socket has no connected peer"),
+            Self::MissingReadTimeout => {
+                write!(f, "UDP response collection requires a read timeout")
+            }
             Self::InvalidDatagramSize { size, max } => {
                 write!(f, "invalid UDP datagram size {size}; maximum is {max}")
+            }
+            Self::InvalidResponseLimit { max_responses } => {
+                write!(
+                    f,
+                    "invalid UDP response limit {max_responses}; maximum is 1 or more"
+                )
             }
             Self::TruncatedDatagram => write!(f, "UDP datagram exceeded receive buffer"),
         }
@@ -280,6 +291,38 @@ pub fn send_and_receive(
     client.connect(destination)?;
     client.send(payload)?;
     client.recv_from()
+}
+
+/// Send one datagram to a discovery endpoint and collect replies until the
+/// configured read timeout or response limit is reached.
+pub fn send_to_and_collect(
+    destination: SocketAddr,
+    payload: &[u8],
+    mut options: UdpOptions,
+    max_responses: usize,
+) -> Result<Vec<UdpDatagram>, UdpError> {
+    if max_responses == 0 {
+        return Err(UdpError::InvalidResponseLimit { max_responses });
+    }
+    if options.read_timeout.is_none() {
+        return Err(UdpError::MissingReadTimeout);
+    }
+    if options.bind_addr.is_none() {
+        options.bind_addr = Some(unspecified_addr_for(destination));
+    }
+
+    let client = UdpClient::bind(options)?;
+    client.send_to(payload, destination)?;
+
+    let mut datagrams = Vec::new();
+    while datagrams.len() < max_responses {
+        match client.recv_from() {
+            Ok(datagram) => datagrams.push(datagram),
+            Err(UdpError::Timeout) => break,
+            Err(error) => return Err(error),
+        }
+    }
+    Ok(datagrams)
 }
 
 fn validate_max_datagram_size(size: usize) -> Result<(), UdpError> {
@@ -423,8 +466,16 @@ mod tests {
             (UdpError::Timeout, "UDP operation timed out"),
             (UdpError::NotConnected, "UDP socket has no connected peer"),
             (
+                UdpError::MissingReadTimeout,
+                "UDP response collection requires a read timeout",
+            ),
+            (
                 UdpError::InvalidDatagramSize { size: 9, max: 8 },
                 "invalid UDP datagram size 9; maximum is 8",
+            ),
+            (
+                UdpError::InvalidResponseLimit { max_responses: 0 },
+                "invalid UDP response limit 0; maximum is 1 or more",
             ),
             (
                 UdpError::TruncatedDatagram,
@@ -449,6 +500,63 @@ mod tests {
 
         assert!(local.is_ipv4());
         assert_ne!(local.port(), 0);
+    }
+
+    #[test]
+    fn send_to_and_collect_gathers_unconnected_replies_until_timeout() {
+        let client = bind_test_client();
+        let client_addr = client.local_addr().unwrap();
+        drop(client);
+        let responder = UdpSocket::bind(localhost(0)).unwrap();
+        let responder_addr = responder.local_addr().unwrap();
+
+        let handle = thread::spawn(move || {
+            let mut buffer = [0u8; 32];
+            let (_, source) = responder.recv_from(&mut buffer).unwrap();
+            responder.send_to(b"one", source).unwrap();
+            responder.send_to(b"two", source).unwrap();
+        });
+
+        let replies = send_to_and_collect(
+            responder_addr,
+            b"probe",
+            UdpOptions {
+                bind_addr: Some(client_addr),
+                max_datagram_size: 16,
+                read_timeout: Some(Duration::from_millis(100)),
+                write_timeout: Some(Duration::from_millis(100)),
+            },
+            4,
+        )
+        .unwrap();
+        handle.join().unwrap();
+
+        assert_eq!(replies.len(), 2);
+        assert_eq!(replies[0].payload, b"one");
+        assert_eq!(replies[1].payload, b"two");
+        assert!(replies.iter().all(|reply| reply.source == responder_addr));
+    }
+
+    #[test]
+    fn send_to_and_collect_requires_timeout_and_positive_limit() {
+        let destination = localhost(9);
+
+        assert_eq!(
+            send_to_and_collect(destination, b"probe", test_options(), 0),
+            Err(UdpError::InvalidResponseLimit { max_responses: 0 })
+        );
+        assert_eq!(
+            send_to_and_collect(
+                destination,
+                b"probe",
+                UdpOptions {
+                    read_timeout: None,
+                    ..test_options()
+                },
+                1,
+            ),
+            Err(UdpError::MissingReadTimeout)
+        );
     }
 
     #[test]

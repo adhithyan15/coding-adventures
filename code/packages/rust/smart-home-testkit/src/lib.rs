@@ -7,8 +7,7 @@
 #![forbid(unsafe_code)]
 
 use hue_core::{
-    hue_discovery_record_from_mdns, hue_discovery_worker_run_from_observations,
-    HueCloudDiscoveryBridge, HUE_MDNS_SERVICE_TYPE,
+    hue_discovery_record_from_mdns, hue_discovery_worker_run_from_mdns_scan, HUE_MDNS_SERVICE_TYPE,
 };
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
@@ -17,7 +16,9 @@ use smart_home_core::{
     ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
     Value,
 };
-use smart_home_discovery::{DiscoveryRecord, DiscoveryWorkerRun, MdnsAdvertisement};
+use smart_home_discovery::{
+    DiscoveryRecord, DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanResult,
+};
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
     EventStreamStatus, MqttQos, MqttTopicError, MqttTopicFilter,
@@ -1019,16 +1020,28 @@ pub fn hue_bridge_mdns_advertisement(
     .expect("fixture Hue firmware TXT is valid")
 }
 
+pub fn hue_bridge_mdns_scan_result(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> MdnsScanResult {
+    MdnsScanResult {
+        service_type: HUE_MDNS_SERVICE_TYPE.to_string(),
+        discovered_at_ms,
+        datagram_count: 1,
+        advertisements: vec![hue_bridge_mdns_advertisement(native_id, discovered_at_ms)],
+        failures: Vec::new(),
+    }
+}
+
 pub fn hue_bridge_discovery_worker_run(
     native_id: impl Into<String>,
     started_at_ms: u64,
     completed_at_ms: u64,
 ) -> DiscoveryWorkerRun {
-    let advertisement = hue_bridge_mdns_advertisement(native_id, completed_at_ms);
-    let mut run = hue_discovery_worker_run_from_observations(
+    let scan = hue_bridge_mdns_scan_result(native_id, completed_at_ms);
+    let mut run = hue_discovery_worker_run_from_mdns_scan(
         "fixture-hue-discovery-worker",
-        [&advertisement],
-        Vec::<HueCloudDiscoveryBridge>::new(),
+        &scan,
         started_at_ms,
         completed_at_ms,
     )
@@ -1752,6 +1765,24 @@ mod tests {
         assert!(run.metadata.iter().any(|metadata| {
             metadata.key == "fixture" && metadata.value == "hue_bridge_discovery_worker"
         }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_datagram_count" && metadata.value == "1"
+        }));
+    }
+
+    #[test]
+    fn hue_mdns_scan_fixture_reports_canonical_advertisements() {
+        let scan = hue_bridge_mdns_scan_result("001788fffescan", 1_000);
+
+        assert_eq!(scan.service_type, HUE_MDNS_SERVICE_TYPE);
+        assert_eq!(scan.datagram_count, 1);
+        assert_eq!(scan.len(), 1);
+        assert!(!scan.has_failures());
+        assert_eq!(
+            scan.advertisements[0].txt_value("bridgeid"),
+            Some("001788fffescan")
+        );
+        assert_eq!(scan.advertisements[0].preferred_address(), "192.0.2.10");
     }
 
     #[test]

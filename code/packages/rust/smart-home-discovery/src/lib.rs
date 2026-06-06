@@ -1,9 +1,10 @@
-//! Transport-neutral discovery records for the D23 smart-home runtime.
+//! Discovery records and mDNS scan helpers for the D23 smart-home runtime.
 //!
 //! Discovery workers can use this crate to normalize LAN, radio, USB, MQTT,
 //! cloud, webhook, manual, or simulator findings before a runtime decides
-//! whether to pair, ignore, or supervise a bridge. The crate deliberately
-//! performs no I/O.
+//! whether to pair, ignore, or supervise a bridge. Most helpers are pure data
+//! shaping; the mDNS scan functions use `udp-client` for bounded datagram I/O
+//! while leaving vendor-specific interpretation to integration crates.
 
 #![forbid(unsafe_code)]
 
@@ -12,7 +13,8 @@ use smart_home_core::{
     ProtocolIdentifier,
 };
 use smart_home_integration_catalog::{AuthMode, DiscoveryMechanism, IntegrationCatalogEntry};
-use std::{cmp::Ordering, collections::BTreeMap, fmt};
+use std::{cmp::Ordering, collections::BTreeMap, fmt, net::Ipv6Addr, time::Duration};
+use udp_client::{send_to_and_collect, UdpDiscoveryEndpoint, UdpOptions};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DiscoveryError {
@@ -21,6 +23,16 @@ pub enum DiscoveryError {
     },
     DuplicateTxtKey {
         key: String,
+    },
+    InvalidMdnsMessage {
+        message: String,
+    },
+    InvalidMdnsScanOption {
+        field: &'static str,
+        message: String,
+    },
+    MdnsTransport {
+        message: String,
     },
     WorkerIntegrationMismatch {
         worker_integration_id: String,
@@ -35,6 +47,13 @@ impl fmt::Display for DiscoveryError {
             Self::DuplicateTxtKey { key } => {
                 write!(f, "mDNS TXT key `{key}` appears more than once")
             }
+            Self::InvalidMdnsMessage { message } => {
+                write!(f, "invalid mDNS message: {message}")
+            }
+            Self::InvalidMdnsScanOption { field, message } => {
+                write!(f, "invalid mDNS scan option `{field}`: {message}")
+            }
+            Self::MdnsTransport { message } => write!(f, "mDNS transport failed: {message}"),
             Self::WorkerIntegrationMismatch {
                 worker_integration_id,
                 record_integration_id,
@@ -1315,6 +1334,239 @@ impl ManualBridgeInput {
     }
 }
 
+pub const MDNS_DNS_CLASS_IN: u16 = 1;
+pub const MDNS_DNS_TYPE_A: u16 = 1;
+pub const MDNS_DNS_TYPE_PTR: u16 = 12;
+pub const MDNS_DNS_TYPE_TXT: u16 = 16;
+pub const MDNS_DNS_TYPE_AAAA: u16 = 28;
+pub const MDNS_DNS_TYPE_SRV: u16 = 33;
+pub const MDNS_DEFAULT_MAX_DATAGRAM_SIZE: usize = 1500;
+pub const MDNS_DEFAULT_MAX_RESPONSES: usize = 32;
+pub const MDNS_UNICAST_RESPONSE_CLASS_BIT: u16 = 0x8000;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsQuestion {
+    pub service_type: String,
+    pub unicast_response: bool,
+}
+
+impl MdnsQuestion {
+    pub fn new(service_type: impl Into<String>) -> Result<Self, DiscoveryError> {
+        Ok(Self {
+            service_type: non_empty("mdns.service_type", service_type)?,
+            unicast_response: true,
+        })
+    }
+
+    pub fn multicast_response(mut self) -> Self {
+        self.unicast_response = false;
+        self
+    }
+
+    pub fn to_query_packet(&self) -> Result<Vec<u8>, DiscoveryError> {
+        let mut packet = Vec::new();
+        packet.extend_from_slice(&0u16.to_be_bytes());
+        packet.extend_from_slice(&0u16.to_be_bytes());
+        packet.extend_from_slice(&1u16.to_be_bytes());
+        packet.extend_from_slice(&0u16.to_be_bytes());
+        packet.extend_from_slice(&0u16.to_be_bytes());
+        packet.extend_from_slice(&0u16.to_be_bytes());
+        encode_dns_name(&self.service_type, &mut packet)?;
+        packet.extend_from_slice(&MDNS_DNS_TYPE_PTR.to_be_bytes());
+        let class = if self.unicast_response {
+            MDNS_DNS_CLASS_IN | MDNS_UNICAST_RESPONSE_CLASS_BIT
+        } else {
+            MDNS_DNS_CLASS_IN
+        };
+        packet.extend_from_slice(&class.to_be_bytes());
+        Ok(packet)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsResponsePacket {
+    pub source: Option<String>,
+    pub payload: Vec<u8>,
+}
+
+impl MdnsResponsePacket {
+    pub fn new(payload: impl Into<Vec<u8>>) -> Self {
+        Self {
+            source: None,
+            payload: payload.into(),
+        }
+    }
+
+    pub fn with_source(mut self, source: impl Into<String>) -> Self {
+        self.source = Some(source.into());
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsScanFailure {
+    pub source: Option<String>,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsScanResult {
+    pub service_type: String,
+    pub discovered_at_ms: u64,
+    pub datagram_count: usize,
+    pub advertisements: Vec<MdnsAdvertisement>,
+    pub failures: Vec<MdnsScanFailure>,
+}
+
+impl MdnsScanResult {
+    pub fn from_packets(
+        service_type: impl Into<String>,
+        discovered_at_ms: u64,
+        packets: impl IntoIterator<Item = MdnsResponsePacket>,
+    ) -> Result<Self, DiscoveryError> {
+        let service_type = non_empty("mdns.service_type", service_type)?;
+        let mut result = Self {
+            service_type: service_type.clone(),
+            discovered_at_ms,
+            datagram_count: 0,
+            advertisements: Vec::new(),
+            failures: Vec::new(),
+        };
+
+        for packet in packets {
+            result.datagram_count += 1;
+            match mdns_advertisements_from_response(
+                &packet.payload,
+                &service_type,
+                discovered_at_ms,
+            ) {
+                Ok(mut advertisements) => result.advertisements.append(&mut advertisements),
+                Err(error) => result.failures.push(MdnsScanFailure {
+                    source: packet.source,
+                    message: error.to_string(),
+                }),
+            }
+        }
+
+        Ok(result)
+    }
+
+    pub fn len(&self) -> usize {
+        self.advertisements.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.advertisements.is_empty()
+    }
+
+    pub fn failure_count(&self) -> usize {
+        self.failures.len()
+    }
+
+    pub fn has_failures(&self) -> bool {
+        !self.failures.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MdnsScanOptions {
+    pub service_type: String,
+    pub discovered_at_ms: u64,
+    pub timeout: Duration,
+    pub max_responses: usize,
+    pub max_datagram_size: usize,
+    pub unicast_response: bool,
+}
+
+impl MdnsScanOptions {
+    pub fn new(
+        service_type: impl Into<String>,
+        discovered_at_ms: u64,
+        timeout: Duration,
+    ) -> Result<Self, DiscoveryError> {
+        Ok(Self {
+            service_type: non_empty("mdns.service_type", service_type)?,
+            discovered_at_ms,
+            timeout,
+            max_responses: MDNS_DEFAULT_MAX_RESPONSES,
+            max_datagram_size: MDNS_DEFAULT_MAX_DATAGRAM_SIZE,
+            unicast_response: true,
+        })
+    }
+
+    pub fn with_max_responses(mut self, max_responses: usize) -> Self {
+        self.max_responses = max_responses;
+        self
+    }
+
+    pub fn with_max_datagram_size(mut self, max_datagram_size: usize) -> Self {
+        self.max_datagram_size = max_datagram_size;
+        self
+    }
+
+    pub fn multicast_response(mut self) -> Self {
+        self.unicast_response = false;
+        self
+    }
+
+    pub fn query_packet(&self) -> Result<Vec<u8>, DiscoveryError> {
+        let mut question = MdnsQuestion::new(self.service_type.clone())?;
+        if !self.unicast_response {
+            question = question.multicast_response();
+        }
+        question.to_query_packet()
+    }
+}
+
+pub fn run_mdns_ipv4_scan(options: MdnsScanOptions) -> Result<MdnsScanResult, DiscoveryError> {
+    validate_mdns_scan_options(&options)?;
+    let endpoint = UdpDiscoveryEndpoint::mdns_ipv4();
+    let query = options.query_packet()?;
+    let udp_options = endpoint.options(
+        options.max_datagram_size,
+        Some(options.timeout),
+        Some(options.timeout),
+    );
+    let datagrams = send_to_and_collect(
+        endpoint.destination,
+        &query,
+        udp_options,
+        options.max_responses,
+    )
+    .map_err(|error| DiscoveryError::MdnsTransport {
+        message: error.to_string(),
+    })?;
+    let packets = datagrams.into_iter().map(|datagram| {
+        MdnsResponsePacket::new(datagram.payload).with_source(datagram.source.to_string())
+    });
+    MdnsScanResult::from_packets(options.service_type, options.discovered_at_ms, packets)
+}
+
+pub fn run_mdns_ipv6_scan(options: MdnsScanOptions) -> Result<MdnsScanResult, DiscoveryError> {
+    validate_mdns_scan_options(&options)?;
+    let endpoint = UdpDiscoveryEndpoint::mdns_ipv6();
+    let query = options.query_packet()?;
+    let udp_options = UdpOptions {
+        bind_addr: Some(endpoint.bind_addr()),
+        max_datagram_size: options.max_datagram_size,
+        read_timeout: Some(options.timeout),
+        write_timeout: Some(options.timeout),
+    };
+    let datagrams = send_to_and_collect(
+        endpoint.destination,
+        &query,
+        udp_options,
+        options.max_responses,
+    )
+    .map_err(|error| DiscoveryError::MdnsTransport {
+        message: error.to_string(),
+    })?;
+    let packets = datagrams.into_iter().map(|datagram| {
+        MdnsResponsePacket::new(datagram.payload).with_source(datagram.source.to_string())
+    });
+    MdnsScanResult::from_packets(options.service_type, options.discovered_at_ms, packets)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MdnsTxtEntry {
     pub key: String,
@@ -1729,6 +1981,341 @@ fn discovery_mechanism_name(mechanism: DiscoveryMechanism) -> &'static str {
     }
 }
 
+fn validate_mdns_scan_options(options: &MdnsScanOptions) -> Result<(), DiscoveryError> {
+    if options.timeout.is_zero() {
+        return Err(DiscoveryError::InvalidMdnsScanOption {
+            field: "timeout",
+            message: "must be greater than zero".to_string(),
+        });
+    }
+    if options.max_responses == 0 {
+        return Err(DiscoveryError::InvalidMdnsScanOption {
+            field: "max_responses",
+            message: "must be greater than zero".to_string(),
+        });
+    }
+    if options.max_datagram_size == 0 {
+        return Err(DiscoveryError::InvalidMdnsScanOption {
+            field: "max_datagram_size",
+            message: "must be greater than zero".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn encode_dns_name(name: &str, packet: &mut Vec<u8>) -> Result<(), DiscoveryError> {
+    let name = name.trim().trim_end_matches('.');
+    if name.is_empty() {
+        return Err(DiscoveryError::EmptyField { field: "dns.name" });
+    }
+    for label in name.split('.') {
+        if label.is_empty() {
+            return Err(DiscoveryError::InvalidMdnsMessage {
+                message: format!("DNS name `{name}` contains an empty label"),
+            });
+        }
+        if label.len() > 63 {
+            return Err(DiscoveryError::InvalidMdnsMessage {
+                message: format!("DNS label `{label}` is longer than 63 bytes"),
+            });
+        }
+        packet.push(label.len() as u8);
+        packet.extend_from_slice(label.as_bytes());
+    }
+    packet.push(0);
+    Ok(())
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct ParsedDnsRecord {
+    name: String,
+    record_type: u16,
+    data: ParsedDnsRecordData,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum ParsedDnsRecordData {
+    Ptr(String),
+    Srv { port: u16, target: String },
+    Txt(Vec<MdnsTxtEntry>),
+    Address(String),
+    Ignored,
+}
+
+fn mdns_advertisements_from_response(
+    packet: &[u8],
+    service_type: &str,
+    discovered_at_ms: u64,
+) -> Result<Vec<MdnsAdvertisement>, DiscoveryError> {
+    let records = parse_dns_records(packet)?;
+    let service_key = normalize_dns_name(service_type);
+    let mut ptr_instances = Vec::new();
+    let mut srv_by_instance = BTreeMap::<String, (u16, String)>::new();
+    let mut txt_by_instance = BTreeMap::<String, Vec<MdnsTxtEntry>>::new();
+    let mut addresses_by_host = BTreeMap::<String, Vec<String>>::new();
+
+    for record in records {
+        match record.data {
+            ParsedDnsRecordData::Ptr(instance_name)
+                if normalize_dns_name(&record.name) == service_key =>
+            {
+                ptr_instances.push(instance_name);
+            }
+            ParsedDnsRecordData::Srv { port, target } => {
+                srv_by_instance.insert(normalize_dns_name(&record.name), (port, target));
+            }
+            ParsedDnsRecordData::Txt(txt) => {
+                txt_by_instance.insert(normalize_dns_name(&record.name), txt);
+            }
+            ParsedDnsRecordData::Address(address) => {
+                addresses_by_host
+                    .entry(normalize_dns_name(&record.name))
+                    .or_default()
+                    .push(address);
+            }
+            ParsedDnsRecordData::Ptr(_) | ParsedDnsRecordData::Ignored => {}
+        }
+    }
+
+    let mut advertisements = Vec::new();
+    for instance_fqdn in ptr_instances {
+        let instance_key = normalize_dns_name(&instance_fqdn);
+        let (port, host_name) = srv_by_instance
+            .get(&instance_key)
+            .cloned()
+            .unwrap_or_else(|| (0, instance_fqdn.clone()));
+        let txt = txt_by_instance.remove(&instance_key).unwrap_or_default();
+        let addresses = addresses_by_host
+            .get(&normalize_dns_name(&host_name))
+            .cloned()
+            .unwrap_or_default();
+        let mut advertisement = MdnsAdvertisement::new(
+            service_type.to_string(),
+            mdns_instance_display_name(&instance_fqdn, service_type),
+            trim_trailing_dot(&host_name),
+            port,
+            discovered_at_ms,
+        )?;
+        for address in addresses {
+            advertisement = advertisement.with_address(address)?;
+        }
+        for entry in txt {
+            advertisement = advertisement.with_txt(entry.key, entry.value)?;
+        }
+        advertisements.push(advertisement);
+    }
+
+    Ok(advertisements)
+}
+
+fn parse_dns_records(packet: &[u8]) -> Result<Vec<ParsedDnsRecord>, DiscoveryError> {
+    if packet.len() < 12 {
+        return Err(invalid_mdns_message("DNS header is shorter than 12 bytes"));
+    }
+
+    let question_count = read_u16(packet, 4)? as usize;
+    let answer_count = read_u16(packet, 6)? as usize;
+    let authority_count = read_u16(packet, 8)? as usize;
+    let additional_count = read_u16(packet, 10)? as usize;
+    let mut offset = 12;
+
+    for _ in 0..question_count {
+        let (_, next_offset) = parse_dns_name(packet, offset)?;
+        offset = next_offset;
+        offset = offset
+            .checked_add(4)
+            .filter(|next| *next <= packet.len())
+            .ok_or_else(|| invalid_mdns_message("question extends beyond packet"))?;
+    }
+
+    let record_count = answer_count
+        .checked_add(authority_count)
+        .and_then(|count| count.checked_add(additional_count))
+        .ok_or_else(|| invalid_mdns_message("record count overflow"))?;
+    let mut records = Vec::new();
+    for _ in 0..record_count {
+        let (name, next_offset) = parse_dns_name(packet, offset)?;
+        offset = next_offset;
+        let record_type = read_u16(packet, offset)?;
+        let _class = read_u16(packet, offset + 2)?;
+        let _ttl = read_u32(packet, offset + 4)?;
+        let data_len = read_u16(packet, offset + 8)? as usize;
+        let data_offset = offset + 10;
+        let data_end = data_offset
+            .checked_add(data_len)
+            .filter(|end| *end <= packet.len())
+            .ok_or_else(|| invalid_mdns_message("record data extends beyond packet"))?;
+        let data = parse_dns_record_data(packet, record_type, data_offset, data_end)?;
+        records.push(ParsedDnsRecord {
+            name,
+            record_type,
+            data,
+        });
+        offset = data_end;
+    }
+    Ok(records)
+}
+
+fn parse_dns_record_data(
+    packet: &[u8],
+    record_type: u16,
+    data_offset: usize,
+    data_end: usize,
+) -> Result<ParsedDnsRecordData, DiscoveryError> {
+    match record_type {
+        MDNS_DNS_TYPE_PTR => {
+            let (name, _) = parse_dns_name(packet, data_offset)?;
+            Ok(ParsedDnsRecordData::Ptr(name))
+        }
+        MDNS_DNS_TYPE_SRV => {
+            if data_end.saturating_sub(data_offset) < 7 {
+                return Err(invalid_mdns_message("SRV record is too short"));
+            }
+            let port = read_u16(packet, data_offset + 4)?;
+            let (target, _) = parse_dns_name(packet, data_offset + 6)?;
+            Ok(ParsedDnsRecordData::Srv { port, target })
+        }
+        MDNS_DNS_TYPE_TXT => parse_txt_record(packet, data_offset, data_end),
+        MDNS_DNS_TYPE_A => {
+            if data_end.saturating_sub(data_offset) != 4 {
+                return Err(invalid_mdns_message("A record must be exactly 4 bytes"));
+            }
+            Ok(ParsedDnsRecordData::Address(format!(
+                "{}.{}.{}.{}",
+                packet[data_offset],
+                packet[data_offset + 1],
+                packet[data_offset + 2],
+                packet[data_offset + 3]
+            )))
+        }
+        MDNS_DNS_TYPE_AAAA => {
+            if data_end.saturating_sub(data_offset) != 16 {
+                return Err(invalid_mdns_message("AAAA record must be exactly 16 bytes"));
+            }
+            let mut octets = [0u8; 16];
+            octets.copy_from_slice(&packet[data_offset..data_end]);
+            Ok(ParsedDnsRecordData::Address(
+                Ipv6Addr::from(octets).to_string(),
+            ))
+        }
+        _ => Ok(ParsedDnsRecordData::Ignored),
+    }
+}
+
+fn parse_txt_record(
+    packet: &[u8],
+    mut offset: usize,
+    data_end: usize,
+) -> Result<ParsedDnsRecordData, DiscoveryError> {
+    let mut entries = Vec::new();
+    while offset < data_end {
+        let len = packet[offset] as usize;
+        offset += 1;
+        let entry_end = offset
+            .checked_add(len)
+            .filter(|end| *end <= data_end)
+            .ok_or_else(|| invalid_mdns_message("TXT entry extends beyond record"))?;
+        if len > 0 {
+            let entry = String::from_utf8_lossy(&packet[offset..entry_end]).to_string();
+            let (key, value) = entry.split_once('=').unwrap_or((entry.as_str(), ""));
+            entries.push(MdnsTxtEntry::new(key, value)?);
+        }
+        offset = entry_end;
+    }
+    Ok(ParsedDnsRecordData::Txt(entries))
+}
+
+fn parse_dns_name(packet: &[u8], offset: usize) -> Result<(String, usize), DiscoveryError> {
+    let mut labels = Vec::new();
+    let mut cursor = offset;
+    let mut consumed_offset = None;
+    let mut jumps = 0usize;
+
+    loop {
+        if cursor >= packet.len() {
+            return Err(invalid_mdns_message("DNS name extends beyond packet"));
+        }
+        let len = packet[cursor];
+        if len & 0xC0 == 0xC0 {
+            if cursor + 1 >= packet.len() {
+                return Err(invalid_mdns_message(
+                    "compressed DNS name pointer is truncated",
+                ));
+            }
+            let pointer = (((len as usize & 0x3F) << 8) | packet[cursor + 1] as usize) as usize;
+            if pointer >= packet.len() {
+                return Err(invalid_mdns_message(
+                    "compressed DNS name pointer is out of range",
+                ));
+            }
+            consumed_offset.get_or_insert(cursor + 2);
+            cursor = pointer;
+            jumps += 1;
+            if jumps > 16 {
+                return Err(invalid_mdns_message("compressed DNS name pointer loop"));
+            }
+            continue;
+        }
+        if len & 0xC0 != 0 {
+            return Err(invalid_mdns_message("unsupported DNS name label encoding"));
+        }
+        cursor += 1;
+        if len == 0 {
+            let next_offset = consumed_offset.unwrap_or(cursor);
+            return Ok((labels.join("."), next_offset));
+        }
+        let label_len = len as usize;
+        let label_end = cursor
+            .checked_add(label_len)
+            .filter(|end| *end <= packet.len())
+            .ok_or_else(|| invalid_mdns_message("DNS label extends beyond packet"))?;
+        labels.push(String::from_utf8_lossy(&packet[cursor..label_end]).to_string());
+        cursor = label_end;
+    }
+}
+
+fn read_u16(packet: &[u8], offset: usize) -> Result<u16, DiscoveryError> {
+    let bytes = packet
+        .get(offset..offset + 2)
+        .ok_or_else(|| invalid_mdns_message("expected u16 beyond packet"))?;
+    Ok(u16::from_be_bytes([bytes[0], bytes[1]]))
+}
+
+fn read_u32(packet: &[u8], offset: usize) -> Result<u32, DiscoveryError> {
+    let bytes = packet
+        .get(offset..offset + 4)
+        .ok_or_else(|| invalid_mdns_message("expected u32 beyond packet"))?;
+    Ok(u32::from_be_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+}
+
+fn mdns_instance_display_name(instance_fqdn: &str, service_type: &str) -> String {
+    let instance = trim_trailing_dot(instance_fqdn);
+    let service = trim_trailing_dot(service_type);
+    let suffix = format!(".{service}");
+    if instance
+        .to_ascii_lowercase()
+        .ends_with(&suffix.to_ascii_lowercase())
+    {
+        instance[..instance.len().saturating_sub(suffix.len())].to_string()
+    } else {
+        instance.to_string()
+    }
+}
+
+fn normalize_dns_name(name: &str) -> String {
+    trim_trailing_dot(name).to_ascii_lowercase()
+}
+
+fn trim_trailing_dot(name: &str) -> String {
+    name.trim().trim_end_matches('.').to_string()
+}
+
+fn invalid_mdns_message(message: impl Into<String>) -> DiscoveryError {
+    DiscoveryError::InvalidMdnsMessage {
+        message: message.into(),
+    }
+}
+
 fn non_empty(field: &'static str, value: impl Into<String>) -> Result<String, DiscoveryError> {
     let value = value.into();
     if value.trim().is_empty() {
@@ -2108,6 +2695,118 @@ mod tests {
             error,
             DiscoveryError::DuplicateTxtKey {
                 key: "bridgeid".to_string()
+            }
+        );
+    }
+
+    #[test]
+    fn mdns_questions_build_ptr_queries_with_unicast_response_class() {
+        let query = MdnsQuestion::new("_hue._tcp.local")
+            .unwrap()
+            .to_query_packet()
+            .unwrap();
+
+        assert_eq!(&query[0..2], &[0, 0]);
+        assert_eq!(&query[4..6], &[0, 1]);
+        assert!(query.windows(4).any(|window| window == b"_hue"));
+        assert_eq!(
+            &query[query.len() - 4..],
+            &[
+                (MDNS_DNS_TYPE_PTR >> 8) as u8,
+                MDNS_DNS_TYPE_PTR as u8,
+                ((MDNS_DNS_CLASS_IN | MDNS_UNICAST_RESPONSE_CLASS_BIT) >> 8) as u8,
+                (MDNS_DNS_CLASS_IN | MDNS_UNICAST_RESPONSE_CLASS_BIT) as u8,
+            ]
+        );
+
+        let multicast_query = MdnsQuestion::new("_hue._tcp.local")
+            .unwrap()
+            .multicast_response()
+            .to_query_packet()
+            .unwrap();
+        assert_eq!(
+            &multicast_query[multicast_query.len() - 2..],
+            &[(MDNS_DNS_CLASS_IN >> 8) as u8, MDNS_DNS_CLASS_IN as u8]
+        );
+    }
+
+    #[test]
+    fn mdns_scan_result_parses_dns_sd_hue_advertisements_with_compression() {
+        let packet = hue_mdns_response_packet();
+        let result = MdnsScanResult::from_packets(
+            "_hue._tcp.local",
+            5_000,
+            [MdnsResponsePacket::new(packet).with_source("192.0.2.10:5353")],
+        )
+        .unwrap();
+
+        assert_eq!(result.datagram_count, 1);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result.failure_count(), 0);
+
+        let advertisement = &result.advertisements[0];
+        assert_eq!(advertisement.service_type, "_hue._tcp.local");
+        assert_eq!(advertisement.instance_name, "Living Room Hue");
+        assert_eq!(advertisement.host_name, "hue-bridge.local");
+        assert_eq!(advertisement.port, 443);
+        assert_eq!(advertisement.addresses, vec!["192.0.2.10"]);
+        assert_eq!(
+            advertisement.txt_value("bridgeid"),
+            Some("001788fffeabcdef")
+        );
+        assert_eq!(advertisement.txt_value("modelid"), Some("BSB002"));
+        assert_eq!(advertisement.discovered_at_ms, 5_000);
+    }
+
+    #[test]
+    fn mdns_scan_result_preserves_malformed_datagram_failures() {
+        let result = MdnsScanResult::from_packets(
+            "_hue._tcp.local",
+            5_000,
+            [
+                MdnsResponsePacket::new([1, 2, 3]).with_source("192.0.2.20:5353"),
+                MdnsResponsePacket::new(hue_mdns_response_packet()).with_source("192.0.2.10:5353"),
+            ],
+        )
+        .unwrap();
+
+        assert_eq!(result.datagram_count, 2);
+        assert_eq!(result.len(), 1);
+        assert_eq!(result.failure_count(), 1);
+        assert_eq!(
+            result.failures[0].source.as_deref(),
+            Some("192.0.2.20:5353")
+        );
+        assert!(result.failures[0]
+            .message
+            .contains("DNS header is shorter than 12 bytes"));
+    }
+
+    #[test]
+    fn mdns_scan_options_validate_bounded_socket_scans() {
+        let error = run_mdns_ipv4_scan(
+            MdnsScanOptions::new("_hue._tcp.local", 1_000, Duration::ZERO).unwrap(),
+        )
+        .unwrap_err();
+        assert_eq!(
+            error,
+            DiscoveryError::InvalidMdnsScanOption {
+                field: "timeout",
+                message: "must be greater than zero".to_string()
+            }
+        );
+
+        let error = run_mdns_ipv4_scan(
+            MdnsScanOptions::new("_hue._tcp.local", 1_000, Duration::from_millis(1))
+                .unwrap()
+                .with_max_responses(0),
+        )
+        .unwrap_err();
+        assert_eq!(
+            error,
+            DiscoveryError::InvalidMdnsScanOption {
+                field: "max_responses",
+                message: "must be greater than zero".to_string()
             }
         );
     }
@@ -2594,5 +3293,84 @@ mod tests {
         .unwrap_err();
 
         assert_eq!(error, DiscoveryError::EmptyField { field: "address" });
+    }
+
+    fn hue_mdns_response_packet() -> Vec<u8> {
+        let mut packet = Vec::new();
+        push_u16(&mut packet, 0);
+        push_u16(&mut packet, 0x8400);
+        push_u16(&mut packet, 0);
+        push_u16(&mut packet, 1);
+        push_u16(&mut packet, 0);
+        push_u16(&mut packet, 3);
+
+        let service_offset = packet.len();
+        encode_dns_name("_hue._tcp.local", &mut packet).unwrap();
+        push_record_fixed_header(&mut packet, MDNS_DNS_TYPE_PTR, 120);
+        let ptr_len_offset = reserve_rdlength(&mut packet);
+        let instance_offset = packet.len();
+        encode_dns_name("Living Room Hue._hue._tcp.local", &mut packet).unwrap();
+        fill_rdlength(&mut packet, ptr_len_offset);
+
+        push_name_pointer(&mut packet, instance_offset);
+        push_record_fixed_header(&mut packet, MDNS_DNS_TYPE_SRV, 120);
+        let srv_len_offset = reserve_rdlength(&mut packet);
+        push_u16(&mut packet, 0);
+        push_u16(&mut packet, 0);
+        push_u16(&mut packet, 443);
+        let host_offset = packet.len();
+        encode_dns_name("hue-bridge.local", &mut packet).unwrap();
+        fill_rdlength(&mut packet, srv_len_offset);
+
+        push_name_pointer(&mut packet, instance_offset);
+        push_record_fixed_header(&mut packet, MDNS_DNS_TYPE_TXT, 120);
+        let txt_len_offset = reserve_rdlength(&mut packet);
+        push_txt_entry(&mut packet, "bridgeid", "001788fffeabcdef");
+        push_txt_entry(&mut packet, "modelid", "BSB002");
+        fill_rdlength(&mut packet, txt_len_offset);
+
+        push_name_pointer(&mut packet, host_offset);
+        push_record_fixed_header(&mut packet, MDNS_DNS_TYPE_A, 120);
+        let a_len_offset = reserve_rdlength(&mut packet);
+        packet.extend_from_slice(&[192, 0, 2, 10]);
+        fill_rdlength(&mut packet, a_len_offset);
+
+        assert_eq!(service_offset, 12);
+        packet
+    }
+
+    fn push_record_fixed_header(packet: &mut Vec<u8>, record_type: u16, ttl: u32) {
+        push_u16(packet, record_type);
+        push_u16(packet, MDNS_DNS_CLASS_IN);
+        packet.extend_from_slice(&ttl.to_be_bytes());
+    }
+
+    fn reserve_rdlength(packet: &mut Vec<u8>) -> usize {
+        let offset = packet.len();
+        push_u16(packet, 0);
+        offset
+    }
+
+    fn fill_rdlength(packet: &mut [u8], len_offset: usize) {
+        let data_start = len_offset + 2;
+        let len = packet.len() - data_start;
+        packet[len_offset..len_offset + 2].copy_from_slice(&(len as u16).to_be_bytes());
+    }
+
+    fn push_name_pointer(packet: &mut Vec<u8>, offset: usize) {
+        assert!(offset <= 0x3FFF);
+        let pointer = 0xC000 | offset as u16;
+        push_u16(packet, pointer);
+    }
+
+    fn push_txt_entry(packet: &mut Vec<u8>, key: &str, value: &str) {
+        let entry = format!("{key}={value}");
+        assert!(entry.len() <= u8::MAX as usize);
+        packet.push(entry.len() as u8);
+        packet.extend_from_slice(entry.as_bytes());
+    }
+
+    fn push_u16(packet: &mut Vec<u8>, value: u16) {
+        packet.extend_from_slice(&value.to_be_bytes());
     }
 }

@@ -1,11 +1,16 @@
 # smart-home-discovery
 
-Pure discovery-record primitives for the D23 smart-home runtime.
+Discovery-record and mDNS scan primitives for the D23 smart-home runtime.
 
-This crate does not open sockets, send mDNS packets, call vendor cloud APIs, or
-write credentials. It gives discovery workers a shared shape for:
+Most of this crate is transport-neutral record shaping. Its LAN mDNS helpers use
+`udp-client` for bounded datagram collection, but still keep vendor-specific
+normalization, cloud APIs, credential storage, and actor supervision outside
+this package. It gives discovery workers a shared shape for:
 
 - mDNS/SSDP/BLE/USB/DHCP/MQTT/webhook/cloud/manual discovery sources
+- bounded IPv4/IPv6 mDNS scans that send PTR questions and collect replies
+- mDNS/DNS-SD PTR/SRV/TXT/A/AAAA response parsing into advertisements
+- per-datagram scan failures for malformed mDNS responses
 - bridge candidate records with stable integration/native identifiers
 - stable discovery fingerprints and freshness signals for supervisor loops
 - confidence, pairing requirement, interface, and expiry metadata for repeated
@@ -32,13 +37,14 @@ write credentials. It gives discovery workers a shared shape for:
 - freshness filtering for supervisor/discovery loops
 - projection into unpaired `smart-home-core::Bridge` records
 
-Network transports, Hue-specific discovery, Vault credential storage, and actor
-supervision live in later integration/runtime crates.
+Hue-specific discovery, Vault credential storage, and actor supervision live in
+later integration/runtime crates.
 
 ## Dependencies
 
 - smart-home-core
 - smart-home-integration-catalog
+- udp-client
 
 ## Development
 

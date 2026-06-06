@@ -36,6 +36,8 @@ packages a typed surface for:
   `DiscoveryRecord` bridge candidates
 - Hue discovery worker runs that bundle mDNS/cloud observations, per-source
   failures, and generic D23 worker metadata for runtime catalog ingest
+- Hue discovery worker runs from generic mDNS scan results, preserving
+  malformed datagram failures alongside valid bridge advertisements
 - discovery-record-to-pairing-plan handoff for local physical-presence Hue
   pairing flows
 - integration descriptor metadata for Chief of Staff discovery
