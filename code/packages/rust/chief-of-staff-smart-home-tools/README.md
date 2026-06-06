@@ -7,10 +7,12 @@ The crate is intentionally a thin adapter:
 
 - it publishes `smart_home.*` D18D tool definitions
 - it registers in-process handlers on `InMemoryToolRuntime`
-- handlers translate JSON arguments into `SmartHomeRuntime` read and command
+- handlers translate JSON arguments into `SmartHomeRuntime` read, subscribe,
+  pair, and command
   requests
 - `SmartHomeRuntime` still owns smart-home authorization, command validation,
-  optimistic state, supervision, and audit decisions
+  event subscriptions, pairing sessions, optimistic state, supervision, and
+  audit decisions
 - D18D still owns tool validation, policy decisions, event streams, terminal
   results, and execution journals
 
@@ -31,7 +33,11 @@ Chief of Staff job/session/agent
 - `smart_home.list_bridges`
 - `smart_home.list_devices`
 - `smart_home.get_state`
+- `smart_home.describe_capabilities`
+- `smart_home.get_health`
 - `smart_home.command`
+- `smart_home.subscribe`
+- `smart_home.pair_bridge`
 - `smart_home.observe_supervision`
 
 ## Development

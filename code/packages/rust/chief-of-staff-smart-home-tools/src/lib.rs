@@ -16,10 +16,13 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus, CommandType,
-    Device, EntityId, Health, StateConfidence, StateSnapshot, StateSource, Value,
+    Device, EntityId, Health, Metadata, StateConfidence, StateSnapshot, StateSource, Value,
 };
 use smart_home_runtime::{
-    RuntimeCommandToolRequest, RuntimeError, RuntimeReadToolOutput, RuntimeReadToolRequest,
+    PairingSessionStatus, RuntimeCommandToolRequest, RuntimeError, RuntimeEventCheckpoint,
+    RuntimeEventFilter, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
+    RuntimePairingSession, RuntimePairingSessionId, RuntimeReadToolOutput, RuntimeReadToolRequest,
+    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionId,
     SmartHomeRuntime,
 };
 use std::cell::RefCell;
@@ -29,6 +32,10 @@ pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
 pub const SMART_HOME_COMMAND_TOOL_ID: &str = "smart_home.command";
+pub const SMART_HOME_SUBSCRIBE_TOOL_ID: &str = "smart_home.subscribe";
+pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
+pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
+pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
 pub const SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID: &str = "smart_home.observe_supervision";
 
 /// Shared, mutable smart-home runtime handle for in-process D18D handlers.
@@ -111,6 +118,32 @@ impl SmartHomeToolBridge {
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "get_state"))
                 }
+                SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID => {
+                    let entity_id = required_string(&arguments, "entity_id")?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::DescribeCapabilities {
+                                entity_id: EntityId::trusted(entity_id),
+                            },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "describe_capabilities"))
+                }
+                SMART_HOME_GET_HEALTH_TOOL_ID => {
+                    let bridge_id = optional_string(&arguments, "bridge_id")?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetHealth {
+                                bridge_id: bridge_id.map(BridgeId::trusted),
+                            },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_health"))
+                }
                 SMART_HOME_COMMAND_TOOL_ID => {
                     let request = command_request(&arguments)?;
                     let result = runtime
@@ -126,6 +159,20 @@ impl SmartHomeToolBridge {
                             ]),
                         ),
                     )
+                }
+                SMART_HOME_SUBSCRIBE_TOOL_ID => {
+                    let request = subscribe_request(&arguments)?;
+                    let output = runtime
+                        .execute_subscribe_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(subscribe_output_handler_output(output))
+                }
+                SMART_HOME_PAIR_BRIDGE_TOOL_ID => {
+                    let request = pair_bridge_request(&arguments)?;
+                    let output = runtime
+                        .execute_pair_bridge_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(pair_bridge_output_handler_output(output))
                 }
                 SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -191,7 +238,44 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                 false,
             ),
         ),
+        read_definition(
+            SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID,
+            "Describe smart-home capabilities",
+            "Describe the normalized D23 capabilities exposed by one smart-home entity.",
+            object_schema(
+                vec![SchemaProperty::new("entity_id", JsonSchema::String)],
+                vec!["entity_id"],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("entity_id", JsonSchema::String),
+                    SchemaProperty::new(
+                        "capabilities",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["entity_id", "capabilities", "count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_HEALTH_TOOL_ID,
+            "Get smart-home bridge health",
+            "Read health snapshots for all bridges or one smart-home bridge.",
+            object_schema(
+                vec![SchemaProperty::new("bridge_id", JsonSchema::String)],
+                vec![],
+                false,
+            ),
+            collection_output_schema("bridges"),
+        ),
         command_definition(),
+        subscribe_definition(),
+        pair_bridge_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
             "Observe smart-home supervision",
@@ -254,6 +338,113 @@ fn read_definition(
         preferred_lock_scope: None,
         timeout_seconds: Some(5),
         tags: vec!["smart_home".to_string(), "runtime".to_string()],
+        stability: ToolStability::Experimental,
+    }
+}
+
+fn subscribe_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_SUBSCRIBE_TOOL_ID.to_string(),
+        display_name: "Subscribe to smart-home events".to_string(),
+        description:
+            "Register a checkpointed subscription over normalized D23 smart-home runtime events."
+                .to_string(),
+        input_schema: object_schema(
+            vec![
+                SchemaProperty::new("subscription_id", JsonSchema::String),
+                SchemaProperty::new("filter", JsonSchema::Any),
+                SchemaProperty::new("from_checkpoint", JsonSchema::Integer),
+            ],
+            vec!["subscription_id"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("subscription_id", JsonSchema::String),
+                SchemaProperty::new("replay_from_checkpoint", JsonSchema::Integer),
+                SchemaProperty::new("subscribed_at_checkpoint", JsonSchema::Integer),
+                SchemaProperty::new("queued_events", JsonSchema::Integer),
+            ],
+            vec![
+                "subscription_id",
+                "replay_from_checkpoint",
+                "subscribed_at_checkpoint",
+                "queued_events",
+            ],
+            false,
+        )),
+        side_effects: ToolSideEffects::Read,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Safe,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier0,
+        required_capabilities: vec!["smart_home:read".to_string()],
+        preferred_lock_scope: None,
+        timeout_seconds: Some(5),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "events".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
+}
+
+fn pair_bridge_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_PAIR_BRIDGE_TOOL_ID.to_string(),
+        display_name: "Pair smart-home bridge".to_string(),
+        description:
+            "Start a D23 bridge-pairing session; secrets remain in the smart-home vault path."
+                .to_string(),
+        input_schema: object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec!["session_id", "bridge_id", "expires_at_ms"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("integration_id", JsonSchema::String),
+                SchemaProperty::new("requested_by", JsonSchema::String),
+                SchemaProperty::new("started_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("vault_ref", JsonSchema::Any),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec![
+                "session_id",
+                "bridge_id",
+                "integration_id",
+                "requested_by",
+                "started_at_ms",
+                "expires_at_ms",
+                "status",
+                "vault_ref",
+                "metadata",
+            ],
+            false,
+        )),
+        side_effects: ToolSideEffects::External,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier2,
+        required_capabilities: vec!["smart_home:pair".to_string()],
+        preferred_lock_scope: Some("smart_home.pairing".to_string()),
+        timeout_seconds: Some(30),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "pairing".to_string(),
+        ],
         stability: ToolStability::Experimental,
     }
 }
@@ -336,6 +527,61 @@ fn command_request(arguments: &JsonValue) -> Result<RuntimeCommandToolRequest, T
         request = request.with_timeout_ms(timeout_ms);
     }
     Ok(request)
+}
+
+fn subscribe_request(arguments: &JsonValue) -> Result<RuntimeSubscribeToolRequest, ToolCallError> {
+    let subscription_id =
+        RuntimeSubscriptionId::trusted(required_string(arguments, "subscription_id")?);
+    let filter = optional_field(arguments, "filter")
+        .map(parse_event_filter)
+        .transpose()?
+        .unwrap_or(RuntimeEventFilter::All);
+    let mut request = RuntimeSubscribeToolRequest::new(subscription_id, filter);
+    if let Some(from_checkpoint) = optional_u64(arguments, "from_checkpoint")? {
+        request =
+            request.with_checkpoint(RuntimeEventCheckpoint::from_next_sequence(from_checkpoint));
+    }
+    Ok(request)
+}
+
+fn pair_bridge_request(
+    arguments: &JsonValue,
+) -> Result<RuntimePairBridgeToolRequest, ToolCallError> {
+    let mut request = RuntimePairBridgeToolRequest::new(
+        RuntimePairingSessionId::trusted(required_string(arguments, "session_id")?),
+        BridgeId::trusted(required_string(arguments, "bridge_id")?),
+        required_u64(arguments, "expires_at_ms")?,
+    );
+    let metadata = optional_metadata(arguments)?;
+    if !metadata.is_empty() {
+        request = request.with_metadata(metadata);
+    }
+    Ok(request)
+}
+
+fn subscribe_output_handler_output(output: RuntimeSubscribeToolOutput) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(subscribe_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("subscribe")),
+            ("subscription_id", string(output.subscription_id.as_str())),
+            ("queued_events", integer(output.queued_events as i64)),
+        ]),
+    )
+}
+
+fn pair_bridge_output_handler_output(output: RuntimePairBridgeToolOutput) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(pair_bridge_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("pair_bridge")),
+            ("session_id", string(output.session.session_id.as_str())),
+            (
+                "status",
+                string(pairing_status_label(output.session.status)),
+            ),
+        ]),
+    )
 }
 
 fn read_output_handler_output(
@@ -452,6 +698,49 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
     }
 }
 
+fn subscribe_output_json(output: &RuntimeSubscribeToolOutput) -> JsonValue {
+    object([
+        ("subscription_id", string(output.subscription_id.as_str())),
+        (
+            "replay_from_checkpoint",
+            integer(output.replay_from_checkpoint.next_sequence() as i64),
+        ),
+        (
+            "subscribed_at_checkpoint",
+            integer(output.subscribed_at_checkpoint.next_sequence() as i64),
+        ),
+        ("queued_events", integer(output.queued_events as i64)),
+    ])
+}
+
+fn pair_bridge_output_json(output: &RuntimePairBridgeToolOutput) -> JsonValue {
+    pairing_session_json(&output.session)
+}
+
+fn pairing_session_json(session: &RuntimePairingSession) -> JsonValue {
+    object([
+        ("session_id", string(session.session_id.as_str())),
+        ("bridge_id", string(session.bridge_id.as_str())),
+        ("integration_id", string(session.integration_id.as_str())),
+        ("requested_by", string(session.requested_by.as_str())),
+        ("started_at_ms", integer(session.started_at_ms as i64)),
+        ("expires_at_ms", integer(session.expires_at_ms as i64)),
+        ("status", string(pairing_status_label(session.status))),
+        (
+            "vault_ref",
+            session
+                .vault_ref
+                .as_ref()
+                .map(|vault_ref| string(vault_ref.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "metadata",
+            JsonValue::Array(session.metadata.iter().map(metadata_json).collect()),
+        ),
+    ])
+}
+
 fn bridge_json(bridge: &Bridge) -> JsonValue {
     object([
         ("bridge_id", string(bridge.bridge_id.as_str())),
@@ -473,6 +762,13 @@ fn bridge_json(bridge: &Bridge) -> JsonValue {
                 .map(|value| integer(value as i64))
                 .unwrap_or(JsonValue::Null),
         ),
+    ])
+}
+
+fn metadata_json(metadata: &Metadata) -> JsonValue {
+    object([
+        ("key", string(&metadata.key)),
+        ("value", string(&metadata.value)),
     ])
 }
 
@@ -617,6 +913,94 @@ fn principal_for_context(
         .unwrap_or_else(|| default_principal_id.clone())
 }
 
+fn parse_event_filter(value: &JsonValue) -> Result<RuntimeEventFilter, ToolCallError> {
+    match value {
+        JsonValue::Null => Ok(RuntimeEventFilter::All),
+        JsonValue::String(label) => parse_event_filter_label(label, None, None),
+        JsonValue::Object(_) => parse_event_filter_object(value),
+        _ => Err(validation_error("filter must be a string or object")),
+    }
+}
+
+fn parse_event_filter_object(value: &JsonValue) -> Result<RuntimeEventFilter, ToolCallError> {
+    reject_unsupported_filter_field(value, "device_id")?;
+    reject_unsupported_filter_field(value, "device_ids")?;
+    reject_unsupported_filter_field(value, "capability_id")?;
+    reject_unsupported_filter_field(value, "capability_ids")?;
+
+    let filter_type = optional_string(value, "filter_type")?
+        .or(optional_string(value, "kind")?)
+        .or(optional_string(value, "type")?);
+    let bridge_id = optional_single_filter_string(value, "bridge_id", "bridge_ids")?;
+    let entity_id = optional_single_filter_string(value, "entity_id", "entity_ids")?;
+
+    if let Some(filter_type) = filter_type {
+        return parse_event_filter_label(&filter_type, bridge_id, entity_id);
+    }
+    if let Some(entity_id) = entity_id {
+        return Ok(RuntimeEventFilter::Entity(EntityId::trusted(entity_id)));
+    }
+    if let Some(bridge_id) = bridge_id {
+        return Ok(RuntimeEventFilter::Bridge(BridgeId::trusted(bridge_id)));
+    }
+    Ok(RuntimeEventFilter::All)
+}
+
+fn parse_event_filter_label(
+    label: &str,
+    bridge_id: Option<String>,
+    entity_id: Option<String>,
+) -> Result<RuntimeEventFilter, ToolCallError> {
+    match label {
+        "all" => Ok(RuntimeEventFilter::All),
+        "bridge" => bridge_id
+            .map(|bridge_id| RuntimeEventFilter::Bridge(BridgeId::trusted(bridge_id)))
+            .ok_or_else(|| validation_error("bridge filter requires bridge_id")),
+        "entity" => entity_id
+            .map(|entity_id| RuntimeEventFilter::Entity(EntityId::trusted(entity_id)))
+            .ok_or_else(|| validation_error("entity filter requires entity_id")),
+        "commands" | "command_results" => Ok(RuntimeEventFilter::Commands),
+        "supervision" => Ok(RuntimeEventFilter::Supervision),
+        _ => Err(validation_error(format!("unknown event filter `{label}`"))),
+    }
+}
+
+fn optional_single_filter_string(
+    value: &JsonValue,
+    singular_field: &str,
+    plural_field: &str,
+) -> Result<Option<String>, ToolCallError> {
+    if let Some(value) = optional_string(value, singular_field)? {
+        return Ok(Some(value));
+    }
+    match optional_field(value, plural_field) {
+        Some(JsonValue::String(value)) => Ok(Some(value.clone())),
+        Some(JsonValue::Array(values)) => match values.as_slice() {
+            [] => Ok(None),
+            [JsonValue::String(value)] => Ok(Some(value.clone())),
+            [_] => Err(validation_error(format!(
+                "{plural_field} must contain string values"
+            ))),
+            _ => Err(validation_error(format!(
+                "{plural_field} supports one value in this runtime slice"
+            ))),
+        },
+        Some(JsonValue::Null) | None => Ok(None),
+        Some(_) => Err(validation_error(format!(
+            "{plural_field} must be a string array"
+        ))),
+    }
+}
+
+fn reject_unsupported_filter_field(value: &JsonValue, field: &str) -> Result<(), ToolCallError> {
+    if optional_field(value, field).is_some() {
+        return Err(validation_error(format!(
+            "{field} filters are not supported by this runtime slice"
+        )));
+    }
+    Ok(())
+}
+
 fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
     match label {
         "turn_on" => Ok(CommandType::TurnOn),
@@ -658,6 +1042,10 @@ fn health_label(health: Health) -> &'static str {
         Health::Unsupported => "unsupported",
         Health::Removed => "removed",
     }
+}
+
+fn pairing_status_label(status: PairingSessionStatus) -> &'static str {
+    status.as_str()
 }
 
 fn command_status_label(status: CommandStatus) -> &'static str {
@@ -731,6 +1119,7 @@ fn runtime_error(error: RuntimeError) -> ToolCallError {
             ToolErrorKind::ToolPermissionDenied
         }
         RuntimeError::DuplicatePairingSession(_)
+        | RuntimeError::DuplicateSubscription(_)
         | RuntimeError::PairingSessionNotPending { .. }
         | RuntimeError::PairingSessionExpired { .. } => ToolErrorKind::ToolConflict,
         _ => ToolErrorKind::ToolExecutionError,
@@ -750,6 +1139,10 @@ fn required_string(value: &JsonValue, field: &str) -> Result<String, ToolCallErr
     }
 }
 
+fn required_u64(value: &JsonValue, field: &str) -> Result<u64, ToolCallError> {
+    optional_u64(value, field)?.ok_or_else(|| validation_error(format!("{field} is required")))
+}
+
 fn optional_string(value: &JsonValue, field: &str) -> Result<Option<String>, ToolCallError> {
     match optional_field(value, field) {
         Some(JsonValue::String(value)) => Ok(Some(value.clone())),
@@ -767,6 +1160,46 @@ fn optional_u64(value: &JsonValue, field: &str) -> Result<Option<u64>, ToolCallE
         Some(_) => Err(validation_error(format!(
             "{field} must be a non-negative integer"
         ))),
+    }
+}
+
+fn optional_metadata(value: &JsonValue) -> Result<Vec<Metadata>, ToolCallError> {
+    match optional_field(value, "metadata") {
+        Some(JsonValue::Object(fields)) => fields
+            .iter()
+            .map(|(key, value)| Ok(Metadata::new(key.clone(), metadata_scalar(value)?)))
+            .collect(),
+        Some(JsonValue::Array(entries)) => {
+            let mut metadata = Vec::new();
+            for entry in entries {
+                metadata.push(metadata_entry(entry)?);
+            }
+            Ok(metadata)
+        }
+        Some(JsonValue::Null) | None => Ok(Vec::new()),
+        Some(_) => Err(validation_error("metadata must be an object or array")),
+    }
+}
+
+fn metadata_entry(value: &JsonValue) -> Result<Metadata, ToolCallError> {
+    Ok(Metadata::new(
+        required_string(value, "key")?,
+        required_string(value, "value")?,
+    ))
+}
+
+fn metadata_scalar(value: &JsonValue) -> Result<String, ToolCallError> {
+    match value {
+        JsonValue::String(value) => Ok(value.clone()),
+        JsonValue::Bool(value) => Ok(value.to_string()),
+        JsonValue::Number(JsonNumber::Integer(value)) => Ok(value.to_string()),
+        JsonValue::Number(JsonNumber::Float(value)) if value.is_finite() => Ok(value.to_string()),
+        JsonValue::Number(JsonNumber::Float(_)) => {
+            Err(validation_error("metadata number must be finite"))
+        }
+        JsonValue::Null | JsonValue::Array(_) | JsonValue::Object(_) => {
+            Err(validation_error("metadata values must be scalar"))
+        }
     }
 }
 
@@ -857,17 +1290,27 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 5);
+        assert_eq!(definitions.len(), 9);
         assert!(export.ok());
         assert!(export.tool_ids().contains(&SMART_HOME_COMMAND_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_PAIR_BRIDGE_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_SUBSCRIBE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            4
+            7
         );
         assert_eq!(
             export
                 .summary
                 .required_capability_count("smart_home:command"),
+            1
+        );
+        assert_eq!(
+            export.summary.required_capability_count("smart_home:pair"),
             1
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
@@ -881,7 +1324,7 @@ mod tests {
             CapabilityGrant::for_all_smart_home(
                 CapabilityGrantId::trusted("grant-smart-home"),
                 AgentId::trusted(AGENT_ID),
-                PrivilegeTier::LowRisk,
+                PrivilegeTier::HumanApproval,
                 "user:test",
                 1_000,
             ),
@@ -903,6 +1346,72 @@ mod tests {
         assert_eq!(
             field(list_trace.result.output.as_ref().unwrap(), "count"),
             Some(&integer(1))
+        );
+
+        let capabilities_request = request(
+            "call-describe-capabilities",
+            SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID,
+            object([("entity_id", string("entity-light-1"))]),
+            1_010,
+        );
+        let capabilities_trace = tool_runtime.invoke_with_events(&capabilities_request);
+        assert!(capabilities_trace.result.ok);
+        assert_eq!(
+            field(capabilities_trace.result.output.as_ref().unwrap(), "count"),
+            Some(&integer(3))
+        );
+
+        let health_request = request(
+            "call-get-health",
+            SMART_HOME_GET_HEALTH_TOOL_ID,
+            object([("bridge_id", string("bridge-1"))]),
+            1_020,
+        );
+        let health_trace = tool_runtime.invoke_with_events(&health_request);
+        assert!(health_trace.result.ok);
+        assert_eq!(
+            field(health_trace.result.output.as_ref().unwrap(), "count"),
+            Some(&integer(1))
+        );
+
+        let subscribe_request = request(
+            "call-subscribe",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("commands")),
+                ("filter", object([("filter_type", string("commands"))])),
+            ]),
+            1_030,
+        );
+        let subscribe_trace = tool_runtime.invoke_with_events(&subscribe_request);
+        assert!(subscribe_trace.result.ok);
+        assert_eq!(
+            field(
+                subscribe_trace.result.output.as_ref().unwrap(),
+                "queued_events"
+            ),
+            Some(&integer(0))
+        );
+
+        let pair_request = request(
+            "call-pair",
+            SMART_HOME_PAIR_BRIDGE_TOOL_ID,
+            object([
+                ("session_id", string("pairing-session-1")),
+                ("bridge_id", string("bridge-1")),
+                ("expires_at_ms", integer(2_000)),
+                (
+                    "metadata",
+                    object([("initiated_by", string("chief-of-staff-test"))]),
+                ),
+            ]),
+            1_040,
+        );
+        let pair_trace = tool_runtime.invoke_with_events(&pair_request);
+        assert!(pair_trace.result.ok);
+        assert_eq!(
+            field(pair_trace.result.output.as_ref().unwrap(), "status"),
+            Some(&string("pending_user_presence"))
         );
 
         let command_request = request(
@@ -939,20 +1448,32 @@ mod tests {
 
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_request, list_trace);
+        journal.record_trace(capabilities_request, capabilities_trace);
+        journal.record_trace(health_request, health_trace);
+        journal.record_trace(subscribe_request, subscribe_trace);
+        journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(state_request, state_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 3);
-        assert_eq!(journal_summary.completed_count, 3);
-        assert_eq!(journal.audit_records().len(), 3);
+        assert_eq!(journal_summary.invocation_count, 7);
+        assert_eq!(journal_summary.completed_count, 7);
+        assert_eq!(journal.audit_records().len(), 7);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
+        assert_eq!(runtime.pairing_session_count(), 1);
+        assert_eq!(
+            runtime
+                .event_bus()
+                .queued_events(&RuntimeSubscriptionId::trusted("commands"))
+                .unwrap(),
+            1
+        );
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            4,
-            "read calls record tool authorization, while command records tool and command authorization"
+            8,
+            "read, subscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }
 
@@ -976,6 +1497,23 @@ mod tests {
         assert!(!denied.ok);
         assert_eq!(
             denied.error.as_ref().map(|error| error.kind),
+            Some(ToolErrorKind::ToolPermissionDenied)
+        );
+
+        let denied_pair = tool_runtime.invoke(&request(
+            "call-pair-denied",
+            SMART_HOME_PAIR_BRIDGE_TOOL_ID,
+            object([
+                ("session_id", string("pairing-session-1")),
+                ("bridge_id", string("bridge-1")),
+                ("expires_at_ms", integer(2_000)),
+            ]),
+            1_000,
+        ));
+
+        assert!(!denied_pair.ok);
+        assert_eq!(
+            denied_pair.error.as_ref().map(|error| error.kind),
             Some(ToolErrorKind::ToolPermissionDenied)
         );
     }
@@ -1004,6 +1542,28 @@ mod tests {
         assert!(!trace.result.ok);
         assert_eq!(
             trace.result.error.as_ref().map(|error| error.kind),
+            Some(ToolErrorKind::ToolValidationError)
+        );
+
+        let unsupported_filter = tool_runtime.invoke_with_events(&request(
+            "call-invalid-subscribe",
+            SMART_HOME_SUBSCRIBE_TOOL_ID,
+            object([
+                ("subscription_id", string("sub-1")),
+                (
+                    "filter",
+                    object([("device_ids", JsonValue::Array(vec![string("device-1")]))]),
+                ),
+            ]),
+            1_000,
+        ));
+        assert!(!unsupported_filter.result.ok);
+        assert_eq!(
+            unsupported_filter
+                .result
+                .error
+                .as_ref()
+                .map(|error| error.kind),
             Some(ToolErrorKind::ToolValidationError)
         );
     }
