@@ -1783,6 +1783,126 @@ impl MdnsWorkerScanReport {
     }
 }
 
+pub trait MdnsWorkerScanExecutor {
+    fn run_request(
+        &mut self,
+        request: &MdnsWorkerScanRequest,
+    ) -> Result<MdnsScanResult, DiscoveryError>;
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct UdpMdnsWorkerScanExecutor;
+
+impl MdnsWorkerScanExecutor for UdpMdnsWorkerScanExecutor {
+    fn run_request(
+        &mut self,
+        request: &MdnsWorkerScanRequest,
+    ) -> Result<MdnsScanResult, DiscoveryError> {
+        run_mdns_worker_scan_request(request)
+    }
+}
+
+pub fn run_mdns_worker_scan_request(
+    request: &MdnsWorkerScanRequest,
+) -> Result<MdnsScanResult, DiscoveryError> {
+    match request.network {
+        MdnsScanNetwork::Ipv4 => run_mdns_ipv4_scan(request.options()?),
+        MdnsScanNetwork::Ipv6 => run_mdns_ipv6_scan(request.options()?),
+    }
+}
+
+pub fn run_mdns_worker_scan_report_with_executor<E>(
+    requests: &[MdnsWorkerScanRequest],
+    started_at_ms: u64,
+    completed_at_ms: u64,
+    executor: &mut E,
+) -> Result<MdnsWorkerScanReport, DiscoveryError>
+where
+    E: MdnsWorkerScanExecutor + ?Sized,
+{
+    let first = requests
+        .first()
+        .ok_or_else(|| DiscoveryError::InvalidMdnsScanOption {
+            field: "requests",
+            message: "must include at least one mDNS scan request".to_string(),
+        })?;
+    let mut report = MdnsWorkerScanReport::new(
+        first.worker_id.clone(),
+        first.integration_id.clone(),
+        first.service_type.clone(),
+        started_at_ms,
+        completed_at_ms,
+    )?;
+
+    for request in requests {
+        report.validate_request(request)?;
+        match executor.run_request(request) {
+            Ok(result) => report.push_success(request.clone(), result)?,
+            Err(error) => report.push_failure(request.clone(), error.to_string())?,
+        }
+    }
+
+    Ok(report)
+}
+
+pub fn run_mdns_worker_scan_report(
+    requests: &[MdnsWorkerScanRequest],
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> Result<MdnsWorkerScanReport, DiscoveryError> {
+    let mut executor = UdpMdnsWorkerScanExecutor;
+    run_mdns_worker_scan_report_with_executor(
+        requests,
+        started_at_ms,
+        completed_at_ms,
+        &mut executor,
+    )
+}
+
+pub fn run_mdns_worker_scan_plan_with_executor<E>(
+    plan: &MdnsWorkerScanPlan,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+    executor: &mut E,
+) -> Result<Vec<MdnsWorkerScanReport>, DiscoveryError>
+where
+    E: MdnsWorkerScanExecutor + ?Sized,
+{
+    let mut groups: Vec<Vec<MdnsWorkerScanRequest>> = Vec::new();
+    'requests: for request in &plan.requests {
+        for group in &mut groups {
+            if group
+                .first()
+                .is_some_and(|existing| mdns_worker_scan_same_scope(existing, request))
+            {
+                group.push(request.clone());
+                continue 'requests;
+            }
+        }
+        groups.push(vec![request.clone()]);
+    }
+
+    let mut reports = Vec::with_capacity(groups.len());
+    for group in groups {
+        reports.push(run_mdns_worker_scan_report_with_executor(
+            &group,
+            started_at_ms,
+            completed_at_ms,
+            executor,
+        )?);
+    }
+    Ok(reports)
+}
+
+pub fn run_mdns_worker_scan_plan(
+    plan: &MdnsWorkerScanPlan,
+    started_at_ms: u64,
+    completed_at_ms: u64,
+) -> Result<Vec<MdnsWorkerScanReport>, DiscoveryError> {
+    let mut executor = UdpMdnsWorkerScanExecutor;
+    run_mdns_worker_scan_plan_with_executor(plan, started_at_ms, completed_at_ms, &mut executor)
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MdnsScanOptions {
     pub service_type: String,
@@ -2318,6 +2438,15 @@ fn validate_mdns_scan_options(options: &MdnsScanOptions) -> Result<(), Discovery
     Ok(())
 }
 
+fn mdns_worker_scan_same_scope(
+    left: &MdnsWorkerScanRequest,
+    right: &MdnsWorkerScanRequest,
+) -> bool {
+    left.worker_id == right.worker_id
+        && left.integration_id == right.integration_id
+        && left.service_type == right.service_type
+}
+
 fn mdns_worker_scan_source(request: &MdnsWorkerScanRequest, source: Option<&str>) -> String {
     match source {
         Some(source) => format!(
@@ -2654,6 +2783,35 @@ fn non_empty(field: &'static str, value: impl Into<String>) -> Result<String, Di
 mod tests {
     use super::*;
     use smart_home_integration_catalog::first_party_catalog;
+
+    #[derive(Debug)]
+    struct ScriptedMdnsWorkerScanExecutor {
+        outcomes: std::collections::VecDeque<Result<MdnsScanResult, DiscoveryError>>,
+        requests: Vec<MdnsWorkerScanRequest>,
+    }
+
+    impl ScriptedMdnsWorkerScanExecutor {
+        fn new(outcomes: impl IntoIterator<Item = Result<MdnsScanResult, DiscoveryError>>) -> Self {
+            Self {
+                outcomes: outcomes.into_iter().collect(),
+                requests: Vec::new(),
+            }
+        }
+    }
+
+    impl MdnsWorkerScanExecutor for ScriptedMdnsWorkerScanExecutor {
+        fn run_request(
+            &mut self,
+            request: &MdnsWorkerScanRequest,
+        ) -> Result<MdnsScanResult, DiscoveryError> {
+            self.requests.push(request.clone());
+            self.outcomes.pop_front().unwrap_or_else(|| {
+                Err(DiscoveryError::MdnsTransport {
+                    message: "missing scripted mDNS outcome".to_string(),
+                })
+            })
+        }
+    }
 
     #[test]
     fn catalog_hints_project_hue_discovery_and_pairing_shape() {
@@ -3250,6 +3408,139 @@ mod tests {
             aggregate.failures[1].message,
             "IPv6 multicast route is unavailable"
         );
+    }
+
+    #[test]
+    fn mdns_worker_scan_report_runner_collects_transport_failures() {
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        let integration_id = IntegrationId::trusted("hue");
+        let ipv4 = MdnsWorkerScanRequest::new(
+            worker_id.clone(),
+            integration_id.clone(),
+            "en0",
+            MdnsScanNetwork::Ipv4,
+            "_hue._tcp.local",
+            5_000,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let ipv6 = MdnsWorkerScanRequest::new(
+            worker_id,
+            integration_id,
+            "en0",
+            MdnsScanNetwork::Ipv6,
+            "_hue._tcp.local",
+            5_000,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let success = MdnsScanResult::from_packets(
+            "_hue._tcp.local",
+            5_000,
+            [MdnsResponsePacket::new(hue_mdns_response_packet()).with_source("192.0.2.10:5353")],
+        )
+        .unwrap();
+        let mut executor = ScriptedMdnsWorkerScanExecutor::new([
+            Ok(success),
+            Err(DiscoveryError::MdnsTransport {
+                message: "IPv6 multicast route is unavailable".to_string(),
+            }),
+        ]);
+
+        let report = run_mdns_worker_scan_report_with_executor(
+            &[ipv4.clone(), ipv6.clone()],
+            4_950,
+            5_050,
+            &mut executor,
+        )
+        .unwrap();
+        let aggregate = report.aggregate_result();
+
+        assert_eq!(executor.requests, vec![ipv4, ipv6]);
+        assert_eq!(report.completed_scan_count(), 1);
+        assert_eq!(report.failed_scan_count(), 1);
+        assert_eq!(report.datagram_count(), 1);
+        assert_eq!(report.advertisement_count(), 1);
+        assert_eq!(aggregate.failure_count(), 1);
+        assert_eq!(aggregate.failures[0].source.as_deref(), Some("en0/ipv6"));
+        assert_eq!(
+            aggregate.failures[0].message,
+            "mDNS transport failed: IPv6 multicast route is unavailable"
+        );
+    }
+
+    #[test]
+    fn mdns_worker_scan_plan_runner_groups_reports_by_worker_scope() {
+        let hue_worker_id = DiscoveryWorkerId::trusted("hue-mdns-worker");
+        let hue_integration_id = IntegrationId::trusted("hue");
+        let matter_worker_id = DiscoveryWorkerId::trusted("matter-mdns-worker");
+        let matter_integration_id = IntegrationId::trusted("matter");
+        let hue_ipv4 = MdnsWorkerScanRequest::new(
+            hue_worker_id.clone(),
+            hue_integration_id.clone(),
+            "en0",
+            MdnsScanNetwork::Ipv4,
+            "_hue._tcp.local",
+            5_000,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let matter_ipv4 = MdnsWorkerScanRequest::new(
+            matter_worker_id.clone(),
+            matter_integration_id,
+            "bridge0",
+            MdnsScanNetwork::Ipv4,
+            "_matter._tcp.local",
+            5_000,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let hue_ipv6 = MdnsWorkerScanRequest::new(
+            hue_worker_id.clone(),
+            hue_integration_id,
+            "en0",
+            MdnsScanNetwork::Ipv6,
+            "_hue._tcp.local",
+            5_000,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let mut plan = MdnsWorkerScanPlan::new(4_990);
+        plan.push_request(hue_ipv4.clone());
+        plan.push_request(matter_ipv4.clone());
+        plan.push_request(hue_ipv6.clone());
+        let mut executor = ScriptedMdnsWorkerScanExecutor::new([
+            MdnsScanResult::from_packets(
+                "_hue._tcp.local",
+                5_000,
+                Vec::<MdnsResponsePacket>::new(),
+            ),
+            MdnsScanResult::from_packets(
+                "_hue._tcp.local",
+                5_000,
+                Vec::<MdnsResponsePacket>::new(),
+            ),
+            MdnsScanResult::from_packets(
+                "_matter._tcp.local",
+                5_000,
+                Vec::<MdnsResponsePacket>::new(),
+            ),
+        ]);
+
+        let reports =
+            run_mdns_worker_scan_plan_with_executor(&plan, 4_950, 5_050, &mut executor).unwrap();
+
+        assert_eq!(
+            executor.requests,
+            vec![hue_ipv4.clone(), hue_ipv6.clone(), matter_ipv4.clone()]
+        );
+        assert_eq!(reports.len(), 2);
+        assert_eq!(reports[0].worker_id, hue_worker_id);
+        assert_eq!(reports[0].service_type, "_hue._tcp.local");
+        assert_eq!(reports[0].completed_scan_count(), 2);
+        assert_eq!(reports[1].worker_id, matter_worker_id);
+        assert_eq!(reports[1].service_type, "_matter._tcp.local");
+        assert_eq!(reports[1].completed_scan_count(), 1);
     }
 
     #[test]

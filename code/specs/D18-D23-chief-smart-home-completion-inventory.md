@@ -140,6 +140,23 @@ contract while keeping socket execution and runtime mutation separate:
   report path, so runtime and Chief-facing tests exercise the same handoff a
   supervised worker will report back.
 
+## Current Discovery Runner Slice
+
+This slice wires the mDNS execution contract into a reusable runner boundary
+without moving platform state or socket supervision into the Chief bridge:
+
+- `smart-home-discovery` now has an injectable `MdnsWorkerScanExecutor`,
+  default UDP-backed request execution, and grouped scan-plan runners that turn
+  runtime-produced mDNS requests into worker scan reports.
+- The runner preserves per-interface successes, packet parse failures, and
+  transport failures while grouping reports by worker, integration, and DNS-SD
+  service type.
+- `smart-home-testkit` now provides a scripted mDNS worker executor that can run
+  scheduled runtime scan plans deterministically without opening sockets.
+- The fixture path now proves schedule projection, scan execution, Hue report
+  conversion, and scheduled runtime ingest end to end while keeping Chief of
+  Staff on the existing thin `smart_home.*` tool bridge.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -161,9 +178,9 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Wire the mDNS execution handoff to a supervised actor or process that opens
-  sockets, runs the requested per-interface scans, and persists schedules,
-  results, and runtime state across restarts.
+- Wire the mDNS runner to a supervised actor or process that manages lifecycle,
+  retries, OS interface binding, and persistence for schedules, results, and
+  runtime state across restarts.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers
