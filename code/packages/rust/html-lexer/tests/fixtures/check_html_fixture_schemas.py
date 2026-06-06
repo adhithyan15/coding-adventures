@@ -267,6 +267,9 @@ def check_browser_readiness_case(
         f"{case_path}.expected", expected, "data_attribute_descriptors", errors
     )
     require_optional_object_list(
+        f"{case_path}.expected", expected, "global_state_descriptors", errors
+    )
+    require_optional_object_list(
         f"{case_path}.expected", expected, "structured_items", errors
     )
     require_optional_object_list(f"{case_path}.expected", expected, "templates", errors)
@@ -943,6 +946,29 @@ def check_browser_expected_lists(
             data_path = f"{descriptor_path}.data_attributes[{data_index}]"
             require_string(data_path, data_attribute, "name", errors)
             require_optional_nullable_string(data_path, data_attribute, "value", errors)
+
+    for index, state in enumerate(object_list_items(expected, "global_state_descriptors")):
+        state_path = f"{case_path}.expected.global_state_descriptors[{index}]"
+        require_string(state_path, state, "element", errors)
+        for field in (
+            "id",
+            "title",
+            "lang",
+            "dir",
+            "tabindex",
+            "contenteditable",
+            "editing_mode",
+            "draggable",
+            "draggable_state",
+            "spellcheck",
+            "translate",
+        ):
+            require_optional_nullable_string(state_path, state, field, errors)
+        for field in ("classes", "accesskey"):
+            require_optional_string_list(state_path, state, field, errors)
+        for field in ("hidden", "inert", "autofocus"):
+            require_optional_boolean(state_path, state, field, errors)
+        require_optional_string(state_path, state, "text", errors)
 
     for index, item in enumerate(object_list_items(expected, "structured_items")):
         item_path = f"{case_path}.expected.structured_items[{index}]"

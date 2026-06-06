@@ -21,6 +21,8 @@ viewport, description, application name, referrer/robots/color-scheme policy,
 theme colors, refresh URL resolution, and canonical/manifest URLs. Form cases
 also pin labels, derived accessible names, owner references,
 placeholder/autocomplete hints, and required/readonly/multiple control state.
+Global-state descriptor cases pin non-form inert/hidden, editing, drag,
+spellcheck, translate, accesskey, autofocus, and related focus metadata.
 Media cases pin audio/video playback flags and preload/poster metadata.
 Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, and loading-policy hints such as integrity,
