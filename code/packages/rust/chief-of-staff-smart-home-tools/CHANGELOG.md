@@ -12,3 +12,6 @@ All notable changes to this package will be documented in this file.
   `smart_home.pair_bridge`, `smart_home.describe_capabilities`, and
   `smart_home.get_health` so Chief of Staff jobs can reach the existing D23
   subscription, pairing, capability, and health runtime paths.
+- Added the `smart_home.discover` D18D handler over
+  `RuntimeDiscoverToolRequest`, including discovery filters, bridge-candidate
+  output, and end-to-end journal coverage.

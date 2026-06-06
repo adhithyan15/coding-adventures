@@ -15,6 +15,10 @@ use smart_home_core::{
     SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
     VaultRef,
 };
+use smart_home_discovery::{
+    DiscoveryCatalog, DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary,
+    DiscoverySource, DiscoveryUpsert,
+};
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
     StateRefreshReason,
@@ -2234,6 +2238,86 @@ impl RuntimePendingWorkSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeDiscoverToolRequest {
+    pub integration_id: Option<IntegrationId>,
+    pub source: Option<DiscoverySource>,
+    pub fresh_only: bool,
+    pub ttl_ms: u64,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeDiscoverToolRequest {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn from_source(mut self, source: DiscoverySource) -> Self {
+        self.source = Some(source);
+        self
+    }
+
+    pub fn fresh_only(mut self, fresh_only: bool) -> Self {
+        self.fresh_only = fresh_only;
+        self
+    }
+
+    pub fn with_ttl_ms(mut self, ttl_ms: u64) -> Self {
+        self.ttl_ms = ttl_ms;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    fn matches_record(&self, record: &DiscoveryRecord, now_ms: u64) -> bool {
+        self.integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &record.integration_id == integration_id)
+            && self.source.is_none_or(|source| record.source == source)
+            && (!self.fresh_only || !record.is_stale_at(now_ms, self.ttl_ms))
+    }
+}
+
+impl Default for RuntimeDiscoverToolRequest {
+    fn default() -> Self {
+        Self {
+            integration_id: None,
+            source: None,
+            fresh_only: false,
+            ttl_ms: 60_000,
+            limit: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeDiscoverToolOutput {
+    pub generated_at_ms: u64,
+    pub ttl_ms: u64,
+    pub records: Vec<DiscoveryRecord>,
+    pub bridge_candidates: Vec<Bridge>,
+    pub record_summary: DiscoveryRecordSummary,
+    pub signal_summary: DiscoverySignalSummary,
+}
+
+impl RuntimeDiscoverToolOutput {
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     ListBridges,
     ListDevices {
@@ -2419,6 +2503,7 @@ pub struct RuntimePairBridgeToolOutput {
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
+    discovery: DiscoveryCatalog,
     event_bus: RuntimeEventBus,
     supervisor: RuntimeSupervisor,
     pairing_sessions: BTreeMap<RuntimePairingSessionId, RuntimePairingSession>,
@@ -2430,6 +2515,7 @@ impl SmartHomeRuntime {
     pub fn new() -> Self {
         Self {
             registry: InMemorySmartHomeRegistry::new(),
+            discovery: DiscoveryCatalog::new(),
             event_bus: RuntimeEventBus::new(),
             supervisor: RuntimeSupervisor::new(),
             pairing_sessions: BTreeMap::new(),
@@ -2444,6 +2530,14 @@ impl SmartHomeRuntime {
 
     pub fn registry_mut(&mut self) -> &mut InMemorySmartHomeRegistry {
         &mut self.registry
+    }
+
+    pub fn discovery(&self) -> &DiscoveryCatalog {
+        &self.discovery
+    }
+
+    pub fn discovery_mut(&mut self) -> &mut DiscoveryCatalog {
+        &mut self.discovery
     }
 
     pub fn event_bus(&self) -> &RuntimeEventBus {
@@ -2622,6 +2716,22 @@ impl SmartHomeRuntime {
 
     pub fn upsert_entity(&mut self, entity: Entity) -> Result<Option<Entity>, RuntimeError> {
         self.registry.upsert_entity(entity).map_err(Into::into)
+    }
+
+    pub fn record_discovery(
+        &mut self,
+        record: DiscoveryRecord,
+    ) -> Result<DiscoveryUpsert, RuntimeError> {
+        let bridge_candidate = record.to_bridge_candidate();
+        let upsert = self.discovery.record_preferred(record);
+        if !matches!(upsert, DiscoveryUpsert::Ignored(_)) {
+            self.registry.upsert_bridge(bridge_candidate)?;
+        }
+        Ok(upsert)
+    }
+
+    pub fn discovery_record_count(&self) -> usize {
+        self.discovery.len()
     }
 
     pub fn apply_device_event(&mut self, event: DeviceEvent) -> Result<(), RuntimeError> {
@@ -2824,6 +2934,59 @@ impl SmartHomeRuntime {
         self.registry
             .record_authorization_decision(decision.clone());
         decision
+    }
+
+    pub fn execute_discover_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeDiscoverToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeDiscoverToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::Discover;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let mut records = self
+            .discovery
+            .records()
+            .filter(|record| request.matches_record(record, now_ms))
+            .cloned()
+            .collect::<Vec<_>>();
+        records.sort_by(|left, right| {
+            right
+                .discovered_at_ms
+                .cmp(&left.discovered_at_ms)
+                .then_with(|| left.integration_id.cmp(&right.integration_id))
+                .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
+        });
+        apply_limit(&mut records, request.limit);
+
+        let bridge_candidates = records
+            .iter()
+            .map(DiscoveryRecord::to_bridge_candidate)
+            .collect::<Vec<_>>();
+        let record_summary =
+            DiscoveryRecordSummary::from_records(records.iter(), now_ms, request.ttl_ms);
+        let signals = records
+            .iter()
+            .map(|record| record.signal(request.ttl_ms))
+            .collect::<Vec<_>>();
+        let signal_summary = DiscoverySignalSummary::from_signals(&signals, now_ms);
+
+        Ok(RuntimeDiscoverToolOutput {
+            generated_at_ms: now_ms,
+            ttl_ms: request.ttl_ms,
+            records,
+            bridge_candidates,
+            record_summary,
+            signal_summary,
+        })
     }
 
     pub fn execute_read_tool(
@@ -3660,6 +3823,9 @@ mod tests {
         AuthorizationOutcome, BridgeTransport, Capability, CapabilityGrantId, CommandId,
         CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
     };
+    use smart_home_discovery::{
+        DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert, PairingRequirement,
+    };
     use smart_home_registry::StateRefreshReason;
 
     fn bridge(id: &str) -> Bridge {
@@ -3735,6 +3901,21 @@ mod tests {
             observed_at_ms: at_ms,
             received_at_ms: at_ms,
         }
+    }
+
+    fn hue_discovery_record(native_bridge_id: &str, discovered_at_ms: u64) -> DiscoveryRecord {
+        DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            native_bridge_id,
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            discovered_at_ms,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.10")
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::PhysicalPresence)
     }
 
     fn device_runtime_event(event_id: &str, at_ms: u64) -> RuntimeEvent {
@@ -4536,6 +4717,143 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn discover_tool_requires_smart_home_read_grants() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeabcdef", 1_000))
+            .unwrap();
+
+        let error = runtime
+            .execute_discover_tool(principal.clone(), RuntimeDiscoverToolRequest::new(), 1_500)
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Discover,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.discovery_record_count(), 1);
+    }
+
+    #[test]
+    fn discovery_records_reconcile_unpaired_bridge_candidates_for_discover_tool() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        let record = hue_discovery_record("001788fffeabcdef", 1_100);
+        let bridge_id = record.bridge_id();
+
+        let upsert = runtime.record_discovery(record.clone()).unwrap();
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap().clone();
+        let output = runtime
+            .execute_discover_tool(
+                principal.clone(),
+                RuntimeDiscoverToolRequest::new()
+                    .for_integration(IntegrationId::trusted("hue"))
+                    .from_source(DiscoverySource::Mdns)
+                    .with_ttl_ms(1_000),
+                1_500,
+            )
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert_eq!(upsert, DiscoveryUpsert::Inserted);
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(bridge.bridge_id, bridge_id);
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.auth_ref, None);
+        assert!(bridge.metadata.iter().any(|metadata| {
+            metadata.key == "smart_home.discovery.source" && metadata.value == "mdns"
+        }));
+        assert_eq!(output.len(), 1);
+        assert_eq!(output.generated_at_ms, 1_500);
+        assert_eq!(output.ttl_ms, 1_000);
+        assert_eq!(output.records[0], record);
+        assert_eq!(output.bridge_candidates[0].bridge_id, bridge_id);
+        assert_eq!(output.record_summary.total, 1);
+        assert_eq!(output.record_summary.with_address, 1);
+        assert_eq!(output.record_summary.fresh, 1);
+        assert_eq!(
+            output
+                .record_summary
+                .count_for_source(DiscoverySource::Mdns),
+            1
+        );
+        assert_eq!(
+            output
+                .record_summary
+                .count_for_pairing_requirement(PairingRequirement::PhysicalPresence),
+            1
+        );
+        assert_eq!(output.signal_summary.fresh, 1);
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+    }
+
+    #[test]
+    fn discover_tool_filters_stale_records_and_limits_results() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(3_000),
+        );
+        runtime
+            .record_discovery(hue_discovery_record("001788fffeold", 1_000))
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffefresh", 1_900))
+            .unwrap();
+
+        let output = runtime
+            .execute_discover_tool(
+                principal,
+                RuntimeDiscoverToolRequest::new()
+                    .fresh_only(true)
+                    .with_ttl_ms(500)
+                    .with_limit(1),
+                2_000,
+            )
+            .unwrap();
+
+        assert_eq!(output.len(), 1);
+        assert_eq!(output.records[0].native_bridge_id, "001788fffefresh");
+        assert_eq!(output.record_summary.total, 1);
+        assert_eq!(output.record_summary.fresh, 1);
+        assert_eq!(output.record_summary.stale, 0);
+        assert_eq!(output.bridge_candidates[0].health, Health::Unpaired);
     }
 
     #[test]
