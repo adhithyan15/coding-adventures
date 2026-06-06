@@ -9,6 +9,9 @@ All notable changes to this package will be documented in this file.
 - Bounded IPv4/IPv6 mDNS scan helpers that build PTR queries, collect UDP
   replies through `udp-client`, and return deterministic `MdnsScanResult`
   envelopes.
+- `MdnsWorkerScanRequest`, `MdnsWorkerScanPlan`, and `MdnsWorkerScanReport`
+  for handing scheduled mDNS work to supervised per-interface scan actors and
+  aggregating interface-level successes or failures.
 - mDNS/DNS-SD response parsing for PTR, SRV, TXT, A, and AAAA records,
   including compressed DNS names and per-datagram scan failures for malformed
   replies.

@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
+- Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
+  envelopes, preserving per-interface scan failures and report metadata.
 - Hue mDNS and cloud-fallback discovery normalization into D23
   `DiscoveryRecord` candidates, including bridge-candidate batches and
   discovery-record pairing-plan handoff.

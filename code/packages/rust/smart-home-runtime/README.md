@@ -43,6 +43,8 @@ Included surfaces:
   catalog counts
 - runtime-owned discovery worker schedules with source/interface scope, due-run
   plans, run-status tracking, and cadence advancement after scheduled ingest
+- executable mDNS scan-plan projection from due discovery schedules into
+  per-interface IPv4/IPv6 scan requests without mutating runtime state
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
 - composed event-bus health summaries for replay history, stream coverage, and

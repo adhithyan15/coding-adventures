@@ -16,7 +16,7 @@ use smart_home_core::{
 use smart_home_discovery::{
     DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerFailure,
     DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun, MdnsAdvertisement, MdnsScanResult,
-    PairingRequirement,
+    MdnsWorkerScanReport, PairingRequirement,
 };
 use std::fmt;
 
@@ -874,6 +874,46 @@ pub fn hue_discovery_worker_run_from_mdns_scan(
         run.push_failure(worker_failure);
     }
 
+    Ok(run)
+}
+
+pub fn hue_discovery_worker_run_from_mdns_scan_report(
+    report: &MdnsWorkerScanReport,
+) -> Result<DiscoveryWorkerRun, HueError> {
+    if report.integration_id != IntegrationId::trusted(HUE_INTEGRATION_ID) {
+        return Err(DiscoveryError::WorkerIntegrationMismatch {
+            worker_integration_id: HUE_INTEGRATION_ID.to_string(),
+            record_integration_id: report.integration_id.as_str().to_string(),
+        }
+        .into());
+    }
+    if report.service_type != HUE_MDNS_SERVICE_TYPE {
+        return Err(HueError::UnsupportedDiscoveryService {
+            service_type: report.service_type.clone(),
+        });
+    }
+
+    let scan = report.aggregate_result();
+    let mut run = hue_discovery_worker_run_from_mdns_scan(
+        report.worker_id.as_str().to_string(),
+        &scan,
+        report.started_at_ms,
+        report.completed_at_ms,
+    )?
+    .with_metadata("hue.discovery.scan_report", "true")
+    .with_metadata(
+        "hue.discovery.scan_request_success_count",
+        report.completed_scan_count().to_string(),
+    )
+    .with_metadata(
+        "hue.discovery.scan_request_failure_count",
+        report.failed_scan_count().to_string(),
+    )
+    .with_metadata(
+        "hue.discovery.scan_packet_failure_count",
+        report.packet_failure_count().to_string(),
+    );
+    run.metadata.extend(report.metadata.iter().cloned());
     Ok(run)
 }
 
@@ -1985,7 +2025,10 @@ pub fn validate_brightness(value: u16) -> Result<u8, HueError> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use smart_home_discovery::DiscoveryWorkerRunStatus;
+    use smart_home_discovery::{
+        DiscoveryWorkerRunStatus, MdnsScanNetwork, MdnsWorkerScanReport, MdnsWorkerScanRequest,
+    };
+    use std::time::Duration;
 
     #[test]
     fn resource_paths_match_clip_v2_shape() {
@@ -2538,6 +2581,95 @@ mod tests {
         assert_eq!(summary.record_count, 1);
         assert_eq!(summary.failure_count, 2);
         assert_eq!(summary.accepted_count(), 1);
+    }
+
+    #[test]
+    fn hue_discovery_worker_run_from_mdns_scan_report_keeps_interface_failures() {
+        let mdns = MdnsAdvertisement::new(
+            HUE_MDNS_SERVICE_TYPE,
+            "Philips Hue - ABCDEF",
+            "hue-bridge.local",
+            443,
+            1_000,
+        )
+        .unwrap()
+        .with_address("192.0.2.10")
+        .unwrap()
+        .with_txt("bridgeid", "001788fffeabcdef")
+        .unwrap();
+        let worker_id = DiscoveryWorkerId::trusted("hue-mdns-scan");
+        let integration_id = IntegrationId::trusted(HUE_INTEGRATION_ID);
+        let ipv4 = MdnsWorkerScanRequest::new(
+            worker_id.clone(),
+            integration_id.clone(),
+            "en0",
+            MdnsScanNetwork::Ipv4,
+            HUE_MDNS_SERVICE_TYPE,
+            1_010,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let ipv6 = MdnsWorkerScanRequest::new(
+            worker_id.clone(),
+            integration_id.clone(),
+            "en0",
+            MdnsScanNetwork::Ipv6,
+            HUE_MDNS_SERVICE_TYPE,
+            1_010,
+            Duration::from_millis(250),
+        )
+        .unwrap();
+        let mut report = MdnsWorkerScanReport::new(
+            worker_id.clone(),
+            integration_id,
+            HUE_MDNS_SERVICE_TYPE,
+            990,
+            1_020,
+        )
+        .unwrap()
+        .with_metadata("fixture", "hue_mdns_scan_report");
+        report
+            .push_success(
+                ipv4,
+                MdnsScanResult {
+                    service_type: HUE_MDNS_SERVICE_TYPE.to_string(),
+                    discovered_at_ms: 1_010,
+                    datagram_count: 1,
+                    advertisements: vec![mdns],
+                    failures: Vec::new(),
+                },
+            )
+            .unwrap();
+        report
+            .push_failure(ipv6, "IPv6 multicast route is unavailable")
+            .unwrap();
+
+        let run = hue_discovery_worker_run_from_mdns_scan_report(&report).unwrap();
+
+        assert_eq!(run.worker_id, worker_id);
+        assert_eq!(run.kind, DiscoveryWorkerKind::MdnsScan);
+        assert_eq!(run.status(), DiscoveryWorkerRunStatus::Partial);
+        assert_eq!(run.len(), 1);
+        assert_eq!(run.failure_count(), 1);
+        assert_eq!(run.failures[0].source, DiscoverySource::Mdns);
+        assert_eq!(
+            run.failures[0]
+                .metadata
+                .iter()
+                .find(|metadata| metadata.key == "hue.discovery.scan_source")
+                .map(|metadata| metadata.value.as_str()),
+            Some("en0/ipv6")
+        );
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_report" && metadata.value == "true"
+        }));
+        assert!(run.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.scan_request_success_count" && metadata.value == "1"
+        }));
+        assert!(run
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == "fixture" && metadata.value == "hue_mdns_scan_report"));
     }
 
     #[test]

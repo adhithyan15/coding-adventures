@@ -18,14 +18,15 @@ use smart_home_core::{
 use smart_home_discovery::{
     DiscoveryCatalog, DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary,
     DiscoverySource, DiscoveryUpsert, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary,
+    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork, MdnsWorkerScanPlan,
+    MdnsWorkerScanRequest, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
     StateRefreshReason,
 };
 use std::collections::{BTreeMap, VecDeque};
-use std::fmt;
+use std::{fmt, time::Duration};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeError {
@@ -1792,6 +1793,16 @@ impl ScheduledDiscoveryWorker {
                 "mDNS schedules must name the selected interfaces",
             ));
         }
+        if self.sources.contains(&DiscoverySource::Mdns)
+            && metadata_value(&self.metadata, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY)
+                .is_none_or(str::is_empty)
+        {
+            return Err(invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "metadata.smart_home.discovery.service_type",
+                "mDNS schedules must name the DNS-SD service type",
+            ));
+        }
         if self
             .network_interfaces
             .iter()
@@ -1827,6 +1838,56 @@ impl DiscoveryWorkerRunInstruction {
     pub fn overdue_by_ms(&self) -> u64 {
         self.planned_at_ms.saturating_sub(self.due_at_ms)
     }
+
+    pub fn mdns_service_type(&self) -> Option<&str> {
+        metadata_value(&self.metadata, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY)
+    }
+
+    pub fn mdns_scan_requests(&self) -> Result<Vec<MdnsWorkerScanRequest>, RuntimeError> {
+        if self.kind != DiscoveryWorkerKind::MdnsScan
+            || !self.sources.contains(&DiscoverySource::Mdns)
+        {
+            return Ok(Vec::new());
+        }
+        let service_type = self.mdns_service_type().ok_or_else(|| {
+            invalid_discovery_worker_schedule(
+                &self.worker_id,
+                "metadata.smart_home.discovery.service_type",
+                "mDNS schedules must name the DNS-SD service type",
+            )
+        })?;
+        let timeout = Duration::from_millis(self.run_timeout_ms);
+        let mut requests = Vec::new();
+        for network_interface in &self.network_interfaces {
+            for network in [MdnsScanNetwork::Ipv4, MdnsScanNetwork::Ipv6] {
+                requests.push(
+                    MdnsWorkerScanRequest::new(
+                        self.worker_id.clone(),
+                        self.integration_id.clone(),
+                        network_interface.clone(),
+                        network,
+                        service_type,
+                        self.planned_at_ms,
+                        timeout,
+                    )
+                    .map_err(|error| {
+                        invalid_discovery_worker_schedule(
+                            &self.worker_id,
+                            "network_interfaces",
+                            error.to_string(),
+                        )
+                    })?
+                    .with_metadata("smart_home.discovery.due_at_ms", self.due_at_ms.to_string())
+                    .with_metadata(
+                        "smart_home.discovery.planned_at_ms",
+                        self.planned_at_ms.to_string(),
+                    )
+                    .with_metadata("smart_home.discovery.worker_status", self.status.as_str()),
+                );
+            }
+        }
+        Ok(requests)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1852,6 +1913,16 @@ impl DiscoveryWorkerRunPlan {
             .iter()
             .filter(|instruction| &instruction.worker_id == worker_id)
             .collect()
+    }
+
+    pub fn mdns_scan_plan(&self) -> Result<MdnsWorkerScanPlan, RuntimeError> {
+        let mut plan = MdnsWorkerScanPlan::new(self.generated_at_ms);
+        for instruction in &self.instructions {
+            for request in instruction.mdns_scan_requests()? {
+                plan.push_request(request);
+            }
+        }
+        Ok(plan)
     }
 }
 
@@ -3307,6 +3378,13 @@ impl SmartHomeRuntime {
         self.discovery_scheduler.run_plan_at(now_ms)
     }
 
+    pub fn discovery_mdns_scan_plan_at(
+        &self,
+        now_ms: u64,
+    ) -> Result<MdnsWorkerScanPlan, RuntimeError> {
+        self.discovery_worker_run_plan_at(now_ms).mdns_scan_plan()
+    }
+
     pub fn mark_discovery_worker_started(
         &mut self,
         worker_id: &DiscoveryWorkerId,
@@ -4324,6 +4402,13 @@ fn invalid_discovery_worker_schedule(
         field,
         message: message.into(),
     }
+}
+
+fn metadata_value<'a>(metadata: &'a [Metadata], key: &str) -> Option<&'a str> {
+    metadata
+        .iter()
+        .find(|entry| entry.key == key)
+        .map(|entry| entry.value.as_str().trim())
 }
 
 fn scheduled_discovery_worker_matches_query(
@@ -5659,6 +5744,27 @@ mod tests {
                 && instruction.overdue_by_ms() == 25
                 && instruction.run_timeout_ms == 250
         ));
+        let mdns_scan_plan = plan.discovery_worker_run_plan.mdns_scan_plan().unwrap();
+        let runtime_mdns_scan_plan = runtime.discovery_mdns_scan_plan_at(1_125).unwrap();
+        assert_eq!(mdns_scan_plan, runtime_mdns_scan_plan);
+        assert_eq!(mdns_scan_plan.generated_at_ms, 1_125);
+        assert_eq!(mdns_scan_plan.len(), 4);
+        assert!(matches!(
+            mdns_scan_plan.requests.as_slice(),
+            [en0_ipv4, en0_ipv6, bridge0_ipv4, bridge0_ipv6]
+                if en0_ipv4.worker_id == worker_id
+                    && en0_ipv4.network_interface == "en0"
+                    && en0_ipv4.network == MdnsScanNetwork::Ipv4
+                    && en0_ipv4.service_type == "_hue._tcp.local"
+                    && en0_ipv4.discovered_at_ms == 1_125
+                    && en0_ipv4.timeout == Duration::from_millis(250)
+                    && en0_ipv6.network_interface == "en0"
+                    && en0_ipv6.network == MdnsScanNetwork::Ipv6
+                    && bridge0_ipv4.network_interface == "bridge0"
+                    && bridge0_ipv4.network == MdnsScanNetwork::Ipv4
+                    && bridge0_ipv6.network_interface == "bridge0"
+                    && bridge0_ipv6.network == MdnsScanNetwork::Ipv6
+        ));
         assert_eq!(summary.total_actions, 1);
         assert_eq!(summary.discovery_worker_run_count, 1);
         assert!(summary.has_discovery_worker_work());
@@ -5780,6 +5886,26 @@ mod tests {
             error,
             RuntimeError::InvalidDiscoveryWorkerSchedule {
                 field: "network_interfaces",
+                ..
+            }
+        ));
+
+        let missing_service_type = ScheduledDiscoveryWorker::new(
+            DiscoveryWorkerId::trusted("hue-mdns-worker"),
+            IntegrationId::trusted("hue"),
+            DiscoveryWorkerKind::MdnsScan,
+            5_000,
+            250,
+            1_100,
+        )
+        .with_source(DiscoverySource::Mdns)
+        .with_network_interface("en0");
+        assert!(matches!(
+            runtime
+                .register_discovery_worker_schedule(missing_service_type)
+                .unwrap_err(),
+            RuntimeError::InvalidDiscoveryWorkerSchedule {
+                field: "metadata.smart_home.discovery.service_type",
                 ..
             }
         ));
