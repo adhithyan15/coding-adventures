@@ -631,6 +631,57 @@ def _is_bounded_in_k(node: IRNode, k: IRSymbol) -> bool:
     return False
 
 
+def _vanishes_at_infinity(node: IRNode, k: IRSymbol) -> bool:
+    """Return True for non-rational shapes that provably tend to zero.
+
+    This complements :func:`_g_vanishes_at_infinity`, which handles rational
+    quotients like ``1/k`` and ``log(k)/k²``.  The telescope rule also needs to
+    recognise direct decaying exponentials such as ``exp(-k)`` and ``2^(-k)``.
+    """
+    if _is_constant_in(node, k):
+        val = _ir_rational_val(node)
+        return val == 0
+    if not isinstance(node, IRApply):
+        return False
+    if node.head == NEG and len(node.args) == 1:
+        return _vanishes_at_infinity(node.args[0], k)
+    if node.head == ADD:
+        return all(_vanishes_at_infinity(arg, k) for arg in node.args)
+    if node.head == EXP and len(node.args) == 1:
+        inner = node.args[0]
+        degree = _polynomial_degree_in_k(inner, k)
+        return (
+            degree is not None
+            and degree > 0
+            and _polynomial_leading_coeff_sign_in_k(inner, k) == -1
+        )
+    if node.head == POW and len(node.args) == 2:
+        base, exp = node.args
+        base_val = _ir_rational_val(base) if _is_constant_in(base, k) else None
+        if base_val is not None and abs(base_val) > 1:
+            degree = _polynomial_degree_in_k(exp, k)
+            return (
+                degree is not None
+                and degree > 0
+                and _polynomial_leading_coeff_sign_in_k(exp, k) == -1
+            )
+    if node.head == MUL:
+        has_vanishing = False
+        for arg in node.args:
+            if _is_constant_in(arg, k):
+                if _ir_rational_val(arg) == 0:
+                    return True
+                continue
+            if _is_bounded_in_k(arg, k):
+                continue
+            if _vanishes_at_infinity(arg, k):
+                has_vanishing = True
+                continue
+            return False
+        return has_vanishing
+    return False
+
+
 def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     """Return True when ``g(k)`` provably tends to 0 as ``k → ∞``.
 
@@ -673,6 +724,8 @@ def _g_vanishes_at_infinity(g: IRNode, k: IRSymbol) -> bool:
     - ``k/(k+1)`` → False (deg 1 = deg 1; limit is 1, not 0).
     - ``k²/(k+1)`` → False (improper; limit is ∞).
     """
+    if _vanishes_at_infinity(g, k):
+        return True
     if not isinstance(g, IRApply) or g.head != DIV or len(g.args) != 2:
         return False
     num, den = g.args

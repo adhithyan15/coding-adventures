@@ -1217,7 +1217,66 @@ function logSqrtPolyEffectiveDegGeneric(
   return sqrtHalfDegSum + polyDegSum;
 }
 
+function vanishesAtInfinity(node: IRNode, k: IRNode): boolean {
+  if (isConstantIn(node, k)) {
+    const value = rationalValue(node);
+    return value !== undefined && value.numer === 0n;
+  }
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, NEG) && node.args.length === 1) {
+    return vanishesAtInfinity(node.args[0], k);
+  }
+  if (equals(node.head, ADD)) {
+    return node.args.every((arg) => vanishesAtInfinity(arg, k));
+  }
+  if (equals(node.head, EXP) && node.args.length === 1) {
+    const inner = node.args[0];
+    const degree = polynomialDegreeInK(inner, k);
+    return (
+      degree !== undefined &&
+      degree > 0 &&
+      polynomialLeadingCoeffSignInK(inner, k) === -1
+    );
+  }
+  if (equals(node.head, POW) && node.args.length === 2) {
+    const [base, exp] = node.args;
+    if (isConstantIn(base, k)) {
+      const baseVal = rationalValue(base);
+      if (baseVal !== undefined) {
+        const absNumer = baseVal.numer < 0n ? -baseVal.numer : baseVal.numer;
+        if (absNumer > baseVal.denom) {
+          const degree = polynomialDegreeInK(exp, k);
+          return (
+            degree !== undefined &&
+            degree > 0 &&
+            polynomialLeadingCoeffSignInK(exp, k) === -1
+          );
+        }
+      }
+    }
+  }
+  if (equals(node.head, MUL)) {
+    let hasVanishing = false;
+    for (const arg of node.args) {
+      if (isConstantIn(arg, k)) {
+        const value = rationalValue(arg);
+        if (value !== undefined && value.numer === 0n) return true;
+        continue;
+      }
+      if (isBoundedInK(arg, k)) continue;
+      if (vanishesAtInfinity(arg, k)) {
+        hasVanishing = true;
+        continue;
+      }
+      return false;
+    }
+    return hasVanishing;
+  }
+  return false;
+}
+
 function gVanishesAtInfinity(g: IRNode, k: IRNode): boolean {
+  if (vanishesAtInfinity(g, k)) return true;
   if (g.kind !== "apply" || !equals(g.head, DIV) || g.args.length !== 2) {
     return false;
   }

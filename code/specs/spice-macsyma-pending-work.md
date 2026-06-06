@@ -30,6 +30,13 @@
 > TypeScript, and Rust by subtracting rational-pole terms and emitting
 > the remaining proper irreducible residual.
 
+> **MACSYMA summation audit follow-up (2026-06-06).** Infinite telescope
+> limits now recognise direct decaying exponential terms, not only rational
+> quotients with diverging denominators. Across Python, TypeScript, and Rust,
+> `exp(-k)` and `b^(-k)` with `|b| > 1` are treated as vanishing at infinity,
+> closing structurally telescoping exponential tails while preserving
+> conservative fallthrough for growing or sign-ambiguous exponentials.
+
 > **SPICE completion follow-up inventory (2026-06-06).** The 2026-06-05
 > release cut closed the planned SPICE 1970s compatibility slice, but a live
 > follow-up audit found one real parity gap: Rust had advanced named-corner
