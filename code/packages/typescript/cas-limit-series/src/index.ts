@@ -225,6 +225,9 @@ function handleIndeterminateForm(
     const denomValue = evalAtNumber(denom, variable, exactPoint);
     const zeroZero = numerValue === 0 && denomValue === 0;
     const infInf = isInfiniteLike(numerValue) && isInfiniteLike(denomValue);
+    if (isInfiniteLike(denomValue) && isBoundedAtInfinity(numer, variable)) {
+      return int(0);
+    }
     if ((zeroZero || infInf) && options.differentiate !== undefined) {
       return lhopital(numer, denom, variable, point, options, depth);
     }
@@ -318,6 +321,16 @@ function rewriteIndeterminatePower(
     return buildUnevaluatedLimit(app(POW, [base, exponent]), variable, point, options.direction);
   }
   return applyLimitCallbacks(app(EXP, [exponentLimit]), options);
+}
+
+function isBoundedAtInfinity(node: IRNode, variable: IRNode): boolean {
+  if (node.kind === "integer" || node.kind === "rational" || node.kind === "float") return true;
+  if (node.kind === "symbol") return !equals(node, variable);
+  if (node.kind !== "apply") return false;
+  if (equals(node.head, NEG) && node.args.length === 1) return isBoundedAtInfinity(node.args[0], variable);
+  if (equals(node.head, ADD)) return node.args.every((arg) => isBoundedAtInfinity(arg, variable));
+  if (equals(node.head, MUL)) return node.args.every((arg) => isBoundedAtInfinity(arg, variable));
+  return [SIN.name, COS.name, TANH.name, ATAN.name].includes(headName(node.head)) && node.args.length === 1;
 }
 
 function applyLimitCallbacks(node: IRNode, options: LimitAdvancedOptions): IRNode {

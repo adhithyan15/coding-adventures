@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-limit-series",
-  "version": "0.1.0",
+  "version": "0.2.2",
   "description": "Pure TypeScript direct limits and polynomial Taylor expansion over symbolic IR",
   "type": "module",
   "main": "src/index.ts",
