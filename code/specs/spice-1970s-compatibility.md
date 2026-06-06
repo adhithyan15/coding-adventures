@@ -497,18 +497,18 @@ Each implementation phase should be handled as a focused PR:
    and restart the monitor.
 7. Once merged, delete the old monitor and move to the next phase.
 
-## Initial Implementation Order
+## Current Wrap-up Status
 
-The next implementation slice is Phase 1, JFET.
+As of 2026-06-05, Phases 1-8 are complete across the Python, TypeScript, and
+Rust packages for the current 1970s compatibility target. New SPICE work should
+be tracked as post-compatibility expansion instead of reopening the original
+phase queue.
 
-Recommended subdivision:
+Remaining expansion belongs in the broader SPICE pending-work inventory:
 
-1. Add cross-language JFET element data structures plus parser model/device
-   support.
-2. Add Python DC/AC engine behavior for JFET.
-3. Port DC/AC behavior to TypeScript and Rust.
-4. Add transient participation if not already covered by the shared nonlinear
-   DC solve path.
-
-This lets parser and public API compatibility land before the more delicate
-nonlinear model math broadens.
+1. Broader parallel corner orchestration beyond the current Rust helpers.
+2. Full `hardware-vm` scheduler integration for mixed-signal simulation.
+3. Verilog-A/custom compact-model support.
+4. Production sparse/KLU and SPICE3-era raw/control/BSIM surfaces.
+5. Richer nonlinear distortion accuracy beyond the constrained Phase 8
+   executable footholds.

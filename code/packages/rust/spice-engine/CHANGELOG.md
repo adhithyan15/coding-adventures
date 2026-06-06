@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.14.0 — 2026-06-05
 
 - Add `s_parameters_corners_parallel` for order-preserving parallel Rust
   S-parameter extraction across named PVT corners.

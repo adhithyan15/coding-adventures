@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-06-05
 
 - Resolve `.temp` cards into Kelvin engine-call temperatures and let explicit
   `.noise temp=<kelvin>` overrides win over deck-level operating temperatures.
