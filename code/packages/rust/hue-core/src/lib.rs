@@ -13,6 +13,10 @@ use smart_home_core::{
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
     StateDelta, StateSnapshot, StateSource, Value,
 };
+use smart_home_discovery::{
+    DiscoveryConfidence, DiscoveryError, DiscoveryRecord, DiscoverySource, MdnsAdvertisement,
+    PairingRequirement,
+};
 use std::fmt;
 
 pub const HUE_INTEGRATION_ID: &str = "hue";
@@ -20,6 +24,8 @@ pub const CLIP_V2_RESOURCE_ROOT: &str = "/clip/v2/resource";
 pub const CLIP_V2_EVENT_STREAM_PATH: &str = "/eventstream/clip/v2";
 pub const HUE_APPLICATION_KEY_HEADER: &str = "hue-application-key";
 pub const HUE_APPLICATION_REGISTRATION_PATH: &str = "/api";
+pub const HUE_MDNS_SERVICE_TYPE: &str = "_hue._tcp.local";
+pub const HUE_DEFAULT_HTTPS_PORT: u16 = 443;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum HueError {
@@ -34,6 +40,13 @@ pub enum HueError {
         capability_id: CapabilityId,
         expected: &'static str,
     },
+    MissingDiscoveryField {
+        field: &'static str,
+    },
+    UnsupportedDiscoveryService {
+        service_type: String,
+    },
+    Discovery(DiscoveryError),
 }
 
 impl fmt::Display for HueError {
@@ -54,11 +67,27 @@ impl fmt::Display for HueError {
                 "Hue command value for capability {} must be {expected}",
                 capability_id.as_str()
             ),
+            Self::MissingDiscoveryField { field } => {
+                write!(f, "Hue discovery field {field} is required")
+            }
+            Self::UnsupportedDiscoveryService { service_type } => {
+                write!(
+                    f,
+                    "mDNS service `{service_type}` is not a Hue bridge service"
+                )
+            }
+            Self::Discovery(error) => write!(f, "{error}"),
         }
     }
 }
 
 impl std::error::Error for HueError {}
+
+impl From<DiscoveryError> for HueError {
+    fn from(error: DiscoveryError) -> Self {
+        Self::Discovery(error)
+    }
+}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueResourceId(String);
@@ -626,6 +655,126 @@ pub struct DiscoveredHueBridge {
     pub firmware_version: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueCloudDiscoveryBridge {
+    pub bridge_id: String,
+    pub internal_ip_address: String,
+    pub port: Option<u16>,
+    pub hardware_model: Option<String>,
+    pub firmware_version: Option<String>,
+    pub discovered_at_ms: u64,
+}
+
+impl HueCloudDiscoveryBridge {
+    pub fn new(
+        bridge_id: impl Into<String>,
+        internal_ip_address: impl Into<String>,
+        discovered_at_ms: u64,
+    ) -> Result<Self, HueError> {
+        Ok(Self {
+            bridge_id: non_empty_discovery_field("bridge_id", bridge_id)?,
+            internal_ip_address: non_empty_discovery_field(
+                "internal_ip_address",
+                internal_ip_address,
+            )?,
+            port: None,
+            hardware_model: None,
+            firmware_version: None,
+            discovered_at_ms,
+        })
+    }
+
+    pub fn with_port(mut self, port: u16) -> Self {
+        self.port = Some(port);
+        self
+    }
+
+    pub fn with_hardware_model(mut self, hardware_model: impl Into<String>) -> Self {
+        self.hardware_model = Some(hardware_model.into());
+        self
+    }
+
+    pub fn with_firmware_version(mut self, firmware_version: impl Into<String>) -> Self {
+        self.firmware_version = Some(firmware_version.into());
+        self
+    }
+
+    pub fn address(&self) -> String {
+        hue_https_endpoint(
+            &self.internal_ip_address,
+            self.port.unwrap_or(HUE_DEFAULT_HTTPS_PORT),
+        )
+    }
+
+    pub fn into_record(self) -> Result<DiscoveryRecord, HueError> {
+        let address = self.address();
+        hue_discovery_record(
+            self.bridge_id,
+            DiscoverySource::CloudFallback,
+            address,
+            DiscoveryConfidence::Candidate,
+            self.hardware_model,
+            self.firmware_version,
+            self.discovered_at_ms,
+            vec![Metadata::new("hue.discovery.source", "cloud_fallback")],
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueDiscoveryBatch {
+    pub generated_at_ms: u64,
+    pub records: Vec<DiscoveryRecord>,
+}
+
+impl HueDiscoveryBatch {
+    pub fn new(generated_at_ms: u64) -> Self {
+        Self {
+            generated_at_ms,
+            records: Vec::new(),
+        }
+    }
+
+    pub fn from_mdns_advertisements<'a>(
+        advertisements: impl IntoIterator<Item = &'a MdnsAdvertisement>,
+        generated_at_ms: u64,
+    ) -> Result<Self, HueError> {
+        let mut batch = Self::new(generated_at_ms);
+        for advertisement in advertisements {
+            batch
+                .records
+                .push(hue_discovery_record_from_mdns(advertisement)?);
+        }
+        Ok(batch)
+    }
+
+    pub fn from_cloud_bridges(
+        bridges: impl IntoIterator<Item = HueCloudDiscoveryBridge>,
+        generated_at_ms: u64,
+    ) -> Result<Self, HueError> {
+        let mut batch = Self::new(generated_at_ms);
+        for bridge in bridges {
+            batch.records.push(bridge.into_record()?);
+        }
+        Ok(batch)
+    }
+
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    pub fn bridge_candidates(&self) -> Vec<Bridge> {
+        self.records
+            .iter()
+            .map(DiscoveryRecord::to_bridge_candidate)
+            .collect()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct HueBridgePairingPlan {
     pub bridge: Bridge,
@@ -685,6 +834,63 @@ pub fn hue_pairing_plan_for_discovered_bridge(
     }
 }
 
+pub fn hue_pairing_plan_for_discovery_record(
+    record: &DiscoveryRecord,
+    app_name: impl Into<String>,
+    instance_name: impl Into<String>,
+) -> Option<HueBridgePairingPlan> {
+    discovered_hue_bridge_from_record(record)
+        .map(|bridge| hue_pairing_plan_for_discovered_bridge(bridge, app_name, instance_name))
+}
+
+pub fn hue_discovery_record_from_mdns(
+    advertisement: &MdnsAdvertisement,
+) -> Result<DiscoveryRecord, HueError> {
+    if !hue_mdns_service_type_matches(&advertisement.service_type) {
+        return Err(HueError::UnsupportedDiscoveryService {
+            service_type: advertisement.service_type.clone(),
+        });
+    }
+    let bridge_id = mdns_txt_value(advertisement, "bridgeid")
+        .or_else(|| mdns_txt_value(advertisement, "bridge_id"))
+        .ok_or(HueError::MissingDiscoveryField { field: "bridgeid" })?;
+    let hardware_model = mdns_txt_value(advertisement, "modelid").map(str::to_string);
+    let firmware_version = mdns_txt_value(advertisement, "swversion")
+        .or_else(|| mdns_txt_value(advertisement, "version"))
+        .map(str::to_string);
+    let metadata = vec![
+        Metadata::new("hue.discovery.source", "mdns"),
+        Metadata::new("hue.discovery.service_type", &advertisement.service_type),
+        Metadata::new("hue.discovery.instance_name", &advertisement.instance_name),
+        Metadata::new("hue.discovery.host_name", &advertisement.host_name),
+        Metadata::new("hue.discovery.port", advertisement.port.to_string()),
+    ];
+
+    hue_discovery_record(
+        bridge_id.to_string(),
+        DiscoverySource::Mdns,
+        hue_https_endpoint(advertisement.preferred_address(), advertisement.port),
+        DiscoveryConfidence::Verified,
+        hardware_model,
+        firmware_version,
+        advertisement.discovered_at_ms,
+        metadata,
+    )
+    .map(|record| record.with_display_name(advertisement.instance_name.clone()))
+}
+
+pub fn discovered_hue_bridge_from_record(record: &DiscoveryRecord) -> Option<DiscoveredHueBridge> {
+    if record.integration_id != IntegrationId::trusted(HUE_INTEGRATION_ID) {
+        return None;
+    }
+    Some(DiscoveredHueBridge {
+        bridge_id: record.native_bridge_id.clone(),
+        address: record.address.clone()?,
+        hardware_model: record.hardware_model.clone(),
+        firmware_version: record.firmware_version.clone(),
+    })
+}
+
 pub fn discovered_bridge_to_core(discovered: DiscoveredHueBridge) -> Bridge {
     let mut bridge = Bridge::new(
         BridgeId::trusted(format!("hue.bridge.{}", discovered.bridge_id)),
@@ -700,6 +906,73 @@ pub fn discovered_bridge_to_core(discovered: DiscoveredHueBridge) -> Bridge {
             .expect("discovered Hue bridge id is non-empty"),
     );
     bridge
+}
+
+fn hue_discovery_record(
+    bridge_id: impl Into<String>,
+    source: DiscoverySource,
+    address: impl Into<String>,
+    confidence: DiscoveryConfidence,
+    hardware_model: Option<String>,
+    firmware_version: Option<String>,
+    discovered_at_ms: u64,
+    metadata: Vec<Metadata>,
+) -> Result<DiscoveryRecord, HueError> {
+    let mut record = DiscoveryRecord::new(
+        IntegrationId::trusted(HUE_INTEGRATION_ID),
+        ProtocolFamily::Hue,
+        non_empty_discovery_field("bridge_id", bridge_id)?,
+        source,
+        BridgeTransport::LanHttp,
+        discovered_at_ms,
+    )?
+    .with_address(non_empty_discovery_field("address", address)?)
+    .with_confidence(confidence)
+    .with_pairing_requirement(PairingRequirement::PhysicalPresence);
+    if let Some(hardware_model) = hardware_model {
+        record = record.with_hardware_model(hardware_model);
+    }
+    if let Some(firmware_version) = firmware_version {
+        record = record.with_firmware_version(firmware_version);
+    }
+    for metadata in metadata {
+        record = record.with_metadata(metadata.key, metadata.value);
+    }
+    Ok(record)
+}
+
+fn hue_https_endpoint(host: &str, port: u16) -> String {
+    if port == HUE_DEFAULT_HTTPS_PORT {
+        format!("https://{host}")
+    } else {
+        format!("https://{host}:{port}")
+    }
+}
+
+fn hue_mdns_service_type_matches(service_type: &str) -> bool {
+    service_type
+        .trim_end_matches('.')
+        .eq_ignore_ascii_case(HUE_MDNS_SERVICE_TYPE)
+}
+
+fn mdns_txt_value<'a>(advertisement: &'a MdnsAdvertisement, key: &str) -> Option<&'a str> {
+    advertisement
+        .txt
+        .iter()
+        .find(|entry| entry.key.eq_ignore_ascii_case(key))
+        .map(|entry| entry.value.as_str())
+}
+
+fn non_empty_discovery_field(
+    field: &'static str,
+    value: impl Into<String>,
+) -> Result<String, HueError> {
+    let value = value.into();
+    if value.trim().is_empty() {
+        Err(HueError::MissingDiscoveryField { field })
+    } else {
+        Ok(value)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1923,6 +2196,130 @@ mod tests {
         assert_eq!(bridge.health, Health::Unpaired);
         assert_eq!(bridge.transport, BridgeTransport::LanHttp);
         assert_eq!(bridge.identifiers[0].kind, "bridge");
+    }
+
+    #[test]
+    fn hue_mdns_discovery_advertisement_projects_to_discovery_record() {
+        let advertisement = MdnsAdvertisement::new(
+            "_hue._tcp.local.",
+            "Philips Hue - ABCDEF",
+            "hue-bridge.local",
+            443,
+            1_000,
+        )
+        .unwrap()
+        .with_address("192.0.2.10")
+        .unwrap()
+        .with_txt("bridgeid", "001788fffeabcdef")
+        .unwrap()
+        .with_txt("modelid", "BSB002")
+        .unwrap()
+        .with_txt("swversion", "1.66.1960062030")
+        .unwrap();
+
+        let record = hue_discovery_record_from_mdns(&advertisement).unwrap();
+        let bridge = record.to_bridge_candidate();
+
+        assert_eq!(record.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(record.native_bridge_id, "001788fffeabcdef");
+        assert_eq!(record.source, DiscoverySource::Mdns);
+        assert_eq!(record.transport, BridgeTransport::LanHttp);
+        assert_eq!(record.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(record.hardware_model.as_deref(), Some("BSB002"));
+        assert_eq!(record.firmware_version.as_deref(), Some("1.66.1960062030"));
+        assert_eq!(record.confidence, DiscoveryConfidence::Verified);
+        assert_eq!(
+            record.pairing_requirement,
+            PairingRequirement::PhysicalPresence
+        );
+        assert_eq!(bridge.bridge_id.as_str(), "hue.bridge.001788fffeabcdef");
+        assert_eq!(bridge.transport, BridgeTransport::LanHttp);
+        assert!(record.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.source" && metadata.value == "mdns"
+        }));
+    }
+
+    #[test]
+    fn hue_mdns_discovery_rejects_non_hue_services() {
+        let advertisement =
+            MdnsAdvertisement::new("_matter._tcp.local", "Matter", "matter.local", 5540, 1_000)
+                .unwrap()
+                .with_txt("bridgeid", "001788fffeabcdef")
+                .unwrap();
+
+        assert_eq!(
+            hue_discovery_record_from_mdns(&advertisement),
+            Err(HueError::UnsupportedDiscoveryService {
+                service_type: "_matter._tcp.local".to_string()
+            })
+        );
+    }
+
+    #[test]
+    fn hue_cloud_fallback_discovery_projects_to_candidate_record() {
+        let record = HueCloudDiscoveryBridge::new("001788fffeabcdef", "192.0.2.10", 2_000)
+            .unwrap()
+            .with_port(8443)
+            .with_hardware_model("BSB002")
+            .with_firmware_version("1.66")
+            .into_record()
+            .unwrap();
+
+        assert_eq!(record.source, DiscoverySource::CloudFallback);
+        assert_eq!(record.transport, BridgeTransport::LanHttp);
+        assert_eq!(record.address.as_deref(), Some("https://192.0.2.10:8443"));
+        assert_eq!(record.confidence, DiscoveryConfidence::Candidate);
+        assert_eq!(
+            record.pairing_requirement,
+            PairingRequirement::PhysicalPresence
+        );
+        assert!(record.metadata.iter().any(|metadata| {
+            metadata.key == "hue.discovery.source" && metadata.value == "cloud_fallback"
+        }));
+    }
+
+    #[test]
+    fn hue_discovery_batch_collects_bridge_candidates() {
+        let advertisement = MdnsAdvertisement::new(
+            HUE_MDNS_SERVICE_TYPE,
+            "Philips Hue - ABCDEF",
+            "hue-bridge.local",
+            443,
+            1_000,
+        )
+        .unwrap()
+        .with_address("192.0.2.10")
+        .unwrap()
+        .with_txt("bridgeid", "001788fffeabcdef")
+        .unwrap();
+        let batch = HueDiscoveryBatch::from_mdns_advertisements([&advertisement], 1_050).unwrap();
+
+        assert_eq!(batch.generated_at_ms, 1_050);
+        assert_eq!(batch.len(), 1);
+        assert_eq!(
+            batch.bridge_candidates()[0].bridge_id.as_str(),
+            "hue.bridge.001788fffeabcdef"
+        );
+    }
+
+    #[test]
+    fn hue_discovery_record_can_seed_pairing_plan() {
+        let record = HueCloudDiscoveryBridge::new("001788fffeabcdef", "192.0.2.10", 2_000)
+            .unwrap()
+            .into_record()
+            .unwrap();
+
+        let discovered = discovered_hue_bridge_from_record(&record).unwrap();
+        let plan =
+            hue_pairing_plan_for_discovery_record(&record, "chief-of-staff", "desktop").unwrap();
+
+        assert_eq!(discovered.bridge_id, "001788fffeabcdef");
+        assert_eq!(plan.bridge_id().as_str(), "hue.bridge.001788fffeabcdef");
+        assert_eq!(
+            plan.registration_request.path,
+            HUE_APPLICATION_REGISTRATION_PATH
+        );
+        assert!(plan.requires_user_presence);
     }
 
     #[test]

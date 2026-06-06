@@ -8,8 +8,9 @@ All notable changes to this package will be documented in this file.
 
 - Deterministic fixture clock for freshness and supervisor tests.
 - Normalized Hue-like bridge, device, light entity, and sensor entity fixtures.
-- Deterministic Hue discovery record and discovery-runtime fixtures for testing
-  unpaired bridge candidates without network I/O.
+- Deterministic Hue discovery record and discovery-runtime fixtures built
+  through `hue-core` mDNS normalization for testing unpaired bridge candidates
+  without network I/O.
 - Registry seeding helpers for installing normalized fixture records into the
   in-memory smart-home registry.
 - Helpers for confirmed, stale, and optimistic state snapshots.

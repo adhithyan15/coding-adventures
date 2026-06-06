@@ -7,3 +7,4 @@ license = "MIT"
 
 [dependencies]
 smart-home-core = { path = "../smart-home-core" }
+smart-home-discovery = { path = "../smart-home-discovery" }

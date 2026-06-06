@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Hue mDNS and cloud-fallback discovery normalization into D23
+  `DiscoveryRecord` candidates, including bridge-candidate batches and
+  discovery-record pairing-plan handoff.
 - Hue application registration request and discovered-bridge pairing plan
   helpers for local physical-presence pairing flows.
 - Hue command summaries and command-plan rollups for payload-free write-surface

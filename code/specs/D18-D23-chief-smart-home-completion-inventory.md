@@ -49,6 +49,21 @@ This does not replace Home Assistant yet. It gives Chief of Staff a complete
 typed route into D23 discovery records; the remaining smart-home work is to run
 real network/radio/cloud discovery workers and persist the platform state.
 
+## Current Follow-On Slice
+
+This slice moves the smart-home platform side forward:
+
+- `hue-core` now normalizes Hue mDNS advertisements and Hue cloud-fallback
+  bridge observations into D23 `DiscoveryRecord` candidates.
+- Hue discovery records preserve the correct split between `source = mdns` or
+  `cloud_fallback` and command transport `lan_http`.
+- Hue discovery batches can project unpaired `Bridge` candidates for
+  `SmartHomeRuntime::record_discovery`.
+- Hue discovery records can seed the existing physical-presence pairing plan
+  without exposing application keys or raw credentials.
+- `smart-home-testkit` now builds its deterministic Hue discovery runtime
+  fixture through the canonical Hue mDNS normalization path.
+
 ## Chief Of Staff Remaining Work
 
 These items are Chief of Staff architecture, not smart-home platform work:
@@ -70,8 +85,8 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Implement real D23 discovery workers, starting with LAN and mDNS Hue
-  discovery, that feed the runtime discovery catalog.
+- Bind real D23 discovery workers to the Hue mDNS/cloud-fallback ingest path,
+  starting with LAN mDNS scanning that feeds the runtime discovery catalog.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

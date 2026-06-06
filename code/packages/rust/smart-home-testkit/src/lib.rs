@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+use hue_core::{hue_discovery_record_from_mdns, HUE_MDNS_SERVICE_TYPE};
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
@@ -13,9 +14,7 @@ use smart_home_core::{
     ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
     Value,
 };
-use smart_home_discovery::{
-    DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
-};
+use smart_home_discovery::{DiscoveryRecord, MdnsAdvertisement};
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
     EventStreamStatus, MqttQos, MqttTopicError, MqttTopicFilter,
@@ -989,22 +988,26 @@ pub fn hue_bridge_discovery_record(
     native_id: impl Into<String>,
     discovered_at_ms: u64,
 ) -> DiscoveryRecord {
-    DiscoveryRecord::new(
-        IntegrationId::trusted("hue"),
-        ProtocolFamily::Hue,
-        native_id,
-        DiscoverySource::Mdns,
-        BridgeTransport::Mdns,
+    let native_id = native_id.into();
+    let advertisement = MdnsAdvertisement::new(
+        HUE_MDNS_SERVICE_TYPE,
+        "Hue Bridge",
+        "hue-bridge.local",
+        443,
         discovered_at_ms,
     )
-    .expect("fixture Hue discovery native ids are valid")
-    .with_display_name("Hue Bridge")
-    .with_address("https://192.0.2.10")
-    .with_hardware_model("BSB002")
-    .with_firmware_version("1.66.1960062030")
-    .with_confidence(DiscoveryConfidence::Verified)
-    .with_pairing_requirement(PairingRequirement::PhysicalPresence)
-    .with_metadata("fixture", "hue_bridge_discovery")
+    .expect("fixture Hue mDNS advertisement is valid")
+    .with_address("192.0.2.10")
+    .expect("fixture Hue mDNS address is valid")
+    .with_txt("bridgeid", native_id)
+    .expect("fixture Hue bridge id TXT is valid")
+    .with_txt("modelid", "BSB002")
+    .expect("fixture Hue model TXT is valid")
+    .with_txt("swversion", "1.66.1960062030")
+    .expect("fixture Hue firmware TXT is valid");
+    hue_discovery_record_from_mdns(&advertisement)
+        .expect("fixture Hue mDNS advertisement maps to a discovery record")
+        .with_metadata("fixture", "hue_bridge_discovery")
 }
 
 pub fn hue_device(id: &'static str, bridge_id: &BridgeId, native_id: &'static str) -> Device {
@@ -1418,6 +1421,7 @@ fn protocol_id(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use smart_home_discovery::{DiscoverySource, PairingRequirement};
 
     #[test]
     fn hue_fixture_projects_normalized_bridge_device_and_entities() {
@@ -1688,6 +1692,7 @@ mod tests {
         assert_eq!(runtime.discovery_record_count(), 1);
         assert_eq!(bridge.health, Health::Unpaired);
         assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.transport, BridgeTransport::LanHttp);
         assert_eq!(bridge.hardware_model.as_deref(), Some("BSB002"));
         assert_eq!(record.source, DiscoverySource::Mdns);
         assert_eq!(
