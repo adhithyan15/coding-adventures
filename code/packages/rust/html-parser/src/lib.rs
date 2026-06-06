@@ -853,6 +853,7 @@ pub struct BrowserDocument {
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
+    pub table_cells: Vec<BrowserTableCell>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -2265,6 +2266,26 @@ pub struct BrowserTable {
     pub column_hint_count: usize,
     pub cell_count: usize,
     pub header_cell_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTableCell {
+    pub table_index: usize,
+    pub table_id: Option<String>,
+    pub table_caption: Option<String>,
+    pub section_kind: Option<String>,
+    pub row_index: usize,
+    pub column_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub header: bool,
+    pub scope: Option<String>,
+    pub headers: Vec<String>,
+    pub abbr: Option<String>,
+    pub rowspan: Option<String>,
+    pub colspan: Option<String>,
 }
 
 impl BrowserDocument {
@@ -9585,15 +9606,21 @@ fn collect_browser_facts(
                 summary.base_href.as_deref(),
                 summary.base_target.as_deref(),
             )),
-            "table" => summary.tables.push(BrowserTable {
-                caption: find_first_element_in_nodes(&element.children, "caption")
-                    .map(element_text),
-                row_count: browser_table_rows(element).len(),
-                column_count: browser_table_column_count(element),
-                column_hint_count: browser_table_column_hint_count(element),
-                cell_count: browser_table_cell_count(element),
-                header_cell_count: browser_table_header_cell_count(element),
-            }),
+            "table" => {
+                let table_index = summary.tables.len() + 1;
+                summary.tables.push(BrowserTable {
+                    caption: find_first_element_in_nodes(&element.children, "caption")
+                        .map(element_text),
+                    row_count: browser_table_rows(element).len(),
+                    column_count: browser_table_column_count(element),
+                    column_hint_count: browser_table_column_hint_count(element),
+                    cell_count: browser_table_cell_count(element),
+                    header_cell_count: browser_table_header_cell_count(element),
+                });
+                summary
+                    .table_cells
+                    .extend(browser_table_cells(element, table_index, id_texts));
+            }
             name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
                 level: heading_level(name).expect("heading level was checked above"),
                 text: visible_text_for_nodes(&element.children),
@@ -15431,6 +15458,74 @@ fn browser_table_rows(table: &Element) -> Vec<&Element> {
     rows
 }
 
+fn browser_table_cells(
+    table: &Element,
+    table_index: usize,
+    id_texts: &[(String, String)],
+) -> Vec<BrowserTableCell> {
+    let table_id = table.attribute("id").map(ToOwned::to_owned);
+    let table_caption = find_first_element_in_nodes(&table.children, "caption").map(element_text);
+    let mut rows = Vec::new();
+    collect_browser_table_rows_with_sections(&table.children, None, &mut rows);
+
+    let mut cells = Vec::new();
+    let mut occupied_until: Vec<usize> = Vec::new();
+    for (row_index, (section_kind, row)) in rows.into_iter().enumerate() {
+        let mut column_index = 0;
+        for child in &row.children {
+            let Node::Element(cell) = child else {
+                continue;
+            };
+            if !matches!(cell.name.as_str(), "td" | "th") {
+                continue;
+            }
+
+            while occupied_until
+                .get(column_index)
+                .map(|occupied| *occupied > row_index)
+                .unwrap_or(false)
+            {
+                column_index += 1;
+            }
+
+            let rowspan = html_positive_integer_attribute(cell, "rowspan");
+            let colspan = html_positive_integer_attribute(cell, "colspan");
+            if rowspan > 1 {
+                for occupied_column in column_index..column_index + colspan {
+                    if occupied_until.len() <= occupied_column {
+                        occupied_until.resize(occupied_column + 1, 0);
+                    }
+                    occupied_until[occupied_column] =
+                        occupied_until[occupied_column].max(row_index + rowspan);
+                }
+            }
+
+            cells.push(BrowserTableCell {
+                table_index,
+                table_id: table_id.clone(),
+                table_caption: table_caption.clone(),
+                section_kind: section_kind.clone(),
+                row_index: row_index + 1,
+                column_index: column_index + 1,
+                element: cell.name.clone(),
+                id: cell.attribute("id").map(ToOwned::to_owned),
+                text: visible_text_for_nodes(&cell.children),
+                accessible_name: browser_accessible_name(cell, "", &[], id_texts),
+                header: cell.name == "th",
+                scope: cell.attribute("scope").map(ToOwned::to_owned),
+                headers: browser_aria_idrefs(cell, "headers"),
+                abbr: cell.attribute("abbr").map(ToOwned::to_owned),
+                rowspan: cell.attribute("rowspan").map(ToOwned::to_owned),
+                colspan: cell.attribute("colspan").map(ToOwned::to_owned),
+            });
+
+            column_index += colspan;
+        }
+    }
+
+    cells
+}
+
 fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
     for node in nodes {
         let Node::Element(element) = node else {
@@ -15440,6 +15535,32 @@ fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>
             rows.push(element);
         } else if element.name != "table" {
             collect_browser_table_rows(&element.children, rows);
+        }
+    }
+}
+
+fn collect_browser_table_rows_with_sections<'a>(
+    nodes: &'a [Node],
+    current_section: Option<String>,
+    rows: &mut Vec<(Option<String>, &'a Element)>,
+) {
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        match element.name.as_str() {
+            "tr" => rows.push((current_section.clone(), element)),
+            "thead" | "tbody" | "tfoot" => collect_browser_table_rows_with_sections(
+                &element.children,
+                Some(element.name.clone()),
+                rows,
+            ),
+            "table" => {}
+            _ => collect_browser_table_rows_with_sections(
+                &element.children,
+                current_section.clone(),
+                rows,
+            ),
         }
     }
 }

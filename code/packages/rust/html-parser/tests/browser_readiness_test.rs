@@ -13,7 +13,7 @@ use coding_adventures_html_parser::{
     BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
     BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
     BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -99,6 +99,8 @@ struct ExpectedBrowserDocument {
     templates: Vec<ExpectedTemplate>,
     forms: Vec<ExpectedForm>,
     tables: Vec<ExpectedTable>,
+    #[serde(default)]
+    table_cells: Vec<ExpectedTableCell>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -1828,6 +1830,37 @@ struct ExpectedTable {
     header_cell_count: usize,
 }
 
+#[derive(Debug, Deserialize)]
+struct ExpectedTableCell {
+    table_index: usize,
+    #[serde(default)]
+    table_id: Option<String>,
+    #[serde(default)]
+    table_caption: Option<String>,
+    #[serde(default)]
+    section_kind: Option<String>,
+    row_index: usize,
+    column_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    header: bool,
+    #[serde(default)]
+    scope: Option<String>,
+    #[serde(default)]
+    headers: Vec<String>,
+    #[serde(default)]
+    abbr: Option<String>,
+    #[serde(default)]
+    rowspan: Option<String>,
+    #[serde(default)]
+    colspan: Option<String>,
+}
+
 #[test]
 fn browser_readiness_cases_extract_browser_document_facts() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
@@ -1848,6 +1881,26 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.id
         );
     }
+}
+
+#[test]
+fn browser_table_cell_descriptor_metadata_tracks_headers_spans_and_sections() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "table-cell-descriptor-page")
+        .expect("table cell descriptor fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("table cell descriptor fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.table_cells, expected.table_cells,
+        "table cell descriptors should preserve table context, sections, spans, headers, and grid positions",
+    );
 }
 
 #[test]
@@ -3328,6 +3381,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTable::into_browser_table)
                 .collect(),
+            table_cells: self
+                .table_cells
+                .into_iter()
+                .map(ExpectedTableCell::into_browser_table_cell)
+                .collect(),
         }
     }
 }
@@ -4708,6 +4766,29 @@ impl ExpectedTable {
             column_hint_count: self.column_hint_count,
             cell_count: self.cell_count,
             header_cell_count: self.header_cell_count,
+        }
+    }
+}
+
+impl ExpectedTableCell {
+    fn into_browser_table_cell(self) -> BrowserTableCell {
+        BrowserTableCell {
+            table_index: self.table_index,
+            table_id: self.table_id,
+            table_caption: self.table_caption,
+            section_kind: self.section_kind,
+            row_index: self.row_index,
+            column_index: self.column_index,
+            element: self.element,
+            id: self.id,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            header: self.header,
+            scope: self.scope,
+            headers: self.headers,
+            abbr: self.abbr,
+            rowspan: self.rowspan,
+            colspan: self.colspan,
         }
     }
 }
