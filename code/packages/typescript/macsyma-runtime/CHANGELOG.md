@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Feed the TypeScript MACSYMA session assumption context into direct
+  `abs`, `sqrt`, and `log` evaluation, matching Python reference behavior
+  for cases such as `assume(x >= 0); sqrt(x^2)`, `log(x^3)`, and `abs(x)`.
+
 ## [0.3.0] — 2026-05-14
 
 - Add TypeScript MACSYMA parity for EllipticE (second kind) integration:

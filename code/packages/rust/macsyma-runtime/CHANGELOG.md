@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Feed the Rust MACSYMA session assumption context into direct `abs`, `sqrt`,
+  and `log` evaluation, matching Python reference behavior for cases such as
+  `assume(x >= 0); sqrt(x^2)`, `log(x^3)`, and `abs(x)`.
+
 ## [0.3.0] — 2026-05-16
 
 **EllipticE (2nd kind) and EllipticPi (3rd kind) integration pipeline tests.**

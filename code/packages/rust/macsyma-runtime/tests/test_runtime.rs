@@ -6,7 +6,7 @@ use coding_adventures_macsyma_runtime::{
 use std::collections::HashMap;
 use symbolic_ir::{
     apply, int, rat, sym, ADD, AND, ASIN, COS, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, LESS,
-    LESS_EQUAL, LIST, LOG, MUL, POW, RULE, SIN, SQRT, SUB,
+    LESS_EQUAL, LIST, LOG, MUL, NEG, POW, RULE, SIN, SQRT, SUB,
 };
 
 const SUBST: &str = "Subst";
@@ -701,6 +701,29 @@ fn declared_positivity_feeds_radcan() {
         .unwrap();
 
     assert_eq!(results[1].output, sym("y"));
+}
+
+#[test]
+fn assumptions_feed_elementary_abs_sqrt_log_simplification() {
+    let mut session = MacsymaSession::new();
+    let results = session
+        .eval_source("assume(x >= 0); sqrt(x^2); log(x^3); abs(x);")
+        .unwrap();
+
+    assert_eq!(results[1].output, sym("x"));
+    assert_eq!(
+        results[2].output,
+        apply(sym(MUL), vec![int(3), apply(sym(LOG), vec![sym("x")])])
+    );
+    assert_eq!(results[3].output, sym("x"));
+}
+
+#[test]
+fn negative_assumptions_feed_abs() {
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("assume(y < 0); abs(y);").unwrap();
+
+    assert_eq!(results[1].output, apply(sym(NEG), vec![sym("y")]));
 }
 
 #[test]

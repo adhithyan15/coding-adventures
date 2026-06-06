@@ -388,6 +388,12 @@ numeric backend is unaffected).
 ports do not yet have an assumption system.  Python keeps those rules behind
 `is_nonneg(x)` checks.
 
+**Update (2026-06-06):** TS/Rust MACSYMA runtime sessions now feed their
+assumption context into direct `abs`, `sqrt`, and `log` evaluation, matching
+the Python reference for `assume(x >= 0); sqrt(x^2)`, `log(x^n)`, and
+`abs(x)`. The lower-level TS/Rust `symbolic-vm` packages remain
+assumption-free by design; the MACSYMA runtime layer owns session assumptions.
+
 **Pi-multiple detection** (Phase 33) covers both numeric (`IRFloat ≈ q·π`,
 denominators {1,2,3,4,6}) and structural IR (`%pi`, `Neg(%pi)`, `Mul(n,%pi)`,
 `Div(%pi,n)`, `Div(Mul(n,%pi),d)`) shapes, keyed via a reduced-fraction string

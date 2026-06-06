@@ -22,8 +22,8 @@ use coding_adventures_macsyma_compiler::{
     SUPPRESS as COMPILER_SUPPRESS,
 };
 use symbolic_ir::{
-    apply, str_node, sym, IRApply, IRNode, ASSIGN, DEFINE, GREATER, GREATER_EQUAL, IF, LESS,
-    LESS_EQUAL, LIST, POW,
+    apply, flt, int, rat, str_node, sym, IRApply, IRNode, ASSIGN, DEFINE, EXP, GREATER,
+    GREATER_EQUAL, IF, LESS, LESS_EQUAL, LIST, LOG, MUL, NEG, POW, SQRT,
 };
 use symbolic_vm::backend::{handler_fn, Backend, Handler};
 use symbolic_vm::handlers::build_handler_table;
@@ -552,6 +552,21 @@ impl MacsymaBackend {
             PROP_VARS.to_string(),
             Arc::new(move |_vm, expr| propvars_handler(&propvars_state, expr)),
         );
+        let abs_state = state.clone();
+        handlers.insert(
+            "Abs".to_string(),
+            Arc::new(move |vm, expr| runtime_abs_handler(&abs_state, vm, expr)),
+        );
+        let sqrt_state = state.clone();
+        handlers.insert(
+            SQRT.to_string(),
+            Arc::new(move |vm, expr| runtime_sqrt_handler(&sqrt_state, vm, expr)),
+        );
+        let log_state = state.clone();
+        handlers.insert(
+            LOG.to_string(),
+            Arc::new(move |vm, expr| runtime_log_handler(&log_state, vm, expr)),
+        );
         handlers.insert(
             LENGTH.to_string(),
             list_handler(Some(1), |args| length(&args[0])),
@@ -649,6 +664,193 @@ impl Backend for MacsymaBackend {
 
     fn hold_heads(&self) -> &HashSet<String> {
         &self.held
+    }
+}
+
+fn runtime_abs_handler(
+    state: &Arc<Mutex<MacsymaBackendState>>,
+    vm: &mut VM,
+    expr: IRApply,
+) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let inner = vm.eval(expr.args[0].clone());
+    if let Some(numeric) = abs_numeric_node(&inner) {
+        return numeric;
+    }
+    if let IRNode::Symbol(name) = &inner {
+        let assumptions = &state.lock().expect("macsyma backend state poisoned").assumptions;
+        if assumptions.is_nonneg(name) == Some(true) {
+            return inner;
+        }
+        if assumptions.sign_of(name) == Some(0) {
+            return int(0);
+        }
+        if assumptions.is_negative(name) == Some(true) {
+            return apply(sym(NEG), vec![inner]);
+        }
+    }
+    if let IRNode::Apply(apply_node) = &inner {
+        if apply_node.head == sym("Abs") {
+            return inner;
+        }
+        if apply_node.head == sym(NEG) && apply_node.args.len() == 1 {
+            return vm.eval(apply(sym("Abs"), vec![apply_node.args[0].clone()]));
+        }
+        if apply_node.head == sym(MUL)
+            && apply_node.args.len() == 2
+            && apply_node.args[0] == int(-1)
+        {
+            return vm.eval(apply(sym("Abs"), vec![apply_node.args[1].clone()]));
+        }
+        if apply_node.head == sym(POW) && apply_node.args.len() == 2 {
+            if let IRNode::Integer(exp) = apply_node.args[1] {
+                if exp >= 2 && exp % 2 == 0 {
+                    return inner;
+                }
+            }
+        }
+    }
+    apply(expr.head, vec![inner])
+}
+
+fn runtime_sqrt_handler(
+    state: &Arc<Mutex<MacsymaBackendState>>,
+    vm: &mut VM,
+    expr: IRApply,
+) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let arg = vm.eval(expr.args[0].clone());
+    if let Some(numeric) = sqrt_numeric_node(&arg) {
+        return numeric;
+    }
+    if let IRNode::Apply(apply_node) = &arg {
+        if apply_node.head == sym(POW) && apply_node.args.len() == 2 {
+            let base = &apply_node.args[0];
+            if let IRNode::Integer(exp) = apply_node.args[1] {
+                if exp > 0 && exp % 2 == 0 {
+                    let k = exp / 2;
+                    if k == 1 {
+                        if let IRNode::Symbol(name) = base {
+                            let assumptions =
+                                &state.lock().expect("macsyma backend state poisoned").assumptions;
+                            if assumptions.is_nonneg(name) == Some(true) {
+                                return base.clone();
+                            }
+                        }
+                    }
+                    if k % 2 == 0 {
+                        return apply(sym(POW), vec![base.clone(), int(k)]);
+                    }
+                    if k == 1 {
+                        return apply(sym("Abs"), vec![base.clone()]);
+                    }
+                    return apply(
+                        sym("Abs"),
+                        vec![apply(sym(POW), vec![base.clone(), int(k)])],
+                    );
+                }
+            }
+        }
+    }
+    apply(expr.head, vec![arg])
+}
+
+fn runtime_log_handler(
+    state: &Arc<Mutex<MacsymaBackendState>>,
+    vm: &mut VM,
+    expr: IRApply,
+) -> IRNode {
+    if expr.args.len() != 1 {
+        return IRNode::Apply(Box::new(expr));
+    }
+    let arg = vm.eval(expr.args[0].clone());
+    if let Some(numeric) = log_numeric_node(&arg) {
+        return numeric;
+    }
+    if let IRNode::Apply(apply_node) = &arg {
+        if apply_node.head == sym(EXP) && apply_node.args.len() == 1 {
+            return apply_node.args[0].clone();
+        }
+        if apply_node.head == sym(POW) && apply_node.args.len() == 2 {
+            let base = &apply_node.args[0];
+            if let IRNode::Symbol(name) = base {
+                let assumptions = &state.lock().expect("macsyma backend state poisoned").assumptions;
+                if assumptions.is_nonneg(name) == Some(true) {
+                    return apply(
+                        sym(MUL),
+                        vec![apply_node.args[1].clone(), apply(sym(LOG), vec![base.clone()])],
+                    );
+                }
+            }
+        }
+    }
+    apply(expr.head, vec![arg])
+}
+
+fn abs_numeric_node(node: &IRNode) -> Option<IRNode> {
+    match node {
+        IRNode::Integer(n) => Some(int(n.abs())),
+        IRNode::Rational(n, d) => Some(rat(n.abs(), *d)),
+        IRNode::Float(v) => Some(flt(v.abs())),
+        _ => None,
+    }
+}
+
+fn sqrt_numeric_node(node: &IRNode) -> Option<IRNode> {
+    match node {
+        IRNode::Integer(n) => {
+            if *n < 0 {
+                return None;
+            }
+            if let Some(root) = i64_sqrt_exact(*n) {
+                Some(int(root))
+            } else {
+                Some(flt((*n as f64).sqrt()))
+            }
+        }
+        IRNode::Rational(n, d) => {
+            if *n < 0 {
+                return None;
+            }
+            match (i64_sqrt_exact(*n), i64_sqrt_exact(*d)) {
+                (Some(n_root), Some(d_root)) => Some(rat(n_root, d_root)),
+                _ => Some(flt((*n as f64 / *d as f64).sqrt())),
+            }
+        }
+        IRNode::Float(v) if *v >= 0.0 => Some(flt(v.sqrt())),
+        _ => None,
+    }
+}
+
+fn log_numeric_node(node: &IRNode) -> Option<IRNode> {
+    let value = match node {
+        IRNode::Integer(n) => *n as f64,
+        IRNode::Rational(n, d) => *n as f64 / *d as f64,
+        IRNode::Float(v) => *v,
+        _ => return None,
+    };
+    if value == 1.0 {
+        return Some(int(0));
+    }
+    if value <= 0.0 {
+        return None;
+    }
+    Some(flt(value.ln()))
+}
+
+fn i64_sqrt_exact(n: i64) -> Option<i64> {
+    if n < 0 {
+        return None;
+    }
+    let root = (n as f64).sqrt().round() as i64;
+    if root.saturating_mul(root) == n {
+        Some(root)
+    } else {
+        None
     }
 }
 
