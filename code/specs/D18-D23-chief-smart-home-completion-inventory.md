@@ -31,17 +31,23 @@ The merged D18 and D23 work has the core local path in place:
 
 ## This Slice
 
-This slice completes the Chief-facing smart-home runtime surface that already
-exists in D23:
+This slice closes the Chief-facing discovery gap while keeping the platform
+boundary intact:
 
-- `smart_home.describe_capabilities`
-- `smart_home.get_health`
-- `smart_home.subscribe`
-- `smart_home.pair_bridge`
+- `smart-home-runtime` now owns a discovery catalog, records preferred
+  discovery results, reconciles them into unpaired bridge candidates, and
+  exposes an authorized `execute_discover_tool` read path.
+- `smart-home-testkit` now has deterministic Hue discovery fixtures so runtime,
+  integration, and Chief bridge tests share the same fake discovery primitive.
+- `chief-of-staff-smart-home-tools` now exposes D18D `smart_home.discover`
+  without owning discovery policy or smart-home state.
+- The bridge end-to-end test now covers list devices, discover, describe
+  capabilities, health, subscribe, pair, command, optimistic state, and D18D
+  journal/audit records.
 
-The one intentional gap is `smart_home.discover`, because D23 has the catalog
-descriptor but does not yet have a runtime discovery execution path. The bridge
-should expose discovery only after D23 owns actual discovery plans and results.
+This does not replace Home Assistant yet. It gives Chief of Staff a complete
+typed route into D23 discovery records; the remaining smart-home work is to run
+real network/radio/cloud discovery workers and persist the platform state.
 
 ## Chief Of Staff Remaining Work
 
@@ -64,7 +70,8 @@ These items are Chief of Staff architecture, not smart-home platform work:
 
 These items move toward retiring an existing Home Assistant install:
 
-- Implement D23 discovery execution, starting with LAN and mDNS Hue discovery.
+- Implement real D23 discovery workers, starting with LAN and mDNS Hue
+  discovery, that feed the runtime discovery catalog.
 - Complete real Hue pairing: start session, user presence/link button, vault
   credential write, bridge health update, and no-secret audit trail.
 - Add real Hue local HTTP command/read workers and Hue event-stream workers

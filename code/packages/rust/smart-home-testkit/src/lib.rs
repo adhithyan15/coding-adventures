@@ -13,6 +13,9 @@ use smart_home_core::{
     ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
     Value,
 };
+use smart_home_discovery::{
+    DiscoveryConfidence, DiscoveryRecord, DiscoverySource, PairingRequirement,
+};
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
     EventStreamStatus, MqttQos, MqttTopicError, MqttTopicFilter,
@@ -982,6 +985,28 @@ pub fn hue_bridge(id: &'static str, native_id: &'static str) -> Bridge {
     bridge
 }
 
+pub fn hue_bridge_discovery_record(
+    native_id: impl Into<String>,
+    discovered_at_ms: u64,
+) -> DiscoveryRecord {
+    DiscoveryRecord::new(
+        IntegrationId::trusted("hue"),
+        ProtocolFamily::Hue,
+        native_id,
+        DiscoverySource::Mdns,
+        BridgeTransport::Mdns,
+        discovered_at_ms,
+    )
+    .expect("fixture Hue discovery native ids are valid")
+    .with_display_name("Hue Bridge")
+    .with_address("https://192.0.2.10")
+    .with_hardware_model("BSB002")
+    .with_firmware_version("1.66.1960062030")
+    .with_confidence(DiscoveryConfidence::Verified)
+    .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+    .with_metadata("fixture", "hue_bridge_discovery")
+}
+
 pub fn hue_device(id: &'static str, bridge_id: &BridgeId, native_id: &'static str) -> Device {
     Device {
         device_id: DeviceId::trusted(id),
@@ -1213,6 +1238,14 @@ pub fn runtime_with_fixture(fixture: &SmartHomeFixture) -> Result<SmartHomeRunti
 pub fn hue_lighting_runtime() -> SmartHomeRuntime {
     runtime_with_fixture(&SmartHomeFixture::hue_lighting())
         .expect("hue lighting fixture records are internally consistent")
+}
+
+pub fn hue_discovery_runtime() -> SmartHomeRuntime {
+    let mut runtime = SmartHomeRuntime::new();
+    runtime
+        .record_discovery(hue_bridge_discovery_record("001788fffeabcdef", 1_000))
+        .expect("Hue discovery fixture can be recorded");
+    runtime
 }
 
 pub fn hue_sse_stream_spec(fixture: &SmartHomeFixture) -> EventStreamSpec {
@@ -1640,6 +1673,30 @@ mod tests {
             registry.entity(&fixture.sensor.entity_id).unwrap().kind,
             EntityKind::Sensor
         );
+    }
+
+    #[test]
+    fn hue_discovery_fixture_records_unpaired_bridge_candidate() {
+        let runtime = hue_discovery_runtime();
+        let bridge_id = BridgeId::trusted("hue.bridge.001788fffeabcdef");
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap();
+        let record = runtime
+            .discovery()
+            .get(&IntegrationId::trusted("hue"), "001788fffeabcdef")
+            .unwrap();
+
+        assert_eq!(runtime.discovery_record_count(), 1);
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.hardware_model.as_deref(), Some("BSB002"));
+        assert_eq!(record.source, DiscoverySource::Mdns);
+        assert_eq!(
+            record.pairing_requirement,
+            PairingRequirement::PhysicalPresence
+        );
+        assert!(bridge.metadata.iter().any(|metadata| {
+            metadata.key == "fixture" && metadata.value == "hue_bridge_discovery"
+        }));
     }
 
     #[test]
