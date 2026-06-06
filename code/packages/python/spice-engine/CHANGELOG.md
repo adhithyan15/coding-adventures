@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.14.0] — 2026-06-05
 
 ### Added
 
@@ -1126,7 +1126,7 @@ Total: 107 tests, 80.16% coverage, ruff clean.
 
 ---
 
-## [0.1.0] — Unreleased
+## [0.1.0]
 
 ### Added
 - Element classes: Resistor, Capacitor, Inductor, VoltageSource, CurrentSource, Diode (Shockley), Mosfet (mosfet-models-backed).

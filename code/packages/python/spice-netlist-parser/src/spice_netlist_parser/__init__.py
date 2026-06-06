@@ -10,12 +10,12 @@ from spice_netlist_parser.parser import (
     NetlistParseError,
     NoiseAnalysis,
     OpAnalysis,
-    OptionValue,
     OptionsAnalysis,
+    OptionValue,
     OutputProbe,
     ParsedNetlist,
-    PoleZeroAnalysis,
     PlotAnalysis,
+    PoleZeroAnalysis,
     PrintAnalysis,
     SensAnalysis,
     TempAnalysis,
@@ -26,7 +26,7 @@ from spice_netlist_parser.parser import (
 )
 
 parse = parse_netlist
-__version__ = "0.1.6"
+__version__ = "0.3.0"
 
 __all__ = [
     "AcAnalysis",

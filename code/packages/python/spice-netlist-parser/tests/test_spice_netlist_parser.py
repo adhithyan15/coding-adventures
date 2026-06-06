@@ -3,17 +3,17 @@ from math import isclose
 import pytest
 from mosfet_models import Level1Model, MosfetType
 from spice_engine import (
-    AcSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcSource,
     Capacitor,
     CurrentSource,
     Diode,
     Inductor,
-    JFET,
     Mosfet,
     MutualInductor,
     Resistor,
@@ -40,16 +40,21 @@ from spice_netlist_parser import (
     OpAnalysis,
     OptionsAnalysis,
     OutputProbe,
-    PoleZeroAnalysis,
     PlotAnalysis,
+    PoleZeroAnalysis,
     PrintAnalysis,
     SensAnalysis,
     TempAnalysis,
     TfAnalysis,
     TranAnalysis,
+    __version__,
     parse_netlist,
 )
 from spice_netlist_parser.parser import parse_value
+
+
+def test_package_version_matches_pyproject_release() -> None:
+    assert __version__ == "0.3.0"
 
 
 def test_parse_linear_operating_point_netlist_into_circuit() -> None:

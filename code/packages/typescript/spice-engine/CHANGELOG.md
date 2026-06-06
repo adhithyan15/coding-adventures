@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.14.0 — 2026-06-05
 
 - Add `diodeAtTemperature` and `circuitAtTemperature` helpers, which adjust
   diode thermal voltage and saturation current for an operating temperature

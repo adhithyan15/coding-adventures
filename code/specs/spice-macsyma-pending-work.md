@@ -22,10 +22,24 @@
 > repo.  New work is feature-driven (e.g. Maple frontend) rather than
 > gap-driven.
 
+> **SPICE wrap-up inventory (2026-06-05).** The SPICE engine and netlist parser
+> now exist as Python, TypeScript, and Rust packages. The 1970s compatibility
+> plan has completed Phases 1-8 across all three language stacks for the
+> current target: JFETs, mutual inductors, ideal transmission lines, Gear-2
+> transient integration, pseudo-transient DC continuation, model-card depth,
+> classic output/control cards, and constrained distortion / pole-zero
+> footholds. This wrap-up cuts `spice-engine` 0.14.0 and
+> `spice-netlist-parser` 0.3.0 across the Python, TypeScript, and Rust
+> packages. Remaining work is now post-release expansion rather than a blocker
+> for this compatibility slice: broader parallel corner orchestration beyond
+> the current Rust helpers, full `hardware-vm` scheduler integration,
+> Verilog-A/custom compact models, production sparse/KLU and SPICE3-era
+> raw/control/BSIM surfaces, and richer nonlinear distortion accuracy beyond
+> the Phase 8 executable footholds.
+
 > **Living document.** Updated each time a PR lands or new work is planned.
-> Last updated: 2026-05-22 (after Phase 48 Apart-for-repeated-linear-
-> factors landed in Python — all three Phase 45-documented summation
-> gaps are now closed).
+> Last updated: 2026-06-05 (SPICE wrap-up inventory, cross-language engine
+> and parser release cuts, and remaining post-release expansion list).
 >
 > **Phase 48 — Apart for repeated linear factors (Python only, so far):**
 > `symbolic-vm` 0.72.0 (PR #3927).  Extends ``Apart`` to decompose
