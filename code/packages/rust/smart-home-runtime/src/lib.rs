@@ -3230,6 +3230,52 @@ impl RuntimeSubscribeToolRequest {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePollEventsToolRequest {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub limit: Option<usize>,
+    pub peek: bool,
+}
+
+impl RuntimePollEventsToolRequest {
+    pub fn new(subscription_id: RuntimeSubscriptionId) -> Self {
+        Self {
+            subscription_id,
+            limit: None,
+            peek: false,
+        }
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn peek(mut self, peek: bool) -> Self {
+        self.peek = peek;
+        self
+    }
+
+    fn delivery_options(&self) -> RuntimeEventDeliveryOptions {
+        let mut options = RuntimeEventDeliveryOptions::new();
+        if let Some(limit) = self.limit {
+            options = options.with_limit(limit);
+        }
+        options
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeUnsubscribeToolRequest {
+    pub subscription_id: RuntimeSubscriptionId,
+}
+
+impl RuntimeUnsubscribeToolRequest {
+    pub fn new(subscription_id: RuntimeSubscriptionId) -> Self {
+        Self { subscription_id }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimePairBridgeToolRequest {
     pub session_id: RuntimePairingSessionId,
     pub bridge_id: BridgeId,
@@ -3350,6 +3396,16 @@ pub struct RuntimeSubscribeToolOutput {
     pub replay_from_checkpoint: RuntimeEventCheckpoint,
     pub subscribed_at_checkpoint: RuntimeEventCheckpoint,
     pub queued_events: usize,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimePollEventsToolOutput {
+    pub batch: RuntimeEventDeliveryBatch,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeUnsubscribeToolOutput {
+    pub batch: RuntimeEventDeliveryBatch,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4209,6 +4265,54 @@ impl SmartHomeRuntime {
             replay_from_checkpoint,
             subscribed_at_checkpoint,
             queued_events,
+        })
+    }
+
+    pub fn execute_poll_events_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimePollEventsToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimePollEventsToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::PollEvents;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let options = request.delivery_options();
+        let batch = if request.peek {
+            self.event_bus
+                .peek_deliveries(&request.subscription_id, options)?
+        } else {
+            self.event_bus
+                .drain_deliveries(&request.subscription_id, options)?
+        };
+        Ok(RuntimePollEventsToolOutput { batch })
+    }
+
+    pub fn execute_unsubscribe_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeUnsubscribeToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeUnsubscribeToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::Unsubscribe;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        Ok(RuntimeUnsubscribeToolOutput {
+            batch: self.event_bus.unsubscribe(&request.subscription_id)?,
         })
     }
 
@@ -6731,6 +6835,38 @@ mod tests {
             runtime.event_bus_mut().drain(&subscription),
             Err(RuntimeError::UnknownSubscription(_))
         ));
+
+        let poll_error = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone()),
+                1_000,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            poll_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::PollEvents,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+
+        let unsubscribe_error = runtime
+            .execute_unsubscribe_tool(
+                principal.clone(),
+                RuntimeUnsubscribeToolRequest::new(subscription.clone()),
+                1_000,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            unsubscribe_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Unsubscribe,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
     }
 
     #[test]
@@ -6797,6 +6933,93 @@ mod tests {
         ));
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+    }
+
+    #[test]
+    fn poll_and_unsubscribe_tools_manage_subscription_deliveries() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        let subscription = RuntimeSubscriptionId::trusted("command-stream");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(3_000),
+        );
+        runtime
+            .execute_subscribe_tool(
+                principal.clone(),
+                RuntimeSubscribeToolRequest::new(
+                    subscription.clone(),
+                    RuntimeEventFilter::Commands,
+                ),
+                1_100,
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-1"));
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-2"));
+
+        let peeked = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone())
+                    .with_limit(1)
+                    .peek(true),
+                1_200,
+            )
+            .unwrap();
+        assert_eq!(peeked.batch.len(), 1);
+        assert_eq!(peeked.batch.remaining_events, 1);
+        assert!(peeked.batch.has_more());
+        assert_eq!(runtime.event_bus().queued_events(&subscription).unwrap(), 2);
+
+        let drained = runtime
+            .execute_poll_events_tool(
+                principal.clone(),
+                RuntimePollEventsToolRequest::new(subscription.clone()).with_limit(1),
+                1_300,
+            )
+            .unwrap();
+        assert_eq!(drained.batch.len(), 1);
+        assert_eq!(drained.batch.remaining_events, 1);
+        assert_eq!(
+            drained.batch.summary().command_results,
+            1,
+            "poll tool should expose compact batch counts for Chief status loops"
+        );
+        assert_eq!(runtime.event_bus().queued_events(&subscription).unwrap(), 1);
+
+        let unsubscribed = runtime
+            .execute_unsubscribe_tool(
+                principal.clone(),
+                RuntimeUnsubscribeToolRequest::new(subscription.clone()),
+                1_400,
+            )
+            .unwrap();
+        assert_eq!(unsubscribed.batch.len(), 1);
+        assert_eq!(unsubscribed.batch.remaining_events, 0);
+        assert!(!runtime.event_bus().has_subscription(&subscription));
+        assert!(matches!(
+            runtime.event_bus().queued_events(&subscription),
+            Err(RuntimeError::UnknownSubscription(_))
+        ));
+
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+        assert_eq!(decisions.len(), 4);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
     }
 
     #[test]

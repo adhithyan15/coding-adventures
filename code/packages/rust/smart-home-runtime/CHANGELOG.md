@@ -8,6 +8,9 @@ All notable changes to this package will be documented in this file.
 
 - `RuntimeEventDeliverySummary` plus delivery-batch `summary()` helpers for
   compact delivered-event and remaining-backlog counts after subscription polls.
+- `RuntimePollEventsToolRequest` / `RuntimePollEventsToolOutput` and
+  `RuntimeUnsubscribeToolRequest` / `RuntimeUnsubscribeToolOutput` for
+  authorized D18D event delivery polling and subscription teardown.
 - `RuntimePendingWorkSummary` helpers for compact pending-work status derived
   from runtime read snapshots.
 - `RuntimeEventLogSummary` plus `event_log_summary()` for compact event-kind

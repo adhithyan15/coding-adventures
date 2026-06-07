@@ -21,3 +21,6 @@ All notable changes to this package will be documented in this file.
 - Added D23 discovery worker retry policy fields to
   `smart_home.observe_supervision`, including configured retry delays,
   multiplier, and the current retry delay during failure pressure.
+- Added `smart_home.poll_events` and `smart_home.unsubscribe` handlers so Chief
+  of Staff jobs can drain, peek, summarize, and retire runtime event
+  subscriptions without bypassing D23 authorization.

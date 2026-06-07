@@ -67,6 +67,9 @@ Included surfaces:
   supervision status without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
+- D18D-facing poll and unsubscribe tool facades that authorize event-stream
+  reads, support bounded peek/drain delivery batches, and return undelivered
+  events when subscriptions are retired
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
   only to Vault references and non-secret audit metadata, never raw credentials
 - read-side queries for pairing sessions and desired-state supervision targets
