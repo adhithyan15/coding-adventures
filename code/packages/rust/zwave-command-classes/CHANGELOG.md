@@ -11,6 +11,7 @@ All notable changes to this package will be documented in this file.
 - Get/set builders for binary switch, multilevel switch, and door lock command
   classes.
 - Value-report parsing for common actuator and sensor command classes.
+- Value-report encoding for common actuator and sensor command classes.
 - Notification report parsing and D23 state-delta mapping for motion, contact,
   lock, and alarm-style sensor events.
 - Battery Get/Report primitives and D23 `sensor.battery` projection.

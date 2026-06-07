@@ -391,6 +391,7 @@ pub enum CommandClassError {
         command_id: u8,
     },
     InvalidExtendedCommandClassId(u16),
+    InvalidReportValue(&'static str),
     InvalidSensorValueSize(u8),
     InvalidMeterValueSize(u8),
 }
@@ -413,6 +414,7 @@ impl fmt::Display for CommandClassError {
             Self::InvalidExtendedCommandClassId(id) => {
                 write!(f, "invalid extended Z-Wave command class id 0x{id:04x}")
             }
+            Self::InvalidReportValue(reason) => write!(f, "invalid Z-Wave report value: {reason}"),
             Self::InvalidSensorValueSize(size) => {
                 write!(f, "invalid Z-Wave multilevel sensor value size {size}")
             }
@@ -585,6 +587,100 @@ pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, Co
             command_class: command.command_class,
             command_id: command.command_id,
         }),
+    }
+}
+
+pub fn encode_value_report(report: &ZWaveValueReport) -> Result<ZWaveCommand, CommandClassError> {
+    match report {
+        ZWaveValueReport::Basic { value } => Ok(ZWaveCommand::new(
+            CommandClassId::BASIC,
+            BASIC_REPORT,
+            vec![*value],
+        )),
+        ZWaveValueReport::BinarySwitch { current_value } => Ok(ZWaveCommand::new(
+            CommandClassId::SWITCH_BINARY,
+            SWITCH_BINARY_REPORT,
+            vec![zwave_bool(*current_value)],
+        )),
+        ZWaveValueReport::MultilevelSwitch {
+            current_level,
+            target_level,
+            duration,
+        } => {
+            let mut payload = vec![*current_level];
+            if let Some(target_level) = target_level {
+                payload.push(*target_level);
+            }
+            if let Some(duration) = duration {
+                if target_level.is_none() {
+                    payload.push(*current_level);
+                }
+                payload.push(*duration);
+            }
+            Ok(ZWaveCommand::new(
+                CommandClassId::SWITCH_MULTILEVEL,
+                SWITCH_MULTILEVEL_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::BinarySensor {
+            detected,
+            sensor_type,
+        } => {
+            let mut payload = vec![zwave_bool(*detected)];
+            if let Some(sensor_type) = sensor_type {
+                payload.push(*sensor_type);
+            }
+            Ok(ZWaveCommand::new(
+                CommandClassId::SENSOR_BINARY,
+                SENSOR_BINARY_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::MultilevelSensor {
+            sensor_type,
+            scale,
+            precision,
+            raw_value,
+        } => {
+            let mut payload = vec![*sensor_type];
+            encode_scaled_value_properties(*precision, *scale, *raw_value, &mut payload)?;
+            Ok(ZWaveCommand::new(
+                CommandClassId::SENSOR_MULTILEVEL,
+                SENSOR_MULTILEVEL_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::DoorLock { mode } => Ok(ZWaveCommand::new(
+            CommandClassId::DOOR_LOCK,
+            DOOR_LOCK_OPERATION_REPORT,
+            vec![door_lock_mode_byte(*mode)],
+        )),
+        ZWaveValueReport::Battery { level } => Ok(ZWaveCommand::new(
+            CommandClassId::BATTERY,
+            BATTERY_REPORT,
+            vec![battery_level_byte(*level)],
+        )),
+        ZWaveValueReport::Meter {
+            meter_type,
+            scale,
+            precision,
+            raw_value,
+        } => {
+            if *meter_type > 0b0001_1111 {
+                return Err(CommandClassError::InvalidReportValue(
+                    "meter type must fit in five bits",
+                ));
+            }
+            let mut payload = vec![*meter_type];
+            encode_scaled_value_properties(*precision, *scale, *raw_value, &mut payload)?;
+            Ok(ZWaveCommand::new(
+                COMMAND_CLASS_METER,
+                METER_REPORT,
+                payload,
+            ))
+        }
+        ZWaveValueReport::Notification(report) => encode_notification_report(report),
     }
 }
 
@@ -893,6 +989,69 @@ fn parse_meter_report(payload: &[u8]) -> Result<ZWaveValueReport, CommandClassEr
     })
 }
 
+fn encode_notification_report(
+    report: &NotificationReport,
+) -> Result<ZWaveCommand, CommandClassError> {
+    if report.event_parameters.len() > u8::MAX as usize {
+        return Err(CommandClassError::InvalidReportValue(
+            "notification event parameters must fit in one length byte",
+        ));
+    }
+
+    let mut payload = vec![
+        report.v1_alarm_type,
+        report.v1_alarm_level,
+        0x00,
+        report.notification_status,
+        report.notification_type.as_byte(),
+        report.event,
+    ];
+    if !report.event_parameters.is_empty() {
+        payload.push(report.event_parameters.len() as u8);
+        payload.extend_from_slice(&report.event_parameters);
+    }
+
+    Ok(ZWaveCommand::new(
+        COMMAND_CLASS_NOTIFICATION,
+        NOTIFICATION_REPORT,
+        payload,
+    ))
+}
+
+fn encode_scaled_value_properties(
+    precision: u8,
+    scale: u8,
+    raw_value: i32,
+    payload: &mut Vec<u8>,
+) -> Result<(), CommandClassError> {
+    if precision > 0b111 {
+        return Err(CommandClassError::InvalidReportValue(
+            "precision must fit in three bits",
+        ));
+    }
+    if scale > 0b11 {
+        return Err(CommandClassError::InvalidReportValue(
+            "scale must fit in two bits",
+        ));
+    }
+
+    let value_bytes = compact_signed_be_bytes(raw_value);
+    let size = value_bytes.len() as u8;
+    payload.push((precision << 5) | (scale << 3) | size);
+    payload.extend_from_slice(&value_bytes);
+    Ok(())
+}
+
+fn compact_signed_be_bytes(value: i32) -> Vec<u8> {
+    if let Ok(value) = i8::try_from(value) {
+        value.to_be_bytes().to_vec()
+    } else if let Ok(value) = i16::try_from(value) {
+        value.to_be_bytes().to_vec()
+    } else {
+        value.to_be_bytes().to_vec()
+    }
+}
+
 fn signed_be_value(bytes: &[u8], size: u8) -> i32 {
     match size {
         1 => i8::from_be_bytes([bytes[0]]) as i32,
@@ -907,6 +1066,22 @@ fn door_lock_mode(value: u8) -> DoorLockMode {
         0x00 => DoorLockMode::Unsecured,
         0xff => DoorLockMode::Secured,
         other => DoorLockMode::Unknown(other),
+    }
+}
+
+fn door_lock_mode_byte(mode: DoorLockMode) -> u8 {
+    match mode {
+        DoorLockMode::Unsecured => 0x00,
+        DoorLockMode::Secured => 0xff,
+        DoorLockMode::Unknown(value) => value,
+    }
+}
+
+fn battery_level_byte(level: BatteryLevel) -> u8 {
+    match level {
+        BatteryLevel::Percentage(value) => value,
+        BatteryLevel::LowWarning => BATTERY_LOW_WARNING,
+        BatteryLevel::Reserved(value) => value,
     }
 }
 
@@ -1234,6 +1409,114 @@ mod tests {
             CapabilityId::trusted("sensor.power")
         );
         assert_eq!(power_delta.value, Value::Number(450.0));
+    }
+
+    #[test]
+    fn encodes_common_value_reports_for_round_trip_fixtures() {
+        let reports = vec![
+            ZWaveValueReport::Basic { value: 0xff },
+            ZWaveValueReport::BinarySwitch {
+                current_value: true,
+            },
+            ZWaveValueReport::MultilevelSwitch {
+                current_level: 99,
+                target_level: Some(50),
+                duration: Some(0),
+            },
+            ZWaveValueReport::BinarySensor {
+                detected: true,
+                sensor_type: Some(0x0c),
+            },
+            ZWaveValueReport::DoorLock {
+                mode: DoorLockMode::Secured,
+            },
+            ZWaveValueReport::Battery {
+                level: BatteryLevel::LowWarning,
+            },
+        ];
+
+        for report in reports {
+            let command = encode_value_report(&report).unwrap();
+            assert_eq!(parse_value_report(&command).unwrap(), report);
+            assert!(command.summary().is_report());
+        }
+    }
+
+    #[test]
+    fn encodes_scaled_sensor_meter_and_notification_reports() {
+        let sensor = ZWaveValueReport::MultilevelSensor {
+            sensor_type: 0x01,
+            scale: 1,
+            precision: 1,
+            raw_value: 2500,
+        };
+        let meter = ZWaveValueReport::Meter {
+            meter_type: 0x01,
+            scale: 0,
+            precision: 2,
+            raw_value: 1234,
+        };
+        let notification = ZWaveValueReport::Notification(NotificationReport {
+            v1_alarm_type: 0x00,
+            v1_alarm_level: 0x00,
+            notification_status: 0xff,
+            notification_type: NotificationType::HomeSecurity,
+            event: 0x08,
+            event_parameters: vec![0xaa, 0xbb],
+        });
+
+        assert_eq!(
+            encode_value_report(&sensor).unwrap().payload,
+            vec![0x01, 0b0010_1010, 0x09, 0xc4]
+        );
+        assert_eq!(
+            encode_value_report(&meter).unwrap().payload,
+            vec![0x01, 0b0100_0010, 0x04, 0xd2]
+        );
+        assert_eq!(
+            encode_value_report(&notification).unwrap().payload,
+            vec![0x00, 0x00, 0x00, 0xff, 0x07, 0x08, 0x02, 0xaa, 0xbb]
+        );
+
+        for report in [sensor, meter, notification] {
+            let command = encode_value_report(&report).unwrap();
+            assert_eq!(parse_value_report(&command).unwrap(), report);
+        }
+    }
+
+    #[test]
+    fn report_encoder_rejects_unrepresentable_packed_fields() {
+        let bad_precision = ZWaveValueReport::MultilevelSensor {
+            sensor_type: 0x01,
+            scale: 0,
+            precision: 8,
+            raw_value: 1,
+        };
+        let bad_scale = ZWaveValueReport::Meter {
+            meter_type: 0x01,
+            scale: 4,
+            precision: 0,
+            raw_value: 1,
+        };
+        let bad_meter_type = ZWaveValueReport::Meter {
+            meter_type: 0x20,
+            scale: 0,
+            precision: 0,
+            raw_value: 1,
+        };
+
+        assert!(matches!(
+            encode_value_report(&bad_precision),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
+        assert!(matches!(
+            encode_value_report(&bad_scale),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
+        assert!(matches!(
+            encode_value_report(&bad_meter_type),
+            Err(CommandClassError::InvalidReportValue(_))
+        ));
     }
 
     #[test]
