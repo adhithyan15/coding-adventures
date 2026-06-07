@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness ARIA relation descriptors now expose details, error-message,
+  and flow target metadata with resolved target text.
 - Browser-readiness global-state descriptors now include shell-level `html` and
   `body` states such as hidden, inert, accesskey, editing, spellcheck, and
   translate metadata.

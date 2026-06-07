@@ -842,6 +842,7 @@ pub struct BrowserDocument {
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
+    pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
@@ -1112,6 +1113,19 @@ pub struct BrowserGlobalStateDescriptor {
     pub spellcheck: Option<String>,
     pub translate: Option<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaRelationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub text: String,
+    pub aria_details: Vec<String>,
+    pub details_text: Vec<String>,
+    pub aria_errormessage: Vec<String>,
+    pub errormessage_text: Vec<String>,
+    pub aria_flowto: Vec<String>,
+    pub flowto_text: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -9620,6 +9634,9 @@ fn collect_browser_facts(
         if let Some(aria_live_region) = browser_aria_live_region_element(element, id_texts) {
             summary.aria_live_regions.push(aria_live_region);
         }
+        if let Some(aria_relation) = browser_aria_relation_descriptor(element, id_texts) {
+            summary.aria_relation_descriptors.push(aria_relation);
+        }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
         }
@@ -12086,6 +12103,31 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
     })
 }
 
+fn browser_aria_relation_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaRelationDescriptor> {
+    let aria_details = browser_aria_idrefs(element, "aria-details");
+    let aria_errormessage = browser_aria_idrefs(element, "aria-errormessage");
+    let aria_flowto = browser_aria_idrefs(element, "aria-flowto");
+
+    if aria_details.is_empty() && aria_errormessage.is_empty() && aria_flowto.is_empty() {
+        return None;
+    }
+
+    Some(BrowserAriaRelationDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        text: visible_text_for_nodes(&element.children),
+        details_text: browser_idref_texts(&aria_details, id_texts),
+        aria_details,
+        errormessage_text: browser_idref_texts(&aria_errormessage, id_texts),
+        aria_errormessage,
+        flowto_text: browser_idref_texts(&aria_flowto, id_texts),
+        aria_flowto,
+    })
+}
+
 fn browser_slot_assignment(element: &Element) -> Option<String> {
     element.attribute("slot").map(ToOwned::to_owned)
 }
@@ -13257,12 +13299,7 @@ fn browser_accessible_name(
 ) -> Option<String> {
     let labelledby = browser_aria_idrefs(element, "aria-labelledby");
     if !labelledby.is_empty() {
-        let mut parts = Vec::new();
-        for id in labelledby {
-            if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == &id) {
-                push_unique_string(&mut parts, collapse_html_whitespace(text));
-            }
-        }
+        let parts = browser_idref_texts(&labelledby, id_texts);
         if !parts.is_empty() {
             return Some(parts.join(" "));
         }
@@ -13305,17 +13342,18 @@ fn browser_accessible_description(
     id_texts: &[(String, String)],
 ) -> Option<String> {
     let describedby = browser_aria_idrefs(element, "aria-describedby");
-    if describedby.is_empty() {
-        return None;
-    }
+    let parts = browser_idref_texts(&describedby, id_texts);
+    (!parts.is_empty()).then(|| parts.join(" "))
+}
 
-    let mut parts = Vec::new();
-    for id in describedby {
-        if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == &id) {
-            push_unique_string(&mut parts, collapse_html_whitespace(text));
+fn browser_idref_texts(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
+    let mut texts = Vec::new();
+    for id in idrefs {
+        if let Some((_, text)) = id_texts.iter().find(|(candidate, _)| candidate == id) {
+            push_unique_string(&mut texts, collapse_html_whitespace(text));
         }
     }
-    (!parts.is_empty()).then(|| parts.join(" "))
+    texts
 }
 
 fn browser_form_owner(element: &Element) -> Option<String> {
@@ -18024,6 +18062,30 @@ mod tests {
         assert_eq!(body_shell.spellcheck.as_deref(), Some("true"));
         assert_eq!(body_shell.translate.as_deref(), Some("yes"));
         assert_eq!(body_shell.text, "Ready");
+    }
+
+    #[test]
+    fn browser_aria_relation_metadata_tracks_details_errors_and_flow() {
+        let document = parse_html(
+            "<body><div id=source aria-details=\"details extra\" aria-errormessage=error aria-flowto=next>Source</div>\
+             <p id=details>Detailed help</p><p id=extra>Extra notes</p>\
+             <p id=error>Required value</p><p id=next>Next step</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.aria_relation_descriptors.len(), 1);
+
+        let relation = &summary.aria_relation_descriptors[0];
+        assert_eq!(relation.element, "div");
+        assert_eq!(relation.id.as_deref(), Some("source"));
+        assert_eq!(relation.text, "Source");
+        assert_eq!(relation.aria_details, vec!["details", "extra"]);
+        assert_eq!(relation.details_text, vec!["Detailed help", "Extra notes"]);
+        assert_eq!(relation.aria_errormessage, vec!["error"]);
+        assert_eq!(relation.errormessage_text, vec!["Required value"]);
+        assert_eq!(relation.aria_flowto, vec!["next"]);
+        assert_eq!(relation.flowto_text, vec!["Next step"]);
     }
 
     #[test]

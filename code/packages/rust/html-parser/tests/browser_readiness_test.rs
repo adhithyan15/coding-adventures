@@ -1,6 +1,6 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserAriaCollection, BrowserAriaCollectionItem,
-    BrowserAriaLiveRegion, BrowserAriaRange, BrowserCommandElement,
+    BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
     BrowserEmbeddedContext, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
@@ -83,6 +83,8 @@ struct ExpectedBrowserDocument {
     aria_ranges: Vec<ExpectedAriaRange>,
     #[serde(default)]
     aria_live_regions: Vec<ExpectedAriaLiveRegion>,
+    #[serde(default)]
+    aria_relation_descriptors: Vec<ExpectedAriaRelationDescriptor>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
     #[serde(default)]
@@ -366,6 +368,27 @@ struct ExpectedGlobalStateDescriptor {
     translate: Option<String>,
     #[serde(default)]
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaRelationDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    aria_details: Vec<String>,
+    #[serde(default)]
+    details_text: Vec<String>,
+    #[serde(default)]
+    aria_errormessage: Vec<String>,
+    #[serde(default)]
+    errormessage_text: Vec<String>,
+    #[serde(default)]
+    aria_flowto: Vec<String>,
+    #[serde(default)]
+    flowto_text: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3511,6 +3534,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedAriaLiveRegion::into_browser_aria_live_region)
                 .collect(),
+            aria_relation_descriptors: self
+                .aria_relation_descriptors
+                .into_iter()
+                .map(ExpectedAriaRelationDescriptor::into_browser_aria_relation_descriptor)
+                .collect(),
             links: self
                 .links
                 .into_iter()
@@ -4181,6 +4209,22 @@ impl ExpectedAriaRange {
             aria_required: self.aria_required,
             tabindex: self.tabindex,
             text_value: self.text_value,
+        }
+    }
+}
+
+impl ExpectedAriaRelationDescriptor {
+    fn into_browser_aria_relation_descriptor(self) -> BrowserAriaRelationDescriptor {
+        BrowserAriaRelationDescriptor {
+            element: self.element,
+            id: self.id,
+            text: self.text,
+            aria_details: self.aria_details,
+            details_text: self.details_text,
+            aria_errormessage: self.aria_errormessage,
+            errormessage_text: self.errormessage_text,
+            aria_flowto: self.aria_flowto,
+            flowto_text: self.flowto_text,
         }
     }
 }
