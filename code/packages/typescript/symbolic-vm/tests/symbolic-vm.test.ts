@@ -427,6 +427,12 @@ describe("symbolic-vm", () => {
     expect(vm.eval(app(D, [app(SQRT, [sym("x")]), sym("x")]))).toEqual(
       app(DIV, [int(1), app(MUL, [int(2), app(SQRT, [sym("x")])])]),
     );
+    expect(vm.eval(app(D, [app(ASIN, [sym("x")]), sym("x")]))).toEqual(
+      app(DIV, [int(1), app(SQRT, [app(SUB, [int(1), app(POW, [sym("x"), int(2)])])])]),
+    );
+    expect(vm.eval(app(D, [app(ACOS, [sym("x")]), sym("x")]))).toEqual(
+      app(NEG, [app(DIV, [int(1), app(SQRT, [app(SUB, [int(1), app(POW, [sym("x"), int(2)])])])])]),
+    );
   });
 
   it("applies hyperbolic and inverse hyperbolic chain rules", () => {
@@ -980,8 +986,11 @@ describe("symbolic-vm", () => {
     if (h === "Neg") return -evalIR28(args[0], xVal);
     if (h === "Pow") return Math.pow(evalIR28(args[0], xVal), evalIR28(args[1], xVal));
     if (h === "Log") return Math.log(evalIR28(args[0], xVal));
+    if (h === "Sqrt") return Math.sqrt(evalIR28(args[0], xVal));
     if (h === "Sin") return Math.sin(evalIR28(args[0], xVal));
     if (h === "Cos") return Math.cos(evalIR28(args[0], xVal));
+    if (h === "Asin") return Math.asin(evalIR28(args[0], xVal));
+    if (h === "Acos") return Math.acos(evalIR28(args[0], xVal));
     if (h === "Atan") return Math.atan(evalIR28(args[0], xVal));
     throw new Error(`evalIR28: unsupported head: ${h}`);
   }
@@ -1143,6 +1152,61 @@ describe("symbolic-vm", () => {
       - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
     const numerical = trapezoid28((t) => t * Math.atan(t), 0, 1);
     expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(x) dx closes and matches numerically", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const antideriv = vm.eval(app(INTEGRATE, [app(ASIN, [x]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => Math.asin(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ x·asin(x) dx closes and matches numerically", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ASIN, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.asin(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ x·acos(x) dx closes and includes the asin residual", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ACOS, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Asin")).toBe(true);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0.5)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.acos(t), 0, 0.5);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(2x+1) dx handles linear arguments", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const antideriv = vm.eval(app(INTEGRATE, [app(ASIN, [arg]), x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, -0.1)
+               - evalIR28(antideriv as unknown as ReturnType<typeof sym>, -0.4);
+    const numerical = trapezoid28((t) => Math.asin(2 * t + 1), -0.4, -0.1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 12: ∫ asin(x²) dx stays unevaluated", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const result = vm.eval(app(INTEGRATE, [app(ASIN, [app(POW, [x, int(2)])]), x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
   });
 });
 

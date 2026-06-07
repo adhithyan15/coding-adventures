@@ -3115,6 +3115,9 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
       tryTrigLogProduct(a, b, x) ?? tryTrigLogProduct(b, a, x);
     if (tl27 !== undefined) return tl27;
     // Phase 28: ∫ P(x)·log(Q(x)) dx  and  ∫ P(x)·atan(Q(x)) dx  (non-linear Q)
+    // Phase 12: ∫ P(x)·asin/acos(ax+b) dx via IBP.
+    const invTrig12 = tryAsinAcosPolyProduct(a, b, x) ?? tryAsinAcosPolyProduct(b, a, x);
+    if (invTrig12 !== undefined) return invTrig12;
     const lp28 = tryLogPolyProduct(a, b, x) ?? tryLogPolyProduct(b, a, x);
     if (lp28 !== undefined) return lp28;
     const ap28 = tryAtanPolyProduct(a, b, x) ?? tryAtanPolyProduct(b, a, x);
@@ -3192,6 +3195,11 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (f.args.length === 1 && equals(f.head, ATAN)) {
     const ap28 = tryAtanPolyProduct(f, int(1), x);
     if (ap28 !== undefined) return ap28;
+  }
+  // Phase 12: bare ∫ asin/acos(ax+b) dx.
+  if (f.args.length === 1 && (equals(f.head, ASIN) || equals(f.head, ACOS))) {
+    const invTrig12 = tryAsinAcosPolyProduct(f, int(1), x);
+    if (invTrig12 !== undefined) return invTrig12;
   }
 
   return undefined;
@@ -4221,6 +4229,14 @@ function diff(f: IRNode, x: IRNode): IRNode {
     if (equals(f.head, SQRT)) {
       return app(DIV, [innerDiff, app(MUL, [int(2), app(SQRT, [inner])])]);
     }
+    if (equals(f.head, ASIN)) {
+      return app(DIV, [innerDiff, app(SQRT, [app(SUB, [int(1), app(POW, [inner, int(2)])])])]);
+    }
+    if (equals(f.head, ACOS)) {
+      return app(NEG, [
+        app(DIV, [innerDiff, app(SQRT, [app(SUB, [int(1), app(POW, [inner, int(2)])])])]),
+      ]);
+    }
     if (equals(f.head, SINH)) {
       return app(MUL, [app(COSH, [inner]), innerDiff]);
     }
@@ -4606,6 +4622,11 @@ function rpAdd(a: RatPoly, b: RatPoly): RatPoly {
   return Array.from({ length: len }, (_, i) => rcAdd(rpCoeff(a, i), rpCoeff(b, i)));
 }
 
+function rpScale(p: RatPoly, c: RatCoeff): RatPoly {
+  if (rcIsZero(c)) return [];
+  return p.map((coef) => rcMul(coef, c));
+}
+
 function rpMul(a: RatPoly, b: RatPoly): RatPoly {
   const da = rpDeg(a);
   const db = rpDeg(b);
@@ -4618,6 +4639,22 @@ function rpMul(a: RatPoly, b: RatPoly): RatPoly {
     }
   }
   return result;
+}
+
+/** Horner composition p(a*x+b). */
+function rpComposeLinear(p: RatPoly, a: RatCoeff, b: RatCoeff): RatPoly {
+  if (rpIsZero(p)) return [];
+  const sub: RatPoly = [b, a];
+  let result: RatPoly = [rpCoeff(p, rpDeg(p))];
+  for (let i = rpDeg(p) - 1; i >= 0; i--) {
+    result = rpAdd(rpMul(result, sub), [rpCoeff(p, i)]);
+  }
+  return result;
+}
+
+/** Compose Q((t-b)/a), represented as a t-polynomial. */
+function rpComposeToT(Q: RatPoly, a: RatCoeff, b: RatCoeff): RatPoly {
+  return rpComposeLinear(Q, rcDiv(RC_ONE, a), rcDiv(rc(0n - b.numer, b.denom), a));
 }
 
 /** Formal derivative: d/dx P(x). */
@@ -5062,6 +5099,100 @@ function tryAtanPolyProduct(
 
   // ∫ P·atan(Q) dx = R·atan(Q) − ∫ R·Q′/(1+Q²) dx.
   return app(SUB, [app(MUL, [R_ir, transcendental]), residual]);
+}
+
+/**
+ * Phase 12: integrate P(x) · asin(ax+b) and P(x) · acos(ax+b).
+ *
+ * Uses the Python reference formula:
+ *   asin: [Q(x)-B(ax+b)]·asin(ax+b) - A(ax+b)·sqrt(1-(ax+b)^2)
+ *   acos: Q(x)·acos(ax+b) + A(ax+b)·sqrt(1-(ax+b)^2) + B(ax+b)·asin(ax+b)
+ * where Q = ∫P dx and ∫Q((t-b)/a)/sqrt(1-t^2) dt = A(t)·sqrt(1-t^2)+B(t)·asin(t).
+ */
+function tryAsinAcosPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, ASIN) && !equals(transcendental.head, ACOS)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+
+  const argMap = toPolynomialCoeffs(arg, x);
+  if (argMap === undefined) return undefined;
+  const argPoly = rpFromCoeffsMap(argMap);
+  if (argPoly === undefined || rpDeg(argPoly) !== 1) return undefined;
+  const b = rpCoeff(argPoly, 0);
+  const a = rpCoeff(argPoly, 1);
+  if (rcIsZero(a)) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  const Q = rpIntegrate(P);
+  const Q_tilde = rpComposeToT(Q, a, b);
+  const [A_t, B_t] = sqrtOneMinusTSquaredDecompose(Q_tilde);
+  const A_x = rpComposeLinear(A_t, a, b);
+  const B_x = rpComposeLinear(B_t, a, b);
+
+  const Q_ir = rpToIR(Q, x);
+  const argSquared = app(POW, [arg, int(2)]);
+  const sqrtIr = app(SQRT, [app(SUB, [int(1), argSquared])]);
+
+  if (equals(transcendental.head, ASIN)) {
+    const asinCoef = rpIsZero(B_x) ? Q_ir : app(SUB, [Q_ir, rpToIR(B_x, x)]);
+    let result: IRNode = app(MUL, [asinCoef, transcendental]);
+    if (!rpIsZero(A_x)) {
+      result = app(SUB, [result, app(MUL, [rpToIR(A_x, x), sqrtIr])]);
+    }
+    return result;
+  }
+
+  let result: IRNode = app(MUL, [Q_ir, transcendental]);
+  if (!rpIsZero(A_x)) {
+    result = app(ADD, [result, app(MUL, [rpToIR(A_x, x), sqrtIr])]);
+  }
+  if (!rpIsZero(B_x)) {
+    result = app(ADD, [result, app(MUL, [rpToIR(B_x, x), app(ASIN, [arg])])]);
+  }
+  return result;
+}
+
+function sqrtOneMinusTSquaredDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[rcFromBigInt(-1n)], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(-1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+
+  let A: RatPoly = [];
+  let B: RatPoly = [];
+  for (let degree = 0; degree < Q_tilde.length; degree += 1) {
+    const coef = rpCoeff(Q_tilde, degree);
+    if (rcIsZero(coef)) continue;
+    const [aN, bN] = monomial(degree);
+    A = rpAdd(A, rpScale(aN, coef));
+    B = rpAdd(B, rpScale(bN, coef));
+  }
+  return [A, B];
 }
 
 function gcd(a: bigint, b: bigint): bigint {
