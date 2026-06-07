@@ -987,6 +987,41 @@ fn derivative_elementary_chain_rules() {
             ],
         )
     );
+    assert_eq!(
+        d(apply(sym(ASIN), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(
+                    sym(SQRT),
+                    vec![apply(
+                        sym(SUB),
+                        vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])],
+                    )],
+                ),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(ACOS), vec![sym("x")])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(
+                        sym(SQRT),
+                        vec![apply(
+                            sym(SUB),
+                            vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])],
+                        )],
+                    ),
+                ],
+            )],
+        )
+    );
 
     assert_eq!(
         d(apply(
@@ -1414,8 +1449,11 @@ fn eval_at(node: &symbolic_ir::IRNode, xval: f64) -> f64 {
                 ("Neg", [v]) => -eval_at(v, xval),
                 ("Pow", [b, e]) => eval_at(b, xval).powf(eval_at(e, xval)),
                 ("Log", [v]) => eval_at(v, xval).ln(),
+                ("Sqrt", [v]) => eval_at(v, xval).sqrt(),
                 ("Sin", [v]) => eval_at(v, xval).sin(),
                 ("Cos", [v]) => eval_at(v, xval).cos(),
+                ("Asin", [v]) => eval_at(v, xval).asin(),
+                ("Acos", [v]) => eval_at(v, xval).acos(),
                 ("Atan", [v]) => eval_at(v, xval).atan(),
                 _ => panic!("eval_at: unsupported head {h}"),
             }
@@ -1702,6 +1740,62 @@ fn phase11_x_atan_x_derivative_matches() {
         let expected = x_val * x_val.atan();
         assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
     }
+}
+
+#[test]
+fn phase12_asin_x_derivative_matches() {
+    let phi = integrate(apply(sym(ASIN), vec![sym("x")]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ asin(x) dx; got {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val.asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_x_asin_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ASIN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ x*asin(x) dx; got {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_x_acos_x_derivative_matches_and_keeps_asin_residual() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ACOS), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ x*acos(x) dx; got {phi:?}");
+    assert!(contains_head(&phi, ASIN), "expected Asin residual in {phi:?}");
+    for &x_val in &[0.0_f64, 0.25, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.acos();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_shifted_linear_asin_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(ASIN), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 12 should close ∫ asin(2x+1) dx; got {phi:?}");
+    for &x_val in &[-0.4_f64, -0.25, -0.1] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).asin();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase12_nonlinear_asin_falls_through() {
+    let integrand = apply(sym(ASIN), vec![apply(sym(POW), vec![sym("x"), int(2)])]);
+    let result = integrate(integrand.clone());
+    let original = apply(sym(INTEGRATE), vec![integrand, sym("x")]);
+    assert_eq!(result, original);
 }
 
 // ---------------------------------------------------------------------------

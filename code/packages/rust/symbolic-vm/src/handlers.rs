@@ -2132,6 +2132,8 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             .or_else(|| try_log_power_product(b, a, x))
             .or_else(|| try_trig_log_product(a, b, x))
             .or_else(|| try_trig_log_product(b, a, x))
+            .or_else(|| try_asin_acos_poly_product(a, b, x))
+            .or_else(|| try_asin_acos_poly_product(b, a, x))
             .or_else(|| try_log_poly_product(a, b, x))
             .or_else(|| try_log_poly_product(b, a, x))
             .or_else(|| try_atan_poly_product(a, b, x))
@@ -2148,6 +2150,8 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             try_atan_poly_product(f, &IRNode::Integer(1), x)
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
+        (ASIN, [_]) | (ACOS, [_]) => try_asin_acos_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
 }
@@ -3564,6 +3568,24 @@ fn rp_mul(a: &[RatC], b: &[RatC]) -> Option<RatPoly> {
     Some(result)
 }
 
+/// Horner composition p(a*x+b).
+fn rp_compose_linear(p: &[RatC], a: RatC, b: RatC) -> Option<RatPoly> {
+    let Some(deg) = rp_deg(p) else {
+        return Some(vec![]);
+    };
+    let sub = vec![b, a];
+    let mut result = vec![rp_coeff(p, deg)];
+    for i in (0..deg).rev() {
+        result = rp_add(&rp_mul(&result, &sub)?, &[rp_coeff(p, i)])?;
+    }
+    Some(result)
+}
+
+/// Compose Q((t-b)/a), represented as a t-polynomial.
+fn rp_compose_to_t(q: &[RatC], a: RatC, b: RatC) -> Option<RatPoly> {
+    rp_compose_linear(q, rc_div(RC_ONE, a)?, rc_div(rc_neg(b), a)?)
+}
+
 /// Formal derivative of a polynomial (drops the constant term's contribution).
 fn rp_deriv(p: &[RatC]) -> Option<RatPoly> {
     if p.len() <= 1 {
@@ -3997,6 +4019,140 @@ fn try_atan_poly_product(
     Some(apply_node(SUB, vec![main_term, residual]))
 }
 
+/// Phase 12: ``∫ P(x) · asin(a*x+b) dx`` and ``∫ P(x) · acos(a*x+b) dx``.
+fn try_asin_acos_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), ASIN | ACOS) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+
+    let arg_rp = rp_from_poly_vec(to_polynomial_coeffs(arg_ir, x)?)?;
+    if rp_deg(&arg_rp) != Some(1) {
+        return None;
+    }
+    let b = rp_coeff(&arg_rp, 0);
+    let a = rp_coeff(&arg_rp, 1);
+    if rc_is_zero(a) {
+        return None;
+    }
+
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&p_rp) {
+        return None;
+    }
+
+    let q_rp = rp_integrate(&p_rp)?;
+    let q_tilde = rp_compose_to_t(&q_rp, a, b)?;
+    let (a_t, b_t) = sqrt_one_minus_t_squared_decompose(&q_tilde)?;
+    let a_x = rp_compose_linear(&a_t, a, b)?;
+    let b_x = rp_compose_linear(&b_t, a, b)?;
+
+    let q_ir = rp_to_ir(&q_rp, x)?;
+    let sqrt_ir = apply_node(
+        SQRT,
+        vec![apply_node(
+            SUB,
+            vec![
+                IRNode::Integer(1),
+                apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]),
+            ],
+        )],
+    );
+
+    if head.as_str() == ASIN {
+        let asin_coef = if rp_is_zero(&b_x) {
+            q_ir
+        } else {
+            apply_node(SUB, vec![q_ir, rp_to_ir(&b_x, x)?])
+        };
+        let mut result = apply_node(MUL, vec![asin_coef, transcendental.clone()]);
+        if !rp_is_zero(&a_x) {
+            result = apply_node(
+                SUB,
+                vec![result, apply_node(MUL, vec![rp_to_ir(&a_x, x)?, sqrt_ir])],
+            );
+        }
+        return Some(result);
+    }
+
+    let mut result = apply_node(MUL, vec![q_ir, transcendental.clone()]);
+    if !rp_is_zero(&a_x) {
+        result = apply_node(
+            ADD,
+            vec![result, apply_node(MUL, vec![rp_to_ir(&a_x, x)?, sqrt_ir])],
+        );
+    }
+    if !rp_is_zero(&b_x) {
+        result = apply_node(
+            ADD,
+            vec![
+                result,
+                apply_node(
+                    MUL,
+                    vec![rp_to_ir(&b_x, x)?, apply_node(ASIN, vec![arg_ir.clone()])],
+                ),
+            ],
+        );
+    }
+    Some(result)
+}
+
+fn sqrt_one_minus_t_squared_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![(-1, 1)], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(-1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc((n - 1) as i128, n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    let mut memo: Vec<Option<(RatPoly, RatPoly)>> = Vec::new();
+    let mut a_total = vec![];
+    let mut b_total = vec![];
+    for (deg, &coef) in q_tilde.iter().enumerate() {
+        if rc_is_zero(coef) {
+            continue;
+        }
+        let (a_n, b_n) = monomial(deg, &mut memo)?;
+        a_total = rp_add(&a_total, &rp_mul_scalar(&a_n, coef)?)?;
+        b_total = rp_add(&b_total, &rp_mul_scalar(&b_n, coef)?)?;
+    }
+    Some((a_total, b_total))
+}
+
 fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {
     let Some(n) = to_numeric(exponent) else {
         return apply_node(
@@ -4098,6 +4254,32 @@ fn diff(f: &IRNode, x: &str) -> IRNode {
                 ),
             ],
         ),
+        (ASIN, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    SUB,
+                    vec![
+                        IRNode::Integer(1),
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                    ],
+                )],
+            );
+            apply_node(DIV, vec![diff(inner, x), denom])
+        }
+        (ACOS, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    SUB,
+                    vec![
+                        IRNode::Integer(1),
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                    ],
+                )],
+            );
+            apply_node(NEG, vec![apply_node(DIV, vec![diff(inner, x), denom])])
+        }
         (SINH, [inner]) => chain(COSH, inner, x),
         (COSH, [inner]) => chain(SINH, inner, x),
         (TANH, [inner]) => apply_node(
