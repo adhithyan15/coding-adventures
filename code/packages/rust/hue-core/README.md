@@ -10,6 +10,7 @@ packages a typed surface for:
 - event stream path constants
 - structured Hue command intents
 - Hue command planning from normalized D23 state deltas
+- direct and grouped-light color-temperature command projection
 - Hue command plans that retain generated requests and ignored capabilities for
   reconciliation telemetry
 - Hue command summaries for payload-free command planning and read-model
