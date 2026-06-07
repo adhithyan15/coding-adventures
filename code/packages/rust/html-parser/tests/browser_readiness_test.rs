@@ -527,6 +527,8 @@ struct ExpectedTextSemantic {
     element: String,
     #[serde(default)]
     id: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
     role: String,
     text: String,
     #[serde(default)]
@@ -551,6 +553,8 @@ struct ExpectedTextSemantic {
     ruby_kind: Option<String>,
     #[serde(default)]
     bidi_kind: Option<String>,
+    #[serde(default)]
+    phrase_kind: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2142,7 +2146,7 @@ fn browser_text_semantic_descriptor_metadata_tracks_inline_annotations() {
 
     assert_eq!(
         actual.text_semantics, expected.text_semantics,
-        "text semantics should preserve machine-readable values, edits, quotes, ruby annotations, and bidi metadata",
+        "text semantics should preserve machine-readable values, edits, quotes, phrase semantics, ruby annotations, and bidi metadata",
     );
 }
 
@@ -3962,6 +3966,7 @@ impl ExpectedTextSemantic {
         BrowserTextSemantic {
             element: self.element,
             id: self.id,
+            title: self.title,
             role: self.role,
             text: self.text,
             lang: self.lang,
@@ -3975,6 +3980,7 @@ impl ExpectedTextSemantic {
             edit_datetime: self.edit_datetime,
             ruby_kind: self.ruby_kind,
             bidi_kind: self.bidi_kind,
+            phrase_kind: self.phrase_kind,
         }
     }
 }

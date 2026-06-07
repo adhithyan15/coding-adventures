@@ -23,6 +23,8 @@ also pin labels, derived accessible names, owner references,
 placeholder/autocomplete hints, and required/readonly/multiple control state.
 Global-state descriptor cases pin non-form inert/hidden, editing, drag,
 spellcheck, translate, accesskey, autofocus, and related focus metadata.
+Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
+annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags and preload/poster metadata.
 Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, and loading-policy hints such as integrity,

@@ -480,6 +480,7 @@ def check_browser_expected_lists(
             require_string(semantic_path, semantic, field, errors)
         for field in (
             "id",
+            "title",
             "lang",
             "dir",
             "quote_cite",
@@ -491,6 +492,7 @@ def check_browser_expected_lists(
             "edit_datetime",
             "ruby_kind",
             "bidi_kind",
+            "phrase_kind",
         ):
             require_optional_nullable_string(semantic_path, semantic, field, errors)
 
