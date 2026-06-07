@@ -2134,6 +2134,10 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             .or_else(|| try_trig_log_product(b, a, x))
             .or_else(|| try_asin_acos_poly_product(a, b, x))
             .or_else(|| try_asin_acos_poly_product(b, a, x))
+            .or_else(|| try_sinh_cosh_poly_product(a, b, x))
+            .or_else(|| try_sinh_cosh_poly_product(b, a, x))
+            .or_else(|| try_asinh_acosh_poly_product(a, b, x))
+            .or_else(|| try_asinh_acosh_poly_product(b, a, x))
             .or_else(|| try_log_poly_product(a, b, x))
             .or_else(|| try_log_poly_product(b, a, x))
             .or_else(|| try_atan_poly_product(a, b, x))
@@ -2151,6 +2155,12 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
         (ASIN, [_]) | (ACOS, [_]) => try_asin_acos_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (SINH, [_]) | (COSH, [_]) => try_sinh_cosh_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (ASINH, [_]) | (ACOSH, [_]) => try_asinh_acosh_poly_product(f, &IRNode::Integer(1), x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (TANH, [_]) | (ATANH, [_]) => try_tanh_atanh_linear(f, x)
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
     }
@@ -4108,6 +4118,289 @@ fn try_asin_acos_poly_product(
         );
     }
     Some(result)
+}
+
+fn linear_arg_coeffs(arg_ir: &IRNode, x: &str) -> Option<(RatC, RatC)> {
+    let arg_rp = rp_from_poly_vec(to_polynomial_coeffs(arg_ir, x)?)?;
+    if rp_deg(&arg_rp) != Some(1) {
+        return None;
+    }
+    let b = rp_coeff(&arg_rp, 0);
+    let a = rp_coeff(&arg_rp, 1);
+    if rc_is_zero(a) {
+        return None;
+    }
+    Some((a, b))
+}
+
+fn hyp_product_term(poly: &[RatC], head: &str, arg_ir: &IRNode, x: &str) -> Option<Option<IRNode>> {
+    if rp_is_zero(poly) {
+        return Some(None);
+    }
+    let hyp_ir = apply_node(head, vec![arg_ir.clone()]);
+    if rp_deg(poly) == Some(0) && rc_is_one(rp_coeff(poly, 0)) {
+        return Some(Some(hyp_ir));
+    }
+    Some(Some(apply_node(MUL, vec![rp_to_ir(poly, x)?, hyp_ir])))
+}
+
+fn add_terms(terms: Vec<Option<IRNode>>) -> Option<IRNode> {
+    let terms: Vec<IRNode> = terms.into_iter().flatten().collect();
+    match terms.len() {
+        0 => None,
+        1 => terms.into_iter().next(),
+        _ => terms.into_iter().reduce(|a, b| apply_node(ADD, vec![a, b])),
+    }
+}
+
+/// Phase 13: integrate P(x)*sinh(a*x+b) and P(x)*cosh(a*x+b).
+fn try_sinh_cosh_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), SINH | COSH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+
+    let mut derivative = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&derivative) {
+        return None;
+    }
+
+    let mut cosh_poly: RatPoly = vec![];
+    let mut sinh_poly: RatPoly = vec![];
+    let mut a_power = a;
+    let mut sign = RC_ONE;
+    let mut degree = 0usize;
+    while !rp_is_zero(&derivative) {
+        let scale = rc_div(sign, a_power)?;
+        let scaled = rp_mul_scalar(&derivative, scale)?;
+        if head.as_str() == SINH {
+            if degree % 2 == 0 {
+                cosh_poly = rp_add(&cosh_poly, &scaled)?;
+            } else {
+                sinh_poly = rp_add(&sinh_poly, &scaled)?;
+            }
+        } else if degree % 2 == 0 {
+            sinh_poly = rp_add(&sinh_poly, &scaled)?;
+        } else {
+            cosh_poly = rp_add(&cosh_poly, &scaled)?;
+        }
+
+        derivative = rp_deriv(&derivative)?;
+        a_power = rc_mul(a_power, a)?;
+        sign = rc_neg(sign);
+        degree += 1;
+    }
+
+    add_terms(vec![
+        hyp_product_term(&cosh_poly, COSH, arg_ir, x)?,
+        hyp_product_term(&sinh_poly, SINH, arg_ir, x)?,
+    ])
+}
+
+/// Phase 13: integrate P(x)*asinh(a*x+b) and P(x)*acosh(a*x+b).
+fn try_asinh_acosh_poly_product(
+    transcendental: &IRNode,
+    poly_candidate: &IRNode,
+    x: &str,
+) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), ASINH | ACOSH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, b) = linear_arg_coeffs(arg_ir, x)?;
+
+    let p_rp = rp_from_poly_vec(to_polynomial_coeffs(poly_candidate, x)?)?;
+    if rp_is_zero(&p_rp) {
+        return None;
+    }
+
+    let q_rp = rp_integrate(&p_rp)?;
+    let q_tilde = rp_compose_to_t(&q_rp, a, b)?;
+    let (a_t, b_t) = if head.as_str() == ASINH {
+        sqrt_t_plus_one_decompose(&q_tilde)?
+    } else {
+        sqrt_t_minus_one_decompose(&q_tilde)?
+    };
+    let a_x = rp_compose_linear(&a_t, a, b)?;
+    let b_x = rp_compose_linear(&b_t, a, b)?;
+
+    let q_ir = rp_to_ir(&q_rp, x)?;
+    let main_coef = if rp_is_zero(&b_x) {
+        q_ir
+    } else {
+        apply_node(SUB, vec![q_ir, rp_to_ir(&b_x, x)?])
+    };
+    let mut result = apply_node(MUL, vec![main_coef, transcendental.clone()]);
+
+    if !rp_is_zero(&a_x) {
+        let arg_sq = apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]);
+        let sqrt_inner = if head.as_str() == ASINH {
+            apply_node(ADD, vec![arg_sq, IRNode::Integer(1)])
+        } else {
+            apply_node(SUB, vec![arg_sq, IRNode::Integer(1)])
+        };
+        result = apply_node(
+            SUB,
+            vec![
+                result,
+                apply_node(
+                    MUL,
+                    vec![rp_to_ir(&a_x, x)?, apply_node(SQRT, vec![sqrt_inner])],
+                ),
+            ],
+        );
+    }
+    Some(result)
+}
+
+fn try_tanh_atanh_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), TANH | ATANH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+    let inv_a = rc_div(RC_ONE, a)?;
+
+    if head.as_str() == TANH {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(inv_a)?,
+                apply_node(LOG, vec![apply_node(COSH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let arg_over_a = apply_node(MUL, vec![rc_to_ir(inv_a)?, arg_ir.clone()]);
+    let log_coef = rc_div(RC_ONE, rc_mul((2, 1), a)?)?;
+    let log_arg = apply_node(
+        SUB,
+        vec![
+            IRNode::Integer(1),
+            apply_node(POW, vec![arg_ir.clone(), IRNode::Integer(2)]),
+        ],
+    );
+    Some(apply_node(
+        ADD,
+        vec![
+            apply_node(MUL, vec![arg_over_a, transcendental.clone()]),
+            apply_node(MUL, vec![rc_to_ir(log_coef)?, apply_node(LOG, vec![log_arg])]),
+        ],
+    ))
+}
+
+fn sqrt_t_plus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![RC_ONE], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc(-((n - 1) as i128), n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    decompose_by_monomial(q_tilde, monomial)
+}
+
+fn sqrt_t_minus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
+    fn monomial(n: usize, memo: &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)> {
+        if n < memo.len() {
+            if let Some(cached) = memo[n].clone() {
+                return Some(cached);
+            }
+        } else {
+            memo.resize_with(n + 1, || None);
+        }
+
+        let result = if n == 0 {
+            (vec![], vec![RC_ONE])
+        } else if n == 1 {
+            (vec![RC_ONE], vec![])
+        } else {
+            let mut a_new = vec![RC_ZERO; n];
+            a_new[n - 1] = rc(1, n as i128)?;
+            let (a_rec, b_rec) = monomial(n - 2, memo)?;
+            let coef = rc((n - 1) as i128, n as i128)?;
+            (
+                rp_add(&a_new, &rp_mul_scalar(&a_rec, coef)?)?,
+                rp_mul_scalar(&b_rec, coef)?,
+            )
+        };
+
+        memo[n] = Some(result.clone());
+        Some(result)
+    }
+
+    decompose_by_monomial(q_tilde, monomial)
+}
+
+fn decompose_by_monomial(
+    q_tilde: &[RatC],
+    monomial: fn(usize, &mut Vec<Option<(RatPoly, RatPoly)>>) -> Option<(RatPoly, RatPoly)>,
+) -> Option<(RatPoly, RatPoly)> {
+    let mut memo: Vec<Option<(RatPoly, RatPoly)>> = Vec::new();
+    let mut a_total = vec![];
+    let mut b_total = vec![];
+    for (deg, &coef) in q_tilde.iter().enumerate() {
+        if rc_is_zero(coef) {
+            continue;
+        }
+        let (a_n, b_n) = monomial(deg, &mut memo)?;
+        a_total = rp_add(&a_total, &rp_mul_scalar(&a_n, coef)?)?;
+        b_total = rp_add(&b_total, &rp_mul_scalar(&b_n, coef)?)?;
+    }
+    Some((a_total, b_total))
 }
 
 fn sqrt_one_minus_t_squared_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
