@@ -22,6 +22,8 @@ All notable changes to this package will be documented in this file.
   and hand off only non-secret completion metadata.
 - Hue command summaries and command-plan rollups for payload-free write-surface
   telemetry.
+- Grouped-light color-temperature command projection from normalized D23 state
+  deltas.
 - Hue command planning from normalized D23 `StateDelta` records for direct and
   grouped light writes.
 - `HueCommandPlan` for bundling generated Hue commands, request projections,

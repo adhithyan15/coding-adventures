@@ -369,6 +369,10 @@ pub enum HueCommand {
         light_id: HueResourceId,
         mirek: u16,
     },
+    SetGroupedLightColorTemperature {
+        grouped_light_id: HueResourceId,
+        mirek: u16,
+    },
     RecallScene {
         scene_id: HueResourceId,
     },
@@ -394,11 +398,17 @@ impl HueCommand {
             } => {
                 set_brightness_request(HueResourceType::GroupedLight, grouped_light_id, *brightness)
             }
-            Self::SetLightColorTemperature { light_id, mirek } => HueRequest {
-                method: HueMethod::Put,
-                path: HueResourceRef::new(HueResourceType::Light, light_id.clone()).path(),
-                body: Some(HueRequestBody::SetColorTemperature { mirek: *mirek }),
-            },
+            Self::SetLightColorTemperature { light_id, mirek } => {
+                set_color_temperature_request(HueResourceType::Light, light_id, *mirek)
+            }
+            Self::SetGroupedLightColorTemperature {
+                grouped_light_id,
+                mirek,
+            } => set_color_temperature_request(
+                HueResourceType::GroupedLight,
+                grouped_light_id,
+                *mirek,
+            ),
             Self::RecallScene { scene_id } => HueRequest {
                 method: HueMethod::Put,
                 path: HueResourceRef::new(HueResourceType::Scene, scene_id.clone()).path(),
@@ -477,15 +487,21 @@ pub fn hue_command_from_state_delta(
                 capability_id: delta.capability_id.clone(),
                 expected: "an integer in 0..=65535",
             })?;
-            if target.resource_type != HueResourceType::Light {
-                return Err(HueError::UnsupportedCommandTarget {
+            match &target.resource_type {
+                HueResourceType::Light => Ok(Some(HueCommand::SetLightColorTemperature {
+                    light_id: target.id.clone(),
+                    mirek,
+                })),
+                HueResourceType::GroupedLight => {
+                    Ok(Some(HueCommand::SetGroupedLightColorTemperature {
+                        grouped_light_id: target.id.clone(),
+                        mirek,
+                    }))
+                }
+                _ => Err(HueError::UnsupportedCommandTarget {
                     resource_type: target.resource_type.clone(),
-                });
+                }),
             }
-            Ok(Some(HueCommand::SetLightColorTemperature {
-                light_id: target.id.clone(),
-                mirek,
-            }))
         }
         _ => Ok(None),
     }
@@ -620,6 +636,11 @@ impl HueCommandSummary {
                 method: HueMethod::Put,
                 body_kind: HueRequestBodyKind::SetColorTemperature,
             },
+            HueCommand::SetGroupedLightColorTemperature { .. } => Self {
+                target: HueCommandTarget::GroupedLight,
+                method: HueMethod::Put,
+                body_kind: HueRequestBodyKind::SetColorTemperature,
+            },
             HueCommand::RecallScene { .. } => Self {
                 target: HueCommandTarget::Scene,
                 method: HueMethod::Put,
@@ -727,6 +748,18 @@ fn set_brightness_request(
         method: HueMethod::Put,
         path: HueResourceRef::new(resource_type, id.clone()).path(),
         body: Some(HueRequestBody::SetBrightness { brightness }),
+    }
+}
+
+fn set_color_temperature_request(
+    resource_type: HueResourceType,
+    id: &HueResourceId,
+    mirek: u16,
+) -> HueRequest {
+    HueRequest {
+        method: HueMethod::Put,
+        path: HueResourceRef::new(resource_type, id.clone()).path(),
+        body: Some(HueRequestBody::SetColorTemperature { mirek }),
     }
 }
 
@@ -1502,6 +1535,13 @@ impl HueGroupedLightResource {
         HueCommand::SetGroupedLightBrightness {
             grouped_light_id: self.id.clone(),
             brightness,
+        }
+    }
+
+    pub fn command_set_color_temperature(&self, mirek: u16) -> HueCommand {
+        HueCommand::SetGroupedLightColorTemperature {
+            grouped_light_id: self.id.clone(),
+            mirek,
         }
     }
 }
@@ -2344,6 +2384,20 @@ mod tests {
                 body: Some(HueRequestBody::SetBrightness { brightness: 70 }),
             }
         );
+
+        let grouped_color_temperature = HueCommand::SetGroupedLightColorTemperature {
+            grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+            mirek: 370,
+        };
+
+        assert_eq!(
+            grouped_color_temperature.to_request(),
+            HueRequest {
+                method: HueMethod::Put,
+                path: "/clip/v2/resource/grouped_light/grouped-light-1".to_string(),
+                body: Some(HueRequestBody::SetColorTemperature { mirek: 370 }),
+            }
+        );
     }
 
     #[test]
@@ -2397,6 +2451,10 @@ mod tests {
                 light_id: HueResourceId::trusted("light-1"),
                 mirek: 366,
             },
+            HueCommand::SetGroupedLightColorTemperature {
+                grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                mirek: 370,
+            },
             HueCommand::RecallScene {
                 scene_id: HueResourceId::trusted("scene-1"),
             },
@@ -2407,13 +2465,13 @@ mod tests {
         assert_eq!(
             summary,
             HueCommandPlanSummary {
-                total_commands: 6,
+                total_commands: 7,
                 light_commands: 3,
-                grouped_light_commands: 2,
+                grouped_light_commands: 3,
                 scene_commands: 1,
                 on_off_commands: 2,
                 brightness_commands: 2,
-                color_temperature_commands: 1,
+                color_temperature_commands: 2,
                 scene_recall_commands: 1,
             }
         );
@@ -2462,6 +2520,10 @@ mod tests {
                 capability_id: CapabilityId::trusted("light.brightness"),
                 value: Value::Percentage(20),
             },
+            StateDelta {
+                capability_id: CapabilityId::trusted("light.color_temperature"),
+                value: Value::Integer(370),
+            },
         ];
 
         let light_commands = hue_commands_from_state_deltas(&light, &light_deltas).unwrap();
@@ -2495,6 +2557,10 @@ mod tests {
                 HueCommand::SetGroupedLightBrightness {
                     grouped_light_id: HueResourceId::trusted("grouped-light-1"),
                     brightness: 20,
+                },
+                HueCommand::SetGroupedLightColorTemperature {
+                    grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                    mirek: 370,
                 },
             ]
         );
@@ -2609,9 +2675,10 @@ mod tests {
                     value: Value::Integer(366),
                 },
             ),
-            Err(HueError::UnsupportedCommandTarget {
-                resource_type: HueResourceType::GroupedLight
-            })
+            Ok(Some(HueCommand::SetGroupedLightColorTemperature {
+                grouped_light_id: HueResourceId::trusted("grouped-light-1"),
+                mirek: 366,
+            }))
         );
         assert!(matches!(
             hue_command_from_state_delta(
@@ -3200,6 +3267,14 @@ mod tests {
         assert_eq!(
             grouped.command_set_brightness(55).to_request().body,
             Some(HueRequestBody::SetBrightness { brightness: 55 })
+        );
+        assert_eq!(
+            grouped.command_set_color_temperature(370).to_request(),
+            HueRequest {
+                method: HueMethod::Put,
+                path: "/clip/v2/resource/grouped_light/grouped-light-1".to_string(),
+                body: Some(HueRequestBody::SetColorTemperature { mirek: 370 }),
+            }
         );
         assert_eq!(grouped.owner.resource_type, HueResourceType::Room);
 
