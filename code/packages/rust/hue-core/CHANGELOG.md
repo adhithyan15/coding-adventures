@@ -17,6 +17,9 @@ All notable changes to this package will be documented in this file.
   per-observation failures in a generic D23 discovery-worker envelope.
 - Hue application registration request and discovered-bridge pairing plan
   helpers for local physical-presence pairing flows.
+- Hue pairing exchange helpers that build local HTTP registration plans, parse
+  Hue success and link-button error responses, produce Vault secret payloads,
+  and hand off only non-secret completion metadata.
 - Hue command summaries and command-plan rollups for payload-free write-surface
   telemetry.
 - Hue command planning from normalized D23 `StateDelta` records for direct and

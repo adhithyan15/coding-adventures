@@ -3357,6 +3357,34 @@ pub struct RuntimePairBridgeToolOutput {
     pub session: RuntimePairingSession,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairingCompletion {
+    pub session_id: RuntimePairingSessionId,
+    pub vault_ref: VaultRef,
+    pub completed_at_ms: u64,
+    pub metadata: Vec<Metadata>,
+}
+
+impl RuntimePairingCompletion {
+    pub fn new(
+        session_id: RuntimePairingSessionId,
+        vault_ref: VaultRef,
+        completed_at_ms: u64,
+    ) -> Self {
+        Self {
+            session_id,
+            vault_ref,
+            completed_at_ms,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
+        self.metadata = metadata;
+        self
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
@@ -3904,24 +3932,40 @@ impl SmartHomeRuntime {
         vault_ref: VaultRef,
         completed_at_ms: u64,
     ) -> Result<RuntimePairingSession, RuntimeError> {
+        self.complete_pairing_session_with(RuntimePairingCompletion::new(
+            session_id.clone(),
+            vault_ref,
+            completed_at_ms,
+        ))
+    }
+
+    pub fn complete_pairing_session_with(
+        &mut self,
+        completion: RuntimePairingCompletion,
+    ) -> Result<RuntimePairingSession, RuntimeError> {
+        let RuntimePairingCompletion {
+            session_id,
+            vault_ref,
+            completed_at_ms,
+            metadata,
+        } = completion;
         let session = self
             .pairing_sessions
-            .get(session_id)
+            .get(&session_id)
             .cloned()
             .ok_or_else(|| RuntimeError::UnknownPairingSession(session_id.clone()))?;
         if session.status != PairingSessionStatus::PendingUserPresence {
             return Err(RuntimeError::PairingSessionNotPending {
-                session_id: session_id.clone(),
+                session_id,
                 status: session.status,
             });
         }
         if completed_at_ms >= session.expires_at_ms {
             let mut expired = session.clone();
             expired.status = PairingSessionStatus::Expired;
-            self.pairing_sessions
-                .insert(session_id.clone(), expired.clone());
+            self.pairing_sessions.insert(session_id.clone(), expired);
             return Err(RuntimeError::PairingSessionExpired {
-                session_id: session_id.clone(),
+                session_id,
                 expired_at_ms: session.expires_at_ms,
                 now_ms: completed_at_ms,
             });
@@ -3930,6 +3974,7 @@ impl SmartHomeRuntime {
         let mut completed = session;
         completed.status = PairingSessionStatus::Completed;
         completed.vault_ref = Some(vault_ref.clone());
+        completed.metadata.extend(metadata.iter().cloned());
         self.pairing_sessions
             .insert(session_id.clone(), completed.clone());
 
@@ -3942,6 +3987,11 @@ impl SmartHomeRuntime {
         bridge.health = Health::Online;
         bridge.last_seen_at_ms = Some(completed_at_ms);
         self.registry.upsert_bridge(bridge)?;
+        let mut event_metadata = vec![Metadata::new(
+            "smart_home.pairing_session",
+            completed.session_id.as_str(),
+        )];
+        event_metadata.extend(metadata);
         self.apply_bridge_health(BridgeHealthReport {
             event_id: EventId::trusted(format!(
                 "pairing.completed.health:{}:{completed_at_ms}",
@@ -3951,10 +4001,7 @@ impl SmartHomeRuntime {
             health: Health::Online,
             observed_at_ms: completed_at_ms,
             received_at_ms: completed_at_ms,
-            metadata: vec![Metadata::new(
-                "smart_home.pairing_session",
-                completed.session_id.as_str(),
-            )],
+            metadata: event_metadata,
         })?;
 
         Ok(completed)
