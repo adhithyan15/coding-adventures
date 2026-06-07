@@ -1798,6 +1798,90 @@ fn phase12_nonlinear_asin_falls_through() {
     assert_eq!(result, original);
 }
 
+#[test]
+fn phase13_x_sinh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(SINH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*sinh(x); got {phi:?}");
+    assert!(contains_head(&phi, COSH), "expected Cosh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_cosh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(COSH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*cosh(x); got {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.cosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_asinh_x_derivative_matches() {
+    let phi = integrate(apply(sym(ASINH), vec![sym("x")]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close asinh(x); got {phi:?}");
+    assert!(contains_head(&phi, SQRT), "expected Sqrt term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val.asinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_acosh_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ACOSH), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close x*acosh(x); got {phi:?}");
+    assert!(contains_head(&phi, SQRT), "expected Sqrt term in {phi:?}");
+    for &x_val in &[1.3_f64, 1.7, 2.2] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.acosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_tanh_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(TANH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close tanh(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.1, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).tanh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_atanh_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let phi = integrate(apply(sym(ATANH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 13 should close atanh(x/2); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    for &x_val in &[-0.5_f64, 0.2, 0.7] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (x_val / 2.0).atanh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase13_x_tanh_x_falls_through() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(TANH), vec![sym("x")])]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "x*tanh(x) should remain deferred; got {result:?}");
+}
+
 // ---------------------------------------------------------------------------
 // Phase 29: Abs and Sqrt algebraic rules
 // ---------------------------------------------------------------------------

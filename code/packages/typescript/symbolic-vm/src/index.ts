@@ -3118,6 +3118,10 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     // Phase 12: ∫ P(x)·asin/acos(ax+b) dx via IBP.
     const invTrig12 = tryAsinAcosPolyProduct(a, b, x) ?? tryAsinAcosPolyProduct(b, a, x);
     if (invTrig12 !== undefined) return invTrig12;
+    const hyp13 =
+      trySinhCoshPolyProduct(a, b, x) ?? trySinhCoshPolyProduct(b, a, x) ??
+      tryAsinhAcoshPolyProduct(a, b, x) ?? tryAsinhAcoshPolyProduct(b, a, x);
+    if (hyp13 !== undefined) return hyp13;
     const lp28 = tryLogPolyProduct(a, b, x) ?? tryLogPolyProduct(b, a, x);
     if (lp28 !== undefined) return lp28;
     const ap28 = tryAtanPolyProduct(a, b, x) ?? tryAtanPolyProduct(b, a, x);
@@ -3200,6 +3204,18 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (f.args.length === 1 && (equals(f.head, ASIN) || equals(f.head, ACOS))) {
     const invTrig12 = tryAsinAcosPolyProduct(f, int(1), x);
     if (invTrig12 !== undefined) return invTrig12;
+  }
+  if (f.args.length === 1 && (equals(f.head, SINH) || equals(f.head, COSH))) {
+    const hyp13 = trySinhCoshPolyProduct(f, int(1), x);
+    if (hyp13 !== undefined) return hyp13;
+  }
+  if (f.args.length === 1 && (equals(f.head, ASINH) || equals(f.head, ACOSH))) {
+    const invHyp13 = tryAsinhAcoshPolyProduct(f, int(1), x);
+    if (invHyp13 !== undefined) return invHyp13;
+  }
+  if (f.args.length === 1 && (equals(f.head, TANH) || equals(f.head, ATANH))) {
+    const tanh13 = tryTanhAtanhLinear(f, x);
+    if (tanh13 !== undefined) return tanh13;
   }
 
   return undefined;
@@ -5160,6 +5176,211 @@ function tryAsinAcosPolyProduct(
     result = app(ADD, [result, app(MUL, [rpToIR(B_x, x), app(ASIN, [arg])])]);
   }
   return result;
+}
+
+function linearArgCoeffs(arg: IRNode, x: IRNode): { readonly a: RatCoeff; readonly b: RatCoeff } | undefined {
+  const argMap = toPolynomialCoeffs(arg, x);
+  if (argMap === undefined) return undefined;
+  const argPoly = rpFromCoeffsMap(argMap);
+  if (argPoly === undefined || rpDeg(argPoly) !== 1) return undefined;
+  const a = rpCoeff(argPoly, 1);
+  if (rcIsZero(a)) return undefined;
+  return { a, b: rpCoeff(argPoly, 0) };
+}
+
+function hypProductTerm(poly: RatPoly, head: IRNode, arg: IRNode, x: IRNode): IRNode | undefined {
+  if (rpIsZero(poly)) return undefined;
+  const polyIr = rpToIR(poly, x);
+  const hypIr = app(head, [arg]);
+  return rpDeg(poly) === 0 && rcIsOne(rpCoeff(poly, 0)) ? hypIr : app(MUL, [polyIr, hypIr]);
+}
+
+function addDefinedTerms(terms: readonly (IRNode | undefined)[]): IRNode | undefined {
+  const present = terms.filter((term): term is IRNode => term !== undefined);
+  if (present.length === 0) return undefined;
+  return present.reduce((acc, term) => app(ADD, [acc, term]));
+}
+
+/**
+ * Phase 13: integrate P(x) * sinh(ax+b) and P(x) * cosh(ax+b).
+ *
+ * Tabular IBP terminates for polynomial P:
+ *   integral P*sinh(u) = P/a*cosh(u) - P'/a^2*sinh(u) + ...
+ *   integral P*cosh(u) = P/a*sinh(u) - P'/a^2*cosh(u) + ...
+ */
+function trySinhCoshPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, SINH) && !equals(transcendental.head, COSH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  let derivative = rpFromCoeffsMap(Pmap);
+  if (derivative === undefined || rpIsZero(derivative)) return undefined;
+
+  let coshPoly: RatPoly = [];
+  let sinhPoly: RatPoly = [];
+  let aPower = linear.a;
+  let sign = RC_ONE;
+  let degree = 0;
+  while (!rpIsZero(derivative)) {
+    const scale = rcDiv(sign, aPower);
+    if (equals(transcendental.head, SINH)) {
+      if (degree % 2 === 0) coshPoly = rpAdd(coshPoly, rpScale(derivative, scale));
+      else sinhPoly = rpAdd(sinhPoly, rpScale(derivative, scale));
+    } else {
+      if (degree % 2 === 0) sinhPoly = rpAdd(sinhPoly, rpScale(derivative, scale));
+      else coshPoly = rpAdd(coshPoly, rpScale(derivative, scale));
+    }
+    derivative = rpDeriv(derivative);
+    aPower = rcMul(aPower, linear.a);
+    sign = rc(0n - sign.numer, sign.denom);
+    degree += 1;
+  }
+
+  return addDefinedTerms([
+    hypProductTerm(coshPoly, COSH, arg, x),
+    hypProductTerm(sinhPoly, SINH, arg, x),
+  ]);
+}
+
+/**
+ * Phase 13: integrate P(x) * asinh(ax+b) and P(x) * acosh(ax+b).
+ *
+ * Mirrors Phase 12's IBP shape, replacing the inverse-trig residual with
+ * decompositions over sqrt(t^2 + 1) or sqrt(t^2 - 1).
+ */
+function tryAsinhAcoshPolyProduct(
+  transcendental: IRNode,
+  polyCandidate: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, ASINH) && !equals(transcendental.head, ACOSH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const Pmap = toPolynomialCoeffs(polyCandidate, x);
+  if (Pmap === undefined) return undefined;
+  const P = rpFromCoeffsMap(Pmap);
+  if (P === undefined || rpIsZero(P)) return undefined;
+
+  const Q = rpIntegrate(P);
+  const Q_tilde = rpComposeToT(Q, linear.a, linear.b);
+  const [A_t, B_t] = equals(transcendental.head, ASINH)
+    ? sqrtTPlusOneDecompose(Q_tilde)
+    : sqrtTMinusOneDecompose(Q_tilde);
+  const A_x = rpComposeLinear(A_t, linear.a, linear.b);
+  const B_x = rpComposeLinear(B_t, linear.a, linear.b);
+
+  const Q_ir = rpToIR(Q, x);
+  const mainCoef = rpIsZero(B_x) ? Q_ir : app(SUB, [Q_ir, rpToIR(B_x, x)]);
+  let result: IRNode = app(MUL, [mainCoef, transcendental]);
+
+  if (!rpIsZero(A_x)) {
+    const argSquared = app(POW, [arg, int(2)]);
+    const sqrtInner = equals(transcendental.head, ASINH)
+      ? app(ADD, [argSquared, int(1)])
+      : app(SUB, [argSquared, int(1)]);
+    result = app(SUB, [result, app(MUL, [rpToIR(A_x, x), app(SQRT, [sqrtInner])])]);
+  }
+  return result;
+}
+
+function tryTanhAtanhLinear(transcendental: IRNode, x: IRNode): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, TANH) && !equals(transcendental.head, ATANH)) return undefined;
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const invA = rcDiv(RC_ONE, linear.a);
+  if (equals(transcendental.head, TANH)) {
+    return app(MUL, [rcToIR(invA), app(LOG, [app(COSH, [arg])])]);
+  }
+
+  const argOverA = app(MUL, [rcToIR(invA), arg]);
+  const logCoef = rcDiv(RC_ONE, rcMul(rcFromBigInt(2n), linear.a));
+  const logArg = app(SUB, [int(1), app(POW, [arg, int(2)])]);
+  return app(ADD, [
+    app(MUL, [argOverA, transcendental]),
+    app(MUL, [rcToIR(logCoef), app(LOG, [logArg])]),
+  ]);
+}
+
+function sqrtTPlusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[RC_ONE], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(0n - BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+  return decomposeByMonomial(Q_tilde, monomial);
+}
+
+function sqrtTMinusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
+  const memo = new Map<number, [RatPoly, RatPoly]>();
+  const monomial = (n: number): [RatPoly, RatPoly] => {
+    const cached = memo.get(n);
+    if (cached !== undefined) return cached;
+    let result: [RatPoly, RatPoly];
+    if (n === 0) {
+      result = [[], [RC_ONE]];
+    } else if (n === 1) {
+      result = [[RC_ONE], []];
+    } else {
+      const aNew: RatCoeff[] = Array.from({ length: n }, () => RC_ZERO);
+      aNew[n - 1] = rc(1n, BigInt(n));
+      const [aRec, bRec] = monomial(n - 2);
+      const coef = rc(BigInt(n - 1), BigInt(n));
+      result = [rpAdd(aNew, rpScale(aRec, coef)), rpScale(bRec, coef)];
+    }
+    memo.set(n, result);
+    return result;
+  };
+  return decomposeByMonomial(Q_tilde, monomial);
+}
+
+function decomposeByMonomial(
+  Q_tilde: RatPoly,
+  monomial: (degree: number) => [RatPoly, RatPoly],
+): [RatPoly, RatPoly] {
+  let A: RatPoly = [];
+  let B: RatPoly = [];
+  for (let degree = 0; degree < Q_tilde.length; degree += 1) {
+    const coef = rpCoeff(Q_tilde, degree);
+    if (rcIsZero(coef)) continue;
+    const [aN, bN] = monomial(degree);
+    A = rpAdd(A, rpScale(aN, coef));
+    B = rpAdd(B, rpScale(bN, coef));
+  }
+  return [A, B];
 }
 
 function sqrtOneMinusTSquaredDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
