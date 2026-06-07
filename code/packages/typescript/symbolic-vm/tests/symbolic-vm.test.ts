@@ -1111,16 +1111,38 @@ describe("symbolic-vm", () => {
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
   });
 
-  it("Phase 28: regression — ∫ atan(x) dx is not intercepted by Phase 28", () => {
-    // Phase 28 checks isLinearIn(Q, x); for atan(x), Q = x is linear (degree 1),
-    // so Phase 28 skips it.  TypeScript does not yet have Phase 11, so atan(x)
-    // remains unevaluated.  This test verifies that Phase 28 does NOT accidentally
-    // intercept or corrupt it.
+  it("Phase 11: ∫ atan(x) dx returns a closed form with ATAN and LOG", () => {
     const vm = new VM(new SymbolicBackend());
     const x = sym("x");
     const result = vm.eval(app(INTEGRATE, [app(ATAN, [x]), x]));
-    // Should remain unevaluated (Phase 11 is not implemented in TypeScript yet).
-    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+  });
+
+  it("Phase 11: ∫ atan(x+1) dx numerical correctness", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(ATAN, [app(ADD, [x, int(1)])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+      - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => Math.atan(t + 1), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
+  });
+
+  it("Phase 11: ∫ x·atan(x) dx numerical correctness", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(MUL, [x, app(ATAN, [x])]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    const diff = evalIR28(antideriv as unknown as ReturnType<typeof sym>, 1)
+      - evalIR28(antideriv as unknown as ReturnType<typeof sym>, 0);
+    const numerical = trapezoid28((t) => t * Math.atan(t), 0, 1);
+    expect(Math.abs(diff - numerical)).toBeLessThan(1e-5);
   });
 });
 

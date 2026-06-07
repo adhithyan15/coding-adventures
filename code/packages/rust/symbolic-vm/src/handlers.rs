@@ -2137,14 +2137,14 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             .or_else(|| try_atan_poly_product(a, b, x))
             .or_else(|| try_atan_poly_product(b, a, x))
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
-        // Phase 28: bare ∫ log(Q(x)) dx and ∫ atan(Q(x)) dx for non-linear Q.
-        // The simple arms (LOG, [inner]) and (ATAN, [inner]) above already captured
-        // the x-equals-inner case; these arms fire when Q depends on x but is non-linear.
+        // Phase 28: bare ∫ log(Q(x)) dx for non-linear Q, plus bare
+        // ∫ atan(Q(x)) dx for linear (Phase 11) and non-linear (Phase 28) Q.
+        // The simple LOG arm above already captured the x-equals-inner case.
         (LOG, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
             try_log_poly_product(f, &IRNode::Integer(1), x)
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
-        (ATAN, [q_ir]) if depends_on(q_ir, x) && !is_linear_in(q_ir, x) => {
+        (ATAN, [q_ir]) if depends_on(q_ir, x) => {
             try_atan_poly_product(f, &IRNode::Integer(1), x)
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
@@ -3717,8 +3717,9 @@ fn is_linear_in(expr: &IRNode, x: &str) -> bool {
 /// Phase 28 residuals:
 ///
 /// - **Case A**: R = c·D′  →  c·log(D)
-/// - **Case B**: R is a constant, D = a₂x²+a₀ (no odd-degree terms),
-///              √(a₀/a₂) is rational  →  r₀/(a₂√(a₀/a₂))·atan(x/√(a₀/a₂))
+/// - **Case B**: R is linear, D = a₂x²+a₁x+a₀, and √(4a₂a₀-a₁²)
+///              is rational. Split off the D′ log term, then close the
+///              remaining constant-over-quadratic term with atan.
 ///
 /// Returns `None` if neither case applies (signals that Phase 28 falls through).
 fn close_remainder_over_d(
@@ -3741,56 +3742,86 @@ fn close_remainder_over_d(
         }
     }
 
-    // Case B: constant remainder over quadratic denominator with rational √
-    if rp_deg(r) != Some(0) {
+    // Case B: linear remainder over a positive shifted quadratic.
+    if rp_deg(d) != Some(2) {
         return None;
     }
-    if rp_deg(d) != Some(2) {
+    if !matches!(rp_deg(r), Some(0) | Some(1)) {
         return None;
     }
 
     let a2 = rp_coeff(d, 2);
     let a1 = rp_coeff(d, 1);
     let a0 = rp_coeff(d, 0);
-
-    // No linear term (otherwise denominator has a real root and we'd need
-    // partial fractions with irrational roots)
-    if !rc_is_zero(a1) {
+    if rc_is_zero(a2) || a2.0 <= 0 {
         return None;
     }
 
-    // a₀/a₂ must be a positive rational perfect square
-    let ba = rc_div(a0, a2)?;
-    if ba.0 <= 0 {
-        return None;
-    }
-    let sqrt_ba = rc_sqrt(ba)?;
-    if rc_is_zero(sqrt_ba) {
-        return None;
-    }
-
-    // ∫ r₀/(a₂x²+a₀) dx = r₀/(a₂·√(a₀/a₂)) · atan(x/√(a₀/a₂))
+    // R = r1*x + r0 = c*D' + k, with c = r1/(2*a2).
+    let two = (2, 1);
+    let four = (4, 1);
+    let r1 = rp_coeff(r, 1);
     let r0 = rp_coeff(r, 0);
-    let denom_coef = rc_mul(a2, sqrt_ba)?;
-    let coef = rc_div(r0, denom_coef)?;
+    let c = rc_div(r1, rc_mul(two, a2)?)?;
+    let k = rc_sub(r0, rc_mul(c, a1)?)?;
 
-    let coef_ir = rc_to_ir(coef)?;
-    let sqrt_ba_ir = rc_to_ir(sqrt_ba)?;
-    let x_sym = IRNode::Symbol(x.to_string());
+    // delta = 4*a2*a0 - a1^2 must have a positive rational square root.
+    let delta = rc_sub(
+        rc_mul(four, rc_mul(a2, a0)?)?,
+        rc_mul(a1, a1)?,
+    )?;
+    if delta.0 <= 0 {
+        return None;
+    }
+    let sqrt_delta = rc_sqrt(delta)?;
+    if rc_is_zero(sqrt_delta) {
+        return None;
+    }
 
-    // Build atan(x / √(a₀/a₂)).  If √(a₀/a₂) = 1, simplify to atan(x).
-    let atan_arg = if rc_is_one(sqrt_ba) {
-        x_sym
-    } else {
-        apply_node(DIV, vec![x_sym, sqrt_ba_ir])
-    };
-    let atan_node = apply_node(ATAN, vec![atan_arg]);
+    let mut terms = Vec::new();
+    if !rc_is_zero(c) {
+        let c_ir = rc_to_ir(c)?;
+        let log_d = apply_node(LOG, vec![d_ir.clone()]);
+        terms.push(if rc_is_one(c) {
+            log_d
+        } else {
+            apply_node(MUL, vec![c_ir, log_d])
+        });
+    }
 
-    Some(if rc_is_one(coef) {
-        atan_node
-    } else {
-        apply_node(MUL, vec![coef_ir, atan_node])
-    })
+    if !rc_is_zero(k) {
+        // ∫ k/D dx = (2k/sqrt(delta)) * atan((2*a2*x+a1)/sqrt(delta)).
+        let coef = rc_div(rc_mul(two, k)?, sqrt_delta)?;
+
+        let x_sym = IRNode::Symbol(x.to_string());
+        let atan_numer = apply_node(
+            ADD,
+            vec![
+                apply_node(MUL, vec![rc_to_ir(rc_mul(two, a2)?)?, x_sym]),
+                rc_to_ir(a1)?,
+            ],
+        );
+        let atan_arg = if rc_is_one(sqrt_delta) {
+            atan_numer
+        } else {
+            apply_node(DIV, vec![atan_numer, rc_to_ir(sqrt_delta)?])
+        };
+        let atan_node = apply_node(ATAN, vec![atan_arg]);
+
+        terms.push(if rc_is_one(coef) {
+            atan_node
+        } else {
+            apply_node(MUL, vec![rc_to_ir(coef)?, atan_node])
+        });
+    }
+
+    match terms.len() {
+        0 => None,
+        1 => terms.into_iter().next(),
+        _ => terms
+            .into_iter()
+            .reduce(|a, b| apply_node(ADD, vec![a, b])),
+    }
 }
 
 /// Core rational function integrator (Phase 28 residuals).
@@ -3903,7 +3934,7 @@ fn try_log_poly_product(
     Some(apply_node(SUB, vec![main_term, residual]))
 }
 
-/// Phase 28: ``∫ P(x) · atan(Q(x)) dx`` for non-linear polynomial Q.
+/// Phase 11/28: ``∫ P(x) · atan(Q(x)) dx`` for polynomial Q.
 ///
 /// IBP (u = atan Q, dv = P dx):
 ///   ∫ P·atan(Q) dx  =  R·atan(Q) − ∫ R·Q′/(1+Q²) dx
@@ -3924,8 +3955,9 @@ fn try_atan_poly_product(
     }
     let q_ir = &apply.args[0];
 
-    // Q must depend on x and be non-linear (linear Q left to future Phase 11)
-    if !depends_on(q_ir, x) || is_linear_in(q_ir, x) {
+    // Q must depend on x. Linear Q covers MACSYMA Phase 11; non-linear Q
+    // covers Phase 28.
+    if !depends_on(q_ir, x) {
         return None;
     }
 

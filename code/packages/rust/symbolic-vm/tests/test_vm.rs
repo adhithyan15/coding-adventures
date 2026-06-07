@@ -1661,15 +1661,47 @@ fn phase28_regression_log_x_still_phase3() {
 }
 
 #[test]
-fn phase28_regression_atan_x_stays_unevaluated() {
-    // ∫ atan(x) dx — linear Q, Phase 28 must NOT intercept this.
-    // TypeScript has no Phase 11 so the result stays unevaluated.
+fn phase11_atan_x_is_closed() {
+    // ∫ atan(x) dx = x*atan(x) - 1/2*log(1+x^2).
     let result = integrate(apply(sym(ATAN), vec![sym("x")]));
-    let original = apply(
-        sym(INTEGRATE),
-        vec![apply(sym(ATAN), vec![sym("x")]), sym("x")],
+    assert!(
+        !is_unevaluated_integrate(&result),
+        "Phase 11 should close ∫ atan(x) dx; got {result:?}"
     );
-    assert_eq!(result, original, "Phase 28 must not intercept linear atan(x)");
+    assert!(contains_head(&result, ATAN), "Expected Atan in {result:?}");
+    assert!(contains_head(&result, LOG), "Expected Log in {result:?}");
+}
+
+#[test]
+fn phase11_shifted_atan_derivative_matches() {
+    // The shifted case exercises the shifted-quadratic residual closure:
+    // D = 1 + (x+1)^2.
+    let integrand = apply(sym(ATAN), vec![apply(sym(ADD), vec![sym("x"), int(1)])]);
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 11 should close ∫ atan(x+1) dx; got {phi:?}"
+    );
+    for &x_val in &[-0.5_f64, 0.0, 0.5, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (x_val + 1.0).atan();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase11_x_atan_x_derivative_matches() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(ATAN), vec![sym("x")])]);
+    let phi = integrate(integrand);
+    assert!(
+        !is_unevaluated_integrate(&phi),
+        "Phase 11 should close ∫ x*atan(x) dx; got {phi:?}"
+    );
+    for &x_val in &[-1.0_f64, -0.25, 0.25, 1.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = x_val * x_val.atan();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
 }
 
 // ---------------------------------------------------------------------------
