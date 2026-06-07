@@ -3213,6 +3213,10 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     const invHyp13 = tryAsinhAcoshPolyProduct(f, int(1), x);
     if (invHyp13 !== undefined) return invHyp13;
   }
+  if (f.args.length === 1 && (equals(f.head, COTH) || equals(f.head, SECH) || equals(f.head, CSCH))) {
+    const recipHyp15 = tryRecipHypLinear(f, x);
+    if (recipHyp15 !== undefined) return recipHyp15;
+  }
   if (f.args.length === 1 && (equals(f.head, TANH) || equals(f.head, ATANH))) {
     const tanh13 = tryTanhAtanhLinear(f, x);
     if (tanh13 !== undefined) return tanh13;
@@ -5319,6 +5323,29 @@ function tryTanhAtanhLinear(transcendental: IRNode, x: IRNode): IRNode | undefin
     app(MUL, [argOverA, transcendental]),
     app(MUL, [rcToIR(logCoef), app(LOG, [logArg])]),
   ]);
+}
+
+function tryRecipHypLinear(transcendental: IRNode, x: IRNode): IRNode | undefined {
+  if (transcendental.kind !== "apply") return undefined;
+  if (!equals(transcendental.head, COTH) && !equals(transcendental.head, SECH) && !equals(transcendental.head, CSCH)) {
+    return undefined;
+  }
+  if (transcendental.args.length !== 1) return undefined;
+  const arg = transcendental.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const invA = rcToIR(rcDiv(RC_ONE, linear.a));
+  if (equals(transcendental.head, COTH)) {
+    return app(MUL, [invA, app(LOG, [app(SINH, [arg])])]);
+  }
+  if (equals(transcendental.head, SECH)) {
+    return app(MUL, [invA, app(ATAN, [app(SINH, [arg])])]);
+  }
+
+  const halfArg = app(MUL, [rational(1, 2), arg]);
+  return app(MUL, [invA, app(LOG, [app(TANH, [halfArg])])]);
 }
 
 function sqrtTPlusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
