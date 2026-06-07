@@ -13,6 +13,8 @@ All notable changes to this package will be documented in this file.
   compact read-side inspection of integration coverage.
 - `SmartHomeToolCatalogSummary` and `smart_home_tool_catalog_summary()` for
   compact read-side inspection of the smart-home tool surface.
+- `smart_home.poll_events` and `smart_home.unsubscribe` tool descriptors for
+  model-facing event subscription lifecycle control.
 - Health and command-result status helpers for shared supervision/read-side
   classification of pairing, attention, acceptance, rejection, and timeout
   states.
