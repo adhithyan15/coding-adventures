@@ -2410,6 +2410,11 @@ impl BrowserDocument {
         if let Some(head) = head {
             collect_head_browser_facts(&head.children, &mut summary);
         }
+        for element in [html, body].into_iter().flatten() {
+            if let Some(descriptor) = browser_global_state_descriptor(element) {
+                summary.global_state_descriptors.push(descriptor);
+            }
+        }
         let labels = collect_label_texts_by_control_id(body_children);
         let id_texts = collect_element_texts_by_id(body_children);
         collect_browser_facts(
@@ -17979,6 +17984,46 @@ mod tests {
         );
         assert!(render_tree.children[0].children[2].open);
         assert!(render_tree.children[0].children[3].open);
+    }
+
+    #[test]
+    fn browser_shell_global_state_metadata_tracks_document_and_body_attributes() {
+        let document = parse_html(
+            "<html lang=en dir=ltr hidden accesskey=\"h ?\" spellcheck=false translate=no>\
+             <body id=app-shell class=\"app hydrated\" title=\"App shell\" inert contenteditable=plaintext-only draggable=true spellcheck=true translate=yes>\
+             <main><p>Ready</p></main></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.global_state_descriptors.len(), 2);
+
+        let document_shell = &summary.global_state_descriptors[0];
+        assert_eq!(document_shell.element, "html");
+        assert_eq!(document_shell.lang.as_deref(), Some("en"));
+        assert_eq!(document_shell.dir.as_deref(), Some("ltr"));
+        assert!(document_shell.hidden);
+        assert_eq!(document_shell.accesskey, vec!["h", "?"]);
+        assert_eq!(document_shell.spellcheck.as_deref(), Some("false"));
+        assert_eq!(document_shell.translate.as_deref(), Some("no"));
+        assert_eq!(document_shell.text, "Ready");
+
+        let body_shell = &summary.global_state_descriptors[1];
+        assert_eq!(body_shell.element, "body");
+        assert_eq!(body_shell.id.as_deref(), Some("app-shell"));
+        assert_eq!(body_shell.classes, vec!["app", "hydrated"]);
+        assert_eq!(body_shell.title.as_deref(), Some("App shell"));
+        assert!(body_shell.inert);
+        assert_eq!(
+            body_shell.contenteditable.as_deref(),
+            Some("plaintext-only")
+        );
+        assert_eq!(body_shell.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(body_shell.draggable.as_deref(), Some("true"));
+        assert_eq!(body_shell.draggable_state.as_deref(), Some("true"));
+        assert_eq!(body_shell.spellcheck.as_deref(), Some("true"));
+        assert_eq!(body_shell.translate.as_deref(), Some("yes"));
+        assert_eq!(body_shell.text, "Ready");
     }
 
     #[test]
