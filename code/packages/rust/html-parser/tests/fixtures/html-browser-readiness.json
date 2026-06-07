@@ -1087,6 +1087,36 @@
       }
     },
     {
+      "id": "document-shell-global-state-page",
+      "description": "Browser document summaries expose html/body shell global-state descriptors alongside document identity metadata.",
+      "input": "<html lang=en dir=ltr hidden accesskey=\"h ?\" spellcheck=false translate=no><body id=app-shell class=\"app hydrated\" title=\"App shell\" inert contenteditable=plaintext-only draggable=true spellcheck=true translate=yes><main><p>Ready</p></main></body></html>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "document_lang": "en",
+        "document_dir": "ltr",
+        "body_id": "app-shell",
+        "body_classes": ["app", "hydrated"],
+        "body_text": "Ready",
+        "metas": [],
+        "resources": [],
+        "anchors": [],
+        "headings": [],
+        "section_landmarks": [
+          { "element": "main", "role": "main", "text": "Ready", "section_kind": "main", "landmark_kind": "main" }
+        ],
+        "links": [],
+        "images": [],
+        "global_state_descriptors": [
+          { "element": "html", "lang": "en", "dir": "ltr", "hidden": true, "accesskey": ["h", "?"], "spellcheck": "false", "translate": "no", "text": "Ready" },
+          { "element": "body", "id": "app-shell", "classes": ["app", "hydrated"], "title": "App shell", "inert": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "true", "draggable_state": "true", "spellcheck": "true", "translate": "yes", "text": "Ready" }
+        ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "popover-command-descriptor-page",
       "description": "Browser document summaries expose popover hosts with their popovertarget and commandfor invoker relationships.",
       "input": "<body><button id=open popovertarget=menu-pop popovertargetaction=show aria-controls=menu-pop aria-expanded=false>Open menu</button><button id=close command=hide-popover commandfor=menu-pop>Close menu</button><div id=menu-pop popover=manual aria-label=Actions><h2>Actions</h2><p>Archive</p></div><div id=note-pop popover=auto aria-labelledby=note-title><h3 id=note-title>Note</h3><p>Saved</p></div></body>",

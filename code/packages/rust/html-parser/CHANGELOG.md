@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness global-state descriptors now include shell-level `html` and
+  `body` states such as hidden, inert, accesskey, editing, spellcheck, and
+  translate metadata.
 - Browser-readiness text semantic summaries now include phrase-level semantics
   for abbreviation, definition, citation, code, keyboard input, sample output,
   variables, subscript/superscript, emphasis, importance, small print,
