@@ -9,6 +9,7 @@ import {
   determinant,
   dimensions,
   dot,
+  eigenvalues,
   frobeniusNorm,
   getEntry,
   identityMatrix,
@@ -267,6 +268,34 @@ describe("characteristic polynomial", () => {
   it("rejects non-square and symbolic-entry matrices", () => {
     expect(() => charPolyCoeffs(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
     expect(() => charPoly(matrix([[sym("a")]]), sym("lambda"))).toThrow(MatrixError);
+  });
+});
+
+describe("eigenvalues", () => {
+  it("returns MACSYMA-style eigenvalue/multiplicity pairs for 1x1 and 2x2 matrices", () => {
+    expect(eigenvalues(matrix([irow([7])]))).toEqual(app(LIST, [
+      app(LIST, [int(7), int(1)]),
+    ]));
+    expect(eigenvalues(matrix([irow([1, 2]), irow([2, 1])]))).toEqual(app(LIST, [
+      app(LIST, [int(-1), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+  });
+
+  it("preserves repeated and rational eigenvalue multiplicity", () => {
+    expect(eigenvalues(matrix([irow([2, 0]), irow([0, 2])]))).toEqual(app(LIST, [
+      app(LIST, [int(2), int(2)]),
+    ]));
+    expect(eigenvalues(matrix([[rational(1, 2), int(0)], [int(0), int(3)]]))).toEqual(app(LIST, [
+      app(LIST, [rational(1, 2), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+  });
+
+  it("rejects unsupported shapes and symbolic entries", () => {
+    expect(() => eigenvalues(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => eigenvalues(identityMatrix(3))).toThrow(MatrixError);
+    expect(() => eigenvalues(matrix([[sym("a")]]))).toThrow(MatrixError);
   });
 });
 

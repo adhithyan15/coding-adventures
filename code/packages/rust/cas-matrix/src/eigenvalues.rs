@@ -1,5 +1,7 @@
 //! Characteristic polynomial helpers for exact-rational matrices.
 
+use cas_solve::frac::Frac as SolveFrac;
+use cas_solve::{solve_linear, solve_quadratic, SolveResult};
 use symbolic_ir::{apply, int, sym, IRNode, ADD, MUL, POW};
 
 use crate::matrix::{num_cols, num_rows, MatrixError, MatrixResult};
@@ -47,7 +49,45 @@ pub fn charpoly(m: &IRNode, variable: &IRNode) -> MatrixResult<IRNode> {
     })
 }
 
-fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
+/// Return `List(List(lambda, multiplicity), ...)` for 1x1/2x2 exact matrices.
+pub fn eigenvalues(m: &IRNode) -> MatrixResult<IRNode> {
+    let n = num_rows(m)?;
+    let ncols = num_cols(m)?;
+    if n != ncols {
+        return Err(MatrixError(format!(
+            "eigenvalues: matrix must be square, got {n}x{ncols}"
+        )));
+    }
+    if n > 2 {
+        return Err(MatrixError(
+            "eigenvalues: only 1x1 and 2x2 matrices are supported in this Rust port".into(),
+        ));
+    }
+
+    let coeffs: Vec<SolveFrac> = char_poly_coeff_fracs(m)?
+        .into_iter()
+        .map(to_solve_frac)
+        .collect::<MatrixResult<Vec<SolveFrac>>>()?;
+    let result = if n == 1 {
+        solve_linear(coeffs[1], coeffs[0])
+    } else {
+        solve_quadratic(coeffs[2], coeffs[1], coeffs[0])
+    };
+
+    let SolveResult::Solutions(roots) = result else {
+        return Ok(apply(sym("Eigenvalues"), vec![m.clone()]));
+    };
+    let multiplicity = if n == 2 && roots.len() == 1 { 2 } else { 1 };
+    Ok(apply(
+        sym("List"),
+        roots
+            .into_iter()
+            .map(|root| apply(sym("List"), vec![root, int(multiplicity)]))
+            .collect(),
+    ))
+}
+
+pub(crate) fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
     let n = num_rows(m)?;
     let ncols = num_cols(m)?;
     if n != ncols {
@@ -75,6 +115,17 @@ fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
         .collect();
 
     Ok(det_poly(&poly_rows))
+}
+
+fn to_solve_frac(value: Frac) -> MatrixResult<SolveFrac> {
+    let node = value.to_irnode()?;
+    match node {
+        IRNode::Integer(n) => Ok(SolveFrac::from_int(n)),
+        IRNode::Rational(n, d) => Ok(SolveFrac::new(n, d)),
+        other => Err(MatrixError(format!(
+            "eigenvalues: expected rational coefficient, got {other:?}"
+        ))),
+    }
 }
 
 fn det_poly(rows: &[Vec<Vec<Frac>>]) -> Vec<Frac> {
