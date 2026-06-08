@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.45.0] - 2026-06-08
+
+### Changed
+- **gap-030 part 2 (CLI WHITESPACE_ONLY side): CLOSES gap-030.**
+  Ports the same ASI-policy rules CLOC12.38 added to the AST
+  emitter to closurec's CLI token re-stitcher
+  (`src/whitespace_only.rs`). The previously-IGNORED
+  `minify_function_decl` byte-identity fixture now PASSes
+  against upstream Closure v20240317.
+- The simple for-loop re-stitcher is replaced with a
+  state-machine while-loop tracking:
+  - `brace_stack: Vec<bool>` — for each open `{`, true iff it
+    opens a function-declaration body.
+  - `paren_stack: Vec<bool>` — for each open `(`, true iff it
+    is the head of an `if`/`while`/`for`.
+  - `body_position_next` — set on `)` popping a control-flow
+    head; suppresses the rule-A `;`-drop so we never strip an
+    `EmptyStatement` body (`if(x);`, `while(x);`, `for(;;);`).
+  - `saw_function_kw_at_boundary` — captured on `function` at
+    a statement boundary; consumed by the next `{`. Only
+    DECLARATIONS get the rule-B trailing `;` (function
+    expressions like `var f=function(){};` don't).
+  - `last_emit_was_synthetic_semi` — rule-C dedup so
+    `function f(){};var g=1;` stays as `};var` instead of
+    `};;var`.
+
+### Added
+- 10 new inline tests in `whitespace_only::tests::gap030_*`.
+
+### Fixed
+- `tests/diff/whitespace-only/expected.stdout` updated. The
+  pre-existing golden was hand-traced from closurec's old
+  shape (`function add(a,b){return a+b;}`); upstream Closure
+  v20240317 actually emits `function add(a,b){return a+b};`.
+  Re-captured from the upstream JAR.
+
 ## [0.44.0] - 2026-06-02
 
 ### Added — CLOC14: end-to-end byte-identity test harness
