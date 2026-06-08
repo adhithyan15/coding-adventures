@@ -1,0 +1,99 @@
+{
+  "summary": "Byte provenance at EVERY layer. Layer 1 (input->IR): every given input must be load-bearing or justified-discarded. Layer 2 (IR->answer SYNTHESIS): synthesis must be a CHAIN of inference steps, each declaring which facts it consumes; every IR fact must be consumed by some step or explicitly discarded-with-a-reason that survives an adversarial read. No reasoning over the whole IR in one opaque pass. Tests whether per-layer provenance gets Opus to the exact Al(OH)3 answer (plain & input-gated Opus both stalled at 5.8e-3 by silently dropping the charge-balance fact at the synthesis layer). All-Opus; no hints; answer never shown to the solver.",
+  "agentCount": 11,
+  "logs": [],
+  "result": {
+    "plain": {
+      "answer": "**Solubility of Al(OH)₃ in pure water ≈ 1.8 × 10⁻³ mol L⁻¹**\n\n**Setup.** Two equilibria contribute dissolved aluminum:\n- Dissolution: Al(OH)₃(s) ⇌ Al³⁺ + 3OH⁻, Ksp = [Al³⁺][OH⁻]³ = 5.3×10⁻²⁷\n- Aluminate (amphoteric) dissolution: Al(OH)₃(s) + OH⁻ ⇌ Al(OH)₄⁻, with K₂ = Ksp·Kf = (5.3×10⁻²⁷)(1.1×10³¹) = 5.83×10⁴, so [Al(OH)₄⁻] = K₂[OH⁻].\n\nSolubility S = [Al³⁺] + [Al(OH)₄⁻] = Ksp/[OH⁻]³ + K₂[OH⁻].\n\n**Finding [OH⁻].** Because Al(OH)₃ is amphoteric, dissolving it perturbs the hydroxide level, so one cannot just set [OH⁻] = 10⁻⁷. Using the charge balance 3[Al³⁺] + [H⁺] = [OH⁻] + [Al(OH)₄⁻] (with [H⁺] = Kw/[OH⁻]):\n\n  3·Ksp/h³ + Kw/h = h + K₂·h  (h = [OH⁻])\n\nSolving: h = [OH⁻] = 2.3×10⁻⁸ M (pH ≈ 6.36, slightly acidic).\n\n**Result.**\n- [Al³⁺] = Ksp/h³ = 4.4×10⁻⁴ M\n- [Al(OH)₄⁻] = K₂·h = 1.3×10⁻³ M (the complex dominates, consistent with the charge-balance ratio [Al(OH)₄⁻]/[Al³⁺] = 3)\n\n**S = [Al³⁺] + [Al(OH)₄⁻] = 4.4×10⁻⁴ + 1.3×10⁻³ ≈ 1.8 × 10⁻³ mol L⁻¹.**\n\n(Note: if your course uses the simplified assumption [OH⁻] = 10⁻⁷ M, the formula gives S = Ksp/(10⁻⁷)³ + K₂·10⁻⁷ ≈ 5.3×10⁻⁶ + 5.8×10⁻³ ≈ 5.8×10⁻³ mol L⁻¹, dominated by the aluminate term. The rigorous charge-balance value, 1.8×10⁻³ mol L⁻¹, is the physically correct one.)",
+      "grade": {
+        "grade": "correct",
+        "note": "The answer's rigorous charge-balance method reproduces the reference exactly. Verified numerically: solving 3·Ksp/h³ + Kw/h = h + Ksp·Kf·h gives [OH⁻] = 2.285×10⁻⁸ M and S = Ksp/h³ + Ksp·Kf·h = 1.7764×10⁻³ mol/L, matching the reference 1.776×10⁻³. The answer's stated value (1.8×10⁻³), [OH⁻] (2.3×10⁻⁸), and component concentrations ([Al³⁺]≈4.4×10⁻⁴, [Al(OH)₄⁻]≈1.3×10⁻³) all agree. Correctly identifies the amphoteric aluminate term as dominant and notes the simplified [OH⁻]=10⁻⁷ approach gives ~5.8×10⁻³ instead."
+      }
+    },
+    "gated": {
+      "final_facts": [
+        "Given: Ksp of Al(OH)3 = 5.3 * 10^-27, where Ksp = [Al^3+][OH^-]^3 (units mol^4 L^-4).",
+        "Given: Kf (complex formation constant) of Al(OH)4^- = 1.1 * 10^31, where Kf = [Al(OH)4^-] / ([Al^3+][OH^-]).",
+        "Dissolution equilibrium 1: Al(OH)3(s) <=> Al^3+ + 3 OH^-, governed by Ksp.",
+        "Complex formation equilibrium 2: Al^3+ + 4 OH^- <=> Al(OH)4^-, governed by Kf.",
+        "Total dissolution reaction (sum of F3 and F4): Al(OH)3(s) + OH^- <=> Al(OH)4^-, with overall constant K = Ksp * Kf.",
+        "Overall constant value: K = Ksp * Kf = (5.3 * 10^-27)(1.1 * 10^31), and K = [Al(OH)4^-]/[OH^-].",
+        "Target quantity (INPUT 'solubility of Al(OH)3 in pure water'): the solubility S is the total molar concentration of dissolved aluminum, S = [Al^3+] + [Al(OH)4^-]. The required answer is S reported in INPUT 'mol L^-1', so [Al^3+] and [Al(OH)4^-] are carried in mol L^-1 and S is returned in mol L^-1. Both inputs are load-bearing: the named quantity fixes WHAT is summed, and the unit fixes the dimension the summed value is expressed in.",
+        "Water autoionization: Kw = [H^+][OH^-] = 1.0 * 10^-14 (mol^2 L^-2), relating [OH^-] to [H^+].",
+        "Pure-water determination of [OH^-]: because Al(OH)3 is extremely insoluble (tiny Ksp), the OH^- produced/consumed by aluminum dissolution is negligible against the OH^- from water self-ionization, so the solution stays effectively neutral and [OH^-] is fixed by water alone: [OH^-] = sqrt(Kw) = 1.0 * 10^-7 mol L^-1. This makes [OH^-] a determinate number (replacing the joint charge-balance solve) that feeds the concentration formulas.",
+        "Expression for [Al^3+] in mol L^-1: [Al^3+] = Ksp / [OH^-]^3, with [OH^-] = 1.0 * 10^-7 mol L^-1 (F9) and Ksp from F1; yields [Al^3+] as a numeric concentration in mol L^-1.",
+        "Expression for [Al(OH)4^-] in mol L^-1: [Al(OH)4^-] = K * [OH^-] = Ksp * Kf * [OH^-], with [OH^-] = 1.0 * 10^-7 mol L^-1 (F9), Ksp from F1, and Kf from F2; yields [Al(OH)4^-] as a numeric concentration in mol L^-1.",
+        "Final solubility assembly: substitute [OH^-] = 1.0 * 10^-7 mol L^-1 into F10 and F11 and sum, S = Ksp/[OH^-]^3 + Ksp*Kf*[OH^-]. The value S satisfies INPUT 'solubility of Al(OH)3 in pure water' as the computed output, and its dimension is INPUT 'mol L^-1' as the reported unit. (Do not compute the numeric result here.)"
+      ],
+      "synth_log": [
+        {
+          "it": 0,
+          "used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "unused": [],
+          "answer": "S = approximately 5.8 * 10^-3 mol L^-1 (5.835e-3 mol/L). The solubility is dominated by the aluminate complex Al(OH)4- (5.83e-3 mol/L), with free Al3+ contributing only 5.3e-6 mol/L."
+        }
+      ],
+      "final_steps": [
+        {
+          "inference": "In pure water, because Al(OH)3 is extremely insoluble, the OH- concentration is fixed by water autoionization alone: [OH-] = sqrt(Kw) = sqrt(1.0e-14) = 1.0e-7 mol/L. The solution stays effectively neutral.",
+          "facts_used": [
+            8,
+            9
+          ]
+        },
+        {
+          "inference": "Compute the free aluminum ion concentration from the solubility product: [Al3+] = Ksp / [OH-]^3 = 5.3e-27 / (1.0e-7)^3 = 5.3e-27 / 1.0e-21 = 5.3e-6 mol/L.",
+          "facts_used": [
+            1,
+            9,
+            10
+          ]
+        },
+        {
+          "inference": "Form the overall constant for the aluminate-producing reaction by combining the dissolution and complex-formation equilibria: K = Ksp * Kf = (5.3e-27)(1.1e31) = 5.83e4, where K = [Al(OH)4-]/[OH-].",
+          "facts_used": [
+            3,
+            4,
+            5,
+            6,
+            1,
+            2
+          ]
+        },
+        {
+          "inference": "Compute the aluminate complex concentration: [Al(OH)4-] = K * [OH-] = 5.83e4 * 1.0e-7 = 5.83e-3 mol/L.",
+          "facts_used": [
+            6,
+            9,
+            11
+          ]
+        },
+        {
+          "inference": "Sum the two dissolved aluminum species to get total solubility: S = [Al3+] + [Al(OH)4-] = 5.3e-6 + 5.83e-3 = 5.835e-3 mol/L. The aluminate complex dominates; free Al3+ is negligible.",
+          "facts_used": [
+            7,
+            12
+          ]
+        }
+      ],
+      "answer": "S = approximately 5.8 * 10^-3 mol L^-1 (5.835e-3 mol/L). The solubility is dominated by the aluminate complex Al(OH)4- (5.83e-3 mol/L), with free Al3+ contributing only 5.3e-6 mol/L.",
+      "grade": {
+        "grade": "incorrect",
+        "note": "The candidate answer is 5.83×10⁻³ mol/L, while the reference is 1.776×10⁻³ mol/L — a divergence by a factor of ~3.3, so it does not match. The candidate used the standard textbook approach: combine K = Ksp·Kf = 5.83×10⁴ for Al(OH)3 + OH⁻ → Al(OH)4⁻, then with [OH⁻] = 10⁻⁷ (neutral water) gets [Al(OH)4⁻] = 5.83×10⁻³, plus negligible free Al³⁺ = 5.3×10⁻⁶. While this method is chemically reasonable and self-consistent, the final number is not within rounding of the reference value, so it is graded incorrect against the reference."
+      }
+    }
+  }
+}
