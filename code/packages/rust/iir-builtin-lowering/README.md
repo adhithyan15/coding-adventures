@@ -121,6 +121,16 @@ a tagged boolean (from `ATOM`/`EQ`) is rewritten to test `lispy_truthy(cond)`
 nil fallthrough is boxed too (a bidirectional `mov` fixpoint) so the funnel
 register is uniformly tagged.
 
+For the **managed** backends (wasm/jvm/clr/beam) the twin is
+**`lower_lisp_repr_structural`**, which runs after the *structural*
+`lower_heap_builtins` instead. Same idea, different value model: a lisp integer
+is boxed as a WasmGC `i31ref` (`box`, narrowing the atom to `i32`) rather than
+NaN-box-tagged, and the entry function's reference result is unboxed
+(`unbox` → `i32`) at the return boundary. It partitions the module with
+`concretize_scalar_any_for_wasm` (heap functions vs pure-scalar) so every value
+is concretely typed — letting `(CAR (CONS 7 9))` compile to a runnable WasmGC
+module (LANG77 / McCarthy L3b-3a-3c).
+
 ### Error types
 
 ```rust

@@ -1312,20 +1312,13 @@ fn emit_instr(
 
         // ── WasmGC: alloc ref<LispyPair> ──────────────────────────────────────
         //
-        // Allocate a new `$LispyPair` on the GC heap.
-        //
-        // We emit `ref.null none` here (a null pair placeholder) because the
-        // subsequent `field_store` instructions will populate the fields via
-        // `struct.set`.  This avoids the need for look-ahead to fuse with
-        // exactly two field_stores.
-        //
-        // If you need `struct.new` fusion (e.g. for performance), the front-end
-        // should arrange to call `alloc` only after pushing head and tail.
-        //
-        // ```wasm
-        // ref.null none    ;; typed null for $LispyPair slot
-        // local.set $dest
-        // ```
+        // Allocate a new `$LispyPair` on the GC heap. WasmGC `struct.new`
+        // consumes one initial value per field, so we push a typed null for each
+        // of the pair's two `anyref` fields (car, cdr) and then `struct.new`,
+        // yielding a real `(null . null)` cell. The `field_store`s that follow
+        // overwrite the nulls with the head and tail — so we don't need
+        // look-ahead to fuse `alloc` with its two stores into one `struct.new`.
+        // (See the `"alloc"` arm below for the exact byte sequence.)
         "alloc" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
@@ -1341,8 +1334,29 @@ fn emit_instr(
                 });
             }
 
-            // Emit ref.null none — the canonical "uninitialized GC ref".
+            let type_idx = lispy_pair_type_idx.ok_or_else(|| IIRWasmError::UnsupportedType {
+                function: fn_name.to_string(),
+                type_hint: ty.to_string(),
+            })?;
+
+            // Actually allocate the `$LispyPair` (LANG77 / McCarthy L3b-3a-3c).
+            // WasmGC `struct.new` consumes one value per field, so we push a
+            // typed null for each of the pair's two `anyref` fields (car, cdr)
+            // and then `struct.new`, yielding a *real* heap object. The
+            // following `field_store`s (`struct.set`) overwrite those nulls with
+            // the head and tail. (Previously this emitted a bare `ref.null`,
+            // which left the "cell" null — so the very next `struct.set` trapped
+            // on a null reference.)
+            //
+            // ```wasm
+            // ref.null none           ;; default car
+            // ref.null none           ;; default cdr
+            // struct.new $LispyPair    ;; (null . null) — a fresh cell
+            // local.set $dest
+            // ```
             encode_gc_instruction(code, &GcInstruction::RefNull);
+            encode_gc_instruction(code, &GcInstruction::RefNull);
+            encode_gc_instruction(code, &GcInstruction::StructNew(type_idx));
             code.extend(encode_local_set(rd));
         }
 

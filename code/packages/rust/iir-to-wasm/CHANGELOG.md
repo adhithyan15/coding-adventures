@@ -3,6 +3,23 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-3c — `alloc` actually allocates)
+
+### Fixed
+
+- **`alloc` now emits a real allocation.** It previously lowered to a bare
+  `ref.null` (a placeholder), so the cons cell was *null* and the very next
+  `field_store` (`struct.set`) trapped on a null reference. It now pushes a
+  typed null for each of the `$LispyPair`'s two `anyref` fields and then
+  `struct.new`, yielding a real `(null . null)` heap object that the following
+  `field_store`s overwrite. Uses only the already-supported `struct.new` /
+  `struct.set` / `struct.get` ops (no engine change).
+
+This completes the wasm side of the McCarthy cons end-to-end: with the
+structural representation pass (boxing atoms / unboxing the result) in
+`iir-builtin-lowering`, `(CAR (CONS 7 9))` now compiles to a `.wasm` that runs
+to `7` on the in-repo `wasm-runtime`.
+
 ## [0.9.0] — 2026-06-04 (LANG77 / McCarthy L3b-3a — i31ref `box`/`unbox`)
 
 ### Added — WasmGC integer boxing

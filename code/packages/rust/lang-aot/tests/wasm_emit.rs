@@ -108,11 +108,38 @@ fn algol_for_loop_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![21], "ALGOL loop should sum 1..6");
 }
 
-/// A cons program is **not yet** supported on this path (it needs the
-/// boxed-anyref WasmGC value model) — it must fail cleanly with a
-/// `WasmBackendError`, not panic or silently miscompile.
+/// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
+/// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
+/// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result
+/// at the return boundary — so `(CAR (CONS 7 9))` evaluates to `7`.
 #[test]
-fn mccarthy_cons_is_cleanly_unsupported_for_now() {
-    let res = compile_source_to_wasm(Language::McCarthyLisp, "(CAR (CONS 7 9))", "cons");
-    assert!(res.is_err(), "cons→wasm should be a clean error until L3b-3a-3");
+fn mccarthy_cons_car_emits_and_runs_on_wasm() {
+    let bytes = compile_source_to_wasm(Language::McCarthyLisp, "(CAR (CONS 7 9))", "cons")
+        .expect("McCarthy (CAR (CONS 7 9)) should emit wasm");
+    assert_wellformed(&bytes, "(McCarthy (CAR (CONS 7 9)))");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("emitted cons wasm must load and run on the in-repo runtime");
+    assert_eq!(result, vec![7], "(CAR (CONS 7 9)) should evaluate to 7");
+}
+
+/// `CDR` reads the second field, and cons cells nest.
+#[test]
+fn mccarthy_cdr_and_nested_cons_run_on_wasm() {
+    let rt = WasmRuntime::new();
+
+    let cdr = compile_source_to_wasm(Language::McCarthyLisp, "(CDR (CONS 7 9))", "cdr")
+        .expect("emit cdr");
+    assert_eq!(rt.load_and_run(&cdr, "main", &[]).expect("run cdr"), vec![9]);
+
+    let nested =
+        compile_source_to_wasm(Language::McCarthyLisp, "(CAR (CONS (CDR (CONS 1 2)) 5))", "nested")
+            .expect("emit nested");
+    assert_eq!(
+        rt.load_and_run(&nested, "main", &[]).expect("run nested"),
+        vec![2],
+        "(CAR (CONS (CDR (CONS 1 2)) 5)) should evaluate to 2"
+    );
 }
