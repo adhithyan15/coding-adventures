@@ -4369,7 +4369,7 @@ fn try_recip_hyp_power(base: &IRNode, exponent: &IRNode, x: &str) -> Option<IRNo
     let IRNode::Symbol(head) = &apply.head else {
         return None;
     };
-    if !matches!(head.as_str(), SECH | CSCH | COTH) || apply.args.len() != 1 {
+    if !matches!(head.as_str(), SECH | CSCH | COTH | TANH) || apply.args.len() != 1 {
         return None;
     }
     let n = match to_numeric(exponent) {
@@ -4386,6 +4386,7 @@ fn try_recip_hyp_power(base: &IRNode, exponent: &IRNode, x: &str) -> Option<IRNo
         SECH => sech_power_integral(n, arg_ir, a, x),
         CSCH => csch_power_integral(n, arg_ir, a, x),
         COTH => coth_power_integral(n, arg_ir, a, x),
+        TANH => tanh_power_integral(n, arg_ir, a, x),
         _ => None,
     }
 }
@@ -4507,6 +4508,31 @@ fn coth_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IR
     Some(apply_node(
         SUB,
         vec![coth_power_integral(n - 2, arg_ir, a, x)?, power_term],
+    ))
+}
+
+fn tanh_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(COSH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let tanh_pow = pow_if_needed(apply_node(TANH, vec![arg_ir.clone()]), n - 1);
+    let power_term = apply_node(
+        MUL,
+        vec![recip_hyp_coeff(1, (n - 1) as i128, a)?, tanh_pow],
+    );
+    Some(apply_node(
+        SUB,
+        vec![tanh_power_integral(n - 2, arg_ir, a, x)?, power_term],
     ))
 }
 

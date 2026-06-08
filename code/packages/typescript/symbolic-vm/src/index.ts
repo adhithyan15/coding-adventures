@@ -5352,7 +5352,9 @@ function tryRecipHypLinear(transcendental: IRNode, x: IRNode): IRNode | undefine
 
 function tryRecipHypPower(base: IRNode, exponent: IRNode, x: IRNode): IRNode | undefined {
   if (base.kind !== "apply" || base.args.length !== 1) return undefined;
-  if (!equals(base.head, SECH) && !equals(base.head, CSCH) && !equals(base.head, COTH)) return undefined;
+  if (!equals(base.head, SECH) && !equals(base.head, CSCH) && !equals(base.head, COTH) && !equals(base.head, TANH)) {
+    return undefined;
+  }
   const nRat = exactRational(exponent);
   if (nRat === undefined || nRat.denom !== 1n || nRat.numer < 0n || nRat.numer > BigInt(Number.MAX_SAFE_INTEGER)) {
     return undefined;
@@ -5365,6 +5367,7 @@ function tryRecipHypPower(base: IRNode, exponent: IRNode, x: IRNode): IRNode | u
   const n = Number(nRat.numer);
   if (equals(base.head, SECH)) return sechPowerIntegral(n, arg, linear.a, x);
   if (equals(base.head, CSCH)) return cschPowerIntegral(n, arg, linear.a, x);
+  if (equals(base.head, TANH)) return tanhPowerIntegral(n, arg, linear.a, x);
   return cothPowerIntegral(n, arg, linear.a, x);
 }
 
@@ -5423,6 +5426,15 @@ function cothPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNo
   const cothPow = powIfNeeded(app(COTH, [arg]), n - 1);
   const powerTerm = app(MUL, [recipHypCoeff(1n, BigInt(n - 1), a), cothPow]);
   return app(SUB, [cothPowerIntegral(n - 2, arg, a, x), powerTerm]);
+}
+
+function tanhPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(COSH, [arg])])]);
+
+  const tanhPow = powIfNeeded(app(TANH, [arg]), n - 1);
+  const powerTerm = app(MUL, [recipHypCoeff(1n, BigInt(n - 1), a), tanhPow]);
+  return app(SUB, [tanhPowerIntegral(n - 2, arg, a, x), powerTerm]);
 }
 
 function sqrtTPlusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {

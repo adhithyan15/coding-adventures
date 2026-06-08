@@ -2018,6 +2018,42 @@ fn phase16_nonlinear_sech_power_falls_through() {
     assert!(is_unevaluated_integrate(&result), "sech^2(x^2) should remain deferred; got {result:?}");
 }
 
+#[test]
+fn phase17_tanh_powers_derivative_match() {
+    for power in [2_i64, 3, 4] {
+        let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![sym("x")]), int(power)]);
+        let phi = integrate(integrand);
+        assert!(!is_unevaluated_integrate(&phi), "Phase 17 should close tanh^{power}(x); got {phi:?}");
+        for &x_val in &[-0.4_f64, 0.2, 0.8] {
+            let got = phase34_numerical_derivative(&phi, x_val);
+            let expected = x_val.tanh().powi(power as i32);
+            assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+        }
+    }
+}
+
+#[test]
+fn phase17_tanh_squared_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![arg]), int(2)]);
+    let phi = integrate(integrand);
+    assert!(!is_unevaluated_integrate(&phi), "Phase 17 should close tanh^2(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, TANH), "expected Tanh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.1, 0.5] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = (2.0 * x_val + 1.0).tanh().powi(2);
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase17_nonlinear_tanh_power_falls_through() {
+    let nonlinear_arg = apply(sym(POW), vec![sym("x"), int(2)]);
+    let integrand = apply(sym(POW), vec![apply(sym(TANH), vec![nonlinear_arg]), int(2)]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "tanh^2(x^2) should remain deferred; got {result:?}");
+}
+
 // ---------------------------------------------------------------------------
 // Phase 29: Abs and Sqrt algebraic rules
 // ---------------------------------------------------------------------------
