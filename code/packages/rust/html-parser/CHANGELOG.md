@@ -261,7 +261,8 @@ documented in this file.
 - Browser-facing document summaries now carry script and stylesheet loading
   metadata, including script kind, async/defer/nomodule flags, inline
   script/style text, integrity/crossorigin/referrer-policy hints, fetch
-  priority, blocking, alternate stylesheets, and disabled stylesheet state.
+  priority, blocking, flattened script execution descriptors, alternate
+  stylesheets, and disabled stylesheet state.
 - Browser-facing image summaries now carry responsive image selection metadata,
   including `srcset`/`sizes`, resolved candidate URLs, `picture/source`
   media/type hints, lazy loading, decoding, fetch priority, CORS/referrer

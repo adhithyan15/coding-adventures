@@ -903,6 +903,11 @@
           { "script_kind": "classic", "src": null, "resolved_src": null, "type_hint": null, "defer_script": true, "nomodule": true, "nonce": "legacyNonce", "text": "legacy();" },
           { "script_kind": "classic", "src": "late.js", "resolved_src": "https://example.test/app/late.js", "type_hint": null, "nonce": "lateNonce", "defer_script": true }
         ],
+        "script_execution_descriptors": [
+          { "script_kind": "module", "execution_kind": "external", "src": "app.js", "resolved_src": "https://example.test/app/app.js", "type_hint": "module", "async_script": true, "integrity": "sha384-js", "crossorigin": "use-credentials", "nonce": "moduleNonce", "referrerpolicy": "origin", "fetchpriority": "low", "blocking": "render", "blocking_tokens": ["render"], "blocking_token_count": 1, "render_blocking": true, "has_text": false, "text_length": 0 },
+          { "script_kind": "classic", "execution_kind": "inline", "src": null, "resolved_src": null, "type_hint": null, "defer_script": true, "nomodule": true, "nonce": "legacyNonce", "blocking_token_count": 0, "render_blocking": false, "has_text": true, "text_length": 9 },
+          { "script_kind": "classic", "execution_kind": "external", "src": "late.js", "resolved_src": "https://example.test/app/late.js", "type_hint": null, "nonce": "lateNonce", "defer_script": true, "blocking_token_count": 0, "render_blocking": false, "has_text": false, "text_length": 0 }
+        ],
         "stylesheets": [
           { "source": "link", "href": "app.css", "resolved_href": "https://example.test/app/app.css", "rel": "stylesheet preload", "rel_tokens": ["stylesheet", "preload"], "media": "screen", "title": "main", "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render", "blocking_tokens": ["render"] },
           { "source": "link", "href": "print.css", "resolved_href": "https://example.test/app/print.css", "rel": "alternate stylesheet", "rel_tokens": ["alternate", "stylesheet"], "title": "print", "disabled": true, "alternate": true },

@@ -16,9 +16,9 @@ use coding_adventures_html_parser::{
     BrowserMediaSource, BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective,
     BrowserNavigationGroup, BrowserNavigationTargetDescriptor, BrowserPopover,
     BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -66,6 +66,8 @@ struct ExpectedBrowserDocument {
     resources: Vec<ExpectedResource>,
     #[serde(default)]
     scripts: Vec<ExpectedScript>,
+    #[serde(default)]
+    script_execution_descriptors: Option<Vec<ExpectedScriptExecutionDescriptor>>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
     #[serde(default)]
@@ -811,6 +813,47 @@ struct ExpectedScript {
     blocking_tokens: Vec<String>,
     #[serde(default)]
     text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedScriptExecutionDescriptor {
+    script_kind: String,
+    #[serde(default)]
+    execution_kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    async_script: bool,
+    #[serde(default)]
+    defer_script: bool,
+    #[serde(default)]
+    nomodule: bool,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    blocking_token_count: usize,
+    #[serde(default)]
+    render_blocking: bool,
+    #[serde(default)]
+    has_text: bool,
+    #[serde(default)]
+    text_length: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3870,6 +3913,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedResource::into_browser_resource)
             .collect();
+        let scripts: Vec<_> = self
+            .scripts
+            .into_iter()
+            .map(ExpectedScript::into_browser_script)
+            .collect();
         let media: Vec<_> = self
             .media
             .into_iter()
@@ -3909,6 +3957,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_embedded_policy_descriptors(&embedded_contexts));
+        let script_execution_descriptors = self
+            .script_execution_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedScriptExecutionDescriptor::into_browser_script_execution_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_script_execution_descriptors(&scripts));
 
         BrowserDocument {
             title: self.title,
@@ -3930,11 +3989,8 @@ impl ExpectedBrowserDocument {
                 .map(ExpectedMeta::into_browser_meta)
                 .collect(),
             resources,
-            scripts: self
-                .scripts
-                .into_iter()
-                .map(ExpectedScript::into_browser_script)
-                .collect(),
+            scripts,
+            script_execution_descriptors,
             stylesheets: self
                 .stylesheets
                 .into_iter()
@@ -4581,6 +4637,53 @@ fn expected_embedded_resource_kind(element: &str) -> &'static str {
     }
 }
 
+fn expected_script_execution_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptExecutionDescriptor> {
+    scripts
+        .iter()
+        .map(expected_script_execution_descriptor)
+        .collect()
+}
+
+fn expected_script_execution_descriptor(
+    script: &BrowserScript,
+) -> BrowserScriptExecutionDescriptor {
+    let text_length = script
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserScriptExecutionDescriptor {
+        script_kind: script.script_kind.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        async_script: script.async_script,
+        defer_script: script.defer_script,
+        nomodule: script.nomodule,
+        integrity: script.integrity.clone(),
+        crossorigin: script.crossorigin.clone(),
+        nonce: script.nonce.clone(),
+        referrerpolicy: script.referrerpolicy.clone(),
+        fetchpriority: script.fetchpriority.clone(),
+        blocking: script.blocking.clone(),
+        blocking_tokens: script.blocking_tokens.clone(),
+        blocking_token_count: script.blocking_tokens.len(),
+        render_blocking: script
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: script.text.is_some(),
+        text_length,
+    }
+}
+
 impl ExpectedResourceEndpointDescriptor {
     fn into_browser_resource_endpoint_descriptor(self) -> BrowserResourceEndpointDescriptor {
         let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
@@ -4651,6 +4754,34 @@ impl ExpectedScript {
             blocking: self.blocking,
             blocking_tokens,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedScriptExecutionDescriptor {
+    fn into_browser_script_execution_descriptor(self) -> BrowserScriptExecutionDescriptor {
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
+        BrowserScriptExecutionDescriptor {
+            script_kind: self.script_kind,
+            execution_kind: self.execution_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            async_script: self.async_script,
+            defer_script: self.defer_script,
+            nomodule: self.nomodule,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            nonce: self.nonce,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            blocking_tokens,
+            blocking_token_count: self.blocking_token_count,
+            render_blocking: self.render_blocking,
+            has_text: self.has_text,
+            text_length: self.text_length,
         }
     }
 }
