@@ -437,9 +437,6 @@ class TestOpcodeSets:
     def test_value_ops_includes_arithmetic(self):
         assert ARITHMETIC_OPS.issubset(VALUE_OPS)
 
-    def test_value_ops_includes_mov(self):
-        assert "mov" in VALUE_OPS
-
     def test_side_effect_ops_includes_branches(self):
         assert BRANCH_OPS.issubset(SIDE_EFFECT_OPS)
 
@@ -449,20 +446,7 @@ class TestOpcodeSets:
             assert op_set.issubset(ALL_OPS)
 
     def test_concrete_types(self):
-        for t in [
-            "u8",
-            "u16",
-            "u32",
-            "u64",
-            "i8",
-            "i16",
-            "i32",
-            "i64",
-            "f32",
-            "f64",
-            "bool",
-            "str",
-        ]:
+        for t in ["u8", "u16", "u32", "u64", "bool", "str"]:
             assert t in CONCRETE_TYPES
 
     def test_dynamic_type_not_concrete(self):

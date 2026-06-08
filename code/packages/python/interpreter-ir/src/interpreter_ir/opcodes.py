@@ -19,20 +19,7 @@ from __future__ import annotations
 # ---------------------------------------------------------------------------
 
 CONCRETE_TYPES: frozenset[str] = frozenset(
-    {
-        "u8",
-        "u16",
-        "u32",
-        "u64",
-        "i8",
-        "i16",
-        "i32",
-        "i64",
-        "f32",
-        "f64",
-        "bool",
-        "str",
-    }
+    {"u8", "u16", "u32", "u64", "bool", "str"}
 )
 
 # The "unknown" type used by dynamically typed languages before profiling.
@@ -151,7 +138,7 @@ HEAP_OPS: frozenset[str] = frozenset(
 
 # All ops that produce a value (have a non-None dest).
 _VALUE_EXTRA: frozenset[str] = frozenset(
-    {"const", "mov", "load_reg", "load_mem", "call", "call_builtin", "io_in", "cast"}
+    {"const", "load_reg", "load_mem", "call", "call_builtin", "io_in", "cast"}
 )
 _HEAP_VALUE_OPS: frozenset[str] = frozenset(
     {"alloc", "box", "unbox", "field_load", "is_null"}
