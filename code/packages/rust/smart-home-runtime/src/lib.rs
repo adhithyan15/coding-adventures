@@ -27,7 +27,7 @@ use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
     StateRefreshReason,
 };
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::{fmt, time::Duration};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2515,6 +2515,54 @@ impl DesiredStateQuery {
     }
 }
 
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DesiredStateInventorySummary {
+    pub total_desired_states: usize,
+    pub total_desired_capabilities: usize,
+    pub requested_by_count: usize,
+    pub min_command_timeout_ms: Option<u64>,
+    pub max_command_timeout_ms: Option<u64>,
+}
+
+impl DesiredStateInventorySummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_states<'a, I>(states: I) -> Self
+    where
+        I: IntoIterator<Item = &'a DesiredEntityState>,
+    {
+        let mut summary = Self::empty();
+        let mut requested_by = BTreeSet::new();
+        for state in states {
+            summary.total_desired_states += 1;
+            summary.total_desired_capabilities += state.desired.len();
+            requested_by.insert(state.requested_by.clone());
+            summary.min_command_timeout_ms = Some(
+                summary
+                    .min_command_timeout_ms
+                    .map_or(state.command_timeout_ms, |current| {
+                        current.min(state.command_timeout_ms)
+                    }),
+            );
+            summary.max_command_timeout_ms = Some(
+                summary
+                    .max_command_timeout_ms
+                    .map_or(state.command_timeout_ms, |current| {
+                        current.max(state.command_timeout_ms)
+                    }),
+            );
+        }
+        summary.requested_by_count = requested_by.len();
+        summary
+    }
+
+    pub fn has_desired_states(&self) -> bool {
+        self.total_desired_states > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum DesiredStateAction {
     CommandIssued {
@@ -3178,6 +3226,7 @@ impl RuntimeDiscoverToolOutput {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
+    GetRuntimeSnapshot,
     ListBridges,
     ListDevices {
         bridge_id: Option<BridgeId>,
@@ -3207,12 +3256,19 @@ pub enum RuntimeReadToolRequest {
     InspectEventLog {
         query: RuntimeEventQuery,
     },
+    ListDesiredStates {
+        query: DesiredStateQuery,
+    },
+    ListPairingSessions {
+        query: RuntimePairingSessionQuery,
+    },
     ObserveSupervision,
 }
 
 impl RuntimeReadToolRequest {
     pub fn tool(&self) -> SmartHomeTool {
         match self {
+            Self::GetRuntimeSnapshot => SmartHomeTool::GetRuntimeSnapshot,
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
             Self::ListScenes { .. } => SmartHomeTool::ListScenes,
@@ -3222,6 +3278,8 @@ impl RuntimeReadToolRequest {
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
             Self::ListSubscriptions { .. } => SmartHomeTool::ListSubscriptions,
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
+            Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
+            Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
             Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
@@ -3413,6 +3471,7 @@ impl RuntimeEventLogRecord {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum RuntimeReadToolOutput {
+    RuntimeSnapshot(RuntimeReadSnapshot),
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
     Scenes(Vec<Scene>),
@@ -3436,6 +3495,14 @@ pub enum RuntimeReadToolOutput {
     EventLog {
         entries: Vec<RuntimeEventLogRecord>,
         summary: RuntimeEventLogSummary,
+    },
+    DesiredStates {
+        desired_states: Vec<DesiredEntityState>,
+        summary: DesiredStateInventorySummary,
+    },
+    PairingSessions {
+        sessions: Vec<RuntimePairingSession>,
+        summary: RuntimePairingSessionInventorySummary,
     },
     SupervisionObservation(RuntimeSupervisionObservation),
 }
@@ -4217,6 +4284,9 @@ impl SmartHomeRuntime {
         }
 
         match request {
+            RuntimeReadToolRequest::GetRuntimeSnapshot => Ok(
+                RuntimeReadToolOutput::RuntimeSnapshot(self.read_snapshot_at(now_ms)),
+            ),
             RuntimeReadToolRequest::ListBridges => Ok(RuntimeReadToolOutput::Bridges(
                 self.registry.bridges().cloned().collect(),
             )),
@@ -4326,6 +4396,25 @@ impl SmartHomeRuntime {
                     .collect::<Vec<_>>();
                 let summary = self.event_bus.event_log_summary(&query);
                 Ok(RuntimeReadToolOutput::EventLog { entries, summary })
+            }
+            RuntimeReadToolRequest::ListDesiredStates { query } => {
+                let desired_state_refs = self.query_desired_states(&query);
+                let summary =
+                    DesiredStateInventorySummary::from_states(desired_state_refs.iter().copied());
+                let desired_states = desired_state_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::DesiredStates {
+                    desired_states,
+                    summary,
+                })
+            }
+            RuntimeReadToolRequest::ListPairingSessions { query } => {
+                let session_refs = self.query_pairing_sessions(&query);
+                let summary = RuntimePairingSessionInventorySummary::from_sessions_at(
+                    session_refs.iter().copied(),
+                    now_ms,
+                );
+                let sessions = session_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::PairingSessions { sessions, summary })
             }
             RuntimeReadToolRequest::ObserveSupervision => Ok(
                 RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
@@ -7680,6 +7769,34 @@ mod tests {
                 metadata: vec![Metadata::new("fixture", "runtime_read_tool_scene")],
             })
             .unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-1"),
+                &bridge,
+                principal.clone(),
+                1_100,
+                2_000,
+                vec![Metadata::new("fixture", "runtime_read_tool_pairing")],
+            ))
+            .unwrap();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:observer")
+                .with_command_timeout(750),
+            )
+            .unwrap();
         runtime
             .event_bus_mut()
             .subscribe(
@@ -7779,8 +7896,39 @@ mod tests {
                 1_508,
             )
             .unwrap();
+        let snapshot = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetRuntimeSnapshot,
+                1_509,
+            )
+            .unwrap();
+        let desired_states = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListDesiredStates {
+                    query: DesiredStateQuery::new()
+                        .requested_by("agent:observer")
+                        .with_capability(CapabilityId::trusted("light.on_off"))
+                        .sorted_by(DesiredStateSort::CommandTimeoutDesc),
+                },
+                1_510,
+            )
+            .unwrap();
+        let pairing_sessions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListPairingSessions {
+                    query: RuntimePairingSessionQuery::new()
+                        .for_bridge(BridgeId::trusted("bridge-1"))
+                        .with_status(PairingSessionStatus::PendingUserPresence)
+                        .sorted_by(RuntimePairingSessionSort::ExpiresAt),
+                },
+                1_511,
+            )
+            .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_509)
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_512)
             .unwrap();
 
         assert!(matches!(
@@ -7858,14 +8006,46 @@ mod tests {
                 && summary.command_results == 1
         ));
         assert!(matches!(
+            snapshot,
+            RuntimeReadToolOutput::RuntimeSnapshot(snapshot)
+                if snapshot.generated_at_ms == 1_509
+                    && snapshot.pairing_session_count == 1
+                    && snapshot.desired_state_count == 1
+                    && snapshot.desired_capability_count == 1
+        ));
+        assert!(matches!(
+            desired_states,
+            RuntimeReadToolOutput::DesiredStates {
+                desired_states,
+                summary,
+            } if desired_states.len() == 1
+                && desired_states[0].entity_id == EntityId::trusted("entity-1")
+                && desired_states[0].requested_by == "agent:observer"
+                && summary.total_desired_states == 1
+                && summary.total_desired_capabilities == 1
+                && summary.requested_by_count == 1
+                && summary.max_command_timeout_ms == Some(750)
+        ));
+        assert!(matches!(
+            pairing_sessions,
+            RuntimeReadToolOutput::PairingSessions {
+                sessions,
+                summary,
+            } if sessions.len() == 1
+                && sessions[0].session_id == RuntimePairingSessionId::trusted("pairing-1")
+                && summary.total_sessions == 1
+                && summary.pending_user_presence_sessions == 1
+                && !summary.has_expiring_sessions()
+        ));
+        assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_509
+                if observation.generated_at_ms == 1_512
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 10);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 13);
         assert!(runtime
             .registry()
             .authorization_decisions()
