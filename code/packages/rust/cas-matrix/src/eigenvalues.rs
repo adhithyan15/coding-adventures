@@ -1,7 +1,9 @@
 //! Characteristic polynomial helpers for exact-rational matrices.
 
+use std::cmp::Ordering;
+
 use cas_solve::frac::Frac as SolveFrac;
-use cas_solve::{solve_linear, solve_quadratic, SolveResult};
+use cas_solve::{solve_cubic, solve_linear, solve_quadratic, solve_quartic, SolveResult};
 use symbolic_ir::{apply, int, sym, IRNode, ADD, LIST, MUL, NEG, POW};
 
 use crate::matrix::{matrix, num_cols, num_rows, MatrixError, MatrixResult};
@@ -50,7 +52,7 @@ pub fn charpoly(m: &IRNode, variable: &IRNode) -> MatrixResult<IRNode> {
     })
 }
 
-/// Return `List(List(lambda, multiplicity), ...)` for 1x1/2x2 exact matrices.
+/// Return `List(List(lambda, multiplicity), ...)` for exact matrices up to 4x4.
 pub fn eigenvalues(m: &IRNode) -> MatrixResult<IRNode> {
     let n = num_rows(m)?;
     let ncols = num_cols(m)?;
@@ -59,31 +61,34 @@ pub fn eigenvalues(m: &IRNode) -> MatrixResult<IRNode> {
             "eigenvalues: matrix must be square, got {n}x{ncols}"
         )));
     }
-    if n > 2 {
+    if n > 4 {
         return Err(MatrixError(
-            "eigenvalues: only 1x1 and 2x2 matrices are supported in this Rust port".into(),
+            "eigenvalues: only matrices up to 4x4 are supported in this Rust port".into(),
         ));
     }
 
-    let coeffs: Vec<SolveFrac> = char_poly_coeff_fracs(m)?
+    let coeff_fracs = char_poly_coeff_fracs(m)?;
+    let coeffs: Vec<SolveFrac> = coeff_fracs
+        .iter()
+        .copied()
         .into_iter()
         .map(to_solve_frac)
         .collect::<MatrixResult<Vec<SolveFrac>>>()?;
-    let result = if n == 1 {
-        solve_linear(coeffs[1], coeffs[0])
-    } else {
-        solve_quadratic(coeffs[2], coeffs[1], coeffs[0])
-    };
+    let result = solve_characteristic(&coeffs)?;
 
-    let SolveResult::Solutions(roots) = result else {
+    let SolveResult::Solutions(mut roots) = result else {
         return Ok(apply(sym("Eigenvalues"), vec![m.clone()]));
     };
-    let multiplicity = if n == 2 && roots.len() == 1 { 2 } else { 1 };
+    roots.sort_by(compare_eigen_root);
+    let root_count = roots.len();
     Ok(apply(
         sym("List"),
         roots
             .into_iter()
-            .map(|root| apply(sym("List"), vec![root, int(multiplicity)]))
+            .map(|root| {
+                let multiplicity = root_multiplicity(&root, &coeff_fracs, n, root_count) as i64;
+                apply(sym("List"), vec![root, int(multiplicity)])
+            })
             .collect(),
     ))
 }
@@ -186,6 +191,69 @@ pub(crate) fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
         .collect();
 
     Ok(det_poly(&poly_rows))
+}
+
+fn solve_characteristic(coeffs: &[SolveFrac]) -> MatrixResult<SolveResult> {
+    let degree = coeffs.len().saturating_sub(1);
+    match degree {
+        1 => Ok(solve_linear(coeffs[1], coeffs[0])),
+        2 => Ok(solve_quadratic(coeffs[2], coeffs[1], coeffs[0])),
+        3 => Ok(solve_cubic(coeffs[3], coeffs[2], coeffs[1], coeffs[0])),
+        4 => Ok(solve_quartic(
+            coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0],
+        )),
+        _ => Err(MatrixError(format!(
+            "eigenvalues: unsupported characteristic polynomial degree {degree}"
+        ))),
+    }
+}
+
+fn compare_eigen_root(left: &IRNode, right: &IRNode) -> Ordering {
+    match (ir_to_frac(left), ir_to_frac(right)) {
+        (Some(left), Some(right)) => (left.numer * right.denom).cmp(&(right.numer * left.denom)),
+        _ => Ordering::Equal,
+    }
+}
+
+fn root_multiplicity(
+    root: &IRNode,
+    coeffs: &[Frac],
+    matrix_size: usize,
+    root_count: usize,
+) -> usize {
+    let Some(rational_root) = ir_to_frac(root) else {
+        return if root_count == 1 { matrix_size } else { 1 };
+    };
+
+    let mut remaining = coeffs.to_vec();
+    let mut multiplicity = 0;
+    while remaining.len() > 1 {
+        let (quotient, remainder) = divide_by_linear_factor(&remaining, rational_root);
+        if !remainder.is_zero() {
+            break;
+        }
+        multiplicity += 1;
+        remaining = quotient;
+    }
+    multiplicity.max(1)
+}
+
+fn divide_by_linear_factor(coeffs: &[Frac], root: Frac) -> (Vec<Frac>, Frac) {
+    let degree = coeffs.len().saturating_sub(1);
+    if degree == 0 {
+        return (
+            Vec::new(),
+            coeffs.first().copied().unwrap_or_else(Frac::zero),
+        );
+    }
+
+    let mut quotient = vec![Frac::zero(); degree];
+    quotient[degree - 1] = coeffs[degree];
+    for i in (0..degree.saturating_sub(1)).rev() {
+        quotient[i] = coeffs[i + 1] + root * quotient[i + 1];
+    }
+    let remainder = coeffs[0] + root * quotient[0];
+    (quotient, remainder)
 }
 
 fn ir_to_frac(node: &IRNode) -> Option<Frac> {
