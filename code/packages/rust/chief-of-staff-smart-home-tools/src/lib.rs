@@ -16,10 +16,23 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus, CommandType,
-    Device, DeviceEvent, DeviceEventType, EntityId, Health, IntegrationId, Metadata,
-    StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    Device, DeviceEvent, DeviceEventType, EntityId, EntityKind, Health, IntegrationId, Metadata,
+    PrivilegeTier, ProtocolFamily, RuntimeKind, StateConfidence, StateDelta, StateSnapshot,
+    StateSource, Value,
 };
 use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
+use smart_home_integration_catalog::{
+    activation_plan_for_entry, describe_primitive_family, ecosystem_platforms_requiring_primitive,
+    ecosystem_survey_sources, entries_requiring_primitive, find_entry, first_party_catalog,
+    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
+    primitive_family_descriptors, query_integrations, readiness_report_for_plan,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationPlan,
+    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationReadinessReport, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
+    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+};
 use smart_home_runtime::{
     PairingSessionStatus, ReconciliationReason, RuntimeCommandToolRequest,
     RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
@@ -45,6 +58,10 @@ pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
 pub const SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID: &str = "smart_home.observe_supervision";
+pub const SMART_HOME_LIST_INTEGRATIONS_TOOL_ID: &str = "smart_home.list_integrations";
+pub const SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID: &str = "smart_home.describe_integration";
+pub const SMART_HOME_LIST_PRIMITIVES_TOOL_ID: &str = "smart_home.list_primitives";
+pub const SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID: &str = "smart_home.describe_primitive";
 
 /// Shared, mutable smart-home runtime handle for in-process D18D handlers.
 pub type SharedSmartHomeRuntime = Rc<RefCell<SmartHomeRuntime>>;
@@ -95,6 +112,19 @@ impl SmartHomeToolBridge {
             let mut runtime = runtime.borrow_mut();
 
             match tool_id.as_str() {
+                SMART_HOME_LIST_INTEGRATIONS_TOOL_ID => {
+                    let request = integration_catalog_query(&arguments)?;
+                    Ok(list_integrations_output_handler_output(request))
+                }
+                SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID => {
+                    Ok(describe_integration_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_LIST_PRIMITIVES_TOOL_ID => {
+                    Ok(list_primitives_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID => {
+                    Ok(describe_primitive_output_handler_output(&arguments)?)
+                }
                 SMART_HOME_DISCOVER_TOOL_ID => {
                     let request = discover_request(&arguments)?;
                     let output = runtime
@@ -226,6 +256,141 @@ impl SmartHomeToolBridge {
 /// Return the D18D definitions for the first smart-home runtime bridge tools.
 pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
     vec![
+        read_definition(
+            SMART_HOME_LIST_INTEGRATIONS_TOOL_ID,
+            "List smart-home integrations",
+            "List D23A smart-home integration catalog entries and filter by reusable primitive, protocol, policy, and implementation traits.",
+            integration_catalog_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "integrations",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["integrations", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID,
+            "Describe smart-home integration",
+            "Describe one D23A integration catalog entry, including activation and optional readiness information.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("integration_id", JsonSchema::String),
+                    SchemaProperty::new(
+                        "available_primitives",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::String),
+                        },
+                    ),
+                    SchemaProperty::new(
+                        "allowed_capability_ids",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::String),
+                        },
+                    ),
+                    SchemaProperty::new(
+                        "enabled_integrations",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::String),
+                        },
+                    ),
+                ],
+                vec!["integration_id"],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("integration", JsonSchema::Any),
+                    SchemaProperty::new("activation_plan", JsonSchema::Any),
+                    SchemaProperty::new("readiness_report", JsonSchema::Any),
+                ],
+                vec!["integration", "activation_plan", "readiness_report"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_PRIMITIVES_TOOL_ID,
+            "List smart-home primitives",
+            "List D23A reusable smart-home primitive families and their integration backlog coverage.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+                    SchemaProperty::new("include_ecosystem_coverage", JsonSchema::Boolean),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "primitives",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new(
+                        "backlog",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("primitive_count", JsonSchema::Integer),
+                    SchemaProperty::new("backlog_count", JsonSchema::Integer),
+                ],
+                vec!["primitives", "backlog", "primitive_count", "backlog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID,
+            "Describe smart-home primitive",
+            "Describe one D23A reusable primitive family, including catalog integrations and ecosystem source coverage.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("primitive", JsonSchema::String),
+                    SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+                ],
+                vec!["primitive"],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("primitive", JsonSchema::Any),
+                    SchemaProperty::new(
+                        "integrations",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new(
+                        "ecosystem_sources",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("integration_count", JsonSchema::Integer),
+                    SchemaProperty::new("source_count", JsonSchema::Integer),
+                    SchemaProperty::new("platform_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "primitive",
+                    "integrations",
+                    "ecosystem_sources",
+                    "integration_count",
+                    "source_count",
+                    "platform_count",
+                ],
+                false,
+            ),
+        ),
         read_definition(
             SMART_HOME_DISCOVER_TOOL_ID,
             "Discover smart-home bridges",
@@ -796,6 +961,168 @@ fn pair_bridge_request(
     Ok(request)
 }
 
+fn integration_catalog_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationCatalogQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = IntegrationCatalogQuery::new();
+
+    for category in optional_string_list(arguments, "category", "categories")? {
+        query = query.with_category(parse_integration_category(&category)?);
+    }
+    for connectivity in optional_string_list(arguments, "connectivity", "connectivity_classes")? {
+        query = query.with_connectivity(parse_connectivity_class(&connectivity)?);
+    }
+    for status in optional_string_list(
+        arguments,
+        "implementation_status",
+        "implementation_statuses",
+    )? {
+        query = query.with_status(parse_implementation_status(&status)?);
+    }
+    for primitive in optional_string_list(arguments, "required_primitive", "required_primitives")? {
+        query = query.requiring_primitive(parse_primitive_family(&primitive)?);
+    }
+    for capability_id in optional_string_list(
+        arguments,
+        "required_capability_id",
+        "required_capability_ids",
+    )? {
+        query = query.requiring_capability(CapabilityId::trusted(capability_id));
+    }
+    for surface in optional_string_list(arguments, "policy_surface", "policy_surfaces")? {
+        query = query.with_policy_surface(parse_policy_surface(&surface)?);
+    }
+    for mechanism in optional_string_list(arguments, "discovery_mechanism", "discovery_mechanisms")?
+    {
+        query = query.with_discovery_mechanism(parse_discovery_mechanism(&mechanism)?);
+    }
+    for mode in optional_string_list(arguments, "auth_mode", "auth_modes")? {
+        query = query.with_auth_mode(parse_auth_mode(&mode)?);
+    }
+    for protocol in optional_string_list(arguments, "protocol_family", "protocol_families")? {
+        query = query.with_protocol_family(parse_protocol_family(&protocol)?);
+    }
+    if let Some(priority) = optional_u8(arguments, "priority_at_or_before")? {
+        query = query.at_or_before_priority(priority);
+    }
+    if let Some(include_virtual_aliases) = optional_bool(arguments, "include_virtual_aliases")? {
+        query = query.include_virtual_aliases(include_virtual_aliases);
+    }
+    if let Some(local_only) = optional_bool(arguments, "local_only")? {
+        query = query.local_only(local_only);
+    }
+    if let Some(cloud_required) = optional_bool(arguments, "cloud_required")? {
+        query = query.cloud_required(cloud_required);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_integration_catalog_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.limited_to(limit as usize);
+    }
+
+    Ok(query)
+}
+
+fn list_integrations_output_handler_output(query: IntegrationCatalogQuery) -> ToolHandlerOutput {
+    let catalog = first_party_catalog();
+    let entries = query_integrations(&catalog, &query);
+    let count = entries.len();
+    ToolHandlerOutput::new(list_integrations_output_json(&catalog, entries)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integrations")),
+            ("count", integer(count as i64)),
+        ]),
+    )
+}
+
+fn describe_integration_output_handler_output(
+    arguments: &JsonValue,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let integration_id = IntegrationId::trusted(required_string(arguments, "integration_id")?);
+    let catalog = first_party_catalog();
+    let entry = find_entry(&catalog, &integration_id).ok_or_else(|| {
+        validation_error(format!(
+            "unknown integration_id `{}`",
+            integration_id.as_str()
+        ))
+    })?;
+    let available_primitives = optional_primitive_list(arguments, "available_primitives")?;
+    let allowed_capabilities = optional_capability_id_list(arguments, "allowed_capability_ids")?;
+    let enabled_integrations = optional_integration_id_list(arguments, "enabled_integrations")?;
+    let plan = activation_plan_for_entry(entry);
+    let report = readiness_report_for_plan(
+        &plan,
+        &available_primitives,
+        &allowed_capabilities,
+        &enabled_integrations,
+    );
+
+    Ok(
+        ToolHandlerOutput::new(describe_integration_output_json(entry, &plan, &report)).with_event(
+            ToolEventKind::Progress,
+            object([
+                ("operation", string("describe_integration")),
+                ("integration_id", string(integration_id.as_str())),
+                (
+                    "activation_ready",
+                    JsonValue::Bool(report.activation_ready()),
+                ),
+            ]),
+        ),
+    )
+}
+
+fn list_primitives_output_handler_output(
+    arguments: &JsonValue,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let priority = optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX);
+    let include_ecosystem_coverage =
+        optional_bool(arguments, "include_ecosystem_coverage")?.unwrap_or(true);
+    let limit = optional_u64(arguments, "limit")?.map(|value| value as usize);
+    let output = list_primitives_output_json(
+        priority,
+        include_ecosystem_coverage,
+        limit.unwrap_or(usize::MAX),
+    );
+    let backlog_count = json_field(&output, "backlog_count")
+        .and_then(json_integer)
+        .unwrap_or(0);
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_primitives")),
+            ("backlog_count", integer(backlog_count)),
+        ]),
+    ))
+}
+
+fn describe_primitive_output_handler_output(
+    arguments: &JsonValue,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let primitive = parse_primitive_family(&required_string(arguments, "primitive")?)?;
+    let priority = optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX);
+    let output = describe_primitive_output_json(primitive, priority);
+    let integration_count = json_field(&output, "integration_count")
+        .and_then(json_integer)
+        .unwrap_or(0);
+
+    Ok(ToolHandlerOutput::new(output).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("describe_primitive")),
+            ("primitive", string(primitive.as_str())),
+            ("integration_count", integer(integration_count)),
+        ]),
+    ))
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -1079,6 +1406,522 @@ fn discover_output_json(output: &RuntimeDiscoverToolOutput) -> JsonValue {
                 .signal_summary
                 .next_transition_at_ms
                 .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn list_integrations_output_json(
+    catalog: &[IntegrationCatalogEntry],
+    entries: Vec<&IntegrationCatalogEntry>,
+) -> JsonValue {
+    object([
+        (
+            "integrations",
+            JsonValue::Array(
+                entries
+                    .iter()
+                    .map(|entry| integration_entry_json(entry))
+                    .collect(),
+            ),
+        ),
+        ("count", integer(entries.len() as i64)),
+        ("catalog_count", integer(catalog.len() as i64)),
+    ])
+}
+
+fn describe_integration_output_json(
+    entry: &IntegrationCatalogEntry,
+    plan: &IntegrationActivationPlan,
+    report: &IntegrationReadinessReport,
+) -> JsonValue {
+    object([
+        ("integration", integration_entry_json(entry)),
+        ("activation_plan", activation_plan_json(plan)),
+        ("readiness_report", readiness_report_json(report)),
+    ])
+}
+
+fn list_primitives_output_json(
+    priority_at_or_before: u8,
+    include_ecosystem_coverage: bool,
+    limit: usize,
+) -> JsonValue {
+    let catalog = first_party_catalog();
+    let sources = ecosystem_survey_sources();
+    let primitives = primitive_family_descriptors();
+    let mut backlog = if include_ecosystem_coverage {
+        primitive_backlog_with_ecosystem_coverage(&catalog, &sources, priority_at_or_before)
+            .iter()
+            .map(primitive_backlog_coverage_json)
+            .collect::<Vec<_>>()
+    } else {
+        primitive_backlog_at_or_before_priority(&catalog, priority_at_or_before)
+            .iter()
+            .map(primitive_backlog_json)
+            .collect::<Vec<_>>()
+    };
+    backlog.truncate(limit);
+
+    object([
+        (
+            "primitives",
+            JsonValue::Array(primitives.iter().map(primitive_descriptor_json).collect()),
+        ),
+        ("backlog", JsonValue::Array(backlog.clone())),
+        ("primitive_count", integer(primitives.len() as i64)),
+        ("backlog_count", integer(backlog.len() as i64)),
+    ])
+}
+
+fn describe_primitive_output_json(
+    primitive: PrimitiveFamily,
+    priority_at_or_before: u8,
+) -> JsonValue {
+    let catalog = first_party_catalog();
+    let sources = ecosystem_survey_sources();
+    let descriptor = describe_primitive_family(primitive);
+    let integrations = entries_requiring_primitive(&catalog, primitive)
+        .into_iter()
+        .filter(|entry| entry.priority <= priority_at_or_before)
+        .collect::<Vec<_>>();
+    let ecosystem_sources = survey_sources_requiring_primitive(&sources, primitive);
+    let platforms = ecosystem_platforms_requiring_primitive(&sources, primitive);
+
+    object([
+        ("primitive", primitive_descriptor_json(&descriptor)),
+        (
+            "integrations",
+            JsonValue::Array(
+                integrations
+                    .iter()
+                    .map(|entry| integration_entry_summary_json(entry))
+                    .collect(),
+            ),
+        ),
+        (
+            "ecosystem_sources",
+            JsonValue::Array(
+                ecosystem_sources
+                    .iter()
+                    .map(|source| ecosystem_source_json(*source))
+                    .collect(),
+            ),
+        ),
+        ("integration_count", integer(integrations.len() as i64)),
+        ("source_count", integer(ecosystem_sources.len() as i64)),
+        ("platform_count", integer(platforms.len() as i64)),
+    ])
+}
+
+fn integration_entry_json(entry: &IntegrationCatalogEntry) -> JsonValue {
+    object([
+        ("integration_id", string(entry.integration_id.as_str())),
+        ("display_name", string(&entry.display_name)),
+        ("summary", string(&entry.summary)),
+        (
+            "category",
+            string(integration_category_label(entry.category)),
+        ),
+        (
+            "connectivity",
+            string(connectivity_class_label(entry.connectivity)),
+        ),
+        (
+            "runtime_kind",
+            string(runtime_kind_label(entry.runtime_kind)),
+        ),
+        (
+            "implementation_status",
+            string(implementation_status_label(entry.implementation_status)),
+        ),
+        ("priority", integer(entry.priority as i64)),
+        (
+            "discovery_mechanisms",
+            JsonValue::Array(
+                entry
+                    .discovery_mechanisms
+                    .iter()
+                    .map(|mechanism| string(discovery_mechanism_label(*mechanism)))
+                    .collect(),
+            ),
+        ),
+        (
+            "auth_modes",
+            JsonValue::Array(
+                entry
+                    .auth_modes
+                    .iter()
+                    .map(|mode| string(auth_mode_label(*mode)))
+                    .collect(),
+            ),
+        ),
+        (
+            "required_capabilities",
+            JsonValue::Array(
+                entry
+                    .required_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "target_entity_kinds",
+            JsonValue::Array(
+                entry
+                    .target_entity_kinds
+                    .iter()
+                    .map(|kind| string(entity_kind_label(*kind)))
+                    .collect(),
+            ),
+        ),
+        (
+            "supported_protocols",
+            JsonValue::Array(
+                entry
+                    .supported_protocols
+                    .iter()
+                    .map(|protocol| string(protocol.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "depends_on_integrations",
+            JsonValue::Array(
+                entry
+                    .depends_on_integrations
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "virtual_target",
+            entry
+                .virtual_target
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "virtual_iot_standards",
+            JsonValue::Array(
+                entry
+                    .virtual_iot_standards
+                    .iter()
+                    .map(|protocol| string(protocol.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "required_primitives",
+            JsonValue::Array(
+                entry
+                    .required_primitives
+                    .iter()
+                    .map(|primitive| string(primitive.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "policy_surfaces",
+            JsonValue::Array(
+                entry
+                    .policy_surfaces()
+                    .iter()
+                    .map(|surface| string(surface.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(entry.highest_policy_tier())),
+        ),
+        (
+            "source_refs",
+            JsonValue::Array(
+                entry
+                    .source_refs
+                    .iter()
+                    .map(source_reference_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "notes",
+            JsonValue::Array(entry.notes.iter().map(string).collect()),
+        ),
+    ])
+}
+
+fn integration_entry_summary_json(entry: &IntegrationCatalogEntry) -> JsonValue {
+    object([
+        ("integration_id", string(entry.integration_id.as_str())),
+        ("display_name", string(&entry.display_name)),
+        (
+            "category",
+            string(integration_category_label(entry.category)),
+        ),
+        (
+            "implementation_status",
+            string(implementation_status_label(entry.implementation_status)),
+        ),
+        ("priority", integer(entry.priority as i64)),
+    ])
+}
+
+fn activation_plan_json(plan: &IntegrationActivationPlan) -> JsonValue {
+    object([
+        (
+            "requested_integration_id",
+            string(plan.requested_integration_id.as_str()),
+        ),
+        ("display_name", string(&plan.display_name)),
+        (
+            "activation_target",
+            activation_target_json(&plan.activation_target),
+        ),
+        (
+            "implementation_status",
+            string(implementation_status_label(plan.implementation_status)),
+        ),
+        ("priority", integer(plan.priority as i64)),
+        (
+            "runtime_kind",
+            string(runtime_kind_label(plan.runtime_kind)),
+        ),
+        (
+            "required_primitives",
+            JsonValue::Array(
+                plan.required_primitives
+                    .iter()
+                    .map(|primitive| string(primitive.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "required_capabilities",
+            JsonValue::Array(
+                plan.required_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "auth_modes",
+            JsonValue::Array(
+                plan.auth_modes
+                    .iter()
+                    .map(|mode| string(auth_mode_label(*mode)))
+                    .collect(),
+            ),
+        ),
+        (
+            "discovery_mechanisms",
+            JsonValue::Array(
+                plan.discovery_mechanisms
+                    .iter()
+                    .map(|mechanism| string(discovery_mechanism_label(*mechanism)))
+                    .collect(),
+            ),
+        ),
+        (
+            "depends_on_integrations",
+            JsonValue::Array(
+                plan.depends_on_integrations
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "policy_surfaces",
+            JsonValue::Array(
+                plan.policy_surfaces
+                    .iter()
+                    .map(|surface| string(surface.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(plan.highest_policy_tier)),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(plan.requires_human_review()),
+        ),
+        ("local_only", JsonValue::Bool(plan.local_only)),
+        ("cloud_required", JsonValue::Bool(plan.cloud_required)),
+    ])
+}
+
+fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
+    object([
+        (
+            "requested_integration_id",
+            string(report.requested_integration_id.as_str()),
+        ),
+        ("display_name", string(&report.display_name)),
+        (
+            "activation_target",
+            activation_target_json(&report.activation_target),
+        ),
+        ("priority", integer(report.priority as i64)),
+        (
+            "missing_primitives",
+            JsonValue::Array(
+                report
+                    .missing_primitives
+                    .iter()
+                    .map(|primitive| string(primitive.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "missing_capabilities",
+            JsonValue::Array(
+                report
+                    .missing_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "missing_dependencies",
+            JsonValue::Array(
+                report
+                    .missing_dependencies
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "activation_ready",
+            JsonValue::Bool(report.activation_ready()),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(report.requires_human_review),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(report.highest_policy_tier)),
+        ),
+        ("local_only", JsonValue::Bool(report.local_only)),
+        ("cloud_required", JsonValue::Bool(report.cloud_required)),
+    ])
+}
+
+fn activation_target_json(target: &IntegrationActivationTarget) -> JsonValue {
+    match target {
+        IntegrationActivationTarget::Direct => object([("kind", string("direct"))]),
+        IntegrationActivationTarget::DelegatedIntegration(integration_id) => object([
+            ("kind", string("delegated_integration")),
+            ("integration_id", string(integration_id.as_str())),
+        ]),
+        IntegrationActivationTarget::DelegatedStandards(protocols) => object([
+            ("kind", string("delegated_standards")),
+            (
+                "protocols",
+                JsonValue::Array(
+                    protocols
+                        .iter()
+                        .map(|protocol| string(protocol.as_str()))
+                        .collect(),
+                ),
+            ),
+        ]),
+    }
+}
+
+fn primitive_descriptor_json(descriptor: &PrimitiveFamilyDescriptor) -> JsonValue {
+    object([
+        ("primitive", string(descriptor.primitive.as_str())),
+        ("display_name", string(descriptor.display_name)),
+        ("summary", string(descriptor.summary)),
+    ])
+}
+
+fn primitive_backlog_json(item: &PrimitiveBacklogItem) -> JsonValue {
+    object([
+        ("primitive", string(item.primitive.as_str())),
+        ("highest_priority", integer(item.highest_priority as i64)),
+        ("entry_count", integer(item.entry_count as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                item.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn primitive_backlog_coverage_json(item: &PrimitiveBacklogCoverageItem) -> JsonValue {
+    object([
+        ("primitive", string(item.primitive.as_str())),
+        ("highest_priority", integer(item.highest_priority as i64)),
+        ("entry_count", integer(item.entry_count as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                item.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        ("source_count", integer(item.source_count as i64)),
+        (
+            "platforms",
+            JsonValue::Array(
+                item.platforms
+                    .iter()
+                    .map(|platform| string(platform.as_str()))
+                    .collect(),
+            ),
+        ),
+        ("platform_count", integer(item.platform_count() as i64)),
+    ])
+}
+
+fn ecosystem_source_json(source: &EcosystemSurveySource) -> JsonValue {
+    object([
+        ("platform", string(source.platform.as_str())),
+        ("display_name", string(source.display_name)),
+        ("source_url", string(source.source_url)),
+        ("source_surface", string(source.source_surface)),
+        ("contributes", string(source.contributes)),
+        (
+            "primitive_hints",
+            JsonValue::Array(
+                source
+                    .primitive_hints
+                    .iter()
+                    .map(|primitive| string(primitive.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn source_reference_json(reference: &SourceReference) -> JsonValue {
+    object([
+        ("label", string(&reference.label)),
+        ("url", string(&reference.url)),
+        (
+            "external_id",
+            reference
+                .external_id
+                .as_ref()
+                .map(string)
                 .unwrap_or(JsonValue::Null),
         ),
     ])
@@ -1724,6 +2567,275 @@ fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError>
     }
 }
 
+fn parse_integration_category(label: &str) -> Result<IntegrationCategory, ToolCallError> {
+    match label {
+        "protocol_standard" => Ok(IntegrationCategory::ProtocolStandard),
+        "local_hub" => Ok(IntegrationCategory::LocalHub),
+        "local_device" => Ok(IntegrationCategory::LocalDevice),
+        "bluetooth_profile" => Ok(IntegrationCategory::BluetoothProfile),
+        "cloud_hub" => Ok(IntegrationCategory::CloudHub),
+        "camera_media" => Ok(IntegrationCategory::CameraMedia),
+        "energy_climate" => Ok(IntegrationCategory::EnergyClimate),
+        "notification_channel" => Ok(IntegrationCategory::NotificationChannel),
+        "data_service" => Ok(IntegrationCategory::DataService),
+        "helper_calculated" => Ok(IntegrationCategory::HelperCalculated),
+        "virtual_alias" => Ok(IntegrationCategory::VirtualAlias),
+        "system_hardware" => Ok(IntegrationCategory::SystemHardware),
+        _ => Err(validation_error(format!(
+            "unknown integration category `{label}`"
+        ))),
+    }
+}
+
+fn parse_connectivity_class(label: &str) -> Result<ConnectivityClass, ToolCallError> {
+    match label {
+        "local_push" => Ok(ConnectivityClass::LocalPush),
+        "local_polling" => Ok(ConnectivityClass::LocalPolling),
+        "cloud_push" => Ok(ConnectivityClass::CloudPush),
+        "cloud_polling" => Ok(ConnectivityClass::CloudPolling),
+        "calculated" => Ok(ConnectivityClass::Calculated),
+        "assumed_state" => Ok(ConnectivityClass::AssumedState),
+        _ => Err(validation_error(format!(
+            "unknown connectivity class `{label}`"
+        ))),
+    }
+}
+
+fn parse_implementation_status(label: &str) -> Result<ImplementationStatus, ToolCallError> {
+    match label {
+        "cataloged" => Ok(ImplementationStatus::Cataloged),
+        "specified" => Ok(ImplementationStatus::Specified),
+        "scaffolded" => Ok(ImplementationStatus::Scaffolded),
+        "simulated" => Ok(ImplementationStatus::Simulated),
+        "first_party_runtime" => Ok(ImplementationStatus::FirstPartyRuntime),
+        "production_ready" => Ok(ImplementationStatus::ProductionReady),
+        "delegated_to_standard" => Ok(ImplementationStatus::DelegatedToStandard),
+        "unsupported" => Ok(ImplementationStatus::Unsupported),
+        _ => Err(validation_error(format!(
+            "unknown implementation status `{label}`"
+        ))),
+    }
+}
+
+fn parse_primitive_family(label: &str) -> Result<PrimitiveFamily, ToolCallError> {
+    match label {
+        "normalized_model" => Ok(PrimitiveFamily::NormalizedModel),
+        "discovery_index" => Ok(PrimitiveFamily::DiscoveryIndex),
+        "mdns" => Ok(PrimitiveFamily::Mdns),
+        "ssdp" => Ok(PrimitiveFamily::Ssdp),
+        "dhcp" => Ok(PrimitiveFamily::Dhcp),
+        "local_http" => Ok(PrimitiveFamily::LocalHttp),
+        "websocket" => Ok(PrimitiveFamily::WebSocket),
+        "server_sent_events" => Ok(PrimitiveFamily::ServerSentEvents),
+        "mqtt" => Ok(PrimitiveFamily::Mqtt),
+        "bluetooth_low_energy" => Ok(PrimitiveFamily::BluetoothLowEnergy),
+        "usb" => Ok(PrimitiveFamily::Usb),
+        "serial_controller" => Ok(PrimitiveFamily::SerialController),
+        "radio_802154" => Ok(PrimitiveFamily::Radio802154),
+        "zwave_serial_api" => Ok(PrimitiveFamily::ZWaveSerialApi),
+        "matter_commissioning" => Ok(PrimitiveFamily::MatterCommissioning),
+        "homekit_pairing" => Ok(PrimitiveFamily::HomeKitPairing),
+        "cloud_api" => Ok(PrimitiveFamily::CloudApi),
+        "webhook" => Ok(PrimitiveFamily::Webhook),
+        "oauth2" => Ok(PrimitiveFamily::OAuth2),
+        "local_pairing" => Ok(PrimitiveFamily::LocalPairing),
+        "local_token" => Ok(PrimitiveFamily::LocalToken),
+        "certificate_pairing" => Ok(PrimitiveFamily::CertificatePairing),
+        "radio_network_key" => Ok(PrimitiveFamily::RadioNetworkKey),
+        "mqtt_credentials" => Ok(PrimitiveFamily::MqttCredentials),
+        "camera_media" => Ok(PrimitiveFamily::CameraMedia),
+        "energy_telemetry" => Ok(PrimitiveFamily::EnergyTelemetry),
+        "calculated_state" => Ok(PrimitiveFamily::CalculatedState),
+        "command_mapping" => Ok(PrimitiveFamily::CommandMapping),
+        "capability_policy" => Ok(PrimitiveFamily::CapabilityPolicy),
+        "vault_lease" => Ok(PrimitiveFamily::VaultLease),
+        "supervision" => Ok(PrimitiveFamily::Supervision),
+        "test_simulator" => Ok(PrimitiveFamily::TestSimulator),
+        _ => Err(validation_error(format!("unknown primitive `{label}`"))),
+    }
+}
+
+fn parse_policy_surface(label: &str) -> Result<IntegrationPolicySurface, ToolCallError> {
+    match label {
+        "local_actuation" => Ok(IntegrationPolicySurface::LocalActuation),
+        "entry_access" => Ok(IntegrationPolicySurface::EntryAccess),
+        "climate_control" => Ok(IntegrationPolicySurface::ClimateControl),
+        "camera_media" => Ok(IntegrationPolicySurface::CameraMedia),
+        "energy_management" => Ok(IntegrationPolicySurface::EnergyManagement),
+        "credential_lease" => Ok(IntegrationPolicySurface::CredentialLease),
+        "credentialed_cloud" => Ok(IntegrationPolicySurface::CredentialedCloud),
+        "radio_network_management" => Ok(IntegrationPolicySurface::RadioNetworkManagement),
+        "network_infrastructure" => Ok(IntegrationPolicySurface::NetworkInfrastructure),
+        _ => Err(validation_error(format!(
+            "unknown policy surface `{label}`"
+        ))),
+    }
+}
+
+fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCallError> {
+    match label {
+        "mdns" => Ok(DiscoveryMechanism::Mdns),
+        "ssdp" => Ok(DiscoveryMechanism::Ssdp),
+        "bluetooth" => Ok(DiscoveryMechanism::Bluetooth),
+        "usb" => Ok(DiscoveryMechanism::Usb),
+        "dhcp" => Ok(DiscoveryMechanism::Dhcp),
+        "mqtt" => Ok(DiscoveryMechanism::Mqtt),
+        "manual" => Ok(DiscoveryMechanism::Manual),
+        "cloud_account" => Ok(DiscoveryMechanism::CloudAccount),
+        "webhook" => Ok(DiscoveryMechanism::Webhook),
+        "file_config" => Ok(DiscoveryMechanism::FileConfig),
+        _ => Err(validation_error(format!(
+            "unknown discovery mechanism `{label}`"
+        ))),
+    }
+}
+
+fn parse_auth_mode(label: &str) -> Result<AuthMode, ToolCallError> {
+    match label {
+        "none" => Ok(AuthMode::None),
+        "local_pairing" => Ok(AuthMode::LocalPairing),
+        "local_token" => Ok(AuthMode::LocalToken),
+        "username_password" => Ok(AuthMode::UsernamePassword),
+        "oauth2" => Ok(AuthMode::OAuth2),
+        "api_key" => Ok(AuthMode::ApiKey),
+        "certificate" => Ok(AuthMode::Certificate),
+        "radio_network_key" => Ok(AuthMode::RadioNetworkKey),
+        "mqtt_credentials" => Ok(AuthMode::MqttCredentials),
+        _ => Err(validation_error(format!("unknown auth mode `{label}`"))),
+    }
+}
+
+fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
+    match label {
+        "hue" => Ok(ProtocolFamily::Hue),
+        "zigbee" => Ok(ProtocolFamily::Zigbee),
+        "zwave" | "z_wave" | "z-wave" => Ok(ProtocolFamily::ZWave),
+        "thread" => Ok(ProtocolFamily::Thread),
+        "matter" => Ok(ProtocolFamily::Matter),
+        "mqtt" => Ok(ProtocolFamily::Mqtt),
+        value if value.starts_with("vendor:") && value.len() > "vendor:".len() => {
+            Ok(ProtocolFamily::Vendor(value["vendor:".len()..].to_string()))
+        }
+        _ => Err(validation_error(format!(
+            "unknown protocol family `{label}`"
+        ))),
+    }
+}
+
+fn parse_integration_catalog_sort(label: &str) -> Result<IntegrationCatalogSort, ToolCallError> {
+    match label {
+        "priority_then_name" => Ok(IntegrationCatalogSort::PriorityThenName),
+        "name" => Ok(IntegrationCatalogSort::Name),
+        "category_then_priority" => Ok(IntegrationCatalogSort::CategoryThenPriority),
+        "status_then_priority" => Ok(IntegrationCatalogSort::StatusThenPriority),
+        _ => Err(validation_error(format!(
+            "unknown integration sort `{label}`"
+        ))),
+    }
+}
+
+fn integration_category_label(category: IntegrationCategory) -> &'static str {
+    match category {
+        IntegrationCategory::ProtocolStandard => "protocol_standard",
+        IntegrationCategory::LocalHub => "local_hub",
+        IntegrationCategory::LocalDevice => "local_device",
+        IntegrationCategory::BluetoothProfile => "bluetooth_profile",
+        IntegrationCategory::CloudHub => "cloud_hub",
+        IntegrationCategory::CameraMedia => "camera_media",
+        IntegrationCategory::EnergyClimate => "energy_climate",
+        IntegrationCategory::NotificationChannel => "notification_channel",
+        IntegrationCategory::DataService => "data_service",
+        IntegrationCategory::HelperCalculated => "helper_calculated",
+        IntegrationCategory::VirtualAlias => "virtual_alias",
+        IntegrationCategory::SystemHardware => "system_hardware",
+    }
+}
+
+fn connectivity_class_label(connectivity: ConnectivityClass) -> &'static str {
+    match connectivity {
+        ConnectivityClass::LocalPush => "local_push",
+        ConnectivityClass::LocalPolling => "local_polling",
+        ConnectivityClass::CloudPush => "cloud_push",
+        ConnectivityClass::CloudPolling => "cloud_polling",
+        ConnectivityClass::Calculated => "calculated",
+        ConnectivityClass::AssumedState => "assumed_state",
+    }
+}
+
+fn implementation_status_label(status: ImplementationStatus) -> &'static str {
+    match status {
+        ImplementationStatus::Cataloged => "cataloged",
+        ImplementationStatus::Specified => "specified",
+        ImplementationStatus::Scaffolded => "scaffolded",
+        ImplementationStatus::Simulated => "simulated",
+        ImplementationStatus::FirstPartyRuntime => "first_party_runtime",
+        ImplementationStatus::ProductionReady => "production_ready",
+        ImplementationStatus::DelegatedToStandard => "delegated_to_standard",
+        ImplementationStatus::Unsupported => "unsupported",
+    }
+}
+
+fn discovery_mechanism_label(mechanism: DiscoveryMechanism) -> &'static str {
+    match mechanism {
+        DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::Ssdp => "ssdp",
+        DiscoveryMechanism::Bluetooth => "bluetooth",
+        DiscoveryMechanism::Usb => "usb",
+        DiscoveryMechanism::Dhcp => "dhcp",
+        DiscoveryMechanism::Mqtt => "mqtt",
+        DiscoveryMechanism::Manual => "manual",
+        DiscoveryMechanism::CloudAccount => "cloud_account",
+        DiscoveryMechanism::Webhook => "webhook",
+        DiscoveryMechanism::FileConfig => "file_config",
+    }
+}
+
+fn auth_mode_label(mode: AuthMode) -> &'static str {
+    match mode {
+        AuthMode::None => "none",
+        AuthMode::LocalPairing => "local_pairing",
+        AuthMode::LocalToken => "local_token",
+        AuthMode::UsernamePassword => "username_password",
+        AuthMode::OAuth2 => "oauth2",
+        AuthMode::ApiKey => "api_key",
+        AuthMode::Certificate => "certificate",
+        AuthMode::RadioNetworkKey => "radio_network_key",
+        AuthMode::MqttCredentials => "mqtt_credentials",
+    }
+}
+
+fn runtime_kind_label(kind: RuntimeKind) -> &'static str {
+    match kind {
+        RuntimeKind::InProcessRust => "in_process_rust",
+        RuntimeKind::RustWorkerProcess => "rust_worker_process",
+    }
+}
+
+fn entity_kind_label(kind: EntityKind) -> &'static str {
+    match kind {
+        EntityKind::Light => "light",
+        EntityKind::LightGroup => "light_group",
+        EntityKind::Switch => "switch",
+        EntityKind::Sensor => "sensor",
+        EntityKind::Lock => "lock",
+        EntityKind::Thermostat => "thermostat",
+        EntityKind::Scene => "scene",
+        EntityKind::Input => "input",
+        EntityKind::BridgeHealth => "bridge_health",
+        EntityKind::NetworkDiagnostic => "network_diagnostic",
+        EntityKind::Unknown => "unknown",
+    }
+}
+
+fn privilege_tier_label(tier: PrivilegeTier) -> &'static str {
+    match tier {
+        PrivilegeTier::ReadOnly => "read_only",
+        PrivilegeTier::LowRisk => "low_risk",
+        PrivilegeTier::HumanApproval => "human_approval",
+        PrivilegeTier::HighRisk => "high_risk",
+    }
+}
+
 fn health_label(health: Health) -> &'static str {
     match health {
         Health::Unknown => "unknown",
@@ -1864,6 +2976,89 @@ fn optional_string(value: &JsonValue, field: &str) -> Result<Option<String>, Too
     }
 }
 
+fn optional_string_list(
+    value: &JsonValue,
+    singular_field: &str,
+    plural_field: &str,
+) -> Result<Vec<String>, ToolCallError> {
+    let mut values = Vec::new();
+    if let Some(value) = optional_string(value, singular_field)? {
+        values.push(value);
+    }
+    match optional_field(value, plural_field) {
+        Some(JsonValue::String(value)) => values.push(value.clone()),
+        Some(JsonValue::Array(items)) => {
+            for item in items {
+                match item {
+                    JsonValue::String(value) => values.push(value.clone()),
+                    _ => {
+                        return Err(validation_error(format!(
+                            "{plural_field} must contain string values"
+                        )))
+                    }
+                }
+            }
+        }
+        Some(JsonValue::Null) | None => {}
+        Some(_) => {
+            return Err(validation_error(format!(
+                "{plural_field} must be a string or string array"
+            )))
+        }
+    }
+    Ok(values)
+}
+
+fn optional_primitive_list(
+    value: &JsonValue,
+    field: &str,
+) -> Result<Vec<PrimitiveFamily>, ToolCallError> {
+    optional_string_list_field(value, field)?
+        .iter()
+        .map(|label| parse_primitive_family(label))
+        .collect()
+}
+
+fn optional_capability_id_list(
+    value: &JsonValue,
+    field: &str,
+) -> Result<Vec<CapabilityId>, ToolCallError> {
+    Ok(optional_string_list_field(value, field)?
+        .into_iter()
+        .map(CapabilityId::trusted)
+        .collect())
+}
+
+fn optional_integration_id_list(
+    value: &JsonValue,
+    field: &str,
+) -> Result<Vec<IntegrationId>, ToolCallError> {
+    Ok(optional_string_list_field(value, field)?
+        .into_iter()
+        .map(IntegrationId::trusted)
+        .collect())
+}
+
+fn optional_string_list_field(
+    value: &JsonValue,
+    field: &str,
+) -> Result<Vec<String>, ToolCallError> {
+    match optional_field(value, field) {
+        Some(JsonValue::String(value)) => Ok(vec![value.clone()]),
+        Some(JsonValue::Array(items)) => items
+            .iter()
+            .map(|item| match item {
+                JsonValue::String(value) => Ok(value.clone()),
+                _ => Err(validation_error(format!("{field} must contain strings"))),
+            })
+            .collect(),
+        Some(JsonValue::Null) | None => Ok(Vec::new()),
+        Some(_) => Err(validation_error(format!(
+            "{field} must be a string or string array"
+        ))),
+    }
+}
+
 fn optional_bool(value: &JsonValue, field: &str) -> Result<Option<bool>, ToolCallError> {
     match optional_field(value, field) {
         Some(JsonValue::Bool(value)) => Ok(Some(*value)),
@@ -1882,6 +3077,15 @@ fn optional_u64(value: &JsonValue, field: &str) -> Result<Option<u64>, ToolCallE
             "{field} must be a non-negative integer"
         ))),
     }
+}
+
+fn optional_u8(value: &JsonValue, field: &str) -> Result<Option<u8>, ToolCallError> {
+    optional_u64(value, field)?
+        .map(|value| {
+            u8::try_from(value)
+                .map_err(|_| validation_error(format!("{field} must be less than or equal to 255")))
+        })
+        .transpose()
 }
 
 fn optional_metadata(value: &JsonValue) -> Result<Vec<Metadata>, ToolCallError> {
@@ -1921,6 +3125,22 @@ fn metadata_scalar(value: &JsonValue) -> Result<String, ToolCallError> {
         JsonValue::Null | JsonValue::Array(_) | JsonValue::Object(_) => {
             Err(validation_error("metadata values must be scalar"))
         }
+    }
+}
+
+fn json_field<'a>(value: &'a JsonValue, name: &str) -> Option<&'a JsonValue> {
+    let JsonValue::Object(fields) = value else {
+        return None;
+    };
+    fields
+        .iter()
+        .find_map(|(field_name, value)| (field_name == name).then_some(value))
+}
+
+fn json_integer(value: &JsonValue) -> Option<i64> {
+    match value {
+        JsonValue::Number(JsonNumber::Integer(value)) => Some(*value),
+        _ => None,
     }
 }
 
@@ -1972,6 +3192,42 @@ fn object_schema(
         required: required.into_iter().map(str::to_string).collect(),
         allow_unknown_fields,
     }
+}
+
+fn integration_catalog_query_schema() -> JsonSchema {
+    let string_array = || JsonSchema::Array {
+        items: Box::new(JsonSchema::String),
+    };
+    object_schema(
+        vec![
+            SchemaProperty::new("category", JsonSchema::String),
+            SchemaProperty::new("categories", string_array()),
+            SchemaProperty::new("connectivity", JsonSchema::String),
+            SchemaProperty::new("connectivity_classes", string_array()),
+            SchemaProperty::new("implementation_status", JsonSchema::String),
+            SchemaProperty::new("implementation_statuses", string_array()),
+            SchemaProperty::new("required_primitive", JsonSchema::String),
+            SchemaProperty::new("required_primitives", string_array()),
+            SchemaProperty::new("required_capability_id", JsonSchema::String),
+            SchemaProperty::new("required_capability_ids", string_array()),
+            SchemaProperty::new("policy_surface", JsonSchema::String),
+            SchemaProperty::new("policy_surfaces", string_array()),
+            SchemaProperty::new("discovery_mechanism", JsonSchema::String),
+            SchemaProperty::new("discovery_mechanisms", string_array()),
+            SchemaProperty::new("auth_mode", JsonSchema::String),
+            SchemaProperty::new("auth_modes", string_array()),
+            SchemaProperty::new("protocol_family", JsonSchema::String),
+            SchemaProperty::new("protocol_families", string_array()),
+            SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+            SchemaProperty::new("include_virtual_aliases", JsonSchema::Boolean),
+            SchemaProperty::new("local_only", JsonSchema::Boolean),
+            SchemaProperty::new("cloud_required", JsonSchema::Boolean),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        Vec::new(),
+        false,
+    )
 }
 
 fn empty_object_schema() -> JsonSchema {
@@ -2028,7 +3284,7 @@ mod tests {
         RequestedBy, ToolCatalogExport, ToolExecutionJournal, ToolInvocationRequest,
         ToolValidationReport,
     };
-    use smart_home_core::{CapabilityGrant, CapabilityGrantId, PrivilegeTier};
+    use smart_home_core::{CapabilityGrant, CapabilityGrantId};
     use smart_home_discovery::{
         DiscoveryWorkerId, DiscoveryWorkerKind, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
     };
@@ -2042,8 +3298,20 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 12);
+        assert_eq!(definitions.len(), 16);
         assert!(export.ok());
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_PRIMITIVES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_COMMAND_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_PAIR_BRIDGE_TOOL_ID));
@@ -2056,7 +3324,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            10
+            14
         );
         assert_eq!(
             export
@@ -2108,6 +3376,107 @@ mod tests {
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
+
+        let list_integrations_request = request(
+            "call-list-integrations",
+            SMART_HOME_LIST_INTEGRATIONS_TOOL_ID,
+            object([
+                ("required_primitive", string("local_http")),
+                ("priority_at_or_before", integer(0)),
+                ("limit", integer(2)),
+            ]),
+            990,
+        );
+        let list_integrations_trace = tool_runtime.invoke_with_events(&list_integrations_request);
+        assert!(list_integrations_trace.result.ok);
+        let list_integrations_output = list_integrations_trace.result.output.as_ref().unwrap();
+        assert_eq!(list_integrations_trace.summary().progress_event_count, 1);
+        let integration_count =
+            integer_value(field(list_integrations_output, "count").unwrap()).unwrap();
+        assert!((1..=2).contains(&integration_count));
+        assert_eq!(
+            array_len(field(list_integrations_output, "integrations").unwrap()),
+            Some(integration_count as usize)
+        );
+
+        let describe_integration_request = request(
+            "call-describe-integration",
+            SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID,
+            object([
+                ("integration_id", string("hue")),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![string("mdns"), string("local_http")]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            991,
+        );
+        let describe_integration_trace =
+            tool_runtime.invoke_with_events(&describe_integration_request);
+        assert!(describe_integration_trace.result.ok);
+        let describe_integration_output =
+            describe_integration_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(
+                field(describe_integration_output, "integration").unwrap(),
+                "integration_id"
+            ),
+            Some(&string("hue"))
+        );
+        assert_eq!(
+            field(
+                field(describe_integration_output, "readiness_report").unwrap(),
+                "activation_ready"
+            ),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let list_primitives_request = request(
+            "call-list-primitives",
+            SMART_HOME_LIST_PRIMITIVES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(0)),
+                ("include_ecosystem_coverage", JsonValue::Bool(true)),
+                ("limit", integer(3)),
+            ]),
+            992,
+        );
+        let list_primitives_trace = tool_runtime.invoke_with_events(&list_primitives_request);
+        assert!(list_primitives_trace.result.ok);
+        let list_primitives_output = list_primitives_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(list_primitives_output, "backlog_count"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            array_len(field(list_primitives_output, "backlog").unwrap()),
+            Some(3)
+        );
+
+        let describe_primitive_request = request(
+            "call-describe-primitive",
+            SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID,
+            object([("primitive", string("mdns"))]),
+            993,
+        );
+        let describe_primitive_trace = tool_runtime.invoke_with_events(&describe_primitive_request);
+        assert!(describe_primitive_trace.result.ok);
+        let describe_primitive_output = describe_primitive_trace.result.output.as_ref().unwrap();
+        assert!(
+            integer_value(field(describe_primitive_output, "integration_count").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(
+                field(describe_primitive_output, "primitive").unwrap(),
+                "primitive"
+            ),
+            Some(&string("mdns"))
+        );
 
         let list_request = request(
             "call-list-devices",
@@ -2350,6 +3719,10 @@ mod tests {
         );
 
         let mut journal = ToolExecutionJournal::new();
+        journal.record_trace(list_integrations_request, list_integrations_trace);
+        journal.record_trace(describe_integration_request, describe_integration_trace);
+        journal.record_trace(list_primitives_request, list_primitives_trace);
+        journal.record_trace(describe_primitive_request, describe_primitive_trace);
         journal.record_trace(list_request, list_trace);
         journal.record_trace(discover_request, discover_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
@@ -2363,9 +3736,9 @@ mod tests {
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 11);
-        assert_eq!(journal_summary.completed_count, 11);
-        assert_eq!(journal.audit_records().len(), 11);
+        assert_eq!(journal_summary.invocation_count, 15);
+        assert_eq!(journal_summary.completed_count, 15);
+        assert_eq!(journal.audit_records().len(), 15);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -2488,6 +3861,22 @@ mod tests {
                 .map(|error| error.kind),
             Some(ToolErrorKind::ToolValidationError)
         );
+
+        let unknown_primitive = tool_runtime.invoke_with_events(&request(
+            "call-invalid-primitive",
+            SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID,
+            object([("primitive", string("time_travel"))]),
+            1_000,
+        ));
+        assert!(!unknown_primitive.result.ok);
+        assert_eq!(
+            unknown_primitive
+                .result
+                .error
+                .as_ref()
+                .map(|error| error.kind),
+            Some(ToolErrorKind::ToolValidationError)
+        );
     }
 
     fn request(
@@ -2532,5 +3921,12 @@ mod tests {
             return None;
         };
         values.get(index)
+    }
+
+    fn integer_value(value: &JsonValue) -> Option<i64> {
+        let JsonValue::Number(JsonNumber::Integer(value)) = value else {
+            return None;
+        };
+        Some(*value)
     }
 }
