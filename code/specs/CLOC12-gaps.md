@@ -274,3 +274,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 - **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_switch` flipped IGNORED → PASS.
 - **Resolution:** Added `BlockKind::Switch` variant + parallel `paren_is_switch_stack`. `switch` keyword (when followed by `(`) arms `next_paren_is_switch_head`. The matching `)` arms `next_block_is_switch_body`. The next `{` pushes `BlockKind::Switch`. On matching `}`, emit synthetic `;`. **Pre-push security review flagged a parallel non-fatal defect** for `switch` as a property name — same family as the `class` bug but only emits cosmetic extra `;`s rather than SyntaxErrors. Fix: require next token to be `(` (grammatically mandatory per §13.12).
+
+### gap-037 — async function declaration trailing `;`
+
+- **Status:** OPEN — newly discovered by CLOC14.5. **Sibling of gap-030.**
+- **Upstream byte-identity test:** `minify_async` seed fixture.
+- **Why it fails:** Upstream emits `async function f(){await x};` for `async function f(){await x;}`. closurec emits `async function f(){await x}` (missing trailing `;`). The state machine's `saw_function_kw_at_boundary` arming requires `function` to be at a statement boundary, but the `async` keyword consumes the boundary (sets `at_stmt_boundary=false`) before `function` is seen.
+- **What it needs:** Add an `async`-tracking flag. When `async` is seen at a statement boundary, set both `at_stmt_boundary=false` (current behavior) AND a sticky `next_keyword_inherits_boundary` flag. The next `function` keyword checks both `at_stmt_boundary` and that flag. Alternative: just track "saw `async` immediately before this `function`" — simpler scope.
+
+### gap-038 — hex numeric literal normalised to decimal
+
+- **Status:** OPEN — newly discovered by CLOC14.5.
+- **Upstream byte-identity test:** `minify_hex_number` seed fixture.
+- **Why it fails:** Upstream emits `var x=255;` for `var x=0xff;` even under WHITESPACE_ONLY. closurec preserves `0xff` verbatim. Note: this is a SHORTEST-FORM normalisation — if the decimal form were longer than the hex form (e.g. `0xffffffff` vs `4294967295`), upstream would presumably keep the hex. The rule is "emit the shorter representation, tie-break to decimal."
+- **What it needs:** Detect NUMBER tokens with hex (`0x` prefix), octal (`0o`), or binary (`0b`) prefixes, parse to a numeric value, format as both decimal and the source form, emit the shorter (tie-break decimal). closure-emitter already has shortest-form number formatting infrastructure (CLOC12.12) — could reuse the same logic at the token-stream layer.
