@@ -9,7 +9,7 @@
 //!
 //! `--lang` is optional: if omitted, the language is inferred from the
 //! input's file extension (`.twig`, `.nib`, `.bf`, `.bas`, `.oct`,
-//! `.mcl`/`.lisp`).
+//! `.mcl`/`.lisp`, `.algol`/`.alg`/`.a60`).
 //! When inference fails, the CLI prints the recognised extensions and
 //! exits non-zero.
 //!
@@ -63,7 +63,7 @@ fn main() -> ExitCode {
             Some(l) => l,
             None => {
                 eprintln!("lang-aot: could not infer language from {:?}; pass --lang explicitly", input);
-                eprintln!("  recognised extensions: .twig .nib .bf .bas .oct .mcl .lisp");
+                eprintln!("  recognised extensions: .twig .nib .bf .bas .oct .mcl .lisp .algol .alg .a60");
                 return ExitCode::from(2);
             }
         },
@@ -216,12 +216,16 @@ Supported languages:
   oct             (.oct)         — TODO (no Rust frontend yet)
   mccarthy-lisp   (.mcl, .lisp)  — full IIR; scalar programs run on every
                                    AOT target (symbol/cons backend support: WIP)
+  algol60         (.algol, .alg, .a60)
+                                  — scalar integer/boolean subset over the
+                                    shared LANG VM IIR
 
 Options:
   -o, --output <PATH>      Output path. Default: input without extension
                            (native) or with .ll extension (--emit=llvm-ir).
   -l, --lang <LANG>        Override language detection
-                           (twig, nib, bf, basic, oct, mccarthy-lisp/mcl/lisp).
+                           (twig, nib, bf, basic, oct, mccarthy-lisp/mcl/lisp,
+                            algol60/algol/a60).
       --emit=<MODE>        What to emit:
                              native           → host executable (default)
                              llvm-ir | llvm | ll

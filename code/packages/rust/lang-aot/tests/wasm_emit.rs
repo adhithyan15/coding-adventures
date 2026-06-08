@@ -52,6 +52,19 @@ fn twig_scalar_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![42], "Twig main() should return 42");
 }
 
+/// ALGOL 60 now enters the same Rust IIR chain as the other LANG frontends.
+#[test]
+fn algol_scalar_emits_and_runs_on_wasm() {
+    let source = "begin integer result; result := 42 end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol")
+        .expect("ALGOL scalar should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL 42)");
+
+    let rt = WasmRuntime::new();
+    let result = rt.load_and_run(&bytes, "main", &[]).expect("ALGOL wasm must run");
+    assert_eq!(result, vec![42], "ALGOL main() should return 42");
+}
+
 /// A cons program is **not yet** supported on this path (it needs the
 /// boxed-anyref WasmGC value model) — it must fail cleanly with a
 /// `WasmBackendError`, not panic or silently miscompile.
