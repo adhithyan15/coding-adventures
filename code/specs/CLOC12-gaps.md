@@ -282,7 +282,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-038 — hex numeric literal normalised to decimal
 
-- **Status:** OPEN — newly discovered by CLOC14.5.
-- **Upstream byte-identity test:** `minify_hex_number` seed fixture.
-- **Why it fails:** Upstream emits `var x=255;` for `var x=0xff;` even under WHITESPACE_ONLY. closurec preserves `0xff` verbatim. Note: this is a SHORTEST-FORM normalisation — if the decimal form were longer than the hex form (e.g. `0xffffffff` vs `4294967295`), upstream would presumably keep the hex. The rule is "emit the shorter representation, tie-break to decimal."
-- **What it needs:** Detect NUMBER tokens with hex (`0x` prefix), octal (`0o`), or binary (`0b`) prefixes, parse to a numeric value, format as both decimal and the source form, emit the shorter (tie-break decimal). closure-emitter already has shortest-form number formatting infrastructure (CLOC12.12) — could reuse the same logic at the token-stream layer.
+- **Status:** **RESOLVED** in CLOC12.45 (PR pending). `minify_hex_number` flipped IGNORED → PASS. **Harness reports 33/33 PASS — full byte-identity across the entire seed set.**
+- **Resolution:** Added `normalize_number_value()` helper to the WHITESPACE_ONLY token emit path. Detects hex/oct/bin integer literals via prefix (`0x`, `0X`, `0o`, `0O`, `0b`, `0B`), parses to `u128`, formats as decimal, emits whichever is shorter (tie-break to decimal). Verified against `closure-compiler-v20240317.jar` for ties — upstream's behaviour is "decimal when ≤ source length". `is_number_literal()` helper mirrors `is_string_literal()` for grammar-name detection.
+- **Limitations carried forward** (each will become its own gap if a fixture surfaces it):
+  - **BigInt literals** (`0xfn`) need arbitrary-precision arithmetic — left verbatim for now. Upstream would emit `15n`.
+  - **Decimal floating-point shortest-form** (`0.5` → `.5`, `10.0` → `10`) is a different normalisation family handled elsewhere in upstream's code path.
+  - **Scientific notation uppercasing** (`1e3` → `1E3`) is a separate rule — pure case change, not numeric normalisation.
+  - **u128 overflow**: literals exceeding `u128::MAX` parse as `None` and stay verbatim rather than panicking.

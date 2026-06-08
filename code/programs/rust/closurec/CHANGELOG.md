@@ -2,6 +2,42 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.51.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-038** — hex/oct/bin numeric literal
+  shortest-form normalisation. **The byte-identity harness
+  now reports `33 matched, 0 failed, 0 skipped (of 33
+  total)`** — third 100% milestone today (after 17/17 and
+  25/25 earlier).
+- Added `normalize_number_value()`: detects hex/oct/bin
+  prefixes, parses to `u128`, formats as decimal, emits
+  whichever is shorter (tie-break to decimal). Tie-break
+  rule verified directly against
+  `closure-compiler-v20240317.jar`: `0xffffffff` (10 chars)
+  → `4294967295` (10 chars, ties → decimal),
+  `0xfffffffff` (11 chars) → `68719476735` (11 chars, ties
+  → decimal).
+- Added `is_number_literal()` helper for grammar-name
+  detection (mirrors `is_string_literal`).
+- Wired the normaliser into both emit sites: the main loop
+  emit and the gap-032 single-statement pre-emit pathway.
+
+### Added
+- 9 new `gap038_*` inline tests covering: hex short, hex
+  tie picks decimal, hex kept when shorter (14-char hex vs
+  15-char decimal), octal, binary, uppercase prefix (`0X`),
+  decimal unchanged, BigInt verbatim, overflow safety.
+
+### Limitations carried forward (each becomes its own gap if a fixture surfaces it)
+- **BigInt literals** (`0xfn`) need bigint arithmetic.
+  Left verbatim; upstream emits `15n`.
+- **Decimal floating-point shortest-form** (`0.5` → `.5`,
+  `10.0` → `10`).
+- **Scientific notation uppercasing** (`1e3` → `1E3`).
+- **u128 overflow**: hex literals exceeding `u128::MAX` stay
+  verbatim rather than panicking.
+
 ## [0.50.0] - 2026-06-08
 
 ### Changed

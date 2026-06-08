@@ -359,6 +359,8 @@ pub fn whitespace_only_minify(
                                 &mut out, &t.value,
                             );
                             out.push('"');
+                        } else if is_number_literal(t) {
+                            out.push_str(&normalize_number_value(&t.value));
                         } else {
                             out.push_str(&t.value);
                         }
@@ -455,6 +457,10 @@ pub fn whitespace_only_minify(
             out.push('"');
             push_quoted_string_content(&mut out, &tok.value);
             out.push('"');
+        } else if is_number_literal(tok) {
+            // gap-038: rewrite hex/oct/bin literals to
+            // decimal when decimal is no longer than source.
+            out.push_str(&normalize_number_value(&tok.value));
         } else {
             out.push_str(&tok.value);
         }
@@ -714,6 +720,92 @@ fn is_keyword_function(tok: &lexer::token::Token) -> bool {
             || upper.starts_with("KEYWORD");
     }
     true
+}
+
+/// True iff this token is a numeric literal (NUMBER token).
+/// Mirrors `is_string_literal`'s grammar-name detection but
+/// for the numeric-rule family. Used by gap-038's shortest-
+/// form normalisation.
+fn is_number_literal(tok: &lexer::token::Token) -> bool {
+    if let Some(name) = &tok.type_name {
+        let upper = name.to_ascii_uppercase();
+        if upper == "NUMBER" || upper == "NUMERIC_LITERAL" || upper == "NUMBER_LITERAL" {
+            return true;
+        }
+    }
+    matches!(tok.type_, lexer::token::TokenType::Number)
+}
+
+/// gap-038: rewrite hex / octal / binary integer literals to
+/// their decimal form when decimal is no longer than source.
+///
+/// Upstream Closure under WHITESPACE_ONLY normalises numeric
+/// literals to a shortest-form representation. For non-BigInt
+/// hex/oct/bin literals, the decimal form is chosen iff its
+/// string length is **less than or equal to** the source-form
+/// length — i.e. tie-breaks go to decimal.
+///
+/// **Worked examples** (verified against
+/// `closure-compiler-v20240317.jar`):
+///   `0xff`         (4 chars) → `255`             (3 chars) → DECIMAL wins
+///   `0xfff`        (5 chars) → `4095`            (4 chars) → DECIMAL wins
+///   `0xffffffff`  (10 chars) → `4294967295`     (10 chars) → DECIMAL wins (tie)
+///   `0xfffffffff` (11 chars) → `68719476735`    (11 chars) → DECIMAL wins (tie)
+///   `0xffffffffffff` (14 chars) → `281474976710655` (15 chars) → HEX wins
+///   `0o777`        (5 chars) → `511`             (3 chars) → DECIMAL wins
+///   `0b1010`       (6 chars) → `10`              (2 chars) → DECIMAL wins
+///
+/// **Not handled (left for follow-up gaps):**
+///   - BigInt literals (anything ending in `n`) need
+///     arbitrary-precision arithmetic. `0xfn` stays as
+///     `0xfn` rather than becoming `15n`.
+///   - Decimal floating-point normalisation: `0.5` → `.5`,
+///     `1e3` → `1E3`, `10.0` → `10`. These are different
+///     rules in different parts of the upstream code path.
+///   - Numbers that exceed `u128::MAX` parse as `None` and
+///     stay verbatim.
+fn normalize_number_value(value: &str) -> String {
+    // BigInt — defer to a future gap.
+    if value.ends_with('n') {
+        return value.to_string();
+    }
+    // Try each radix prefix in turn. The prefixes are
+    // case-insensitive per §12.8.3.
+    let parsed: Option<u128> = if let Some(rest) = value
+        .strip_prefix("0x")
+        .or_else(|| value.strip_prefix("0X"))
+    {
+        u128::from_str_radix(rest, 16).ok()
+    } else if let Some(rest) = value
+        .strip_prefix("0o")
+        .or_else(|| value.strip_prefix("0O"))
+    {
+        u128::from_str_radix(rest, 8).ok()
+    } else if let Some(rest) = value
+        .strip_prefix("0b")
+        .or_else(|| value.strip_prefix("0B"))
+    {
+        u128::from_str_radix(rest, 2).ok()
+    } else {
+        // Decimal or no radix prefix — leave alone. Decimal
+        // floating-point shortest-form is a separate concern
+        // (see function doc).
+        return value.to_string();
+    };
+
+    let Some(n) = parsed else {
+        // Doesn't fit in u128 — leave verbatim.
+        return value.to_string();
+    };
+    let decimal = n.to_string();
+    // `<= value.len()` because upstream tie-breaks to decimal
+    // (verified via JAR probe: `0xffffffff` (10) → `4294967295` (10)
+    // → DECIMAL wins).
+    if decimal.len() <= value.len() {
+        decimal
+    } else {
+        value.to_string()
+    }
 }
 
 /// True iff this token came from a string-literal rule. The
@@ -1642,5 +1734,81 @@ mod tests {
             minify("var f=async function(){};"),
             "var f=async function(){};"
         );
+    }
+
+    // ---- gap-038: number literal shortest-form normalisation
+
+    /// Target fixture: hex literal `0xff` shortens to `255`.
+    #[test]
+    fn gap038_hex_short() {
+        assert_eq!(minify("var x=0xff;"), "var x=255;");
+    }
+
+    /// Hex tie-break: `0xffffffff` (10 chars) → `4294967295`
+    /// (10 chars). Upstream tie-breaks to DECIMAL.
+    #[test]
+    fn gap038_hex_tie_picks_decimal() {
+        assert_eq!(
+            minify("var x=0xffffffff;"),
+            "var x=4294967295;"
+        );
+    }
+
+    /// Hex too long for decimal: 14-char hex →
+    /// 15-char decimal. Keep hex.
+    #[test]
+    fn gap038_hex_kept_when_shorter() {
+        assert_eq!(
+            minify("var x=0xffffffffffff;"),
+            "var x=0xffffffffffff;"
+        );
+    }
+
+    /// Octal literal: `0o777` → `511` (5 chars → 3).
+    #[test]
+    fn gap038_octal_short() {
+        assert_eq!(minify("var x=0o777;"), "var x=511;");
+    }
+
+    /// Binary literal: `0b1010` → `10` (6 chars → 2).
+    #[test]
+    fn gap038_binary_short() {
+        assert_eq!(minify("var x=0b1010;"), "var x=10;");
+    }
+
+    /// Uppercase prefix `0X` is equivalent to `0x` per
+    /// §12.8.3 — same normalisation rule applies.
+    #[test]
+    fn gap038_uppercase_hex_prefix() {
+        assert_eq!(minify("var x=0XFF;"), "var x=255;");
+    }
+
+    /// **Non-regression**: decimal literals are NOT touched.
+    /// Decimal-floating-point shortest-form (e.g. `0.5` → `.5`)
+    /// is a different rule and out of scope for this gap.
+    #[test]
+    fn gap038_decimal_unchanged() {
+        assert_eq!(minify("var x=42;"), "var x=42;");
+    }
+
+    /// **Non-regression**: BigInt literals are NOT touched.
+    /// `0xfn` would canonicalise to `15n` upstream, but
+    /// that requires bigint arithmetic — left for a
+    /// follow-up gap. Leaving verbatim is safer than
+    /// truncating.
+    #[test]
+    fn gap038_bigint_left_verbatim() {
+        assert_eq!(minify("var x=0xfn;"), "var x=0xfn;");
+    }
+
+    /// **Non-regression**: number that overflows u128 stays
+    /// verbatim rather than panicking. Hex digits >>32 are
+    /// rare in practice but we must not crash on input that
+    /// happens to be very large.
+    #[test]
+    fn gap038_overflow_left_verbatim() {
+        let big = "0x".to_string() + &"f".repeat(40); // u160 worth
+        let src = format!("var x={};", big);
+        assert_eq!(minify(&src), src);
     }
 }
