@@ -868,6 +868,16 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     offset += sz;
                     (t, 0)
                 }
+                // ref.test (0x14) / ref.test null (0x15): one heap-type immediate
+                // (LANG77 L3b-3a-4). For McCarthy `pair?` the heap type is the
+                // concrete `$LispyPair` struct type, whose small typeidx encodes
+                // identically as a signed or unsigned LEB, so we read it as a
+                // typeidx. (Abstract heap types — negative sLEB — are not used.)
+                0x14 | 0x15 => {
+                    let (t, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (t, 0)
+                }
                 // struct.get / struct.set: two index immediates (type, field).
                 0x02 | 0x04 => {
                     let (t, sz1) = decode_leb_u32(code, offset);
@@ -1598,6 +1608,27 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                     ))
                 })?;
                 *slot = val;
+            }
+
+            // ref.test (0x14) / ref.test null (0x15): pop a reference, push i32
+            // 1 if it is an instance of the heap type, else 0 (LANG77 L3b-3a-4).
+            // This is what McCarthy `pair?` lowers to: "is this value a cons
+            // cell?" — i.e. a (non-null) `$LispyPair` struct reference.
+            //
+            // Our value model has exactly one struct type ($LispyPair), so a
+            // `struct.new` result — the only way to make a `Ref(Some(_))` — is
+            // always that type. A test against any concrete struct type is
+            // therefore "is it a struct ref": `Ref(Some(_))` → 1; an `i31`
+            // payload (`I32`) or the null reference → 0. The `0x15` (nullable)
+            // variant additionally accepts the null reference.
+            0x14 | 0x15 => {
+                let nullable = op.sub == 0x15;
+                let matches = match pop_wasm(vm)? {
+                    WasmValue::Ref(Some(_)) => true,
+                    WasmValue::Ref(None) => nullable,
+                    _ => false, // an i31 payload / numeric value is not a struct ref
+                };
+                push_wasm(vm, WasmValue::I32(if matches { 1 } else { 0 }));
             }
 
             other => {
@@ -3473,6 +3504,53 @@ mod tests {
         ];
         let mut e2 = gc_engine(code_cons, vec![ValueType::I32], vec![2]);
         assert_eq!(e2.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_ref_test_distinguishes_cons_from_atom_and_nil() {
+        // McCarthy `pair?` lowers to `ref.test $LispyPair`. Here $LispyPair is
+        // type 0 (the only struct type), so the op is `0xFB 0x14 0x00`.
+
+        // pair?(atom 5) → 0  — a boxed integer is not a cons.
+        let atom = vec![
+            0x41, 0x05, 0xFB, 0x1C, // i32.const 5 ; i31.new
+            0xFB, 0x14, 0x00, // ref.test $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(atom, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+
+        // pair?(cons 1 2) → 1  — a struct ref IS a cons.
+        let cons = vec![
+            0x41, 0x01, 0xFB, 0x1C, // box 1
+            0x41, 0x02, 0xFB, 0x1C, // box 2
+            0xFB, 0x00, 0x00, // struct.new $LispyPair
+            0xFB, 0x14, 0x00, // ref.test $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(cons, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
+
+        // pair?(nil) → 0  — the null reference is not a cons.
+        let nil = vec![
+            0xD0, 0x0F, // ref.null
+            0xFB, 0x14, 0x00, // ref.test $LispyPair (non-null)
+            0x0B,
+        ];
+        let mut e = gc_engine(nil, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0)]);
+    }
+
+    #[test]
+    fn test_ref_test_null_variant_accepts_null() {
+        // The nullable `ref.test null` (0x15) additionally matches the null ref.
+        let nil = vec![
+            0xD0, 0x0F, // ref.null
+            0xFB, 0x15, 0x00, // ref.test null $LispyPair
+            0x0B,
+        ];
+        let mut e = gc_engine(nil, vec![ValueType::I32], vec![2]);
+        assert_eq!(e.call_function(0, &[]).unwrap(), vec![WasmValue::I32(1)]);
     }
 
     #[test]

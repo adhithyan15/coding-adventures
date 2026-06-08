@@ -15,6 +15,10 @@ emitted:
   `(CAR (CONS 7 9))` executes to `7`.  Register struct field counts via
   `WasmExecutionEngine::set_struct_field_counts` (the parser will supply these
   automatically in L3b-3a-3c).
+- **`ref.test` / `ref.test null`** (0.4.0) — the WasmGC type-test op that
+  McCarthy `pair?` lowers to: pop a reference, push `i32 1` if it is a (non-null)
+  `$LispyPair` struct reference, else `0`. `pair?(cons)` → 1; `pair?(atom)` and
+  `pair?(nil)` → 0.
 
 All GC failure modes (null dereference, out-of-range field, missing arity,
 unknown opcode) are clean traps, never panics.
