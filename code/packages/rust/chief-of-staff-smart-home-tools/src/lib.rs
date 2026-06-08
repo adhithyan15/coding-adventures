@@ -16,11 +16,12 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
-    AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus,
-    CommandType, Device, DeviceCommand, DeviceEvent, DeviceEventType, EntityId, EntityKind, Health,
-    IntegrationId, Metadata, PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene,
-    SceneAction, SceneId, SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource,
-    Value,
+    AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
+    CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
+    CommandResult, CommandStatus, CommandType, Device, DeviceCommand, DeviceEvent, DeviceEventType,
+    EntityId, EntityKind, Health, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
+    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
 use smart_home_integration_catalog::{
@@ -39,22 +40,24 @@ use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary, DesiredStateQuery,
     DesiredStateSort, DiscoveryWorkerRunInstruction, PairingSessionStatus, ReconciliationReason,
-    RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort, RuntimeCommandToolRequest,
-    RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
-    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
-    RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
-    RuntimePairBridgeToolRequest, RuntimePairingSession, RuntimePairingSessionId,
-    RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
-    RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
-    RuntimeReadSnapshot, RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeSubscribeToolOutput,
-    RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId,
-    RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot,
-    RuntimeSubscriptionSort, RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary,
-    RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot,
-    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
-    SmartHomeRuntime, SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort,
-    SupervisionTickReport, WorkerHeartbeatDeadline, WorkerHeartbeatSchedule,
-    WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
+    RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
+    RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
+    RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
+    RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
+    RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort,
+    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
+    RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
+    RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
+    RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
+    RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
+    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
+    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
+    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
+    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
+    WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -75,6 +78,9 @@ pub const SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID: &str =
     "smart_home.list_authorization_decisions";
 pub const SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_authorization_summary";
+pub const SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID: &str = "smart_home.list_capability_grants";
+pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_capability_grant_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
@@ -314,6 +320,31 @@ impl SmartHomeToolBridge {
                     Ok(read_output_handler_output(
                         output,
                         "get_authorization_summary",
+                    ))
+                }
+                SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID => {
+                    let query = capability_grant_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::ListCapabilityGrants { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_capability_grants"))
+                }
+                SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID => {
+                    let query = capability_grant_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetCapabilityGrantSummary { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(
+                        output,
+                        "get_capability_grant_summary",
                     ))
                 }
                 SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID => {
@@ -732,6 +763,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         inspect_event_log_definition(),
         list_authorization_decisions_definition(),
         get_authorization_summary_definition(),
+        list_capability_grants_definition(),
+        get_capability_grant_summary_definition(),
         get_runtime_snapshot_definition(),
         list_desired_states_definition(),
         list_pairing_sessions_definition(),
@@ -1066,11 +1099,64 @@ fn get_authorization_summary_definition() -> ToolDefinition {
     )
 }
 
+fn list_capability_grants_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+        "List smart-home capability grants",
+        "List D23 smart-home capability grants, optionally filtered by Chief principal, effective status, scope, capability, or entity.",
+        capability_grant_query_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "grants",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["grants", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn get_capability_grant_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID,
+        "Get smart-home capability grant summary",
+        "Summarize D23 smart-home capability grants without returning individual grant rows.",
+        capability_grant_query_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
+            false,
+        ),
+    )
+}
+
 fn authorization_decision_query_schema() -> JsonSchema {
     object_schema(
         vec![
             SchemaProperty::new("principal_id", JsonSchema::String),
             SchemaProperty::new("outcome", JsonSchema::String),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn capability_grant_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("principal_id", JsonSchema::String),
+            SchemaProperty::new("status", JsonSchema::String),
+            SchemaProperty::new("scope_kind", JsonSchema::String),
+            SchemaProperty::new("capability_id", JsonSchema::String),
+            SchemaProperty::new("entity_id", JsonSchema::String),
             SchemaProperty::new("sort", JsonSchema::String),
             SchemaProperty::new("limit", JsonSchema::Integer),
         ],
@@ -1704,6 +1790,35 @@ fn authorization_decision_query(
     Ok(query)
 }
 
+fn capability_grant_query(
+    arguments: &JsonValue,
+) -> Result<RuntimeCapabilityGrantQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimeCapabilityGrantQuery::new();
+    if let Some(principal_id) = optional_string(arguments, "principal_id")? {
+        query = query.for_principal(AgentId::trusted(principal_id));
+    }
+    if let Some(status) = optional_string(arguments, "status")? {
+        query = query.with_status(parse_capability_grant_status(&status)?);
+    }
+    if let Some(scope_kind) = optional_string(arguments, "scope_kind")? {
+        query = query.with_scope_kind(parse_capability_grant_scope_kind(&scope_kind)?);
+    }
+    if let Some(capability_id) = optional_string(arguments, "capability_id")? {
+        query = query.with_capability(CapabilityId::trusted(capability_id));
+    }
+    if let Some(entity_id) = optional_string(arguments, "entity_id")? {
+        query = query.for_entity(EntityId::trusted(entity_id));
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_capability_grant_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(query)
+}
+
 fn list_desired_states_request(
     arguments: &JsonValue,
 ) -> Result<RuntimeReadToolRequest, ToolCallError> {
@@ -2220,6 +2335,22 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
         ]),
         RuntimeReadToolOutput::AuthorizationSummary { summary } => {
             object([("summary", authorization_decision_log_summary_json(&summary))])
+        }
+        RuntimeReadToolOutput::CapabilityGrants { grants, summary } => object([
+            (
+                "grants",
+                JsonValue::Array(
+                    grants
+                        .iter()
+                        .map(|grant| capability_grant_json(grant, summary.generated_at_ms))
+                        .collect(),
+                ),
+            ),
+            ("summary", capability_grant_inventory_summary_json(&summary)),
+            ("count", integer(grants.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::CapabilityGrantSummary { summary } => {
+            object([("summary", capability_grant_inventory_summary_json(&summary))])
         }
         RuntimeReadToolOutput::DesiredStates {
             desired_states,
@@ -4266,6 +4397,115 @@ fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     ])
 }
 
+fn capability_grant_json(grant: &CapabilityGrant, now_ms: u64) -> JsonValue {
+    object([
+        ("grant_id", string(grant.grant_id.as_str())),
+        ("principal_id", string(grant.principal_id.as_str())),
+        (
+            "scope_kind",
+            string(capability_grant_scope_label(&grant.scope)),
+        ),
+        ("scope", capability_grant_scope_json(&grant.scope)),
+        ("max_tier", string(privilege_tier_label(grant.max_tier))),
+        ("granted_by", string(&grant.granted_by)),
+        ("granted_at_ms", integer(grant.granted_at_ms as i64)),
+        (
+            "expires_at_ms",
+            grant
+                .expires_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "status",
+            string(capability_grant_status_label(grant.status)),
+        ),
+        (
+            "effective_status",
+            string(capability_grant_status_label(grant.status_at(now_ms))),
+        ),
+        ("effective_status_at_ms", integer(now_ms as i64)),
+        ("is_active", JsonValue::Bool(grant.is_active_at(now_ms))),
+        (
+            "metadata",
+            JsonValue::Array(grant.metadata.iter().map(metadata_json).collect()),
+        ),
+    ])
+}
+
+fn capability_grant_scope_json(scope: &CapabilityGrantScope) -> JsonValue {
+    match scope {
+        CapabilityGrantScope::Tool(tool) => object([
+            ("scope_kind", string("tool")),
+            ("tool_id", string(tool.descriptor().tool_id)),
+        ]),
+        CapabilityGrantScope::Capability(capability_id) => object([
+            ("scope_kind", string("capability")),
+            ("capability_id", string(capability_id.as_str())),
+        ]),
+        CapabilityGrantScope::EntityCapability {
+            entity_id,
+            capability_id,
+        } => object([
+            ("scope_kind", string("entity_capability")),
+            ("entity_id", string(entity_id.as_str())),
+            ("capability_id", string(capability_id.as_str())),
+        ]),
+        CapabilityGrantScope::AllSmartHome => object([("scope_kind", string("all_smart_home"))]),
+    }
+}
+
+fn capability_grant_inventory_summary_json(summary: &CapabilityGrantInventorySummary) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(summary.generated_at_ms as i64)),
+        ("total_grants", integer(summary.total_grants as i64)),
+        ("active_grants", integer(summary.active_grants as i64)),
+        ("pending_grants", integer(summary.pending_grants as i64)),
+        ("revoked_grants", integer(summary.revoked_grants as i64)),
+        ("expired_grants", integer(summary.expired_grants as i64)),
+        ("tool_grants", integer(summary.tool_grants as i64)),
+        (
+            "capability_grants",
+            integer(summary.capability_grants as i64),
+        ),
+        (
+            "entity_capability_grants",
+            integer(summary.entity_capability_grants as i64),
+        ),
+        (
+            "all_smart_home_grants",
+            integer(summary.all_smart_home_grants as i64),
+        ),
+        (
+            "read_only_tier_grants",
+            integer(summary.read_only_tier_grants as i64),
+        ),
+        (
+            "low_risk_tier_grants",
+            integer(summary.low_risk_tier_grants as i64),
+        ),
+        (
+            "human_approval_tier_grants",
+            integer(summary.human_approval_tier_grants as i64),
+        ),
+        (
+            "high_risk_tier_grants",
+            integer(summary.high_risk_tier_grants as i64),
+        ),
+        ("expiring_grants", integer(summary.expiring_grants as i64)),
+        (
+            "unique_principals",
+            integer(summary.unique_principals as i64),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_active_grants",
+            JsonValue::Bool(summary.has_active_grants()),
+        ),
+        ("needs_review", JsonValue::Bool(summary.needs_review())),
+    ])
+}
+
 fn authorization_decision_json(decision: &AuthorizationDecision) -> JsonValue {
     object([
         ("principal_id", string(decision.principal_id.as_str())),
@@ -4693,6 +4933,46 @@ fn parse_authorization_outcome(label: &str) -> Result<AuthorizationOutcome, Tool
         "denied" | "deny" => Ok(AuthorizationOutcome::Denied),
         _ => Err(validation_error(format!(
             "unknown authorization outcome `{label}`"
+        ))),
+    }
+}
+
+fn parse_capability_grant_status(label: &str) -> Result<CapabilityGrantStatus, ToolCallError> {
+    match label {
+        "pending" => Ok(CapabilityGrantStatus::Pending),
+        "active" => Ok(CapabilityGrantStatus::Active),
+        "revoked" => Ok(CapabilityGrantStatus::Revoked),
+        "expired" => Ok(CapabilityGrantStatus::Expired),
+        _ => Err(validation_error(format!(
+            "unknown capability grant status `{label}`"
+        ))),
+    }
+}
+
+fn parse_capability_grant_scope_kind(
+    label: &str,
+) -> Result<RuntimeCapabilityGrantScopeKind, ToolCallError> {
+    match label {
+        "tool" => Ok(RuntimeCapabilityGrantScopeKind::Tool),
+        "capability" => Ok(RuntimeCapabilityGrantScopeKind::Capability),
+        "entity_capability" | "entity" => Ok(RuntimeCapabilityGrantScopeKind::EntityCapability),
+        "all_smart_home" | "all" => Ok(RuntimeCapabilityGrantScopeKind::AllSmartHome),
+        _ => Err(validation_error(format!(
+            "unknown capability grant scope kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_capability_grant_sort(label: &str) -> Result<RuntimeCapabilityGrantSort, ToolCallError> {
+    match label {
+        "grant_id" | "id" => Ok(RuntimeCapabilityGrantSort::GrantId),
+        "principal_id" | "principal" => Ok(RuntimeCapabilityGrantSort::PrincipalId),
+        "granted_at_asc" | "oldest_first" => Ok(RuntimeCapabilityGrantSort::GrantedAtAsc),
+        "granted_at_desc" | "newest_first" => Ok(RuntimeCapabilityGrantSort::GrantedAtDesc),
+        "expires_at_asc" | "expires_first" => Ok(RuntimeCapabilityGrantSort::ExpiresAtAsc),
+        "expires_at_desc" | "expires_last" => Ok(RuntimeCapabilityGrantSort::ExpiresAtDesc),
+        _ => Err(validation_error(format!(
+            "unknown capability grant sort `{label}`"
         ))),
     }
 }
@@ -5134,6 +5414,24 @@ fn privilege_tier_label(tier: PrivilegeTier) -> &'static str {
         PrivilegeTier::LowRisk => "low_risk",
         PrivilegeTier::HumanApproval => "human_approval",
         PrivilegeTier::HighRisk => "high_risk",
+    }
+}
+
+fn capability_grant_status_label(status: CapabilityGrantStatus) -> &'static str {
+    match status {
+        CapabilityGrantStatus::Pending => "pending",
+        CapabilityGrantStatus::Active => "active",
+        CapabilityGrantStatus::Revoked => "revoked",
+        CapabilityGrantStatus::Expired => "expired",
+    }
+}
+
+fn capability_grant_scope_label(scope: &CapabilityGrantScope) -> &'static str {
+    match scope {
+        CapabilityGrantScope::Tool(_) => "tool",
+        CapabilityGrantScope::Capability(_) => "capability",
+        CapabilityGrantScope::EntityCapability { .. } => "entity_capability",
+        CapabilityGrantScope::AllSmartHome => "all_smart_home",
     }
 }
 
@@ -5651,7 +5949,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 30);
+        assert_eq!(definitions.len(), 32);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -5689,6 +5987,12 @@ mod tests {
             .contains(&SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -5715,7 +6019,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            26
+            28
         );
         assert_eq!(
             export
@@ -6442,6 +6746,69 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let list_capability_grants_request = request(
+            "call-list-capability-grants",
+            SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID,
+            object([
+                ("principal_id", string(AGENT_ID)),
+                ("status", string("active")),
+                ("scope_kind", string("all_smart_home")),
+                ("sort", string("newest_first")),
+                ("limit", integer(1)),
+            ]),
+            1_105,
+        );
+        let list_capability_grants_trace =
+            tool_runtime.invoke_with_events(&list_capability_grants_request);
+        assert!(list_capability_grants_trace.result.ok);
+        let list_capability_grants_output =
+            list_capability_grants_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(list_capability_grants_output, "count"),
+            Some(&integer(1))
+        );
+        let grant = array_item(field(list_capability_grants_output, "grants").unwrap(), 0).unwrap();
+        assert_eq!(field(grant, "grant_id"), Some(&string("grant-smart-home")));
+        assert_eq!(field(grant, "effective_status"), Some(&string("active")));
+        assert_eq!(
+            field(field(grant, "scope").unwrap(), "scope_kind"),
+            Some(&string("all_smart_home"))
+        );
+        assert_eq!(
+            field(
+                field(list_capability_grants_output, "summary").unwrap(),
+                "human_approval_tier_grants"
+            ),
+            Some(&integer(1))
+        );
+
+        let capability_grant_summary_request = request(
+            "call-capability-grant-summary",
+            SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID,
+            object([
+                ("principal_id", string(AGENT_ID)),
+                ("status", string("active")),
+            ]),
+            1_106,
+        );
+        let capability_grant_summary_trace =
+            tool_runtime.invoke_with_events(&capability_grant_summary_request);
+        assert!(capability_grant_summary_trace.result.ok);
+        let capability_grant_summary_output = capability_grant_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let capability_grant_summary = field(capability_grant_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(capability_grant_summary, "total_grants"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(capability_grant_summary, "has_active_grants"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let poll_request = request(
             "call-poll-events",
             SMART_HOME_POLL_EVENTS_TOOL_ID,
@@ -6603,6 +6970,11 @@ mod tests {
         journal.record_trace(inspect_event_log_request, inspect_event_log_trace);
         journal.record_trace(list_authorization_request, list_authorization_trace);
         journal.record_trace(authorization_summary_request, authorization_summary_trace);
+        journal.record_trace(list_capability_grants_request, list_capability_grants_trace);
+        journal.record_trace(
+            capability_grant_summary_request,
+            capability_grant_summary_trace,
+        );
         journal.record_trace(poll_request, poll_trace);
         journal.record_trace(state_request, state_trace);
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
@@ -6610,9 +6982,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 29);
-        assert_eq!(journal_summary.completed_count, 29);
-        assert_eq!(journal.audit_records().len(), 29);
+        assert_eq!(journal_summary.invocation_count, 31);
+        assert_eq!(journal_summary.completed_count, 31);
+        assert_eq!(journal.audit_records().len(), 31);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -6625,7 +6997,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            26,
+            28,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

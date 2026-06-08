@@ -30,6 +30,7 @@ Chief of Staff job/session/agent
   -> discovery worker health and retry state in smart_home.observe_supervision
   -> event-log and subscription-backlog reads
   -> authorization decision audit reads and summaries
+  -> capability grant ledger reads and summaries
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> non-mutating supervision plan previews
   -> authorized desired-state reconciliation and supervision ticks
@@ -61,6 +62,8 @@ Chief of Staff job/session/agent
 - `smart_home.inspect_event_log`
 - `smart_home.list_authorization_decisions`
 - `smart_home.get_authorization_summary`
+- `smart_home.list_capability_grants`
+- `smart_home.get_capability_grant_summary`
 - `smart_home.get_runtime_snapshot`
 - `smart_home.list_desired_states`
 - `smart_home.list_pairing_sessions`

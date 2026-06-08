@@ -20,6 +20,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_authorization_decisions` and
   `smart_home.get_authorization_summary` tool descriptors for read-only
   authorization-audit inspection.
+- `smart_home.list_capability_grants` and
+  `smart_home.get_capability_grant_summary` tool descriptors plus
+  `CapabilityGrantInventorySummary` for read-only grant-governance inspection.
 - `smart_home.get_runtime_snapshot`, `smart_home.list_desired_states`, and
   `smart_home.list_pairing_sessions` tool descriptors for read-only runtime
   automation inventory inspection.

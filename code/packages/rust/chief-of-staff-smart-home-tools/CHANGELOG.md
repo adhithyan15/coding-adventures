@@ -37,6 +37,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_authorization_summary` handlers over the D23 runtime read
   facade so Chief of Staff jobs can inspect allow/deny audit history without
   owning smart-home authorization logic.
+- Added `smart_home.list_capability_grants` and
+  `smart_home.get_capability_grant_summary` handlers over the D23 runtime read
+  facade so Chief of Staff jobs can inspect grant governance without owning
+  smart-home authorization policy.
 - Added `smart_home.get_runtime_snapshot`, `smart_home.list_desired_states`,
   and `smart_home.list_pairing_sessions` handlers over the D23 runtime read
   facade so Chief of Staff jobs can inspect automation backlog, reconciliation

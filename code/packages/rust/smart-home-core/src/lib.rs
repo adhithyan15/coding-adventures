@@ -1460,6 +1460,8 @@ pub enum SmartHomeTool {
     InspectEventLog,
     ListAuthorizationDecisions,
     GetAuthorizationSummary,
+    ListCapabilityGrants,
+    GetCapabilityGrantSummary,
     GetRuntimeSnapshot,
     ListDesiredStates,
     ListPairingSessions,
@@ -1508,6 +1510,8 @@ impl SmartHomeTool {
                 read_tool("smart_home.list_authorization_decisions")
             }
             Self::GetAuthorizationSummary => read_tool("smart_home.get_authorization_summary"),
+            Self::ListCapabilityGrants => read_tool("smart_home.list_capability_grants"),
+            Self::GetCapabilityGrantSummary => read_tool("smart_home.get_capability_grant_summary"),
             Self::GetRuntimeSnapshot => read_tool("smart_home.get_runtime_snapshot"),
             Self::ListDesiredStates => read_tool("smart_home.list_desired_states"),
             Self::ListPairingSessions => read_tool("smart_home.list_pairing_sessions"),
@@ -1731,6 +1735,86 @@ impl ToolDescriptor {
 
     pub fn requires_human_approval(&self) -> bool {
         self.required_tier == PrivilegeTier::HumanApproval
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct CapabilityGrantInventorySummary {
+    pub generated_at_ms: u64,
+    pub total_grants: usize,
+    pub active_grants: usize,
+    pub pending_grants: usize,
+    pub revoked_grants: usize,
+    pub expired_grants: usize,
+    pub tool_grants: usize,
+    pub capability_grants: usize,
+    pub entity_capability_grants: usize,
+    pub all_smart_home_grants: usize,
+    pub read_only_tier_grants: usize,
+    pub low_risk_tier_grants: usize,
+    pub human_approval_tier_grants: usize,
+    pub high_risk_tier_grants: usize,
+    pub expiring_grants: usize,
+    pub unique_principals: usize,
+}
+
+impl CapabilityGrantInventorySummary {
+    pub fn empty(generated_at_ms: u64) -> Self {
+        Self {
+            generated_at_ms,
+            ..Self::default()
+        }
+    }
+
+    pub fn from_grants_at<'a, I>(grants: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a CapabilityGrant>,
+    {
+        let mut summary = Self::empty(now_ms);
+        let mut principals = BTreeSet::new();
+        for grant in grants {
+            summary.record_grant_at(grant, now_ms);
+            principals.insert(grant.principal_id.clone());
+        }
+        summary.unique_principals = principals.len();
+        summary
+    }
+
+    pub fn record_grant_at(&mut self, grant: &CapabilityGrant, now_ms: u64) {
+        self.total_grants += 1;
+        match grant.status_at(now_ms) {
+            CapabilityGrantStatus::Active => self.active_grants += 1,
+            CapabilityGrantStatus::Pending => self.pending_grants += 1,
+            CapabilityGrantStatus::Revoked => self.revoked_grants += 1,
+            CapabilityGrantStatus::Expired => self.expired_grants += 1,
+        }
+        match &grant.scope {
+            CapabilityGrantScope::Tool(_) => self.tool_grants += 1,
+            CapabilityGrantScope::Capability(_) => self.capability_grants += 1,
+            CapabilityGrantScope::EntityCapability { .. } => self.entity_capability_grants += 1,
+            CapabilityGrantScope::AllSmartHome => self.all_smart_home_grants += 1,
+        }
+        match grant.max_tier {
+            PrivilegeTier::ReadOnly => self.read_only_tier_grants += 1,
+            PrivilegeTier::LowRisk => self.low_risk_tier_grants += 1,
+            PrivilegeTier::HumanApproval => self.human_approval_tier_grants += 1,
+            PrivilegeTier::HighRisk => self.high_risk_tier_grants += 1,
+        }
+        if grant.expires_at_ms.is_some() {
+            self.expiring_grants += 1;
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_grants == 0
+    }
+
+    pub fn has_active_grants(&self) -> bool {
+        self.active_grants > 0
+    }
+
+    pub fn needs_review(&self) -> bool {
+        self.pending_grants > 0 || self.revoked_grants > 0 || self.expired_grants > 0
     }
 }
 
@@ -1983,6 +2067,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::InspectEventLog,
         SmartHomeTool::ListAuthorizationDecisions,
         SmartHomeTool::GetAuthorizationSummary,
+        SmartHomeTool::ListCapabilityGrants,
+        SmartHomeTool::GetCapabilityGrantSummary,
         SmartHomeTool::GetRuntimeSnapshot,
         SmartHomeTool::ListDesiredStates,
         SmartHomeTool::ListPairingSessions,
@@ -2789,7 +2875,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 26);
+        assert_eq!(catalog.len(), 28);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
@@ -2853,6 +2939,15 @@ mod tests {
         ));
         assert!(catalog
             .iter()
+            .any(|tool| tool.tool_id == "smart_home.list_capability_grants"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_capability_grant_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog
+            .iter()
             .any(|tool| tool.tool_id == "smart_home.get_runtime_snapshot"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -2887,15 +2982,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 26);
-        assert_eq!(summary.read_tools, 22);
+        assert_eq!(summary.total_tools, 28);
+        assert_eq!(summary.read_tools, 24);
         assert_eq!(summary.write_tools, 0);
         assert_eq!(summary.external_tools, 4);
-        assert_eq!(summary.read_only_tier_tools, 22);
+        assert_eq!(summary.read_only_tier_tools, 24);
         assert_eq!(summary.low_risk_tier_tools, 3);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 1);
-        assert_eq!(summary.total_required_capabilities, 26);
+        assert_eq!(summary.total_required_capabilities, 28);
         assert_eq!(summary.risky_tool_count(), 4);
         assert_eq!(summary.approval_gated_tool_count(), 1);
         assert!(pair_bridge.requires_human_approval());
@@ -2933,6 +3028,70 @@ mod tests {
         assert!(!command.is_satisfied_by(&principal, &grants, 2_000));
         assert!(!command.is_satisfied_by(&other_principal, &grants, 1_500));
         assert_eq!(grants[1].status_at(2_000), CapabilityGrantStatus::Expired);
+    }
+
+    #[test]
+    fn capability_grant_inventory_summary_counts_status_scope_and_tier() {
+        let lighting_principal = AgentId::trusted("agent:lighting-planner");
+        let installer_principal = AgentId::trusted("agent:installer");
+        let grants = vec![
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                lighting_principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            ),
+            CapabilityGrant::for_tool(
+                CapabilityGrantId::trusted("grant-command"),
+                lighting_principal.clone(),
+                SmartHomeTool::Command,
+                "chief-of-staff",
+                1_010,
+            )
+            .with_expiry(2_000),
+            CapabilityGrant::for_entity_capability(
+                CapabilityGrantId::trusted("grant-entity-command"),
+                lighting_principal,
+                EntityId::trusted("entity-light-1"),
+                CapabilityId::trusted("light.on_off"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_020,
+            )
+            .with_status(CapabilityGrantStatus::Revoked),
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-installer"),
+                installer_principal,
+                PrivilegeTier::HumanApproval,
+                "chief-of-staff",
+                1_030,
+            )
+            .with_status(CapabilityGrantStatus::Pending),
+        ];
+
+        let summary = CapabilityGrantInventorySummary::from_grants_at(&grants, 2_000);
+
+        assert_eq!(summary.generated_at_ms, 2_000);
+        assert_eq!(summary.total_grants, 4);
+        assert_eq!(summary.active_grants, 1);
+        assert_eq!(summary.pending_grants, 1);
+        assert_eq!(summary.revoked_grants, 1);
+        assert_eq!(summary.expired_grants, 1);
+        assert_eq!(summary.tool_grants, 1);
+        assert_eq!(summary.capability_grants, 1);
+        assert_eq!(summary.entity_capability_grants, 1);
+        assert_eq!(summary.all_smart_home_grants, 1);
+        assert_eq!(summary.read_only_tier_grants, 1);
+        assert_eq!(summary.low_risk_tier_grants, 2);
+        assert_eq!(summary.human_approval_tier_grants, 1);
+        assert_eq!(summary.high_risk_tier_grants, 0);
+        assert_eq!(summary.expiring_grants, 1);
+        assert_eq!(summary.unique_principals, 2);
+        assert!(summary.has_active_grants());
+        assert!(summary.needs_review());
+        assert!(CapabilityGrantInventorySummary::empty(3_000).is_empty());
     }
 
     #[test]
