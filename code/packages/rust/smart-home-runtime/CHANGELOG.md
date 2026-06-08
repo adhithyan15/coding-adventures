@@ -63,6 +63,9 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListAuthorizationDecisions` and
   `RuntimeReadToolRequest::GetAuthorizationSummary` for authorized D18D reads
   over registry-backed smart-home authorization audit decisions.
+- `RuntimeReadToolRequest::ListCapabilityGrants` and
+  `RuntimeReadToolRequest::GetCapabilityGrantSummary` for authorized D18D
+  reads over registry-backed smart-home capability grant governance.
 - `RuntimeReadToolRequest::GetRuntimeSnapshot`,
   `RuntimeReadToolRequest::ListDesiredStates`, and
   `RuntimeReadToolRequest::ListPairingSessions` for authorized D18D reads over

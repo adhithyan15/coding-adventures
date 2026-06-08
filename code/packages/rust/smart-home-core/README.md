@@ -53,6 +53,8 @@ Current scope:
   inspecting checkpointed runtime event-log entries
 - D18D authorization-audit tool descriptors for listing decisions and compact
   allow/deny summaries
+- D18D capability-grant tool descriptors for listing grant rows and compact
+  grant inventory summaries
 - D18D runtime automation inventory tool descriptors for read-only snapshots,
   desired-state targets, and pairing-session status
 - D18D bridge-worker inventory descriptors for read-only supervisor and
@@ -67,6 +69,8 @@ Current scope:
 - authorization decisions that can be logged by runtimes and agents
 - authorization-decision summaries for allow/deny, grant, and
   missing-capability inspection
+- capability-grant inventory summaries for grant status, scope, tier, expiry,
+  and principal review counts
 - MQTT topic names, topic filters, QoS levels, topic roles, and topic bindings
   for MQTT-backed integrations
 

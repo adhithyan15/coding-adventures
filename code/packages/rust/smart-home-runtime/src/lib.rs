@@ -9,12 +9,12 @@
 
 use smart_home_core::{
     tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
-    AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantScope,
-    CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType,
-    CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
-    EventId, Health, IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope,
-    SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
-    VaultRef,
+    AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant,
+    CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
+    CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device,
+    DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId, Health,
+    IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope, SmartHomeError,
+    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError, DiscoveryRecord,
@@ -3289,6 +3289,82 @@ impl RuntimeAuthorizationDecisionQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCapabilityGrantScopeKind {
+    Tool,
+    Capability,
+    EntityCapability,
+    AllSmartHome,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCapabilityGrantSort {
+    GrantId,
+    PrincipalId,
+    GrantedAtAsc,
+    GrantedAtDesc,
+    ExpiresAtAsc,
+    ExpiresAtDesc,
+}
+
+impl Default for RuntimeCapabilityGrantSort {
+    fn default() -> Self {
+        Self::GrantId
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeCapabilityGrantQuery {
+    pub principal_id: Option<AgentId>,
+    pub status: Option<CapabilityGrantStatus>,
+    pub scope_kind: Option<RuntimeCapabilityGrantScopeKind>,
+    pub capability_id: Option<CapabilityId>,
+    pub entity_id: Option<EntityId>,
+    pub sort: RuntimeCapabilityGrantSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeCapabilityGrantQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_principal(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = Some(principal_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: CapabilityGrantStatus) -> Self {
+        self.status = Some(status);
+        self
+    }
+
+    pub fn with_scope_kind(mut self, scope_kind: RuntimeCapabilityGrantScopeKind) -> Self {
+        self.scope_kind = Some(scope_kind);
+        self
+    }
+
+    pub fn with_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.capability_id = Some(capability_id);
+        self
+    }
+
+    pub fn for_entity(mut self, entity_id: EntityId) -> Self {
+        self.entity_id = Some(entity_id);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeCapabilityGrantSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     GetRuntimeSnapshot,
@@ -3327,6 +3403,12 @@ pub enum RuntimeReadToolRequest {
     GetAuthorizationSummary {
         query: RuntimeAuthorizationDecisionQuery,
     },
+    ListCapabilityGrants {
+        query: RuntimeCapabilityGrantQuery,
+    },
+    GetCapabilityGrantSummary {
+        query: RuntimeCapabilityGrantQuery,
+    },
     ListDesiredStates {
         query: DesiredStateQuery,
     },
@@ -3360,6 +3442,8 @@ impl RuntimeReadToolRequest {
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
             Self::ListAuthorizationDecisions { .. } => SmartHomeTool::ListAuthorizationDecisions,
             Self::GetAuthorizationSummary { .. } => SmartHomeTool::GetAuthorizationSummary,
+            Self::ListCapabilityGrants { .. } => SmartHomeTool::ListCapabilityGrants,
+            Self::GetCapabilityGrantSummary { .. } => SmartHomeTool::GetCapabilityGrantSummary,
             Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
             Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
             Self::ListWorkers { .. } => SmartHomeTool::ListWorkers,
@@ -3611,6 +3695,13 @@ pub enum RuntimeReadToolOutput {
     },
     AuthorizationSummary {
         summary: AuthorizationDecisionLogSummary,
+    },
+    CapabilityGrants {
+        grants: Vec<CapabilityGrant>,
+        summary: CapabilityGrantInventorySummary,
+    },
+    CapabilityGrantSummary {
+        summary: CapabilityGrantInventorySummary,
     },
     DesiredStates {
         desired_states: Vec<DesiredEntityState>,
@@ -3873,6 +3964,79 @@ impl SmartHomeRuntime {
         query: &RuntimeAuthorizationDecisionQuery,
     ) -> AuthorizationDecisionLogSummary {
         AuthorizationDecisionLogSummary::from_decisions(self.query_authorization_decisions(query))
+    }
+
+    pub fn query_capability_grants_at(
+        &self,
+        query: &RuntimeCapabilityGrantQuery,
+        now_ms: u64,
+    ) -> Vec<&CapabilityGrant> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut grants = match &query.principal_id {
+            Some(principal_id) => self.registry.capability_grants_for_principal(principal_id),
+            None => self.registry.capability_grants().collect::<Vec<_>>(),
+        }
+        .into_iter()
+        .filter(|grant| capability_grant_matches_query(grant, query, now_ms))
+        .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeCapabilityGrantSort::GrantId => {
+                grants.sort_by(|left, right| left.grant_id.cmp(&right.grant_id));
+            }
+            RuntimeCapabilityGrantSort::PrincipalId => {
+                grants.sort_by(|left, right| {
+                    left.principal_id
+                        .cmp(&right.principal_id)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::GrantedAtAsc => {
+                grants.sort_by(|left, right| {
+                    left.granted_at_ms
+                        .cmp(&right.granted_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::GrantedAtDesc => {
+                grants.sort_by(|left, right| {
+                    right
+                        .granted_at_ms
+                        .cmp(&left.granted_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::ExpiresAtAsc => {
+                grants.sort_by(|left, right| {
+                    left.expires_at_ms
+                        .cmp(&right.expires_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+            RuntimeCapabilityGrantSort::ExpiresAtDesc => {
+                grants.sort_by(|left, right| {
+                    right
+                        .expires_at_ms
+                        .cmp(&left.expires_at_ms)
+                        .then_with(|| left.grant_id.cmp(&right.grant_id))
+                });
+            }
+        }
+        apply_limit(&mut grants, query.limit);
+        grants
+    }
+
+    pub fn capability_grant_summary_at(
+        &self,
+        query: &RuntimeCapabilityGrantQuery,
+        now_ms: u64,
+    ) -> CapabilityGrantInventorySummary {
+        CapabilityGrantInventorySummary::from_grants_at(
+            self.query_capability_grants_at(query, now_ms),
+            now_ms,
+        )
     }
 
     pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
@@ -4558,6 +4722,20 @@ impl SmartHomeRuntime {
             RuntimeReadToolRequest::GetAuthorizationSummary { query } => {
                 Ok(RuntimeReadToolOutput::AuthorizationSummary {
                     summary: self.authorization_decision_summary(&query),
+                })
+            }
+            RuntimeReadToolRequest::ListCapabilityGrants { query } => {
+                let grant_refs = self.query_capability_grants_at(&query, now_ms);
+                let summary = CapabilityGrantInventorySummary::from_grants_at(
+                    grant_refs.iter().copied(),
+                    now_ms,
+                );
+                let grants = grant_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::CapabilityGrants { grants, summary })
+            }
+            RuntimeReadToolRequest::GetCapabilityGrantSummary { query } => {
+                Ok(RuntimeReadToolOutput::CapabilityGrantSummary {
+                    summary: self.capability_grant_summary_at(&query, now_ms),
                 })
             }
             RuntimeReadToolRequest::ListDesiredStates { query } => {
@@ -5458,6 +5636,63 @@ fn desired_state_matches_query(
         && query
             .max_command_timeout_ms
             .is_none_or(|maximum| desired_state.command_timeout_ms <= maximum)
+}
+
+fn capability_grant_matches_query(
+    grant: &CapabilityGrant,
+    query: &RuntimeCapabilityGrantQuery,
+    now_ms: u64,
+) -> bool {
+    query
+        .status
+        .is_none_or(|status| grant.status_at(now_ms) == status)
+        && query
+            .scope_kind
+            .is_none_or(|scope_kind| capability_grant_scope_matches_kind(&grant.scope, scope_kind))
+        && query
+            .capability_id
+            .as_ref()
+            .is_none_or(|capability_id| match &grant.scope {
+                CapabilityGrantScope::Capability(granted)
+                | CapabilityGrantScope::EntityCapability {
+                    capability_id: granted,
+                    ..
+                } => granted == capability_id,
+                CapabilityGrantScope::Tool(_) | CapabilityGrantScope::AllSmartHome => false,
+            })
+        && query
+            .entity_id
+            .as_ref()
+            .is_none_or(|entity_id| match &grant.scope {
+                CapabilityGrantScope::EntityCapability {
+                    entity_id: granted, ..
+                } => granted == entity_id,
+                CapabilityGrantScope::Tool(_)
+                | CapabilityGrantScope::Capability(_)
+                | CapabilityGrantScope::AllSmartHome => false,
+            })
+}
+
+fn capability_grant_scope_matches_kind(
+    scope: &CapabilityGrantScope,
+    kind: RuntimeCapabilityGrantScopeKind,
+) -> bool {
+    matches!(
+        (scope, kind),
+        (
+            CapabilityGrantScope::Tool(_),
+            RuntimeCapabilityGrantScopeKind::Tool
+        ) | (
+            CapabilityGrantScope::Capability(_),
+            RuntimeCapabilityGrantScopeKind::Capability
+        ) | (
+            CapabilityGrantScope::EntityCapability { .. },
+            RuntimeCapabilityGrantScopeKind::EntityCapability
+        ) | (
+            CapabilityGrantScope::AllSmartHome,
+            RuntimeCapabilityGrantScopeKind::AllSmartHome
+        )
+    )
 }
 
 fn pairing_session_matches_query(
@@ -6551,6 +6786,93 @@ mod tests {
                     && summary.decisions_with_missing_capabilities == 1
         ));
         assert_eq!(runtime.registry().counts().authorization_decisions, 3);
+    }
+
+    #[test]
+    fn capability_grant_read_tools_filter_effective_status_and_scope() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let installer = AgentId::trusted("agent:installer");
+        runtime
+            .registry_mut()
+            .upsert_capability_grant(CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            ));
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_entity_capability(
+                CapabilityGrantId::trusted("grant-light-command"),
+                principal.clone(),
+                EntityId::trusted("entity-light-1"),
+                CapabilityId::trusted("light.on_off"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_100,
+            )
+            .with_expiry(2_000),
+        );
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_all_smart_home(
+                CapabilityGrantId::trusted("grant-installer"),
+                installer,
+                PrivilegeTier::HumanApproval,
+                "chief-of-staff",
+                1_200,
+            )
+            .with_status(CapabilityGrantStatus::Pending),
+        );
+
+        let grants = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListCapabilityGrants {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .for_principal(principal.clone())
+                        .with_status(CapabilityGrantStatus::Expired)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::EntityCapability)
+                        .with_capability(CapabilityId::trusted("light.on_off"))
+                        .for_entity(EntityId::trusted("entity-light-1"))
+                        .sorted_by(RuntimeCapabilityGrantSort::GrantedAtDesc),
+                },
+                2_500,
+            )
+            .unwrap();
+        let summary = runtime
+            .execute_read_tool(
+                principal,
+                RuntimeReadToolRequest::GetCapabilityGrantSummary {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .with_status(CapabilityGrantStatus::Pending)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::AllSmartHome),
+                },
+                2_501,
+            )
+            .unwrap();
+
+        assert!(matches!(
+            grants,
+            RuntimeReadToolOutput::CapabilityGrants { grants, summary }
+                if grants.len() == 1
+                    && grants[0].grant_id == CapabilityGrantId::trusted("grant-light-command")
+                    && summary.total_grants == 1
+                    && summary.expired_grants == 1
+                    && summary.entity_capability_grants == 1
+                    && summary.unique_principals == 1
+        ));
+        assert!(matches!(
+            summary,
+            RuntimeReadToolOutput::CapabilityGrantSummary { summary }
+                if summary.total_grants == 1
+                    && summary.pending_grants == 1
+                    && summary.all_smart_home_grants == 1
+                    && summary.human_approval_tier_grants == 1
+                    && summary.needs_review()
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 2);
     }
 
     #[test]
@@ -8352,6 +8674,30 @@ mod tests {
                 1_517,
             )
             .unwrap();
+        let capability_grants = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListCapabilityGrants {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_status(CapabilityGrantStatus::Active)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability)
+                        .with_capability(CapabilityId::trusted("smart_home.read")),
+                },
+                1_518,
+            )
+            .unwrap();
+        let capability_grant_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetCapabilityGrantSummary {
+                    query: RuntimeCapabilityGrantQuery::new()
+                        .with_status(CapabilityGrantStatus::Active)
+                        .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability),
+                },
+                1_519,
+            )
+            .unwrap();
 
         assert!(matches!(
             bridges,
@@ -8514,7 +8860,25 @@ mod tests {
                     && summary.denied_decisions == 0
                     && summary.tool_decisions == 18
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 18);
+        assert!(matches!(
+            capability_grants,
+            RuntimeReadToolOutput::CapabilityGrants { grants, summary }
+                if grants.len() == 1
+                    && grants[0].grant_id == CapabilityGrantId::trusted("grant-read")
+                    && summary.total_grants == 1
+                    && summary.active_grants == 1
+                    && summary.capability_grants == 1
+                    && summary.read_only_tier_grants == 1
+        ));
+        assert!(matches!(
+            capability_grant_summary,
+            RuntimeReadToolOutput::CapabilityGrantSummary { summary }
+                if summary.total_grants == 1
+                    && summary.active_grants == 1
+                    && summary.unique_principals == 1
+                    && !summary.needs_review()
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 20);
         assert!(runtime
             .registry()
             .authorization_decisions()
