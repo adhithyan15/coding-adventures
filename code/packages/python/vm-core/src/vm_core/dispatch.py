@@ -303,6 +303,13 @@ def handle_const(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
     return value
 
 
+def handle_mov(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
+    value = frame.resolve(instr.srcs[0])
+    if instr.dest:
+        frame.assign(instr.dest, value)
+    return value
+
+
 # --- Arithmetic ---
 
 def handle_add(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
@@ -1623,6 +1630,7 @@ def _runtime_type(value: Any) -> str:
 
 STANDARD_OPCODES: dict[str, Any] = {
     "const": handle_const,
+    "mov": handle_mov,
     "add": handle_add,
     "sub": handle_sub,
     "mul": handle_mul,

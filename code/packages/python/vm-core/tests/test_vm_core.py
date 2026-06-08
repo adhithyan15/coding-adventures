@@ -392,6 +392,13 @@ class TestVMCoreInit:
 # ---------------------------------------------------------------------------
 
 class TestExecuteArithmetic:
+    def test_mov_copies_value(self):
+        fn = _simple_fn("main",
+            _const("a", 42),
+            _i("mov", "b", ["a"], type_hint="i32"),
+            _i("ret", srcs=["b"], type_hint="i32"))
+        assert run(fn) == 42
+
     def test_add(self):
         fn = _simple_fn("main",
             _const("a", 3), _const("b", 4),
