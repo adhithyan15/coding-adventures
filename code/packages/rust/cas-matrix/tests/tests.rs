@@ -5,9 +5,9 @@
 
 use cas_matrix::{
     add_matrices, char_poly_coeffs, charpoly, columnspace, determinant, dimensions, dot,
-    eigenvalues, frobenius_norm, get_entry, identity_matrix, inverse, is_matrix, lu_decompose,
-    matrix, norm, nullspace, num_cols, num_rows, rank, row_reduce, rowspace, scalar_multiply,
-    sub_matrices, trace, transpose, zero_matrix, MatrixError, MATRIX,
+    eigenvalues, eigenvectors, frobenius_norm, get_entry, identity_matrix, inverse, is_matrix,
+    lu_decompose, matrix, norm, nullspace, num_cols, num_rows, rank, row_reduce, rowspace,
+    scalar_multiply, sub_matrices, trace, transpose, zero_matrix, MatrixError, MATRIX,
 };
 use symbolic_ir::{apply, flt, int, rat, sym, ADD, LIST, MUL, POW, SQRT, SUB};
 
@@ -530,6 +530,128 @@ fn eigenvalues_rejects_unsupported_shapes_and_symbolic_entries() {
 
     let symbolic = matrix(vec![vec![sym("a")]]).unwrap();
     assert!(eigenvalues(&symbolic).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// Eigenvectors
+// ---------------------------------------------------------------------------
+
+#[test]
+fn eigenvectors_1x1_and_2x2_distinct() {
+    let scalar = matrix(vec![irow(&[7])]).unwrap();
+    assert_eq!(
+        eigenvectors(&scalar).unwrap(),
+        apply(
+            sym(LIST),
+            vec![apply(
+                sym(LIST),
+                vec![
+                    int(7),
+                    int(1),
+                    apply(sym(LIST), vec![matrix(vec![irow(&[1])]).unwrap()])
+                ],
+            )],
+        )
+    );
+
+    let m = matrix(vec![irow(&[1, 2]), irow(&[2, 1])]).unwrap();
+    assert_eq!(
+        eigenvectors(&m).unwrap(),
+        apply(
+            sym(LIST),
+            vec![
+                apply(
+                    sym(LIST),
+                    vec![
+                        int(-1),
+                        int(1),
+                        apply(
+                            sym(LIST),
+                            vec![matrix(vec![irow(&[-1]), irow(&[1])]).unwrap()]
+                        ),
+                    ],
+                ),
+                apply(
+                    sym(LIST),
+                    vec![
+                        int(3),
+                        int(1),
+                        apply(
+                            sym(LIST),
+                            vec![matrix(vec![irow(&[1]), irow(&[1])]).unwrap()]
+                        ),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn eigenvectors_repeated_and_rational() {
+    let rational = matrix(vec![vec![rat(1, 2), int(0)], vec![int(0), int(3)]]).unwrap();
+    assert_eq!(
+        eigenvectors(&rational).unwrap(),
+        apply(
+            sym(LIST),
+            vec![
+                apply(
+                    sym(LIST),
+                    vec![
+                        rat(1, 2),
+                        int(1),
+                        apply(
+                            sym(LIST),
+                            vec![matrix(vec![irow(&[1]), irow(&[0])]).unwrap()]
+                        ),
+                    ],
+                ),
+                apply(
+                    sym(LIST),
+                    vec![
+                        int(3),
+                        int(1),
+                        apply(
+                            sym(LIST),
+                            vec![matrix(vec![irow(&[0]), irow(&[1])]).unwrap()]
+                        ),
+                    ],
+                ),
+            ],
+        )
+    );
+
+    let repeated = matrix(vec![irow(&[2, 0]), irow(&[0, 2])]).unwrap();
+    assert_eq!(
+        eigenvectors(&repeated).unwrap(),
+        apply(
+            sym(LIST),
+            vec![apply(
+                sym(LIST),
+                vec![
+                    int(2),
+                    int(2),
+                    apply(
+                        sym(LIST),
+                        vec![
+                            matrix(vec![irow(&[1]), irow(&[0])]).unwrap(),
+                            matrix(vec![irow(&[0]), irow(&[1])]).unwrap(),
+                        ],
+                    ),
+                ],
+            )],
+        )
+    );
+}
+
+#[test]
+fn eigenvectors_rejects_unsupported_shapes_and_symbolic_entries() {
+    let non_square = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6])]).unwrap();
+    assert!(eigenvectors(&non_square).is_err());
+    assert!(eigenvectors(&identity_matrix(3).unwrap()).is_err());
+
+    let symbolic = matrix(vec![vec![sym("a")]]).unwrap();
+    assert!(eigenvectors(&symbolic).is_err());
 }
 
 // ---------------------------------------------------------------------------
