@@ -34,17 +34,19 @@ use smart_home_integration_catalog::{
     PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_runtime::{
+    DesiredEntityState, DesiredStateInventorySummary, DesiredStateQuery, DesiredStateSort,
     PairingSessionStatus, ReconciliationReason, RuntimeCommandToolRequest,
     RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
     RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
     RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
     RuntimePairBridgeToolRequest, RuntimePairingSession, RuntimePairingSessionId,
-    RuntimePollEventsToolOutput, RuntimePollEventsToolRequest, RuntimeReadToolOutput,
-    RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
-    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
-    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
-    SmartHomeRuntime,
+    RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
+    RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
+    RuntimeReadSnapshot, RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeSubscribeToolOutput,
+    RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId,
+    RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot,
+    RuntimeSubscriptionSort, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
+    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -61,6 +63,9 @@ pub const SMART_HOME_POLL_EVENTS_TOOL_ID: &str = "smart_home.poll_events";
 pub const SMART_HOME_UNSUBSCRIBE_TOOL_ID: &str = "smart_home.unsubscribe";
 pub const SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID: &str = "smart_home.list_subscriptions";
 pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event_log";
+pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
+pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
+pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
@@ -264,6 +269,31 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "inspect_event_log"))
+                }
+                SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetRuntimeSnapshot,
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_runtime_snapshot"))
+                }
+                SMART_HOME_LIST_DESIRED_STATES_TOOL_ID => {
+                    let request = list_desired_states_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_desired_states"))
+                }
+                SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID => {
+                    let request = list_pairing_sessions_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_pairing_sessions"))
                 }
                 SMART_HOME_PAIR_BRIDGE_TOOL_ID => {
                     let request = pair_bridge_request(&arguments)?;
@@ -598,6 +628,9 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         unsubscribe_definition(),
         list_subscriptions_definition(),
         inspect_event_log_definition(),
+        get_runtime_snapshot_definition(),
+        list_desired_states_definition(),
+        list_pairing_sessions_definition(),
         pair_bridge_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
@@ -887,6 +920,130 @@ fn inspect_event_log_definition() -> ToolDefinition {
     )
 }
 
+fn get_runtime_snapshot_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+        "Get smart-home runtime snapshot",
+        "Read compact D23 smart-home runtime counts and pending-work pressure without mutating supervision state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("registry_counts", JsonSchema::Any),
+                SchemaProperty::new("discovery_record_count", JsonSchema::Integer),
+                SchemaProperty::new("event_bus", JsonSchema::Any),
+                SchemaProperty::new("supervisor", JsonSchema::Any),
+                SchemaProperty::new("discovery_scheduler", JsonSchema::Any),
+                SchemaProperty::new("pairing_session_count", JsonSchema::Integer),
+                SchemaProperty::new("expiring_pairing_session_count", JsonSchema::Integer),
+                SchemaProperty::new("optimistic_state_count", JsonSchema::Integer),
+                SchemaProperty::new("stale_optimistic_state_count", JsonSchema::Integer),
+                SchemaProperty::new("desired_state_count", JsonSchema::Integer),
+                SchemaProperty::new("desired_capability_count", JsonSchema::Integer),
+                SchemaProperty::new("state_refresh_target_count", JsonSchema::Integer),
+                SchemaProperty::new("pending_work", JsonSchema::Any),
+                SchemaProperty::new("has_pending_work", JsonSchema::Boolean),
+            ],
+            vec![
+                "generated_at_ms",
+                "registry_counts",
+                "discovery_record_count",
+                "event_bus",
+                "supervisor",
+                "discovery_scheduler",
+                "pairing_session_count",
+                "expiring_pairing_session_count",
+                "optimistic_state_count",
+                "stale_optimistic_state_count",
+                "desired_state_count",
+                "desired_capability_count",
+                "state_refresh_target_count",
+                "pending_work",
+                "has_pending_work",
+            ],
+            false,
+        ),
+    )
+}
+
+fn list_desired_states_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
+        "List smart-home desired states",
+        "List runtime-owned D23 desired-state targets so Chief of Staff jobs can plan reconciliation without issuing commands.",
+        object_schema(
+            vec![
+                SchemaProperty::new("entity_id", JsonSchema::String),
+                SchemaProperty::new("requested_by", JsonSchema::String),
+                SchemaProperty::new("capability_id", JsonSchema::String),
+                SchemaProperty::new("min_command_timeout_ms", JsonSchema::Integer),
+                SchemaProperty::new("max_command_timeout_ms", JsonSchema::Integer),
+                SchemaProperty::new("sort", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "desired_states",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["desired_states", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn list_pairing_sessions_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID,
+        "List smart-home pairing sessions",
+        "List runtime-owned D23 pairing sessions and summarize pending credential ceremonies.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("integration_id", JsonSchema::String),
+                SchemaProperty::new("requested_by", JsonSchema::String),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new(
+                    "statuses",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+                SchemaProperty::new("expires_before_ms", JsonSchema::Integer),
+                SchemaProperty::new("expiring_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("sort", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "sessions",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["sessions", "summary", "count"],
+            false,
+        ),
+    )
+}
+
 fn pair_bridge_definition() -> ToolDefinition {
     ToolDefinition {
         tool_id: SMART_HOME_PAIR_BRIDGE_TOOL_ID.to_string(),
@@ -1136,6 +1293,70 @@ fn inspect_event_log_request(
         query = query.with_limit(limit as usize);
     }
     Ok(RuntimeReadToolRequest::InspectEventLog { query })
+}
+
+fn list_desired_states_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = DesiredStateQuery::new();
+    if let Some(entity_id) = optional_string(arguments, "entity_id")? {
+        query = query.for_entity(EntityId::trusted(entity_id));
+    }
+    if let Some(requested_by) = optional_string(arguments, "requested_by")? {
+        query = query.requested_by(requested_by);
+    }
+    if let Some(capability_id) = optional_string(arguments, "capability_id")? {
+        query = query.with_capability(CapabilityId::trusted(capability_id));
+    }
+    if let Some(min_command_timeout_ms) = optional_u64(arguments, "min_command_timeout_ms")? {
+        query = query.min_command_timeout(min_command_timeout_ms);
+    }
+    if let Some(max_command_timeout_ms) = optional_u64(arguments, "max_command_timeout_ms")? {
+        query = query.max_command_timeout(max_command_timeout_ms);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_desired_state_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(RuntimeReadToolRequest::ListDesiredStates { query })
+}
+
+fn list_pairing_sessions_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimePairingSessionQuery::new();
+    if let Some(session_id) = optional_string(arguments, "session_id")? {
+        query = query.for_session(RuntimePairingSessionId::trusted(session_id));
+    }
+    if let Some(bridge_id) = optional_string(arguments, "bridge_id")? {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(integration_id) = optional_string(arguments, "integration_id")? {
+        query = query.for_integration(IntegrationId::trusted(integration_id));
+    }
+    if let Some(requested_by) = optional_string(arguments, "requested_by")? {
+        query = query.requested_by(AgentId::trusted(requested_by));
+    }
+    for status in optional_string_list(arguments, "status", "statuses")? {
+        query = query.with_status(parse_pairing_status(&status)?);
+    }
+    if let Some(expires_before_ms) = optional_u64(arguments, "expires_before_ms")? {
+        query = query.expires_before(expires_before_ms);
+    }
+    if let Some(expiring_at_ms) = optional_u64(arguments, "expiring_at_ms")? {
+        query = query.expiring_at(expiring_at_ms);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_pairing_session_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(RuntimeReadToolRequest::ListPairingSessions { query })
 }
 
 fn pair_bridge_request(
@@ -1395,6 +1616,7 @@ fn read_output_handler_output(
 
 fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
     match output {
+        RuntimeReadToolOutput::RuntimeSnapshot(snapshot) => runtime_read_snapshot_json(&snapshot),
         RuntimeReadToolOutput::Bridges(bridges) => object([
             (
                 "bridges",
@@ -1493,6 +1715,25 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
             ),
             ("summary", event_log_summary_json(&summary)),
             ("count", integer(entries.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::DesiredStates {
+            desired_states,
+            summary,
+        } => object([
+            (
+                "desired_states",
+                JsonValue::Array(desired_states.iter().map(desired_state_json).collect()),
+            ),
+            ("summary", desired_state_inventory_summary_json(&summary)),
+            ("count", integer(desired_states.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::PairingSessions { sessions, summary } => object([
+            (
+                "sessions",
+                JsonValue::Array(sessions.iter().map(pairing_session_json).collect()),
+            ),
+            ("summary", pairing_session_inventory_summary_json(&summary)),
+            ("count", integer(sessions.len() as i64)),
         ]),
         RuntimeReadToolOutput::SupervisionObservation(observation) => object([
             (
@@ -1634,6 +1875,359 @@ fn discover_output_json(output: &RuntimeDiscoverToolOutput) -> JsonValue {
                 .next_transition_at_ms
                 .map(|value| integer(value as i64))
                 .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn runtime_read_snapshot_json(snapshot: &RuntimeReadSnapshot) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        (
+            "registry_counts",
+            object([
+                ("bridges", integer(snapshot.registry_counts.bridges as i64)),
+                ("devices", integer(snapshot.registry_counts.devices as i64)),
+                (
+                    "entities",
+                    integer(snapshot.registry_counts.entities as i64),
+                ),
+                ("scenes", integer(snapshot.registry_counts.scenes as i64)),
+                ("states", integer(snapshot.registry_counts.states as i64)),
+                ("events", integer(snapshot.registry_counts.events as i64)),
+                (
+                    "protocol_identifiers",
+                    integer(snapshot.registry_counts.protocol_identifiers as i64),
+                ),
+                (
+                    "capability_grants",
+                    integer(snapshot.registry_counts.capability_grants as i64),
+                ),
+                (
+                    "authorization_decisions",
+                    integer(snapshot.registry_counts.authorization_decisions as i64),
+                ),
+            ]),
+        ),
+        (
+            "discovery_record_count",
+            integer(snapshot.discovery_record_count as i64),
+        ),
+        (
+            "discovery_scheduler",
+            object([
+                (
+                    "generated_at_ms",
+                    integer(snapshot.discovery_scheduler.generated_at_ms as i64),
+                ),
+                (
+                    "worker_count",
+                    integer(snapshot.discovery_scheduler.worker_count as i64),
+                ),
+                (
+                    "due_worker_count",
+                    integer(snapshot.discovery_scheduler.due_worker_count as i64),
+                ),
+                (
+                    "starting_count",
+                    integer(snapshot.discovery_scheduler.starting_count as i64),
+                ),
+                (
+                    "running_count",
+                    integer(snapshot.discovery_scheduler.running_count as i64),
+                ),
+                (
+                    "unhealthy_count",
+                    integer(snapshot.discovery_scheduler.unhealthy_count as i64),
+                ),
+                (
+                    "restarting_count",
+                    integer(snapshot.discovery_scheduler.restarting_count as i64),
+                ),
+                (
+                    "stopped_count",
+                    integer(snapshot.discovery_scheduler.stopped_count as i64),
+                ),
+                (
+                    "workers_with_failures",
+                    integer(snapshot.discovery_scheduler.workers_with_failures as i64),
+                ),
+                (
+                    "has_due_work",
+                    JsonValue::Bool(snapshot.discovery_scheduler.has_due_work()),
+                ),
+                (
+                    "has_worker_pressure",
+                    JsonValue::Bool(snapshot.discovery_scheduler.has_worker_pressure()),
+                ),
+            ]),
+        ),
+        (
+            "event_bus",
+            object([
+                (
+                    "subscription_count",
+                    integer(snapshot.event_bus.subscription_count as i64),
+                ),
+                (
+                    "pending_delivery_count",
+                    integer(snapshot.event_bus.pending_delivery_count as i64),
+                ),
+                (
+                    "published_event_count",
+                    integer(snapshot.event_bus.published_event_count as i64),
+                ),
+                (
+                    "backlogged_subscription_count",
+                    integer(snapshot.event_bus.backlogged_subscription_count as i64),
+                ),
+                (
+                    "max_pending_delivery_count",
+                    integer(snapshot.event_bus.max_pending_delivery_count as i64),
+                ),
+                (
+                    "average_pending_deliveries_per_subscription",
+                    integer(
+                        snapshot
+                            .event_bus
+                            .average_pending_deliveries_per_subscription()
+                            as i64,
+                    ),
+                ),
+                (
+                    "has_backlog",
+                    JsonValue::Bool(snapshot.event_bus.has_backlog()),
+                ),
+                (
+                    "has_lagging_subscriptions",
+                    JsonValue::Bool(snapshot.event_bus.has_lagging_subscriptions()),
+                ),
+            ]),
+        ),
+        (
+            "supervisor",
+            object([
+                (
+                    "generated_at_ms",
+                    integer(snapshot.supervisor.generated_at_ms as i64),
+                ),
+                (
+                    "worker_count",
+                    integer(snapshot.supervisor.worker_count as i64),
+                ),
+                (
+                    "starting_count",
+                    integer(snapshot.supervisor.starting_count as i64),
+                ),
+                (
+                    "running_count",
+                    integer(snapshot.supervisor.running_count as i64),
+                ),
+                (
+                    "unhealthy_count",
+                    integer(snapshot.supervisor.unhealthy_count as i64),
+                ),
+                (
+                    "restarting_count",
+                    integer(snapshot.supervisor.restarting_count as i64),
+                ),
+                (
+                    "stopped_count",
+                    integer(snapshot.supervisor.stopped_count as i64),
+                ),
+                (
+                    "restart_due_count",
+                    integer(snapshot.supervisor.restart_due_count as i64),
+                ),
+                (
+                    "has_restart_pressure",
+                    JsonValue::Bool(snapshot.supervisor.has_restart_pressure()),
+                ),
+            ]),
+        ),
+        (
+            "pairing_session_count",
+            integer(snapshot.pairing_session_count as i64),
+        ),
+        (
+            "expiring_pairing_session_count",
+            integer(snapshot.expiring_pairing_session_count as i64),
+        ),
+        (
+            "optimistic_state_count",
+            integer(snapshot.optimistic_state_count as i64),
+        ),
+        (
+            "stale_optimistic_state_count",
+            integer(snapshot.stale_optimistic_state_count as i64),
+        ),
+        (
+            "desired_state_count",
+            integer(snapshot.desired_state_count as i64),
+        ),
+        (
+            "desired_capability_count",
+            integer(snapshot.desired_capability_count as i64),
+        ),
+        (
+            "state_refresh_target_count",
+            integer(snapshot.state_refresh_target_count as i64),
+        ),
+        (
+            "pending_work",
+            pending_work_summary_json(&snapshot.pending_work_summary()),
+        ),
+        (
+            "has_pending_work",
+            JsonValue::Bool(snapshot.has_pending_work()),
+        ),
+    ])
+}
+
+fn pending_work_summary_json(summary: &RuntimePendingWorkSummary) -> JsonValue {
+    object([
+        (
+            "event_backlog_count",
+            integer(summary.event_backlog_count as i64),
+        ),
+        (
+            "backlogged_subscription_count",
+            integer(summary.backlogged_subscription_count as i64),
+        ),
+        (
+            "discovery_worker_due_count",
+            integer(summary.discovery_worker_due_count as i64),
+        ),
+        (
+            "unhealthy_discovery_worker_count",
+            integer(summary.unhealthy_discovery_worker_count as i64),
+        ),
+        (
+            "restart_due_count",
+            integer(summary.restart_due_count as i64),
+        ),
+        (
+            "unhealthy_worker_count",
+            integer(summary.unhealthy_worker_count as i64),
+        ),
+        (
+            "expiring_pairing_session_count",
+            integer(summary.expiring_pairing_session_count as i64),
+        ),
+        (
+            "stale_optimistic_state_count",
+            integer(summary.stale_optimistic_state_count as i64),
+        ),
+        (
+            "state_refresh_target_count",
+            integer(summary.state_refresh_target_count as i64),
+        ),
+        (
+            "total_pending_work_count",
+            integer(summary.total_pending_work_count() as i64),
+        ),
+        ("is_idle", JsonValue::Bool(summary.is_idle())),
+        (
+            "has_event_backlog",
+            JsonValue::Bool(summary.has_event_backlog()),
+        ),
+        (
+            "has_supervision_pressure",
+            JsonValue::Bool(summary.has_supervision_pressure()),
+        ),
+    ])
+}
+
+fn desired_state_json(desired_state: &DesiredEntityState) -> JsonValue {
+    object([
+        ("entity_id", string(desired_state.entity_id.as_str())),
+        (
+            "desired",
+            JsonValue::Array(desired_state.desired.iter().map(state_delta_json).collect()),
+        ),
+        ("requested_by", string(&desired_state.requested_by)),
+        (
+            "command_timeout_ms",
+            integer(desired_state.command_timeout_ms as i64),
+        ),
+        (
+            "desired_capability_count",
+            integer(desired_state.desired.len() as i64),
+        ),
+    ])
+}
+
+fn desired_state_inventory_summary_json(summary: &DesiredStateInventorySummary) -> JsonValue {
+    object([
+        (
+            "total_desired_states",
+            integer(summary.total_desired_states as i64),
+        ),
+        (
+            "total_desired_capabilities",
+            integer(summary.total_desired_capabilities as i64),
+        ),
+        (
+            "requested_by_count",
+            integer(summary.requested_by_count as i64),
+        ),
+        (
+            "min_command_timeout_ms",
+            summary
+                .min_command_timeout_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "max_command_timeout_ms",
+            summary
+                .max_command_timeout_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_desired_states",
+            JsonValue::Bool(summary.has_desired_states()),
+        ),
+    ])
+}
+
+fn pairing_session_inventory_summary_json(
+    summary: &RuntimePairingSessionInventorySummary,
+) -> JsonValue {
+    object([
+        ("total_sessions", integer(summary.total_sessions as i64)),
+        (
+            "pending_user_presence_sessions",
+            integer(summary.pending_user_presence_sessions as i64),
+        ),
+        (
+            "completed_sessions",
+            integer(summary.completed_sessions as i64),
+        ),
+        ("expired_sessions", integer(summary.expired_sessions as i64)),
+        (
+            "cancelled_sessions",
+            integer(summary.cancelled_sessions as i64),
+        ),
+        (
+            "expiring_sessions",
+            integer(summary.expiring_sessions as i64),
+        ),
+        (
+            "sessions_with_vault_ref",
+            integer(summary.sessions_with_vault_ref as i64),
+        ),
+        (
+            "has_pending_user_presence",
+            JsonValue::Bool(summary.has_pending_user_presence()),
+        ),
+        (
+            "has_expiring_sessions",
+            JsonValue::Bool(summary.has_expiring_sessions()),
+        ),
+        (
+            "has_completed_credentials",
+            JsonValue::Bool(summary.has_completed_credentials()),
         ),
     ])
 }
@@ -2913,6 +3507,31 @@ fn parse_event_sort(label: &str) -> Result<RuntimeEventSort, ToolCallError> {
     }
 }
 
+fn parse_desired_state_sort(label: &str) -> Result<DesiredStateSort, ToolCallError> {
+    match label {
+        "entity_id" | "entity" => Ok(DesiredStateSort::EntityId),
+        "requested_by_then_entity_id" | "requested_by" => {
+            Ok(DesiredStateSort::RequestedByThenEntityId)
+        }
+        "command_timeout_desc" | "timeout_desc" => Ok(DesiredStateSort::CommandTimeoutDesc),
+        _ => Err(validation_error(format!(
+            "unknown desired state sort `{label}`"
+        ))),
+    }
+}
+
+fn parse_pairing_session_sort(label: &str) -> Result<RuntimePairingSessionSort, ToolCallError> {
+    match label {
+        "session_id" | "id" => Ok(RuntimePairingSessionSort::SessionId),
+        "expires_at" | "expires_at_asc" => Ok(RuntimePairingSessionSort::ExpiresAt),
+        "started_at_desc" | "newest_first" => Ok(RuntimePairingSessionSort::StartedAtDesc),
+        "status_then_expires_at" | "status" => Ok(RuntimePairingSessionSort::StatusThenExpiresAt),
+        _ => Err(validation_error(format!(
+            "unknown pairing session sort `{label}`"
+        ))),
+    }
+}
+
 fn optional_single_filter_string(
     value: &JsonValue,
     singular_field: &str,
@@ -3342,6 +3961,18 @@ fn pairing_status_label(status: PairingSessionStatus) -> &'static str {
     status.as_str()
 }
 
+fn parse_pairing_status(label: &str) -> Result<PairingSessionStatus, ToolCallError> {
+    match label {
+        "pending_user_presence" | "pending" => Ok(PairingSessionStatus::PendingUserPresence),
+        "completed" => Ok(PairingSessionStatus::Completed),
+        "expired" => Ok(PairingSessionStatus::Expired),
+        "cancelled" | "canceled" => Ok(PairingSessionStatus::Cancelled),
+        _ => Err(validation_error(format!(
+            "unknown pairing session status `{label}`"
+        ))),
+    }
+}
+
 fn command_status_label(status: CommandStatus) -> &'static str {
     match status {
         CommandStatus::Accepted => "accepted",
@@ -3767,7 +4398,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 20);
+        assert_eq!(definitions.len(), 23);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -3799,11 +4430,20 @@ mod tests {
             .contains(&SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_DESIRED_STATES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            18
+            21
         );
         assert_eq!(
             export
@@ -3853,6 +4493,20 @@ mod tests {
                 1_000,
             ),
         );
+        runtime
+            .borrow_mut()
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-light-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:scene-planner")
+                .with_command_timeout(750),
+            )
+            .unwrap();
 
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
@@ -4183,6 +4837,88 @@ mod tests {
         );
         assert_eq!(command_trace.summary().progress_event_count, 1);
 
+        let runtime_snapshot_request = request(
+            "call-runtime-snapshot",
+            SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
+            object([]),
+            1_100,
+        );
+        let runtime_snapshot_trace = tool_runtime.invoke_with_events(&runtime_snapshot_request);
+        assert!(runtime_snapshot_trace.result.ok);
+        let runtime_snapshot_output = runtime_snapshot_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(runtime_snapshot_output, "pairing_session_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(runtime_snapshot_output, "desired_state_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(runtime_snapshot_output, "pending_work").unwrap(),
+                "event_backlog_count"
+            ),
+            Some(&integer(1))
+        );
+
+        let desired_states_request = request(
+            "call-list-desired-states",
+            SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
+            object([
+                ("capability_id", string("light.on_off")),
+                ("sort", string("command_timeout_desc")),
+            ]),
+            1_100,
+        );
+        let desired_states_trace = tool_runtime.invoke_with_events(&desired_states_request);
+        assert!(desired_states_trace.result.ok);
+        let desired_states_output = desired_states_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(desired_states_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                array_item(field(desired_states_output, "desired_states").unwrap(), 0).unwrap(),
+                "requested_by"
+            ),
+            Some(&string("agent:scene-planner"))
+        );
+        assert_eq!(
+            field(
+                field(desired_states_output, "summary").unwrap(),
+                "total_desired_capabilities"
+            ),
+            Some(&integer(1))
+        );
+
+        let pairing_sessions_request = request(
+            "call-list-pairing-sessions",
+            SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID,
+            object([
+                ("bridge_id", string("bridge-1")),
+                ("status", string("pending_user_presence")),
+                ("sort", string("expires_at")),
+            ]),
+            1_100,
+        );
+        let pairing_sessions_trace = tool_runtime.invoke_with_events(&pairing_sessions_request);
+        assert!(pairing_sessions_trace.result.ok);
+        let pairing_sessions_output = pairing_sessions_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(pairing_sessions_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                array_item(field(pairing_sessions_output, "sessions").unwrap(), 0).unwrap(),
+                "session_id"
+            ),
+            Some(&string("pairing-session-1"))
+        );
+        assert_eq!(
+            field(
+                field(pairing_sessions_output, "summary").unwrap(),
+                "pending_user_presence_sessions"
+            ),
+            Some(&integer(1))
+        );
+
         let list_subscriptions_request = request(
             "call-list-subscriptions",
             SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID,
@@ -4330,6 +5066,9 @@ mod tests {
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
+        journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
+        journal.record_trace(desired_states_request, desired_states_trace);
+        journal.record_trace(pairing_sessions_request, pairing_sessions_trace);
         journal.record_trace(list_subscriptions_request, list_subscriptions_trace);
         journal.record_trace(inspect_event_log_request, inspect_event_log_trace);
         journal.record_trace(poll_request, poll_trace);
@@ -4337,9 +5076,9 @@ mod tests {
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 19);
-        assert_eq!(journal_summary.completed_count, 19);
-        assert_eq!(journal.audit_records().len(), 19);
+        assert_eq!(journal_summary.invocation_count, 22);
+        assert_eq!(journal_summary.completed_count, 22);
+        assert_eq!(journal.audit_records().len(), 22);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -4352,7 +5091,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            16,
+            19,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

@@ -60,6 +60,10 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListSubscriptions` and
   `RuntimeReadToolRequest::InspectEventLog` for authorized D18D reads over
   event-stream backlog pressure and checkpointed runtime event history.
+- `RuntimeReadToolRequest::GetRuntimeSnapshot`,
+  `RuntimeReadToolRequest::ListDesiredStates`, and
+  `RuntimeReadToolRequest::ListPairingSessions` for authorized D18D reads over
+  runtime pending work, desired-state targets, and pairing-session inventories.
 
 ## [0.1.0] - 2026-05-06
 
