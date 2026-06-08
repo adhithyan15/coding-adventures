@@ -1436,6 +1436,42 @@ describe("symbolic-vm", () => {
     const result = vm.eval(app(INTEGRATE, [integrand, x]));
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
   });
+
+  it("Phase 17: integrates tanh powers through identity reduction", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    for (const power of [2, 3, 4]) {
+      const integrand = app(POW, [app(TANH, [x]), int(power)]);
+      const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+      expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+      for (const xVal of [-0.4, 0.2, 0.8]) {
+        const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+        expect(Math.abs(got - Math.tanh(xVal) ** power)).toBeLessThan(1e-5);
+      }
+    }
+  });
+
+  it("Phase 17: integrates tanh^2(2x+1) with the chain-rule factor", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(ADD, [app(MUL, [int(2), x]), int(1)]);
+    const integrand = app(POW, [app(TANH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Tanh")).toBe(true);
+    for (const xVal of [-0.4, 0.1, 0.5]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - Math.tanh(2 * xVal + 1) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 17: leaves tanh^2(x^2) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(TANH, [app(POW, [x, int(2)])]), int(2)]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------
