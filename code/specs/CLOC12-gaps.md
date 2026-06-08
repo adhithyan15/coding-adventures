@@ -258,10 +258,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-033 — try/catch trailing `;` after `}`
 
-- **Status:** OPEN — newly discovered by CLOC14.3. **Same family as gap-030** (function-decl trailing `;`).
-- **Upstream byte-identity test:** `minify_try_catch` seed fixture.
-- **Why it fails:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation:
-  - Input: `try{a();}catch(e){b();}`
-  - Upstream: `try{a()}catch(e){b()};`  (note inner `;`s dropped per gap-030's rule-A and trailing `;` added)
-  - closurec: `try{a()}catch(e){b()}`  (inner `;`s correctly dropped; trailing missing)
-- **What it needs:** Extend the CLI token state machine (CLOC12.39's brace_stack) to track try/catch blocks the same way as function declarations. When a `}` closes the LAST catch/finally clause of a `try`, emit `;`. The `try` keyword is the marker; track it like `function` is tracked.
+- **Status:** **RESOLVED** in CLOC12.40 (PR pending). `minify_try_catch` flipped IGNORED → PASS.
+- **Upstream byte-identity test:** `minify_try_catch` seed fixture. PASS.
+- **Why it failed:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation. closurec correctly dropped inner `;`s per gap-030 rule A but never emitted the trailing `;`.
+- **Resolution:** Extended the CLI token state machine. `brace_stack` was refactored from `Vec<bool>` to `Vec<BlockKind>` with three variants: `Function`, `TryChain`, `Other`. A new flag `next_block_is_try_chain` is armed by the `try`/`catch`/`finally` keywords; the next `{` consumes it and pushes `BlockKind::TryChain` onto the stack. When a `}` pops a `TryChain` kind, the emitter peeks the next non-trivia token: if it's `catch` or `finally`, the chain continues and no `;` is emitted; otherwise the chain has ended and a synthetic `;` is appended. 6 inline tests pin the behavior including nested try/catch, try/catch/finally chains, function-decl inside try-block (no interference between Function and TryChain), and ES2019 optional catch binding (`try{a;}catch{b;}`).

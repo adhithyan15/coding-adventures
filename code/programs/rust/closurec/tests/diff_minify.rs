@@ -95,10 +95,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-010 (DCE block flattening, already resolved).
     // Discovered by CLOC14.3.
     ("if_else", "gap-032: single-stmt if/else block flattening"),
-    // gap-033: try/catch trailing `;` after `}`. Same family
-    // as gap-030 (function-decl trailing `;`) but for
-    // try/catch statements. Discovered by CLOC14.3.
-    ("try_catch", "gap-033: try/catch trailing `;` after `}`"),
+    // gap-033 was RESOLVED in CLOC12.40 — the brace_stack
+    // state machine now tracks try/catch/finally chains via
+    // BlockKind::TryChain. `minify_try_catch` flipped from
+    // IGNORED to PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

@@ -94,6 +94,29 @@ impl std::error::Error for MinifyError {}
 // Public entry point
 // ---------------------------------------------------------------------------
 
+/// What kind of block does an open `{` start? Pushed onto
+/// `brace_stack` and consulted on the matching `}` to decide
+/// whether to emit a synthetic `;` after the closing brace.
+///
+/// | Kind        | Trigger to push                          | `}` action |
+/// |-------------|------------------------------------------|-------------|
+/// | `Function`  | `function` keyword at stmt boundary      | always emit `;` (gap-030 rule B) |
+/// | `TryChain`  | `try`/`catch`/`finally` keyword          | emit `;` IFF next non-trivia is NOT `catch`/`finally` (gap-033) |
+/// | `Other`     | any other block (if/while/for/plain block)| no synthetic `;` |
+///
+/// The `TryChain` variant captures both the try-body block and
+/// each catch/finally clause body in the chain. The chain ends
+/// when a `}` closing a `TryChain` block is NOT followed by
+/// another `catch` or `finally` keyword — at that point the
+/// trailing `;` is emitted, mirroring upstream Closure
+/// v20240317's normalisation of try-statement output shape.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum BlockKind {
+    Function,
+    TryChain,
+    Other,
+}
+
 /// Apply WHITESPACE_ONLY to a single source string.
 ///
 /// Returns the comment-stripped, whitespace-collapsed equivalent.
@@ -151,15 +174,27 @@ pub fn whitespace_only_minify(
     let mut out = String::with_capacity(source.len());
 
     // State machine:
-    let mut brace_stack: Vec<bool> = Vec::new();
-    // ^ for each open `{`, true iff this `{` opened a
-    //   function-declaration body. Popped on matching `}`.
+    let mut brace_stack: Vec<BlockKind> = Vec::new();
+    // ^ for each open `{`, the kind of block it opens.
+    //   `BlockKind::Function` triggers gap-030 rule-B (emit
+    //   `;` after closing `}`); `BlockKind::TryChain` triggers
+    //   gap-033 rule (emit `;` after closing `}` iff next
+    //   non-trivia token is NOT `catch` or `finally` — i.e.
+    //   the chain has ended).
     let mut paren_stack: Vec<bool> = Vec::new();
     // ^ for each open `(`, true iff this `(` was the head of
     //   an `if` / `while` / `for` (control-flow construct
     //   whose body slot follows the close-paren). Popped on
     //   matching `)`.
     let mut saw_function_kw_at_boundary = false;
+    let mut next_block_is_try_chain = false;
+    // ^ gap-033: armed by `try` / `catch` / `finally`
+    //   keywords; consumed by the next `{` and stored on the
+    //   brace stack as `BlockKind::TryChain`. `try` arms it
+    //   at a statement boundary. `catch` and `finally` arm
+    //   it whenever they appear (they only legally appear
+    //   after a preceding `}` that closed a try-chain block,
+    //   so the boundary context is already correct).
     let mut next_paren_is_control_flow_head = false;
     let mut body_position_next = false;
     let mut at_stmt_boundary = true;
@@ -198,6 +233,12 @@ pub fn whitespace_only_minify(
             }
         }
 
+        // Snapshot prev BEFORE the emit overwrites it, so
+        // the state-update branches below can inspect the
+        // token that came *before* the current one. Needed
+        // for gap-033's `catch`/`finally` guard.
+        let prev_before_this_emit = prev_emitted_tok;
+
         // Emit the token (with separator if needed).
         if let Some(prev) = prev_emitted_tok {
             if needs_separator(prev, tok) {
@@ -213,23 +254,51 @@ pub fn whitespace_only_minify(
         }
         prev_emitted_tok = Some(tok);
 
-        // Rule B: a `}` that closes a function-declaration
-        // body gets a synthetic `;` appended.
+        // Rule B / gap-033: a `}` that closes a
+        // function-declaration body, or the LAST clause of a
+        // try-chain, gets a synthetic `;` appended.
         if val == "}" {
-            let was_function_decl = brace_stack.pop().unwrap_or(false);
-            if was_function_decl {
+            let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
+            let needs_synthetic_semi = match kind {
+                BlockKind::Function => true,
+                BlockKind::TryChain => {
+                    // gap-033: the chain continues iff the
+                    // very next non-trivia token is `catch`
+                    // or `finally`. If so, suppress the `;`
+                    // because the next clause will own the
+                    // terminator. Otherwise the chain has
+                    // ended — emit `;`.
+                    let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
+                    !matches!(next_val, Some("catch") | Some("finally"))
+                }
+                BlockKind::Other => false,
+            };
+            if needs_synthetic_semi {
                 out.push(';');
                 last_emit_was_synthetic_semi = true;
             }
             at_stmt_boundary = true;
             body_position_next = false;
         } else if val == "{" {
-            brace_stack.push(saw_function_kw_at_boundary);
+            // Priority: TryChain > Function > Other. A `{`
+            // immediately after `try`/`catch`/`finally` is a
+            // try-chain body; one preceded by `function` at a
+            // statement boundary is a function-decl body;
+            // everything else is Other.
+            let kind = if next_block_is_try_chain {
+                BlockKind::TryChain
+            } else if saw_function_kw_at_boundary {
+                BlockKind::Function
+            } else {
+                BlockKind::Other
+            };
+            brace_stack.push(kind);
+            next_block_is_try_chain = false;
             saw_function_kw_at_boundary = false;
             // A `{` either opens a Block-as-body (consumes
-            // body_position_next) or opens a function-decl
-            // body (independent of body_position). Either
-            // way the body slot is filled by this brace.
+            // body_position_next) or opens a function-decl /
+            // try-chain body (independent of body_position).
+            // Either way the body slot is filled by this brace.
             body_position_next = false;
             at_stmt_boundary = true;
         } else if val == "(" {
@@ -255,6 +324,49 @@ pub fn whitespace_only_minify(
             // mid-expression and don't qualify.
             if at_stmt_boundary {
                 saw_function_kw_at_boundary = true;
+            }
+            at_stmt_boundary = false;
+        } else if val == "try" {
+            // gap-033: `try` opens a try-chain ONLY when it
+            // is acting as a statement-starting keyword. Two
+            // guards needed:
+            //
+            //   1. `at_stmt_boundary` — filters out e.g.
+            //      `return try` (which is illegal anyway,
+            //      defense in depth).
+            //   2. Next non-trivia token must be `{` — this
+            //      filters out `try` appearing as a PROPERTY
+            //      NAME in an object literal (`{try: 1}`)
+            //      where `at_stmt_boundary` would be true
+            //      after the object-opening `{` but `try` is
+            //      semantically a key, not a statement.
+            //      Without this guard, the flag would leak
+            //      forward and contaminate the next
+            //      unrelated `{`, turning e.g.
+            //      `var t={try:1};do{y}while(x);` into
+            //      `var t={try:1};do{y};while(x);` — a
+            //      do/while SyntaxError. Caught by pre-push
+            //      security review.
+            let next_is_brace =
+                kept.get(idx + 1).map(|t| t.value.as_str()) == Some("{");
+            if at_stmt_boundary && next_is_brace {
+                next_block_is_try_chain = true;
+            }
+            at_stmt_boundary = false;
+        } else if matches!(val, "catch" | "finally") {
+            // `catch` / `finally` open a try-chain clause
+            // ONLY when they follow a try-chain block's
+            // closing `}` — which is the only legal position
+            // per ECMAScript §14.15. The previous emitted
+            // token tells us this. Without the guard, member
+            // access like `obj.catch(...)` (where the lexer
+            // still tags `catch` as KEYWORD) would arm the
+            // flag and contaminate the next unrelated `{`.
+            // Same family of defect as the `try` filter above.
+            let prev_is_brace =
+                prev_before_this_emit.map(|t| t.value.as_str()) == Some("}");
+            if prev_is_brace {
+                next_block_is_try_chain = true;
             }
             at_stmt_boundary = false;
         } else if matches!(val, "if" | "while" | "for") {
@@ -639,5 +751,137 @@ mod tests {
     #[test]
     fn gap030_top_level_var_unchanged() {
         assert_eq!(minify("var x=1;"), "var x=1;");
+    }
+
+    // ---- gap-033: try/catch/finally trailing `;` ----------
+
+    /// The target fixture for gap-033. A try/catch chain
+    /// gets a trailing `;` after the LAST clause's `}`.
+    /// Inner `;`s are correctly dropped by rule A from
+    /// gap-030 (already working before this change).
+    #[test]
+    fn gap033_try_catch_gets_trailing_semi() {
+        assert_eq!(
+            minify("try{a();}catch(e){b();}"),
+            "try{a()}catch(e){b()};"
+        );
+    }
+
+    /// try-only (no catch, but a finally) gets `;` after
+    /// `finally`'s `}`.
+    #[test]
+    fn gap033_try_finally_gets_trailing_semi() {
+        assert_eq!(
+            minify("try{a();}finally{c();}"),
+            "try{a()}finally{c()};"
+        );
+    }
+
+    /// try/catch/finally chain — only the FINAL `}` gets `;`.
+    /// The brace stack pops TryChain three times; the first
+    /// two pops suppress `;` because next non-trivia is
+    /// `catch` or `finally`.
+    #[test]
+    fn gap033_try_catch_finally_only_final_semi() {
+        assert_eq!(
+            minify("try{a();}catch(e){b();}finally{c();}"),
+            "try{a()}catch(e){b()}finally{c()};"
+        );
+    }
+
+    /// Nested try/catch — each chain independently gets its
+    /// own trailing `;`. Important regression: brace_stack
+    /// must track depth, not a single boolean.
+    #[test]
+    fn gap033_nested_try_catch_each_gets_semi() {
+        // try{ try{a;}catch(e){b;} }catch(f){c;}
+        // After inner-catch `}`: peek is `}` (outer-try's),
+        // not catch/finally — inner chain ends, emit `;`.
+        // After outer-try-body `}`: peek is `catch`, chain
+        // continues, no `;`.
+        // After outer-catch `}`: peek is EOF, chain ends,
+        // emit `;`.
+        assert_eq!(
+            minify("try{try{a;}catch(e){b;}}catch(f){c;}"),
+            "try{try{a}catch(e){b};}catch(f){c};"
+        );
+    }
+
+    /// Critical regression test: gap-030's function-decl
+    /// trailing `;` is preserved when function-decl appears
+    /// inside a try-block. brace_stack handles Function and
+    /// TryChain as separate cases — they don't interfere.
+    #[test]
+    fn gap033_function_decl_inside_try_block_still_gets_semi() {
+        // try{ function f(){} } catches no semi inside (rule A
+        // wouldn't fire on the function-decl `}` because
+        // brace_stack pop is Function not TryChain). The
+        // function-decl gets its own `;`. The try-body's `}`
+        // then pops TryChain.
+        assert_eq!(
+            minify("try{function f(){}}catch(e){b;}"),
+            "try{function f(){};}catch(e){b};"
+        );
+    }
+
+    /// catch-with-no-binding (ES2019 optional catch binding):
+    /// `try{a;}catch{b;}` — no `(e)`. Should still work.
+    #[test]
+    fn gap033_optional_catch_binding() {
+        assert_eq!(
+            minify("try{a;}catch{b;}"),
+            "try{a}catch{b};"
+        );
+    }
+
+    /// Critical regression from pre-push security review:
+    /// `try` as an OBJECT-LITERAL PROPERTY NAME must NOT arm
+    /// the try-chain flag. Without this guard, the flag would
+    /// leak forward and contaminate the next unrelated `{` —
+    /// specifically breaking `do{...}while(...)` because the
+    /// spurious `;` after the do-body's `}` would terminate
+    /// the do-statement and turn `while(x)` into an
+    /// independent while-loop, a grammar error.
+    #[test]
+    fn gap033_try_as_object_property_does_not_arm() {
+        // The original failing input the security review
+        // identified.
+        assert_eq!(
+            minify("var t={try:1};do{y}while(x);"),
+            "var t={try:1};do{y}while(x);"
+        );
+    }
+
+    /// Same family as the above: `try` as a property name
+    /// followed by other constructs that have their own `{}`.
+    #[test]
+    fn gap033_try_as_property_then_function_decl_unchanged() {
+        assert_eq!(
+            minify("var t={try:1};function g(){};var z=1;"),
+            "var t={try:1};function g(){};var z=1;"
+        );
+    }
+
+    /// `obj.catch(...)` — `catch` as method name on an
+    /// object. The lexer tags `catch` as KEYWORD even here,
+    /// so the state machine must use the prev-emitted-token
+    /// guard (must be `}`) to filter out this case.
+    #[test]
+    fn gap033_catch_as_method_does_not_arm() {
+        assert_eq!(
+            minify("obj.catch(err);"),
+            "obj.catch(err);"
+        );
+    }
+
+    /// Promise-style chain: `p.then().catch(f)`. Both `catch`
+    /// occurrences are method calls, not statement clauses.
+    /// Neither should arm the try-chain.
+    #[test]
+    fn gap033_promise_catch_chain_unchanged() {
+        assert_eq!(
+            minify("p.then(g).catch(f);"),
+            "p.then(g).catch(f);"
+        );
     }
 }
