@@ -218,6 +218,13 @@ pub fn whitespace_only_minify(
     //   boundary. The next `{` (after the optional class name
     //   and optional `extends` clause) consumes the flag and
     //   pushes `BlockKind::Class`.
+    let mut saw_async_kw_at_boundary = false;
+    // ^ gap-037: armed by `async` keyword at a statement
+    //   boundary when the very next token is `function`. The
+    //   next `function` token consumes the flag and treats
+    //   the upcoming function-decl shape as if `function`
+    //   itself were at a statement boundary, so the matching
+    //   `}` emits the gap-030 trailing `;`.
     let mut next_paren_is_control_flow_head = false;
     let mut next_paren_is_switch_head = false;
     // ^ gap-036: armed by the `switch` keyword. When the `(`
@@ -539,10 +546,30 @@ pub fn whitespace_only_minify(
             at_stmt_boundary = true;
         } else if is_keyword_function(tok) {
             // Only treat as a function-DECLARATION when at a
-            // statement boundary. Expressions live
-            // mid-expression and don't qualify.
-            if at_stmt_boundary {
+            // statement boundary OR when we just saw `async`
+            // at a statement boundary (gap-037). Expressions
+            // live mid-expression and don't qualify.
+            if at_stmt_boundary || saw_async_kw_at_boundary {
                 saw_function_kw_at_boundary = true;
+            }
+            saw_async_kw_at_boundary = false;
+            at_stmt_boundary = false;
+        } else if val == "async" {
+            // gap-037: `async` keyword before `function` makes
+            // `async function f(){}` a function-DECLARATION
+            // shape. Track that we just saw `async` at a
+            // statement boundary, and propagate that boundary
+            // forward through the next `function` keyword
+            // arming. Filter out method-shorthand `async
+            // m(){}` (next token would be IDENT followed by
+            // `(`) and async-arrow `async()=>{}` (next is
+            // `(`) by requiring the next non-trivia to be
+            // `function`. Without this guard the flag would
+            // leak forward and contaminate an unrelated `{`.
+            let next_is_function =
+                kept.get(idx + 1).map(|t| t.value.as_str()) == Some("function");
+            if at_stmt_boundary && next_is_function {
+                saw_async_kw_at_boundary = true;
             }
             at_stmt_boundary = false;
         } else if val == "try" {
@@ -1555,6 +1582,65 @@ mod tests {
         assert_eq!(
             minify("var o={switch:1};while(x){a;b;}"),
             "var o={switch:1};while(x){a;b}"
+        );
+    }
+
+    // ---- gap-037: async function trailing `;` ------------
+
+    /// Target fixture: async function declaration gets a
+    /// trailing `;` mirroring gap-030's plain-function rule.
+    #[test]
+    fn gap037_async_function_trailing_semi() {
+        assert_eq!(
+            minify("async function f(){await x;}"),
+            "async function f(){await x};"
+        );
+    }
+
+    /// Empty-body async function also gets the trailing `;`.
+    #[test]
+    fn gap037_empty_async_function_trailing_semi() {
+        assert_eq!(
+            minify("async function f(){}"),
+            "async function f(){};"
+        );
+    }
+
+    /// **Non-regression**: `async` as method-shorthand name
+    /// in an object literal (`{async(){...}}`) must NOT arm
+    /// the flag. The next token after `async` is the IDENT
+    /// for the method name (or `(` for the bare shorthand),
+    /// not `function`, so the guard correctly filters this.
+    #[test]
+    fn gap037_async_method_shorthand_does_not_arm() {
+        // `{async f(){}}` — `async` shorthand prefix on a
+        // method. Output: object literal preserved; no
+        // trailing `;` injected.
+        assert_eq!(
+            minify("var o={async f(){}};"),
+            "var o={async f(){}};"
+        );
+    }
+
+    /// **Non-regression**: `async()=>x` (async arrow
+    /// function) must NOT arm. Next token is `(`, not
+    /// `function`.
+    #[test]
+    fn gap037_async_arrow_does_not_arm() {
+        assert_eq!(
+            minify("var f=async()=>1;"),
+            "var f=async()=>1;"
+        );
+    }
+
+    /// **Non-regression**: async function EXPRESSION (mid-
+    /// expression position) doesn't get the trailing `;`.
+    /// at_stmt_boundary is false in this position.
+    #[test]
+    fn gap037_async_function_expression_no_trailing_semi() {
+        assert_eq!(
+            minify("var f=async function(){};"),
+            "var f=async function(){};"
         );
     }
 }
