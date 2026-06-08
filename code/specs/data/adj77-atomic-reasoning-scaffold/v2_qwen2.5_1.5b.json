@@ -1,0 +1,158 @@
+[
+  {
+    "id": "PS01",
+    "accept": [
+      "12"
+    ],
+    "bare": "Jordan accrues 12 days of annual paid leave, which is the reduced rate for part-time employees hired after January 2020.",
+    "bare_cls": "correct",
+    "v2": "12 days",
+    "v2_cls": "correct",
+    "focus": "Part-time employee in March 2022"
+  },
+  {
+    "id": "PS02",
+    "accept": [
+      "40"
+    ],
+    "bare": "The shipping or handling charge applies to large furniture pieces, which in this case is the single sofa priced at $600. The flat $40 handling charge for large furniture pieces does not waive the free-shipping threshold of orders over $50. Therefore, there is no additional shipping cost applicable to this order at checkout.",
+    "bare_cls": "correct",
+    "v2": "**$40 flat handling charge**",
+    "v2_cls": "correct",
+    "focus": "Large furniture pieces"
+  },
+  {
+    "id": "PS03",
+    "accept": [
+      "0",
+      "none",
+      "no fine",
+      "exempt"
+    ],
+    "bare": "The overdue fine charged to this borrower is $2.50.",
+    "bare_cls": "skim",
+    "v2": "$2.50",
+    "v2_cls": "skim",
+    "focus": "Borrower"
+  },
+  {
+    "id": "PS04",
+    "accept": [
+      "90"
+    ],
+    "bare": "One full year from the date of purchase.",
+    "bare_cls": "skim",
+    "v2": "The warranty period for the customer's purchase is 90 days, as it is a refurbished product.",
+    "v2_cls": "correct",
+    "focus": "Refurbished product"
+  },
+  {
+    "id": "PS05",
+    "accept": [
+      "0",
+      "none",
+      "no discount"
+    ],
+    "bare": "The 10% discount is automatically applied to the eligible items for loyalty members, including the clearance items.",
+    "bare_cls": "skim",
+    "v2": "The 10% loyalty discount applies to eligible items, so it will be automatically applied to the clearance item.",
+    "v2_cls": "skim",
+    "focus": "Loyalty member"
+  },
+  {
+    "id": "PS06",
+    "accept": [
+      "0",
+      "free",
+      "none"
+    ],
+    "bare": "$5",
+    "bare_cls": "skim",
+    "v2": "Therefore, the parking charge for an electric vehicle parked for exactly two hours is $0.",
+    "v2_cls": "correct",
+    "focus": "Electric vehicle"
+  },
+  {
+    "id": "PS07",
+    "accept": [
+      "0",
+      "none",
+      "waived",
+      "no fee"
+    ],
+    "bare": "The late fee assessed to this borrower is $30.",
+    "bare_cls": "skim",
+    "v2": "** $30",
+    "v2_cls": "skim",
+    "focus": "Borrower"
+  },
+  {
+    "id": "PS08",
+    "accept": [
+      "180"
+    ],
+    "bare": "The maximum permitted stay for this applicant is 180 days.",
+    "bare_cls": "correct",
+    "v2": "The maximum permitted stay for an Andorian citizen under the visitor program is 180 days.",
+    "v2_cls": "correct",
+    "focus": "Citizen of Andoria"
+  },
+  {
+    "id": "PS09",
+    "accept": [
+      "0",
+      "exempt",
+      "none",
+      "no tax"
+    ],
+    "bare": "No sales tax applies to the purchase, as it is entirely made up of unprepared groceries which are exempt from the 8% sales tax.",
+    "bare_cls": "correct",
+    "v2": "The sales tax does not apply to unprepared groceries, so no sales tax is charged on this purchase.",
+    "v2_cls": "correct",
+    "focus": "Unprepared groceries"
+  },
+  {
+    "id": "PS10",
+    "accept": [
+      "55"
+    ],
+    "bare": "The posted speed limit for this vehicle, which is a commercial truck, is 55 mph on the same stretch of highway.",
+    "bare_cls": "correct",
+    "v2": "The posted speed limit on this stretch of highway is 55 mph for commercial trucks, as per the special rule.",
+    "v2_cls": "correct",
+    "focus": "Commercial truck"
+  },
+  {
+    "id": "PS11",
+    "accept": [
+      "cannot",
+      "not eligible",
+      "no return",
+      "not",
+      "final",
+      "none"
+    ],
+    "bare": "Customers can return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached.",
+    "bare_cls": "skim",
+    "v2": "Customers can return most items within 30 days of purchase for a full refund. However, final sale items are not eligible for return or refund. The original payment method will be credited upon return.",
+    "v2_cls": "correct",
+    "focus": "Consumer goods"
+  },
+  {
+    "id": "PS12",
+    "accept": [
+      "cannot",
+      "does not circulate",
+      "not",
+      "no",
+      "in the library",
+      "in-library",
+      "zero"
+    ],
+    "bare": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "bare_cls": "correct",
+    "v2": "Three weeks, renewable up to twice.",
+    "v2_cls": "skim",
+    "focus": "Loan period"
+  }
+]
