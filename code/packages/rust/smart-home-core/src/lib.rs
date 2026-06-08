@@ -1464,6 +1464,8 @@ pub enum SmartHomeTool {
     ListWorkers,
     GetWorkerHeartbeatSchedule,
     GetSupervisionPlan,
+    ReconcileDesiredStates,
+    RunSupervisionTick,
     DescribeCapabilities,
     GetHealth,
     ObserveSupervision,
@@ -1508,6 +1510,18 @@ impl SmartHomeTool {
                 read_tool("smart_home.get_worker_heartbeat_schedule")
             }
             Self::GetSupervisionPlan => read_tool("smart_home.get_supervision_plan"),
+            Self::ReconcileDesiredStates => ToolDescriptor {
+                tool_id: "smart_home.reconcile_desired_states",
+                side_effects: ToolSideEffects::External,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.command.light")],
+                required_tier: PrivilegeTier::LowRisk,
+            },
+            Self::RunSupervisionTick => ToolDescriptor {
+                tool_id: "smart_home.run_supervision_tick",
+                side_effects: ToolSideEffects::External,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.command.light")],
+                required_tier: PrivilegeTier::LowRisk,
+            },
             Self::DescribeCapabilities => read_tool("smart_home.describe_capabilities"),
             Self::GetHealth => read_tool("smart_home.get_health"),
             Self::ObserveSupervision => read_tool("smart_home.observe_supervision"),
@@ -1967,6 +1981,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::ListWorkers,
         SmartHomeTool::GetWorkerHeartbeatSchedule,
         SmartHomeTool::GetSupervisionPlan,
+        SmartHomeTool::ReconcileDesiredStates,
+        SmartHomeTool::RunSupervisionTick,
         SmartHomeTool::DescribeCapabilities,
         SmartHomeTool::GetHealth,
         SmartHomeTool::ObserveSupervision,
@@ -2765,12 +2781,24 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 22);
+        assert_eq!(catalog.len(), 24);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
             vec![CapabilityId::trusted("smart_home.command.light")]
         );
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.reconcile_desired_states"
+                && tool.side_effects == ToolSideEffects::External
+                && tool.required_capabilities
+                    == vec![CapabilityId::trusted("smart_home.command.light")]));
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.run_supervision_tick"
+                && tool.side_effects == ToolSideEffects::External
+                && tool.required_capabilities
+                    == vec![CapabilityId::trusted("smart_home.command.light")]));
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.observe_supervision"
@@ -2842,16 +2870,16 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 22);
+        assert_eq!(summary.total_tools, 24);
         assert_eq!(summary.read_tools, 20);
         assert_eq!(summary.write_tools, 0);
-        assert_eq!(summary.external_tools, 2);
+        assert_eq!(summary.external_tools, 4);
         assert_eq!(summary.read_only_tier_tools, 20);
-        assert_eq!(summary.low_risk_tier_tools, 1);
+        assert_eq!(summary.low_risk_tier_tools, 3);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 1);
-        assert_eq!(summary.total_required_capabilities, 22);
-        assert_eq!(summary.risky_tool_count(), 2);
+        assert_eq!(summary.total_required_capabilities, 24);
+        assert_eq!(summary.risky_tool_count(), 4);
         assert_eq!(summary.approval_gated_tool_count(), 1);
         assert!(pair_bridge.requires_human_approval());
         assert!(!SmartHomeTool::Command

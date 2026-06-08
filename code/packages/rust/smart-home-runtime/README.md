@@ -81,6 +81,9 @@ Included surfaces:
   VaultRef completion counts
 - D18D-facing command tool facade for authorized `smart_home.command` calls that
   validate tool grants, command grants, optimistic state, and audit decisions
+- D18D-facing supervision tool facade for authorized desired-state
+  reconciliation and full supervision ticks through runtime-owned mutation
+  paths
 - accepted command results that remain separate from confirmed device state
 - optimistic command state with expiry into stale snapshots
 - desired-state reconciliation that detects missing, stale, or drifted state

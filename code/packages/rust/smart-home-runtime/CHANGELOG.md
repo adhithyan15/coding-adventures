@@ -69,6 +69,9 @@ All notable changes to this package will be documented in this file.
   reads over supervised bridge-worker inventory and heartbeat deadlines.
 - `RuntimeReadToolRequest::GetSupervisionPlan` for authorized D18D previews of
   non-mutating supervision due work.
+- `RuntimeSupervisionToolRequest` / `RuntimeSupervisionToolOutput` and
+  `SmartHomeRuntime::execute_supervision_tool` for authorized D18D desired-state
+  reconciliation and supervision ticks through runtime-owned mutation paths.
 
 ## [0.1.0] - 2026-05-06
 

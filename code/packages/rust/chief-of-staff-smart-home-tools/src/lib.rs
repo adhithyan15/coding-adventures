@@ -16,9 +16,10 @@ use chief_of_staff_tool_api::{
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus, CommandType,
-    Device, DeviceEvent, DeviceEventType, EntityId, EntityKind, Health, IntegrationId, Metadata,
-    PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId,
-    SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    Device, DeviceCommand, DeviceEvent, DeviceEventType, EntityId, EntityKind, Health,
+    IntegrationId, Metadata, PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene,
+    SceneAction, SceneId, SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource,
+    Value,
 };
 use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
 use smart_home_integration_catalog::{
@@ -35,8 +36,8 @@ use smart_home_integration_catalog::{
 };
 use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
-    DesiredEntityState, DesiredStateInventorySummary, DesiredStateQuery, DesiredStateSort,
-    DiscoveryWorkerRunInstruction, PairingSessionStatus, ReconciliationReason,
+    DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary, DesiredStateQuery,
+    DesiredStateSort, DiscoveryWorkerRunInstruction, PairingSessionStatus, ReconciliationReason,
     RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
     RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
     RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort,
@@ -47,9 +48,10 @@ use smart_home_runtime::{
     RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
     RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
     RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisorSnapshot,
-    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
-    SmartHomeRuntime, SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
+    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
     WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
     WorkerRestartReason, WorkerStatus,
 };
@@ -75,6 +77,8 @@ pub const SMART_HOME_LIST_WORKERS_TOOL_ID: &str = "smart_home.list_workers";
 pub const SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID: &str =
     "smart_home.get_worker_heartbeat_schedule";
 pub const SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID: &str = "smart_home.get_supervision_plan";
+pub const SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID: &str = "smart_home.reconcile_desired_states";
+pub const SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID: &str = "smart_home.run_supervision_tick";
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
@@ -331,6 +335,34 @@ impl SmartHomeToolBridge {
                         )
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "get_supervision_plan"))
+                }
+                SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    let output = runtime
+                        .execute_supervision_tool(
+                            principal_id,
+                            RuntimeSupervisionToolRequest::ReconcileDesiredStates,
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(supervision_tool_output_handler_output(
+                        output,
+                        "reconcile_desired_states",
+                    ))
+                }
+                SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    let output = runtime
+                        .execute_supervision_tool(
+                            principal_id,
+                            RuntimeSupervisionToolRequest::RunSupervisionTick,
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(supervision_tool_output_handler_output(
+                        output,
+                        "run_supervision_tick",
+                    ))
                 }
                 SMART_HOME_PAIR_BRIDGE_TOOL_ID => {
                     let request = pair_bridge_request(&arguments)?;
@@ -671,6 +703,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         list_workers_definition(),
         get_worker_heartbeat_schedule_definition(),
         get_supervision_plan_definition(),
+        reconcile_desired_states_definition(),
+        run_supervision_tick_definition(),
         pair_bridge_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
@@ -1209,6 +1243,109 @@ fn get_supervision_plan_definition() -> ToolDefinition {
             false,
         ),
     )
+}
+
+fn reconcile_desired_states_definition() -> ToolDefinition {
+    supervision_command_definition(
+        SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+        "Reconcile smart-home desired states",
+        "Run D23 desired-state reconciliation through the runtime authorization and command path.",
+        object_schema(
+            vec![
+                SchemaProperty::new("reconciled_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("action_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new(
+                    "actions",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+            ],
+            vec!["reconciled_at_ms", "action_count", "summary", "actions"],
+            false,
+        ),
+    )
+}
+
+fn run_supervision_tick_definition() -> ToolDefinition {
+    supervision_command_definition(
+        SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID,
+        "Run smart-home supervision tick",
+        "Run one D23 runtime supervision tick for pairing expiry, optimistic-state expiry, desired-state reconciliation, and worker restart events.",
+        object_schema(
+            vec![
+                SchemaProperty::new("ticked_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("is_idle", JsonSchema::Boolean),
+                SchemaProperty::new("action_count", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new(
+                    "expired_pairing_sessions",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+                SchemaProperty::new(
+                    "expired_entities",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+                SchemaProperty::new(
+                    "desired_state_actions",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new(
+                    "worker_events",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+            ],
+            vec![
+                "ticked_at_ms",
+                "is_idle",
+                "action_count",
+                "summary",
+                "expired_pairing_sessions",
+                "expired_entities",
+                "desired_state_actions",
+                "worker_events",
+            ],
+            false,
+        ),
+    )
+}
+
+fn supervision_command_definition(
+    tool_id: &str,
+    display_name: &str,
+    description: &str,
+    output_schema: JsonSchema,
+) -> ToolDefinition {
+    ToolDefinition {
+        tool_id: tool_id.to_string(),
+        display_name: display_name.to_string(),
+        description: description.to_string(),
+        input_schema: empty_object_schema(),
+        output_schema: Some(output_schema),
+        side_effects: ToolSideEffects::External,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier1,
+        required_capabilities: vec!["smart_home:command".to_string()],
+        preferred_lock_scope: Some("smart_home.supervision".to_string()),
+        timeout_seconds: Some(15),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "supervision".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
 }
 
 fn pair_bridge_definition() -> ToolDefinition {
@@ -1822,6 +1959,48 @@ fn read_output_handler_output(
         ToolEventKind::Progress,
         object([("operation", string(operation))]),
     )
+}
+
+fn supervision_tool_output_handler_output(
+    output: RuntimeSupervisionToolOutput,
+    operation: &'static str,
+) -> ToolHandlerOutput {
+    let action_count = supervision_tool_action_count(&output);
+    ToolHandlerOutput::new(supervision_tool_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string(operation)),
+            ("action_count", integer(action_count as i64)),
+            ("is_idle", JsonValue::Bool(action_count == 0)),
+        ]),
+    )
+}
+
+fn supervision_tool_action_count(output: &RuntimeSupervisionToolOutput) -> usize {
+    match output {
+        RuntimeSupervisionToolOutput::DesiredStateReconciliation { actions, .. } => actions.len(),
+        RuntimeSupervisionToolOutput::SupervisionTick(report) => report.action_count(),
+    }
+}
+
+fn supervision_tool_output_json(output: &RuntimeSupervisionToolOutput) -> JsonValue {
+    match output {
+        RuntimeSupervisionToolOutput::DesiredStateReconciliation {
+            reconciled_at_ms,
+            actions,
+        } => object([
+            ("reconciled_at_ms", integer(*reconciled_at_ms as i64)),
+            ("action_count", integer(actions.len() as i64)),
+            ("summary", desired_state_action_summary_json(actions)),
+            (
+                "actions",
+                JsonValue::Array(actions.iter().map(desired_state_action_json).collect()),
+            ),
+        ]),
+        RuntimeSupervisionToolOutput::SupervisionTick(report) => {
+            supervision_tick_report_json(report)
+        }
+    }
 }
 
 fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
@@ -2485,6 +2664,182 @@ fn desired_state_inventory_summary_json(summary: &DesiredStateInventorySummary) 
         (
             "has_desired_states",
             JsonValue::Bool(summary.has_desired_states()),
+        ),
+    ])
+}
+
+fn desired_state_action_summary_json(actions: &[DesiredStateAction]) -> JsonValue {
+    let mut missing_state_count = 0;
+    let mut stale_state_count = 0;
+    let mut drifted_state_count = 0;
+    for action in actions {
+        let DesiredStateAction::CommandIssued { reason, .. } = action;
+        match reason {
+            ReconciliationReason::MissingState => missing_state_count += 1,
+            ReconciliationReason::StaleState => stale_state_count += 1,
+            ReconciliationReason::Drifted => drifted_state_count += 1,
+        }
+    }
+
+    object([
+        ("action_count", integer(actions.len() as i64)),
+        ("missing_state_count", integer(missing_state_count)),
+        ("stale_state_count", integer(stale_state_count)),
+        ("drifted_state_count", integer(drifted_state_count)),
+        ("is_idle", JsonValue::Bool(actions.is_empty())),
+    ])
+}
+
+fn desired_state_action_json(action: &DesiredStateAction) -> JsonValue {
+    match action {
+        DesiredStateAction::CommandIssued {
+            entity_id,
+            capability_id,
+            reason,
+            command,
+            result,
+        } => object([
+            ("action_type", string("command_issued")),
+            ("entity_id", string(entity_id.as_str())),
+            ("capability_id", string(capability_id.as_str())),
+            ("reason", string(reconciliation_reason_label(*reason))),
+            ("command", device_command_json(command)),
+            ("result", command_result_json(result)),
+        ]),
+    }
+}
+
+fn device_command_json(command: &DeviceCommand) -> JsonValue {
+    object([
+        ("command_id", string(command.command_id.as_str())),
+        ("entity_id", string(command.entity_id.as_str())),
+        (
+            "command_type",
+            string(command_type_label(command.command_type)),
+        ),
+        ("arguments", smart_value_to_json(&command.arguments)),
+        ("requested_by", string(&command.requested_by)),
+        (
+            "idempotency_key",
+            command
+                .idempotency_key
+                .as_ref()
+                .map(|value| string(value))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "required_capabilities",
+            JsonValue::Array(
+                command
+                    .required_capabilities
+                    .iter()
+                    .map(|capability_id| string(capability_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        ("timeout_ms", integer(command.timeout_ms as i64)),
+        ("correlation_id", string(command.correlation_id.as_str())),
+    ])
+}
+
+fn supervision_tick_report_json(report: &SupervisionTickReport) -> JsonValue {
+    object([
+        ("ticked_at_ms", integer(report.ticked_at_ms as i64)),
+        ("is_idle", JsonValue::Bool(report.is_idle())),
+        ("action_count", integer(report.action_count() as i64)),
+        ("summary", supervision_tick_summary_json(report)),
+        (
+            "expired_pairing_sessions",
+            JsonValue::Array(
+                report
+                    .expired_pairing_sessions
+                    .iter()
+                    .map(|session_id| string(session_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "expired_entities",
+            JsonValue::Array(
+                report
+                    .expired_entities
+                    .iter()
+                    .map(|entity_id| string(entity_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "desired_state_actions",
+            JsonValue::Array(
+                report
+                    .desired_state_actions
+                    .iter()
+                    .map(desired_state_action_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "worker_events",
+            JsonValue::Array(
+                report
+                    .worker_events
+                    .iter()
+                    .map(runtime_event_json)
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn supervision_tick_summary_json(report: &SupervisionTickReport) -> JsonValue {
+    let summary = report.summary();
+    object([
+        ("ticked_at_ms", integer(summary.ticked_at_ms as i64)),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "expired_pairing_session_count",
+            integer(summary.expired_pairing_session_count as i64),
+        ),
+        (
+            "expired_entity_count",
+            integer(summary.expired_entity_count as i64),
+        ),
+        (
+            "desired_state_action_count",
+            integer(summary.desired_state_action_count as i64),
+        ),
+        (
+            "desired_missing_state_count",
+            integer(summary.desired_missing_state_count as i64),
+        ),
+        (
+            "desired_stale_state_count",
+            integer(summary.desired_stale_state_count as i64),
+        ),
+        (
+            "desired_drifted_state_count",
+            integer(summary.desired_drifted_state_count as i64),
+        ),
+        (
+            "worker_restart_event_count",
+            integer(summary.worker_restart_event_count as i64),
+        ),
+        ("is_idle", JsonValue::Bool(summary.is_idle())),
+        (
+            "has_pairing_expiry_work",
+            JsonValue::Bool(summary.has_pairing_expiry_work()),
+        ),
+        (
+            "has_state_expiry_work",
+            JsonValue::Bool(summary.has_state_expiry_work()),
+        ),
+        (
+            "has_reconciliation_work",
+            JsonValue::Bool(summary.has_reconciliation_work()),
+        ),
+        (
+            "has_worker_restart_work",
+            JsonValue::Bool(summary.has_worker_restart_work()),
         ),
     ])
 }
@@ -4566,6 +4921,19 @@ fn pairing_status_label(status: PairingSessionStatus) -> &'static str {
     status.as_str()
 }
 
+fn command_type_label(command_type: CommandType) -> &'static str {
+    match command_type {
+        CommandType::TurnOn => "turn_on",
+        CommandType::TurnOff => "turn_off",
+        CommandType::SetBrightness => "set_brightness",
+        CommandType::SetColor => "set_color",
+        CommandType::SetColorTemperature => "set_color_temperature",
+        CommandType::RecallScene => "recall_scene",
+        CommandType::SetLock => "set_lock",
+        CommandType::SetThermostatSetpoint => "set_thermostat_setpoint",
+    }
+}
+
 fn parse_pairing_status(label: &str) -> Result<PairingSessionStatus, ToolCallError> {
     match label {
         "pending_user_presence" | "pending" => Ok(PairingSessionStatus::PendingUserPresence),
@@ -5003,7 +5371,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 26);
+        assert_eq!(definitions.len(), 28);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -5051,6 +5419,12 @@ mod tests {
             .contains(&SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
@@ -5061,7 +5435,7 @@ mod tests {
             export
                 .summary
                 .required_capability_count("smart_home:command"),
-            1
+            3
         );
         assert_eq!(
             export.summary.required_capability_count("smart_home:pair"),
@@ -5508,6 +5882,7 @@ mod tests {
                 ("entity_id", string("entity-light-1")),
                 ("command_type", string("turn_on")),
                 ("idempotency_key", string("demo-turn-on")),
+                ("timeout_ms", integer(750)),
             ]),
             1_100,
         );
@@ -5783,6 +6158,83 @@ mod tests {
             Some(&integer(0))
         );
 
+        let reconcile_request = request(
+            "call-reconcile-desired-states",
+            SMART_HOME_RECONCILE_DESIRED_STATES_TOOL_ID,
+            object([]),
+            1_900,
+        );
+        let reconcile_trace = tool_runtime.invoke_with_events(&reconcile_request);
+        assert!(reconcile_trace.result.ok);
+        assert_eq!(reconcile_trace.summary().progress_event_count, 1);
+        let reconcile_output = reconcile_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(reconcile_output, "action_count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                field(reconcile_output, "summary").unwrap(),
+                "stale_state_count"
+            ),
+            Some(&integer(1))
+        );
+        let reconcile_action = array_item(field(reconcile_output, "actions").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(reconcile_action, "action_type"),
+            Some(&string("command_issued"))
+        );
+        assert_eq!(field(reconcile_action, "reason"), Some(&string("stale")));
+        assert_eq!(
+            field(field(reconcile_action, "command").unwrap(), "command_type"),
+            Some(&string("turn_on"))
+        );
+        assert_eq!(
+            field(field(reconcile_action, "result").unwrap(), "accepted"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let supervision_tick_request = request(
+            "call-run-supervision-tick",
+            SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID,
+            object([]),
+            2_100,
+        );
+        let supervision_tick_trace = tool_runtime.invoke_with_events(&supervision_tick_request);
+        assert!(supervision_tick_trace.result.ok);
+        let supervision_tick_output = supervision_tick_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(supervision_tick_output, "action_count"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            array_len(field(supervision_tick_output, "expired_pairing_sessions").unwrap()),
+            Some(1)
+        );
+        assert_eq!(
+            array_len(field(supervision_tick_output, "expired_entities").unwrap()),
+            Some(0)
+        );
+        assert_eq!(
+            array_len(field(supervision_tick_output, "desired_state_actions").unwrap()),
+            Some(0)
+        );
+        assert_eq!(
+            array_len(field(supervision_tick_output, "worker_events").unwrap()),
+            Some(1)
+        );
+        assert_eq!(
+            field(
+                field(supervision_tick_output, "summary").unwrap(),
+                "expired_pairing_session_count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(supervision_tick_output, "summary").unwrap(),
+                "worker_restart_event_count"
+            ),
+            Some(&integer(1))
+        );
+
         let mut journal = ToolExecutionJournal::new();
         journal.record_trace(list_integrations_request, list_integrations_trace);
         journal.record_trace(describe_integration_request, describe_integration_trace);
@@ -5809,11 +6261,13 @@ mod tests {
         journal.record_trace(poll_request, poll_trace);
         journal.record_trace(state_request, state_trace);
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
+        journal.record_trace(reconcile_request, reconcile_trace);
+        journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 25);
-        assert_eq!(journal_summary.completed_count, 25);
-        assert_eq!(journal.audit_records().len(), 25);
+        assert_eq!(journal_summary.invocation_count, 27);
+        assert_eq!(journal_summary.completed_count, 27);
+        assert_eq!(journal.audit_records().len(), 27);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -5826,7 +6280,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            22,
+            24,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }
