@@ -1,0 +1,8 @@
+{
+  "primary_source_found": false,
+  "citation": "Zusi, Richard L., and Gregory Dean Bentz. 1984. 'Myology of the purple-throated Carib (Eulampis jugularis) and other hummingbirds (Aves: Trochilidae).' Smithsonian Contributions to Zoology 385: 1-70. Available at https://repository.si.edu/handle/10088/5185",
+  "verbatim_passage": null,
+  "grounded_answer_number": null,
+  "verdict": "UNDERDETERMINED",
+  "notes": "The Zusi & Bentz 1984 Smithsonian monograph is definitively the primary source on hummingbird myology and is cited as the authoritative reference. The monograph is confirmed to exist and be available in full-text PDF form via the Smithsonian Institution repository (formats: high-res PDF 37.37 MB, low-res PDF 2.37 MB, EPUB, MOBI). However, WebFetch cannot access the full text content, so no verbatim passage about the depressor caudae sesamoid or the paired-tendon count could be extracted. Multiple secondary sources (tutoring platforms, AI benchmark discussions, social media) consistently cite the answer as '2 paired tendons,' but these are derivative and lack grounding in the primary source. The question itself appears as part of 'Humanity's Last Exam,' an AI benchmark developed by Center for AI Safety and Scale AI (2025). Without access to the actual monograph text, the answer cannot be grounded in a verbatim primary-source passage as required."
+}

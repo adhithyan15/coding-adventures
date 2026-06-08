@@ -1,0 +1,79 @@
+[
+  {
+    "id": "Q40",
+    "verbatim_source_passage": null,
+    "source_citation": "No verbatim source exists. The popular phrasing 'Be the change you wish to see in the world' is not found in Gandhi's collected writings or speeches. The closest authentic statement appears in 'The Collected Works of Mahatma Gandhi': 'We but mirror the world. All the tendencies present in the outer world are to be found in the world of our body. If we could change ourselves, the tendencies in the world would also change. As a man changes his own nature, so does the attitude of the world change towards him. This is the divine mystery supreme.' (Vol. 13, 1913). The condensed slogan is a later paraphrase/misattribution.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q41",
+    "verbatim_source_passage": "It has not escaped our notice that the specific pairing we have postulated immediately suggests a possible copying mechanism for the genetic material.",
+    "source_citation": "J. D. Watson and F. H. C. Crick, 'Molecular Structure of Nucleic Acids: A Structure for Deoxyribose Nucleic Acid,' Nature, vol. 171, no. 4356, pp. 737–738, 25 April 1953. (This is the famous penultimate-type sentence; it is sometimes cited as the closing sentence, though it is followed by a short paragraph about details being published elsewhere and acknowledgements.)",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q42",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/misattributed. Voltaire never wrote 'I disapprove of what you say, but I will defend to the death your right to say it.' The sentence was composed by his biographer Evelyn Beatrice Hall (writing as S. G. Tallentyre) in 'The Friends of Voltaire' (1906) as a summary of Voltaire's attitude, not as a quotation. Hall's actual text: 'I disapprove of what you say, but I will defend to the death your right to say it, was his attitude now.'",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q43",
+    "verbatim_source_passage": null,
+    "source_citation": "False premise. The line 'Keep your friends close and your enemies closer' does not appear in Sun Tzu's 'The Art of War.' It is popularly associated with the film 'The Godfather Part II' (1974), spoken by Michael Corleone. No such maxim exists in Sun Tzu's text.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q44",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal. There is no contemporary record of Galileo uttering 'Eppur si muove' (or its Latin form) at his 1633 trial. The anecdote first appears more than a century later, notably in Giuseppe Baretti's 'The Italian Library' (1757). There is no authentic verbatim trial source for the phrase. (Note: the phrase is Italian, not Latin; no Latin original exists.)",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.88
+  },
+  {
+    "id": "Q45",
+    "verbatim_source_passage": null,
+    "source_citation": "Apocryphal/unverified. There is no reliable contemporary documentation that P. T. Barnum said 'There's a sucker born every minute.' Barnum biographers have found no evidence he originated it; the attribution is widely regarded as spurious. No verbatim primary source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q46",
+    "verbatim_source_passage": null,
+    "source_citation": "Misattributed. 'The only thing necessary for the triumph of evil is for good men to do nothing' does not appear in any of Edmund Burke's known writings or speeches; the attribution is not authenticated. A frequently cited (but only loosely related) genuine Burke passage is from 'Thoughts on the Cause of the Present Discontents' (1770): 'When bad men combine, the good must associate; else they will fall one by one, an unpitied sacrifice in a contemptible struggle.' The familiar 'triumph of evil' wording itself has no verified Burke source.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q47",
+    "verbatim_source_passage": "The report of my death was an exaggeration.",
+    "source_citation": "Mark Twain (Samuel Clemens), note to reporter Frank Marshall White, recounted in the New York Journal, 2 June 1897. The exact authenticated wording is 'The report of my death was an exaggeration.' (Sometimes given as '...was greatly exaggerated,' but Twain's documented phrasing lacks 'greatly' and uses singular 'report.') The popular 'reports of my death have been greatly exaggerated' is a misquotation.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.8
+  },
+  {
+    "id": "Q48",
+    "verbatim_source_passage": "No. I am your father.",
+    "source_citation": "Star Wars: Episode V — The Empire Strikes Back (1980), spoken by Darth Vader to Luke Skywalker. The line is 'No. I am your father.' The often-quoted 'Luke, I am your father' is a misquotation, and the line is from The Empire Strikes Back (1980), NOT Star Wars (1977, A New Hope) as the question assumes. The premise that this line appears in A New Hope is false.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.9
+  },
+  {
+    "id": "Q49",
+    "verbatim_source_passage": null,
+    "source_citation": "Unverified/apocryphal. 'If you're going through hell, keep going' is widely attributed to Winston Churchill, but no source in his speeches, writings, or the authoritative Churchill quotation collections (e.g., the International Churchill Society) supports the attribution. The Churchill Society lists it among quotations Churchill did not say. No verbatim primary source exists.",
+    "exists": false,
+    "confidence_passage_is_verbatim_accurate": 0.85
+  },
+  {
+    "id": "Q50",
+    "verbatim_source_passage": "It was on a dreary night of November that I beheld the accomplishment of my toils.",
+    "source_citation": "Mary Shelley, Frankenstein; or, The Modern Prometheus (1818 text). NOTE: This is the opening sentence of Chapter 5 (where the creature is animated), which is the most famous opening line. The question's premise about 'the second chapter' is ambiguous/likely incorrect. The actual opening sentence of Chapter 2 (1818 text) is: 'We were brought up together; there was not quite a year difference in our ages.' Confidence is reduced because of uncertainty about exact Chapter 2 wording in the 1818 vs 1831 editions.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.4
+  }
+]
