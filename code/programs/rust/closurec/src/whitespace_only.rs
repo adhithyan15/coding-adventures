@@ -114,6 +114,18 @@ impl std::error::Error for MinifyError {}
 enum BlockKind {
     Function,
     TryChain,
+    /// gap-034: class declaration body. Pushed when `{`
+    /// follows `class [Name]` at a statement boundary.
+    /// Popped on matching `}`; ALWAYS emits a synthetic `;`
+    /// (same shape as `Function`), normalising upstream
+    /// Closure's `class C{}` → `class C{};` output.
+    Class,
+    /// gap-036: switch statement body. Pushed when `{`
+    /// follows the matching `)` of a `switch(...)` head.
+    /// Popped on matching `}`; ALWAYS emits a synthetic `;`
+    /// (same shape as `Function`), mirroring upstream
+    /// Closure's `switch(x){...}` → `switch(x){...};` output.
+    Switch,
     Other,
 }
 
@@ -186,6 +198,12 @@ pub fn whitespace_only_minify(
     //   an `if` / `while` / `for` (control-flow construct
     //   whose body slot follows the close-paren). Popped on
     //   matching `)`.
+    let mut paren_is_switch_stack: Vec<bool> = Vec::new();
+    // ^ parallel to `paren_stack`. For each open `(`, true
+    //   iff this `(` was the head of a `switch(...)`. On the
+    //   matching `)` pop, arms `next_block_is_switch_body`
+    //   so the upcoming `{` gets pushed as `BlockKind::Switch`
+    //   for gap-036's trailing-`;` rule.
     let mut saw_function_kw_at_boundary = false;
     let mut next_block_is_try_chain = false;
     // ^ gap-033: armed by `try` / `catch` / `finally`
@@ -195,7 +213,18 @@ pub fn whitespace_only_minify(
     //   it whenever they appear (they only legally appear
     //   after a preceding `}` that closed a try-chain block,
     //   so the boundary context is already correct).
+    let mut saw_class_kw_at_boundary = false;
+    // ^ gap-034: armed by the `class` keyword at a statement
+    //   boundary. The next `{` (after the optional class name
+    //   and optional `extends` clause) consumes the flag and
+    //   pushes `BlockKind::Class`.
     let mut next_paren_is_control_flow_head = false;
+    let mut next_paren_is_switch_head = false;
+    // ^ gap-036: armed by the `switch` keyword. When the `(`
+    //   pushes this onto its own paren-stack frame, the `)`
+    //   pop will arm `next_block_is_switch_body`. The next
+    //   `{` consumes that and pushes `BlockKind::Switch`.
+    let mut next_block_is_switch_body = false;
     let mut body_position_next = false;
     let mut at_stmt_boundary = true;
     let mut last_emit_was_synthetic_semi = false;
@@ -431,6 +460,8 @@ pub fn whitespace_only_minify(
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
             let needs_synthetic_semi = match kind {
                 BlockKind::Function => true,
+                BlockKind::Class => true,    // gap-034
+                BlockKind::Switch => true,   // gap-036
                 BlockKind::TryChain => {
                     // gap-033: the chain continues iff the
                     // very next non-trivia token is `catch`
@@ -450,13 +481,20 @@ pub fn whitespace_only_minify(
             at_stmt_boundary = true;
             body_position_next = false;
         } else if val == "{" {
-            // Priority: TryChain > Function > Other. A `{`
-            // immediately after `try`/`catch`/`finally` is a
-            // try-chain body; one preceded by `function` at a
-            // statement boundary is a function-decl body;
-            // everything else is Other.
+            // Priority: TryChain > Switch > Class > Function
+            // > Other. A `{` immediately after a
+            // `try`/`catch`/`finally` is a try-chain body; a
+            // `{` after `switch(...)`'s closing `)` is a
+            // switch body; a `{` after `class [Name]` is a
+            // class body; a `{` after `function [Name](...)`
+            // at a statement boundary is a function-decl
+            // body; everything else is Other.
             let kind = if next_block_is_try_chain {
                 BlockKind::TryChain
+            } else if next_block_is_switch_body {
+                BlockKind::Switch
+            } else if saw_class_kw_at_boundary {
+                BlockKind::Class
             } else if saw_function_kw_at_boundary {
                 BlockKind::Function
             } else {
@@ -464,23 +502,34 @@ pub fn whitespace_only_minify(
             };
             brace_stack.push(kind);
             next_block_is_try_chain = false;
+            next_block_is_switch_body = false;
+            saw_class_kw_at_boundary = false;
             saw_function_kw_at_boundary = false;
             // A `{` either opens a Block-as-body (consumes
             // body_position_next) or opens a function-decl /
-            // try-chain body (independent of body_position).
-            // Either way the body slot is filled by this brace.
+            // try-chain / class / switch body (independent of
+            // body_position). Either way the body slot is
+            // filled by this brace.
             body_position_next = false;
             at_stmt_boundary = true;
         } else if val == "(" {
             paren_stack.push(next_paren_is_control_flow_head);
+            paren_is_switch_stack.push(next_paren_is_switch_head);
             next_paren_is_control_flow_head = false;
+            next_paren_is_switch_head = false;
             at_stmt_boundary = false;
         } else if val == ")" {
             let was_cf = paren_stack.pop().unwrap_or(false);
+            let was_switch = paren_is_switch_stack.pop().unwrap_or(false);
             // The body slot of an if/while/for opens after
             // the closing `)`. The next emitted statement
             // (or `;` / `{`) fills that slot.
             body_position_next = was_cf;
+            // gap-036: if this `)` closed a `switch(...)`
+            // head, the next `{` opens a switch body.
+            if was_switch {
+                next_block_is_switch_body = true;
+            }
             at_stmt_boundary = false;
         } else if val == ";" {
             // We emitted a real `;` (either a terminator or
@@ -542,6 +591,57 @@ pub fn whitespace_only_minify(
         } else if matches!(val, "if" | "while" | "for") {
             // The next `(` is a control-flow head.
             next_paren_is_control_flow_head = true;
+            at_stmt_boundary = false;
+        } else if val == "switch" {
+            // gap-036: arm the switch-head flag ONLY when
+            // the very next token is `(`. Mirrors gap-033's
+            // `try` guard family: `switch` can legally
+            // appear as a reserved word in property-name
+            // position (`var o={switch:1};`) and the lexer
+            // still tags it as KEYWORD. Without this guard,
+            // the flag would leak forward and contaminate
+            // an unrelated `(` somewhere downstream, then
+            // `)`, then a `{`, causing a spurious
+            // `BlockKind::Switch` push and a stray trailing
+            // `;` on an innocent block. The `(` requirement
+            // is grammatical: `SwitchStatement → switch (
+            // Expression ) CaseBlock` per §13.12.
+            let next_is_paren =
+                kept.get(idx + 1).map(|t| t.value.as_str()) == Some("(");
+            if next_is_paren {
+                next_paren_is_switch_head = true;
+            }
+            at_stmt_boundary = false;
+        } else if val == "class" {
+            // gap-034: `class` at a statement boundary opens
+            // a class-declaration body. Same guard family as
+            // gap-033's `try` filter: defend against `class`
+            // appearing as a property name (`var o={class:1};`)
+            // or other mid-expression uses where the KEYWORD
+            // tag is misleading.
+            //
+            // The legal token positions for a class
+            // DECLARATION right after the `class` keyword
+            // are: `{` (anonymous class declaration is
+            // illegal at statement position but we accept
+            // for symmetry with class expressions),
+            // `extends` (the extends clause), or an IDENT
+            // (the class name). Property-name position
+            // would put `:`/`,`/`}` next; method shorthand
+            // would put `(` next. Filter all those out.
+            let next_val =
+                kept.get(idx + 1).map(|t| t.value.as_str());
+            let next_looks_class_decl = match next_val {
+                Some("{") | Some("extends") => true,
+                Some(v) => !matches!(
+                    v,
+                    ":" | "," | ";" | "}" | ")" | "]" | "." | "=" | "("
+                ),
+                None => false,
+            };
+            if at_stmt_boundary && next_looks_class_decl {
+                saw_class_kw_at_boundary = true;
+            }
             at_stmt_boundary = false;
         } else if val == "else" {
             // gap-032: `else` opens the else-clause's body
@@ -675,7 +775,20 @@ pub(crate) fn is_eof(tok: &lexer::token::Token) -> bool {
 /// preserve their separate identity when re-tokenized.
 fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
     // Conservative rule: both word-like → space; otherwise none.
-    is_word_like(a) && is_word_like(b)
+    if is_word_like(a) && is_word_like(b) {
+        return true;
+    }
+    // gap-035: `var{` / `var[` / `let{` / `let[` / `const{` /
+    // `const[` get a separator inserted before the bracket,
+    // matching upstream Closure's output for destructuring
+    // declarations. Without this, `var{a}=x;` round-trips as
+    // `var{a}=x;`; upstream emits `var {a}=x;`.
+    if matches!(a.value.as_str(), "var" | "let" | "const")
+        && matches!(b.value.as_str(), "{" | "[")
+    {
+        return true;
+    }
+    false
 }
 
 /// True iff a token is "word-like" — its value would merge with
@@ -1324,6 +1437,124 @@ mod tests {
         assert_eq!(
             minify("try{a();}catch(e){b();}"),
             "try{a()}catch(e){b()};"
+        );
+    }
+
+    // ---- gap-034: class declaration trailing `;` --------
+
+    /// Target fixture: class declaration gets a trailing `;`.
+    #[test]
+    fn gap034_class_declaration_trailing_semi() {
+        assert_eq!(minify("class C{m(){}}"), "class C{m(){}};");
+    }
+
+    /// Empty-body class also gets the trailing `;`. Composes
+    /// with the rule that `class C{}` is NOT a body slot for
+    /// gap-031's empty-`{}` collapse — the class body must
+    /// stay as `{}` to be a valid class declaration.
+    #[test]
+    fn gap034_class_with_empty_body_gets_trailing_semi() {
+        assert_eq!(minify("class C{}"), "class C{};");
+    }
+
+    /// class expression (mid-expression position, e.g. as
+    /// the RHS of an assignment) does NOT arm the
+    /// `saw_class_kw_at_boundary` flag, so the body's `}`
+    /// is BlockKind::Other and no synthetic `;` fires.
+    /// The surrounding `var x=...;` provides its own
+    /// terminator.
+    #[test]
+    fn gap034_class_expression_does_not_get_trailing_semi() {
+        assert_eq!(
+            minify("var x=class{};"),
+            "var x=class{};"
+        );
+    }
+
+    // ---- gap-035: var/let/const → `{`/`[` separator -----
+
+    /// Target fixture: `var{a}=x;` round-trips with a space
+    /// between `var` and `{`.
+    #[test]
+    fn gap035_var_destructuring_inserts_space() {
+        assert_eq!(minify("var{a}=x;"), "var {a}=x;");
+    }
+
+    /// `let` destructuring shape.
+    #[test]
+    fn gap035_let_destructuring_inserts_space() {
+        assert_eq!(minify("let{a}=x;"), "let {a}=x;");
+    }
+
+    /// `const` destructuring shape.
+    #[test]
+    fn gap035_const_destructuring_inserts_space() {
+        assert_eq!(minify("const{a}=x;"), "const {a}=x;");
+    }
+
+    /// Array destructuring `var[a,b]=x;` gets the same
+    /// separator.
+    #[test]
+    fn gap035_var_array_destructuring_inserts_space() {
+        assert_eq!(minify("var[a]=x;"), "var [a]=x;");
+    }
+
+    /// Non-destructuring `var x=1;` is unaffected — the
+    /// `var` keyword is followed by an identifier, not
+    /// `{`/`[`.
+    #[test]
+    fn gap035_simple_var_decl_unchanged() {
+        assert_eq!(minify("var x=1;"), "var x=1;");
+    }
+
+    // ---- gap-036: switch trailing `;` --------------------
+
+    /// Target fixture: switch statement gets a trailing `;`.
+    #[test]
+    fn gap036_switch_trailing_semi() {
+        assert_eq!(
+            minify("switch(x){case 1:y();break;}"),
+            "switch(x){case 1:y();break};"
+        );
+    }
+
+    /// Switch with default clause also gets the trailing `;`.
+    #[test]
+    fn gap036_switch_with_default_trailing_semi() {
+        assert_eq!(
+            minify("switch(x){default:y();}"),
+            "switch(x){default:y()};"
+        );
+    }
+
+    /// **Regression for security-review-caught bug.** `class`
+    /// as an OBJECT-LITERAL PROPERTY NAME must NOT arm the
+    /// class-declaration flag. Without the guard, the flag
+    /// leaks forward and contaminates the next unrelated
+    /// `{` — specifically breaking `do{...}while(...)` by
+    /// emitting `do{y};while(x);` which is a SyntaxError.
+    /// Same defect family as gap-033's `try`-as-property bug.
+    #[test]
+    fn gap034_class_as_property_does_not_arm() {
+        assert_eq!(
+            minify("var o={class:1};do{y}while(x);"),
+            "var o={class:1};do{y}while(x);"
+        );
+    }
+
+    /// **Regression for security-review-caught bug.** `switch`
+    /// as an OBJECT-LITERAL PROPERTY NAME must NOT arm the
+    /// switch-head flag. Without the guard, the flag would
+    /// leak forward and contaminate an unrelated `(`/`)`/`{`
+    /// chain (e.g. `while(x){a;b;}`), emitting a spurious
+    /// `;` after the while-body's `}`. Not a SyntaxError on
+    /// its own (the extra `;` is an EmptyStatement), but
+    /// still a parity divergence vs upstream.
+    #[test]
+    fn gap036_switch_as_property_does_not_arm() {
+        assert_eq!(
+            minify("var o={switch:1};while(x){a;b;}"),
+            "var o={switch:1};while(x){a;b}"
         );
     }
 }
