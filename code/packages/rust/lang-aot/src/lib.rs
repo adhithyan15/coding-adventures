@@ -399,6 +399,13 @@ pub fn compile_source_to_wasm(
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    // The two representation passes partition the module's functions:
+    //   • heap-using functions → the structural pass boxes their integer atoms
+    //     as `i31ref` and unboxes the entry result (uniform-anyref value model);
+    //   • pure-scalar functions → `concretize_scalar_any_for_wasm` retypes their
+    //     `any` to `i64`.
+    // Together they leave every value concretely typed (LANG77 / L3b-3a-3c).
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_wasm(&mut module);
 
     let config = iir_to_wasm::IIRWasmConfig::default();

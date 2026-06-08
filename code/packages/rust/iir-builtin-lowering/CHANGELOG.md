@@ -4,6 +4,32 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.8.0] — 2026-06-08 — structural lisp-value representation (LANG77 / McCarthy L3b-3a-3c)
+
+### Added
+
+- **`lower_lisp_repr_structural`** — the *managed-backend* (wasm/jvm/clr/beam)
+  twin of `lower_lisp_repr`. Where the native pass tags integers with the
+  NaN-box `n << 3` over the runtime-call form, this pass implements the
+  **uniform-anyref** model over the *structural* heap form
+  (`alloc`/`field_store`/`field_load`):
+  - an integer atom stored into a cons field is **boxed** as an `i31ref` — a
+    `box` op is inserted and the atom's `const` is narrowed to `i32` (the
+    `ref.i31` payload width);
+  - a value that is already a reference (an `alloc`/`field_load`/`box` result or
+    a `ref<…>` const) is left alone;
+  - in the **entry** function a `ret` of a reference is **unboxed** to `i32`
+    (`unbox`), and the return type becomes `i32` (the machine exit code);
+    non-entry functions return their lisp value as `ref<any>`.
+  - Use-site directed and gate-free (no per-language switch): a function with no
+    heap op is left entirely to `concretize_scalar_any_for_wasm`, so the two
+    passes partition the module and every value ends up concretely typed.
+  - Atoms outside the `i31` range (`±2³⁰`) are left unboxed (and rejected
+    downstream) rather than silently truncated.
+
+This is what lets a McCarthy **cons** program compile to a runnable WasmGC
+module: `(CAR (CONS 7 9))` → `7`. 4 new unit tests.
+
 ## [0.7.0] — 2026-06-04
 
 ### Added (LANG77 — compile-time symbol interning, McCarthy L3b-2c-3)

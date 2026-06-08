@@ -115,6 +115,7 @@ pub mod error;
 pub mod numeric;
 pub mod heap;
 pub mod lisp_repr;
+pub mod lisp_repr_structural;
 pub mod symbol_intern;
 pub mod global_io;
 pub mod closure;
@@ -139,6 +140,13 @@ pub use heap::lower_heap_builtins_runtime;
 // result, so native lisp values carry their NaN-box tag.  Runs after
 // `lower_heap_builtins_runtime`; a no-op for non-lisp modules.
 pub use lisp_repr::lower_lisp_repr;
+// Re-export the *structural* lisp-value representation pass (LANG77 / L3b-3a-3c):
+// the managed-backend (wasm/jvm/clr/beam) twin of `lower_lisp_repr`. Boxes
+// integer atoms stored into cons fields as `i31ref` (`box`) and unboxes the
+// entry function's reference result (`unbox`), so the uniform-anyref value model
+// is concretely typed. Runs after `lower_heap_builtins`; a no-op for functions
+// that touch no heap op.
+pub use lisp_repr_structural::lower_lisp_repr_structural;
 // Re-export the compile-time symbol interning pass (LANG77 / L3b-2c-3):
 // rewrites `const Var(name):symbol` → the tagged immediate `(id<<32)|TAG_SYMBOL`
 // so native symbols carry identity (for `EQ`) without runtime interning.
