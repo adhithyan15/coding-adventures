@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness document-policy descriptors now expose charset, viewport,
+  referrer/robots/color-scheme policy, CSP/Permissions/Origin-Trial/Accept-CH
+  hints, theme colors, refresh, canonical, and manifest metadata as a flat
+  browser-planning inventory.
 - Browser-readiness form-policy descriptors now expose form submission targets,
   accept/autocomplete/rel policy tokens, validation bypass state, and submitter
   overrides as a flat browser-planning inventory.

@@ -3,20 +3,21 @@ use coding_adventures_html_parser::{
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
-    BrowserEmbeddedContext, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaSource, BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective,
-    BrowserNavigationGroup, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
-    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserFetchPolicyDescriptor,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
+    BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
+    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -66,6 +67,8 @@ struct ExpectedBrowserDocument {
     scripts: Vec<ExpectedScript>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
+    #[serde(default)]
+    document_policy_descriptors: Vec<ExpectedDocumentPolicyDescriptor>,
     #[serde(default)]
     loading_hint_descriptors: Vec<ExpectedLoadingHintDescriptor>,
     #[serde(default)]
@@ -396,6 +399,52 @@ struct ExpectedAriaRelationDescriptor {
     aria_flowto: Vec<String>,
     #[serde(default)]
     flowto_text: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDocumentPolicyDescriptor {
+    #[serde(default)]
+    charset: Option<String>,
+    #[serde(default)]
+    viewport: Option<String>,
+    #[serde(default)]
+    viewport_directives: Vec<ExpectedMetadataDirective>,
+    #[serde(default)]
+    description: Option<String>,
+    #[serde(default)]
+    application_name: Option<String>,
+    #[serde(default)]
+    referrer_policy: Option<String>,
+    #[serde(default)]
+    robots: Option<String>,
+    #[serde(default)]
+    robots_directives: Vec<String>,
+    #[serde(default)]
+    color_scheme: Option<String>,
+    #[serde(default)]
+    content_security_policy: Option<String>,
+    #[serde(default)]
+    permissions_policy: Option<String>,
+    #[serde(default)]
+    origin_trials: Vec<String>,
+    #[serde(default)]
+    accept_ch: Option<String>,
+    #[serde(default)]
+    accept_ch_tokens: Vec<String>,
+    #[serde(default)]
+    dns_prefetch_control: Option<String>,
+    #[serde(default)]
+    theme_colors: Vec<ExpectedThemeColor>,
+    #[serde(default)]
+    refresh: Option<ExpectedRefresh>,
+    #[serde(default)]
+    canonical_url: Option<String>,
+    #[serde(default)]
+    resolved_canonical_url: Option<String>,
+    #[serde(default)]
+    manifest_url: Option<String>,
+    #[serde(default)]
+    resolved_manifest_url: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3616,6 +3665,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedStylesheet::into_browser_stylesheet)
                 .collect(),
+            document_policy_descriptors: self
+                .document_policy_descriptors
+                .into_iter()
+                .map(ExpectedDocumentPolicyDescriptor::into_browser_document_policy_descriptor)
+                .collect(),
             loading_hint_descriptors: self
                 .loading_hint_descriptors
                 .into_iter()
@@ -4140,6 +4194,42 @@ impl ExpectedFetchPolicyDescriptor {
             allow: self.allow,
             allowfullscreen: self.allowfullscreen,
             credentialless: self.credentialless,
+        }
+    }
+}
+
+impl ExpectedDocumentPolicyDescriptor {
+    fn into_browser_document_policy_descriptor(self) -> BrowserDocumentPolicyDescriptor {
+        BrowserDocumentPolicyDescriptor {
+            charset: self.charset,
+            viewport: self.viewport,
+            viewport_directives: self
+                .viewport_directives
+                .into_iter()
+                .map(ExpectedMetadataDirective::into_browser_metadata_directive)
+                .collect(),
+            description: self.description,
+            application_name: self.application_name,
+            referrer_policy: self.referrer_policy,
+            robots: self.robots,
+            robots_directives: self.robots_directives,
+            color_scheme: self.color_scheme,
+            content_security_policy: self.content_security_policy,
+            permissions_policy: self.permissions_policy,
+            origin_trials: self.origin_trials,
+            accept_ch: self.accept_ch,
+            accept_ch_tokens: self.accept_ch_tokens,
+            dns_prefetch_control: self.dns_prefetch_control,
+            theme_colors: self
+                .theme_colors
+                .into_iter()
+                .map(ExpectedThemeColor::into_browser_theme_color)
+                .collect(),
+            refresh: self.refresh.map(ExpectedRefresh::into_browser_refresh),
+            canonical_url: self.canonical_url,
+            resolved_canonical_url: self.resolved_canonical_url,
+            manifest_url: self.manifest_url,
+            resolved_manifest_url: self.resolved_manifest_url,
         }
     }
 }
