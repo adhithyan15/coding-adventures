@@ -132,10 +132,17 @@ describe("macsyma-runtime", () => {
     const session = new MacsymaSession();
     const [killResult] = session.evalSource("kill(x);");
     const [evResult] = session.evalSource("ev(1 + 2, numer);");
+    const [odeResult] = session.evalSource("ode2(foo, y, x);");
 
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
     expect(evResult.output).toEqual(numberNode(3));
+    expect(odeResult.input).toEqual(app(sym("ODE2"), [
+      sym("foo"),
+      sym("y"),
+      sym("x"),
+    ]));
+    expect(odeResult.output).toEqual(odeResult.input);
   });
 
   it("factors univariate integer polynomials through the runtime", () => {
