@@ -831,6 +831,7 @@ pub struct BrowserDocument {
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
     pub scripts: Vec<BrowserScript>,
+    pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
@@ -1048,6 +1049,29 @@ pub struct BrowserScript {
     pub blocking: Option<String>,
     pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptExecutionDescriptor {
+    pub script_kind: String,
+    pub execution_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub async_script: bool,
+    pub defer_script: bool,
+    pub nomodule: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub blocking_token_count: usize,
+    pub render_blocking: bool,
+    pub has_text: bool,
+    pub text_length: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2671,6 +2695,8 @@ impl BrowserDocument {
             &[],
             body_children,
         );
+        summary.script_execution_descriptors =
+            browser_script_execution_descriptors(&summary.scripts);
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
@@ -10329,6 +10355,51 @@ fn browser_embedded_resource_kind(element: &str) -> &'static str {
         "object" => "object",
         "embed" => "embed",
         _ => "embedded",
+    }
+}
+
+fn browser_script_execution_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptExecutionDescriptor> {
+    scripts
+        .iter()
+        .map(browser_script_execution_descriptor)
+        .collect()
+}
+
+fn browser_script_execution_descriptor(script: &BrowserScript) -> BrowserScriptExecutionDescriptor {
+    let text_length = script
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserScriptExecutionDescriptor {
+        script_kind: script.script_kind.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        async_script: script.async_script,
+        defer_script: script.defer_script,
+        nomodule: script.nomodule,
+        integrity: script.integrity.clone(),
+        crossorigin: script.crossorigin.clone(),
+        nonce: script.nonce.clone(),
+        referrerpolicy: script.referrerpolicy.clone(),
+        fetchpriority: script.fetchpriority.clone(),
+        blocking: script.blocking.clone(),
+        blocking_tokens: script.blocking_tokens.clone(),
+        blocking_token_count: script.blocking_tokens.len(),
+        render_blocking: script
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: script.text.is_some(),
+        text_length,
     }
 }
 
@@ -19266,6 +19337,62 @@ mod tests {
         );
         assert_eq!(stylesheet_preload.fetchpriority.as_deref(), Some("high"));
         assert_eq!(stylesheet_preload.blocking.as_deref(), Some("render"));
+    }
+
+    #[test]
+    fn browser_script_execution_descriptors_track_execution_and_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/index.html\">\
+             <script type=module src=app.js async integrity=sha384-js crossorigin=use-credentials \
+                 nonce=moduleNonce referrerpolicy=origin fetchpriority=low blocking=render></script>\
+             <script type=\"text/javascript; charset=utf-8\">classicMime();</script>\
+             <script nomodule defer nonce=legacyNonce>legacy();</script>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.script_execution_descriptors.len(), 3);
+
+        let module = &summary.script_execution_descriptors[0];
+        assert_eq!(module.script_kind, "module");
+        assert_eq!(module.execution_kind, "external");
+        assert_eq!(module.src.as_deref(), Some("app.js"));
+        assert_eq!(
+            module.resolved_src.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert!(module.async_script);
+        assert!(!module.defer_script);
+        assert_eq!(module.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(module.crossorigin.as_deref(), Some("use-credentials"));
+        assert_eq!(module.nonce.as_deref(), Some("moduleNonce"));
+        assert_eq!(module.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(module.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(module.blocking.as_deref(), Some("render"));
+        assert_eq!(module.blocking_tokens, vec!["render"]);
+        assert_eq!(module.blocking_token_count, 1);
+        assert!(module.render_blocking);
+        assert!(!module.has_text);
+        assert_eq!(module.text_length, 0);
+
+        let classic = &summary.script_execution_descriptors[1];
+        assert_eq!(classic.script_kind, "classic");
+        assert_eq!(classic.execution_kind, "inline");
+        assert_eq!(
+            classic.type_hint.as_deref(),
+            Some("text/javascript; charset=utf-8")
+        );
+        assert!(classic.has_text);
+        assert_eq!(classic.text_length, "classicMime();".chars().count());
+        assert!(!classic.render_blocking);
+
+        let legacy = &summary.script_execution_descriptors[2];
+        assert_eq!(legacy.script_kind, "classic");
+        assert_eq!(legacy.execution_kind, "inline");
+        assert!(legacy.nomodule);
+        assert!(legacy.defer_script);
+        assert_eq!(legacy.nonce.as_deref(), Some("legacyNonce"));
+        assert_eq!(legacy.text_length, "legacy();".chars().count());
     }
 
     #[test]
