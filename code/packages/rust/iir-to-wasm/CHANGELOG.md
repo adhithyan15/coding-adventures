@@ -3,6 +3,23 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-4b — `pair?` / `not`)
+
+### Added
+
+- The `call_builtin` whitelist gains the McCarthy lisp predicates **`pair?`**
+  and **`not`**, with their lowerings:
+  - `pair?` → **`ref.test $LispyPair`** — "is this lisp value a cons cell?"
+    (pushes `i32 1` for a cons, `0` for a boxed atom or nil).
+  - `not` → **`i32.eqz`** — boolean negation of a predicate's machine boolean.
+    (Distinct from the numeric `not` *op*, a bitwise XOR -1.)
+- `module_uses_lispy_pair` now also triggers on a `pair?` call, so the
+  `$LispyPair` struct type is emitted even for a program that never `cons`es
+  (e.g. `(ATOM 5)`, where `pair?`'s `ref.test` still needs the type).
+
+With these and the predicate-atom boxing in `iir-builtin-lowering`, `ATOM x`
+(= `not(pair? x)`) compiles and runs: `(ATOM 5)` → 1, `(ATOM (CONS 1 2))` → 0.
+
 ## [0.10.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-3c — `alloc` actually allocates)
 
 ### Fixed

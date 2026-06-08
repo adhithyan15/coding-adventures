@@ -61,6 +61,54 @@ const REF_ANY: &str = "ref<any>";
 const I31_MAX: i64 = (1 << 30) - 1;
 const I31_MIN: i64 = -(1 << 30);
 
+/// Lisp builtins that survive `lower_heap_builtins` as `call_builtin`s (the
+/// cons data path — cons/car/cdr/null? — is already structural by now). Their
+/// presence marks a function as using the lisp value model, so **this** pass —
+/// not the scalar concretizer — owns it. Mirrors the `LISP_BUILTINS` list in
+/// `lang-aot::concretize_scalar_any_for_wasm` so the two passes partition the
+/// module's functions with no overlap or gap.
+const LISP_BUILTINS: &[&str] = &["pair?", "not", "equal?", "make_symbol", "make_nil", "null?"];
+
+/// The subset of [`LISP_BUILTINS`] whose **value** arguments are lisp values, so
+/// an integer atom flowing into one must be boxed as an `i31ref` (exactly as an
+/// atom stored into a cons field is). `not` is absent — it takes a machine
+/// boolean (the `i32` result of a predicate), not a lisp value.
+const LISP_VALUE_ARG_BUILTINS: &[&str] = &["pair?", "equal?"];
+
+/// If `instr` is a `call_builtin` whose name is a lisp builtin, return that name.
+fn lisp_builtin_name(instr: &IIRInstr) -> Option<&str> {
+    if instr.op != "call_builtin" {
+        return None;
+    }
+    match instr.srcs.first() {
+        Some(Operand::Var(name)) if LISP_BUILTINS.contains(&name.as_str()) => Some(name.as_str()),
+        _ => None,
+    }
+}
+
+/// Whether a type hint denotes a value that lowers to a wasm `i32` (as opposed
+/// to `i64`). Predicates produce `"bool"`, which the wasm backend maps to `i32`.
+fn is_i32_width(hint: &str) -> bool {
+    matches!(hint, "bool" | "i8" | "i16" | "i32" | "u8" | "u16" | "u32")
+}
+
+/// The `srcs` indices of `instr` that hold a **lisp value** (and so whose
+/// integer atoms must be boxed): `field_store`'s value operand, and the value
+/// arguments of a `pair?`/`equal?` call. Other positions (the builtin name, a
+/// field index, a machine-boolean `not` arg) are excluded.
+fn lisp_value_src_indices(instr: &IIRInstr) -> Vec<usize> {
+    match instr.op.as_str() {
+        "field_store" => vec![2],
+        "call_builtin" => match instr.srcs.first() {
+            Some(Operand::Var(name)) if LISP_VALUE_ARG_BUILTINS.contains(&name.as_str()) => {
+                (1..instr.srcs.len()).collect()
+            }
+            _ => vec![],
+        },
+        _ => vec![],
+    }
+}
+
 /// Apply the structural representation pass to every heap-using function.
 ///
 /// Run by `lang-aot::compile_source_to_wasm` **after** `lower_heap_builtins`
@@ -86,6 +134,7 @@ fn function_uses_heap(func: &IIRFunction) -> bool {
     func.instructions.iter().any(|i| {
         matches!(i.op.as_str(), "alloc" | "field_load" | "field_store" | "is_null")
             || i.type_hint.starts_with("ref<")
+            || lisp_builtin_name(i).is_some()
     })
 }
 
@@ -109,12 +158,13 @@ fn reference_registers(func: &IIRFunction) -> HashSet<String> {
 fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
     let ref_regs = reference_registers(func);
 
-    // ── 1. Which atoms must be boxed? The value operand of every `field_store`
-    //       that is not already a reference. ──
+    // ── 1. Which atoms must be boxed? Any non-reference value that flows into a
+    //       lisp-value position — a `field_store`'s value operand, or a
+    //       `pair?`/`equal?` argument. ──
     let mut needs_box: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
-        if instr.op == "field_store" {
-            if let Some(Operand::Var(val)) = instr.srcs.get(2) {
+        for idx in lisp_value_src_indices(instr) {
+            if let Some(Operand::Var(val)) = instr.srcs.get(idx) {
                 if !ref_regs.contains(val) {
                     needs_box.insert(val.clone());
                 }
@@ -123,7 +173,8 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
     }
 
     // ── 2. Rebuild the body, narrowing boxable atom `const`s to i32 and
-    //       inserting a `box` before the store that first consumes each. ──
+    //       inserting a `box` before the first instruction that consumes each
+    //       in a lisp-value position. ──
     let mut new_instrs: Vec<IIRInstr> = Vec::with_capacity(func.instructions.len() + needs_box.len());
     let mut boxed: HashMap<String, String> = HashMap::new(); // atom reg → boxed reg
     for instr in std::mem::take(&mut func.instructions) {
@@ -141,26 +192,32 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
             }
         }
 
-        if instr.op == "field_store" {
-            if let Some(Operand::Var(val)) = instr.srcs.get(2).cloned() {
-                if needs_box.contains(&val) {
-                    // Insert (once per atom) `box %b = %val : ref<any>`.
-                    let boxed_reg = boxed.entry(val.clone()).or_insert_with(|| {
-                        let b = format!("{val}.box");
-                        new_instrs.push(IIRInstr::new(
-                            "box",
-                            Some(b.clone()),
-                            vec![Operand::Var(val.clone())],
-                            REF_ANY,
-                        ));
-                        b
-                    });
-                    let mut store = instr.clone();
-                    store.srcs[2] = Operand::Var(boxed_reg.clone());
-                    new_instrs.push(store);
-                    continue;
+        let value_idxs = lisp_value_src_indices(&instr);
+        if !value_idxs.is_empty() {
+            let mut rewritten = instr.clone();
+            for idx in value_idxs {
+                if let Some(Operand::Var(val)) = instr.srcs.get(idx).cloned() {
+                    if needs_box.contains(&val) {
+                        // Box each atom once (`box %b = %val : ref<any>`) and reuse.
+                        let boxed_reg = boxed
+                            .entry(val.clone())
+                            .or_insert_with(|| {
+                                let b = format!("{val}.box");
+                                new_instrs.push(IIRInstr::new(
+                                    "box",
+                                    Some(b.clone()),
+                                    vec![Operand::Var(val.clone())],
+                                    REF_ANY,
+                                ));
+                                b
+                            })
+                            .clone();
+                        rewritten.srcs[idx] = Operand::Var(boxed_reg);
+                    }
                 }
             }
+            new_instrs.push(rewritten);
+            continue;
         }
 
         new_instrs.push(instr);
@@ -217,9 +274,24 @@ fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &
         if func.return_type == "any" || func.return_type == "polymorphic" || func.return_type == REF_PAIR {
             func.return_type = REF_ANY.to_string();
         }
-    } else if func.return_type == "any" || func.return_type == "polymorphic" {
-        // A scalar result in a heap function (e.g. a predicate's i32) — i64.
-        func.return_type = "i64".to_string();
+    } else if func.return_type == "any"
+        || func.return_type == "polymorphic"
+        || func.instructions[ret_pos].type_hint == "any"
+    {
+        // A non-reference scalar result in a heap function. Concretise the return
+        // type to the value's machine width: a **predicate** result (`pair?` /
+        // `not` / `equal?`, whose hint is `"bool"`) is an `i32`; everything else
+        // defaults to `i64`. Setting the `ret` instruction's hint too keeps the
+        // defensive `any` sweep from re-widening a boolean back to `i64`.
+        let width = func
+            .instructions
+            .iter()
+            .find(|i| i.dest.as_deref() == Some(ret_reg.as_str()))
+            .map(|i| i.type_hint.as_str())
+            .map(|h| if is_i32_width(h) { "i32" } else { "i64" })
+            .unwrap_or("i64");
+        func.return_type = width.to_string();
+        func.instructions[ret_pos].type_hint = width.to_string();
     }
 }
 
@@ -268,6 +340,58 @@ mod tests {
 
     fn ops(f: &IIRFunction) -> Vec<&str> {
         f.instructions.iter().map(|i| i.op.as_str()).collect()
+    }
+
+    /// `(ATOM 5)` after `lower_heap_builtins`: const 5, pair?(5), not(_), ret.
+    fn atom_module() -> IIRModule {
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(5)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v1".into()),
+                vec![Operand::Var("pair?".into()), Operand::Var("v0".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v2".into()),
+                vec![Operand::Var("not".into()), Operand::Var("v1".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v2".into())], "any"),
+        ];
+        let f = IIRFunction::new("main", vec![], "any", instrs);
+        let mut m = IIRModule::new("atom", "mccarthy-lisp");
+        m.entry_point = Some("main".to_string());
+        m.functions = vec![f];
+        m
+    }
+
+    #[test]
+    fn predicate_atom_arg_is_boxed_and_bool_result_is_i32() {
+        let mut m = atom_module();
+        lower_lisp_repr_structural(&mut m);
+        let f = &m.functions[0];
+
+        // The atom feeding `pair?` is boxed (and narrowed to i32); `not`'s arg
+        // (a machine boolean) is NOT boxed.
+        assert_eq!(ops(f).iter().filter(|o| **o == "box").count(), 1, "exactly the pair? atom boxes");
+        let pair = f.instructions.iter().find(|i| {
+            matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "pair?")
+        }).unwrap();
+        match &pair.srcs[1] {
+            Operand::Var(v) => assert!(v.ends_with(".box"), "pair? arg is the boxed atom"),
+            other => panic!("unexpected pair? arg {other:?}"),
+        }
+        // The const atom is narrowed to i32 for `ref.i31`.
+        let c = f.instructions.iter().find(|i| i.op == "const").unwrap();
+        assert_eq!(c.type_hint, "i32");
+
+        // A predicate result (bool) returns as i32 — NOT unboxed, NOT widened to
+        // i64 — so the wasm function's result type matches the value.
+        assert_eq!(f.return_type, "i32");
+        assert!(ops(f).iter().all(|o| *o != "unbox"), "a boolean result is not unboxed");
+        assert!(f.instructions.iter().all(|i| i.type_hint != "any"));
     }
 
     #[test]

@@ -143,3 +143,27 @@ fn mccarthy_cdr_and_nested_cons_run_on_wasm() {
         "(CAR (CONS (CDR (CONS 1 2)) 5)) should evaluate to 2"
     );
 }
+
+/// `ATOM`/`pair?` run on wasm (LANG77 L3b-3a-4b): `pair?` lowers to
+/// `ref.test $LispyPair` and the lisp `not` to `i32.eqz`, so `ATOM x` =
+/// `not(pair? x)` tells an atom (`1`) from a cons (`0`).
+#[test]
+fn mccarthy_atom_predicate_runs_on_wasm() {
+    let rt = WasmRuntime::new();
+
+    // An integer is an atom — even with no cons anywhere in the program, the
+    // `$LispyPair` struct type is emitted because `pair?` needs it.
+    let atom = compile_source_to_wasm(Language::McCarthyLisp, "(ATOM 5)", "atom")
+        .expect("emit (ATOM 5)");
+    assert_wellformed(&atom, "(ATOM 5)");
+    assert_eq!(rt.load_and_run(&atom, "main", &[]).expect("run atom"), vec![1], "5 is an atom");
+
+    // A cons cell is not an atom.
+    let cons = compile_source_to_wasm(Language::McCarthyLisp, "(ATOM (CONS 1 2))", "atom_cons")
+        .expect("emit (ATOM (CONS 1 2))");
+    assert_eq!(
+        rt.load_and_run(&cons, "main", &[]).expect("run atom-cons"),
+        vec![0],
+        "a cons is not an atom"
+    );
+}

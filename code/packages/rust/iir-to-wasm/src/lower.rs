@@ -1786,6 +1786,49 @@ fn emit_instr(
                     code.extend(encode_local_get(val_slot));
                     code.extend(encode_call(fn_idx));
                 }
+                // McCarthy `pair?` (LANG77 L3b-3a-4): "is this lisp value a cons
+                // cell?". In the uniform-anyref model a cons is a `$LispyPair`
+                // struct reference, so `pair?` is exactly `ref.test $LispyPair`:
+                // it pushes i32 1 for a cons, 0 for a boxed atom (`i31ref`) or
+                // nil (the null reference). `ATOM x` is the frontend's
+                // `not(pair? x)`.
+                //
+                //   local.get $arg            ;; anyref
+                //   ref.test $LispyPair        ;; → i32 (1 = cons, 0 = atom/nil)
+                //   local.set $dest
+                "pair?" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"pair?\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let arg = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    let type_idx = lispy_pair_type_idx.ok_or_else(|| IIRWasmError::UnsupportedOp {
+                        function: fn_name.to_string(),
+                        op: "call_builtin \"pair?\": module has no $LispyPair struct type".to_string(),
+                    })?;
+                    code.extend(encode_local_get(arg));
+                    encode_gc_instruction(code, &GcInstruction::RefTest(type_idx));
+                    code.extend(encode_local_set(rd));
+                }
+                // The lisp `not` (LANG77 L3b-3a-4): boolean negation of a
+                // predicate's machine boolean (0/1), i.e. `i32.eqz`. (Distinct
+                // from the numeric `not` *op*, which is a bitwise XOR -1.)
+                //
+                //   local.get $arg            ;; i32 (0 or 1)
+                //   i32.eqz                    ;; → i32 (1 → 0, 0 → 1)
+                //   local.set $dest
+                "not" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"not\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let arg = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    code.extend(encode_local_get(arg));
+                    code.push(0x45); // i32.eqz
+                    code.extend(encode_local_set(rd));
+                }
                 _ => {
                     // Validator should have rejected this; defense in depth.
                     return Err(IIRWasmError::UnsupportedOp {
@@ -2032,8 +2075,13 @@ fn lower_function(
 /// `"ref<LispyPair>"`, which triggers WasmGC struct type registration.
 fn module_uses_lispy_pair(module: &IIRModule) -> bool {
     module.functions.iter().any(|fn_| {
-        fn_.instructions.iter().any(|i| i.type_hint == "ref<LispyPair>")
-            || fn_.params.iter().any(|(_, t)| t == "ref<LispyPair>")
+        fn_.instructions.iter().any(|i| {
+            i.type_hint == "ref<LispyPair>"
+                // `pair?` lowers to `ref.test $LispyPair`, so it needs the struct
+                // type even in a module that never `cons`es (e.g. `(ATOM 5)`).
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "pair?"))
+        }) || fn_.params.iter().any(|(_, t)| t == "ref<LispyPair>")
             || fn_.return_type == "ref<LispyPair>"
     })
 }
