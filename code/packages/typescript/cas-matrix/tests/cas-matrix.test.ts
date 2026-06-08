@@ -287,15 +287,37 @@ describe("eigenvalues", () => {
     expect(eigenvalues(matrix([irow([2, 0]), irow([0, 2])]))).toEqual(app(LIST, [
       app(LIST, [int(2), int(2)]),
     ]));
+    expect(eigenvalues(identityMatrix(3))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(3)]),
+    ]));
     expect(eigenvalues(matrix([[rational(1, 2), int(0)], [int(0), int(3)]]))).toEqual(app(LIST, [
       app(LIST, [rational(1, 2), int(1)]),
       app(LIST, [int(3), int(1)]),
     ]));
   });
 
+  it("solves cubic and quartic characteristic polynomials for 3x3 and 4x4 matrices", () => {
+    expect(eigenvalues(matrix([irow([1, 0, 0]), irow([0, 2, 0]), irow([0, 0, 3])]))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(1)]),
+      app(LIST, [int(2), int(1)]),
+      app(LIST, [int(3), int(1)]),
+    ]));
+    expect(eigenvalues(matrix([
+      irow([-2, 0, 0, 0]),
+      irow([0, -1, 0, 0]),
+      irow([0, 0, 1, 0]),
+      irow([0, 0, 0, 2]),
+    ]))).toEqual(app(LIST, [
+      app(LIST, [int(-2), int(1)]),
+      app(LIST, [int(-1), int(1)]),
+      app(LIST, [int(1), int(1)]),
+      app(LIST, [int(2), int(1)]),
+    ]));
+  });
+
   it("rejects unsupported shapes and symbolic entries", () => {
     expect(() => eigenvalues(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
-    expect(() => eigenvalues(identityMatrix(3))).toThrow(MatrixError);
+    expect(() => eigenvalues(identityMatrix(5))).toThrow(MatrixError);
     expect(() => eigenvalues(matrix([[sym("a")]]))).toThrow(MatrixError);
   });
 });
@@ -326,6 +348,14 @@ describe("eigenvectors", () => {
     ]));
   });
 
+  it("returns 3x3 exact rational eigenvector bases", () => {
+    expect(eigenvectors(matrix([irow([1, 0, 0]), irow([0, 2, 0]), irow([0, 0, 3])]))).toEqual(app(LIST, [
+      app(LIST, [int(1), int(1), app(LIST, [matrix([irow([1]), irow([0]), irow([0])])])]),
+      app(LIST, [int(2), int(1), app(LIST, [matrix([irow([0]), irow([1]), irow([0])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([0]), irow([0]), irow([1])])])]),
+    ]));
+  });
+
   it("returns an empty vector list for non-rational eigenvalues", () => {
     const triples = eigenvectors(matrix([irow([0, 1]), irow([-1, 0])]));
     expect(triples.kind).toBe("apply");
@@ -341,7 +371,7 @@ describe("eigenvectors", () => {
 
   it("rejects unsupported shapes and symbolic entries", () => {
     expect(() => eigenvectors(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
-    expect(() => eigenvectors(identityMatrix(3))).toThrow(MatrixError);
+    expect(() => eigenvectors(identityMatrix(5))).toThrow(MatrixError);
     expect(() => eigenvectors(matrix([[sym("a")]]))).toThrow(MatrixError);
   });
 });

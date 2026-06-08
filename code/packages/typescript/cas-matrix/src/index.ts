@@ -16,7 +16,7 @@ import {
   type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
-import { Frac as SolveFrac, solveLinear, solveQuadratic } from "@coding-adventures/cas-solve";
+import { Frac as SolveFrac, solveCubic, solveLinear, solveQuadratic, solveQuartic } from "@coding-adventures/cas-solve";
 import { Matrix, getMatrixBackend } from "matrix";
 
 export const MATRIX = "Matrix";
@@ -205,18 +205,20 @@ export function eigenvalues(node: IRNode): IRNode {
   if (n !== ncols) {
     throw new MatrixError(`eigenvalues: matrix must be square, got ${n}x${ncols}`);
   }
-  if (n > 2) {
-    throw new MatrixError("eigenvalues: only 1x1 and 2x2 matrices are supported in this TypeScript port");
+  if (n > 4) {
+    throw new MatrixError("eigenvalues: only matrices up to 4x4 are supported in this TypeScript port");
   }
 
-  const coeffs = charPolyCoeffValues(node).map(toSolveFrac);
-  const result = n === 1
-    ? solveLinear(coeffs[1], coeffs[0])
-    : solveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
+  const coeffValues = charPolyCoeffValues(node);
+  const coeffs = coeffValues.map(toSolveFrac);
+  const result = solveCharacteristic(coeffs);
   if (result.kind === "all") return app(sym("Eigenvalues"), [node]);
 
-  const multiplicity = n === 2 && result.roots.length === 1 ? 2 : 1;
-  return app(LIST, result.roots.map((root) => app(LIST, [root, int(multiplicity)])));
+  const roots = [...result.roots].sort(compareEigenRoot);
+  return app(LIST, roots.map((root) => app(LIST, [
+    root,
+    int(rootMultiplicity(root, coeffValues, n, roots.length)),
+  ])));
 }
 
 export function eigenvectors(node: IRNode): IRNode {
@@ -564,6 +566,64 @@ function charPolyCoeffValues(node: IRNode): RationalValue[] {
   return detPoly(polyRows);
 }
 
+function solveCharacteristic(coeffs: readonly SolveFrac[]) {
+  const degree = coeffs.length - 1;
+  if (degree === 1) return solveLinear(coeffs[1], coeffs[0]);
+  if (degree === 2) return solveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
+  if (degree === 3) return solveCubic(coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+  if (degree === 4) return solveQuartic(coeffs[4], coeffs[3], coeffs[2], coeffs[1], coeffs[0]);
+  throw new MatrixError(`eigenvalues: unsupported characteristic polynomial degree ${degree}`);
+}
+
+function compareEigenRoot(left: IRNode, right: IRNode): number {
+  const leftRational = irToRationalValue(left);
+  const rightRational = irToRationalValue(right);
+  if (leftRational !== undefined && rightRational !== undefined) {
+    return compareRationalValues(leftRational, rightRational);
+  }
+  return 0;
+}
+
+function rootMultiplicity(
+  root: IRNode,
+  coeffs: readonly RationalValue[],
+  matrixSize: number,
+  rootCount: number,
+): number {
+  const rationalRoot = irToRationalValue(root);
+  if (rationalRoot === undefined) {
+    return rootCount === 1 ? matrixSize : 1;
+  }
+
+  let remaining = [...coeffs];
+  let multiplicity = 0;
+  while (remaining.length > 1) {
+    const division = divideByLinearFactor(remaining, rationalRoot);
+    if (!division.remainder.isZero()) break;
+    multiplicity += 1;
+    remaining = division.quotient;
+  }
+  return multiplicity === 0 ? 1 : multiplicity;
+}
+
+function divideByLinearFactor(
+  coeffs: readonly RationalValue[],
+  root: RationalValue,
+): { quotient: RationalValue[]; remainder: RationalValue } {
+  const degree = coeffs.length - 1;
+  if (degree <= 0) return { quotient: [], remainder: coeffs[0] ?? RationalValue.zero() };
+
+  const quotient = Array.from({ length: degree }, () => RationalValue.zero());
+  quotient[degree - 1] = coeffs[degree] ?? RationalValue.zero();
+  for (let i = degree - 2; i >= 0; i -= 1) {
+    quotient[i] = (coeffs[i + 1] ?? RationalValue.zero()).add(root.mul(quotient[i + 1]));
+  }
+  return {
+    quotient,
+    remainder: (coeffs[0] ?? RationalValue.zero()).add(root.mul(quotient[0])),
+  };
+}
+
 function detPoly(rows: RationalValue[][][]): RationalValue[] {
   const n = rows.length;
   if (n === 0) return [RationalValue.one()];
@@ -715,6 +775,13 @@ function integerSqrt(value: bigint): bigint {
 function compareAbsRational(a: RationalValue, b: RationalValue): number {
   const left = abs(a.numer) * b.denom;
   const right = abs(b.numer) * a.denom;
+  if (left === right) return 0;
+  return left > right ? 1 : -1;
+}
+
+function compareRationalValues(a: RationalValue, b: RationalValue): number {
+  const left = a.numer * b.denom;
+  const right = b.numer * a.denom;
   if (left === right) return 0;
   return left > right ? 1 : -1;
 }
