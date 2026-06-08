@@ -3164,6 +3164,8 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
         return polyLogPowerTerm(0, Number(n26.numer), x);
       }
     }
+    const recipHyp16 = tryRecipHypPower(base, exponent, x);
+    if (recipHyp16 !== undefined) return recipHyp16;
     return undefined;
   }
 
@@ -5346,6 +5348,81 @@ function tryRecipHypLinear(transcendental: IRNode, x: IRNode): IRNode | undefine
 
   const halfArg = app(MUL, [rational(1, 2), arg]);
   return app(MUL, [invA, app(LOG, [app(TANH, [halfArg])])]);
+}
+
+function tryRecipHypPower(base: IRNode, exponent: IRNode, x: IRNode): IRNode | undefined {
+  if (base.kind !== "apply" || base.args.length !== 1) return undefined;
+  if (!equals(base.head, SECH) && !equals(base.head, CSCH) && !equals(base.head, COTH)) return undefined;
+  const nRat = exactRational(exponent);
+  if (nRat === undefined || nRat.denom !== 1n || nRat.numer < 0n || nRat.numer > BigInt(Number.MAX_SAFE_INTEGER)) {
+    return undefined;
+  }
+  const arg = base.args[0]!;
+  if (!dependsOn(arg, x)) return undefined;
+  const linear = linearArgCoeffs(arg, x);
+  if (linear === undefined) return undefined;
+
+  const n = Number(nRat.numer);
+  if (equals(base.head, SECH)) return sechPowerIntegral(n, arg, linear.a, x);
+  if (equals(base.head, CSCH)) return cschPowerIntegral(n, arg, linear.a, x);
+  return cothPowerIntegral(n, arg, linear.a, x);
+}
+
+function powIfNeeded(base: IRNode, exponent: number): IRNode {
+  return exponent === 1 ? base : app(POW, [base, int(BigInt(exponent))]);
+}
+
+function recipHypCoeff(numer: bigint, denom: bigint, a: RatCoeff): IRNode {
+  return rcToIR(rcDiv(rc(numer, denom), a));
+}
+
+function sechPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(ATAN, [app(SINH, [arg])])]);
+  if (n === 2) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(TANH, [arg])]);
+
+  const sechPow = powIfNeeded(app(SECH, [arg]), n - 2);
+  const mainTerm = app(MUL, [
+    recipHypCoeff(1n, BigInt(n - 1), a),
+    app(MUL, [sechPow, app(TANH, [arg])]),
+  ]);
+  const tail = sechPowerIntegral(n - 2, arg, a, x);
+  return app(ADD, [
+    mainTerm,
+    app(MUL, [rational(BigInt(n - 2), BigInt(n - 1)), tail]),
+  ]);
+}
+
+function cschPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) {
+    const halfArg = app(MUL, [rational(1, 2), arg]);
+    return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(TANH, [halfArg])])]);
+  }
+  if (n === 2) {
+    const negInvA = rcToIR(rcDiv(rc(-1n, 1n), a));
+    return app(MUL, [negInvA, app(COTH, [arg])]);
+  }
+
+  const cschPow = powIfNeeded(app(CSCH, [arg]), n - 2);
+  const mainTerm = app(MUL, [
+    recipHypCoeff(-1n, BigInt(n - 1), a),
+    app(MUL, [cschPow, app(COTH, [arg])]),
+  ]);
+  const tail = cschPowerIntegral(n - 2, arg, a, x);
+  return app(SUB, [
+    mainTerm,
+    app(MUL, [rational(BigInt(n - 2), BigInt(n - 1)), tail]),
+  ]);
+}
+
+function cothPowerIntegral(n: number, arg: IRNode, a: RatCoeff, x: IRNode): IRNode {
+  if (n === 0) return x;
+  if (n === 1) return app(MUL, [rcToIR(rcDiv(RC_ONE, a)), app(LOG, [app(SINH, [arg])])]);
+
+  const cothPow = powIfNeeded(app(COTH, [arg]), n - 1);
+  const powerTerm = app(MUL, [recipHypCoeff(1n, BigInt(n - 1), a), cothPow]);
+  return app(SUB, [cothPowerIntegral(n - 2, arg, a, x), powerTerm]);
 }
 
 function sqrtTPlusOneDecompose(Q_tilde: RatPoly): [RatPoly, RatPoly] {
