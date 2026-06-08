@@ -17,8 +17,8 @@ use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
     AgentId, Bridge, BridgeId, Capability, CapabilityId, CommandResult, CommandStatus, CommandType,
     Device, DeviceEvent, DeviceEventType, EntityId, EntityKind, Health, IntegrationId, Metadata,
-    PrivilegeTier, ProtocolFamily, RuntimeKind, StateConfidence, StateDelta, StateSnapshot,
-    StateSource, Value,
+    PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId,
+    SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
 use smart_home_integration_catalog::{
@@ -49,6 +49,8 @@ use std::rc::Rc;
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
+pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
+pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
 pub const SMART_HOME_COMMAND_TOOL_ID: &str = "smart_home.command";
 pub const SMART_HOME_SUBSCRIBE_TOOL_ID: &str = "smart_home.subscribe";
@@ -149,6 +151,24 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_devices"))
+                }
+                SMART_HOME_LIST_SCENES_TOOL_ID => {
+                    let request = list_scenes_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_scenes"))
+                }
+                SMART_HOME_DESCRIBE_SCENE_TOOL_ID => {
+                    let scene_id = SceneId::trusted(required_string(&arguments, "scene_id")?);
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::DescribeScene { scene_id },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "describe_scene"))
                 }
                 SMART_HOME_GET_STATE_TOOL_ID => {
                     let entity_id = required_string(&arguments, "entity_id")?;
@@ -465,6 +485,39 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                 false,
             ),
             collection_output_schema("devices"),
+        ),
+        read_definition(
+            SMART_HOME_LIST_SCENES_TOOL_ID,
+            "List smart-home scenes",
+            "List normalized D23 smart-home scenes, optionally filtered by scope, target entity, or target capability.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("scope", JsonSchema::String),
+                    SchemaProperty::new("entity_id", JsonSchema::String),
+                    SchemaProperty::new("capability_id", JsonSchema::String),
+                ],
+                vec![],
+                false,
+            ),
+            collection_output_schema("scenes"),
+        ),
+        read_definition(
+            SMART_HOME_DESCRIBE_SCENE_TOOL_ID,
+            "Describe smart-home scene",
+            "Read one normalized D23 smart-home scene and its target actions.",
+            object_schema(
+                vec![SchemaProperty::new("scene_id", JsonSchema::String)],
+                vec!["scene_id"],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("scene_id", JsonSchema::String),
+                    SchemaProperty::new("scene", JsonSchema::Any),
+                ],
+                vec!["scene_id", "scene"],
+                false,
+            ),
         ),
         read_definition(
             SMART_HOME_GET_STATE_TOOL_ID,
@@ -891,6 +944,16 @@ fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest,
     })
 }
 
+fn list_scenes_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    Ok(RuntimeReadToolRequest::ListScenes {
+        scope: optional_string(arguments, "scope")?
+            .map(|value| parse_scene_scope(&value))
+            .transpose()?,
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
+    })
+}
+
 fn command_request(arguments: &JsonValue) -> Result<RuntimeCommandToolRequest, ToolCallError> {
     let entity_id = EntityId::trusted(required_string(arguments, "entity_id")?);
     let command_type = parse_command_type(&required_string(arguments, "command_type")?)?;
@@ -1216,6 +1279,17 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
                 JsonValue::Array(devices.iter().map(device_json).collect()),
             ),
             ("count", integer(devices.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::Scenes(scenes) => object([
+            (
+                "scenes",
+                JsonValue::Array(scenes.iter().map(scene_json).collect()),
+            ),
+            ("count", integer(scenes.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::Scene { scene_id, scene } => object([
+            ("scene_id", string(scene_id.as_str())),
+            ("scene", scene_json(&scene)),
         ]),
         RuntimeReadToolOutput::State {
             entity_id,
@@ -2024,6 +2098,14 @@ fn metadata_json(metadata: &Metadata) -> JsonValue {
     ])
 }
 
+fn protocol_identifier_json(identifier: &ProtocolIdentifier) -> JsonValue {
+    object([
+        ("family", string(protocol_family_label(&identifier.family))),
+        ("kind", string(&identifier.kind)),
+        ("value", string(&identifier.value)),
+    ])
+}
+
 fn discovery_worker_snapshot_json(snapshot: &ScheduledDiscoveryWorkerSnapshot) -> JsonValue {
     object([
         ("worker_id", string(snapshot.worker_id.as_str())),
@@ -2134,6 +2216,37 @@ fn device_json(device: &Device) -> JsonValue {
                 .map(|value| string(value))
                 .unwrap_or(JsonValue::Null),
         ),
+    ])
+}
+
+fn scene_json(scene: &Scene) -> JsonValue {
+    object([
+        ("scene_id", string(scene.scene_id.as_str())),
+        ("scope", string(scene_scope_label(scene.scope))),
+        (
+            "native_ref",
+            scene
+                .native_ref
+                .as_ref()
+                .map(protocol_identifier_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "actions",
+            JsonValue::Array(scene.actions.iter().map(scene_action_json).collect()),
+        ),
+        ("action_count", integer(scene.actions.len() as i64)),
+        (
+            "metadata",
+            JsonValue::Array(scene.metadata.iter().map(metadata_json).collect()),
+        ),
+    ])
+}
+
+fn scene_action_json(action: &SceneAction) -> JsonValue {
+    object([
+        ("entity_id", string(action.entity_id.as_str())),
+        ("desired_state", smart_value_to_json(&action.desired_state)),
     ])
 }
 
@@ -2549,6 +2662,17 @@ fn parse_health(label: &str) -> Result<Health, ToolCallError> {
     }
 }
 
+fn parse_scene_scope(label: &str) -> Result<SceneScope, ToolCallError> {
+    match label {
+        "room" => Ok(SceneScope::Room),
+        "zone" => Ok(SceneScope::Zone),
+        "home" => Ok(SceneScope::Home),
+        "bridge" => Ok(SceneScope::Bridge),
+        "custom" => Ok(SceneScope::Custom),
+        _ => Err(validation_error(format!("unknown scene scope `{label}`"))),
+    }
+}
+
 fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError> {
     match label {
         "mdns" => Ok(DiscoverySource::Mdns),
@@ -2722,6 +2846,18 @@ fn parse_protocol_family(label: &str) -> Result<ProtocolFamily, ToolCallError> {
     }
 }
 
+fn protocol_family_label(family: &ProtocolFamily) -> String {
+    match family {
+        ProtocolFamily::Hue => "hue".to_string(),
+        ProtocolFamily::Zigbee => "zigbee".to_string(),
+        ProtocolFamily::ZWave => "zwave".to_string(),
+        ProtocolFamily::Thread => "thread".to_string(),
+        ProtocolFamily::Matter => "matter".to_string(),
+        ProtocolFamily::Mqtt => "mqtt".to_string(),
+        ProtocolFamily::Vendor(value) => format!("vendor:{value}"),
+    }
+}
+
 fn parse_integration_catalog_sort(label: &str) -> Result<IntegrationCatalogSort, ToolCallError> {
     match label {
         "priority_then_name" => Ok(IntegrationCatalogSort::PriorityThenName),
@@ -2808,6 +2944,16 @@ fn runtime_kind_label(kind: RuntimeKind) -> &'static str {
     match kind {
         RuntimeKind::InProcessRust => "in_process_rust",
         RuntimeKind::RustWorkerProcess => "rust_worker_process",
+    }
+}
+
+fn scene_scope_label(scope: SceneScope) -> &'static str {
+    match scope {
+        SceneScope::Room => "room",
+        SceneScope::Zone => "zone",
+        SceneScope::Home => "home",
+        SceneScope::Bridge => "bridge",
+        SceneScope::Custom => "custom",
     }
 }
 
@@ -3298,7 +3444,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 16);
+        assert_eq!(definitions.len(), 18);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -3313,6 +3459,10 @@ mod tests {
             .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_LIST_SCENES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_DESCRIBE_SCENE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_COMMAND_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_PAIR_BRIDGE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_SUBSCRIBE_TOOL_ID));
@@ -3324,7 +3474,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            14
+            16
         );
         assert_eq!(
             export
@@ -3337,6 +3487,8 @@ mod tests {
             1
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition("smart_home.unknown").is_none());
     }
 
@@ -3490,6 +3642,49 @@ mod tests {
         assert_eq!(
             field(list_trace.result.output.as_ref().unwrap(), "count"),
             Some(&integer(1))
+        );
+
+        let list_scenes_request = request(
+            "call-list-scenes",
+            SMART_HOME_LIST_SCENES_TOOL_ID,
+            object([
+                ("scope", string("room")),
+                ("capability_id", string("light.on_off")),
+            ]),
+            1_001,
+        );
+        let list_scenes_trace = tool_runtime.invoke_with_events(&list_scenes_request);
+        assert!(list_scenes_trace.result.ok);
+        let list_scenes_output = list_scenes_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_scenes_output, "count"), Some(&integer(1)));
+        let scene_summary = array_item(field(list_scenes_output, "scenes").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(scene_summary, "scene_id"),
+            Some(&string("scene-kitchen-bright"))
+        );
+        assert_eq!(field(scene_summary, "scope"), Some(&string("room")));
+
+        let describe_scene_request = request(
+            "call-describe-scene",
+            SMART_HOME_DESCRIBE_SCENE_TOOL_ID,
+            object([("scene_id", string("scene-kitchen-bright"))]),
+            1_002,
+        );
+        let describe_scene_trace = tool_runtime.invoke_with_events(&describe_scene_request);
+        assert!(describe_scene_trace.result.ok);
+        let describe_scene_output = describe_scene_trace.result.output.as_ref().unwrap();
+        let scene = field(describe_scene_output, "scene").unwrap();
+        assert_eq!(
+            field(describe_scene_output, "scene_id"),
+            Some(&string("scene-kitchen-bright"))
+        );
+        assert_eq!(field(scene, "action_count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                array_item(field(scene, "actions").unwrap(), 0).unwrap(),
+                "entity_id"
+            ),
+            Some(&string("entity-light-1"))
         );
 
         let discover_request = request(
@@ -3724,6 +3919,8 @@ mod tests {
         journal.record_trace(list_primitives_request, list_primitives_trace);
         journal.record_trace(describe_primitive_request, describe_primitive_trace);
         journal.record_trace(list_request, list_trace);
+        journal.record_trace(list_scenes_request, list_scenes_trace);
+        journal.record_trace(describe_scene_request, describe_scene_trace);
         journal.record_trace(discover_request, discover_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
@@ -3736,9 +3933,9 @@ mod tests {
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 15);
-        assert_eq!(journal_summary.completed_count, 15);
-        assert_eq!(journal.audit_records().len(), 15);
+        assert_eq!(journal_summary.invocation_count, 17);
+        assert_eq!(journal_summary.completed_count, 17);
+        assert_eq!(journal.audit_records().len(), 17);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -3751,7 +3948,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            12,
+            14,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

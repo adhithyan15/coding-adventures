@@ -26,6 +26,8 @@ All notable changes to this package will be documented in this file.
   describe-capabilities views over entity capability surfaces.
 - `IntegrationSurfaceSummary` and `IntegrationDescriptor::surface_summary()`
   for payload-free adapter capability, discovery, and pairing introspection.
+- `smart_home.list_scenes` and `smart_home.describe_scene` tool descriptors for
+  read-only scene inventory and detail surfaces.
 
 ## [0.1.0] - 2026-05-06
 

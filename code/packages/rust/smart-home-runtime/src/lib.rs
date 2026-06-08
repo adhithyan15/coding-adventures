@@ -11,9 +11,9 @@ use smart_home_core::{
     tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, Capability,
     CapabilityGrant, CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
-    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
-    SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
-    VaultRef,
+    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier, Scene,
+    SceneId, SceneScope, SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot,
+    StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError, DiscoveryRecord,
@@ -38,6 +38,7 @@ pub enum RuntimeError {
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
+    UnknownScene(SceneId),
     UnknownPairingSession(RuntimePairingSessionId),
     UnknownSubscription(RuntimeSubscriptionId),
     UnknownDiscoveryWorker(DiscoveryWorkerId),
@@ -98,6 +99,7 @@ impl fmt::Display for RuntimeError {
             Self::UnknownBridge(id) => write!(f, "unknown runtime bridge {id}"),
             Self::UnknownDevice(id) => write!(f, "unknown runtime device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
+            Self::UnknownScene(id) => write!(f, "unknown runtime scene {id}"),
             Self::UnknownPairingSession(id) => write!(f, "unknown runtime pairing session {id}"),
             Self::UnknownSubscription(id) => write!(f, "unknown runtime subscription {id}"),
             Self::UnknownDiscoveryWorker(id) => write!(f, "unknown discovery worker {id}"),
@@ -3182,6 +3184,14 @@ pub enum RuntimeReadToolRequest {
         health: Option<Health>,
         capability_id: Option<CapabilityId>,
     },
+    ListScenes {
+        scope: Option<SceneScope>,
+        entity_id: Option<EntityId>,
+        capability_id: Option<CapabilityId>,
+    },
+    DescribeScene {
+        scene_id: SceneId,
+    },
     GetState {
         entity_id: EntityId,
     },
@@ -3199,6 +3209,8 @@ impl RuntimeReadToolRequest {
         match self {
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
+            Self::ListScenes { .. } => SmartHomeTool::ListScenes,
+            Self::DescribeScene { .. } => SmartHomeTool::DescribeScene,
             Self::GetState { .. } => SmartHomeTool::GetState,
             Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
@@ -3378,6 +3390,11 @@ impl BridgeHealthSnapshot {
 pub enum RuntimeReadToolOutput {
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
+    Scenes(Vec<Scene>),
+    Scene {
+        scene_id: SceneId,
+        scene: Scene,
+    },
     State {
         entity_id: EntityId,
         snapshot: Option<StateSnapshot>,
@@ -3669,6 +3686,10 @@ impl SmartHomeRuntime {
 
     pub fn upsert_entity(&mut self, entity: Entity) -> Result<Option<Entity>, RuntimeError> {
         self.registry.upsert_entity(entity).map_err(Into::into)
+    }
+
+    pub fn upsert_scene(&mut self, scene: Scene) -> Result<Option<Scene>, RuntimeError> {
+        self.registry.upsert_scene(scene).map_err(Into::into)
     }
 
     pub fn record_discovery(
@@ -4189,6 +4210,35 @@ impl SmartHomeRuntime {
                         .collect(),
                 ))
             }
+            RuntimeReadToolRequest::ListScenes {
+                scope,
+                entity_id,
+                capability_id,
+            } => Ok(RuntimeReadToolOutput::Scenes(
+                self.registry
+                    .scenes()
+                    .filter(|scene| scope.is_none_or(|scope| scene.scope == scope))
+                    .filter(|scene| {
+                        entity_id
+                            .as_ref()
+                            .is_none_or(|entity_id| scene_has_action_for_entity(scene, entity_id))
+                    })
+                    .filter(|scene| {
+                        capability_id.as_ref().is_none_or(|capability_id| {
+                            scene_has_action_for_capability(&self.registry, scene, capability_id)
+                        })
+                    })
+                    .cloned()
+                    .collect(),
+            )),
+            RuntimeReadToolRequest::DescribeScene { scene_id } => {
+                let scene = self
+                    .registry
+                    .scene(&scene_id)
+                    .ok_or_else(|| RuntimeError::UnknownScene(scene_id.clone()))?
+                    .clone();
+                Ok(RuntimeReadToolOutput::Scene { scene_id, scene })
+            }
             RuntimeReadToolRequest::GetState { entity_id } => {
                 if self.registry.entity(&entity_id).is_none() {
                     return Err(RuntimeError::UnknownEntity(entity_id));
@@ -4695,6 +4745,28 @@ pub fn health_name(health: Health) -> &'static str {
         Health::Unsupported => "unsupported",
         Health::Removed => "removed",
     }
+}
+
+fn scene_has_action_for_entity(scene: &Scene, entity_id: &EntityId) -> bool {
+    scene
+        .actions
+        .iter()
+        .any(|action| &action.entity_id == entity_id)
+}
+
+fn scene_has_action_for_capability(
+    registry: &InMemorySmartHomeRegistry,
+    scene: &Scene,
+    capability_id: &CapabilityId,
+) -> bool {
+    scene.actions.iter().any(|action| {
+        registry.entity(&action.entity_id).is_some_and(|entity| {
+            entity
+                .capabilities
+                .iter()
+                .any(|capability| &capability.capability_id == capability_id)
+        })
+    })
 }
 
 fn validate_command_capabilities(
@@ -7544,6 +7616,18 @@ mod tests {
                 confidence: StateConfidence::Confirmed,
             })
             .unwrap();
+        runtime
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: None,
+                actions: vec![smart_home_core::SceneAction {
+                    entity_id: EntityId::trusted("entity-1"),
+                    desired_state: Value::Bool(true),
+                }],
+                metadata: vec![Metadata::new("fixture", "runtime_read_tool_scene")],
+            })
+            .unwrap();
 
         let bridges = runtime
             .execute_read_tool(
@@ -7563,13 +7647,33 @@ mod tests {
                 1_501,
             )
             .unwrap();
+        let scenes = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListScenes {
+                    scope: Some(SceneScope::Room),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    capability_id: Some(CapabilityId::trusted("light.on_off")),
+                },
+                1_502,
+            )
+            .unwrap();
+        let scene = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::DescribeScene {
+                    scene_id: SceneId::trusted("scene-1"),
+                },
+                1_503,
+            )
+            .unwrap();
         let state = runtime
             .execute_read_tool(
                 principal.clone(),
                 RuntimeReadToolRequest::GetState {
                     entity_id: EntityId::trusted("entity-1"),
                 },
-                1_502,
+                1_504,
             )
             .unwrap();
         let capabilities = runtime
@@ -7578,7 +7682,7 @@ mod tests {
                 RuntimeReadToolRequest::DescribeCapabilities {
                     entity_id: EntityId::trusted("entity-1"),
                 },
-                1_503,
+                1_505,
             )
             .unwrap();
         let health = runtime
@@ -7587,11 +7691,11 @@ mod tests {
                 RuntimeReadToolRequest::GetHealth {
                     bridge_id: Some(BridgeId::trusted("bridge-1")),
                 },
-                1_504,
+                1_506,
             )
             .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_505)
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_507)
             .unwrap();
 
         assert!(matches!(
@@ -7603,6 +7707,19 @@ mod tests {
             devices,
             RuntimeReadToolOutput::Devices(devices) if devices.len() == 1
                 && devices[0].device_id == DeviceId::trusted("device-1")
+        ));
+        assert!(matches!(
+            scenes,
+            RuntimeReadToolOutput::Scenes(scenes) if scenes.len() == 1
+                && scenes[0].scene_id == SceneId::trusted("scene-1")
+        ));
+        assert!(matches!(
+            scene,
+            RuntimeReadToolOutput::Scene {
+                scene_id,
+                scene,
+            } if scene_id == SceneId::trusted("scene-1")
+                && scene.actions.len() == 1
         ));
         assert!(matches!(
             state,
@@ -7632,12 +7749,12 @@ mod tests {
         assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_505
+                if observation.generated_at_ms == 1_507
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 6);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 8);
         assert!(runtime
             .registry()
             .authorization_decisions()

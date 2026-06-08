@@ -11,6 +11,8 @@ All notable changes to this package will be documented in this file.
 - A Hue pairing fixture path that matches the application registration HTTP
   plan, parses the scripted Hue response, simulates Vault storage, and completes
   the runtime pairing session without raw secret values in audit metadata.
+- A normalized Hue-style room scene fixture seeded into registry and runtime
+  helpers for scene inventory/read tests.
 
 ## [0.1.0] - 2026-05-08
 
