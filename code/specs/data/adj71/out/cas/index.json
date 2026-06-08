@@ -1,0 +1,292 @@
+{
+  "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471": {
+    "kind": "case_input",
+    "label": "case_006_not_continuous_after_filing.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/03/dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+    "sha256": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+    "size": 907
+  },
+  "0849b243e02158ada47f7905582627b2fc96e025385ea9974962c32299f98989": {
+    "kind": "program_library",
+    "label": "immigration_316a_rules.py",
+    "metadata": {
+      "derived_from_source_ir_hash": "6042ab931915ed9bf310b8836c1a4863ca8f194114eec80c21ffb065a0594627"
+    },
+    "path": "objects/08/49b243e02158ada47f7905582627b2fc96e025385ea9974962c32299f98989",
+    "sha256": "0849b243e02158ada47f7905582627b2fc96e025385ea9974962c32299f98989",
+    "size": 8507
+  },
+  "1678d368964ea8840609ea470403beca419a454d6adc88d5bff5d8bc9fc13bcf": {
+    "kind": "case_ir",
+    "label": "case_007_no_good_moral_character.json",
+    "metadata": {
+      "input_hash": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+      "role": "training"
+    },
+    "path": "objects/16/78d368964ea8840609ea470403beca419a454d6adc88d5bff5d8bc9fc13bcf",
+    "sha256": "1678d368964ea8840609ea470403beca419a454d6adc88d5bff5d8bc9fc13bcf",
+    "size": 4695
+  },
+  "1ea589624c0bb8fd7546ab6a129afeb5ba0ff9e5b01e2962fc4f74553b94807e": {
+    "kind": "case_ir",
+    "label": "case_010_exception_claimed.json",
+    "metadata": {
+      "input_hash": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+      "role": "training"
+    },
+    "path": "objects/1e/a589624c0bb8fd7546ab6a129afeb5ba0ff9e5b01e2962fc4f74553b94807e",
+    "sha256": "1ea589624c0bb8fd7546ab6a129afeb5ba0ff9e5b01e2962fc4f74553b94807e",
+    "size": 4661
+  },
+  "368c283b64eba9ab14b3884ab63cc30e938deacc9ea5769efbf704e3bdb3fecf": {
+    "kind": "case_ir",
+    "label": "case_001_clean_pass.json",
+    "metadata": {
+      "input_hash": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+      "role": "training"
+    },
+    "path": "objects/36/8c283b64eba9ab14b3884ab63cc30e938deacc9ea5769efbf704e3bdb3fecf",
+    "sha256": "368c283b64eba9ab14b3884ab63cc30e938deacc9ea5769efbf704e3bdb3fecf",
+    "size": 4671
+  },
+  "50507aebb33ef451f08d5532806e1c755f91dda3df25b49fa96889a5a03ac7dd": {
+    "kind": "case_ir",
+    "label": "case_004_short_physical_presence.json",
+    "metadata": {
+      "input_hash": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+      "role": "training"
+    },
+    "path": "objects/50/507aebb33ef451f08d5532806e1c755f91dda3df25b49fa96889a5a03ac7dd",
+    "sha256": "50507aebb33ef451f08d5532806e1c755f91dda3df25b49fa96889a5a03ac7dd",
+    "size": 4682
+  },
+  "6042ab931915ed9bf310b8836c1a4863ca8f194114eec80c21ffb065a0594627": {
+    "kind": "source_ir",
+    "label": "8usc1427_release_119_95_xml_section_ir",
+    "metadata": {},
+    "path": "objects/60/42ab931915ed9bf310b8836c1a4863ca8f194114eec80c21ffb065a0594627",
+    "sha256": "6042ab931915ed9bf310b8836c1a4863ca8f194114eec80c21ffb065a0594627",
+    "size": 9217
+  },
+  "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00": {
+    "kind": "case_input",
+    "label": "case_008_not_attached.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/65/265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+    "sha256": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+    "size": 909
+  },
+  "6963d3227dfa02e96566d47291347d7d8c7fbde2ae9faaae92a1792fb0c37689": {
+    "kind": "case_program",
+    "label": "case_011_heldout_borderline_pass_program.py",
+    "metadata": {
+      "imports_library_hash": "0849b243e02158ada47f7905582627b2fc96e025385ea9974962c32299f98989",
+      "input_ir_hash": "bdb3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267"
+    },
+    "path": "objects/69/63d3227dfa02e96566d47291347d7d8c7fbde2ae9faaae92a1792fb0c37689",
+    "sha256": "6963d3227dfa02e96566d47291347d7d8c7fbde2ae9faaae92a1792fb0c37689",
+    "size": 6302
+  },
+  "72418fac35dd42cd7085ff78a6ea70ec733fb1c0bd32aae7b9b629d4ad3fdef2": {
+    "kind": "case_ir",
+    "label": "case_003_not_lpr.json",
+    "metadata": {
+      "input_hash": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+      "role": "training"
+    },
+    "path": "objects/72/418fac35dd42cd7085ff78a6ea70ec733fb1c0bd32aae7b9b629d4ad3fdef2",
+    "sha256": "72418fac35dd42cd7085ff78a6ea70ec733fb1c0bd32aae7b9b629d4ad3fdef2",
+    "size": 4673
+  },
+  "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7": {
+    "kind": "case_input",
+    "label": "case_011_heldout_borderline_pass.txt",
+    "metadata": {
+      "role": "held_out"
+    },
+    "path": "objects/75/a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+    "sha256": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+    "size": 912
+  },
+  "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4": {
+    "kind": "case_input",
+    "label": "case_004_short_physical_presence.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/7b/1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+    "sha256": "7b1769446221449ef69cf97a419b862dc4a38b4a3fd3fcd5dfed00336ece98d4",
+    "size": 903
+  },
+  "7cf90f8392a8916f63b491af5dcfe3b4b1f1da7c48cbcebe7d22f78719a67de0": {
+    "kind": "case_ir",
+    "label": "case_008_not_attached.json",
+    "metadata": {
+      "input_hash": "65265a2266cb7d7c0a5de835662b571f8bca45c9d4cd4de1318411fa8585da00",
+      "role": "training"
+    },
+    "path": "objects/7c/f90f8392a8916f63b491af5dcfe3b4b1f1da7c48cbcebe7d22f78719a67de0",
+    "sha256": "7cf90f8392a8916f63b491af5dcfe3b4b1f1da7c48cbcebe7d22f78719a67de0",
+    "size": 4678
+  },
+  "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20": {
+    "kind": "case_input",
+    "label": "case_001_clean_pass.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/7e/3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+    "sha256": "7e3d7d6ebdcbbf2e1300ef63f787daee6697c9d0008a1b37e14c4400ae53ca20",
+    "size": 905
+  },
+  "7f8d679769fd9b76363884eb7668ef933e4fdb0fe47fe1d339e9aeb6fd11e980": {
+    "kind": "case_ir",
+    "label": "case_006_not_continuous_after_filing.json",
+    "metadata": {
+      "input_hash": "03dfd1a8b87c7caee647f4ee88c26b3b32c6b80dff1688dce2a6feff36c10471",
+      "role": "training"
+    },
+    "path": "objects/7f/8d679769fd9b76363884eb7668ef933e4fdb0fe47fe1d339e9aeb6fd11e980",
+    "sha256": "7f8d679769fd9b76363884eb7668ef933e4fdb0fe47fe1d339e9aeb6fd11e980",
+    "size": 4691
+  },
+  "966877819ed911c463df7e9773653a3848fc59e4f98f65c49c51ee1323fae0fb": {
+    "kind": "case_ir",
+    "label": "case_009_not_well_disposed.json",
+    "metadata": {
+      "input_hash": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+      "role": "training"
+    },
+    "path": "objects/96/6877819ed911c463df7e9773653a3848fc59e4f98f65c49c51ee1323fae0fb",
+    "sha256": "966877819ed911c463df7e9773653a3848fc59e4f98f65c49c51ee1323fae0fb",
+    "size": 4683
+  },
+  "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986": {
+    "kind": "case_input",
+    "label": "case_007_no_good_moral_character.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/97/2ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+    "sha256": "972ac5d76046db98fd0987b6adebe005996c49945e600b114f11c7789480b986",
+    "size": 915
+  },
+  "a0a1562478aa19724a47d55d61d5c0a689d8c3c2c57e1216bb217a0274123a53": {
+    "kind": "case_ir",
+    "label": "case_002_short_residence.json",
+    "metadata": {
+      "input_hash": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+      "role": "training"
+    },
+    "path": "objects/a0/a1562478aa19724a47d55d61d5c0a689d8c3c2c57e1216bb217a0274123a53",
+    "sha256": "a0a1562478aa19724a47d55d61d5c0a689d8c3c2c57e1216bb217a0274123a53",
+    "size": 4676
+  },
+  "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751": {
+    "kind": "case_input",
+    "label": "case_003_not_lpr.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/a3/961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+    "sha256": "a3961729cfbc25ed6b1efd0040e4a0617acc8906acc275c073ea98db3c0b2751",
+    "size": 909
+  },
+  "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41": {
+    "kind": "source_bytes",
+    "label": "8usc1427_release_119_95_xml_section",
+    "metadata": {
+      "archive_bytes": 1232043,
+      "archive_sha256": "a66b51e9deae5606ba6d7cad0c8fa920fa96f16a3a4e15e9548767284bfd63c1",
+      "fetched_at": "2026-06-08T01:18:36.036603+00:00",
+      "release_point": "Public Law 119-95 (05/29/2026)",
+      "section_end_in_title_xml": 5929979,
+      "section_identifier": "identifier=\"/us/usc/t8/s1427\"",
+      "section_start_in_title_xml": 5903622,
+      "title_xml_bytes": 7384422,
+      "title_xml_name": "usc08.xml",
+      "title_xml_sha256": "40df2a8b138086b6d84e50be8292813dde70798499cb469f42cf104803594898",
+      "url": "https://uscode.house.gov/download/releasepoints/us/pl/119/95/xml_usc08@119-95.zip"
+    },
+    "path": "objects/ac/97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+    "sha256": "ac97e9ef0ceb87cefd2df2975920237534c833d33c7bd1a2a019ad5bfb5a9c41",
+    "size": 26357
+  },
+  "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc": {
+    "kind": "case_input",
+    "label": "case_009_not_well_disposed.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/b9/f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+    "sha256": "b9f9e46869f728abc5e8717f1329bece4e557e8f613dd042fc790350113cdccc",
+    "size": 909
+  },
+  "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73": {
+    "kind": "case_input",
+    "label": "case_010_exception_claimed.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/ba/9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+    "sha256": "ba9ded403f262ca204ef839697dcb8decbb67cb2aa3f1d4e9e2cb62a44a0db73",
+    "size": 893
+  },
+  "bdb3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267": {
+    "kind": "case_ir",
+    "label": "case_011_heldout_borderline_pass.json",
+    "metadata": {
+      "input_hash": "75a6c599d131b1d34a7ed81ea75313eab7c7eed1c0b606a91f903fd196af25a7",
+      "role": "held_out"
+    },
+    "path": "objects/bd/b3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267",
+    "sha256": "bdb3fc58e18f7180f02faa2869bd5f790813348c3af1a8cdd129462f2c092267",
+    "size": 4692
+  },
+  "c8a3a1aadf6b5c74870937c7d1e04c0047f34cac748fbc2128133b6ab1fe0c4d": {
+    "kind": "case_ir",
+    "label": "case_005_short_state_residence.json",
+    "metadata": {
+      "input_hash": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+      "role": "training"
+    },
+    "path": "objects/c8/a3a1aadf6b5c74870937c7d1e04c0047f34cac748fbc2128133b6ab1fe0c4d",
+    "sha256": "c8a3a1aadf6b5c74870937c7d1e04c0047f34cac748fbc2128133b6ab1fe0c4d",
+    "size": 4682
+  },
+  "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2": {
+    "kind": "case_input",
+    "label": "case_005_short_state_residence.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/e6/5e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+    "sha256": "e65e68f744b78f73037e13629dca960971a89da2b457d6b98b80637acb119dd2",
+    "size": 905
+  },
+  "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845": {
+    "kind": "case_input",
+    "label": "case_002_short_residence.txt",
+    "metadata": {
+      "role": "training"
+    },
+    "path": "objects/e7/65dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+    "sha256": "e765dbbda0240a0d48beaa0ac7670e70131bd0e4fac99aee8a60545d6f58a845",
+    "size": 905
+  },
+  "f697475c6c26d28d9f59a01e0da4a136fe68cdbdce95e823ed95bfcb2f72b0fa": {
+    "kind": "execution_result",
+    "label": "case_011_heldout_borderline_pass_result.json",
+    "metadata": {
+      "case_program_hash": "6963d3227dfa02e96566d47291347d7d8c7fbde2ae9faaae92a1792fb0c37689"
+    },
+    "path": "objects/f6/97475c6c26d28d9f59a01e0da4a136fe68cdbdce95e823ed95bfcb2f72b0fa",
+    "sha256": "f697475c6c26d28d9f59a01e0da4a136fe68cdbdce95e823ed95bfcb2f72b0fa",
+    "size": 10488
+  }
+}
