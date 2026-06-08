@@ -6,6 +6,8 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness loading-hint descriptors now expose lazy/eager loading,
+  decoding, fetch priority, blocking, and media preload scheduling metadata.
 - Browser-readiness ARIA relation descriptors now expose details, error-message,
   and flow target metadata with resolved target text.
 - Browser-readiness global-state descriptors now include shell-level `html` and

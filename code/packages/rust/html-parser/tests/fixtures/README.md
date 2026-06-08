@@ -26,6 +26,8 @@ inert/hidden, editing, drag, spellcheck, translate, accesskey, autofocus, and
 related focus metadata.
 ARIA descriptor cases pin collection/range/live-region semantics plus details,
 error-message, and flow relationship target text.
+Loading-hint descriptor cases pin scheduling hints across lazy/eager loading,
+decoding, fetch priority, blocking, and media preload metadata.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags and preload/poster metadata.
