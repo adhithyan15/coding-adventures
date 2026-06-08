@@ -85,29 +85,18 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-031 was RESOLVED in CLOC12.41 — empty `{}` body
-    // collapses to `;` per §13.2 EmptyStatement substitution
-    // in body position. `minify_for_loop` flipped from
-    // IGNORED to PASS.
-    // gap-032 was RESOLVED in CLOC12.42 — single-statement
-    // block flattening in body position. `minify_if_else`
-    // flipped from IGNORED to PASS.
-    // gap-033 was RESOLVED in CLOC12.40 — the brace_stack
-    // state machine now tracks try/catch/finally chains via
-    // BlockKind::TryChain. `minify_try_catch` flipped from
-    // IGNORED to PASS.
-    //
-    // gap-034 was RESOLVED in CLOC12.43 — `BlockKind::Class`
-    // variant pushed when `{` follows `class` keyword at
-    // statement boundary. `minify_class` flipped IGNORED → PASS.
-    //
-    // gap-035 was RESOLVED in CLOC12.43 — `needs_separator`
-    // extended with a `var`/`let`/`const` → `{`/`[` rule.
-    // `minify_destructuring` flipped IGNORED → PASS.
-    //
-    // gap-036 was RESOLVED in CLOC12.43 — `BlockKind::Switch`
-    // variant pushed when `{` follows the matching `)` of a
-    // `switch(...)` head. `minify_switch` flipped IGNORED → PASS.
+    // gap-037: async function declaration trailing `;` —
+    // sibling of gap-030. closurec's state machine arms
+    // `saw_function_kw_at_boundary` on `function` keyword at
+    // stmt boundary, but `async` consumes the boundary first,
+    // so the subsequent `function` doesn't see at_boundary=true.
+    // Discovered by CLOC14.5. See README in fixture dir.
+    ("async", "gap-037: async function trailing `;`"),
+    // gap-038: hex numeric literal normalized to decimal.
+    // Upstream emits `var x=255;` for `var x=0xff;` even
+    // under WHITESPACE_ONLY. closurec preserves the source
+    // literal verbatim. Discovered by CLOC14.5.
+    ("hex_number", "gap-038: hex literal → decimal"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
