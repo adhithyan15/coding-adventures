@@ -96,6 +96,24 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // state machine now tracks try/catch/finally chains via
     // BlockKind::TryChain. `minify_try_catch` flipped from
     // IGNORED to PASS.
+    //
+    // gap-034: class declaration trailing `;` after `}` —
+    // same family as gap-030 (function-decl) and gap-033
+    // (try/catch). Upstream emits `class C{m(){}};` for
+    // `class C{m(){}}`. Discovered by CLOC14.4.
+    ("class", "gap-034: class declaration trailing `;` after `}`"),
+    // gap-035: `var{...}` destructuring needs space between
+    // `var` and `{` to disambiguate from a Block at lex
+    // boundary (per Closure's choice). Upstream emits
+    // `var {a}=x;` not `var{a}=x;`. Discovered by CLOC14.4.
+    ("destructuring", "gap-035: var{ requires space before `{`"),
+    // gap-036: switch statement trailing `;` after `}` —
+    // same family as gap-034. Upstream emits
+    // `switch(x){case 1:y();break};` for
+    // `switch(x){case 1:y();break;}`. The inner `break`'s
+    // `;` is correctly dropped already (rule A) but the
+    // trailing `;` is missing. Discovered by CLOC14.4.
+    ("switch", "gap-036: switch trailing `;` after `}`"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

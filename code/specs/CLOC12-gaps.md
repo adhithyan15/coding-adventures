@@ -259,3 +259,24 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream byte-identity test:** `minify_try_catch` seed fixture. PASS.
 - **Why it failed:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation. closurec correctly dropped inner `;`s per gap-030 rule A but never emitted the trailing `;`.
 - **Resolution:** Extended the CLI token state machine. `brace_stack` was refactored from `Vec<bool>` to `Vec<BlockKind>` with three variants: `Function`, `TryChain`, `Other`. A new flag `next_block_is_try_chain` is armed by the `try`/`catch`/`finally` keywords; the next `{` consumes it and pushes `BlockKind::TryChain` onto the stack. When a `}` pops a `TryChain` kind, the emitter peeks the next non-trivia token: if it's `catch` or `finally`, the chain continues and no `;` is emitted; otherwise the chain has ended and a synthetic `;` is appended. 6 inline tests pin the behavior including nested try/catch, try/catch/finally chains, function-decl inside try-block (no interference between Function and TryChain), and ES2019 optional catch binding (`try{a;}catch{b;}`).
+
+### gap-034 — class declaration trailing `;` after `}`
+
+- **Status:** OPEN — newly discovered by CLOC14.4. **Same family as gap-030 / gap-033** — declarations that produce a `{...}` block get a synthetic trailing `;`.
+- **Upstream byte-identity test:** `minify_class` seed fixture.
+- **Why it fails:** Upstream emits `class C{m(){}};` for `class C{m(){}}`. closurec emits `class C{m(){}}` (no trailing `;`).
+- **What it needs:** Trivial extension to the `BlockKind` enum in `whitespace_only.rs`. Add a `BlockKind::Class` variant pushed when a `{` follows the `class` keyword (and optional class name) at a statement boundary. When the matching `}` is popped, emit `;`. Composes cleanly with gap-030's brace_stack mechanism — same shape, different keyword. Conservative trigger: `class` keyword + at_stmt_boundary, similar to the gap-030 `function` arming.
+
+### gap-035 — `var{...}` / `let{...}` / `const{...}` destructuring requires space before `{`
+
+- **Status:** OPEN — newly discovered by CLOC14.4.
+- **Upstream byte-identity test:** `minify_destructuring` seed fixture.
+- **Why it fails:** Upstream emits `var {a}=x;` for `var{a}=x;` (space inserted between `var` and `{`). closurec's `needs_separator` returns false when prev is `var` (KEYWORD, word-like) and next is `{` (PUNCTUATION, not word-like) — so no separator is inserted. The token stream `var{a}=x;` IS unambiguous to a parser (the `{` opens a destructuring pattern given `var` precedes it), but upstream Closure inserts the space anyway, likely for human readability and disambiguation from a Block.
+- **What it needs:** Extend `needs_separator`'s rule: when prev is `var` / `let` / `const` keyword AND next is `{` or `[`, force a separator. Keeps the change scoped to a 3-keyword whitelist; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
+
+### gap-036 — switch statement trailing `;` after `}`
+
+- **Status:** OPEN — newly discovered by CLOC14.4. **Same family as gap-034.**
+- **Upstream byte-identity test:** `minify_switch` seed fixture.
+- **Why it fails:** Upstream emits `switch(x){case 1:y();break};` for `switch(x){case 1:y();break;}`. closurec emits `switch(x){case 1:y();break}` (the inner `;` after `break` is correctly dropped by rule A, but the trailing `;` after the switch's closing `}` is missing).
+- **What it needs:** Add `BlockKind::Switch` to the enum (or piggyback on the gap-034 work). Pushed when `{` follows a `)` whose paren-stack frame was tagged as a switch-head. The `switch` keyword arms `next_paren_is_switch_head`; the `{` after the `)` becomes a `BlockKind::Switch` push. On matching `}`, emit `;`.
