@@ -12,8 +12,9 @@ ALGOL source -> algol-lexer/parser -> algol-iir-compiler -> IIRModule
 ```
 
 The first slice supports scalar `integer` and `boolean` programs with
-assignments, integer arithmetic, comparisons, `if`/`else`, compound statements,
-labels, `goto`, and `for i := a step k until b do ...` where `k` is a constant
-integer. Unsupported ALGOL 60 features, including arrays, procedures, strings,
-reals, switches, nested declaration scopes, and by-name calls, return explicit
+assignments, integer arithmetic (`+`, `-`, `*`, `div`, `mod`), comparisons,
+`if`/`else`, compound statements, labels, `goto`, and
+`for i := a step k until b do ...` where `k` is a constant integer.
+Unsupported ALGOL 60 features, including arrays, procedures, strings, reals,
+switches, nested declaration scopes, and by-name calls, return explicit
 compiler errors.

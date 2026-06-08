@@ -66,6 +66,20 @@ fn algol_scalar_emits_and_runs_on_wasm() {
 }
 
 #[test]
+fn algol_mod_emits_and_runs_on_wasm() {
+    let source = "begin integer result; result := 17 mod 5 end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_mod")
+        .expect("ALGOL mod should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL 17 mod 5)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL mod wasm must run");
+    assert_eq!(result, vec![2], "ALGOL mod should return 2");
+}
+
+#[test]
 fn algol_for_loop_emits_and_runs_on_wasm() {
     let source =
         "begin integer i, result; result := 0; for i := 1 step 1 until 6 do result := result + i end";

@@ -789,7 +789,7 @@ fn emit_instr(
         // ── Binary arithmetic ────────────────────────────────────────────────
         //
         // Pattern: local.get r1; local.get r2; <opcode>; local.set rd
-        "add" | "sub" | "mul" | "div" | "rem" => {
+        "add" | "sub" | "mul" | "div" | "mod" | "rem" => {
             let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
                 function: fn_name.to_string(),
                 detail: format!("{} must have a dest", instr.op),
@@ -820,10 +820,10 @@ fn emit_instr(
                 ("div", t) if is_float_hint(t) => F64_DIV,
                 ("div", t) if is_unsigned_hint(t) => I32_DIV_U,
                 ("div", _) => I32_DIV_S,
-                ("rem", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_REM_U,
-                ("rem", t) if is_i64_hint(t) => I64_REM_S,
-                ("rem", t) if is_unsigned_hint(t) => I32_REM_U,
-                ("rem", _) => I32_REM_S,
+                ("mod" | "rem", t) if is_i64_hint(t) && is_unsigned_hint(t) => I64_REM_U,
+                ("mod" | "rem", t) if is_i64_hint(t) => I64_REM_S,
+                ("mod" | "rem", t) if is_unsigned_hint(t) => I32_REM_U,
+                ("mod" | "rem", _) => I32_REM_S,
                 _ => unreachable!("matched outer pattern"),
             };
             code.push(opcode);
