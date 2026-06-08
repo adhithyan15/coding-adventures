@@ -64,6 +64,8 @@ All notable changes to this package will be documented in this file.
   `RuntimeReadToolRequest::ListDesiredStates`, and
   `RuntimeReadToolRequest::ListPairingSessions` for authorized D18D reads over
   runtime pending work, desired-state targets, and pairing-session inventories.
+- `RuntimeReadToolRequest::GetSupervisionPlan` for authorized D18D previews of
+  non-mutating supervision due work.
 
 ## [0.1.0] - 2026-05-06
 

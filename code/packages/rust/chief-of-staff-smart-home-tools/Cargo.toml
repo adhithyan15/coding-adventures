@@ -11,6 +11,7 @@ coding-adventures-json-value = { path = "../json-value" }
 smart-home-core = { path = "../smart-home-core" }
 smart-home-discovery = { path = "../smart-home-discovery" }
 smart-home-integration-catalog = { path = "../smart-home-integration-catalog" }
+smart-home-registry = { path = "../smart-home-registry" }
 smart-home-runtime = { path = "../smart-home-runtime" }
 
 [dev-dependencies]
