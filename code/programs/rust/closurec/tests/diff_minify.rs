@@ -85,11 +85,15 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // Empty. The list shrinks as gaps close and as upstream
-    // captures land. `minify_empty` was un-ignored in CLOC14.1 —
-    // upstream Closure v20240317 emits a single `\n` for empty
-    // input, which is what closurec emits today; the fixture
-    // flipped from IGNORED to PASS.
+    // gap-030: emitter divergence around function-declaration
+    // semicolons. Upstream Closure v20240317 drops the inner `;`
+    // before `}` (ASI lets the brace terminate) AND emits a
+    // trailing `;` after the function-declaration's closing
+    // brace. closurec preserves the inner `;` and emits no
+    // trailing `;`. See
+    // tests/diff/minify_function_decl/README.md for the byte
+    // breakdown and what an emitter fix would need to do.
+    ("function_decl", "gap-030: function-decl semicolon ASI policy"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
