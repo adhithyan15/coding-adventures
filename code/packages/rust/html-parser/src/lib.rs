@@ -853,6 +853,7 @@ pub struct BrowserDocument {
     pub images: Vec<BrowserImage>,
     pub image_maps: Vec<BrowserImageMap>,
     pub media: Vec<BrowserMedia>,
+    pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub disclosures: Vec<BrowserDisclosure>,
@@ -1988,6 +1989,33 @@ pub struct BrowserMediaTrack {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserMediaPlaybackDescriptor {
+    pub kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub poster: Option<String>,
+    pub resolved_poster: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub controls: bool,
+    pub autoplay: bool,
+    pub loop_media: bool,
+    pub muted: bool,
+    pub playsinline: bool,
+    pub preload: Option<String>,
+    pub crossorigin: Option<String>,
+    pub controlslist: Option<String>,
+    pub controlslist_tokens: Vec<String>,
+    pub disableremoteplayback: bool,
+    pub disablepictureinpicture: bool,
+    pub source_count: usize,
+    pub sources: Vec<BrowserMediaSource>,
+    pub track_count: usize,
+    pub default_track_count: usize,
+    pub tracks: Vec<BrowserMediaTrack>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserEmbeddedContext {
     pub element: String,
     pub url: Option<String>,
@@ -2617,6 +2645,7 @@ impl BrowserDocument {
             &[],
             body_children,
         );
+        summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -10186,6 +10215,47 @@ fn browser_resource_endpoint_descriptors(
             .map(browser_resource_endpoint_descriptor),
     );
     descriptors
+}
+
+fn browser_media_playback_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaPlaybackDescriptor> {
+    media
+        .iter()
+        .map(browser_media_playback_descriptor)
+        .collect()
+}
+
+fn browser_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlaybackDescriptor {
+    BrowserMediaPlaybackDescriptor {
+        kind: media.kind.clone(),
+        src: media.src.clone(),
+        resolved_src: media.resolved_src.clone(),
+        poster: media.poster.clone(),
+        resolved_poster: media.resolved_poster.clone(),
+        width: media.width.clone(),
+        height: media.height.clone(),
+        controls: media.controls,
+        autoplay: media.autoplay,
+        loop_media: media.loop_media,
+        muted: media.muted,
+        playsinline: media.playsinline,
+        preload: media.preload.clone(),
+        crossorigin: media.crossorigin.clone(),
+        controlslist: media.controlslist.clone(),
+        controlslist_tokens: media.controlslist_tokens.clone(),
+        disableremoteplayback: media.disableremoteplayback,
+        disablepictureinpicture: media.disablepictureinpicture,
+        source_count: media.sources.len(),
+        sources: media.sources.clone(),
+        track_count: media.tracks.len(),
+        default_track_count: media
+            .tracks
+            .iter()
+            .filter(|track| track.default_track)
+            .count(),
+        tracks: media.tracks.clone(),
+    }
 }
 
 fn browser_resource_endpoint_descriptor(
@@ -19594,6 +19664,65 @@ mod tests {
         assert_eq!(audio.sources[0].src.as_deref(), Some("theme.ogg"));
         assert_eq!(audio.sources[0].type_hint.as_deref(), Some("audio/ogg"));
         assert!(audio.tracks.is_empty());
+    }
+
+    #[test]
+    fn browser_media_playback_descriptors_track_controls_sources_and_tracks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/watch/index.html\"><body>\
+             <video src=movie.mp4 poster=poster.jpg controls autoplay loop muted playsinline \
+                 preload=metadata crossorigin=anonymous controlslist=\"nodownload noremoteplayback\" \
+                 disableremoteplayback disablepictureinpicture width=640 height=360>\
+               <source src=movie.webm type=video/webm media=\"(min-width: 700px)\">\
+               <track kind=captions src=captions.vtt srclang=en label=English default>\
+               <track src=descriptions.vtt label=Descriptions>\
+             </video>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.media_playback_descriptors.len(), 1);
+
+        let descriptor = &summary.media_playback_descriptors[0];
+        assert_eq!(descriptor.kind, "video");
+        assert_eq!(descriptor.src.as_deref(), Some("movie.mp4"));
+        assert_eq!(
+            descriptor.resolved_src.as_deref(),
+            Some("https://example.test/watch/movie.mp4")
+        );
+        assert_eq!(
+            descriptor.resolved_poster.as_deref(),
+            Some("https://example.test/watch/poster.jpg")
+        );
+        assert_eq!(descriptor.width.as_deref(), Some("640"));
+        assert!(descriptor.controls);
+        assert!(descriptor.autoplay);
+        assert!(descriptor.loop_media);
+        assert!(descriptor.muted);
+        assert!(descriptor.playsinline);
+        assert_eq!(descriptor.preload.as_deref(), Some("metadata"));
+        assert_eq!(descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(
+            descriptor.controlslist_tokens,
+            vec!["nodownload", "noremoteplayback"]
+        );
+        assert!(descriptor.disableremoteplayback);
+        assert!(descriptor.disablepictureinpicture);
+        assert_eq!(descriptor.source_count, 1);
+        assert_eq!(descriptor.sources[0].src.as_deref(), Some("movie.webm"));
+        assert_eq!(
+            descriptor.sources[0].media.as_deref(),
+            Some("(min-width: 700px)")
+        );
+        assert_eq!(descriptor.track_count, 2);
+        assert_eq!(descriptor.default_track_count, 1);
+        assert_eq!(descriptor.tracks[0].kind, "captions");
+        assert_eq!(
+            descriptor.tracks[0].resolved_src.as_deref(),
+            Some("https://example.test/watch/captions.vtt")
+        );
+        assert!(descriptor.tracks[0].default_track);
+        assert_eq!(descriptor.tracks[1].kind, "subtitles");
     }
 
     #[test]

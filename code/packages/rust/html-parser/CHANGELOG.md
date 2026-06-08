@@ -255,7 +255,8 @@ documented in this file.
   and authored dimensions for fetch and layout planning.
 - Browser-facing document, content-tree, and render-tree projections now carry
   media playback metadata for `audio` and `video`, including playback flags,
-  and preload/poster fields.
+  preload/poster fields, and flattened playback descriptors with source/track
+  counts.
 - Browser-facing document summaries now carry script and stylesheet loading
   metadata, including script kind, async/defer/nomodule flags, inline
   script/style text, integrity/crossorigin/referrer-policy hints, fetch

@@ -745,6 +745,49 @@
             "disableremoteplayback": true
           }
         ],
+        "media_playback_descriptors": [
+          {
+            "kind": "video",
+            "src": "movie.mp4",
+            "resolved_src": "https://example.test/watch/movie.mp4",
+            "poster": "poster.jpg",
+            "resolved_poster": "https://example.test/watch/poster.jpg",
+            "width": "640",
+            "height": "360",
+            "controls": true,
+            "autoplay": true,
+            "loop_media": true,
+            "muted": true,
+            "playsinline": true,
+            "preload": "metadata",
+            "crossorigin": "anonymous",
+            "controlslist": "nodownload noplaybackrate",
+            "controlslist_tokens": ["nodownload", "noplaybackrate"],
+            "disableremoteplayback": true,
+            "disablepictureinpicture": true,
+            "source_count": 0,
+            "sources": [],
+            "track_count": 0,
+            "default_track_count": 0,
+            "tracks": []
+          },
+          {
+            "kind": "audio",
+            "src": "theme.ogg",
+            "resolved_src": "https://example.test/watch/theme.ogg",
+            "controls": true,
+            "preload": "none",
+            "crossorigin": "use-credentials",
+            "controlslist": "nodownload",
+            "controlslist_tokens": ["nodownload"],
+            "disableremoteplayback": true,
+            "source_count": 0,
+            "sources": [],
+            "track_count": 0,
+            "default_track_count": 0,
+            "tracks": []
+          }
+        ],
         "forms": [],
         "tables": []
       }
@@ -791,6 +834,36 @@
             "sources": [
               { "src": "theme.ogg", "resolved_src": "https://example.test/watch/theme.ogg", "type_hint": "audio/ogg" }
             ],
+            "tracks": []
+          }
+        ],
+        "media_playback_descriptors": [
+          {
+            "kind": "video",
+            "src": null,
+            "controls": true,
+            "source_count": 2,
+            "sources": [
+              { "src": "movie.webm", "resolved_src": "https://example.test/watch/movie.webm", "type_hint": "video/webm", "media": "(min-width: 700px)" },
+              { "src": "movie.mp4", "resolved_src": "https://example.test/watch/movie.mp4", "type_hint": "video/mp4" }
+            ],
+            "track_count": 2,
+            "default_track_count": 1,
+            "tracks": [
+              { "kind": "captions", "src": "captions.vtt", "resolved_src": "https://example.test/watch/captions.vtt", "srclang": "en", "label": "English", "default_track": true },
+              { "kind": "subtitles", "src": "descriptions.vtt", "resolved_src": "https://example.test/watch/descriptions.vtt", "label": "Descriptions" }
+            ]
+          },
+          {
+            "kind": "audio",
+            "src": null,
+            "controls": true,
+            "source_count": 1,
+            "sources": [
+              { "src": "theme.ogg", "resolved_src": "https://example.test/watch/theme.ogg", "type_hint": "audio/ogg" }
+            ],
+            "track_count": 0,
+            "default_track_count": 0,
             "tracks": []
           }
         ],

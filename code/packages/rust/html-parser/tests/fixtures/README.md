@@ -42,7 +42,8 @@ targets with target selection, rel policy, ping/attribution endpoints,
 language/type hints, download/referrer policy, and area geometry.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
-Media cases pin audio/video playback flags and preload/poster metadata.
+Media cases pin audio/video playback flags, preload/poster metadata, and
+flattened playback descriptors with source/track counts.
 Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, and loading-policy hints such as integrity,
 crossorigin, referrer policy, fetch priority, blocking, disabled state, and
