@@ -33,20 +33,23 @@ use smart_home_integration_catalog::{
     IntegrationReadinessReport, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
     PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
+use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateInventorySummary, DesiredStateQuery, DesiredStateSort,
-    PairingSessionStatus, ReconciliationReason, RuntimeCommandToolRequest,
-    RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
-    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
-    RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
-    RuntimePairBridgeToolRequest, RuntimePairingSession, RuntimePairingSessionId,
-    RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
-    RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
-    RuntimeReadSnapshot, RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeSubscribeToolOutput,
-    RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId,
-    RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot,
-    RuntimeSubscriptionSort, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
-    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    DiscoveryWorkerRunInstruction, PairingSessionStatus, ReconciliationReason,
+    RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
+    RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
+    RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort,
+    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
+    RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
+    RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
+    RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
+    RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
+    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
+    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    WorkerRestartInstruction, WorkerRestartReason,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -66,6 +69,7 @@ pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
+pub const SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID: &str = "smart_home.get_supervision_plan";
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
@@ -294,6 +298,17 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_pairing_sessions"))
+                }
+                SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetSupervisionPlan,
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_supervision_plan"))
                 }
                 SMART_HOME_PAIR_BRIDGE_TOOL_ID => {
                     let request = pair_bridge_request(&arguments)?;
@@ -631,6 +646,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_snapshot_definition(),
         list_desired_states_definition(),
         list_pairing_sessions_definition(),
+        get_supervision_plan_definition(),
         pair_bridge_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
@@ -1039,6 +1055,50 @@ fn list_pairing_sessions_definition() -> ToolDefinition {
                 SchemaProperty::new("count", JsonSchema::Integer),
             ],
             vec!["sessions", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn get_supervision_plan_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID,
+        "Get smart-home supervision plan",
+        "Preview the D23 runtime supervision plan for due pairing expiry, state refresh, reconciliation, worker restart, and discovery work without mutating runtime state.",
+        empty_object_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("is_idle", JsonSchema::Boolean),
+                SchemaProperty::new("action_count", JsonSchema::Integer),
+                SchemaProperty::new(
+                    "pairing_sessions_expiring",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+                SchemaProperty::new("state_refresh_plan", JsonSchema::Any),
+                SchemaProperty::new(
+                    "desired_state_drifts",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("worker_restart_plan", JsonSchema::Any),
+                SchemaProperty::new("discovery_worker_run_plan", JsonSchema::Any),
+            ],
+            vec![
+                "generated_at_ms",
+                "summary",
+                "is_idle",
+                "action_count",
+                "pairing_sessions_expiring",
+                "state_refresh_plan",
+                "desired_state_drifts",
+                "worker_restart_plan",
+                "discovery_worker_run_plan",
+            ],
             false,
         ),
     )
@@ -1735,6 +1795,7 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
             ("summary", pairing_session_inventory_summary_json(&summary)),
             ("count", integer(sessions.len() as i64)),
         ]),
+        RuntimeReadToolOutput::SupervisionPlan(plan) => runtime_supervision_plan_json(&plan),
         RuntimeReadToolOutput::SupervisionObservation(observation) => object([
             (
                 "generated_at_ms",
@@ -2228,6 +2289,277 @@ fn pairing_session_inventory_summary_json(
         (
             "has_completed_credentials",
             JsonValue::Bool(summary.has_completed_credentials()),
+        ),
+    ])
+}
+
+fn runtime_supervision_plan_json(plan: &RuntimeSupervisionPlan) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(plan.generated_at_ms as i64)),
+        ("summary", supervision_plan_summary_json(&plan.summary())),
+        ("is_idle", JsonValue::Bool(plan.is_empty())),
+        ("action_count", integer(plan.action_count() as i64)),
+        (
+            "pairing_sessions_expiring",
+            JsonValue::Array(
+                plan.pairing_sessions_expiring
+                    .iter()
+                    .map(|session_id| string(session_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "state_refresh_plan",
+            object([
+                (
+                    "generated_at_ms",
+                    integer(plan.state_refresh_plan.generated_at_ms as i64),
+                ),
+                (
+                    "targets",
+                    JsonValue::Array(
+                        plan.state_refresh_plan
+                            .targets
+                            .iter()
+                            .map(|target| {
+                                object([
+                                    ("bridge_id", string(target.bridge_id.as_str())),
+                                    ("device_id", string(target.device_id.as_str())),
+                                    ("entity_id", string(target.entity_id.as_str())),
+                                    ("kind", string(entity_kind_label(target.kind))),
+                                    (
+                                        "capabilities",
+                                        JsonValue::Array(
+                                            target
+                                                .capabilities
+                                                .iter()
+                                                .map(|capability_id| string(capability_id.as_str()))
+                                                .collect(),
+                                        ),
+                                    ),
+                                    ("reason", string(state_refresh_reason_label(target.reason))),
+                                ])
+                            })
+                            .collect(),
+                    ),
+                ),
+                (
+                    "count",
+                    integer(plan.state_refresh_plan.targets.len() as i64),
+                ),
+            ]),
+        ),
+        (
+            "desired_state_drifts",
+            JsonValue::Array(
+                plan.desired_state_drifts
+                    .iter()
+                    .map(|drift| {
+                        object([
+                            ("bridge_id", string(drift.bridge_id.as_str())),
+                            ("entity_id", string(drift.entity_id.as_str())),
+                            ("capability_id", string(drift.capability_id.as_str())),
+                            ("desired_value", smart_value_to_json(&drift.desired_value)),
+                            ("reason", string(reconciliation_reason_label(drift.reason))),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "worker_restart_plan",
+            object([
+                (
+                    "generated_at_ms",
+                    integer(plan.worker_restart_plan.generated_at_ms as i64),
+                ),
+                (
+                    "instructions",
+                    JsonValue::Array(
+                        plan.worker_restart_plan
+                            .instructions
+                            .iter()
+                            .map(worker_restart_instruction_json)
+                            .collect(),
+                    ),
+                ),
+                (
+                    "count",
+                    integer(plan.worker_restart_plan.instructions.len() as i64),
+                ),
+            ]),
+        ),
+        (
+            "discovery_worker_run_plan",
+            object([
+                (
+                    "generated_at_ms",
+                    integer(plan.discovery_worker_run_plan.generated_at_ms as i64),
+                ),
+                (
+                    "instructions",
+                    JsonValue::Array(
+                        plan.discovery_worker_run_plan
+                            .instructions
+                            .iter()
+                            .map(discovery_worker_run_instruction_json)
+                            .collect(),
+                    ),
+                ),
+                (
+                    "count",
+                    integer(plan.discovery_worker_run_plan.instructions.len() as i64),
+                ),
+            ]),
+        ),
+    ])
+}
+
+fn supervision_plan_summary_json(summary: &RuntimeSupervisionPlanSummary) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(summary.generated_at_ms as i64)),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "pairing_expiry_count",
+            integer(summary.pairing_expiry_count as i64),
+        ),
+        (
+            "state_refresh_count",
+            integer(summary.state_refresh_count as i64),
+        ),
+        (
+            "missing_state_refresh_count",
+            integer(summary.missing_state_refresh_count as i64),
+        ),
+        (
+            "stale_state_refresh_count",
+            integer(summary.stale_state_refresh_count as i64),
+        ),
+        (
+            "desired_state_drift_count",
+            integer(summary.desired_state_drift_count as i64),
+        ),
+        (
+            "desired_missing_state_count",
+            integer(summary.desired_missing_state_count as i64),
+        ),
+        (
+            "desired_stale_state_count",
+            integer(summary.desired_stale_state_count as i64),
+        ),
+        (
+            "desired_drifted_state_count",
+            integer(summary.desired_drifted_state_count as i64),
+        ),
+        (
+            "worker_restart_count",
+            integer(summary.worker_restart_count as i64),
+        ),
+        (
+            "discovery_worker_run_count",
+            integer(summary.discovery_worker_run_count as i64),
+        ),
+        ("is_idle", JsonValue::Bool(summary.is_idle())),
+        (
+            "has_state_refresh_work",
+            JsonValue::Bool(summary.has_state_refresh_work()),
+        ),
+        (
+            "has_reconciliation_work",
+            JsonValue::Bool(summary.has_reconciliation_work()),
+        ),
+        (
+            "has_worker_restart_work",
+            JsonValue::Bool(summary.has_worker_restart_work()),
+        ),
+        (
+            "has_discovery_worker_work",
+            JsonValue::Bool(summary.has_discovery_worker_work()),
+        ),
+    ])
+}
+
+fn worker_restart_instruction_json(instruction: &WorkerRestartInstruction) -> JsonValue {
+    object([
+        ("bridge_id", string(instruction.bridge_id.as_str())),
+        (
+            "integration_id",
+            string(instruction.integration_id.as_str()),
+        ),
+        (
+            "reason",
+            string(worker_restart_reason_label(instruction.reason)),
+        ),
+        ("status", string(instruction.status.as_str())),
+        (
+            "last_heartbeat_at_ms",
+            integer(instruction.last_heartbeat_at_ms as i64),
+        ),
+        (
+            "heartbeat_timeout_ms",
+            integer(instruction.heartbeat_timeout_ms as i64),
+        ),
+        ("due_at_ms", integer(instruction.due_at_ms as i64)),
+        ("planned_at_ms", integer(instruction.planned_at_ms as i64)),
+        (
+            "restart_attempt",
+            integer(instruction.restart_attempt as i64),
+        ),
+        ("overdue_by_ms", integer(instruction.overdue_by_ms() as i64)),
+    ])
+}
+
+fn discovery_worker_run_instruction_json(instruction: &DiscoveryWorkerRunInstruction) -> JsonValue {
+    object([
+        ("worker_id", string(instruction.worker_id.as_str())),
+        (
+            "integration_id",
+            string(instruction.integration_id.as_str()),
+        ),
+        ("kind", string(instruction.kind.as_str())),
+        ("status", string(instruction.status.as_str())),
+        (
+            "sources",
+            JsonValue::Array(
+                instruction
+                    .sources
+                    .iter()
+                    .map(|source| string(source.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "network_interfaces",
+            JsonValue::Array(instruction.network_interfaces.iter().map(string).collect()),
+        ),
+        ("due_at_ms", integer(instruction.due_at_ms as i64)),
+        ("planned_at_ms", integer(instruction.planned_at_ms as i64)),
+        ("interval_ms", integer(instruction.interval_ms as i64)),
+        ("run_timeout_ms", integer(instruction.run_timeout_ms as i64)),
+        ("retry_delay_ms", integer(instruction.retry_delay_ms as i64)),
+        (
+            "max_retry_delay_ms",
+            integer(instruction.max_retry_delay_ms as i64),
+        ),
+        (
+            "retry_backoff_multiplier",
+            integer(instruction.retry_backoff_multiplier as i64),
+        ),
+        (
+            "consecutive_failure_count",
+            integer(instruction.consecutive_failure_count as i64),
+        ),
+        ("overdue_by_ms", integer(instruction.overdue_by_ms() as i64)),
+        (
+            "mdns_service_type",
+            instruction
+                .mdns_service_type()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "metadata",
+            JsonValue::Array(instruction.metadata.iter().map(metadata_json).collect()),
         ),
     ])
 }
@@ -3957,6 +4289,19 @@ fn reconciliation_reason_label(reason: ReconciliationReason) -> &'static str {
     }
 }
 
+fn state_refresh_reason_label(reason: StateRefreshReason) -> &'static str {
+    match reason {
+        StateRefreshReason::Missing => "missing",
+        StateRefreshReason::Stale => "stale",
+    }
+}
+
+fn worker_restart_reason_label(reason: WorkerRestartReason) -> &'static str {
+    match reason {
+        WorkerRestartReason::HeartbeatOverdue => "heartbeat_overdue",
+    }
+}
+
 fn pairing_status_label(status: PairingSessionStatus) -> &'static str {
     status.as_str()
 }
@@ -4398,7 +4743,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 23);
+        assert_eq!(definitions.len(), 24);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -4439,11 +4784,14 @@ mod tests {
             .contains(&SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            21
+            22
         );
         assert_eq!(
             export
@@ -4862,6 +5210,56 @@ mod tests {
             Some(&integer(1))
         );
 
+        let supervision_plan_request = request(
+            "call-supervision-plan",
+            SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID,
+            object([]),
+            1_100,
+        );
+        let supervision_plan_trace = tool_runtime.invoke_with_events(&supervision_plan_request);
+        assert!(supervision_plan_trace.result.ok);
+        let supervision_plan_output = supervision_plan_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(supervision_plan_output, "action_count"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                field(supervision_plan_output, "summary").unwrap(),
+                "total_actions"
+            ),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(
+                field(supervision_plan_output, "summary").unwrap(),
+                "discovery_worker_run_count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(supervision_plan_output, "discovery_worker_run_plan").unwrap(),
+                "count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                array_item(
+                    field(
+                        field(supervision_plan_output, "discovery_worker_run_plan").unwrap(),
+                        "instructions"
+                    )
+                    .unwrap(),
+                    0
+                )
+                .unwrap(),
+                "worker_id"
+            ),
+            Some(&string("hue-mdns-worker"))
+        );
+
         let desired_states_request = request(
             "call-list-desired-states",
             SMART_HOME_LIST_DESIRED_STATES_TOOL_ID,
@@ -5067,6 +5465,7 @@ mod tests {
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
+        journal.record_trace(supervision_plan_request, supervision_plan_trace);
         journal.record_trace(desired_states_request, desired_states_trace);
         journal.record_trace(pairing_sessions_request, pairing_sessions_trace);
         journal.record_trace(list_subscriptions_request, list_subscriptions_trace);
@@ -5076,9 +5475,9 @@ mod tests {
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 22);
-        assert_eq!(journal_summary.completed_count, 22);
-        assert_eq!(journal.audit_records().len(), 22);
+        assert_eq!(journal_summary.invocation_count, 23);
+        assert_eq!(journal_summary.completed_count, 23);
+        assert_eq!(journal.audit_records().len(), 23);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -5091,7 +5490,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            19,
+            20,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

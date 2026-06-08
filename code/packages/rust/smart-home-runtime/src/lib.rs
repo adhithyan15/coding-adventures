@@ -3262,6 +3262,7 @@ pub enum RuntimeReadToolRequest {
     ListPairingSessions {
         query: RuntimePairingSessionQuery,
     },
+    GetSupervisionPlan,
     ObserveSupervision,
 }
 
@@ -3280,6 +3281,7 @@ impl RuntimeReadToolRequest {
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
             Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
             Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
+            Self::GetSupervisionPlan => SmartHomeTool::GetSupervisionPlan,
             Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
@@ -3504,6 +3506,7 @@ pub enum RuntimeReadToolOutput {
         sessions: Vec<RuntimePairingSession>,
         summary: RuntimePairingSessionInventorySummary,
     },
+    SupervisionPlan(RuntimeSupervisionPlan),
     SupervisionObservation(RuntimeSupervisionObservation),
 }
 
@@ -4416,6 +4419,9 @@ impl SmartHomeRuntime {
                 let sessions = session_refs.into_iter().cloned().collect();
                 Ok(RuntimeReadToolOutput::PairingSessions { sessions, summary })
             }
+            RuntimeReadToolRequest::GetSupervisionPlan => Ok(
+                RuntimeReadToolOutput::SupervisionPlan(self.supervision_plan_at(now_ms)?),
+            ),
             RuntimeReadToolRequest::ObserveSupervision => Ok(
                 RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
             ),
@@ -7927,8 +7933,15 @@ mod tests {
                 1_511,
             )
             .unwrap();
+        let supervision_plan = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetSupervisionPlan,
+                1_512,
+            )
+            .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_512)
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_513)
             .unwrap();
 
         assert!(matches!(
@@ -8038,14 +8051,22 @@ mod tests {
                 && !summary.has_expiring_sessions()
         ));
         assert!(matches!(
+            supervision_plan,
+            RuntimeReadToolOutput::SupervisionPlan(plan)
+                if plan.generated_at_ms == 1_512
+                    && plan.action_count() == 1
+                    && plan.summary().worker_restart_count == 1
+                    && plan.worker_restart_plan.len() == 1
+        ));
+        assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_512
+                if observation.generated_at_ms == 1_513
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 13);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 14);
         assert!(runtime
             .registry()
             .authorization_decisions()

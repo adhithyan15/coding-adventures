@@ -37,3 +37,6 @@ All notable changes to this package will be documented in this file.
   and `smart_home.list_pairing_sessions` handlers over the D23 runtime read
   facade so Chief of Staff jobs can inspect automation backlog, reconciliation
   targets, and pairing ceremonies without bypassing runtime ownership.
+- Added `smart_home.get_supervision_plan` over the D23 runtime read facade so
+  Chief of Staff jobs can preview due pairing, refresh, reconciliation,
+  restart, and discovery work without ticking supervision.
