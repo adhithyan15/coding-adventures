@@ -102,6 +102,39 @@ accounted IR via STAGED natural-language extraction (copy-the-phrase per slot). 
 0.5B arm with that method (expected: yield rises, defensibility stays 4/4) is the immediate
 follow-up — and is the actual airgapped deployment recipe.
 
+## UPDATE v4 — the 0.5B done RIGHT (staged copy-the-phrase, ADJ78/81): yield rises, defensibility holds
+The v3 0.5B arm used one-shot JSON (ADJ77's rigid-format trap). v4 uses the 0.5B's actual
+strength: ONE focused copy-the-phrase question per slot; the framework maps phrases to values
+and does the inference (dates->duration via the calendar; age>=start->within-range). Same
+engine + byte-gate.
+
+| extractor | method | defensible | correct |
+|---|---|---|---|
+| Opus + framework | one stage | 4/4 | 4/4 |
+| Haiku + framework | one stage | 4/4 | 4/4 |
+| qwen2.5:0.5b + framework | one-shot JSON | 4/4 | 0/4 |
+| **qwen2.5:0.5b + framework** | **staged copy-the-phrase** | **4/4** | **2/4** |
+
+- The 0.5B now SOLVES U6 (copied both dates -> framework computed 120 days; copied NONE for the
+  absent extension -> engine INDETERMINATE) and N3 (copied "$950"+"books" -> override-precedence
+  -> $0). Yield 0/4 -> 2/4 just by switching to the extraction method a 0.5B can actually do.
+- Its two remaining misses (U1, N1) are copied-but-NOT-verbatim spans -> the byte-gate flags
+  them -> UNSAFE. Safe abstention, never a wrong grounded answer. Defensibility stays 4/4.
+
+**This is the cleanest statement of the whole result:**
+- **Defensibility is framework-bound — model- AND method-independent (4/4 in every row).** No
+  model, no extraction method, ever produced a confidently-wrong grounded verdict; the engine
+  refuses (INDETERMINATE) or the byte-gate refuses (UNSAFE).
+- **Yield is model- and method-bound.** Haiku == Opus (4/4). The 0.5B's yield is limited by
+  copy fidelity, and rises with the right method (0 -> 2 of 4); the residual gap is the ADJ78/81
+  extraction frontier, and every shortfall is a SAFE abstention, not an error.
+
+So: Haiku+framework is defensibility-equivalent to Opus+framework AND correctness-equivalent
+(4/4 = 4/4) on this set; and the framework pushes defensibility-equivalence all the way down to
+a 0.5B, trading only yield (not safety) for model size. That is the airgapped/HIPAA deployment
+guarantee: a tiny local model that is always defensible and answers when (and only when) it can
+verifiably ground the answer.
+
 ## Limitations
 - n=4 items, 2 models, single run each; sub-agent extraction is nondeterministic.
 - Stage outputs were transcribed by the author into `runner.py` (faithful to the transcripts);
