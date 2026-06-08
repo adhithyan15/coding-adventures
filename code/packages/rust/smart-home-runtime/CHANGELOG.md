@@ -57,6 +57,9 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListScenes` and
   `RuntimeReadToolRequest::DescribeScene` for authorized D18D reads over the
   registry-backed scene inventory.
+- `RuntimeReadToolRequest::ListSubscriptions` and
+  `RuntimeReadToolRequest::InspectEventLog` for authorized D18D reads over
+  event-stream backlog pressure and checkpointed runtime event history.
 
 ## [0.1.0] - 2026-05-06
 

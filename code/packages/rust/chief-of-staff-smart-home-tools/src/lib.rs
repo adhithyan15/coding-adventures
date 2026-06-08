@@ -36,12 +36,15 @@ use smart_home_integration_catalog::{
 use smart_home_runtime::{
     PairingSessionStatus, ReconciliationReason, RuntimeCommandToolRequest,
     RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
-    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
-    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
-    RuntimePairingSessionId, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
-    RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeSubscribeToolOutput,
-    RuntimeSubscribeToolRequest, RuntimeSubscriptionId, RuntimeUnsubscribeToolOutput,
-    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
+    RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
+    RuntimePairBridgeToolRequest, RuntimePairingSession, RuntimePairingSessionId,
+    RuntimePollEventsToolOutput, RuntimePollEventsToolRequest, RuntimeReadToolOutput,
+    RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
+    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
+    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
+    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
+    SmartHomeRuntime,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -56,6 +59,8 @@ pub const SMART_HOME_COMMAND_TOOL_ID: &str = "smart_home.command";
 pub const SMART_HOME_SUBSCRIBE_TOOL_ID: &str = "smart_home.subscribe";
 pub const SMART_HOME_POLL_EVENTS_TOOL_ID: &str = "smart_home.poll_events";
 pub const SMART_HOME_UNSUBSCRIBE_TOOL_ID: &str = "smart_home.unsubscribe";
+pub const SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID: &str = "smart_home.list_subscriptions";
+pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event_log";
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
@@ -245,6 +250,20 @@ impl SmartHomeToolBridge {
                         .execute_unsubscribe_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(unsubscribe_output_handler_output(output))
+                }
+                SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID => {
+                    let request = list_subscriptions_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_subscriptions"))
+                }
+                SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID => {
+                    let request = inspect_event_log_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "inspect_event_log"))
                 }
                 SMART_HOME_PAIR_BRIDGE_TOOL_ID => {
                     let request = pair_bridge_request(&arguments)?;
@@ -577,6 +596,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         subscribe_definition(),
         poll_events_definition(),
         unsubscribe_definition(),
+        list_subscriptions_definition(),
+        inspect_event_log_definition(),
         pair_bridge_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
@@ -801,6 +822,71 @@ fn unsubscribe_definition() -> ToolDefinition {
     }
 }
 
+fn list_subscriptions_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID,
+        "List smart-home event subscriptions",
+        "List active D23 smart-home runtime event subscriptions and summarize queued event pressure.",
+        object_schema(
+            vec![
+                SchemaProperty::new("subscription_id", JsonSchema::String),
+                SchemaProperty::new("filter", JsonSchema::Any),
+                SchemaProperty::new("min_queued_events", JsonSchema::Integer),
+                SchemaProperty::new("sort", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "subscriptions",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["subscriptions", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn inspect_event_log_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID,
+        "Inspect smart-home event log",
+        "Query checkpointed D23 smart-home runtime events without creating or draining a subscription.",
+        object_schema(
+            vec![
+                SchemaProperty::new("filter", JsonSchema::Any),
+                SchemaProperty::new("from_checkpoint", JsonSchema::Integer),
+                SchemaProperty::new("sort", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "events",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["events", "summary", "count"],
+            false,
+        ),
+    )
+}
+
 fn pair_bridge_definition() -> ToolDefinition {
     ToolDefinition {
         tool_id: SMART_HOME_PAIR_BRIDGE_TOOL_ID.to_string(),
@@ -1007,6 +1093,49 @@ fn unsubscribe_request(
     Ok(RuntimeUnsubscribeToolRequest::new(
         RuntimeSubscriptionId::trusted(required_string(arguments, "subscription_id")?),
     ))
+}
+
+fn list_subscriptions_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimeSubscriptionQuery::new();
+    if let Some(subscription_id) = optional_string(arguments, "subscription_id")? {
+        query = query.for_subscription(RuntimeSubscriptionId::trusted(subscription_id));
+    }
+    if let Some(filter) = optional_field(arguments, "filter") {
+        query = query.matching(parse_event_filter(filter)?);
+    }
+    if let Some(min_queued_events) = optional_u64(arguments, "min_queued_events")? {
+        query = query.with_min_queued_events(min_queued_events as usize);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_subscription_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(RuntimeReadToolRequest::ListSubscriptions { query })
+}
+
+fn inspect_event_log_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimeEventQuery::new();
+    if let Some(filter) = optional_field(arguments, "filter") {
+        query = query.matching(parse_event_filter(filter)?);
+    }
+    if let Some(from_checkpoint) = optional_u64(arguments, "from_checkpoint")? {
+        query = query.from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(from_checkpoint));
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_event_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(RuntimeReadToolRequest::InspectEventLog { query })
 }
 
 fn pair_bridge_request(
@@ -1340,6 +1469,30 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
                 ),
             ),
             ("count", integer(health.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::Subscriptions {
+            subscriptions,
+            summary,
+        } => object([
+            (
+                "subscriptions",
+                JsonValue::Array(
+                    subscriptions
+                        .iter()
+                        .map(subscription_snapshot_json)
+                        .collect(),
+                ),
+            ),
+            ("summary", subscription_inventory_summary_json(&summary)),
+            ("count", integer(subscriptions.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::EventLog { entries, summary } => object([
+            (
+                "events",
+                JsonValue::Array(entries.iter().map(event_log_record_json).collect()),
+            ),
+            ("summary", event_log_summary_json(&summary)),
+            ("count", integer(entries.len() as i64)),
         ]),
         RuntimeReadToolOutput::SupervisionObservation(observation) => object([
             (
@@ -2350,6 +2503,151 @@ fn event_delivery_summary_json(batch: &RuntimeEventDeliveryBatch) -> JsonValue {
     ])
 }
 
+fn subscription_snapshot_json(snapshot: &RuntimeSubscriptionSnapshot) -> JsonValue {
+    object([
+        ("subscription_id", string(snapshot.subscription_id.as_str())),
+        ("filter", event_filter_json(&snapshot.filter)),
+        ("queued_events", integer(snapshot.queued_events as i64)),
+        ("has_backlog", JsonValue::Bool(snapshot.has_backlog())),
+        (
+            "backlog_status",
+            string(subscription_backlog_status_label(snapshot.backlog_status())),
+        ),
+    ])
+}
+
+fn subscription_inventory_summary_json(summary: &RuntimeSubscriptionInventorySummary) -> JsonValue {
+    object([
+        (
+            "total_subscriptions",
+            integer(summary.total_subscriptions as i64),
+        ),
+        (
+            "all_event_subscriptions",
+            integer(summary.all_event_subscriptions as i64),
+        ),
+        (
+            "bridge_subscriptions",
+            integer(summary.bridge_subscriptions as i64),
+        ),
+        (
+            "entity_subscriptions",
+            integer(summary.entity_subscriptions as i64),
+        ),
+        (
+            "command_subscriptions",
+            integer(summary.command_subscriptions as i64),
+        ),
+        (
+            "supervision_subscriptions",
+            integer(summary.supervision_subscriptions as i64),
+        ),
+        (
+            "backlogged_subscriptions",
+            integer(summary.backlogged_subscriptions as i64),
+        ),
+        (
+            "caught_up_subscriptions",
+            integer(summary.caught_up_subscriptions as i64),
+        ),
+        (
+            "total_queued_events",
+            integer(summary.total_queued_events as i64),
+        ),
+        (
+            "max_queued_events",
+            integer(summary.max_queued_events as i64),
+        ),
+        (
+            "average_queued_events_per_subscription",
+            integer(summary.average_queued_events_per_subscription() as i64),
+        ),
+        (
+            "backlogged_subscription_percent",
+            integer(summary.backlogged_subscription_percent() as i64),
+        ),
+        ("has_backlog", JsonValue::Bool(summary.has_backlog())),
+    ])
+}
+
+fn event_log_record_json(record: &RuntimeEventLogRecord) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        (
+            "next_checkpoint",
+            integer(record.next_checkpoint.next_sequence() as i64),
+        ),
+        ("event", runtime_event_json(&record.event)),
+    ])
+}
+
+fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
+    object([
+        ("total_events", integer(summary.total_events as i64)),
+        ("device_events", integer(summary.device_events as i64)),
+        ("command_results", integer(summary.command_results as i64)),
+        (
+            "bridge_health_events",
+            integer(summary.bridge_health_events as i64),
+        ),
+        (
+            "state_expired_events",
+            integer(summary.state_expired_events as i64),
+        ),
+        (
+            "desired_state_drift_events",
+            integer(summary.desired_state_drift_events as i64),
+        ),
+        (
+            "worker_restart_events",
+            integer(summary.worker_restart_events as i64),
+        ),
+        (
+            "first_sequence",
+            summary
+                .first_sequence
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "latest_sequence",
+            summary
+                .latest_sequence
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_checkpoint",
+            integer(summary.next_checkpoint.next_sequence() as i64),
+        ),
+        ("has_events", JsonValue::Bool(summary.has_events())),
+        (
+            "has_command_results",
+            JsonValue::Bool(summary.has_command_results()),
+        ),
+        (
+            "has_supervision_events",
+            JsonValue::Bool(summary.has_supervision_events()),
+        ),
+    ])
+}
+
+fn event_filter_json(filter: &RuntimeEventFilter) -> JsonValue {
+    match filter {
+        RuntimeEventFilter::All => object([("filter_type", string("all"))]),
+        RuntimeEventFilter::Bridge(bridge_id) => object([
+            ("filter_type", string("bridge")),
+            ("bridge_id", string(bridge_id.as_str())),
+        ]),
+        RuntimeEventFilter::Entity(entity_id) => object([
+            ("filter_type", string("entity")),
+            ("entity_id", string(entity_id.as_str())),
+        ]),
+        RuntimeEventFilter::Commands => object([("filter_type", string("commands"))]),
+        RuntimeEventFilter::Supervision => object([("filter_type", string("supervision"))]),
+    }
+}
+
 fn runtime_event_json(event: &RuntimeEvent) -> JsonValue {
     match event {
         RuntimeEvent::Device(event) => object([
@@ -2597,6 +2895,24 @@ fn parse_event_filter_label(
     }
 }
 
+fn parse_subscription_sort(label: &str) -> Result<RuntimeSubscriptionSort, ToolCallError> {
+    match label {
+        "subscription_id" | "id" => Ok(RuntimeSubscriptionSort::SubscriptionId),
+        "queued_events_desc" | "backlog_desc" => Ok(RuntimeSubscriptionSort::QueuedEventsDesc),
+        _ => Err(validation_error(format!(
+            "unknown subscription sort `{label}`"
+        ))),
+    }
+}
+
+fn parse_event_sort(label: &str) -> Result<RuntimeEventSort, ToolCallError> {
+    match label {
+        "sequence_asc" | "oldest_first" => Ok(RuntimeEventSort::SequenceAsc),
+        "sequence_desc" | "newest_first" => Ok(RuntimeEventSort::SequenceDesc),
+        _ => Err(validation_error(format!("unknown event sort `{label}`"))),
+    }
+}
+
 fn optional_single_filter_string(
     value: &JsonValue,
     singular_field: &str,
@@ -2644,6 +2960,13 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
+    }
+}
+
+fn subscription_backlog_status_label(status: RuntimeSubscriptionBacklogStatus) -> &'static str {
+    match status {
+        RuntimeSubscriptionBacklogStatus::CaughtUp => "caught_up",
+        RuntimeSubscriptionBacklogStatus::Backlogged => "backlogged",
     }
 }
 
@@ -3444,7 +3767,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 18);
+        assert_eq!(definitions.len(), 20);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -3470,11 +3793,17 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_UNSUBSCRIBE_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            16
+            18
         );
         assert_eq!(
             export
@@ -3854,6 +4183,79 @@ mod tests {
         );
         assert_eq!(command_trace.summary().progress_event_count, 1);
 
+        let list_subscriptions_request = request(
+            "call-list-subscriptions",
+            SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID,
+            object([
+                ("filter", object([("filter_type", string("commands"))])),
+                ("min_queued_events", integer(1)),
+                ("sort", string("queued_events_desc")),
+            ]),
+            1_101,
+        );
+        let list_subscriptions_trace = tool_runtime.invoke_with_events(&list_subscriptions_request);
+        assert!(list_subscriptions_trace.result.ok);
+        let list_subscriptions_output = list_subscriptions_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_subscriptions_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                array_item(
+                    field(list_subscriptions_output, "subscriptions").unwrap(),
+                    0
+                )
+                .unwrap(),
+                "subscription_id"
+            ),
+            Some(&string("commands"))
+        );
+        assert_eq!(
+            field(
+                field(list_subscriptions_output, "summary").unwrap(),
+                "total_queued_events"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(list_subscriptions_output, "summary").unwrap(),
+                "backlogged_subscriptions"
+            ),
+            Some(&integer(1))
+        );
+
+        let inspect_event_log_request = request(
+            "call-inspect-event-log",
+            SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID,
+            object([
+                ("filter", object([("filter_type", string("commands"))])),
+                ("sort", string("sequence_desc")),
+                ("limit", integer(1)),
+            ]),
+            1_102,
+        );
+        let inspect_event_log_trace = tool_runtime.invoke_with_events(&inspect_event_log_request);
+        assert!(inspect_event_log_trace.result.ok);
+        let inspect_event_log_output = inspect_event_log_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(inspect_event_log_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                field(
+                    array_item(field(inspect_event_log_output, "events").unwrap(), 0).unwrap(),
+                    "event"
+                )
+                .unwrap(),
+                "event_kind"
+            ),
+            Some(&string("command_result"))
+        );
+        assert_eq!(
+            field(
+                field(inspect_event_log_output, "summary").unwrap(),
+                "command_results"
+            ),
+            Some(&integer(1))
+        );
+
         let poll_request = request(
             "call-poll-events",
             SMART_HOME_POLL_EVENTS_TOOL_ID,
@@ -3861,7 +4263,7 @@ mod tests {
                 ("subscription_id", string("commands")),
                 ("limit", integer(1)),
             ]),
-            1_101,
+            1_103,
         );
         let poll_trace = tool_runtime.invoke_with_events(&poll_request);
         assert!(poll_trace.result.ok);
@@ -3885,7 +4287,7 @@ mod tests {
             "call-get-state",
             SMART_HOME_GET_STATE_TOOL_ID,
             object([("entity_id", string("entity-light-1"))]),
-            1_102,
+            1_104,
         );
         let state_trace = tool_runtime.invoke_with_events(&state_request);
         assert!(state_trace.result.ok);
@@ -3899,7 +4301,7 @@ mod tests {
             "call-unsubscribe",
             SMART_HOME_UNSUBSCRIBE_TOOL_ID,
             object([("subscription_id", string("commands"))]),
-            1_103,
+            1_105,
         );
         let unsubscribe_trace = tool_runtime.invoke_with_events(&unsubscribe_request);
         assert!(unsubscribe_trace.result.ok);
@@ -3928,14 +4330,16 @@ mod tests {
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
+        journal.record_trace(list_subscriptions_request, list_subscriptions_trace);
+        journal.record_trace(inspect_event_log_request, inspect_event_log_trace);
         journal.record_trace(poll_request, poll_trace);
         journal.record_trace(state_request, state_trace);
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 17);
-        assert_eq!(journal_summary.completed_count, 17);
-        assert_eq!(journal.audit_records().len(), 17);
+        assert_eq!(journal_summary.invocation_count, 19);
+        assert_eq!(journal_summary.completed_count, 19);
+        assert_eq!(journal.audit_records().len(), 19);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -3948,7 +4352,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            14,
+            16,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

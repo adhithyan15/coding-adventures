@@ -28,6 +28,7 @@ Chief of Staff job/session/agent
   -> discovery records and unpaired bridge candidates
   -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
+  -> event-log and subscription-backlog reads
   -> device command acceptance
   -> optimistic state update
   -> D18D trace and audit record
@@ -51,6 +52,8 @@ Chief of Staff job/session/agent
 - `smart_home.subscribe`
 - `smart_home.poll_events`
 - `smart_home.unsubscribe`
+- `smart_home.list_subscriptions`
+- `smart_home.inspect_event_log`
 - `smart_home.pair_bridge`
 - `smart_home.observe_supervision`
 

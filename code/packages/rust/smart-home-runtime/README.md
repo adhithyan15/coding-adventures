@@ -64,7 +64,8 @@ Included surfaces:
 - registry-backed tool authorization decisions for Chief of Staff tool calls
 - D18D-facing read tool facade for listing bridges/devices/scenes, describing
   scenes, reading entity state, describing capabilities, inspecting bridge
-  health, and observing supervision status without invoking integrations
+  health, listing event subscriptions, inspecting event-log entries, and
+  observing supervision status without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
 - D18D-facing poll and unsubscribe tool facades that authorize event-stream
