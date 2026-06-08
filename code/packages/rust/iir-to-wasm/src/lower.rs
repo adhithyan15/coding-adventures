@@ -489,27 +489,23 @@ fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
     map
 }
 
-/// Infer the WASM ValueType for each local variable beyond the parameters.
+/// Infer IIR type hints for each WASM local index.
 ///
-/// We scan instructions for type hints associated with each variable index and
-/// return a `Vec<ValueType>` parallel to indices `param_count..total_vars`.
-/// If a variable has no type information, we default to `I32` (the most
-/// common type and the natural choice for boolean/integer values).
-fn infer_local_types(
+/// We scan parameters and instruction destinations for type hints associated
+/// with each local index. First definition wins, matching the existing local
+/// declaration behavior.
+fn infer_local_type_hints(
     fn_: &IIRFunction,
     reg_map: &HashMap<String, u32>,
-    param_count: u32,
-    total_vars: u32,
-) -> Vec<ValueType> {
+) -> HashMap<u32, String> {
     // Build a map: var_index → best known type hint.
     let mut var_type: HashMap<u32, String> = HashMap::new();
 
     // Seed from parameter types.
-    for (i, (param_name, param_type)) in fn_.params.iter().enumerate() {
+    for (param_name, param_type) in &fn_.params {
         if let Some(&idx) = reg_map.get(param_name) {
             var_type.insert(idx, param_type.clone());
         }
-        let _ = i; // suppress unused warning
     }
 
     // Walk instructions: use the dest type_hint as the type for the dest var.
@@ -522,6 +518,19 @@ fn infer_local_types(
         }
     }
 
+    var_type
+}
+
+/// Infer the WASM ValueType for each local variable beyond the parameters.
+///
+/// Returns a `Vec<ValueType>` parallel to indices `param_count..total_vars`.
+/// If a variable has no type information, we default to `I32` (the most
+/// common type and the natural choice for boolean/integer values).
+fn infer_local_types(
+    var_type: &HashMap<u32, String>,
+    param_count: u32,
+    total_vars: u32,
+) -> Vec<ValueType> {
     // Build the locals list: one ValueType per index from param_count to total_vars-1.
     //
     // Note: locals whose hint starts with "ref<" map to `Anyref` via
@@ -674,6 +683,7 @@ fn emit_instr(
     code: &mut Vec<u8>,
     instr: &interpreter_ir::IIRInstr,
     reg_map: &HashMap<String, u32>,
+    local_type_hints: &HashMap<u32, String>,
     fn_map: &HashMap<String, u32>,
     fn_name: &str,
     dispatch_reg: u32,
@@ -879,8 +889,9 @@ fn emit_instr(
             // Strip the `cmp_` prefix so the existing per-type lookup table
             // doesn't need 12 extra arms.
             let bare = instr.op.strip_prefix("cmp_").unwrap_or(instr.op.as_str());
+            let cmp_ty = local_type_hints.get(&r1).map(String::as_str).unwrap_or(ty);
 
-            let opcode: u8 = match (bare, ty) {
+            let opcode: u8 = match (bare, cmp_ty) {
                 // i64
                 ("eq", t) if is_i64_hint(t) => I64_EQ,
                 ("ne", t) if is_i64_hint(t) => I64_NE,
@@ -1853,7 +1864,8 @@ fn lower_function(
     let dispatch_reg = total_vars;
 
     // Infer types for non-parameter locals.
-    let mut local_types = infer_local_types(fn_, &reg_map, param_count, total_vars);
+    let local_type_hints = infer_local_type_hints(fn_, &reg_map);
+    let mut local_types = infer_local_types(&local_type_hints, param_count, total_vars);
     // Append the dispatch variable (always I32 — it holds a block index).
     local_types.push(ValueType::I32);
 
@@ -1913,6 +1925,7 @@ fn lower_function(
                     &mut code,
                     instr,
                     &reg_map,
+                    &local_type_hints,
                     fn_map,
                     &fn_.name,
                     dispatch_reg,
@@ -1969,6 +1982,7 @@ fn lower_function(
                 &mut code,
                 instr,
                 &reg_map,
+                &local_type_hints,
                 fn_map,
                 &fn_.name,
                 dispatch_reg,
@@ -2501,6 +2515,22 @@ mod tests {
         ]);
         let result = lower_iir_to_wasm(&m, &IIRWasmConfig::default());
         assert!(result.is_ok(), "f64 const should succeed; err: {:?}", result);
+    }
+
+    #[test]
+    fn comparison_uses_operand_type_when_result_is_bool() {
+        let m = single_fn("f", vec![], "bool", vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(6)], "i64"),
+            IIRInstr::new("cmp_le", Some("ok".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "bool"),
+            IIRInstr::new("ret", None, vec![Operand::Var("ok".into())], "bool"),
+        ]);
+        let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).unwrap();
+        assert!(
+            wm.code[0].code.contains(&I64_LE_S),
+            "i64 operands with a bool comparison result must emit i64.le_s"
+        );
     }
 
     #[test]
