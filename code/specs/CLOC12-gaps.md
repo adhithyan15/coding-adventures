@@ -215,3 +215,12 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream test:** `PeepholeFoldConstantsTest::testStringStringComparison` (`typeof a === typeof a` lines)
 - **Ported file:** `closure-pass-constant-fold/tests/upstream/peephole_fold_constants_test.rs`
 - **Resolution note:** Added a new structural-equality arm in `try_fold_binary_op` for `StrictEq`/`StrictNotEq` operators where both sides are `UnaryExpression { op: TypeOf, argument: Identifier }` with the same identifier name. Folds to `true`/`false` respectively. Identifier-only because `typeof <undeclared>` is special-cased by ECMAScript §UnaryTypeofExpression to return `"undefined"` rather than throw, so the fold is safe even without declaration-tracking — `typeof x` evaluated twice deterministically produces the same string. Member/call expressions are deliberately NOT folded because they can have side effects that we can't prove are absent without a heavier purity analysis. `test_typeof_identifier_identity_fold` un-ignored.
+
+### gap-030 — function-declaration semicolon ASI policy
+
+- **Status:** OPEN — newly discovered by CLOC14.2.
+- **Upstream byte-identity test:** `minify_function_decl` seed fixture (in CLOC14 harness).
+- **Why it fails:** Upstream Closure v20240317 normalises function-declaration emit in two ways our emitter doesn't yet do:
+  1. **Drops the redundant inner `;`** before `}` in single-statement blocks (`function f(){return 1;}` → `function f(){return 1}`). ASI lets the closing `}` terminate the inner statement, so the `;` is noise.
+  2. **Adds a trailing `;`** after the function-declaration's closing `}` at top-level statement-list position (`}` → `};`). Even at end-of-file this is a no-op, but it keeps the function-declaration output shape predictable for concatenation cases.
+- **What it needs:** Two pure emitter changes (no AST work). Conservative trigger for (1): emit `;` only when the next sibling is not the closing brace. (2) lands as a post-emit step for `FunctionDeclaration` at top-level. The `minify_function_decl` fixture flips from IGNORED to PASS the moment both land.
