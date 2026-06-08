@@ -1359,6 +1359,83 @@ describe("symbolic-vm", () => {
     const result = vm.eval(app(INTEGRATE, [app(MUL, [x, app(COTH, [x])]), x]));
     expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
   });
+
+  it("Phase 16: integrates sech^2(3x) as tanh(3x)/3", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [int(3), x]);
+    const integrand = app(POW, [app(SECH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Tanh")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.cosh(3 * xVal) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates sech^3(x) via the odd-power recurrence", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(SECH, [x]), int(3)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Atan")).toBe(true);
+    for (const xVal of [-0.4, 0.2, 0.8]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.cosh(xVal) ** 3)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates csch^2(x/2) as -2*coth(x/2)", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const arg = app(MUL, [rational(1, 2), x]);
+    const integrand = app(POW, [app(CSCH, [arg]), int(2)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Coth")).toBe(true);
+    for (const xVal of [0.6, 1.2, 2.0]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.sinh(xVal / 2) ** 2)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates csch^3(x) via the odd-power recurrence", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(CSCH, [x]), int(3)]);
+    const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+    expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Log")).toBe(true);
+    for (const xVal of [0.6, 1.2, 2.0]) {
+      const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+      expect(Math.abs(got - 1 / Math.sinh(xVal) ** 3)).toBeLessThan(1e-5);
+    }
+  });
+
+  it("Phase 16: integrates coth powers through identity reduction", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    for (const power of [2, 3]) {
+      const integrand = app(POW, [app(COTH, [x]), int(power)]);
+      const antideriv = vm.eval(app(INTEGRATE, [integrand, x]));
+      expect(containsHeadName(antideriv as unknown as ReturnType<typeof sym>, "Integrate")).toBe(false);
+      for (const xVal of [0.6, 1.2, 2.0]) {
+        const u = Math.cosh(xVal) / Math.sinh(xVal);
+        const got = numericalDerivative28(antideriv as unknown as ReturnType<typeof sym>, xVal);
+        expect(Math.abs(got - u ** power)).toBeLessThan(1e-5);
+      }
+    }
+  });
+
+  it("Phase 16: leaves sech^2(x^2) deferred", () => {
+    const vm = new VM(new SymbolicBackend());
+    const x = sym("x");
+    const integrand = app(POW, [app(SECH, [app(POW, [x, int(2)])]), int(2)]);
+    const result = vm.eval(app(INTEGRATE, [integrand, x]));
+    expect(containsHeadName(result as unknown as ReturnType<typeof sym>, "Integrate")).toBe(true);
+  });
 });
 
 // ---------------------------------------------------------------------------

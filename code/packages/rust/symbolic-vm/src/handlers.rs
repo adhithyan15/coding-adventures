@@ -2123,6 +2123,8 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
                 _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
             }
         }
+        (POW, [base, exponent]) => try_recip_hyp_power(base, exponent, x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         // Phase 27: ∫ sin(log(x)) dx and ∫ cos(log(x)) dx (k=0 direct forms).
         (SIN, [inner]) if is_log_of_x(inner, x) => trig_log_integral(SIN, 0, x),
         (COS, [inner]) if is_log_of_x(inner, x) => trig_log_integral(COS, 0, x),
@@ -4358,6 +4360,154 @@ fn try_recip_hyp_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
         }
         _ => None,
     }
+}
+
+fn try_recip_hyp_power(base: &IRNode, exponent: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = base else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), SECH | CSCH | COTH) || apply.args.len() != 1 {
+        return None;
+    }
+    let n = match to_numeric(exponent) {
+        Some(Numeric::Int(n)) if n >= 0 => usize::try_from(n).ok()?,
+        _ => return None,
+    };
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+
+    match head.as_str() {
+        SECH => sech_power_integral(n, arg_ir, a, x),
+        CSCH => csch_power_integral(n, arg_ir, a, x),
+        COTH => coth_power_integral(n, arg_ir, a, x),
+        _ => None,
+    }
+}
+
+fn pow_if_needed(base: IRNode, exponent: usize) -> IRNode {
+    if exponent == 1 {
+        base
+    } else {
+        apply_node(POW, vec![base, IRNode::Integer(exponent as i64)])
+    }
+}
+
+fn recip_hyp_coeff(numer: i128, denom: i128, a: RatC) -> Option<IRNode> {
+    rc_to_ir(rc_div(rc(numer, denom)?, a)?)
+}
+
+fn sech_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(ATAN, vec![apply_node(SINH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+    if n == 2 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(TANH, vec![arg_ir.clone()]),
+            ],
+        ));
+    }
+
+    let sech_pow = pow_if_needed(apply_node(SECH, vec![arg_ir.clone()]), n - 2);
+    let main_term = apply_node(
+        MUL,
+        vec![
+            recip_hyp_coeff(1, (n - 1) as i128, a)?,
+            apply_node(MUL, vec![sech_pow, apply_node(TANH, vec![arg_ir.clone()])]),
+        ],
+    );
+    let tail = sech_power_integral(n - 2, arg_ir, a, x)?;
+    Some(apply_node(
+        ADD,
+        vec![
+            main_term,
+            apply_node(MUL, vec![IRNode::Rational((n - 2) as i64, (n - 1) as i64), tail]),
+        ],
+    ))
+}
+
+fn csch_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        let half_arg = apply_node(MUL, vec![IRNode::Rational(1, 2), arg_ir.clone()]);
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(TANH, vec![half_arg])]),
+            ],
+        ));
+    }
+    if n == 2 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(rc(-1, 1)?, a)?)?,
+                apply_node(COTH, vec![arg_ir.clone()]),
+            ],
+        ));
+    }
+
+    let csch_pow = pow_if_needed(apply_node(CSCH, vec![arg_ir.clone()]), n - 2);
+    let main_term = apply_node(
+        MUL,
+        vec![
+            recip_hyp_coeff(-1, (n - 1) as i128, a)?,
+            apply_node(MUL, vec![csch_pow, apply_node(COTH, vec![arg_ir.clone()])]),
+        ],
+    );
+    let tail = csch_power_integral(n - 2, arg_ir, a, x)?;
+    Some(apply_node(
+        SUB,
+        vec![
+            main_term,
+            apply_node(MUL, vec![IRNode::Rational((n - 2) as i64, (n - 1) as i64), tail]),
+        ],
+    ))
+}
+
+fn coth_power_integral(n: usize, arg_ir: &IRNode, a: RatC, x: &str) -> Option<IRNode> {
+    if n == 0 {
+        return Some(IRNode::Symbol(x.to_string()));
+    }
+    if n == 1 {
+        return Some(apply_node(
+            MUL,
+            vec![
+                rc_to_ir(rc_div(RC_ONE, a)?)?,
+                apply_node(LOG, vec![apply_node(SINH, vec![arg_ir.clone()])]),
+            ],
+        ));
+    }
+
+    let coth_pow = pow_if_needed(apply_node(COTH, vec![arg_ir.clone()]), n - 1);
+    let power_term = apply_node(
+        MUL,
+        vec![recip_hyp_coeff(1, (n - 1) as i128, a)?, coth_pow],
+    );
+    Some(apply_node(
+        SUB,
+        vec![coth_power_integral(n - 2, arg_ir, a, x)?, power_term],
+    ))
 }
 
 fn sqrt_t_plus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
