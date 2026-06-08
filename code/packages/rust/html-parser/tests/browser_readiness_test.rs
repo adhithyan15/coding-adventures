@@ -3,11 +3,11 @@ use coding_adventures_html_parser::{
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
-    BrowserEmbeddedContext, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
-    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
-    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
-    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserEmbeddedContext, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
     BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
     BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
     BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
@@ -67,6 +67,8 @@ struct ExpectedBrowserDocument {
     stylesheets: Vec<ExpectedStylesheet>,
     #[serde(default)]
     loading_hint_descriptors: Vec<ExpectedLoadingHintDescriptor>,
+    #[serde(default)]
+    fetch_policy_descriptors: Vec<ExpectedFetchPolicyDescriptor>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
@@ -418,6 +420,35 @@ struct ExpectedLoadingHintDescriptor {
     as_hint: Option<String>,
     #[serde(default)]
     media: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFetchPolicyDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    url: Option<String>,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    csp: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    credentialless: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3518,6 +3549,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedLoadingHintDescriptor::into_browser_loading_hint_descriptor)
                 .collect(),
+            fetch_policy_descriptors: self
+                .fetch_policy_descriptors
+                .into_iter()
+                .map(ExpectedFetchPolicyDescriptor::into_browser_fetch_policy_descriptor)
+                .collect(),
             anchors: self
                 .anchors
                 .into_iter()
@@ -4007,6 +4043,26 @@ impl ExpectedLoadingHintDescriptor {
             preload: self.preload,
             as_hint: self.as_hint,
             media: self.media,
+        }
+    }
+}
+
+impl ExpectedFetchPolicyDescriptor {
+    fn into_browser_fetch_policy_descriptor(self) -> BrowserFetchPolicyDescriptor {
+        BrowserFetchPolicyDescriptor {
+            element: self.element,
+            id: self.id,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            nonce: self.nonce,
+            referrerpolicy: self.referrerpolicy,
+            csp: self.csp,
+            sandbox: self.sandbox,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            credentialless: self.credentialless,
         }
     }
 }

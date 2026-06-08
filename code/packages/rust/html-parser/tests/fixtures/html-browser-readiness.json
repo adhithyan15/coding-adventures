@@ -32,6 +32,9 @@
         "navigation_groups": [
           { "element": "ul", "role": "list", "text": "One Two", "list_kind": "unordered", "item_count": 2 }
         ],
+        "fetch_policy_descriptors": [
+          { "element": "a", "url": "intro.html", "resolved_url": "https://example.test/docs/intro.html", "referrerpolicy": "no-referrer" }
+        ],
         "links": [
           { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "effective_target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "rel_external": true, "rel_noreferrer": true, "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "attributionsrc": ["attr/register", "https://ad.example/register"], "resolved_attributionsrc": ["https://example.test/docs/attr/register", "https://ad.example/register"], "hreflang": "en", "type_hint": "text/html", "referrerpolicy": "no-referrer", "text": "Venture HTML" }
         ],
@@ -152,6 +155,9 @@
         "headings": [],
         "loading_hint_descriptors": [
           { "element": "img", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "loading": "lazy", "decoding": "async", "fetchpriority": "high" }
+        ],
+        "fetch_policy_descriptors": [
+          { "element": "img", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "crossorigin": "anonymous", "referrerpolicy": "no-referrer" }
         ],
         "links": [
           { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "attributionsrc": ["area-attr.html"], "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"], "hreflang": "en", "text": "Details" }
@@ -450,6 +456,12 @@
           { "element": "link", "url": "scripts/app.mjs", "resolved_url": "https://example.test/app/scripts/app.mjs", "blocking": "render", "blocking_tokens": ["render"] },
           { "element": "link", "url": "hero.jpg", "resolved_url": "https://example.test/app/hero.jpg", "fetchpriority": "high", "as_hint": "image" }
         ],
+        "fetch_policy_descriptors": [
+          { "element": "link", "url": "https://cdn.example.test", "resolved_url": "https://cdn.example.test", "crossorigin": "" },
+          { "element": "link", "url": "fonts/site.woff2", "resolved_url": "https://example.test/app/fonts/site.woff2", "integrity": "sha384-font", "crossorigin": "anonymous" },
+          { "element": "link", "url": "scripts/app.mjs", "resolved_url": "https://example.test/app/scripts/app.mjs", "integrity": "sha384-module", "referrerpolicy": "no-referrer" },
+          { "element": "link", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "crossorigin": "use-credentials" }
+        ],
         "links": [],
         "images": [],
         "forms": [],
@@ -517,6 +529,10 @@
         "loading_hint_descriptors": [
           { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "loading": "lazy", "fetchpriority": "high" }
         ],
+        "fetch_policy_descriptors": [
+          { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "referrerpolicy": "no-referrer", "csp": "script-src 'self'", "sandbox": ["allow-scripts", "allow-same-origin"], "allow": "fullscreen; geolocation", "allowfullscreen": true, "credentialless": true },
+          { "element": "iframe", "url": null, "resolved_url": null, "sandbox": [], "allow": "payment" }
+        ],
         "links": [],
         "images": [],
         "media": [
@@ -560,6 +576,10 @@
         "loading_hint_descriptors": [
           { "element": "video", "id": "hero", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "preload": "metadata" },
           { "element": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "preload": "none" }
+        ],
+        "fetch_policy_descriptors": [
+          { "element": "video", "id": "hero", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "crossorigin": "anonymous" },
+          { "element": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "crossorigin": "use-credentials" }
         ],
         "links": [],
         "images": [],
@@ -685,6 +705,13 @@
         "loading_hint_descriptors": [
           { "element": "link", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "fetchpriority": "high", "blocking": "render", "blocking_tokens": ["render"], "as_hint": null, "media": "screen" },
           { "element": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "fetchpriority": "low", "blocking": "render", "blocking_tokens": ["render"] }
+        ],
+        "fetch_policy_descriptors": [
+          { "element": "link", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer" },
+          { "element": "style", "nonce": "inlineStyleNonce" },
+          { "element": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "integrity": "sha384-js", "crossorigin": "use-credentials", "nonce": "moduleNonce", "referrerpolicy": "origin" },
+          { "element": "script", "url": null, "resolved_url": null, "nonce": "legacyNonce" },
+          { "element": "script", "url": "late.js", "resolved_url": "https://example.test/app/late.js", "nonce": "lateNonce" }
         ],
         "links": [],
         "images": [],

@@ -833,6 +833,7 @@ pub struct BrowserDocument {
     pub scripts: Vec<BrowserScript>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
+    pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
@@ -1035,6 +1036,23 @@ pub struct BrowserLoadingHintDescriptor {
     pub preload: Option<String>,
     pub as_hint: Option<String>,
     pub media: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFetchPolicyDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub csp: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub credentialless: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9615,6 +9633,11 @@ fn collect_browser_facts(
         {
             summary.loading_hint_descriptors.push(descriptor);
         }
+        if let Some(descriptor) =
+            browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.fetch_policy_descriptors.push(descriptor);
+        }
         if let Some(context) = browser_embedded_context(element, summary.base_href.as_deref()) {
             summary.embedded_contexts.push(context);
         }
@@ -9778,6 +9801,11 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             browser_loading_hint_descriptor(element, summary.base_href.as_deref())
         {
             summary.loading_hint_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) =
+            browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.fetch_policy_descriptors.push(descriptor);
         }
 
         match element.name.as_str() {
@@ -12346,6 +12374,80 @@ fn browser_loading_hint_descriptor(
 fn browser_loading_hint_url(element: &Element) -> Option<String> {
     match element.name.as_str() {
         "link" => element.attribute("href"),
+        "audio" | "frame" | "iframe" | "img" | "script" | "video" => element.attribute("src"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned)
+}
+
+fn browser_fetch_policy_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserFetchPolicyDescriptor> {
+    let integrity = match element.name.as_str() {
+        "link" | "script" => element.attribute("integrity").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let crossorigin = match element.name.as_str() {
+        "audio" | "img" | "link" | "script" | "video" => {
+            element.attribute("crossorigin").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let nonce = match element.name.as_str() {
+        "link" | "script" | "style" => element.attribute("nonce").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let referrerpolicy = match element.name.as_str() {
+        "a" | "area" | "iframe" | "img" | "link" | "script" => {
+            element.attribute("referrerpolicy").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let csp = browser_browsing_context_csp(element);
+    let sandbox = browser_browsing_context_sandbox(element);
+    let allow = browser_browsing_context_allow(element);
+    let allowfullscreen = browser_browsing_context_allowfullscreen(element);
+    let credentialless = browser_browsing_context_credentialless(element);
+
+    if integrity.is_none()
+        && crossorigin.is_none()
+        && nonce.is_none()
+        && referrerpolicy.is_none()
+        && csp.is_none()
+        && sandbox.is_empty()
+        && allow.is_none()
+        && !allowfullscreen
+        && !credentialless
+    {
+        return None;
+    }
+
+    let url = browser_policy_url(element);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+
+    Some(BrowserFetchPolicyDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        url,
+        resolved_url,
+        integrity,
+        crossorigin,
+        nonce,
+        referrerpolicy,
+        csp,
+        sandbox,
+        allow,
+        allowfullscreen,
+        credentialless,
+    })
+}
+
+fn browser_policy_url(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "a" | "area" | "link" => element.attribute("href"),
         "audio" | "frame" | "iframe" | "img" | "script" | "video" => element.attribute("src"),
         _ => None,
     }
@@ -18394,6 +18496,73 @@ mod tests {
         let video = &summary.loading_hint_descriptors[5];
         assert_eq!(video.element, "video");
         assert_eq!(video.preload.as_deref(), Some("metadata"));
+    }
+
+    #[test]
+    fn browser_fetch_policy_descriptors_track_security_and_policy_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/\">\
+             <link id=font rel=preload href=fonts/site.woff2 as=font integrity=sha384-font crossorigin=anonymous referrerpolicy=no-referrer nonce=fontNonce>\
+             <style id=critical nonce=styleNonce>body{color:black}</style>\
+             <script id=boot src=scripts/app.js integrity=sha384-js crossorigin=use-credentials referrerpolicy=origin nonce=scriptNonce></script>\
+             <body>\
+               <img id=hero src=hero.jpg crossorigin=anonymous referrerpolicy=no-referrer>\
+               <iframe id=frame src=frame.html csp=\"script-src 'self'\" sandbox=\"allow-scripts allow-same-origin\" allow=\"fullscreen; geolocation\" allowfullscreen referrerpolicy=no-referrer credentialless></iframe>\
+               <video id=movie src=movie.mp4 crossorigin=anonymous></video>\
+             </body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.fetch_policy_descriptors.len(), 6);
+
+        let link = &summary.fetch_policy_descriptors[0];
+        assert_eq!(link.element, "link");
+        assert_eq!(link.id.as_deref(), Some("font"));
+        assert_eq!(
+            link.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(link.integrity.as_deref(), Some("sha384-font"));
+        assert_eq!(link.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(link.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(link.nonce.as_deref(), Some("fontNonce"));
+
+        let style = &summary.fetch_policy_descriptors[1];
+        assert_eq!(style.element, "style");
+        assert_eq!(style.id.as_deref(), Some("critical"));
+        assert_eq!(style.nonce.as_deref(), Some("styleNonce"));
+
+        let script = &summary.fetch_policy_descriptors[2];
+        assert_eq!(script.element, "script");
+        assert_eq!(
+            script.resolved_url.as_deref(),
+            Some("https://example.test/app/scripts/app.js")
+        );
+        assert_eq!(script.integrity.as_deref(), Some("sha384-js"));
+        assert_eq!(script.crossorigin.as_deref(), Some("use-credentials"));
+        assert_eq!(script.referrerpolicy.as_deref(), Some("origin"));
+        assert_eq!(script.nonce.as_deref(), Some("scriptNonce"));
+
+        let image = &summary.fetch_policy_descriptors[3];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(image.referrerpolicy.as_deref(), Some("no-referrer"));
+
+        let frame = &summary.fetch_policy_descriptors[4];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.csp.as_deref(), Some("script-src 'self'"));
+        assert_eq!(
+            frame.sandbox,
+            vec!["allow-scripts".to_string(), "allow-same-origin".to_string()]
+        );
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert!(frame.allowfullscreen);
+        assert!(frame.credentialless);
+
+        let video = &summary.fetch_policy_descriptors[5];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.crossorigin.as_deref(), Some("anonymous"));
     }
 
     #[test]

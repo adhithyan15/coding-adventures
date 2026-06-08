@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness fetch-policy descriptors now expose subresource integrity,
+  CORS, nonce, referrer policy, iframe CSP/sandbox/permissions, fullscreen, and
+  credentialless metadata as a flat browser-planning inventory.
 - Browser-readiness loading-hint descriptors now expose lazy/eager loading,
   decoding, fetch priority, blocking, and media preload scheduling metadata.
 - Browser-readiness ARIA relation descriptors now expose details, error-message,
