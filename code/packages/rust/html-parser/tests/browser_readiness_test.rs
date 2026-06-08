@@ -12,13 +12,13 @@ use coding_adventures_html_parser::{
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
-    BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
-    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
-    BrowserThemeColor,
+    BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor,
+    BrowserMediaSource, BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective,
+    BrowserNavigationGroup, BrowserNavigationTargetDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -106,6 +106,8 @@ struct ExpectedBrowserDocument {
     image_maps: Vec<ExpectedImageMap>,
     #[serde(default)]
     media: Vec<ExpectedMedia>,
+    #[serde(default)]
+    media_playback_descriptors: Option<Vec<ExpectedMediaPlaybackDescriptor>>,
     #[serde(default)]
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
     #[serde(default)]
@@ -1415,6 +1417,55 @@ struct ExpectedMediaTrack {
     label: Option<String>,
     #[serde(default)]
     default_track: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedMediaPlaybackDescriptor {
+    kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    poster: Option<String>,
+    #[serde(default)]
+    resolved_poster: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    controls: bool,
+    #[serde(default)]
+    autoplay: bool,
+    #[serde(default)]
+    loop_media: bool,
+    #[serde(default)]
+    muted: bool,
+    #[serde(default)]
+    playsinline: bool,
+    #[serde(default)]
+    preload: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    controlslist: Option<String>,
+    #[serde(default)]
+    controlslist_tokens: Vec<String>,
+    #[serde(default)]
+    disableremoteplayback: bool,
+    #[serde(default)]
+    disablepictureinpicture: bool,
+    #[serde(default)]
+    source_count: usize,
+    #[serde(default)]
+    sources: Vec<ExpectedMediaSource>,
+    #[serde(default)]
+    track_count: usize,
+    #[serde(default)]
+    default_track_count: usize,
+    #[serde(default)]
+    tracks: Vec<ExpectedMediaTrack>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3772,6 +3823,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedResource::into_browser_resource)
             .collect();
+        let media: Vec<_> = self
+            .media
+            .into_iter()
+            .map(ExpectedMedia::into_browser_media)
+            .collect();
         let resource_endpoint_descriptors = self
             .resource_endpoint_descriptors
             .map(|descriptors| {
@@ -3783,6 +3839,15 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_resource_endpoint_descriptors(&metadata, &resources));
+        let media_playback_descriptors = self
+            .media_playback_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedMediaPlaybackDescriptor::into_browser_media_playback_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_media_playback_descriptors(&media));
 
         BrowserDocument {
             title: self.title,
@@ -3910,11 +3975,8 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedImageMap::into_browser_image_map)
                 .collect(),
-            media: self
-                .media
-                .into_iter()
-                .map(ExpectedMedia::into_browser_media)
-                .collect(),
+            media,
+            media_playback_descriptors,
             embedded_contexts: self
                 .embedded_contexts
                 .into_iter()
@@ -4371,6 +4433,47 @@ fn expected_resource_endpoint_element(kind: &str) -> &str {
         "frame" => "iframe",
         "image" => "img",
         other => other,
+    }
+}
+
+fn expected_media_playback_descriptors(
+    media: &[BrowserMedia],
+) -> Vec<BrowserMediaPlaybackDescriptor> {
+    media
+        .iter()
+        .map(expected_media_playback_descriptor)
+        .collect()
+}
+
+fn expected_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlaybackDescriptor {
+    BrowserMediaPlaybackDescriptor {
+        kind: media.kind.clone(),
+        src: media.src.clone(),
+        resolved_src: media.resolved_src.clone(),
+        poster: media.poster.clone(),
+        resolved_poster: media.resolved_poster.clone(),
+        width: media.width.clone(),
+        height: media.height.clone(),
+        controls: media.controls,
+        autoplay: media.autoplay,
+        loop_media: media.loop_media,
+        muted: media.muted,
+        playsinline: media.playsinline,
+        preload: media.preload.clone(),
+        crossorigin: media.crossorigin.clone(),
+        controlslist: media.controlslist.clone(),
+        controlslist_tokens: media.controlslist_tokens.clone(),
+        disableremoteplayback: media.disableremoteplayback,
+        disablepictureinpicture: media.disablepictureinpicture,
+        source_count: media.sources.len(),
+        sources: media.sources.clone(),
+        track_count: media.tracks.len(),
+        default_track_count: media
+            .tracks
+            .iter()
+            .filter(|track| track.default_track)
+            .count(),
+        tracks: media.tracks.clone(),
     }
 }
 
@@ -5108,6 +5211,44 @@ impl ExpectedMediaTrack {
             srclang: self.srclang,
             label: self.label,
             default_track: self.default_track,
+        }
+    }
+}
+
+impl ExpectedMediaPlaybackDescriptor {
+    fn into_browser_media_playback_descriptor(self) -> BrowserMediaPlaybackDescriptor {
+        BrowserMediaPlaybackDescriptor {
+            kind: self.kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            poster: self.poster,
+            resolved_poster: self.resolved_poster,
+            width: self.width,
+            height: self.height,
+            controls: self.controls,
+            autoplay: self.autoplay,
+            loop_media: self.loop_media,
+            muted: self.muted,
+            playsinline: self.playsinline,
+            preload: self.preload,
+            crossorigin: self.crossorigin,
+            controlslist: self.controlslist,
+            controlslist_tokens: self.controlslist_tokens,
+            disableremoteplayback: self.disableremoteplayback,
+            disablepictureinpicture: self.disablepictureinpicture,
+            source_count: self.source_count,
+            sources: self
+                .sources
+                .into_iter()
+                .map(ExpectedMediaSource::into_browser_media_source)
+                .collect(),
+            track_count: self.track_count,
+            default_track_count: self.default_track_count,
+            tracks: self
+                .tracks
+                .into_iter()
+                .map(ExpectedMediaTrack::into_browser_media_track)
+                .collect(),
         }
     }
 }
