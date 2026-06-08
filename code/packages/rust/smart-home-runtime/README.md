@@ -65,14 +65,17 @@ Included surfaces:
 - read-side authorization-decision queries and summaries for Chief audit tools
 - read-side capability-grant queries and summaries for Chief grant governance
   tools
+- read-side room summaries and topology coverage derived from registry-owned
+  devices, entities, cached states, and scenes
 - D18D-facing read tool facade for listing bridges/devices/scenes, describing
-  scenes, reading entity state, describing capabilities, inspecting bridge
-  health, listing event subscriptions, inspecting event-log entries, reading
+  scenes, reading room topology summaries, reading aggregate topology coverage,
+  reading entity state, describing capabilities, inspecting bridge health,
+  listing event subscriptions, inspecting event-log entries, reading
   authorization decisions and summaries, reading capability grants and
   summaries, reading compact runtime snapshots, listing desired-state targets,
-  listing pairing sessions, listing supervised bridge workers, reading worker heartbeat
-  schedules, previewing supervision plans, and observing supervision status
-  without invoking integrations
+  listing pairing sessions, listing supervised bridge workers, reading worker
+  heartbeat schedules, previewing supervision plans, and observing supervision
+  status without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
 - D18D-facing poll and unsubscribe tool facades that authorize event-stream

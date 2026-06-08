@@ -55,6 +55,8 @@ Current scope:
   allow/deny summaries
 - D18D capability-grant tool descriptors for listing grant rows and compact
   grant inventory summaries
+- D18D topology tool descriptors for room summaries and aggregate bridge,
+  device, entity, state, and scene coverage
 - D18D runtime automation inventory tool descriptors for read-only snapshots,
   desired-state targets, and pairing-session status
 - D18D bridge-worker inventory descriptors for read-only supervisor and
