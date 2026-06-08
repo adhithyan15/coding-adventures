@@ -111,6 +111,14 @@ describe("macsyma-runtime", () => {
     expect(MACSYMA_NAME_TABLE.get("trigsimp")).toEqual(TRIG_SIMPLIFY);
     expect(MACSYMA_NAME_TABLE.get("trigexpand")).toEqual(TRIG_EXPAND);
     expect(MACSYMA_NAME_TABLE.get("trigreduce")).toEqual(TRIG_REDUCE);
+    expect(MACSYMA_NAME_TABLE.get("eigenvalues")).toEqual(sym("Eigenvalues"));
+    expect(MACSYMA_NAME_TABLE.get("eigenvectors")).toEqual(sym("Eigenvectors"));
+    expect(MACSYMA_NAME_TABLE.get("charpoly")).toEqual(sym("CharPoly"));
+    expect(MACSYMA_NAME_TABLE.get("nullspace")).toEqual(sym("NullSpace"));
+    expect(MACSYMA_NAME_TABLE.get("columnspace")).toEqual(sym("ColumnSpace"));
+    expect(MACSYMA_NAME_TABLE.get("rowspace")).toEqual(sym("RowSpace"));
+    expect(MACSYMA_NAME_TABLE.get("norm")).toEqual(sym("Norm"));
+    expect(MACSYMA_NAME_TABLE.get("lu")).toEqual(sym("LU"));
 
     const target = new Map<string, typeof KILL>();
     extendCompilerNameTable(target);
@@ -133,6 +141,8 @@ describe("macsyma-runtime", () => {
     const [killResult] = session.evalSource("kill(x);");
     const [evResult] = session.evalSource("ev(1 + 2, numer);");
     const [odeResult] = session.evalSource("ode2(foo, y, x);");
+    const [luResult] = session.evalSource("lu(a);");
+    const [nullspaceResult] = session.evalSource("nullspace(a);");
 
     expect(killResult.input).toEqual(app(KILL, [sym("x")]));
     expect(evResult.input).toEqual(app(EV, [app(ADD, [int(1), int(2)]), sym("numer")]));
@@ -143,6 +153,8 @@ describe("macsyma-runtime", () => {
       sym("x"),
     ]));
     expect(odeResult.output).toEqual(odeResult.input);
+    expect(luResult.input).toEqual(app(sym("LU"), [sym("a")]));
+    expect(nullspaceResult.input).toEqual(app(sym("NullSpace"), [sym("a")]));
   });
 
   it("factors univariate integer polynomials through the runtime", () => {

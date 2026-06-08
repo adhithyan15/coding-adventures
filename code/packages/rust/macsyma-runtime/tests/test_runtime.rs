@@ -620,6 +620,26 @@ fn exports_and_extends_runtime_name_table_idempotently() {
         Some(PROPERTIES)
     );
     assert_eq!(table.get("propvars").map(String::as_str), Some(PROP_VARS));
+    assert_eq!(
+        table.get("eigenvalues").map(String::as_str),
+        Some("Eigenvalues")
+    );
+    assert_eq!(
+        table.get("eigenvectors").map(String::as_str),
+        Some("Eigenvectors")
+    );
+    assert_eq!(table.get("charpoly").map(String::as_str), Some("CharPoly"));
+    assert_eq!(
+        table.get("nullspace").map(String::as_str),
+        Some("NullSpace")
+    );
+    assert_eq!(
+        table.get("columnspace").map(String::as_str),
+        Some("ColumnSpace")
+    );
+    assert_eq!(table.get("rowspace").map(String::as_str), Some("RowSpace"));
+    assert_eq!(table.get("norm").map(String::as_str), Some("Norm"));
+    assert_eq!(table.get("lu").map(String::as_str), Some("LU"));
 
     let mut target = HashMap::from([("custom".to_string(), "CustomHead".to_string())]);
     extend_macsyma_name_table(&mut target);
