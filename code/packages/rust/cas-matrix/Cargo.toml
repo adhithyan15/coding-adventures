@@ -6,6 +6,7 @@ description = "Matrix operations over symbolic IR (construction, arithmetic, det
 license = "MIT"
 
 [dependencies]
+cas-solve = { path = "../cas-solve" }
 compute-ir = { path = "../compute-ir" }
 executor-protocol = { path = "../executor-protocol" }
 matrix-cpu = { path = "../matrix-cpu" }

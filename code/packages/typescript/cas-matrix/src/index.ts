@@ -16,6 +16,7 @@ import {
   type IRInteger,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { Frac as SolveFrac, solveLinear, solveQuadratic } from "@coding-adventures/cas-solve";
 import { Matrix, getMatrixBackend } from "matrix";
 
 export const MATRIX = "Matrix";
@@ -195,6 +196,27 @@ export function charPoly(node: IRNode, variable: IRNode): IRNode {
   if (terms.length === 0) return int(0);
   if (terms.length === 1) return terms[0];
   return app(ADD, terms);
+}
+
+export function eigenvalues(node: IRNode): IRNode {
+  const rows = matrixToRationals(node);
+  const n = rows.length;
+  const ncols = rows[0]?.length ?? 0;
+  if (n !== ncols) {
+    throw new MatrixError(`eigenvalues: matrix must be square, got ${n}x${ncols}`);
+  }
+  if (n > 2) {
+    throw new MatrixError("eigenvalues: only 1x1 and 2x2 matrices are supported in this TypeScript port");
+  }
+
+  const coeffs = charPolyCoeffValues(node).map(toSolveFrac);
+  const result = n === 1
+    ? solveLinear(coeffs[1], coeffs[0])
+    : solveQuadratic(coeffs[2], coeffs[1], coeffs[0]);
+  if (result.kind === "all") return app(sym("Eigenvalues"), [node]);
+
+  const multiplicity = n === 2 && result.roots.length === 1 ? 2 : 1;
+  return app(LIST, result.roots.map((root) => app(LIST, [root, int(multiplicity)])));
 }
 
 export function inverse(node: IRNode): IRNode {
@@ -572,6 +594,10 @@ function entryToRational(node: IRNode): RationalValue {
 
 function rationalToIr(value: RationalValue): IRNode {
   return value.denom === 1n ? int(value.numer) : rational(value.numer, value.denom);
+}
+
+function toSolveFrac(value: RationalValue): SolveFrac {
+  return new SolveFrac(value.numer, value.denom);
 }
 
 function rationalsToMatrix(rows: readonly (readonly RationalValue[])[]): IRNode {

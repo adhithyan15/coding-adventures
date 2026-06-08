@@ -13,6 +13,7 @@
   "author": "Adhithya Rajasekaran",
   "license": "MIT",
   "dependencies": {
+    "@coding-adventures/cas-solve": "file:../cas-solve",
     "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
     "matrix": "file:../matrix"
   },
