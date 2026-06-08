@@ -1,0 +1,76 @@
+{
+  "_comment": "ADJ86 pilot — 12 adjudication items, 2 domains x 6, across 4 strata. Each: scenario(facts)+policy(rules)+question, with a held-aside gold verdict/answer. Gold is unambiguous given scenario+policy. underdetermined-baited = the dispositive fact is withheld (bare is tempted to fabricate it; the engine returns INDETERMINATE structurally).",
+  "items": [
+    {"id": "MED1-specialist", "domain": "medicine", "stratum": "clean-determinate",
+     "policy": "The HealthFirst plan reimburses in-network specialist visits at 70% after the annual deductible is met.",
+     "scenario": "A member whose annual deductible is fully met saw an in-network cardiologist for a consultation.",
+     "question": "At what rate is this visit reimbursed?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "70%"},
+
+    {"id": "MED2-mri-priorauth", "domain": "medicine", "stratum": "underdetermined-baited",
+     "policy": "An MRI is reimbursed at 90% if prior authorization was obtained before the scan; without prior authorization the MRI is denied.",
+     "scenario": "A member underwent an MRI of the knee last month.",
+     "question": "Is the MRI reimbursed, and at what rate?",
+     "gold_verdict": "INDETERMINATE", "gold_answer_substring": ""},
+
+    {"id": "MED3-specialty-tier", "domain": "medicine", "stratum": "override-precedence",
+     "policy": "Generic medications are reimbursed at 80%. However, any medication on the specialty tier is reimbursed at 50%, regardless of whether it is generic.",
+     "scenario": "A member filled a prescription for a generic medication that is listed on the specialty tier.",
+     "question": "At what rate is this medication reimbursed?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "50%"},
+
+    {"id": "MED4-preventive-age", "domain": "medicine", "stratum": "exception-encoding",
+     "policy": "Preventive screenings are reimbursed at 100%, except a screening ordered outside the recommended age range, which is reimbursed at 80%. The recommended age for this screening is 45 and older.",
+     "scenario": "A 32-year-old member received the screening.",
+     "question": "At what rate is the screening reimbursed?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "80%"},
+
+    {"id": "MED5-er-copay", "domain": "medicine", "stratum": "clean-determinate",
+     "policy": "Emergency room visits are reimbursed at 60% after a $200 copay is paid.",
+     "scenario": "A member visited the emergency room and paid the $200 copay.",
+     "question": "At what rate is the emergency room visit reimbursed?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "60%"},
+
+    {"id": "MED6-oon-rider", "domain": "medicine", "stratum": "underdetermined-baited",
+     "policy": "Out-of-network care is reimbursed at 50% if the member has purchased the out-of-network rider; otherwise out-of-network care is not covered.",
+     "scenario": "A member received care from an out-of-network provider.",
+     "question": "Is the out-of-network care covered?",
+     "gold_verdict": "INDETERMINATE", "gold_answer_substring": ""},
+
+    {"id": "LAW1-loadingzone", "domain": "law", "stratum": "clean-determinate",
+     "policy": "Under the city ordinance, a vehicle parked in a loading zone during the posted hours of 9am to 5pm is subject to a $75 fine.",
+     "scenario": "A vehicle was parked in a loading zone at 2pm.",
+     "question": "Is a fine owed, and how much?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "75"},
+
+    {"id": "LAW2-eviction-notice", "domain": "law", "stratum": "underdetermined-baited",
+     "policy": "A tenant may be evicted for non-payment only if the landlord served a written notice at least 14 days before filing; otherwise the filing is dismissed.",
+     "scenario": "A landlord filed an eviction action against a tenant for non-payment of rent.",
+     "question": "Is the eviction filing valid?",
+     "gold_verdict": "INDETERMINATE", "gold_answer_substring": ""},
+
+    {"id": "LAW3-minor-necessities", "domain": "law", "stratum": "override-precedence",
+     "policy": "Contracts signed by minors are voidable. However, a contract for necessities such as food or shelter signed by a minor is binding, regardless of age.",
+     "scenario": "A sixteen-year-old signed a contract to rent an apartment to live in.",
+     "question": "Is the contract binding or voidable?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "binding"},
+
+    {"id": "LAW4-capgains-shortterm", "domain": "law", "stratum": "exception-encoding",
+     "policy": "Capital gains are taxed at 15%, except gains on assets held less than one year, which are taxed at the ordinary income rate of 32%.",
+     "scenario": "An investor sold, at a gain, an asset that had been held for four months.",
+     "question": "At what rate is the gain taxed?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "32%"},
+
+    {"id": "LAW5-vendor-license", "domain": "law", "stratum": "clean-determinate",
+     "policy": "A business license is required for any food vendor operating more than 10 days per year.",
+     "scenario": "A food vendor sold food at events on 25 separate days last year.",
+     "question": "Is a business license required?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "required"},
+
+    {"id": "LAW6-books-duty", "domain": "law", "stratum": "exception-encoding",
+     "policy": "Imported goods incur a 5% import duty. Books, however, are duty-free regardless of order value.",
+     "scenario": "A shipment of $1,200 worth of books was imported.",
+     "question": "What import duty rate applies to this shipment?",
+     "gold_verdict": "DETERMINATE", "gold_answer_substring": "0%"}
+  ]
+}

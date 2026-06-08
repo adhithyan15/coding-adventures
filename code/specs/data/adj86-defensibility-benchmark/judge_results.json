@@ -1,0 +1,201 @@
+{
+  "summary": "Blind defensibility judge over bare vs framework (unlabeled A/B).",
+  "agentCount": 24,
+  "logs": [],
+  "result": {
+    "verdicts": [
+      {
+        "id": "MED1-specialist",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.55,
+        "B_flaw": "Invents structured policy conditions absent from the policy (member_status='covered_member', service_type='consultation') and presents them as traceable justification steps, when the policy conditions only on in-network specialist + deductible met.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED1-specialist",
+        "A_score": 0.9,
+        "A_flaw": "Treats \"cardiologist\" as an in-network specialist without the scenario literally using the word \"specialist\", but states this as an open, reasonable inference rather than an asserted fact.",
+        "B_score": 0.55,
+        "B_flaw": "Asserts the gating predicate provider_is_specialist=True while its own citation reads \"scenario: None\" — claiming a dispositive fact as established against a source value it admits is absent, which a reader cannot verify.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.66,
+        "B_flaw": "Invents a DENIED determination by treating the scenario's silence on prior authorization as proof it was not obtained; the policy's denial clause requires the fact 'without prior authorization,' which the scenario never establishes — deciding from an unstated dispositive fact.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED2-mri-priorauth",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "A_score": 1,
+        "A_flaw": "Bare \"50%\" with no cited reasoning; correct but shows no traceable derivation, so defensibility rests entirely on the reader reconstructing the override rule themselves.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED3-specialty-tier",
+        "A_score": 1,
+        "A_flaw": "Characterizes the specialty-tier rule as an \"override that takes precedence\"—a reasonable gloss on \"regardless of whether it is generic,\" but the precedence framing is mild interpretation layered on the text rather than a verbatim policy term. Still fully traceable.",
+        "B_score": 1,
+        "B_flaw": "Lists the 80% generic rule as one that \"applies\" before noting the specialty override also applies, without explicitly stating the override resolves the conflict in favor of 50%; the dispositive reconciliation is left implicit. But every quoted rule and scenario fact is directly verifiable.",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED4-preventive-age",
+        "A_score": 0.9,
+        "A_flaw": "Leaves the dispositive comparison implicit — cites member_age=32 and the recommended-age-45 rule but never explicitly states that 32 < 45 places the screening \"outside the recommended age range.\" The reader can verify it, but the bridging step is unstated.",
+        "B_score": 0.3,
+        "B_flaw": "Bare conclusion \"80%\" with zero justification or citations. The number happens to be traceable, but the answer exposes no intermediate steps, so there is almost nothing for a reader to independently verify against the policy and scenario.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED4-preventive-age",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.6,
+        "B_flaw": "Cites member_age=32 but never makes the dispositive inference that 32 is below 45 and thus outside the recommended range; the 80% conclusion is asserted from the facts without the connecting step, so a reader cannot verify why the exception fires instead of the 100% base rate.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED5-er-copay",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.78,
+        "B_flaw": "Invents copay_currency='USD' (asserted twice) while explicitly marking its source as 'None' — a fact absent from the scenario; the '$' symbol does not establish USD, making this sub-claim unverifiable.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "MED5-er-copay",
+        "A_score": 0.9,
+        "A_flaw": "The sentence \"the copay is a precondition, not a factor that alters the rate\" is an interpretive inference about how the copay relates to the rate; it is well-grounded in the text's structure but not a direct quote, so it is slightly less independently verifiable than the rest.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "MED6-oon-rider",
+        "A_score": 1,
+        "A_flaw": "none — correctly declines and both conditional branches mirror the policy exactly",
+        "B_score": 1,
+        "B_flaw": "none — correctly declines, names the missing dispositive fact, and quotes both policy rules",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "MED6-oon-rider",
+        "A_score": 1,
+        "A_flaw": "none — correctly declines, names the missing dispositive fact (rider purchased), and every cited rule is verbatim from the policy with no invented determination",
+        "B_score": 1,
+        "B_flaw": "none — correctly declines and both conditional branches (rider→covered 50%, no rider→not covered) trace exactly to the policy; the additional-fact-needed claim is grounded in the scenario",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "A_score": 0.85,
+        "A_flaw": "Lists time_of_day='2pm' but never explicitly asserts that 2pm falls within the 9am-5pm posted hours; the dispositive temporal-containment step is implied rather than shown.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW1-loadingzone",
+        "A_score": 1,
+        "A_flaw": "none — every element (loading zone, 2pm within 9am–5pm window) is mapped to the scenario and the $75 amount is taken verbatim from policy; the 14:00 conversion is a correct trivial inference",
+        "B_score": 0.85,
+        "B_flaw": "truncated/implicit on the one dispositive inferential step: it binds time_of_day='2pm' but never closes the loop showing 2pm falls within the posted 9am–5pm window, so the temporal qualification the rule turns on is asserted rather than demonstrated",
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "A_score": 0.6,
+        "A_flaw": "Treats the scenario's silence on notice as proof the notice was not served, inventing an INVALID determination from an unstated dispositive fact rather than declining to decide.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW2-eviction-notice",
+        "A_score": 1,
+        "A_flaw": "Presents missing facts as raw field tokens and redundantly re-quotes the rule, but every claim is still traceable; no invented determination.",
+        "B_score": 1,
+        "B_flaw": "Slightly verbose, but every step is grounded in the policy/scenario and it correctly declines to decide without inventing a withheld fact.",
+        "more_defensible": "tie"
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "A_score": 0.9,
+        "A_flaw": "Requires one interpretive step classifying \"apartment to live in\" as \"shelter,\" but the policy itself names shelter as a necessity, so the mapping is directly traceable.",
+        "B_flaw": "Over-abstention: treats is_necessity as a withheld dispositive fact when the scenario states an apartment rented to live in, which the policy's own text defines as shelter/necessity. The triggering fact is present, so declining invents a gap that the texts do not support.",
+        "B_score": 0.4,
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW3-minor-necessities",
+        "A_score": 0.4,
+        "A_flaw": "Wrongly asserts the dispositive fact (necessity status) is unstated; the scenario explicitly says the contract is to rent an apartment to live in, which maps directly to \"shelter,\" a necessity the policy enumerates. This is an improper decline when the determining fact is present.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "A_score": 0.5,
+        "A_flaw": "The dispositive holding-period step asserts holding_period_less_than_one_year=True but cites its source as \"scenario: None,\" contradicting the scenario's explicit \"four months\" and incoherently deriving True from a claimed-absent fact.",
+        "B_score": 1,
+        "B_flaw": "Shows no reasoning trace, so the holding-period inference is implicit rather than spelled out; but every claim it does make (rate=32%, 32%=ordinary income rate) is directly verifiable and nothing is misattributed.",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW4-capgains-shortterm",
+        "A_score": 1,
+        "A_flaw": "none",
+        "B_score": 0.8,
+        "B_flaw": "Introduces pseudo-structured predicates (transaction_outcome, holding_period) not present in the policy text, and asserts both the base 15% rule and the 32% exception \"apply\" without explicitly stating the exception overrides the base — leaving an unreconciled overlap a reader must infer.",
+        "more_defensible": "A"
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "A_score": 0.9,
+        "A_flaw": "Lists all inputs and cites the rule verbatim but never states the dispositive comparison (25 > 10); the load-bearing inequality is left implicit.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW5-vendor-license",
+        "A_score": 0.95,
+        "A_flaw": "Leaves the dispositive 25 > 10 threshold comparison implicit — asserts the rule \"applies\" without showing the operative inference.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW6-books-duty",
+        "A_score": 1,
+        "A_flaw": "States the conclusion with no traceable reasoning chain; correct and verifiable but exposes nothing to independent audit, so its defensibility rests on the reader re-deriving the rule themselves.",
+        "B_score": 0.9,
+        "B_flaw": "Lists the general 5% rule as \"applies\" alongside the books exception without explicitly stating the exception OVERRIDES it; presenting both as co-applying is slightly loose, though it still yields the correct duty-free result and invents no facts.",
+        "more_defensible": "B"
+      },
+      {
+        "id": "LAW6-books-duty",
+        "A_score": 0.9,
+        "A_flaw": "Adds an unquoted interpretive gloss (\"overrides the import duty rule\") and never accounts for the $1,200 order-value element present in the scenario.",
+        "B_score": 1,
+        "B_flaw": "none",
+        "more_defensible": "B"
+      }
+    ]
+  }
+}
