@@ -1,0 +1,155 @@
+[
+  {
+    "id": "MED1-specialist",
+    "slot": "member_status",
+    "basis_span": "A member",
+    "verdict": "LEAP",
+    "rationale": "The scenario says only \"A member.\" Deriving \"covered_member\" requires the outside assumption that being a \"member\" means one's claim is covered/eligible \u2014 that membership equals active coverage. The bytes \"A member\" do not, by their meaning alone, establish coverage status; a person can be a member without a given service being covered. The fact that the deductible was \"fully met\" concerns cost-sharing, not coverage status, and seeing an in-network provider does not entail covered-member status either. Concluding \"covered_member\" needs domain knowledge beyond what the literal bytes carry, so it is a LEAP.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "MED1-specialist",
+    "slot": "provider_is_specialist",
+    "basis_span": "in-network cardiologist",
+    "verdict": "LEAP",
+    "rationale": "The bytes name the provider as a \"cardiologist,\" but they do not state that a cardiologist is a \"specialist.\" Classifying a cardiologist as a specialist (as opposed to, e.g., a primary care provider) requires outside medical/world knowledge about provider categories that the literal bytes do not carry. The meaning of \"cardiologist\" alone does not establish provider_is_specialist = true without that external fact, so deriving it is a LEAP.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "MED2-mri-priorauth",
+    "slot": "procedure_completed",
+    "basis_span": "underwent an MRI of the knee last month",
+    "verdict": "ENTAILED",
+    "rationale": "\"underwent ... last month\" describes a past-tense action that already took place, which directly establishes that the procedure was completed. No outside knowledge is needed; the verb \"underwent\" literally conveys that the member went through (completed) the MRI procedure.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "MED2-mri-priorauth",
+    "slot": "imaging_modality",
+    "basis_span": "an MRI of the knee",
+    "verdict": "ENTAILED",
+    "rationale": "The scenario explicitly names \"an MRI of the knee.\" The inferred value imaging_modality = \"MRI\" is a verbatim restatement of the modality named in the bytes. The text states the member \"underwent an MRI,\" so the bytes themselves establish that MRI was the procedure performed; deriving the modality value \"MRI\" requires no outside knowledge, only quoting what is literally written.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "MED3-specialty-tier",
+    "slot": "medication_on_formulary",
+    "basis_span": "listed on the specialty tier",
+    "verdict": "LEAP",
+    "rationale": "The inferred fact is medication_on_formulary = true. The quoted bytes state the medication is \"listed on the specialty tier.\" The bytes never mention a \"formulary.\" Concluding that being on the \"specialty tier\" means being \"on the formulary\" requires outside domain knowledge that a formulary is a tiered list of covered drugs and that the \"specialty tier\" is one of its tiers. The literal meaning of \"listed on the specialty tier\" does not, by itself, carry the concept of a formulary; that linkage is supplied by world knowledge about how pharmacy benefits are structured. Hence deriving formulary membership is a LEAP beyond the bytes.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "MED5-er-copay",
+    "slot": "visit_type",
+    "basis_span": "visited the emergency room",
+    "verdict": "ENTAILED",
+    "rationale": "The bytes \"visited the emergency room\" directly state the type of visit. Classifying this visit as type \"emergency\" is a restatement of the literal content \u2014 the phrase \"emergency room\" names the place/type of visit as emergency, with no outside knowledge required to map \"emergency room\" to an emergency visit type.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "MED5-er-copay",
+    "slot": "copay_currency",
+    "basis_span": "paid the $200 copay",
+    "verdict": "LEAP",
+    "rationale": "The scenario only shows the \"$\" symbol with \"200 copay\" and never names a currency. The bytes alone do not establish that \"$\" means USD \u2014 the \"$\" sign is shared by many currencies (CAD, AUD, MXN, etc.). Mapping \"$\" specifically to \"USD\" requires outside/world knowledge not carried by the quoted bytes, so deriving copay_currency = \"USD\" is a LEAP.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW3-minor-necessities",
+    "slot": "age_status",
+    "basis_span": "A sixteen-year-old",
+    "verdict": "LEAP",
+    "rationale": "The bytes establish the person is sixteen years old. They do not, on their own meaning alone, establish that this counts as \"minor\" \u2014 that classification depends on the legal age of majority (commonly 18), which is outside/world knowledge the bytes do not carry. The number sixteen does not inherently mean \"minor\" without the external threshold.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW3-minor-necessities",
+    "slot": "party_role",
+    "basis_span": "signed a contract to rent an apartment to live in",
+    "verdict": "ENTAILED",
+    "rationale": "The bytes state the person signed a contract to rent an apartment \"to live in,\" which means they are taking the apartment for their own occupancy under a rental agreement \u2014 i.e., they are the renting party rather than the owner/landlord. The role of \"the party who takes property under a rental/lease\" is exactly what \"lessee\" denotes; mapping the described role to that label is a vocabulary restatement of the meaning already present in the bytes (\"rent ... to live in\" = taking, not granting, the rental). It does not require outside facts the bytes fail to carry \u2014 the directional cue \"to live in\" rules out the lessor reading. Hence the role is entailed by the meaning of the quoted bytes.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "LAW3-minor-necessities",
+    "slot": "is_minor",
+    "basis_span": "A sixteen-year-old",
+    "verdict": "LEAP",
+    "rationale": "The bytes establish the person is sixteen years old. They do NOT carry the concept of legal minority or the age threshold defining a \"minor.\" Concluding \"is_minor = true\" requires outside legal/world knowledge that the age of majority is above sixteen (e.g., 18 in most jurisdictions). The bytes alone state an age, not a legal status; mapping age sixteen to \"minor\" needs an unstated threshold the text does not provide.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW4-capgains-shortterm",
+    "slot": "holding_period_less_than_one_year",
+    "basis_span": "held for four months",
+    "verdict": "ENTAILED",
+    "rationale": "\"held for four months\" literally states a holding period of four months. Four months is less than one year (twelve months) by deterministic comparison of the quantities the bytes carry \u2014 no outside or world knowledge is needed, only arithmetic on the stated duration. Therefore the bytes entail that the holding period is less than one year.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "LAW4-capgains-shortterm",
+    "slot": "cost_basis_known",
+    "basis_span": null,
+    "verdict": "LEAP",
+    "rationale": "The scenario states only that an asset held for four months was sold at a gain. Nothing in the text addresses whether the cost basis is known or unknown \u2014 there is no span describing acquisition price, basis records, or basis availability. Deriving cost_basis_known = false requires information the bytes do not carry, so it is a LEAP (and in fact the bytes neither support nor contradict it; no supporting span exists).",
+    "basis_verbatim": false,
+    "grounded": false
+  },
+  {
+    "id": "LAW4-capgains-shortterm",
+    "slot": "sale_price_known",
+    "basis_span": "sold, at a gain,",
+    "verdict": "LEAP",
+    "rationale": "The closest relevant bytes are \"sold, at a gain,\" which establish that a sale occurred and produced a gain, but say nothing about whether the sale price figure is or is not known. Inferring sale_price_known = false rests on the scenario's silence about a specific price, not on the meaning of the quoted bytes \u2014 concluding \"not known\" from \"no price stated\" is an assumption beyond what the bytes literally establish. A gain can exist with a known sale price just as easily as an unknown one; the bytes do not entail either.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW4-capgains-shortterm",
+    "slot": "asset_type_specified",
+    "basis_span": "an asset",
+    "verdict": "ENTAILED",
+    "rationale": "The scenario refers only to \"an asset\" \u2014 a generic, unqualified noun with no accompanying type descriptor (no \"stock,\" \"real estate,\" \"bond,\" \"collectible,\" etc.). The meaning of these bytes alone establishes that no asset type was specified, which is exactly the inferred fact (asset_type_specified = false). This is a direct restatement of what the bytes literally convey: the absence of any type qualifier on \"asset\" is visible in the bytes themselves and requires no outside knowledge to recognize.",
+    "basis_verbatim": true,
+    "grounded": true
+  },
+  {
+    "id": "LAW5-vendor-license",
+    "slot": "temporal_distribution",
+    "basis_span": "sold food at events on 25 separate days last year",
+    "verdict": "LEAP",
+    "rationale": "The bytes establish that the vendor sold food on 25 separate days within \"last year.\" They do NOT establish that those days were \"distributed across a 12-month period.\" The 25 days could be clustered in a single month, a single season, or any subset of the year; \"last year\" only locates the days within that year and does not assert that activity spanned all 12 months or was spread evenly. Deriving \"distributed across a 12-month period\" requires an unstated assumption about how the 25 days are spaced \u2014 a leap beyond what the quoted bytes literally carry.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW6-books-duty",
+    "slot": "currency",
+    "basis_span": "$1,200",
+    "verdict": "LEAP",
+    "rationale": "The only support is the \"$\" sign in \"$1,200\". The meaning of those bytes alone is \"1,200 dollar-sign units\"; the bytes do not carry which currency. Resolving \"$\" specifically to USD requires outside knowledge (the \"$\" glyph denotes many currencies \u2014 USD, CAD, AUD, MXN, etc.), and the scenario provides no country or context fixing it to US dollars. The prompt explicitly cites \"that '$' means USD\" as a LEAP.",
+    "basis_verbatim": true,
+    "grounded": false
+  },
+  {
+    "id": "LAW6-books-duty",
+    "slot": "shipment_currency",
+    "basis_span": "$1,200",
+    "verdict": "LEAP",
+    "rationale": "The only relevant bytes are \"$1,200\". Mapping the \"$\" glyph to the currency code \"USD\" requires outside world knowledge: \"$\" is used by many currencies (USD, CAD, AUD, MXN, etc.), and the bytes alone do not specify which. Per the instructions, inferring that \"$\" means USD is explicitly cited as a LEAP, not an entailment.",
+    "basis_verbatim": true,
+    "grounded": false
+  }
+]
