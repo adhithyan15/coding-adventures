@@ -280,5 +280,12 @@ ADJ_DEMO_ENDPOINT=http://127.0.0.1:11434 \
   producing auditable law reasoning, and introduces the
   `claimed_from_model_memory` authenticity class for model-emitted
   source bytes.
+- [ADJ71](ADJ71-cas-program-cache-experiment.md) — automated
+  CAS program-cache experiment: fetches an official 8 U.S.C. 1427
+  release XML section, byte-provenances a narrow
+  ordinary-naturalization rule subset, compiles it once into a
+  generated executable library, validates ten synthetic cases, then
+  compiles an eleventh held-out case into a program that imports the
+  cached library and executes with zero answer-time model calls.
 - [LM00](LM00-llm-gateway-architecture.md) — gateway architecture.
 - [LM00b](LM00b-llm-primitives.md) — primitives layer.
