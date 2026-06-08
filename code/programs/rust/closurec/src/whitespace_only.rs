@@ -233,6 +233,53 @@ pub fn whitespace_only_minify(
             }
         }
 
+        // gap-031: empty `{}` in body position collapses to
+        // `;`. Upstream Closure substitutes an EmptyStatement
+        // (`;`) for an empty Block when the block is in the
+        // body slot of a control-flow construct
+        // (`for(...){...}` / `while(x){}` / `if(x){}` etc.).
+        // The trigger is `{}` (a `{` immediately followed by
+        // `}`) WHERE `body_position_next` is true. We emit a
+        // single `;` and skip both braces. Function-decl
+        // bodies are unaffected because `body_position_next`
+        // is false in that context (no paren-stack push of
+        // control-flow head). Plain block-as-statement at
+        // top level is also unaffected (also no control-flow
+        // head). The substitution is semantically identical
+        // — ECMAScript §13.2 lets either Block or
+        // EmptyStatement satisfy the Statement nonterminal
+        // in the body slot.
+        if val == "{" && body_position_next {
+            if let Some(next) = kept.get(idx + 1) {
+                if next.value == "}" {
+                    // Emit `;` in place of `{}`.
+                    out.push(';');
+                    // The body slot is now filled by the
+                    // EmptyStatement we just emitted.
+                    body_position_next = false;
+                    at_stmt_boundary = true;
+                    // Arm rule-C dedup so an immediately-
+                    // following source `;` (e.g.
+                    // `for(...){};var x=1;`) gets folded into
+                    // the synthetic one — output stays
+                    // `for(...);var x=1;` instead of
+                    // becoming `for(...);;var x=1;`. Same
+                    // mechanism rule B uses for function-decl
+                    // trailing `;`. Pre-push security review
+                    // flagged this as an optimality regression.
+                    last_emit_was_synthetic_semi = true;
+                    // prev_emitted_tok is left untouched —
+                    // the next real token will compute its
+                    // separator against whatever came before
+                    // our substituted `;` (typically `)`),
+                    // which is not word-like so no separator
+                    // is needed.
+                    idx += 2; // Skip `{` and `}`.
+                    continue;
+                }
+            }
+        }
+
         // Snapshot prev BEFORE the emit overwrites it, so
         // the state-update branches below can inspect the
         // token that came *before* the current one. Needed
@@ -882,6 +929,101 @@ mod tests {
         assert_eq!(
             minify("p.then(g).catch(f);"),
             "p.then(g).catch(f);"
+        );
+    }
+
+    // ---- gap-031: empty `{}` body collapses to `;` --------
+
+    /// Target fixture: empty for-body collapses to `;`.
+    #[test]
+    fn gap031_empty_for_body_collapses() {
+        assert_eq!(
+            minify("for(var i=0;i<10;i++){}"),
+            "for(var i=0;i<10;i++);"
+        );
+    }
+
+    /// Empty while-body collapses.
+    #[test]
+    fn gap031_empty_while_body_collapses() {
+        assert_eq!(minify("while(x){}"), "while(x);");
+    }
+
+    /// Empty if-body collapses (with no else).
+    #[test]
+    fn gap031_empty_if_body_collapses() {
+        assert_eq!(minify("if(x){}"), "if(x);");
+    }
+
+    /// Empty function-decl body is NOT in body-position
+    /// (the `(...)` head of `function` is not a control-flow
+    /// head). So `function f(){}` stays as is + gets the
+    /// gap-030 trailing `;`. Important non-regression for
+    /// gap-031's interaction with gap-030.
+    #[test]
+    fn gap031_function_empty_body_unaffected() {
+        assert_eq!(minify("function f(){}"), "function f(){};");
+    }
+
+    /// A NON-empty for-body must NOT collapse — only `{}`
+    /// (empty) triggers the rule. The `{` arm checks that
+    /// the very next token is `}`.
+    #[test]
+    fn gap031_nonempty_for_body_unaffected() {
+        assert_eq!(
+            minify("for(var i=0;i<10;i++){a;}"),
+            "for(var i=0;i<10;i++){a}"
+        );
+    }
+
+    /// Top-level `{}` is a Block statement, NOT in body
+    /// position. body_position_next is false there, so the
+    /// rule does not fire. (Plain `{}` stays as `{}`.)
+    #[test]
+    fn gap031_top_level_empty_block_unaffected() {
+        // Top-level `{}` followed by a statement. The rule's
+        // body_position_next guard means we don't substitute.
+        assert_eq!(minify("{}var x=1;"), "{}var x=1;");
+    }
+
+    /// Object literal `{}` is in expression position, NOT in
+    /// body position. body_position_next would be false
+    /// (it's set by control-flow `)` only). Non-regression
+    /// for empty object literals.
+    #[test]
+    fn gap031_empty_object_literal_unaffected() {
+        assert_eq!(minify("var x={};"), "var x={};");
+    }
+
+    /// Critical interaction with gap-033: a try-body that is
+    /// empty `{}`. The try-body's `{` is opening a TryChain
+    /// block — but it is NOT in body position (try doesn't
+    /// have a `(...)` head). So gap-031 does NOT fire and
+    /// gap-033 correctly processes the try-chain.
+    #[test]
+    fn gap031_try_empty_body_unaffected() {
+        // `try{}catch(e){a;}` — try-body stays `{}` because
+        // it's not in body position; catch-body works as in
+        // gap-033.
+        assert_eq!(
+            minify("try{}catch(e){a;}"),
+            "try{}catch(e){a};"
+        );
+    }
+
+    /// Optimality regression test (caught by pre-push
+    /// security review). A source `;` immediately after the
+    /// `{}` collapse-target gets folded into the synthetic
+    /// `;` via rule C dedup. Without the
+    /// `last_emit_was_synthetic_semi = true` line in the
+    /// gap-031 branch, this would emit `for(...);;var x=1;`
+    /// — syntactically valid (the extra `;` is an
+    /// EmptyStatement) but ugly and non-minimal.
+    #[test]
+    fn gap031_for_loop_with_trailing_semi_deduped() {
+        assert_eq!(
+            minify("for(var i=0;i<10;i++){};var x=1;"),
+            "for(var i=0;i<10;i++);var x=1;"
         );
     }
 }

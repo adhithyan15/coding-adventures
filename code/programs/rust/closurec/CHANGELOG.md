@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.47.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-031**: empty `{}` body collapses to `;`
+  (EmptyStatement substitution per ECMAScript §13.2). When
+  the CLI WHITESPACE_ONLY re-stitcher encounters `{` with
+  `body_position_next` true (i.e. it's the body slot of a
+  `for`/`while`/`if`/`labeled` after the closing `)`) AND the
+  next non-trivia token is `}`, the emitter writes a single
+  `;` in place of the `{}` pair and skips both braces.
+- `minify_for_loop` flipped IGNORED → PASS. Harness now
+  reports `16 matched, 0 failed, 1 skipped (of 17 total)`;
+  only gap-032 (single-statement if/else block flattening)
+  remains open.
+
+### Added
+- 8 new inline tests in `whitespace_only::tests::gap031_*`:
+  - **Positive (rule fires):**
+    - `gap031_empty_for_body_collapses` — the target fixture.
+    - `gap031_empty_while_body_collapses` — `while(x){}` → `while(x);`.
+    - `gap031_empty_if_body_collapses` — `if(x){}` → `if(x);`.
+  - **Non-regression (rule does NOT fire):**
+    - `gap031_function_empty_body_unaffected` — function-decl
+      body stays `{}` (no control-flow paren).
+    - `gap031_nonempty_for_body_unaffected` — `{...}` with
+      content stays as is.
+    - `gap031_top_level_empty_block_unaffected` — `{}` at
+      statement position (not body position) stays as is.
+    - `gap031_empty_object_literal_unaffected` — `{}` in
+      expression position stays as is.
+    - `gap031_try_empty_body_unaffected` — `try{}` body stays
+      `{}` (try doesn't have a `(...)` head); composes
+      correctly with gap-033 try-chain processing.
+
 ## [0.46.0] - 2026-06-08
 
 ### Changed
