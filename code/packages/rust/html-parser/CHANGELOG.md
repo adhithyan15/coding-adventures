@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness form-policy descriptors now expose form submission targets,
+  accept/autocomplete/rel policy tokens, validation bypass state, and submitter
+  overrides as a flat browser-planning inventory.
 - Browser-readiness fetch-policy descriptors now expose subresource integrity,
   CORS, nonce, referrer policy, iframe CSP/sandbox/permissions, fullscreen, and
   credentialless metadata as a flat browser-planning inventory.

@@ -30,6 +30,8 @@ Loading-hint descriptor cases pin scheduling hints across lazy/eager loading,
 decoding, fetch priority, blocking, and media preload metadata.
 Fetch-policy descriptor cases pin integrity, CORS, nonce, referrer policy,
 iframe CSP/sandbox/permissions, fullscreen, and credentialless metadata.
+Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
+policy tokens, validation bypass state, and submitter overrides.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags and preload/poster metadata.
