@@ -832,6 +832,7 @@ pub struct BrowserDocument {
     pub resources: Vec<BrowserResource>,
     pub scripts: Vec<BrowserScript>,
     pub stylesheets: Vec<BrowserStylesheet>,
+    pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
@@ -1018,6 +1019,22 @@ pub struct BrowserStylesheet {
     pub blocking: Option<String>,
     pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLoadingHintDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub preload: Option<String>,
+    pub as_hint: Option<String>,
+    pub media: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9593,6 +9610,11 @@ fn collect_browser_facts(
 
         collect_anchor_target(element, summary);
         collect_body_resource(element, summary);
+        if let Some(descriptor) =
+            browser_loading_hint_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.loading_hint_descriptors.push(descriptor);
+        }
         if let Some(context) = browser_embedded_context(element, summary.base_href.as_deref()) {
             summary.embedded_contexts.push(context);
         }
@@ -9751,6 +9773,12 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
         let Node::Element(element) = node else {
             continue;
         };
+
+        if let Some(descriptor) =
+            browser_loading_hint_descriptor(element, summary.base_href.as_deref())
+        {
+            summary.loading_hint_descriptors.push(descriptor);
+        }
 
         match element.name.as_str() {
             "meta" => summary.metas.push(BrowserMeta {
@@ -12260,6 +12288,68 @@ fn browser_browsing_context_fetchpriority(element: &Element) -> Option<String> {
     } else {
         None
     }
+}
+
+fn browser_loading_hint_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+) -> Option<BrowserLoadingHintDescriptor> {
+    let loading = match element.name.as_str() {
+        "img" => element.attribute("loading").map(ToOwned::to_owned),
+        _ => browser_browsing_context_loading(element),
+    };
+    let decoding = (element.name == "img")
+        .then(|| element.attribute("decoding").map(ToOwned::to_owned))
+        .flatten();
+    let fetchpriority = match element.name.as_str() {
+        "img" | "iframe" | "frame" | "link" | "script" => {
+            element.attribute("fetchpriority").map(ToOwned::to_owned)
+        }
+        _ => None,
+    };
+    let blocking = match element.name.as_str() {
+        "link" | "script" | "style" => element.attribute("blocking").map(ToOwned::to_owned),
+        _ => None,
+    };
+    let preload = browser_media_preload(element);
+
+    if loading.is_none()
+        && decoding.is_none()
+        && fetchpriority.is_none()
+        && blocking.is_none()
+        && preload.is_none()
+    {
+        return None;
+    }
+
+    let url = browser_loading_hint_url(element);
+    let resolved_url = url
+        .as_deref()
+        .and_then(|url| resolve_browser_url(url, base_href));
+
+    Some(BrowserLoadingHintDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        url,
+        resolved_url,
+        loading,
+        decoding,
+        fetchpriority,
+        blocking,
+        blocking_tokens: browser_blocking_tokens(element),
+        preload,
+        as_hint: element.attribute("as").map(ToOwned::to_owned),
+        media: element.attribute("media").map(ToOwned::to_owned),
+    })
+}
+
+fn browser_loading_hint_url(element: &Element) -> Option<String> {
+    match element.name.as_str() {
+        "link" => element.attribute("href"),
+        "audio" | "frame" | "iframe" | "img" | "script" | "video" => element.attribute("src"),
+        _ => None,
+    }
+    .map(ToOwned::to_owned)
 }
 
 fn browser_browsing_context_csp(element: &Element) -> Option<String> {
@@ -18247,6 +18337,63 @@ mod tests {
         );
         assert_eq!(stylesheet_preload.fetchpriority.as_deref(), Some("high"));
         assert_eq!(stylesheet_preload.blocking.as_deref(), Some("render"));
+    }
+
+    #[test]
+    fn browser_loading_hint_descriptors_track_head_and_body_scheduling_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/\">\
+             <link rel=preload href=fonts/site.woff2 as=font fetchpriority=high blocking=render>\
+             <style id=critical blocking=render media=screen>body{color:black}</style>\
+             <script id=boot src=scripts/app.js fetchpriority=low blocking=render></script>\
+             <body><img id=hero src=hero.jpg loading=lazy decoding=async fetchpriority=high>\
+             <iframe id=frame src=frame.html loading=eager fetchpriority=low></iframe>\
+             <video id=movie src=movie.mp4 preload=metadata></video></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.loading_hint_descriptors.len(), 6);
+
+        let preload = &summary.loading_hint_descriptors[0];
+        assert_eq!(preload.element, "link");
+        assert_eq!(preload.url.as_deref(), Some("fonts/site.woff2"));
+        assert_eq!(
+            preload.resolved_url.as_deref(),
+            Some("https://example.test/app/fonts/site.woff2")
+        );
+        assert_eq!(preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(preload.blocking.as_deref(), Some("render"));
+        assert_eq!(preload.blocking_tokens, vec!["render"]);
+        assert_eq!(preload.as_hint.as_deref(), Some("font"));
+
+        let style = &summary.loading_hint_descriptors[1];
+        assert_eq!(style.element, "style");
+        assert_eq!(style.id.as_deref(), Some("critical"));
+        assert_eq!(style.blocking.as_deref(), Some("render"));
+        assert_eq!(style.media.as_deref(), Some("screen"));
+
+        let script = &summary.loading_hint_descriptors[2];
+        assert_eq!(script.element, "script");
+        assert_eq!(script.id.as_deref(), Some("boot"));
+        assert_eq!(script.url.as_deref(), Some("scripts/app.js"));
+        assert_eq!(script.fetchpriority.as_deref(), Some("low"));
+        assert_eq!(script.blocking.as_deref(), Some("render"));
+
+        let image = &summary.loading_hint_descriptors[3];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.loading.as_deref(), Some("lazy"));
+        assert_eq!(image.decoding.as_deref(), Some("async"));
+        assert_eq!(image.fetchpriority.as_deref(), Some("high"));
+
+        let frame = &summary.loading_hint_descriptors[4];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.loading.as_deref(), Some("eager"));
+        assert_eq!(frame.fetchpriority.as_deref(), Some("low"));
+
+        let video = &summary.loading_hint_descriptors[5];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.preload.as_deref(), Some("metadata"));
     }
 
     #[test]

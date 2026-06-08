@@ -10,12 +10,12 @@ use coding_adventures_html_parser::{
     BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
     BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
     BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
-    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
-    BrowserThemeColor,
+    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaSource, BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective,
+    BrowserNavigationGroup, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
+    BrowserResourceHint, BrowserScript, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -65,6 +65,8 @@ struct ExpectedBrowserDocument {
     scripts: Vec<ExpectedScript>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
+    #[serde(default)]
+    loading_hint_descriptors: Vec<ExpectedLoadingHintDescriptor>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
@@ -389,6 +391,33 @@ struct ExpectedAriaRelationDescriptor {
     aria_flowto: Vec<String>,
     #[serde(default)]
     flowto_text: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedLoadingHintDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    url: Option<String>,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    decoding: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    preload: Option<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3484,6 +3513,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedStylesheet::into_browser_stylesheet)
                 .collect(),
+            loading_hint_descriptors: self
+                .loading_hint_descriptors
+                .into_iter()
+                .map(ExpectedLoadingHintDescriptor::into_browser_loading_hint_descriptor)
+                .collect(),
             anchors: self
                 .anchors
                 .into_iter()
@@ -3952,6 +3986,27 @@ impl ExpectedStylesheet {
             blocking: self.blocking,
             blocking_tokens,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedLoadingHintDescriptor {
+    fn into_browser_loading_hint_descriptor(self) -> BrowserLoadingHintDescriptor {
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
+        BrowserLoadingHintDescriptor {
+            element: self.element,
+            id: self.id,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            loading: self.loading,
+            decoding: self.decoding,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            blocking_tokens,
+            preload: self.preload,
+            as_hint: self.as_hint,
+            media: self.media,
         }
     }
 }

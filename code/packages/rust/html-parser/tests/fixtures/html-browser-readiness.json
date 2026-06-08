@@ -150,6 +150,9 @@
         ],
         "anchors": [],
         "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "img", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "loading": "lazy", "decoding": "async", "fetchpriority": "high" }
+        ],
         "links": [
           { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "attributionsrc": ["area-attr.html"], "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"], "hreflang": "en", "text": "Details" }
         ],
@@ -442,6 +445,11 @@
         ],
         "anchors": [],
         "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "link", "url": "fonts/site.woff2", "resolved_url": "https://example.test/app/fonts/site.woff2", "fetchpriority": "high", "as_hint": "font" },
+          { "element": "link", "url": "scripts/app.mjs", "resolved_url": "https://example.test/app/scripts/app.mjs", "blocking": "render", "blocking_tokens": ["render"] },
+          { "element": "link", "url": "hero.jpg", "resolved_url": "https://example.test/app/hero.jpg", "fetchpriority": "high", "as_hint": "image" }
+        ],
         "links": [],
         "images": [],
         "forms": [],
@@ -506,6 +514,9 @@
         ],
         "anchors": [],
         "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "loading": "lazy", "fetchpriority": "high" }
+        ],
         "links": [],
         "images": [],
         "media": [
@@ -546,6 +557,10 @@
           { "id": "hero", "name": null, "text": "" }
         ],
         "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "video", "id": "hero", "url": "movie.mp4", "resolved_url": "https://example.test/watch/movie.mp4", "preload": "metadata" },
+          { "element": "audio", "url": "theme.ogg", "resolved_url": "https://example.test/watch/theme.ogg", "preload": "none" }
+        ],
         "links": [],
         "images": [],
         "media": [
@@ -667,6 +682,10 @@
         ],
         "anchors": [],
         "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "link", "url": "app.css", "resolved_url": "https://example.test/app/app.css", "fetchpriority": "high", "blocking": "render", "blocking_tokens": ["render"], "as_hint": null, "media": "screen" },
+          { "element": "script", "url": "app.js", "resolved_url": "https://example.test/app/app.js", "fetchpriority": "low", "blocking": "render", "blocking_tokens": ["render"] }
+        ],
         "links": [],
         "images": [],
         "forms": [],
@@ -1357,6 +1376,50 @@
         ],
         "links": [],
         "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "loading-hint-descriptor-page",
+      "description": "Browser document summaries expose image, frame, and media loading hints as a flat scheduling descriptor inventory.",
+      "input": "<base href=\"https://example.test/assets/\"><body><img id=hero src=hero.jpg alt=Hero loading=lazy decoding=async fetchpriority=high><iframe id=frame src=frame.html loading=eager fetchpriority=low title=Frame></iframe><video id=movie src=movie.mp4 preload=metadata></video><audio id=sound src=sound.ogg preload=none></audio></body>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/assets/",
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "image", "url": "hero.jpg", "resolved_url": "https://example.test/assets/hero.jpg", "rel": null, "type_hint": null, "media": null, "title": null, "fetchpriority": "high", "async_script": false, "defer_script": false },
+          { "kind": "frame", "url": "frame.html", "resolved_url": "https://example.test/assets/frame.html", "rel": null, "type_hint": null, "media": null, "title": "Frame", "fetchpriority": "low", "loading": "eager", "async_script": false, "defer_script": false },
+          { "kind": "video", "url": "movie.mp4", "resolved_url": "https://example.test/assets/movie.mp4", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false },
+          { "kind": "audio", "url": "sound.ogg", "resolved_url": "https://example.test/assets/sound.ogg", "rel": null, "type_hint": null, "media": null, "title": null, "async_script": false, "defer_script": false }
+        ],
+        "anchors": [
+          { "id": "hero", "name": null, "text": "" },
+          { "id": "frame", "name": null, "text": "" },
+          { "id": "movie", "name": null, "text": "" },
+          { "id": "sound", "name": null, "text": "" }
+        ],
+        "headings": [],
+        "loading_hint_descriptors": [
+          { "element": "img", "id": "hero", "url": "hero.jpg", "resolved_url": "https://example.test/assets/hero.jpg", "loading": "lazy", "decoding": "async", "fetchpriority": "high" },
+          { "element": "iframe", "id": "frame", "url": "frame.html", "resolved_url": "https://example.test/assets/frame.html", "loading": "eager", "fetchpriority": "low" },
+          { "element": "video", "id": "movie", "url": "movie.mp4", "resolved_url": "https://example.test/assets/movie.mp4", "preload": "metadata" },
+          { "element": "audio", "id": "sound", "url": "sound.ogg", "resolved_url": "https://example.test/assets/sound.ogg", "preload": "none" }
+        ],
+        "links": [],
+        "images": [
+          { "src": "hero.jpg", "resolved_src": "https://example.test/assets/hero.jpg", "alt": "Hero", "loading": "lazy", "decoding": "async", "fetchpriority": "high" }
+        ],
+        "media": [
+          { "kind": "video", "src": "movie.mp4", "resolved_src": "https://example.test/assets/movie.mp4", "preload": "metadata" },
+          { "kind": "audio", "src": "sound.ogg", "resolved_src": "https://example.test/assets/sound.ogg", "preload": "none" }
+        ],
+        "embedded_contexts": [
+          { "element": "iframe", "url": "frame.html", "resolved_url": "https://example.test/assets/frame.html", "title": "Frame", "loading": "eager", "fetchpriority": "low", "fallback_text": "" }
+        ],
         "forms": [],
         "tables": []
       }
