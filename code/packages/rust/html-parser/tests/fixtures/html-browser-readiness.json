@@ -490,6 +490,11 @@
           { "kind": "canonical", "url": "https://example.test/app/", "resolved_url": "https://example.test/app/", "rel": "canonical", "async_script": false, "defer_script": false },
           { "kind": "manifest", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "rel": "manifest", "async_script": false, "defer_script": false }
         ],
+        "resource_endpoint_descriptors": [
+          { "endpoint_kind": "metadata-refresh", "element": "meta", "resource_kind": "refresh", "url": "next.html", "resolved_url": "https://example.test/app/next.html" },
+          { "endpoint_kind": "resource", "element": "link", "resource_kind": "canonical", "url": "https://example.test/app/", "resolved_url": "https://example.test/app/", "rel": "canonical" },
+          { "endpoint_kind": "resource", "element": "link", "resource_kind": "manifest", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "rel": "manifest" }
+        ],
         "document_policy_descriptors": [
           {
             "charset": "windows-1252",

@@ -15,9 +15,10 @@ use coding_adventures_html_parser::{
     BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
     BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
     BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
+    BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -73,6 +74,8 @@ struct ExpectedBrowserDocument {
     loading_hint_descriptors: Vec<ExpectedLoadingHintDescriptor>,
     #[serde(default)]
     fetch_policy_descriptors: Vec<ExpectedFetchPolicyDescriptor>,
+    #[serde(default)]
+    resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
     anchors: Vec<ExpectedAnchor>,
@@ -691,6 +694,87 @@ struct ExpectedResource {
     #[serde(default)]
     default_track: bool,
     async_script: bool,
+    defer_script: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedResourceEndpointDescriptor {
+    endpoint_kind: String,
+    element: String,
+    #[serde(default)]
+    resource_kind: Option<String>,
+    url: String,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    color: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    csp: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    browsing_context_name: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    srcdoc: Option<String>,
+    #[serde(default)]
+    credentialless: bool,
+    #[serde(default)]
+    imagesrcset: Option<String>,
+    #[serde(default)]
+    resolved_imagesrcset: Option<String>,
+    #[serde(default)]
+    imagesizes: Option<String>,
+    #[serde(default)]
+    track_kind: Option<String>,
+    #[serde(default)]
+    srclang: Option<String>,
+    #[serde(default)]
+    track_label: Option<String>,
+    #[serde(default)]
+    default_track: bool,
+    #[serde(default)]
+    async_script: bool,
+    #[serde(default)]
     defer_script: bool,
 }
 
@@ -3682,11 +3766,29 @@ fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_element
 
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
+        let metadata = self.metadata.into_browser_document_metadata();
+        let resources: Vec<_> = self
+            .resources
+            .into_iter()
+            .map(ExpectedResource::into_browser_resource)
+            .collect();
+        let resource_endpoint_descriptors = self
+            .resource_endpoint_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedResourceEndpointDescriptor::into_browser_resource_endpoint_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_resource_endpoint_descriptors(&metadata, &resources));
+
         BrowserDocument {
             title: self.title,
             base_href: self.base_href,
             base_target: self.base_target,
-            metadata: self.metadata.into_browser_document_metadata(),
+            metadata,
             document_lang: self.document_lang,
             document_dir: self.document_dir,
             body_id: self.body_id,
@@ -3701,11 +3803,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedMeta::into_browser_meta)
                 .collect(),
-            resources: self
-                .resources
-                .into_iter()
-                .map(ExpectedResource::into_browser_resource)
-                .collect(),
+            resources,
             scripts: self
                 .scripts
                 .into_iter()
@@ -3731,6 +3829,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFetchPolicyDescriptor::into_browser_fetch_policy_descriptor)
                 .collect(),
+            resource_endpoint_descriptors,
             form_policy_descriptors: self
                 .form_policy_descriptors
                 .into_iter()
@@ -4120,6 +4219,170 @@ impl ExpectedResource {
             expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
         BrowserResource {
             kind: self.kind,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            rel: self.rel,
+            rel_tokens,
+            as_hint: self.as_hint,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            sizes: self.sizes,
+            hreflang: self.hreflang,
+            color: self.color,
+            width: self.width,
+            height: self.height,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            nonce: self.nonce,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            csp: self.csp,
+            blocking: self.blocking,
+            blocking_tokens,
+            browsing_context_name: self.browsing_context_name,
+            loading: self.loading,
+            sandbox: self.sandbox,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            srcdoc: self.srcdoc,
+            credentialless: self.credentialless,
+            imagesrcset: self.imagesrcset,
+            resolved_imagesrcset: self.resolved_imagesrcset,
+            imagesizes: self.imagesizes,
+            track_kind: self.track_kind,
+            srclang: self.srclang,
+            track_label: self.track_label,
+            default_track: self.default_track,
+            async_script: self.async_script,
+            defer_script: self.defer_script,
+        }
+    }
+}
+
+fn expected_resource_endpoint_descriptors(
+    metadata: &BrowserDocumentMetadata,
+    resources: &[BrowserResource],
+) -> Vec<BrowserResourceEndpointDescriptor> {
+    let mut descriptors = Vec::new();
+    if let Some(refresh) = &metadata.refresh {
+        if let Some(url) = &refresh.url {
+            descriptors.push(BrowserResourceEndpointDescriptor {
+                endpoint_kind: "metadata-refresh".to_string(),
+                element: "meta".to_string(),
+                resource_kind: Some("refresh".to_string()),
+                url: url.clone(),
+                resolved_url: refresh.resolved_url.clone(),
+                rel: None,
+                rel_tokens: Vec::new(),
+                as_hint: None,
+                type_hint: None,
+                media: None,
+                title: None,
+                sizes: None,
+                hreflang: None,
+                color: None,
+                width: None,
+                height: None,
+                integrity: None,
+                crossorigin: None,
+                nonce: None,
+                referrerpolicy: None,
+                fetchpriority: None,
+                csp: None,
+                blocking: None,
+                blocking_tokens: Vec::new(),
+                browsing_context_name: None,
+                loading: None,
+                sandbox: Vec::new(),
+                allow: None,
+                allowfullscreen: false,
+                srcdoc: None,
+                credentialless: false,
+                imagesrcset: None,
+                resolved_imagesrcset: None,
+                imagesizes: None,
+                track_kind: None,
+                srclang: None,
+                track_label: None,
+                default_track: false,
+                async_script: false,
+                defer_script: false,
+            });
+        }
+    }
+    descriptors.extend(resources.iter().map(expected_resource_endpoint_descriptor));
+    descriptors
+}
+
+fn expected_resource_endpoint_descriptor(
+    resource: &BrowserResource,
+) -> BrowserResourceEndpointDescriptor {
+    BrowserResourceEndpointDescriptor {
+        endpoint_kind: "resource".to_string(),
+        element: expected_resource_endpoint_element(&resource.kind).to_string(),
+        resource_kind: Some(resource.kind.clone()),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel: resource.rel.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        width: resource.width.clone(),
+        height: resource.height.clone(),
+        integrity: resource.integrity.clone(),
+        crossorigin: resource.crossorigin.clone(),
+        nonce: resource.nonce.clone(),
+        referrerpolicy: resource.referrerpolicy.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        csp: resource.csp.clone(),
+        blocking: resource.blocking.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        browsing_context_name: resource.browsing_context_name.clone(),
+        loading: resource.loading.clone(),
+        sandbox: resource.sandbox.clone(),
+        allow: resource.allow.clone(),
+        allowfullscreen: resource.allowfullscreen,
+        srcdoc: resource.srcdoc.clone(),
+        credentialless: resource.credentialless,
+        imagesrcset: resource.imagesrcset.clone(),
+        resolved_imagesrcset: resource.resolved_imagesrcset.clone(),
+        imagesizes: resource.imagesizes.clone(),
+        track_kind: resource.track_kind.clone(),
+        srclang: resource.srclang.clone(),
+        track_label: resource.track_label.clone(),
+        default_track: resource.default_track,
+        async_script: resource.async_script,
+        defer_script: resource.defer_script,
+    }
+}
+
+fn expected_resource_endpoint_element(kind: &str) -> &str {
+    match kind {
+        "alternate" | "canonical" | "dns-prefetch" | "icon" | "link" | "manifest"
+        | "modulepreload" | "preconnect" | "prefetch" | "preload" | "prerender" | "stylesheet" => {
+            "link"
+        }
+        "frame" => "iframe",
+        "image" => "img",
+        other => other,
+    }
+}
+
+impl ExpectedResourceEndpointDescriptor {
+    fn into_browser_resource_endpoint_descriptor(self) -> BrowserResourceEndpointDescriptor {
+        let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
+        BrowserResourceEndpointDescriptor {
+            endpoint_kind: self.endpoint_kind,
+            element: self.element,
+            resource_kind: self.resource_kind,
             url: self.url,
             resolved_url: self.resolved_url,
             rel: self.rel,
