@@ -441,6 +441,30 @@ fn arith_inlines_const_operand() {
         "const operand should inline literally; got:\n{ll}");
 }
 
+#[test]
+fn bitwise_bool_ops_lower_as_i1_logic() {
+    let f = IIRFunction::new(
+        "f",
+        vec![("a".into(), "bool".into()), ("b".into(), "bool".into())],
+        "bool",
+        vec![
+            IIRInstr::new("and", Some("both".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "bool"),
+            IIRInstr::new("or", Some("either".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())], "bool"),
+            IIRInstr::new("xor", Some("v".into()),
+                vec![Operand::Var("both".into()), Operand::Var("either".into())], "bool"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "bool"),
+        ]);
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%both = and i1 %a, %b"),
+        "expected i1 and; got:\n{ll}");
+    assert!(ll.contains("%either = or i1 %a, %b"),
+        "expected i1 or; got:\n{ll}");
+    assert!(ll.contains("%v = xor i1 %both, %either"),
+        "expected i1 xor; got:\n{ll}");
+}
+
 // ===========================================================================
 // 9. LLVM03 — comparison
 // ===========================================================================

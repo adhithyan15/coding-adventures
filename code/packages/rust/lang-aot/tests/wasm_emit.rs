@@ -80,6 +80,20 @@ fn algol_mod_emits_and_runs_on_wasm() {
 }
 
 #[test]
+fn algol_boolean_ops_emit_and_run_on_wasm() {
+    let source = "begin boolean a, b; integer result; a := true; b := false; if (a and not b) and ((b impl a) eqv (a or b)) then result := 42 else result := 1 end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_bool_ops")
+        .expect("ALGOL boolean operators should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL boolean operators)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL boolean-operator wasm must run");
+    assert_eq!(result, vec![42], "ALGOL boolean operators should return 42");
+}
+
+#[test]
 fn algol_for_loop_emits_and_runs_on_wasm() {
     let source =
         "begin integer i, result; result := 0; for i := 1 step 1 until 6 do result := result + i end";

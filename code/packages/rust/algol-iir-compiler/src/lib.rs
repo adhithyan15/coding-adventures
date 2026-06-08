@@ -625,17 +625,11 @@ impl Compiler {
     }
 
     fn emit_bool_wrapper(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
-        let found_op = pieces(node).into_iter().find_map(|p| {
-            if let Piece::Op(op) = p {
-                matches!(op.as_str(), "and" | "or" | "impl" | "eqv").then_some(op)
-            } else {
-                None
-            }
-        });
-        if let Some(op) = found_op {
-            return Err(CompileError::Unsupported(format!(
-                "boolean operator {op:?}"
-            )));
+        if pieces(node)
+            .iter()
+            .any(|p| matches!(p, Piece::Op(op) if matches!(op.as_str(), "and" | "or" | "impl" | "eqv")))
+        {
+            return self.emit_binary_or_child(node, BinaryFamily::Boolean);
         }
         self.emit_single_child_expr(node)
     }
@@ -647,21 +641,7 @@ impl Compiler {
                 .copied()
                 .ok_or_else(|| CompileError::Malformed("not expression missing operand".into()))?;
             let value = self.emit_expr(child)?;
-            if value.ty != ScalarType::Boolean {
-                return Err(CompileError::Type("not operand must be boolean".into()));
-            }
-            let false_slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
-            let dest = self.fresh_temp();
-            self.emit(IIRInstr::new(
-                "cmp_eq",
-                Some(dest.clone()),
-                vec![Operand::Var(value.slot), Operand::Var(false_slot)],
-                "bool",
-            ));
-            Ok(ExprValue {
-                slot: dest,
-                ty: ScalarType::Boolean,
-            })
+            self.emit_not_value(value)
         } else {
             self.emit_single_child_expr(node)
         }
@@ -878,13 +858,75 @@ impl Compiler {
                 })
             }
             "^" | "**" => Err(CompileError::Unsupported("exponentiation".into())),
-            "and" | "or" | "impl" | "eqv" => Err(CompileError::Unsupported(format!(
-                "boolean operator {op:?}"
-            ))),
+            "and" | "or" => {
+                self.ensure_boolean_operands(op, &lhs, &rhs)?;
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    op,
+                    Some(dest.clone()),
+                    vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                    "bool",
+                ));
+                Ok(ExprValue {
+                    slot: dest,
+                    ty: ScalarType::Boolean,
+                })
+            }
+            "impl" => {
+                self.ensure_boolean_operands(op, &lhs, &rhs)?;
+                let not_lhs = self.emit_not_value(lhs)?;
+                self.emit_binary("or", not_lhs, rhs)
+            }
+            "eqv" => {
+                self.ensure_boolean_operands(op, &lhs, &rhs)?;
+                let dest = self.fresh_temp();
+                self.emit(IIRInstr::new(
+                    "cmp_eq",
+                    Some(dest.clone()),
+                    vec![Operand::Var(lhs.slot), Operand::Var(rhs.slot)],
+                    "bool",
+                ));
+                Ok(ExprValue {
+                    slot: dest,
+                    ty: ScalarType::Boolean,
+                })
+            }
             other => Err(CompileError::Malformed(format!(
                 "unknown operator {other:?}"
             ))),
         }
+    }
+
+    fn ensure_boolean_operands(
+        &self,
+        op: &str,
+        lhs: &ExprValue,
+        rhs: &ExprValue,
+    ) -> Result<(), CompileError> {
+        if lhs.ty != ScalarType::Boolean || rhs.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(format!(
+                "operator {op:?} requires boolean operands"
+            )));
+        }
+        Ok(())
+    }
+
+    fn emit_not_value(&mut self, value: ExprValue) -> Result<ExprValue, CompileError> {
+        if value.ty != ScalarType::Boolean {
+            return Err(CompileError::Type("not operand must be boolean".into()));
+        }
+        let false_slot = self.emit_const(ScalarType::Boolean, Operand::Bool(false));
+        let dest = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_eq",
+            Some(dest.clone()),
+            vec![Operand::Var(value.slot), Operand::Var(false_slot)],
+            "bool",
+        ));
+        Ok(ExprValue {
+            slot: dest,
+            ty: ScalarType::Boolean,
+        })
     }
 
     fn emit_unary_minus(&mut self, value: ExprValue) -> Result<ExprValue, CompileError> {
@@ -1027,6 +1069,7 @@ enum BinaryFamily {
     Additive,
     Multiplicative,
     Comparison,
+    Boolean,
 }
 
 fn node_loc(node: &GrammarASTNode) -> SourceLoc {
@@ -1225,6 +1268,12 @@ mod tests {
     #[test]
     fn boolean_not_assignment_runs() {
         let src = "begin boolean flag; integer result; flag := true; if not flag then result := 1 else result := 42 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn boolean_operators_run() {
+        let src = "begin boolean a, b; integer result; a := true; b := false; if (a and not b) and ((b impl a) eqv (a or b)) then result := 42 else result := 1 end";
         assert_eq!(run_i64(src), 42);
     }
 
