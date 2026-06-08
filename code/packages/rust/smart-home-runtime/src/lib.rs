@@ -3510,6 +3510,12 @@ impl RuntimeRoomSummary {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     GetRuntimeSnapshot,
+    ListDiscoveryWorkers {
+        query: DiscoveryWorkerQuery,
+    },
+    GetDiscoverySummary {
+        request: RuntimeDiscoverToolRequest,
+    },
     ListBridges,
     ListDevices {
         bridge_id: Option<BridgeId>,
@@ -3577,6 +3583,8 @@ impl RuntimeReadToolRequest {
     pub fn tool(&self) -> SmartHomeTool {
         match self {
             Self::GetRuntimeSnapshot => SmartHomeTool::GetRuntimeSnapshot,
+            Self::ListDiscoveryWorkers { .. } => SmartHomeTool::ListDiscoveryWorkers,
+            Self::GetDiscoverySummary { .. } => SmartHomeTool::GetDiscoverySummary,
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
             Self::ListRooms { .. } => SmartHomeTool::ListRooms,
@@ -3813,6 +3821,16 @@ impl RuntimeEventLogRecord {
 #[derive(Debug, Clone, PartialEq)]
 pub enum RuntimeReadToolOutput {
     RuntimeSnapshot(RuntimeReadSnapshot),
+    DiscoveryWorkers {
+        workers: Vec<ScheduledDiscoveryWorkerSnapshot>,
+        summary: DiscoveryWorkerSchedulerSnapshot,
+    },
+    DiscoverySummary {
+        generated_at_ms: u64,
+        ttl_ms: u64,
+        record_summary: DiscoveryRecordSummary,
+        signal_summary: DiscoverySignalSummary,
+    },
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
     Rooms {
@@ -4028,6 +4046,38 @@ impl SmartHomeRuntime {
                 .sum(),
             state_refresh_target_count: self.registry.state_refresh_plan_at(now_ms).len(),
         }
+    }
+
+    pub fn query_discovery_worker_snapshots_at(
+        &self,
+        query: &DiscoveryWorkerQuery,
+        now_ms: u64,
+    ) -> Vec<ScheduledDiscoveryWorkerSnapshot> {
+        self.discovery_scheduler
+            .query_workers(query)
+            .into_iter()
+            .map(|worker| ScheduledDiscoveryWorkerSnapshot::from_worker_at(worker, now_ms))
+            .collect()
+    }
+
+    pub fn discovery_summary_at(
+        &self,
+        request: &RuntimeDiscoverToolRequest,
+        now_ms: u64,
+    ) -> (DiscoveryRecordSummary, DiscoverySignalSummary) {
+        let records = self
+            .discovery
+            .records()
+            .filter(|record| request.matches_record(record, now_ms))
+            .collect::<Vec<_>>();
+        let record_summary =
+            DiscoveryRecordSummary::from_records(records.iter().copied(), now_ms, request.ttl_ms);
+        let signals = records
+            .iter()
+            .map(|record| record.signal(request.ttl_ms))
+            .collect::<Vec<_>>();
+        let signal_summary = DiscoverySignalSummary::from_signals(&signals, now_ms);
+        (record_summary, signal_summary)
     }
 
     pub fn topology_summary(&self) -> RegistryTopologySummary {
@@ -4841,6 +4891,21 @@ impl SmartHomeRuntime {
             RuntimeReadToolRequest::GetRuntimeSnapshot => Ok(
                 RuntimeReadToolOutput::RuntimeSnapshot(self.read_snapshot_at(now_ms)),
             ),
+            RuntimeReadToolRequest::ListDiscoveryWorkers { query } => {
+                Ok(RuntimeReadToolOutput::DiscoveryWorkers {
+                    workers: self.query_discovery_worker_snapshots_at(&query, now_ms),
+                    summary: self.discovery_scheduler.snapshot_at(now_ms),
+                })
+            }
+            RuntimeReadToolRequest::GetDiscoverySummary { request } => {
+                let (record_summary, signal_summary) = self.discovery_summary_at(&request, now_ms);
+                Ok(RuntimeReadToolOutput::DiscoverySummary {
+                    generated_at_ms: now_ms,
+                    ttl_ms: request.ttl_ms,
+                    record_summary,
+                    signal_summary,
+                })
+            }
             RuntimeReadToolRequest::ListBridges => Ok(RuntimeReadToolOutput::Bridges(
                 self.registry.bridges().cloned().collect(),
             )),
@@ -8980,6 +9045,39 @@ mod tests {
                 1_521,
             )
             .unwrap();
+        runtime
+            .register_discovery_worker_schedule(hue_mdns_discovery_worker(1_100))
+            .unwrap();
+        let discovery_workers = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListDiscoveryWorkers {
+                    query: DiscoveryWorkerQuery::new()
+                        .for_integration(IntegrationId::trusted("hue"))
+                        .with_kind(DiscoveryWorkerKind::MdnsScan)
+                        .with_source(DiscoverySource::Mdns)
+                        .overdue_at(1_522)
+                        .sorted_by(DiscoveryWorkerSort::NextDueAt),
+                },
+                1_522,
+            )
+            .unwrap();
+        runtime
+            .record_discovery(hue_discovery_record("001788fffediscovered", 1_000))
+            .unwrap();
+        let discovery_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetDiscoverySummary {
+                    request: RuntimeDiscoverToolRequest::new()
+                        .for_integration(IntegrationId::trusted("hue"))
+                        .from_source(DiscoverySource::Mdns)
+                        .fresh_only(true)
+                        .with_ttl_ms(1_000),
+                },
+                1_523,
+            )
+            .unwrap();
 
         assert!(matches!(
             bridges,
@@ -9186,7 +9284,31 @@ mod tests {
                     && summary.unique_rooms == 1
                     && summary.scene_actions == 1
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 22);
+        assert!(matches!(
+            discovery_workers,
+            RuntimeReadToolOutput::DiscoveryWorkers { workers, summary }
+                if workers.len() == 1
+                    && workers[0].worker_id == DiscoveryWorkerId::trusted("hue-mdns-worker")
+                    && workers[0].kind == DiscoveryWorkerKind::MdnsScan
+                    && workers[0].is_due
+                    && summary.generated_at_ms == 1_522
+                    && summary.worker_count == 1
+                    && summary.due_worker_count == 1
+        ));
+        assert!(matches!(
+            discovery_summary,
+            RuntimeReadToolOutput::DiscoverySummary {
+                generated_at_ms,
+                ttl_ms,
+                record_summary,
+                signal_summary,
+            } if generated_at_ms == 1_523
+                && ttl_ms == 1_000
+                && record_summary.total == 1
+                && record_summary.fresh == 1
+                && signal_summary.fresh == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 24);
         assert!(runtime
             .registry()
             .authorization_decisions()

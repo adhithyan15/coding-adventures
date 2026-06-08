@@ -54,6 +54,8 @@ Included surfaces:
   retry policy, current retry delay, and consecutive failure pressure
 - D18D-facing discover tool facade for authorized discovery reads, freshness
   filters, summaries, and bridge-candidate output
+- D18D-facing read tool facade entries for listing scheduled discovery workers
+  and reading compact discovery record/signal summaries without invoking scans
 - composed event-bus health summaries for replay history, stream coverage, and
   current queue pressure checks
 - command validation against entity capabilities and command modes
@@ -74,8 +76,9 @@ Included surfaces:
   authorization decisions and summaries, reading capability grants and
   summaries, reading compact runtime snapshots, listing desired-state targets,
   listing pairing sessions, listing supervised bridge workers, reading worker
-  heartbeat schedules, previewing supervision plans, and observing supervision
-  status without invoking integrations
+  heartbeat schedules, listing scheduled discovery workers, reading discovery
+  summaries, previewing supervision plans, and observing supervision status
+  without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
 - D18D-facing poll and unsubscribe tool facades that authorize event-stream

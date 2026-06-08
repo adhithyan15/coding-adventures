@@ -23,7 +23,10 @@ use smart_home_core::{
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
     StateDelta, StateSnapshot, StateSource, Value,
 };
-use smart_home_discovery::{DiscoveryRecord, DiscoverySource};
+use smart_home_discovery::{
+    DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource,
+    DiscoveryWorkerId, DiscoveryWorkerKind,
+};
 use smart_home_integration_catalog::{
     activation_plan_for_entry, describe_primitive_family, ecosystem_platforms_requiring_primitive,
     ecosystem_survey_sources, entries_requiring_primitive, find_entry, first_party_catalog,
@@ -40,8 +43,9 @@ use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary, DesiredStateQuery,
-    DesiredStateSort, DiscoveryWorkerRunInstruction, PairingSessionStatus, ReconciliationReason,
-    RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
+    DesiredStateSort, DiscoveryWorkerQuery, DiscoveryWorkerRunInstruction,
+    DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort, PairingSessionStatus,
+    ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
     RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
     RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
     RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
@@ -65,6 +69,8 @@ use std::rc::Rc;
 
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
+pub const SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID: &str = "smart_home.list_discovery_workers";
+pub const SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID: &str = "smart_home.get_discovery_summary";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
@@ -170,6 +176,28 @@ impl SmartHomeToolBridge {
                         .execute_discover_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(discover_output_handler_output(output))
+                }
+                SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID => {
+                    let query = discovery_worker_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::ListDiscoveryWorkers { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_discovery_workers"))
+                }
+                SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID => {
+                    let request = discover_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetDiscoverySummary { request },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_discovery_summary"))
                 }
                 SMART_HOME_LIST_BRIDGES_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -667,6 +695,75 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                     "stale_count",
                     "expired_count",
                     "next_transition_at_ms",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID,
+            "List smart-home discovery workers",
+            "List scheduled D23 discovery workers and summarize scheduler pressure without running discovery.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("worker_id", JsonSchema::String),
+                    SchemaProperty::new("integration_id", JsonSchema::String),
+                    SchemaProperty::new("kind", JsonSchema::String),
+                    SchemaProperty::new("kinds", string_array_schema()),
+                    SchemaProperty::new("source", JsonSchema::String),
+                    SchemaProperty::new("sources", string_array_schema()),
+                    SchemaProperty::new("status", JsonSchema::String),
+                    SchemaProperty::new("statuses", string_array_schema()),
+                    SchemaProperty::new("due_before_ms", JsonSchema::Integer),
+                    SchemaProperty::new("overdue_at_ms", JsonSchema::Integer),
+                    SchemaProperty::new("min_consecutive_failure_count", JsonSchema::Integer),
+                    SchemaProperty::new("sort", JsonSchema::String),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "workers",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["workers", "summary", "count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID,
+            "Get smart-home discovery summary",
+            "Summarize D23 discovery candidates and signal freshness without returning candidate payloads.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("integration_id", JsonSchema::String),
+                    SchemaProperty::new("source", JsonSchema::String),
+                    SchemaProperty::new("fresh_only", JsonSchema::Boolean),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new("record_summary", JsonSchema::Any),
+                    SchemaProperty::new("signal_summary", JsonSchema::Any),
+                ],
+                vec![
+                    "generated_at_ms",
+                    "ttl_ms",
+                    "record_summary",
+                    "signal_summary",
                 ],
                 false,
             ),
@@ -1722,6 +1819,42 @@ fn discover_request(arguments: &JsonValue) -> Result<RuntimeDiscoverToolRequest,
     Ok(request)
 }
 
+fn discovery_worker_query(arguments: &JsonValue) -> Result<DiscoveryWorkerQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = DiscoveryWorkerQuery::new();
+    if let Some(worker_id) = optional_string(arguments, "worker_id")? {
+        query = query.for_worker(DiscoveryWorkerId::trusted(worker_id));
+    }
+    if let Some(integration_id) = optional_string(arguments, "integration_id")? {
+        query = query.for_integration(IntegrationId::trusted(integration_id));
+    }
+    for kind in optional_string_list(arguments, "kind", "kinds")? {
+        query = query.with_kind(parse_discovery_worker_kind(&kind)?);
+    }
+    for source in optional_string_list(arguments, "source", "sources")? {
+        query = query.with_source(parse_discovery_source(&source)?);
+    }
+    for status in optional_string_list(arguments, "status", "statuses")? {
+        query = query.with_status(parse_worker_status(&status)?);
+    }
+    if let Some(due_before_ms) = optional_u64(arguments, "due_before_ms")? {
+        query = query.due_before(due_before_ms);
+    }
+    if let Some(overdue_at_ms) = optional_u64(arguments, "overdue_at_ms")? {
+        query = query.overdue_at(overdue_at_ms);
+    }
+    if let Some(count) = optional_u64(arguments, "min_consecutive_failure_count")? {
+        query = query.min_consecutive_failure_count(count as u32);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_discovery_worker_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(query)
+}
+
 fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
     Ok(RuntimeReadToolRequest::ListDevices {
         bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
@@ -2317,6 +2450,31 @@ fn supervision_tool_output_json(output: &RuntimeSupervisionToolOutput) -> JsonVa
 fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
     match output {
         RuntimeReadToolOutput::RuntimeSnapshot(snapshot) => runtime_read_snapshot_json(&snapshot),
+        RuntimeReadToolOutput::DiscoveryWorkers { workers, summary } => object([
+            (
+                "workers",
+                JsonValue::Array(workers.iter().map(discovery_worker_snapshot_json).collect()),
+            ),
+            ("summary", discovery_worker_scheduler_summary_json(&summary)),
+            ("count", integer(workers.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::DiscoverySummary {
+            generated_at_ms,
+            ttl_ms,
+            record_summary,
+            signal_summary,
+        } => object([
+            ("generated_at_ms", integer(generated_at_ms as i64)),
+            ("ttl_ms", integer(ttl_ms as i64)),
+            (
+                "record_summary",
+                discovery_record_summary_json(&record_summary),
+            ),
+            (
+                "signal_summary",
+                discovery_signal_summary_json(&signal_summary),
+            ),
+        ]),
         RuntimeReadToolOutput::Bridges(bridges) => object([
             (
                 "bridges",
@@ -2630,6 +2788,105 @@ fn discover_output_json(output: &RuntimeDiscoverToolOutput) -> JsonValue {
                 .next_transition_at_ms
                 .map(|value| integer(value as i64))
                 .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn discovery_record_summary_json(summary: &DiscoveryRecordSummary) -> JsonValue {
+    object([
+        ("total", integer(summary.total as i64)),
+        ("with_address", integer(summary.with_address as i64)),
+        ("fresh", integer(summary.fresh as i64)),
+        ("stale", integer(summary.stale as i64)),
+        ("expired", integer(summary.expired as i64)),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "by_source",
+            JsonValue::Array(
+                summary
+                    .by_source
+                    .iter()
+                    .map(|(source, count)| {
+                        object([
+                            ("source", string(source.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "by_confidence",
+            JsonValue::Array(
+                summary
+                    .by_confidence
+                    .iter()
+                    .map(|(confidence, count)| {
+                        object([
+                            ("confidence", string(confidence.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "by_pairing_requirement",
+            JsonValue::Array(
+                summary
+                    .by_pairing_requirement
+                    .iter()
+                    .map(|(requirement, count)| {
+                        object([
+                            ("pairing_requirement", string(requirement.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn discovery_signal_summary_json(summary: &DiscoverySignalSummary) -> JsonValue {
+    object([
+        ("fresh", integer(summary.fresh as i64)),
+        ("stale", integer(summary.stale as i64)),
+        ("expired", integer(summary.expired as i64)),
+        (
+            "next_transition_at_ms",
+            summary
+                .next_transition_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_stale_or_expired_signals",
+            JsonValue::Bool(summary.stale > 0 || summary.expired > 0),
+        ),
+    ])
+}
+
+fn discovery_worker_scheduler_summary_json(
+    summary: &DiscoveryWorkerSchedulerSnapshot,
+) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(summary.generated_at_ms as i64)),
+        ("worker_count", integer(summary.worker_count as i64)),
+        ("due_worker_count", integer(summary.due_worker_count as i64)),
+        ("starting_count", integer(summary.starting_count as i64)),
+        ("running_count", integer(summary.running_count as i64)),
+        ("unhealthy_count", integer(summary.unhealthy_count as i64)),
+        ("restarting_count", integer(summary.restarting_count as i64)),
+        ("stopped_count", integer(summary.stopped_count as i64)),
+        (
+            "workers_with_failures",
+            integer(summary.workers_with_failures as i64),
+        ),
+        ("has_due_work", JsonValue::Bool(summary.has_due_work())),
+        (
+            "has_worker_pressure",
+            JsonValue::Bool(summary.has_worker_pressure()),
         ),
     ])
 }
@@ -5283,6 +5540,33 @@ fn parse_worker_status(label: &str) -> Result<WorkerStatus, ToolCallError> {
     }
 }
 
+fn parse_discovery_worker_kind(label: &str) -> Result<DiscoveryWorkerKind, ToolCallError> {
+    match label {
+        "mdns_scan" | "mdns" => Ok(DiscoveryWorkerKind::MdnsScan),
+        "cloud_fallback" | "cloud" => Ok(DiscoveryWorkerKind::CloudFallback),
+        "manual_seed" | "manual" => Ok(DiscoveryWorkerKind::ManualSeed),
+        "composite" => Ok(DiscoveryWorkerKind::Composite),
+        "simulator" => Ok(DiscoveryWorkerKind::Simulator),
+        _ => Err(validation_error(format!(
+            "unknown discovery worker kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_discovery_worker_sort(label: &str) -> Result<DiscoveryWorkerSort, ToolCallError> {
+    match label {
+        "worker_id" | "worker" => Ok(DiscoveryWorkerSort::WorkerId),
+        "next_due_at" | "next_due_at_ms" | "due_at" => Ok(DiscoveryWorkerSort::NextDueAt),
+        "status_then_worker_id" | "status" => Ok(DiscoveryWorkerSort::StatusThenWorkerId),
+        "consecutive_failures_desc" | "failures_desc" => {
+            Ok(DiscoveryWorkerSort::ConsecutiveFailuresDesc)
+        }
+        _ => Err(validation_error(format!(
+            "unknown discovery worker sort `{label}`"
+        ))),
+    }
+}
+
 fn parse_supervised_worker_sort(label: &str) -> Result<SupervisedWorkerSort, ToolCallError> {
     match label {
         "bridge_id" | "bridge" => Ok(SupervisedWorkerSort::BridgeId),
@@ -6115,6 +6399,12 @@ fn object_schema(
     }
 }
 
+fn string_array_schema() -> JsonSchema {
+    JsonSchema::Array {
+        items: Box::new(JsonSchema::String),
+    }
+}
+
 fn integration_catalog_query_schema() -> JsonSchema {
     let string_array = || JsonSchema::Array {
         items: Box::new(JsonSchema::String),
@@ -6219,7 +6509,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 34);
+        assert_eq!(definitions.len(), 36);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -6234,6 +6524,12 @@ mod tests {
             .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_ROOMS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_SCENES_TOOL_ID));
         assert!(export
@@ -6293,7 +6589,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            30
+            32
         );
         assert_eq!(
             export
@@ -6306,6 +6602,8 @@ mod tests {
             1
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
@@ -6591,6 +6889,82 @@ mod tests {
                 .unwrap()
             ),
             Some(1)
+        );
+
+        let list_discovery_workers_request = request(
+            "call-list-discovery-workers",
+            SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID,
+            object([
+                ("integration_id", string("hue")),
+                ("kind", string("mdns")),
+                ("source", string("mdns")),
+                ("overdue_at_ms", integer(1_055)),
+                ("sort", string("next_due_at")),
+                ("limit", integer(1)),
+            ]),
+            1_055,
+        );
+        let list_discovery_workers_trace =
+            tool_runtime.invoke_with_events(&list_discovery_workers_request);
+        assert!(list_discovery_workers_trace.result.ok);
+        let list_discovery_workers_output =
+            list_discovery_workers_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(list_discovery_workers_output, "count"),
+            Some(&integer(1))
+        );
+        let discovery_worker =
+            array_item(field(list_discovery_workers_output, "workers").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(discovery_worker, "worker_id"),
+            Some(&string("hue-mdns-worker"))
+        );
+        assert_eq!(
+            field(discovery_worker, "is_due"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                field(list_discovery_workers_output, "summary").unwrap(),
+                "due_worker_count"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(list_discovery_workers_output, "summary").unwrap(),
+                "has_due_work"
+            ),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let discovery_summary_request = request(
+            "call-get-discovery-summary",
+            SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID,
+            object([
+                ("integration_id", string("hue")),
+                ("source", string("mdns")),
+                ("fresh_only", JsonValue::Bool(true)),
+                ("ttl_ms", integer(1_000)),
+            ]),
+            1_056,
+        );
+        let discovery_summary_trace = tool_runtime.invoke_with_events(&discovery_summary_request);
+        assert!(discovery_summary_trace.result.ok);
+        let discovery_summary_output = discovery_summary_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(
+                field(discovery_summary_output, "record_summary").unwrap(),
+                "total"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(discovery_summary_output, "signal_summary").unwrap(),
+                "fresh"
+            ),
+            Some(&integer(1))
         );
 
         let capabilities_request = request(
@@ -7279,6 +7653,8 @@ mod tests {
         journal.record_trace(list_scenes_request, list_scenes_trace);
         journal.record_trace(describe_scene_request, describe_scene_trace);
         journal.record_trace(discover_request, discover_trace);
+        journal.record_trace(list_discovery_workers_request, list_discovery_workers_trace);
+        journal.record_trace(discovery_summary_request, discovery_summary_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
         journal.record_trace(list_workers_request, list_workers_trace);
@@ -7308,9 +7684,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 33);
-        assert_eq!(journal_summary.completed_count, 33);
-        assert_eq!(journal.audit_records().len(), 33);
+        assert_eq!(journal_summary.invocation_count, 35);
+        assert_eq!(journal_summary.completed_count, 35);
+        assert_eq!(journal.audit_records().len(), 35);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -7323,7 +7699,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            30,
+            32,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }
