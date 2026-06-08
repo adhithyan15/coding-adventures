@@ -12,6 +12,9 @@
         "base_href": "https://example.test/docs/",
         "base_target": "_top",
         "metadata": { "charset": "utf-8" },
+        "document_policy_descriptors": [
+          { "charset": "utf-8" }
+        ],
         "body_text": "Example Directory Welcome to Venture HTML. One Two",
         "metas": [
           { "name": null, "http_equiv": null, "property": null, "charset": "utf-8", "content": null }
@@ -54,6 +57,9 @@
         "base_href": null,
         "base_target": null,
         "metadata": { "refresh": { "delay": "30", "url": "/next", "resolved_url": null } },
+        "document_policy_descriptors": [
+          { "refresh": { "delay": "30", "url": "/next", "resolved_url": null } }
+        ],
         "document_lang": "en",
         "document_dir": "ltr",
         "body_id": "catalog",
@@ -441,6 +447,38 @@
           { "kind": "canonical", "url": "https://example.test/app/", "resolved_url": "https://example.test/app/", "rel": "canonical", "async_script": false, "defer_script": false },
           { "kind": "manifest", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "rel": "manifest", "async_script": false, "defer_script": false }
         ],
+        "document_policy_descriptors": [
+          {
+            "charset": "windows-1252",
+            "viewport": "width=device-width, initial-scale=1, viewport-fit=cover",
+            "viewport_directives": [
+              { "name": "width", "value": "device-width" },
+              { "name": "initial-scale", "value": "1" },
+              { "name": "viewport-fit", "value": "cover" }
+            ],
+            "description": "HTML parser workbench",
+            "application_name": "Venture",
+            "referrer_policy": "no-referrer",
+            "robots": "index, follow, max-image-preview:large",
+            "robots_directives": ["index", "follow", "max-image-preview:large"],
+            "color_scheme": "light dark",
+            "content_security_policy": "default-src 'self'; img-src https:",
+            "permissions_policy": "geolocation=(), camera=()",
+            "origin_trials": ["trial-token"],
+            "accept_ch": "Sec-CH-UA-Platform, DPR",
+            "accept_ch_tokens": ["Sec-CH-UA-Platform", "DPR"],
+            "dns_prefetch_control": "off",
+            "theme_colors": [
+              { "color": "#ffffff", "media": "(prefers-color-scheme: light)" },
+              { "color": "#111111", "media": "(prefers-color-scheme: dark)" }
+            ],
+            "refresh": { "delay": "5", "url": "next.html", "resolved_url": "https://example.test/app/next.html" },
+            "canonical_url": "https://example.test/app/",
+            "resolved_canonical_url": "https://example.test/app/",
+            "manifest_url": "site.webmanifest",
+            "resolved_manifest_url": "https://example.test/app/site.webmanifest"
+          }
+        ],
         "anchors": [],
         "headings": [],
         "links": [],
@@ -483,6 +521,14 @@
           { "kind": "icon", "url": "favicon.ico", "resolved_url": "https://example.test/app/favicon.ico", "rel": "shortcut icon", "rel_tokens": ["shortcut", "icon"], "type_hint": "image/x-icon", "sizes": "any", "async_script": false, "defer_script": false },
           { "kind": "icon", "url": "mask.svg", "resolved_url": "https://example.test/app/mask.svg", "rel": "mask-icon", "rel_tokens": ["mask-icon"], "color": "#0055ff", "async_script": false, "defer_script": false },
           { "kind": "alternate", "url": "feed.xml", "resolved_url": "https://example.test/app/feed.xml", "rel": "alternate", "rel_tokens": ["alternate"], "type_hint": "application/rss+xml", "title": "Feed", "hreflang": "en", "async_script": false, "defer_script": false }
+        ],
+        "document_policy_descriptors": [
+          {
+            "canonical_url": "https://example.test/app/",
+            "resolved_canonical_url": "https://example.test/app/",
+            "manifest_url": "site.webmanifest",
+            "resolved_manifest_url": "https://example.test/app/site.webmanifest"
+          }
         ],
         "anchors": [],
         "headings": [],

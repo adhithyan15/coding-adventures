@@ -832,6 +832,7 @@ pub struct BrowserDocument {
     pub resources: Vec<BrowserResource>,
     pub scripts: Vec<BrowserScript>,
     pub stylesheets: Vec<BrowserStylesheet>,
+    pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
@@ -1021,6 +1022,31 @@ pub struct BrowserStylesheet {
     pub blocking: Option<String>,
     pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDocumentPolicyDescriptor {
+    pub charset: Option<String>,
+    pub viewport: Option<String>,
+    pub viewport_directives: Vec<BrowserMetadataDirective>,
+    pub description: Option<String>,
+    pub application_name: Option<String>,
+    pub referrer_policy: Option<String>,
+    pub robots: Option<String>,
+    pub robots_directives: Vec<String>,
+    pub color_scheme: Option<String>,
+    pub content_security_policy: Option<String>,
+    pub permissions_policy: Option<String>,
+    pub origin_trials: Vec<String>,
+    pub accept_ch: Option<String>,
+    pub accept_ch_tokens: Vec<String>,
+    pub dns_prefetch_control: Option<String>,
+    pub theme_colors: Vec<BrowserThemeColor>,
+    pub refresh: Option<BrowserRefresh>,
+    pub canonical_url: Option<String>,
+    pub resolved_canonical_url: Option<String>,
+    pub manifest_url: Option<String>,
+    pub resolved_manifest_url: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2499,6 +2525,9 @@ impl BrowserDocument {
 
         if let Some(head) = head {
             collect_head_browser_facts(&head.children, &mut summary);
+        }
+        if let Some(descriptor) = browser_document_policy_descriptor(&summary.metadata) {
+            summary.document_policy_descriptors.push(descriptor);
         }
         for element in [html, body].into_iter().flatten() {
             if let Some(descriptor) = browser_global_state_descriptor(element) {
@@ -10016,6 +10045,85 @@ fn collect_link_document_metadata(element: &Element, summary: &mut BrowserDocume
             summary.metadata.resource_hints.push(resource_hint);
         }
     }
+}
+
+fn browser_document_policy_descriptor(
+    metadata: &BrowserDocumentMetadata,
+) -> Option<BrowserDocumentPolicyDescriptor> {
+    let content_security_policy =
+        browser_http_equiv_hint_content(metadata, "content-security-policy");
+    let permissions_policy = browser_http_equiv_hint_content(metadata, "permissions-policy");
+    let origin_trials = browser_http_equiv_hint_contents(metadata, "origin-trial");
+    let accept_ch = browser_http_equiv_hint_content(metadata, "accept-ch");
+    let accept_ch_tokens = accept_ch
+        .as_deref()
+        .map(browser_metadata_list)
+        .unwrap_or_default();
+    let dns_prefetch_control = browser_http_equiv_hint_content(metadata, "x-dns-prefetch-control");
+
+    let has_policy_metadata = metadata.charset.is_some()
+        || metadata.viewport.is_some()
+        || metadata.description.is_some()
+        || metadata.application_name.is_some()
+        || metadata.referrer_policy.is_some()
+        || metadata.robots.is_some()
+        || metadata.color_scheme.is_some()
+        || content_security_policy.is_some()
+        || permissions_policy.is_some()
+        || !origin_trials.is_empty()
+        || accept_ch.is_some()
+        || dns_prefetch_control.is_some()
+        || !metadata.theme_colors.is_empty()
+        || metadata.refresh.is_some()
+        || metadata.canonical_url.is_some()
+        || metadata.manifest_url.is_some();
+
+    has_policy_metadata.then(|| BrowserDocumentPolicyDescriptor {
+        charset: metadata.charset.clone(),
+        viewport: metadata.viewport.clone(),
+        viewport_directives: metadata.viewport_directives.clone(),
+        description: metadata.description.clone(),
+        application_name: metadata.application_name.clone(),
+        referrer_policy: metadata.referrer_policy.clone(),
+        robots: metadata.robots.clone(),
+        robots_directives: metadata.robots_directives.clone(),
+        color_scheme: metadata.color_scheme.clone(),
+        content_security_policy,
+        permissions_policy,
+        origin_trials,
+        accept_ch,
+        accept_ch_tokens,
+        dns_prefetch_control,
+        theme_colors: metadata.theme_colors.clone(),
+        refresh: metadata.refresh.clone(),
+        canonical_url: metadata.canonical_url.clone(),
+        resolved_canonical_url: metadata.resolved_canonical_url.clone(),
+        manifest_url: metadata.manifest_url.clone(),
+        resolved_manifest_url: metadata.resolved_manifest_url.clone(),
+    })
+}
+
+fn browser_http_equiv_hint_content(
+    metadata: &BrowserDocumentMetadata,
+    expected: &str,
+) -> Option<String> {
+    metadata
+        .http_equiv_hints
+        .iter()
+        .find(|hint| hint.name == expected)
+        .map(|hint| hint.content.clone())
+}
+
+fn browser_http_equiv_hint_contents(
+    metadata: &BrowserDocumentMetadata,
+    expected: &str,
+) -> Vec<String> {
+    metadata
+        .http_equiv_hints
+        .iter()
+        .filter(|hint| hint.name == expected)
+        .map(|hint| hint.content.clone())
+        .collect()
 }
 
 fn browser_meta_name_is(element: &Element, expected: &str) -> bool {
@@ -18617,6 +18725,102 @@ mod tests {
         );
         assert_eq!(stylesheet_preload.fetchpriority.as_deref(), Some("high"));
         assert_eq!(stylesheet_preload.blocking.as_deref(), Some("render"));
+    }
+
+    #[test]
+    fn browser_document_policy_descriptors_track_head_policy_and_app_hints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=content-type content=\"text/html; charset=windows-1252\">\
+             <meta name=viewport content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\
+             <meta name=description content=\"HTML parser workbench\">\
+             <meta name=application-name content=Venture>\
+             <meta name=referrer content=no-referrer>\
+             <meta name=robots content=\"index, follow, max-image-preview:large\">\
+             <meta name=color-scheme content=\"light dark\">\
+             <meta http-equiv=Content-Security-Policy content=\"default-src 'self'; img-src https:\">\
+             <meta http-equiv=Permissions-Policy content=\"geolocation=(), camera=()\">\
+             <meta http-equiv=Origin-Trial content=trial-token>\
+             <meta http-equiv=Accept-CH content=\"Sec-CH-UA-Platform, DPR\">\
+             <meta http-equiv=x-dns-prefetch-control content=off>\
+             <meta name=theme-color content=\"#ffffff\" media=\"(prefers-color-scheme: light)\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.document_policy_descriptors.len(), 1);
+
+        let descriptor = &summary.document_policy_descriptors[0];
+        assert_eq!(descriptor.charset.as_deref(), Some("windows-1252"));
+        assert_eq!(
+            descriptor.viewport.as_deref(),
+            Some("width=device-width, initial-scale=1, viewport-fit=cover")
+        );
+        assert_eq!(
+            descriptor
+                .viewport_directives
+                .iter()
+                .map(|directive| (directive.name.as_str(), directive.value.as_deref()))
+                .collect::<Vec<_>>(),
+            vec![
+                ("width", Some("device-width")),
+                ("initial-scale", Some("1")),
+                ("viewport-fit", Some("cover")),
+            ]
+        );
+        assert_eq!(
+            descriptor.description.as_deref(),
+            Some("HTML parser workbench")
+        );
+        assert_eq!(descriptor.application_name.as_deref(), Some("Venture"));
+        assert_eq!(descriptor.referrer_policy.as_deref(), Some("no-referrer"));
+        assert_eq!(
+            descriptor.robots_directives,
+            vec!["index", "follow", "max-image-preview:large"]
+        );
+        assert_eq!(descriptor.color_scheme.as_deref(), Some("light dark"));
+        assert_eq!(
+            descriptor.content_security_policy.as_deref(),
+            Some("default-src 'self'; img-src https:")
+        );
+        assert_eq!(
+            descriptor.permissions_policy.as_deref(),
+            Some("geolocation=(), camera=()")
+        );
+        assert_eq!(descriptor.origin_trials, vec!["trial-token"]);
+        assert_eq!(
+            descriptor.accept_ch_tokens,
+            vec!["Sec-CH-UA-Platform", "DPR"]
+        );
+        assert_eq!(descriptor.dns_prefetch_control.as_deref(), Some("off"));
+        assert_eq!(descriptor.theme_colors.len(), 1);
+        assert_eq!(descriptor.theme_colors[0].color, "#ffffff");
+        assert_eq!(
+            descriptor.theme_colors[0].media.as_deref(),
+            Some("(prefers-color-scheme: light)")
+        );
+        let refresh = descriptor
+            .refresh
+            .as_ref()
+            .expect("refresh metadata should be preserved");
+        assert_eq!(refresh.delay.as_deref(), Some("5"));
+        assert_eq!(refresh.url.as_deref(), Some("next.html"));
+        assert_eq!(
+            refresh.resolved_url.as_deref(),
+            Some("https://example.test/app/next.html")
+        );
+        assert_eq!(
+            descriptor.resolved_canonical_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+        assert_eq!(descriptor.manifest_url.as_deref(), Some("site.webmanifest"));
+        assert_eq!(
+            descriptor.resolved_manifest_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
+        );
     }
 
     #[test]
