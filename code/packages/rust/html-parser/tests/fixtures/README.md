@@ -35,6 +35,9 @@ Fetch-policy descriptor cases pin integrity, CORS, nonce, referrer policy,
 iframe CSP/sandbox/permissions, fullscreen, and credentialless metadata.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
 policy tokens, validation bypass state, and submitter overrides.
+Navigation-target descriptor cases pin policy-rich anchor and image-map area
+targets with target selection, rel policy, ping/attribution endpoints,
+language/type hints, download/referrer policy, and area geometry.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags and preload/poster metadata.

@@ -839,6 +839,7 @@ pub struct BrowserDocument {
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
+    pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub command_elements: Vec<BrowserCommandElement>,
@@ -1626,6 +1627,33 @@ pub struct BrowserTextSemantic {
     pub ruby_kind: Option<String>,
     pub bidi_kind: Option<String>,
     pub phrase_kind: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationTargetDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub text: String,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub download: Option<String>,
+    pub ping: Vec<String>,
+    pub resolved_ping: Vec<String>,
+    pub attributionsrc: Vec<String>,
+    pub resolved_attributionsrc: Vec<String>,
+    pub hreflang: Option<String>,
+    pub type_hint: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub area_shape: Option<String>,
+    pub area_coords: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9773,6 +9801,13 @@ fn collect_browser_facts(
         }
 
         if is_browser_document_link(element) {
+            if let Some(descriptor) = browser_navigation_target_descriptor(
+                element,
+                summary.base_href.as_deref(),
+                summary.base_target.as_deref(),
+            ) {
+                summary.navigation_target_descriptors.push(descriptor);
+            }
             summary.links.push(browser_link(
                 element,
                 summary.base_href.as_deref(),
@@ -10313,6 +10348,77 @@ fn browser_link(
         referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
         text: browser_link_text(element),
     }
+}
+
+fn browser_navigation_target_descriptor(
+    element: &Element,
+    base_href: Option<&str>,
+    base_target: Option<&str>,
+) -> Option<BrowserNavigationTargetDescriptor> {
+    if element.attribute("href").is_none() {
+        return None;
+    }
+
+    let rel_tokens = browser_rel_tokens(element);
+    let ping = browser_anchor_ping(element);
+    let attributionsrc = browser_anchor_attributionsrc(element);
+    let has_navigation_policy = element.attribute("target").is_some()
+        || element.attribute("rel").is_some()
+        || element.attribute("download").is_some()
+        || !ping.is_empty()
+        || !attributionsrc.is_empty()
+        || element.attribute("hreflang").is_some()
+        || element.attribute("type").is_some()
+        || element.attribute("referrerpolicy").is_some()
+        || element.name == "area";
+
+    if !has_navigation_policy {
+        return None;
+    }
+
+    let href = element.attribute("href").map(ToOwned::to_owned);
+    let target = element.attribute("target").map(ToOwned::to_owned);
+    let area_shape = (element.name == "area")
+        .then(|| browser_image_map_shape(element).unwrap_or_else(|| "rect".to_string()));
+    let area_coords = (element.name == "area")
+        .then(|| browser_image_map_coords(element))
+        .flatten();
+
+    Some(BrowserNavigationTargetDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        resolved_href: href
+            .as_deref()
+            .and_then(|href| resolve_browser_url(href, base_href)),
+        href,
+        text: browser_link_text(element),
+        effective_target: target
+            .clone()
+            .or_else(|| base_target.map(ToOwned::to_owned)),
+        target,
+        rel: element.attribute("rel").map(ToOwned::to_owned),
+        rel_external: browser_rel_tokens_contain(&rel_tokens, "external"),
+        rel_nofollow: browser_rel_tokens_contain(&rel_tokens, "nofollow"),
+        rel_noopener: browser_rel_tokens_contain(&rel_tokens, "noopener"),
+        rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
+        rel_tokens,
+        download: browser_anchor_download(element),
+        resolved_ping: ping
+            .iter()
+            .filter_map(|ping| resolve_browser_url(ping, base_href))
+            .collect(),
+        ping,
+        resolved_attributionsrc: attributionsrc
+            .iter()
+            .filter_map(|attributionsrc| resolve_browser_url(attributionsrc, base_href))
+            .collect(),
+        attributionsrc,
+        hreflang: element.attribute("hreflang").map(ToOwned::to_owned),
+        type_hint: element.attribute("type").map(ToOwned::to_owned),
+        referrerpolicy: element.attribute("referrerpolicy").map(ToOwned::to_owned),
+        area_shape,
+        area_coords,
+    })
 }
 
 fn is_browser_document_link(element: &Element) -> bool {
@@ -17124,6 +17230,76 @@ mod tests {
         assert_eq!(render_tree.children[1].display, "block");
         assert_eq!(render_tree.children[1].children[0].display, "list-item");
         assert_eq!(render_tree.children[2].children[0].display, "list-item");
+    }
+
+    #[test]
+    fn browser_navigation_target_descriptors_track_links_and_image_map_areas() {
+        let document = parse_html(
+            "<base href=\"https://example.test/docs/\" target=_top>\
+             <body><a id=plain href=plain.html>Plain</a>\
+             <a id=intro href=intro.html target=main rel=\"next external noreferrer\" download=intro.html ping=\"track.html https://metrics.example/p\" attributionsrc=\"attr/register https://ad.example/register\" hreflang=en type=text/html referrerpolicy=no-referrer>Intro</a>\
+             <map name=hero><area id=detail shape=circle coords=\"20,20,10\" href=detail.html alt=Details target=preview rel=\"nofollow external\" ping=area-track.html attributionsrc=area-attr.html hreflang=en></map></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.navigation_target_descriptors.len(), 2);
+
+        let anchor = &summary.navigation_target_descriptors[0];
+        assert_eq!(anchor.element, "a");
+        assert_eq!(anchor.id.as_deref(), Some("intro"));
+        assert_eq!(anchor.href.as_deref(), Some("intro.html"));
+        assert_eq!(
+            anchor.resolved_href.as_deref(),
+            Some("https://example.test/docs/intro.html")
+        );
+        assert_eq!(anchor.text, "Intro");
+        assert_eq!(anchor.target.as_deref(), Some("main"));
+        assert_eq!(anchor.effective_target.as_deref(), Some("main"));
+        assert_eq!(anchor.rel_tokens, vec!["next", "external", "noreferrer"]);
+        assert!(anchor.rel_external);
+        assert!(anchor.rel_noreferrer);
+        assert_eq!(anchor.download.as_deref(), Some("intro.html"));
+        assert_eq!(anchor.ping, vec!["track.html", "https://metrics.example/p"]);
+        assert_eq!(
+            anchor.resolved_ping,
+            vec![
+                "https://example.test/docs/track.html",
+                "https://metrics.example/p"
+            ]
+        );
+        assert_eq!(
+            anchor.attributionsrc,
+            vec!["attr/register", "https://ad.example/register"]
+        );
+        assert_eq!(
+            anchor.resolved_attributionsrc,
+            vec![
+                "https://example.test/docs/attr/register",
+                "https://ad.example/register"
+            ]
+        );
+        assert_eq!(anchor.hreflang.as_deref(), Some("en"));
+        assert_eq!(anchor.type_hint.as_deref(), Some("text/html"));
+        assert_eq!(anchor.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(anchor.area_shape, None);
+
+        let area = &summary.navigation_target_descriptors[1];
+        assert_eq!(area.element, "area");
+        assert_eq!(area.id.as_deref(), Some("detail"));
+        assert_eq!(area.text, "Details");
+        assert_eq!(area.area_shape.as_deref(), Some("circle"));
+        assert_eq!(area.area_coords.as_deref(), Some("20,20,10"));
+        assert_eq!(area.target.as_deref(), Some("preview"));
+        assert_eq!(area.effective_target.as_deref(), Some("preview"));
+        assert_eq!(area.rel_tokens, vec!["nofollow", "external"]);
+        assert!(area.rel_external);
+        assert!(area.rel_nofollow);
+        assert_eq!(area.hreflang.as_deref(), Some("en"));
+        assert_eq!(
+            area.resolved_attributionsrc,
+            vec!["https://example.test/docs/area-attr.html"]
+        );
     }
 
     #[test]

@@ -13,11 +13,11 @@ use coding_adventures_html_parser::{
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
     BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaSource, BrowserMediaTrack,
-    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceHint, BrowserScript,
-    BrowserSectionLandmark, BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic,
-    BrowserThemeColor,
+    BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceHint, BrowserScript, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -79,6 +79,8 @@ struct ExpectedBrowserDocument {
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
     text_semantics: Vec<ExpectedTextSemantic>,
+    #[serde(default)]
+    navigation_target_descriptors: Vec<ExpectedNavigationTargetDescriptor>,
     #[serde(default)]
     navigation_groups: Vec<ExpectedNavigationGroup>,
     #[serde(default)]
@@ -445,6 +447,55 @@ struct ExpectedDocumentPolicyDescriptor {
     manifest_url: Option<String>,
     #[serde(default)]
     resolved_manifest_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedNavigationTargetDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_external: bool,
+    #[serde(default)]
+    rel_nofollow: bool,
+    #[serde(default)]
+    rel_noopener: bool,
+    #[serde(default)]
+    rel_noreferrer: bool,
+    #[serde(default)]
+    download: Option<String>,
+    #[serde(default)]
+    ping: Vec<String>,
+    #[serde(default)]
+    resolved_ping: Vec<String>,
+    #[serde(default)]
+    attributionsrc: Vec<String>,
+    #[serde(default)]
+    resolved_attributionsrc: Vec<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    area_shape: Option<String>,
+    #[serde(default)]
+    area_coords: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3700,6 +3751,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTextSemantic::into_browser_text_semantic)
                 .collect(),
+            navigation_target_descriptors: self
+                .navigation_target_descriptors
+                .into_iter()
+                .map(ExpectedNavigationTargetDescriptor::into_browser_navigation_target_descriptor)
+                .collect(),
             navigation_groups: self
                 .navigation_groups
                 .into_iter()
@@ -4230,6 +4286,36 @@ impl ExpectedDocumentPolicyDescriptor {
             resolved_canonical_url: self.resolved_canonical_url,
             manifest_url: self.manifest_url,
             resolved_manifest_url: self.resolved_manifest_url,
+        }
+    }
+}
+
+impl ExpectedNavigationTargetDescriptor {
+    fn into_browser_navigation_target_descriptor(self) -> BrowserNavigationTargetDescriptor {
+        BrowserNavigationTargetDescriptor {
+            element: self.element,
+            id: self.id,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            text: self.text,
+            target: self.target,
+            effective_target: self.effective_target,
+            rel: self.rel,
+            rel_tokens: self.rel_tokens,
+            rel_external: self.rel_external,
+            rel_nofollow: self.rel_nofollow,
+            rel_noopener: self.rel_noopener,
+            rel_noreferrer: self.rel_noreferrer,
+            download: self.download,
+            ping: self.ping,
+            resolved_ping: self.resolved_ping,
+            attributionsrc: self.attributionsrc,
+            resolved_attributionsrc: self.resolved_attributionsrc,
+            hreflang: self.hreflang,
+            type_hint: self.type_hint,
+            referrerpolicy: self.referrerpolicy,
+            area_shape: self.area_shape,
+            area_coords: self.area_coords,
         }
     }
 }

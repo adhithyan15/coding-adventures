@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness navigation-target descriptors now expose policy-rich anchor
+  and image-map area targets with resolved URLs, target selection, rel policy,
+  ping/attribution endpoints, language/type hints, referrer policy, download,
+  and area geometry metadata as a flat browser-planning inventory.
 - Browser-readiness document-policy descriptors now expose charset, viewport,
   referrer/robots/color-scheme policy, CSP/Permissions/Origin-Trial/Accept-CH
   hints, theme colors, refresh, canonical, and manifest metadata as a flat
