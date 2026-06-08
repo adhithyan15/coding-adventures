@@ -181,8 +181,7 @@ impl std::error::Error for IIRLlvmError {}
 //
 // Float and double map to LLVM's `float` and `double` respectively.
 //
-// Anything else (refs, str, bool, polymorphic) is rejected; v0.2.0 deals
-// only in numeric scalars.
+// Anything else (refs, str, polymorphic) is rejected in this scalar layer.
 fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlvmError> {
     match type_hint {
         "void" => Ok("void"),
@@ -219,8 +218,9 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
 const SUPPORTED_OPS: &[&str] = &[
     // LLVM02
     "const", "mov", "ret", "ret_void",
-    // LLVM03 — arithmetic
+    // LLVM03 — arithmetic and bitwise/logical scalar ops
     "add", "sub", "mul", "div", "mod", "rem",
+    "and", "or", "xor",
     // LLVM03 — comparison (both naked and cmp_-prefixed; see G1)
     "eq", "ne", "lt", "le", "gt", "ge",
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
@@ -534,6 +534,13 @@ fn lower_instr(
             lower_arith(instr.op.as_str(), instr, state, out)
         }
 
+        // ── bitwise / logical ───────────────────────────────────────────
+        //
+        // On `bool`/`i1` this is logical `and`/`or`/`xor`; on integer widths
+        // it is the usual bitwise operation.  The same IIR opcodes are used
+        // by WASM/JVM/CLR/BEAM, so LLVM accepts them too.
+        "and" | "or" | "xor" => lower_bitwise(instr.op.as_str(), instr, state, out),
+
         // ── comparison ──────────────────────────────────────────────────
         //
         // LLVM `icmp` and `fcmp` always return i1.  IIR's type_hint on a
@@ -718,18 +725,42 @@ fn lower_cmp(
     ));
     state.env_i1.insert(dest.clone(), i1_name.clone());
 
-    // If the IIR type_hint is i1 (width 1), use the i1 form directly.
-    // Otherwise zext to the wider type so subsequent arithmetic stays
-    // typed-correctly.  We approximate "is i1" as type_hint == "i1" since
-    // IIR doesn't currently emit a literal "i1" — most callers use the
-    // operand type as the result type (wasm convention).
-    if instr.type_hint == "i1" {
-        state.env.insert(dest, i1_name);
+    // If the operand type maps to i1 (`i1` or `bool`), use the i1 form
+    // directly. Otherwise zext to the wider type so subsequent arithmetic
+    // stays typed-correctly.
+    if operand_ty == "i1" {
+        state.env.insert(dest.clone(), i1_name.clone());
     } else {
         out.push_str(&format!(
             "  %{dest} = zext i1 {i1_name} to {operand_ty}\n"
         ));
         state.env.insert(dest.clone(), format!("%{dest}"));
+    }
+    Ok(())
+}
+
+fn lower_bitwise(
+    iir_op: &str,
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if is_float_type(&instr.type_hint) {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: format!("{iir_op} does not support floating-point operands"),
+        });
+    }
+    let dest = require_dest(instr, iir_op, state.fn_name)?.to_string();
+    let ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
+    let a = resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, state.fn_name)?;
+    let b = resolve_operand(instr.srcs.get(1), &state.env, &instr.type_hint, state.fn_name)?;
+
+    out.push_str(&format!("  %{dest} = {iir_op} {ty} {a}, {b}\n"));
+    let value = format!("%{dest}");
+    state.env.insert(dest.clone(), value.clone());
+    if ty == "i1" {
+        state.env_i1.insert(dest, value);
     }
     Ok(())
 }
@@ -768,12 +799,17 @@ fn lower_jmp_if(
                 name: cond_name.clone(),
             }
         })?;
-        // Truncate to i1.  Need to know the cond's current type for the
-        // trunc — use the instr's type_hint as the operand type.
+        // Truncate to i1 unless the condition is already a boolean/i1 value.
+        // Need to know the cond's current type for the trunc — use the
+        // instr's type_hint as the operand type.
         let cond_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
-        let i1 = state.fresh("trunc");
-        out.push_str(&format!("  {i1} = trunc {cond_ty} {cond_op} to i1\n"));
-        i1
+        if cond_ty == "i1" {
+            cond_op
+        } else {
+            let i1 = state.fresh("trunc");
+            out.push_str(&format!("  {i1} = trunc {cond_ty} {cond_op} to i1\n"));
+            i1
+        }
     };
 
     let fallthrough = format!("__fall{}", {

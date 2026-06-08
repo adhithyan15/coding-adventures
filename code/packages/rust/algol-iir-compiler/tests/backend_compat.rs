@@ -7,6 +7,8 @@ const ALGOL_SUM: &str =
 
 const ALGOL_MOD: &str = "begin integer result; result := 17 mod 5 end";
 
+const ALGOL_BOOL_OPS: &str = "begin boolean a, b; integer result; a := true; b := false; if (a and not b) and ((b impl a) eqv (a or b)) then result := 42 else result := 1 end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -16,6 +18,10 @@ fn algol_iir_validates_for_every_direct_backend() {
     for (case, module) in [
         ("sum", compile_case(ALGOL_SUM, "algol_backend_compat")),
         ("mod", compile_case(ALGOL_MOD, "algol_mod_backend_compat")),
+        (
+            "bool_ops",
+            compile_case(ALGOL_BOOL_OPS, "algol_bool_ops_backend_compat"),
+        ),
     ] {
         let checks = [
             ("wasm", iir_to_wasm::validate_for_wasm(&module)),
@@ -85,4 +91,41 @@ fn algol_mod_lowers_to_wasm_and_llvm_remainder_ops() {
         iir_to_llvm::lower_iir_to_llvm(&module, &iir_to_llvm::IIRLlvmConfig::new("algol_mod"))
             .expect("ALGOL mod IIR should lower to LLVM");
     assert!(llvm.contains("srem i64"), "LLVM should lower ALGOL mod as signed remainder");
+}
+
+#[test]
+fn algol_boolean_ops_lower_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(ALGOL_BOOL_OPS, "algol_bool_ops_backend_compat");
+
+    let wasm =
+        iir_to_wasm::lower_iir_to_wasm(&module, &iir_to_wasm::IIRWasmConfig::new("AlgolBoolOps"))
+            .expect("ALGOL boolean IIR should lower to WASM");
+    let wasm_bytes = iir_to_wasm::encode_module(&wasm).expect("WASM module should encode");
+    assert!(wasm_bytes.starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolBoolOps"),
+    )
+    .expect("ALGOL boolean IIR should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::lower_iir_to_cil(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::default(),
+    )
+    .expect("ALGOL boolean IIR should lower to CLR");
+    assert!(!clr.methods.is_empty());
+
+    let beam =
+        iir_to_beam::lower_iir_to_beam(&module, &iir_to_beam::IIRBeamConfig::new("algol_bool_ops"))
+            .expect("ALGOL boolean IIR should lower to BEAM");
+    let beam_bytes = iir_to_beam::encode_beam(&beam);
+    assert!(beam_bytes.starts_with(b"FOR1"));
+
+    let llvm =
+        iir_to_llvm::lower_iir_to_llvm(&module, &iir_to_llvm::IIRLlvmConfig::new("algol_bool_ops"))
+            .expect("ALGOL boolean IIR should lower to LLVM");
+    assert!(llvm.contains("and i1"), "LLVM should lower ALGOL and as i1 and");
+    assert!(llvm.contains("or i1"), "LLVM should lower ALGOL or as i1 or");
 }
