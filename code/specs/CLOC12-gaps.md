@@ -237,9 +237,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-031 — empty `{}` body collapses to `;`
 
-- **Status:** OPEN — newly discovered by CLOC14.3.
-- **Upstream byte-identity test:** `minify_for_loop` seed fixture.
-- **Why it fails:** Upstream Closure emits `for(...){}` as `for(...);` — the empty block body is replaced by an `EmptyStatement` (`;`). closurec preserves the `{}`.
+- **Status:** **RESOLVED** in CLOC12.41 (PR pending). `minify_for_loop` flipped IGNORED → PASS.
+- **Upstream byte-identity test:** `minify_for_loop` seed fixture. PASS.
+- **Resolution:** Added a third gap-rule in `whitespace_only.rs` between rule A (drop `;` before `}`) and the token emit. When the current token is `{` AND `body_position_next` is true AND the next non-trivia token is `}`, emit a single `;` and skip both braces. The substitution is ECMAScript §13.2 — either Block or EmptyStatement satisfies the body-position Statement nonterminal. The `body_position_next` guard is critical: it scopes the rule to true body-positions (for/while/if/labeled) and leaves untouched (a) function-decl bodies (no control-flow paren-stack push, so guard is false), (b) plain Block-as-statement at top level (no guard), (c) object literals in expression position (no guard), and (d) try/catch bodies (try doesn't have a `(...)` head, so guard is false). 8 inline tests pin the behaviour including 5 non-regression tests for the cases the guard must NOT fire on.
+- **Original divergence (now historical):**
   - Input: `for(var i=0;i<10;i++){}`
   - Upstream: `for(var i=0;i<10;i++);`
   - closurec: `for(var i=0;i<10;i++){}`

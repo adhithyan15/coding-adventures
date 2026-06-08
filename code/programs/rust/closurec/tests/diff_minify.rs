@@ -85,10 +85,10 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-031: empty for-body `{}` collapses to `;`
-    // (EmptyStatement) in upstream Closure. Discovered by
-    // CLOC14.3. See tests/diff/minify_for_loop/README.md.
-    ("for_loop", "gap-031: empty `{}` body collapses to `;`"),
+    // gap-031 was RESOLVED in CLOC12.41 — empty `{}` body
+    // collapses to `;` per §13.2 EmptyStatement substitution
+    // in body position. `minify_for_loop` flipped from
+    // IGNORED to PASS.
     // gap-032: single-statement if/else block flattening.
     // Upstream emits `if(x)a();else b();` not
     // `if(x){a()}else{b()}`. CLI counterpart to AST-level
