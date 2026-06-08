@@ -44,3 +44,7 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_worker_heartbeat_schedule` over the D23 runtime read facade
   so Chief of Staff jobs can inspect supervised bridge workers and heartbeat
   deadlines without mutating supervisor state.
+- Added `smart_home.reconcile_desired_states` and
+  `smart_home.run_supervision_tick` handlers over the D23 runtime supervision
+  facade so Chief of Staff jobs can run authorized reconciliation and
+  supervisor ticks without owning D23 mutation logic.

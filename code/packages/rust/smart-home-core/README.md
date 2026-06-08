@@ -56,6 +56,8 @@ Current scope:
 - D18D bridge-worker inventory descriptors for read-only supervisor and
   heartbeat deadline inspection
 - D18D supervision planning tool descriptor for non-mutating due-work previews
+- D18D supervision execution tool descriptors for authorized desired-state
+  reconciliation and runtime supervision ticks
 - compact smart-home tool catalog summaries for read-side inspection
 - read-only supervision observation tool descriptor for Chief of Staff status
   loops

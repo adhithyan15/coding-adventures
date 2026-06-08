@@ -3452,6 +3452,30 @@ impl RuntimeCommandToolRequest {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeSupervisionToolRequest {
+    ReconcileDesiredStates,
+    RunSupervisionTick,
+}
+
+impl RuntimeSupervisionToolRequest {
+    pub fn tool(self) -> SmartHomeTool {
+        match self {
+            Self::ReconcileDesiredStates => SmartHomeTool::ReconcileDesiredStates,
+            Self::RunSupervisionTick => SmartHomeTool::RunSupervisionTick,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeSupervisionToolOutput {
+    DesiredStateReconciliation {
+        reconciled_at_ms: u64,
+        actions: Vec<DesiredStateAction>,
+    },
+    SupervisionTick(SupervisionTickReport),
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeHealthSnapshot {
     pub bridge_id: BridgeId,
@@ -4471,6 +4495,35 @@ impl SmartHomeRuntime {
             ),
             RuntimeReadToolRequest::ObserveSupervision => Ok(
                 RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
+            ),
+        }
+    }
+
+    pub fn execute_supervision_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeSupervisionToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeSupervisionToolOutput, RuntimeError> {
+        let tool = request.tool();
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        match request {
+            RuntimeSupervisionToolRequest::ReconcileDesiredStates => {
+                Ok(RuntimeSupervisionToolOutput::DesiredStateReconciliation {
+                    reconciled_at_ms: now_ms,
+                    actions: self.reconcile_desired_states(now_ms)?,
+                })
+            }
+            RuntimeSupervisionToolRequest::RunSupervisionTick => Ok(
+                RuntimeSupervisionToolOutput::SupervisionTick(self.run_supervision_tick(now_ms)?),
             ),
         }
     }
@@ -7698,6 +7751,86 @@ mod tests {
             .registry()
             .state(&EntityId::trusted("entity-1"))
             .is_none());
+    }
+
+    #[test]
+    fn supervision_tool_facade_authorizes_and_reconciles_desired_state() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:supervisor");
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+
+        let error = runtime
+            .execute_supervision_tool(
+                principal.clone(),
+                RuntimeSupervisionToolRequest::ReconcileDesiredStates,
+                1_500,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ReconcileDesiredStates,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert!(runtime.event_bus().published().is_empty());
+
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-supervision-command"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "user:test",
+                1_600,
+            )
+            .with_expiry(2_000),
+        );
+
+        let output = runtime
+            .execute_supervision_tool(
+                principal.clone(),
+                RuntimeSupervisionToolRequest::ReconcileDesiredStates,
+                1_700,
+            )
+            .unwrap();
+
+        let RuntimeSupervisionToolOutput::DesiredStateReconciliation {
+            reconciled_at_ms,
+            actions,
+        } = output
+        else {
+            panic!("expected desired-state reconciliation output");
+        };
+        assert_eq!(reconciled_at_ms, 1_700);
+        assert!(matches!(
+            actions.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                reason: ReconciliationReason::MissingState,
+                ..
+            }]
+        ));
+        assert_eq!(
+            runtime
+                .registry()
+                .authorization_decisions_for_principal(&principal)
+                .len(),
+            2
+        );
+        assert_eq!(
+            runtime.event_bus().published().len(),
+            2,
+            "reconciliation publishes drift and command-result events"
+        );
     }
 
     #[test]
