@@ -2,6 +2,80 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.49.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-034, gap-035, gap-036** in a single PR. The
+  byte-identity harness now reports **`25 matched, 0 failed,
+  0 skipped (of 25 total)`** — full parity with upstream
+  Closure v20240317 across the expanded 25-fixture seed set.
+- **gap-034**: class declaration trailing `;`. Added
+  `BlockKind::Class` variant. `class` keyword at a statement
+  boundary arms `saw_class_kw_at_boundary`. The next `{`
+  consumes the flag and pushes `BlockKind::Class`. On the
+  matching `}`, a synthetic `;` is appended — mirroring
+  upstream's normalisation of `class C{m(){}}` to
+  `class C{m(){}};`.
+- **gap-035**: `var`/`let`/`const` followed by `{`/`[`
+  (destructuring) gets a space inserted. Extended
+  `needs_separator` with a 3-keyword whitelist. Without
+  this, `var{a}=x;` round-trips identical; upstream emits
+  `var {a}=x;` (with space) to match its own preference.
+- **gap-036**: switch statement trailing `;`. Added
+  `BlockKind::Switch` variant + a parallel
+  `paren_is_switch_stack`. `switch` keyword (when followed
+  by `(`) arms `next_paren_is_switch_head`. The matching
+  `)` arms `next_block_is_switch_body`. The next `{` pushes
+  `BlockKind::Switch`. On the matching `}`, a synthetic `;`
+  is appended — mirroring upstream's
+  `switch(x){...};` shape.
+
+### Pre-push security review caught the keyword-as-property bug family
+
+Round-1 verdict identified a real correctness failure: when
+`class` appears as an OBJECT-LITERAL PROPERTY NAME (e.g.
+`var o={class:1};do{y}while(x);`), the original cut armed
+`saw_class_kw_at_boundary` unconditionally on
+`at_stmt_boundary`. The flag would then leak forward and
+contaminate the next unrelated `{` — specifically breaking
+do/while grammar by emitting `do{y};while(x);` (the
+spurious `;` after the do-body's `}` terminates the
+do-statement and orphans the `while(x)` clause). Same
+defect family as the `try`-as-property bug from CLOC12.40.
+
+A parallel-but-non-fatal defect existed for `switch` as a
+property name — it would leak the switch-head flag and add
+spurious trailing `;`s to unrelated while/if bodies.
+
+### Fix
+
+Two guard refinements added:
+
+- `class` keyword: only arm when `at_stmt_boundary` is true
+  AND the next non-trivia token "looks like" a class-decl
+  continuation (`{`, `extends`, or an identifier — i.e. NOT
+  `:`, `,`, `;`, `}`, `)`, `]`, `.`, `=`, `(`). This filters
+  property-name (`class:1`), method shorthand
+  (`class(){...}`), member-access (`obj.class`), and other
+  expression-position uses.
+- `switch` keyword: only arm when the next non-trivia token
+  is `(` — which is grammatically required per §13.12. Same
+  shape as gap-033's `try` guard.
+
+### Added
+
+- 13 new inline tests in `whitespace_only::tests::gap03[456]_*`:
+  - **gap-034:** class decl trailing `;`, empty class body,
+    class expression doesn't get `;`, **regression for the
+    security-review bug**: `class` as object-property
+    doesn't arm.
+  - **gap-035:** `var`/`let`/`const` destructuring with `{`,
+    `var` with `[` (array destructuring), simple `var x=1`
+    unchanged.
+  - **gap-036:** switch trailing `;`, default-clause shape,
+    **regression for the security-review bug**: `switch` as
+    object-property doesn't arm.
+
 ## [0.48.0] - 2026-06-08
 
 ### Changed

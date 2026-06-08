@@ -262,21 +262,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-034 — class declaration trailing `;` after `}`
 
-- **Status:** OPEN — newly discovered by CLOC14.4. **Same family as gap-030 / gap-033** — declarations that produce a `{...}` block get a synthetic trailing `;`.
-- **Upstream byte-identity test:** `minify_class` seed fixture.
-- **Why it fails:** Upstream emits `class C{m(){}};` for `class C{m(){}}`. closurec emits `class C{m(){}}` (no trailing `;`).
-- **What it needs:** Trivial extension to the `BlockKind` enum in `whitespace_only.rs`. Add a `BlockKind::Class` variant pushed when a `{` follows the `class` keyword (and optional class name) at a statement boundary. When the matching `}` is popped, emit `;`. Composes cleanly with gap-030's brace_stack mechanism — same shape, different keyword. Conservative trigger: `class` keyword + at_stmt_boundary, similar to the gap-030 `function` arming.
+- **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_class` flipped IGNORED → PASS. **The byte-identity harness now reports 25/25 PASS across the expanded seed set.**
+- **Resolution:** Added `BlockKind::Class` variant. `class` keyword at statement boundary arms `saw_class_kw_at_boundary`; next `{` consumes it. On matching `}`, emit synthetic `;`. **Critical bug caught by pre-push security review**: the initial cut armed the flag whenever `class` appeared at a statement boundary, contaminating the next unrelated `{` when `class` was used as an object-literal property name (`var o={class:1};do{y}while(x);` would emit `do{y};while(x);` — a SyntaxError). Same defect family as gap-033's `try`-as-property bug. Fix: also require the next non-trivia token to look like a class-decl continuation (`{`, `extends`, or an identifier — NOT `:`/`,`/`;`/`}`/`)`/`]`/`.`/`=`/`(`).
 
 ### gap-035 — `var{...}` / `let{...}` / `const{...}` destructuring requires space before `{`
 
-- **Status:** OPEN — newly discovered by CLOC14.4.
-- **Upstream byte-identity test:** `minify_destructuring` seed fixture.
-- **Why it fails:** Upstream emits `var {a}=x;` for `var{a}=x;` (space inserted between `var` and `{`). closurec's `needs_separator` returns false when prev is `var` (KEYWORD, word-like) and next is `{` (PUNCTUATION, not word-like) — so no separator is inserted. The token stream `var{a}=x;` IS unambiguous to a parser (the `{` opens a destructuring pattern given `var` precedes it), but upstream Closure inserts the space anyway, likely for human readability and disambiguation from a Block.
-- **What it needs:** Extend `needs_separator`'s rule: when prev is `var` / `let` / `const` keyword AND next is `{` or `[`, force a separator. Keeps the change scoped to a 3-keyword whitelist; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
+- **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_destructuring` flipped IGNORED → PASS.
+- **Resolution:** Extended `needs_separator` with a 3-keyword whitelist: when prev is `var`/`let`/`const` AND next is `{`/`[`, force a separator. Keeps the change scoped; doesn't affect general PUNCTUATION-after-KEYWORD shapes.
 
 ### gap-036 — switch statement trailing `;` after `}`
 
-- **Status:** OPEN — newly discovered by CLOC14.4. **Same family as gap-034.**
-- **Upstream byte-identity test:** `minify_switch` seed fixture.
-- **Why it fails:** Upstream emits `switch(x){case 1:y();break};` for `switch(x){case 1:y();break;}`. closurec emits `switch(x){case 1:y();break}` (the inner `;` after `break` is correctly dropped by rule A, but the trailing `;` after the switch's closing `}` is missing).
-- **What it needs:** Add `BlockKind::Switch` to the enum (or piggyback on the gap-034 work). Pushed when `{` follows a `)` whose paren-stack frame was tagged as a switch-head. The `switch` keyword arms `next_paren_is_switch_head`; the `{` after the `)` becomes a `BlockKind::Switch` push. On matching `}`, emit `;`.
+- **Status:** **RESOLVED** in CLOC12.43 (PR pending). `minify_switch` flipped IGNORED → PASS.
+- **Resolution:** Added `BlockKind::Switch` variant + parallel `paren_is_switch_stack`. `switch` keyword (when followed by `(`) arms `next_paren_is_switch_head`. The matching `)` arms `next_block_is_switch_body`. The next `{` pushes `BlockKind::Switch`. On matching `}`, emit synthetic `;`. **Pre-push security review flagged a parallel non-fatal defect** for `switch` as a property name — same family as the `class` bug but only emits cosmetic extra `;`s rather than SyntaxErrors. Fix: require next token to be `(` (grammatically mandatory per §13.12).
