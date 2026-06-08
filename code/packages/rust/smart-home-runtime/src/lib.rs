@@ -8,12 +8,13 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, Capability,
-    CapabilityGrant, CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult,
-    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
-    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier, Scene,
-    SceneId, SceneScope, SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot,
-    StateSource, Value, VaultRef,
+    tier_for_command, AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary,
+    AuthorizationOutcome, Bridge, BridgeId, Capability, CapabilityGrant, CapabilityGrantScope,
+    CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType,
+    CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
+    EventId, Health, IntegrationId, Metadata, PrivilegeTier, Scene, SceneId, SceneScope,
+    SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    VaultRef,
 };
 use smart_home_discovery::{
     run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError, DiscoveryRecord,
@@ -24,8 +25,8 @@ use smart_home_discovery::{
     MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
 };
 use smart_home_registry::{
-    DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
-    StateRefreshReason,
+    AuthorizationDecisionSelector, DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts,
+    RegistryError, StateRefreshPlan, StateRefreshReason,
 };
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::{fmt, time::Duration};
@@ -3231,6 +3232,63 @@ impl RuntimeDiscoverToolOutput {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeAuthorizationDecisionSort {
+    DecidedAtAsc,
+    DecidedAtDesc,
+}
+
+impl Default for RuntimeAuthorizationDecisionSort {
+    fn default() -> Self {
+        Self::DecidedAtDesc
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeAuthorizationDecisionQuery {
+    pub principal_id: Option<AgentId>,
+    pub outcome: Option<AuthorizationOutcome>,
+    pub sort: RuntimeAuthorizationDecisionSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeAuthorizationDecisionQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_principal(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = Some(principal_id);
+        self
+    }
+
+    pub fn with_outcome(mut self, outcome: AuthorizationOutcome) -> Self {
+        self.outcome = Some(outcome);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeAuthorizationDecisionSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    fn selector(&self) -> AuthorizationDecisionSelector {
+        let mut selector = AuthorizationDecisionSelector::new();
+        if let Some(principal_id) = self.principal_id.clone() {
+            selector = selector.for_principal(principal_id);
+        }
+        if let Some(outcome) = self.outcome {
+            selector = selector.with_outcome(outcome);
+        }
+        selector
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     GetRuntimeSnapshot,
@@ -3263,6 +3321,12 @@ pub enum RuntimeReadToolRequest {
     InspectEventLog {
         query: RuntimeEventQuery,
     },
+    ListAuthorizationDecisions {
+        query: RuntimeAuthorizationDecisionQuery,
+    },
+    GetAuthorizationSummary {
+        query: RuntimeAuthorizationDecisionQuery,
+    },
     ListDesiredStates {
         query: DesiredStateQuery,
     },
@@ -3294,6 +3358,8 @@ impl RuntimeReadToolRequest {
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
             Self::ListSubscriptions { .. } => SmartHomeTool::ListSubscriptions,
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
+            Self::ListAuthorizationDecisions { .. } => SmartHomeTool::ListAuthorizationDecisions,
+            Self::GetAuthorizationSummary { .. } => SmartHomeTool::GetAuthorizationSummary,
             Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
             Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
             Self::ListWorkers { .. } => SmartHomeTool::ListWorkers,
@@ -3539,6 +3605,13 @@ pub enum RuntimeReadToolOutput {
         entries: Vec<RuntimeEventLogRecord>,
         summary: RuntimeEventLogSummary,
     },
+    AuthorizationDecisions {
+        decisions: Vec<AuthorizationDecision>,
+        summary: AuthorizationDecisionLogSummary,
+    },
+    AuthorizationSummary {
+        summary: AuthorizationDecisionLogSummary,
+    },
     DesiredStates {
         desired_states: Vec<DesiredEntityState>,
         summary: DesiredStateInventorySummary,
@@ -3771,6 +3844,35 @@ impl SmartHomeRuntime {
             self.query_pairing_sessions(query),
             now_ms,
         )
+    }
+
+    pub fn query_authorization_decisions(
+        &self,
+        query: &RuntimeAuthorizationDecisionQuery,
+    ) -> Vec<&AuthorizationDecision> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let selector = query.selector();
+        let mut decisions = self.registry.query_authorization_decisions(&selector);
+        match query.sort {
+            RuntimeAuthorizationDecisionSort::DecidedAtAsc => {
+                decisions.sort_by(|left, right| left.decided_at_ms.cmp(&right.decided_at_ms));
+            }
+            RuntimeAuthorizationDecisionSort::DecidedAtDesc => {
+                decisions.sort_by(|left, right| right.decided_at_ms.cmp(&left.decided_at_ms));
+            }
+        }
+        apply_limit(&mut decisions, query.limit);
+        decisions
+    }
+
+    pub fn authorization_decision_summary(
+        &self,
+        query: &RuntimeAuthorizationDecisionQuery,
+    ) -> AuthorizationDecisionLogSummary {
+        AuthorizationDecisionLogSummary::from_decisions(self.query_authorization_decisions(query))
     }
 
     pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
@@ -4445,6 +4547,18 @@ impl SmartHomeRuntime {
                     .collect::<Vec<_>>();
                 let summary = self.event_bus.event_log_summary(&query);
                 Ok(RuntimeReadToolOutput::EventLog { entries, summary })
+            }
+            RuntimeReadToolRequest::ListAuthorizationDecisions { query } => {
+                let decision_refs = self.query_authorization_decisions(&query);
+                let summary =
+                    AuthorizationDecisionLogSummary::from_decisions(decision_refs.iter().copied());
+                let decisions = decision_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary })
+            }
+            RuntimeReadToolRequest::GetAuthorizationSummary { query } => {
+                Ok(RuntimeReadToolOutput::AuthorizationSummary {
+                    summary: self.authorization_decision_summary(&query),
+                })
             }
             RuntimeReadToolRequest::ListDesiredStates { query } => {
                 let desired_state_refs = self.query_desired_states(&query);
@@ -5411,8 +5525,9 @@ fn event_entity_id(event: &RuntimeEvent) -> Option<&EntityId> {
 mod tests {
     use super::*;
     use smart_home_core::{
-        AuthorizationOutcome, BridgeTransport, Capability, CapabilityGrantId, CommandId,
-        CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
+        AuthorizationOutcome, AuthorizationSubject, BridgeTransport, Capability, CapabilityGrantId,
+        CommandId, CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier,
+        StateDelta,
     };
     use smart_home_discovery::{
         DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert,
@@ -6373,6 +6488,69 @@ mod tests {
             expired.missing_capabilities,
             vec![CapabilityId::trusted("smart_home.read")]
         );
+    }
+
+    #[test]
+    fn authorization_read_tools_filter_denied_decisions() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        let denied =
+            runtime.authorize_tool_for_principal(principal.clone(), SmartHomeTool::Command, 1_250);
+
+        let decisions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListAuthorizationDecisions {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(principal.clone())
+                        .with_outcome(AuthorizationOutcome::Denied),
+                },
+                1_500,
+            )
+            .unwrap();
+        let summary = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetAuthorizationSummary {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(principal)
+                        .with_outcome(AuthorizationOutcome::Denied),
+                },
+                1_501,
+            )
+            .unwrap();
+
+        assert_eq!(denied.outcome, AuthorizationOutcome::Denied);
+        assert!(matches!(
+            decisions,
+            RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary }
+                if decisions.len() == 1
+                    && decisions[0].subject == AuthorizationSubject::Tool(SmartHomeTool::Command)
+                    && decisions[0].missing_capabilities
+                        == vec![CapabilityId::trusted("smart_home.command.light")]
+                    && summary.total_decisions == 1
+                    && summary.denied_decisions == 1
+                    && summary.allowed_decisions == 0
+        ));
+        assert!(matches!(
+            summary,
+            RuntimeReadToolOutput::AuthorizationSummary { summary }
+                if summary.total_decisions == 1
+                    && summary.denied_decisions == 1
+                    && summary.decisions_with_missing_capabilities == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 3);
     }
 
     #[test]
@@ -8150,6 +8328,30 @@ mod tests {
                 1_515,
             )
             .unwrap();
+        let authorization_decisions = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListAuthorizationDecisions {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_outcome(AuthorizationOutcome::Allowed)
+                        .sorted_by(RuntimeAuthorizationDecisionSort::DecidedAtDesc)
+                        .with_limit(2),
+                },
+                1_516,
+            )
+            .unwrap();
+        let authorization_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetAuthorizationSummary {
+                    query: RuntimeAuthorizationDecisionQuery::new()
+                        .for_principal(AgentId::trusted("agent:observer"))
+                        .with_outcome(AuthorizationOutcome::Allowed),
+                },
+                1_517,
+            )
+            .unwrap();
 
         assert!(matches!(
             bridges,
@@ -8292,7 +8494,27 @@ mod tests {
                     && schedule.deadlines[0].bridge_id == BridgeId::trusted("bridge-1")
                     && schedule.deadlines[0].is_due_at(1_515)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 16);
+        assert!(matches!(
+            authorization_decisions,
+            RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary }
+                if decisions.len() == 2
+                    && decisions[0].decided_at_ms == 1_516
+                    && decisions[0].subject == AuthorizationSubject::Tool(
+                        SmartHomeTool::ListAuthorizationDecisions
+                    )
+                    && summary.total_decisions == 2
+                    && summary.allowed_decisions == 2
+                    && summary.denied_decisions == 0
+        ));
+        assert!(matches!(
+            authorization_summary,
+            RuntimeReadToolOutput::AuthorizationSummary { summary }
+                if summary.total_decisions == 18
+                    && summary.allowed_decisions == 18
+                    && summary.denied_decisions == 0
+                    && summary.tool_decisions == 18
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 18);
         assert!(runtime
             .registry()
             .authorization_decisions()
