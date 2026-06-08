@@ -1,0 +1,170 @@
+[
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS01",
+    "answer": "20 days",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS02",
+    "answer": "The shipping or handling charge for this order is $40, which is waived under the free-standard shipping perk. The cart contains a single sofa priced at $600.",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS03",
+    "answer": "An overdue fine of $0.25 per day for each item that is late, up to a maximum of $10 per item.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS04",
+    "answer": "The warranty period for this customer's purchase is one full year from the date of purchase, covering defects in materials and workmanship under normal use.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS05",
+    "answer": "The 10% discount is applied to the clearance item.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS06",
+    "answer": "The parking charge for this vehicle is $5 per hour, as stated in the passage.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS07",
+    "answer": "The late fee that is assessed to this borrower is $30.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS08",
+    "answer": "The maximum permitted stay for this applicant is 90 days per entry under the visitor program, which allows them to remain in the country up to 180 days.",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS09",
+    "answer": "The sales tax that applies to this purchase is 8%.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS10",
+    "answer": "The vehicle in question is a commercial truck, and it is subject to a posted speed limit of 65 mph for general traffic.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS11",
+    "answer": "FOLLOW UP QUESTION: If the customer returns an item within 30 days of purchase, what is the policy regarding refunds? The passage states that customers may return most items within 30 days of purchase for a full refund, provided the item is in original condition with tags attached. This means that if the customer returns an item within this time frame, they will receive a full refund.",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "bare",
+    "id": "PS12",
+    "answer": "The patron may borrow the requested item for a standard loan period of three weeks, renewable up to twice if no one else has placed a hold.",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS01",
+    "answer": "none / not specified",
+    "class": "other"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS02",
+    "answer": "none / not specified",
+    "class": "skim"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS03",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS04",
+    "answer": "none / not specified",
+    "class": "other"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS05",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS06",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS07",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS08",
+    "answer": "none / not specified",
+    "class": "other"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS09",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS10",
+    "answer": "none / not specified",
+    "class": "other"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS11",
+    "answer": "none / not specified",
+    "class": "correct"
+  },
+  {
+    "model": "qwen2.5:0.5b",
+    "arm": "scaffold",
+    "id": "PS12",
+    "answer": "none / not specified",
+    "class": "correct"
+  }
+]
