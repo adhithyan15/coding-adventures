@@ -85,13 +85,11 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-037: async function declaration trailing `;` —
-    // sibling of gap-030. closurec's state machine arms
-    // `saw_function_kw_at_boundary` on `function` keyword at
-    // stmt boundary, but `async` consumes the boundary first,
-    // so the subsequent `function` doesn't see at_boundary=true.
-    // Discovered by CLOC14.5. See README in fixture dir.
-    ("async", "gap-037: async function trailing `;`"),
+    // gap-037 was RESOLVED in CLOC12.44 — `async` keyword at
+    // stmt boundary now propagates the boundary to the
+    // following `function` keyword via the
+    // `saw_async_kw_at_boundary` flag. `minify_async` flipped
+    // IGNORED → PASS.
     // gap-038: hex numeric literal normalized to decimal.
     // Upstream emits `var x=255;` for `var x=0xff;` even
     // under WHITESPACE_ONLY. closurec preserves the source

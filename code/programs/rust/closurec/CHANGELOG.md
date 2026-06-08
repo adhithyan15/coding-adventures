@@ -2,6 +2,50 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.50.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-037** — async function declaration trailing `;`.
+  The byte-identity harness now reports
+  `32 matched, 0 failed, 1 skipped (of 33 total)` — only
+  gap-038 (hex literal → decimal normalisation) remains.
+- Added `saw_async_kw_at_boundary` flag. `async` keyword at
+  a statement boundary arms it ONLY when the very next
+  non-trivia token is `function` (gate). The next
+  `function` keyword consumes the flag and arms
+  `saw_function_kw_at_boundary` as if `function` itself had
+  been at the boundary. The matching `}` then emits the
+  gap-030 trailing `;`.
+- The `function` keyword arm is now `at_stmt_boundary
+  || saw_async_kw_at_boundary` (was just `at_stmt_boundary`),
+  and the async flag is cleared whether or not the function
+  branch fires.
+
+### Added
+- 5 new inline `gap037_*` tests:
+  - `gap037_async_function_trailing_semi` — target fixture
+  - `gap037_empty_async_function_trailing_semi`
+  - `gap037_async_method_shorthand_does_not_arm` —
+    non-regression: `{async f(){}}` doesn't arm.
+  - `gap037_async_arrow_does_not_arm` — non-regression:
+    `async()=>x` doesn't arm.
+  - `gap037_async_function_expression_no_trailing_semi` —
+    non-regression: `var f=async function(){};` doesn't get
+    extra `;`.
+
+### Design — keyword-arming guard family
+
+This continues the keyword-as-property defense pattern
+established by gap-033 (`try`), gap-034 (`class`), and
+gap-036 (`switch`): never arm a keyword flag without
+checking the next non-trivia token. The `async` keyword is
+particularly important to guard because it's NOT a reserved
+word in ES (it's a contextual keyword), so users can name
+methods `async` legally. The guard requires next-is-`function`
+which is grammatically necessary for the async-function-decl
+shape (per §15.8) and surgically excludes async arrow
+functions, async methods, and async-named properties.
+
 ## [0.49.0] - 2026-06-08
 
 ### Changed

@@ -277,10 +277,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-037 — async function declaration trailing `;`
 
-- **Status:** OPEN — newly discovered by CLOC14.5. **Sibling of gap-030.**
-- **Upstream byte-identity test:** `minify_async` seed fixture.
-- **Why it fails:** Upstream emits `async function f(){await x};` for `async function f(){await x;}`. closurec emits `async function f(){await x}` (missing trailing `;`). The state machine's `saw_function_kw_at_boundary` arming requires `function` to be at a statement boundary, but the `async` keyword consumes the boundary (sets `at_stmt_boundary=false`) before `function` is seen.
-- **What it needs:** Add an `async`-tracking flag. When `async` is seen at a statement boundary, set both `at_stmt_boundary=false` (current behavior) AND a sticky `next_keyword_inherits_boundary` flag. The next `function` keyword checks both `at_stmt_boundary` and that flag. Alternative: just track "saw `async` immediately before this `function`" — simpler scope.
+- **Status:** **RESOLVED** in CLOC12.44 (PR pending). `minify_async` flipped IGNORED → PASS.
+- **Resolution:** Added `saw_async_kw_at_boundary` flag. `async` keyword at stmt boundary arms it ONLY when the very next non-trivia token is `function` (filters out async-arrow `async()=>x`, async method shorthand `{async m(){}}`, etc.). The next `function` keyword checks both `at_stmt_boundary` and `saw_async_kw_at_boundary` to decide whether to arm `saw_function_kw_at_boundary`. Same guard family as gap-033's `try` and gap-034's `class` — never arm a keyword flag without next-token confirmation.
 
 ### gap-038 — hex numeric literal normalised to decimal
 
