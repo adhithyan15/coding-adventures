@@ -359,6 +359,7 @@ members = [
     "affine2d",
     "algol-lexer",
     "algol-parser",
+    "algol-iir-compiler",
     "arc2d",
     "asciidoc",
     "asciidoc-parser",

@@ -23,6 +23,7 @@
 //! | Brainfuck       | full | `brainfuck-iir-compiler` |
 //! | Dartmouth BASIC | full (integer subset) | `dartmouth-basic-iir-compiler` |
 //! | Oct             | full (integer subset; 8008 intrinsics rejected) | `oct-iir-compiler` |
+//! | ALGOL 60        | scalar integer/boolean subset | `algol-iir-compiler` |
 //!
 //! ## How to add a language
 //!
@@ -62,6 +63,8 @@ pub enum Language {
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
     McCarthyLisp,
+    /// ALGOL 60 — scalar integer/boolean subset over the shared IIR.
+    Algol60,
 }
 
 impl fmt::Display for Language {
@@ -73,6 +76,7 @@ impl fmt::Display for Language {
             Language::DartmouthBasic => write!(f, "dartmouth-basic"),
             Language::Oct => write!(f, "oct"),
             Language::McCarthyLisp => write!(f, "mccarthy-lisp"),
+            Language::Algol60 => write!(f, "algol60"),
         }
     }
 }
@@ -87,10 +91,12 @@ impl Language {
             "dartmouth-basic" | "basic" | "bas" => Ok(Self::DartmouthBasic),
             "oct" => Ok(Self::Oct),
             "mccarthy-lisp" | "mccarthy" | "mcl" | "lisp" => Ok(Self::McCarthyLisp),
+            "algol" | "algol60" | "algol-60" | "a60" => Ok(Self::Algol60),
             other => Err(format!(
                 "unknown language {other:?}; expected one of: twig, nib, \
                  brainfuck (or bf), dartmouth-basic (or basic / bas), oct, \
-                 mccarthy-lisp (or mccarthy / mcl / lisp)")),
+                 mccarthy-lisp (or mccarthy / mcl / lisp), algol60 \
+                 (or algol / algol-60 / a60)")),
         }
     }
 }
@@ -107,6 +113,7 @@ pub fn detect_language_from_path(path: &Path) -> Option<Language> {
         "bas" | "basic" => Some(Language::DartmouthBasic),
         "oct" => Some(Language::Oct),
         "mcl" | "lisp" => Some(Language::McCarthyLisp),
+        "algol" | "alg" | "a60" => Some(Language::Algol60),
         _ => None,
     }
 }
@@ -264,6 +271,13 @@ pub fn compile_source_to_iir(
         }
         Language::McCarthyLisp => {
             mccarthy_lisp_iir_compiler::compile_source(source, module_name)
+                .map_err(|e| LangAotError::FrontendError {
+                    language,
+                    message: format!("{e}"),
+                })
+        }
+        Language::Algol60 => {
+            algol_iir_compiler::compile_source(source, module_name)
                 .map_err(|e| LangAotError::FrontendError {
                     language,
                     message: format!("{e}"),
@@ -1007,6 +1021,9 @@ mod tests {
         assert_eq!(Language::parse("mccarthy").unwrap(), Language::McCarthyLisp);
         assert_eq!(Language::parse("mcl").unwrap(), Language::McCarthyLisp);
         assert_eq!(Language::parse("lisp").unwrap(), Language::McCarthyLisp);
+        assert_eq!(Language::parse("algol60").unwrap(), Language::Algol60);
+        assert_eq!(Language::parse("algol").unwrap(), Language::Algol60);
+        assert_eq!(Language::parse("a60").unwrap(), Language::Algol60);
         assert!(Language::parse("bogus").is_err());
     }
 
@@ -1031,8 +1048,20 @@ mod tests {
         assert_eq!(detect_language_from_path(&p("foo.oct")), Some(Language::Oct));
         assert_eq!(detect_language_from_path(&p("foo.mcl")), Some(Language::McCarthyLisp));
         assert_eq!(detect_language_from_path(&p("foo.lisp")), Some(Language::McCarthyLisp));
+        assert_eq!(detect_language_from_path(&p("foo.algol")), Some(Language::Algol60));
+        assert_eq!(detect_language_from_path(&p("foo.alg")), Some(Language::Algol60));
+        assert_eq!(detect_language_from_path(&p("foo.a60")), Some(Language::Algol60));
         assert_eq!(detect_language_from_path(&p("foo.txt")), None);
         assert_eq!(detect_language_from_path(&p("README")), None);
+    }
+
+    #[test]
+    fn algol_compiles_to_iir() {
+        let src = "begin integer result; result := 42 end";
+        let iir = compile_source_to_iir(Language::Algol60, src, "algol")
+            .expect("ALGOL scalar program must compile");
+        assert_eq!(iir.entry_point.as_deref(), Some("main"));
+        assert!(iir.validate().is_empty());
     }
 
     #[test]
