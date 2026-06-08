@@ -2,6 +2,80 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.48.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-032** — single-statement if/else block
+  flattening at the CLI WHITESPACE_ONLY layer.
+  `minify_if_else` flipped IGNORED → PASS. **The byte-
+  identity harness now reports `17 matched, 0 failed,
+  0 skipped (of 17 total)`** — the entire seed set is byte-
+  for-byte identical to upstream Closure v20240317.
+- When `whitespace_only_minify` encounters a `{` token in
+  body position (i.e. `body_position_next == true`), it
+  scans forward to find the matching `}` and checks
+  eligibility:
+  - matching `}` found,
+  - exactly one `;` at depth 0 inside the block,
+  - no nested `{` at depth 0,
+  - no `function` / `try` / `if` / `while` / `for` / `do` /
+    `switch` / `class` keyword at depth 0,
+  - the token immediately before the close-`}` IS `;`.
+  When all hold, the inner content tokens are pre-emitted
+  directly (bypassing the main loop's rule A and other
+  state-machine logic), then both braces are skipped.
+- `else` keyword now also arms `body_position_next = true`
+  so the else-clause body can be a flatten target.
+
+### Added
+- 13 new inline tests in `whitespace_only::tests::gap032_*`:
+  - **Positive (rule fires):**
+    - `gap032_if_else_single_stmts_flatten` (target fixture)
+    - `gap032_if_single_stmt_flattens`
+    - `gap032_while_single_stmt_flattens`
+    - `gap032_for_single_stmt_flattens`
+    - `gap032_body_with_var_decl_flattens`
+  - **Non-regression (rule does NOT fire):**
+    - `gap032_multi_stmt_body_does_not_flatten`
+    - `gap032_nested_if_does_not_flatten` (dangling-else
+      safety)
+    - `gap032_nested_brace_does_not_flatten`
+    - `gap032_body_with_function_does_not_flatten`
+    - `gap032_body_with_try_does_not_flatten`
+    - `gap032_top_level_block_does_not_flatten`
+    - `gap032_function_body_does_not_flatten`
+    - `gap032_try_body_does_not_flatten`
+
+### Updated
+- Two pre-existing tests had their expectations updated to
+  reflect the new, MORE correct behaviour gap-032 introduces:
+  - `gap030_if_block_drops_inner_semi_no_trailing`:
+    `if(x){y();}` was previously expected as `if(x){y()}`
+    (just the inner `;` dropped). With gap-032 it now
+    flattens to `if(x)y();` — matching upstream.
+  - `gap031_nonempty_for_body_unaffected`:
+    `for(...){a;}` was previously expected as
+    `for(...){a}`. Now flattens to `for(...)a;` — matching
+    upstream.
+
+### Pre-push security review
+
+Verdict PASS. Six concerns traced through the change:
+
+1. Dangling-else binding — preserved by the
+   `has_blocking_keyword` guard which keeps outer braces.
+2. String literals containing `;`/`{`/`}` — the scan
+   matches token values like `"x}y" != "}"`, so depth
+   tracking is safe.
+3. Regex literals — same safety as strings.
+4. Comments — already stripped pre-scan.
+5. `prev_emitted_tok` after flatten — points to the
+   trailing `;`, which is not word-like, so next token gets
+   no spurious separator.
+6. `paren_stack` / `brace_stack` invariants — eligibility
+   requires balanced parens and no nested braces inside the
+   block, so pre-emit doesn't corrupt the stacks.
+
 ## [0.47.0] - 2026-06-08
 
 ### Changed

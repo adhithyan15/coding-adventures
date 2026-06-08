@@ -89,12 +89,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // collapses to `;` per §13.2 EmptyStatement substitution
     // in body position. `minify_for_loop` flipped from
     // IGNORED to PASS.
-    // gap-032: single-statement if/else block flattening.
-    // Upstream emits `if(x)a();else b();` not
-    // `if(x){a()}else{b()}`. CLI counterpart to AST-level
-    // gap-010 (DCE block flattening, already resolved).
-    // Discovered by CLOC14.3.
-    ("if_else", "gap-032: single-stmt if/else block flattening"),
+    // gap-032 was RESOLVED in CLOC12.42 — single-statement
+    // block flattening in body position. `minify_if_else`
+    // flipped from IGNORED to PASS.
     // gap-033 was RESOLVED in CLOC12.40 — the brace_stack
     // state machine now tracks try/catch/finally chains via
     // BlockKind::TryChain. `minify_try_catch` flipped from
