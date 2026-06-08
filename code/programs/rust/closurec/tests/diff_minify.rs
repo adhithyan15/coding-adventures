@@ -85,15 +85,12 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-030: emitter divergence around function-declaration
-    // semicolons. Upstream Closure v20240317 drops the inner `;`
-    // before `}` (ASI lets the brace terminate) AND emits a
-    // trailing `;` after the function-declaration's closing
-    // brace. closurec preserves the inner `;` and emits no
-    // trailing `;`. See
-    // tests/diff/minify_function_decl/README.md for the byte
-    // breakdown and what an emitter fix would need to do.
-    ("function_decl", "gap-030: function-decl semicolon ASI policy"),
+    // Empty. gap-030 (function-decl ASI policy) was resolved
+    // in CLOC12.38 (AST emitter side) + CLOC12.39 (CLI
+    // WHITESPACE_ONLY token re-stitcher side). The
+    // `minify_function_decl` fixture flipped from IGNORED to
+    // PASS in CLOC12.39 — closurec now matches upstream
+    // Closure v20240317 byte-for-byte.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
