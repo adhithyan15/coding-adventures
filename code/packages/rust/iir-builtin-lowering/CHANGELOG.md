@@ -4,6 +4,28 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.9.0] — 2026-06-08 — predicate atoms box (LANG77 / McCarthy L3b-3a-4b)
+
+### Changed
+
+- `lower_lisp_repr_structural` now also handles functions that use the lisp
+  **predicate** builtins (`pair?`/`not`/`equal?`), not just the cons heap ops —
+  so a program like `(ATOM 5)` (which `cons`es nothing) is owned by this pass
+  rather than slipping through untyped:
+  - `function_uses_heap` additionally returns true for a `call_builtin` to a
+    lisp builtin, matching `concretize_scalar_any_for_wasm`'s `LISP_BUILTINS`
+    list so the two passes still partition the module cleanly.
+  - the atom-boxing rule generalised from "the value stored into a cons field"
+    to "any non-reference value flowing into a **lisp-value position**" — which
+    now also covers the arguments of `pair?`/`equal?` (a lisp integer atom is
+    boxed as an `i31ref` before the predicate). `not`'s argument is a machine
+    boolean, so it is left alone.
+  - a non-reference **scalar** result is concretised to its real width: a
+    predicate result (hint `"bool"`) returns as `i32` (not widened to `i64`), so
+    the wasm function's result type matches the value on the stack.
+
+1 new test (predicate atom boxes, bool result stays i32, not unboxed).
+
 ## [0.8.0] — 2026-06-08 — structural lisp-value representation (LANG77 / McCarthy L3b-3a-3c)
 
 ### Added
