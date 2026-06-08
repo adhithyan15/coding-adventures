@@ -2,6 +2,66 @@
 
 All notable changes to the `coding-adventures-closure-emitter` crate will be documented in this file.
 
+## [0.12.0] - 2026-06-08
+
+### Changed
+- **gap-030 part 1 (AST emitter side):** Function-declaration
+  ASI policy now matches upstream Closure v20240317 in compact
+  (non-pretty) mode.
+  - `emit_block_statement` drops a single trailing `;` before
+    `}` via a new `pop_trailing_semi_if_compact()` helper —
+    BUT only when the block's last child is a leaf
+    statement-terminator type (gated by
+    `last_stmt_uses_terminator_semi`). Per ECMAScript §11.9
+    (Automatic Semicolon Insertion), the `}` terminates the
+    in-progress statement, so a true terminator `;` is
+    redundant noise that upstream Closure doesn't emit.
+  - **Critical correctness gate:** when the block's last child
+    is a compound statement (If/While/For/Labeled) whose body
+    is an `EmptyStatement`, the trailing `;` is structurally
+    part of the body grammar — NOT a terminator. Popping it
+    would produce SyntaxError-emitting output like
+    `function f(){if(x)}` or `function f(){for(;;)}`. The
+    `last_stmt_uses_terminator_semi` helper enumerates the
+    safe-to-pop set (ExpressionStatement / ReturnStatement /
+    BreakStatement / ContinueStatement / ThrowStatement); all
+    other types fall through to the conservative "preserve
+    `;`" path. Caught by pre-push security review.
+  - `emit_function_declaration` emits a `;` after the body's
+    closing `}` in compact mode. Even at EOF this is a no-op
+    `EmptyStatement`, but in concatenation contexts it keeps
+    the function-declaration's output shape predictable.
+- **Pretty mode is unchanged.** Visual delimiter clarity
+  outranks byte minimization in the human-facing pretty mode;
+  both gap-030 changes are compact-only.
+- The pre-existing `function_declaration_minified` test
+  assertion was updated from `function f(x){return x;}` to
+  `function f(x){return x};` to track the new compact-mode
+  shape.
+
+### Added
+- Five new inline tests:
+  - `gap030_block_multi_stmts_drops_only_last_semi`: multi-
+    statement blocks drop only the final `;` (intermediate
+    `;`s between statements are preserved).
+  - `gap030_pretty_mode_unchanged`: pretty mode still emits
+    inner `;` and no trailing `;` after `}`.
+  - `gap030_empty_function_body_compact`: empty body stays
+    `{}` with trailing `;` (`function noop(){};`).
+  - `gap030_does_not_pop_empty_body_of_if`: regression for the
+    security-review-caught bug — `function f(){if(x);}` must
+    not collapse to `function f(){if(x)}` (SyntaxError).
+  - `gap030_does_not_pop_empty_body_of_while`: same defense
+    applied to `while(x);` body shape.
+
+### Known limitation
+- **closurec's CLI WHITESPACE_ONLY path uses a separate
+  token-level re-stitcher** (`whitespace_only.rs`), not this
+  emitter. So gap-030's `minify_function_decl` byte-identity
+  fixture stays IGNORED for now; flipping it to PASS requires
+  porting the same two rules to the token re-stitcher in a
+  follow-up PR (gap-030 spec entry tracks both parts).
+
 ## [0.11.0] - 2026-06-04
 
 ### Added — CLOC12.33: `SwitchStatement` emitter rule (gap-014)
