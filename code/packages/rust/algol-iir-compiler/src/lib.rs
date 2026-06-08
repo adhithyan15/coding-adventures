@@ -814,7 +814,7 @@ impl Compiler {
         rhs: ExprValue,
     ) -> Result<ExprValue, CompileError> {
         match op {
-            "+" | "-" | "*" | "div" => {
+            "+" | "-" | "*" | "div" | "mod" => {
                 if lhs.ty != ScalarType::Integer || rhs.ty != ScalarType::Integer {
                     return Err(CompileError::Type(format!(
                         "operator {op:?} requires integer operands"
@@ -825,6 +825,7 @@ impl Compiler {
                     "-" => "sub",
                     "*" => "mul",
                     "div" => "div",
+                    "mod" => "mod",
                     _ => unreachable!(),
                 };
                 let dest = self.fresh_temp();
@@ -841,9 +842,6 @@ impl Compiler {
             }
             "/" => Err(CompileError::Unsupported(
                 "real division '/' in the integer-only backend slice; use div".into(),
-            )),
-            "mod" => Err(CompileError::Unsupported(
-                "mod until the WASM backend accepts the shared IIR 'mod' opcode".into(),
             )),
             "=" | "!=" | "<>" | "<" | "<=" | ">" | ">=" => {
                 if lhs.ty != rhs.ty {
@@ -1198,6 +1196,12 @@ mod tests {
     fn compiles_and_runs_integer_assignment() {
         let src = "begin integer result; result := 40 + 2 end";
         assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_mod_expression() {
+        let src = "begin integer result; result := 17 mod 5 end";
+        assert_eq!(run_i64(src), 2);
     }
 
     #[test]

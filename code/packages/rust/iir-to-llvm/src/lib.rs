@@ -212,7 +212,7 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
 /// [`lower_instr`] — the validator and the lowerer must stay in lockstep.
 ///
 /// LLVM02 added: `const`, `mov`, `ret`, `ret_void`.
-/// LLVM03 added: arithmetic (`add`/`sub`/`mul`/`div`/`rem`), comparison
+/// LLVM03 added: arithmetic (`add`/`sub`/`mul`/`div`/`mod`/`rem`), comparison
 /// (`eq`/`ne`/`lt`/`le`/`gt`/`ge` plus their `cmp_`-prefixed aliases per
 /// gap G1 in the multi-language backend plan), and control flow
 /// (`label`/`jmp`/`jmp_if_true`/`jmp_if_false`).
@@ -220,7 +220,7 @@ const SUPPORTED_OPS: &[&str] = &[
     // LLVM02
     "const", "mov", "ret", "ret_void",
     // LLVM03 — arithmetic
-    "add", "sub", "mul", "div", "rem",
+    "add", "sub", "mul", "div", "mod", "rem",
     // LLVM03 — comparison (both naked and cmp_-prefixed; see G1)
     "eq", "ne", "lt", "le", "gt", "ge",
     "cmp_eq", "cmp_ne", "cmp_lt", "cmp_le", "cmp_gt", "cmp_ge",
@@ -528,9 +528,9 @@ fn lower_instr(
         //
         // Two-operand integer or float operation.  Signedness comes from
         // the type_hint prefix (`i*` = signed, `u*` = unsigned), which only
-        // matters for `div` and `rem` (LLVM splits these into `sdiv`/`udiv`
+        // matters for `div` and `mod`/`rem` (LLVM splits these into `sdiv`/`udiv`
         // and `srem`/`urem`; `add`/`sub`/`mul` are signedness-agnostic).
-        "add" | "sub" | "mul" | "div" | "rem" => {
+        "add" | "sub" | "mul" | "div" | "mod" | "rem" => {
             lower_arith(instr.op.as_str(), instr, state, out)
         }
 
@@ -641,7 +641,7 @@ fn is_unsigned_type(s: &str) -> bool {
 
 /// Pick the LLVM opcode for a binary arithmetic instruction.
 ///
-/// The result is signedness-aware for `div` and `rem` (split into
+/// The result is signedness-aware for `div` and `mod`/`rem` (split into
 /// `sdiv`/`udiv` and `srem`/`urem`), and operand-type-aware for floats
 /// (use `f*` variants).  `add`/`sub`/`mul` share opcodes between signed
 /// and unsigned because in two's-complement they produce the same bits.
@@ -655,7 +655,7 @@ fn llvm_arith_op(iir_op: &str, type_hint: &str) -> &'static str {
         "div" => {
             if f { "fdiv" } else if u { "udiv" } else { "sdiv" }
         }
-        "rem" => {
+        "mod" | "rem" => {
             if f { "frem" } else if u { "urem" } else { "srem" }
         }
         _ => unreachable!("llvm_arith_op called with non-arith op {iir_op}"),
