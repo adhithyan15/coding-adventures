@@ -99,8 +99,9 @@
 
 use wasm_leb128::decode_unsigned;
 use wasm_types::{
-    CustomSection, DataSegment, Element, Export, ExternalKind, FuncType, FunctionBody, Global,
-    GlobalType, Import, ImportTypeInfo, Limits, MemoryType, TableType, ValueType, WasmModule,
+    CustomSection, DataSegment, Element, Export, ExternalKind, FieldType, FuncType, FunctionBody,
+    Global, GlobalType, Import, ImportTypeInfo, Limits, MemoryType, StructType, TableType,
+    ValueType, WasmModule,
 };
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -117,6 +118,25 @@ const WASM_VERSION: [u8; 4] = [0x01, 0x00, 0x00, 0x00];
 /// The byte tag that begins every function type entry in the type section.
 /// Spells `-0x20` in signed LEB128, chosen to avoid overlap with value-type bytes.
 const FUNC_TYPE_TAG: u8 = 0x60;
+
+/// The byte tag that begins a **WasmGC sub-type** entry in the type section
+/// (the form used for struct types). It is followed by a vector of supertype
+/// indices (we require it to be empty) and then the composite-type body.
+const SUBTYPE_TAG: u8 = 0x50;
+
+/// The composite-type marker for a **struct** (inside a sub-type entry).
+const STRUCT_TYPE_MARKER: u8 = 0x5F;
+
+/// The leading byte of a nullable concrete reference type (`(ref null $n)`),
+/// e.g. `structref` to a named struct type: `0x63 <typeidx: u32 LEB>`.
+const REF_NULL_CONCRETE_TAG: u8 = 0x63;
+
+/// An upper bound on how much a length-prefixed vector may **pre-allocate**.
+/// The byte stream is untrusted, so a crafted count (e.g. `0xFFFFFFFF`) must not
+/// trigger a multi-gigabyte allocation before the (failing) element reads. We
+/// reserve at most this many slots up front and let the `Vec` grow as elements
+/// actually arrive; a truncated module then errors on a missing byte instead.
+const MAX_PREALLOC: usize = 1024;
 
 /// The `end` opcode that terminates constant expressions (init_expr, offset_expr).
 const END_OPCODE: u8 = 0x0B;
@@ -389,11 +409,33 @@ fn decode_value_type(byte: u8, offset: usize) -> Result<ValueType, WasmParseErro
         0x7E => Ok(ValueType::I64),
         0x7D => Ok(ValueType::F32),
         0x7C => Ok(ValueType::F64),
+        // WasmGC single-byte reference types (LANG77 / McCarthy L3b-3a-3c).
+        // `structref` (`0x63 <typeidx>`) is multi-byte and is handled by
+        // [`read_value_type`], which is why it is absent here.
+        0x6E => Ok(ValueType::Anyref),
+        0x6C => Ok(ValueType::I31ref),
         _ => Err(WasmParseError {
             message: format!("unknown value type byte: 0x{:02X}", byte),
             offset,
         }),
     }
+}
+
+/// Read one `ValueType` from the stream, handling the **multi-byte** WasmGC
+/// reference encodings that [`decode_value_type`] cannot (it only sees a single
+/// byte).  Specifically, a nullable concrete struct reference is
+/// `0x63 <typeidx: u32 LEB>`; every other value type is a single byte.
+///
+/// Used when parsing WasmGC struct field types, whose field value types may be
+/// `anyref`, `i31ref`, or a concrete `structref` (LANG77 / McCarthy L3b-3a-3c).
+fn read_value_type(p: &mut Parser) -> Result<ValueType, WasmParseError> {
+    let byte = p.read_u8()?;
+    if byte == REF_NULL_CONCRETE_TAG {
+        let idx = p.read_u32leb()?;
+        return Ok(ValueType::StructRef(idx));
+    }
+    // `offset()` now points one past `byte`, so the error offset is `- 1`.
+    decode_value_type(byte, p.offset().saturating_sub(1))
 }
 
 /// Decode a single external-kind byte into an [`ExternalKind`].
@@ -449,27 +491,101 @@ fn parse_type_section(p: &mut Parser, module: &mut WasmModule) -> Result<(), Was
     let count = p.read_u32leb()? as usize;
     for _ in 0..count {
         let tag = p.read_u8()?;
-        if tag != FUNC_TYPE_TAG {
-            return Err(p.error(format!(
-                "expected function type tag 0x60, got 0x{:02X}",
-                tag
-            )));
+        match tag {
+            FUNC_TYPE_TAG => {
+                let func_type = parse_func_type(p)?;
+                module.types.push(func_type);
+            }
+            // WasmGC struct type (LANG77 / McCarthy L3b-3a-3c). The `$LispyPair`
+            // cons cell is emitted as a sub-type entry; recover it so the
+            // runtime can learn its field count (e.g. for `struct.new`).
+            //
+            // NOTE: function and struct types share one type-index space. The
+            // encoder emits all function types first, then struct types, so a
+            // function's `module.types` index still equals its wasm type index;
+            // a producer that interleaved them would break that alignment, which
+            // we neither emit nor (currently) need to consume.
+            SUBTYPE_TAG => {
+                let struct_type = parse_struct_type(p)?;
+                module.struct_types.push(struct_type);
+            }
+            other => {
+                return Err(p.error(format!(
+                    "expected a function type (0x60) or struct sub-type (0x50), got 0x{:02X}",
+                    other
+                )));
+            }
         }
-        let param_count = p.read_u32leb()? as usize;
-        let mut params = Vec::with_capacity(param_count);
-        for _ in 0..param_count {
-            let b = p.read_u8()?;
-            params.push(decode_value_type(b, p.offset() - 1)?);
-        }
-        let result_count = p.read_u32leb()? as usize;
-        let mut results = Vec::with_capacity(result_count);
-        for _ in 0..result_count {
-            let b = p.read_u8()?;
-            results.push(decode_value_type(b, p.offset() - 1)?);
-        }
-        module.types.push(FuncType { params, results });
     }
     Ok(())
+}
+
+/// Parse a function type body — everything **after** the `0x60` tag.
+///
+/// ```text
+/// param_count: u32leb   params: valtype × param_count
+/// result_count: u32leb  results: valtype × result_count
+/// ```
+fn parse_func_type(p: &mut Parser) -> Result<FuncType, WasmParseError> {
+    let param_count = p.read_u32leb()? as usize;
+    let mut params = Vec::with_capacity(param_count.min(MAX_PREALLOC));
+    for _ in 0..param_count {
+        let b = p.read_u8()?;
+        params.push(decode_value_type(b, p.offset() - 1)?);
+    }
+    let result_count = p.read_u32leb()? as usize;
+    let mut results = Vec::with_capacity(result_count.min(MAX_PREALLOC));
+    for _ in 0..result_count {
+        let b = p.read_u8()?;
+        results.push(decode_value_type(b, p.offset() - 1)?);
+    }
+    Ok(FuncType { params, results })
+}
+
+/// Parse a WasmGC **struct type** body — everything **after** the `0x50`
+/// sub-type tag.  Mirrors `wasm-module-encoder`'s `encode_struct_type`:
+///
+/// ```text
+/// 0x50                      ;; sub-type open tag (already consumed by caller)
+/// supertype_count: u32leb   ;; must be 0 (we don't support explicit supertypes)
+/// 0x5F                      ;; struct composite-type marker
+/// field_count: u32leb
+/// for each field:
+///   val_type bytes          ;; ValueType (anyref/i31ref/structref/numeric)
+///   mutability: u8          ;; 0 = immutable, 1 = mutable
+/// ```
+///
+/// For `$LispyPair` (two mutable `anyref` fields) the bytes after `0x50` are
+/// `0x00 0x5F 0x02  0x6E 0x01  0x6E 0x01`.
+fn parse_struct_type(p: &mut Parser) -> Result<StructType, WasmParseError> {
+    let supertype_count = p.read_u32leb()?;
+    if supertype_count != 0 {
+        return Err(p.error(format!(
+            "WasmGC struct sub-types with explicit supertypes are not supported \
+             (supertype_count = {supertype_count})"
+        )));
+    }
+    let marker = p.read_u8()?;
+    if marker != STRUCT_TYPE_MARKER {
+        return Err(p.error(format!(
+            "expected struct composite-type marker 0x5F, got 0x{marker:02X}"
+        )));
+    }
+    let field_count = p.read_u32leb()? as usize;
+    // Do NOT pre-allocate with the attacker-controlled `field_count`: a crafted
+    // module could claim a huge count and force a giant allocation before the
+    // (failing) reads. Grow on demand instead — a truncated module then errors
+    // on the first missing byte without over-allocating.
+    let mut fields = Vec::new();
+    for _ in 0..field_count {
+        let val_type = read_value_type(p)?;
+        let mutability = p.read_u8()?;
+        fields.push(FieldType {
+            val_type,
+            mutable: mutability != 0,
+        });
+    }
+    Ok(StructType { fields })
 }
 
 /// Parse the **import section** (§2).
@@ -989,6 +1105,128 @@ mod tests {
                 results: vec![ValueType::I32],
             }
         );
+    }
+
+    // ── WasmGC struct types in the type section (LANG77 / McCarthy L3b-3a-3c) ──
+
+    /// The `$LispyPair` cons cell: two mutable `anyref` fields. Bytes after the
+    /// `0x50` sub-type tag are `0x00 0x5F 0x02  0x6E 0x01  0x6E 0x01`.
+    fn lispy_pair_struct_bytes() -> Vec<u8> {
+        vec![
+            0x50, // sub-type open tag
+            0x00, // zero supertypes
+            0x5F, // struct composite-type marker
+            0x02, // 2 fields
+            0x6E, 0x01, // field 0: anyref, mutable
+            0x6E, 0x01, // field 1: anyref, mutable
+        ]
+    }
+
+    #[test]
+    fn test_struct_type_section() {
+        // A type section containing only the $LispyPair struct type.
+        let mut payload = vec![0x01]; // count = 1
+        payload.extend(lispy_pair_struct_bytes());
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+
+        assert!(m.types.is_empty(), "no function types in this module");
+        assert_eq!(m.struct_types.len(), 1, "the $LispyPair struct is recovered");
+        let st = &m.struct_types[0];
+        assert_eq!(st.fields.len(), 2);
+        assert_eq!(st.fields[0].val_type, ValueType::Anyref);
+        assert!(st.fields[0].mutable);
+        assert_eq!(st.fields[1].val_type, ValueType::Anyref);
+        assert!(st.fields[1].mutable);
+    }
+
+    #[test]
+    fn test_func_and_struct_types_share_section_with_aligned_indices() {
+        // Two function types FIRST, then the struct type — the layout the
+        // encoder emits. Function type indices must remain 0 and 1 (unaffected
+        // by the trailing struct type), and the struct lands in struct_types.
+        let mut payload = vec![0x03]; // count = 3 (2 func + 1 struct)
+        payload.extend([0x60, 0x00, 0x00]); // type 0: () -> ()
+        payload.extend([0x60, 0x01, 0x7F, 0x01, 0x7E]); // type 1: (i32) -> (i64)
+        payload.extend(lispy_pair_struct_bytes()); // type 2: $LispyPair
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+
+        assert_eq!(m.types.len(), 2, "two function types");
+        assert_eq!(m.types[0], FuncType { params: vec![], results: vec![] });
+        assert_eq!(
+            m.types[1],
+            FuncType { params: vec![ValueType::I32], results: vec![ValueType::I64] }
+        );
+        assert_eq!(m.struct_types.len(), 1, "one struct type");
+        assert_eq!(m.struct_types[0].fields.len(), 2);
+    }
+
+    #[test]
+    fn test_struct_field_immutable_and_ref_types_roundtrip() {
+        // A struct with an immutable i31ref field and a concrete structref
+        // field (`0x63 <typeidx>`) — exercises the multi-byte ref decoding.
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x00, 0x5F, // sub-type, 0 supers, struct
+            0x02, // 2 fields
+            0x6C, 0x00, // field 0: i31ref, immutable
+            0x63, 0x00, 0x01, // field 1: (ref null $0), mutable
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        let m = WasmModuleParser::parse(&data).unwrap();
+
+        let st = &m.struct_types[0];
+        assert_eq!(st.fields[0].val_type, ValueType::I31ref);
+        assert!(!st.fields[0].mutable, "field 0 is immutable");
+        assert_eq!(st.fields[1].val_type, ValueType::StructRef(0));
+        assert!(st.fields[1].mutable, "field 1 is mutable");
+    }
+
+    #[test]
+    fn test_struct_type_bad_marker_is_clean_error() {
+        // 0x50 followed by a non-0x5F composite marker must be a clean Err.
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x00, 0x99, // sub-type, 0 supers, BOGUS marker
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        assert!(WasmModuleParser::parse(&data).is_err());
+    }
+
+    #[test]
+    fn test_struct_supertypes_unsupported_is_clean_error() {
+        // A sub-type that declares a supertype (count != 0) is unsupported —
+        // a clean Err, not a panic or a misparse.
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x01, 0x00, // sub-type, ONE supertype (idx 0)
+            0x5F, 0x00, // struct, 0 fields
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        assert!(WasmModuleParser::parse(&data).is_err());
+    }
+
+    #[test]
+    fn test_truncated_struct_type_is_clean_error() {
+        // Claims 2 fields but the bytes end after the first — must error
+        // cleanly (no panic, no over-allocation).
+        let payload = vec![
+            0x01, // count = 1
+            0x50, 0x00, 0x5F, // sub-type, 0 supers, struct
+            0x02, // 2 fields...
+            0x6E, 0x01, // ...but only one field's bytes are present
+        ];
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        assert!(WasmModuleParser::parse(&data).is_err());
+    }
+
+    #[test]
+    fn test_unknown_type_tag_is_clean_error() {
+        // A type entry that is neither 0x60 nor 0x50 must be a clean Err.
+        let payload = vec![0x01, 0x42]; // count = 1, bogus tag 0x42
+        let data = wasm_with_sections(&[make_section(1, &payload)]);
+        assert!(WasmModuleParser::parse(&data).is_err());
     }
 
     // ── Test 3: Function section — type index list ────────────────────────────
