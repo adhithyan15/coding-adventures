@@ -49,6 +49,8 @@ Current scope:
 - D18D scene inventory/read tool descriptors for model-facing scene lookup
 - D18D event lifecycle tool descriptors for subscribing, polling, and
   unsubscribing from runtime event streams
+- D18D event observability tool descriptors for listing active subscriptions and
+  inspecting checkpointed runtime event-log entries
 - compact smart-home tool catalog summaries for read-side inspection
 - read-only supervision observation tool descriptor for Chief of Staff status
   loops

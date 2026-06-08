@@ -3201,6 +3201,12 @@ pub enum RuntimeReadToolRequest {
     GetHealth {
         bridge_id: Option<BridgeId>,
     },
+    ListSubscriptions {
+        query: RuntimeSubscriptionQuery,
+    },
+    InspectEventLog {
+        query: RuntimeEventQuery,
+    },
     ObserveSupervision,
 }
 
@@ -3214,6 +3220,8 @@ impl RuntimeReadToolRequest {
             Self::GetState { .. } => SmartHomeTool::GetState,
             Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
+            Self::ListSubscriptions { .. } => SmartHomeTool::ListSubscriptions,
+            Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
             Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
@@ -3387,6 +3395,23 @@ impl BridgeHealthSnapshot {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeEventLogRecord {
+    pub sequence: u64,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+    pub event: RuntimeEvent,
+}
+
+impl RuntimeEventLogRecord {
+    pub fn from_entry(entry: RuntimeEventLogEntry<'_>) -> Self {
+        Self {
+            sequence: entry.sequence,
+            next_checkpoint: entry.next_checkpoint,
+            event: entry.event.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum RuntimeReadToolOutput {
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
@@ -3404,6 +3429,14 @@ pub enum RuntimeReadToolOutput {
         capabilities: Vec<Capability>,
     },
     Health(Vec<BridgeHealthSnapshot>),
+    Subscriptions {
+        subscriptions: Vec<RuntimeSubscriptionSnapshot>,
+        summary: RuntimeSubscriptionInventorySummary,
+    },
+    EventLog {
+        entries: Vec<RuntimeEventLogRecord>,
+        summary: RuntimeEventLogSummary,
+    },
     SupervisionObservation(RuntimeSupervisionObservation),
 }
 
@@ -4275,6 +4308,25 @@ impl SmartHomeRuntime {
                         .collect(),
                 )),
             },
+            RuntimeReadToolRequest::ListSubscriptions { query } => {
+                let subscriptions = self.event_bus.query_subscriptions(&query);
+                let summary =
+                    RuntimeSubscriptionInventorySummary::from_snapshots(subscriptions.iter());
+                Ok(RuntimeReadToolOutput::Subscriptions {
+                    subscriptions,
+                    summary,
+                })
+            }
+            RuntimeReadToolRequest::InspectEventLog { query } => {
+                let entries = self
+                    .event_bus
+                    .query_events(&query)
+                    .into_iter()
+                    .map(RuntimeEventLogRecord::from_entry)
+                    .collect::<Vec<_>>();
+                let summary = self.event_bus.event_log_summary(&query);
+                Ok(RuntimeReadToolOutput::EventLog { entries, summary })
+            }
             RuntimeReadToolRequest::ObserveSupervision => Ok(
                 RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
             ),
@@ -7628,6 +7680,16 @@ mod tests {
                 metadata: vec![Metadata::new("fixture", "runtime_read_tool_scene")],
             })
             .unwrap();
+        runtime
+            .event_bus_mut()
+            .subscribe(
+                RuntimeSubscriptionId::trusted("commands"),
+                RuntimeEventFilter::Commands,
+            )
+            .unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("command-1"));
 
         let bridges = runtime
             .execute_read_tool(
@@ -7694,8 +7756,31 @@ mod tests {
                 1_506,
             )
             .unwrap();
+        let subscriptions = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListSubscriptions {
+                    query: RuntimeSubscriptionQuery::new()
+                        .matching(RuntimeEventFilter::Commands)
+                        .with_min_queued_events(1),
+                },
+                1_507,
+            )
+            .unwrap();
+        let event_log = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::InspectEventLog {
+                    query: RuntimeEventQuery::new()
+                        .matching(RuntimeEventFilter::Commands)
+                        .sorted_by(RuntimeEventSort::SequenceDesc)
+                        .with_limit(1),
+                },
+                1_508,
+            )
+            .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_507)
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_509)
             .unwrap();
 
         assert!(matches!(
@@ -7747,19 +7832,49 @@ mod tests {
             }]
         ));
         assert!(matches!(
+            subscriptions,
+            RuntimeReadToolOutput::Subscriptions {
+                subscriptions,
+                summary,
+            } if subscriptions.len() == 1
+                && subscriptions[0].subscription_id == RuntimeSubscriptionId::trusted("commands")
+                && subscriptions[0].queued_events == 1
+                && summary.command_subscriptions == 1
+                && summary.backlogged_subscriptions == 1
+        ));
+        assert!(matches!(
+            event_log,
+            RuntimeReadToolOutput::EventLog {
+                entries,
+                summary,
+            } if entries.len() == 1
+                && entries[0].sequence == 0
+                && matches!(
+                    &entries[0].event,
+                    RuntimeEvent::CommandResult(result)
+                        if result.command_id == CommandId::trusted("command-1")
+                )
+                && summary.total_events == 1
+                && summary.command_results == 1
+        ));
+        assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_507
+                if observation.generated_at_ms == 1_509
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 8);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 10);
         assert!(runtime
             .registry()
             .authorization_decisions()
             .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
-        assert!(runtime.event_bus().published().is_empty());
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::CommandResult(result)]
+                if result.command_id == CommandId::trusted("command-1")
+        ));
     }
 
     #[test]

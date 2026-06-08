@@ -29,3 +29,7 @@ All notable changes to this package will be documented in this file.
   subscriptions without bypassing D23 authorization.
 - Added `smart_home.list_scenes` and `smart_home.describe_scene` handlers over
   the D23 runtime scene read facade, including Hue-style fixture coverage.
+- Added `smart_home.list_subscriptions` and `smart_home.inspect_event_log`
+  handlers over the D23 runtime read facade so Chief of Staff jobs can inspect
+  event-stream backlog pressure and checkpointed event history without draining
+  subscriptions.
