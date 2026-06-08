@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] — 2026-06-08
+
+### Added — `ref.test` execution (LANG77 / McCarthy L3b-3a-4)
+
+The engine now runs the WasmGC **`ref.test`** type-test op — the primitive
+McCarthy `pair?` lowers to ("is this lisp value a cons cell?"):
+
+- The decoder reads the heap-type immediate of `ref.test` (`0xFB 0x14`) and the
+  nullable `ref.test null` (`0xFB 0x15`).
+- The engine executes them: pop a reference, push `i32 1` if it is a (non-null)
+  struct reference, else `0`. Our value model has exactly one struct type
+  (`$LispyPair`), so a `struct.new` result — the only `Ref(Some(_))` — is that
+  type; a boxed integer (`i31` payload / `I32`) or the null reference yields `0`.
+  The `0x15` variant additionally accepts the null reference.
+
+So `pair?(cons)` → 1, `pair?(atom)` → 0, `pair?(nil)` → 0. 3 new tests.
+
 ## [0.3.0] — 2026-06-04
 
 ### Added — WasmGC struct heap + references (LANG77 / McCarthy L3b-3a-3b)
