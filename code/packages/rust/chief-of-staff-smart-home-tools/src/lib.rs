@@ -47,9 +47,11 @@ use smart_home_runtime::{
     RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
     RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
     RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeUnsubscribeToolOutput,
-    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
-    WorkerRestartInstruction, WorkerRestartReason,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisorSnapshot,
+    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
+    SmartHomeRuntime, SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort,
+    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
+    WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -69,6 +71,9 @@ pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
+pub const SMART_HOME_LIST_WORKERS_TOOL_ID: &str = "smart_home.list_workers";
+pub const SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID: &str =
+    "smart_home.get_worker_heartbeat_schedule";
 pub const SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID: &str = "smart_home.get_supervision_plan";
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
@@ -298,6 +303,23 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_pairing_sessions"))
+                }
+                SMART_HOME_LIST_WORKERS_TOOL_ID => {
+                    let request = list_workers_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_workers"))
+                }
+                SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID => {
+                    let request = get_worker_heartbeat_schedule_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(
+                        output,
+                        "get_worker_heartbeat_schedule",
+                    ))
                 }
                 SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -646,6 +668,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_snapshot_definition(),
         list_desired_states_definition(),
         list_pairing_sessions_definition(),
+        list_workers_definition(),
+        get_worker_heartbeat_schedule_definition(),
         get_supervision_plan_definition(),
         pair_bridge_definition(),
         read_definition(
@@ -1060,6 +1084,89 @@ fn list_pairing_sessions_definition() -> ToolDefinition {
     )
 }
 
+fn list_workers_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_WORKERS_TOOL_ID,
+        "List smart-home workers",
+        "List supervised D23 bridge workers with status, heartbeat, restart, and overdue filters without mutating supervisor state.",
+        object_schema(
+            vec![
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("integration_id", JsonSchema::String),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new(
+                    "statuses",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+                SchemaProperty::new("heartbeat_due_before_ms", JsonSchema::Integer),
+                SchemaProperty::new("overdue_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("min_restart_count", JsonSchema::Integer),
+                SchemaProperty::new("sort", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "workers",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["workers", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn get_worker_heartbeat_schedule_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID,
+        "Get smart-home worker heartbeat schedule",
+        "Read supervised D23 bridge-worker heartbeat deadlines, optionally filtered by bridge or due window, without mutating supervisor state.",
+        object_schema(
+            vec![
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("due_at_or_before_ms", JsonSchema::Integer),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec![],
+            false,
+        ),
+        object_schema(
+            vec![
+                SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                SchemaProperty::new(
+                    "deadlines",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("count", JsonSchema::Integer),
+                SchemaProperty::new("due_count", JsonSchema::Integer),
+                SchemaProperty::new("next_due_at_ms", JsonSchema::Any),
+                SchemaProperty::new("is_empty", JsonSchema::Boolean),
+            ],
+            vec![
+                "generated_at_ms",
+                "deadlines",
+                "count",
+                "due_count",
+                "next_due_at_ms",
+                "is_empty",
+            ],
+            false,
+        ),
+    )
+}
+
 fn get_supervision_plan_definition() -> ToolDefinition {
     read_definition(
         SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID,
@@ -1417,6 +1524,49 @@ fn list_pairing_sessions_request(
         query = query.with_limit(limit as usize);
     }
     Ok(RuntimeReadToolRequest::ListPairingSessions { query })
+}
+
+fn list_workers_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = SupervisedWorkerQuery::new();
+    if let Some(bridge_id) = optional_string(arguments, "bridge_id")? {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(integration_id) = optional_string(arguments, "integration_id")? {
+        query = query.for_integration(IntegrationId::trusted(integration_id));
+    }
+    for status in optional_string_list(arguments, "status", "statuses")? {
+        query = query.with_status(parse_worker_status(&status)?);
+    }
+    if let Some(heartbeat_due_before_ms) = optional_u64(arguments, "heartbeat_due_before_ms")? {
+        query = query.heartbeat_due_before(heartbeat_due_before_ms);
+    }
+    if let Some(overdue_at_ms) = optional_u64(arguments, "overdue_at_ms")? {
+        query = query.overdue_at(overdue_at_ms);
+    }
+    if let Some(min_restart_count) = optional_u64(arguments, "min_restart_count")? {
+        query = query.min_restart_count(u32::try_from(min_restart_count).map_err(|_| {
+            validation_error("min_restart_count must be less than or equal to 4294967295")
+        })?);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_supervised_worker_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(RuntimeReadToolRequest::ListWorkers { query })
+}
+
+fn get_worker_heartbeat_schedule_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeReadToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
+        bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
+        due_at_or_before_ms: optional_u64(arguments, "due_at_or_before_ms")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
 }
 
 fn pair_bridge_request(
@@ -1795,6 +1945,22 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
             ("summary", pairing_session_inventory_summary_json(&summary)),
             ("count", integer(sessions.len() as i64)),
         ]),
+        RuntimeReadToolOutput::Workers { workers, summary } => object([
+            (
+                "workers",
+                JsonValue::Array(
+                    workers
+                        .iter()
+                        .map(|worker| supervised_worker_json(worker, summary.generated_at_ms))
+                        .collect(),
+                ),
+            ),
+            ("summary", supervisor_snapshot_json(&summary)),
+            ("count", integer(workers.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule) => {
+            worker_heartbeat_schedule_json(&schedule)
+        }
         RuntimeReadToolOutput::SupervisionPlan(plan) => runtime_supervision_plan_json(&plan),
         RuntimeReadToolOutput::SupervisionObservation(observation) => object([
             (
@@ -2064,47 +2230,7 @@ fn runtime_read_snapshot_json(snapshot: &RuntimeReadSnapshot) -> JsonValue {
                 ),
             ]),
         ),
-        (
-            "supervisor",
-            object([
-                (
-                    "generated_at_ms",
-                    integer(snapshot.supervisor.generated_at_ms as i64),
-                ),
-                (
-                    "worker_count",
-                    integer(snapshot.supervisor.worker_count as i64),
-                ),
-                (
-                    "starting_count",
-                    integer(snapshot.supervisor.starting_count as i64),
-                ),
-                (
-                    "running_count",
-                    integer(snapshot.supervisor.running_count as i64),
-                ),
-                (
-                    "unhealthy_count",
-                    integer(snapshot.supervisor.unhealthy_count as i64),
-                ),
-                (
-                    "restarting_count",
-                    integer(snapshot.supervisor.restarting_count as i64),
-                ),
-                (
-                    "stopped_count",
-                    integer(snapshot.supervisor.stopped_count as i64),
-                ),
-                (
-                    "restart_due_count",
-                    integer(snapshot.supervisor.restart_due_count as i64),
-                ),
-                (
-                    "has_restart_pressure",
-                    JsonValue::Bool(snapshot.supervisor.has_restart_pressure()),
-                ),
-            ]),
-        ),
+        ("supervisor", supervisor_snapshot_json(&snapshot.supervisor)),
         (
             "pairing_session_count",
             integer(snapshot.pairing_session_count as i64),
@@ -2140,6 +2266,117 @@ fn runtime_read_snapshot_json(snapshot: &RuntimeReadSnapshot) -> JsonValue {
         (
             "has_pending_work",
             JsonValue::Bool(snapshot.has_pending_work()),
+        ),
+    ])
+}
+
+fn supervised_worker_json(worker: &SupervisedBridgeWorker, now_ms: u64) -> JsonValue {
+    let heartbeat_due_at_ms = worker.heartbeat_due_at_ms();
+    object([
+        ("bridge_id", string(worker.bridge_id.as_str())),
+        ("integration_id", string(worker.integration_id.as_str())),
+        ("status", string(worker.status.as_str())),
+        ("restart_count", integer(worker.restart_count as i64)),
+        (
+            "last_heartbeat_at_ms",
+            integer(worker.last_heartbeat_at_ms as i64),
+        ),
+        (
+            "heartbeat_timeout_ms",
+            integer(worker.heartbeat_timeout_ms as i64),
+        ),
+        (
+            "heartbeat_due_at_ms",
+            heartbeat_due_at_ms
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_heartbeat_deadline",
+            JsonValue::Bool(heartbeat_due_at_ms.is_some()),
+        ),
+        ("is_overdue", JsonValue::Bool(worker.is_overdue_at(now_ms))),
+        (
+            "overdue_by_ms",
+            heartbeat_due_at_ms
+                .map(|due_at_ms| integer(now_ms.saturating_sub(due_at_ms) as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn supervisor_snapshot_json(snapshot: &RuntimeSupervisorSnapshot) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(snapshot.generated_at_ms as i64)),
+        ("worker_count", integer(snapshot.worker_count as i64)),
+        ("starting_count", integer(snapshot.starting_count as i64)),
+        ("running_count", integer(snapshot.running_count as i64)),
+        ("unhealthy_count", integer(snapshot.unhealthy_count as i64)),
+        (
+            "restarting_count",
+            integer(snapshot.restarting_count as i64),
+        ),
+        ("stopped_count", integer(snapshot.stopped_count as i64)),
+        (
+            "restart_due_count",
+            integer(snapshot.restart_due_count as i64),
+        ),
+        (
+            "has_restart_pressure",
+            JsonValue::Bool(snapshot.has_restart_pressure()),
+        ),
+    ])
+}
+
+fn worker_heartbeat_schedule_json(schedule: &WorkerHeartbeatSchedule) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(schedule.generated_at_ms as i64)),
+        (
+            "deadlines",
+            JsonValue::Array(
+                schedule
+                    .deadlines
+                    .iter()
+                    .map(|deadline| {
+                        worker_heartbeat_deadline_json(deadline, schedule.generated_at_ms)
+                    })
+                    .collect(),
+            ),
+        ),
+        ("count", integer(schedule.len() as i64)),
+        (
+            "due_count",
+            integer(schedule.due_at(schedule.generated_at_ms).len() as i64),
+        ),
+        (
+            "next_due_at_ms",
+            schedule
+                .next_due_at_ms()
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("is_empty", JsonValue::Bool(schedule.is_empty())),
+    ])
+}
+
+fn worker_heartbeat_deadline_json(deadline: &WorkerHeartbeatDeadline, now_ms: u64) -> JsonValue {
+    object([
+        ("bridge_id", string(deadline.bridge_id.as_str())),
+        ("integration_id", string(deadline.integration_id.as_str())),
+        ("status", string(deadline.status.as_str())),
+        (
+            "last_heartbeat_at_ms",
+            integer(deadline.last_heartbeat_at_ms as i64),
+        ),
+        (
+            "heartbeat_timeout_ms",
+            integer(deadline.heartbeat_timeout_ms as i64),
+        ),
+        ("due_at_ms", integer(deadline.due_at_ms as i64)),
+        ("is_due", JsonValue::Bool(deadline.is_due_at(now_ms))),
+        (
+            "overdue_by_ms",
+            integer(deadline.overdue_by_ms_at(now_ms) as i64),
         ),
     ])
 }
@@ -3864,6 +4101,29 @@ fn parse_pairing_session_sort(label: &str) -> Result<RuntimePairingSessionSort, 
     }
 }
 
+fn parse_worker_status(label: &str) -> Result<WorkerStatus, ToolCallError> {
+    match label {
+        "starting" => Ok(WorkerStatus::Starting),
+        "running" => Ok(WorkerStatus::Running),
+        "unhealthy" => Ok(WorkerStatus::Unhealthy),
+        "restarting" => Ok(WorkerStatus::Restarting),
+        "stopped" => Ok(WorkerStatus::Stopped),
+        _ => Err(validation_error(format!("unknown worker status `{label}`"))),
+    }
+}
+
+fn parse_supervised_worker_sort(label: &str) -> Result<SupervisedWorkerSort, ToolCallError> {
+    match label {
+        "bridge_id" | "bridge" => Ok(SupervisedWorkerSort::BridgeId),
+        "heartbeat_due_at" | "heartbeat_due_at_ms" | "due_at" => {
+            Ok(SupervisedWorkerSort::HeartbeatDueAt)
+        }
+        "restart_count_desc" | "restarts_desc" => Ok(SupervisedWorkerSort::RestartCountDesc),
+        "status_then_bridge_id" | "status" => Ok(SupervisedWorkerSort::StatusThenBridgeId),
+        _ => Err(validation_error(format!("unknown worker sort `{label}`"))),
+    }
+}
+
 fn optional_single_filter_string(
     value: &JsonValue,
     singular_field: &str,
@@ -4743,7 +5003,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 24);
+        assert_eq!(definitions.len(), 26);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -4782,6 +5042,10 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_LIST_WORKERS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_SUPERVISION_PLAN_TOOL_ID));
@@ -4791,7 +5055,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            22
+            24
         );
         assert_eq!(
             export
@@ -4832,6 +5096,15 @@ mod tests {
                 .with_metadata(MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY, "_hue._tcp.local"),
             )
             .unwrap();
+        runtime
+            .borrow_mut()
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                750,
+            ));
         runtime.borrow_mut().registry_mut().upsert_capability_grant(
             CapabilityGrant::for_all_smart_home(
                 CapabilityGrantId::trusted("grant-smart-home"),
@@ -5077,6 +5350,67 @@ mod tests {
         assert_eq!(
             field(health_trace.result.output.as_ref().unwrap(), "count"),
             Some(&integer(1))
+        );
+
+        let list_workers_request = request(
+            "call-list-workers",
+            SMART_HOME_LIST_WORKERS_TOOL_ID,
+            object([
+                ("status", string("starting")),
+                ("sort", string("heartbeat_due_at")),
+            ]),
+            1_025,
+        );
+        let list_workers_trace = tool_runtime.invoke_with_events(&list_workers_request);
+        assert!(list_workers_trace.result.ok);
+        let list_workers_output = list_workers_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_workers_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                field(list_workers_output, "summary").unwrap(),
+                "worker_count"
+            ),
+            Some(&integer(1))
+        );
+        let worker_output = array_item(field(list_workers_output, "workers").unwrap(), 0).unwrap();
+        assert_eq!(field(worker_output, "bridge_id"), Some(&string("bridge-1")));
+        assert_eq!(field(worker_output, "status"), Some(&string("starting")));
+        assert_eq!(
+            field(worker_output, "heartbeat_due_at_ms"),
+            Some(&integer(1_750))
+        );
+        assert_eq!(
+            field(worker_output, "is_overdue"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let heartbeat_schedule_request = request(
+            "call-worker-heartbeat-schedule",
+            SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID,
+            object([
+                ("bridge_id", string("bridge-1")),
+                ("due_at_or_before_ms", integer(2_000)),
+            ]),
+            1_026,
+        );
+        let heartbeat_schedule_trace = tool_runtime.invoke_with_events(&heartbeat_schedule_request);
+        assert!(heartbeat_schedule_trace.result.ok);
+        let heartbeat_schedule_output = heartbeat_schedule_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(heartbeat_schedule_output, "count"), Some(&integer(1)));
+        assert_eq!(
+            field(heartbeat_schedule_output, "due_count"),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(heartbeat_schedule_output, "next_due_at_ms"),
+            Some(&integer(1_750))
+        );
+        let deadline_output =
+            array_item(field(heartbeat_schedule_output, "deadlines").unwrap(), 0).unwrap();
+        assert_eq!(field(deadline_output, "due_at_ms"), Some(&integer(1_750)));
+        assert_eq!(
+            field(deadline_output, "is_due"),
+            Some(&JsonValue::Bool(false))
         );
 
         let supervision_request = request(
@@ -5460,6 +5794,8 @@ mod tests {
         journal.record_trace(discover_request, discover_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
+        journal.record_trace(list_workers_request, list_workers_trace);
+        journal.record_trace(heartbeat_schedule_request, heartbeat_schedule_trace);
         journal.record_trace(supervision_request, supervision_trace);
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
@@ -5475,9 +5811,9 @@ mod tests {
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 23);
-        assert_eq!(journal_summary.completed_count, 23);
-        assert_eq!(journal.audit_records().len(), 23);
+        assert_eq!(journal_summary.invocation_count, 25);
+        assert_eq!(journal_summary.completed_count, 25);
+        assert_eq!(journal.audit_records().len(), 25);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -5490,7 +5826,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            20,
+            22,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

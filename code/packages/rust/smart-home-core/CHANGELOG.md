@@ -20,6 +20,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.get_runtime_snapshot`, `smart_home.list_desired_states`, and
   `smart_home.list_pairing_sessions` tool descriptors for read-only runtime
   automation inventory inspection.
+- `smart_home.list_workers` and `smart_home.get_worker_heartbeat_schedule`
+  tool descriptors for read-only supervised bridge-worker inventory and
+  heartbeat deadline inspection.
 - `smart_home.get_supervision_plan` tool descriptor for read-only runtime
   supervision due-work previews.
 - Health and command-result status helpers for shared supervision/read-side

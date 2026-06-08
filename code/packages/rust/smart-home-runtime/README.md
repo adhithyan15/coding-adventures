@@ -66,7 +66,8 @@ Included surfaces:
   scenes, reading entity state, describing capabilities, inspecting bridge
   health, listing event subscriptions, inspecting event-log entries, reading
   compact runtime snapshots, listing desired-state targets, listing pairing
-  sessions, previewing supervision plans, and observing supervision status
+  sessions, listing supervised bridge workers, reading worker heartbeat
+  schedules, previewing supervision plans, and observing supervision status
   without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
