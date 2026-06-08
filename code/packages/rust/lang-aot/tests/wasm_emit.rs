@@ -65,6 +65,21 @@ fn algol_scalar_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![42], "ALGOL main() should return 42");
 }
 
+#[test]
+fn algol_for_loop_emits_and_runs_on_wasm() {
+    let source =
+        "begin integer i, result; result := 0; for i := 1 step 1 until 6 do result := result + i end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_loop")
+        .expect("ALGOL loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL sum 1..6)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL loop wasm must run");
+    assert_eq!(result, vec![21], "ALGOL loop should sum 1..6");
+}
+
 /// A cons program is **not yet** supported on this path (it needs the
 /// boxed-anyref WasmGC value model) — it must fail cleanly with a
 /// `WasmBackendError`, not panic or silently miscompile.
