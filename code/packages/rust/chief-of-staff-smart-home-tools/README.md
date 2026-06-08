@@ -26,6 +26,7 @@ Chief of Staff job/session/agent
   -> D18D smart_home.discover / smart_home.command tool calls
   -> smart-home runtime authorization
   -> discovery records and unpaired bridge candidates
+  -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
   -> device command acceptance
   -> optimistic state update
@@ -41,6 +42,8 @@ Chief of Staff job/session/agent
 - `smart_home.discover`
 - `smart_home.list_bridges`
 - `smart_home.list_devices`
+- `smart_home.list_scenes`
+- `smart_home.describe_scene`
 - `smart_home.get_state`
 - `smart_home.describe_capabilities`
 - `smart_home.get_health`

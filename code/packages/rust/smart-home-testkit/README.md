@@ -7,7 +7,7 @@ This crate does not open sockets, touch radios, read files, or call cloud APIs.
 It gives future Hue, MQTT, Zigbee, Z-Wave, Thread, Matter, and runtime packages
 a shared way to build:
 
-- normalized bridge/device/entity fixtures
+- normalized bridge/device/entity/scene fixtures
 - normalized Hue discovery records, built through `hue-core` mDNS mapping, and
   discovery-seeded runtime fixtures
 - deterministic Hue mDNS scan, scan-report, and discovery worker-run fixtures

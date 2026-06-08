@@ -54,6 +54,9 @@ All notable changes to this package will be documented in this file.
   due-work counts over non-mutating supervision plans.
 - `SupervisionTickSummary` plus tick-report helpers for compact actual-work
   counts after supervision ticks mutate runtime state.
+- `RuntimeReadToolRequest::ListScenes` and
+  `RuntimeReadToolRequest::DescribeScene` for authorized D18D reads over the
+  registry-backed scene inventory.
 
 ## [0.1.0] - 2026-05-06
 

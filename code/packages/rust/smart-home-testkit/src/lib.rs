@@ -14,8 +14,8 @@ use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
     DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId, Metadata,
-    ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
-    Value,
+    ProtocolFamily, ProtocolIdentifier, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_discovery::{
     DiscoveryError, DiscoveryRecord, DiscoverySource, DiscoveryWorkerId, DiscoveryWorkerKind,
@@ -65,6 +65,7 @@ pub struct SmartHomeFixture {
     pub device: Device,
     pub light: Entity,
     pub sensor: Entity,
+    pub scene: Scene,
 }
 
 impl SmartHomeFixture {
@@ -73,17 +74,23 @@ impl SmartHomeFixture {
         let device = hue_device("device-1", &bridge.bridge_id, "device-native-1");
         let light = light_entity("entity-light-1", &device.device_id);
         let sensor = occupancy_sensor_entity("entity-sensor-1", &device.device_id);
+        let scene = room_scene("scene-kitchen-bright", &light.entity_id);
 
         Self {
             bridge,
             device,
             light,
             sensor,
+            scene,
         }
     }
 
     pub fn entities(&self) -> [&Entity; 2] {
         [&self.light, &self.sensor]
+    }
+
+    pub fn scenes(&self) -> [&Scene; 1] {
+        [&self.scene]
     }
 
     pub fn install_in_registry(
@@ -1201,6 +1208,25 @@ pub fn occupancy_sensor_entity(id: &'static str, device_id: &DeviceId) -> Entity
     }
 }
 
+pub fn room_scene(id: &'static str, entity_id: &EntityId) -> Scene {
+    Scene {
+        scene_id: SceneId::trusted(id),
+        scope: SceneScope::Room,
+        native_ref: Some(protocol_id(ProtocolFamily::Hue, "scene", id)),
+        actions: vec![SceneAction {
+            entity_id: entity_id.clone(),
+            desired_state: Value::Object(vec![
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(80)),
+            ]),
+        }],
+        metadata: vec![
+            Metadata::new("fixture", "room_scene"),
+            Metadata::new("fixture.room_id", "kitchen"),
+        ],
+    }
+}
+
 pub fn turn_on_command(
     command_id: &'static str,
     entity_id: &EntityId,
@@ -1357,6 +1383,9 @@ pub fn install_fixture_in_registry(
     for entity in fixture.entities() {
         registry.upsert_entity(entity.clone())?;
     }
+    for scene in fixture.scenes() {
+        registry.upsert_scene(scene.clone())?;
+    }
     Ok(())
 }
 
@@ -1380,6 +1409,9 @@ pub fn runtime_with_fixture(fixture: &SmartHomeFixture) -> Result<SmartHomeRunti
     runtime.upsert_device(fixture.device.clone())?;
     for entity in fixture.entities() {
         runtime.upsert_entity(entity.clone())?;
+    }
+    for scene in fixture.scenes() {
+        runtime.upsert_scene(scene.clone())?;
     }
     Ok(runtime)
 }
@@ -1812,7 +1844,7 @@ mod tests {
         assert_eq!(registry.counts().bridges, 1);
         assert_eq!(registry.counts().devices, 1);
         assert_eq!(registry.counts().entities, 2);
-        assert_eq!(registry.counts().protocol_identifiers, 2);
+        assert_eq!(registry.counts().protocol_identifiers, 3);
         assert_eq!(
             registry
                 .bridge(&fixture.bridge.bridge_id)
