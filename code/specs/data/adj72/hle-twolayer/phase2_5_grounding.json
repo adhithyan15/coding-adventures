@@ -1,0 +1,43 @@
+{
+  "grounded_tokens": [
+    {
+      "token": "ḤRY",
+      "grounded_gloss": "Common noun, NOT a personal name. It is the noun for 'freed(person)' (from the Aramaic root ḥrr 'to be free'). In this inscription it forms the construct phrase BT ḤRY = 'freedwoman of', so ḤRY here means '(female) freed slave / freedwoman of'. The closed-book gloss of ḤRY as a father's personal name 'Ḥari' is incorrect.",
+      "verbatim_source": "The transliteration into Latin letters reads: 'RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL' ... Full Translation: 'Regina, the freedwoman of Barates, alas'. The inscription reads 'Regina, the freedwoman of Barates, alas', and this is a typical Palmyran formula for the dead: name + descent or description + lament. The term BT HRY ... represents the freedwoman designation.",
+      "citation": "Tombstone of Regina, Wikipedia, https://en.wikipedia.org/wiki/Tombstone_of_Regina (Palmyrene line RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL = 'Regina, the freedwoman of Barates, alas'); cross-confirmed by RIB 1065, https://romaninscriptionsofbritain.org/inscriptions/1065",
+      "contradicts_proposed": true
+    },
+    {
+      "token": "ᶜTᵓ",
+      "grounded_gloss": "The personal name of the dedicator, Barates (Palmyrene ʿAtē/ʿAtā, rendered Barates/Βαράθης in the Latin/Greek). It is NOT a grandfather's name 'ʿAttā' in a genealogy; it is the name of the (single) man who set up the stone and whose freedwoman/wife Regina was. The preceding BR is part of the Palmyrene rendering of his name (the inscription names only one man, Barates).",
+      "verbatim_source": "Palmyrene Text & Translation: The Palmyrene transliteration shown is: 'RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL'. The English translation provided states: 'Regina, the freedwoman of Barates, alas.' ... Latin Translation: 'To the spirits of the departed (and to) Regina, his freedwoman and wife, a Catuvellaunian by tribe, aged 30, Barates of Palmyra (set this up).'",
+      "citation": "RIB 1065. Funerary inscription for Regina, Roman Inscriptions of Britain, https://romaninscriptionsofbritain.org/inscriptions/1065",
+      "contradicts_proposed": true
+    },
+    {
+      "token": "BT",
+      "grounded_gloss": "In isolation BT is the Aramaic 'daughter of'; but here it heads the construct chain BT ḤRY which is the scholarly-attested unit meaning 'freedwoman of'. So in this inscription BT is NOT functioning as a genealogical 'daughter of X'; it combines with ḤRY to express freed/manumitted status, matching Latin 'liberta'.",
+      "verbatim_source": "Latin Text: 'D(is) M(anibus) Regina liberta et coniuge Barates Palmyrenus...' Latin Translation: '...Regina, his freedwoman and wife...'. The term BT HRY ... represents the freedwoman designation ... the phrase indicating her status as a freedwoman is part of this standard Palmyrene epigraphic formula.",
+      "citation": "RIB 1065, https://romaninscriptionsofbritain.org/inscriptions/1065; Tombstone of Regina, Wikipedia, https://en.wikipedia.org/wiki/Tombstone_of_Regina",
+      "contradicts_proposed": true
+    },
+    {
+      "token": "BR",
+      "grounded_gloss": "Although BR is the ordinary Palmyrene 'son of', in THIS inscription it is part of the Palmyrene spelling of the dedicator's name 'Barates' (BR ᶜTᵓ). The text names only one man (Barates), so BR is not introducing a separate grandfather generation. The closed-book reading of BR as a genealogical 'son of' linking two distinct ancestors is not supported.",
+      "verbatim_source": "RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL ... 'Regina, the freedwoman of Barates, alas'. Barates is identified as a Palmyrene—from Palmyra. ... commissioned by a Palmyrene named Barates for his freedwoman Regina.",
+      "citation": "RIB 1065, https://romaninscriptionsofbritain.org/inscriptions/1065; Tombstone of Regina, Wikipedia, https://en.wikipedia.org/wiki/Tombstone_of_Regina",
+      "contradicts_proposed": false
+    },
+    {
+      "token": "ḤBL",
+      "grounded_gloss": "Funerary exclamation 'alas!' — a standard expression of grief/lamentation closing Palmyrene epitaphs. This matches the closed-book gloss.",
+      "verbatim_source": "the Aramaic term ḥbl appears in funerary inscriptions and translates to 'alas!' ... the expression ḥbl is an expression of sorrow common on funerary reliefs at Palmyra; '... Regina, the freedwoman of Barates, alas.'",
+      "citation": "RIB 1065, https://romaninscriptionsofbritain.org/inscriptions/1065; 'Aramaic Inscriptions in the Palmyra Museum', OpenEdition Syria, https://journals.openedition.org/syria/1478?lang=en",
+      "contradicts_proposed": false
+    }
+  ],
+  "inscription_identified": "Tombstone of Regina, Arbeia (South Shields), Roman Britain; bilingual Latin–Palmyrene funerary stele set up by Barates of Palmyra for his freedwoman-and-wife Regina. Catalogued as RIB 1065 (Roman Inscriptions of Britain) and within the Palmyrene corpus (PAT, Hillers & Cussini). 2nd century CE.",
+  "published_reading": "Palmyrene line RGYNᵓ BT ḤRY BR ᶜTᵓ ḤBL = 'Regina, the freedwoman of Barates, alas' (RIB 1065, https://romaninscriptionsofbritain.org/inscriptions/1065 and Tombstone of Regina, https://en.wikipedia.org/wiki/Tombstone_of_Regina). Accompanying Latin (RIB 1065): 'D(is) M(anibus) Regina liberta et coniuge Barates Palmyrenus natione Catuallauna an(norum) XXX' = 'To the spirits of the departed (and to) Regina, his freedwoman and wife, a Catuvellaunian by tribe, aged 30, Barates of Palmyra (set this up).'",
+  "verdict_on_proposed_reading": "CONTRADICTED — on both flagged tokens and on the overall syntactic frame. ḤRY (t3) is the noun 'freed(woman)', not a personal name 'Ḥari'; ᶜTᵓ (t5) is the dedicator's name 'Barates', not a grandfather 'ʿAttā'. Consequently the proposed three-generation genealogy ('daughter of Ḥari, son of ʿAttā') is wrong: BT ḤRY = 'freedwoman of' and BR ᶜTᵓ = '(of) Barates'. Only ḤBL ('alas') in the proposed reading is supported.",
+  "corrected_reading_if_any": "Regina, the freedwoman of Barates, alas."
+}

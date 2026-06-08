@@ -1,0 +1,93 @@
+[
+  {
+    "id": "Q01",
+    "verbatim_source_passage": "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
+    "source_citation": "Jane Austen, Pride and Prejudice (1813), Chapter 1, opening sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.99
+  },
+  {
+    "id": "Q02",
+    "verbatim_source_passage": "All human beings are born free and equal in dignity and rights. They are endowed with reason and conscience and should act towards one another in a spirit of brotherhood.",
+    "source_citation": "Universal Declaration of Human Rights (adopted by UN General Assembly Resolution 217 A, 10 December 1948), Article 1.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.98
+  },
+  {
+    "id": "Q03",
+    "verbatim_source_passage": "Call me Ishmael.",
+    "source_citation": "Herman Melville, Moby-Dick; or, The Whale (1851), Chapter 1 (\"Loomings\"), first sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.99
+  },
+  {
+    "id": "Q04",
+    "verbatim_source_passage": "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair, we had everything before us, we had nothing before us, we were all going direct to Heaven, we were all going direct the other way—in short, the period was so far like the present period, that some of its noisiest authorities insisted on its being received, for good or for evil, in the superlative degree of comparison only.",
+    "source_citation": "Charles Dickens, A Tale of Two Cities (1859), Book the First, Chapter I (\"The Period\"), opening.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q05",
+    "verbatim_source_passage": "It was a bright cold day in April, and the clocks were striking thirteen.",
+    "source_citation": "George Orwell, Nineteen Eighty-Four (1949), Part One, Chapter 1, first sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.99
+  },
+  {
+    "id": "Q06",
+    "verbatim_source_passage": "In the beginning God created the heaven and the earth.",
+    "source_citation": "King James Version (1611), Genesis 1:1.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.99
+  },
+  {
+    "id": "Q07",
+    "verbatim_source_passage": "In a hole in the ground there lived a hobbit.",
+    "source_citation": "J.R.R. Tolkien, The Hobbit, or There and Back Again (1937), Chapter 1 (\"An Unexpected Party\"), first sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.99
+  },
+  {
+    "id": "Q08",
+    "verbatim_source_passage": "Four score and seven years ago our fathers brought forth on this continent, a new nation, conceived in Liberty, and dedicated to the proposition that all men are created equal.",
+    "source_citation": "Abraham Lincoln, Gettysburg Address, November 19, 1863 (Bliss copy), opening sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.95
+  },
+  {
+    "id": "Q09",
+    "verbatim_source_passage": "To be, or not to be, that is the question:",
+    "source_citation": "William Shakespeare, Hamlet, Act III, Scene 1, opening line of Hamlet's soliloquy.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q10",
+    "verbatim_source_passage": "Lolita, light of my life, fire of my loins.",
+    "source_citation": "Vladimir Nabokov, Lolita (1955), Part One, Chapter 1, first sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.98
+  },
+  {
+    "id": "Q11",
+    "verbatim_source_passage": "We the People of the United States, in Order to form a more perfect Union, establish Justice, insure domestic Tranquility, provide for the common defence, promote the general Welfare, and secure the Blessings of Liberty to ourselves and our Posterity, do ordain and establish this Constitution for the United States of America.",
+    "source_citation": "Preamble to the Constitution of the United States (1787).",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q12",
+    "verbatim_source_passage": "Congress shall make no law respecting an establishment of religion, or prohibiting the free exercise thereof;",
+    "source_citation": "First Amendment to the Constitution of the United States (ratified 1791), opening clause.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.97
+  },
+  {
+    "id": "Q13",
+    "verbatim_source_passage": "If you really want to hear about it, the first thing you'll probably want to know is where I was born, and what my lousy childhood was like, and how my parents were occupied and all before they had me, and all that David Copperfield kind of crap, but I don't feel like going into it, if you want to know the truth.",
+    "source_citation": "J.D. Salinger, The Catcher in the Rye (1951), Chapter 1, first sentence.",
+    "exists": true,
+    "confidence_passage_is_verbatim_accurate": 0.96
+  }
+]
