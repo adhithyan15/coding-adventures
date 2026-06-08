@@ -2,6 +2,46 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.46.0] - 2026-06-08
+
+### Changed
+- **CLOSES gap-033**: try/catch trailing `;` after `}`. The
+  CLI WHITESPACE_ONLY token re-stitcher now emits a synthetic
+  `;` after the last clause of a try/catch/finally chain,
+  mirroring upstream Closure v20240317's behaviour and same
+  family as gap-030's function-decl trailing `;`.
+- `brace_stack` was refactored from `Vec<bool>` to
+  `Vec<BlockKind>` with three variants: `Function`,
+  `TryChain`, `Other`. The new `BlockKind::TryChain` is pushed
+  whenever a `{` immediately follows a `try` / `catch` /
+  `finally` keyword (tracked via a new
+  `next_block_is_try_chain` flag).
+- When a `}` pops a `BlockKind::TryChain`, the emitter peeks
+  the very next non-trivia token. If it's `catch` or `finally`
+  the chain continues, no `;` is emitted. Otherwise the chain
+  has ended and a synthetic `;` is appended (and tracked by
+  `last_emit_was_synthetic_semi` so rule-C dedup applies).
+- `minify_try_catch` flipped from IGNORED → PASS. The
+  `diff_minify` harness now reports `15 matched, 0 failed,
+  2 skipped (of 17 total)` (gap-031 and gap-032 remain).
+
+### Added
+- 6 new inline tests in `whitespace_only::tests::gap033_*`:
+  - `gap033_try_catch_gets_trailing_semi` — the target fixture
+    shape.
+  - `gap033_try_finally_gets_trailing_semi` — try/finally
+    (no catch).
+  - `gap033_try_catch_finally_only_final_semi` — only the
+    LAST `}` in a 3-clause chain gets `;`.
+  - `gap033_nested_try_catch_each_gets_semi` — depth
+    regression; brace_stack must track all open chains.
+  - `gap033_function_decl_inside_try_block_still_gets_semi` —
+    `BlockKind::Function` and `BlockKind::TryChain` don't
+    interfere; nested `function f(){}` inside a try-body still
+    gets its gap-030 trailing `;`.
+  - `gap033_optional_catch_binding` — ES2019 `catch{...}`
+    without `(e)` binding.
+
 ## [0.45.0] - 2026-06-08
 
 ### Changed
