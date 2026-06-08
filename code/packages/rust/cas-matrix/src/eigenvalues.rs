@@ -2,10 +2,11 @@
 
 use cas_solve::frac::Frac as SolveFrac;
 use cas_solve::{solve_linear, solve_quadratic, SolveResult};
-use symbolic_ir::{apply, int, sym, IRNode, ADD, MUL, POW};
+use symbolic_ir::{apply, int, sym, IRNode, ADD, LIST, MUL, NEG, POW};
 
-use crate::matrix::{num_cols, num_rows, MatrixError, MatrixResult};
+use crate::matrix::{matrix, num_cols, num_rows, MatrixError, MatrixResult};
 use crate::rowreduce::{matrix_to_fracs, Frac};
+use crate::subspaces::nullspace;
 
 /// Return coefficients for `det(lambda I - A)` in ascending power order.
 pub fn char_poly_coeffs(m: &IRNode) -> MatrixResult<Vec<IRNode>> {
@@ -87,6 +88,76 @@ pub fn eigenvalues(m: &IRNode) -> MatrixResult<IRNode> {
     ))
 }
 
+/// Return `List(List(lambda, multiplicity, List(vector, ...)), ...)`.
+///
+/// Exact eigenvector bases are returned for rational eigenvalues.  Irrational
+/// or complex roots keep the eigenvalue/multiplicity pair but receive an empty
+/// vector list, matching the Python reference fallback.
+pub fn eigenvectors(m: &IRNode) -> MatrixResult<IRNode> {
+    let rows = matrix_to_fracs(m)?;
+    let eigs = eigenvalues(m)?;
+    let IRNode::Apply(eigs_apply) = eigs else {
+        return Ok(apply(sym("Eigenvectors"), vec![m.clone()]));
+    };
+    if eigs_apply.head != sym(LIST) {
+        return Ok(apply(sym("Eigenvectors"), vec![m.clone()]));
+    }
+
+    let mut triples = Vec::new();
+    for pair in eigs_apply.args {
+        let IRNode::Apply(pair_apply) = pair else {
+            triples.push(apply(
+                sym(LIST),
+                vec![pair, int(1), apply(sym(LIST), vec![])],
+            ));
+            continue;
+        };
+        let pair_args = pair_apply.args;
+        if pair_args.len() < 2 {
+            triples.push(apply(
+                sym(LIST),
+                vec![
+                    apply(sym(LIST), pair_args),
+                    int(1),
+                    apply(sym(LIST), vec![]),
+                ],
+            ));
+            continue;
+        }
+        let lambda = pair_args[0].clone();
+        let multiplicity = pair_args[1].clone();
+        let Some(lambda_frac) = ir_to_frac(&lambda) else {
+            triples.push(apply(
+                sym(LIST),
+                vec![lambda, multiplicity, apply(sym(LIST), vec![])],
+            ));
+            continue;
+        };
+
+        let shifted = rows
+            .iter()
+            .enumerate()
+            .map(|(row_index, row)| {
+                row.iter()
+                    .enumerate()
+                    .map(|(col_index, entry)| {
+                        let adjustment = if row_index == col_index {
+                            lambda_frac
+                        } else {
+                            Frac::zero()
+                        };
+                        Ok((*entry - adjustment).to_irnode()?)
+                    })
+                    .collect::<MatrixResult<Vec<IRNode>>>()
+            })
+            .collect::<MatrixResult<Vec<Vec<IRNode>>>>()?;
+        let vectors = nullspace(&matrix(shifted)?)?;
+        triples.push(apply(sym(LIST), vec![lambda, multiplicity, vectors]));
+    }
+
+    Ok(apply(sym(LIST), triples))
+}
+
 pub(crate) fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
     let n = num_rows(m)?;
     let ncols = num_cols(m)?;
@@ -115,6 +186,17 @@ pub(crate) fn char_poly_coeff_fracs(m: &IRNode) -> MatrixResult<Vec<Frac>> {
         .collect();
 
     Ok(det_poly(&poly_rows))
+}
+
+fn ir_to_frac(node: &IRNode) -> Option<Frac> {
+    match node {
+        IRNode::Integer(value) => Some(Frac::from_i64(*value)),
+        IRNode::Rational(numer, denom) => Some(Frac::new(*numer as i128, *denom as i128)),
+        IRNode::Apply(apply) if apply.head == sym(NEG) && apply.args.len() == 1 => {
+            ir_to_frac(&apply.args[0]).map(|value| -value)
+        }
+        _ => None,
+    }
 }
 
 fn to_solve_frac(value: Frac) -> MatrixResult<SolveFrac> {

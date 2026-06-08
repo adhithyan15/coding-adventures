@@ -219,6 +219,29 @@ export function eigenvalues(node: IRNode): IRNode {
   return app(LIST, result.roots.map((root) => app(LIST, [root, int(multiplicity)])));
 }
 
+export function eigenvectors(node: IRNode): IRNode {
+  const rows = matrixToRationals(node);
+  const eigs = eigenvalues(node);
+  if (eigs.kind !== "apply" || headName(eigs.head) !== LIST.name) {
+    return app(sym("Eigenvectors"), [node]);
+  }
+
+  return app(LIST, eigs.args.map((pair) => {
+    if (pair.kind !== "apply" || pair.args.length < 2) {
+      return app(LIST, [pair, int(1), app(LIST, [])]);
+    }
+    const [lambda, multiplicity] = pair.args;
+    const lambdaValue = irToRationalValue(lambda);
+    if (lambdaValue === undefined) {
+      return app(LIST, [lambda, multiplicity, app(LIST, [])]);
+    }
+
+    const shifted = rows.map((row, rowIndex) =>
+      row.map((entry, colIndex) => entry.sub(rowIndex === colIndex ? lambdaValue : RationalValue.zero())));
+    return app(LIST, [lambda, multiplicity, nullspace(rationalsToMatrix(shifted))]);
+  }));
+}
+
 export function inverse(node: IRNode): IRNode {
   const rows = rowsOf(node);
   const n = rows.length;
@@ -598,6 +621,15 @@ function rationalToIr(value: RationalValue): IRNode {
 
 function toSolveFrac(value: RationalValue): SolveFrac {
   return new SolveFrac(value.numer, value.denom);
+}
+
+function irToRationalValue(node: IRNode): RationalValue | undefined {
+  if (node.kind === "integer") return new RationalValue(node.value, 1n);
+  if (node.kind === "rational") return new RationalValue(node.numer, node.denom);
+  if (node.kind === "apply" && headName(node.head) === NEG.name && node.args.length === 1) {
+    return irToRationalValue(node.args[0])?.neg();
+  }
+  return undefined;
 }
 
 function rationalsToMatrix(rows: readonly (readonly RationalValue[])[]): IRNode {

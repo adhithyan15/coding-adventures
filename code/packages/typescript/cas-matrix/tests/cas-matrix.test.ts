@@ -9,6 +9,7 @@ import {
   determinant,
   dimensions,
   dot,
+  eigenvectors,
   eigenvalues,
   frobeniusNorm,
   getEntry,
@@ -296,6 +297,52 @@ describe("eigenvalues", () => {
     expect(() => eigenvalues(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
     expect(() => eigenvalues(identityMatrix(3))).toThrow(MatrixError);
     expect(() => eigenvalues(matrix([[sym("a")]]))).toThrow(MatrixError);
+  });
+});
+
+describe("eigenvectors", () => {
+  it("returns MACSYMA-style eigenvalue/multiplicity/vector triples", () => {
+    expect(eigenvectors(matrix([irow([7])]))).toEqual(app(LIST, [
+      app(LIST, [int(7), int(1), app(LIST, [matrix([irow([1])])])]),
+    ]));
+
+    expect(eigenvectors(matrix([irow([1, 2]), irow([2, 1])]))).toEqual(app(LIST, [
+      app(LIST, [int(-1), int(1), app(LIST, [matrix([irow([-1]), irow([1])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([1]), irow([1])])])]),
+    ]));
+  });
+
+  it("preserves rational and repeated eigenvalue vector bases", () => {
+    expect(eigenvectors(matrix([[rational(1, 2), int(0)], [int(0), int(3)]]))).toEqual(app(LIST, [
+      app(LIST, [rational(1, 2), int(1), app(LIST, [matrix([irow([1]), irow([0])])])]),
+      app(LIST, [int(3), int(1), app(LIST, [matrix([irow([0]), irow([1])])])]),
+    ]));
+
+    expect(eigenvectors(matrix([irow([2, 0]), irow([0, 2])]))).toEqual(app(LIST, [
+      app(LIST, [int(2), int(2), app(LIST, [
+        matrix([irow([1]), irow([0])]),
+        matrix([irow([0]), irow([1])]),
+      ])]),
+    ]));
+  });
+
+  it("returns an empty vector list for non-rational eigenvalues", () => {
+    const triples = eigenvectors(matrix([irow([0, 1]), irow([-1, 0])]));
+    expect(triples.kind).toBe("apply");
+    if (triples.kind !== "apply") return;
+    expect(triples.args.length).toBe(2);
+    triples.args.forEach((triple) => {
+      expect(triple.kind).toBe("apply");
+      if (triple.kind !== "apply") return;
+      expect(triple.args[1]).toEqual(int(1));
+      expect(triple.args[2]).toEqual(app(LIST, []));
+    });
+  });
+
+  it("rejects unsupported shapes and symbolic entries", () => {
+    expect(() => eigenvectors(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => eigenvectors(identityMatrix(3))).toThrow(MatrixError);
+    expect(() => eigenvectors(matrix([[sym("a")]]))).toThrow(MatrixError);
   });
 });
 
