@@ -1,6 +1,6 @@
 [package]
 name = "wasm-module-parser"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "WASM binary module parser: decodes .wasm files into structured WasmModule data"
 
