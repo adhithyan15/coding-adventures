@@ -29,6 +29,7 @@ Chief of Staff job/session/agent
   -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
   -> event-log and subscription-backlog reads
+  -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> device command acceptance
   -> optimistic state update
   -> D18D trace and audit record
@@ -54,6 +55,9 @@ Chief of Staff job/session/agent
 - `smart_home.unsubscribe`
 - `smart_home.list_subscriptions`
 - `smart_home.inspect_event_log`
+- `smart_home.get_runtime_snapshot`
+- `smart_home.list_desired_states`
+- `smart_home.list_pairing_sessions`
 - `smart_home.pair_bridge`
 - `smart_home.observe_supervision`
 
