@@ -7,7 +7,8 @@ use coding_adventures_html_parser::{
     BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
     BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
     BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormSelect, BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
     BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
     BrowserHttpEquivHint, BrowserImage, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
     BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
@@ -69,6 +70,8 @@ struct ExpectedBrowserDocument {
     loading_hint_descriptors: Vec<ExpectedLoadingHintDescriptor>,
     #[serde(default)]
     fetch_policy_descriptors: Vec<ExpectedFetchPolicyDescriptor>,
+    #[serde(default)]
+    form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
@@ -449,6 +452,75 @@ struct ExpectedFetchPolicyDescriptor {
     allowfullscreen: bool,
     #[serde(default)]
     credentialless: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormPolicyDescriptor {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    accept_charset: Option<String>,
+    #[serde(default)]
+    accept_charset_tokens: Vec<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_external: bool,
+    #[serde(default)]
+    rel_nofollow: bool,
+    #[serde(default)]
+    rel_noopener: bool,
+    #[serde(default)]
+    rel_noreferrer: bool,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    submitters: Vec<ExpectedFormPolicySubmitterDescriptor>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormPolicySubmitterDescriptor {
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    action: Option<String>,
+    #[serde(default)]
+    resolved_action: Option<String>,
+    method: String,
+    #[serde(default)]
+    enctype: Option<String>,
+    #[serde(default)]
+    target: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    novalidate: bool,
+    #[serde(default)]
+    value: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3554,6 +3626,11 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFetchPolicyDescriptor::into_browser_fetch_policy_descriptor)
                 .collect(),
+            form_policy_descriptors: self
+                .form_policy_descriptors
+                .into_iter()
+                .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
+                .collect(),
             anchors: self
                 .anchors
                 .into_iter()
@@ -4063,6 +4140,58 @@ impl ExpectedFetchPolicyDescriptor {
             allow: self.allow,
             allowfullscreen: self.allowfullscreen,
             credentialless: self.credentialless,
+        }
+    }
+}
+
+impl ExpectedFormPolicyDescriptor {
+    fn into_browser_form_policy_descriptor(self) -> BrowserFormPolicyDescriptor {
+        BrowserFormPolicyDescriptor {
+            id: self.id,
+            name: self.name,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            accept_charset: self.accept_charset,
+            accept_charset_tokens: self.accept_charset_tokens,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            rel: self.rel,
+            rel_tokens: self.rel_tokens,
+            rel_external: self.rel_external,
+            rel_nofollow: self.rel_nofollow,
+            rel_noopener: self.rel_noopener,
+            rel_noreferrer: self.rel_noreferrer,
+            novalidate: self.novalidate,
+            submitters: self
+                .submitters
+                .into_iter()
+                .map(
+                    ExpectedFormPolicySubmitterDescriptor::into_browser_form_policy_submitter_descriptor,
+                )
+                .collect(),
+        }
+    }
+}
+
+impl ExpectedFormPolicySubmitterDescriptor {
+    fn into_browser_form_policy_submitter_descriptor(self) -> BrowserFormPolicySubmitterDescriptor {
+        BrowserFormPolicySubmitterDescriptor {
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            accessible_name: self.accessible_name,
+            action: self.action,
+            resolved_action: self.resolved_action,
+            method: self.method,
+            enctype: self.enctype,
+            target: self.target,
+            effective_target: self.effective_target,
+            novalidate: self.novalidate,
+            value: self.value,
         }
     }
 }

@@ -71,6 +71,18 @@
         ],
         "links": [],
         "images": [],
+        "form_policy_descriptors": [
+          {
+            "action": "/search",
+            "method": "post",
+            "enctype": "multipart/form-data",
+            "target": "results",
+            "effective_target": "results",
+            "submitters": [
+              { "control_type": "submit", "name": "go", "accessible_name": "Search", "action": "/search", "method": "post", "enctype": "multipart/form-data", "target": "results", "effective_target": "results" }
+            ]
+          }
+        ],
         "forms": [
           {
             "id": null,
@@ -246,6 +258,29 @@
         "interactive_elements": [
           { "element": "input", "id": "q", "role": "control", "text": "", "accessible_name": "Query", "accessible_description": "Query", "aria_describedby": ["q-help"], "spellcheck": "false" },
           { "element": "textarea", "id": "notes", "role": "control", "text": "Keep me", "accessible_name": "Details", "spellcheck": "true" }
+        ],
+        "form_policy_descriptors": [
+          {
+            "id": "search",
+            "name": "searchForm",
+            "action": "find.html",
+            "resolved_action": "https://example.test/search/find.html",
+            "method": "post",
+            "effective_target": "_search",
+            "accept_charset": "utf-8 windows-1252",
+            "accept_charset_tokens": ["utf-8", "windows-1252"],
+            "autocomplete": "on",
+            "autocomplete_tokens": ["on"],
+            "rel": "noreferrer external",
+            "rel_tokens": ["noreferrer", "external"],
+            "rel_external": true,
+            "rel_noreferrer": true,
+            "novalidate": true,
+            "submitters": [
+              { "id": "go", "control_type": "submit", "accessible_name": "Run search", "action": "run.html", "resolved_action": "https://example.test/search/run.html", "method": "post", "enctype": "application/x-www-form-urlencoded", "target": "results", "effective_target": "results", "novalidate": true },
+              { "id": "imageGo", "control_type": "image", "name": "image-go", "accessible_name": "Search image", "action": "find.html", "resolved_action": "https://example.test/search/find.html", "method": "post", "effective_target": "_search", "novalidate": true }
+            ]
+          }
         ],
         "forms": [
           {
@@ -1473,6 +1508,9 @@
         "headings": [],
         "links": [],
         "images": [],
+        "form_policy_descriptors": [
+          { "id": "telemetry", "method": "get" }
+        ],
         "forms": [
           {
             "id": "telemetry",
@@ -1538,6 +1576,9 @@
           { "element": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "fallback_text": "Fallback player" },
           { "element": "object", "url": "/external.bin", "resolved_url": "https://example.test/external.bin", "type_hint": "application/octet-stream", "fallback_text": "External fallback" },
           { "element": "object", "url": "outside.bin", "resolved_url": "https://example.test/media/outside.bin", "fallback_text": "Outside fallback" }
+        ],
+        "form_policy_descriptors": [
+          { "id": "player", "method": "get" }
         ],
         "forms": [
           {

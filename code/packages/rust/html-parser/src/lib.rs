@@ -834,6 +834,7 @@ pub struct BrowserDocument {
     pub stylesheets: Vec<BrowserStylesheet>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
+    pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
@@ -1053,6 +1054,46 @@ pub struct BrowserFetchPolicyDescriptor {
     pub allow: Option<String>,
     pub allowfullscreen: bool,
     pub credentialless: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormPolicyDescriptor {
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub accept_charset: Option<String>,
+    pub accept_charset_tokens: Vec<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_external: bool,
+    pub rel_nofollow: bool,
+    pub rel_noopener: bool,
+    pub rel_noreferrer: bool,
+    pub novalidate: bool,
+    pub submitters: Vec<BrowserFormPolicySubmitterDescriptor>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormPolicySubmitterDescriptor {
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub accessible_name: Option<String>,
+    pub action: Option<String>,
+    pub resolved_action: Option<String>,
+    pub method: String,
+    pub enctype: Option<String>,
+    pub target: Option<String>,
+    pub effective_target: Option<String>,
+    pub novalidate: bool,
+    pub value: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9747,14 +9788,20 @@ fn collect_browser_facts(
             "style" => summary
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
-            "form" => summary.forms.push(browser_form(
-                body_root,
-                element,
-                labels,
-                id_texts,
-                summary.base_href.as_deref(),
-                summary.base_target.as_deref(),
-            )),
+            "form" => {
+                let form = browser_form(
+                    body_root,
+                    element,
+                    labels,
+                    id_texts,
+                    summary.base_href.as_deref(),
+                    summary.base_target.as_deref(),
+                );
+                summary
+                    .form_policy_descriptors
+                    .push(browser_form_policy_descriptor(&form));
+                summary.forms.push(form);
+            }
             "table" => {
                 let table_index = summary.tables.len() + 1;
                 summary.tables.push(BrowserTable {
@@ -14787,6 +14834,54 @@ fn browser_form(
     }
 }
 
+fn browser_form_policy_descriptor(form: &BrowserForm) -> BrowserFormPolicyDescriptor {
+    BrowserFormPolicyDescriptor {
+        id: form.id.clone(),
+        name: form.name.clone(),
+        action: form.action.clone(),
+        resolved_action: form.resolved_action.clone(),
+        method: form.method.clone(),
+        enctype: form.enctype.clone(),
+        target: form.target.clone(),
+        effective_target: form.effective_target.clone(),
+        accept_charset: form.accept_charset.clone(),
+        accept_charset_tokens: form.accept_charset_tokens.clone(),
+        autocomplete: form.autocomplete.clone(),
+        autocomplete_tokens: form.autocomplete_tokens.clone(),
+        rel: form.rel.clone(),
+        rel_tokens: form.rel_tokens.clone(),
+        rel_external: form.rel_external,
+        rel_nofollow: form.rel_nofollow,
+        rel_noopener: form.rel_noopener,
+        rel_noreferrer: form.rel_noreferrer,
+        novalidate: form.novalidate,
+        submitters: form
+            .submitters
+            .iter()
+            .map(browser_form_policy_submitter_descriptor)
+            .collect(),
+    }
+}
+
+fn browser_form_policy_submitter_descriptor(
+    submitter: &BrowserFormSubmitter,
+) -> BrowserFormPolicySubmitterDescriptor {
+    BrowserFormPolicySubmitterDescriptor {
+        id: submitter.id.clone(),
+        control_type: submitter.control_type.clone(),
+        name: submitter.name.clone(),
+        accessible_name: submitter.accessible_name.clone(),
+        action: submitter.action.clone(),
+        resolved_action: submitter.resolved_action.clone(),
+        method: submitter.method.clone(),
+        enctype: submitter.enctype.clone(),
+        target: submitter.target.clone(),
+        effective_target: submitter.effective_target.clone(),
+        novalidate: submitter.novalidate,
+        value: submitter.value.clone(),
+    }
+}
+
 fn collect_form_labels_for_form(
     body_root: &[Node],
     target_form: &Element,
@@ -17766,6 +17861,89 @@ mod tests {
                 .as_deref(),
             Some("Query")
         );
+    }
+
+    #[test]
+    fn browser_form_policy_descriptors_track_form_and_submitter_navigation() {
+        let document = parse_html(
+            "<base href=\"https://example.test/search/index.html\" target=_base>\
+             <form id=search name=searchForm action=find.html method=post \
+             enctype=\"multipart/form-data\" target=results \
+             accept-charset=\"utf-8 windows-1252\" autocomplete=off \
+             rel=\"external noreferrer\" novalidate>\
+             <input name=q value=rust>\
+             <button id=go type=submit name=go value=run formaction=run.html \
+             formenctype=\"application/x-www-form-urlencoded\" formmethod=dialog \
+             formtarget=dialog formnovalidate>Run</button>\
+             <input id=imageGo type=image name=image-go src=buttons/search.png \
+             alt=\"Search image\"></form>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.form_policy_descriptors.len(), 1);
+
+        let descriptor = &summary.form_policy_descriptors[0];
+        assert_eq!(descriptor.id.as_deref(), Some("search"));
+        assert_eq!(descriptor.name.as_deref(), Some("searchForm"));
+        assert_eq!(descriptor.action.as_deref(), Some("find.html"));
+        assert_eq!(
+            descriptor.resolved_action.as_deref(),
+            Some("https://example.test/search/find.html")
+        );
+        assert_eq!(descriptor.method, "post");
+        assert_eq!(descriptor.enctype.as_deref(), Some("multipart/form-data"));
+        assert_eq!(descriptor.target.as_deref(), Some("results"));
+        assert_eq!(descriptor.effective_target.as_deref(), Some("results"));
+        assert_eq!(
+            descriptor.accept_charset.as_deref(),
+            Some("utf-8 windows-1252")
+        );
+        assert_eq!(
+            descriptor.accept_charset_tokens,
+            vec!["utf-8", "windows-1252"]
+        );
+        assert_eq!(descriptor.autocomplete.as_deref(), Some("off"));
+        assert_eq!(descriptor.autocomplete_tokens, vec!["off"]);
+        assert_eq!(descriptor.rel.as_deref(), Some("external noreferrer"));
+        assert_eq!(descriptor.rel_tokens, vec!["external", "noreferrer"]);
+        assert!(descriptor.rel_external);
+        assert!(!descriptor.rel_nofollow);
+        assert!(!descriptor.rel_noopener);
+        assert!(descriptor.rel_noreferrer);
+        assert!(descriptor.novalidate);
+        assert_eq!(descriptor.submitters.len(), 2);
+
+        let button = &descriptor.submitters[0];
+        assert_eq!(button.id.as_deref(), Some("go"));
+        assert_eq!(button.control_type, "submit");
+        assert_eq!(button.name.as_deref(), Some("go"));
+        assert_eq!(button.accessible_name.as_deref(), Some("Run"));
+        assert_eq!(button.action.as_deref(), Some("run.html"));
+        assert_eq!(
+            button.resolved_action.as_deref(),
+            Some("https://example.test/search/run.html")
+        );
+        assert_eq!(button.method, "dialog");
+        assert_eq!(
+            button.enctype.as_deref(),
+            Some("application/x-www-form-urlencoded")
+        );
+        assert_eq!(button.target.as_deref(), Some("dialog"));
+        assert_eq!(button.effective_target.as_deref(), Some("dialog"));
+        assert!(button.novalidate);
+        assert_eq!(button.value.as_deref(), Some("run"));
+
+        let image = &descriptor.submitters[1];
+        assert_eq!(image.id.as_deref(), Some("imageGo"));
+        assert_eq!(image.control_type, "image");
+        assert_eq!(image.name.as_deref(), Some("image-go"));
+        assert_eq!(image.accessible_name.as_deref(), Some("Search image"));
+        assert_eq!(image.action.as_deref(), Some("find.html"));
+        assert_eq!(image.method, "post");
+        assert_eq!(image.target.as_deref(), Some("results"));
+        assert_eq!(image.effective_target.as_deref(), Some("results"));
+        assert!(image.novalidate);
     }
 
     #[test]
