@@ -4,12 +4,12 @@
 // code/packages/python/cas-matrix/tests/.
 
 use cas_matrix::{
-    add_matrices, columnspace, determinant, dimensions, dot, frobenius_norm, get_entry,
-    identity_matrix, inverse, is_matrix, lu_decompose, matrix, norm, nullspace, num_cols, num_rows,
-    rank, row_reduce, rowspace, scalar_multiply, sub_matrices, trace, transpose, zero_matrix,
-    MatrixError, MATRIX,
+    add_matrices, char_poly_coeffs, charpoly, columnspace, determinant, dimensions, dot,
+    frobenius_norm, get_entry, identity_matrix, inverse, is_matrix, lu_decompose, matrix, norm,
+    nullspace, num_cols, num_rows, rank, row_reduce, rowspace, scalar_multiply, sub_matrices,
+    trace, transpose, zero_matrix, MatrixError, MATRIX,
 };
-use symbolic_ir::{apply, flt, int, rat, sym, ADD, LIST, MUL, SQRT, SUB};
+use symbolic_ir::{apply, flt, int, rat, sym, ADD, LIST, MUL, POW, SQRT, SUB};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -426,6 +426,54 @@ fn inverse_1x1_shape() {
 fn inverse_non_square_raises() {
     let m = matrix(vec![irow(&[1, 2, 3])]).unwrap();
     assert!(inverse(&m).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// Characteristic polynomial
+// ---------------------------------------------------------------------------
+
+#[test]
+fn char_poly_coeffs_2x2_integer() {
+    let m = matrix(vec![irow(&[1, 2]), irow(&[2, 1])]).unwrap();
+    assert_eq!(
+        char_poly_coeffs(&m).unwrap(),
+        vec![int(-3), int(-2), int(1)]
+    );
+}
+
+#[test]
+fn char_poly_coeffs_2x2_rational() {
+    let m = matrix(vec![vec![rat(1, 2), int(1)], vec![int(0), int(2)]]).unwrap();
+    assert_eq!(
+        char_poly_coeffs(&m).unwrap(),
+        vec![int(1), rat(-5, 2), int(1)]
+    );
+}
+
+#[test]
+fn charpoly_builds_ir_polynomial() {
+    let m = matrix(vec![irow(&[1, 2]), irow(&[2, 1])]).unwrap();
+    let lambda = sym("lambda");
+    assert_eq!(
+        charpoly(&m, &lambda).unwrap(),
+        apply(
+            sym(ADD),
+            vec![
+                int(-3),
+                apply(sym(MUL), vec![int(-2), lambda.clone()]),
+                apply(sym(POW), vec![lambda, int(2)]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn charpoly_rejects_non_square_and_symbolic_entries() {
+    let non_square = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6])]).unwrap();
+    assert!(char_poly_coeffs(&non_square).is_err());
+
+    let symbolic = matrix(vec![vec![sym("a")]]).unwrap();
+    assert!(charpoly(&symbolic, &sym("lambda")).is_err());
 }
 
 // ---------------------------------------------------------------------------

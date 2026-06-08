@@ -4,6 +4,7 @@ import {
   LIST,
   MUL,
   NEG,
+  POW,
   SQRT,
   SUB,
   app,
@@ -177,6 +178,23 @@ export function determinant(node: IRNode): IRNode {
     throw new MatrixError(`determinant: matrix must be square, got ${n}x${ncols}`);
   }
   return det(rows);
+}
+
+export function charPolyCoeffs(node: IRNode): IRNode[] {
+  return charPolyCoeffValues(node).map(rationalToIr);
+}
+
+export function charPoly(node: IRNode, variable: IRNode): IRNode {
+  const terms = charPolyCoeffValues(node).flatMap((coeff, power) => {
+    if (coeff.isZero()) return [];
+    const coeffNode = rationalToIr(coeff);
+    if (power === 0) return [coeffNode];
+    const variablePower = power === 1 ? variable : app(POW, [variable, int(power)]);
+    return coeff.equals(RationalValue.one()) ? [variablePower] : [app(MUL, [coeffNode, variablePower])];
+  });
+  if (terms.length === 0) return int(0);
+  if (terms.length === 1) return terms[0];
+  return app(ADD, terms);
 }
 
 export function inverse(node: IRNode): IRNode {
@@ -489,6 +507,59 @@ function minor(rows: MatrixRows, skipRow: number, skipCol: number): MatrixRows {
     .map((row) => row.filter((_, colIndex) => colIndex !== skipCol));
 }
 
+function charPolyCoeffValues(node: IRNode): RationalValue[] {
+  const rows = matrixToRationals(node);
+  const n = rows.length;
+  const ncols = rows[0]?.length ?? 0;
+  if (n !== ncols) {
+    throw new MatrixError(`charPolyCoeffs: matrix must be square, got ${n}x${ncols}`);
+  }
+  const polyRows = rows.map((row, i) =>
+    row.map((entry, j) => (i === j ? [entry.neg(), RationalValue.one()] : [entry.neg()])));
+  return detPoly(polyRows);
+}
+
+function detPoly(rows: RationalValue[][][]): RationalValue[] {
+  const n = rows.length;
+  if (n === 0) return [RationalValue.one()];
+  if (n === 1) return [...rows[0][0]];
+  if (n === 2) {
+    const [[a, b], [c, d]] = rows;
+    return polySub(polyMul(a, d), polyMul(b, c));
+  }
+  return rows[0].reduce((acc, entry, col) => {
+    const product = polyMul(entry, detPoly(minorPoly(rows, 0, col)));
+    return col % 2 === 0 ? polyAdd(acc, product) : polySub(acc, product);
+  }, [RationalValue.zero()]);
+}
+
+function minorPoly(rows: RationalValue[][][], skipRow: number, skipCol: number): RationalValue[][][] {
+  return rows
+    .filter((_, rowIndex) => rowIndex !== skipRow)
+    .map((row) => row.filter((_, colIndex) => colIndex !== skipCol));
+}
+
+function polyAdd(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  const length = Math.max(left.length, right.length);
+  return Array.from({ length }, (_, i) =>
+    (left[i] ?? RationalValue.zero()).add(right[i] ?? RationalValue.zero()));
+}
+
+function polySub(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  return polyAdd(left, right.map((entry) => entry.neg()));
+}
+
+function polyMul(left: RationalValue[], right: RationalValue[]): RationalValue[] {
+  if (left.length === 0 || right.length === 0) return [RationalValue.zero()];
+  const result = Array.from({ length: left.length + right.length - 1 }, () => RationalValue.zero());
+  left.forEach((a, i) => {
+    right.forEach((b, j) => {
+      result[i + j] = result[i + j].add(a.mul(b));
+    });
+  });
+  return result;
+}
+
 function matrixToRationals(node: IRNode): RationalValue[][] {
   return rowsOf(node).map((row) => row.map(entryToRational));
 }
@@ -617,6 +688,10 @@ class RationalValue {
 
   isZero(): boolean {
     return this.numer === 0n;
+  }
+
+  equals(other: RationalValue): boolean {
+    return this.numer === other.numer && this.denom === other.denom;
   }
 
   add(other: RationalValue): RationalValue {

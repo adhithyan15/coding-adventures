@@ -3,6 +3,8 @@ import {
   MATRIX,
   MatrixError,
   addMatrices,
+  charPoly,
+  charPolyCoeffs,
   columnspace,
   determinant,
   dimensions,
@@ -28,7 +30,7 @@ import {
   transpose,
   zeroMatrix,
 } from "../src/index";
-import { ADD, LIST, MUL, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, LIST, MUL, POW, SQRT, SUB, app, equals, int, numberNode, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 import { Matrix, getMatrixBackend, resetMatrixBackend, setMatrixBackend, type MatrixBackend } from "matrix";
 
 function irow(values: readonly number[]): IRNode[] {
@@ -236,6 +238,35 @@ describe("determinant and inverse", () => {
     expect(numRows(inv1)).toBe(1);
     expect(numCols(inv1)).toBe(1);
     expect(() => inverse(matrix([irow([1, 2, 3])]))).toThrow(MatrixError);
+  });
+});
+
+describe("characteristic polynomial", () => {
+  it("returns coefficients for det(lambda I - A)", () => {
+    expect(charPolyCoeffs(matrix([irow([1, 2]), irow([2, 1])]))).toEqual([
+      int(-3),
+      int(-2),
+      int(1),
+    ]);
+    expect(charPolyCoeffs(matrix([[rational(1, 2), int(1)], [int(0), int(2)]]))).toEqual([
+      int(1),
+      rational(-5, 2),
+      int(1),
+    ]);
+  });
+
+  it("builds an IR polynomial in the requested variable", () => {
+    const lambda = sym("lambda");
+    expect(charPoly(matrix([irow([1, 2]), irow([2, 1])]), lambda)).toEqual(app(ADD, [
+      int(-3),
+      app(MUL, [int(-2), lambda]),
+      app(POW, [lambda, int(2)]),
+    ]));
+  });
+
+  it("rejects non-square and symbolic-entry matrices", () => {
+    expect(() => charPolyCoeffs(matrix([irow([1, 2, 3]), irow([4, 5, 6])]))).toThrow(MatrixError);
+    expect(() => charPoly(matrix([[sym("a")]]), sym("lambda"))).toThrow(MatrixError);
   });
 });
 
