@@ -234,3 +234,34 @@ historical context with status `RESOLVED` and a link to the fix PR.
     3. **Rule C — dedup**: source `;` immediately after a synthetic `;` (rule B) is dropped to avoid `};;` in output for shapes like `function f(){};var g=1;`.
   - 10 inline tests pin every rule + edge case (function-expression doesn't get trailing `;`, if/while/for body slots preserved, dedup works, multi-stmt drops only last `;`, top-level `var` unchanged).
   - The pre-existing `tests/diff/whitespace-only/expected.stdout` was updated — its hand-written golden predicted `function add(a,b){return a+b;}` (closurec's old shape), but upstream Closure actually emits `function add(a,b){return a+b};`. Re-captured from upstream JAR to match the now-correct output.
+
+### gap-031 — empty `{}` body collapses to `;`
+
+- **Status:** OPEN — newly discovered by CLOC14.3.
+- **Upstream byte-identity test:** `minify_for_loop` seed fixture.
+- **Why it fails:** Upstream Closure emits `for(...){}` as `for(...);` — the empty block body is replaced by an `EmptyStatement` (`;`). closurec preserves the `{}`.
+  - Input: `for(var i=0;i<10;i++){}`
+  - Upstream: `for(var i=0;i<10;i++);`
+  - closurec: `for(var i=0;i<10;i++){}`
+- **Applies to:** Empty `{}` in any control-flow body position: `for(...){}`, `while(x){}`, `if(x){}`, `if(x){}else{}` (each else position), `for(x in y){}`, `for(x of y){}`.
+- **What it needs:** CLI token-state-machine extension. When `body_position_next` is true AND the next two tokens are `{` and `}` (in that order), emit `;` instead of `{}`. Pretty mode keeps `{}` for readability. Per-language, ECMAScript §13.4 (EmptyStatement) is exactly the substitution upstream is doing.
+
+### gap-032 — single-statement if/else block flattening (CLI)
+
+- **Status:** OPEN — newly discovered by CLOC14.3. **Counterpart to gap-010** (which closes the AST-level version via DCE block-flattening, resolved in CLOC12.19).
+- **Upstream byte-identity test:** `minify_if_else` seed fixture.
+- **Why it fails:** Upstream emits single-statement if/else bodies WITHOUT enclosing `{}`:
+  - Input: `if(x){a();}else{b();}`
+  - Upstream: `if(x)a();else b();`
+  - closurec: `if(x){a()}else{b()}`
+- **What it needs:** The AST-level pass (DCE block-flattening) does this transformation, but the CLI's WHITESPACE_ONLY path doesn't invoke the AST pipeline. Either: (a) route WHITESPACE_ONLY through a minimal AST → emit cycle for this rule, OR (b) add a CLI-only token-level "drop `{}` around single-stmt body" rule, OR (c) accept that WHITESPACE_ONLY's mandate is "preserve source statement shape" and this is upstream over-stepping its level (Closure does this anyway under WHITESPACE_ONLY — verified). Option (a) is the path-of-least-divergence and most pipeline-aligned.
+
+### gap-033 — try/catch trailing `;` after `}`
+
+- **Status:** OPEN — newly discovered by CLOC14.3. **Same family as gap-030** (function-decl trailing `;`).
+- **Upstream byte-identity test:** `minify_try_catch` seed fixture.
+- **Why it fails:** Upstream emits a `;` after the last `}` of a try/catch statement, mirroring its function-decl normalisation:
+  - Input: `try{a();}catch(e){b();}`
+  - Upstream: `try{a()}catch(e){b()};`  (note inner `;`s dropped per gap-030's rule-A and trailing `;` added)
+  - closurec: `try{a()}catch(e){b()}`  (inner `;`s correctly dropped; trailing missing)
+- **What it needs:** Extend the CLI token state machine (CLOC12.39's brace_stack) to track try/catch blocks the same way as function declarations. When a `}` closes the LAST catch/finally clause of a `try`, emit `;`. The `try` keyword is the marker; track it like `function` is tracked.

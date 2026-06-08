@@ -85,12 +85,20 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // Empty. gap-030 (function-decl ASI policy) was resolved
-    // in CLOC12.38 (AST emitter side) + CLOC12.39 (CLI
-    // WHITESPACE_ONLY token re-stitcher side). The
-    // `minify_function_decl` fixture flipped from IGNORED to
-    // PASS in CLOC12.39 — closurec now matches upstream
-    // Closure v20240317 byte-for-byte.
+    // gap-031: empty for-body `{}` collapses to `;`
+    // (EmptyStatement) in upstream Closure. Discovered by
+    // CLOC14.3. See tests/diff/minify_for_loop/README.md.
+    ("for_loop", "gap-031: empty `{}` body collapses to `;`"),
+    // gap-032: single-statement if/else block flattening.
+    // Upstream emits `if(x)a();else b();` not
+    // `if(x){a()}else{b()}`. CLI counterpart to AST-level
+    // gap-010 (DCE block flattening, already resolved).
+    // Discovered by CLOC14.3.
+    ("if_else", "gap-032: single-stmt if/else block flattening"),
+    // gap-033: try/catch trailing `;` after `}`. Same family
+    // as gap-030 (function-decl trailing `;`) but for
+    // try/catch statements. Discovered by CLOC14.3.
+    ("try_catch", "gap-033: try/catch trailing `;` after `}`"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
