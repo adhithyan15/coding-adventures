@@ -26,7 +26,7 @@ use smart_home_discovery::{
 };
 use smart_home_registry::{
     AuthorizationDecisionSelector, DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts,
-    RegistryError, StateRefreshPlan, StateRefreshReason,
+    RegistryError, RegistryTopologySummary, StateRefreshPlan, StateRefreshReason,
 };
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::{fmt, time::Duration};
@@ -3365,6 +3365,148 @@ impl RuntimeCapabilityGrantQuery {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeRoomSort {
+    RoomId,
+    AttentionDesc,
+    EntityCountDesc,
+    SceneCountDesc,
+}
+
+impl Default for RuntimeRoomSort {
+    fn default() -> Self {
+        Self::RoomId
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct RuntimeRoomQuery {
+    pub room_id: Option<String>,
+    pub attention_only: bool,
+    pub state_gaps_only: bool,
+    pub sort: RuntimeRoomSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeRoomQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_room(mut self, room_id: impl Into<String>) -> Self {
+        self.room_id = Some(room_id.into());
+        self
+    }
+
+    pub fn attention_only(mut self, attention_only: bool) -> Self {
+        self.attention_only = attention_only;
+        self
+    }
+
+    pub fn state_gaps_only(mut self, state_gaps_only: bool) -> Self {
+        self.state_gaps_only = state_gaps_only;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeRoomSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeRoomSummary {
+    pub room_id: String,
+    pub device_count: usize,
+    pub online_devices: usize,
+    pub pairing_candidate_devices: usize,
+    pub attention_devices: usize,
+    pub entity_count: usize,
+    pub commandable_entities: usize,
+    pub entities_with_state: usize,
+    pub entities_without_state: usize,
+    pub stale_entities: usize,
+    pub scene_count: usize,
+    pub scene_action_count: usize,
+}
+
+impl RuntimeRoomSummary {
+    pub fn new(room_id: impl Into<String>) -> Self {
+        Self {
+            room_id: room_id.into(),
+            device_count: 0,
+            online_devices: 0,
+            pairing_candidate_devices: 0,
+            attention_devices: 0,
+            entity_count: 0,
+            commandable_entities: 0,
+            entities_with_state: 0,
+            entities_without_state: 0,
+            stale_entities: 0,
+            scene_count: 0,
+            scene_action_count: 0,
+        }
+    }
+
+    fn record_device(&mut self, device: &Device) {
+        self.device_count += 1;
+        if device.health.is_online() {
+            self.online_devices += 1;
+        }
+        if device.health.is_pairing_candidate() {
+            self.pairing_candidate_devices += 1;
+        }
+        if device.health.needs_attention() {
+            self.attention_devices += 1;
+        }
+    }
+
+    fn record_entity(&mut self, entity: &Entity, state: Option<&StateSnapshot>, now_ms: u64) {
+        self.entity_count += 1;
+        if entity.capability_summary().has_command_surface() {
+            self.commandable_entities += 1;
+        }
+        match state {
+            Some(snapshot) => {
+                self.entities_with_state += 1;
+                if snapshot.is_stale_at(now_ms) {
+                    self.stale_entities += 1;
+                }
+            }
+            None => self.entities_without_state += 1,
+        }
+    }
+
+    fn record_scene_actions(&mut self, action_count: usize) {
+        if action_count == 0 {
+            return;
+        }
+        self.scene_count += 1;
+        self.scene_action_count += action_count;
+    }
+
+    pub fn has_attention_items(&self) -> bool {
+        self.attention_devices > 0
+    }
+
+    pub fn has_state_gaps(&self) -> bool {
+        self.entities_without_state > 0 || self.stale_entities > 0
+    }
+
+    pub fn state_gap_count(&self) -> usize {
+        self.entities_without_state + self.stale_entities
+    }
+
+    pub fn has_scene_actions(&self) -> bool {
+        self.scene_action_count > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     GetRuntimeSnapshot,
@@ -3373,6 +3515,9 @@ pub enum RuntimeReadToolRequest {
         bridge_id: Option<BridgeId>,
         health: Option<Health>,
         capability_id: Option<CapabilityId>,
+    },
+    ListRooms {
+        query: RuntimeRoomQuery,
     },
     ListScenes {
         scope: Option<SceneScope>,
@@ -3409,6 +3554,7 @@ pub enum RuntimeReadToolRequest {
     GetCapabilityGrantSummary {
         query: RuntimeCapabilityGrantQuery,
     },
+    GetTopologySummary,
     ListDesiredStates {
         query: DesiredStateQuery,
     },
@@ -3433,6 +3579,7 @@ impl RuntimeReadToolRequest {
             Self::GetRuntimeSnapshot => SmartHomeTool::GetRuntimeSnapshot,
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
+            Self::ListRooms { .. } => SmartHomeTool::ListRooms,
             Self::ListScenes { .. } => SmartHomeTool::ListScenes,
             Self::DescribeScene { .. } => SmartHomeTool::DescribeScene,
             Self::GetState { .. } => SmartHomeTool::GetState,
@@ -3444,6 +3591,7 @@ impl RuntimeReadToolRequest {
             Self::GetAuthorizationSummary { .. } => SmartHomeTool::GetAuthorizationSummary,
             Self::ListCapabilityGrants { .. } => SmartHomeTool::ListCapabilityGrants,
             Self::GetCapabilityGrantSummary { .. } => SmartHomeTool::GetCapabilityGrantSummary,
+            Self::GetTopologySummary => SmartHomeTool::GetTopologySummary,
             Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
             Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
             Self::ListWorkers { .. } => SmartHomeTool::ListWorkers,
@@ -3667,6 +3815,10 @@ pub enum RuntimeReadToolOutput {
     RuntimeSnapshot(RuntimeReadSnapshot),
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
+    Rooms {
+        rooms: Vec<RuntimeRoomSummary>,
+        topology: RegistryTopologySummary,
+    },
     Scenes(Vec<Scene>),
     Scene {
         scene_id: SceneId,
@@ -3702,6 +3854,9 @@ pub enum RuntimeReadToolOutput {
     },
     CapabilityGrantSummary {
         summary: CapabilityGrantInventorySummary,
+    },
+    TopologySummary {
+        summary: RegistryTopologySummary,
     },
     DesiredStates {
         desired_states: Vec<DesiredEntityState>,
@@ -3873,6 +4028,90 @@ impl SmartHomeRuntime {
                 .sum(),
             state_refresh_target_count: self.registry.state_refresh_plan_at(now_ms).len(),
         }
+    }
+
+    pub fn topology_summary(&self) -> RegistryTopologySummary {
+        self.registry.topology_summary()
+    }
+
+    pub fn room_summaries_at(&self, now_ms: u64) -> Vec<RuntimeRoomSummary> {
+        let mut rooms = BTreeMap::new();
+        let mut entity_rooms = BTreeMap::new();
+
+        for device in self.registry.devices() {
+            let Some(room_id) = device.room_id.as_ref() else {
+                continue;
+            };
+            let room = rooms
+                .entry(room_id.clone())
+                .or_insert_with(|| RuntimeRoomSummary::new(room_id.clone()));
+            room.record_device(device);
+
+            for entity in self.registry.entities_for_device(&device.device_id) {
+                room.record_entity(entity, self.registry.state(&entity.entity_id), now_ms);
+                entity_rooms.insert(entity.entity_id.clone(), room_id.clone());
+            }
+        }
+
+        for scene in self.registry.scenes() {
+            let mut room_action_counts: BTreeMap<String, usize> = BTreeMap::new();
+            for action in &scene.actions {
+                if let Some(room_id) = entity_rooms.get(&action.entity_id) {
+                    *room_action_counts.entry(room_id.clone()).or_default() += 1;
+                }
+            }
+
+            for (room_id, action_count) in room_action_counts {
+                rooms
+                    .entry(room_id.clone())
+                    .or_insert_with(|| RuntimeRoomSummary::new(room_id))
+                    .record_scene_actions(action_count);
+            }
+        }
+
+        rooms.into_values().collect()
+    }
+
+    pub fn query_room_summaries_at(
+        &self,
+        query: &RuntimeRoomQuery,
+        now_ms: u64,
+    ) -> Vec<RuntimeRoomSummary> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut rooms = self
+            .room_summaries_at(now_ms)
+            .into_iter()
+            .filter(|room| room_summary_matches_query(room, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeRoomSort::RoomId => {
+                rooms.sort_by(|left, right| left.room_id.cmp(&right.room_id))
+            }
+            RuntimeRoomSort::AttentionDesc => rooms.sort_by(|left, right| {
+                right
+                    .attention_devices
+                    .cmp(&left.attention_devices)
+                    .then_with(|| right.state_gap_count().cmp(&left.state_gap_count()))
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+            RuntimeRoomSort::EntityCountDesc => rooms.sort_by(|left, right| {
+                right
+                    .entity_count
+                    .cmp(&left.entity_count)
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+            RuntimeRoomSort::SceneCountDesc => rooms.sort_by(|left, right| {
+                right
+                    .scene_count
+                    .cmp(&left.scene_count)
+                    .then_with(|| left.room_id.cmp(&right.room_id))
+            }),
+        }
+        apply_limit(&mut rooms, query.limit);
+        rooms
     }
 
     pub fn event_bus_health_summary(&self) -> RuntimeEventBusHealthSummary {
@@ -4628,6 +4867,10 @@ impl SmartHomeRuntime {
                         .collect(),
                 ))
             }
+            RuntimeReadToolRequest::ListRooms { query } => Ok(RuntimeReadToolOutput::Rooms {
+                rooms: self.query_room_summaries_at(&query, now_ms),
+                topology: self.topology_summary(),
+            }),
             RuntimeReadToolRequest::ListScenes {
                 scope,
                 entity_id,
@@ -4736,6 +4979,11 @@ impl SmartHomeRuntime {
             RuntimeReadToolRequest::GetCapabilityGrantSummary { query } => {
                 Ok(RuntimeReadToolOutput::CapabilityGrantSummary {
                     summary: self.capability_grant_summary_at(&query, now_ms),
+                })
+            }
+            RuntimeReadToolRequest::GetTopologySummary => {
+                Ok(RuntimeReadToolOutput::TopologySummary {
+                    summary: self.topology_summary(),
                 })
             }
             RuntimeReadToolRequest::ListDesiredStates { query } => {
@@ -5610,6 +5858,15 @@ fn supervised_worker_matches_query(
         && query
             .min_restart_count
             .is_none_or(|minimum| worker.restart_count >= minimum)
+}
+
+fn room_summary_matches_query(room: &RuntimeRoomSummary, query: &RuntimeRoomQuery) -> bool {
+    query
+        .room_id
+        .as_ref()
+        .is_none_or(|room_id| &room.room_id == room_id)
+        && (!query.attention_only || room.has_attention_items())
+        && (!query.state_gaps_only || room.has_state_gaps())
 }
 
 fn desired_state_matches_query(
@@ -8412,6 +8669,13 @@ mod tests {
             Capability::light_brightness(),
         ]);
         let principal = AgentId::trusted("agent:observer");
+        let mut kitchen_device = runtime
+            .registry()
+            .device(&DeviceId::trusted("device-1"))
+            .unwrap()
+            .clone();
+        kitchen_device.room_id = Some("kitchen".to_string());
+        runtime.upsert_device(kitchen_device).unwrap();
         runtime.registry_mut().upsert_capability_grant(
             CapabilityGrant::for_capability(
                 CapabilityGrantId::trusted("grant-read"),
@@ -8698,6 +8962,24 @@ mod tests {
                 1_519,
             )
             .unwrap();
+        let rooms = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::ListRooms {
+                    query: RuntimeRoomQuery::new()
+                        .for_room("kitchen")
+                        .sorted_by(RuntimeRoomSort::SceneCountDesc),
+                },
+                1_520,
+            )
+            .unwrap();
+        let topology_summary = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetTopologySummary,
+                1_521,
+            )
+            .unwrap();
 
         assert!(matches!(
             bridges,
@@ -8878,7 +9160,33 @@ mod tests {
                     && summary.unique_principals == 1
                     && !summary.needs_review()
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 20);
+        assert!(matches!(
+            rooms,
+            RuntimeReadToolOutput::Rooms { rooms, topology }
+                if rooms.len() == 1
+                    && rooms[0].room_id == "kitchen"
+                    && rooms[0].device_count == 1
+                    && rooms[0].entity_count == 1
+                    && rooms[0].commandable_entities == 1
+                    && rooms[0].entities_with_state == 1
+                    && rooms[0].scene_count == 1
+                    && rooms[0].scene_action_count == 1
+                    && topology.devices_with_room == 1
+                    && topology.unique_rooms == 1
+                    && topology.room_scenes == 1
+        ));
+        assert!(matches!(
+            topology_summary,
+            RuntimeReadToolOutput::TopologySummary { summary }
+                if summary.bridges == 1
+                    && summary.devices == 1
+                    && summary.entities == 1
+                    && summary.scenes == 1
+                    && summary.devices_with_room == 1
+                    && summary.unique_rooms == 1
+                    && summary.scene_actions == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 22);
         assert!(runtime
             .registry()
             .authorization_decisions()

@@ -36,6 +36,7 @@ use smart_home_integration_catalog::{
     IntegrationReadinessReport, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
     PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
+use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
     DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary, DesiredStateQuery,
@@ -49,15 +50,15 @@ use smart_home_runtime::{
     RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
     RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
     RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
-    RuntimeReadToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
-    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
-    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
-    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
-    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
-    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
-    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
-    WorkerRestartReason, WorkerStatus,
+    RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
+    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
+    RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
+    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
+    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
+    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
+    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
+    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
+    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -65,6 +66,7 @@ use std::rc::Rc;
 pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
+pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
@@ -82,6 +84,7 @@ pub const SMART_HOME_LIST_CAPABILITY_GRANTS_TOOL_ID: &str = "smart_home.list_cap
 pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_capability_grant_summary";
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
+pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
 pub const SMART_HOME_LIST_WORKERS_TOOL_ID: &str = "smart_home.list_workers";
@@ -185,6 +188,17 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_devices"))
+                }
+                SMART_HOME_LIST_ROOMS_TOOL_ID => {
+                    let query = room_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::ListRooms { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_rooms"))
                 }
                 SMART_HOME_LIST_SCENES_TOOL_ID => {
                     let request = list_scenes_request(&arguments)?;
@@ -357,6 +371,17 @@ impl SmartHomeToolBridge {
                         )
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "get_runtime_snapshot"))
+                }
+                SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID => {
+                    let _ = expect_object(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetTopologySummary,
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_topology_summary"))
                 }
                 SMART_HOME_LIST_DESIRED_STATES_TOOL_ID => {
                     let request = list_desired_states_request(&arguments)?;
@@ -669,6 +694,36 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             collection_output_schema("devices"),
         ),
         read_definition(
+            SMART_HOME_LIST_ROOMS_TOOL_ID,
+            "List smart-home rooms",
+            "List runtime-derived D23 room topology summaries, including device health, state coverage, and scene action coverage.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("room_id", JsonSchema::String),
+                    SchemaProperty::new("attention_only", JsonSchema::Boolean),
+                    SchemaProperty::new("state_gaps_only", JsonSchema::Boolean),
+                    SchemaProperty::new("sort", JsonSchema::String),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "rooms",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("topology", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["rooms", "topology", "count"],
+                false,
+            ),
+        ),
+        read_definition(
             SMART_HOME_LIST_SCENES_TOOL_ID,
             "List smart-home scenes",
             "List normalized D23 smart-home scenes, optionally filtered by scope, target entity, or target capability.",
@@ -766,6 +821,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         list_capability_grants_definition(),
         get_capability_grant_summary_definition(),
         get_runtime_snapshot_definition(),
+        get_topology_summary_definition(),
         list_desired_states_definition(),
         list_pairing_sessions_definition(),
         list_workers_definition(),
@@ -1206,6 +1262,20 @@ fn get_runtime_snapshot_definition() -> ToolDefinition {
                 "pending_work",
                 "has_pending_work",
             ],
+            false,
+        ),
+    )
+}
+
+fn get_topology_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
+        "Get smart-home topology summary",
+        "Read aggregate D23 registry topology coverage across bridges, devices, rooms, entities, cached states, and scenes.",
+        empty_object_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
             false,
         ),
     )
@@ -1660,6 +1730,27 @@ fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest,
             .transpose()?,
         capability_id: optional_string(arguments, "capability_id")?.map(CapabilityId::trusted),
     })
+}
+
+fn room_query(arguments: &JsonValue) -> Result<RuntimeRoomQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimeRoomQuery::new();
+    if let Some(room_id) = optional_string(arguments, "room_id")? {
+        query = query.for_room(room_id);
+    }
+    if let Some(attention_only) = optional_bool(arguments, "attention_only")? {
+        query = query.attention_only(attention_only);
+    }
+    if let Some(state_gaps_only) = optional_bool(arguments, "state_gaps_only")? {
+        query = query.state_gaps_only(state_gaps_only);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_room_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(query)
 }
 
 fn list_scenes_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
@@ -2240,6 +2331,14 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
             ),
             ("count", integer(devices.len() as i64)),
         ]),
+        RuntimeReadToolOutput::Rooms { rooms, topology } => object([
+            (
+                "rooms",
+                JsonValue::Array(rooms.iter().map(room_summary_json).collect()),
+            ),
+            ("topology", topology_summary_json(&topology)),
+            ("count", integer(rooms.len() as i64)),
+        ]),
         RuntimeReadToolOutput::Scenes(scenes) => object([
             (
                 "scenes",
@@ -2351,6 +2450,9 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
         ]),
         RuntimeReadToolOutput::CapabilityGrantSummary { summary } => {
             object([("summary", capability_grant_inventory_summary_json(&summary))])
+        }
+        RuntimeReadToolOutput::TopologySummary { summary } => {
+            object([("summary", topology_summary_json(&summary))])
         }
         RuntimeReadToolOutput::DesiredStates {
             desired_states,
@@ -2692,6 +2794,164 @@ fn runtime_read_snapshot_json(snapshot: &RuntimeReadSnapshot) -> JsonValue {
         (
             "has_pending_work",
             JsonValue::Bool(snapshot.has_pending_work()),
+        ),
+    ])
+}
+
+fn room_summary_json(room: &RuntimeRoomSummary) -> JsonValue {
+    object([
+        ("room_id", string(&room.room_id)),
+        ("device_count", integer(room.device_count as i64)),
+        ("online_devices", integer(room.online_devices as i64)),
+        (
+            "pairing_candidate_devices",
+            integer(room.pairing_candidate_devices as i64),
+        ),
+        ("attention_devices", integer(room.attention_devices as i64)),
+        ("entity_count", integer(room.entity_count as i64)),
+        (
+            "commandable_entities",
+            integer(room.commandable_entities as i64),
+        ),
+        (
+            "entities_with_state",
+            integer(room.entities_with_state as i64),
+        ),
+        (
+            "entities_without_state",
+            integer(room.entities_without_state as i64),
+        ),
+        ("stale_entities", integer(room.stale_entities as i64)),
+        ("state_gap_count", integer(room.state_gap_count() as i64)),
+        ("scene_count", integer(room.scene_count as i64)),
+        (
+            "scene_action_count",
+            integer(room.scene_action_count as i64),
+        ),
+        (
+            "has_attention_items",
+            JsonValue::Bool(room.has_attention_items()),
+        ),
+        ("has_state_gaps", JsonValue::Bool(room.has_state_gaps())),
+        (
+            "has_scene_actions",
+            JsonValue::Bool(room.has_scene_actions()),
+        ),
+    ])
+}
+
+fn topology_summary_json(summary: &RegistryTopologySummary) -> JsonValue {
+    object([
+        ("bridges", integer(summary.bridges as i64)),
+        ("devices", integer(summary.devices as i64)),
+        ("entities", integer(summary.entities as i64)),
+        ("scenes", integer(summary.scenes as i64)),
+        ("lan_http_bridges", integer(summary.lan_http_bridges as i64)),
+        ("mdns_bridges", integer(summary.mdns_bridges as i64)),
+        ("serial_bridges", integer(summary.serial_bridges as i64)),
+        ("ble_bridges", integer(summary.ble_bridges as i64)),
+        ("cloud_bridges", integer(summary.cloud_bridges as i64)),
+        (
+            "local_process_bridges",
+            integer(summary.local_process_bridges as i64),
+        ),
+        ("online_bridges", integer(summary.online_bridges as i64)),
+        (
+            "pairing_candidate_bridges",
+            integer(summary.pairing_candidate_bridges as i64),
+        ),
+        (
+            "attention_bridges",
+            integer(summary.attention_bridges as i64),
+        ),
+        ("online_devices", integer(summary.online_devices as i64)),
+        (
+            "pairing_candidate_devices",
+            integer(summary.pairing_candidate_devices as i64),
+        ),
+        (
+            "attention_devices",
+            integer(summary.attention_devices as i64),
+        ),
+        (
+            "devices_with_entities",
+            integer(summary.devices_with_entities as i64),
+        ),
+        (
+            "devices_without_entities",
+            integer(summary.devices_without_entities as i64),
+        ),
+        (
+            "devices_with_room",
+            integer(summary.devices_with_room as i64),
+        ),
+        (
+            "devices_without_room",
+            integer(summary.devices_without_room as i64),
+        ),
+        ("unique_rooms", integer(summary.unique_rooms as i64)),
+        ("light_entities", integer(summary.light_entities as i64)),
+        (
+            "light_group_entities",
+            integer(summary.light_group_entities as i64),
+        ),
+        ("switch_entities", integer(summary.switch_entities as i64)),
+        ("sensor_entities", integer(summary.sensor_entities as i64)),
+        ("lock_entities", integer(summary.lock_entities as i64)),
+        (
+            "thermostat_entities",
+            integer(summary.thermostat_entities as i64),
+        ),
+        ("scene_entities", integer(summary.scene_entities as i64)),
+        ("input_entities", integer(summary.input_entities as i64)),
+        (
+            "bridge_health_entities",
+            integer(summary.bridge_health_entities as i64),
+        ),
+        (
+            "network_diagnostic_entities",
+            integer(summary.network_diagnostic_entities as i64),
+        ),
+        ("unknown_entities", integer(summary.unknown_entities as i64)),
+        (
+            "entities_with_state",
+            integer(summary.entities_with_state as i64),
+        ),
+        (
+            "entities_without_state",
+            integer(summary.entities_without_state as i64),
+        ),
+        (
+            "total_capabilities",
+            integer(summary.total_capabilities as i64),
+        ),
+        ("room_scenes", integer(summary.room_scenes as i64)),
+        ("zone_scenes", integer(summary.zone_scenes as i64)),
+        ("home_scenes", integer(summary.home_scenes as i64)),
+        ("bridge_scenes", integer(summary.bridge_scenes as i64)),
+        ("custom_scenes", integer(summary.custom_scenes as i64)),
+        ("scene_actions", integer(summary.scene_actions as i64)),
+        ("has_topology", JsonValue::Bool(summary.has_topology())),
+        (
+            "has_pairing_candidates",
+            JsonValue::Bool(summary.has_pairing_candidates()),
+        ),
+        (
+            "has_attention_items",
+            JsonValue::Bool(summary.has_attention_items()),
+        ),
+        (
+            "has_devices_without_entities",
+            JsonValue::Bool(summary.has_devices_without_entities()),
+        ),
+        ("has_state_gaps", JsonValue::Bool(summary.has_state_gaps())),
+        (
+            "has_scene_actions",
+            JsonValue::Bool(summary.has_scene_actions()),
+        ),
+        (
+            "has_multi_transport_bridges",
+            JsonValue::Bool(summary.has_multi_transport_bridges()),
         ),
     ])
 }
@@ -4915,6 +5175,16 @@ fn parse_event_sort(label: &str) -> Result<RuntimeEventSort, ToolCallError> {
     }
 }
 
+fn parse_room_sort(label: &str) -> Result<RuntimeRoomSort, ToolCallError> {
+    match label {
+        "room_id" | "id" => Ok(RuntimeRoomSort::RoomId),
+        "attention_desc" | "attention" => Ok(RuntimeRoomSort::AttentionDesc),
+        "entity_count_desc" | "entities_desc" => Ok(RuntimeRoomSort::EntityCountDesc),
+        "scene_count_desc" | "scenes_desc" => Ok(RuntimeRoomSort::SceneCountDesc),
+        _ => Err(validation_error(format!("unknown room sort `{label}`"))),
+    }
+}
+
 fn parse_authorization_decision_sort(
     label: &str,
 ) -> Result<RuntimeAuthorizationDecisionSort, ToolCallError> {
@@ -5949,7 +6219,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 32);
+        assert_eq!(definitions.len(), 34);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -5964,6 +6234,7 @@ mod tests {
             .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_LIST_ROOMS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_SCENES_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -5996,6 +6267,9 @@ mod tests {
             .contains(&SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_DESIRED_STATES_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -6019,7 +6293,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            28
+            30
         );
         assert_eq!(
             export
@@ -6032,8 +6306,10 @@ mod tests {
             1
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition("smart_home.unknown").is_none());
     }
 
@@ -6209,6 +6485,33 @@ mod tests {
         assert_eq!(list_trace.summary().terminal_event_count, 1);
         assert_eq!(
             field(list_trace.result.output.as_ref().unwrap(), "count"),
+            Some(&integer(1))
+        );
+
+        let list_rooms_request = request(
+            "call-list-rooms",
+            SMART_HOME_LIST_ROOMS_TOOL_ID,
+            object([
+                ("room_id", string("kitchen")),
+                ("sort", string("scenes_desc")),
+            ]),
+            1_001,
+        );
+        let list_rooms_trace = tool_runtime.invoke_with_events(&list_rooms_request);
+        assert!(list_rooms_trace.result.ok);
+        let list_rooms_output = list_rooms_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(list_rooms_output, "count"), Some(&integer(1)));
+        let room_summary = array_item(field(list_rooms_output, "rooms").unwrap(), 0).unwrap();
+        assert_eq!(field(room_summary, "room_id"), Some(&string("kitchen")));
+        assert_eq!(field(room_summary, "device_count"), Some(&integer(1)));
+        assert_eq!(field(room_summary, "entity_count"), Some(&integer(2)));
+        assert_eq!(field(room_summary, "scene_count"), Some(&integer(1)));
+        assert_eq!(field(room_summary, "scene_action_count"), Some(&integer(1)));
+        assert_eq!(
+            field(
+                field(list_rooms_output, "topology").unwrap(),
+                "unique_rooms"
+            ),
             Some(&integer(1))
         );
 
@@ -6507,6 +6810,27 @@ mod tests {
                 "event_backlog_count"
             ),
             Some(&integer(1))
+        );
+
+        let topology_summary_request = request(
+            "call-topology-summary",
+            SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID,
+            object([]),
+            1_100,
+        );
+        let topology_summary_trace = tool_runtime.invoke_with_events(&topology_summary_request);
+        assert!(topology_summary_trace.result.ok);
+        let topology_summary_output = topology_summary_trace.result.output.as_ref().unwrap();
+        let topology_summary = field(topology_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(topology_summary, "devices_with_room"),
+            Some(&integer(1))
+        );
+        assert_eq!(field(topology_summary, "unique_rooms"), Some(&integer(1)));
+        assert_eq!(field(topology_summary, "room_scenes"), Some(&integer(1)));
+        assert_eq!(
+            field(topology_summary, "has_scene_actions"),
+            Some(&JsonValue::Bool(true))
         );
 
         let supervision_plan_request = request(
@@ -6951,6 +7275,7 @@ mod tests {
         journal.record_trace(list_primitives_request, list_primitives_trace);
         journal.record_trace(describe_primitive_request, describe_primitive_trace);
         journal.record_trace(list_request, list_trace);
+        journal.record_trace(list_rooms_request, list_rooms_trace);
         journal.record_trace(list_scenes_request, list_scenes_trace);
         journal.record_trace(describe_scene_request, describe_scene_trace);
         journal.record_trace(discover_request, discover_trace);
@@ -6963,6 +7288,7 @@ mod tests {
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
+        journal.record_trace(topology_summary_request, topology_summary_trace);
         journal.record_trace(supervision_plan_request, supervision_plan_trace);
         journal.record_trace(desired_states_request, desired_states_trace);
         journal.record_trace(pairing_sessions_request, pairing_sessions_trace);
@@ -6982,9 +7308,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 31);
-        assert_eq!(journal_summary.completed_count, 31);
-        assert_eq!(journal.audit_records().len(), 31);
+        assert_eq!(journal_summary.invocation_count, 33);
+        assert_eq!(journal_summary.completed_count, 33);
+        assert_eq!(journal.audit_records().len(), 33);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -6997,7 +7323,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            28,
+            30,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

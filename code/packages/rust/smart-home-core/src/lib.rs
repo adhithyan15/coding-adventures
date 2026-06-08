@@ -1449,6 +1449,7 @@ pub enum SmartHomeTool {
     PairBridge,
     ListBridges,
     ListDevices,
+    ListRooms,
     ListScenes,
     DescribeScene,
     GetState,
@@ -1463,6 +1464,7 @@ pub enum SmartHomeTool {
     ListCapabilityGrants,
     GetCapabilityGrantSummary,
     GetRuntimeSnapshot,
+    GetTopologySummary,
     ListDesiredStates,
     ListPairingSessions,
     ListWorkers,
@@ -1492,6 +1494,7 @@ impl SmartHomeTool {
             },
             Self::ListBridges => read_tool("smart_home.list_bridges"),
             Self::ListDevices => read_tool("smart_home.list_devices"),
+            Self::ListRooms => read_tool("smart_home.list_rooms"),
             Self::ListScenes => read_tool("smart_home.list_scenes"),
             Self::DescribeScene => read_tool("smart_home.describe_scene"),
             Self::GetState => read_tool("smart_home.get_state"),
@@ -1513,6 +1516,7 @@ impl SmartHomeTool {
             Self::ListCapabilityGrants => read_tool("smart_home.list_capability_grants"),
             Self::GetCapabilityGrantSummary => read_tool("smart_home.get_capability_grant_summary"),
             Self::GetRuntimeSnapshot => read_tool("smart_home.get_runtime_snapshot"),
+            Self::GetTopologySummary => read_tool("smart_home.get_topology_summary"),
             Self::ListDesiredStates => read_tool("smart_home.list_desired_states"),
             Self::ListPairingSessions => read_tool("smart_home.list_pairing_sessions"),
             Self::ListWorkers => read_tool("smart_home.list_workers"),
@@ -2056,6 +2060,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::PairBridge,
         SmartHomeTool::ListBridges,
         SmartHomeTool::ListDevices,
+        SmartHomeTool::ListRooms,
         SmartHomeTool::ListScenes,
         SmartHomeTool::DescribeScene,
         SmartHomeTool::GetState,
@@ -2070,6 +2075,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::ListCapabilityGrants,
         SmartHomeTool::GetCapabilityGrantSummary,
         SmartHomeTool::GetRuntimeSnapshot,
+        SmartHomeTool::GetTopologySummary,
         SmartHomeTool::ListDesiredStates,
         SmartHomeTool::ListPairingSessions,
         SmartHomeTool::ListWorkers,
@@ -2875,7 +2881,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 28);
+        assert_eq!(catalog.len(), 30);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
@@ -2901,6 +2907,11 @@ mod tests {
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_scenes"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.list_rooms"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog
@@ -2953,6 +2964,11 @@ mod tests {
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog
             .iter()
+            .any(|tool| tool.tool_id == "smart_home.get_topology_summary"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog
+            .iter()
             .any(|tool| tool.tool_id == "smart_home.list_desired_states"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -2982,15 +2998,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 28);
-        assert_eq!(summary.read_tools, 24);
+        assert_eq!(summary.total_tools, 30);
+        assert_eq!(summary.read_tools, 26);
         assert_eq!(summary.write_tools, 0);
         assert_eq!(summary.external_tools, 4);
-        assert_eq!(summary.read_only_tier_tools, 24);
+        assert_eq!(summary.read_only_tier_tools, 26);
         assert_eq!(summary.low_risk_tier_tools, 3);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 1);
-        assert_eq!(summary.total_required_capabilities, 28);
+        assert_eq!(summary.total_required_capabilities, 30);
         assert_eq!(summary.risky_tool_count(), 4);
         assert_eq!(summary.approval_gated_tool_count(), 1);
         assert!(pair_bridge.requires_human_approval());

@@ -66,6 +66,10 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListCapabilityGrants` and
   `RuntimeReadToolRequest::GetCapabilityGrantSummary` for authorized D18D
   reads over registry-backed smart-home capability grant governance.
+- `RuntimeRoomQuery`, `RuntimeRoomSummary`,
+  `RuntimeReadToolRequest::ListRooms`, and
+  `RuntimeReadToolRequest::GetTopologySummary` for authorized D18D reads over
+  registry-derived room and topology coverage.
 - `RuntimeReadToolRequest::GetRuntimeSnapshot`,
   `RuntimeReadToolRequest::ListDesiredStates`, and
   `RuntimeReadToolRequest::ListPairingSessions` for authorized D18D reads over

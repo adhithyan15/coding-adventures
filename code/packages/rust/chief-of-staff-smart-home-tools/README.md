@@ -26,6 +26,7 @@ Chief of Staff job/session/agent
   -> D18D smart_home.discover / smart_home.command tool calls
   -> smart-home runtime authorization
   -> discovery records and unpaired bridge candidates
+  -> room topology and aggregate topology summary reads
   -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
   -> event-log and subscription-backlog reads
@@ -49,6 +50,7 @@ Chief of Staff job/session/agent
 - `smart_home.discover`
 - `smart_home.list_bridges`
 - `smart_home.list_devices`
+- `smart_home.list_rooms`
 - `smart_home.list_scenes`
 - `smart_home.describe_scene`
 - `smart_home.get_state`
@@ -65,6 +67,7 @@ Chief of Staff job/session/agent
 - `smart_home.list_capability_grants`
 - `smart_home.get_capability_grant_summary`
 - `smart_home.get_runtime_snapshot`
+- `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
 - `smart_home.list_pairing_sessions`
 - `smart_home.list_workers`
