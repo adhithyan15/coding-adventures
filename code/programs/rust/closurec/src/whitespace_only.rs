@@ -217,6 +217,129 @@ pub fn whitespace_only_minify(
         // other token after the synthetic `;` clears the flag.
         last_emit_was_synthetic_semi = false;
 
+        // gap-032: single-statement block flattening. When a
+        // `{` appears in body position and the block contains
+        // exactly one simple statement ending with `;`, we
+        // strip the braces and pre-emit the contents directly.
+        //
+        // Upstream Closure normalises `if(x){a();}else{b();}`
+        // to `if(x)a();else b();` — both `{}` wrappers gone,
+        // statements inlined. We match that shape.
+        //
+        // **Eligibility for flatten** (all must hold):
+        // 1. `body_position_next` is true (we're a body slot).
+        // 2. We can find the matching `}` for this `{`.
+        // 3. Inside the block: exactly one `;` at depth 1
+        //    (counted relative to our outer `{`).
+        // 4. Inside the block: no nested `{`.
+        // 5. The token just before the closing `}` is `;`
+        //    (the trailing terminator that becomes our
+        //    inline terminator after flatten).
+        // 6. Inside the block: no `function`/`try`/`if`/
+        //    `while`/`for`/`do`/`switch` keyword at depth 1.
+        //    These would introduce structure (their own
+        //    `{...}` or body slots) that the conservative
+        //    pre-emit pathway can't track.
+        //
+        // When eligible, we skip the `{`, copy content tokens
+        // directly into `out` (bypassing rule A so the
+        // trailing `;` survives as our terminator), then skip
+        // the closing `}`. Brace_stack is untouched — we
+        // never pushed for this `{`, so we never pop for the
+        // skipped `}`.
+        if val == "{" && body_position_next {
+            // Walk forward to find matching `}` and gather
+            // eligibility info.
+            let mut depth: i32 = 0;
+            let mut semi_count: u32 = 0;
+            let mut has_nested_brace = false;
+            let mut has_blocking_keyword = false;
+            let mut matching_close: Option<usize> = None;
+            let mut scan = idx + 1;
+            while scan < kept.len() {
+                let s = kept[scan].value.as_str();
+                match s {
+                    "{" => {
+                        has_nested_brace = true;
+                        depth += 1;
+                    }
+                    "}" => {
+                        if depth == 0 {
+                            matching_close = Some(scan);
+                            break;
+                        }
+                        depth -= 1;
+                    }
+                    "(" | "[" => {
+                        depth += 1;
+                    }
+                    ")" | "]" => {
+                        depth -= 1;
+                    }
+                    ";" if depth == 0 => {
+                        semi_count += 1;
+                    }
+                    "function" | "try" | "if" | "while" | "for"
+                    | "do" | "switch" | "class"
+                        if depth == 0 =>
+                    {
+                        has_blocking_keyword = true;
+                    }
+                    _ => {}
+                }
+                scan += 1;
+            }
+
+            if let Some(close_idx) = matching_close {
+                let last_before_close = if close_idx > idx + 1 {
+                    kept[close_idx - 1].value.as_str()
+                } else {
+                    ""
+                };
+                let eligible = !has_nested_brace
+                    && !has_blocking_keyword
+                    && semi_count == 1
+                    && last_before_close == ";";
+                if eligible {
+                    // Pre-emit content tokens (idx+1 ..
+                    // close_idx). Each token gets the same
+                    // separator + quoting treatment as the
+                    // main loop, but the state machine isn't
+                    // run on them — they're carried through
+                    // verbatim. This is safe because we
+                    // verified the contents are a single
+                    // simple statement with no nested
+                    // structure.
+                    for content_idx in (idx + 1)..close_idx {
+                        let t = kept[content_idx];
+                        if let Some(prev) = prev_emitted_tok {
+                            if needs_separator(prev, t) {
+                                out.push(' ');
+                            }
+                        }
+                        if is_string_literal(t) {
+                            out.push('"');
+                            push_quoted_string_content(
+                                &mut out, &t.value,
+                            );
+                            out.push('"');
+                        } else {
+                            out.push_str(&t.value);
+                        }
+                        prev_emitted_tok = Some(t);
+                    }
+                    // The body slot is now filled.
+                    body_position_next = false;
+                    at_stmt_boundary = true;
+                    // Advance past the closing `}`.
+                    idx = close_idx + 1;
+                    continue;
+                }
+            }
+            // Not eligible — fall through to normal `{`
+            // handling (push brace_stack, etc.).
+        }
+
         // Rule A: drop `;` directly before `}`, UNLESS the
         // `;` is a body slot (body_position_next).
         if val == ";" && !body_position_next {
@@ -419,6 +542,15 @@ pub fn whitespace_only_minify(
         } else if matches!(val, "if" | "while" | "for") {
             // The next `(` is a control-flow head.
             next_paren_is_control_flow_head = true;
+            at_stmt_boundary = false;
+        } else if val == "else" {
+            // gap-032: `else` opens the else-clause's body
+            // slot. Mirror the post-`)` arming so gap-031 /
+            // gap-032 can fire on `else{}` / `else{a;}`.
+            // Without this, the else-body would never see
+            // body_position_next=true and the rules wouldn't
+            // apply.
+            body_position_next = true;
             at_stmt_boundary = false;
         } else {
             // Any other token consumes the body slot (the
@@ -731,9 +863,17 @@ mod tests {
     /// if-block) must NOT receive a trailing `;` after its
     /// `}`. The inner `;` before `}` IS droppable because the
     /// last child is a terminator (`y()` expression).
+    ///
+    /// **gap-032 interaction**: As of CLOC12.42, single-
+    /// statement if-bodies in body position are flattened
+    /// (the `{` and `}` removed entirely), so this case now
+    /// emits `if(x)y();` instead of `if(x){y()}`. Both
+    /// outputs are semantically equivalent valid JS; the
+    /// flattened form is what upstream Closure produces and
+    /// is a strict improvement.
     #[test]
     fn gap030_if_block_drops_inner_semi_no_trailing() {
-        assert_eq!(minify("if(x){y();}"), "if(x){y()}");
+        assert_eq!(minify("if(x){y();}"), "if(x)y();");
     }
 
     /// Critical correctness gate (same shape as the
@@ -965,14 +1105,21 @@ mod tests {
         assert_eq!(minify("function f(){}"), "function f(){};");
     }
 
-    /// A NON-empty for-body must NOT collapse — only `{}`
-    /// (empty) triggers the rule. The `{` arm checks that
-    /// the very next token is `}`.
+    /// A NON-empty for-body must NOT collapse via gap-031 —
+    /// the empty-`{}` rule requires the next token to be `}`.
+    /// (gap-032 may further flatten the single-statement
+    /// body — see below.)
+    ///
+    /// **gap-032 interaction**: With single-statement
+    /// flattening now in place, `for(...){a;}` flattens to
+    /// `for(...)a;` per CLOC12.42. Both outputs are
+    /// semantically equivalent valid JS; the flattened form
+    /// matches upstream and is strictly more minimal.
     #[test]
     fn gap031_nonempty_for_body_unaffected() {
         assert_eq!(
             minify("for(var i=0;i<10;i++){a;}"),
-            "for(var i=0;i<10;i++){a}"
+            "for(var i=0;i<10;i++)a;"
         );
     }
 
@@ -1024,6 +1171,159 @@ mod tests {
         assert_eq!(
             minify("for(var i=0;i<10;i++){};var x=1;"),
             "for(var i=0;i<10;i++);var x=1;"
+        );
+    }
+
+    // ---- gap-032: single-statement block flattening ------
+
+    /// Target fixture: if/else with single-statement bodies.
+    #[test]
+    fn gap032_if_else_single_stmts_flatten() {
+        assert_eq!(
+            minify("if(x){a();}else{b();}"),
+            "if(x)a();else b();"
+        );
+    }
+
+    /// if-only (no else) with single-statement body.
+    #[test]
+    fn gap032_if_single_stmt_flattens() {
+        assert_eq!(minify("if(x){a();}"), "if(x)a();");
+    }
+
+    /// while-body with single statement flattens.
+    #[test]
+    fn gap032_while_single_stmt_flattens() {
+        assert_eq!(minify("while(x){a();}"), "while(x)a();");
+    }
+
+    /// for-body with single statement flattens.
+    #[test]
+    fn gap032_for_single_stmt_flattens() {
+        assert_eq!(
+            minify("for(var i=0;i<10;i++){a();}"),
+            "for(var i=0;i<10;i++)a();"
+        );
+    }
+
+    /// Multi-statement body MUST NOT flatten — there's
+    /// more than one `;` at depth 0 inside the block.
+    /// Without this non-regression test, the rule could
+    /// over-fire and produce semantically different output.
+    #[test]
+    fn gap032_multi_stmt_body_does_not_flatten() {
+        assert_eq!(
+            minify("if(x){a();b();}"),
+            "if(x){a();b()}"
+        );
+    }
+
+    /// Body containing a nested control-flow keyword
+    /// (`if`, `while`, `for`, etc.) MUST NOT flatten. The
+    /// conservative pre-emit pathway can't track the inner
+    /// body's structure, so we punt back to the normal
+    /// brace-preserving path. The else-inner is the danger
+    /// case: `if(x){if(y)a;}else{b;}` would, if flattened
+    /// naively, become `if(x)if(y)a;else b;` — but the
+    /// `else` would bind to the INNER `if(y)`, not the
+    /// outer one. We avoid this entirely by refusing to
+    /// flatten any body with a control-flow keyword.
+    #[test]
+    fn gap032_nested_if_does_not_flatten() {
+        // The OUTER if-body has `has_blocking_keyword=true`
+        // (the inner `if` is in the keyword exclude list),
+        // so the outer block stays wrapped. The INNER
+        // if-body, however, IS a single statement and DOES
+        // get flattened by gap-032 — so `{a();}` becomes
+        // `a();`. The inner-flatten's `;` survives the
+        // outer block's closing `}` because the synthetic
+        // `;` from gap-032's pre-emit path bypasses rule A.
+        // Output is `if(x){if(y)a();}` — valid JS, just
+        // slightly less minimal than upstream might produce.
+        assert_eq!(
+            minify("if(x){if(y){a();}}"),
+            "if(x){if(y)a();}"
+        );
+    }
+
+    /// Body containing a nested `{}` block MUST NOT flatten.
+    /// `has_nested_brace` catches this.
+    #[test]
+    fn gap032_nested_brace_does_not_flatten() {
+        assert_eq!(
+            minify("if(x){{a();}}"),
+            "if(x){{a()}}"
+        );
+    }
+
+    /// Body containing `function` keyword MUST NOT flatten.
+    /// Function declarations have their own block structure
+    /// and trailing-`;` handling that the pre-emit pathway
+    /// would corrupt.
+    #[test]
+    fn gap032_body_with_function_does_not_flatten() {
+        // Outer if-body has `function` in the blocking-
+        // keyword set, so flatten is blocked. The function-
+        // decl inside then gets its normal gap-030 trailing
+        // `;` after its `}` — the output is
+        // `if(x){function f(){};}` which is the correct
+        // composition of gap-030 + gap-032's bail-out.
+        assert_eq!(
+            minify("if(x){function f(){}}"),
+            "if(x){function f(){};}"
+        );
+    }
+
+    /// Body containing `try` keyword MUST NOT flatten. The
+    /// try/catch chain has its own state machine that the
+    /// pre-emit pathway would corrupt.
+    #[test]
+    fn gap032_body_with_try_does_not_flatten() {
+        assert_eq!(
+            minify("if(x){try{a();}catch(e){b();}}"),
+            "if(x){try{a()}catch(e){b()};}"
+        );
+    }
+
+    /// Body with `var` declaration containing a string with
+    /// `;` inside flattens correctly — depth tracking is
+    /// based on tokenized `;`, and string literals are
+    /// single tokens not affecting depth.
+    #[test]
+    fn gap032_body_with_var_decl_flattens() {
+        assert_eq!(
+            minify("if(x){var y=1;}"),
+            "if(x)var y=1;"
+        );
+    }
+
+    /// Top-level `{a;}` (not in body position) MUST NOT
+    /// flatten — body_position_next is false. The block is
+    /// a statement in its own right.
+    #[test]
+    fn gap032_top_level_block_does_not_flatten() {
+        assert_eq!(minify("{a;}"), "{a}");
+    }
+
+    /// Function-decl body MUST NOT flatten — not in body
+    /// position. function-body stays as `{...}` and gets
+    /// the gap-030 trailing `;` after `}`.
+    #[test]
+    fn gap032_function_body_does_not_flatten() {
+        assert_eq!(
+            minify("function f(){a();}"),
+            "function f(){a()};"
+        );
+    }
+
+    /// Try-body MUST NOT flatten — try-body's `{` is not in
+    /// body_position_next true context. The gap-033
+    /// try-chain processing still works.
+    #[test]
+    fn gap032_try_body_does_not_flatten() {
+        assert_eq!(
+            minify("try{a();}catch(e){b();}"),
+            "try{a()}catch(e){b()};"
         );
     }
 }

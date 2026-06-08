@@ -249,13 +249,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-032 — single-statement if/else block flattening (CLI)
 
-- **Status:** OPEN — newly discovered by CLOC14.3. **Counterpart to gap-010** (which closes the AST-level version via DCE block-flattening, resolved in CLOC12.19).
-- **Upstream byte-identity test:** `minify_if_else` seed fixture.
-- **Why it fails:** Upstream emits single-statement if/else bodies WITHOUT enclosing `{}`:
-  - Input: `if(x){a();}else{b();}`
-  - Upstream: `if(x)a();else b();`
-  - closurec: `if(x){a()}else{b()}`
-- **What it needs:** The AST-level pass (DCE block-flattening) does this transformation, but the CLI's WHITESPACE_ONLY path doesn't invoke the AST pipeline. Either: (a) route WHITESPACE_ONLY through a minimal AST → emit cycle for this rule, OR (b) add a CLI-only token-level "drop `{}` around single-stmt body" rule, OR (c) accept that WHITESPACE_ONLY's mandate is "preserve source statement shape" and this is upstream over-stepping its level (Closure does this anyway under WHITESPACE_ONLY — verified). Option (a) is the path-of-least-divergence and most pipeline-aligned.
+- **Status:** **RESOLVED** in CLOC12.42 (PR pending). `minify_if_else` flipped IGNORED → PASS. **The byte-identity harness now reports 17 matched, 0 failed, 0 skipped (of 17 total)** — the entire 17-fixture seed set is byte-for-byte identical to upstream.
+- **Upstream byte-identity test:** `minify_if_else` seed fixture. PASS.
+- **Resolution:** Option (b) chosen — a CLI-only token-level rule. When the re-stitcher encounters `{` in body position, it forward-scans for the matching `}` collecting eligibility info: must have exactly 1 `;` at depth 0, no nested `{`, no `function`/`try`/`if`/`while`/`for`/`do`/`switch`/`class` keyword at depth 0, and the last token before the close-`}` must be `;`. When eligible, the inner content is pre-emitted directly (bypassing the main loop), then both braces are skipped. Also armed: `else` keyword now sets `body_position_next = true`, so the else-clause body becomes a flatten target too. 13 inline tests pin the rule + non-regressions. Pre-push security review traced 6 concerns (dangling-else, string literals containing structural chars, regex literals, prev_emitted_tok, paren_stack/brace_stack invariants) — verdict PASS.
 
 ### gap-033 — try/catch trailing `;` after `}`
 
