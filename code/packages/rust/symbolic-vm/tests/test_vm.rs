@@ -1455,6 +1455,15 @@ fn eval_at(node: &symbolic_ir::IRNode, xval: f64) -> f64 {
                 ("Asin", [v]) => eval_at(v, xval).asin(),
                 ("Acos", [v]) => eval_at(v, xval).acos(),
                 ("Atan", [v]) => eval_at(v, xval).atan(),
+                ("Sinh", [v]) => eval_at(v, xval).sinh(),
+                ("Cosh", [v]) => eval_at(v, xval).cosh(),
+                ("Tanh", [v]) => eval_at(v, xval).tanh(),
+                ("Coth", [v]) => {
+                    let u = eval_at(v, xval);
+                    u.cosh() / u.sinh()
+                }
+                ("Sech", [v]) => 1.0 / eval_at(v, xval).cosh(),
+                ("Csch", [v]) => 1.0 / eval_at(v, xval).sinh(),
                 _ => panic!("eval_at: unsupported head {h}"),
             }
         }
@@ -1880,6 +1889,56 @@ fn phase13_x_tanh_x_falls_through() {
     let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(TANH), vec![sym("x")])]);
     let result = integrate(integrand);
     assert!(is_unevaluated_integrate(&result), "x*tanh(x) should remain deferred; got {result:?}");
+}
+
+#[test]
+fn phase15_coth_linear_derivative_matches() {
+    let arg = apply(sym(ADD), vec![apply(sym(MUL), vec![int(2), sym("x")]), int(1)]);
+    let phi = integrate(apply(sym(COTH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close coth(2x+1); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[0.2_f64, 0.6, 1.0] {
+        let u = 2.0 * x_val + 1.0;
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = u.cosh() / u.sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_sech_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![int(3), sym("x")]);
+    let phi = integrate(apply(sym(SECH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close sech(3x); got {phi:?}");
+    assert!(contains_head(&phi, ATAN), "expected Atan term in {phi:?}");
+    assert!(contains_head(&phi, SINH), "expected Sinh term in {phi:?}");
+    for &x_val in &[-0.4_f64, 0.2, 0.8] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (3.0 * x_val).cosh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_csch_linear_derivative_matches() {
+    let arg = apply(sym(MUL), vec![rat(1, 2), sym("x")]);
+    let phi = integrate(apply(sym(CSCH), vec![arg]));
+    assert!(!is_unevaluated_integrate(&phi), "Phase 15 should close csch(x/2); got {phi:?}");
+    assert!(contains_head(&phi, LOG), "expected Log term in {phi:?}");
+    assert!(contains_head(&phi, TANH), "expected Tanh term in {phi:?}");
+    for &x_val in &[0.6_f64, 1.2, 2.0] {
+        let got = phase34_numerical_derivative(&phi, x_val);
+        let expected = 1.0 / (x_val / 2.0).sinh();
+        assert!((got - expected).abs() < 1e-4, "x={x_val}: got={got}, expected={expected}");
+    }
+}
+
+#[test]
+fn phase15_x_coth_x_falls_through() {
+    let integrand = apply(sym(MUL), vec![sym("x"), apply(sym(COTH), vec![sym("x")])]);
+    let result = integrate(integrand);
+    assert!(is_unevaluated_integrate(&result), "x*coth(x) should remain deferred; got {result:?}");
 }
 
 // ---------------------------------------------------------------------------

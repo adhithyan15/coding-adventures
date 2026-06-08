@@ -2160,6 +2160,8 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         (ASINH, [_]) | (ACOSH, [_]) => try_asinh_acosh_poly_product(f, &IRNode::Integer(1), x)
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
+        (COTH, [_]) | (SECH, [_]) | (CSCH, [_]) => try_recip_hyp_linear(f, x)
+            .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         (TANH, [_]) | (ATANH, [_]) => try_tanh_atanh_linear(f, x)
             .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])),
         _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
@@ -4319,6 +4321,43 @@ fn try_tanh_atanh_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
             apply_node(MUL, vec![rc_to_ir(log_coef)?, apply_node(LOG, vec![log_arg])]),
         ],
     ))
+}
+
+fn try_recip_hyp_linear(transcendental: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = transcendental else {
+        return None;
+    };
+    let IRNode::Symbol(head) = &apply.head else {
+        return None;
+    };
+    if !matches!(head.as_str(), COTH | SECH | CSCH) || apply.args.len() != 1 {
+        return None;
+    }
+    let arg_ir = &apply.args[0];
+    if !depends_on(arg_ir, x) {
+        return None;
+    }
+    let (a, _) = linear_arg_coeffs(arg_ir, x)?;
+    let inv_a = rc_to_ir(rc_div(RC_ONE, a)?)?;
+
+    match head.as_str() {
+        COTH => Some(apply_node(
+            MUL,
+            vec![inv_a, apply_node(LOG, vec![apply_node(SINH, vec![arg_ir.clone()])])],
+        )),
+        SECH => Some(apply_node(
+            MUL,
+            vec![inv_a, apply_node(ATAN, vec![apply_node(SINH, vec![arg_ir.clone()])])],
+        )),
+        CSCH => {
+            let half_arg = apply_node(MUL, vec![IRNode::Rational(1, 2), arg_ir.clone()]);
+            Some(apply_node(
+                MUL,
+                vec![inv_a, apply_node(LOG, vec![apply_node(TANH, vec![half_arg])])],
+            ))
+        }
+        _ => None,
+    }
 }
 
 fn sqrt_t_plus_one_decompose(q_tilde: &[RatC]) -> Option<(RatPoly, RatPoly)> {
