@@ -64,6 +64,44 @@ how the real Adj-Lang / MYCIN-2026 handles defeasible rules; ADJ84's flat engine
 purpose so the conflict is visible. Implementing it is the obvious next step (and would likely
 move N3 to ✓✓ and leave the parity conclusion intact).
 
+## UPDATE v2 — override-precedence engine: Haiku == Opus, 4/4 correct
+Adding the standard defeasible-reasoning precedence to the engine — (1) a rule whose
+`source_span` carries an override marker ("except"/"regardless"/"unless"/...) dominates the
+rule it excepts; (2) failing that, the more-specific (more-conditioned) rule wins — resolves
+both conflicts: N3 -> $0 for BOTH models (override-marker), Opus's N1 -> 100% (specificity).
+Result: **all 8 runs gold-correct, byte-accounting clean. Haiku+framework == Opus+framework
+on every item.** The determinate-correctness gap in v1 was an engine limitation, not a model
+gap. (Added transparently after seeing v1 conflicts; v1 results above are preserved.)
+
+## UPDATE v3 — the 0.5B LOCAL arm + the byte-accounting GATE: defensibility is model-independent, capability is not
+Deployment shape (ADJ79/81): rulebook compiled offline; `qwen2.5:0.5b` does input-IR
+extraction ONLY; engine adjudicates. Added a GATE: if any slot fails byte-verification
+(hallucinated), the engine returns UNSAFE and refuses — a verdict built on an unverifiable
+slot is never defensible. Three-model result (4 items):
+
+| model (extractor) | defensible | correct yield |
+|---|---|---|
+| Opus + framework | 4/4 | 4/4 |
+| Haiku + framework | 4/4 | 4/4 |
+| qwen2.5:0.5b + framework | **4/4** | **0/4** |
+
+The 0.5B hallucinated the dispositive slots on U6/U1 (byte-check caught it -> UNSAFE) and
+emitted unparseable IR on N1/N3 (-> abstain). In EVERY case the framework made it abstain
+rather than emit a confident wrong grounded answer. So:
+- **Defensibility is framework-bound and model-independent (4/4/4):** the engine + byte-gate
+  guarantee no model — not even a 0.5B — produces an indefensible (confidently-wrong,
+  ungrounded) verdict. This is the real "defensibility-parity" result, and it extends BELOW
+  Haiku to a tiny local model.
+- **Capability (yield of correct answers) is model-bound (4/4/0):** faithful extraction is
+  within Haiku/Opus's reach but not the 0.5B's here, so the 0.5B's safety comes at the cost of
+  answering nothing. The framework converts the 0.5B's incapacity into SAFE ABSTENTION, not error.
+
+Caveat: the 0.5B's 0/4 yield is partly a METHOD artifact — one-shot JSON slot-filling is the
+exact rigid-format task that chokes a 0.5B (ADJ77). ADJ78 showed a 0.5B CAN build byte-
+accounted IR via STAGED natural-language extraction (copy-the-phrase per slot). Re-running the
+0.5B arm with that method (expected: yield rises, defensibility stays 4/4) is the immediate
+follow-up — and is the actual airgapped deployment recipe.
+
 ## Limitations
 - n=4 items, 2 models, single run each; sub-agent extraction is nondeterministic.
 - Stage outputs were transcribed by the author into `runner.py` (faithful to the transcripts);

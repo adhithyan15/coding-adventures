@@ -91,6 +91,34 @@ def verify_spans(slots, input_text):
 
 
 # ---------------------------------------------------------------------------
+# Precedence for DEFEASIBLE rules (added in v2; see FINDINGS "override-precedence").
+# When several satisfied rules disagree, resolve by the two classic precedence
+# principles of defeasible reasoning (this is how Adj-Lang / MYCIN handle it):
+#   1. OVERRIDE MARKER: a rule whose source_span carries override language
+#      ("except", "regardless", "unless", "however", "instead", "notwithstanding")
+#      states an exception and dominates the rule it excepts.
+#   2. SPECIFICITY: failing that, the rule with MORE conditions (more specific) wins.
+# If neither breaks the tie, it remains a genuine CONFLICT.
+# ---------------------------------------------------------------------------
+OVERRIDE_MARKERS = ("except", "regardless", "unless", "however", "instead", "notwithstanding")
+
+
+def _specificity(rule):
+    return len(rule.get("when", {}))
+
+
+def resolve_precedence(satisfied):
+    marked = [r for r in satisfied
+              if any(m in (r.get("source_span") or "").lower() for m in OVERRIDE_MARKERS)]
+    pool = marked or satisfied
+    max_spec = max(_specificity(r) for r in pool)
+    top = [r for r in pool if _specificity(r) == max_spec]
+    if len({r["then"] for r in top}) == 1:
+        return top[0], ("override-marker" if marked else "specificity")
+    return None, "unresolved"
+
+
+# ---------------------------------------------------------------------------
 # The deterministic adjudication.
 # ---------------------------------------------------------------------------
 def adjudicate(input_ir, rulebook_ir, input_text):
@@ -119,8 +147,13 @@ def adjudicate(input_ir, rulebook_ir, input_text):
         verdict = "DETERMINATE"
         answer = next(iter(consequences_satisfied))
     elif len(consequences_satisfied) > 1:
-        verdict = "CONFLICT"          # multiple satisfied rules disagree
-        answer = None
+        winner, how = resolve_precedence(satisfied)   # defeasible precedence (v2)
+        if winner is not None:
+            verdict = f"DETERMINATE(precedence:{how})"
+            answer = winner["then"]
+        else:
+            verdict = "CONFLICT"      # multiple satisfied rules genuinely disagree
+            answer = None
     elif rulebook_ir.get("default"):
         verdict = "DETERMINATE(default)"
         answer = rulebook_ir["default"]["then"]
@@ -129,6 +162,13 @@ def adjudicate(input_ir, rulebook_ir, input_text):
         answer = None
 
     hallucinated = [k for k, v in span_report.items() if v.startswith("HALLUCINATED")]
+    # BYTE-ACCOUNTING GATE (v3): a verdict built on an unverifiable (hallucinated) slot is not
+    # defensible no matter what the rules say. Refuse rather than emit a confidently-wrong,
+    # ungrounded answer. This is what makes even a weak extractor SAFE: it abstains, never
+    # overclaims. (The audit trail still records which slot failed verification.)
+    if hallucinated:
+        verdict, answer = "UNSAFE(unverified-extraction)", None
+
     return {
         "verdict": verdict,
         "answer": answer,
