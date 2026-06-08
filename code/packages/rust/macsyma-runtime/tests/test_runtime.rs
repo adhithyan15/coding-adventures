@@ -74,6 +74,19 @@ fn parses_and_renders_question_mark_help() {
 }
 
 #[test]
+fn canonicalizes_ode2_surface_name_to_ode2_head() {
+    let table = macsyma_name_table();
+    assert_eq!(table.get("ode2").map(String::as_str), Some("ODE2"));
+
+    let mut session = MacsymaSession::new();
+    let results = session.eval_source("ode2(foo, y, x);").unwrap();
+    let expected = apply(sym("ODE2"), vec![sym("foo"), sym("y"), sym("x")]);
+
+    assert_eq!(results[0].input, expected);
+    assert_eq!(results[0].output, expected);
+}
+
+#[test]
 fn factors_univariate_integer_polynomials_through_runtime() {
     let mut session = MacsymaSession::new();
     let results = session.eval_source("factor(x^2 - 1);").unwrap();
@@ -448,9 +461,7 @@ fn recognizes_complete_elliptic_third_kind_integrals_through_runtime() {
     // ∫₀^(π/2) 1/((1 + n*sin(theta)^2) * sqrt(1 - k^2*sin(theta)^2)) dtheta  →  EllipticPi(n, k)
     let mut session = MacsymaSession::new();
     let results = session
-        .eval_source(
-            "integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);",
-        )
+        .eval_source("integrate(1/((1+n*sin(theta)^2)*sqrt(1-k^2*sin(theta)^2)), theta, 0, %pi/2);")
         .unwrap();
 
     assert_eq!(
