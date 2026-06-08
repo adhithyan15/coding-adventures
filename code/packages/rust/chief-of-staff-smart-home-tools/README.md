@@ -31,6 +31,7 @@ Chief of Staff job/session/agent
   -> event-log and subscription-backlog reads
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> non-mutating supervision plan previews
+  -> supervised worker inventory and heartbeat schedule reads
   -> device command acceptance
   -> optimistic state update
   -> D18D trace and audit record
@@ -59,6 +60,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_runtime_snapshot`
 - `smart_home.list_desired_states`
 - `smart_home.list_pairing_sessions`
+- `smart_home.list_workers`
+- `smart_home.get_worker_heartbeat_schedule`
 - `smart_home.get_supervision_plan`
 - `smart_home.pair_bridge`
 - `smart_home.observe_supervision`

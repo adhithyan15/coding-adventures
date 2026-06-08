@@ -1526,24 +1526,7 @@ impl RuntimeSupervisor {
     }
 
     pub fn snapshot_at(&self, now_ms: u64) -> RuntimeSupervisorSnapshot {
-        let mut snapshot = RuntimeSupervisorSnapshot {
-            generated_at_ms: now_ms,
-            ..RuntimeSupervisorSnapshot::default()
-        };
-        for worker in self.workers.values() {
-            snapshot.worker_count += 1;
-            if worker.is_overdue_at(now_ms) {
-                snapshot.restart_due_count += 1;
-            }
-            match worker.status {
-                WorkerStatus::Starting => snapshot.starting_count += 1,
-                WorkerStatus::Running => snapshot.running_count += 1,
-                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
-                WorkerStatus::Restarting => snapshot.restarting_count += 1,
-                WorkerStatus::Stopped => snapshot.stopped_count += 1,
-            }
-        }
-        snapshot
+        RuntimeSupervisorSnapshot::from_workers_at(self.workers.values(), now_ms)
     }
 
     pub fn query_workers(&self, query: &SupervisedWorkerQuery) -> Vec<&SupervisedBridgeWorker> {
@@ -1639,6 +1622,30 @@ pub struct RuntimeSupervisorSnapshot {
 }
 
 impl RuntimeSupervisorSnapshot {
+    pub fn from_workers_at<'a, I>(workers: I, now_ms: u64) -> Self
+    where
+        I: IntoIterator<Item = &'a SupervisedBridgeWorker>,
+    {
+        let mut snapshot = Self {
+            generated_at_ms: now_ms,
+            ..Self::default()
+        };
+        for worker in workers {
+            snapshot.worker_count += 1;
+            if worker.is_overdue_at(now_ms) {
+                snapshot.restart_due_count += 1;
+            }
+            match worker.status {
+                WorkerStatus::Starting => snapshot.starting_count += 1,
+                WorkerStatus::Running => snapshot.running_count += 1,
+                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
+                WorkerStatus::Restarting => snapshot.restarting_count += 1,
+                WorkerStatus::Stopped => snapshot.stopped_count += 1,
+            }
+        }
+        snapshot
+    }
+
     pub fn has_restart_pressure(&self) -> bool {
         self.restart_due_count > 0 || self.unhealthy_count > 0
     }
@@ -3262,6 +3269,14 @@ pub enum RuntimeReadToolRequest {
     ListPairingSessions {
         query: RuntimePairingSessionQuery,
     },
+    ListWorkers {
+        query: SupervisedWorkerQuery,
+    },
+    GetWorkerHeartbeatSchedule {
+        bridge_id: Option<BridgeId>,
+        due_at_or_before_ms: Option<u64>,
+        limit: Option<usize>,
+    },
     GetSupervisionPlan,
     ObserveSupervision,
 }
@@ -3281,6 +3296,8 @@ impl RuntimeReadToolRequest {
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
             Self::ListDesiredStates { .. } => SmartHomeTool::ListDesiredStates,
             Self::ListPairingSessions { .. } => SmartHomeTool::ListPairingSessions,
+            Self::ListWorkers { .. } => SmartHomeTool::ListWorkers,
+            Self::GetWorkerHeartbeatSchedule { .. } => SmartHomeTool::GetWorkerHeartbeatSchedule,
             Self::GetSupervisionPlan => SmartHomeTool::GetSupervisionPlan,
             Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
@@ -3506,6 +3523,11 @@ pub enum RuntimeReadToolOutput {
         sessions: Vec<RuntimePairingSession>,
         summary: RuntimePairingSessionInventorySummary,
     },
+    Workers {
+        workers: Vec<SupervisedBridgeWorker>,
+        summary: RuntimeSupervisorSnapshot,
+    },
+    WorkerHeartbeatSchedule(WorkerHeartbeatSchedule),
     SupervisionPlan(RuntimeSupervisionPlan),
     SupervisionObservation(RuntimeSupervisionObservation),
 }
@@ -4418,6 +4440,31 @@ impl SmartHomeRuntime {
                 );
                 let sessions = session_refs.into_iter().cloned().collect();
                 Ok(RuntimeReadToolOutput::PairingSessions { sessions, summary })
+            }
+            RuntimeReadToolRequest::ListWorkers { query } => {
+                let worker_refs = self.supervisor.query_workers(&query);
+                let summary =
+                    RuntimeSupervisorSnapshot::from_workers_at(worker_refs.iter().copied(), now_ms);
+                let workers = worker_refs.into_iter().cloned().collect();
+                Ok(RuntimeReadToolOutput::Workers { workers, summary })
+            }
+            RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
+                bridge_id,
+                due_at_or_before_ms,
+                limit,
+            } => {
+                let mut schedule = self.worker_heartbeat_schedule_at(now_ms);
+                schedule.deadlines.retain(|deadline| {
+                    bridge_id
+                        .as_ref()
+                        .is_none_or(|bridge_id| &deadline.bridge_id == bridge_id)
+                        && due_at_or_before_ms
+                            .is_none_or(|due_at_ms| deadline.due_at_ms <= due_at_ms)
+                });
+                if let Some(limit) = limit {
+                    schedule.deadlines.truncate(limit);
+                }
+                Ok(RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule))
             }
             RuntimeReadToolRequest::GetSupervisionPlan => Ok(
                 RuntimeReadToolOutput::SupervisionPlan(self.supervision_plan_at(now_ms)?),
@@ -7941,7 +7988,34 @@ mod tests {
             )
             .unwrap();
         let observation = runtime
-            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_513)
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ObserveSupervision,
+                1_513,
+            )
+            .unwrap();
+        let workers = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListWorkers {
+                    query: SupervisedWorkerQuery::new()
+                        .with_status(WorkerStatus::Starting)
+                        .overdue_at(1_514)
+                        .sorted_by(SupervisedWorkerSort::HeartbeatDueAt),
+                },
+                1_514,
+            )
+            .unwrap();
+        let heartbeat_schedule = runtime
+            .execute_read_tool(
+                principal,
+                RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
+                    bridge_id: Some(BridgeId::trusted("bridge-1")),
+                    due_at_or_before_ms: Some(1_515),
+                    limit: Some(1),
+                },
+                1_515,
+            )
             .unwrap();
 
         assert!(matches!(
@@ -8066,7 +8140,26 @@ mod tests {
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 14);
+        assert!(matches!(
+            workers,
+            RuntimeReadToolOutput::Workers { workers, summary }
+                if workers.len() == 1
+                    && workers[0].bridge_id == BridgeId::trusted("bridge-1")
+                    && workers[0].status == WorkerStatus::Starting
+                    && summary.generated_at_ms == 1_514
+                    && summary.worker_count == 1
+                    && summary.restart_due_count == 1
+        ));
+        assert!(matches!(
+            heartbeat_schedule,
+            RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule)
+                if schedule.generated_at_ms == 1_515
+                    && schedule.len() == 1
+                    && schedule.next_due_at_ms() == Some(1_100)
+                    && schedule.deadlines[0].bridge_id == BridgeId::trusted("bridge-1")
+                    && schedule.deadlines[0].is_due_at(1_515)
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 16);
         assert!(runtime
             .registry()
             .authorization_decisions()

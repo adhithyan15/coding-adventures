@@ -40,3 +40,7 @@ All notable changes to this package will be documented in this file.
 - Added `smart_home.get_supervision_plan` over the D23 runtime read facade so
   Chief of Staff jobs can preview due pairing, refresh, reconciliation,
   restart, and discovery work without ticking supervision.
+- Added `smart_home.list_workers` and
+  `smart_home.get_worker_heartbeat_schedule` over the D23 runtime read facade
+  so Chief of Staff jobs can inspect supervised bridge workers and heartbeat
+  deadlines without mutating supervisor state.

@@ -53,6 +53,8 @@ Current scope:
   inspecting checkpointed runtime event-log entries
 - D18D runtime automation inventory tool descriptors for read-only snapshots,
   desired-state targets, and pairing-session status
+- D18D bridge-worker inventory descriptors for read-only supervisor and
+  heartbeat deadline inspection
 - D18D supervision planning tool descriptor for non-mutating due-work previews
 - compact smart-home tool catalog summaries for read-side inspection
 - read-only supervision observation tool descriptor for Chief of Staff status
