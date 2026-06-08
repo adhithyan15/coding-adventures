@@ -1,0 +1,45 @@
+{
+  "summary": "Recursive byte-provenance coverage gate on the decomposed IR (Haiku only). Enumerate given inputs -> decompose -> audit unaccounted inputs -> force use-or-justified-discard -> adversarially test each discard -> if a discard fails, require the input and re-decompose -> repeat until every given input is represented or validly discarded -> solve. NO hand-tipping: the solver is never told the answer or which input matters; the gate only enforces coverage. Tests whether byte-provenance enforcement ALONE gets Haiku to the right answer on the Al(OH)3 solubility problem (it had silently dropped the given K_f).",
+  "agentCount": 5,
+  "logs": [],
+  "result": {
+    "inputs": [
+      "K_sp of Al(OH)_3 = 5.3 * 10^(-27)",
+      "K_f of Al(OH)_4^(-) = 1.1 * 10^31"
+    ],
+    "iterations": 1,
+    "coverage_log": [
+      {
+        "iter": 1,
+        "facts": [
+          "Ksp of Al(OH)3 = 5.3 × 10^(-27)",
+          "Kf of Al(OH)4^(-) complex formation constant = 1.1 × 10^31",
+          "For the dissolution equilibrium Al(OH)3(s) ⇌ Al^(3+) + 3 OH^(-), the solubility product is Ksp = [Al^(3+)][OH^(-)]^3",
+          "In pure water, [OH^(-)] is determined by the autoionization equilibrium of water: Kw = [H^(+)][OH^(-)] = 1.0 × 10^(-14) at 25°C, giving [OH^(-)] = 1.0 × 10^(-7) M from neutral pH = 7",
+          "The dissolution of Al(OH)3 in pure water produces Al^(3+) ions which immediately hydrolyze and form complexes; the solubility s = [Al^(3+)]_total represents all dissolved aluminum species",
+          "Since [OH^(-)] from pure water (1.0 × 10^(-7) M) is given and fixed by the water autoionization equilibrium, the Ksp expression directly yields: [Al^(3+)] = Ksp / [OH^(-)]^3",
+          "The solubility of Al(OH)3 in pure water is determined solely by the Ksp and the [OH^(-)] concentration from water autoionization; the complex formation constant Kf for Al(OH)4^(-) is not needed for this calculation because it describes reactions in basic solutions where excess OH^(-) is present",
+          "Calculation: s = [Al^(3+)] = Ksp / [OH^(-)]^3 = 5.3 × 10^(-27) / (1.0 × 10^(-7))^3 = 5.3 × 10^(-27) / (1.0 × 10^(-21)) = 5.3 × 10^(-6) mol L^(-1)"
+        ],
+        "unaccounted": []
+      }
+    ],
+    "final_facts": [
+      "Ksp of Al(OH)3 = 5.3 × 10^(-27)",
+      "Kf of Al(OH)4^(-) complex formation constant = 1.1 × 10^31",
+      "For the dissolution equilibrium Al(OH)3(s) ⇌ Al^(3+) + 3 OH^(-), the solubility product is Ksp = [Al^(3+)][OH^(-)]^3",
+      "In pure water, [OH^(-)] is determined by the autoionization equilibrium of water: Kw = [H^(+)][OH^(-)] = 1.0 × 10^(-14) at 25°C, giving [OH^(-)] = 1.0 × 10^(-7) M from neutral pH = 7",
+      "The dissolution of Al(OH)3 in pure water produces Al^(3+) ions which immediately hydrolyze and form complexes; the solubility s = [Al^(3+)]_total represents all dissolved aluminum species",
+      "Since [OH^(-)] from pure water (1.0 × 10^(-7) M) is given and fixed by the water autoionization equilibrium, the Ksp expression directly yields: [Al^(3+)] = Ksp / [OH^(-)]^3",
+      "The solubility of Al(OH)3 in pure water is determined solely by the Ksp and the [OH^(-)] concentration from water autoionization; the complex formation constant Kf for Al(OH)4^(-) is not needed for this calculation because it describes reactions in basic solutions where excess OH^(-) is present",
+      "Calculation: s = [Al^(3+)] = Ksp / [OH^(-)]^3 = 5.3 × 10^(-27) / (1.0 × 10^(-7))^3 = 5.3 × 10^(-27) / (1.0 × 10^(-21)) = 5.3 × 10^(-6) mol L^(-1)"
+    ],
+    "solution": {
+      "answer": "5.3 × 10⁻⁶ mol L⁻¹\n\n**Work:**\n\nIn pure water, [OH⁻] is fixed at 1.0 × 10⁻⁷ M by water's autoionization (Kw = 1.0 × 10⁻¹⁴).\n\nUsing the Ksp expression for Al(OH)₃:\nKsp = [Al³⁺][OH⁻]³\n\nSolving for solubility s = [Al³⁺]:\ns = Ksp / [OH⁻]³\ns = (5.3 × 10⁻²⁷) / (1.0 × 10⁻⁷)³\ns = (5.3 × 10⁻²⁷) / (1.0 × 10⁻²¹)\ns = 5.3 × 10⁻⁶ mol L⁻¹\n\nThe Kf for Al(OH)₄⁻ complex formation is not needed because in pure water at neutral pH, the [OH⁻] concentration is too low to form significant amounts of the complex."
+    },
+    "grade": {
+      "grade": "incorrect",
+      "note": "The given answer (5.3×10⁻⁶ mol/L) is incorrect. It only accounts for dissolution as Al³⁺ ([Al³⁺] = Ksp/[OH⁻]³ = 5.3×10⁻⁶) and explicitly — and wrongly — dismisses the Kf term. The whole reason the problem supplies Kf is that the amphoteric complex Al(OH)₄⁻ dominates the solubility. For Al(OH)₃ + OH⁻ ⇌ Al(OH)₄⁻, K = Ksp·Kf = 5.3×10⁻²⁷ × 1.1×10³¹ = 5.83×10⁴, so [Al(OH)₄⁻] = K·[OH⁻] = 5.83×10⁴ × 10⁻⁷ = 5.83×10⁻³ mol/L, which swamps the 5.3×10⁻⁶ Al³⁺ contribution. Total solubility ≈ 5.8×10⁻³ mol/L, of the same order as the reference's 1.776×10⁻³ and three orders of magnitude larger than the given answer. (The reference's 1.776×10⁻³ likely comes from a self-consistent treatment where OH⁻ is not held at 10⁻⁷ but solved together with the charge/mass balance, but in any case the complex term is dominant and the given answer's claim that \"Kf is not needed\" and that the complex is negligible is the central error.) Wrong value and wrong reasoning."
+    }
+  }
+}
