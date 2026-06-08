@@ -51,6 +51,8 @@ Current scope:
   unsubscribing from runtime event streams
 - D18D event observability tool descriptors for listing active subscriptions and
   inspecting checkpointed runtime event-log entries
+- D18D authorization-audit tool descriptors for listing decisions and compact
+  allow/deny summaries
 - D18D runtime automation inventory tool descriptors for read-only snapshots,
   desired-state targets, and pairing-session status
 - D18D bridge-worker inventory descriptors for read-only supervisor and

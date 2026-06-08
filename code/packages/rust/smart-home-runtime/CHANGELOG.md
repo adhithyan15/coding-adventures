@@ -60,6 +60,9 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListSubscriptions` and
   `RuntimeReadToolRequest::InspectEventLog` for authorized D18D reads over
   event-stream backlog pressure and checkpointed runtime event history.
+- `RuntimeReadToolRequest::ListAuthorizationDecisions` and
+  `RuntimeReadToolRequest::GetAuthorizationSummary` for authorized D18D reads
+  over registry-backed smart-home authorization audit decisions.
 - `RuntimeReadToolRequest::GetRuntimeSnapshot`,
   `RuntimeReadToolRequest::ListDesiredStates`, and
   `RuntimeReadToolRequest::ListPairingSessions` for authorized D18D reads over
