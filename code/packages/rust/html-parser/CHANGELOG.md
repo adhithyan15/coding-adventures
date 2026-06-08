@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness resource-endpoint descriptors now expose refresh redirects
+  plus resolved document resources as a flat endpoint inventory for
+  fetch/navigation planning.
 - Browser-readiness navigation-target descriptors now expose policy-rich anchor
   and image-map area targets with resolved URLs, target selection, rel policy,
   ping/attribution endpoints, language/type hints, referrer policy, download,

@@ -835,6 +835,7 @@ pub struct BrowserDocument {
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
+    pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
@@ -945,6 +946,50 @@ pub struct BrowserMeta {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserResource {
     pub kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub browsing_context_name: Option<String>,
+    pub loading: Option<String>,
+    pub sandbox: Vec<String>,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub srcdoc: Option<String>,
+    pub credentialless: bool,
+    pub imagesrcset: Option<String>,
+    pub resolved_imagesrcset: Option<String>,
+    pub imagesizes: Option<String>,
+    pub track_kind: Option<String>,
+    pub srclang: Option<String>,
+    pub track_label: Option<String>,
+    pub default_track: bool,
+    pub async_script: bool,
+    pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserResourceEndpointDescriptor {
+    pub endpoint_kind: String,
+    pub element: String,
+    pub resource_kind: Option<String>,
     pub url: String,
     pub resolved_url: Option<String>,
     pub rel: Option<String>,
@@ -2572,6 +2617,7 @@ impl BrowserDocument {
             &[],
             body_children,
         );
+        summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
 }
@@ -10079,6 +10125,125 @@ fn collect_link_document_metadata(element: &Element, summary: &mut BrowserDocume
         {
             summary.metadata.resource_hints.push(resource_hint);
         }
+    }
+}
+
+fn browser_resource_endpoint_descriptors(
+    summary: &BrowserDocument,
+) -> Vec<BrowserResourceEndpointDescriptor> {
+    let mut descriptors = Vec::new();
+    if let Some(refresh) = &summary.metadata.refresh {
+        if let Some(url) = &refresh.url {
+            descriptors.push(BrowserResourceEndpointDescriptor {
+                endpoint_kind: "metadata-refresh".to_string(),
+                element: "meta".to_string(),
+                resource_kind: Some("refresh".to_string()),
+                url: url.clone(),
+                resolved_url: refresh.resolved_url.clone(),
+                rel: None,
+                rel_tokens: Vec::new(),
+                as_hint: None,
+                type_hint: None,
+                media: None,
+                title: None,
+                sizes: None,
+                hreflang: None,
+                color: None,
+                width: None,
+                height: None,
+                integrity: None,
+                crossorigin: None,
+                nonce: None,
+                referrerpolicy: None,
+                fetchpriority: None,
+                csp: None,
+                blocking: None,
+                blocking_tokens: Vec::new(),
+                browsing_context_name: None,
+                loading: None,
+                sandbox: Vec::new(),
+                allow: None,
+                allowfullscreen: false,
+                srcdoc: None,
+                credentialless: false,
+                imagesrcset: None,
+                resolved_imagesrcset: None,
+                imagesizes: None,
+                track_kind: None,
+                srclang: None,
+                track_label: None,
+                default_track: false,
+                async_script: false,
+                defer_script: false,
+            });
+        }
+    }
+
+    descriptors.extend(
+        summary
+            .resources
+            .iter()
+            .map(browser_resource_endpoint_descriptor),
+    );
+    descriptors
+}
+
+fn browser_resource_endpoint_descriptor(
+    resource: &BrowserResource,
+) -> BrowserResourceEndpointDescriptor {
+    BrowserResourceEndpointDescriptor {
+        endpoint_kind: "resource".to_string(),
+        element: browser_resource_endpoint_element(&resource.kind).to_string(),
+        resource_kind: Some(resource.kind.clone()),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel: resource.rel.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        width: resource.width.clone(),
+        height: resource.height.clone(),
+        integrity: resource.integrity.clone(),
+        crossorigin: resource.crossorigin.clone(),
+        nonce: resource.nonce.clone(),
+        referrerpolicy: resource.referrerpolicy.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        csp: resource.csp.clone(),
+        blocking: resource.blocking.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        browsing_context_name: resource.browsing_context_name.clone(),
+        loading: resource.loading.clone(),
+        sandbox: resource.sandbox.clone(),
+        allow: resource.allow.clone(),
+        allowfullscreen: resource.allowfullscreen,
+        srcdoc: resource.srcdoc.clone(),
+        credentialless: resource.credentialless,
+        imagesrcset: resource.imagesrcset.clone(),
+        resolved_imagesrcset: resource.resolved_imagesrcset.clone(),
+        imagesizes: resource.imagesizes.clone(),
+        track_kind: resource.track_kind.clone(),
+        srclang: resource.srclang.clone(),
+        track_label: resource.track_label.clone(),
+        default_track: resource.default_track,
+        async_script: resource.async_script,
+        defer_script: resource.defer_script,
+    }
+}
+
+fn browser_resource_endpoint_element(kind: &str) -> &str {
+    match kind {
+        "alternate" | "canonical" | "dns-prefetch" | "icon" | "link" | "manifest"
+        | "modulepreload" | "preconnect" | "prefetch" | "preload" | "prerender" | "stylesheet" => {
+            "link"
+        }
+        "frame" => "iframe",
+        "image" => "img",
+        other => other,
     }
 }
 
@@ -19121,6 +19286,101 @@ mod tests {
         let video = &summary.fetch_policy_descriptors[5];
         assert_eq!(video.element, "video");
         assert_eq!(video.crossorigin.as_deref(), Some("anonymous"));
+    }
+
+    #[test]
+    fn browser_resource_endpoint_descriptors_track_document_and_fetch_endpoints() {
+        let document = parse_html(
+            "<base href=\"https://example.test/app/page.html\">\
+             <meta http-equiv=refresh content=\"5; url=next.html\">\
+             <link rel=canonical href=\"https://example.test/app/\">\
+             <link rel=manifest href=\"site.webmanifest\">\
+             <link rel=preload href=\"app.css\" as=style type=text/css integrity=sha384-css crossorigin=anonymous fetchpriority=high blocking=render>\
+             <script src=app.js async defer nonce=n1></script>\
+             <body><img src=hero.jpg width=640 height=360 loading=lazy>\
+             <iframe src=frame.html name=preview sandbox=\"allow-scripts\" allow=fullscreen credentialless></iframe>\
+             <video src=movie.mp4><track kind=captions src=captions.vtt srclang=en label=English default></video></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.resource_endpoint_descriptors.len(), 9);
+
+        let refresh = &summary.resource_endpoint_descriptors[0];
+        assert_eq!(refresh.endpoint_kind, "metadata-refresh");
+        assert_eq!(refresh.element, "meta");
+        assert_eq!(refresh.resource_kind.as_deref(), Some("refresh"));
+        assert_eq!(refresh.url, "next.html");
+        assert_eq!(
+            refresh.resolved_url.as_deref(),
+            Some("https://example.test/app/next.html")
+        );
+
+        let canonical = &summary.resource_endpoint_descriptors[1];
+        assert_eq!(canonical.endpoint_kind, "resource");
+        assert_eq!(canonical.element, "link");
+        assert_eq!(canonical.resource_kind.as_deref(), Some("canonical"));
+        assert_eq!(canonical.rel_tokens, vec!["canonical"]);
+        assert_eq!(
+            canonical.resolved_url.as_deref(),
+            Some("https://example.test/app/")
+        );
+
+        let manifest = &summary.resource_endpoint_descriptors[2];
+        assert_eq!(manifest.resource_kind.as_deref(), Some("manifest"));
+        assert_eq!(
+            manifest.resolved_url.as_deref(),
+            Some("https://example.test/app/site.webmanifest")
+        );
+
+        let preload = &summary.resource_endpoint_descriptors[3];
+        assert_eq!(preload.resource_kind.as_deref(), Some("preload"));
+        assert_eq!(preload.as_hint.as_deref(), Some("style"));
+        assert_eq!(preload.type_hint.as_deref(), Some("text/css"));
+        assert_eq!(preload.integrity.as_deref(), Some("sha384-css"));
+        assert_eq!(preload.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(preload.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(preload.blocking_tokens, vec!["render"]);
+
+        let script = &summary.resource_endpoint_descriptors[4];
+        assert_eq!(script.element, "script");
+        assert_eq!(
+            script.resolved_url.as_deref(),
+            Some("https://example.test/app/app.js")
+        );
+        assert_eq!(script.nonce.as_deref(), Some("n1"));
+        assert!(script.async_script);
+        assert!(script.defer_script);
+
+        let image = &summary.resource_endpoint_descriptors[5];
+        assert_eq!(image.element, "img");
+        assert_eq!(image.resource_kind.as_deref(), Some("image"));
+        assert_eq!(image.width.as_deref(), Some("640"));
+        assert_eq!(image.height.as_deref(), Some("360"));
+
+        let frame = &summary.resource_endpoint_descriptors[6];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.resource_kind.as_deref(), Some("frame"));
+        assert_eq!(frame.browsing_context_name.as_deref(), Some("preview"));
+        assert_eq!(frame.sandbox, vec!["allow-scripts"]);
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen"));
+        assert!(frame.credentialless);
+
+        let video = &summary.resource_endpoint_descriptors[7];
+        assert_eq!(video.element, "video");
+        assert_eq!(video.resource_kind.as_deref(), Some("video"));
+        assert_eq!(
+            video.resolved_url.as_deref(),
+            Some("https://example.test/app/movie.mp4")
+        );
+
+        let track = &summary.resource_endpoint_descriptors[8];
+        assert_eq!(track.element, "track");
+        assert_eq!(track.resource_kind.as_deref(), Some("track"));
+        assert_eq!(track.track_kind.as_deref(), Some("captions"));
+        assert_eq!(track.srclang.as_deref(), Some("en"));
+        assert_eq!(track.track_label.as_deref(), Some("English"));
+        assert!(track.default_track);
     }
 
     #[test]
