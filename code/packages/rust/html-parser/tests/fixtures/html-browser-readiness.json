@@ -38,6 +38,28 @@
         "fetch_policy_descriptors": [
           { "element": "a", "url": "intro.html", "resolved_url": "https://example.test/docs/intro.html", "referrerpolicy": "no-referrer" }
         ],
+        "navigation_target_descriptors": [
+          {
+            "element": "a",
+            "href": "intro.html",
+            "resolved_href": "https://example.test/docs/intro.html",
+            "text": "Venture HTML",
+            "target": "main",
+            "effective_target": "main",
+            "rel": "next external noreferrer",
+            "rel_tokens": ["next", "external", "noreferrer"],
+            "rel_external": true,
+            "rel_noreferrer": true,
+            "download": "intro.html",
+            "ping": ["track.html", "https://metrics.example/p"],
+            "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"],
+            "attributionsrc": ["attr/register", "https://ad.example/register"],
+            "resolved_attributionsrc": ["https://example.test/docs/attr/register", "https://ad.example/register"],
+            "hreflang": "en",
+            "type_hint": "text/html",
+            "referrerpolicy": "no-referrer"
+          }
+        ],
         "links": [
           { "href": "intro.html", "resolved_href": "https://example.test/docs/intro.html", "name": null, "target": "main", "effective_target": "main", "rel": "next external noreferrer", "rel_tokens": ["next", "external", "noreferrer"], "rel_external": true, "rel_noreferrer": true, "title": "Intro", "download": "intro.html", "ping": ["track.html", "https://metrics.example/p"], "resolved_ping": ["https://example.test/docs/track.html", "https://metrics.example/p"], "attributionsrc": ["attr/register", "https://ad.example/register"], "resolved_attributionsrc": ["https://example.test/docs/attr/register", "https://ad.example/register"], "hreflang": "en", "type_hint": "text/html", "referrerpolicy": "no-referrer", "text": "Venture HTML" }
         ],
@@ -176,6 +198,27 @@
         ],
         "fetch_policy_descriptors": [
           { "element": "img", "url": "hero.jpg", "resolved_url": "https://example.test/gallery/hero.jpg", "crossorigin": "anonymous", "referrerpolicy": "no-referrer" }
+        ],
+        "navigation_target_descriptors": [
+          {
+            "element": "area",
+            "href": "details.html",
+            "resolved_href": "https://example.test/gallery/details.html",
+            "text": "Details",
+            "target": "preview",
+            "effective_target": "preview",
+            "rel": "nofollow external",
+            "rel_tokens": ["nofollow", "external"],
+            "rel_external": true,
+            "rel_nofollow": true,
+            "ping": ["track.html"],
+            "resolved_ping": ["https://example.test/gallery/track.html"],
+            "attributionsrc": ["area-attr.html"],
+            "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"],
+            "hreflang": "en",
+            "area_shape": "rect",
+            "area_coords": "0,0,120,60"
+          }
         ],
         "links": [
           { "element": "area", "href": "details.html", "resolved_href": "https://example.test/gallery/details.html", "name": null, "target": "preview", "effective_target": "preview", "rel": "nofollow external", "rel_tokens": ["nofollow", "external"], "rel_external": true, "rel_nofollow": true, "title": null, "ping": ["track.html"], "resolved_ping": ["https://example.test/gallery/track.html"], "attributionsrc": ["area-attr.html"], "resolved_attributionsrc": ["https://example.test/gallery/area-attr.html"], "hreflang": "en", "text": "Details" }
