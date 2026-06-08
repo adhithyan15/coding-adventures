@@ -58,10 +58,13 @@ contribution: the close prior art, the genuine gap, and the defensible framing.
 
 **Verdict: "small model matches big model at a fraction of cost" is NOT a novel headline. FrugalGPT owns it.** A bare "Haiku reaches Opus cheaply" claim will be desk-rejected as derivative.
 
-**What's open / how to position — the headline must shift to what cascades DON'T do:**
-- Cascades route on **answer confidence / ensemble agreement**; they never make the cheap model's output **auditable** or **safe-by-verification**. They gamble that the cheap model is right; we **verify** it byte-by-byte.
-- In our split the small model does **extraction**, not **reasoning** — the reasoning lives in the compiled external library. Cascades still ask each model to *reason*.
-- **The defensible headline:** *"A small **local** model matches a frontier model's accuracy on auditable adjudication **at a fraction of cost AND with a full audit trail neither bare model produces — because the knowledge lives in a verified external library, not the model** — enabling privacy-compliant (PHI-local) deployment."* The novelty is **auditability + privacy-local + knowledge-in-external-library**, not the cost/accuracy parity (which is FrugalGPT's).
+**What's open / how to position — a DIFFERENT AXIS from cascades entirely:**
+- Cascades / FrugalGPT measure **answer-correctness parity** at lower cost. We do **not** claim Haiku matches Opus on capability/accuracy — it doesn't, and we don't need it to.
+- **The claim is defensibility-parity, not capability-parity:** *defensibility is a property of the verification discipline, not of model scale.* Under the framework, Haiku produces work whose **audit trail is as defensible/verifiable as Opus's** — the intelligence that makes work defensible lives in the discipline, so a small model inherits it.
+- **Honest boundary (this is what makes it bulletproof):** Haiku and Opus differ on **coverage**, not on **defensibility-of-completed-work**. Where Haiku hits a capability ceiling it **abstains / kicks back** rather than fabricating; Opus reaches further. So the *accuracy/coverage* gap persists (honest); the *defensibility* gap closes to ~0; neither produces un-auditable work.
+- **Why this isn't FrugalGPT's territory:** nobody measures **defensibility-parity across model scale** (the ADJ68 axis). FrugalGPT owns correctness-parity; this lane is uncontested.
+- **The headline:** *"Defensibility is model-independent under the discipline: a small **local** model produces work as defensible and auditable as a frontier model — abstaining where it cannot ground rather than fabricating — enabling privacy-compliant (PHI-local) deployment."*
+- **The experiment (2×2):** {Haiku, Opus} × {bare, +framework}, same items, blind adversarial auditor scoring **defensibility-fraction** + accuracy + abstention/kickback rate. Prediction: the framework collapses the Haiku↔Opus **defensibility** gap to ~0 while the **accuracy/coverage** gap persists and is absorbed by honest abstention.
 
 ---
 

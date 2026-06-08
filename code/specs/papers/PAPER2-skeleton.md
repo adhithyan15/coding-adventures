@@ -27,10 +27,13 @@ Byte-grounded rulebooks compile **once** into content-addressed (CAS) executable
 ## Related work (positions per memo)
 Knowledge compilation (Darwiche & Marquis); model editing ROME/MEMIT/AlphaEdit + **the editing-collapse result** (foil); IKE / parameter-preserving editing; belief revision / truth-maintenance (corrections + conflict); **FrugalGPT (TMLR 2024) + cascades/routing** — the critical foil for the cost headline.
 
-## The headline — reframed (see memo §6)
-**"Small model = big model at a fraction of cost" is FrugalGPT's, already published.** Our defensible headline:
-> A small **local** model with the framework matches frontier accuracy on auditable adjudication **at a fraction of cost, with a full audit trail neither bare model produces, because the knowledge lives in a verified external library rather than the model — enabling PHI-local deployment.**
-Measure **accuracy parity + cost ratio + defensibility** together; the headline is the conjunction. Reframe vs. cascades: they *gamble* on the cheap model; we *verify* it, and the small model does *extraction*, not *reasoning*.
+## The headline — DEFENSIBILITY-parity, not capability-parity (see memo §6)
+**Do NOT claim "Haiku matches Opus on accuracy" — that's FrugalGPT's axis (TMLR 2024), and it isn't even true.** The claim is on a different, uncontested axis:
+> **Defensibility is a property of the verification discipline, not of model scale.** Under the framework, a small **local** model (Haiku) produces work whose audit trail is **as defensible and auditable as a frontier model's (Opus)** — abstaining/kicking-back where it cannot ground rather than fabricating — enabling PHI-local deployment.
+
+**Honest boundary:** the accuracy/coverage gap persists (Haiku abstains where Opus completes); the **defensibility** gap closes to ~0; neither produces un-auditable work.
+
+**The 2×2 experiment:** {Haiku, Opus} × {bare, +framework}, same items, blind adversarial auditor scoring **defensibility-fraction** + accuracy + abstention/kickback rate. Prediction: the framework collapses the Haiku↔Opus *defensibility* gap to ~0 while the *accuracy/coverage* gap persists and is absorbed by honest abstention. Reframe vs. cascades: they measure correctness-parity and *gamble* on the cheap model; we measure *defensibility*-parity and *verify* it.
 
 ## Threats to validity
 Rule-interaction consistency at scale (belief-revision is hard; conflict-detection + regression-gate is partial); local-extraction fidelity on real inputs; library coverage gaps (must kick back, never silently proceed); liability/governance (deployment barrier the audit trail mitigates but doesn't remove).
