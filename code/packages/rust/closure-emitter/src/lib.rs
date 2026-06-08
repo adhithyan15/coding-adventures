@@ -351,8 +351,44 @@ impl<'a> Emitter<'a> {
                 }
                 self.emit_statement(s);
             }
+            // gap-030 part A: drop the trailing `;` of the
+            // block's last statement in compact mode IFF that
+            // `;` came from a real statement-terminator (not a
+            // body slot). The `}` we're about to write
+            // terminates the statement per ECMAScript §11.9
+            // (Automatic Semicolon Insertion), so a true
+            // terminator `;` is redundant noise that upstream
+            // Closure doesn't emit either. But we MUST NOT pop
+            // when the trailing `;` is structurally a body
+            // (`if(x);`, `for(;;);`, `while(x);`, `lbl:;`)
+            // because the grammar requires a Statement there
+            // and `}` is not a valid Statement start. The
+            // last-child type tells us which case we're in.
+            if let Some(last) = b.body.last() {
+                if last_stmt_uses_terminator_semi(last) {
+                    self.pop_trailing_semi_if_compact();
+                }
+            }
         }
         self.write_str("}");
+    }
+
+    /// Pop a single trailing `;` from the emitter's output
+    /// buffer in compact mode. Used by gap-030's
+    /// drop-redundant-semi-before-`}` rule under the
+    /// `last_stmt_uses_terminator_semi` gate. Pretty mode is
+    /// intentionally untouched — visual clarity outranks byte
+    /// minimization there.
+    fn pop_trailing_semi_if_compact(&mut self) {
+        if self.opts.pretty {
+            return;
+        }
+        if self.out.ends_with(';') {
+            self.out.pop();
+            // Decrement column so any subsequent maybe_map call
+            // stays accurate. ASCII `;` is one UTF-16 unit.
+            self.col = self.col.saturating_sub(1);
+        }
     }
 
     fn emit_if(&mut self, i: &IfStatement) {
@@ -622,6 +658,18 @@ impl<'a> Emitter<'a> {
         self.write_str(")");
         self.pretty_ws();
         self.emit_block_statement(&f.body);
+        // gap-030 part B: emit a trailing `;` after the
+        // function-declaration's closing `}` in compact mode.
+        // Upstream Closure does this to normalise the
+        // function-declaration output shape — even at EOF it's
+        // a no-op `EmptyStatement`, but in concatenation
+        // contexts (multiple top-level declarations) it keeps
+        // the next statement unambiguously separated. Pretty
+        // mode preserves the unparenthesised shape for
+        // readability.
+        if !self.opts.pretty {
+            self.write_str(";");
+        }
     }
 
     // ---- Expressions ---------------------------------------------
@@ -1167,6 +1215,60 @@ fn unary_op_str(op: UnaryOperator) -> &'static str {
     }
 }
 
+/// Decide whether a block's last child statement ends in a `;`
+/// that is a TRUE statement terminator (safe for gap-030's
+/// drop-before-`}` rule to strip) versus a `;` that is
+/// structurally a body slot (must NOT be stripped because the
+/// grammar requires a Statement there, and `}` doesn't satisfy
+/// that).
+///
+/// Truth table for the leaf statement types:
+///
+/// | Last child                  | Trailing `;` is... | Safe to pop? |
+/// |-----------------------------|--------------------|--------------|
+/// | ExpressionStatement         | terminator         | YES          |
+/// | ReturnStatement             | terminator         | YES          |
+/// | BreakStatement              | terminator         | YES          |
+/// | ContinueStatement           | terminator         | YES          |
+/// | ThrowStatement              | terminator         | YES          |
+/// | EmptyStatement              | the statement      | NO (rare; preserve so empty bodies survive) |
+/// | Declaration::*              | terminator-ish     | NO (FunctionDeclaration adds a part-B `;` we want to keep) |
+/// | IfStatement                 | body's `;` maybe   | NO  |
+/// | WhileStatement              | body's `;` maybe   | NO  |
+/// | ForStatement                | body's `;` maybe   | NO  |
+/// | LabeledStatement            | body's `;` maybe   | NO  |
+/// | BlockStatement              | ends in `}`        | (no `;` to pop anyway) |
+/// | SwitchStatement             | ends in `}`        | (no `;` to pop anyway) |
+///
+/// The pessimistic default for "compound" statements
+/// (If/While/For/Labeled) reflects ECMAScript §13.7-§13.13:
+/// each of those grammars takes a Statement in the body
+/// position, and `;` (EmptyStatement) is a legal Statement,
+/// while `}` is not. Stripping the `;` from
+/// `function f(){for(;;);}` would produce
+/// `function f(){for(;;)}` — a SyntaxError. Hence: only pop
+/// after the listed leaf terminator types.
+fn last_stmt_uses_terminator_semi(s: &Statement) -> bool {
+    match s {
+        Statement::Tagged(t) => matches!(
+            t,
+            TaggedStatement::ExpressionStatement(_)
+                | TaggedStatement::ReturnStatement(_)
+                | TaggedStatement::BreakStatement(_)
+                | TaggedStatement::ContinueStatement(_)
+                | TaggedStatement::ThrowStatement(_)
+        ),
+        // Declarations are conservatively excluded. Both
+        // VariableDeclaration and FunctionDeclaration end in
+        // `;` in compact mode, but for the former the saving
+        // is a single byte and for the latter the `;` is
+        // gap-030's part-B addition that we explicitly want to
+        // keep at top-level (popping it here would undo part
+        // B's contribution).
+        Statement::Declaration(_) => false,
+    }
+}
+
 fn assignment_op_str(op: AssignmentOperator) -> &'static str {
     use AssignmentOperator::*;
     match op {
@@ -1565,8 +1667,12 @@ mod tests {
         let out = emit_default(prog);
         // No spaces inside `{` `}` or around params in minified
         // mode, but `function` and `return` keywords are followed
-        // by required whitespace.
-        assert_eq!(out.code, "function f(x){return x;}");
+        // by required whitespace. After gap-030 the inner `;`
+        // before `}` is dropped (ASI lets the brace terminate
+        // the return statement) and a trailing `;` is added
+        // after the function-declaration's closing `}` to
+        // match upstream Closure v20240317.
+        assert_eq!(out.code, "function f(x){return x};");
     }
 
     #[test]
@@ -1603,6 +1709,192 @@ mod tests {
             },
         );
         assert_eq!(out.code, "function f(x) {\n  return x;\n}");
+    }
+
+    // ---- gap-030: function-decl + block ASI policy ----------
+
+    /// Block with multiple statements drops only the LAST `;`.
+    /// `{a;b;}` → `{a;b}` in compact mode. The internal `;`
+    /// between statements is preserved because there's no `}`
+    /// adjacent to terminate the first statement via ASI.
+    #[test]
+    fn gap030_block_multi_stmts_drops_only_last_semi() {
+        let mk = |name: &str| {
+            Statement::expression_statement(ExpressionStatement {
+                cv: None,
+                expression: ident(name),
+            })
+        };
+        let block = BlockStatement {
+            cv: None,
+            body: vec![mk("a"), mk("b")],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body: block,
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        // Both intermediate `;` and the trailing function-decl
+        // `;` after `}` follow gap-030's rules.
+        assert_eq!(out.code, "function g(){a;b};");
+    }
+
+    /// Pretty mode preserves all `;`s for visual clarity. The
+    /// gap-030 changes are compact-only.
+    #[test]
+    fn gap030_pretty_mode_unchanged() {
+        let body = BlockStatement {
+            cv: None,
+            body: vec![Statement::return_statement(ReturnStatement {
+                cv: None,
+                argument: Some(num(1.0)),
+            })],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "h".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_with(
+            prog,
+            EmitOptions {
+                pretty: true,
+                ..Default::default()
+            },
+        );
+        // Inner `;` AND no trailing `;` after `}` — pretty mode
+        // is untouched by gap-030. The visual delimiter
+        // benefits of pretty-printing outrank byte-minimization.
+        assert_eq!(out.code, "function h() {\n  return 1;\n}");
+    }
+
+    /// Regression test for the security-review-caught bug:
+    /// when the block's last child is an `IfStatement` with an
+    /// `EmptyStatement` body, the trailing `;` belongs to the
+    /// EmptyStatement (which IS a body slot for the if), not
+    /// to a statement terminator. Popping it would produce
+    /// `function f(){if(x)};` which `}` cannot satisfy as a
+    /// Statement at the body position — SyntaxError.
+    ///
+    /// The fix: gate the pop on
+    /// `last_stmt_uses_terminator_semi()`, which returns
+    /// `false` for IfStatement so the trailing `;` survives.
+    #[test]
+    fn gap030_does_not_pop_empty_body_of_if() {
+        // Build: function f(){if(x);}
+        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement {
+            cv: None,
+        }));
+        let if_stmt = TaggedStatement::IfStatement(IfStatement {
+            cv: None,
+            test: ident("x"),
+            consequent: Box::new(empty),
+            alternate: None,
+        });
+        let body = BlockStatement {
+            cv: None,
+            body: vec![Statement::Tagged(if_stmt)],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "f".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        // The `;` inside `if(x);` MUST be preserved — it's the
+        // IfStatement's body. Trailing `;` after `}` is the
+        // gap-030 part-B addition for the function-declaration.
+        assert_eq!(out.code, "function f(){if(x);};");
+    }
+
+    /// Same defense applied to `WhileStatement` with an
+    /// `EmptyStatement` body — `while(x);` must not collapse to
+    /// `while(x)`. Mirrors `gap030_does_not_pop_empty_body_of_if`.
+    #[test]
+    fn gap030_does_not_pop_empty_body_of_while() {
+        let empty = Statement::Tagged(TaggedStatement::EmptyStatement(EmptyStatement {
+            cv: None,
+        }));
+        let while_stmt = TaggedStatement::WhileStatement(WhileStatement {
+            cv: None,
+            test: ident("x"),
+            body: Box::new(empty),
+        });
+        let body = BlockStatement {
+            cv: None,
+            body: vec![Statement::Tagged(while_stmt)],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "g".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function g(){while(x);};");
+    }
+
+    /// Empty function body stays `{}` — no `;` to drop, no
+    /// regression introduced by the pop-trailing-semi helper.
+    /// Trailing `;` after `{}` still applies per gap-030 part B.
+    #[test]
+    fn gap030_empty_function_body_compact() {
+        let body = BlockStatement {
+            cv: None,
+            body: vec![],
+        };
+        let f = FunctionDeclaration {
+            cv: None,
+            id: Identifier {
+                cv: None,
+                name: "noop".to_string(),
+            },
+            params: vec![],
+            body,
+            generator: false,
+            is_async: false,
+        };
+        let prog = program().with_body(vec![ProgramItem::Declaration(
+            Declaration::FunctionDeclaration(f),
+        )]);
+        let out = emit_default(prog);
+        assert_eq!(out.code, "function noop(){};");
     }
 
     // ---- arrays + objects -----------------------------------

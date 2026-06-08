@@ -218,9 +218,21 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-030 — function-declaration semicolon ASI policy
 
-- **Status:** OPEN — newly discovered by CLOC14.2.
-- **Upstream byte-identity test:** `minify_function_decl` seed fixture (in CLOC14 harness).
-- **Why it fails:** Upstream Closure v20240317 normalises function-declaration emit in two ways our emitter doesn't yet do:
-  1. **Drops the redundant inner `;`** before `}` in single-statement blocks (`function f(){return 1;}` → `function f(){return 1}`). ASI lets the closing `}` terminate the inner statement, so the `;` is noise.
-  2. **Adds a trailing `;`** after the function-declaration's closing `}` at top-level statement-list position (`}` → `};`). Even at end-of-file this is a no-op, but it keeps the function-declaration output shape predictable for concatenation cases.
-- **What it needs:** Two pure emitter changes (no AST work). Conservative trigger for (1): emit `;` only when the next sibling is not the closing brace. (2) lands as a post-emit step for `FunctionDeclaration` at top-level. The `minify_function_decl` fixture flips from IGNORED to PASS the moment both land.
+- **Status:** PARTIALLY RESOLVED in CLOC12.38 (PR pending). **Two-half gap.**
+- **Upstream byte-identity test:** `minify_function_decl` seed fixture (in CLOC14 harness). Still IGNORED — the CLI WHITESPACE_ONLY path is the half that flips the fixture, and CLOC12.38 only addressed the AST emitter half.
+- **The two halves:**
+
+  **A. AST emitter side (closure-emitter)** — **RESOLVED in CLOC12.38.**
+  - `emit_block_statement` now drops a trailing `;` before `}` via `pop_trailing_semi_if_compact()` (compact mode only). Per ECMAScript §11.9 (Automatic Semicolon Insertion), `}` terminates any in-progress statement, so the inner `;` is redundant.
+  - `emit_function_declaration` now emits `;` after the body's closing `}` in compact mode.
+  - Pretty mode is intentionally untouched — visual delimiter clarity outranks byte minimization there.
+  - Three new inline tests pin: multi-stmt blocks drop only last `;`, pretty mode unchanged, empty body still gets trailing `;`.
+  - **Why this matters:** When the full pass pipeline eventually drives the CLI's output for SIMPLE_OPTIMIZATIONS / ADVANCED_OPTIMIZATIONS levels (currently the CLI only wires WHITESPACE_ONLY via a token re-stitcher), this emitter half is what produces parity. The work isn't observable in the current diff_minify harness, but it's the right foundation.
+
+  **B. CLI WHITESPACE_ONLY token re-stitcher side (`closurec/src/whitespace_only.rs`)** — **OPEN.**
+  - The closurec CLI does NOT call closure-emitter for WHITESPACE_ONLY. It uses a token-level re-stitcher that walks the lexer's token stream, drops trivia (comments/whitespace), and concatenates with a separator inserted between adjacent word-like tokens.
+  - To flip `minify_function_decl` to PASS, two more rules are needed at this layer:
+    1. **Drop `;` token if next non-trivia token is `}`.** Mechanical — no AST awareness needed.
+    2. **Emit `;` after `}` that closes a function-DECLARATION body.** Requires a small state machine: track "saw `function` keyword at statement boundary" + push/pop a per-brace flag. Statement boundary = at start-of-input, or after a previously-emitted `;` or `}`. Distinguishes function declarations (get trailing `;`) from function expressions (don't — they're nested in another expression that owns its own punctuation).
+  - **Why split:** The token-level state machine has real edge cases (function expressions, double-`;` after `;function`, share-body fall-through patterns). Splitting CLOC12.38 (AST half) from a follow-up CLOC12.39 (CLI token half) keeps each PR small and reviewable.
+- **The `minify_function_decl` fixture flips to PASS** when CLOC12.39 lands the token re-stitcher half.
