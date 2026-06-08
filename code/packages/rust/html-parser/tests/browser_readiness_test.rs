@@ -3,11 +3,11 @@ use coding_adventures_html_parser::{
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
-    BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserFetchPolicyDescriptor,
-    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor,
+    BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
+    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
+    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
+    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
     BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
@@ -110,6 +110,8 @@ struct ExpectedBrowserDocument {
     media_playback_descriptors: Option<Vec<ExpectedMediaPlaybackDescriptor>>,
     #[serde(default)]
     embedded_contexts: Vec<ExpectedEmbeddedContext>,
+    #[serde(default)]
+    embedded_policy_descriptors: Option<Vec<ExpectedEmbeddedPolicyDescriptor>>,
     #[serde(default)]
     interactive_elements: Vec<ExpectedInteractiveElement>,
     #[serde(default)]
@@ -1501,6 +1503,51 @@ struct ExpectedEmbeddedContext {
     referrerpolicy: Option<String>,
     #[serde(default)]
     srcdoc: Option<String>,
+    #[serde(default)]
+    credentialless: bool,
+    #[serde(default)]
+    fallback_text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedEmbeddedPolicyDescriptor {
+    element: String,
+    #[serde(default)]
+    resource_kind: String,
+    #[serde(default)]
+    url: Option<String>,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    browsing_context_name: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    csp: Option<String>,
+    #[serde(default)]
+    sandbox: Vec<String>,
+    #[serde(default)]
+    sandbox_token_count: usize,
+    #[serde(default)]
+    allow: Option<String>,
+    #[serde(default)]
+    allowfullscreen: bool,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    srcdoc: Option<String>,
+    #[serde(default)]
+    has_srcdoc: bool,
     #[serde(default)]
     credentialless: bool,
     #[serde(default)]
@@ -3828,6 +3875,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedMedia::into_browser_media)
             .collect();
+        let embedded_contexts: Vec<_> = self
+            .embedded_contexts
+            .into_iter()
+            .map(ExpectedEmbeddedContext::into_browser_embedded_context)
+            .collect();
         let resource_endpoint_descriptors = self
             .resource_endpoint_descriptors
             .map(|descriptors| {
@@ -3848,6 +3900,15 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_media_playback_descriptors(&media));
+        let embedded_policy_descriptors = self
+            .embedded_policy_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedEmbeddedPolicyDescriptor::into_browser_embedded_policy_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_embedded_policy_descriptors(&embedded_contexts));
 
         BrowserDocument {
             title: self.title,
@@ -3977,11 +4038,8 @@ impl ExpectedBrowserDocument {
                 .collect(),
             media,
             media_playback_descriptors,
-            embedded_contexts: self
-                .embedded_contexts
-                .into_iter()
-                .map(ExpectedEmbeddedContext::into_browser_embedded_context)
-                .collect(),
+            embedded_contexts,
+            embedded_policy_descriptors,
             interactive_elements: self
                 .interactive_elements
                 .into_iter()
@@ -4474,6 +4532,52 @@ fn expected_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlayb
             .filter(|track| track.default_track)
             .count(),
         tracks: media.tracks.clone(),
+    }
+}
+
+fn expected_embedded_policy_descriptors(
+    contexts: &[BrowserEmbeddedContext],
+) -> Vec<BrowserEmbeddedPolicyDescriptor> {
+    contexts
+        .iter()
+        .map(expected_embedded_policy_descriptor)
+        .collect()
+}
+
+fn expected_embedded_policy_descriptor(
+    context: &BrowserEmbeddedContext,
+) -> BrowserEmbeddedPolicyDescriptor {
+    BrowserEmbeddedPolicyDescriptor {
+        element: context.element.clone(),
+        resource_kind: expected_embedded_resource_kind(&context.element).to_string(),
+        url: context.url.clone(),
+        resolved_url: context.resolved_url.clone(),
+        browsing_context_name: context.browsing_context_name.clone(),
+        title: context.title.clone(),
+        type_hint: context.type_hint.clone(),
+        width: context.width.clone(),
+        height: context.height.clone(),
+        loading: context.loading.clone(),
+        fetchpriority: context.fetchpriority.clone(),
+        csp: context.csp.clone(),
+        sandbox: context.sandbox.clone(),
+        sandbox_token_count: context.sandbox.len(),
+        allow: context.allow.clone(),
+        allowfullscreen: context.allowfullscreen,
+        referrerpolicy: context.referrerpolicy.clone(),
+        srcdoc: context.srcdoc.clone(),
+        has_srcdoc: context.srcdoc.is_some(),
+        credentialless: context.credentialless,
+        fallback_text: context.fallback_text.clone(),
+    }
+}
+
+fn expected_embedded_resource_kind(element: &str) -> &'static str {
+    match element {
+        "iframe" | "frame" => "document",
+        "object" => "object",
+        "embed" => "embed",
+        _ => "embedded",
     }
 }
 
@@ -5272,6 +5376,34 @@ impl ExpectedEmbeddedContext {
             allowfullscreen: self.allowfullscreen,
             referrerpolicy: self.referrerpolicy,
             srcdoc: self.srcdoc,
+            credentialless: self.credentialless,
+            fallback_text: self.fallback_text,
+        }
+    }
+}
+
+impl ExpectedEmbeddedPolicyDescriptor {
+    fn into_browser_embedded_policy_descriptor(self) -> BrowserEmbeddedPolicyDescriptor {
+        BrowserEmbeddedPolicyDescriptor {
+            element: self.element,
+            resource_kind: self.resource_kind,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            browsing_context_name: self.browsing_context_name,
+            title: self.title,
+            type_hint: self.type_hint,
+            width: self.width,
+            height: self.height,
+            loading: self.loading,
+            fetchpriority: self.fetchpriority,
+            csp: self.csp,
+            sandbox: self.sandbox,
+            sandbox_token_count: self.sandbox_token_count,
+            allow: self.allow,
+            allowfullscreen: self.allowfullscreen,
+            referrerpolicy: self.referrerpolicy,
+            srcdoc: self.srcdoc,
+            has_srcdoc: self.has_srcdoc,
             credentialless: self.credentialless,
             fallback_text: self.fallback_text,
         }

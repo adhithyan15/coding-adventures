@@ -855,6 +855,7 @@ pub struct BrowserDocument {
     pub media: Vec<BrowserMedia>,
     pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
+    pub embedded_policy_descriptors: Vec<BrowserEmbeddedPolicyDescriptor>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2038,6 +2039,31 @@ pub struct BrowserEmbeddedContext {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEmbeddedPolicyDescriptor {
+    pub element: String,
+    pub resource_kind: String,
+    pub url: Option<String>,
+    pub resolved_url: Option<String>,
+    pub browsing_context_name: Option<String>,
+    pub title: Option<String>,
+    pub type_hint: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub csp: Option<String>,
+    pub sandbox: Vec<String>,
+    pub sandbox_token_count: usize,
+    pub allow: Option<String>,
+    pub allowfullscreen: bool,
+    pub referrerpolicy: Option<String>,
+    pub srcdoc: Option<String>,
+    pub has_srcdoc: bool,
+    pub credentialless: bool,
+    pub fallback_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserInteractiveElement {
     pub element: String,
     pub id: Option<String>,
@@ -2646,6 +2672,8 @@ impl BrowserDocument {
             body_children,
         );
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
+        summary.embedded_policy_descriptors =
+            browser_embedded_policy_descriptors(&summary.embedded_contexts);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -10258,6 +10286,52 @@ fn browser_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlayba
     }
 }
 
+fn browser_embedded_policy_descriptors(
+    contexts: &[BrowserEmbeddedContext],
+) -> Vec<BrowserEmbeddedPolicyDescriptor> {
+    contexts
+        .iter()
+        .map(browser_embedded_policy_descriptor)
+        .collect()
+}
+
+fn browser_embedded_policy_descriptor(
+    context: &BrowserEmbeddedContext,
+) -> BrowserEmbeddedPolicyDescriptor {
+    BrowserEmbeddedPolicyDescriptor {
+        element: context.element.clone(),
+        resource_kind: browser_embedded_resource_kind(&context.element).to_string(),
+        url: context.url.clone(),
+        resolved_url: context.resolved_url.clone(),
+        browsing_context_name: context.browsing_context_name.clone(),
+        title: context.title.clone(),
+        type_hint: context.type_hint.clone(),
+        width: context.width.clone(),
+        height: context.height.clone(),
+        loading: context.loading.clone(),
+        fetchpriority: context.fetchpriority.clone(),
+        csp: context.csp.clone(),
+        sandbox: context.sandbox.clone(),
+        sandbox_token_count: context.sandbox.len(),
+        allow: context.allow.clone(),
+        allowfullscreen: context.allowfullscreen,
+        referrerpolicy: context.referrerpolicy.clone(),
+        srcdoc: context.srcdoc.clone(),
+        has_srcdoc: context.srcdoc.is_some(),
+        credentialless: context.credentialless,
+        fallback_text: context.fallback_text.clone(),
+    }
+}
+
+fn browser_embedded_resource_kind(element: &str) -> &'static str {
+    match element {
+        "iframe" | "frame" => "document",
+        "object" => "object",
+        "embed" => "embed",
+        _ => "embedded",
+    }
+}
+
 fn browser_resource_endpoint_descriptor(
     resource: &BrowserResource,
 ) -> BrowserResourceEndpointDescriptor {
@@ -17152,6 +17226,62 @@ mod tests {
         );
         assert!(render_tree.children[0].allowfullscreen);
         assert_eq!(render_tree.children[1].display, "inline-replaced");
+    }
+
+    #[test]
+    fn browser_embedded_policy_descriptors_track_context_policy_and_fallbacks() {
+        let document = parse_html(
+            "<base href=\"https://example.test/media/index.html\">\
+             <iframe src=frame.html name=preview loading=lazy fetchpriority=high \
+                 csp=\"script-src 'self'\" sandbox=\"allow-scripts allow-same-origin\" \
+                 allow=\"fullscreen; geolocation\" allowfullscreen \
+                 referrerpolicy=no-referrer srcdoc=\"<p>Fallback</p>\" \
+                 credentialless width=320 height=200 title=Frame></iframe>\
+             <object data=movie.swf type=\"application/x-shockwave-flash\" width=400 height=300>\
+                 Fallback player\
+             </object>\
+             <embed src=legacy.mov type=\"video/quicktime\" width=160 height=120>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.embedded_policy_descriptors.len(), 3);
+
+        let frame = &summary.embedded_policy_descriptors[0];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.resource_kind, "document");
+        assert_eq!(frame.url.as_deref(), Some("frame.html"));
+        assert_eq!(
+            frame.resolved_url.as_deref(),
+            Some("https://example.test/media/frame.html")
+        );
+        assert_eq!(frame.browsing_context_name.as_deref(), Some("preview"));
+        assert_eq!(frame.title.as_deref(), Some("Frame"));
+        assert_eq!(frame.width.as_deref(), Some("320"));
+        assert_eq!(frame.loading.as_deref(), Some("lazy"));
+        assert_eq!(frame.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(frame.csp.as_deref(), Some("script-src 'self'"));
+        assert_eq!(frame.sandbox, vec!["allow-scripts", "allow-same-origin"]);
+        assert_eq!(frame.sandbox_token_count, 2);
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert!(frame.allowfullscreen);
+        assert_eq!(frame.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(frame.srcdoc.as_deref(), Some("<p>Fallback</p>"));
+        assert!(frame.has_srcdoc);
+        assert!(frame.credentialless);
+
+        let object = &summary.embedded_policy_descriptors[1];
+        assert_eq!(object.resource_kind, "object");
+        assert_eq!(
+            object.type_hint.as_deref(),
+            Some("application/x-shockwave-flash")
+        );
+        assert_eq!(object.fallback_text, "Fallback player");
+
+        let embed = &summary.embedded_policy_descriptors[2];
+        assert_eq!(embed.resource_kind, "embed");
+        assert_eq!(embed.type_hint.as_deref(), Some("video/quicktime"));
+        assert!(!embed.has_srcdoc);
     }
 
     #[test]

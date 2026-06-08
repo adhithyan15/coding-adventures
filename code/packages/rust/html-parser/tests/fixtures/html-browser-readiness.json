@@ -680,6 +680,12 @@
           { "element": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "type_hint": "video/quicktime", "width": "160", "height": "120", "fallback_text": "" },
           { "element": "iframe", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "allow": "payment", "srcdoc": "<h1>Inline</h1>", "fallback_text": "" }
         ],
+        "embedded_policy_descriptors": [
+          { "element": "iframe", "resource_kind": "document", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "browsing_context_name": "preview", "title": "Frame", "width": "320", "height": "200", "loading": "lazy", "fetchpriority": "high", "csp": "script-src 'self'", "sandbox": ["allow-scripts", "allow-same-origin"], "sandbox_token_count": 2, "allow": "fullscreen; geolocation", "allowfullscreen": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "has_srcdoc": true, "credentialless": true, "fallback_text": "" },
+          { "element": "object", "resource_kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "" },
+          { "element": "embed", "resource_kind": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "type_hint": "video/quicktime", "width": "160", "height": "120", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "" },
+          { "element": "iframe", "resource_kind": "document", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "sandbox_token_count": 0, "allow": "payment", "srcdoc": "<h1>Inline</h1>", "has_srcdoc": true, "fallback_text": "" }
+        ],
         "forms": [],
         "tables": []
       }
@@ -1743,6 +1749,11 @@
           { "element": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "fallback_text": "Fallback player" },
           { "element": "object", "url": "/external.bin", "resolved_url": "https://example.test/external.bin", "type_hint": "application/octet-stream", "fallback_text": "External fallback" },
           { "element": "object", "url": "outside.bin", "resolved_url": "https://example.test/media/outside.bin", "fallback_text": "Outside fallback" }
+        ],
+        "embedded_policy_descriptors": [
+          { "element": "object", "resource_kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "Fallback player" },
+          { "element": "object", "resource_kind": "object", "url": "/external.bin", "resolved_url": "https://example.test/external.bin", "type_hint": "application/octet-stream", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "External fallback" },
+          { "element": "object", "resource_kind": "object", "url": "outside.bin", "resolved_url": "https://example.test/media/outside.bin", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "Outside fallback" }
         ],
         "form_policy_descriptors": [
           { "id": "player", "method": "get" }

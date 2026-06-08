@@ -252,7 +252,8 @@ documented in this file.
 - Browser-facing document, content-tree, and render-tree projections now carry
   embedded resource metadata for frames, objects, embeds, media, and images,
   including resolved source URLs, resource kind, type hints, media attributes,
-  and authored dimensions for fetch and layout planning.
+  authored dimensions, and flattened embedded policy descriptors for fetch,
+  sandboxing, permissions, and fallback planning.
 - Browser-facing document, content-tree, and render-tree projections now carry
   media playback metadata for `audio` and `video`, including playback flags,
   preload/poster fields, and flattened playback descriptors with source/track
