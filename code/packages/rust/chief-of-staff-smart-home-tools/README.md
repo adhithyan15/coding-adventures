@@ -37,6 +37,7 @@ Chief of Staff job/session/agent
   -> typed command-result audit reads and summaries
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
+  -> activation-plan list and summary reads for D23A rollout planning
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
@@ -56,6 +57,8 @@ Chief of Staff job/session/agent
 - `smart_home.describe_primitive`
 - `smart_home.get_integration_catalog_summary`
 - `smart_home.get_tool_catalog_summary`
+- `smart_home.list_integration_activation_plans`
+- `smart_home.get_integration_activation_plan_summary`
 - `smart_home.list_integration_readiness`
 - `smart_home.get_integration_readiness_summary`
 - `smart_home.list_integration_readiness_gaps`

@@ -31,6 +31,9 @@ All notable changes to this package will be documented in this file.
 - Integration activation planning helpers for resolving virtual aliases,
   standard-backed products, required primitives, capabilities, auth modes,
   dependencies, and review tiers before enabling an integration.
+- `IntegrationActivationPlanSummary` for compact direct/delegated target,
+  review, local/cloud, dependency, primitive, and capability rollups over
+  activation-plan sets.
 - Integration readiness reports that expose missing primitive families, missing
   capability grants, and missing delegated integrations before activation.
 - Integration readiness summaries for compact activation-ready, blocker,

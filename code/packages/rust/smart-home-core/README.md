@@ -50,6 +50,8 @@ Current scope:
   reusable-primitive inspection
 - D18D catalog-summary descriptors for compact integration and tool surface
   inspection
+- D18D integration activation-plan descriptors for bulk rollout plan listing
+  and compact activation-plan rollups
 - D18D integration-readiness descriptors for bulk activation blocker reports
   and compact readiness rollups
 - D18D integration-readiness gap descriptors for grouped primitive,

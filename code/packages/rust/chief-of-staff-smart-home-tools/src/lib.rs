@@ -33,16 +33,16 @@ use smart_home_discovery::{
     DiscoveryWorkerId, DiscoveryWorkerKind, PairingRequirement,
 };
 use smart_home_integration_catalog::{
-    activation_plan_for_entry, describe_primitive_family, ecosystem_platforms_requiring_primitive,
-    ecosystem_survey_sources, entries_requiring_primitive, find_entry, first_party_catalog,
-    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
-    readiness_report_for_plan, readiness_reports_at_or_before_priority,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationPlan,
-    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
-    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
-    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    activation_plan_for_entry, activation_plans_at_or_before_priority, describe_primitive_family,
+    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
+    find_entry, first_party_catalog, primitive_backlog_at_or_before_priority,
+    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
+    readiness_gap_inventory_from_reports, readiness_report_for_plan,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationTarget,
+    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
+    IntegrationPolicySurface, IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
     IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
     PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
@@ -131,6 +131,10 @@ pub const SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID: &str = "smart_home.describe_pri
 pub const SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_catalog_summary";
 pub const SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID: &str = "smart_home.get_tool_catalog_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_plans";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_plan_summary";
 pub const SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID: &str =
     "smart_home.list_integration_readiness";
 pub const SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID: &str =
@@ -207,6 +211,16 @@ impl SmartHomeToolBridge {
                 ),
                 SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID => {
                     Ok(get_tool_catalog_summary_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID => {
+                    let query = integration_activation_plan_query(&arguments)?;
+                    Ok(list_integration_activation_plans_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_plan_query(&arguments)?;
+                    Ok(get_integration_activation_plan_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
@@ -784,6 +798,38 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home tool catalog summary",
             "Return compact D18D smart-home tool descriptor counts from the shared smart-home core catalog.",
             object_schema(vec![], vec![], false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID,
+            "List smart-home integration activation plans",
+            "List D23A activation plans before applying host-specific primitive, capability, or dependency readiness context.",
+            integration_activation_plan_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "activation_plans",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_plans", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation plan summary",
+            "Return compact D23A activation-plan rollups for target shape, review, primitive, capability, and dependency planning.",
+            integration_activation_plan_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -2970,6 +3016,84 @@ fn integration_catalog_query(
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationPlanQuery {
+    priority_at_or_before: u8,
+    target_kind: Option<ActivationTargetKind>,
+    requires_human_review: Option<bool>,
+    cloud_required: Option<bool>,
+    local_only: Option<bool>,
+    limit: Option<usize>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ActivationTargetKind {
+    Direct,
+    DelegatedIntegration,
+    DelegatedStandards,
+}
+
+impl ActivationTargetKind {
+    fn matches(self, target: &IntegrationActivationTarget) -> bool {
+        matches!(
+            (self, target),
+            (Self::Direct, IntegrationActivationTarget::Direct)
+                | (
+                    Self::DelegatedIntegration,
+                    IntegrationActivationTarget::DelegatedIntegration(_)
+                )
+                | (
+                    Self::DelegatedStandards,
+                    IntegrationActivationTarget::DelegatedStandards(_)
+                )
+        )
+    }
+}
+
+fn integration_activation_plan_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationPlanQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let target_kind = optional_string(arguments, "activation_target_kind")?
+        .map(|label| parse_activation_target_kind(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationPlanQuery {
+        priority_at_or_before: optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX),
+        target_kind,
+        requires_human_review: optional_bool(arguments, "requires_human_review")?,
+        cloud_required: optional_bool(arguments, "cloud_required")?,
+        local_only: optional_bool(arguments, "local_only")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_plans_for_query(
+    query: &IntegrationActivationPlanQuery,
+) -> (Vec<IntegrationActivationPlan>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let mut plans = activation_plans_at_or_before_priority(&catalog, query.priority_at_or_before);
+
+    if let Some(target_kind) = query.target_kind {
+        plans.retain(|plan| target_kind.matches(&plan.activation_target));
+    }
+    if let Some(requires_human_review) = query.requires_human_review {
+        plans.retain(|plan| plan.requires_human_review() == requires_human_review);
+    }
+    if let Some(cloud_required) = query.cloud_required {
+        plans.retain(|plan| plan.cloud_required == cloud_required);
+    }
+    if let Some(local_only) = query.local_only {
+        plans.retain(|plan| plan.local_only == local_only);
+    }
+    if let Some(limit) = query.limit {
+        plans.truncate(limit);
+    }
+
+    (plans, catalog_count)
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationReadinessQuery {
     priority_at_or_before: u8,
     available_primitives: Vec<PrimitiveFamily>,
@@ -3200,6 +3324,64 @@ fn get_tool_catalog_summary_output_handler_output(
                     ("total_tools", integer(summary.total_tools as i64)),
                 ]),
             ),
+    )
+}
+
+fn list_integration_activation_plans_output_handler_output(
+    query: IntegrationActivationPlanQuery,
+) -> ToolHandlerOutput {
+    let (plans, catalog_count) = integration_activation_plans_for_query(&query);
+    let summary = IntegrationActivationPlanSummary::from_plans(plans.iter());
+    let count = plans.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_plans",
+            JsonValue::Array(plans.iter().map(activation_plan_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_plan_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_plans")),
+            ("count", integer(count as i64)),
+            (
+                "plans_requiring_human_review",
+                integer(summary.plans_requiring_human_review as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_plan_summary_output_handler_output(
+    query: IntegrationActivationPlanQuery,
+) -> ToolHandlerOutput {
+    let (plans, _) = integration_activation_plans_for_query(&query);
+    let summary = IntegrationActivationPlanSummary::from_plans(plans.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_plan_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_plan_summary"),
+            ),
+            ("total_plans", integer(summary.total_plans as i64)),
+            (
+                "plans_requiring_human_review",
+                integer(summary.plans_requiring_human_review as i64),
+            ),
+        ]),
     )
 }
 
@@ -5590,6 +5772,69 @@ fn activation_plan_json(plan: &IntegrationActivationPlan) -> JsonValue {
     ])
 }
 
+fn integration_activation_plan_summary_json(
+    summary: &IntegrationActivationPlanSummary,
+) -> JsonValue {
+    object([
+        ("total_plans", integer(summary.total_plans as i64)),
+        ("direct_targets", integer(summary.direct_targets as i64)),
+        (
+            "delegated_integration_targets",
+            integer(summary.delegated_integration_targets as i64),
+        ),
+        (
+            "delegated_standard_targets",
+            integer(summary.delegated_standard_targets as i64),
+        ),
+        (
+            "plans_requiring_human_review",
+            integer(summary.plans_requiring_human_review as i64),
+        ),
+        ("local_only_plans", integer(summary.local_only_plans as i64)),
+        (
+            "cloud_required_plans",
+            integer(summary.cloud_required_plans as i64),
+        ),
+        (
+            "plans_with_dependencies",
+            integer(summary.plans_with_dependencies as i64),
+        ),
+        (
+            "plans_with_required_primitives",
+            integer(summary.plans_with_required_primitives as i64),
+        ),
+        (
+            "plans_with_required_capabilities",
+            integer(summary.plans_with_required_capabilities as i64),
+        ),
+        (
+            "unique_required_primitives",
+            integer(summary.unique_required_primitives as i64),
+        ),
+        (
+            "unique_required_capabilities",
+            integer(summary.unique_required_capabilities as i64),
+        ),
+        (
+            "unique_dependencies",
+            integer(summary.unique_dependencies as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_delegated_targets",
+            JsonValue::Bool(summary.has_delegated_targets()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+    ])
+}
+
 fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
     object([
         (
@@ -7575,6 +7820,19 @@ fn parse_integration_catalog_sort(label: &str) -> Result<IntegrationCatalogSort,
     }
 }
 
+fn parse_activation_target_kind(label: &str) -> Result<ActivationTargetKind, ToolCallError> {
+    match label {
+        "direct" => Ok(ActivationTargetKind::Direct),
+        "delegated_integration" | "integration" => Ok(ActivationTargetKind::DelegatedIntegration),
+        "delegated_standards" | "delegated_standard" | "standard" | "standards" => {
+            Ok(ActivationTargetKind::DelegatedStandards)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation target kind `{label}`"
+        ))),
+    }
+}
+
 fn integration_category_label(category: IntegrationCategory) -> &'static str {
     match category {
         IntegrationCategory::ProtocolStandard => "protocol_standard",
@@ -8161,6 +8419,21 @@ fn integration_catalog_query_schema() -> JsonSchema {
     )
 }
 
+fn integration_activation_plan_query_schema(include_limit: bool) -> JsonSchema {
+    let mut properties = vec![
+        SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+        SchemaProperty::new("activation_target_kind", JsonSchema::String),
+        SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+        SchemaProperty::new("cloud_required", JsonSchema::Boolean),
+        SchemaProperty::new("local_only", JsonSchema::Boolean),
+    ];
+    if include_limit {
+        properties.push(SchemaProperty::new("limit", JsonSchema::Integer));
+    }
+
+    object_schema(properties, Vec::new(), false)
+}
+
 fn integration_readiness_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -8265,7 +8538,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 49);
+        assert_eq!(definitions.len(), 51);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -8285,6 +8558,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID));
@@ -8382,7 +8661,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            41
+            43
         );
         assert_eq!(
             export
@@ -8408,6 +8687,14 @@ mod tests {
                 .is_some()
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(
             smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID).is_some()
         );
@@ -8652,15 +8939,91 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(49))
+            Some(&integer(51))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(41))
+            Some(&integer(43))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
             Some(&integer(8))
+        );
+
+        let list_activation_plans_request = request(
+            "call-list-integration-activation-plans",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                ("activation_target_kind", string("delegated_integration")),
+                ("limit", integer(3)),
+            ]),
+            4_995,
+        );
+        let list_activation_plans_trace =
+            tool_runtime.invoke_with_events(&list_activation_plans_request);
+        assert!(list_activation_plans_trace.result.ok);
+        assert_eq!(
+            list_activation_plans_trace.summary().progress_event_count,
+            1
+        );
+        let list_activation_plans_output =
+            list_activation_plans_trace.result.output.as_ref().unwrap();
+        let activation_plan_count =
+            integer_value(field(list_activation_plans_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_plan_count));
+        assert_eq!(
+            array_len(field(list_activation_plans_output, "activation_plans").unwrap()),
+            Some(activation_plan_count as usize)
+        );
+        let activation_plan_summary = field(list_activation_plans_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_plan_summary, "has_delegated_targets"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(activation_plan_summary, "delegated_integration_targets").unwrap())
+                .unwrap()
+                >= 1
+        );
+        let activation_plan = array_item(
+            field(list_activation_plans_output, "activation_plans").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(field(activation_plan, "activation_target").unwrap(), "kind"),
+            Some(&string("delegated_integration"))
+        );
+
+        let activation_plan_summary_request = request(
+            "call-integration-activation-plan-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID,
+            object([("priority_at_or_before", integer(1))]),
+            4_996,
+        );
+        let activation_plan_summary_trace =
+            tool_runtime.invoke_with_events(&activation_plan_summary_request);
+        assert!(activation_plan_summary_trace.result.ok);
+        assert_eq!(
+            activation_plan_summary_trace.summary().progress_event_count,
+            1
+        );
+        let activation_plan_summary_output = activation_plan_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_plan_rollup = field(activation_plan_summary_output, "summary").unwrap();
+        assert!(integer_value(field(activation_plan_rollup, "total_plans").unwrap()).unwrap() >= 1);
+        assert!(
+            integer_value(field(activation_plan_rollup, "unique_required_primitives").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_plan_rollup, "has_review_work"),
+            Some(&JsonValue::Bool(true))
         );
 
         let list_integration_readiness_request = request(
@@ -10029,6 +10392,11 @@ mod tests {
             integration_catalog_summary_trace,
         );
         journal.record_trace(tool_catalog_summary_request, tool_catalog_summary_trace);
+        journal.record_trace(list_activation_plans_request, list_activation_plans_trace);
+        journal.record_trace(
+            activation_plan_summary_request,
+            activation_plan_summary_trace,
+        );
         journal.record_trace(
             list_integration_readiness_request,
             list_integration_readiness_trace,
@@ -10089,9 +10457,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 49);
-        assert_eq!(journal_summary.completed_count, 49);
-        assert_eq!(journal.audit_records().len(), 49);
+        assert_eq!(journal_summary.invocation_count, 51);
+        assert_eq!(journal_summary.completed_count, 51);
+        assert_eq!(journal.audit_records().len(), 51);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
