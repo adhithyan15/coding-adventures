@@ -568,6 +568,42 @@ pub fn whitespace_only_minify(
             let next_is_close_brace = next_val == Some("}");
             let next_is_chain_continuation =
                 matches!(next_val, Some("catch") | Some("finally"));
+            // gap-047: ASI cleanly covers the boundary
+            // between `}` and a new statement-starting
+            // keyword — no synthetic `;` is needed.
+            // Upstream Closure under WHITESPACE_ONLY emits
+            //   `function add(a,b){return a+b}var sum=add(2,3);`
+            // for a source that has both a function decl and
+            // a subsequent `var`. Without this suppression
+            // we emit `function add(a,b){return a+b};var sum=...;`
+            // — the extra `;` is a wasted byte.
+            //
+            // The keyword set is the closed list of tokens
+            // that grammatically START a new statement and
+            // CANNOT continue the previous expression. This
+            // is the safety guarantee: omitting the `;` here
+            // is always parser-correct because there's no
+            // way for `}` followed by these keywords to
+            // semantically join into a single statement.
+            //
+            // Notably ABSENT: identifier-like names
+            // (`x`, `foo`, etc.) — could be a free expression
+            // that grammar-fuses with the preceding `}` in
+            // some constructs (e.g., function expressions vs
+            // declarations). Keeping `;` here is safer. EOF
+            // (next_val == None) also keeps the `;` per
+            // gap-030's original rule for cases like
+            // `function f(){}` (no trailing context).
+            let next_is_stmt_keyword = matches!(
+                next_val,
+                Some("var") | Some("let") | Some("const")
+                    | Some("function") | Some("class")
+                    | Some("if") | Some("for") | Some("while")
+                    | Some("do") | Some("switch") | Some("try")
+                    | Some("return") | Some("throw")
+                    | Some("break") | Some("continue")
+                    | Some("import") | Some("export")
+            );
             let kind_wants_semi = match kind {
                 BlockKind::Function => true,
                 BlockKind::Class => true,    // gap-034
@@ -612,6 +648,13 @@ pub fn whitespace_only_minify(
             } else if next_is_chain_continuation {
                 // Carry the deferred forward past the chain
                 // boundary; nothing emits here.
+                emit_semi = false;
+            } else if next_is_stmt_keyword {
+                // gap-047: ASI covers the boundary. No `;`
+                // needed. Drop both the kind-wants-semi and
+                // any deferred pending — the next statement
+                // can stand on its own without us.
+                deferred_synthetic_semi = false;
                 emit_semi = false;
             } else {
                 // Emit if either we owe one OR a deferred
@@ -2411,6 +2454,95 @@ mod tests {
     #[test]
     fn gap046_empty_array_unchanged() {
         assert_eq!(minify("var a=[];"), "var a=[];");
+    }
+
+    // ---- gap-047: suppress `;` before stmt-keyword -------
+
+    /// Target case: function decl followed by `var`.
+    #[test]
+    fn gap047_function_then_var_no_semi() {
+        assert_eq!(
+            minify("function f(){a;}var x=1;"),
+            "function f(){a}var x=1;"
+        );
+    }
+
+    /// Class decl followed by `function`: the class's
+    /// trailing `;` (gap-034) is suppressed. But the
+    /// outermost `function g(){}` at EOF still gets its own
+    /// `;` from gap-030's EOF case (no suppression).
+    #[test]
+    fn gap047_class_then_function_no_semi() {
+        assert_eq!(
+            minify("class C{}function g(){}"),
+            "class C{}function g(){};"
+        );
+    }
+
+    /// **EOF (None) → keep `;`**. The single-statement
+    /// fixture `function add(a,b){return a+b;}` was passing
+    /// at the harness level with output
+    /// `function add(a,b){return a+b};` and that behaviour
+    /// must not change. EOF doesn't match any keyword and
+    /// is NOT in the suppression set.
+    #[test]
+    fn gap047_function_at_eof_keeps_semi() {
+        assert_eq!(
+            minify("function add(a,b){return a+b;}"),
+            "function add(a,b){return a+b};"
+        );
+    }
+
+    /// **`}` next → still defer (gap-041)**. The gap-047
+    /// keyword check is separate from the close-brace defer.
+    /// `function f(){function g(){}}` should still hoist
+    /// the single `;` to the outermost `}`.
+    #[test]
+    fn gap047_close_brace_next_still_defers() {
+        assert_eq!(
+            minify("function f(){function g(){}}"),
+            "function f(){function g(){}};"
+        );
+    }
+
+    /// **Non-regression**: an Other-block close followed by
+    /// `var` doesn't ever emit a `;` regardless of gap-047
+    /// (because `kind_wants_semi == false`). This is the
+    /// natural shape `if(x){...}var y;` which works
+    /// pre-gap-047 too. Verifies the change doesn't regress
+    /// it.
+    #[test]
+    fn gap047_other_block_then_var_unchanged() {
+        // Multi-statement if-body so gap-032 doesn't flatten.
+        assert_eq!(
+            minify("if(x){a();b();}var y=1;"),
+            "if(x){a();b()}var y=1;"
+        );
+    }
+
+    /// **Non-regression**: `return` keyword in suppression
+    /// list. Inner function-decl's trailing `;` (would be
+    /// gap-030) is suppressed because next is `return`.
+    /// The outer function's `;` at EOF still fires.
+    #[test]
+    fn gap047_function_then_return_no_semi() {
+        assert_eq!(
+            minify("function f(){function g(){}return 1;}"),
+            "function f(){function g(){}return 1};"
+        );
+    }
+
+    /// **Non-regression**: catch/finally are NOT in the
+    /// gap-047 suppression set — they're handled via
+    /// `next_is_chain_continuation` (a separate branch).
+    /// Test verifies the TryChain rule still fires
+    /// correctly.
+    #[test]
+    fn gap047_trychain_continuation_unaffected() {
+        assert_eq!(
+            minify("try{a;}catch(e){b;}"),
+            "try{a}catch(e){b};"
+        );
     }
 
     // Note on `do{}while(x);` (empty do-body): gap-031's

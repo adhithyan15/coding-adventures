@@ -94,13 +94,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // before `]` is now suppressed. `minify_trailing_array_comma`
     // flipped IGNORED → PASS. Object-literal trailing comma
     // (gap-046b) deferred.
-    // gap-047: synthetic `;` after function-decl `}` should
-    // be suppressed when the next token is a keyword that
-    // starts a new statement (var, function, etc.) — ASI
-    // covers the boundary. Upstream emits
-    // `function add(a,b){return a+b}var sum=add(2,3);` for
-    // a multi-line input. Discovered by CLOC14.12.
-    ("multi_line_func", "gap-047: suppress trailing `;` before stmt-keyword"),
+    // gap-047 was RESOLVED in CLOC12.53 — `}` handler now
+    // adds a 5th branch in its decision: when next non-trivia
+    // is a statement-starting keyword, no synthetic `;` is
+    // emitted (ASI covers the boundary). `minify_multi_line_func`
+    // flipped IGNORED → PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
