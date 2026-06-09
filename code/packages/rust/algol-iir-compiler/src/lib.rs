@@ -488,26 +488,64 @@ impl Compiler {
             .into_iter()
             .filter(|n| n.rule_name == "for_elem")
             .collect();
-        if elems.len() != 1 {
-            return Err(CompileError::Unsupported(
-                "multi-element ALGOL for lists".into(),
-            ));
+        if elems.is_empty() {
+            return Err(CompileError::Malformed("for_list has no elements".into()));
         }
-        let elem = elems[0];
         let body = direct_nodes(node)
             .into_iter()
             .find(|n| n.rule_name == "statement")
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
-        if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return self.emit_for_while(&var_name, elem, body);
+        for elem in elems {
+            self.emit_for_element(&var_name, elem, body)?;
         }
-        if !direct_tokens(elem).iter().any(|t| t.value == "step") {
-            return Err(CompileError::Unsupported(
-                "single-value for elements outside step/until form".into(),
+        Ok(())
+    }
+
+    fn emit_for_element(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        if direct_tokens(elem).iter().any(|t| t.value == "while") {
+            return self.emit_for_while(var_name, elem, body);
+        }
+        if direct_tokens(elem).iter().any(|t| t.value == "step") {
+            return self.emit_for_step_until(var_name, elem, body);
+        }
+        self.emit_for_once(var_name, elem, body)
+    }
+
+    fn emit_for_once(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let arith_nodes: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|n| n.rule_name == "arith_expr")
+            .collect();
+        if arith_nodes.len() != 1 {
+            return Err(CompileError::Malformed(
+                "single-value for element should have one value".into(),
             ));
         }
-        self.emit_for_step_until(&var_name, elem, body)
+
+        let value = self.emit_expr(arith_nodes[0])?;
+        if value.ty != ScalarType::Integer {
+            return Err(CompileError::Type(
+                "single-value for element must be integer".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(var_name.to_string()),
+            vec![Operand::Var(value.slot)],
+            "i64",
+        ));
+        self.emit_statement(body)
     }
 
     fn emit_for_step_until(
@@ -1325,6 +1363,18 @@ mod tests {
     fn compiles_and_runs_for_while_sum() {
         let src = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
         assert_eq!(run_i64(src), 15);
+    }
+
+    #[test]
+    fn compiles_and_runs_single_value_for_element() {
+        let src = "begin integer i, result; for i := 2 do result := 40 + i end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_multi_element_for_list() {
+        let src = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
+        assert_eq!(run_i64(src), 39);
     }
 
     #[test]
