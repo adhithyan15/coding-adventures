@@ -34,8 +34,18 @@ Chief of Staff job/session/agent
   -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
   -> event-log and subscription-backlog reads
+  -> typed command-result audit reads and summaries
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
+  -> policy-surface inventory and summary reads for review planning
+  -> ecosystem platform coverage and summary reads for primitive planning
+  -> primitive coverage gap list and summary reads for backlog planning
+  -> activation-plan list and summary reads for D23A rollout planning
+  -> activation-candidate list and summary reads for ranked rollout planning
+  -> activation-action list and summary reads for concrete unblock/activate work
+  -> activation-agenda list and summary reads for concrete work by rollout wave
+  -> activation-runway list and summary reads for rollout-priority waves
+  -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
@@ -53,6 +63,30 @@ Chief of Staff job/session/agent
 - `smart_home.describe_integration`
 - `smart_home.list_primitives`
 - `smart_home.describe_primitive`
+- `smart_home.get_integration_catalog_summary`
+- `smart_home.get_tool_catalog_summary`
+- `smart_home.list_integration_policy_surfaces`
+- `smart_home.get_integration_policy_surface_summary`
+- `smart_home.list_integration_platform_coverage`
+- `smart_home.get_integration_platform_coverage_summary`
+- `smart_home.list_integration_primitive_coverage`
+- `smart_home.get_integration_primitive_coverage_summary`
+- `smart_home.list_integration_activation_plans`
+- `smart_home.get_integration_activation_plan_summary`
+- `smart_home.list_integration_activation_candidates`
+- `smart_home.get_integration_activation_candidate_summary`
+- `smart_home.list_integration_activation_actions`
+- `smart_home.get_integration_activation_action_summary`
+- `smart_home.list_integration_activation_agenda`
+- `smart_home.get_integration_activation_agenda_summary`
+- `smart_home.list_integration_activation_runway`
+- `smart_home.get_integration_activation_runway_summary`
+- `smart_home.list_integration_activation_dependencies`
+- `smart_home.get_integration_activation_dependency_summary`
+- `smart_home.list_integration_readiness`
+- `smart_home.get_integration_readiness_summary`
+- `smart_home.list_integration_readiness_gaps`
+- `smart_home.get_integration_readiness_gap_summary`
 - `smart_home.discover`
 - `smart_home.list_discovery_workers`
 - `smart_home.get_discovery_summary`
@@ -72,6 +106,8 @@ Chief of Staff job/session/agent
 - `smart_home.unsubscribe`
 - `smart_home.list_subscriptions`
 - `smart_home.inspect_event_log`
+- `smart_home.list_command_results`
+- `smart_home.get_command_result_summary`
 - `smart_home.list_authorization_decisions`
 - `smart_home.get_authorization_summary`
 - `smart_home.list_capability_grants`

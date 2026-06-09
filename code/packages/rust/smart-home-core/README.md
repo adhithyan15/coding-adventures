@@ -46,11 +46,33 @@ Current scope:
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors
+- D18D integration-catalog descriptors for model-facing integration and
+  reusable-primitive inspection
+- D18D catalog-summary descriptors for compact integration and tool surface
+  inspection
+- D18D integration policy-surface descriptors for read-only review, cloud,
+  local, and privilege-tier planning rollups
+- D18D integration activation-plan descriptors for bulk rollout plan listing
+  and compact activation-plan rollups
+- D18D integration activation-candidate descriptors for ranked ready, review,
+  and blocked rollout planning
+- D18D integration activation-action descriptors for concrete activate,
+  policy-review, primitive, capability, and dependency work planning
+- D18D integration activation-agenda descriptors for grouping concrete action
+  work by rollout-priority wave
+- D18D integration activation-runway descriptors for rollout-priority wave
+  grouping and compact actionable/blocker summaries
+- D18D integration-readiness descriptors for bulk activation blocker reports
+  and compact readiness rollups
+- D18D integration-readiness gap descriptors for grouped primitive,
+  capability, and delegated-dependency blocker planning
 - D18D scene inventory/read tool descriptors for model-facing scene lookup
 - D18D event lifecycle tool descriptors for subscribing, polling, and
   unsubscribing from runtime event streams
 - D18D event observability tool descriptors for listing active subscriptions and
   inspecting checkpointed runtime event-log entries
+- D18D command-result observability descriptors for listing and summarizing
+  command results from checkpointed runtime event history
 - D18D authorization-audit tool descriptors for listing decisions and compact
   allow/deny summaries
 - D18D capability-grant tool descriptors for listing grant rows and compact

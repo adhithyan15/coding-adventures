@@ -1,0 +1,26 @@
+[
+  {
+    "target_id": "f3",
+    "set": { "lr": 1.0 },
+    "editor": "human expert (demo)",
+    "date": "2026-06-09",
+    "reason": "CSF low glucose is a correlated manifestation of the bacterial CSF profile, not an independent test. f2 (neutrophilic pleocytosis) is kept as the representative of that one CSF-chemistry signal; counting glucose independently double-counts. Neutralized (lr=1).",
+    "source": "ADJ56 cross-domain stress test — documented meningitis CSF over-saturation (P=1.0000); CSF pleocytosis/glucose/protein/lactate are joint effects of one process."
+  },
+  {
+    "target_id": "f4",
+    "set": { "lr": 1.0 },
+    "editor": "human expert (demo)",
+    "date": "2026-06-09",
+    "reason": "CSF elevated protein is part of the same correlated CSF-chemistry signal as f2/f3/f5; subsumed under f2. Neutralized (lr=1) to stop independent double-counting.",
+    "source": "ADJ56 — meningitis CSF over-saturation."
+  },
+  {
+    "target_id": "f5",
+    "set": { "lr": 1.0 },
+    "editor": "human expert (demo)",
+    "date": "2026-06-09",
+    "reason": "CSF elevated lactate is part of the same correlated CSF-chemistry signal; subsumed under f2. Neutralized (lr=1).",
+    "source": "ADJ56 — meningitis CSF over-saturation."
+  }
+]

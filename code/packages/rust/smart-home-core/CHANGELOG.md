@@ -13,10 +13,48 @@ All notable changes to this package will be documented in this file.
   compact read-side inspection of integration coverage.
 - `SmartHomeToolCatalogSummary` and `smart_home_tool_catalog_summary()` for
   compact read-side inspection of the smart-home tool surface.
+- `smart_home.list_integrations`, `smart_home.describe_integration`,
+  `smart_home.list_primitives`, and `smart_home.describe_primitive` tool
+  descriptors for read-only integration-catalog and reusable-primitive
+  inspection.
+- `smart_home.get_integration_catalog_summary` and
+  `smart_home.get_tool_catalog_summary` tool descriptors for compact read-only
+  catalog rollups.
+- `smart_home.list_integration_policy_surfaces` and
+  `smart_home.get_integration_policy_surface_summary` tool descriptors for
+  read-only policy-surface planning rollups.
+- `smart_home.list_integration_activation_plans` and
+  `smart_home.get_integration_activation_plan_summary` tool descriptors for
+  read-only activation-plan listing and compact rollout plan summaries.
+- `smart_home.list_integration_activation_candidates` and
+  `smart_home.get_integration_activation_candidate_summary` tool descriptors
+  for read-only ranked activation candidate planning.
+- `smart_home.list_integration_activation_actions` and
+  `smart_home.get_integration_activation_action_summary` tool descriptors for
+  read-only concrete activation action planning.
+- `smart_home.list_integration_activation_agenda` and
+  `smart_home.get_integration_activation_agenda_summary` tool descriptors for
+  read-only priority-wave activation action planning.
+- `smart_home.list_integration_activation_runway` and
+  `smart_home.get_integration_activation_runway_summary` tool descriptors for
+  read-only rollout-priority activation wave planning.
+- `smart_home.list_integration_activation_dependencies` and
+  `smart_home.get_integration_activation_dependency_summary` tool descriptors
+  for read-only activation dependency graph planning.
+- `smart_home.list_integration_readiness` and
+  `smart_home.get_integration_readiness_summary` tool descriptors for read-only
+  integration activation blocker planning.
+- `smart_home.list_integration_readiness_gaps` and
+  `smart_home.get_integration_readiness_gap_summary` tool descriptors for
+  read-only grouped blocker planning across primitives, capabilities, and
+  delegated integration dependencies.
 - `smart_home.poll_events` and `smart_home.unsubscribe` tool descriptors for
   model-facing event subscription lifecycle control.
 - `smart_home.list_subscriptions` and `smart_home.inspect_event_log` tool
   descriptors for read-only event-stream backlog and replay-log inspection.
+- `smart_home.list_command_results` and
+  `smart_home.get_command_result_summary` tool descriptors for read-only
+  command-result audit views over runtime event history.
 - `smart_home.list_authorization_decisions` and
   `smart_home.get_authorization_summary` tool descriptors for read-only
   authorization-audit inspection.

@@ -297,7 +297,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-040 — numeric separator + scientific shortest-form
 
-- **Status:** OPEN — newly discovered by CLOC14.7.
+- **Status:** **RESOLVED** in CLOC12.48 (PR pending). `minify_numeric_separator` flipped IGNORED → PASS. **Harness now 49/49 PASS — fifth 100% milestone today** (after 17/17, 25/25, 33/33, 41/41).
 - **Upstream byte-identity test:** `minify_numeric_separator` seed fixture.
 - **Why it fails:** Upstream emits `var x=1E6;` for `var x=1_000_000;`. closurec preserves the underscored literal verbatim. This is TWO normalisations stacked:
   1. Strip ES2021 numeric separators (`_`) from the literal.
@@ -309,7 +309,53 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-041 — nested function-decl double synthetic `;`
 
-- **Status:** OPEN — newly discovered by CLOC14.7.
-- **Upstream byte-identity test:** `minify_nested_function` seed fixture.
-- **Why it fails:** For `function f(){function g(){}}`, upstream emits `function f(){function g(){}};` but closurec emits `function f(){function g(){};};` — an extra inner `;`. The inner `function g(){}` triggers gap-030's `BlockKind::Function` synthetic `;`. Then when the outer `}` is processed, Rule A's source-`;`-before-`}` filter doesn't fire because the inner `;` was OUR synthetic emit, not a source token.
-- **What it needs:** Before emitting a synthetic `;` for a function/class/switch body close (BlockKind triggers), peek the very next non-trivia token. If it's `}`, suppress the synthetic `;` — the outer `}` will get its own synthetic `;` if appropriate, and chaining two synthetic terminators in a row is always wrong. Equivalent: when processing `}` and `last_emit_was_synthetic_semi == true`, pop the trailing `;` from `out` before computing this close's synthetic `;`. The former is cleaner (pre-check rather than post-correction).
+- **Status:** **RESOLVED** in CLOC12.47 (PR pending). `minify_nested_function` flipped IGNORED → PASS. Harness now 48/49 (only gap-040 remains).
+- **Resolution:** Implemented a `deferred_synthetic_semi` flag carried across iterations. When a `}` would emit a synthetic `;` but the next non-trivia is another `}`, the `;` is **deferred** to that outer brace instead of emitted. The outer brace consumes the deferred state (collapsing with any own-`;` it would emit). Chain continuations (`catch`/`finally`) carry the deferred state forward across the chain. Verified against `closure-compiler-v20240317.jar`: matches upstream for `function f(){function g(){}}` and `if(x){function f(){}}` and the try-chain composition `try{function f(){}}catch(e){b;}`.
+- **Test expectations updated**: 4 pre-existing inline tests had encoded the buggy `function f(){function g(){};};` and similar outputs as their `assert_eq!` rhs. Updated to the correct upstream-matching form with comments referencing the JAR probe.
+
+### gap-042 — `do` keyword should arm body_position_next
+
+- **Status:** **RESOLVED** in CLOC12.49 (PR pending). `minify_do_while` flipped IGNORED → PASS. Harness 56/57 (only gap-043 left).
+- **Resolution:** Added `else if val == "do"` branch arming `body_position_next = true`. Unlike `if`/`while`/`for` which arm via the `next_paren_is_control_flow_head` mechanism (their body opens after `)`), `do` opens its body slot IMMEDIATELY per §13.7.2. gap-032's single-statement flatten then fires correctly. 2 inline tests added; also documented a separate latent issue with empty-body do-while (`do{}while(x);` produces a spurious space between `;` and `while`) that's a `prev_emitted_tok` update bug in gap-031, orthogonal to this gap.
+- **What it needs:** Add `do` to the keyword arm list (alongside `if`/`while`/`for`) — but note `do` arms body_position_next IMMEDIATELY (no following `(`), unlike the others. Insert at the right `else if val == "do"` branch arming `body_position_next = true`.
+
+### gap-043 — CLI quote-choice optimisation
+
+- **Status:** **RESOLVED** in CLOC12.50 (PR pending). `minify_escape_chars` flipped IGNORED → PASS. **Harness back to 57/57 — sixth 100% milestone today** (after 17/17, 25/25, 33/33, 41/41, 49/49).
+- **Upstream byte-identity test:** `minify_escape_chars` seed fixture.
+- **Why it fails:** Upstream switches between `"` and `'` based on which yields a shorter output (escapes fewer chars). closurec's CLI WHITESPACE_ONLY path always uses `"` via `push_quoted_string_content`. The AST emitter already has this logic (gap-026 closed in CLOC12.11), but the CLI doesn't go through the AST.
+- **What it needs:** Lift `pick_better_quote` and `push_quoted_string_content` logic from closure-emitter into a shared module (or duplicate it carefully) and call it from `whitespace_only.rs`. Counting rule: prefer the quote style that requires fewer escape sequences; tie-break to the source-form's quote.
+
+### gap-044 — JavaScript lexer does not support template literal substitution `${...}`
+
+- **Status:** OPEN — newly discovered by CLOC14.9. **Lexer-level gap** (NOT a whitespace_only bug).
+- **Upstream byte-identity test:** `minify_template_subst` and `minify_tagged_subst` seed fixtures.
+- **Why it fails:** Our JavaScript lexer raises `LexerError: Unexpected sequence '` `` ` `` `'` when it encounters the closing backtick of a template like `` `hello ${name}` ``. The lexer currently treats template literals as a single atomic token (`` `…` ``), but substitution templates require multi-segment lexing per §12.8.6:
+  - `TEMPLATE_HEAD` — `` `…${ ``
+  - `TEMPLATE_MIDDLE` — `}…${`
+  - `TEMPLATE_TAIL` — `}…` ``
+  - And the embedded expression is regular tokens between the head and tail/middle.
+- **What it needs:** Extend the JavaScript lexer's template-literal handling to emit the head/middle/tail variants and re-enter expression-tokenisation mode between segments. Once the lexer emits these correctly, the whitespace_only pass needs minimal-or-no changes — the segments are emitted verbatim along with the substitution expression tokens.
+- **Cross-cutting:** Closing this gap also unblocks template-substitution support in other downstream passes (AST emitter, constant folding, etc.). The grammar file (`code/grammars/javascript.grammar`) and `javascript-lexer` crate are the implementation surface.
+
+### gap-045 — single-argument arrow function should drop enclosing parens
+
+- **Status:** **RESOLVED** in CLOC12.51 (PR pending). `minify_arrow_async` flipped IGNORED → PASS. Harness now 79/81; only gap-044 (template substitution, lexer-level) remains open.
+- **Upstream byte-identity test:** `minify_arrow_async` seed fixture.
+- **Why it fails:** Upstream emits `var f=async x=>x+1;` for `var f=async(x)=>x+1;` (drops the parens). closurec preserves the source form `(x)`. The arrow-function grammar §15.3.1 permits single-identifier parameter without parens — upstream normalises to the parens-less form because it's shorter (saves 2 bytes).
+- **What it needs:** A token-level pattern detector: when seeing `(`, IDENT, `)`, `=>`, peek ahead and if the shape matches a single-bare-identifier arrow head, drop the `(` and `)` tokens. Care must be taken NOT to drop parens around: (a) typed parameters (`(x: T)=>...` — TS only, but our lexer might emit them), (b) default values (`(x=1)=>...`), (c) rest parameters (`(...args)=>...`), (d) destructuring (`({x})=>...`), (e) zero arguments (`()=>...`). The eligibility test is "exactly one IDENT token between matching `(` and `)`, followed by `=>`".
+- **Composition with async arrow**: `async(x)=>...` → `async x=>...` works identically; the `async` keyword doesn't affect the eligibility check.
+
+### gap-046 — trailing comma in array/object literal dropped under WHITESPACE_ONLY
+
+- **Status:** **RESOLVED (array case)** in CLOC12.52 (PR pending). `minify_trailing_array_comma` flipped IGNORED → PASS. Object-literal case deferred to a future `gap-046b` since `}` discrimination between block-close and object-literal-close requires brace_stack awareness.
+- **Upstream byte-identity test:** `minify_trailing_array_comma` seed fixture.
+- **Why it fails:** Upstream emits `var a=[1,2];` for `var a=[1,2,];` (trailing comma dropped). closurec preserves it. The trailing-comma form is grammatically valid (§13.2.4 Elision), but it's a byte saving to drop. Also applies to object literals (`{a:1,}` → `{a:1}`).
+- **What it needs:** When emitting a `,` token, peek ahead. If the next non-trivia token is `]` (or `}` in an OBJECT-LITERAL position), suppress the `,`. The OBJECT-LITERAL position distinction matters because `,` before `}` of a block (`{stmt;}` ← never has `,`) vs an object literal (`{a:1,}` ← does) requires knowing the brace-stack kind. Easier alternative: just check `]` — that's the array case. Object case can be a follow-up.
+
+### gap-047 — suppress synthetic `;` after function-decl `}` before statement-starting keyword
+
+- **Status:** OPEN — newly discovered by CLOC14.12.
+- **Upstream byte-identity test:** `minify_multi_line_func` seed fixture.
+- **Why it fails:** Upstream emits `function add(a,b){return a+b}var sum=add(2,3);` for a multi-line input. closurec emits `function add(a,b){return a+b};var sum=add(2,3);` — the gap-030 synthetic `;` after the function-decl `}` is unneeded because `var` (and other statement-starting keywords) can never grammatically fuse with the preceding `}`. ASI safety doesn't require the `;`.
+- **What it needs:** Extend the gap-030 trailing-`;` rule (and its gap-041 deferred-`;` cousin) with a peek-ahead suppression: if the next non-trivia token is a statement-starting keyword (`var`, `let`, `const`, `function`, `class`, `if`, `for`, `while`, `do`, `switch`, `try`, `return`, `throw`, `break`, `continue`), suppress the synthetic `;`. EOF stays at the SOURCE EOF behaviour (gap-030 still fires there).

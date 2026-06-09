@@ -2,6 +2,202 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.58.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-046** (array case) — trailing comma in array
+  literal is now suppressed. Harness 86/89. Only gap-044
+  (lexer-level template substitution) and gap-047 (suppress
+  synthetic `;` before stmt-keyword) remain.
+- Top-of-loop check: when current is `,` AND next non-trivia
+  is `]`, skip the comma. Handles `[1,2,]` → `[1,2]` and
+  degenerate elision `[1,,]` → `[1,]` (matches upstream's
+  lossy normalisation under WHITESPACE_ONLY).
+- Object-literal case deferred to gap-046b.
+
+### Added
+- 6 inline `gap046_*` tests covering target, single-
+  element, inner-comma non-regression, elision
+  normalisation, call-expr non-regression, empty array.
+
+## [0.57.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-045** — single-argument arrow function drops
+  its enclosing parens. Harness now 79/81; only gap-044
+  (template substitution, lexer-level) remains open.
+- Added a top-of-loop pattern detector: when the current
+  token is `(` AND `kept[idx+1]` is a Name AND
+  `kept[idx+2]` is `)` AND `kept[idx+3]` is `=>`, emit just
+  the IDENT and `=>`, advancing idx by 4. Both parens are
+  skipped — the `(` push and `)` pop both bypassed, leaving
+  paren_stack net-zero.
+- Composes with `async` keyword: `var f=async(x)=>x+1;` →
+  `var f=async x=>x+1;`. The `async` keyword + Name IDENT
+  pair triggers `needs_separator` (both word-like → space).
+- Added `is_simple_identifier_token` helper that returns
+  true only for `TokenType::Name` — keywords, punctuation,
+  strings, and numbers all fail. This filters out
+  destructuring (`{`), rest (`...`), and reserved-word
+  param names.
+
+### Added
+
+8 inline `gap045_*` tests:
+- target single-arg arrow + async composition
+- 6 non-regression cases: zero-arg, multi-arg, default,
+  rest, destructuring, `(x).y` member access (not arrow)
+
+### Pre-push security review
+
+Verdict PASS. Traced 6 concerns: paren_stack balance,
+other stack non-interaction, false-positive on `(x).y`,
+async composition + needs_separator interaction, future
+template-substitution composition, prev_emitted_tok stored
+as the `=>` token (PUNCT) to avoid spurious space after
+IDENT body.
+
+## [0.56.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-043** — CLI quote-choice optimisation for
+  string literals. **Harness now 57/57 PASS — sixth 100%
+  milestone today** (17/17 → 25/25 → 33/33 → 41/41 → 49/49
+  → 57/57).
+- Added `emit_quoted_string(out, content)`: counts `"` vs
+  `'` occurrences in content. When `"` count > `'` count,
+  switches to single-quoted form (no `\"` escape needed
+  for the content's `"`). Otherwise default to double
+  (tie-break per upstream's `CodePrinter`).
+- Mirrors the logic in `closure-emitter`'s
+  `choose_quote_and_escape` (closed CLOC12 gap-026). The
+  CLI path uses an independent copy because it doesn't go
+  through the AST.
+- Both string-emit sites in the WHITESPACE_ONLY path now
+  call `emit_quoted_string` (main loop + gap-032 pre-emit).
+
+### Added
+
+4 new `gap043_*` inline tests:
+- `gap043_no_quotes_in_content_picks_double` — default
+  case
+- `gap043_single_quotes_only_stay_double` — no escape
+  savings from switching
+- `gap043_more_double_switches_to_single` — target case
+  (one `"`, no `'`)
+- `gap043_tie_picks_double` — tie-break verification
+
+## [0.55.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-042** — `do` keyword now arms
+  `body_position_next = true`. `do{a;}while(x);` flattens
+  via gap-032 to `do a;while(x);` matching upstream.
+  Harness 55/57 → 56/57. Only gap-043 left.
+
+Unlike `if`/`while`/`for` whose body slot opens after
+their `)`, `do`'s body opens IMMEDIATELY after the keyword
+(per §13.7.2). A one-keyword branch mirroring `else`.
+
+### Added
+- 2 inline `gap042_*` tests (single-stmt flatten target +
+  multi-stmt non-regression).
+
+### Documented (orthogonal, not fixed here)
+- Empty-body `do{}while(x);` produces `do; while(x);` —
+  the synthetic `;` from gap-031 doesn't update
+  `prev_emitted_tok`, leaving `needs_separator` to see
+  word-like(do, while). Future gap.
+
+## [0.54.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-040** — numeric separator stripping +
+  scientific shortest-form normalisation. **Harness now
+  reports `49 matched, 0 failed, 0 skipped (of 49 total)`
+  — fifth 100% milestone today** (17/17, 25/25, 33/33,
+  41/41, 49/49).
+- Extended `normalize_number_value()` to consider three
+  candidates: cleaned form (with `_` stripped), decimal,
+  and scientific. Picks the shortest with tie-break order
+  decimal > cleaned > scientific.
+- Added `scientific_form_of(n)` helper: for `n = m × 10^e`
+  with `m % 10 ≠ 0` and `e ≥ 1`, returns `Some("{m}E{e}")`.
+- Decimal source (no radix prefix) is now also considered
+  for normalisation — `1000` → `1E3`, `12000` → `12E3`.
+- Underscores in source are stripped before parsing
+  (`u128::from_str_radix` doesn't accept ES2021 numeric
+  separators).
+- Floating-point and exponential-source literals (anything
+  containing `.`, `e`, `E`) hit the early-return branch and
+  stay verbatim — those normalisations are separate gaps.
+
+### Added
+
+12 new `gap040_*` inline tests covering:
+- separator + scientific (`1_000`, `1_000_000`)
+- separator without trailing zeros (`1_234_567`)
+- hex + separator (`0xff_ff`)
+- bare decimal → scientific (`1000`)
+- decimal/scientific tie (`100`)
+- tiny decimal stays (`10`)
+- multi-digit mantissa scientific (`12000` → `12E3`)
+- mantissa-exponent tie (`1234500`)
+- zero/no-norm/float non-regression
+
+### Verified against upstream JAR
+
+All worked examples in the function docstring were verified
+against `closure-compiler-v20240317.jar` directly during
+implementation. Boundary cases confirmed:
+- `1000` → `1E3` (sci strictly shorter)
+- `100` → `100` (decimal-sci tie → decimal)
+- `12000` → `12E3` (multi-digit mantissa)
+- `1234500` → `1234500` (cleaned-decimal-sci tie → decimal)
+- `0xff_ff` → `65535` (decimal strictly shortest)
+
+## [0.53.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-041** — synthetic `;` propagation through
+  closing braces. Harness now 48/49 (only gap-040 left).
+- Introduced `deferred_synthetic_semi: bool` carried across
+  iterations. When a `}` would emit a synthetic `;` but the
+  next non-trivia is another `}`, the `;` is **deferred**
+  to that outer brace. The outer brace then consumes the
+  deferred state, collapsing with any own-`;` it would emit
+  to a single output.
+- 4-way decision at every `}`:
+  1. owes + next-is-`}` → defer
+  2. doesn't owe + next-is-`}` → propagate state
+  3. next-is-`catch`/`finally` → carry across chain
+  4. else → emit if `kind_wants_semi || deferred`, clear flag
+- Verified against `closure-compiler-v20240317.jar` for:
+  - `function f(){function g(){}}` → `function f(){function g(){}};`
+  - `if(x){function f(){}}` → `if(x){function f(){}};`
+  - `try{function f(){}}catch(e){b;}` → `try{function f(){}}catch(e){b};`
+  - `try{try{a;}catch(e){b;}}catch(f){c;}` → `try{try{a}catch(e){b}}catch(f){c};`
+
+### Updated
+
+Four pre-existing inline tests had encoded the buggy
+double-`;` output as their expected rhs:
+- `gap032_body_with_function_does_not_flatten`
+- `gap032_body_with_try_does_not_flatten` (partial — gap-032
+  conservatism still keeps the outer braces)
+- `gap033_function_decl_inside_try_block_still_gets_semi`
+- `gap033_nested_try_catch_each_gets_semi`
+
+All four updated to the upstream-matching form with
+references to the JAR probe in their docstrings.
+
+### Pre-push security review
+
+Verdict PASS. Traced 7 concerns: source-`;` non-interference,
+sequential `}}}}` collapse, Function-Other mix, Rule A
+interaction, EOF handling, multi-defer collapse, TryChain
+across non-`}` boundary. No counterexample.
+
 ## [0.52.0] - 2026-06-09
 
 ### Changed

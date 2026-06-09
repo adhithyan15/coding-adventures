@@ -15,6 +15,9 @@ All notable changes to this package will be documented in this file.
   from runtime read snapshots.
 - `RuntimeEventLogSummary` plus `event_log_summary()` for compact event-kind
   counts over selected runtime replay windows.
+- `RuntimeCommandResultQuery`, `RuntimeCommandResultRecord`, and
+  `RuntimeCommandResultSummary` plus authorized read-tool variants for typed
+  command-result audit views over runtime event history.
 - `RuntimeSubscriptionInventorySummary` plus `subscription_inventory_summary()`
   for compact event-stream filter coverage and backlog pressure checks.
 - `RuntimeEventBusHealthSummary` plus event-bus/runtime helpers for composed

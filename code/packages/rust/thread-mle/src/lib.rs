@@ -694,6 +694,37 @@ impl Connectivity {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MleStatus {
+    pub code: u8,
+}
+
+impl MleStatus {
+    pub const ENCODED_LEN: usize = 1;
+
+    pub fn parse(value: &[u8]) -> Result<Self, MleError> {
+        if value.len() != Self::ENCODED_LEN {
+            return Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: Self::ENCODED_LEN,
+                actual: value.len(),
+            });
+        }
+        Ok(Self { code: value[0] })
+    }
+
+    pub fn encode(self) -> [u8; Self::ENCODED_LEN] {
+        [self.code]
+    }
+
+    pub fn to_tlv(self) -> Tlv {
+        Tlv {
+            tlv_type: TlvType::Status,
+            value: self.encode().to_vec(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MleMessage {
     pub command: MleCommand,
@@ -1341,6 +1372,13 @@ pub fn connectivity_from_message(message: &MleMessage) -> Result<Option<Connecti
         .transpose()
 }
 
+pub fn status_from_message(message: &MleMessage) -> Result<Option<MleStatus>, MleError> {
+    message
+        .find_tlv(TlvType::Status)
+        .map(|tlv| MleStatus::parse(&tlv.value))
+        .transpose()
+}
+
 pub fn version_is_newer(candidate: u8, current: u8) -> bool {
     let distance = candidate.wrapping_sub(current);
     distance != 0 && distance < 128
@@ -1483,6 +1521,43 @@ mod tests {
 
         assert_eq!(ScanMask::parse(scan.encode()), scan);
         assert_eq!(Mode::parse(mode.encode()), mode);
+    }
+
+    #[test]
+    fn status_tlv_round_trips_and_extracts_from_message() {
+        let status = MleStatus { code: 0x01 };
+        let message = MleMessage {
+            command: MleCommand::ChildIdResponse,
+            tlvs: vec![status.to_tlv()],
+        };
+
+        assert_eq!(MleStatus::parse(&status.encode()).unwrap(), status);
+        assert_eq!(status.to_tlv().tlv_type, TlvType::Status);
+        assert_eq!(status_from_message(&message).unwrap(), Some(status));
+        assert_eq!(
+            MleMessage::parse(&message.encode().unwrap()).unwrap(),
+            message
+        );
+    }
+
+    #[test]
+    fn status_tlv_rejects_wrong_length() {
+        assert_eq!(
+            MleStatus::parse(&[]),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: MleStatus::ENCODED_LEN,
+                actual: 0,
+            })
+        );
+        assert_eq!(
+            MleStatus::parse(&[0x01, 0x02]),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: MleStatus::ENCODED_LEN,
+                actual: 2,
+            })
+        );
     }
 
     #[test]

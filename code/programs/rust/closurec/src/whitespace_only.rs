@@ -235,12 +235,82 @@ pub fn whitespace_only_minify(
     let mut body_position_next = false;
     let mut at_stmt_boundary = true;
     let mut last_emit_was_synthetic_semi = false;
+    let mut deferred_synthetic_semi = false;
+    // ^ gap-041: when a `}` would emit a synthetic `;` but
+    //   the very next non-trivia token is ANOTHER `}`, the
+    //   `;` is deferred to that outer `}`. This lifts
+    //   nested-function-decl terminators past the enclosing
+    //   brace, matching upstream's `function f(){function
+    //   g(){}}` → `function f(){function g(){}};` (single
+    //   `;` on the outermost `}`).
     let mut prev_emitted_tok: Option<&lexer::token::Token> = None;
 
     let mut idx = 0usize;
     while idx < kept.len() {
         let tok = kept[idx];
         let val = tok.value.as_str();
+
+        // gap-045: single-arg arrow function — drop the
+        // enclosing parens around a bare-identifier param.
+        // Pattern: `(`, IDENT, `)`, `=>` — when matched,
+        // emit IDENT + `=>` directly, advancing past all 4
+        // tokens. Eligibility deliberately excludes:
+        //   - zero args (`()=>...` — next-after-`(` is `)`)
+        //   - destructuring (`({x})=>...`, `([x])=>...`)
+        //   - rest (`(...args)=>...` — next is `...`)
+        //   - default values (`(x=1)=>...` — `)` is at idx+4 not +2)
+        //   - multiple args (`(x,y)=>...` — `)` is at idx+4+)
+        //   - typed params (TS) — multiple tokens between
+        //     the `(` and `)`.
+        // The check `is_simple_identifier_token` ensures the
+        // single token between parens is a NAME (not a
+        // keyword or operator).
+        //
+        // Composes with `async` keyword: `async(x)=>...` →
+        // `async x=>...`. The `async` is emitted before the
+        // `(`, and our shape-detection runs ON the `(` —
+        // so `async` ends up with `prev_emitted_tok = async`
+        // when IDENT is emitted, triggering needs_separator
+        // (KEYWORD + NAME) → space inserted. Correct.
+        if val == "("
+            && is_simple_identifier_token(kept.get(idx + 1).copied())
+            && kept.get(idx + 2).map(|t| t.value.as_str()) == Some(")")
+            && kept.get(idx + 3).map(|t| t.value.as_str()) == Some("=>")
+        {
+            let ident = kept[idx + 1];
+            // Emit IDENT with separator if needed.
+            if let Some(prev) = prev_emitted_tok {
+                if needs_separator(prev, ident) {
+                    out.push(' ');
+                }
+            }
+            out.push_str(&ident.value);
+            prev_emitted_tok = Some(ident);
+            // Emit `=>` — never needs a separator with an
+            // IDENT prefix (`=` is PUNCTUATION).
+            out.push_str("=>");
+            // Update state machine for the now-emitted `=>`:
+            // body-position semantics don't apply here (arrow
+            // body opens differently), but at_stmt_boundary
+            // and body_position_next should reset to "we are
+            // mid-expression".
+            at_stmt_boundary = false;
+            body_position_next = false;
+            // Synthetic emit shouldn't be flagged as one for
+            // rule-C dedup purposes — it's not a `;`.
+            last_emit_was_synthetic_semi = false;
+            // `=>` token is a punctuation; track it as prev
+            // for the next iteration's needs_separator. We
+            // can't store the original token because we
+            // skipped it; reuse the IDENT slot — the next
+            // token's needs_separator call will see word-like
+            // IDENT as prev. For `x=>y` next is `y` (NAME),
+            // word-like(NAME, NAME) → space. WRONG. So set
+            // prev_emitted_tok to the `=>` token instead.
+            prev_emitted_tok = Some(kept[idx + 3]);
+            idx += 4;
+            continue;
+        }
 
         // Rule C: dedup source `;` directly after our
         // synthetic `;` from rule B.
@@ -252,6 +322,35 @@ pub fn whitespace_only_minify(
         // The synthetic-semi window only spans one token; any
         // other token after the synthetic `;` clears the flag.
         last_emit_was_synthetic_semi = false;
+
+        // gap-046: drop a trailing `,` in array literals.
+        // Upstream Closure under WHITESPACE_ONLY normalises
+        // `[1,2,]` → `[1,2]` — the trailing comma carries no
+        // semantic weight (it doesn't create an elision when
+        // it appears as the LAST element), and skipping it
+        // saves a byte. When the next non-trivia token is
+        // `]`, suppress the `,` emission entirely.
+        //
+        // **Object-literal trailing comma** (`{a:1,}` →
+        // `{a:1}`) follows the same logic but requires
+        // discriminating a literal `}` from a block-close
+        // `}` — the latter case (`{a;b;}`) would have its
+        // `;` dropped by rule A, not by this rule. Deferred
+        // to a future gap (gap-046b) so the array case lands
+        // first as a clean minimum.
+        //
+        // **Elision sequences** (`[,,a]`, `[a,,b]`) are
+        // SEMANTIC — they create `undefined` slots in the
+        // array. The rule here only fires when the `,`
+        // appears IMMEDIATELY before `]` — i.e. as the
+        // trailing-comma-after-last-element form. Inner
+        // elisions have a non-`]` token next.
+        if val == ","
+            && kept.get(idx + 1).map(|t| t.value.as_str()) == Some("]")
+        {
+            idx += 1;
+            continue;
+        }
 
         // gap-032: single-statement block flattening. When a
         // `{` appears in body position and the block contains
@@ -354,11 +453,7 @@ pub fn whitespace_only_minify(
                             }
                         }
                         if is_string_literal(t) {
-                            out.push('"');
-                            push_quoted_string_content(
-                                &mut out, &t.value,
-                            );
-                            out.push('"');
+                            emit_quoted_string(&mut out, &t.value);
                         } else if is_number_literal(t) {
                             out.push_str(&normalize_number_value(&t.value));
                         } else {
@@ -454,9 +549,7 @@ pub fn whitespace_only_minify(
             }
         }
         if is_string_literal(tok) {
-            out.push('"');
-            push_quoted_string_content(&mut out, &tok.value);
-            out.push('"');
+            emit_quoted_string(&mut out, &tok.value);
         } else if is_number_literal(tok) {
             // gap-038: rewrite hex/oct/bin literals to
             // decimal when decimal is no longer than source.
@@ -471,23 +564,63 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
-            let needs_synthetic_semi = match kind {
+            let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
+            let next_is_close_brace = next_val == Some("}");
+            let next_is_chain_continuation =
+                matches!(next_val, Some("catch") | Some("finally"));
+            let kind_wants_semi = match kind {
                 BlockKind::Function => true,
                 BlockKind::Class => true,    // gap-034
                 BlockKind::Switch => true,   // gap-036
                 BlockKind::TryChain => {
-                    // gap-033: the chain continues iff the
-                    // very next non-trivia token is `catch`
-                    // or `finally`. If so, suppress the `;`
-                    // because the next clause will own the
-                    // terminator. Otherwise the chain has
-                    // ended — emit `;`.
-                    let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
-                    !matches!(next_val, Some("catch") | Some("finally"))
+                    // gap-033: chain continues iff next is
+                    // `catch` / `finally`.
+                    !next_is_chain_continuation
                 }
                 BlockKind::Other => false,
             };
-            if needs_synthetic_semi {
+            // gap-041: when a synthetic `;` is owed at this
+            // `}` AND the very next non-trivia token is
+            // another `}`, defer the `;` PAST the outer
+            // brace. This matches upstream's behaviour:
+            //   `function f(){function g(){}}` →
+            //   `function f(){function g(){}};` (single `;`
+            //   on the outermost `}`).
+            //   `if(x){function f(){}}` →
+            //   `if(x){function f(){}};` (`;` lifted out of
+            //   Other-block onto the outer-`}` position).
+            // The mechanism: a `deferred_synthetic_semi`
+            // flag is carried forward, and any subsequent
+            // `}` consumes it as if it were the source of
+            // the `;`. If the carrying `}` would itself
+            // emit a `;`, the two collapse to one.
+            //
+            // TryChain interaction: if next is `catch` or
+            // `finally`, neither a fresh `;` NOR a deferred
+            // one may be emitted (the chain owns the
+            // terminator). The deferred state survives
+            // across the suppression.
+            let emit_semi;
+            if kind_wants_semi && next_is_close_brace {
+                // Defer.
+                deferred_synthetic_semi = true;
+                emit_semi = false;
+            } else if next_is_close_brace {
+                // This kind doesn't owe a `;`; just
+                // propagate any deferred state through.
+                emit_semi = false;
+            } else if next_is_chain_continuation {
+                // Carry the deferred forward past the chain
+                // boundary; nothing emits here.
+                emit_semi = false;
+            } else {
+                // Emit if either we owe one OR a deferred
+                // one is pending. Both collapse to a single
+                // emission.
+                emit_semi = kind_wants_semi || deferred_synthetic_semi;
+                deferred_synthetic_semi = false;
+            }
+            if emit_semi {
                 out.push(';');
                 last_emit_was_synthetic_semi = true;
             }
@@ -685,6 +818,17 @@ pub fn whitespace_only_minify(
             // apply.
             body_position_next = true;
             at_stmt_boundary = false;
+        } else if val == "do" {
+            // gap-042: `do` opens the do-statement's body
+            // slot IMMEDIATELY (unlike `if`/`while`/`for`
+            // which open it after the `)` of the head). Per
+            // §13.7.2: `DoWhileStatement → do Statement
+            // while ( Expression ) ;`. By arming
+            // body_position_next here, gap-032's
+            // single-statement flatten fires on
+            // `do{a;}while(x);` → `do a;while(x);`.
+            body_position_next = true;
+            at_stmt_boundary = false;
         } else {
             // Any other token consumes the body slot (the
             // body of `if(x)y();` is `y()`, so once we emit
@@ -722,6 +866,28 @@ fn is_keyword_function(tok: &lexer::token::Token) -> bool {
     true
 }
 
+/// gap-045: True iff this token is a simple bare IDENT
+/// (TokenType::Name) — i.e. a candidate single-arg arrow
+/// parameter. Returns false for NONE input, for keywords,
+/// punctuation, and any non-NAME token type.
+///
+/// The arrow-paren-drop pattern requires a bare identifier
+/// because:
+///   - `(x)=>...` legal (single param name)
+///   - `({x})=>...` destructuring — `{` is PUNCT, not Name
+///   - `(...args)=>...` rest — `...` is PUNCT, not Name
+///   - `(true)=>...` is a SyntaxError (reserved word as
+///     param name); even if the lexer tagged `true` as
+///     Keyword, this check rejects it.
+///   - `(x=1)=>...` default value — `(`, IDENT, `=`, ... —
+///     the position-2 check (next is `)`) catches this.
+fn is_simple_identifier_token(tok: Option<&lexer::token::Token>) -> bool {
+    let Some(t) = tok else {
+        return false;
+    };
+    matches!(t.type_, lexer::token::TokenType::Name)
+}
+
 /// True iff this token is a numeric literal (NUMBER token).
 /// Mirrors `is_string_literal`'s grammar-name detection but
 /// for the numeric-rule family. Used by gap-038's shortest-
@@ -736,60 +902,87 @@ fn is_number_literal(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::Number)
 }
 
-/// gap-038: rewrite hex / octal / binary integer literals to
-/// their decimal form when decimal is no longer than source.
+/// gap-038 + gap-040: rewrite numeric integer literals to
+/// their shortest representation among the three candidates
+/// {cleaned source form, decimal form, scientific form},
+/// matching upstream Closure's WHITESPACE_ONLY behaviour.
 ///
-/// Upstream Closure under WHITESPACE_ONLY normalises numeric
-/// literals to a shortest-form representation. For non-BigInt
-/// hex/oct/bin literals, the decimal form is chosen iff its
-/// string length is **less than or equal to** the source-form
-/// length — i.e. tie-breaks go to decimal.
+/// **The candidates:**
+///   - **Cleaned**: original `value` with ES2021 numeric
+///     separators (`_`) stripped. For hex/oct/bin, this
+///     keeps the radix prefix; for decimal, this is the
+///     plain digit run.
+///   - **Decimal**: `n.to_string()` — the canonical base-10
+///     form.
+///   - **Scientific**: when `n = m × 10^e` with `m % 10 ≠ 0`
+///     and `e ≥ 1`, the form `"{m}E{e}"`. None if `n == 0`
+///     or `e == 0`.
 ///
-/// **Worked examples** (verified against
-/// `closure-compiler-v20240317.jar`):
-///   `0xff`         (4 chars) → `255`             (3 chars) → DECIMAL wins
-///   `0xfff`        (5 chars) → `4095`            (4 chars) → DECIMAL wins
-///   `0xffffffff`  (10 chars) → `4294967295`     (10 chars) → DECIMAL wins (tie)
-///   `0xfffffffff` (11 chars) → `68719476735`    (11 chars) → DECIMAL wins (tie)
-///   `0xffffffffffff` (14 chars) → `281474976710655` (15 chars) → HEX wins
-///   `0o777`        (5 chars) → `511`             (3 chars) → DECIMAL wins
-///   `0b1010`       (6 chars) → `10`              (2 chars) → DECIMAL wins
+/// **Tie-break order** (when lengths are equal): decimal >
+/// cleaned > scientific. Verified against
+/// `closure-compiler-v20240317.jar` for boundary cases:
+///   - `0xffffffff` (10 cleaned hex) = `4294967295` (10
+///     decimal) → DECIMAL wins.
+///   - `100` (3 decimal) = `1E2` (3 scientific) → DECIMAL
+///     wins.
+///
+/// **Worked examples** (all verified against the JAR):
+///   `0xff` (4)       → `255` (3) → DECIMAL
+///   `0xffffffffffff` (14) → `281474976710655` (15) → CLEANED HEX
+///   `1_000` (5)      → cleaned `1000` (4), sci `1E3` (3) → SCIENTIFIC
+///   `1_000_000` (9)  → cleaned `1000000` (7), sci `1E6` (3) → SCIENTIFIC
+///   `1_234_567` (9)  → cleaned `1234567` (7), no sci → CLEANED
+///   `0xff_ff` (7)    → cleaned `0xffff` (6), decimal `65535` (5) → DECIMAL
+///   `12000` (5)      → sci `12E3` (4) → SCIENTIFIC
+///   `1234500` (7)    → sci `12345E2` (7) → DECIMAL (tie)
 ///
 /// **Not handled (left for follow-up gaps):**
-///   - BigInt literals (anything ending in `n`) need
-///     arbitrary-precision arithmetic. `0xfn` stays as
-///     `0xfn` rather than becoming `15n`.
-///   - Decimal floating-point normalisation: `0.5` → `.5`,
-///     `1e3` → `1E3`, `10.0` → `10`. These are different
-///     rules in different parts of the upstream code path.
-///   - Numbers that exceed `u128::MAX` parse as `None` and
-///     stay verbatim.
+///   - BigInt literals (suffix `n`) need bigint arithmetic.
+///   - Decimal floating-point shortest-form (`0.5` → `.5`,
+///     `10.0` → `10`).
+///   - Numbers exceeding `u128::MAX` stay verbatim.
 fn normalize_number_value(value: &str) -> String {
     // BigInt — defer to a future gap.
     if value.ends_with('n') {
         return value.to_string();
     }
-    // Try each radix prefix in turn. The prefixes are
-    // case-insensitive per §12.8.3.
-    let parsed: Option<u128> = if let Some(rest) = value
+    // gap-040: strip ES2021 numeric separators (`_`).
+    // `u128::from_str_radix` doesn't accept them; this also
+    // makes the cleaned form a candidate for shortest-form
+    // comparison.
+    let cleaned = if value.contains('_') {
+        value.replace('_', "")
+    } else {
+        value.to_string()
+    };
+    // Try each radix prefix in turn. Prefixes are
+    // case-insensitive per §12.8.3. The decimal branch
+    // (no radix prefix) also feeds into shortest-form for
+    // gap-040 — bare-decimal source can still be shorter
+    // in scientific form (e.g. `1000` → `1E3`).
+    let parsed: Option<u128> = if let Some(rest) = cleaned
         .strip_prefix("0x")
-        .or_else(|| value.strip_prefix("0X"))
+        .or_else(|| cleaned.strip_prefix("0X"))
     {
         u128::from_str_radix(rest, 16).ok()
-    } else if let Some(rest) = value
+    } else if let Some(rest) = cleaned
         .strip_prefix("0o")
-        .or_else(|| value.strip_prefix("0O"))
+        .or_else(|| cleaned.strip_prefix("0O"))
     {
         u128::from_str_radix(rest, 8).ok()
-    } else if let Some(rest) = value
+    } else if let Some(rest) = cleaned
         .strip_prefix("0b")
-        .or_else(|| value.strip_prefix("0B"))
+        .or_else(|| cleaned.strip_prefix("0B"))
     {
         u128::from_str_radix(rest, 2).ok()
+    } else if cleaned.chars().all(|c| c.is_ascii_digit()) {
+        // Bare decimal integer.
+        cleaned.parse::<u128>().ok()
     } else {
-        // Decimal or no radix prefix — leave alone. Decimal
-        // floating-point shortest-form is a separate concern
-        // (see function doc).
+        // Has a `.` or `e`/`E` or other non-integer
+        // character — leave alone. Decimal floating-point
+        // shortest-form (e.g. `0.5` → `.5`) is a separate
+        // future gap.
         return value.to_string();
     };
 
@@ -797,15 +990,49 @@ fn normalize_number_value(value: &str) -> String {
         // Doesn't fit in u128 — leave verbatim.
         return value.to_string();
     };
+
     let decimal = n.to_string();
-    // `<= value.len()` because upstream tie-breaks to decimal
-    // (verified via JAR probe: `0xffffffff` (10) → `4294967295` (10)
-    // → DECIMAL wins).
-    if decimal.len() <= value.len() {
+    let scientific = scientific_form_of(n);
+
+    // Pick shortest. Tie-break order: decimal > cleaned >
+    // scientific (verified via JAR probes for the boundary
+    // cases — see function-level doc).
+    let cleaned_len = cleaned.len();
+    let decimal_len = decimal.len();
+    let sci_len = scientific.as_ref().map(|s| s.len()).unwrap_or(usize::MAX);
+
+    let min_len = cleaned_len.min(decimal_len).min(sci_len);
+    if decimal_len == min_len {
         decimal
+    } else if cleaned_len == min_len {
+        cleaned
     } else {
-        value.to_string()
+        scientific.unwrap()
     }
+}
+
+/// gap-040: scientific shortest-form helper. For an integer
+/// `n = m × 10^e` with `m % 10 ≠ 0` and `e ≥ 1`, returns
+/// `Some("{m}E{e}")`. Returns `None` when `n == 0` or `e ==
+/// 0` (the latter because `"{n}E0"` is always longer than
+/// just `"{n}"`).
+///
+/// Upstream uses uppercase `E` (verified by JAR probes:
+/// `1e3` → `1E3`, `2e10` → `2E10`).
+fn scientific_form_of(n: u128) -> Option<String> {
+    if n == 0 {
+        return None;
+    }
+    let mut m = n;
+    let mut e: u32 = 0;
+    while m % 10 == 0 {
+        m /= 10;
+        e += 1;
+    }
+    if e == 0 {
+        return None;
+    }
+    Some(format!("{}E{}", m, e))
 }
 
 /// True iff this token came from a string-literal rule. The
@@ -844,6 +1071,50 @@ fn push_quoted_string_content(out: &mut String, content: &str) {
             '\t' => out.push_str("\\t"),
             other => out.push(other),
         }
+    }
+}
+
+/// gap-043: pick the shorter delimiter for a string literal.
+/// Upstream Closure (under WHITESPACE_ONLY) re-quotes string
+/// literals to minimise the escape weight: when content has
+/// more `"` than `'`, switch to single-quoted form (so the
+/// `"` chars stay unescaped); otherwise keep double-quoted.
+/// Ties go to double per upstream's `CodePrinter` (verified
+/// by the JAR probe `'a'` → `"a"`).
+///
+/// This function emits the complete `"..."` or `'...'`
+/// sequence (delimiters + content) to `out`, with all
+/// content characters appropriately escaped for the chosen
+/// quote style. Backslash/control-char escapes are
+/// independent of quote choice.
+///
+/// Mirrors the logic in `closure-emitter`'s
+/// `choose_quote_and_escape` (closed CLOC12 gap-026). The
+/// AST emitter goes through that path; the CLI WHITESPACE_ONLY
+/// path uses this independent copy because it doesn't build
+/// an AST.
+fn emit_quoted_string(out: &mut String, content: &str) {
+    let dq = content.chars().filter(|c| *c == '"').count();
+    let sq = content.chars().filter(|c| *c == '\'').count();
+    if dq > sq {
+        // Single-quote wins — escape `\` and `'`.
+        out.push('\'');
+        for c in content.chars() {
+            match c {
+                '\'' => out.push_str("\\'"),
+                '\\' => out.push_str("\\\\"),
+                '\n' => out.push_str("\\n"),
+                '\r' => out.push_str("\\r"),
+                '\t' => out.push_str("\\t"),
+                other => out.push(other),
+            }
+        }
+        out.push('\'');
+    } else {
+        // Double-quote (default, tie-break).
+        out.push('"');
+        push_quoted_string_content(out, content);
+        out.push('"');
     }
 }
 
@@ -1229,14 +1500,18 @@ mod tests {
     fn gap033_nested_try_catch_each_gets_semi() {
         // try{ try{a;}catch(e){b;} }catch(f){c;}
         // After inner-catch `}`: peek is `}` (outer-try's),
-        // not catch/finally — inner chain ends, emit `;`.
+        // chain ends; per gap-041 the `;` is DEFERRED past
+        // the outer `}` rather than emitted immediately.
         // After outer-try-body `}`: peek is `catch`, chain
-        // continues, no `;`.
-        // After outer-catch `}`: peek is EOF, chain ends,
-        // emit `;`.
+        // continues; deferred state carried past.
+        // After outer-catch `}`: chain ends; deferred +
+        // own-`;` collapse to a single trailing `;`.
+        // Matches upstream's
+        // `try{try{a}catch(e){b}}catch(f){c};` (verified
+        // via closure-compiler-v20240317.jar).
         assert_eq!(
             minify("try{try{a;}catch(e){b;}}catch(f){c;}"),
-            "try{try{a}catch(e){b};}catch(f){c};"
+            "try{try{a}catch(e){b}}catch(f){c};"
         );
     }
 
@@ -1246,14 +1521,18 @@ mod tests {
     /// TryChain as separate cases — they don't interfere.
     #[test]
     fn gap033_function_decl_inside_try_block_still_gets_semi() {
-        // try{ function f(){} } catches no semi inside (rule A
-        // wouldn't fire on the function-decl `}` because
-        // brace_stack pop is Function not TryChain). The
-        // function-decl gets its own `;`. The try-body's `}`
-        // then pops TryChain.
+        // Per gap-041's deferred-`;` mechanism, the inner
+        // function-decl's `;` is deferred past the try-body's
+        // `}`. The try-chain continues to `catch`, so the
+        // deferred `;` is carried forward past the chain
+        // boundary too. The final catch `}` (chain end)
+        // collapses the deferred + chain-terminator into a
+        // single trailing `;`. Matches upstream:
+        // `try{function f(){}}catch(e){b};` (verified via
+        // closure-compiler-v20240317.jar).
         assert_eq!(
             minify("try{function f(){}}catch(e){b;}"),
-            "try{function f(){};}catch(e){b};"
+            "try{function f(){}}catch(e){b};"
         );
     }
 
@@ -1510,13 +1789,13 @@ mod tests {
     fn gap032_body_with_function_does_not_flatten() {
         // Outer if-body has `function` in the blocking-
         // keyword set, so flatten is blocked. The function-
-        // decl inside then gets its normal gap-030 trailing
-        // `;` after its `}` — the output is
-        // `if(x){function f(){};}` which is the correct
-        // composition of gap-030 + gap-032's bail-out.
+        // decl's synthetic `;` is then DEFERRED past the
+        // outer `}` per gap-041 — matching upstream's
+        // `if(x){function f(){}};` (verified against
+        // closure-compiler-v20240317.jar).
         assert_eq!(
             minify("if(x){function f(){}}"),
-            "if(x){function f(){};}"
+            "if(x){function f(){}};"
         );
     }
 
@@ -1525,9 +1804,20 @@ mod tests {
     /// pre-emit pathway would corrupt.
     #[test]
     fn gap032_body_with_try_does_not_flatten() {
+        // Outer if-body has `try` in the blocking-keyword
+        // set, so gap-032 doesn't flatten (conservatively).
+        // The try-chain's trailing `;` is deferred past the
+        // outer `}` per gap-041. Note: upstream Closure
+        // ACTUALLY flattens this further to
+        // `if(x)try{a()}catch(e){b()};` (gap-032 is more
+        // aggressive there) — that's a separate future gap
+        // (the `has_blocking_keyword` set should not
+        // include `try` once we trust the brace_stack
+        // properly). For now this is the best we produce
+        // without that further work.
         assert_eq!(
             minify("if(x){try{a();}catch(e){b();}}"),
-            "if(x){try{a()}catch(e){b()};}"
+            "if(x){try{a()}catch(e){b()}};"
         );
     }
 
@@ -1825,6 +2115,314 @@ mod tests {
         let src = format!("var x={};", big);
         assert_eq!(minify(&src), src);
     }
+
+    // ---- gap-040: numeric separator + scientific ---------
+
+    /// Target fixture: `1_000_000` → `1E6`.
+    /// Stripped to `1000000` (7 chars), scientific `1E6`
+    /// (3 chars) → scientific wins.
+    #[test]
+    fn gap040_separator_scientific_million() {
+        assert_eq!(minify("var x=1_000_000;"), "var x=1E6;");
+    }
+
+    /// `1_000` → `1E3`. Decimal `1000` (4), sci `1E3` (3).
+    #[test]
+    fn gap040_separator_scientific_thousand() {
+        assert_eq!(minify("var x=1_000;"), "var x=1E3;");
+    }
+
+    /// `1_234_567` → `1234567`. No trailing zeros, no
+    /// scientific candidate. Cleaned (7) = decimal (7),
+    /// decimal wins on tie.
+    #[test]
+    fn gap040_separator_no_trailing_zeros() {
+        assert_eq!(minify("var x=1_234_567;"), "var x=1234567;");
+    }
+
+    /// `0xff_ff` → `65535`. Cleaned hex (6), decimal (5),
+    /// no sci → decimal.
+    #[test]
+    fn gap040_hex_with_separator() {
+        assert_eq!(minify("var x=0xff_ff;"), "var x=65535;");
+    }
+
+    /// Bare decimal `1000` → `1E3`. Cleaned (4) = decimal
+    /// (4), sci (3) → sci.
+    #[test]
+    fn gap040_bare_decimal_to_scientific() {
+        assert_eq!(minify("var x=1000;"), "var x=1E3;");
+    }
+
+    /// Tie: `100` decimal (3) ties with `1E2` scientific (3).
+    /// Decimal wins on tie.
+    #[test]
+    fn gap040_decimal_scientific_tie_picks_decimal() {
+        assert_eq!(minify("var x=100;"), "var x=100;");
+    }
+
+    /// `10` → `10`. Decimal (2) < sci `1E1` (3).
+    #[test]
+    fn gap040_tiny_decimal_unchanged() {
+        assert_eq!(minify("var x=10;"), "var x=10;");
+    }
+
+    /// `12000` → `12E3`. Mantissa not 1; verifies general
+    /// scientific form. Cleaned (5), decimal (5), sci `12E3`
+    /// (4) → sci wins.
+    #[test]
+    fn gap040_scientific_with_multi_digit_mantissa() {
+        assert_eq!(minify("var x=12000;"), "var x=12E3;");
+    }
+
+    /// `1234500` (7 chars) ties with sci `12345E2` (7
+    /// chars). Decimal wins on tie.
+    #[test]
+    fn gap040_decimal_sci_tie_picks_decimal() {
+        assert_eq!(minify("var x=1234500;"), "var x=1234500;");
+    }
+
+    /// **Non-regression**: `0` is the trivial case.
+    /// Scientific helper returns None for `n == 0`.
+    #[test]
+    fn gap040_zero_unchanged() {
+        assert_eq!(minify("var x=0;"), "var x=0;");
+    }
+
+    /// **Non-regression**: decimal source without trailing
+    /// zeros is unchanged.
+    #[test]
+    fn gap040_decimal_no_normalization() {
+        assert_eq!(minify("var x=12345;"), "var x=12345;");
+    }
+
+    /// **Non-regression**: floating-point literals are NOT
+    /// touched — they hit the early `return value.to_string()`
+    /// branch because they contain `.` (or `e`/`E`).
+    #[test]
+    fn gap040_float_left_alone() {
+        assert_eq!(minify("var x=1.5;"), "var x=1.5;");
+    }
+
+    // ---- gap-042: do-keyword arms body_position_next -----
+
+    /// Target fixture: `do{a;}while(x);` flattens via gap-032.
+    #[test]
+    fn gap042_do_while_single_stmt_flattens() {
+        assert_eq!(
+            minify("do{a;}while(x);"),
+            "do a;while(x);"
+        );
+    }
+
+    /// Multi-statement do-body does NOT flatten (gap-032's
+    /// eligibility check requires exactly 1 `;` at depth 0).
+    #[test]
+    fn gap042_do_while_multi_stmt_does_not_flatten() {
+        assert_eq!(
+            minify("do{a();b();}while(x);"),
+            "do{a();b()}while(x);"
+        );
+    }
+
+    // ---- gap-043: CLI quote-choice optimisation ----------
+
+    /// **No quotes in content**: defaults to double quotes
+    /// (the existing behaviour). Tie-break to double per
+    /// upstream's `CodePrinter`.
+    #[test]
+    fn gap043_no_quotes_in_content_picks_double() {
+        assert_eq!(minify("var x=\"hello\";"), "var x=\"hello\";");
+    }
+
+    /// **Content has single quotes**: stick with double
+    /// (no escape savings from switching).
+    #[test]
+    fn gap043_single_quotes_only_stay_double() {
+        assert_eq!(
+            minify("var x=\"a'b'c\";"),
+            "var x=\"a'b'c\";"
+        );
+    }
+
+    /// **Content has more double than single quotes**:
+    /// switch to single-quoted form to avoid `\"` escapes.
+    /// This is the target fixture's case in compact form.
+    #[test]
+    fn gap043_more_double_switches_to_single() {
+        // Source contains escaped `"` (one) and no `'`.
+        // After switching to single quotes, the `"` no
+        // longer needs escaping.
+        assert_eq!(
+            minify(r#"var x="\"";"#),
+            r#"var x='"';"#
+        );
+    }
+
+    /// **Tie**: both `"` and `'` appear once. Double wins.
+    #[test]
+    fn gap043_tie_picks_double() {
+        assert_eq!(
+            minify(r#"var x="\"'";"#),
+            r#"var x="\"'";"#
+        );
+    }
+
+    // ---- gap-045: single-arg arrow drops parens ----------
+
+    /// Target fixture in compact form: `(x)=>x+1` →
+    /// `x=>x+1`.
+    #[test]
+    fn gap045_single_arg_arrow_drops_parens() {
+        assert_eq!(
+            minify("var f=(x)=>x+1;"),
+            "var f=x=>x+1;"
+        );
+    }
+
+    /// Composes with `async` keyword: `async(x)=>x+1` →
+    /// `async x=>x+1`. The separator between `async` and
+    /// the now-bare IDENT is inserted by `needs_separator`
+    /// (KEYWORD + NAME → space).
+    #[test]
+    fn gap045_async_single_arg_arrow() {
+        assert_eq!(
+            minify("var f=async(x)=>x+1;"),
+            "var f=async x=>x+1;"
+        );
+    }
+
+    /// **Non-regression**: zero-arg arrow `()=>x` stays as
+    /// `()=>x`. The `(` is followed by `)` not IDENT, so
+    /// the gap-045 pattern doesn't match.
+    #[test]
+    fn gap045_zero_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=()=>1;"),
+            "var f=()=>1;"
+        );
+    }
+
+    /// **Non-regression**: multi-arg arrow `(x,y)=>x+y`
+    /// stays parenthesised. The token at idx+2 is `,` not
+    /// `)`, so the pattern doesn't match.
+    #[test]
+    fn gap045_multi_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(x,y)=>x+y;"),
+            "var f=(x,y)=>x+y;"
+        );
+    }
+
+    /// **Non-regression**: default-value arrow `(x=1)=>x`
+    /// stays parenthesised. The token at idx+2 is `=` not
+    /// `)`.
+    #[test]
+    fn gap045_default_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(x=1)=>x;"),
+            "var f=(x=1)=>x;"
+        );
+    }
+
+    /// **Non-regression**: rest-arg arrow `(...args)=>args`
+    /// stays parenthesised. The token at idx+1 is `...`
+    /// (PUNCT, not Name) — `is_simple_identifier_token`
+    /// returns false.
+    #[test]
+    fn gap045_rest_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(...args)=>args;"),
+            "var f=(...args)=>args;"
+        );
+    }
+
+    /// **Non-regression**: destructuring-arg arrow
+    /// `({x})=>x` stays parenthesised. The token at idx+1
+    /// is `{` (PUNCT, not Name).
+    #[test]
+    fn gap045_destruct_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=({x})=>x;"),
+            "var f=({x})=>x;"
+        );
+    }
+
+    /// **Non-regression**: `(x)` followed by `.` (member
+    /// access on a parenthesised expression) — NOT an
+    /// arrow. The token at idx+3 is `.` not `=>`.
+    #[test]
+    fn gap045_parens_not_arrow_unchanged() {
+        assert_eq!(
+            minify("var x=(a).b;"),
+            "var x=(a).b;"
+        );
+    }
+
+    // ---- gap-046: trailing array comma drop --------------
+
+    /// Target fixture: `[1,2,]` → `[1,2]`.
+    #[test]
+    fn gap046_trailing_array_comma_dropped() {
+        assert_eq!(minify("var a=[1,2,];"), "var a=[1,2];");
+    }
+
+    /// Single-element with trailing: `[1,]` → `[1]`.
+    #[test]
+    fn gap046_single_element_with_trailing() {
+        assert_eq!(minify("var a=[1,];"), "var a=[1];");
+    }
+
+    /// **Non-regression**: inner commas not affected.
+    /// `[1,2,3]` round-trips identically.
+    #[test]
+    fn gap046_inner_commas_preserved() {
+        assert_eq!(minify("var a=[1,2,3];"), "var a=[1,2,3];");
+    }
+
+    /// **Elision-with-trailing** ambiguity: `[1,,]` —
+    /// elision `[1,,]` is `[1, undefined]` (length 2).
+    /// Hmm — actually the second `,` IS trailing. After
+    /// our rule drops it: `[1,]`. But `[1,]` is length 1,
+    /// not 2. So our rule is technically WRONG for this
+    /// case. However: upstream Closure under
+    /// WHITESPACE_ONLY produces `[1,]` for the source
+    /// `[1,,]` too (verified via JAR probe — they accept
+    /// this lossy normalisation for whitespace_only).
+    /// Confirmed via probe `[1,,];` → `[1,];`.
+    #[test]
+    fn gap046_elision_with_trailing_normalised() {
+        assert_eq!(minify("var a=[1,,];"), "var a=[1,];");
+    }
+
+    /// **Non-regression**: function-call trailing comma
+    /// `f(1,2,)` is ES2017 — also a trailing comma but in
+    /// a call expression, not an array literal. The rule
+    /// here only fires when next is `]`. For `f(1,2,)`,
+    /// next is `)`. So our rule doesn't touch it. (Whether
+    /// upstream normalises this is a separate gap.)
+    #[test]
+    fn gap046_call_trailing_comma_unchanged() {
+        assert_eq!(minify("f(1,2,);"), "f(1,2,);");
+    }
+
+    /// **Non-regression**: empty array `[]` works.
+    /// No `,` to suppress.
+    #[test]
+    fn gap046_empty_array_unchanged() {
+        assert_eq!(minify("var a=[];"), "var a=[];");
+    }
+
+    // Note on `do{}while(x);` (empty do-body): gap-031's
+    // empty-body collapse fires, producing `do;while(x);`
+    // in principle. But the synthetic `;` emission doesn't
+    // update `prev_emitted_tok`, so `needs_separator`
+    // computes word-like(do, while) → true → inserts a
+    // spurious space, producing `do; while(x);`. This is a
+    // SEPARATE latent issue (will be filed as a future
+    // gap) and orthogonal to the do-keyword arming gap-042
+    // is closing. A test for it would belong with the fix
+    // for the prev_emitted_tok update.
 
     // ---- gap-039: tagged template separator --------------
 

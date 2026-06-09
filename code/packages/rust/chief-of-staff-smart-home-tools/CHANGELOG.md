@@ -7,6 +7,42 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for the D23A smart-home integration catalog tools:
   `smart_home.list_integrations`, `smart_home.describe_integration`,
   `smart_home.list_primitives`, and `smart_home.describe_primitive`.
+- Added D18D handlers for compact shared-core catalog summaries:
+  `smart_home.get_integration_catalog_summary` and
+  `smart_home.get_tool_catalog_summary`.
+- Added D18D handlers for D23A integration policy-surface planning:
+  `smart_home.list_integration_policy_surfaces` and
+  `smart_home.get_integration_policy_surface_summary`.
+- Added D18D handlers for D23A ecosystem platform coverage planning:
+  `smart_home.list_integration_platform_coverage` and
+  `smart_home.get_integration_platform_coverage_summary`.
+- Added D18D handlers for D23A primitive coverage gap planning:
+  `smart_home.list_integration_primitive_coverage` and
+  `smart_home.get_integration_primitive_coverage_summary`.
+- Added D18D handlers for bulk D23A integration activation-plan planning:
+  `smart_home.list_integration_activation_plans` and
+  `smart_home.get_integration_activation_plan_summary`.
+- Added D18D handlers for ranked D23A integration activation candidate
+  planning: `smart_home.list_integration_activation_candidates` and
+  `smart_home.get_integration_activation_candidate_summary`.
+- Added D18D handlers for concrete D23A integration activation action
+  planning: `smart_home.list_integration_activation_actions` and
+  `smart_home.get_integration_activation_action_summary`.
+- Added D18D handlers for D23A priority-wave activation agendas:
+  `smart_home.list_integration_activation_agenda` and
+  `smart_home.get_integration_activation_agenda_summary`.
+- Added D18D handlers for D23A rollout-priority activation runway planning:
+  `smart_home.list_integration_activation_runway` and
+  `smart_home.get_integration_activation_runway_summary`.
+- Added D18D handlers for D23A integration activation dependency graph
+  planning: `smart_home.list_integration_activation_dependencies` and
+  `smart_home.get_integration_activation_dependency_summary`.
+- Added D18D handlers for bulk D23A integration readiness planning:
+  `smart_home.list_integration_readiness` and
+  `smart_home.get_integration_readiness_summary`.
+- Added D18D handlers for grouped D23A integration readiness blocker planning:
+  `smart_home.list_integration_readiness_gaps` and
+  `smart_home.get_integration_readiness_gap_summary`.
 - Added D18D smart-home tool definitions and in-memory handlers over
   `SmartHomeRuntime`.
 - Added an end-to-end Hue-style fixture test that lists devices, commands a
@@ -46,6 +82,10 @@ All notable changes to this package will be documented in this file.
   handlers over the D23 runtime read facade so Chief of Staff jobs can inspect
   event-stream backlog pressure and checkpointed event history without draining
   subscriptions.
+- Added `smart_home.list_command_results` and
+  `smart_home.get_command_result_summary` handlers over the D23 runtime read
+  facade so Chief of Staff jobs can inspect accepted and failed command results
+  without owning a parallel command audit log.
 - Added `smart_home.list_authorization_decisions` and
   `smart_home.get_authorization_summary` handlers over the D23 runtime read
   facade so Chief of Staff jobs can inspect allow/deny audit history without

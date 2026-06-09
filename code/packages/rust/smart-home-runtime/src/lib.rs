@@ -905,6 +905,187 @@ impl RuntimeEventLogSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeCommandResultSort {
+    SequenceAsc,
+    SequenceDesc,
+    StatusThenSequenceDesc,
+}
+
+impl Default for RuntimeCommandResultSort {
+    fn default() -> Self {
+        Self::SequenceAsc
+    }
+}
+
+/// Read-side query for command results already captured in the runtime event log.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCommandResultQuery {
+    pub command_id: Option<CommandId>,
+    pub bridge_id: Option<BridgeId>,
+    pub correlation_id: Option<CorrelationId>,
+    pub statuses: Vec<CommandStatus>,
+    pub from_checkpoint: RuntimeEventCheckpoint,
+    pub sort: RuntimeCommandResultSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeCommandResultQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_command(mut self, command_id: CommandId) -> Self {
+        self.command_id = Some(command_id);
+        self
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_correlation(mut self, correlation_id: CorrelationId) -> Self {
+        self.correlation_id = Some(correlation_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: CommandStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn from_checkpoint(mut self, checkpoint: RuntimeEventCheckpoint) -> Self {
+        self.from_checkpoint = checkpoint;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeCommandResultSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+impl Default for RuntimeCommandResultQuery {
+    fn default() -> Self {
+        Self {
+            command_id: None,
+            bridge_id: None,
+            correlation_id: None,
+            statuses: Vec::new(),
+            from_checkpoint: RuntimeEventCheckpoint::start(),
+            sort: RuntimeCommandResultSort::default(),
+            limit: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCommandResultRecord {
+    pub sequence: u64,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+    pub result: CommandResult,
+}
+
+impl RuntimeCommandResultRecord {
+    pub fn from_entry(entry: RuntimeEventLogEntry<'_>) -> Option<Self> {
+        match entry.event {
+            RuntimeEvent::CommandResult(result) => Some(Self {
+                sequence: entry.sequence,
+                next_checkpoint: entry.next_checkpoint,
+                result: result.clone(),
+            }),
+            _ => None,
+        }
+    }
+}
+
+/// Compact count view over selected command results.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeCommandResultSummary {
+    pub total_results: usize,
+    pub accepted_results: usize,
+    pub rejected_results: usize,
+    pub timed_out_results: usize,
+    pub failed_results: usize,
+    pub first_sequence: Option<u64>,
+    pub latest_sequence: Option<u64>,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+}
+
+impl Default for RuntimeCommandResultSummary {
+    fn default() -> Self {
+        Self {
+            total_results: 0,
+            accepted_results: 0,
+            rejected_results: 0,
+            timed_out_results: 0,
+            failed_results: 0,
+            first_sequence: None,
+            latest_sequence: None,
+            next_checkpoint: RuntimeEventCheckpoint::start(),
+        }
+    }
+}
+
+impl RuntimeCommandResultSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_records<'a, I>(records: I) -> Self
+    where
+        I: IntoIterator<Item = &'a RuntimeCommandResultRecord>,
+    {
+        let mut summary = Self::empty();
+        for record in records {
+            summary.total_results += 1;
+            summary.first_sequence = Some(
+                summary
+                    .first_sequence
+                    .map(|sequence| sequence.min(record.sequence))
+                    .unwrap_or(record.sequence),
+            );
+            summary.latest_sequence = Some(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.max(record.sequence))
+                    .unwrap_or(record.sequence),
+            );
+            summary.next_checkpoint = RuntimeEventCheckpoint::from_next_sequence(
+                summary
+                    .latest_sequence
+                    .map(|sequence| sequence.saturating_add(1))
+                    .unwrap_or(0),
+            );
+            match record.result.status {
+                CommandStatus::Accepted => summary.accepted_results += 1,
+                CommandStatus::Rejected => summary.rejected_results += 1,
+                CommandStatus::TimedOut => summary.timed_out_results += 1,
+                CommandStatus::Failed => summary.failed_results += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn has_results(&self) -> bool {
+        self.total_results > 0
+    }
+
+    pub fn failure_results(&self) -> usize {
+        self.rejected_results + self.timed_out_results + self.failed_results
+    }
+
+    pub fn has_failures(&self) -> bool {
+        self.failure_results() > 0
+    }
+}
+
 /// Read-side query for the runtime event log.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimeEventQuery {
@@ -3584,6 +3765,12 @@ pub enum RuntimeReadToolRequest {
     InspectEventLog {
         query: RuntimeEventQuery,
     },
+    ListCommandResults {
+        query: RuntimeCommandResultQuery,
+    },
+    GetCommandResultSummary {
+        query: RuntimeCommandResultQuery,
+    },
     ListAuthorizationDecisions {
         query: RuntimeAuthorizationDecisionQuery,
     },
@@ -3632,6 +3819,8 @@ impl RuntimeReadToolRequest {
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
             Self::ListSubscriptions { .. } => SmartHomeTool::ListSubscriptions,
             Self::InspectEventLog { .. } => SmartHomeTool::InspectEventLog,
+            Self::ListCommandResults { .. } => SmartHomeTool::ListCommandResults,
+            Self::GetCommandResultSummary { .. } => SmartHomeTool::GetCommandResultSummary,
             Self::ListAuthorizationDecisions { .. } => SmartHomeTool::ListAuthorizationDecisions,
             Self::GetAuthorizationSummary { .. } => SmartHomeTool::GetAuthorizationSummary,
             Self::ListCapabilityGrants { .. } => SmartHomeTool::ListCapabilityGrants,
@@ -3960,6 +4149,13 @@ pub enum RuntimeReadToolOutput {
     EventLog {
         entries: Vec<RuntimeEventLogRecord>,
         summary: RuntimeEventLogSummary,
+    },
+    CommandResults {
+        results: Vec<RuntimeCommandResultRecord>,
+        summary: RuntimeCommandResultSummary,
+    },
+    CommandResultSummary {
+        summary: RuntimeCommandResultSummary,
     },
     AuthorizationDecisions {
         decisions: Vec<AuthorizationDecision>,
@@ -4312,6 +4508,49 @@ impl SmartHomeRuntime {
 
     pub fn event_bus_health_summary(&self) -> RuntimeEventBusHealthSummary {
         self.event_bus.health_summary()
+    }
+
+    pub fn query_command_results(
+        &self,
+        query: &RuntimeCommandResultQuery,
+    ) -> Vec<RuntimeCommandResultRecord> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let event_query = RuntimeEventQuery::new()
+            .matching(RuntimeEventFilter::Commands)
+            .from_checkpoint(query.from_checkpoint);
+        let mut results = self
+            .event_bus
+            .query_events(&event_query)
+            .into_iter()
+            .filter_map(RuntimeCommandResultRecord::from_entry)
+            .filter(|record| command_result_matches_query(&record.result, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeCommandResultSort::SequenceAsc => {
+                results.sort_by(|left, right| left.sequence.cmp(&right.sequence));
+            }
+            RuntimeCommandResultSort::SequenceDesc => {
+                results.sort_by(|left, right| right.sequence.cmp(&left.sequence));
+            }
+            RuntimeCommandResultSort::StatusThenSequenceDesc => results.sort_by(|left, right| {
+                command_status_sort_rank(left.result.status)
+                    .cmp(&command_status_sort_rank(right.result.status))
+                    .then_with(|| right.sequence.cmp(&left.sequence))
+            }),
+        }
+        apply_limit(&mut results, query.limit);
+        results
+    }
+
+    pub fn command_result_summary(
+        &self,
+        query: &RuntimeCommandResultQuery,
+    ) -> RuntimeCommandResultSummary {
+        let results = self.query_command_results(query);
+        RuntimeCommandResultSummary::from_records(results.iter())
     }
 
     pub fn pairing_session(
@@ -5269,6 +5508,16 @@ impl SmartHomeRuntime {
                     .collect::<Vec<_>>();
                 let summary = self.event_bus.event_log_summary(&query);
                 Ok(RuntimeReadToolOutput::EventLog { entries, summary })
+            }
+            RuntimeReadToolRequest::ListCommandResults { query } => {
+                let results = self.query_command_results(&query);
+                let summary = RuntimeCommandResultSummary::from_records(results.iter());
+                Ok(RuntimeReadToolOutput::CommandResults { results, summary })
+            }
+            RuntimeReadToolRequest::GetCommandResultSummary { query } => {
+                Ok(RuntimeReadToolOutput::CommandResultSummary {
+                    summary: self.command_result_summary(&query),
+                })
             }
             RuntimeReadToolRequest::ListAuthorizationDecisions { query } => {
                 let decision_refs = self.query_authorization_decisions(&query);
@@ -6296,6 +6545,31 @@ fn pairing_session_matches_query(
             .is_none_or(|now_ms| session.is_expired_at(now_ms))
 }
 
+fn command_result_matches_query(result: &CommandResult, query: &RuntimeCommandResultQuery) -> bool {
+    query
+        .command_id
+        .as_ref()
+        .is_none_or(|command_id| &result.command_id == command_id)
+        && query
+            .bridge_id
+            .as_ref()
+            .is_none_or(|bridge_id| &result.bridge_id == bridge_id)
+        && query
+            .correlation_id
+            .as_ref()
+            .is_none_or(|correlation_id| &result.correlation_id == correlation_id)
+        && (query.statuses.is_empty() || query.statuses.contains(&result.status))
+}
+
+fn command_status_sort_rank(status: CommandStatus) -> u8 {
+    match status {
+        CommandStatus::Accepted => 0,
+        CommandStatus::Rejected => 1,
+        CommandStatus::TimedOut => 2,
+        CommandStatus::Failed => 3,
+    }
+}
+
 fn apply_limit<T>(items: &mut Vec<T>, limit: Option<usize>) {
     if let Some(limit) = limit {
         items.truncate(limit);
@@ -6711,6 +6985,73 @@ mod tests {
         assert!(!empty.has_events());
         assert!(!empty.has_command_results());
         assert!(!empty.has_supervision_events());
+    }
+
+    #[test]
+    fn command_result_queries_filter_sort_and_summarize_runtime_events() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        runtime
+            .event_bus_mut()
+            .publish(command_result_runtime_event("cmd-accepted"));
+        runtime
+            .event_bus_mut()
+            .publish(RuntimeEvent::CommandResult(CommandResult {
+                command_id: CommandId::trusted("cmd-failed"),
+                status: CommandStatus::Failed,
+                bridge_id: BridgeId::trusted("bridge-1"),
+                correlation_id: CorrelationId::trusted("corr-failed"),
+                message: Some("integration dispatch failed".to_string()),
+            }));
+
+        let newest_failure = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .for_bridge(BridgeId::trusted("bridge-1"))
+                .for_correlation(CorrelationId::trusted("corr-failed"))
+                .with_status(CommandStatus::Failed)
+                .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+                .with_limit(1),
+        );
+
+        assert_eq!(newest_failure.len(), 1);
+        assert_eq!(newest_failure[0].sequence, 1);
+        assert_eq!(
+            newest_failure[0].next_checkpoint,
+            RuntimeEventCheckpoint::from_next_sequence(2)
+        );
+        assert_eq!(
+            newest_failure[0].result.command_id,
+            CommandId::trusted("cmd-failed")
+        );
+
+        let summary = runtime.command_result_summary(
+            &RuntimeCommandResultQuery::new()
+                .for_bridge(BridgeId::trusted("bridge-1"))
+                .sorted_by(RuntimeCommandResultSort::StatusThenSequenceDesc),
+        );
+
+        assert_eq!(
+            summary,
+            RuntimeCommandResultSummary {
+                total_results: 2,
+                accepted_results: 1,
+                rejected_results: 0,
+                timed_out_results: 0,
+                failed_results: 1,
+                first_sequence: Some(0),
+                latest_sequence: Some(1),
+                next_checkpoint: RuntimeEventCheckpoint::from_next_sequence(2),
+            }
+        );
+        assert!(summary.has_results());
+        assert_eq!(summary.failure_results(), 1);
+        assert!(summary.has_failures());
+
+        let empty = runtime.query_command_results(
+            &RuntimeCommandResultQuery::new()
+                .for_command(CommandId::trusted("unknown"))
+                .with_limit(0),
+        );
+        assert!(empty.is_empty());
     }
 
     #[test]
@@ -9359,11 +9700,35 @@ mod tests {
                 1_508,
             )
             .unwrap();
+        let command_results = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListCommandResults {
+                    query: RuntimeCommandResultQuery::new()
+                        .for_bridge(BridgeId::trusted("bridge-1"))
+                        .with_status(CommandStatus::Accepted)
+                        .sorted_by(RuntimeCommandResultSort::SequenceDesc)
+                        .with_limit(1),
+                },
+                1_509,
+            )
+            .unwrap();
+        let command_result_summary = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetCommandResultSummary {
+                    query: RuntimeCommandResultQuery::new()
+                        .for_command(CommandId::trusted("command-1"))
+                        .with_status(CommandStatus::Accepted),
+                },
+                1_510,
+            )
+            .unwrap();
         let snapshot = runtime
             .execute_read_tool(
                 principal.clone(),
                 RuntimeReadToolRequest::GetRuntimeSnapshot,
-                1_509,
+                1_511,
             )
             .unwrap();
         let desired_states = runtime
@@ -9375,7 +9740,7 @@ mod tests {
                         .with_capability(CapabilityId::trusted("light.on_off"))
                         .sorted_by(DesiredStateSort::CommandTimeoutDesc),
                 },
-                1_510,
+                1_512,
             )
             .unwrap();
         let pairing_sessions = runtime
@@ -9387,21 +9752,21 @@ mod tests {
                         .with_status(PairingSessionStatus::PendingUserPresence)
                         .sorted_by(RuntimePairingSessionSort::ExpiresAt),
                 },
-                1_511,
+                1_513,
             )
             .unwrap();
         let supervision_plan = runtime
             .execute_read_tool(
                 principal.clone(),
                 RuntimeReadToolRequest::GetSupervisionPlan,
-                1_512,
+                1_514,
             )
             .unwrap();
         let observation = runtime
             .execute_read_tool(
                 principal.clone(),
                 RuntimeReadToolRequest::ObserveSupervision,
-                1_513,
+                1_515,
             )
             .unwrap();
         let workers = runtime
@@ -9410,10 +9775,10 @@ mod tests {
                 RuntimeReadToolRequest::ListWorkers {
                     query: SupervisedWorkerQuery::new()
                         .with_status(WorkerStatus::Starting)
-                        .overdue_at(1_514)
+                        .overdue_at(1_516)
                         .sorted_by(SupervisedWorkerSort::HeartbeatDueAt),
                 },
-                1_514,
+                1_516,
             )
             .unwrap();
         let heartbeat_schedule = runtime
@@ -9421,10 +9786,10 @@ mod tests {
                 principal,
                 RuntimeReadToolRequest::GetWorkerHeartbeatSchedule {
                     bridge_id: Some(BridgeId::trusted("bridge-1")),
-                    due_at_or_before_ms: Some(1_515),
+                    due_at_or_before_ms: Some(1_517),
                     limit: Some(1),
                 },
-                1_515,
+                1_517,
             )
             .unwrap();
         let authorization_decisions = runtime
@@ -9437,7 +9802,7 @@ mod tests {
                         .sorted_by(RuntimeAuthorizationDecisionSort::DecidedAtDesc)
                         .with_limit(2),
                 },
-                1_516,
+                1_518,
             )
             .unwrap();
         let authorization_summary = runtime
@@ -9448,7 +9813,7 @@ mod tests {
                         .for_principal(AgentId::trusted("agent:observer"))
                         .with_outcome(AuthorizationOutcome::Allowed),
                 },
-                1_517,
+                1_519,
             )
             .unwrap();
         let capability_grants = runtime
@@ -9461,7 +9826,7 @@ mod tests {
                         .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability)
                         .with_capability(CapabilityId::trusted("smart_home.read")),
                 },
-                1_518,
+                1_520,
             )
             .unwrap();
         let capability_grant_summary = runtime
@@ -9472,7 +9837,7 @@ mod tests {
                         .with_status(CapabilityGrantStatus::Active)
                         .with_scope_kind(RuntimeCapabilityGrantScopeKind::Capability),
                 },
-                1_519,
+                1_521,
             )
             .unwrap();
         let rooms = runtime
@@ -9483,14 +9848,14 @@ mod tests {
                         .for_room("kitchen")
                         .sorted_by(RuntimeRoomSort::SceneCountDesc),
                 },
-                1_520,
+                1_522,
             )
             .unwrap();
         let topology_summary = runtime
             .execute_read_tool(
                 AgentId::trusted("agent:observer"),
                 RuntimeReadToolRequest::GetTopologySummary,
-                1_521,
+                1_523,
             )
             .unwrap();
         runtime
@@ -9507,7 +9872,7 @@ mod tests {
                         .overdue_at(1_522)
                         .sorted_by(DiscoveryWorkerSort::NextDueAt),
                 },
-                1_522,
+                1_524,
             )
             .unwrap();
         runtime
@@ -9523,7 +9888,7 @@ mod tests {
                         .fresh_only(true)
                         .with_ttl_ms(1_000),
                 },
-                1_523,
+                1_525,
             )
             .unwrap();
         let pairing_plan = runtime
@@ -9541,7 +9906,7 @@ mod tests {
                                 .limited_to(1),
                         ),
                 },
-                1_524,
+                1_526,
             )
             .unwrap();
 
@@ -9620,9 +9985,30 @@ mod tests {
                 && summary.command_results == 1
         ));
         assert!(matches!(
+            command_results,
+            RuntimeReadToolOutput::CommandResults {
+                results,
+                summary,
+            } if results.len() == 1
+                && results[0].sequence == 0
+                && results[0].result.command_id == CommandId::trusted("command-1")
+                && results[0].result.status == CommandStatus::Accepted
+                && summary.total_results == 1
+                && summary.accepted_results == 1
+                && !summary.has_failures()
+        ));
+        assert!(matches!(
+            command_result_summary,
+            RuntimeReadToolOutput::CommandResultSummary { summary }
+                if summary.total_results == 1
+                    && summary.accepted_results == 1
+                    && summary.failure_results() == 0
+                    && summary.next_checkpoint == RuntimeEventCheckpoint::from_next_sequence(1)
+        ));
+        assert!(matches!(
             snapshot,
             RuntimeReadToolOutput::RuntimeSnapshot(snapshot)
-                if snapshot.generated_at_ms == 1_509
+                if snapshot.generated_at_ms == 1_511
                     && snapshot.pairing_session_count == 1
                     && snapshot.desired_state_count == 1
                     && snapshot.desired_capability_count == 1
@@ -9654,7 +10040,7 @@ mod tests {
         assert!(matches!(
             supervision_plan,
             RuntimeReadToolOutput::SupervisionPlan(plan)
-                if plan.generated_at_ms == 1_512
+                if plan.generated_at_ms == 1_514
                     && plan.action_count() == 1
                     && plan.summary().worker_restart_count == 1
                     && plan.worker_restart_plan.len() == 1
@@ -9662,7 +10048,7 @@ mod tests {
         assert!(matches!(
             observation,
             RuntimeReadToolOutput::SupervisionObservation(observation)
-                if observation.generated_at_ms == 1_513
+                if observation.generated_at_ms == 1_515
                     && observation.worker_restart_count() == 1
                     && observation.due_worker_deadline_count() == 1
                     && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
@@ -9673,24 +10059,24 @@ mod tests {
                 if workers.len() == 1
                     && workers[0].bridge_id == BridgeId::trusted("bridge-1")
                     && workers[0].status == WorkerStatus::Starting
-                    && summary.generated_at_ms == 1_514
+                    && summary.generated_at_ms == 1_516
                     && summary.worker_count == 1
                     && summary.restart_due_count == 1
         ));
         assert!(matches!(
             heartbeat_schedule,
             RuntimeReadToolOutput::WorkerHeartbeatSchedule(schedule)
-                if schedule.generated_at_ms == 1_515
+                if schedule.generated_at_ms == 1_517
                     && schedule.len() == 1
                     && schedule.next_due_at_ms() == Some(1_100)
                     && schedule.deadlines[0].bridge_id == BridgeId::trusted("bridge-1")
-                    && schedule.deadlines[0].is_due_at(1_515)
+                    && schedule.deadlines[0].is_due_at(1_517)
         ));
         assert!(matches!(
             authorization_decisions,
             RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary }
                 if decisions.len() == 2
-                    && decisions[0].decided_at_ms == 1_516
+                    && decisions[0].decided_at_ms == 1_518
                     && decisions[0].subject == AuthorizationSubject::Tool(
                         SmartHomeTool::ListAuthorizationDecisions
                     )
@@ -9701,10 +10087,10 @@ mod tests {
         assert!(matches!(
             authorization_summary,
             RuntimeReadToolOutput::AuthorizationSummary { summary }
-                if summary.total_decisions == 18
-                    && summary.allowed_decisions == 18
+                if summary.total_decisions == 20
+                    && summary.allowed_decisions == 20
                     && summary.denied_decisions == 0
-                    && summary.tool_decisions == 18
+                    && summary.tool_decisions == 20
         ));
         assert!(matches!(
             capability_grants,
@@ -9757,7 +10143,7 @@ mod tests {
                     && workers[0].worker_id == DiscoveryWorkerId::trusted("hue-mdns-worker")
                     && workers[0].kind == DiscoveryWorkerKind::MdnsScan
                     && workers[0].is_due
-                    && summary.generated_at_ms == 1_522
+                    && summary.generated_at_ms == 1_524
                     && summary.worker_count == 1
                     && summary.due_worker_count == 1
         ));
@@ -9768,7 +10154,7 @@ mod tests {
                 ttl_ms,
                 record_summary,
                 signal_summary,
-            } if generated_at_ms == 1_523
+            } if generated_at_ms == 1_525
                 && ttl_ms == 1_000
                 && record_summary.total == 1
                 && record_summary.fresh == 1
@@ -9781,7 +10167,7 @@ mod tests {
                 plan,
                 summary,
             } if ttl_ms == 1_000
-                && plan.generated_at_ms == 1_524
+                && plan.generated_at_ms == 1_526
                 && plan.targets.len() == 1
                 && plan.targets[0].bridge_id
                     == BridgeId::trusted("hue.bridge.001788fffediscovered")
@@ -9790,7 +10176,7 @@ mod tests {
                 && summary.actionable == 1
                 && summary.requires_human_action == 1
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 25);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 27);
         assert!(runtime
             .registry()
             .authorization_decisions()

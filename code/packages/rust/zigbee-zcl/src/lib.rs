@@ -147,6 +147,15 @@ impl ZclFrameControl {
             disable_default_response: true,
         }
     }
+
+    pub fn foundation_server_to_client() -> Self {
+        Self {
+            frame_type: ZclFrameType::Foundation,
+            manufacturer_specific: false,
+            direction: ZclDirection::ServerToClient,
+            disable_default_response: true,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -221,6 +230,20 @@ impl ZclFrame {
             payload,
         }
     }
+
+    pub fn foundation_response(
+        transaction_sequence_number: u8,
+        command_id: u8,
+        payload: Vec<u8>,
+    ) -> Self {
+        Self {
+            frame_control: ZclFrameControl::foundation_server_to_client(),
+            manufacturer_code: None,
+            transaction_sequence_number,
+            command_id,
+            payload,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -236,6 +259,40 @@ impl OnOffCommand {
             Self::Off => 0x00,
             Self::On => 0x01,
             Self::Toggle => 0x02,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ZclStatusCode {
+    Success,
+    Failure,
+    UnsupportedAttribute,
+    InvalidValue,
+    UnsupportedCommand,
+    Unknown(u8),
+}
+
+impl ZclStatusCode {
+    pub fn parse(raw: u8) -> Self {
+        match raw {
+            0x00 => Self::Success,
+            0x01 => Self::Failure,
+            0x86 => Self::UnsupportedAttribute,
+            0x87 => Self::InvalidValue,
+            0x81 => Self::UnsupportedCommand,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn encode(self) -> u8 {
+        match self {
+            Self::Success => 0x00,
+            Self::Failure => 0x01,
+            Self::UnsupportedAttribute => 0x86,
+            Self::InvalidValue => 0x87,
+            Self::UnsupportedCommand => 0x81,
+            Self::Unknown(raw) => raw,
         }
     }
 }
@@ -465,6 +522,18 @@ pub fn report_attributes_frame(
         ZCL_REPORT_ATTRIBUTES_COMMAND_ID,
         payload,
     ))
+}
+
+pub fn default_response_frame(
+    transaction_sequence_number: u8,
+    original_command_id: u8,
+    status: ZclStatusCode,
+) -> ZclFrame {
+    ZclFrame::foundation_response(
+        transaction_sequence_number,
+        ZCL_DEFAULT_RESPONSE_COMMAND_ID,
+        vec![original_command_id, status.encode()],
+    )
 }
 
 pub fn encode_attribute_reports(reports: &[ZclAttributeReport]) -> Result<Vec<u8>, ZclError> {
@@ -771,6 +840,29 @@ mod tests {
             frame.encode().unwrap(),
             vec![0x10, 0x22, 0x00, 0x04, 0x00, 0x05, 0x00]
         );
+    }
+
+    #[test]
+    fn default_response_frame_encodes_server_to_client_status() {
+        let frame = default_response_frame(
+            0x23,
+            ZCL_READ_ATTRIBUTES_COMMAND_ID,
+            ZclStatusCode::UnsupportedAttribute,
+        );
+
+        assert_eq!(frame.command_id, ZCL_DEFAULT_RESPONSE_COMMAND_ID);
+        assert_eq!(
+            frame.frame_control,
+            ZclFrameControl::foundation_server_to_client()
+        );
+        assert_eq!(frame.payload, vec![ZCL_READ_ATTRIBUTES_COMMAND_ID, 0x86]);
+        assert_eq!(frame.encode().unwrap(), vec![0x18, 0x23, 0x0b, 0x00, 0x86]);
+        assert_eq!(ZclFrame::parse(&frame.encode().unwrap()).unwrap(), frame);
+        assert_eq!(
+            ZclStatusCode::parse(0x81),
+            ZclStatusCode::UnsupportedCommand
+        );
+        assert_eq!(ZclStatusCode::Unknown(0xfe).encode(), 0xfe);
     }
 
     #[test]

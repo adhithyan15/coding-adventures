@@ -85,18 +85,22 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-040: numeric separator + scientific shortest-form.
-    // Upstream emits `var x=1E6;` for `var x=1_000_000;` —
-    // BOTH stripping underscores AND switching to scientific
-    // notation when shorter. Discovered by CLOC14.7.
-    ("numeric_separator", "gap-040: numeric separator + scientific shortest-form"),
-    // gap-041: nested function-decl produces a double
-    // synthetic `;`. Output: `function f(){function g(){};};`
-    // — Rule A should drop the inner synthetic `;` before
-    // the outer `}`, but it currently only filters SOURCE
-    // `;`, not previously-emitted synthetic ones.
-    // Discovered by CLOC14.7.
-    ("nested_function", "gap-041: nested function-decl double synthetic `;`"),
+    // gap-044: JavaScript lexer does not yet support
+    // template literal SUBSTITUTIONS (`${expr}` inside
+    // a backtick-delimited string). Lexer-level gap.
+    ("template_subst", "gap-044: lexer does not support `${...}`"),
+    ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-046 was RESOLVED in CLOC12.52 — `,` immediately
+    // before `]` is now suppressed. `minify_trailing_array_comma`
+    // flipped IGNORED → PASS. Object-literal trailing comma
+    // (gap-046b) deferred.
+    // gap-047: synthetic `;` after function-decl `}` should
+    // be suppressed when the next token is a keyword that
+    // starts a new statement (var, function, etc.) — ASI
+    // covers the boundary. Upstream emits
+    // `function add(a,b){return a+b}var sum=add(2,3);` for
+    // a multi-line input. Discovered by CLOC14.12.
+    ("multi_line_func", "gap-047: suppress trailing `;` before stmt-keyword"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
