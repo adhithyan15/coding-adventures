@@ -9,6 +9,9 @@ documented in this file.
 - Browser-readiness resource-endpoint descriptors now expose refresh redirects
   plus resolved document resources as a flat endpoint inventory for
   fetch/navigation planning.
+- Browser-readiness event-handler descriptors now expose document, body, and
+  element inline handler metadata as a categorized flat inventory for browser
+  readiness planning without evaluating script text.
 - Browser-readiness navigation-target descriptors now expose policy-rich anchor
   and image-map area targets with resolved URLs, target selection, rel policy,
   ping/attribution endpoints, language/type hints, referrer policy, download,

@@ -41,6 +41,9 @@ policy tokens, validation bypass state, and submitter overrides.
 Navigation-target descriptor cases pin policy-rich anchor and image-map area
 targets with target selection, rel policy, ping/attribution endpoints,
 language/type hints, download/referrer policy, and area geometry.
+Event-handler descriptor cases pin document, body, and element inline handler
+metadata as a flat inventory categorized by activation, keyboard, form, media,
+lifecycle, and error/event-recovery concerns without evaluating script text.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and

@@ -1278,6 +1278,15 @@
         "base_target": null,
         "document_event_handlers": ["onreadystatechange"],
         "body_event_handlers": ["onload", "onunload"],
+        "event_handler_descriptors": [
+          { "element": "html", "role": "block", "source": "document", "event_handlers": ["onreadystatechange"], "handler_count": 1, "lifecycle_handlers": ["onreadystatechange"], "text": "Save" },
+          { "element": "body", "role": "block", "source": "body", "event_handlers": ["onload", "onunload"], "handler_count": 2, "lifecycle_handlers": ["onload", "onunload"], "text": "Save" },
+          { "element": "main", "id": "app", "role": "main", "source": "element", "event_handlers": ["onclick"], "handler_count": 1, "activation_handlers": ["onclick"], "text": "Save" },
+          { "element": "button", "role": "control", "source": "element", "event_handlers": ["onclick", "onkeydown"], "handler_count": 2, "activation_handlers": ["onclick"], "keyboard_handlers": ["onkeydown"], "text": "Save" },
+          { "element": "video", "role": "media", "source": "element", "event_handlers": ["onplay", "onpause"], "handler_count": 2, "media_handlers": ["onplay", "onpause"] },
+          { "element": "img", "role": "image", "source": "element", "event_handlers": ["onerror"], "handler_count": 1, "error_handlers": ["onerror"] },
+          { "element": "input", "role": "control", "source": "element", "event_handlers": ["oninput", "onchange"], "handler_count": 2, "form_handlers": ["oninput", "onchange"] }
+        ],
         "body_text": "Save",
         "metas": [],
         "resources": [
@@ -1319,6 +1328,10 @@
         "body_text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative",
         "metas": [],
         "resources": [],
+        "event_handler_descriptors": [
+          { "element": "button", "id": "menu", "role": "control", "source": "element", "event_handlers": ["onclick"], "handler_count": 1, "activation_handlers": ["onclick"], "text": "Menu" },
+          { "element": "div", "id": "action", "role": "block", "source": "element", "event_handlers": ["onkeydown"], "handler_count": 1, "keyboard_handlers": ["onkeydown"], "text": "Inline action" }
+        ],
         "anchors": [
           { "id": "app", "name": null, "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative" },
           { "id": "menu", "name": null, "text": "Menu" },
