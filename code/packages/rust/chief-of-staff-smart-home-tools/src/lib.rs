@@ -7568,7 +7568,7 @@ mod tests {
         RequestedBy, ToolCatalogExport, ToolExecutionJournal, ToolInvocationRequest,
         ToolValidationReport,
     };
-    use smart_home_core::{CapabilityGrant, CapabilityGrantId};
+    use smart_home_core::{smart_home_tool_catalog, CapabilityGrant, CapabilityGrantId};
     use smart_home_discovery::{
         DiscoveryWorkerId, DiscoveryWorkerKind, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
     };
@@ -7716,6 +7716,23 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition("smart_home.unknown").is_none());
+    }
+
+    #[test]
+    fn smart_home_tool_definitions_match_shared_core_descriptors() {
+        let definitions = smart_home_tool_definitions();
+        let export = ToolCatalogExport::from_definitions(definitions.iter());
+        let core_tool_ids = smart_home_tool_catalog()
+            .into_iter()
+            .map(|tool| tool.tool_id)
+            .collect::<Vec<_>>();
+
+        for tool_id in export.tool_ids() {
+            assert!(
+                core_tool_ids.contains(&tool_id),
+                "D18D smart-home tool `{tool_id}` is missing from smart-home-core"
+            );
+        }
     }
 
     #[test]
