@@ -359,3 +359,23 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream byte-identity test:** `minify_multi_line_func` seed fixture.
 - **Why it fails:** Upstream emits `function add(a,b){return a+b}var sum=add(2,3);` for a multi-line input. closurec emits `function add(a,b){return a+b};var sum=add(2,3);` — the gap-030 synthetic `;` after the function-decl `}` is unneeded because `var` (and other statement-starting keywords) can never grammatically fuse with the preceding `}`. ASI safety doesn't require the `;`.
 - **What it needs:** Extend the gap-030 trailing-`;` rule (and its gap-041 deferred-`;` cousin) with a peek-ahead suppression: if the next non-trivia token is a statement-starting keyword (`var`, `let`, `const`, `function`, `class`, `if`, `for`, `while`, `do`, `switch`, `try`, `return`, `throw`, `break`, `continue`), suppress the synthetic `;`. EOF stays at the SOURCE EOF behaviour (gap-030 still fires there).
+
+### gap-048 — BigInt with numeric separator: strip `_` separators
+
+- **Status:** OPEN — newly discovered by CLOC14.13.
+- **Upstream byte-identity test:** `minify_bigint_separator` seed fixture.
+- **Input:** `var a = 1_000_000n;`
+- **Upstream:** `var a=1000000n;` (separators stripped, BigInt suffix kept)
+- **closurec:** `var a=1_000_000n;` (separators not stripped)
+- **Why it fails:** gap-040 strips `_` separators from regular numeric literals via `normalize_number_value`, but the BigInt path (trailing `n`) is a separate token-shape branch that doesn't run through the same normalization. The same `1_000_000` body is allowed in both forms — just the BigInt branch isn't stripping it.
+- **What it needs:** Either (1) make the BigInt token-emit branch also call the separator-stripper before re-appending `n`, or (2) make the underlying tokenizer's numeric-literal value-extraction strip `_` for BOTH regular and BigInt forms (single fix). Option (2) is the cleaner one — separators are purely lexical sugar, not semantic.
+
+### gap-049 — flattened single-stmt for-body keeps trailing `;` before `}`
+
+- **Status:** OPEN — newly discovered by CLOC14.13.
+- **Upstream byte-identity test:** `minify_for_await_of` seed fixture (general repro: `function f(){for(var v of a){a;}}`).
+- **Input:** `function f(){for(var v of a){a;}}`
+- **Upstream:** `function f(){for(var v of a)a};`
+- **closurec:** `function f(){for(var v of a)a;};`
+- **Why it fails:** gap-032's single-stmt block-flatten unwraps `{a;}` → `a;`, but the resulting `;` between the for-body's last statement and the outer function-`}` is NOT dropped by Rule A. Rule A drops source `;` before `}`, but this `;` survives. Probable cause: gap-032's flatten happens after Rule A's pass (or in a different pipeline stage), so Rule A doesn't see this position again. Confirmed NOT specific to `for-await-of` — reproduces with plain `for-of`, `for-in`, and likely `if`/`while`/`do` flattened bodies.
+- **What it needs:** Either (1) re-run Rule A after gap-032 flatten, or (2) gap-032 itself peeks the next-after token; if it's `}`, drop the trailing `;` from the flattened content. Approach (2) is more local — the flatten knows exactly what it's emitting and what comes after.
