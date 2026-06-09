@@ -53,6 +53,10 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationHealthStage` and `IntegrationActivationHealthSummary`
   for compact ready, review, blocked, and missing-prerequisite priority-wave
   status rollups.
+- `IntegrationActivationConstraint` and
+  `IntegrationActivationConstraintSummary` for grouping unresolved primitive,
+  capability, dependency, and policy-review surface work by affected
+  integrations.
 - `IntegrationActivationDependencyGraph` plus node, edge, and summary types for
   exposing satisfied and blocking integration prerequisites in rollout plans.
 - Integration readiness reports that expose missing primitive families, missing

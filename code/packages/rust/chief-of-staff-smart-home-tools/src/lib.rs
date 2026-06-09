@@ -34,10 +34,10 @@ use smart_home_discovery::{
 };
 use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
-    activation_candidates_at_or_before_priority, activation_dependency_graph_from_reports,
-    activation_health_from_candidates, activation_plan_for_entry,
-    activation_plans_at_or_before_priority, activation_runway_from_candidates,
-    describe_primitive_family, ecosystem_platform_coverage,
+    activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
+    activation_dependency_graph_from_reports, activation_health_from_candidates,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
     ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
     find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
     primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
@@ -49,11 +49,13 @@ use smart_home_integration_catalog::{
     IntegrationActivationActionKind, IntegrationActivationActionSummary,
     IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
     IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationDependencyEdge,
-    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
-    IntegrationActivationDependencySummary, IntegrationActivationHealthStage,
-    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
+    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
+    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
+    IntegrationActivationHealthSummary, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
     IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
     IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
@@ -182,6 +184,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_HEALTH_TOOL_ID: &str =
     "smart_home.list_integration_activation_health";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_health_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_constraints";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_constraint_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID: &str =
     "smart_home.list_integration_activation_dependencies";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID: &str =
@@ -350,6 +356,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID => {
                     let query = integration_activation_health_query(&arguments)?;
                     Ok(get_integration_activation_health_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID => {
+                    let query = integration_activation_constraint_query(&arguments)?;
+                    Ok(list_integration_activation_constraints_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_constraint_query(&arguments)?;
+                    Ok(get_integration_activation_constraint_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID => {
                     let query = integration_activation_dependency_query(&arguments)?;
@@ -1237,6 +1251,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation health summary",
             "Return compact D23A priority-wave activation health counts for ready, review, blocked, and missing-prerequisite work.",
             integration_activation_health_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID,
+            "List smart-home integration activation constraints",
+            "List grouped D23A activation constraints across missing primitives, missing capability grants, unsatisfied integration dependencies, and policy-review surfaces.",
+            integration_activation_constraint_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_constraints", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_constraints",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation constraint summary",
+            "Return compact D23A activation constraint counts for blockers, policy-review work, affected integrations, and first rollout priorities.",
+            integration_activation_constraint_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3765,6 +3813,15 @@ struct IntegrationActivationHealthQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationConstraintQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    constraint_kind: Option<IntegrationActivationConstraintKind>,
+    blocking_only: Option<bool>,
+    constraint_requires_human_review: Option<bool>,
+    constraint_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationDependencyQuery {
     readiness: IntegrationReadinessQuery,
     blocking_only: bool,
@@ -3815,6 +3872,26 @@ fn integration_activation_health_query(
         health_status,
         requires_attention: optional_bool(arguments, "requires_attention")?,
         stage_limit,
+    })
+}
+
+fn integration_activation_constraint_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationConstraintQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let constraint_kind = optional_string(arguments, "constraint_kind")?
+        .map(|label| parse_activation_constraint_kind(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationConstraintQuery {
+        candidates,
+        constraint_kind,
+        blocking_only: optional_bool(arguments, "blocking_only")?,
+        constraint_requires_human_review: optional_bool(
+            arguments,
+            "constraint_requires_human_review",
+        )?,
+        constraint_limit: optional_u64(arguments, "constraint_limit")?.map(|value| value as usize),
     })
 }
 
@@ -4034,6 +4111,30 @@ fn integration_activation_health_for_query(
     }
 
     (health, catalog_count)
+}
+
+fn integration_activation_constraints_for_query(
+    query: &IntegrationActivationConstraintQuery,
+) -> (Vec<IntegrationActivationConstraint>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let (candidates, _) = integration_activation_candidates_for_query(&query.candidates);
+    let mut constraints = activation_constraints_from_candidates(&catalog, candidates.iter());
+
+    if let Some(kind) = query.constraint_kind {
+        constraints.retain(|constraint| constraint.kind == kind);
+    }
+    if let Some(blocking_only) = query.blocking_only {
+        constraints.retain(|constraint| constraint.blocks_activation == blocking_only);
+    }
+    if let Some(requires_human_review) = query.constraint_requires_human_review {
+        constraints.retain(|constraint| constraint.requires_human_review == requires_human_review);
+    }
+    if let Some(limit) = query.constraint_limit {
+        constraints.truncate(limit);
+    }
+
+    (constraints, catalog_count)
 }
 
 fn integration_activation_actions_for_query(
@@ -4760,6 +4861,78 @@ fn get_integration_activation_health_summary_output_handler_output(
             (
                 "blocked_integrations",
                 integer(summary.blocked_integrations as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_constraints_output_handler_output(
+    query: IntegrationActivationConstraintQuery,
+) -> ToolHandlerOutput {
+    let (constraints, catalog_count) = integration_activation_constraints_for_query(&query);
+    let summary = IntegrationActivationConstraintSummary::from_constraints(constraints.iter());
+    let count = constraints.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_constraints",
+            JsonValue::Array(constraints.iter().map(activation_constraint_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_constraint_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_constraints"),
+            ),
+            ("constraints", integer(count as i64)),
+            (
+                "blocking_constraints",
+                integer(summary.blocking_constraints as i64),
+            ),
+            (
+                "review_constraints",
+                integer(summary.review_constraints as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_constraint_summary_output_handler_output(
+    query: IntegrationActivationConstraintQuery,
+) -> ToolHandlerOutput {
+    let (constraints, _) = integration_activation_constraints_for_query(&query);
+    let summary = IntegrationActivationConstraintSummary::from_constraints(constraints.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_constraint_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_constraint_summary"),
+            ),
+            (
+                "total_constraints",
+                integer(summary.total_constraints as i64),
+            ),
+            (
+                "blocking_constraints",
+                integer(summary.blocking_constraints as i64),
+            ),
+            (
+                "review_constraints",
+                integer(summary.review_constraints as i64),
             ),
         ]),
     )
@@ -8113,6 +8286,117 @@ fn integration_activation_health_summary_json(
     ])
 }
 
+fn activation_constraint_json(constraint: &IntegrationActivationConstraint) -> JsonValue {
+    object([
+        ("constraint_kind", string(constraint.kind.as_str())),
+        ("constraint_id", string(&constraint.constraint_id)),
+        ("display_name", string(&constraint.display_name)),
+        (
+            "highest_priority",
+            integer(constraint.highest_priority as i64),
+        ),
+        (
+            "affected_integration_ids",
+            JsonValue::Array(
+                constraint
+                    .affected_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "affected_integration_count",
+            integer(constraint.affected_integration_count() as i64),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(constraint.blocks_activation),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(constraint.requires_human_review),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(constraint.highest_policy_tier)),
+        ),
+        (
+            "policy_surfaces",
+            JsonValue::Array(
+                constraint
+                    .policy_surfaces
+                    .iter()
+                    .map(|surface| string(surface.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn integration_activation_constraint_summary_json(
+    summary: &IntegrationActivationConstraintSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_constraints",
+            integer(summary.total_constraints as i64),
+        ),
+        (
+            "blocking_constraints",
+            integer(summary.blocking_constraints as i64),
+        ),
+        (
+            "review_constraints",
+            integer(summary.review_constraints as i64),
+        ),
+        (
+            "primitive_constraints",
+            integer(summary.primitive_constraints as i64),
+        ),
+        (
+            "capability_constraints",
+            integer(summary.capability_constraints as i64),
+        ),
+        (
+            "dependency_constraints",
+            integer(summary.dependency_constraints as i64),
+        ),
+        (
+            "policy_review_constraints",
+            integer(summary.policy_review_constraints as i64),
+        ),
+        (
+            "affected_integrations",
+            integer(summary.affected_integrations as i64),
+        ),
+        (
+            "first_blocking_priority",
+            summary
+                .first_blocking_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+    ])
+}
+
 fn activation_dependency_node_json(node: &IntegrationActivationDependencyNode) -> JsonValue {
     object([
         ("integration_id", string(node.integration_id.as_str())),
@@ -10392,6 +10676,28 @@ fn parse_activation_health_status(
     }
 }
 
+fn parse_activation_constraint_kind(
+    label: &str,
+) -> Result<IntegrationActivationConstraintKind, ToolCallError> {
+    match label {
+        "primitive" | "missing_primitive" | "primitives" => {
+            Ok(IntegrationActivationConstraintKind::Primitive)
+        }
+        "capability" | "missing_capability" | "capabilities" | "grant" => {
+            Ok(IntegrationActivationConstraintKind::Capability)
+        }
+        "dependency" | "missing_dependency" | "dependencies" => {
+            Ok(IntegrationActivationConstraintKind::Dependency)
+        }
+        "policy_review" | "policy" | "human_review" | "review" => {
+            Ok(IntegrationActivationConstraintKind::PolicyReview)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation constraint kind `{label}`"
+        ))),
+    }
+}
+
 fn activation_candidate_recommendation_label(
     recommendation: IntegrationActivationCandidateRecommendation,
 ) -> &'static str {
@@ -11169,6 +11475,25 @@ fn integration_activation_health_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_constraint_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("constraint_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("blocking_only", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "constraint_requires_human_review",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("constraint_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_dependency_query_schema() -> JsonSchema {
     let mut schema = integration_readiness_query_schema(true);
     if let JsonSchema::Object {
@@ -11293,7 +11618,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 69);
+        assert_eq!(definitions.len(), 71);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -11367,6 +11692,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID));
@@ -11470,7 +11801,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            61
+            63
         );
         assert_eq!(
             export
@@ -11566,6 +11897,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -11820,11 +12159,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(69))
+            Some(&integer(71))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(61))
+            Some(&integer(63))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -12708,6 +13047,129 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_constraints_request = request(
+            "call-list-integration-activation-constraints",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("blocking_only", JsonValue::Bool(true)),
+                ("constraint_limit", integer(3)),
+            ]),
+            5_007,
+        );
+        let list_activation_constraints_trace =
+            tool_runtime.invoke_with_events(&list_activation_constraints_request);
+        assert!(list_activation_constraints_trace.result.ok);
+        assert_eq!(
+            list_activation_constraints_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_constraints_output = list_activation_constraints_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_activation_constraints_output, "count"),
+            Some(&integer(3))
+        );
+        let activation_constraint_summary =
+            field(list_activation_constraints_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_constraint_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(activation_constraint_summary, "blocking_constraints").unwrap())
+                .unwrap()
+                >= 1
+        );
+        let activation_constraint = array_item(
+            field(list_activation_constraints_output, "activation_constraints").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_constraint, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(matches!(
+            field(activation_constraint, "constraint_kind"),
+            Some(JsonValue::String(_))
+        ));
+        assert!(
+            integer_value(field(activation_constraint, "affected_integration_count").unwrap())
+                .unwrap()
+                >= 1
+        );
+
+        let activation_constraint_summary_request = request(
+            "call-integration-activation-constraint-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("constraint_kind", string("policy_review")),
+            ]),
+            5_008,
+        );
+        let activation_constraint_summary_trace =
+            tool_runtime.invoke_with_events(&activation_constraint_summary_request);
+        assert!(activation_constraint_summary_trace.result.ok);
+        assert_eq!(
+            activation_constraint_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_constraint_summary_output = activation_constraint_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_constraint_rollup =
+            field(activation_constraint_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(
+                field(activation_constraint_rollup, "policy_review_constraints").unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_constraint_rollup, "has_review_work"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_dependencies_request = request(
             "call-list-integration-activation-dependencies",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID,
@@ -12732,7 +13194,7 @@ mod tests {
                     JsonValue::Array(vec![string("mqtt")]),
                 ),
             ]),
-            5_007,
+            5_009,
         );
         let list_activation_dependencies_trace =
             tool_runtime.invoke_with_events(&list_activation_dependencies_request);
@@ -12810,7 +13272,7 @@ mod tests {
                 ("blocking_only", JsonValue::Bool(true)),
                 ("edge_limit", integer(2)),
             ]),
-            5_008,
+            5_010,
         );
         let activation_dependency_summary_trace =
             tool_runtime.invoke_with_events(&activation_dependency_summary_request);
@@ -14255,6 +14717,14 @@ mod tests {
             activation_health_summary_trace,
         );
         journal.record_trace(
+            list_activation_constraints_request,
+            list_activation_constraints_trace,
+        );
+        journal.record_trace(
+            activation_constraint_summary_request,
+            activation_constraint_summary_trace,
+        );
+        journal.record_trace(
             list_activation_dependencies_request,
             list_activation_dependencies_trace,
         );
@@ -14322,9 +14792,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 69);
-        assert_eq!(journal_summary.completed_count, 69);
-        assert_eq!(journal.audit_records().len(), 69);
+        assert_eq!(journal_summary.invocation_count, 71);
+        assert_eq!(journal_summary.completed_count, 71);
+        assert_eq!(journal.audit_records().len(), 71);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

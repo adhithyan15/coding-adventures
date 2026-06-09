@@ -46,6 +46,8 @@ runtime and Chief of Staff tools a typed catalog for:
   with compact ready, review, and blocker rollups
 - activation health stages that add priority-wave ready, review, blocked, and
   missing-prerequisite gap rollups for compact platform status inspection
+- activation constraints that group unresolved primitive, capability,
+  dependency, and policy-review surface work by affected integrations
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
   and blocking edges after applying host-specific enabled-integration context
 - readiness reports that compare activation plans against available primitives,

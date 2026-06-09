@@ -1033,6 +1033,14 @@ pub enum IntegrationActivationActionKind {
     EnableDependency,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationConstraintKind {
+    Primitive,
+    Capability,
+    Dependency,
+    PolicyReview,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationCandidate {
     pub readiness_report: IntegrationReadinessReport,
@@ -1086,6 +1094,34 @@ pub struct IntegrationActivationActionSummary {
     pub first_action_priority: Option<u8>,
     pub first_activation_priority: Option<u8>,
     pub first_blocker_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationConstraint {
+    pub kind: IntegrationActivationConstraintKind,
+    pub constraint_id: String,
+    pub display_name: String,
+    pub highest_priority: u8,
+    pub affected_integration_ids: Vec<IntegrationId>,
+    pub blocks_activation: bool,
+    pub requires_human_review: bool,
+    pub highest_policy_tier: PrivilegeTier,
+    pub policy_surfaces: Vec<IntegrationPolicySurface>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationConstraintSummary {
+    pub total_constraints: usize,
+    pub blocking_constraints: usize,
+    pub review_constraints: usize,
+    pub primitive_constraints: usize,
+    pub capability_constraints: usize,
+    pub dependency_constraints: usize,
+    pub policy_review_constraints: usize,
+    pub affected_integrations: usize,
+    pub first_blocking_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
 }
 
@@ -1738,6 +1774,97 @@ impl IntegrationActivationHealthSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationConstraintKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Primitive => "primitive",
+            Self::Capability => "capability",
+            Self::Dependency => "dependency",
+            Self::PolicyReview => "policy_review",
+        }
+    }
+}
+
+impl IntegrationActivationConstraint {
+    pub fn affected_integration_count(&self) -> usize {
+        self.affected_integration_ids.len()
+    }
+}
+
+impl IntegrationActivationConstraintSummary {
+    pub fn from_constraints<'a>(
+        constraints: impl IntoIterator<Item = &'a IntegrationActivationConstraint>,
+    ) -> Self {
+        let mut affected_integrations = BTreeSet::new();
+        let mut summary = Self {
+            total_constraints: 0,
+            blocking_constraints: 0,
+            review_constraints: 0,
+            primitive_constraints: 0,
+            capability_constraints: 0,
+            dependency_constraints: 0,
+            policy_review_constraints: 0,
+            affected_integrations: 0,
+            first_blocking_priority: None,
+            first_review_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for constraint in constraints {
+            summary.total_constraints += 1;
+            if constraint.blocks_activation {
+                summary.blocking_constraints += 1;
+                summary.first_blocking_priority = min_optional_priority(
+                    summary.first_blocking_priority,
+                    Some(constraint.highest_priority),
+                );
+            }
+            if constraint.requires_human_review {
+                summary.review_constraints += 1;
+                summary.first_review_priority = min_optional_priority(
+                    summary.first_review_priority,
+                    Some(constraint.highest_priority),
+                );
+            }
+            match constraint.kind {
+                IntegrationActivationConstraintKind::Primitive => {
+                    summary.primitive_constraints += 1
+                }
+                IntegrationActivationConstraintKind::Capability => {
+                    summary.capability_constraints += 1
+                }
+                IntegrationActivationConstraintKind::Dependency => {
+                    summary.dependency_constraints += 1
+                }
+                IntegrationActivationConstraintKind::PolicyReview => {
+                    summary.policy_review_constraints += 1
+                }
+            }
+            for integration_id in &constraint.affected_integration_ids {
+                affected_integrations.insert(integration_id.clone());
+            }
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(constraint.highest_policy_tier);
+        }
+
+        summary.affected_integrations = affected_integrations.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_constraints == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_constraints > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_constraints > 0
     }
 }
 
@@ -3727,6 +3854,174 @@ pub fn activation_health_at_or_before_priority(
     ))
 }
 
+pub fn activation_constraints_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationConstraint> {
+    let candidates = candidates.into_iter().collect::<Vec<_>>();
+    let policy_tier_by_integration = candidates
+        .iter()
+        .map(|candidate| {
+            (
+                candidate.readiness_report.requested_integration_id.clone(),
+                candidate.readiness_report.highest_policy_tier,
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    let gap_inventory = readiness_gap_inventory_from_reports(
+        candidates
+            .iter()
+            .map(|candidate| &candidate.readiness_report),
+    );
+    let mut constraints = Vec::new();
+
+    for gap in gap_inventory.primitive_gaps {
+        let primitive = describe_primitive_family(gap.primitive);
+        constraints.push(IntegrationActivationConstraint {
+            kind: IntegrationActivationConstraintKind::Primitive,
+            constraint_id: format!("primitive:{}", gap.primitive.as_str()),
+            display_name: primitive.display_name.to_string(),
+            highest_priority: gap.highest_priority,
+            highest_policy_tier: highest_policy_tier_for_integrations(
+                &gap.integration_ids,
+                &policy_tier_by_integration,
+            ),
+            affected_integration_ids: gap.integration_ids,
+            blocks_activation: true,
+            requires_human_review: false,
+            policy_surfaces: Vec::new(),
+        });
+    }
+
+    for gap in gap_inventory.capability_gaps {
+        constraints.push(IntegrationActivationConstraint {
+            kind: IntegrationActivationConstraintKind::Capability,
+            constraint_id: format!("capability:{}", gap.capability_id.as_str()),
+            display_name: gap.capability_id.as_str().to_string(),
+            highest_priority: gap.highest_priority,
+            highest_policy_tier: highest_policy_tier_for_integrations(
+                &gap.integration_ids,
+                &policy_tier_by_integration,
+            ),
+            affected_integration_ids: gap.integration_ids,
+            blocks_activation: true,
+            requires_human_review: false,
+            policy_surfaces: Vec::new(),
+        });
+    }
+
+    for gap in gap_inventory.dependency_gaps {
+        constraints.push(IntegrationActivationConstraint {
+            kind: IntegrationActivationConstraintKind::Dependency,
+            constraint_id: format!("dependency:{}", gap.integration_id.as_str()),
+            display_name: gap.integration_id.as_str().to_string(),
+            highest_priority: gap.highest_priority,
+            highest_policy_tier: highest_policy_tier_for_integrations(
+                &gap.requested_integration_ids,
+                &policy_tier_by_integration,
+            ),
+            affected_integration_ids: gap.requested_integration_ids,
+            blocks_activation: true,
+            requires_human_review: false,
+            policy_surfaces: Vec::new(),
+        });
+    }
+
+    let mut policy_review_constraints: BTreeMap<
+        Option<IntegrationPolicySurface>,
+        (u8, BTreeSet<IntegrationId>, PrivilegeTier),
+    > = BTreeMap::new();
+
+    for candidate in candidates {
+        if !candidate.requires_human_review() {
+            continue;
+        }
+
+        let policy_surfaces = find_entry(
+            catalog,
+            &candidate.readiness_report.requested_integration_id,
+        )
+        .map(IntegrationCatalogEntry::policy_surfaces)
+        .unwrap_or_default();
+
+        if policy_surfaces.is_empty() {
+            let (highest_priority, integration_ids, highest_policy_tier) =
+                policy_review_constraints.entry(None).or_insert((
+                    candidate.readiness_report.priority,
+                    BTreeSet::new(),
+                    candidate.readiness_report.highest_policy_tier,
+                ));
+            *highest_priority = (*highest_priority).min(candidate.readiness_report.priority);
+            integration_ids.insert(candidate.readiness_report.requested_integration_id.clone());
+            *highest_policy_tier =
+                (*highest_policy_tier).max(candidate.readiness_report.highest_policy_tier);
+            continue;
+        }
+
+        for surface in policy_surfaces {
+            let (highest_priority, integration_ids, highest_policy_tier) =
+                policy_review_constraints.entry(Some(surface)).or_insert((
+                    candidate.readiness_report.priority,
+                    BTreeSet::new(),
+                    surface.required_tier(),
+                ));
+            *highest_priority = (*highest_priority).min(candidate.readiness_report.priority);
+            integration_ids.insert(candidate.readiness_report.requested_integration_id.clone());
+            *highest_policy_tier = (*highest_policy_tier)
+                .max(surface.required_tier())
+                .max(candidate.readiness_report.highest_policy_tier);
+        }
+    }
+
+    for (surface, (highest_priority, integration_ids, highest_policy_tier)) in
+        policy_review_constraints
+    {
+        let (constraint_id, display_name, policy_surfaces) = match surface {
+            Some(surface) => (
+                format!("policy_review:{}", surface.as_str()),
+                surface.as_str().to_string(),
+                vec![surface],
+            ),
+            None => (
+                "policy_review:human_approval".to_string(),
+                "human_approval".to_string(),
+                Vec::new(),
+            ),
+        };
+        constraints.push(IntegrationActivationConstraint {
+            kind: IntegrationActivationConstraintKind::PolicyReview,
+            constraint_id,
+            display_name,
+            highest_priority,
+            affected_integration_ids: integration_ids.into_iter().collect(),
+            blocks_activation: false,
+            requires_human_review: true,
+            highest_policy_tier,
+            policy_surfaces,
+        });
+    }
+
+    constraints.sort_by(compare_activation_constraints);
+    constraints
+}
+
+pub fn activation_constraints_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationConstraint> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_constraints_from_candidates(catalog, candidates.iter())
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -4840,6 +5135,17 @@ fn activation_health_status_from_counts(
     }
 }
 
+fn highest_policy_tier_for_integrations(
+    integration_ids: &[IntegrationId],
+    policy_tier_by_integration: &BTreeMap<IntegrationId, PrivilegeTier>,
+) -> PrivilegeTier {
+    integration_ids
+        .iter()
+        .filter_map(|integration_id| policy_tier_by_integration.get(integration_id).copied())
+        .max()
+        .unwrap_or(PrivilegeTier::ReadOnly)
+}
+
 fn compare_activation_candidates(
     left: &IntegrationActivationCandidate,
     right: &IntegrationActivationCandidate,
@@ -4882,6 +5188,22 @@ fn compare_activation_actions(
             left.dependency_integration_id
                 .cmp(&right.dependency_integration_id)
         })
+}
+
+fn compare_activation_constraints(
+    left: &IntegrationActivationConstraint,
+    right: &IntegrationActivationConstraint,
+) -> Ordering {
+    left.highest_priority
+        .cmp(&right.highest_priority)
+        .then_with(|| left.kind.cmp(&right.kind))
+        .then_with(|| {
+            right
+                .affected_integration_ids
+                .len()
+                .cmp(&left.affected_integration_ids.len())
+        })
+        .then_with(|| left.constraint_id.cmp(&right.constraint_id))
 }
 
 fn compare_activation_dependency_nodes(
@@ -5618,6 +5940,73 @@ mod tests {
         assert!(summary.has_review_work());
         assert!(summary.has_blockers());
         assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_constraints_group_readiness_and_policy_review_work() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let candidates = activation_candidates_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        let constraints = activation_constraints_from_candidates(&catalog, candidates.iter());
+
+        assert!(constraints.iter().any(|constraint| constraint.kind
+            == IntegrationActivationConstraintKind::Primitive
+            && constraint.blocks_activation));
+        assert!(constraints.iter().any(|constraint| constraint.kind
+            == IntegrationActivationConstraintKind::Capability
+            && constraint.blocks_activation));
+        assert!(constraints.iter().any(|constraint| constraint.kind
+            == IntegrationActivationConstraintKind::Dependency
+            && constraint.blocks_activation));
+        let policy_review = constraints
+            .iter()
+            .find(|constraint| constraint.kind == IntegrationActivationConstraintKind::PolicyReview)
+            .unwrap();
+        assert!(policy_review.requires_human_review);
+        assert!(!policy_review.blocks_activation);
+        assert!(!policy_review.policy_surfaces.is_empty());
+        assert_eq!(
+            policy_review.kind.as_str(),
+            IntegrationActivationConstraintKind::PolicyReview.as_str()
+        );
+
+        let summary = IntegrationActivationConstraintSummary::from_constraints(constraints.iter());
+        assert_eq!(summary.total_constraints, constraints.len());
+        assert!(summary.blocking_constraints >= 3);
+        assert!(summary.review_constraints > 0);
+        assert!(summary.primitive_constraints > 0);
+        assert!(summary.capability_constraints > 0);
+        assert!(summary.dependency_constraints > 0);
+        assert!(summary.policy_review_constraints > 0);
+        assert!(summary.affected_integrations > 0);
+        assert!(summary.first_blocking_priority <= Some(2));
+        assert!(summary.first_review_priority <= Some(2));
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
+
+        let constraints_from_catalog = activation_constraints_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert_eq!(constraints, constraints_from_catalog);
     }
 
     #[test]
