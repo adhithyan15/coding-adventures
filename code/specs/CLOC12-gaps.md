@@ -397,4 +397,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-046b — object-literal trailing comma drop
 
-- **Status:** OPEN — deferred follow-up from CLOC12.52 (gap-046). Same idea as gap-046 (drop `,` before `]`), but for `,` before `}` in OBJECT LITERAL contexts only. Needs brace_stack-aware discrimination (block `}` keeps `,`; object `}` drops it).
+- **Status:** **RESOLVED** in CLOC12.58 (PR pending). `minify_trailing_obj_comma` fixture matches byte-for-byte.
+- **Upstream byte-identity test:** `minify_trailing_obj_comma` seed fixture.
+- **Input:** `var o={a:1,b:2,};`
+- **Upstream:** `var o={a:1,b:2};`
+- **Why it failed:** closurec's whitespace_only re-stitcher passed `,` through verbatim.
+- **Fix:** Mirror gap-046's `,`-before-`]` peephole for `,`-before-`}`. Brace_stack discrimination is NOT needed: in valid ECMAScript, `,` immediately before `}` can only appear in object-literal / object-destructuring contexts. Block bodies separate statements with `;`, class bodies have no separator, switch/try have no comma. So the drop is safe unconditionally.
