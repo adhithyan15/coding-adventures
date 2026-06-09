@@ -3,6 +3,17 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-4c — `EQ` / `equal?`)
+
+### Added
+
+- `call_builtin "equal?"` (McCarthy `EQ` on atoms) lowers to **unbox-both +
+  `i32.eq`**: each argument arrives boxed as an `i31ref` (the structural pass
+  boxes a lisp atom before a predicate), so we `i31.get_s` each and compare.
+  `(EQ 5 5)` → 1, `(EQ 5 6)` → 0. `equal?` is added to the call_builtin
+  whitelist. (This is McCarthy `eq` / atom equality; deep structural `equal`
+  over cons cells is a separate, later builtin.)
+
 ## [0.11.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-4b — `pair?` / `not`)
 
 ### Added

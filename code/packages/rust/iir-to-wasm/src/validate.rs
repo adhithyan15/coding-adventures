@@ -149,10 +149,11 @@ const UNSUPPORTED_OPS: &[&str] = &[
 ///   3. Injecting the import entry in `lower_iir_to_wasm` (see the
 ///      analogous wiring for `io_out` → `env.__print_i64`).
 pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
-    // `pair?` / `not` are McCarthy lisp predicates (LANG77 L3b-3a-4): `pair?`
-    // lowers to `ref.test $LispyPair` (is this lisp value a cons cell?) and the
-    // lisp `not` to `i32.eqz` (boolean negation). `ATOM x` = `not(pair? x)`.
-    &["putchar", "getchar", "print_i64", "pair?", "not"];
+    // `pair?` / `not` / `equal?` are McCarthy lisp predicates (LANG77 L3b-3a-4):
+    // `pair?` lowers to `ref.test $LispyPair` (is this lisp value a cons cell?),
+    // the lisp `not` to `i32.eqz` (boolean negation), and `equal?` (McCarthy
+    // `EQ` on atoms) to unbox-both-and-`i32.eq`. `ATOM x` = `not(pair? x)`.
+    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
 
 // ---------------------------------------------------------------------------
 // validate_for_wasm
