@@ -46,6 +46,8 @@ Current scope:
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors
+- D18D integration-catalog descriptors for model-facing integration and
+  reusable-primitive inspection
 - D18D scene inventory/read tool descriptors for model-facing scene lookup
 - D18D event lifecycle tool descriptors for subscribing, polling, and
   unsubscribing from runtime event streams
