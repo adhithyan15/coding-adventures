@@ -122,6 +122,20 @@ fn algol_for_while_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![15], "ALGOL for-while should sum 5..1");
 }
 
+#[test]
+fn algol_for_list_emits_and_runs_on_wasm() {
+    let source = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_for_list")
+        .expect("ALGOL for-list loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL for-list sum)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL for-list wasm must run");
+    assert_eq!(result, vec![39], "ALGOL for-list should sum mixed elements");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result
