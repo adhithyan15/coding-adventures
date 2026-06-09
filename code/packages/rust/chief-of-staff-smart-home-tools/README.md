@@ -37,6 +37,7 @@ Chief of Staff job/session/agent
   -> typed command-result audit reads and summaries
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
+  -> policy-surface inventory and summary reads for review planning
   -> activation-plan list and summary reads for D23A rollout planning
   -> activation-candidate list and summary reads for ranked rollout planning
   -> activation-action list and summary reads for concrete unblock/activate work
@@ -62,6 +63,8 @@ Chief of Staff job/session/agent
 - `smart_home.describe_primitive`
 - `smart_home.get_integration_catalog_summary`
 - `smart_home.get_tool_catalog_summary`
+- `smart_home.list_integration_policy_surfaces`
+- `smart_home.get_integration_policy_surface_summary`
 - `smart_home.list_integration_activation_plans`
 - `smart_home.get_integration_activation_plan_summary`
 - `smart_home.list_integration_activation_candidates`

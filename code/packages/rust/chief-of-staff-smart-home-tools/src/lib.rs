@@ -38,20 +38,22 @@ use smart_home_integration_catalog::{
     activation_plan_for_entry, activation_plans_at_or_before_priority,
     activation_runway_from_candidates, describe_primitive_family,
     ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
-    find_entry, first_party_catalog, primitive_backlog_at_or_before_priority,
-    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
-    readiness_gap_inventory_from_reports, readiness_report_for_plan,
-    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
-    ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
-    IntegrationActivationAction, IntegrationActivationActionKind,
-    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
-    IntegrationActivationAgendaSummary, IntegrationActivationCandidate,
-    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
-    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
-    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
+    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
+    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
+    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
+    readiness_report_for_plan, readiness_reports_at_or_before_priority,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
+    IntegrationActivationActionKind, IntegrationActivationActionSummary,
+    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
+    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
+    IntegrationActivationCandidateSummary, IntegrationActivationDependencyEdge,
+    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
+    IntegrationActivationDependencySummary, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
     IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
     IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
     IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
@@ -141,6 +143,10 @@ pub const SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID: &str = "smart_home.describe_pri
 pub const SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_catalog_summary";
 pub const SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID: &str = "smart_home.get_tool_catalog_summary";
+pub const SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID: &str =
+    "smart_home.list_integration_policy_surfaces";
+pub const SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_policy_surface_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID: &str =
     "smart_home.list_integration_activation_plans";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID: &str =
@@ -241,6 +247,16 @@ impl SmartHomeToolBridge {
                 ),
                 SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID => {
                     Ok(get_tool_catalog_summary_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID => {
+                    let query = integration_policy_surface_query(&arguments)?;
+                    Ok(list_integration_policy_surfaces_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID => {
+                    let query = integration_policy_surface_query(&arguments)?;
+                    Ok(get_integration_policy_surface_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID => {
                     let query = integration_activation_plan_query(&arguments)?;
@@ -874,6 +890,38 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home tool catalog summary",
             "Return compact D18D smart-home tool descriptor counts from the shared smart-home core catalog.",
             object_schema(vec![], vec![], false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID,
+            "List smart-home integration policy surfaces",
+            "List D23A policy-surface planning inventory grouped across integration catalog entries.",
+            integration_policy_surface_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "policy_surfaces",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["policy_surfaces", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID,
+            "Get smart-home integration policy surface summary",
+            "Return compact D23A policy-surface rollups for review, cloud, local, and privilege-tier planning.",
+            integration_policy_surface_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3260,6 +3308,54 @@ fn integration_catalog_query(
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationPolicySurfaceQuery {
+    priority_at_or_before: u8,
+    surfaces: Vec<IntegrationPolicySurface>,
+    minimum_required_tier: Option<PrivilegeTier>,
+    limit: Option<usize>,
+}
+
+fn integration_policy_surface_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationPolicySurfaceQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut surfaces = Vec::new();
+    for surface in optional_string_list(arguments, "policy_surface", "policy_surfaces")? {
+        surfaces.push(parse_policy_surface(&surface)?);
+    }
+
+    Ok(IntegrationPolicySurfaceQuery {
+        priority_at_or_before: optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX),
+        surfaces,
+        minimum_required_tier: optional_string(arguments, "minimum_required_tier")?
+            .map(|tier| parse_privilege_tier(&tier))
+            .transpose()?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_policy_surface_inventory_for_query(
+    query: &IntegrationPolicySurfaceQuery,
+) -> (Vec<IntegrationPolicySurfaceInventoryItem>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let mut inventory =
+        policy_surface_inventory_at_or_before_priority(&catalog, query.priority_at_or_before);
+
+    if !query.surfaces.is_empty() {
+        inventory.retain(|item| query.surfaces.contains(&item.surface));
+    }
+    if let Some(minimum_required_tier) = query.minimum_required_tier {
+        inventory.retain(|item| item.required_tier >= minimum_required_tier);
+    }
+    if let Some(limit) = query.limit {
+        inventory.truncate(limit);
+    }
+
+    (inventory, catalog_count)
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationPlanQuery {
     priority_at_or_before: u8,
     target_kind: Option<ActivationTargetKind>,
@@ -3807,6 +3903,66 @@ fn get_tool_catalog_summary_output_handler_output(
                     ("total_tools", integer(summary.total_tools as i64)),
                 ]),
             ),
+    )
+}
+
+fn list_integration_policy_surfaces_output_handler_output(
+    query: IntegrationPolicySurfaceQuery,
+) -> ToolHandlerOutput {
+    let (inventory, catalog_count) = integration_policy_surface_inventory_for_query(&query);
+    let summary = IntegrationPolicySurfaceSummary::from_inventory(inventory.iter());
+    let count = inventory.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "policy_surfaces",
+            JsonValue::Array(
+                inventory
+                    .iter()
+                    .map(policy_surface_inventory_item_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", integration_policy_surface_summary_json(&summary)),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_policy_surfaces")),
+            ("count", integer(count as i64)),
+            (
+                "human_review_surface_entries",
+                integer(summary.human_review_surface_entries as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_policy_surface_summary_output_handler_output(
+    query: IntegrationPolicySurfaceQuery,
+) -> ToolHandlerOutput {
+    let (inventory, _) = integration_policy_surface_inventory_for_query(&query);
+    let summary = IntegrationPolicySurfaceSummary::from_inventory(inventory.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_policy_surface_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_policy_surface_summary"),
+            ),
+            ("total_surfaces", integer(summary.total_surfaces as i64)),
+            (
+                "human_review_surface_entries",
+                integer(summary.human_review_surface_entries as i64),
+            ),
+        ]),
     )
 }
 
@@ -6321,6 +6477,99 @@ fn tool_catalog_summary_json(summary: &SmartHomeToolCatalogSummary) -> JsonValue
         (
             "approval_gated_tool_count",
             integer(summary.approval_gated_tool_count() as i64),
+        ),
+    ])
+}
+
+fn policy_surface_inventory_item_json(item: &IntegrationPolicySurfaceInventoryItem) -> JsonValue {
+    object([
+        ("policy_surface", string(item.surface.as_str())),
+        (
+            "required_tier",
+            string(privilege_tier_label(item.required_tier)),
+        ),
+        ("highest_priority", integer(item.highest_priority as i64)),
+        ("entry_count", integer(item.entry_count as i64)),
+        ("local_entry_count", integer(item.local_entry_count as i64)),
+        ("cloud_entry_count", integer(item.cloud_entry_count as i64)),
+        (
+            "human_review_entry_count",
+            integer(item.human_review_entry_count as i64),
+        ),
+        (
+            "requires_human_review",
+            JsonValue::Bool(item.requires_human_review()),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                item.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn integration_policy_surface_summary_json(summary: &IntegrationPolicySurfaceSummary) -> JsonValue {
+    object([
+        ("total_surfaces", integer(summary.total_surfaces as i64)),
+        (
+            "total_surface_entries",
+            integer(summary.total_surface_entries as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "local_surface_entries",
+            integer(summary.local_surface_entries as i64),
+        ),
+        (
+            "cloud_surface_entries",
+            integer(summary.cloud_surface_entries as i64),
+        ),
+        (
+            "human_review_surface_entries",
+            integer(summary.human_review_surface_entries as i64),
+        ),
+        (
+            "read_only_surfaces",
+            integer(summary.read_only_surfaces as i64),
+        ),
+        (
+            "low_risk_surfaces",
+            integer(summary.low_risk_surfaces as i64),
+        ),
+        (
+            "human_approval_surfaces",
+            integer(summary.human_approval_surfaces as i64),
+        ),
+        (
+            "high_risk_surfaces",
+            integer(summary.high_risk_surfaces as i64),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        (
+            "has_high_risk_surface",
+            JsonValue::Bool(summary.has_high_risk_surface()),
         ),
     ])
 }
@@ -9116,6 +9365,18 @@ fn parse_policy_surface(label: &str) -> Result<IntegrationPolicySurface, ToolCal
     }
 }
 
+fn parse_privilege_tier(label: &str) -> Result<PrivilegeTier, ToolCallError> {
+    match label {
+        "read_only" | "readonly" | "read" => Ok(PrivilegeTier::ReadOnly),
+        "low_risk" | "low" => Ok(PrivilegeTier::LowRisk),
+        "human_approval" | "human_review" | "review" => Ok(PrivilegeTier::HumanApproval),
+        "high_risk" | "high" => Ok(PrivilegeTier::HighRisk),
+        _ => Err(validation_error(format!(
+            "unknown privilege tier `{label}`"
+        ))),
+    }
+}
+
 fn parse_discovery_mechanism(label: &str) -> Result<DiscoveryMechanism, ToolCallError> {
     match label {
         "mdns" => Ok(DiscoveryMechanism::Mdns),
@@ -9855,6 +10116,20 @@ fn integration_catalog_query_schema() -> JsonSchema {
     )
 }
 
+fn integration_policy_surface_query_schema(include_limit: bool) -> JsonSchema {
+    let mut properties = vec![
+        SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+        SchemaProperty::new("policy_surface", JsonSchema::String),
+        SchemaProperty::new("policy_surfaces", string_array_schema()),
+        SchemaProperty::new("minimum_required_tier", JsonSchema::String),
+    ];
+    if include_limit {
+        properties.push(SchemaProperty::new("limit", JsonSchema::Integer));
+    }
+
+    object_schema(properties, Vec::new(), false)
+}
+
 fn integration_activation_plan_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -10059,7 +10334,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 61);
+        assert_eq!(definitions.len(), 63);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -10079,6 +10354,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID));
@@ -10212,7 +10493,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            53
+            55
         );
         assert_eq!(
             export
@@ -10238,6 +10519,14 @@ mod tests {
                 .is_some()
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(
             smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID)
                 .is_some()
@@ -10530,15 +10819,78 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(61))
+            Some(&integer(63))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(53))
+            Some(&integer(55))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
             Some(&integer(8))
+        );
+
+        let list_policy_surfaces_request = request(
+            "call-list-integration-policy-surfaces",
+            SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                ("minimum_required_tier", string("human_approval")),
+                ("limit", integer(4)),
+            ]),
+            996,
+        );
+        let list_policy_surfaces_trace =
+            tool_runtime.invoke_with_events(&list_policy_surfaces_request);
+        assert!(list_policy_surfaces_trace.result.ok);
+        assert_eq!(list_policy_surfaces_trace.summary().progress_event_count, 1);
+        let list_policy_surfaces_output =
+            list_policy_surfaces_trace.result.output.as_ref().unwrap();
+        let policy_surface_count =
+            integer_value(field(list_policy_surfaces_output, "count").unwrap()).unwrap();
+        assert!((1..=4).contains(&policy_surface_count));
+        assert_eq!(
+            array_len(field(list_policy_surfaces_output, "policy_surfaces").unwrap()),
+            Some(policy_surface_count as usize)
+        );
+        let policy_surface_summary = field(list_policy_surfaces_output, "summary").unwrap();
+        assert_eq!(
+            field(policy_surface_summary, "has_review_work"),
+            Some(&JsonValue::Bool(true))
+        );
+        let policy_surface = array_item(
+            field(list_policy_surfaces_output, "policy_surfaces").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_ne!(
+            field(policy_surface, "required_tier"),
+            Some(&string("read_only"))
+        );
+
+        let policy_surface_summary_request = request(
+            "call-integration-policy-surface-summary",
+            SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID,
+            object([("priority_at_or_before", integer(2))]),
+            997,
+        );
+        let policy_surface_summary_trace =
+            tool_runtime.invoke_with_events(&policy_surface_summary_request);
+        assert!(policy_surface_summary_trace.result.ok);
+        assert_eq!(
+            policy_surface_summary_trace.summary().progress_event_count,
+            1
+        );
+        let policy_surface_summary_output =
+            policy_surface_summary_trace.result.output.as_ref().unwrap();
+        let policy_surface_rollup = field(policy_surface_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(policy_surface_rollup, "highest_policy_tier"),
+            Some(&string("high_risk"))
+        );
+        assert_eq!(
+            field(policy_surface_rollup, "has_high_risk_surface"),
+            Some(&JsonValue::Bool(true))
         );
 
         let list_activation_plans_request = request(
@@ -12576,6 +12928,8 @@ mod tests {
             integration_catalog_summary_trace,
         );
         journal.record_trace(tool_catalog_summary_request, tool_catalog_summary_trace);
+        journal.record_trace(list_policy_surfaces_request, list_policy_surfaces_trace);
+        journal.record_trace(policy_surface_summary_request, policy_surface_summary_trace);
         journal.record_trace(list_activation_plans_request, list_activation_plans_trace);
         journal.record_trace(
             activation_plan_summary_request,
@@ -12675,9 +13029,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 61);
-        assert_eq!(journal_summary.completed_count, 61);
-        assert_eq!(journal.audit_records().len(), 61);
+        assert_eq!(journal_summary.invocation_count, 63);
+        assert_eq!(journal_summary.completed_count, 63);
+        assert_eq!(journal.audit_records().len(), 63);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
