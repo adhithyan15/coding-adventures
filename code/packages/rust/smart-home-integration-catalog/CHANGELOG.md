@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationPlanSummary` for compact direct/delegated target,
   review, local/cloud, dependency, primitive, and capability rollups over
   activation-plan sets.
+- `IntegrationActivationCandidate` and `IntegrationActivationCandidateSummary`
+  for ranking ready, human-review, and blocked activation work after applying
+  host-specific readiness context.
 - Integration readiness reports that expose missing primitive families, missing
   capability grants, and missing delegated integrations before activation.
 - Integration readiness summaries for compact activation-ready, blocker,
