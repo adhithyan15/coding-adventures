@@ -2,21 +2,22 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserAnchor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
-    BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
-    BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor,
-    BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
+    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext,
+    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
+    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -126,6 +127,8 @@ struct ExpectedBrowserDocument {
     interactive_elements: Vec<ExpectedInteractiveElement>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
+    #[serde(default)]
+    disclosure_state_descriptors: Option<Vec<ExpectedDisclosureStateDescriptor>>,
     #[serde(default)]
     component_hydration_targets: Vec<ExpectedComponentHydrationTarget>,
     #[serde(default)]
@@ -1853,6 +1856,46 @@ struct ExpectedDisclosure {
     aria_modal: Option<String>,
     #[serde(default)]
     closedby: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedDisclosureStateDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    disclosure_kind: String,
+    #[serde(default)]
+    open: bool,
+    #[serde(default)]
+    grouped: bool,
+    #[serde(default)]
+    group_name: Option<String>,
+    #[serde(default)]
+    has_summary: bool,
+    #[serde(default)]
+    summary_text: Option<String>,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    aria_describedby: Vec<String>,
+    #[serde(default)]
+    aria_modal: Option<String>,
+    #[serde(default)]
+    modal: bool,
+    #[serde(default)]
+    closedby: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    text_length: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3966,6 +4009,26 @@ fn browser_disclosure_descriptor_metadata_tracks_details_and_dialogs() {
 }
 
 #[test]
+fn browser_disclosure_state_descriptor_metadata_tracks_details_and_dialogs() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive disclosure-state fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive disclosure-state fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.disclosure_state_descriptors,
+        case.expected.into_browser_document().disclosure_state_descriptors,
+        "disclosure-state descriptors should preserve details/dialog open, summary, modal, naming, and grouping metadata",
+    );
+}
+
+#[test]
 fn browser_navigation_attribution_metadata_tracks_links_areas_and_form_targets() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4158,6 +4221,22 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_image_candidate_descriptors(&images));
+        let disclosures: Vec<_> = self
+            .disclosures
+            .into_iter()
+            .map(ExpectedDisclosure::into_browser_disclosure)
+            .collect();
+        let disclosure_state_descriptors = self
+            .disclosure_state_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedDisclosureStateDescriptor::into_browser_disclosure_state_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_disclosure_state_descriptors(&disclosures));
 
         BrowserDocument {
             title: self.title,
@@ -4290,11 +4369,8 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedInteractiveElement::into_browser_interactive_element)
                 .collect(),
-            disclosures: self
-                .disclosures
-                .into_iter()
-                .map(ExpectedDisclosure::into_browser_disclosure)
-                .collect(),
+            disclosures,
+            disclosure_state_descriptors,
             component_hydration_targets: self
                 .component_hydration_targets
                 .into_iter()
@@ -4914,6 +4990,51 @@ fn expected_embedded_resource_kind(element: &str) -> &'static str {
         "object" => "object",
         "embed" => "embed",
         _ => "embedded",
+    }
+}
+
+fn expected_disclosure_state_descriptors(
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserDisclosureStateDescriptor> {
+    disclosures
+        .iter()
+        .map(expected_disclosure_state_descriptor)
+        .collect()
+}
+
+fn expected_disclosure_state_descriptor(
+    disclosure: &BrowserDisclosure,
+) -> BrowserDisclosureStateDescriptor {
+    let disclosure_kind = if disclosure.element == "dialog" {
+        "dialog"
+    } else {
+        "details"
+    };
+    let grouped = disclosure.element == "details" && disclosure.name.is_some();
+
+    BrowserDisclosureStateDescriptor {
+        element: disclosure.element.clone(),
+        id: disclosure.id.clone(),
+        name: disclosure.name.clone(),
+        disclosure_kind: disclosure_kind.to_string(),
+        open: disclosure.open,
+        grouped,
+        group_name: grouped.then(|| disclosure.name.clone()).flatten(),
+        has_summary: disclosure.summary_text.is_some(),
+        summary_text: disclosure.summary_text.clone(),
+        accessible_name: disclosure.accessible_name.clone(),
+        accessible_description: disclosure.accessible_description.clone(),
+        aria_label: disclosure.aria_label.clone(),
+        aria_labelledby: disclosure.aria_labelledby.clone(),
+        aria_describedby: disclosure.aria_describedby.clone(),
+        aria_modal: disclosure.aria_modal.clone(),
+        modal: disclosure
+            .aria_modal
+            .as_deref()
+            .is_some_and(|value| value.eq_ignore_ascii_case("true")),
+        closedby: disclosure.closedby.clone(),
+        text: disclosure.text.clone(),
+        text_length: disclosure.text.chars().count(),
     }
 }
 
@@ -6007,6 +6128,32 @@ impl ExpectedDisclosure {
             aria_describedby: self.aria_describedby,
             aria_modal: self.aria_modal,
             closedby: self.closedby,
+        }
+    }
+}
+
+impl ExpectedDisclosureStateDescriptor {
+    fn into_browser_disclosure_state_descriptor(self) -> BrowserDisclosureStateDescriptor {
+        BrowserDisclosureStateDescriptor {
+            element: self.element,
+            id: self.id,
+            name: self.name,
+            disclosure_kind: self.disclosure_kind,
+            open: self.open,
+            grouped: self.grouped,
+            group_name: self.group_name,
+            has_summary: self.has_summary,
+            summary_text: self.summary_text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            aria_describedby: self.aria_describedby,
+            aria_modal: self.aria_modal,
+            modal: self.modal,
+            closedby: self.closedby,
+            text: self.text,
+            text_length: self.text_length,
         }
     }
 }

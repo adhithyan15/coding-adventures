@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness disclosure-state descriptors now expose details/dialog open
+  state, grouped details names, summary text, modal/closedby behavior, and
+  accessible naming metadata as a flat browser-planning inventory.
 - Browser-readiness resource-endpoint descriptors now expose refresh redirects
   plus resolved document resources as a flat endpoint inventory for
   fetch/navigation planning.
