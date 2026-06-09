@@ -297,7 +297,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-040 — numeric separator + scientific shortest-form
 
-- **Status:** OPEN — newly discovered by CLOC14.7.
+- **Status:** **RESOLVED** in CLOC12.48 (PR pending). `minify_numeric_separator` flipped IGNORED → PASS. **Harness now 49/49 PASS — fifth 100% milestone today** (after 17/17, 25/25, 33/33, 41/41).
 - **Upstream byte-identity test:** `minify_numeric_separator` seed fixture.
 - **Why it fails:** Upstream emits `var x=1E6;` for `var x=1_000_000;`. closurec preserves the underscored literal verbatim. This is TWO normalisations stacked:
   1. Strip ES2021 numeric separators (`_`) from the literal.

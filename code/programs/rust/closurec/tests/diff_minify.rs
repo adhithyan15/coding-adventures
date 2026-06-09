@@ -85,11 +85,12 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-040: numeric separator + scientific shortest-form.
-    // Upstream emits `var x=1E6;` for `var x=1_000_000;` —
-    // BOTH stripping underscores AND switching to scientific
-    // notation when shorter. Discovered by CLOC14.7.
-    ("numeric_separator", "gap-040: numeric separator + scientific shortest-form"),
+    // gap-040 was RESOLVED in CLOC12.48 — `normalize_number_value`
+    // now strips `_` separators and considers scientific
+    // notation alongside decimal/cleaned-hex in the
+    // shortest-form comparison. `minify_numeric_separator`
+    // flipped IGNORED → PASS. Harness back to 49/49 — fifth
+    // 100% milestone today.
     // gap-041 was RESOLVED in CLOC12.47 — synthetic `;`
     // emission now peeks ahead and suppresses when the next
     // non-trivia token is `}`. `minify_nested_function`
