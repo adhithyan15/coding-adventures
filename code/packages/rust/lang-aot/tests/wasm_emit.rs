@@ -167,3 +167,29 @@ fn mccarthy_atom_predicate_runs_on_wasm() {
         "a cons is not an atom"
     );
 }
+
+/// `EQ`/`equal?` on atoms runs on wasm (LANG77 L3b-3a-4c): the atoms arrive
+/// boxed as `i31ref`, so `equal?` unboxes both and `i32.eq`s them.
+#[test]
+fn mccarthy_eq_atom_equality_runs_on_wasm() {
+    let rt = WasmRuntime::new();
+
+    let eq = compile_source_to_wasm(Language::McCarthyLisp, "(EQ 5 5)", "eq")
+        .expect("emit (EQ 5 5)");
+    assert_wellformed(&eq, "(EQ 5 5)");
+    assert_eq!(rt.load_and_run(&eq, "main", &[]).expect("run eq"), vec![1], "5 = 5");
+
+    let neq = compile_source_to_wasm(Language::McCarthyLisp, "(EQ 5 6)", "neq")
+        .expect("emit (EQ 5 6)");
+    assert_eq!(rt.load_and_run(&neq, "main", &[]).expect("run neq"), vec![0], "5 != 6");
+
+    // The compared values can be computed (a car of a cons), not just literals.
+    let computed =
+        compile_source_to_wasm(Language::McCarthyLisp, "(EQ (CAR (CONS 3 4)) 3)", "eq_car")
+            .expect("emit eq-car");
+    assert_eq!(
+        rt.load_and_run(&computed, "main", &[]).expect("run eq-car"),
+        vec![1],
+        "(CAR (CONS 3 4)) = 3"
+    );
+}

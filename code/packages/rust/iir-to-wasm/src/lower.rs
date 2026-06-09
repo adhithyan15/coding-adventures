@@ -1829,6 +1829,33 @@ fn emit_instr(
                     code.push(0x45); // i32.eqz
                     code.extend(encode_local_set(rd));
                 }
+                // McCarthy `EQ` (frontend builtin `equal?`) on atoms (LANG77
+                // L3b-3a-4c): equality of two lisp integer atoms. Both arguments
+                // arrive boxed as `i31ref` (the structural pass boxes a lisp atom
+                // before a predicate), so we unbox each and compare:
+                //
+                //   local.get $a  i31.get_s     ;; a → i32
+                //   local.get $b  i31.get_s     ;; b → i32
+                //   i32.eq                       ;; → i32 (1 = equal)
+                //   local.set $dest
+                //
+                // This is McCarthy `eq` (atom equality); deep structural `equal`
+                // over cons cells is a separate, later builtin.
+                "equal?" => {
+                    let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                        function: fn_name.to_string(),
+                        detail: "call_builtin \"equal?\" requires a dest register".to_string(),
+                    })?;
+                    let rd = get_reg(dest)?;
+                    let a = get_src_reg(&instr.srcs, 1, reg_map, fn_name)?;
+                    let b = get_src_reg(&instr.srcs, 2, reg_map, fn_name)?;
+                    code.extend(encode_local_get(a));
+                    encode_gc_instruction(code, &GcInstruction::I31GetS);
+                    code.extend(encode_local_get(b));
+                    encode_gc_instruction(code, &GcInstruction::I31GetS);
+                    code.push(0x46); // i32.eq
+                    code.extend(encode_local_set(rd));
+                }
                 _ => {
                     // Validator should have rejected this; defense in depth.
                     return Err(IIRWasmError::UnsupportedOp {
