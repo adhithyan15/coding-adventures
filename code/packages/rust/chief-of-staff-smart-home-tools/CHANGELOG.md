@@ -10,6 +10,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for compact shared-core catalog summaries:
   `smart_home.get_integration_catalog_summary` and
   `smart_home.get_tool_catalog_summary`.
+- Added D18D handlers for bulk D23A integration activation-plan planning:
+  `smart_home.list_integration_activation_plans` and
+  `smart_home.get_integration_activation_plan_summary`.
 - Added D18D handlers for bulk D23A integration readiness planning:
   `smart_home.list_integration_readiness` and
   `smart_home.get_integration_readiness_summary`.

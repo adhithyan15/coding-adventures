@@ -651,6 +651,24 @@ pub struct IntegrationActivationPlan {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPlanSummary {
+    pub total_plans: usize,
+    pub direct_targets: usize,
+    pub delegated_integration_targets: usize,
+    pub delegated_standard_targets: usize,
+    pub plans_requiring_human_review: usize,
+    pub local_only_plans: usize,
+    pub cloud_required_plans: usize,
+    pub plans_with_dependencies: usize,
+    pub plans_with_required_primitives: usize,
+    pub plans_with_required_capabilities: usize,
+    pub unique_required_primitives: usize,
+    pub unique_required_capabilities: usize,
+    pub unique_dependencies: usize,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationReadinessReport {
     pub requested_integration_id: IntegrationId,
     pub display_name: String,
@@ -717,6 +735,88 @@ pub struct IntegrationReadinessGapInventory {
     pub primitive_gaps: Vec<IntegrationReadinessPrimitiveGap>,
     pub capability_gaps: Vec<IntegrationReadinessCapabilityGap>,
     pub dependency_gaps: Vec<IntegrationReadinessDependencyGap>,
+}
+
+impl IntegrationActivationPlanSummary {
+    pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
+        let mut summary = Self {
+            total_plans: 0,
+            direct_targets: 0,
+            delegated_integration_targets: 0,
+            delegated_standard_targets: 0,
+            plans_requiring_human_review: 0,
+            local_only_plans: 0,
+            cloud_required_plans: 0,
+            plans_with_dependencies: 0,
+            plans_with_required_primitives: 0,
+            plans_with_required_capabilities: 0,
+            unique_required_primitives: 0,
+            unique_required_capabilities: 0,
+            unique_dependencies: 0,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+        let mut required_primitives = BTreeSet::new();
+        let mut required_capabilities = BTreeSet::new();
+        let mut dependencies = BTreeSet::new();
+
+        for plan in plans {
+            summary.total_plans += 1;
+            match &plan.activation_target {
+                IntegrationActivationTarget::Direct => summary.direct_targets += 1,
+                IntegrationActivationTarget::DelegatedIntegration(_) => {
+                    summary.delegated_integration_targets += 1
+                }
+                IntegrationActivationTarget::DelegatedStandards(_) => {
+                    summary.delegated_standard_targets += 1
+                }
+            }
+            if plan.requires_human_review() {
+                summary.plans_requiring_human_review += 1;
+            }
+            if plan.local_only {
+                summary.local_only_plans += 1;
+            }
+            if plan.cloud_required {
+                summary.cloud_required_plans += 1;
+            }
+            if !plan.depends_on_integrations.is_empty() {
+                summary.plans_with_dependencies += 1;
+            }
+            if !plan.required_primitives.is_empty() {
+                summary.plans_with_required_primitives += 1;
+            }
+            if !plan.required_capabilities.is_empty() {
+                summary.plans_with_required_capabilities += 1;
+            }
+            for primitive in &plan.required_primitives {
+                required_primitives.insert(*primitive);
+            }
+            for capability_id in &plan.required_capabilities {
+                required_capabilities.insert(capability_id.clone());
+            }
+            for integration_id in &plan.depends_on_integrations {
+                dependencies.insert(integration_id.clone());
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(plan.highest_policy_tier);
+        }
+
+        summary.unique_required_primitives = required_primitives.len();
+        summary.unique_required_capabilities = required_capabilities.len();
+        summary.unique_dependencies = dependencies.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_plans == 0
+    }
+
+    pub fn has_delegated_targets(&self) -> bool {
+        self.delegated_integration_targets > 0 || self.delegated_standard_targets > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.plans_requiring_human_review > 0
+    }
 }
 
 impl IntegrationReadinessSummary {
@@ -3255,7 +3355,7 @@ mod tests {
     #[test]
     fn activation_plans_follow_rollout_priority_waves() {
         let catalog = first_party_catalog();
-        let early = activation_plans_at_or_before_priority(&catalog, 1);
+        let early = activation_plans_at_or_before_priority(&catalog, 2);
 
         assert!(early
             .iter()
@@ -3269,6 +3369,19 @@ mod tests {
         assert!(early.iter().any(|plan| plan
             .depends_on_integrations
             .contains(&IntegrationId::trusted("mqtt"))));
+
+        let summary = IntegrationActivationPlanSummary::from_plans(early.iter());
+        assert_eq!(summary.total_plans, early.len());
+        assert!(summary.direct_targets > 0);
+        assert!(summary.has_delegated_targets());
+        assert!(summary.local_only_plans > 0);
+        assert!(summary.plans_with_dependencies > 0);
+        assert!(summary.plans_with_required_primitives > 0);
+        assert!(summary.plans_with_required_capabilities > 0);
+        assert!(summary.unique_required_primitives > 0);
+        assert!(summary.unique_required_capabilities > 0);
+        assert!(summary.unique_dependencies > 0);
+        assert!(!summary.is_empty());
     }
 
     #[test]
