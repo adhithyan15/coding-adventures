@@ -90,11 +90,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // following `function` keyword via the
     // `saw_async_kw_at_boundary` flag. `minify_async` flipped
     // IGNORED → PASS.
-    // gap-038: hex numeric literal normalized to decimal.
-    // Upstream emits `var x=255;` for `var x=0xff;` even
-    // under WHITESPACE_ONLY. closurec preserves the source
-    // literal verbatim. Discovered by CLOC14.5.
-    ("hex_number", "gap-038: hex literal → decimal"),
+    // gap-038 was RESOLVED in CLOC12.45 — hex/oct/bin
+    // integer literals now normalise to decimal when
+    // decimal length is <= source length (tie-break to
+    // decimal), matching upstream's shortest-form rule.
+    // `minify_hex_number` flipped IGNORED → PASS.
+    // **The byte-identity harness now reports 33 matched,
+    // 0 failed, 0 skipped (of 33 total).**
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
