@@ -40,6 +40,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationAction` and `IntegrationActivationActionSummary` for
   converting activation candidates into concrete activate, policy-review,
   primitive, capability, and dependency work items.
+- `IntegrationActivationAgendaStage` and `IntegrationActivationAgendaSummary`
+  for grouping activation candidates and concrete action work by rollout
+  priority wave.
 - `IntegrationActivationRunwayStage` and `IntegrationActivationRunwaySummary`
   for grouping activation candidates by rollout priority wave and identifying
   actionable, review, and blocked stages.
