@@ -85,16 +85,19 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-040 was RESOLVED in CLOC12.48 — `normalize_number_value`
-    // now strips `_` separators and considers scientific
-    // notation alongside decimal/cleaned-hex in the
-    // shortest-form comparison. `minify_numeric_separator`
-    // flipped IGNORED → PASS. Harness back to 49/49 — fifth
-    // 100% milestone today.
-    // gap-041 was RESOLVED in CLOC12.47 — synthetic `;`
-    // emission now peeks ahead and suppresses when the next
-    // non-trivia token is `}`. `minify_nested_function`
-    // flipped IGNORED → PASS.
+    // gap-042: `do` keyword should arm body_position_next
+    // so that single-statement do-bodies flatten via
+    // gap-032 (just like `if`/`while`/`for`). Upstream
+    // emits `do a;while(x);` for `do{a;}while(x);`.
+    // Discovered by CLOC14.8.
+    ("do_while", "gap-042: do-keyword should arm body_position_next"),
+    // gap-043: CLI quote-choice optimisation for string
+    // literals. Upstream switches to `'` when content has
+    // escaped `"` characters (saves the backslash). The
+    // AST emitter has this (gap-026 closed in CLOC12.11)
+    // but the CLI WHITESPACE_ONLY path doesn't reuse that
+    // logic. Discovered by CLOC14.8.
+    ("escape_chars", "gap-043: CLI quote-choice"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

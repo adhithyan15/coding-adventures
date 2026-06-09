@@ -312,3 +312,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.47 (PR pending). `minify_nested_function` flipped IGNORED → PASS. Harness now 48/49 (only gap-040 remains).
 - **Resolution:** Implemented a `deferred_synthetic_semi` flag carried across iterations. When a `}` would emit a synthetic `;` but the next non-trivia is another `}`, the `;` is **deferred** to that outer brace instead of emitted. The outer brace consumes the deferred state (collapsing with any own-`;` it would emit). Chain continuations (`catch`/`finally`) carry the deferred state forward across the chain. Verified against `closure-compiler-v20240317.jar`: matches upstream for `function f(){function g(){}}` and `if(x){function f(){}}` and the try-chain composition `try{function f(){}}catch(e){b;}`.
 - **Test expectations updated**: 4 pre-existing inline tests had encoded the buggy `function f(){function g(){};};` and similar outputs as their `assert_eq!` rhs. Updated to the correct upstream-matching form with comments referencing the JAR probe.
+
+### gap-042 — `do` keyword should arm body_position_next
+
+- **Status:** OPEN — newly discovered by CLOC14.8.
+- **Upstream byte-identity test:** `minify_do_while` seed fixture.
+- **Why it fails:** Upstream emits `do a;while(x);` for `do{a;}while(x);`. closurec emits `do{a}while(x);`. The state machine arms `body_position_next = true` for `if`/`while`/`for` (and indirectly for `else`), but not for `do`. As a result gap-032's single-statement flatten doesn't fire on the do-body.
+- **What it needs:** Add `do` to the keyword arm list (alongside `if`/`while`/`for`) — but note `do` arms body_position_next IMMEDIATELY (no following `(`), unlike the others. Insert at the right `else if val == "do"` branch arming `body_position_next = true`.
+
+### gap-043 — CLI quote-choice optimisation
+
+- **Status:** OPEN — newly discovered by CLOC14.8.
+- **Upstream byte-identity test:** `minify_escape_chars` seed fixture.
+- **Why it fails:** Upstream switches between `"` and `'` based on which yields a shorter output (escapes fewer chars). closurec's CLI WHITESPACE_ONLY path always uses `"` via `push_quoted_string_content`. The AST emitter already has this logic (gap-026 closed in CLOC12.11), but the CLI doesn't go through the AST.
+- **What it needs:** Lift `pick_better_quote` and `push_quoted_string_content` logic from closure-emitter into a shared module (or duplicate it carefully) and call it from `whitespace_only.rs`. Counting rule: prefer the quote style that requires fewer escape sequences; tie-break to the source-form's quote.
