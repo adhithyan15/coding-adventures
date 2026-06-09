@@ -44,6 +44,61 @@ const SYMBOL_HINT: &str = "symbol";
 /// The symbol tag (`lispy-runtime` `TAG_SYMBOL = 0b010`).
 const TAG_SYMBOL: i64 = 0b010;
 
+/// The base of the reserved **symbol id range** for the *managed* (uniform-ref)
+/// backends (WASM/JVM/CLR/BEAM) — see [`intern_symbols_structural`].
+///
+/// Those backends have no spare tag bit in their boxed-integer representation
+/// (a WASM `i31ref` is a bare 31-bit payload), so a symbol is interned to a
+/// distinct integer in a **high reserved range** that ordinary integer atoms do
+/// not reach. `2²⁹` carves the 31-bit space into integers `[−2²⁹, 2²⁹)` and
+/// symbol ids `[2²⁹, 2³⁰)`, so a symbol value can never equal an integer value
+/// — `(EQ 'A 5)` is `nil`. (A program that mixes symbols with integer atoms
+/// `≥ 2²⁹` is out of range, the documented analogue of the native `±2⁶⁰` limit;
+/// McCarthy 1.0 programs use small integers.)
+pub const SYMBOL_ID_BASE: i64 = 1 << 29;
+
+/// Intern every symbol literal to a distinct integer in the reserved symbol-id
+/// range, for the **managed / uniform-reference** backends (WASM today;
+/// JVM/CLR/BEAM as they land). The twin of [`intern_symbols`], which targets the
+/// native tagged-word model.
+///
+/// A frontend symbol literal is `const Var(name) : symbol`. We assign each
+/// distinct name a module-wide id (first-seen order, so one id per name across
+/// all functions — what makes cross-function `EQ` sound) and rewrite the const
+/// to `const Int(SYMBOL_ID_BASE + id) : i32`. From there the value flows like
+/// any integer atom: the structural representation pass boxes it as an `i31ref`,
+/// and `EQ` compares the payloads with `i32.eq` — so `(EQ 'A 'A)` is true,
+/// `(EQ 'A 'B)` is false, with no new value type or polymorphic `EQ`.
+///
+/// Run it **before** `lower_lisp_repr_structural` (so the pass sees a plain
+/// integer atom). Idempotent: a `const : symbol` that is already an `Int`
+/// (re-run) is left untouched; non-symbol consts are never touched.
+pub fn intern_symbols_structural(module: &mut IIRModule) {
+    let mut ids: HashMap<String, u32> = HashMap::new();
+    let mut next_id: u32 = 0;
+
+    for func in &mut module.functions {
+        for instr in &mut func.instructions {
+            if instr.op != "const" || instr.type_hint != SYMBOL_HINT {
+                continue;
+            }
+            let name = match instr.srcs.first() {
+                Some(Operand::Var(n)) => n.clone(),
+                _ => continue, // already interned (Int), or malformed — leave it.
+            };
+            let id = *ids.entry(name).or_insert_with(|| {
+                let id = next_id;
+                next_id += 1;
+                id
+            });
+            // The interned symbol value: a distinct integer in the reserved
+            // range. Retype to i32 so it boxes as an i31ref like an integer atom.
+            instr.srcs[0] = Operand::Int(SYMBOL_ID_BASE + id as i64);
+            instr.type_hint = "i32".to_string();
+        }
+    }
+}
+
 /// Intern every symbol literal in `module` to its tagged immediate, in place.
 ///
 /// Assigns ids in first-seen order across the **whole module** (so a name used
@@ -147,6 +202,71 @@ mod tests {
         let helper_bits = const_bits(&m, 0, "h");
         let main_bits = const_bits(&m, 1, "m");
         assert_eq!(helper_bits, main_bits, "same name across functions → same id");
+    }
+
+    // ── intern_symbols_structural (managed / uniform-ref backends) ────────────
+
+    #[test]
+    fn structural_distinct_names_get_distinct_reserved_ids() {
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![sym_const("a", "A"), sym_const("a2", "A"), sym_const("b", "B")],
+        );
+        let mut m = module(vec![f]);
+        intern_symbols_structural(&mut m);
+        // A → SYMBOL_ID_BASE + 0 (twice), B → SYMBOL_ID_BASE + 1.
+        assert_eq!(const_bits(&m, 0, "a"), SYMBOL_ID_BASE, "first symbol id 0");
+        assert_eq!(const_bits(&m, 0, "a2"), SYMBOL_ID_BASE, "same name → same id");
+        assert_eq!(const_bits(&m, 0, "b"), SYMBOL_ID_BASE + 1, "B → id 1");
+        assert_ne!(const_bits(&m, 0, "a"), const_bits(&m, 0, "b"), "A ≠ B");
+    }
+
+    #[test]
+    fn structural_symbols_are_retyped_i32_and_disjoint_from_integers() {
+        let f = IIRFunction::new("main", vec![], "any", vec![sym_const("a", "A")]);
+        let mut m = module(vec![f]);
+        intern_symbols_structural(&mut m);
+        let instr = m.functions[0]
+            .instructions
+            .iter()
+            .find(|i| i.dest.as_deref() == Some("a"))
+            .unwrap();
+        assert_eq!(instr.type_hint, "i32", "interned symbol retyped to i32 (boxes as i31ref)");
+        // A symbol id is in the reserved high range, never reached by a small
+        // integer atom, so `(EQ 'A 5)` is false.
+        assert!(const_bits(&m, 0, "a") >= SYMBOL_ID_BASE, "symbol id in reserved range");
+    }
+
+    #[test]
+    fn structural_ids_are_module_wide() {
+        let helper = IIRFunction::new("helper", vec![], "any", vec![sym_const("h", "A")]);
+        let main = IIRFunction::new("main", vec![], "any", vec![sym_const("m", "A")]);
+        let mut m = module(vec![helper, main]);
+        intern_symbols_structural(&mut m);
+        assert_eq!(
+            const_bits(&m, 0, "h"),
+            const_bits(&m, 1, "m"),
+            "same name across functions → same id"
+        );
+    }
+
+    #[test]
+    fn structural_non_symbol_consts_untouched() {
+        let f = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new("const", Some("i".into()), vec![Operand::Int(42)], "i64"),
+                IIRInstr::new("const", Some("n".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            ],
+        );
+        let mut m = module(vec![f]);
+        intern_symbols_structural(&mut m);
+        assert_eq!(const_bits(&m, 0, "i"), 42, "i64 const untouched");
+        assert_eq!(const_bits(&m, 0, "n"), 0, "nil const untouched");
     }
 
     #[test]

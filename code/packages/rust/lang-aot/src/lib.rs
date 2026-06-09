@@ -399,6 +399,11 @@ pub fn compile_source_to_wasm(
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    // Intern symbol literals to distinct integers in a reserved range, so each
+    // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
+    // them with `i32.eq` — `(EQ 'A 'A)` true, `(EQ 'A 'B)` false (LANG77 / W1).
+    // A no-op for a module with no symbol literals. Before the repr pass.
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
     // The two representation passes partition the module's functions:
     //   • heap-using functions → the structural pass boxes their integer atoms
     //     as `i31ref` and unboxes the entry result (uniform-anyref value model);

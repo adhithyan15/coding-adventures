@@ -288,3 +288,28 @@ fn mccarthy_cond_runs_on_wasm() {
     assert_eq!(go("(COND ((EQ 1 1) 7) (5 9))"), vec![7]);
     assert_eq!(go("(COND ((EQ 1 2) 7) (5 9))"), vec![9]);
 }
+
+/// Symbols run on wasm (LANG77 W1 / F6): `QUOTE`/symbol literals are interned to
+/// distinct integers in a reserved range (boxed as `i31ref`), so `EQ` tells
+/// symbols apart — `(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil — disjoint from integers.
+#[test]
+fn mccarthy_symbols_run_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "sym").expect("emit symbol");
+        rt.load_and_run(&bytes, "main", &[]).expect("run symbol")
+    };
+
+    // Same symbol is EQ; different symbols are not.
+    assert_eq!(go("(EQ 'A 'A)"), vec![1], "'A = 'A");
+    assert_eq!(go("(EQ 'A 'B)"), vec![0], "'A != 'B");
+    assert_eq!(go("(EQ 'FOO 'FOO)"), vec![1], "multi-char symbol");
+    // A symbol is an atom (not a cons).
+    assert_eq!(go("(ATOM 'A)"), vec![1], "'A is an atom");
+    // Symbols flow through cons cells.
+    assert_eq!(go("(EQ (CAR (CONS 'A 'B)) 'A)"), vec![1], "car of a cons of symbols");
+    // A symbol guard in COND.
+    assert_eq!(go("(COND ((EQ 'A 'B) 7) ((EQ 'X 'X) 9) (5 1))"), vec![9]);
+    // Symbol ids are disjoint from integer atoms.
+    assert_eq!(go("(EQ 'A 5)"), vec![0], "a symbol never equals an integer");
+}
