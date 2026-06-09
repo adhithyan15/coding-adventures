@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.55.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-042** — `do` keyword now arms
+  `body_position_next = true`. `do{a;}while(x);` flattens
+  via gap-032 to `do a;while(x);` matching upstream.
+  Harness 55/57 → 56/57. Only gap-043 left.
+
+Unlike `if`/`while`/`for` whose body slot opens after
+their `)`, `do`'s body opens IMMEDIATELY after the keyword
+(per §13.7.2). A one-keyword branch mirroring `else`.
+
+### Added
+- 2 inline `gap042_*` tests (single-stmt flatten target +
+  multi-stmt non-regression).
+
+### Documented (orthogonal, not fixed here)
+- Empty-body `do{}while(x);` produces `do; while(x);` —
+  the synthetic `;` from gap-031 doesn't update
+  `prev_emitted_tok`, leaving `needs_separator` to see
+  word-like(do, while). Future gap.
+
 ## [0.54.0] - 2026-06-09
 
 ### Changed

@@ -733,6 +733,17 @@ pub fn whitespace_only_minify(
             // apply.
             body_position_next = true;
             at_stmt_boundary = false;
+        } else if val == "do" {
+            // gap-042: `do` opens the do-statement's body
+            // slot IMMEDIATELY (unlike `if`/`while`/`for`
+            // which open it after the `)` of the head). Per
+            // §13.7.2: `DoWhileStatement → do Statement
+            // while ( Expression ) ;`. By arming
+            // body_position_next here, gap-032's
+            // single-statement flatten fires on
+            // `do{a;}while(x);` → `do a;while(x);`.
+            body_position_next = true;
+            at_stmt_boundary = false;
         } else {
             // Any other token consumes the body slot (the
             // body of `if(x)y();` is `y()`, so once we emit
@@ -2041,6 +2052,38 @@ mod tests {
     fn gap040_float_left_alone() {
         assert_eq!(minify("var x=1.5;"), "var x=1.5;");
     }
+
+    // ---- gap-042: do-keyword arms body_position_next -----
+
+    /// Target fixture: `do{a;}while(x);` flattens via gap-032.
+    #[test]
+    fn gap042_do_while_single_stmt_flattens() {
+        assert_eq!(
+            minify("do{a;}while(x);"),
+            "do a;while(x);"
+        );
+    }
+
+    /// Multi-statement do-body does NOT flatten (gap-032's
+    /// eligibility check requires exactly 1 `;` at depth 0).
+    #[test]
+    fn gap042_do_while_multi_stmt_does_not_flatten() {
+        assert_eq!(
+            minify("do{a();b();}while(x);"),
+            "do{a();b()}while(x);"
+        );
+    }
+
+    // Note on `do{}while(x);` (empty do-body): gap-031's
+    // empty-body collapse fires, producing `do;while(x);`
+    // in principle. But the synthetic `;` emission doesn't
+    // update `prev_emitted_tok`, so `needs_separator`
+    // computes word-like(do, while) → true → inserts a
+    // spurious space, producing `do; while(x);`. This is a
+    // SEPARATE latent issue (will be filed as a future
+    // gap) and orthogonal to the do-keyword arming gap-042
+    // is closing. A test for it would belong with the fix
+    // for the prev_emitted_tok update.
 
     // ---- gap-039: tagged template separator --------------
 
