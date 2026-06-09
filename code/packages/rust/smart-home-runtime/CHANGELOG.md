@@ -32,6 +32,11 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReportEventToolRequest`, `RuntimeReportEventToolOutput`, and
   `SmartHomeRuntime::execute_report_event_tool` for authorized D18D event
   ingest through the runtime-owned device-event and bridge-health paths.
+- `RuntimeSetDesiredStateToolRequest`,
+  `RuntimeSetDesiredStateToolOutput`,
+  `RuntimeClearDesiredStateToolRequest`,
+  `RuntimeClearDesiredStateToolOutput`, and runtime facade methods for
+  authorized desired-state target mutation through runtime-owned validation.
 - Runtime discovery catalog recording plus `RuntimeDiscoverToolRequest` and
   `RuntimeDiscoverToolOutput` for authorized discovery reads, freshness
   filtering, and unpaired bridge-candidate projection.

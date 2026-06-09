@@ -1471,6 +1471,8 @@ pub enum SmartHomeTool {
     GetRuntimeSnapshot,
     GetTopologySummary,
     ListDesiredStates,
+    SetDesiredState,
+    ClearDesiredState,
     ListPairingSessions,
     ListWorkers,
     GetWorkerHeartbeatSchedule,
@@ -1538,6 +1540,18 @@ impl SmartHomeTool {
             Self::GetRuntimeSnapshot => read_tool("smart_home.get_runtime_snapshot"),
             Self::GetTopologySummary => read_tool("smart_home.get_topology_summary"),
             Self::ListDesiredStates => read_tool("smart_home.list_desired_states"),
+            Self::SetDesiredState => ToolDescriptor {
+                tool_id: "smart_home.set_desired_state",
+                side_effects: ToolSideEffects::Write,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.command.light")],
+                required_tier: PrivilegeTier::LowRisk,
+            },
+            Self::ClearDesiredState => ToolDescriptor {
+                tool_id: "smart_home.clear_desired_state",
+                side_effects: ToolSideEffects::Write,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.command.light")],
+                required_tier: PrivilegeTier::LowRisk,
+            },
             Self::ListPairingSessions => read_tool("smart_home.list_pairing_sessions"),
             Self::ListWorkers => read_tool("smart_home.list_workers"),
             Self::GetWorkerHeartbeatSchedule => {
@@ -2102,6 +2116,8 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::GetRuntimeSnapshot,
         SmartHomeTool::GetTopologySummary,
         SmartHomeTool::ListDesiredStates,
+        SmartHomeTool::SetDesiredState,
+        SmartHomeTool::ClearDesiredState,
         SmartHomeTool::ListPairingSessions,
         SmartHomeTool::ListWorkers,
         SmartHomeTool::GetWorkerHeartbeatSchedule,
@@ -2906,7 +2922,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 35);
+        assert_eq!(catalog.len(), 37);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
@@ -3024,6 +3040,18 @@ mod tests {
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog
             .iter()
+            .any(|tool| tool.tool_id == "smart_home.set_desired_state"
+                && tool.side_effects == ToolSideEffects::Write
+                && tool.required_capabilities
+                    == vec![CapabilityId::trusted("smart_home.command.light")]));
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.clear_desired_state"
+                && tool.side_effects == ToolSideEffects::Write
+                && tool.required_capabilities
+                    == vec![CapabilityId::trusted("smart_home.command.light")]));
+        assert!(catalog
+            .iter()
             .any(|tool| tool.tool_id == "smart_home.list_pairing_sessions"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -3048,16 +3076,16 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 35);
+        assert_eq!(summary.total_tools, 37);
         assert_eq!(summary.read_tools, 29);
-        assert_eq!(summary.write_tools, 0);
+        assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
         assert_eq!(summary.read_only_tier_tools, 29);
-        assert_eq!(summary.low_risk_tier_tools, 4);
+        assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 35);
-        assert_eq!(summary.risky_tool_count(), 6);
+        assert_eq!(summary.total_required_capabilities, 37);
+        assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());
         assert!(SmartHomeTool::CompletePairing

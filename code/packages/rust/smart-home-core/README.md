@@ -69,6 +69,8 @@ Current scope:
   without exposing raw credentials
 - D18D event-ingest descriptor for authorized adapter-observed device and
   bridge-health events
+- D18D desired-state mutation descriptors for authorized runtime target
+  set/clear operations
 - D18D supervision planning tool descriptor for non-mutating due-work previews
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks

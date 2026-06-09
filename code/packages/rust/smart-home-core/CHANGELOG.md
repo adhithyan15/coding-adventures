@@ -40,6 +40,8 @@ All notable changes to this package will be documented in this file.
   of pairing sessions with VaultRef handles and non-secret metadata.
 - `smart_home.report_event` tool descriptor for authorized adapter-observed
   device and bridge-health event ingest.
+- `smart_home.set_desired_state` and `smart_home.clear_desired_state` tool
+  descriptors for authorized runtime desired-state target mutation.
 - `smart_home.get_supervision_plan` tool descriptor for read-only runtime
   supervision due-work previews.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`

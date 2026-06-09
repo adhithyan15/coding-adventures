@@ -72,3 +72,7 @@ All notable changes to this package will be documented in this file.
   `smart_home.run_supervision_tick` handlers over the D23 runtime supervision
   facade so Chief of Staff jobs can run authorized reconciliation and
   supervisor ticks without owning D23 mutation logic.
+- Added `smart_home.set_desired_state` and
+  `smart_home.clear_desired_state` handlers over the D23 runtime mutation
+  facade so Chief of Staff jobs can manage desired-state targets without
+  owning validation, storage, or reconciliation semantics.

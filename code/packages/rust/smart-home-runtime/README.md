@@ -92,6 +92,8 @@ Included surfaces:
   through the same pairing capability before mutating runtime session state
 - D18D-facing report-event facade that authorizes adapter-observed device
   events and bridge-health reports before mutating registry state
+- D18D-facing desired-state mutation facade that authorizes target set/clear
+  operations before mutating runtime-owned reconciliation intent
 - read-side queries for pairing sessions and desired-state supervision targets
 - pairing-session inventory summaries for bridge-pairing status, expiry, and
   VaultRef completion counts

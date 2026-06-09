@@ -49,6 +49,7 @@ use smart_home_runtime::{
     DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort, PairingSessionStatus,
     ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
     RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
+    RuntimeClearDesiredStateToolOutput, RuntimeClearDesiredStateToolRequest,
     RuntimeCommandToolRequest, RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest,
     RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
     RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
@@ -58,15 +59,16 @@ use smart_home_runtime::{
     RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
     RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
     RuntimeReadToolRequest, RuntimeReportEventToolOutput, RuntimeReportEventToolRequest,
-    RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary, RuntimeSubscribeToolOutput,
-    RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId,
-    RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot,
-    RuntimeSubscriptionSort, RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary,
-    RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot,
-    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
-    SmartHomeRuntime, SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort,
-    SupervisionTickReport, WorkerHeartbeatDeadline, WorkerHeartbeatSchedule,
-    WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
+    RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput,
+    RuntimeSetDesiredStateToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
+    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
+    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
+    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
+    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
+    WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -98,6 +100,8 @@ pub const SMART_HOME_GET_CAPABILITY_GRANT_SUMMARY_TOOL_ID: &str =
 pub const SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID: &str = "smart_home.get_runtime_snapshot";
 pub const SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID: &str = "smart_home.get_topology_summary";
 pub const SMART_HOME_LIST_DESIRED_STATES_TOOL_ID: &str = "smart_home.list_desired_states";
+pub const SMART_HOME_SET_DESIRED_STATE_TOOL_ID: &str = "smart_home.set_desired_state";
+pub const SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID: &str = "smart_home.clear_desired_state";
 pub const SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID: &str = "smart_home.list_pairing_sessions";
 pub const SMART_HOME_LIST_WORKERS_TOOL_ID: &str = "smart_home.list_workers";
 pub const SMART_HOME_GET_WORKER_HEARTBEAT_SCHEDULE_TOOL_ID: &str =
@@ -442,6 +446,20 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "list_desired_states"))
+                }
+                SMART_HOME_SET_DESIRED_STATE_TOOL_ID => {
+                    let request = set_desired_state_request(&arguments, &principal_id)?;
+                    let output = runtime
+                        .execute_set_desired_state_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(set_desired_state_output_handler_output(output))
+                }
+                SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID => {
+                    let request = clear_desired_state_request(&arguments)?;
+                    let output = runtime
+                        .execute_clear_desired_state_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(clear_desired_state_output_handler_output(output))
                 }
                 SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID => {
                     let request = list_pairing_sessions_request(&arguments)?;
@@ -996,6 +1014,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         get_runtime_snapshot_definition(),
         get_topology_summary_definition(),
         list_desired_states_definition(),
+        set_desired_state_definition(),
+        clear_desired_state_definition(),
         list_pairing_sessions_definition(),
         list_workers_definition(),
         get_worker_heartbeat_schedule_definition(),
@@ -1488,6 +1508,94 @@ fn list_desired_states_definition() -> ToolDefinition {
             false,
         ),
     )
+}
+
+fn set_desired_state_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_SET_DESIRED_STATE_TOOL_ID.to_string(),
+        display_name: "Set smart-home desired state".to_string(),
+        description: "Set or replace a runtime-owned D23 desired-state target without directly issuing a device command."
+            .to_string(),
+        input_schema: object_schema(
+            vec![
+                SchemaProperty::new("entity_id", JsonSchema::String),
+                SchemaProperty::new("desired", JsonSchema::Any),
+                SchemaProperty::new("requested_by", JsonSchema::String),
+                SchemaProperty::new("command_timeout_ms", JsonSchema::Integer),
+            ],
+            vec!["entity_id", "desired"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("entity_id", JsonSchema::String),
+                SchemaProperty::new("desired_state", JsonSchema::Any),
+                SchemaProperty::new("replaced", JsonSchema::Boolean),
+                SchemaProperty::new("previous", JsonSchema::Any),
+                SchemaProperty::new("desired_capability_count", JsonSchema::Integer),
+            ],
+            vec![
+                "entity_id",
+                "desired_state",
+                "replaced",
+                "previous",
+                "desired_capability_count",
+            ],
+            false,
+        )),
+        side_effects: ToolSideEffects::Write,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier1,
+        required_capabilities: vec!["smart_home:command".to_string()],
+        preferred_lock_scope: Some("smart_home.desired_state".to_string()),
+        timeout_seconds: Some(10),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "desired_state".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
+}
+
+fn clear_desired_state_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID.to_string(),
+        display_name: "Clear smart-home desired state".to_string(),
+        description:
+            "Clear one runtime-owned D23 desired-state target without touching device state."
+                .to_string(),
+        input_schema: object_schema(
+            vec![SchemaProperty::new("entity_id", JsonSchema::String)],
+            vec!["entity_id"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("entity_id", JsonSchema::String),
+                SchemaProperty::new("removed", JsonSchema::Boolean),
+                SchemaProperty::new("desired_state", JsonSchema::Any),
+            ],
+            vec!["entity_id", "removed", "desired_state"],
+            false,
+        )),
+        side_effects: ToolSideEffects::Write,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier1,
+        required_capabilities: vec!["smart_home:command".to_string()],
+        preferred_lock_scope: Some("smart_home.desired_state".to_string()),
+        timeout_seconds: Some(10),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "desired_state".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
 }
 
 fn list_pairing_sessions_definition() -> ToolDefinition {
@@ -2386,6 +2494,59 @@ fn list_desired_states_request(
     Ok(RuntimeReadToolRequest::ListDesiredStates { query })
 }
 
+fn set_desired_state_request(
+    arguments: &JsonValue,
+    principal_id: &AgentId,
+) -> Result<RuntimeSetDesiredStateToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let entity_id = EntityId::trusted(required_string(arguments, "entity_id")?);
+    let mut desired_state = DesiredEntityState::new(
+        entity_id,
+        desired_state_deltas(required_field(arguments, "desired")?)?,
+    );
+    if let Some(requested_by) = optional_string(arguments, "requested_by")? {
+        desired_state = desired_state.requested_by(requested_by);
+    } else {
+        desired_state = desired_state.requested_by(principal_id.as_str());
+    }
+    if let Some(command_timeout_ms) = optional_u64(arguments, "command_timeout_ms")? {
+        desired_state = desired_state.with_command_timeout(command_timeout_ms);
+    }
+    Ok(RuntimeSetDesiredStateToolRequest::new(desired_state))
+}
+
+fn clear_desired_state_request(
+    arguments: &JsonValue,
+) -> Result<RuntimeClearDesiredStateToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(RuntimeClearDesiredStateToolRequest::new(EntityId::trusted(
+        required_string(arguments, "entity_id")?,
+    )))
+}
+
+fn desired_state_deltas(value: &JsonValue) -> Result<Vec<StateDelta>, ToolCallError> {
+    match value {
+        JsonValue::Array(values) => {
+            if values.is_empty() {
+                return Err(validation_error("desired must contain at least one delta"));
+            }
+            values.iter().map(desired_state_delta).collect()
+        }
+        JsonValue::Object(_) => Ok(vec![desired_state_delta(value)?]),
+        JsonValue::Null | JsonValue::Bool(_) | JsonValue::Number(_) | JsonValue::String(_) => {
+            Err(validation_error("desired must be an object or array"))
+        }
+    }
+}
+
+fn desired_state_delta(value: &JsonValue) -> Result<StateDelta, ToolCallError> {
+    let _ = expect_object(value)?;
+    Ok(StateDelta {
+        capability_id: CapabilityId::trusted(required_string(value, "capability_id")?),
+        value: json_to_smart_value(required_field(value, "value")?)?,
+    })
+}
+
 fn list_pairing_sessions_request(
     arguments: &JsonValue,
 ) -> Result<RuntimeReadToolRequest, ToolCallError> {
@@ -2773,6 +2934,36 @@ fn report_event_output_handler_output(output: RuntimeReportEventToolOutput) -> T
                 ("health", string(health_label(report.health))),
             ]),
         },
+    )
+}
+
+fn set_desired_state_output_handler_output(
+    output: RuntimeSetDesiredStateToolOutput,
+) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(set_desired_state_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("set_desired_state")),
+            ("entity_id", string(output.desired_state.entity_id.as_str())),
+            ("replaced", JsonValue::Bool(output.replaced)),
+            (
+                "desired_capability_count",
+                integer(output.desired_state.desired.len() as i64),
+            ),
+        ]),
+    )
+}
+
+fn clear_desired_state_output_handler_output(
+    output: RuntimeClearDesiredStateToolOutput,
+) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(clear_desired_state_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("clear_desired_state")),
+            ("entity_id", string(output.entity_id.as_str())),
+            ("removed", JsonValue::Bool(output.removed())),
+        ]),
     )
 }
 
@@ -3899,6 +4090,41 @@ fn desired_state_json(desired_state: &DesiredEntityState) -> JsonValue {
         (
             "desired_capability_count",
             integer(desired_state.desired.len() as i64),
+        ),
+    ])
+}
+
+fn set_desired_state_output_json(output: &RuntimeSetDesiredStateToolOutput) -> JsonValue {
+    object([
+        ("entity_id", string(output.desired_state.entity_id.as_str())),
+        ("desired_state", desired_state_json(&output.desired_state)),
+        ("replaced", JsonValue::Bool(output.replaced)),
+        (
+            "previous",
+            output
+                .previous
+                .as_ref()
+                .map(desired_state_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "desired_capability_count",
+            integer(output.desired_state.desired.len() as i64),
+        ),
+    ])
+}
+
+fn clear_desired_state_output_json(output: &RuntimeClearDesiredStateToolOutput) -> JsonValue {
+    object([
+        ("entity_id", string(output.entity_id.as_str())),
+        ("removed", JsonValue::Bool(output.removed())),
+        (
+            "desired_state",
+            output
+                .removed
+                .as_ref()
+                .map(desired_state_json)
+                .unwrap_or(JsonValue::Null),
         ),
     ])
 }
@@ -7009,6 +7235,10 @@ fn optional_field<'a>(value: &'a JsonValue, field: &str) -> Option<&'a JsonValue
         .find_map(|(name, value)| (name == field).then_some(value))
 }
 
+fn required_field<'a>(value: &'a JsonValue, field: &str) -> Result<&'a JsonValue, ToolCallError> {
+    optional_field(value, field).ok_or_else(|| validation_error(format!("{field} is required")))
+}
+
 fn expect_object(value: &JsonValue) -> Result<&[(String, JsonValue)], ToolCallError> {
     match value {
         JsonValue::Object(fields) => Ok(fields),
@@ -7159,7 +7389,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 39);
+        assert_eq!(definitions.len(), 41);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -7226,6 +7456,12 @@ mod tests {
             .contains(&SMART_HOME_LIST_DESIRED_STATES_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_SET_DESIRED_STATE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_WORKERS_TOOL_ID));
         assert!(export
@@ -7252,7 +7488,7 @@ mod tests {
             export
                 .summary
                 .required_capability_count("smart_home:command"),
-            3
+            5
         );
         assert_eq!(
             export.summary.required_capability_count("smart_home:pair"),
@@ -7274,6 +7510,8 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOPOLOGY_SUMMARY_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_SET_DESIRED_STATE_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition("smart_home.unknown").is_none());
     }
 
@@ -7318,21 +7556,6 @@ mod tests {
                 1_000,
             ),
         );
-        runtime
-            .borrow_mut()
-            .upsert_desired_state(
-                DesiredEntityState::new(
-                    EntityId::trusted("entity-light-1"),
-                    vec![StateDelta {
-                        capability_id: CapabilityId::trusted("light.on_off"),
-                        value: Value::Bool(true),
-                    }],
-                )
-                .requested_by("agent:scene-planner")
-                .with_command_timeout(750),
-            )
-            .unwrap();
-
         let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
@@ -7879,6 +8102,47 @@ mod tests {
             Some(&string("vault://smart-home/hue/bridge-1/app-key"))
         );
 
+        let set_desired_state_request = request(
+            "call-set-desired-state",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    JsonValue::Array(vec![object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(true)),
+                    ])]),
+                ),
+                ("requested_by", string("agent:scene-planner")),
+                ("command_timeout_ms", integer(750)),
+            ]),
+            1_099,
+        );
+        let set_desired_state_trace = tool_runtime.invoke_with_events(&set_desired_state_request);
+        assert!(set_desired_state_trace.result.ok);
+        assert_eq!(set_desired_state_trace.summary().progress_event_count, 1);
+        let set_desired_state_output = set_desired_state_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(set_desired_state_output, "entity_id"),
+            Some(&string("entity-light-1"))
+        );
+        assert_eq!(
+            field(set_desired_state_output, "replaced"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(set_desired_state_output, "desired_capability_count"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(set_desired_state_output, "desired_state").unwrap(),
+                "requested_by"
+            ),
+            Some(&string("agent:scene-planner"))
+        );
+
         let command_request = request(
             "call-turn-on",
             SMART_HOME_COMMAND_TOOL_ID,
@@ -8408,6 +8672,33 @@ mod tests {
             Some(0)
         );
 
+        let clear_desired_state_request = request(
+            "call-clear-desired-state",
+            SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID,
+            object([("entity_id", string("entity-light-1"))]),
+            1_905,
+        );
+        let clear_desired_state_trace =
+            tool_runtime.invoke_with_events(&clear_desired_state_request);
+        assert!(clear_desired_state_trace.result.ok);
+        assert_eq!(clear_desired_state_trace.summary().progress_event_count, 1);
+        let clear_desired_state_output = clear_desired_state_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(clear_desired_state_output, "entity_id"),
+            Some(&string("entity-light-1"))
+        );
+        assert_eq!(
+            field(clear_desired_state_output, "removed"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(
+                field(clear_desired_state_output, "desired_state").unwrap(),
+                "requested_by"
+            ),
+            Some(&string("agent:scene-planner"))
+        );
+
         let supervision_tick_request = request(
             "call-run-supervision-tick",
             SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID,
@@ -8473,6 +8764,7 @@ mod tests {
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(complete_pairing_request, complete_pairing_trace);
+        journal.record_trace(set_desired_state_request, set_desired_state_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(report_event_request, report_event_trace);
         journal.record_trace(report_health_request, report_health_trace);
@@ -8494,15 +8786,17 @@ mod tests {
         journal.record_trace(state_request, state_trace);
         journal.record_trace(unsubscribe_request, unsubscribe_trace);
         journal.record_trace(reconcile_request, reconcile_trace);
+        journal.record_trace(clear_desired_state_request, clear_desired_state_trace);
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 39);
-        assert_eq!(journal_summary.completed_count, 39);
-        assert_eq!(journal.audit_records().len(), 39);
+        assert_eq!(journal_summary.invocation_count, 41);
+        assert_eq!(journal_summary.completed_count, 41);
+        assert_eq!(journal.audit_records().len(), 41);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
+        assert_eq!(runtime.desired_state_count(), 0);
         assert_eq!(runtime.pairing_session_count(), 1);
         assert!(matches!(
             runtime
@@ -8512,8 +8806,8 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            36,
-            "read, subscribe, poll, unsubscribe, pairing, and ingest calls record tool authorization, while command records tool and command authorization"
+            38,
+            "read, subscribe, poll, unsubscribe, pairing, ingest, and desired-state calls record tool authorization, while command records tool and command authorization"
         );
         assert_eq!(
             runtime
@@ -8582,7 +8876,49 @@ mod tests {
             denied_report.error.as_ref().map(|error| error.kind),
             Some(ToolErrorKind::ToolPermissionDenied)
         );
+
+        let denied_set_desired_state = tool_runtime.invoke(&request(
+            "call-set-desired-state-denied",
+            SMART_HOME_SET_DESIRED_STATE_TOOL_ID,
+            object([
+                ("entity_id", string("entity-light-1")),
+                (
+                    "desired",
+                    object([
+                        ("capability_id", string("light.on_off")),
+                        ("value", JsonValue::Bool(true)),
+                    ]),
+                ),
+            ]),
+            1_000,
+        ));
+
+        assert!(!denied_set_desired_state.ok);
+        assert_eq!(
+            denied_set_desired_state
+                .error
+                .as_ref()
+                .map(|error| error.kind),
+            Some(ToolErrorKind::ToolPermissionDenied)
+        );
+
+        let denied_clear_desired_state = tool_runtime.invoke(&request(
+            "call-clear-desired-state-denied",
+            SMART_HOME_CLEAR_DESIRED_STATE_TOOL_ID,
+            object([("entity_id", string("entity-light-1"))]),
+            1_000,
+        ));
+
+        assert!(!denied_clear_desired_state.ok);
+        assert_eq!(
+            denied_clear_desired_state
+                .error
+                .as_ref()
+                .map(|error| error.kind),
+            Some(ToolErrorKind::ToolPermissionDenied)
+        );
         assert_eq!(runtime.borrow().registry().counts().events, 0);
+        assert_eq!(runtime.borrow().desired_state_count(), 0);
     }
 
     #[test]

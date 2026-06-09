@@ -9,7 +9,7 @@ The crate is intentionally a thin adapter:
 - it registers in-process handlers on `InMemoryToolRuntime`
 - handlers translate JSON arguments into `SmartHomeRuntime` read, discover,
   event-subscription, pair, command, event-ingest, and supervision execution
-  requests, plus read-only D23A catalog queries
+  requests, desired-state target mutations, plus read-only D23A catalog queries
 - `SmartHomeRuntime` still owns smart-home authorization, command validation,
   event subscriptions, pairing sessions, optimistic state, discovery scheduler
   policy and observability, discovery pairing plans, supervision, and audit
@@ -37,6 +37,7 @@ Chief of Staff job/session/agent
   -> authorization decision audit reads and summaries
   -> capability grant ledger reads and summaries
   -> runtime snapshot, desired-state, and pairing-session inventory reads
+  -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
   -> authorized desired-state reconciliation and supervision ticks
   -> supervised worker inventory and heartbeat schedule reads
@@ -78,6 +79,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_runtime_snapshot`
 - `smart_home.get_topology_summary`
 - `smart_home.list_desired_states`
+- `smart_home.set_desired_state`
+- `smart_home.clear_desired_state`
 - `smart_home.list_pairing_sessions`
 - `smart_home.list_workers`
 - `smart_home.get_worker_heartbeat_schedule`
