@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/minify_computed_method/input/a.js

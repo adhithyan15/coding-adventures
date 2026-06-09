@@ -325,3 +325,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream byte-identity test:** `minify_escape_chars` seed fixture.
 - **Why it fails:** Upstream switches between `"` and `'` based on which yields a shorter output (escapes fewer chars). closurec's CLI WHITESPACE_ONLY path always uses `"` via `push_quoted_string_content`. The AST emitter already has this logic (gap-026 closed in CLOC12.11), but the CLI doesn't go through the AST.
 - **What it needs:** Lift `pick_better_quote` and `push_quoted_string_content` logic from closure-emitter into a shared module (or duplicate it carefully) and call it from `whitespace_only.rs`. Counting rule: prefer the quote style that requires fewer escape sequences; tie-break to the source-form's quote.
+
+### gap-044 — JavaScript lexer does not support template literal substitution `${...}`
+
+- **Status:** OPEN — newly discovered by CLOC14.9. **Lexer-level gap** (NOT a whitespace_only bug).
+- **Upstream byte-identity test:** `minify_template_subst` and `minify_tagged_subst` seed fixtures.
+- **Why it fails:** Our JavaScript lexer raises `LexerError: Unexpected sequence '` `` ` `` `'` when it encounters the closing backtick of a template like `` `hello ${name}` ``. The lexer currently treats template literals as a single atomic token (`` `…` ``), but substitution templates require multi-segment lexing per §12.8.6:
+  - `TEMPLATE_HEAD` — `` `…${ ``
+  - `TEMPLATE_MIDDLE` — `}…${`
+  - `TEMPLATE_TAIL` — `}…` ``
+  - And the embedded expression is regular tokens between the head and tail/middle.
+- **What it needs:** Extend the JavaScript lexer's template-literal handling to emit the head/middle/tail variants and re-enter expression-tokenisation mode between segments. Once the lexer emits these correctly, the whitespace_only pass needs minimal-or-no changes — the segments are emitted verbatim along with the substitution expression tokens.
+- **Cross-cutting:** Closing this gap also unblocks template-substitution support in other downstream passes (AST emitter, constant folding, etc.). The grammar file (`code/grammars/javascript.grammar`) and `javascript-lexer` crate are the implementation surface.
