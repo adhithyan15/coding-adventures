@@ -11,14 +11,15 @@ use coding_adventures_html_parser::{
     BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageMap, BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement,
-    BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor,
-    BrowserMediaSource, BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective,
-    BrowserNavigationGroup, BrowserNavigationTargetDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
+    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
+    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -104,6 +105,8 @@ struct ExpectedBrowserDocument {
     aria_relation_descriptors: Vec<ExpectedAriaRelationDescriptor>,
     links: Vec<ExpectedLink>,
     images: Vec<ExpectedImage>,
+    #[serde(default)]
+    image_candidate_descriptors: Option<Vec<ExpectedImageCandidateDescriptor>>,
     #[serde(default)]
     image_maps: Vec<ExpectedImageMap>,
     #[serde(default)]
@@ -1336,6 +1339,54 @@ struct ExpectedImageSource {
     media: Option<String>,
     #[serde(default)]
     type_hint: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedImageCandidateDescriptor {
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    srcset: Option<String>,
+    #[serde(default)]
+    resolved_srcset: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    alt: Option<String>,
+    #[serde(default)]
+    width: Option<String>,
+    #[serde(default)]
+    height: Option<String>,
+    #[serde(default)]
+    loading: Option<String>,
+    #[serde(default)]
+    decoding: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    usemap: Option<String>,
+    #[serde(default)]
+    ismap: bool,
+    #[serde(default)]
+    has_alt: bool,
+    #[serde(default)]
+    source_count: usize,
+    #[serde(default)]
+    source_srcset_count: usize,
+    #[serde(default)]
+    candidate_count: usize,
+    #[serde(default)]
+    source_type_hints: Vec<String>,
+    #[serde(default)]
+    source_media: Vec<String>,
+    #[serde(default)]
+    sources: Vec<ExpectedImageSource>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3918,6 +3969,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedScript::into_browser_script)
             .collect();
+        let images: Vec<_> = self
+            .images
+            .into_iter()
+            .map(ExpectedImage::into_browser_image)
+            .collect();
         let media: Vec<_> = self
             .media
             .into_iter()
@@ -3968,6 +4024,15 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_script_execution_descriptors(&scripts));
+        let image_candidate_descriptors = self
+            .image_candidate_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedImageCandidateDescriptor::into_browser_image_candidate_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_image_candidate_descriptors(&images));
 
         BrowserDocument {
             title: self.title,
@@ -4082,11 +4147,8 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedLink::into_browser_link)
                 .collect(),
-            images: self
-                .images
-                .into_iter()
-                .map(ExpectedImage::into_browser_image)
-                .collect(),
+            images,
+            image_candidate_descriptors,
             image_maps: self
                 .image_maps
                 .into_iter()
@@ -4589,6 +4651,75 @@ fn expected_media_playback_descriptor(media: &BrowserMedia) -> BrowserMediaPlayb
             .count(),
         tracks: media.tracks.clone(),
     }
+}
+
+fn expected_image_candidate_descriptors(
+    images: &[BrowserImage],
+) -> Vec<BrowserImageCandidateDescriptor> {
+    images
+        .iter()
+        .map(expected_image_candidate_descriptor)
+        .collect()
+}
+
+fn expected_image_candidate_descriptor(image: &BrowserImage) -> BrowserImageCandidateDescriptor {
+    let image_srcset_count = image
+        .srcset
+        .as_deref()
+        .map(expected_srcset_candidate_count)
+        .unwrap_or_default();
+    let source_srcset_count = image
+        .sources
+        .iter()
+        .filter(|source| source.srcset.is_some())
+        .count();
+    let source_candidate_count = image
+        .sources
+        .iter()
+        .filter_map(|source| source.srcset.as_deref())
+        .map(expected_srcset_candidate_count)
+        .sum::<usize>();
+
+    BrowserImageCandidateDescriptor {
+        src: image.src.clone(),
+        resolved_src: image.resolved_src.clone(),
+        srcset: image.srcset.clone(),
+        resolved_srcset: image.resolved_srcset.clone(),
+        sizes: image.sizes.clone(),
+        alt: image.alt.clone(),
+        width: image.width.clone(),
+        height: image.height.clone(),
+        loading: image.loading.clone(),
+        decoding: image.decoding.clone(),
+        fetchpriority: image.fetchpriority.clone(),
+        crossorigin: image.crossorigin.clone(),
+        referrerpolicy: image.referrerpolicy.clone(),
+        usemap: image.usemap.clone(),
+        ismap: image.ismap,
+        has_alt: image.alt.is_some(),
+        source_count: image.sources.len(),
+        source_srcset_count,
+        candidate_count: image_srcset_count + source_candidate_count,
+        source_type_hints: image
+            .sources
+            .iter()
+            .filter_map(|source| source.type_hint.clone())
+            .collect(),
+        source_media: image
+            .sources
+            .iter()
+            .filter_map(|source| source.media.clone())
+            .collect(),
+        sources: image.sources.clone(),
+    }
+}
+
+fn expected_srcset_candidate_count(srcset: &str) -> usize {
+    srcset
+        .split(',')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .count()
 }
 
 fn expected_embedded_policy_descriptors(
@@ -5345,6 +5476,39 @@ impl ExpectedImageSource {
             sizes: self.sizes,
             media: self.media,
             type_hint: self.type_hint,
+        }
+    }
+}
+
+impl ExpectedImageCandidateDescriptor {
+    fn into_browser_image_candidate_descriptor(self) -> BrowserImageCandidateDescriptor {
+        BrowserImageCandidateDescriptor {
+            src: self.src,
+            resolved_src: self.resolved_src,
+            srcset: self.srcset,
+            resolved_srcset: self.resolved_srcset,
+            sizes: self.sizes,
+            alt: self.alt,
+            width: self.width,
+            height: self.height,
+            loading: self.loading,
+            decoding: self.decoding,
+            fetchpriority: self.fetchpriority,
+            crossorigin: self.crossorigin,
+            referrerpolicy: self.referrerpolicy,
+            usemap: self.usemap,
+            ismap: self.ismap,
+            has_alt: self.has_alt,
+            source_count: self.source_count,
+            source_srcset_count: self.source_srcset_count,
+            candidate_count: self.candidate_count,
+            source_type_hints: self.source_type_hints,
+            source_media: self.source_media,
+            sources: self
+                .sources
+                .into_iter()
+                .map(ExpectedImageSource::into_browser_image_source)
+                .collect(),
         }
     }
 }

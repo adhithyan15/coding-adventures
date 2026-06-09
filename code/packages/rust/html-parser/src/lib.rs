@@ -852,6 +852,7 @@ pub struct BrowserDocument {
     pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
+    pub image_candidate_descriptors: Vec<BrowserImageCandidateDescriptor>,
     pub image_maps: Vec<BrowserImageMap>,
     pub media: Vec<BrowserMedia>,
     pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
@@ -1940,6 +1941,32 @@ pub struct BrowserImageSource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageCandidateDescriptor {
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub srcset: Option<String>,
+    pub resolved_srcset: Option<String>,
+    pub sizes: Option<String>,
+    pub alt: Option<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub loading: Option<String>,
+    pub decoding: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub crossorigin: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub usemap: Option<String>,
+    pub ismap: bool,
+    pub has_alt: bool,
+    pub source_count: usize,
+    pub source_srcset_count: usize,
+    pub candidate_count: usize,
+    pub source_type_hints: Vec<String>,
+    pub source_media: Vec<String>,
+    pub sources: Vec<BrowserImageSource>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserImageMap {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -2697,6 +2724,7 @@ impl BrowserDocument {
         );
         summary.script_execution_descriptors =
             browser_script_execution_descriptors(&summary.scripts);
+        summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
@@ -10271,6 +10299,75 @@ fn browser_resource_endpoint_descriptors(
     descriptors
 }
 
+fn browser_image_candidate_descriptors(
+    images: &[BrowserImage],
+) -> Vec<BrowserImageCandidateDescriptor> {
+    images
+        .iter()
+        .map(browser_image_candidate_descriptor)
+        .collect()
+}
+
+fn browser_image_candidate_descriptor(image: &BrowserImage) -> BrowserImageCandidateDescriptor {
+    let image_srcset_count = image
+        .srcset
+        .as_deref()
+        .map(browser_srcset_candidate_count)
+        .unwrap_or_default();
+    let source_srcset_count = image
+        .sources
+        .iter()
+        .filter(|source| source.srcset.is_some())
+        .count();
+    let source_candidate_count = image
+        .sources
+        .iter()
+        .filter_map(|source| source.srcset.as_deref())
+        .map(browser_srcset_candidate_count)
+        .sum::<usize>();
+
+    BrowserImageCandidateDescriptor {
+        src: image.src.clone(),
+        resolved_src: image.resolved_src.clone(),
+        srcset: image.srcset.clone(),
+        resolved_srcset: image.resolved_srcset.clone(),
+        sizes: image.sizes.clone(),
+        alt: image.alt.clone(),
+        width: image.width.clone(),
+        height: image.height.clone(),
+        loading: image.loading.clone(),
+        decoding: image.decoding.clone(),
+        fetchpriority: image.fetchpriority.clone(),
+        crossorigin: image.crossorigin.clone(),
+        referrerpolicy: image.referrerpolicy.clone(),
+        usemap: image.usemap.clone(),
+        ismap: image.ismap,
+        has_alt: image.alt.is_some(),
+        source_count: image.sources.len(),
+        source_srcset_count,
+        candidate_count: image_srcset_count + source_candidate_count,
+        source_type_hints: image
+            .sources
+            .iter()
+            .filter_map(|source| source.type_hint.clone())
+            .collect(),
+        source_media: image
+            .sources
+            .iter()
+            .filter_map(|source| source.media.clone())
+            .collect(),
+        sources: image.sources.clone(),
+    }
+}
+
+fn browser_srcset_candidate_count(srcset: &str) -> usize {
+    srcset
+        .split(',')
+        .map(str::trim)
+        .filter(|candidate| !candidate.is_empty())
+        .count()
+}
+
 fn browser_media_playback_descriptors(
     media: &[BrowserMedia],
 ) -> Vec<BrowserMediaPlaybackDescriptor> {
@@ -17401,6 +17498,40 @@ mod tests {
             Some("https://example.test/gallery/hero-wide.avif 1x, https://example.test/gallery/hero-wide@2x.avif 2x")
         );
         assert_eq!(image.sources[1].sizes.as_deref(), Some("100vw"));
+
+        assert_eq!(summary.image_candidate_descriptors.len(), 1);
+        let descriptor = &summary.image_candidate_descriptors[0];
+        assert_eq!(descriptor.src.as_deref(), Some("hero.jpg"));
+        assert_eq!(
+            descriptor.resolved_src.as_deref(),
+            Some("https://example.test/gallery/hero.jpg")
+        );
+        assert_eq!(descriptor.alt.as_deref(), Some("Hero"));
+        assert!(descriptor.has_alt);
+        assert_eq!(descriptor.width.as_deref(), Some("640"));
+        assert_eq!(descriptor.height.as_deref(), Some("360"));
+        assert_eq!(descriptor.loading.as_deref(), Some("lazy"));
+        assert_eq!(descriptor.decoding.as_deref(), Some("async"));
+        assert_eq!(descriptor.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(descriptor.referrerpolicy.as_deref(), Some("no-referrer"));
+        assert_eq!(descriptor.usemap.as_deref(), Some("#hero-map"));
+        assert!(descriptor.ismap);
+        assert_eq!(descriptor.source_count, 2);
+        assert_eq!(descriptor.source_srcset_count, 2);
+        assert_eq!(descriptor.candidate_count, 6);
+        assert_eq!(
+            descriptor.source_type_hints,
+            vec!["image/avif".to_string(), "image/webp".to_string()]
+        );
+        assert_eq!(
+            descriptor.source_media,
+            vec![
+                "(min-width: 800px)".to_string(),
+                "(min-width: 400px)".to_string()
+            ]
+        );
+        assert_eq!(descriptor.sources.len(), 2);
     }
 
     #[test]
