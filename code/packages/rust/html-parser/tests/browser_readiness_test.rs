@@ -14,11 +14,12 @@ use coding_adventures_html_parser::{
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
+    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -132,6 +133,8 @@ struct ExpectedBrowserDocument {
     focus_navigation_descriptors: Option<Vec<ExpectedFocusNavigationDescriptor>>,
     #[serde(default)]
     keyboard_interaction_descriptors: Option<Vec<ExpectedKeyboardInteractionDescriptor>>,
+    #[serde(default)]
+    input_planning_descriptors: Option<Vec<ExpectedInputPlanningDescriptor>>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
@@ -2039,6 +2042,99 @@ struct ExpectedKeyboardInteractionDescriptor {
     keyboard_blocked: bool,
     #[serde(default)]
     keyboard_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedInputPlanningDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    input_kind: String,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    placeholder: Option<String>,
+    value: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    autocapitalize: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    dirname: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    autocorrect: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    pattern: Option<String>,
+    #[serde(default)]
+    min: Option<String>,
+    #[serde(default)]
+    max: Option<String>,
+    #[serde(default)]
+    step: Option<String>,
+    #[serde(default)]
+    minlength: Option<String>,
+    #[serde(default)]
+    maxlength: Option<String>,
+    #[serde(default)]
+    size: Option<String>,
+    #[serde(default)]
+    rows: Option<String>,
+    #[serde(default)]
+    cols: Option<String>,
+    #[serde(default)]
+    wrap: Option<String>,
+    #[serde(default)]
+    list: Option<String>,
+    #[serde(default)]
+    datalist_options: Vec<String>,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    input_handlers: Vec<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    input_blocked: bool,
+    #[serde(default)]
+    input_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4190,6 +4286,26 @@ fn browser_keyboard_interaction_descriptors_track_shortcuts_handlers_and_blocker
 }
 
 #[test]
+fn browser_input_planning_descriptors_track_text_controls_and_editing_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form input-planning fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form input-planning fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.input_planning_descriptors,
+        case.expected.into_browser_document().input_planning_descriptors,
+        "input-planning descriptors should preserve text-entry hints, datalist suggestions, validation blockers, form ownership, and editing metadata",
+    );
+}
+
+#[test]
 fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4515,6 +4631,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedInteractiveElement::into_browser_interactive_element)
             .collect();
+        let forms: Vec<_> = self
+            .forms
+            .into_iter()
+            .map(ExpectedForm::into_browser_form)
+            .collect();
         let disclosure_state_descriptors = self
             .disclosure_state_descriptors
             .map(|descriptors| {
@@ -4559,6 +4680,15 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_keyboard_interaction_descriptors(&interactive_elements));
+        let input_planning_descriptors = self
+            .input_planning_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedInputPlanningDescriptor::into_browser_input_planning_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_input_planning_descriptors(&forms, &interactive_elements));
 
         BrowserDocument {
             title: self.title,
@@ -4682,6 +4812,7 @@ impl ExpectedBrowserDocument {
             interactive_elements,
             focus_navigation_descriptors,
             keyboard_interaction_descriptors,
+            input_planning_descriptors,
             disclosures,
             disclosure_state_descriptors,
             component_hydration_targets: self
@@ -4709,11 +4840,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedTemplate::into_browser_template)
                 .collect(),
-            forms: self
-                .forms
-                .into_iter()
-                .map(ExpectedForm::into_browser_form)
-                .collect(),
+            forms,
             tables: self
                 .tables
                 .into_iter()
@@ -5718,6 +5845,225 @@ fn expected_keyboard_kind(
     "focus".to_string()
 }
 
+fn expected_input_planning_descriptors(
+    forms: &[BrowserForm],
+    interactive_elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserInputPlanningDescriptor> {
+    let mut descriptors = Vec::new();
+    for form in forms {
+        for text_entry in &form.text_entries {
+            descriptors.push(expected_input_planning_descriptor_from_text_entry(
+                text_entry,
+                interactive_elements,
+            ));
+        }
+    }
+
+    for element in interactive_elements {
+        if !expected_is_input_editing_host(element) {
+            continue;
+        }
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.id == element.id && descriptor.element == element.element)
+        {
+            continue;
+        }
+        descriptors.push(expected_input_planning_descriptor_from_editing_host(
+            element,
+        ));
+    }
+
+    descriptors
+}
+
+fn expected_input_planning_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    interactive_elements: &[BrowserInteractiveElement],
+) -> BrowserInputPlanningDescriptor {
+    let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+        interactive_elements
+            .iter()
+            .find(|element| element.id.as_deref() == Some(id))
+    });
+    let input_handlers = matching_interactive
+        .map(|element| {
+            expected_event_handlers_by_kind(&element.event_handlers, expected_input_event)
+        })
+        .unwrap_or_default();
+    let mut input_block_reasons = Vec::new();
+    if text_entry.disabled {
+        input_block_reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        input_block_reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &text_entry.validation_barred_reason {
+        input_block_reasons.push(format!("validation-barred:{reason}"));
+    }
+    if let Some(element) = matching_interactive {
+        if element.hidden {
+            input_block_reasons.push("hidden".to_string());
+        }
+        if element.inert {
+            input_block_reasons.push("inert".to_string());
+        }
+        if element.aria_hidden {
+            input_block_reasons.push("aria-hidden".to_string());
+        }
+    }
+
+    BrowserInputPlanningDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        input_kind: expected_text_entry_input_kind(text_entry).to_string(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        accessible_description: text_entry.accessible_description.clone(),
+        labels: text_entry.labels.clone(),
+        placeholder: text_entry.placeholder.clone(),
+        value: text_entry.value.clone(),
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        autocomplete: text_entry.autocomplete.clone(),
+        autocomplete_tokens: text_entry.autocomplete_tokens.clone(),
+        autocapitalize: text_entry.autocapitalize.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        dirname: text_entry.dirname.clone(),
+        spellcheck: text_entry.spellcheck.clone(),
+        autocorrect: text_entry.autocorrect.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        pattern: text_entry.pattern.clone(),
+        min: text_entry.min.clone(),
+        max: text_entry.max.clone(),
+        step: text_entry.step.clone(),
+        minlength: text_entry.minlength.clone(),
+        maxlength: text_entry.maxlength.clone(),
+        size: text_entry.size.clone(),
+        rows: text_entry.rows.clone(),
+        cols: text_entry.cols.clone(),
+        wrap: text_entry.wrap.clone(),
+        list: text_entry.list.clone(),
+        datalist_options: text_entry.datalist_options.clone(),
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        input_handlers,
+        disabled: text_entry.disabled,
+        required: text_entry.required,
+        readonly: text_entry.readonly,
+        will_validate: text_entry.will_validate,
+        validation_attributes: text_entry.validation_attributes.clone(),
+        validation_barred_reason: text_entry.validation_barred_reason.clone(),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn expected_input_planning_descriptor_from_editing_host(
+    element: &BrowserInteractiveElement,
+) -> BrowserInputPlanningDescriptor {
+    let mut input_block_reasons = expected_focus_block_reasons(element);
+    if element.aria_disabled.as_deref() == Some("true") {
+        input_block_reasons.push("aria-disabled".to_string());
+    }
+    BrowserInputPlanningDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        input_kind: "editing-host".to_string(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        labels: Vec::new(),
+        placeholder: None,
+        value: Some(element.text.clone()),
+        editing_mode: element.editing_mode.clone(),
+        autocomplete: None,
+        autocomplete_tokens: Vec::new(),
+        autocapitalize: None,
+        enterkeyhint: None,
+        dirname: None,
+        spellcheck: element.spellcheck.clone(),
+        autocorrect: None,
+        inputmode: None,
+        pattern: None,
+        min: None,
+        max: None,
+        step: None,
+        minlength: None,
+        maxlength: None,
+        size: None,
+        rows: None,
+        cols: None,
+        wrap: None,
+        list: None,
+        datalist_options: Vec::new(),
+        focusable: element.focusable.unwrap_or(false),
+        input_handlers: expected_event_handlers_by_kind(
+            &element.event_handlers,
+            expected_input_event,
+        ),
+        disabled: element.disabled,
+        required: false,
+        readonly: false,
+        will_validate: false,
+        validation_attributes: Vec::new(),
+        validation_barred_reason: None,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn expected_is_input_editing_host(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !expected_event_handlers_by_kind(&element.event_handlers, expected_input_event)
+            .is_empty()
+}
+
+fn expected_text_entry_input_kind(text_entry: &BrowserFormTextEntry) -> &'static str {
+    if text_entry.disabled {
+        "disabled"
+    } else if text_entry.readonly {
+        "readonly"
+    } else if !text_entry.datalist_options.is_empty() {
+        "suggested-text"
+    } else if text_entry.control_type == "textarea" {
+        "multiline-text"
+    } else if text_entry.control_type == "password" {
+        "password"
+    } else if matches!(text_entry.control_type.as_str(), "email" | "url" | "tel") {
+        "contact-text"
+    } else if text_entry.control_type == "number" {
+        "numeric-text"
+    } else if text_entry.required || !text_entry.validation_attributes.is_empty() {
+        "constrained-text"
+    } else {
+        "text"
+    }
+}
+
 fn expected_tabindex_order(tabindex: Option<&str>) -> Option<i32> {
     tabindex.and_then(|tabindex| tabindex.trim().parse::<i32>().ok())
 }
@@ -5735,6 +6081,19 @@ fn expected_event_handlers_by_kind(
 
 fn expected_keyboard_event(handler: &str) -> bool {
     matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
+}
+
+fn expected_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "onselect"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
 }
 
 fn expected_script_execution_descriptors(
@@ -6929,6 +7288,59 @@ impl ExpectedKeyboardInteractionDescriptor {
             aria_hidden: self.aria_hidden,
             keyboard_blocked: self.keyboard_blocked,
             keyboard_block_reasons: self.keyboard_block_reasons,
+        }
+    }
+}
+
+impl ExpectedInputPlanningDescriptor {
+    fn into_browser_input_planning_descriptor(self) -> BrowserInputPlanningDescriptor {
+        BrowserInputPlanningDescriptor {
+            element: self.element,
+            id: self.id,
+            input_kind: self.input_kind,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            labels: self.labels,
+            placeholder: self.placeholder,
+            value: self.value,
+            editing_mode: self.editing_mode,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            autocapitalize: self.autocapitalize,
+            enterkeyhint: self.enterkeyhint,
+            dirname: self.dirname,
+            spellcheck: self.spellcheck,
+            autocorrect: self.autocorrect,
+            inputmode: self.inputmode,
+            pattern: self.pattern,
+            min: self.min,
+            max: self.max,
+            step: self.step,
+            minlength: self.minlength,
+            maxlength: self.maxlength,
+            size: self.size,
+            rows: self.rows,
+            cols: self.cols,
+            wrap: self.wrap,
+            list: self.list,
+            datalist_options: self.datalist_options,
+            focusable: self.focusable,
+            input_handlers: self.input_handlers,
+            disabled: self.disabled,
+            required: self.required,
+            readonly: self.readonly,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_barred_reason: self.validation_barred_reason,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            input_blocked: self.input_blocked,
+            input_block_reasons: self.input_block_reasons,
         }
     }
 }

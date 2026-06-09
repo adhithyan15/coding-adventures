@@ -864,6 +864,7 @@ pub struct BrowserDocument {
     pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub focus_navigation_descriptors: Vec<BrowserFocusNavigationDescriptor>,
     pub keyboard_interaction_descriptors: Vec<BrowserKeyboardInteractionDescriptor>,
+    pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2329,6 +2330,56 @@ pub struct BrowserKeyboardInteractionDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserInputPlanningDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub input_kind: String,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub placeholder: Option<String>,
+    pub value: Option<String>,
+    pub editing_mode: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocapitalize: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub dirname: Option<String>,
+    pub spellcheck: Option<String>,
+    pub autocorrect: Option<String>,
+    pub inputmode: Option<String>,
+    pub pattern: Option<String>,
+    pub min: Option<String>,
+    pub max: Option<String>,
+    pub step: Option<String>,
+    pub minlength: Option<String>,
+    pub maxlength: Option<String>,
+    pub size: Option<String>,
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    pub wrap: Option<String>,
+    pub list: Option<String>,
+    pub datalist_options: Vec<String>,
+    pub focusable: bool,
+    pub input_handlers: Vec<String>,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub input_blocked: bool,
+    pub input_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -2936,6 +2987,8 @@ impl BrowserDocument {
             browser_focus_navigation_descriptors(&summary.interactive_elements);
         summary.keyboard_interaction_descriptors =
             browser_keyboard_interaction_descriptors(&summary.interactive_elements);
+        summary.input_planning_descriptors =
+            browser_input_planning_descriptors(&summary.forms, &summary.interactive_elements);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -12918,6 +12971,220 @@ fn browser_keyboard_kind(
     "focus".to_string()
 }
 
+fn browser_input_planning_descriptors(
+    forms: &[BrowserForm],
+    interactive_elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserInputPlanningDescriptor> {
+    let mut descriptors = Vec::new();
+    for form in forms {
+        for text_entry in &form.text_entries {
+            descriptors.push(browser_input_planning_descriptor_from_text_entry(
+                text_entry,
+                interactive_elements,
+            ));
+        }
+    }
+
+    for element in interactive_elements {
+        if !browser_is_input_editing_host(element) {
+            continue;
+        }
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.id == element.id && descriptor.element == element.element)
+        {
+            continue;
+        }
+        descriptors.push(browser_input_planning_descriptor_from_editing_host(element));
+    }
+
+    descriptors
+}
+
+fn browser_input_planning_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    interactive_elements: &[BrowserInteractiveElement],
+) -> BrowserInputPlanningDescriptor {
+    let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+        interactive_elements
+            .iter()
+            .find(|element| element.id.as_deref() == Some(id))
+    });
+    let input_handlers = matching_interactive
+        .map(|element| browser_event_handlers_by_kind(&element.event_handlers, browser_input_event))
+        .unwrap_or_default();
+    let mut input_block_reasons = Vec::new();
+    if text_entry.disabled {
+        input_block_reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        input_block_reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &text_entry.validation_barred_reason {
+        input_block_reasons.push(format!("validation-barred:{reason}"));
+    }
+    if let Some(element) = matching_interactive {
+        if element.hidden {
+            input_block_reasons.push("hidden".to_string());
+        }
+        if element.inert {
+            input_block_reasons.push("inert".to_string());
+        }
+        if element.aria_hidden {
+            input_block_reasons.push("aria-hidden".to_string());
+        }
+    }
+
+    BrowserInputPlanningDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        input_kind: browser_text_entry_input_kind(text_entry).to_string(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        accessible_description: text_entry.accessible_description.clone(),
+        labels: text_entry.labels.clone(),
+        placeholder: text_entry.placeholder.clone(),
+        value: text_entry.value.clone(),
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        autocomplete: text_entry.autocomplete.clone(),
+        autocomplete_tokens: text_entry.autocomplete_tokens.clone(),
+        autocapitalize: text_entry.autocapitalize.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        dirname: text_entry.dirname.clone(),
+        spellcheck: text_entry.spellcheck.clone(),
+        autocorrect: text_entry.autocorrect.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        pattern: text_entry.pattern.clone(),
+        min: text_entry.min.clone(),
+        max: text_entry.max.clone(),
+        step: text_entry.step.clone(),
+        minlength: text_entry.minlength.clone(),
+        maxlength: text_entry.maxlength.clone(),
+        size: text_entry.size.clone(),
+        rows: text_entry.rows.clone(),
+        cols: text_entry.cols.clone(),
+        wrap: text_entry.wrap.clone(),
+        list: text_entry.list.clone(),
+        datalist_options: text_entry.datalist_options.clone(),
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        input_handlers,
+        disabled: text_entry.disabled,
+        required: text_entry.required,
+        readonly: text_entry.readonly,
+        will_validate: text_entry.will_validate,
+        validation_attributes: text_entry.validation_attributes.clone(),
+        validation_barred_reason: text_entry.validation_barred_reason.clone(),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn browser_input_planning_descriptor_from_editing_host(
+    element: &BrowserInteractiveElement,
+) -> BrowserInputPlanningDescriptor {
+    let mut input_block_reasons = browser_focus_block_reasons(element);
+    if element.aria_disabled.as_deref() == Some("true") {
+        input_block_reasons.push("aria-disabled".to_string());
+    }
+    BrowserInputPlanningDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        input_kind: "editing-host".to_string(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        labels: Vec::new(),
+        placeholder: None,
+        value: Some(element.text.clone()),
+        editing_mode: element.editing_mode.clone(),
+        autocomplete: None,
+        autocomplete_tokens: Vec::new(),
+        autocapitalize: None,
+        enterkeyhint: None,
+        dirname: None,
+        spellcheck: element.spellcheck.clone(),
+        autocorrect: None,
+        inputmode: None,
+        pattern: None,
+        min: None,
+        max: None,
+        step: None,
+        minlength: None,
+        maxlength: None,
+        size: None,
+        rows: None,
+        cols: None,
+        wrap: None,
+        list: None,
+        datalist_options: Vec::new(),
+        focusable: element.focusable.unwrap_or(false),
+        input_handlers: browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_input_event,
+        ),
+        disabled: element.disabled,
+        required: false,
+        readonly: false,
+        will_validate: false,
+        validation_attributes: Vec::new(),
+        validation_barred_reason: None,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        input_blocked: !input_block_reasons.is_empty(),
+        input_block_reasons,
+    }
+}
+
+fn browser_is_input_editing_host(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_input_event).is_empty()
+}
+
+fn browser_text_entry_input_kind(text_entry: &BrowserFormTextEntry) -> &'static str {
+    if text_entry.disabled {
+        "disabled"
+    } else if text_entry.readonly {
+        "readonly"
+    } else if !text_entry.datalist_options.is_empty() {
+        "suggested-text"
+    } else if text_entry.control_type == "textarea" {
+        "multiline-text"
+    } else if text_entry.control_type == "password" {
+        "password"
+    } else if matches!(text_entry.control_type.as_str(), "email" | "url" | "tel") {
+        "contact-text"
+    } else if text_entry.control_type == "number" {
+        "numeric-text"
+    } else if text_entry.required || !text_entry.validation_attributes.is_empty() {
+        "constrained-text"
+    } else {
+        "text"
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -14761,6 +15028,19 @@ fn browser_pointer_event(handler: &str) -> bool {
             | "ondragover"
             | "ondrop"
             | "onwheel"
+    )
+}
+
+fn browser_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "onselect"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
     )
 }
 
@@ -20286,6 +20566,69 @@ mod tests {
         assert_eq!(secret.keyboard_block_reasons, vec!["hidden"]);
         let decorative = &summary.keyboard_interaction_descriptors[6];
         assert_eq!(decorative.keyboard_block_reasons, vec!["aria-hidden"]);
+    }
+
+    #[test]
+    fn browser_input_planning_descriptors_track_controls_editing_hosts_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <label for=q>Query</label><input id=q name=q type=search placeholder=Search \
+             autocomplete=\"section-main search\" inputmode=search autocapitalize=words \
+             enterkeyhint=search dirname=q.dir spellcheck=false autocorrect=off \
+             pattern=\"[A-Za-z ]+\" minlength=2 maxlength=80 size=40 list=suggestions \
+             required oninput=filter()><datalist id=suggestions><option value=Rust><option>HTML</datalist>\
+             <textarea id=notes name=notes readonly maxlength=500 rows=4 cols=40 wrap=hard \
+             onselect=selectNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only spellcheck=true onbeforeinput=beforeEdit() \
+             oninput=edit()>Draft</div><p id=hidden hidden contenteditable>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.input_planning_descriptors.len(), 4);
+
+        let query = &summary.input_planning_descriptors[0];
+        assert_eq!(query.id.as_deref(), Some("q"));
+        assert_eq!(query.input_kind, "suggested-text");
+        assert_eq!(query.control_type.as_deref(), Some("search"));
+        assert_eq!(query.placeholder.as_deref(), Some("Search"));
+        assert_eq!(query.autocomplete_tokens, vec!["section-main", "search"]);
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.datalist_options, vec!["Rust", "HTML"]);
+        assert!(query.required);
+        assert!(query.will_validate);
+        assert!(!query.input_blocked);
+
+        let notes = &summary.input_planning_descriptors[1];
+        assert_eq!(notes.id.as_deref(), Some("notes"));
+        assert_eq!(notes.input_kind, "readonly");
+        assert_eq!(notes.element, "textarea");
+        assert_eq!(notes.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(notes.rows.as_deref(), Some("4"));
+        assert_eq!(notes.cols.as_deref(), Some("40"));
+        assert_eq!(notes.wrap.as_deref(), Some("hard"));
+        assert_eq!(notes.input_handlers, vec!["onselect"]);
+        assert!(notes.readonly);
+        assert_eq!(
+            notes.input_block_reasons,
+            vec!["readonly", "validation-barred:readonly"]
+        );
+
+        let editor = &summary.input_planning_descriptors[2];
+        assert_eq!(editor.id.as_deref(), Some("editor"));
+        assert_eq!(editor.input_kind, "editing-host");
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.value.as_deref(), Some("Draft"));
+        assert_eq!(editor.spellcheck.as_deref(), Some("true"));
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput", "oninput"]);
+        assert!(!editor.input_blocked);
+
+        let hidden = &summary.input_planning_descriptors[3];
+        assert_eq!(hidden.id.as_deref(), Some("hidden"));
+        assert_eq!(hidden.input_kind, "editing-host");
+        assert!(hidden.input_blocked);
+        assert_eq!(hidden.input_block_reasons, vec!["hidden"]);
     }
 
     #[test]

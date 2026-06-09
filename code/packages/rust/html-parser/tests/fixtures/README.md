@@ -53,6 +53,8 @@ Focus-navigation descriptor cases pin sequential focus, programmatic focus,
 editing hosts, access keys, and hidden/inert/disabled/ARIA focus blockers.
 Keyboard-interaction descriptor cases pin access keys, ARIA shortcuts, keyboard
 handlers, focus order, editing hosts, and blocked keyboard paths.
+Input-planning descriptor cases pin text-entry hints, datalist suggestions,
+validation blockers, form ownership, and contenteditable editing hosts.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
