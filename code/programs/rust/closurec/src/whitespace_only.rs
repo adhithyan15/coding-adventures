@@ -272,6 +272,58 @@ pub fn whitespace_only_minify(
         // so `async` ends up with `prev_emitted_tok = async`
         // when IDENT is emitted, triggering needs_separator
         // (KEYWORD + NAME) → space inserted. Correct.
+        // gap-050: `new IDENT ( )` → `new IDENT`. Empty
+        // constructor arg-list elision. Upstream Closure
+        // normalises `new Foo()` to `new Foo` because the
+        // two NewExpression forms are operationally
+        // equivalent in ECMAScript.
+        //
+        // Safety: we must NOT drop when the result would
+        // syntactically fuse with what follows the
+        // dropped `()`. Specifically:
+        //   - `new Foo().bar` ≠ `new Foo.bar`
+        //     (left: member-access on constructed object;
+        //     right: NewExpression on the member `Foo.bar`)
+        //   - `new Foo()[x]` ≠ `new Foo[x]`
+        //     (same family — element-access on result vs.
+        //     constructor of `Foo[x]`)
+        //   - `new Foo()()` ≠ `new Foo()`
+        //     (left: invoke constructed object as fn;
+        //     right: lose the chained call entirely)
+        //   - `new Foo()` ` `tag` ≠ `new Foo` ` `tag`
+        //     (tagged template — tighter than NewExpression)
+        //
+        // Conservative gate: kept[idx-2] == "new", kept[idx-1]
+        // is a simple identifier, kept[idx+1] == ")", and
+        // kept[idx+2] is none of {`(`, `.`, `[`, `` ` ``}.
+        // Other followers (`;`, `}`, `,`, EOF, infix
+        // operators like `+`, `instanceof`, etc.) all bind
+        // LOOSER than NewExpression and therefore are safe.
+        let next2_starts_with_backtick = kept
+            .get(idx + 2)
+            .map(|t| t.value.starts_with('`'))
+            .unwrap_or(false);
+        let next2_blocks_drop = matches!(
+            kept.get(idx + 2).map(|t| t.value.as_str()),
+            Some("(") | Some(".") | Some("[")
+        ) || next2_starts_with_backtick;
+        if val == "("
+            && idx >= 2
+            && kept[idx - 2].value == "new"
+            && is_simple_identifier_token(Some(kept[idx - 1]))
+            && kept.get(idx + 1).map(|t| t.value.as_str()) == Some(")")
+            && !next2_blocks_drop
+        {
+            // Skip both `(` and `)`. State machine
+            // unchanged — these tokens were going to be
+            // ignored for at_stmt_boundary /
+            // body_position_next purposes anyway (parens
+            // around an empty arg list don't open a body
+            // slot).
+            idx += 2;
+            continue;
+        }
+
         if val == "("
             && is_simple_identifier_token(kept.get(idx + 1).copied())
             && kept.get(idx + 2).map(|t| t.value.as_str()) == Some(")")
@@ -2627,6 +2679,94 @@ mod tests {
         assert_eq!(
             minify("function f(){if(x){a();}else{b();}}"),
             "function f(){if(x)a();else b()};"
+        );
+    }
+
+    // ---- gap-050: `new X()` → `new X` empty-paren drop --
+
+    /// Target case: bare `new Foo()` at top level.
+    #[test]
+    fn gap050_new_call_drops_empty_parens() {
+        assert_eq!(
+            minify("var x=new Foo();"),
+            "var x=new Foo;"
+        );
+    }
+
+    /// `new Foo()` inside a function body still drops.
+    #[test]
+    fn gap050_new_call_in_function_body_drops() {
+        assert_eq!(
+            minify("function f(){return new Bar();}"),
+            "function f(){return new Bar};"
+        );
+    }
+
+    /// **Non-regression**: `new Foo(a)` (NON-empty arg
+    /// list) keeps parens — they're not redundant.
+    #[test]
+    fn gap050_new_call_with_args_unchanged() {
+        assert_eq!(
+            minify("var x=new Foo(a);"),
+            "var x=new Foo(a);"
+        );
+    }
+
+    /// **Non-regression**: `new Foo().bar` — dropping the
+    /// `()` would change parse to `new Foo.bar` (different
+    /// constructor). Must keep parens.
+    #[test]
+    fn gap050_new_call_then_member_keeps_parens() {
+        assert_eq!(
+            minify("var x=new Foo().bar;"),
+            "var x=new Foo().bar;"
+        );
+    }
+
+    /// **Non-regression**: `new Foo()[x]` — same family;
+    /// element-access on result vs constructor of `Foo[x]`.
+    #[test]
+    fn gap050_new_call_then_bracket_keeps_parens() {
+        assert_eq!(
+            minify("var x=new Foo()[0];"),
+            "var x=new Foo()[0];"
+        );
+    }
+
+    /// **Non-regression**: `new Foo()()` — chained call on
+    /// result. Dropping would lose the chained call.
+    #[test]
+    fn gap050_new_call_then_call_keeps_parens() {
+        assert_eq!(
+            minify("var x=new Foo()();"),
+            "var x=new Foo()();"
+        );
+    }
+
+    /// **Non-regression**: `new Foo() + 1` — `+` binds
+    /// looser than NewExpression, so dropping is safe.
+    /// Verifies the peephole DOES drop here.
+    #[test]
+    fn gap050_new_call_then_plus_drops() {
+        assert_eq!(
+            minify("var x=new Foo()+1;"),
+            "var x=new Foo+1;"
+        );
+    }
+
+    /// **Non-regression**: `new` keyword followed by a
+    /// non-identifier (e.g. `new (expr)`) is NOT
+    /// targeted by this peephole — kept[idx-1] isn't a
+    /// simple identifier.
+    #[test]
+    fn gap050_new_with_paren_expr_unchanged() {
+        // `new (Foo||Bar)()` — paren expression for
+        // constructor selection. The empty `()` after the
+        // paren-close is NOT what we target (idx-1 is `)`,
+        // not an identifier).
+        assert_eq!(
+            minify("var x=new (Foo||Bar)();"),
+            "var x=new(Foo||Bar)();"
         );
     }
 

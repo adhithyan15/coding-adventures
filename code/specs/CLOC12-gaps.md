@@ -388,13 +388,12 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-050 — `new X()` with empty arg list drops parens
 
-- **Status:** OPEN — newly discovered by CLOC14.14.
+- **Status:** **RESOLVED** in CLOC12.57 (PR pending). `minify_new_expr` flips IGNORED → PASS.
 - **Upstream byte-identity test:** `minify_new_expr` seed fixture.
 - **Input:** `var x = new Foo();`
 - **Upstream:** `var x=new Foo;` (parens stripped)
-- **closurec:** `var x=new Foo();`
-- **Why it fails:** ECMAScript grammar accepts `new X` (no args) and `new X()` (empty args) as equivalent. Closure normalizes to the shorter `new X`. closurec passes the parens through verbatim.
-- **What it needs:** Token-level peephole: when sequence `new IDENT ( )` is emitted, suppress the `(` and `)`. Safe regardless of continuation — `new X` and `new X()` are operationally equivalent forms.
+- **Why it failed:** closurec's whitespace_only re-stitcher passed `(` and `)` through verbatim for `new Foo()`.
+- **Fix:** Token-level peephole at `(` — when `kept[idx-2] == "new"` AND `kept[idx-1]` is a simple identifier AND `kept[idx+1] == ")"` AND `kept[idx+2]` is none of {`(`, `.`, `[`, `` ` ``}, skip both tokens. The forbidden followers bind tighter than NewExpression (member access, chained call, tagged template) — dropping `()` before them would change parse precedence. All looser-binding tokens (`;`, `}`, `,`, `+`, `instanceof`, etc.) are safe.
 
 ### gap-046b — object-literal trailing comma drop
 

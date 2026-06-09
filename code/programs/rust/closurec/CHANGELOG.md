@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.62.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-050** — empty constructor arg-list elision.
+  `new Foo()` → `new Foo` when followed by anything OTHER than
+  member-access (`.`, `[`), chained call (`(`), or tagged
+  template (`` ` ``). Those four cases would change parse
+  precedence and are kept verbatim.
+
+### Added
+
+Token-level peephole right before the existing arrow-fn
+parens-drop optimisation in `whitespace_only.rs`. Triggers when
+`kept[idx-2] == "new"` AND `kept[idx-1]` is a simple identifier
+AND the bracket pair is empty AND the follower is safe.
+
+8 inline `gap050_*` tests including 5 explicit non-regression
+cases (with-args, member-access, bracket-access, chained call,
+paren-expr-constructor).
+
 ## [0.61.0] - 2026-06-09
 
 ### Changed
