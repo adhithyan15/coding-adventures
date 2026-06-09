@@ -37,6 +37,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationCandidate` and `IntegrationActivationCandidateSummary`
   for ranking ready, human-review, and blocked activation work after applying
   host-specific readiness context.
+- `IntegrationActivationAction` and `IntegrationActivationActionSummary` for
+  converting activation candidates into concrete activate, policy-review,
+  primitive, capability, and dependency work items.
 - `IntegrationActivationRunwayStage` and `IntegrationActivationRunwaySummary`
   for grouping activation candidates by rollout priority wave and identifying
   actionable, review, and blocked stages.

@@ -16,6 +16,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for ranked D23A integration activation candidate
   planning: `smart_home.list_integration_activation_candidates` and
   `smart_home.get_integration_activation_candidate_summary`.
+- Added D18D handlers for concrete D23A integration activation action
+  planning: `smart_home.list_integration_activation_actions` and
+  `smart_home.get_integration_activation_action_summary`.
 - Added D18D handlers for D23A rollout-priority activation runway planning:
   `smart_home.list_integration_activation_runway` and
   `smart_home.get_integration_activation_runway_summary`.
