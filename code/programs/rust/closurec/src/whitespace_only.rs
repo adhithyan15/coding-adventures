@@ -938,7 +938,19 @@ fn is_simple_identifier_token(tok: Option<&lexer::token::Token>) -> bool {
 fn is_number_literal(tok: &lexer::token::Token) -> bool {
     if let Some(name) = &tok.type_name {
         let upper = name.to_ascii_uppercase();
-        if upper == "NUMBER" || upper == "NUMERIC_LITERAL" || upper == "NUMBER_LITERAL" {
+        // gap-048: BIGINT tokens (e.g. `1_000_000n`) go
+        // through the same normalize path so the ES2021
+        // `_` separator gets stripped. The full radix +
+        // shortest-form normalization is short-circuited
+        // inside `normalize_number_value` for BigInt
+        // (the suffix `n` is detected there) — only the
+        // separator-stripping applies.
+        if upper == "NUMBER"
+            || upper == "NUMERIC_LITERAL"
+            || upper == "NUMBER_LITERAL"
+            || upper == "BIGINT"
+            || upper == "BIGINT_LITERAL"
+        {
             return true;
         }
     }
@@ -985,8 +997,22 @@ fn is_number_literal(tok: &lexer::token::Token) -> bool {
 ///     `10.0` → `10`).
 ///   - Numbers exceeding `u128::MAX` stay verbatim.
 fn normalize_number_value(value: &str) -> String {
-    // BigInt — defer to a future gap.
-    if value.ends_with('n') {
+    // gap-048: BigInt literals don't get the full
+    // radix-and-shortest-form normalization that regular
+    // numbers do — that requires bigint arithmetic and
+    // is deferred. BUT the ES2021 `_` numeric separator
+    // is PURELY LEXICAL sugar (the body before `n` is
+    // still a decimal literal); we can strip it
+    // independently of any arithmetic. So:
+    //   `1_000_000n` → `1000000n` ✓ (gap-048)
+    //   `0x1_FFFn`   → `0x1FFFn`  ✓ (gap-048)
+    //   `9007199254740993n` → unchanged (no separators)
+    //   `9007199254740993n` → NOT normalized to decimal
+    //     shortest-form (would need bigint math, deferred)
+    if let Some(body) = value.strip_suffix('n') {
+        if body.contains('_') {
+            return format!("{}n", body.replace('_', ""));
+        }
         return value.to_string();
     }
     // gap-040: strip ES2021 numeric separators (`_`).
@@ -2146,6 +2172,57 @@ mod tests {
     #[test]
     fn gap038_bigint_left_verbatim() {
         assert_eq!(minify("var x=0xfn;"), "var x=0xfn;");
+    }
+
+    /// gap-048: BigInt literal with ES2021 `_` numeric
+    /// separator strips the separators (lexical sugar)
+    /// while leaving the BigInt body otherwise verbatim.
+    #[test]
+    fn gap048_bigint_decimal_separator_stripped() {
+        assert_eq!(
+            minify("var a=1_000_000n;"),
+            "var a=1000000n;"
+        );
+    }
+
+    /// gap-048: separator stripping also works for hex
+    /// BigInt — the `0x` prefix and digits-pattern are
+    /// preserved; only `_` is removed.
+    #[test]
+    fn gap048_bigint_hex_separator_stripped() {
+        assert_eq!(
+            minify("var a=0x1_FFFn;"),
+            "var a=0x1FFFn;"
+        );
+    }
+
+    /// **Non-regression**: BigInt WITHOUT separators is
+    /// unchanged. The gap-048 branch returns early in
+    /// that case (no `_` → no work).
+    #[test]
+    fn gap048_bigint_no_separator_unchanged() {
+        assert_eq!(
+            minify("var a=9007199254740993n;"),
+            "var a=9007199254740993n;"
+        );
+    }
+
+    /// **Non-regression**: hex BigInt without separators
+    /// is unchanged (the radix-and-shortest-form
+    /// canonicalization that regular `0xff` → `255`
+    /// gets is still deferred for BigInt — that's
+    /// gap-038's bigint future).
+    #[test]
+    fn gap048_bigint_hex_no_separator_unchanged() {
+        assert_eq!(minify("var x=0xfn;"), "var x=0xfn;");
+    }
+
+    /// **Non-regression**: separator in regular number
+    /// (non-BigInt) still goes through gap-040's normal
+    /// shortest-form path. `1_000` → `1E3` (shortest).
+    #[test]
+    fn gap048_regular_separator_still_uses_gap040() {
+        assert_eq!(minify("var a=1_000;"), "var a=1E3;");
     }
 
     /// **Non-regression**: number that overflows u128 stays

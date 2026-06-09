@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.60.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-048** — BigInt literals with ES2021 `_`
+  numeric separators now normalize: `1_000_000n` →
+  `1000000n`, `0x1_FFFn` → `0x1FFFn`. The separator is
+  pure lexical sugar; stripping it doesn't require
+  bigint arithmetic (which keeps gap-038's bigint
+  shortest-form deferred).
+
+### Fixed
+
+Two-line fix:
+1. `is_number_literal` now recognizes `BIGINT` /
+   `BIGINT_LITERAL` token-names. Without this gate,
+   BigInt tokens never reached the normalize path.
+2. `normalize_number_value`'s BigInt early-return now
+   strips `_` from the body before re-appending `n`.
+
+### Added
+
+5 inline `gap048_*` tests + 1 byte-identity fixture
+(`minify_bigint_separator`, flipped IGNORED → PASS).
+
 ## [0.59.0] - 2026-06-09
 
 ### Changed
