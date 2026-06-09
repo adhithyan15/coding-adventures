@@ -580,10 +580,6 @@ impl Compiler {
                 "for bounds and step must be integer".into(),
             ));
         }
-        let step_const = const_i64_from_node(arith_nodes[1])
-            .ok_or_else(|| CompileError::Unsupported("non-constant for step values".into()))?;
-        let cmp_op = if step_const >= 0 { "cmp_le" } else { "cmp_ge" };
-
         self.emit(IIRInstr::new(
             "mov",
             Some(var_name.to_string()),
@@ -591,22 +587,72 @@ impl Compiler {
             "i64",
         ));
 
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
         let loop_label = self.fresh_label("for_loop");
+        let negative_check_label = self.fresh_label("for_negative_check");
+        let body_label = self.fresh_label("for_body");
         let end_label = self.fresh_label("for_end");
         self.emit_label(&loop_label);
-        let cond = self.fresh_temp();
+
+        let step_non_negative = self.fresh_temp();
         self.emit(IIRInstr::new(
-            cmp_op,
-            Some(cond.clone()),
-            vec![Operand::Var(var_name.to_string()), Operand::Var(limit.slot)],
+            "cmp_ge",
+            Some(step_non_negative.clone()),
+            vec![Operand::Var(step.slot.clone()), Operand::Var(zero)],
             "bool",
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
             None,
-            vec![Operand::Var(cond), Operand::Var(end_label.clone())],
+            vec![
+                Operand::Var(step_non_negative),
+                Operand::Var(negative_check_label.clone()),
+            ],
             "void",
         ));
+
+        let positive_cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_le",
+            Some(positive_cond.clone()),
+            vec![
+                Operand::Var(var_name.to_string()),
+                Operand::Var(limit.slot.clone()),
+            ],
+            "bool",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(positive_cond), Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(body_label.clone())],
+            "void",
+        ));
+
+        self.emit_label(&negative_check_label);
+        let negative_cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_ge",
+            Some(negative_cond.clone()),
+            vec![
+                Operand::Var(var_name.to_string()),
+                Operand::Var(limit.slot.clone()),
+            ],
+            "bool",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(negative_cond), Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        self.emit_label(&body_label);
         self.emit_statement(body)?;
         let next = self.fresh_temp();
         self.emit(IIRInstr::new(
@@ -1456,23 +1502,6 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
     }
 }
 
-fn const_i64_from_node(node: &GrammarASTNode) -> Option<i64> {
-    let mut sign = 1i64;
-    let mut literal: Option<i64> = None;
-    for token in recursive_tokens(node) {
-        match (token.effective_type_name(), token.value.as_str()) {
-            ("PLUS", _) => {}
-            ("MINUS", _) if literal.is_none() => sign = -sign,
-            ("INTEGER_LIT", _) if literal.is_none() => {
-                literal = token.value.parse::<i64>().ok();
-            }
-            ("LPAREN", _) | ("RPAREN", _) => {}
-            _ => return None,
-        }
-    }
-    literal.map(|n| sign * n)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1506,6 +1535,12 @@ mod tests {
     fn compiles_and_runs_for_step_until_sum() {
         let src = "begin integer i, result; result := 0; for i := 1 step 1 until 10 do result := result + i end";
         assert_eq!(run_i64(src), 55);
+    }
+
+    #[test]
+    fn compiles_and_runs_dynamic_for_step_until() {
+        let src = "begin integer i, stepvalue, result; result := 0; stepvalue := 2; for i := 1 step stepvalue until 5 do result := result + i; stepvalue := 0 - stepvalue; for i := 5 step stepvalue until 1 do result := result + i end";
+        assert_eq!(run_i64(src), 18);
     }
 
     #[test]

@@ -13,6 +13,8 @@ const ALGOL_FOR_WHILE: &str = "begin integer x, result; x := 6; result := 0; for
 
 const ALGOL_FOR_LIST: &str = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
 
+const ALGOL_DYNAMIC_STEP: &str = "begin integer i, stepvalue, result; result := 0; stepvalue := 2; for i := 1 step stepvalue until 5 do result := result + i; stepvalue := 0 - stepvalue; for i := 5 step stepvalue until 1 do result := result + i end";
+
 const ALGOL_COND_EXPR: &str = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
 
 const ALGOL_NESTED_BLOCKS: &str = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
@@ -37,6 +39,10 @@ fn algol_iir_validates_for_every_direct_backend() {
         (
             "for_list",
             compile_case(ALGOL_FOR_LIST, "algol_for_list_backend_compat"),
+        ),
+        (
+            "dynamic_step",
+            compile_case(ALGOL_DYNAMIC_STEP, "algol_dynamic_step_backend_compat"),
         ),
         (
             "cond_expr",
@@ -233,6 +239,64 @@ fn algol_for_list_lowers_to_wasm_jvm_clr_beam_and_llvm() {
     assert!(
         llvm.contains("br label"),
         "LLVM should lower for-list loop branches"
+    );
+}
+
+#[test]
+fn algol_dynamic_step_lowers_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(ALGOL_DYNAMIC_STEP, "algol_dynamic_step_backend_compat");
+    let main = module.get_function("main").expect("main exists");
+    assert!(
+        main.instructions
+            .iter()
+            .any(|instr| instr.op == "cmp_le"),
+        "dynamic step should emit a positive-step bound check"
+    );
+    assert!(
+        main.instructions
+            .iter()
+            .any(|instr| instr.op == "cmp_ge"),
+        "dynamic step should emit runtime step-sign and negative-step checks"
+    );
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolDynamicStep"),
+    )
+    .expect("ALGOL dynamic-step IIR should lower to WASM");
+    let wasm_bytes = iir_to_wasm::encode_module(&wasm).expect("WASM module should encode");
+    assert!(wasm_bytes.starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolDynamicStep"),
+    )
+    .expect("ALGOL dynamic-step IIR should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::lower_iir_to_cil(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::default(),
+    )
+    .expect("ALGOL dynamic-step IIR should lower to CLR");
+    assert!(!clr.methods.is_empty());
+
+    let beam = iir_to_beam::lower_iir_to_beam(
+        &module,
+        &iir_to_beam::IIRBeamConfig::new("algol_dynamic_step"),
+    )
+    .expect("ALGOL dynamic-step IIR should lower to BEAM");
+    let beam_bytes = iir_to_beam::encode_beam(&beam);
+    assert!(beam_bytes.starts_with(b"FOR1"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_dynamic_step"),
+    )
+    .expect("ALGOL dynamic-step IIR should lower to LLVM");
+    assert!(
+        llvm.contains("br i1"),
+        "LLVM should lower dynamic-step checks as conditional branches"
     );
 }
 
