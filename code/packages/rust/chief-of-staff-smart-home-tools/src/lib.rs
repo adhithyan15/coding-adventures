@@ -36,30 +36,31 @@ use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
     activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
     activation_dependency_graph_from_reports, activation_health_from_candidates,
-    activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_risk_from_candidates, activation_runway_from_candidates, describe_primitive_family,
-    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
-    entries_requiring_primitive, find_entry, first_party_catalog,
-    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
-    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
-    readiness_gap_inventory_from_reports, readiness_report_for_plan,
-    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
-    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
-    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
-    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
-    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
-    IntegrationActivationAgendaSummary, IntegrationActivationCandidate,
-    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
-    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
-    IntegrationActivationConstraintSummary, IntegrationActivationDependencyEdge,
-    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
-    IntegrationActivationDependencySummary, IntegrationActivationHealthStage,
-    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRiskItem,
-    IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
-    IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
-    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
-    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    activation_maintenance_from_candidates, activation_plan_for_entry,
+    activation_plans_at_or_before_priority, activation_risk_from_candidates,
+    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
+    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
+    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
+    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
+    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
+    readiness_report_for_plan, readiness_reports_at_or_before_priority,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
+    IntegrationActivationActionKind, IntegrationActivationActionSummary,
+    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
+    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
+    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
+    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
+    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
+    IntegrationActivationMaintenanceWindow, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationRiskItem, IntegrationActivationRiskKind,
+    IntegrationActivationRiskSummary, IntegrationActivationRunwayStage,
+    IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
+    IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
@@ -186,6 +187,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_HEALTH_TOOL_ID: &str =
     "smart_home.list_integration_activation_health";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_health_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID: &str =
+    "smart_home.list_integration_activation_maintenance";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_maintenance_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID: &str =
     "smart_home.list_integration_activation_constraints";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID: &str =
@@ -362,6 +367,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID => {
                     let query = integration_activation_health_query(&arguments)?;
                     Ok(get_integration_activation_health_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID => {
+                    let query = integration_activation_maintenance_query(&arguments)?;
+                    Ok(list_integration_activation_maintenance_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_maintenance_query(&arguments)?;
+                    Ok(get_integration_activation_maintenance_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID => {
                     let query = integration_activation_constraint_query(&arguments)?;
@@ -1267,6 +1280,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation health summary",
             "Return compact D23A priority-wave activation health counts for ready, review, blocked, and missing-prerequisite work.",
             integration_activation_health_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID,
+            "List smart-home integration activation maintenance",
+            "List D23A activation maintenance windows that combine priority-wave health, actions, constraints, risk, and dependency blockers.",
+            integration_activation_maintenance_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_maintenance", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_maintenance",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation maintenance summary",
+            "Return compact D23A activation maintenance rollups across priority waves, risk, blockers, dependency edges, and review work.",
+            integration_activation_maintenance_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3858,6 +3905,14 @@ struct IntegrationActivationHealthQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationMaintenanceQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    health_status: Option<IntegrationActivationHealthStatus>,
+    requires_attention: Option<bool>,
+    window_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationConstraintQuery {
     candidates: IntegrationActivationCandidateQuery,
     constraint_kind: Option<IntegrationActivationConstraintKind>,
@@ -3927,6 +3982,23 @@ fn integration_activation_health_query(
         health_status,
         requires_attention: optional_bool(arguments, "requires_attention")?,
         stage_limit,
+    })
+}
+
+fn integration_activation_maintenance_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationMaintenanceQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let health_status = optional_string(arguments, "health_status")?
+        .or(optional_string(arguments, "maintenance_status")?)
+        .map(|label| parse_activation_health_status(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationMaintenanceQuery {
+        candidates,
+        health_status,
+        requires_attention: optional_bool(arguments, "requires_attention")?,
+        window_limit: optional_u64(arguments, "window_limit")?.map(|value| value as usize),
     })
 }
 
@@ -4190,6 +4262,31 @@ fn integration_activation_health_for_query(
     }
 
     (health, catalog_count)
+}
+
+fn integration_activation_maintenance_for_query(
+    query: &IntegrationActivationMaintenanceQuery,
+) -> (Vec<IntegrationActivationMaintenanceWindow>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let (candidates, _) = integration_activation_candidates_for_query(&query.candidates);
+    let mut maintenance = activation_maintenance_from_candidates(
+        &catalog,
+        candidates,
+        &query.candidates.readiness.enabled_integrations,
+    );
+
+    if let Some(health_status) = query.health_status {
+        maintenance.retain(|window| window.health_status == health_status);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        maintenance.retain(|window| window.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.window_limit {
+        maintenance.truncate(limit);
+    }
+
+    (maintenance, catalog_count)
 }
 
 fn integration_activation_constraints_for_query(
@@ -4967,6 +5064,74 @@ fn get_integration_activation_health_summary_output_handler_output(
             (
                 "blocked_integrations",
                 integer(summary.blocked_integrations as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_maintenance_output_handler_output(
+    query: IntegrationActivationMaintenanceQuery,
+) -> ToolHandlerOutput {
+    let (maintenance, catalog_count) = integration_activation_maintenance_for_query(&query);
+    let summary = IntegrationActivationMaintenanceSummary::from_windows(maintenance.iter());
+    let count = maintenance.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_maintenance",
+            JsonValue::Array(
+                maintenance
+                    .iter()
+                    .map(activation_maintenance_window_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_maintenance_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_maintenance"),
+            ),
+            ("windows", integer(count as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+            (
+                "windows_with_blockers",
+                integer(summary.windows_with_blockers as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_maintenance_summary_output_handler_output(
+    query: IntegrationActivationMaintenanceQuery,
+) -> ToolHandlerOutput {
+    let (maintenance, _) = integration_activation_maintenance_for_query(&query);
+    let summary = IntegrationActivationMaintenanceSummary::from_windows(maintenance.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_maintenance_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_maintenance_summary"),
+            ),
+            ("total_windows", integer(summary.total_windows as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+            (
+                "windows_with_blockers",
+                integer(summary.windows_with_blockers as i64),
             ),
         ]),
     )
@@ -8458,6 +8623,237 @@ fn integration_activation_health_summary_json(
     ])
 }
 
+fn activation_maintenance_window_json(
+    window: &IntegrationActivationMaintenanceWindow,
+) -> JsonValue {
+    object([
+        ("priority", integer(window.priority as i64)),
+        ("health_status", string(window.health_status.as_str())),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                window
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "ready_to_activate_integration_ids",
+            JsonValue::Array(
+                window
+                    .ready_to_activate_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "review_integration_ids",
+            JsonValue::Array(
+                window
+                    .review_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "blocked_integration_ids",
+            JsonValue::Array(
+                window
+                    .blocked_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "candidate_summary",
+            integration_activation_candidate_summary_json(&window.candidate_summary),
+        ),
+        (
+            "action_summary",
+            integration_activation_action_summary_json(&window.action_summary),
+        ),
+        (
+            "constraint_summary",
+            integration_activation_constraint_summary_json(&window.constraint_summary),
+        ),
+        (
+            "risk_summary",
+            integration_activation_risk_summary_json(&window.risk_summary),
+        ),
+        (
+            "dependency_summary",
+            integration_activation_dependency_summary_json(&window.dependency_summary),
+        ),
+        (
+            "integration_count",
+            integer(window.integration_ids.len() as i64),
+        ),
+        (
+            "ready_to_activate_count",
+            integer(window.ready_to_activate_integration_ids.len() as i64),
+        ),
+        (
+            "review_count",
+            integer(window.review_integration_ids.len() as i64),
+        ),
+        (
+            "blocked_count",
+            integer(window.blocked_integration_ids.len() as i64),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(window.requires_attention()),
+        ),
+        ("has_ready_work", JsonValue::Bool(window.has_ready_work())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(window.has_activation_work()),
+        ),
+        ("has_review_work", JsonValue::Bool(window.has_review_work())),
+        ("has_blockers", JsonValue::Bool(window.has_blockers())),
+        ("has_risks", JsonValue::Bool(window.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(window.has_dependency_blockers()),
+        ),
+    ])
+}
+
+fn integration_activation_maintenance_summary_json(
+    summary: &IntegrationActivationMaintenanceSummary,
+) -> JsonValue {
+    object([
+        ("total_windows", integer(summary.total_windows as i64)),
+        (
+            "total_integrations",
+            integer(summary.total_integrations as i64),
+        ),
+        ("ready_windows", integer(summary.ready_windows as i64)),
+        ("review_windows", integer(summary.review_windows as i64)),
+        ("blocked_windows", integer(summary.blocked_windows as i64)),
+        ("empty_windows", integer(summary.empty_windows as i64)),
+        (
+            "activation_ready_integrations",
+            integer(summary.activation_ready_integrations as i64),
+        ),
+        (
+            "ready_to_activate_integrations",
+            integer(summary.ready_to_activate_integrations as i64),
+        ),
+        (
+            "review_integrations",
+            integer(summary.review_integrations as i64),
+        ),
+        (
+            "blocked_integrations",
+            integer(summary.blocked_integrations as i64),
+        ),
+        (
+            "windows_with_actions",
+            integer(summary.windows_with_actions as i64),
+        ),
+        (
+            "windows_with_activation_work",
+            integer(summary.windows_with_activation_work as i64),
+        ),
+        (
+            "windows_with_review_work",
+            integer(summary.windows_with_review_work as i64),
+        ),
+        (
+            "windows_with_blockers",
+            integer(summary.windows_with_blockers as i64),
+        ),
+        (
+            "windows_with_risks",
+            integer(summary.windows_with_risks as i64),
+        ),
+        (
+            "windows_with_dependency_blockers",
+            integer(summary.windows_with_dependency_blockers as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "activate_integration_actions",
+            integer(summary.activate_integration_actions as i64),
+        ),
+        (
+            "review_policy_actions",
+            integer(summary.review_policy_actions as i64),
+        ),
+        (
+            "blocking_constraints",
+            integer(summary.blocking_constraints as i64),
+        ),
+        (
+            "review_constraints",
+            integer(summary.review_constraints as i64),
+        ),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_priority",
+            summary
+                .first_activation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("has_risks", JsonValue::Bool(summary.has_risks())),
+    ])
+}
+
 fn activation_constraint_json(constraint: &IntegrationActivationConstraint) -> JsonValue {
     object([
         ("constraint_kind", string(constraint.kind.as_str())),
@@ -11845,6 +12241,33 @@ fn integration_activation_health_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_maintenance_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "window_limit".to_string();
+        }
+        properties.push(SchemaProperty::new("health_status", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "maintenance_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "requires_attention",
+            JsonSchema::Boolean,
+        ));
+    }
+    schema
+}
+
 fn integration_activation_constraint_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -12008,7 +12431,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 73);
+        assert_eq!(definitions.len(), 75);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -12082,6 +12505,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID));
@@ -12197,7 +12626,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            65
+            67
         );
         assert_eq!(
             export
@@ -12293,6 +12722,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_HEALTH_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -12563,11 +13000,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(73))
+            Some(&integer(75))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(65))
+            Some(&integer(67))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -13448,6 +13885,157 @@ mod tests {
         );
         assert_eq!(
             field(activation_health_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_maintenance_request = request(
+            "call-list-integration-activation-maintenance",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_MAINTENANCE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("window_limit", integer(2)),
+            ]),
+            5_020,
+        );
+        let list_activation_maintenance_trace =
+            tool_runtime.invoke_with_events(&list_activation_maintenance_request);
+        assert!(list_activation_maintenance_trace.result.ok);
+        assert_eq!(
+            list_activation_maintenance_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_maintenance_output = list_activation_maintenance_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_activation_maintenance_output, "count"),
+            Some(&integer(2))
+        );
+        let activation_maintenance_summary =
+            field(list_activation_maintenance_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_maintenance_summary, "overall_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_maintenance_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(activation_maintenance_summary, "windows_with_blockers").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_maintenance_summary, "total_actions").unwrap()).unwrap()
+                >= 1
+        );
+        let activation_maintenance = array_item(
+            field(list_activation_maintenance_output, "activation_maintenance").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_maintenance, "health_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_maintenance, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_maintenance, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(activation_maintenance, "integration_count").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(field(activation_maintenance, "action_summary").is_some());
+        assert!(field(activation_maintenance, "constraint_summary").is_some());
+        assert!(field(activation_maintenance, "risk_summary").is_some());
+        assert!(field(activation_maintenance, "dependency_summary").is_some());
+
+        let activation_maintenance_summary_request = request(
+            "call-integration-activation-maintenance-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_MAINTENANCE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("maintenance_status", string("blocked")),
+            ]),
+            5_021,
+        );
+        let activation_maintenance_summary_trace =
+            tool_runtime.invoke_with_events(&activation_maintenance_summary_request);
+        assert!(activation_maintenance_summary_trace.result.ok);
+        assert_eq!(
+            activation_maintenance_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_maintenance_summary_output = activation_maintenance_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_maintenance_rollup =
+            field(activation_maintenance_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_maintenance_rollup, "overall_status"),
+            Some(&string("blocked"))
+        );
+        assert!(
+            integer_value(field(activation_maintenance_rollup, "total_windows").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_maintenance_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_maintenance_rollup, "requires_attention"),
             Some(&JsonValue::Bool(true))
         );
 
@@ -15234,6 +15822,14 @@ mod tests {
             activation_health_summary_trace,
         );
         journal.record_trace(
+            list_activation_maintenance_request,
+            list_activation_maintenance_trace,
+        );
+        journal.record_trace(
+            activation_maintenance_summary_request,
+            activation_maintenance_summary_trace,
+        );
+        journal.record_trace(
             list_activation_constraints_request,
             list_activation_constraints_trace,
         );
@@ -15314,9 +15910,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 73);
-        assert_eq!(journal_summary.completed_count, 73);
-        assert_eq!(journal.audit_records().len(), 73);
+        assert_eq!(journal_summary.invocation_count, 75);
+        assert_eq!(journal_summary.completed_count, 75);
+        assert_eq!(journal.audit_records().len(), 75);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

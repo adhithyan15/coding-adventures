@@ -64,8 +64,14 @@ Current scope:
   grouping and compact actionable/blocker summaries
 - D18D integration activation-health descriptors for priority-wave ready,
   review, blocked, and missing-prerequisite status summaries
+- D18D integration activation-maintenance descriptors for combined
+  priority-wave health, action, constraint, risk, and dependency summaries
 - D18D integration activation-constraint descriptors for grouped primitive,
   capability, dependency, and policy-review blocker summaries
+- D18D integration activation-risk descriptors for policy-tier and
+  policy-surface rollout risk summaries
+- D18D integration activation-dependency descriptors for prerequisite node and
+  edge rollups
 - D18D integration-readiness descriptors for bulk activation blocker reports
   and compact readiness rollups
 - D18D integration-readiness gap descriptors for grouped primitive,
