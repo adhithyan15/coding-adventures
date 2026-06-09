@@ -108,6 +108,20 @@ fn algol_for_loop_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![21], "ALGOL loop should sum 1..6");
 }
 
+#[test]
+fn algol_for_while_emits_and_runs_on_wasm() {
+    let source = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_for_while")
+        .expect("ALGOL for-while loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL for-while sum)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL for-while wasm must run");
+    assert_eq!(result, vec![15], "ALGOL for-while should sum 5..1");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result

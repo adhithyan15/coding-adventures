@@ -31,3 +31,29 @@ fn algol_scalar_program_runs_through_generic_jit() {
     }
     assert_eq!(result.as_i64(), Some(21));
 }
+
+#[test]
+fn algol_for_while_program_runs_through_generic_jit() {
+    let source = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
+    let mut module = compile_source(source, "algol_for_while_jit").expect("ALGOL should compile");
+    let main = module.get_function("main").expect("main exists");
+    assert_eq!(
+        main.type_status,
+        interpreter_ir::FunctionTypeStatus::FullyTyped
+    );
+
+    let mut vm = VMCore::new();
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+
+    let result = jit
+        .execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("JIT execution should succeed")
+        .unwrap_or(Value::Null);
+
+    if let Some(err) = error_handle.lock().unwrap().clone() {
+        panic!("GenericCirJit reported an error: {err}");
+    }
+    assert_eq!(result.as_i64(), Some(15));
+}
