@@ -4,19 +4,19 @@ use coding_adventures_html_parser::{
     BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
     BrowserDatalistOption, BrowserDisclosure, BrowserDocument, BrowserDocumentMetadata,
     BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor,
-    BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
-    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
-    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
-    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
-    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
+    BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -63,6 +63,8 @@ struct ExpectedBrowserDocument {
     document_event_handlers: Vec<String>,
     #[serde(default)]
     body_event_handlers: Vec<String>,
+    #[serde(default)]
+    event_handler_descriptors: Vec<ExpectedEventHandlerDescriptor>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -567,6 +569,38 @@ struct ExpectedFetchPolicyDescriptor {
     allowfullscreen: bool,
     #[serde(default)]
     credentialless: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedEventHandlerDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    role: Option<String>,
+    source: String,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    activation_handlers: Vec<String>,
+    #[serde(default)]
+    keyboard_handlers: Vec<String>,
+    #[serde(default)]
+    pointer_handlers: Vec<String>,
+    #[serde(default)]
+    form_handlers: Vec<String>,
+    #[serde(default)]
+    media_handlers: Vec<String>,
+    #[serde(default)]
+    lifecycle_handlers: Vec<String>,
+    #[serde(default)]
+    error_handlers: Vec<String>,
+    #[serde(default)]
+    text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4009,6 +4043,28 @@ fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_element
     );
 }
 
+#[test]
+fn browser_event_handler_descriptors_track_document_and_element_wiring() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "event-handler-page")
+        .expect("event handler fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("event handler fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.event_handler_descriptors,
+        case.expected
+            .into_browser_document()
+            .event_handler_descriptors,
+        "event handler descriptors should preserve document/body handlers and categorize inline element handlers without evaluating script text",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         let metadata = self.metadata.into_browser_document_metadata();
@@ -4116,6 +4172,11 @@ impl ExpectedBrowserDocument {
             body_dir: self.body_dir,
             document_event_handlers: self.document_event_handlers,
             body_event_handlers: self.body_event_handlers,
+            event_handler_descriptors: self
+                .event_handler_descriptors
+                .into_iter()
+                .map(ExpectedEventHandlerDescriptor::into_browser_event_handler_descriptor)
+                .collect(),
             body_text: self.body_text,
             metas: self
                 .metas
@@ -4511,6 +4572,28 @@ impl ExpectedGlobalStateDescriptor {
             draggable_state: self.draggable_state,
             spellcheck: self.spellcheck,
             translate: self.translate,
+            text: self.text,
+        }
+    }
+}
+
+impl ExpectedEventHandlerDescriptor {
+    fn into_browser_event_handler_descriptor(self) -> BrowserEventHandlerDescriptor {
+        BrowserEventHandlerDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            role: self.role,
+            source: self.source,
+            event_handlers: self.event_handlers,
+            handler_count: self.handler_count,
+            activation_handlers: self.activation_handlers,
+            keyboard_handlers: self.keyboard_handlers,
+            pointer_handlers: self.pointer_handlers,
+            form_handlers: self.form_handlers,
+            media_handlers: self.media_handlers,
+            lifecycle_handlers: self.lifecycle_handlers,
+            error_handlers: self.error_handlers,
             text: self.text,
         }
     }

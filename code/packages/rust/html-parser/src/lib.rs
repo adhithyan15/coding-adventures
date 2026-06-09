@@ -827,6 +827,7 @@ pub struct BrowserDocument {
     pub body_dir: Option<String>,
     pub document_event_handlers: Vec<String>,
     pub body_event_handlers: Vec<String>,
+    pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1316,6 +1317,25 @@ pub struct BrowserGlobalStateDescriptor {
     pub draggable_state: Option<String>,
     pub spellcheck: Option<String>,
     pub translate: Option<String>,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserEventHandlerDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub event_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub activation_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub form_handlers: Vec<String>,
+    pub media_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub error_handlers: Vec<String>,
     pub text: String,
 }
 
@@ -2736,7 +2756,13 @@ impl BrowserDocument {
         if let Some(descriptor) = browser_document_policy_descriptor(&summary.metadata) {
             summary.document_policy_descriptors.push(descriptor);
         }
-        for element in [html, body].into_iter().flatten() {
+        for (source, element) in [("document", html), ("body", body)] {
+            let Some(element) = element else {
+                continue;
+            };
+            if let Some(descriptor) = browser_event_handler_descriptor(element, source) {
+                summary.event_handler_descriptors.push(descriptor);
+            }
             if let Some(descriptor) = browser_global_state_descriptor(element) {
                 summary.global_state_descriptors.push(descriptor);
             }
@@ -9930,6 +9956,9 @@ fn collect_browser_facts(
         if let Some(interactive) = browser_interactive_element(element, labels, id_texts) {
             summary.interactive_elements.push(interactive);
         }
+        if let Some(descriptor) = browser_event_handler_descriptor(element, "element") {
+            summary.event_handler_descriptors.push(descriptor);
+        }
         if let Some(disclosure) = browser_disclosure_element(element, id_texts) {
             summary.disclosures.push(disclosure);
         }
@@ -12980,6 +13009,43 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
     })
 }
 
+fn browser_event_handler_descriptor(
+    element: &Element,
+    source: &str,
+) -> Option<BrowserEventHandlerDescriptor> {
+    let event_handlers = browser_event_handlers(element);
+    if event_handlers.is_empty() {
+        return None;
+    }
+
+    Some(BrowserEventHandlerDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        role: browser_content_role(&element.name).map(ToOwned::to_owned),
+        source: source.to_string(),
+        handler_count: event_handlers.len(),
+        activation_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_activation_event,
+        ),
+        keyboard_handlers: browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event),
+        pointer_handlers: browser_event_handlers_by_kind(&event_handlers, browser_pointer_event),
+        form_handlers: browser_event_handlers_by_kind(&event_handlers, browser_form_event),
+        media_handlers: browser_event_handlers_by_kind(&event_handlers, browser_media_event),
+        lifecycle_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_lifecycle_event,
+        ),
+        error_handlers: browser_event_handlers_by_kind(&event_handlers, browser_error_event),
+        event_handlers,
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+    })
+}
+
 fn browser_aria_relation_descriptor(
     element: &Element,
     id_texts: &[(String, String)],
@@ -14069,6 +14135,111 @@ fn browser_event_handlers(element: &Element) -> Vec<String> {
             (name.len() > 2 && name.starts_with("on")).then(|| name.to_string())
         })
         .collect()
+}
+
+fn browser_event_handlers_by_kind(
+    event_handlers: &[String],
+    predicate: fn(&str) -> bool,
+) -> Vec<String> {
+    event_handlers
+        .iter()
+        .filter(|handler| predicate(handler.as_str()))
+        .cloned()
+        .collect()
+}
+
+fn browser_activation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onclick" | "ondblclick" | "onsubmit" | "onreset" | "oncommand" | "ontoggle"
+    )
+}
+
+fn browser_keyboard_event(handler: &str) -> bool {
+    matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
+}
+
+fn browser_pointer_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onpointerdown"
+            | "onpointermove"
+            | "onpointerup"
+            | "onpointercancel"
+            | "onpointerenter"
+            | "onpointerleave"
+            | "onpointerover"
+            | "onpointerout"
+            | "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+            | "ontouchstart"
+            | "ontouchmove"
+            | "ontouchend"
+            | "ontouchcancel"
+            | "ondrag"
+            | "ondragstart"
+            | "ondragend"
+            | "ondragenter"
+            | "ondragleave"
+            | "ondragover"
+            | "ondrop"
+            | "onwheel"
+    )
+}
+
+fn browser_form_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "oninput" | "onchange" | "oninvalid" | "onselect" | "onsubmit" | "onreset"
+    )
+}
+
+fn browser_media_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onplay"
+            | "onplaying"
+            | "onpause"
+            | "onended"
+            | "onvolumechange"
+            | "ontimeupdate"
+            | "onratechange"
+            | "onwaiting"
+            | "onstalled"
+            | "onsuspend"
+            | "onloadeddata"
+            | "onloadedmetadata"
+            | "onloadstart"
+            | "oncanplay"
+            | "oncanplaythrough"
+            | "ondurationchange"
+            | "onemptied"
+            | "onprogress"
+            | "onseeking"
+            | "onseeked"
+    )
+}
+
+fn browser_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload"
+            | "onunload"
+            | "onbeforeunload"
+            | "onpageshow"
+            | "onpagehide"
+            | "onreadystatechange"
+            | "ondomcontentloaded"
+    )
+}
+
+fn browser_error_event(handler: &str) -> bool {
+    matches!(handler, "onerror" | "onabort" | "oncancel")
 }
 
 fn browser_popover_target(element: &Element) -> Option<String> {
@@ -19447,6 +19618,56 @@ mod tests {
             render_tree.children[0].children[1].event_handlers,
             vec!["onplay".to_string(), "onpause".to_string()]
         );
+    }
+
+    #[test]
+    fn browser_event_handler_descriptors_track_document_body_and_inline_handlers() {
+        let html = "<html onreadystatechange=ready><body onload=boot onunload=teardown>\
+             <main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button>\
+             <video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback>\
+             <input value=Draft oninput=edit onchange=commit></main></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.event_handler_descriptors.len(), 7);
+
+        let document = &summary.event_handler_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.event_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.lifecycle_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.handler_count, 1);
+
+        let body = &summary.event_handler_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.source, "body");
+        assert_eq!(body.event_handlers, vec!["onload", "onunload"]);
+        assert_eq!(body.lifecycle_handlers, vec!["onload", "onunload"]);
+        assert_eq!(body.handler_count, 2);
+
+        let main = &summary.event_handler_descriptors[2];
+        assert_eq!(main.element, "main");
+        assert_eq!(main.id.as_deref(), Some("app"));
+        assert_eq!(main.role.as_deref(), Some("main"));
+        assert_eq!(main.activation_handlers, vec!["onclick"]);
+        assert_eq!(main.text, "Save");
+
+        let button = &summary.event_handler_descriptors[3];
+        assert_eq!(button.element, "button");
+        assert_eq!(button.role.as_deref(), Some("control"));
+        assert_eq!(button.activation_handlers, vec!["onclick"]);
+        assert_eq!(button.keyboard_handlers, vec!["onkeydown"]);
+
+        let video = &summary.event_handler_descriptors[4];
+        assert_eq!(video.role.as_deref(), Some("media"));
+        assert_eq!(video.media_handlers, vec!["onplay", "onpause"]);
+
+        let image = &summary.event_handler_descriptors[5];
+        assert_eq!(image.role.as_deref(), Some("image"));
+        assert_eq!(image.error_handlers, vec!["onerror"]);
+
+        let input = &summary.event_handler_descriptors[6];
+        assert_eq!(input.role.as_deref(), Some("control"));
+        assert_eq!(input.form_handlers, vec!["oninput", "onchange"]);
     }
 
     #[test]
