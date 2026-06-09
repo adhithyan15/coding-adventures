@@ -51,6 +51,8 @@ Activation descriptor cases pin command, popover, disclosure, ARIA, focus, and
 inline handler routing metadata as a flat activation-planning inventory.
 Focus-navigation descriptor cases pin sequential focus, programmatic focus,
 editing hosts, access keys, and hidden/inert/disabled/ARIA focus blockers.
+Keyboard-interaction descriptor cases pin access keys, ARIA shortcuts, keyboard
+handlers, focus order, editing hosts, and blocked keyboard paths.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
