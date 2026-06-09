@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
   Home, Google Home, Alexa, Z-Wave Alliance, and Thread Group.
 - Ecosystem primitive coverage reports that map surveyed platforms onto rollout
   backlog primitive families.
+- Primitive coverage summary helpers for counting uncovered, single-source, and
+  multi-platform primitive-backlog rows.
 - Ecosystem platform coverage item and summary helpers that show which surveyed
   platform lessons overlap a priority-bounded reusable primitive backlog.
 - Query helpers for integration id, category, connectivity, capability,

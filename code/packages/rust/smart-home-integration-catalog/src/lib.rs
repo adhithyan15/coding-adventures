@@ -625,6 +625,95 @@ impl PrimitiveBacklogCoverageItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrimitiveBacklogCoverageSummary {
+    pub total_primitives: usize,
+    pub total_entries: usize,
+    pub unique_integrations: usize,
+    pub covered_primitives: usize,
+    pub uncovered_primitives: usize,
+    pub single_source_primitives: usize,
+    pub multi_platform_primitives: usize,
+    pub total_source_references: usize,
+    pub total_platform_references: usize,
+    pub first_uncovered_priority: Option<u8>,
+    pub first_single_source_priority: Option<u8>,
+    pub broadest_platform_count: usize,
+}
+
+impl PrimitiveBacklogCoverageSummary {
+    pub fn from_items<'a>(
+        items: impl IntoIterator<Item = &'a PrimitiveBacklogCoverageItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_primitives: 0,
+            total_entries: 0,
+            unique_integrations: 0,
+            covered_primitives: 0,
+            uncovered_primitives: 0,
+            single_source_primitives: 0,
+            multi_platform_primitives: 0,
+            total_source_references: 0,
+            total_platform_references: 0,
+            first_uncovered_priority: None,
+            first_single_source_priority: None,
+            broadest_platform_count: 0,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for item in items {
+            summary.total_primitives += 1;
+            summary.total_entries += item.entry_count;
+            summary.total_source_references += item.source_count;
+            summary.total_platform_references += item.platform_count();
+            summary.broadest_platform_count =
+                summary.broadest_platform_count.max(item.platform_count());
+
+            if item.source_count == 0 {
+                summary.uncovered_primitives += 1;
+                summary.first_uncovered_priority = Some(
+                    summary
+                        .first_uncovered_priority
+                        .map_or(item.highest_priority, |priority| {
+                            priority.min(item.highest_priority)
+                        }),
+                );
+            } else {
+                summary.covered_primitives += 1;
+            }
+
+            if item.source_count == 1 {
+                summary.single_source_primitives += 1;
+                summary.first_single_source_priority = Some(
+                    summary
+                        .first_single_source_priority
+                        .map_or(item.highest_priority, |priority| {
+                            priority.min(item.highest_priority)
+                        }),
+                );
+            }
+            if item.platform_count() >= 2 {
+                summary.multi_platform_primitives += 1;
+            }
+
+            for integration_id in &item.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary
+    }
+
+    pub fn has_uncovered_primitives(&self) -> bool {
+        self.uncovered_primitives > 0
+    }
+
+    pub fn has_single_source_primitives(&self) -> bool {
+        self.single_source_primitives > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EcosystemPlatformCoverageItem {
     pub platform: EcosystemSurveyPlatform,
     pub display_name: &'static str,
@@ -4720,6 +4809,29 @@ mod tests {
         assert!(coverage
             .iter()
             .all(|item| item.source_count == item.platform_count()));
+    }
+
+    #[test]
+    fn primitive_backlog_coverage_summary_highlights_rollout_gaps() {
+        let catalog = first_party_catalog();
+        let sources = ecosystem_survey_sources();
+        let coverage = primitive_backlog_with_ecosystem_coverage(&catalog, &sources, 1);
+        let summary = PrimitiveBacklogCoverageSummary::from_items(coverage.iter());
+
+        assert_eq!(summary.total_primitives, coverage.len());
+        assert!(summary.total_entries >= coverage.len());
+        assert!(summary.unique_integrations >= 5);
+        assert!(summary.covered_primitives > 0);
+        assert!(summary.uncovered_primitives > 0);
+        assert!(summary.single_source_primitives > 0);
+        assert!(summary.multi_platform_primitives > 0);
+        assert!(summary.total_source_references >= summary.covered_primitives);
+        assert!(summary.total_platform_references >= summary.total_source_references);
+        assert!(summary.first_uncovered_priority.is_some());
+        assert!(summary.first_single_source_priority.is_some());
+        assert!(summary.broadest_platform_count >= 2);
+        assert!(summary.has_uncovered_primitives());
+        assert!(summary.has_single_source_primitives());
     }
 
     #[test]
