@@ -235,6 +235,14 @@ pub fn whitespace_only_minify(
     let mut body_position_next = false;
     let mut at_stmt_boundary = true;
     let mut last_emit_was_synthetic_semi = false;
+    let mut deferred_synthetic_semi = false;
+    // ^ gap-041: when a `}` would emit a synthetic `;` but
+    //   the very next non-trivia token is ANOTHER `}`, the
+    //   `;` is deferred to that outer `}`. This lifts
+    //   nested-function-decl terminators past the enclosing
+    //   brace, matching upstream's `function f(){function
+    //   g(){}}` → `function f(){function g(){}};` (single
+    //   `;` on the outermost `}`).
     let mut prev_emitted_tok: Option<&lexer::token::Token> = None;
 
     let mut idx = 0usize;
@@ -471,23 +479,63 @@ pub fn whitespace_only_minify(
         // try-chain, gets a synthetic `;` appended.
         if val == "}" {
             let kind = brace_stack.pop().unwrap_or(BlockKind::Other);
-            let needs_synthetic_semi = match kind {
+            let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
+            let next_is_close_brace = next_val == Some("}");
+            let next_is_chain_continuation =
+                matches!(next_val, Some("catch") | Some("finally"));
+            let kind_wants_semi = match kind {
                 BlockKind::Function => true,
                 BlockKind::Class => true,    // gap-034
                 BlockKind::Switch => true,   // gap-036
                 BlockKind::TryChain => {
-                    // gap-033: the chain continues iff the
-                    // very next non-trivia token is `catch`
-                    // or `finally`. If so, suppress the `;`
-                    // because the next clause will own the
-                    // terminator. Otherwise the chain has
-                    // ended — emit `;`.
-                    let next_val = kept.get(idx + 1).map(|t| t.value.as_str());
-                    !matches!(next_val, Some("catch") | Some("finally"))
+                    // gap-033: chain continues iff next is
+                    // `catch` / `finally`.
+                    !next_is_chain_continuation
                 }
                 BlockKind::Other => false,
             };
-            if needs_synthetic_semi {
+            // gap-041: when a synthetic `;` is owed at this
+            // `}` AND the very next non-trivia token is
+            // another `}`, defer the `;` PAST the outer
+            // brace. This matches upstream's behaviour:
+            //   `function f(){function g(){}}` →
+            //   `function f(){function g(){}};` (single `;`
+            //   on the outermost `}`).
+            //   `if(x){function f(){}}` →
+            //   `if(x){function f(){}};` (`;` lifted out of
+            //   Other-block onto the outer-`}` position).
+            // The mechanism: a `deferred_synthetic_semi`
+            // flag is carried forward, and any subsequent
+            // `}` consumes it as if it were the source of
+            // the `;`. If the carrying `}` would itself
+            // emit a `;`, the two collapse to one.
+            //
+            // TryChain interaction: if next is `catch` or
+            // `finally`, neither a fresh `;` NOR a deferred
+            // one may be emitted (the chain owns the
+            // terminator). The deferred state survives
+            // across the suppression.
+            let emit_semi;
+            if kind_wants_semi && next_is_close_brace {
+                // Defer.
+                deferred_synthetic_semi = true;
+                emit_semi = false;
+            } else if next_is_close_brace {
+                // This kind doesn't owe a `;`; just
+                // propagate any deferred state through.
+                emit_semi = false;
+            } else if next_is_chain_continuation {
+                // Carry the deferred forward past the chain
+                // boundary; nothing emits here.
+                emit_semi = false;
+            } else {
+                // Emit if either we owe one OR a deferred
+                // one is pending. Both collapse to a single
+                // emission.
+                emit_semi = kind_wants_semi || deferred_synthetic_semi;
+                deferred_synthetic_semi = false;
+            }
+            if emit_semi {
                 out.push(';');
                 last_emit_was_synthetic_semi = true;
             }
@@ -1229,14 +1277,18 @@ mod tests {
     fn gap033_nested_try_catch_each_gets_semi() {
         // try{ try{a;}catch(e){b;} }catch(f){c;}
         // After inner-catch `}`: peek is `}` (outer-try's),
-        // not catch/finally — inner chain ends, emit `;`.
+        // chain ends; per gap-041 the `;` is DEFERRED past
+        // the outer `}` rather than emitted immediately.
         // After outer-try-body `}`: peek is `catch`, chain
-        // continues, no `;`.
-        // After outer-catch `}`: peek is EOF, chain ends,
-        // emit `;`.
+        // continues; deferred state carried past.
+        // After outer-catch `}`: chain ends; deferred +
+        // own-`;` collapse to a single trailing `;`.
+        // Matches upstream's
+        // `try{try{a}catch(e){b}}catch(f){c};` (verified
+        // via closure-compiler-v20240317.jar).
         assert_eq!(
             minify("try{try{a;}catch(e){b;}}catch(f){c;}"),
-            "try{try{a}catch(e){b};}catch(f){c};"
+            "try{try{a}catch(e){b}}catch(f){c};"
         );
     }
 
@@ -1246,14 +1298,18 @@ mod tests {
     /// TryChain as separate cases — they don't interfere.
     #[test]
     fn gap033_function_decl_inside_try_block_still_gets_semi() {
-        // try{ function f(){} } catches no semi inside (rule A
-        // wouldn't fire on the function-decl `}` because
-        // brace_stack pop is Function not TryChain). The
-        // function-decl gets its own `;`. The try-body's `}`
-        // then pops TryChain.
+        // Per gap-041's deferred-`;` mechanism, the inner
+        // function-decl's `;` is deferred past the try-body's
+        // `}`. The try-chain continues to `catch`, so the
+        // deferred `;` is carried forward past the chain
+        // boundary too. The final catch `}` (chain end)
+        // collapses the deferred + chain-terminator into a
+        // single trailing `;`. Matches upstream:
+        // `try{function f(){}}catch(e){b};` (verified via
+        // closure-compiler-v20240317.jar).
         assert_eq!(
             minify("try{function f(){}}catch(e){b;}"),
-            "try{function f(){};}catch(e){b};"
+            "try{function f(){}}catch(e){b};"
         );
     }
 
@@ -1510,13 +1566,13 @@ mod tests {
     fn gap032_body_with_function_does_not_flatten() {
         // Outer if-body has `function` in the blocking-
         // keyword set, so flatten is blocked. The function-
-        // decl inside then gets its normal gap-030 trailing
-        // `;` after its `}` — the output is
-        // `if(x){function f(){};}` which is the correct
-        // composition of gap-030 + gap-032's bail-out.
+        // decl's synthetic `;` is then DEFERRED past the
+        // outer `}` per gap-041 — matching upstream's
+        // `if(x){function f(){}};` (verified against
+        // closure-compiler-v20240317.jar).
         assert_eq!(
             minify("if(x){function f(){}}"),
-            "if(x){function f(){};}"
+            "if(x){function f(){}};"
         );
     }
 
@@ -1525,9 +1581,20 @@ mod tests {
     /// pre-emit pathway would corrupt.
     #[test]
     fn gap032_body_with_try_does_not_flatten() {
+        // Outer if-body has `try` in the blocking-keyword
+        // set, so gap-032 doesn't flatten (conservatively).
+        // The try-chain's trailing `;` is deferred past the
+        // outer `}` per gap-041. Note: upstream Closure
+        // ACTUALLY flattens this further to
+        // `if(x)try{a()}catch(e){b()};` (gap-032 is more
+        // aggressive there) — that's a separate future gap
+        // (the `has_blocking_keyword` set should not
+        // include `try` once we trust the brace_stack
+        // properly). For now this is the best we produce
+        // without that further work.
         assert_eq!(
             minify("if(x){try{a();}catch(e){b();}}"),
-            "if(x){try{a()}catch(e){b()};}"
+            "if(x){try{a()}catch(e){b()}};"
         );
     }
 

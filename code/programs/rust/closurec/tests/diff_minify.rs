@@ -90,13 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // BOTH stripping underscores AND switching to scientific
     // notation when shorter. Discovered by CLOC14.7.
     ("numeric_separator", "gap-040: numeric separator + scientific shortest-form"),
-    // gap-041: nested function-decl produces a double
-    // synthetic `;`. Output: `function f(){function g(){};};`
-    // — Rule A should drop the inner synthetic `;` before
-    // the outer `}`, but it currently only filters SOURCE
-    // `;`, not previously-emitted synthetic ones.
-    // Discovered by CLOC14.7.
-    ("nested_function", "gap-041: nested function-decl double synthetic `;`"),
+    // gap-041 was RESOLVED in CLOC12.47 — synthetic `;`
+    // emission now peeks ahead and suppresses when the next
+    // non-trivia token is `}`. `minify_nested_function`
+    // flipped IGNORED → PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

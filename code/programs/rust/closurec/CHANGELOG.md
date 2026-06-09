@@ -2,6 +2,48 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.53.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-041** — synthetic `;` propagation through
+  closing braces. Harness now 48/49 (only gap-040 left).
+- Introduced `deferred_synthetic_semi: bool` carried across
+  iterations. When a `}` would emit a synthetic `;` but the
+  next non-trivia is another `}`, the `;` is **deferred**
+  to that outer brace. The outer brace then consumes the
+  deferred state, collapsing with any own-`;` it would emit
+  to a single output.
+- 4-way decision at every `}`:
+  1. owes + next-is-`}` → defer
+  2. doesn't owe + next-is-`}` → propagate state
+  3. next-is-`catch`/`finally` → carry across chain
+  4. else → emit if `kind_wants_semi || deferred`, clear flag
+- Verified against `closure-compiler-v20240317.jar` for:
+  - `function f(){function g(){}}` → `function f(){function g(){}};`
+  - `if(x){function f(){}}` → `if(x){function f(){}};`
+  - `try{function f(){}}catch(e){b;}` → `try{function f(){}}catch(e){b};`
+  - `try{try{a;}catch(e){b;}}catch(f){c;}` → `try{try{a}catch(e){b}}catch(f){c};`
+
+### Updated
+
+Four pre-existing inline tests had encoded the buggy
+double-`;` output as their expected rhs:
+- `gap032_body_with_function_does_not_flatten`
+- `gap032_body_with_try_does_not_flatten` (partial — gap-032
+  conservatism still keeps the outer braces)
+- `gap033_function_decl_inside_try_block_still_gets_semi`
+- `gap033_nested_try_catch_each_gets_semi`
+
+All four updated to the upstream-matching form with
+references to the JAR probe in their docstrings.
+
+### Pre-push security review
+
+Verdict PASS. Traced 7 concerns: source-`;` non-interference,
+sequential `}}}}` collapse, Function-Other mix, Rule A
+interaction, EOF handling, multi-defer collapse, TryChain
+across non-`}` boundary. No counterexample.
+
 ## [0.52.0] - 2026-06-09
 
 ### Changed
