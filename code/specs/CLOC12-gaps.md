@@ -294,3 +294,22 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 - **Status:** **RESOLVED** in CLOC12.46 (PR pending). `minify_tagged_template` flipped IGNORED → PASS. **Harness back to 41/41 PASS** (fourth 100% milestone today).
 - **Resolution:** Added a short-circuit at the top of `needs_separator`: when the next token's value starts with `` ` ``, return false unconditionally. This filter runs BEFORE the word-like rule so any IDENT/keyword/number followed by a template literal emits no space — matching upstream's tagged-template grammar (§13.3.11) which forbids whitespace between the tag function and the template's opening backtick.
+
+### gap-040 — numeric separator + scientific shortest-form
+
+- **Status:** OPEN — newly discovered by CLOC14.7.
+- **Upstream byte-identity test:** `minify_numeric_separator` seed fixture.
+- **Why it fails:** Upstream emits `var x=1E6;` for `var x=1_000_000;`. closurec preserves the underscored literal verbatim. This is TWO normalisations stacked:
+  1. Strip ES2021 numeric separators (`_`) from the literal.
+  2. Apply shortest-form: `1000000` (7 chars) vs `1E6` (3 chars) → scientific wins (decimal form falls back to scientific when shorter).
+- **What it needs:** Extend `normalize_number_value()` (gap-038) to:
+  - Strip `_` from the digit run before parsing (`u128::from_str_radix` doesn't accept separators).
+  - After computing the decimal form, also compute the scientific form and pick the shortest of {source-form, decimal, scientific}, tie-breaking deterministically.
+  - Uppercase `e` to `E` for the scientific form (verified by JAR probes: `1e3` → `1E3`).
+
+### gap-041 — nested function-decl double synthetic `;`
+
+- **Status:** OPEN — newly discovered by CLOC14.7.
+- **Upstream byte-identity test:** `minify_nested_function` seed fixture.
+- **Why it fails:** For `function f(){function g(){}}`, upstream emits `function f(){function g(){}};` but closurec emits `function f(){function g(){};};` — an extra inner `;`. The inner `function g(){}` triggers gap-030's `BlockKind::Function` synthetic `;`. Then when the outer `}` is processed, Rule A's source-`;`-before-`}` filter doesn't fire because the inner `;` was OUR synthetic emit, not a source token.
+- **What it needs:** Before emitting a synthetic `;` for a function/class/switch body close (BlockKind triggers), peek the very next non-trivia token. If it's `}`, suppress the synthetic `;` — the outer `}` will get its own synthetic `;` if appropriate, and chaining two synthetic terminators in a row is always wrong. Equivalent: when processing `}` and `last_emit_was_synthetic_semi == true`, pop the trailing `;` from `out` before computing this close's synthetic `;`. The former is cleaner (pre-check rather than post-correction).
