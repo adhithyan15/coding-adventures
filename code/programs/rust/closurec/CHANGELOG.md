@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.57.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-045** — single-argument arrow function drops
+  its enclosing parens. Harness now 79/81; only gap-044
+  (template substitution, lexer-level) remains open.
+- Added a top-of-loop pattern detector: when the current
+  token is `(` AND `kept[idx+1]` is a Name AND
+  `kept[idx+2]` is `)` AND `kept[idx+3]` is `=>`, emit just
+  the IDENT and `=>`, advancing idx by 4. Both parens are
+  skipped — the `(` push and `)` pop both bypassed, leaving
+  paren_stack net-zero.
+- Composes with `async` keyword: `var f=async(x)=>x+1;` →
+  `var f=async x=>x+1;`. The `async` keyword + Name IDENT
+  pair triggers `needs_separator` (both word-like → space).
+- Added `is_simple_identifier_token` helper that returns
+  true only for `TokenType::Name` — keywords, punctuation,
+  strings, and numbers all fail. This filters out
+  destructuring (`{`), rest (`...`), and reserved-word
+  param names.
+
+### Added
+
+8 inline `gap045_*` tests:
+- target single-arg arrow + async composition
+- 6 non-regression cases: zero-arg, multi-arg, default,
+  rest, destructuring, `(x).y` member access (not arrow)
+
+### Pre-push security review
+
+Verdict PASS. Traced 6 concerns: paren_stack balance,
+other stack non-interaction, false-positive on `(x).y`,
+async composition + needs_separator interaction, future
+template-substitution composition, prev_emitted_tok stored
+as the `=>` token (PUNCT) to avoid spurious space after
+IDENT body.
+
 ## [0.56.0] - 2026-06-09
 
 ### Changed
