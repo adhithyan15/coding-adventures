@@ -90,11 +90,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-045: single-argument arrow function should drop
-    // its enclosing parens (`(x)=>...` → `x=>...`). Upstream
-    // normalises this; closurec preserves the source form.
-    // Discovered by CLOC14.11.
-    ("arrow_async", "gap-045: single-arg arrow drops parens"),
+    // gap-045 was RESOLVED in CLOC12.51 — token-level
+    // pattern detect for `(`, IDENT, `)`, `=>` skips both
+    // parens. `minify_arrow_async` flipped IGNORED → PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

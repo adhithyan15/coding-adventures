@@ -250,6 +250,68 @@ pub fn whitespace_only_minify(
         let tok = kept[idx];
         let val = tok.value.as_str();
 
+        // gap-045: single-arg arrow function — drop the
+        // enclosing parens around a bare-identifier param.
+        // Pattern: `(`, IDENT, `)`, `=>` — when matched,
+        // emit IDENT + `=>` directly, advancing past all 4
+        // tokens. Eligibility deliberately excludes:
+        //   - zero args (`()=>...` — next-after-`(` is `)`)
+        //   - destructuring (`({x})=>...`, `([x])=>...`)
+        //   - rest (`(...args)=>...` — next is `...`)
+        //   - default values (`(x=1)=>...` — `)` is at idx+4 not +2)
+        //   - multiple args (`(x,y)=>...` — `)` is at idx+4+)
+        //   - typed params (TS) — multiple tokens between
+        //     the `(` and `)`.
+        // The check `is_simple_identifier_token` ensures the
+        // single token between parens is a NAME (not a
+        // keyword or operator).
+        //
+        // Composes with `async` keyword: `async(x)=>...` →
+        // `async x=>...`. The `async` is emitted before the
+        // `(`, and our shape-detection runs ON the `(` —
+        // so `async` ends up with `prev_emitted_tok = async`
+        // when IDENT is emitted, triggering needs_separator
+        // (KEYWORD + NAME) → space inserted. Correct.
+        if val == "("
+            && is_simple_identifier_token(kept.get(idx + 1).copied())
+            && kept.get(idx + 2).map(|t| t.value.as_str()) == Some(")")
+            && kept.get(idx + 3).map(|t| t.value.as_str()) == Some("=>")
+        {
+            let ident = kept[idx + 1];
+            // Emit IDENT with separator if needed.
+            if let Some(prev) = prev_emitted_tok {
+                if needs_separator(prev, ident) {
+                    out.push(' ');
+                }
+            }
+            out.push_str(&ident.value);
+            prev_emitted_tok = Some(ident);
+            // Emit `=>` — never needs a separator with an
+            // IDENT prefix (`=` is PUNCTUATION).
+            out.push_str("=>");
+            // Update state machine for the now-emitted `=>`:
+            // body-position semantics don't apply here (arrow
+            // body opens differently), but at_stmt_boundary
+            // and body_position_next should reset to "we are
+            // mid-expression".
+            at_stmt_boundary = false;
+            body_position_next = false;
+            // Synthetic emit shouldn't be flagged as one for
+            // rule-C dedup purposes — it's not a `;`.
+            last_emit_was_synthetic_semi = false;
+            // `=>` token is a punctuation; track it as prev
+            // for the next iteration's needs_separator. We
+            // can't store the original token because we
+            // skipped it; reuse the IDENT slot — the next
+            // token's needs_separator call will see word-like
+            // IDENT as prev. For `x=>y` next is `y` (NAME),
+            // word-like(NAME, NAME) → space. WRONG. So set
+            // prev_emitted_tok to the `=>` token instead.
+            prev_emitted_tok = Some(kept[idx + 3]);
+            idx += 4;
+            continue;
+        }
+
         // Rule C: dedup source `;` directly after our
         // synthetic `;` from rule B.
         if val == ";" && last_emit_was_synthetic_semi {
@@ -773,6 +835,28 @@ fn is_keyword_function(tok: &lexer::token::Token) -> bool {
             || upper.starts_with("KEYWORD");
     }
     true
+}
+
+/// gap-045: True iff this token is a simple bare IDENT
+/// (TokenType::Name) — i.e. a candidate single-arg arrow
+/// parameter. Returns false for NONE input, for keywords,
+/// punctuation, and any non-NAME token type.
+///
+/// The arrow-paren-drop pattern requires a bare identifier
+/// because:
+///   - `(x)=>...` legal (single param name)
+///   - `({x})=>...` destructuring — `{` is PUNCT, not Name
+///   - `(...args)=>...` rest — `...` is PUNCT, not Name
+///   - `(true)=>...` is a SyntaxError (reserved word as
+///     param name); even if the lexer tagged `true` as
+///     Keyword, this check rejects it.
+///   - `(x=1)=>...` default value — `(`, IDENT, `=`, ... —
+///     the position-2 check (next is `)`) catches this.
+fn is_simple_identifier_token(tok: Option<&lexer::token::Token>) -> bool {
+    let Some(t) = tok else {
+        return false;
+    };
+    matches!(t.type_, lexer::token::TokenType::Name)
 }
 
 /// True iff this token is a numeric literal (NUMBER token).
@@ -2152,6 +2236,97 @@ mod tests {
         assert_eq!(
             minify(r#"var x="\"'";"#),
             r#"var x="\"'";"#
+        );
+    }
+
+    // ---- gap-045: single-arg arrow drops parens ----------
+
+    /// Target fixture in compact form: `(x)=>x+1` →
+    /// `x=>x+1`.
+    #[test]
+    fn gap045_single_arg_arrow_drops_parens() {
+        assert_eq!(
+            minify("var f=(x)=>x+1;"),
+            "var f=x=>x+1;"
+        );
+    }
+
+    /// Composes with `async` keyword: `async(x)=>x+1` →
+    /// `async x=>x+1`. The separator between `async` and
+    /// the now-bare IDENT is inserted by `needs_separator`
+    /// (KEYWORD + NAME → space).
+    #[test]
+    fn gap045_async_single_arg_arrow() {
+        assert_eq!(
+            minify("var f=async(x)=>x+1;"),
+            "var f=async x=>x+1;"
+        );
+    }
+
+    /// **Non-regression**: zero-arg arrow `()=>x` stays as
+    /// `()=>x`. The `(` is followed by `)` not IDENT, so
+    /// the gap-045 pattern doesn't match.
+    #[test]
+    fn gap045_zero_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=()=>1;"),
+            "var f=()=>1;"
+        );
+    }
+
+    /// **Non-regression**: multi-arg arrow `(x,y)=>x+y`
+    /// stays parenthesised. The token at idx+2 is `,` not
+    /// `)`, so the pattern doesn't match.
+    #[test]
+    fn gap045_multi_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(x,y)=>x+y;"),
+            "var f=(x,y)=>x+y;"
+        );
+    }
+
+    /// **Non-regression**: default-value arrow `(x=1)=>x`
+    /// stays parenthesised. The token at idx+2 is `=` not
+    /// `)`.
+    #[test]
+    fn gap045_default_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(x=1)=>x;"),
+            "var f=(x=1)=>x;"
+        );
+    }
+
+    /// **Non-regression**: rest-arg arrow `(...args)=>args`
+    /// stays parenthesised. The token at idx+1 is `...`
+    /// (PUNCT, not Name) — `is_simple_identifier_token`
+    /// returns false.
+    #[test]
+    fn gap045_rest_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=(...args)=>args;"),
+            "var f=(...args)=>args;"
+        );
+    }
+
+    /// **Non-regression**: destructuring-arg arrow
+    /// `({x})=>x` stays parenthesised. The token at idx+1
+    /// is `{` (PUNCT, not Name).
+    #[test]
+    fn gap045_destruct_arg_arrow_unchanged() {
+        assert_eq!(
+            minify("var f=({x})=>x;"),
+            "var f=({x})=>x;"
+        );
+    }
+
+    /// **Non-regression**: `(x)` followed by `.` (member
+    /// access on a parenthesised expression) — NOT an
+    /// arrow. The token at idx+3 is `.` not `=>`.
+    #[test]
+    fn gap045_parens_not_arrow_unchanged() {
+        assert_eq!(
+            minify("var x=(a).b;"),
+            "var x=(a).b;"
         );
     }
 
