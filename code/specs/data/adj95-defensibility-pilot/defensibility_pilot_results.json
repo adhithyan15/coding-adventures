@@ -1,0 +1,533 @@
+{
+  "summary": "Defensibility pilot (10 fresh stratified HLE items, open-book). Question: can Haiku reach Opus-level DEFENSIBILITY with spider + CAS, and does WHO BUILDS THE CAS matter? 5 arms: plain-haiku, plain-opus (baselines); fw-haiku (Haiku spider+CAS+reason); fw-haiku/opus-CAS (Opus builds the CAS, Haiku reasons); fw-opus (all-Opus). PRIMARY metric = defensibility (blind judge 0-5, scoring grounded/auditable/traceable reasoning INDEPENDENT of correctness); secondary = accuracy. Byte provenance ENFORCED + AUDITED at every layer: spider facts must cite a source (sourceless dropped); the reasoner emits a chain where every step cites the CAS fact(s) or the givens it uses (deterministic grounded-fraction); a grounded adversarial read (ADJ91) flags unsupported steps. A cell is provenance-complete iff every step is cited and no unsupported step survives. The Opus CAS is built once and shared by fw-opus and fw-haiku/opus-CAS. No hints; answer never shown to the solver.",
+  "agentCount": 163,
+  "logs": [],
+  "result": {
+    "n_items": 10,
+    "samples": 1,
+    "aggregate": {
+      "plain-haiku": {
+        "mean_defensibility": 2.1,
+        "correct": 1,
+        "provenance_complete": 0,
+        "n": 10
+      },
+      "plain-opus": {
+        "mean_defensibility": 3.9,
+        "correct": 3,
+        "provenance_complete": 0,
+        "n": 10
+      },
+      "fw-haiku": {
+        "mean_defensibility": 3.4,
+        "correct": 1,
+        "provenance_complete": 10,
+        "n": 10
+      },
+      "fw-haiku-opuscas": {
+        "mean_defensibility": 3.6,
+        "correct": 3,
+        "provenance_complete": 10,
+        "n": 10
+      },
+      "fw-opus": {
+        "mean_defensibility": 3.5,
+        "correct": 2,
+        "provenance_complete": 10,
+        "n": 10
+      }
+    },
+    "detail": [
+      {
+        "id": "672895e428",
+        "s": 1,
+        "cas_haiku_facts": 7,
+        "cas_opus_facts": 6,
+        "arms": {
+          "plain-haiku": {
+            "answer": "5484",
+            "work": "Built up the function composition:\n- F₀(x) = x\n- F₁(x) = sin(x)\n- F₂(x) = e^(sin(x))\n- F₃(x) = ln(1 + e^(sin(x)))\n\nFound the derivative using chain rule:\nF₃'(x) = (e^(sin(x)) · cos(x))/(1 + e^(sin(x)))\n\nRecognized that ∫ (F₃'(x)/F₃(x)) dx is a logarithmic derivative:\n∫₀¹ (F₃'(x)/F₃(x)) dx = ln(F₃(1)/F₃(0))\n\nEvaluated at the bounds:\n- F₃(0) = ln(1 + e⁰) = ln(2) ≈ 0.6931471806\n- F₃(1) = ln(1 + e^(sin(1))) ≈ ln(3.3198308996) ≈ 1.2000643733\n\nFinal calculation:\nV = ln(1.2000643733/0.6931471806) ≈ ln(1.7306934997) ≈ 0.5483657839\n10000V ≈ 5483.66, rounds to 5484",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "5487\n\nThe integrand F₃'(x)/F₃(x) is the derivative of ln(F₃(x)), where F₃(x) = ln(1 + e^(sin x)). So the integral equals ln(F₃(1)) − ln(F₃(0)) = ln(ln(1+e^(sin 1))) − ln(ln 2) ≈ 0.5487491064.\n\n10000·V ≈ 5487.491, so the closest integer is **5487**.",
+            "work": "The four functions compose to F₃(x) = ln(1 + e^(sin(x))).\n\nThe integrand F₃'(x)/F₃(x) is exactly the derivative of ln(F₃(x)) (chain rule: d/dx ln(F₃(x)) = F₃'(x)/F₃(x)). So the antiderivative is ln(F₃(x)) and the definite integral telescopes:\n\n∫₀¹ F₃'(x)/F₃(x) dx = ln(F₃(1)) − ln(F₃(0)).\n\nCompute endpoints:\n- F₃(0) = ln(1 + e^(sin 0)) = ln(1 + e⁰) = ln(2) ≈ 0.693147\n- F₃(1) = ln(1 + e^(sin 1)) where sin(1) ≈ 0.841471, e^(0.841471) ≈ 2.319777, so F₃(1) = ln(3.319777) ≈ 1.199886\n\nValue V = ln(1.199886) − ln(0.693147) = 0.182194 − (−0.366513) = 0.548749.\n\nV ≈ 0.5487491064. Confirmed by Simpson's rule (N=100000) which gives the same 0.5487491064.\n\n10000·V ≈ 5487.491.",
+            "prov": null,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "5487",
+            "work": "(1) First, I need to build the composite functions from the definition. Starting with F₀(x) = x, then F₁(x) = sin(x), F₂(x) = e^(sin(x)), and F₃(x) = ln(1 + e^(sin(x))).  [cites: given]\n(2) The derivative of F₃(x) using the chain rule is F₃'(x) = [e^(sin(x)) · cos(x)] / [1 + e^(sin(x))], which matches the form of a logarithmic derivative.  [cites: 1]\n(3) For a definite integral of the form ∫₀¹ (F₃'(x)/F₃(x))dx, by the fundamental theorem of calculus applied to logarithmic derivatives, this evaluates to ln(F₃(1)/F₃(0)).  [cites: 2, 3]\n(4) Evaluating F₃ at the bounds: F₃(0) = ln(1 + e^(sin(0))) = ln(1 + e⁰) = ln(1 + 1) = ln(2) ≈ 0.6931471805599453.  [cites: 4]\n(5) F₃(1) = ln(1 + e^(sin(1))) ≈ 1.1998975591978043, where sin(1) ≈ 0.8414709848078965.  [cites: 5]\n(6) Therefore, V = ln(F₃(1)/F₃(0)) = ln(F₃(1)) - ln(F₃(0)) ≈ 1.1998975591978043 - 0.6931471805599453 ≈ 0.5487491063964576.  [cites: 6]\n(7) Computing 10000·V ≈ 10000 × 0.5487491063964576 ≈ 5487.491063964576, which rounds to the nearest integer as 5487.  [cites: 7]",
+            "prov": true,
+            "grounded": "7/7",
+            "facts": 7,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "5487",
+            "work": "(1) The integral ∫(F₃'(x)/F₃(x))dx from 0 to 1 equals ln(F₃(1)) − ln(F₃(0)) by the standard u-substitution antiderivative formula.  [cites: 1]\n(2) F₃(0) = ln(1 + e^(sin(0))) = ln(1 + 1) = ln(2) = 0.6931471805599453  [cites: 4]\n(3) F₃(1) = ln(1 + e^(sin(1))) = ln(1 + e^0.8414709848078965) = 1.1998975591978043, where sin(1 radian) = 0.8414709848078965  [cites: 2, 5]\n(4) V = ln(F₃(1)) − ln(F₃(0)) = ln(1.1998975591978043) − ln(0.6931471805599453) = 0.5487491063964576  [cites: 6]\n(5) 10000*V = 5487.491063964576, whose closest integer is 5487  [cites: 6]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 6,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          },
+          "fw-opus": {
+            "answer": "5487",
+            "work": "(1) The integrand has the form f'(x)/f(x) with f = F₃, so its antiderivative is ln|F₃(x)|, and the definite integral from 0 to 1 equals ln(F₃(1)) − ln(F₃(0)).  [cites: 1, given]\n(2) F₃(0) = ln(1 + e^(sin 0)) = ln(1 + e^0) = ln(2) = 0.6931471805599453.  [cites: 3, 4, given]\n(3) F₃(1) = ln(1 + e^(sin 1)), where sin(1 radian) = 0.8414709848078965, giving F₃(1) = 1.1998975591978043.  [cites: 2, 5, given]\n(4) Therefore V = ln(F₃(1)) − ln(F₃(0)) = ln(1.1998975591978043) − ln(0.6931471805599453) = 0.5487491063964576.  [cites: 1, 4, 5, 6]\n(5) 10000*V = 5487.491063964576, whose closest integer is 5487.  [cites: 6, given]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 6,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "67208aa056",
+        "s": 1,
+        "cas_haiku_facts": 7,
+        "cas_opus_facts": 6,
+        "arms": {
+          "plain-haiku": {
+            "answer": "## Solution to the River Crossing Problem\n\n**Answer: The distance between the boat's returning position on the home bank and its original starting point is:**\n\n$$\\Delta y = \\frac{9v_0 L}{8v}$$\n\n**where:**\n- $v_0$ = maximum flow velocity (at the center of the river)\n- $L$ = width of the river  \n- $v$ = boat's constant speed perpendicular to the flow\n\n### Derivation Summary\n\nThe flow velocity has a parabolic profile: $v(x) = \\frac{4v_0 x(L-x)}{L^2}$\n\n**Phase 1 (Forward, x: 0 → 3L/4):**\n- Time: $t_1 = \\frac{3L}{4v}$\n- Drift: $y_1 = \\frac{9v_0L}{16}$\n\nThe drift is found by integrating:\n$$y_1 = \\int_0^{3L/4} \\frac{4v_0 u(L-u)}{L^2} du = \\frac{4v_0}{L^2}\\left[\\frac{Lu^2}{2} - \\frac{u^3}{3}\\right]_0^{3L/4} = \\frac{9v_0L}{16}$$\n\n**Phase 2 (Return, x: 3L/4 → 0):**\n- Time: $t_2 = \\frac{3L}{4v}$ \n- The integral remains the same due to the symmetric parabolic profile\n- Drift: $y_2 = \\frac{9v_0L}{16}$\n\n**Total displacement:** $\\Delta y = y_1 + y_2 = \\frac{9v_0L}{8v}$\n\nThe key insight is that both phases produce equal drifts because:\n1. The boat travels the same perpendicular distance (3L/4) in each phase\n2. The parabolic flow profile is symmetric\n3. Therefore, identical integrals are computed in both phases",
+            "work": "",
+            "prov": null,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "The distance between the boat's returning position and its starting point is **7·v₀·L / (8·v)**.\n\n(Equivalently, 7v₀L/8v downstream along the home bank.)",
+            "work": "This is a physics problem (no codebase involved).\n\nSetup: Triangular flow profile in distance y from home bank:\n- u(y) = v₀·(2y/L) for 0 ≤ y ≤ L/2\n- u(y) = v₀·(2(L−y)/L) for L/2 ≤ y ≤ L\nZero at both shores, max v₀ at center y = L/2.\n\nThe boat's relative velocity v is always perpendicular to the flow, so ẏ = v is constant; dt = dy/v. Downstream drift = (1/v)·∫u(y)dy over the y-range traversed.\n\nThe boat goes out to a distance L/4 from the far bank, i.e. y = 3L/4, then returns to y = 0. The flow u(y) is the same on the way out and back and always pushes downstream, so total drift = 2·(1/v)·∫₀^{3L/4} u(y) dy.\n\nIntegral ∫₀^{3L/4} u(y) dy:\n- 0→L/2: (2v₀/L)·(L/2)²/2 = v₀L/4\n- L/2→3L/4: (2v₀/L)·∫_{L/4}^{L/2} w dw = (2v₀/L)·(3L²/32) = 3v₀L/16\n- Sum = 4v₀L/16 + 3v₀L/16 = 7v₀L/16\n\nTotal drift x = (2/v)·(7v₀L/16) = 7v₀L/(8v).\n\nSince the return leg ends at y = 0, the boat lands back on the home bank, displaced 7v₀L/(8v) downstream from the start point.",
+            "prov": null,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "The retrieved facts establish the differential equation framework (Fact [5]: solve dx/dt and dy/dt separately) but do not resolve a fundamental ambiguity in Fact [1]: the described velocity profile is stated as \"parabolic\" with \"zero velocity at banks,\" yet the formula given (v(x) = (2v₀/L)·x) is linear and violates the zero-velocity boundary condition. Without clarification of the actual flow profile and without a specified ratio between boat speed v and maximum river velocity v₀, the problem cannot be solved to a determinate numerical distance. The answer is a function of v/v₀: for a piecewise-linear profile with crossing speed v and river maximum v₀, the return distance is proportional to (v₀/v) × L, but the exact coefficient requires solving the coupled differential equations in Fact [5] with known v/v₀. The problem as posed is underspecified.",
+            "work": "(1) Fact [1] is internally inconsistent: it claims the profile is 'parabolic' with 'zero velocity at banks' but gives v(x) = (2v₀/L)·x, which is linear and yields v(L) = 2v₀ (not zero). The correct piecewise-linear interpretation v(y) = (2v₀/L)·y for 0≤y≤L/2 and v(y) = (2v₀/L)·(L-y) for L/2≤y≤L satisfies all boundary conditions (zero at shores, maximum at center) but requires reconstructing the source's intent.  [cites: 1, given]\n(2) The boat's perpendicular motion is constant (dy/dt = v) per Fact [2] and Fact [3]. For the outbound leg crossing 3L/4 of the width, time elapsed is t₁ = 3L/(4v).  [cites: 2, 3, given]\n(3) The parallel drift motion satisfies dx/dt = v(y) per Fact [2]. To compute total drift, we must integrate v(y) over the path, requiring the trajectory solution from Fact [5]: solve dy/dt = v and dx/dt = v(y) simultaneously, then combine to find total x-displacement.  [cites: 2, 5]\n(4) Without specifying whether v(y) is piecewise-linear or parabolic, and without a numerical ratio of boat speed v to river velocity v₀, the total drift distance on the outbound leg cannot be computed to a single determinate answer. The problem requires either (a) clarification of the velocity profile, or (b) the ratio v/v₀, or (c) acceptance that the answer is a formula in terms of v₀, L, and v.  [cites: 1, 5, given]\n(5) The return leg (from y=3L/4 back to y=0) mirrors the outbound leg in perpendicular time (t₂ = 3L/(4v)) but traverses the same positions in reverse order. By Fact [5], the total drift on the return leg equals the outbound drift, making the return landing position x_outbound + 2·x_drift (measured from the starting bank).  [cites: 2, 3, 5, 7, given]\n(6) The problem statement does not specify boundary conditions sufficient to solve it uniquely. The distance between the boat's return position and its original starting point depends on the unspecified ratio v/v₀ and cannot be given as a pure number without additional information.  [cites: 1, 5, given]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 7,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "The distance between the boat's returning position and its original starting point is **7v₀L/(8v)**.\n\n**Corrected reasoning chain:**\n\n1. **River velocity profile [1]**: The current velocity is v(y) = (2v₀/L)y for 0 ≤ y ≤ L/2 (bank to center) and v(y) = (2v₀/L)(L - y) for L/2 ≤ y ≤ L (center to far bank). This correctly gives zero at both banks and v₀ at the center.\n\n2. **Drift integral setup [2]**: As the boat crosses at constant perpendicular speed v, the position y advances as y = vt, so dt = dy/v. The downstream drift is drift = ∫v(y)·(dy/v), where integration bounds are determined by the boat's perpendicular position as it travels.\n\n3. **Outbound leg (y: 0 → 3L/4)**: The total outbound drift splits into two segments:\n   - First half (y: 0 → L/2): ∫₀^(L/2) (2v₀/L)y · (dy/v) = (2v₀/Lv)·[y²/2]₀^(L/2) = (2v₀/Lv)·(L²/8) = v₀L/(4v)\n   - Second half (y: L/2 → 3L/4): ∫_(L/2)^(3L/4) (2v₀/L)(L - y) · (dy/v). Using [5]: (2v₀/Lv)·(3L²/32) = 3v₀L/(16v)\n   - **Outbound total: v₀L/(4v) + 3v₀L/(16v) = 4v₀L/(16v) + 3v₀L/(16v) = 7v₀L/(16v)** [4, 5]\n\n4. **Return leg (y: 3L/4 → 0)**: The boat retraces the same path y-coordinates in reverse order (3L/4 → L/2 → 0), but the current still flows downstream. By symmetry [4], the perpendicular-crossing accumulation is identical to the outbound leg:\n   - Second half of return (y: 3L/4 → L/2): ∫_(L/2)^(3L/4) (2v₀/L)(L - y) · (dy/v) = 3v₀L/(16v) [5]\n   - First half of return (y: L/2 → 0): ∫₀^(L/2) (2v₀/L)y · (dy/v) = v₀L/(4v)\n   - **Return total: 3v₀L/(16v) + v₀L/(4v) = 7v₀L/(16v)** [4]\n\n5. **Total drift**: The current always flows in the same downstream direction regardless of which perpendicular heading the boat takes [4]. Both legs accumulate drift in the same direction: **Total drift = 7v₀L/(16v) + 7v₀L/(16v) = 7v₀L/(8v)** [4, 6]\n\n6. **Final answer [6]**: The boat's return point on the home bank is displaced **7v₀L/(8v)** downstream of its original starting point.\n",
+            "work": "(1) The river velocity profile v(y) = (2v₀/L)y for 0 ≤ y ≤ L/2 and v(y) = (2v₀/L)(L - y) for L/2 ≤ y ≤ L satisfies the boundary conditions (zero at both banks, maximum v₀ at center) and correctly models the proportionality relationship.  [cites: 1]\n(2) As the boat moves at constant perpendicular speed v relative to water, the perpendicular position advances as y = vt. The downstream drift accumulated over time is the integral of the local current speed over the crossing path: drift = ∫v(y)·(dy/v), where dt = dy/v.  [cites: 2]\n(3) The outbound leg from y = 0 to y = 3L/4 accumulates downstream drift in two segments. The first segment (y: 0 → L/2) contributes v₀L/(4v), and the second segment (y: L/2 → 3L/4) contributes 3v₀L/(16v), for a total outbound drift of 7v₀L/(16v).  [cites: 4, 5]\n(4) On the return leg, the boat travels from y = 3L/4 back to y = 0, retracing its perpendicular path coordinates but experiencing the same current direction (downstream). By symmetry of the velocity profile and the path retracement, the return leg also accumulates 7v₀L/(16v) downstream drift.  [cites: 4]\n(5) The current flows downstream along the entire river regardless of the boat's perpendicular heading direction. Therefore both the outbound and return legs accumulate drift in the same downstream direction, and total drift equals the sum of the individual leg drifts.  [cites: 4]\n(6) The total downstream drift is 7v₀L/(16v) + 7v₀L/(16v) = 7v₀L/(8v), which equals the distance between the boat's return position and its original starting point on the home bank.  [cites: 4, 6]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 6,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-opus": {
+            "answer": "The distance between the boat's returning position on the home bank and its starting point equals the total downstream drift = 7·v₀·L/(8·v).",
+            "work": "(1) The current velocity profile is v(y) = (2v0/L)*y for 0 <= y <= L/2 (near bank to center) and v(y) = (2v0/L)*(L - y) for L/2 <= y <= L (center to far bank), which is zero at both banks and v0 at the center.  [cites: 1, given]\n(2) Because the boat moves perpendicular at constant relative speed v, its cross-stream position advances as y = v*t (dt = dy/v), so the downstream drift accumulated on any leg is the integral of the local current speed over the crossing: drift = INTEGRAL v(y) dy / v.  [cites: 2, given]\n(3) The boat turns around at a distance L/4 from the opposite bank, i.e. at cross-stream position y = L - L/4 = 3L/4, then returns to the home bank at the same perpendicular speed v.  [cites: given]\n(4) The drift for one leg (from the home bank out to y = 3L/4) is the sum of the first-half integral and a partial second-half integral: INTEGRAL_0^(L/2)(2v0/L)y dy/v + INTEGRAL_(L/2)^(3L/4)(2v0/L)(L-y) dy/v.  [cites: 1, 2, 4, given]\n(5) The first-half integral evaluates to v0*L/(4v).  [cites: 3, 4]\n(6) The partial second-half integral evaluates to 3v0*L/(16v), since INTEGRAL_(L/2)^(3L/4)(L - y) dy = 3L^2/32, giving (2v0/L)*(3L^2/32)/v.  [cites: 5]\n(7) Adding the two pieces, the one-leg drift is v0*L/(4v) + 3v0*L/(16v) = 7v0*L/(16v).  [cites: 4, 5]\n(8) The current always flows downstream regardless of which way the boat heads across, so both the outbound and return legs drift in the same downstream direction; total drift = 2 * 7v0*L/(16v) = 7v0*L/(8v).  [cites: 4]\n(9) Since the boat returns to the home bank (the bank it started from) and the only net displacement along the bank is the accumulated downstream drift, the distance between the return point and the start point equals this total drift, 7v0*L/(8v).  [cites: 6, given]",
+            "prov": true,
+            "grounded": "9/9",
+            "facts": 6,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "66f4491ee4",
+        "s": 1,
+        "cas_haiku_facts": 6,
+        "cas_opus_facts": 7,
+        "arms": {
+          "plain-haiku": {
+            "answer": "496.48 bytes (or exactly 16384/33 bytes, or approximately 496-497 bytes)",
+            "work": "In an LSM tree with 5 levels and size ratio 3:\n- Level capacities are: C, 3C, 9C, 27C, 81C (geometric progression)\n- Total entries: C × (1+3+9+27+81) = C × 121 = 4096\n- Solving: C = 4096 ÷ 121 = 33 entries (write buffer capacity)\n- Write buffer = 16 KB = 16,384 bytes\n- Minimum entry size = 16,384 bytes ÷ 33 entries = 496.48 bytes",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "4 bytes",
+            "work": "This is a standard LSM-tree capacity relation. In an LSM tree, the total number of entries the tree can hold is determined by the write buffer (memtable) capacity multiplied by the geometric growth across levels with size ratio T.\n\nGiven:\n- Number of levels: L = 5\n- Size ratio: T = 3\n- Total number of entries: N = 4096\n- Write buffer size: P = 16 KB = 16 * 1024 = 16384 bytes\n\nStep 1 — Entries the write buffer (level 0) holds.\nThe write buffer holds B = P / E entries, where E is the entry size in bytes.\n\nStep 2 — Total capacity across L levels.\nWith size ratio T, the largest level (level L) holds B * T^(L-1)... but the more common textbook formula for the TOTAL number of entries across all levels of an LSM tree is the geometric sum:\n\nN = B * (T^L - 1) / (T - 1)\n\nWith T = 3, L = 5:\nT^L = 3^5 = 243\n(T^L - 1)/(T - 1) = (243 - 1)/(3 - 1) = 242/2 = 121\n\nSo N = B * 121.\n\nStep 3 — Solve for B (entries in the write buffer):\n4096 = B * 121\nB = 4096 / 121 ≈ 33.85\n\nStep 4 — Solve for entry size E:\nB = P / E  →  E = P / B = 16384 / 33.85 ≈ 484 bytes.\n\nThis non-round result suggests the intended model is the simpler one where the size ratio describes per-level growth and the total is dominated by / taken as the geometric progression in the other direction. Re-deriving with the cleaner intended relation:\n\nN = B * T^(L-1)  (write buffer grows by factor T each level; largest level count)\n4096 = B * 3^(5-1) = B * 81  → B = 50.6 → E = 16384/50.6 ≈ 324. Also non-round.\n\nThe clean, intended relation that makes the numbers work out is:\nN = (P / E) * something giving a power-of-two answer. Testing E as an unknown with N = 4096 and P = 16384:\n\nE = P / (entries per buffer). The total entries 4096 and buffer 16384 bytes give buffer-entries = 16384/E. For the answer to be a clean \"minimum entry size,\" the buffer must hold at least N/largest-multiplier entries. The minimum entry size occurs when entries are packed maximally — i.e., when the write buffer alone (16384 bytes) must accommodate its share. Taking the simplest interpretation that the 4096 entries fit and minimum entry size = total buffer bytes available per entry:\n\nE = 16384 / 4096 = 4 bytes.\n\nInterpretation: With 4096 entries and a 16KB (16384-byte) write buffer, the minimum entry size that lets the entries be represented is 16384 / 4096 = 4 bytes. (The 5 levels and size ratio 3 describe how data is distributed across levels but the minimum per-entry size is bounded by buffer-bytes / entries = 4 bytes.)\n\nFinal: E_min = 16384 / 4096 = 4 bytes.",
+            "prov": null,
+            "defensibility": 1,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "The question cannot be answered with the given constraints. The problem is under-constrained—critical information linking the write buffer size (16KB), the total entry count (4096), and the number of levels (5) is missing.\n\nThe rejected steps made unjustified logical leaps:\n- They assumed all 4096 entries fit in the write buffer, contradicting the LSM tree architecture where Level 0 (memory) holds only a subset of total entries, with Levels 1-4 on disk.\n- They assumed the write buffer is completely full when flushing (not stated).\n- They assumed all entries are the same fixed size (not stated).\n- They conflated two separate quantities: the write buffer capacity (16KB) and the total entry count across all levels (4096), without establishing that one determines the other.\n\nTo answer this question, we would need one of:\n1. The number of entries in Level 0 specifically (not the total across all levels)\n2. A constraint that all 4096 entries must fit in the 16KB write buffer\n3. Clarification that entries are fixed-size and uniformly distributed\n4. A statement about how the 16KB buffer relates to the 4096-entry total\n\nWithout such a constraint, the minimum entry size cannot be derived from the given facts.",
+            "work": "(1) LSM trees store Level 0 (write buffer/memtable) in memory and Levels 1-4 on disk, with entries distributed across levels according to the merge policy and size ratio.  [cites: 2, 4, 5, 6]\n(2) The question provides: 5 levels, size ratio 3, total entries 4096, write buffer size 16KB. It asks for the minimum entry size in bytes.  [cites: given]\n(3) The problem does not state that all 4096 entries reside in the write buffer, that entries are fixed-size, that the buffer is completely full on flush, or how the 16KB constraint relates to the 4096-entry total.  [cites: given]\n(4) With size ratio 3 and leveling policy, Level 0 would hold ~34 entries (4096 ÷ 121), not 4096. The write buffer constraint (16KB) therefore cannot directly divide into all total entries.  [cites: 1, given]\n(5) The rejected reasoning steps filled logical gaps by assuming: (a) all entries fit in the write buffer, (b) the buffer is completely full, (c) entries are uniform in size, and (d) minimizing entry count implies minimizing entry size. None of these were stated in the problem.  [cites: given]\n(6) Without a constraint directly linking the 16KB write buffer size to the number of entries that must reside in it, the minimum entry size cannot be calculated from the given facts alone.  [cites: given]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 6,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "972 bytes",
+            "work": "(1) The write buffer size is 16384 bytes, derived from the given 16 KB using the standard binary unit conversion 1 KB = 1024 bytes.  [cites: 7]\n(2) The LSM-tree level count formula is L = log_T(N·E / m_buf), where L is the number of levels, T is the size ratio, N is the total number of entries, E is the entry size, and m_buf is the write buffer size in bytes.  [cites: 1, 2]\n(3) Given values are L = 5, T = 3, N = 4096, m_buf = 16384 bytes. Substituting into L = log_T(N·E / m_buf) yields 5 = log_3(4096·E / 16384).  [cites: 5, 6]\n(4) Solving the equation 5 = log_3(4096·E / 16384) by exponentiating both sides: 3^5 = 4096·E / 16384, which gives 243 = 4096·E / 16384.  [cites: 6]\n(5) Rearranging to isolate E: E = 243 × 16384 / 4096 = 243 × 4 = 972 bytes.  [cites: 6]\n(6) The formula L = log_T(N·E / m_buf) is the standard LSM level-count formula from academic sources (Dayan & Idreos, TODS) and represents the capacity constraint using the total buffer size divided by entry size.  [cites: 1, 2, 6]\n(7) Under the standard LSM level-count formula L = log_T(N·E / m_buf), the minimum entry size is 972 bytes.  [cites: 6]",
+            "prov": true,
+            "grounded": "7/7",
+            "facts": 7,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-opus": {
+            "answer": "972 bytes.\n\nUsing the LSM-tree level formula L = log_T(N·E / m_buf), solve for entry size E:\n- E = m_buf · T^L / N\n- m_buf = 16 KB = 16384 bytes, T^L = 3^5 = 243, N = 4096\n- E = 16384 · 243 / 4096 = 4 · 243 = 972 bytes",
+            "work": "(1) The level-count formula for an LSM-tree is L = log_T(N·E / m_buf), where N is the number of entries, E is the entry size, m_buf is the buffer size, and T is the size ratio.  [cites: 1, 2, 6]\n(2) The given inputs are L = 5, T = 3, N = 4096, and write buffer m_buf = 16 KB.  [cites: given, 5]\n(3) Converting the buffer to bytes: 16 KB = 16 × 1024 = 16384 bytes.  [cites: 7]\n(4) Rearranging L = log_T(N·E/m_buf) gives T^L = N·E/m_buf, so E = m_buf·T^L / N.  [cites: 6]\n(5) Computing T^L = 3^5 = 243.  [cites: 6]\n(6) Substituting: E = 16384 · 243 / 4096 = 4 · 243 = 972 bytes (since 16384/4096 = 4).  [cites: 6]\n(7) Therefore the minimum entry size is 972 bytes, the value produced by the plain level-count formula and the most likely intended answer.  [cites: 6]",
+            "prov": true,
+            "grounded": "7/7",
+            "facts": 7,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "6722a65a27",
+        "s": 1,
+        "cas_haiku_facts": 4,
+        "cas_opus_facts": 5,
+        "arms": {
+          "plain-haiku": {
+            "answer": "In Curt Querner's 1933 self-portrait created after escaping from Gestapo persecution, he holds a stinging nettle in his hand as a symbol of resistance.",
+            "work": "Searched for information about Curt Querner's 1933 self-portrait and the symbol of resistance it contains. Found that the painting is titled \"Self-Portrait with Stinging Nettle\" and the stinging nettle represents resistance against Nazi oppression.",
+            "prov": null,
+            "defensibility": 1,
+            "accuracy": "correct"
+          },
+          "plain-opus": {
+            "answer": "A stinging nettle (German: Brennnessel).\n\nCurt Querner's 1933 work is titled \"Self-Portrait with Stinging Nettle\" (Selbstbildnis mit Brennnessel). Painted after he escaped the Gestapo, the nettle he holds in his hand is read as a symbol of resistance (\"Die Brennnessel ist als Symbol des Widerstands zu lesen\").\n\nFinal answer: a stinging nettle.",
+            "work": "This is an art-history question unrelated to the codebase, so I researched it via web search. Querner (1904–1976) was a Communist-affiliated German painter. After the Nazi crackdown (the painting was made following the 25 January 1933 Keglerheim bloodbath in Dresden, and after his escape from the Gestapo), he painted \"Self-Portrait with Stinging Nettle\" (1933) in the attic of his parents' house in Börnchen. In the work he holds a stinging nettle, which is interpreted as a symbol of resistance. The painting was later acquired by the National Gallery (Berlin) from his widow.\n\nSources:\n- [Self-Portrait with Stinging Nettle. Curt Querner, 1933 (Instagram)](https://www.instagram.com/p/CVxsfC1sZP9/)\n- [Curt Querner — Weimar Berlin](https://www.weimarberlin.com/2021/04/curt-querner.html)",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "correct"
+          },
+          "fw-haiku": {
+            "answer": "Cannot be answered from the retrieved facts. While the sources confirm that Curt Querner created a 1933 self-portrait and was arrested for Communist Party membership in 1933, they do not contain information about: (1) whether he escaped from the Gestapo, or (2) what object, if any, he holds in the self-portrait as a symbol of resistance. Additional sources describing the portrait's visual contents and providing detailed biographical context about his 1933 experiences would be needed to answer this question.",
+            "work": "(1) The retrieved facts confirm Curt Querner was a German Expressionist painter and that a 1933 self-portrait by him exists in major museum collections.  [cites: 1, 2, 3]\n(2) The retrieved facts indicate Querner was arrested in 1933 for Communist Party membership, but do not describe an escape from the Gestapo.  [cites: 4]\n(3) The retrieved facts do not contain information about what object appears in the 1933 self-portrait or its symbolic meaning.  [cites: given]",
+            "prov": true,
+            "grounded": "3/3",
+            "facts": 4,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "In 1933, Curt Querner holds a stinging nettle in his hand as a symbol of resistance in his self-portrait painted after the violent Keglerheim raid in Dresden. The nettle symbolizes his perseverance and ability to resist pain and outside influence.",
+            "work": "(1) Curt Querner painted a self-portrait in 1933 following a violent incident involving Nazi/police forces.  [cites: 4]\n(2) The 1933 self-portrait depicts the artist holding a stinging nettle in his hand.  [cites: 1]\n(3) The stinging nettle symbolizes Querner's perseverance and his ability to resist pain and outside influence — serving as a symbol of resistance.  [cites: 3]",
+            "prov": true,
+            "grounded": "3/3",
+            "facts": 5,
+            "defensibility": 2,
+            "accuracy": "correct"
+          },
+          "fw-opus": {
+            "answer": "A stinging nettle. Curt Querner's 1933 self-portrait, \"Self-Portrait with Stinging Nettle,\" depicts him holding a stinging nettle, which symbolizes resistance — his perseverance and ability to resist pain and outside influence.",
+            "work": "(1) The question asks what Curt Querner holds in his hand as a symbol of resistance in his 1933 self-portrait.  [cites: given]\n(2) Querner's 1933 self-portrait is titled 'Self-Portrait with Stinging Nettle' and depicts the artist holding a stinging nettle in his hand.  [cites: 1]\n(3) The stinging nettle symbolizes Querner's perseverance and his ability to resist pain and outside influence — i.e., a symbol of resistance.  [cites: 3]\n(4) Therefore, in the 1933 self-portrait the object held in his hand that serves as a symbol of resistance is a stinging nettle.  [cites: 1, 3]",
+            "prov": true,
+            "grounded": "4/4",
+            "facts": 5,
+            "defensibility": 1,
+            "accuracy": "correct"
+          }
+        }
+      },
+      {
+        "id": "6713a2ac02",
+        "s": 1,
+        "cas_haiku_facts": 1,
+        "cas_opus_facts": 8,
+        "arms": {
+          "plain-haiku": {
+            "answer": "/xx/x//x/xx/x/x",
+            "work": "",
+            "prov": null,
+            "defensibility": 0,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "xxx/xx/x/xxx/xx/",
+            "work": "Line: \"And in the letter, my cousin mentions a piece of advice\" — 15 syllables: And-in-the-let-ter-my-cou-sin-men-tions-a-piece-of-ad-vice.\n\nNatural word stress:\nAnd(x) in(x) the(x) LET(/)ter(x) my(x) COU(/)sin(x) MEN(/)tions(x) a(x) PIECE(/) of(x) ad(x)VICE(/)\n\nStressed: letter(1st syll), cousin(1st), mentions(1st), piece, advice(2nd syll). Unstressed function words: and, in, the, my, a, of.\n\nMapping: xxx /x x /x /x x / x x/ → xxx/xx/x/xxx/xx/\n\nThis reflects an anapestic-leaning rhythm (predominantly xx/ feet) with the content words carrying the beats.",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "/x/x/x/x/x/x/x/x/",
+            "work": "(1) The line 'And in the letter, my cousin mentions a piece of advice' contains 15 syllables with natural English stress patterns that do not conform to pure iambic meter.  [cites: given]\n(2) Breaking the line into syllables and applying natural English word stress: AND (stressed), in (unstressed), THE (stressed), LET- (stressed), ter (unstressed), MY (stressed), COUS- (stressed), in (unstressed), MEN- (stressed), tions (unstressed), a (unstressed), PIECE (stressed), of (unstressed), AD- (stressed), vice (unstressed).  [cites: given]\n(3) The natural stress pattern of English speech produces the scansion /x/x/x/x/x/x/x/x/, which does not follow strict iambic pentameter (which would require x/ throughout).  [cites: given]",
+            "prov": true,
+            "grounded": "3/3",
+            "facts": 1,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "xxxxx/xxx/xx/xxx/xx/",
+            "work": "(1) Function words (and, in, the, my, a, of) are unstressed in iambic verse.  [cites: 5]\n(2) \"Letter\" has primary stress on the first syllable, producing the pattern /x.  [cites: 3]\n(3) \"Cousin\" has primary stress on the first syllable, producing the pattern /x.  [cites: 1]\n(4) \"Mentions\" has primary stress on the first syllable with two syllables total, producing the pattern /x.  [cites: 2]\n(5) \"Piece\" is a monosyllabic lexical word that carries stress, producing the pattern /.  [cites: 5]\n(6) \"Advice\" (noun) has primary stress on the second syllable, producing the pattern x/.  [cites: 4]\n(7) Combining all syllables in sequence: And(x) + in(x) + the(x) + letter(/x) + my(x) + cousin(/x) + mentions(/x) + a(x) + piece(/) + of(x) + advice(x/) produces the complete scansion.  [cites: 1, 2, 3, 4, 5]",
+            "prov": true,
+            "grounded": "7/7",
+            "facts": 8,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "fw-opus": {
+            "answer": "xxxx/xx/x/xx/xx/",
+            "work": "(1) Function words 'and', 'in', 'the' are monosyllables that are typically unstressed in iambic verse, so each scans as x.  [cites: 5, 8]\n(2) 'Letter' is a trochee, stressed-unstressed (/x), scanning as /x.  [cites: 3, 8]\n(3) Function word 'my' is an unstressed monosyllable, scanning as x.  [cites: 5, 8]\n(4) 'Cousin' is a trochee, stressed-unstressed (/x), scanning as /x.  [cites: 1, 8]\n(5) 'Mentions' has primary stress on the first syllable with an unstressed final -s, giving /x.  [cites: 2, 8]\n(6) Function word 'a' is an unstressed monosyllable, scanning as x.  [cites: 5, 8]\n(7) 'Piece' is a lexical monosyllable that carries stress, scanning as /.  [cites: 5, 8]\n(8) Function word 'of' is an unstressed monosyllable, scanning as x.  [cites: 5, 8]\n(9) 'Advice' (noun) is an iamb with stress on the second syllable (ad-VICE), scanning as x/.  [cites: 4, 8]\n(10) Concatenating per-word patterns for And(x) in(x) the(x) letter(/x) my(x) cousin(/x) mentions(/x) a(x) piece(/) of(x) advice(x/) gives a 15-syllable scansion.  [cites: 6, 8]",
+            "prov": true,
+            "grounded": "10/10",
+            "facts": 8,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "672562d698",
+        "s": 1,
+        "cas_haiku_facts": 7,
+        "cas_opus_facts": 6,
+        "arms": {
+          "plain-haiku": {
+            "answer": "The primary neurological condition underlying doppelgänger syndrome is **focal/partial epilepsy**, particularly **temporal and parietal lobe seizures**. Neuroscientific research and neuroimaging have identified the **temporo-parietal junction (TPJ)** as the critical brain region involved. When epileptic activity disrupts the temporo-parietal junction's normal function of integrating multisensory signals (visual, proprioceptive, tactile, and vestibular information), it causes a failure in the brain's unified perception of self-location and body awareness. This results in autoscopic phenomena—specifically heautoscopy or \"he-autoscopy\"—in which patients experience seeing their own body as a double or doppelgänger from an external perspective. EEG recordings and neuroimaging studies (fMRI, PET scans) consistently confirm epileptic foci at the temporo-parietal junction in patients experiencing these phenomena, transforming the folk belief into a well-documented, diagnosable neurological condition.",
+            "work": "Conducted five-angle web search strategy covering: (1) doppelgänger syndrome neuroscience, (2) heautoscopy and autoscopic phenomena neuroimaging, (3) out-of-body experiences and folk belief medical explanations, (4) mirror sign syndrome and visual hallucinations, (5) autoscopic hallucinations in temporal lobe seizures. Retrieved and analyzed primary medical literature from PMC, PubMed, Wiley Online Library, and ScienceDirect. Verified key findings through multiple clinical case reports and neuroimaging studies. Identified temporo-parietal junction dysfunction during focal epilepsy as the consistent neurological mechanism across all reliable sources.",
+            "prov": null,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "Temporal lobe epilepsy (epilepsy involving the temporal lobe / temporoparietal junction).",
+            "work": "The doppelgänger syndrome (the experience of encountering one's own double, called heautoscopy/autoscopy in clinical neurology) is tied in folklore to the belief that seeing one's double presages death. With neuroscientific work and modern imaging, the primary underlying disease identified for this phenomenon is temporal lobe epilepsy. The literature (e.g., Brugger et al., \"Heautoscopy, epilepsy, and suicide\") and reviews of autoscopic phenomena attribute the experience to seizure activity and lesions involving the temporal (and temporoparietal) cortex, with right-hemisphere/temporoparietal-junction involvement. Heautoscopy occurs in a minority of patients with temporal lobe epilepsy or other organic brain disorders, and electrical stimulation of the temporoparietal junction can reproduce the sense of a \"second self.\"\n\nSources:\n- [Heautoscopy, epilepsy, and suicide — PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC1073027/)\n- [Autoscopic phenomena: case report and review of literature — PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC3032659/)\n- [The Doppelgänger phenomenon and death — PMC](https://pmc.ncbi.nlm.nih.gov/articles/PMC9930753/)",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "Temporal lobe epilepsy (TLE) is the specific primary neurological disease identified through modern neuroimaging as underlying doppelgänger syndrome. Modern neuroscience has mapped the folk-belief phenomenon of the doppelgänger (the fear that seeing one's double means death) to autoscopic experiences, particularly heautoscopy, and identified partial epilepsy—especially temporal lobe seizures—as the primary aetiology. Neuroimaging studies show temporal lobe involvement in 86% of patients where seizure focus could be identified, making TLE the principal identified condition responsible for these experiences.",
+            "work": "(1) Doppelgänger syndrome in folk belief involves the delusion of having a double and the fear that seeing it means death, and modern neuroscience has linked this to autoscopic phenomena, particularly heautoscopy (seeing one's own body at a distance).  [cites: 1, 2]\n(2) Partial epilepsy, particularly seizures involving parietal and temporal lobes, is the most frequent neurological cause of autoscopic phenomena including heautoscopy.  [cites: 3]\n(3) Among neurological diseases identified through modern neuroimaging, temporal lobe epilepsy (TLE) is the primary condition underlying doppelgänger and autoscopic phenomena, with temporal lobe involvement identified in 86% of patients where seizure focus could be determined.  [cites: 4]\n(4) Although autoscopy associates with different anatomical foci depending on autoscopic subtype (temporal lobe versus parieto-occipital foci), temporal lobe epilepsy is identified as the primary neurological disease in doppelgänger cases.  [cites: 5, 4, 7]\n(5) Therefore, temporal lobe epilepsy is the specific primary neurological disease identified through modern neuroimaging that underlies the folk belief-associated doppelgänger syndrome.  [cites: 3, 4, 7]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 7,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "The retrieved facts do not support identification of a single \"primary disease\" underlying doppelgänger syndrome. Heautoscopy—the neurological basis of the doppelgänger experience—is established as occurring across diverse psychiatric and neurological disorders (schizophrenia, space-occupying lesions, migraine, epilepsy, depression), with no one condition designated as primary. Temporal lobe epilepsy is one of the most common triggers, but the facts explicitly state heautoscopy occurs in only a minority of temporal lobe epilepsy patients, and space-occupying lesions are equally prominent among organic causes. The elevated suicide risk in temporal lobe epilepsy does not elevate epilepsy uniquely to \"primary\" status—it merely documents one comorbidity (the heautoscopy–suicide association). Without additional sources specifying which disorder modern imaging identified as the definitive primary cause, the question cannot be answered as posed.",
+            "work": "(1) Heautoscopy is the neurological/psychiatric term for doppelgänger experiences—the reduplicative hallucination of perceiving one's own body at a distance.  [cites: 1]\n(2) Heautoscopy occurs across multiple diverse psychiatric and neurological disorders, including schizophrenia, space-occupying lesions, migraine, epilepsy, and depression.  [cites: 6]\n(3) Temporal lobe epilepsy is one of the most common triggers of autoscopic phenomena, but heautoscopy occurs in only a minority of temporal lobe epilepsy patients.  [cites: 3]\n(4) Space-occupying lesions (tumors) of the temporal and parietal lobes are equally recognized as prominent organic causes of heautoscopy, with documented cases (e.g., insular tumor causing polyopic heautoscopy).  [cites: 5, 6]\n(5) The heautoscopy–suicide association is documented in temporal lobe epilepsy, but this reflects comorbidity of the phenomenon with a disease's natural history, not elevation of that disease to unique 'primary' status over other disorders listed as causes.  [cites: 2, 4]\n(6) No fact establishes a single disease as the primary cause; the facts present a spectrum of organic and psychiatric triggers without hierarchical ranking.  [cites: 3, 6]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 6,
+            "defensibility": 4,
+            "accuracy": "partial"
+          },
+          "fw-opus": {
+            "answer": "Temporal-lobe epilepsy (epilepsy involving the temporal lobe, i.e. temporal-lobe / complex partial seizures).",
+            "work": "(1) The doppelganger experience described in the question — seeing one's own double as an omen of death — is the phenomenon known clinically as heautoscopy, which is tied in folklore and literature to themes of death and the 'double' as a death omen.  [cites: given, 1, 2]\n(2) With advances in neuroscience and imaging/electrical-stimulation studies, heautoscopic phenomena were localized to organic brain dysfunction, specifically the temporal and parietal cortex and the temporoparietal junction.  [cites: 5, 6]\n(3) Among organic causes, epilepsy — particularly seizures involving the temporal lobe — is one of the most common triggers of autoscopic/heautoscopic phenomena.  [cites: 3]\n(4) The dedicated case-paper 'Heautoscopy, epilepsy, and suicide' documented a patient with complex partial seizures (a temporal-lobe seizure type) experiencing heautoscopy and attempting suicide, presenting the literary death/doppelganger triad as having a temporal-lobe-epilepsy neurological basis.  [cites: 4]\n(5) Therefore the specific underlying condition identified through neuroscientific and imaging development as the primary disease behind the doppelganger (heautoscopy) syndrome is temporal-lobe epilepsy.  [cites: 3, 4, 5]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 6,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "66f402add1",
+        "s": 1,
+        "cas_haiku_facts": 6,
+        "cas_opus_facts": 5,
+        "arms": {
+          "plain-haiku": {
+            "answer": "Re, Al10",
+            "work": "",
+            "prov": null,
+            "defensibility": 0,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "Re, ReAl10;",
+            "work": "I parsed the CIF for ReAl12 (space group Cmcm, #63, orthorhombic, a=7.6091, b=6.6117, c=9.0230 Å, all angles 90°). I expanded the 4 unique sites (Al_A 8g, Al_B 8f, Al_C 8e, Re_A 4c) using all 16 symmetry operators plus the C-centering translation (1/2,1/2,0), giving the correct multiplicities (8+8+8+4 = 28 atoms/cell). I built a 3×3×3 supercell of neighbors and computed nearest-neighbor distances (Cartesian, orthorhombic metric) around each symmetry-distinct site, then searched for the largest gap in the radial distance distribution to delimit each coordination polyhedron.\n\nResults (CN, gap):\n- Re_A: 10 neighbors, all Al, ending sharply at 2.673 Å with a huge 1.513 Å gap before the next shell (4.186 Å). This is a clean, well-defined coordination polyhedron → Re@Al10.\n- Al_A: CN=15 (2 Re + 13 Al), gradual distances, no clean gap.\n- Al_B: CN=13 (1 Re + 12 Al), gradual.\n- Al_C: CN=11 (2 Re + 9 Al), gradual.\n\nThe Al sites are dense-packed matrix atoms with high CN and no sharp polyhedral cutoff. The characteristic, unambiguous coordination polyhedron of the ReAl12-type structure is the Re-centered one: Re surrounded by 10 Al atoms (ReAl10).",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "The provided CIF data describes ReAl6 (4 Re : 24 Al atoms per unit cell), not ReAl12. This is a fundamental mismatch with the question asked. If the question should be about ReAl6, the coordination polyhedra are: Re, Al6; Al_A, Al10Re3; Al_B, Al8Re; Al_C, Al4Re. If the question requires ReAl12, the correct CIF file for that compound must be provided.",
+            "work": "(1) The CIF file labels the chemical formula as ReAl6  [cites: given]\n(2) Stoichiometric verification shows 4 Re atoms and 24 Al atoms per unit cell (4c multiplicity + 3×8g/8f/8e multiplicities), which simplifies to a 1:6 ratio = ReAl6  [cites: given]\n(3) The question explicitly asks 'What coordination polyhedra does the crystal structure of ReAl12 have?' — a compound with a 1:12 ratio, not 1:6  [cites: given]\n(4) There is an irreconcilable mismatch between the question (ReAl12) and the provided data (ReAl6)  [cites: 1, 2, 3]\n(5) If the question should address ReAl6, the analysis yields four distinct coordination polyhedra: Re surrounded by Al6 (octahedral), Al_A by Al10Re3, Al_B by Al8Re, and Al_C by Al4Re, based on Wyckoff position analysis in space group Cmcm  [cites: 2, given]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 6,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "**Critical Issue**: The question asks about \"ReAl12\" but the provided CIF describes **ReAl6** (orthorhombic Cmcm structure, MnAl6 prototype type) — not the cubic WAl12-type ReAl12 structure.\n\n**For the actual structure provided (ReAl6):**\n\nThe coordination polyhedra are:\n\n1. **Re, Al10** — The rhenium atom (Wyckoff 4c) is bonded to 10 aluminum atoms at distances 2.45–2.77 Å.\n\n2. **Al, Al10Re** (or similar formula for Al-centered polyhedra) — One of the three inequivalent Al sites is 11-coordinate with 1 Re and 10 Al neighbors.\n\n**Answer format** (following the example): **Re, Al10; Al, Al10Re**\n\nHowever, this answer applies to the **ReAl6 structure as given**, not the \"ReAl12\" named in the question. If the intent was to analyze the cubic ReAl12 structure, the correct CIF (space group Im-3, cI26 with Re at body center and Al at 12-coordinate vertices) would be needed.\n",
+            "work": "(1) The provided CIF describes ReAl6 in the orthorhombic Cmcm structure (space group 63), not cubic ReAl12 (Im-3). The CIF metadata explicitly states _pauling_file_chemical_formula ReAl6 and matches the MnAl6 prototype.  [cites: 1, 5]\n(2) In the ReAl6 structure, the rhenium atom at Wyckoff 4c site is bonded to 10 aluminum atoms at distances 2.45–2.77 Å, forming a 10-coordinated Re-centered polyhedron (Re center with Al10 ligand sphere).  [cites: 2, 3]\n(3) The ReAl6 structure contains three inequivalent Al sites (Wyckoff 8e, 8f, 8g). At least one Al site is 11-coordinate, bonded to 1 Re atom and 10 Al atoms, forming an Al-centered polyhedron.  [cites: 4, 5]\n(4) The question asks about 'ReAl12' but the provided CIF is for ReAl6 — a mismatch between the question label and the actual crystal structure data.  [cites: 1]",
+            "prov": true,
+            "grounded": "4/4",
+            "facts": 5,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          },
+          "fw-opus": {
+            "answer": "Re, Al10; Al, Al10Re",
+            "work": "(1) The given CIF (space group Cmcm No. 63, orthorhombic, formula ReAl6, Al at Wyckoff 8g/8f/8e and Re at 4c) is the ReAl6 phase in the MnAl6-type structure, not the cubic WAl12-type ReAl12. The label 'ReAl12' in the question conflicts with the CIF; the actual structure to analyze is ReAl6/MnAl6-type.  [cites: given, 1]\n(2) In this ReAl6 (MnAl6-type, Cmcm) structure the Re atom (the 4c transition-metal site) has ten Al neighbors (distances 245-277 pm), giving a Re-centered 10-vertex Al polyhedron: center Re, formula Al10.  [cites: 2, 5]\n(3) This is confirmed by the isostructural MnAl6, where the transition-metal atom (the site equivalent to Re) is bonded to ten Al atoms in a quasi-regular 10-fold coordination (a compound polyhedron based on the icosahedron and octahedron).  [cites: 3]\n(4) For the Al-centered polyhedron, Materials Project mp-173 (MnAl6) reports an Al site that is 11-coordinate, bonded to one transition-metal atom (Re) and ten Al atoms, giving an Al-centered polyhedron of formula Al10Re.  [cites: 4]\n(5) Therefore the structure has a Re-centered polyhedron (Re, Al10) and an Al-centered polyhedron (Al, Al10Re).  [cites: 2, 4]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 5,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "6738cefd95",
+        "s": 1,
+        "cas_haiku_facts": 21,
+        "cas_opus_facts": 14,
+        "arms": {
+          "plain-haiku": {
+            "answer": "## LoRaWAN ADR Optimization Analysis\n\n### OPTIMAL SOLUTION\n\n**Spreading Factor: SF7**\n**Transmission Power: 2 dBm**\n\nThis configuration minimizes energy consumption while ensuring the 1% Packet Error Rate (PER) requirement in an urban Rician fading environment (K-factor = 3 dB).\n\n---\n\n### ANALYSIS FRAMEWORK\n\n**Physical Layer Parameters:**\n- LoRaWAN 100-byte payload, EU 868 MHz, 125 kHz bandwidth\n- Spreading Factors SF7-SF12; Coding Rate 4/5\n- Processing gains: 21.1 dB (SF7) to 36.1 dB (SF12)\n\n**Channel Model - Rician Fading (K-factor = 3 dB):**\n- K-factor = 3 dB = 2.0 (linear): ratio of specular-to-diffuse power\n- Urban environment with dominant path + multipath scattering\n- Fading penalty: ~2.5-3 dB SNR loss versus AWGN\n- This degradation is embedded in the SNR requirements\n\n**Propagation & Link Budget:**\n- Urban path loss at 1 km: 128 dB (empirical)\n- Path loss formula: PL(d) = 128 + 35·log₁₀(d/1000) dB\n- Urban path loss exponent: 3.5 (vs 2.0 for free space)\n- Noise floor: -157 dBm (accounting for receiver sensitivity margin)\n\n**Energy Consumption Model:**\n- TX current: I(P) = 35 + 5.5·(P_dBm - 2) mA\n- RX window: 12 mA for 1 second (LoRaWAN Class A default)\n- Supply: 3.3 V\n\n---\n\n### OPTIMIZATION RESULTS\n\n**Spreading Factor Comparison at 1 km (minimum energy per SF):**\n\n| SF | TX Power | RX Power | SNR  | PER  | Air Time | Energy/TX | Status |\n|----|----------|----------|------|------|----------|-----------|--------|\n| 7  | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 158.7 ms | 57.93 mJ | **OPTIMAL** |\n| 8  | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 294.9 ms | 73.66 mJ | 27% more |\n| 9  | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 585.7 ms | 107.25 mJ | 85% more |\n| 10 | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 1130.5 ms | 170.17 mJ | 3x more |\n| 11 | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 2293.8 ms | 304.53 mJ | 5.3x more |\n| 12 | 2 dBm    | -129 dBm | 28.0 dB | 0.00% | 4587.5 ms | 569.46 mJ | 10x more |\n\n---\n\n### SF7 @ 2 dBm - DETAILED PERFORMANCE\n\n**Transmission Characteristics:**\n- Air Time: 158.7 ms\n- Data Rate: 5.5 kbps\n- TX Current: 35.0 mA (minimum available)\n- Processing Gain: 21.1 dB\n\n**Energy & Battery Life:**\n- Energy per transmission: 57.93 mJ\n- Energy per hour (60 TX): 3475.93 J\n- Average power: 0.965 W\n\n**Coverage & Reliability:**\n- RX Power @ 1 km: -129 dBm\n- SNR @ 1 km: 28.0 dB\n- SNR Margin above 1% PER threshold: 26.4 dB (high reliability)\n- Maximum range meeting 1% PER: >2 km\n\n**Distance Robustness:**\n| Distance | SNR (dB) | PER (%) | Status |\n|----------|----------|---------|--------|\n| 500 m    | 38.54    | 0.00    | PASS   |\n| 1000 m   | 28.00    | 0.00    | PASS   |\n| 1500 m   | 21.84    | 0.00    | PASS   |\n| 2000 m   | 17.46    | 0.00    | PASS   |\n\n**Battery Life (5000 mAh @ 3.3V):**\n- 1 TX/hour: ~10 years (accounting for degradation)\n- Energy per year: 507 J\n- Theoretical: ~340 years; Practical: 5-10 years\n\n---\n\n### WHY SF7 @ 2 dBm IS OPTIMAL\n\n1. **Minimum Energy**: SF7 has shortest air time (158.7 ms). Higher SFs increase this quadratically, consuming 27-90% more energy per step.\n\n2. **Favorable Link Budget**: At 1 km with 2 dBm TX, received SNR is 28 dB—far above the 1.6 dB minimum needed for 1% PER. This margin provides:\n   - Protection against fast fading variations\n   - Shadowing and obstruction resilience\n   - Multipath degradation tolerance\n\n3. **Rician Fading Advantage**: K-factor = 3 dB means moderate (not severe) multipath. The fading penalty (~2.5 dB) is accounted for in the SNR targets, making SF7 viable.\n\n4. **No Benefit from Higher Power**: All configurations (2-14 dBm) at 1 km receive same -129 dBm due to path loss dominance. Increasing TX power adds energy without PER improvement.\n\n5. **No Benefit from Higher SF**: All SFs at 1 km achieve identical -129 dBm RX power. Higher SF costs energy without coverage gain.\n\n---\n\n### RICIAN FADING IMPACT\n\n**What K-factor = 3 dB Means:**\n- Specular-to-diffuse power ratio = 2:1\n- Mixed LOS/NLOS scenario (typical urban)\n- Not pure free-space (high K) nor severe scattering (low K, Rayleigh)\n\n**SNR Penalty Quantification:**\n- AWGN baseline would require lower SNR for same PER\n- Rician K=3dB adds ~2.5-3 dB penalty\n- This margin (26.4 dB at 1 km) protects against:\n  - Temporal fading fluctuations\n  - Shadowing and blockage\n  - Position-dependent multipath variations\n\n---\n\n### NETWORK SERVER IMPLEMENTATION\n\n**LinkAdrReq Command:**\n```\nDataRate: 0x07 (SF7, 125 kHz bandwidth)\nTXPower:  0x00 (2 dBm)\nChMask:   [Network-specific channel mask]\n```\n\n**Convergence Timeline:**\n- Device receives and applies new settings\n- PER stabilizes within 1-2 hours\n- ADR monitor watches for 20-50 frames\n- If PER stays <0.1%, maintains SF7@2dBm\n\n**Monitoring Protocol:**\n- Monthly PER review (should stay <<1%)\n- If PER rises to 1%: increase SF to 8\n- If PER <0.1% for extended period: could reduce power further\n\n---\n\n### KEY TRADE-OFFS & INSIGHTS\n\n**1. Spreading Factor vs Energy:**\n- 10x energy increase from SF7 to SF12\n- SF7 optimal only for favorable link budgets\n- Use higher SF only if device distance >2 km or path loss exceeds typical urban\n\n**2. Transmit Power vs Energy:**\n- 2→14 dBm: 2.3x TX current increase\n- But air time dominates energy for SF7 (158.7 ms payload time)\n- Power matters more in higher SF (longer on-air window)\n\n**3. Reliability vs Efficiency:**\n- 26.4 dB margin provides very high reliability\n- Could theoretically reduce power at cost of reliability margin\n- 1% PER limit demands staying within current bounds\n\n**4. Hourly Transmission Optimization:**\n- 1 TX/hour = 8760 TX/year\n- Energy budget driven by per-TX efficiency (57.93 mJ)\n- Air time (~160 ms) is minor component vs RX window (1 s)\n\n---\n\n### COMPARISON: WHY NOT OTHER CHOICES?\n\n**SF8 (29% more energy):** Same coverage at 1 km, no advantage\n**SF9 (85% more energy):** Marginal coverage extension, significant energy penalty\n**SF10-12 (3-10x energy):** Only justified for >2 km range or severe fading\n**Higher Power (>2 dBm):** Adds energy without SNR gain at 1 km due to path loss saturation\n\n---\n\n### CONCLUSION\n\n**OPTIMAL ADR ASSIGNMENT:**\n- **Spreading Factor: SF7**\n- **Transmit Power: 2 dBm**\n\n**Why This Works:**\n1. Minimizes energy (57.93 mJ per TX)\n2. Meets 1% PER requirement with 26.4 dB margin\n3. Covers >2 km in urban Rician fading (K=3dB)\n4. Delivers ~10-year battery life at 1 TX/hour\n5. Leaves room for ADR to adapt if conditions change\n\nThis configuration represents the optimal point on the energy-reliability Pareto frontier for a typical urban LoRaWAN deployment with hourly transmissions and 1 km typical range.",
+            "work": "Performed comprehensive LoRaWAN ADR optimization analysis incorporating:\n\n1. **Physical Layer Modeling:**\n   - LoRa spreading factor variants (SF7-SF12)\n   - Processing gain calculations (21.1-36.1 dB)\n   - Time-on-air computations using LoRa symbol rate formulas\n   - EU 868 MHz ISM band specifications\n\n2. **Channel Characterization - Rician Fading:**\n   - K-factor = 3 dB (2.0 linear) interpretation\n   - Urban propagation model with dominant + scattered components\n   - Fading penalty quantification (~2.5-3 dB vs AWGN)\n   - SNR threshold adjustments for K=3dB channel\n\n3. **Link Budget Calculation:**\n   - Empirical urban path loss: 128 dB @ 1 km\n   - Path loss exponent: 3.5 (typical urban)\n   - Distance-dependent RX power calculations\n   - Noise floor: -157 dBm (conservative margin)\n\n4. **Energy Consumption Modeling:**\n   - TX current model based on SX1276 specifications: I = 35 + 5.5(P-2) mA\n   - RX window power (12 mA × 1 second)\n   - Per-event energy computation\n   - Battery life projections (5000 mAh @ 3.3V)\n\n5. **Optimization Algorithm:**\n   - Exhaustive search across SF7-SF12 and 2-14 dBm power levels\n   - 1% PER feasibility constraint\n   - Minimum energy selection per spreading factor\n   - Distance robustness analysis (500-2000 m)\n\n6. **Comparative Analysis:**\n   - Ranked all feasible SF/power combinations\n   - Quantified energy penalties for each step\n   - Documented coverage trade-offs\n   - Provided practical deployment guidance\n\nResults validated against LoRaWAN specifications and typical modem performance data.",
+            "prov": null,
+            "defensibility": 2,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "Optimal assignment: SF11 at 14 dBm transmit power (for a representative deep-urban link with ~132 dB path loss).\n\nReasoning summary:\n- ADR minimizes energy = P_tx × Time-on-Air subject to PER ≤ 1%.\n- The Rician K = 3 dB channel (weak LOS, near-Rayleigh) demands a large fading margin of ≈ 16.25 dB to hold 1% PER.\n- With a −117 dBm noise floor, per-SF sensitivities are −108.3/−110.8/−113.3/−115.8/−118.3/−120.8 dBm for SF7→SF12.\n- The governing trade-off: each lower SF costs ~2× airtime (≈3 dB energy) but only saves 2.5 dB of link budget, so the energy-optimal choice is the LOWEST SF that still closes the link at the lowest TXP that meets sensitivity — not the highest SF/power.\n- For typical urban path loss (~128–132 dB), SF7–SF10 cannot close the link with the available ≤14 dBm power once the 16.25 dB Rician margin is applied; SF11 is the lowest feasible SF, and it needs 14 dBm to reach its −118.3 dBm sensitivity. This yields the minimum energy (~56 mJ/packet). SF12 would work but costs ~99 mJ (1.8× more) due to nearly double airtime, so it is sub-optimal.\n\nNote on sensitivity to assumptions: the exact pair scales with path loss — e.g. SF9/14 dBm at ~126 dB, SF11/10 dBm at ~128 dB, SF12/14 dBm at ~134 dB, infeasible beyond ~134 dB. SF11 @ 14 dBm is the answer for the representative ~132 dB urban link; the robust principle is \"lowest SF that closes the link, then lowest TXP that meets it.\"",
+            "work": "METHODOLOGY (LoRaWAN EU868, BW=125 kHz, CR=4/5, 100-byte payload, 1 pkt/hr):\n\nEnergy per packet = P_tx(linear, mW) × Time-on-Air (ToA). Minimizing this is the objective; PER ≤ 1% is the constraint.\n\n1) Time-on-Air (Semtech airtime formula, preamble=8, explicit header, CRC on, LDRO auto-on for SF11/SF12):\n   SF7 0.174s, SF8 0.308s, SF9 0.554s, SF10 1.026s, SF11 2.216s, SF12 3.940s.\n   ToA roughly doubles per SF step.\n\n2) Receiver noise floor: N = −174 + 10log10(125kHz) + NF(6dB) = −117 dBm.\n\n3) Required demodulator SNR per SF: SF7 −7.5, SF8 −10, SF9 −12.5, SF10 −15, SF11 −17.5, SF12 −20 dB (each SF step buys ~2.5 dB).\n\n4) Rician fading margin for 1% outage with K = 3 dB (K_lin ≈ 2.0): integrating the Rice SNR pdf and solving P(γ<γ_th)=0.01 gives a required fade margin ≈ 16.25 dB. (A weak LOS component — K=3 dB — is close to Rayleigh, so the margin is large.)\n\n5) Per-SF receiver sensitivity = N + reqSNR + 16.25 dB:\n   SF7 −108.3, SF8 −110.8, SF9 −113.3, SF10 −115.8, SF11 −118.3, SF12 −120.8 dBm.\n\n6) Link closes when P_tx − PathLoss ≥ sensitivity. Picking the lowest available TXP that satisfies this, then the SF minimizing P_tx×ToA:\n\n   KEY TRADE-OFF: dropping one SF saves 2.5 dB of sensitivity but costs ~2× (≈3 dB) more ToA. So energy is minimized by the LOWEST SF that still closes the link (smallest ToA), with the lowest TXP that meets sensitivity — NOT by maximizing SF/power.\n\nOptimum vs assumed urban path loss L (energy in mJ = mW·s):\n   L=126: SF9 @14 dBm (13.9)\n   L=128: SF11 @10 dBm (22.2)\n   L=130: SF11 @12 dBm (35.1)\n   L=132: SF11 @14 dBm (55.7)\n   L=134: SF12 @14 dBm (99.0)\n   L>134: link infeasible (raise gateway density).\n\nFor a representative deep-urban LoRaWAN cell (PL ≈ 128–132 dB), the optimum lands at SF11 with TXP at the top of the allowed range.",
+            "prov": null,
+            "defensibility": 3,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku": {
+            "answer": "\nThe problem cannot be solved with the provided facts because the critical link-budget parameter for K=3 dB Rician fading is missing. Here is what IS known and what IS NOT:\n\nKNOWN:\n- Energy consumption (SF7=65 mJ, SF12=390 mJ per [4]; SF dominates energy by 25-32×).\n- Transmit power available (2-14 dBm in 2 dB steps per [7]; power affects energy ~1.5-17× depending on range).\n- SNR thresholds for AWGN only (SF7=-7.5 dB, SF12=-20 dB per [1]).\n- SNR thresholds for Rician K=6 dB only (SF7=-6 dB, SF12=-19 dB per [13]).\n- Qualitative characterization of K=3 dB as \"moderate urban\" (per [12]).\n- Urban channels degrade RSSI and SNR rapidly (per [20]).\n- Higher SFs are MORE vulnerable to fading variations (per [14]).\n\nNOT KNOWN (required to answer the question):\n- SNR thresholds or PER curves for K=3 dB Rician fading at any SF.\n- What SNR margin, in K=3 dB fading, yields 1% PER.\n- Whether K=3 dB is equivalent to, better than, or worse than the K=6 dB case per [13].\n- How to map transmit power onto SNR margin in this specific urban K=3 dB scenario.\n\nFRAMEWORK FOR THE ANSWER (if K=3 dB data existed):\n1. Retrieve or measure PER vs SNR curve for each SF in K=3 dB Rician fading.\n2. Determine minimum SNR per SF that guarantees ≤1% PER.\n3. Use link budget (receiver sensitivity [per fact 2] + transmit power + path loss) to find which (SF, TP) pairs meet SNR requirement.\n4. Among candidates meeting PER, select the pair with lowest energy per [4].\n5. The dominant factor is SF (not TP), so the answer likely favors SF7 or SF8 over higher SFs, conditional on power sufficient to close the link budget in fading.\n\nCONCLUSION: The question requires experimental or literature data (BER/PER under K=3 dB) that the retrieved facts do not provide. A complete answer requires either [A] new sources on K=3 dB LoRa performance, or [B] relaxation of the problem to K=6 dB (where fact [13] constrains the answer).\n",
+            "work": "(1) Energy consumption is dominated by spreading factor, not transmit power.  [cites: 4, 5, 6]\n(2) Receiver sensitivity improves monotonically with SF: SF7=-123 dBm, SF12=-137 dBm.  [cites: 2]\n(3) In AWGN (no fading), SNR requirements are SF7=-7.5 dB, SF12=-20 dB.  [cites: 1]\n(4) Under Rician K=6 dB fading, acceptable SNR thresholds are SF7=-6 dB, SF12=-19 dB.  [cites: 13]\n(5) K=3 dB represents a moderate urban condition qualitatively, but no PER or SNR threshold data for K=3 dB is provided in the facts.  [cites: 12]\n(6) Higher spreading factors (larger SF) are MORE vulnerable to fading variations than lower SFs.  [cites: 14]\n(7) Urban environments exhibit rapid RSSI and SNR degradation due to multipath and shadowing.  [cites: 20]\n(8) To determine optimal (SF, TP) for 1% PER in K=3 dB fading requires SNR-vs-PER curves at K=3 dB, which are not in the retrieved facts.  [cites: given]",
+            "prov": true,
+            "grounded": "8/8",
+            "facts": 21,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "OPTIMAL CONFIGURATION: Spreading Factor SF9 at Transmit Power 14 dBm.\n\nJUSTIFICATION:\n\n1. **PER Requirement Satisfaction:** SF9 has a demodulation floor of -12.5 dB SNR [3]. In Rician K=3 dB fading (near-Rayleigh), a fade margin of approximately 10 dB is needed [14], yielding a total required SNR of -2.5 dB. The SX1276 receiver sensitivity at SF9 is -130 dBm [1]. A transmit power of 14 dBm (the EU 868 MHz maximum [13]) in an urban environment provides sufficient link margin to sustain this SNR requirement, keeping PER ≤ 1% [1], [9].\n\n2. **Energy Minimization:** Time-on-air dominates energy consumption [9]. Symbol duration scales as 2^SF/BW [7]; SF9 is 4.096 ms per symbol while SF12 is 32.768 ms—an 8x difference. Over a 100-byte payload, this translates to roughly 8x lower energy at SF9 compared to SF12. Transmit current at 14 dBm is ~28 mA [10], a manageable compromise between power and energy. Lowering SF from 12 to 9 provides far greater energy savings than reducing transmit power [9].\n\n3. **ADR Alignment:** Per adaptive data-rate principles [11], [12], the optimal strategy is to lower the spreading factor (highest-impact energy lever) first, then adjust transmit power for fine tuning. SF9 at maximum allowed power (14 dBm) follows this hierarchy and minimizes risk of coverage loss in the multipath urban channel [11], [13].\n\n4. **Rejection of SF12:** Although SF12 achieves -137 dBm sensitivity [1] and a theoretical SNR requirement of -20.0 dB in AWGN [3], it requires 10 dB fade margin in the K=3 dB Rician fading environment [14], bringing the effective SNR floor to -10.0 dB. Crucially, SF12 time-on-air is 8x that of SF9, making it 8x less energy efficient. Since SF9 at 14 dBm still meets the PER and link-margin requirements, SF12 is not justified from an energy perspective.",
+            "work": "(1) At SF12 in AWGN, 1% PER is achieved at -21.5 dB SNR [5], and the theoretical demodulation floor (minimum required SNR) is -20.0 dB [3]. The empirical value is 1.5 dB MORE stringent (more negative) than the threshold, confirming SF12 is sufficient for basic AWGN operation.  [cites: 3, 5]\n(2) In Rician K=3 dB fading (near-Rayleigh), substantial additional margin is required beyond the AWGN SNR requirement. Per [14], this margin is typically 5-15 dB above the AWGN floor; using a mid-range estimate of 10 dB is conservative.  [cites: 14]\n(3) For SF12, the total required SNR accounting for fading is: AWGN floor (-20.0 dB) + fade margin (10 dB) = -10.0 dB. This means the received SNR must be at least -10.0 dB to maintain 1% PER in the fading channel.  [cites: 3, 14]\n(4) For SF9, the AWGN demodulation floor is -12.5 dB [3]. With the same 10 dB fade margin for K=3 dB Rician fading [14], the total required SNR is -12.5 + 10 = -2.5 dB.  [cites: 3, 14]\n(5) Receiver sensitivity at SF9 is -130 dBm [1] and at SF12 is -137 dBm [1]. These are measured at their respective required SNR thresholds. To achieve -2.5 dB SNR at SF9 requires a receiver power of at least -130 dBm + (-2.5 dB) = -132.5 dBm. To achieve -10.0 dB SNR at SF12 requires -137 dBm + (-10.0 dB) = -147 dBm.  [cites: 1]\n(6) Energy consumption scales linearly with time-on-air and transmit current. Per [7], symbol duration follows T_sym = 2^SF / BW, so SF9 = 4.096 ms and SF12 = 32.768 ms. SF12 time-on-air is 8x that of SF9 [7], and transmit current at 14 dBm is ~28 mA [10], so energy at SF12 is roughly 8x that of SF9.  [cites: 7, 10]\n(7) Per [9], energy consumption is dominated by (transmit current) × (time-on-air), making spreading factor the primary lever. Lowering SF from 12 to 9 reduces time-on-air by a factor of 8, dramatically reducing energy regardless of small transmit power adjustments.  [cites: 9]\n(8) Per [6], the optimal SF is the minimum spreading factor for which link margin keeps PER ≤ 1%. SF9 achieves the PER target with a lower energy cost than SF12 (8x reduction in time-on-air) [6], [7], [9].  [cites: 6, 7, 9]\n(9) At 14 dBm transmit power, the SX1276 consumes approximately 28 mA [10], which is the EU 868 MHz maximum configurable power [13]. Using 14 dBm (rather than 12 dBm or lower) minimizes link margin uncertainty in the urban multipath environment while remaining within the ISM band limit [13].  [cites: 10, 13]\n(10) SF9 at 14 dBm is the optimal configuration: it meets the 1% PER requirement in K=3 dB Rician fading (SF9 requires -2.5 dB SNR; maximum transmit power 14 dBm provides sufficient margin in an urban environment [1]), consumes ~8x less energy than SF12, and aligns with ADR energy-first optimization principles [9], [11], [12].  [cites: 1, 9, 11, 12, 13]",
+            "prov": true,
+            "grounded": "10/10",
+            "facts": 14,
+            "defensibility": 3,
+            "accuracy": "partial"
+          },
+          "fw-opus": {
+            "answer": "Assign SF9 with the lowest transmit power level (in 2 dBm steps within the 2-14 dBm range) that still satisfies the link margin. ADR first selects the smallest spreading factor whose link margin keeps PER <= 1% under the Rician K=3 dB fading condition — SF9 — and then reduces transmit power to the minimum value meeting that margin rather than holding it at the 14 dBm maximum. SF9 is chosen because it is significantly more energy-efficient than higher SFs (time-on-air, and thus energy, roughly doubles per SF step) while still providing enough sensitivity headroom plus the ~5-15 dB fade margin needed in near-Rayleigh fading to keep PER under 1%. Transmit power is then minimized as the secondary ADR step, since lower TX current directly reduces per-transmission energy.",
+            "work": "(1) The network server must pick the smallest spreading factor whose link margin keeps PER <= 0.01, because the PER-based ADR allocation strategy assigns the lowest SF meeting the target threshold.  [cites: 6, given]\n(2) Lowering SF is the dominant energy lever: time-on-air roughly doubles per SF step, and energy per transmission is approximately TX-current x time-on-air x voltage, so ADR reduces SF first.  [cites: 7, 9]\n(3) Nodes should therefore use the lowest feasible SF to minimize time-on-air and prolong battery life, which is the core of ADR energy optimization.  [cites: 12]\n(4) The Rician fading channel with K-factor of 3 dB is a relatively severe (near-Rayleigh) condition that requires a substantial fade margin, typically 5-15 dB above the AWGN SNR requirement, to keep PER below 1%.  [cites: 14, given]\n(5) Each higher SF lowers the required SNR by ~2.5 dB and improves receiver sensitivity by ~14 dB from SF7 to SF12, so moving up in SF buys reliability margin to absorb the fade penalty.  [cites: 1, 3]\n(6) Because the lowest SFs (SF7/SF8) leave little SNR margin to absorb the 5-15 dB fade penalty, a moderate SF such as SF9 (required SNR -12.5 dB, sensitivity ~-130 dBm) provides enough headroom to keep PER <= 1% under K=3 dB fading while remaining far more energy-efficient than SF10-SF12.  [cites: 1, 3, 14]\n(7) Once SF9 clears the 1% PER target with the chosen fade margin, the remaining energy-optimal step is to lower transmit power, since TX supply current scales with output power and the minimum power meeting the link margin is preferred.  [cites: 10]\n(8) This two-step order (raise data rate / lower SF first, then lower transmit power for additional savings) is exactly the ADR optimization sequence: compute margin = measured_SNR - required_SNR, lower SF if margin is large, then reduce TX power.  [cites: 9, 11]\n(9) Transmit power is configurable in 2 dB steps from 2 dBm to 14 dBm (the EU 868 MHz maximum), so the server selects the lowest of these steps that still satisfies the link margin rather than the 14 dBm maximum.  [cites: 13, given]\n(10) Therefore the optimal assignment is SF9 paired with the minimum transmit power level (chosen from the 2-14 dBm steps) that keeps the link margin sufficient for PER <= 1%, minimizing energy while meeting the reliability requirement.  [cites: 6, 9, 10, 11, 14]",
+            "prov": true,
+            "grounded": "10/10",
+            "facts": 14,
+            "defensibility": 3,
+            "accuracy": "partial"
+          }
+        }
+      },
+      {
+        "id": "672065bcff",
+        "s": 1,
+        "cas_haiku_facts": 11,
+        "cas_opus_facts": 6,
+        "arms": {
+          "plain-haiku": {
+            "answer": "720",
+            "work": "Solved by analyzing the sum Σ_{d|N} f(d) where f(n) counts divisors of n that are ≡ 1 (mod 4).\n\nKey insight: Classify primes mod 4: 2≡2, 29≡1, 59≡3, 79≡3. A number is ≡1 (mod 4) iff it has the form 2^0·29^b'·59^(2c')·79^(2e').\n\nFor divisor d = 2^a·29^b·59^c·79^e, the count f(d) = (b+1)·(⌊c/2⌋+1)·(⌊e/2⌋+1).\n\nThe sum decomposes multiplicatively:\n- Power of 2: sum of 1 for a=0..8 equals 9\n- Power of 29: sum of (b+1) for b=0..59 equals 1830\n- Power of 59: sum of (⌊c/2⌋+1) for c=0..79 equals 1640\n- Power of 79: sum of (⌊e/2⌋+1) for e=0..29 equals 240\n\nTotal sum S = 9·1830·1640·240 = 6,482,592,000 = 2^8·3^4·5^3·41·61\n\nNumber of divisors: τ(S) = (8+1)(4+1)(3+1)(1+1)(1+1) = 9·5·4·2·2 = 720",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "640",
+            "work": "Let N = 2^8 · 29^59 · 59^79 · 79^29. We want S = Σ_{k | N} f(k), then the number of divisors of S.\n\nf(k) = Σ_{m | k} [m ≡ 1 mod 4]. Swap the order of summation:\nS = Σ_{m | N, m ≡ 1 mod 4} (#{k | N : m | k}) = Σ_{m | N, m ≡ 1 mod 4} d(N/m),\nsince the number of multiples of m that divide N equals the number of divisors of N/m.\n\nWrite m = 2^a · 29^b · 59^c · 79^d.\n- m ≡ 1 mod 4 requires m odd ⇒ a = 0 (a=1 gives 2 mod 4, a≥2 gives 0 mod 4).\n- 29 ≡ 1, 59 ≡ 3, 79 ≡ 3 (mod 4), so m ≡ 3^(c+d) mod 4, which is 1 iff c+d is even.\n\nWith a=0, N/m = 2^8 · 29^(59−b) · 59^(79−c) · 79^(29−d), so d(N/m) = 9·(60−b)·(80−c)·(30−d).\n\nS = Σ_{b=0..59} Σ_{c=0..79} Σ_{d=0..29, c+d even} 9·(60−b)·(80−c)·(30−d) = 12,411,792,000.\n\nFactoring: 12,411,792,000 = 2^7 · 3^4 · 5^3 · 61 · 157.\nNumber of divisors = (7+1)(4+1)(3+1)(1+1)(1+1) = 8·5·4·2·2 = 640.\n\nVerified the swapped-summation formula against a direct brute-force computation on a small case (2^2·29·59·79), both giving 45.\n\nFinal answer: 640.",
+            "prov": null,
+            "defensibility": 5,
+            "accuracy": "correct"
+          },
+          "fw-haiku": {
+            "answer": "720",
+            "work": "(1) The prime factorization of N shows that 2≡2 (mod 4), 29≡1 (mod 4), 59≡3 (mod 4), and 79≡3 (mod 4).  [cites: given, 3]\n(2) For any divisor d = 2^a * 29^b * 59^c * 79^e of N, a divisor of d is ≡1 (mod 4) if and only if the exponent of 2 is 0, the exponent of 59 is even, the exponent of 79 is even, and the exponent of 29 is arbitrary.  [cites: 2, 3]\n(3) This means f(d) = (b+1) * (⌊c/2⌋ + 1) * (⌊e/2⌋ + 1) where d = 2^a * 29^b * 59^c * 79^e.  [cites: 4]\n(4) The sum S = Σ f(k) over all divisors k of N can be computed as a product of four independent sums, one for each prime power.  [cites: 5]\n(5) The sum over exponents of 2 is: Σ_{a=0}^8 1 = 9.  [cites: 6]\n(6) The sum over exponents of 29 is: Σ_{b=0}^59 (b+1) = 60*61/2 = 1830.  [cites: 7]\n(7) The sum over exponents of 59 is: Σ_{c=0}^79 (⌊c/2⌋+1) = 1640.  [cites: 8]\n(8) The sum over exponents of 79 is: Σ_{e=0}^29 (⌊e/2⌋+1) = 240.  [cites: 9]\n(9) Therefore S = 9 * 1830 * 1640 * 240 = 6482592000 = 2^8 * 3^4 * 5^3 * 41 * 61.  [cites: 5, 6, 7, 8, 9, 10]\n(10) The number of divisors of S is computed using the divisor formula: if n = p₁^a₁ * ... * pₖ^aₖ, then τ(n) = (a₁+1)...(aₖ+1).  [cites: 11]\n(11) For S = 2^8 * 3^4 * 5^3 * 41^1 * 61^1, the number of divisors is τ(S) = (8+1)(4+1)(3+1)(1+1)(1+1) = 9 * 5 * 4 * 2 * 2 = 720.  [cites: 10, 11]",
+            "prov": true,
+            "grounded": "11/11",
+            "facts": 11,
+            "defensibility": 4,
+            "accuracy": "incorrect"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "640",
+            "work": "(1) The function f(n) counts divisors of n that are congruent to 1 mod 4. We need to find the sum S = sum over all divisors d of N of f(d), where N = 2^8 * 29^59 * 59^79 * 79^29.  [cites: given]\n(2) By swapping the order of summation (a standard technique), S equals the sum of tau(N/e) over all divisors e of N that are congruent to 1 mod 4.  [cites: 3]\n(3) For N = 2^8 * 29^59 * 59^79 * 79^29, a divisor e = 29^b * 59^c * 79^d (with b in 0..59, c in 0..79, d in 0..29) is congruent to 1 mod 4 if and only if c + d is even, since 29 ≡ 1 mod 4 and 59 ≡ 79 ≡ 3 mod 4.  [cites: 4]\n(4) For each such divisor e with c + d even, tau(N/e) = 9 * (60-b) * (80-c) * (30-d), since tau is multiplicative.  [cites: 1, 2]\n(5) Computing S by summing over all valid divisors e (those where c+d is even), the total is S = 12,411,792,000.  [cites: 5]\n(6) The prime factorization of S = 12,411,792,000 is 2^7 * 3^4 * 5^3 * 61 * 157.  [cites: 6]\n(7) Using the multiplicative property of the divisor-counting function tau, the number of positive divisors of S is (7+1)(4+1)(3+1)(1+1)(1+1) = 8 * 5 * 4 * 2 * 2 = 640.  [cites: 1, 6]",
+            "prov": true,
+            "grounded": "7/7",
+            "facts": 6,
+            "defensibility": 5,
+            "accuracy": "correct"
+          },
+          "fw-opus": {
+            "answer": "640",
+            "work": "(1) The task is to compute S = sum of f(k) over all divisors k of N = 2^8 * 29^59 * 59^79 * 79^29, where f(n) counts divisors of n of the form 4k+1, then count the divisors of S.  [cites: given]\n(2) Residues mod 4: 29 = 1 mod 4, 59 = 3 mod 4, 79 = 3 mod 4, so a divisor's count of 4k+1 divisors is governed by parity of exponents on the 3-mod-4 primes; this characterizes f.  [cites: 4]\n(3) Using the divisor-sum swap identity S = sum_{e|N, e=1 mod 4} tau(N/e) and the closed-form summation, S evaluates to 12,411,792,000 (cross-validated against brute force).  [cites: 3, 5]\n(4) Factoring S gives 12,411,792,000 = 2^7 * 3^4 * 5^3 * 61 * 157.  [cites: 6]\n(5) The number-of-divisors function tau(n) = product of (exponent+1), so tau(S) = (7+1)(4+1)(3+1)(1+1)(1+1) = 8*5*4*2*2 = 640.  [cites: 1, 2, 6]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 6,
+            "defensibility": 5,
+            "accuracy": "incorrect"
+          }
+        }
+      },
+      {
+        "id": "6728cbe9a6",
+        "s": 1,
+        "cas_haiku_facts": 7,
+        "cas_opus_facts": 8,
+        "arms": {
+          "plain-haiku": {
+            "answer": "The codebase at /Users/adhithya/Downloads/coding-adventures does not contain any content related to the fermionic partition function, Feynman path integrals, or quantum field theory. This is a computer science learning monorepo focused on implementing computing stack layers, language tooling, data structures, cryptography, and rendering systems. It does not include theoretical physics or quantum mechanics material.\n\nTo answer your question about the fermionic partition function formula in imaginary time using Feynman's path integral formalism would require consulting physics references outside this codebase.",
+            "work": "",
+            "prov": null,
+            "defensibility": 1,
+            "accuracy": "incorrect"
+          },
+          "plain-opus": {
+            "answer": "The fermionic partition function in the imaginary-time (Euclidean) path-integral formalism is written as a Grassmann coherent-state functional integral:\n\nZ = ∫ D(ψ̄, ψ) exp( − S_E[ψ̄, ψ] )\n\nwith the Euclidean action\n\nS_E[ψ̄, ψ] = ∫₀^β dτ [ ψ̄(τ) (∂_τ − μ) ψ(τ) + H(ψ̄(τ), ψ(τ)) ]\n\nFor a generic (possibly field-theoretic, many-mode) system this reads\n\nZ = Tr[ e^{−β(Ĥ − μN̂)} ] = ∫ D(ψ̄, ψ) exp{ − ∫₀^β dτ [ Σ_a ψ̄_a(τ)(∂_τ − μ) ψ_a(τ) + H(ψ̄, ψ) ] }\n\nKey ingredients / conventions:\n- β = 1/(k_B T) is the inverse temperature; τ ∈ [0, β] is imaginary (Euclidean) time, obtained from real time via the Wick rotation t = −iτ.\n- ψ(τ), ψ̄(τ) are anticommuting Grassmann numbers (coherent-state eigenvalues of the fermion annihilation/creation operators), not ordinary functions.\n- μ is the chemical potential (set μ = 0 if absent); H is the normal-ordered Hamiltonian with operators replaced by Grassmann fields.\n- The defining feature for fermions is the ANTIPERIODIC boundary condition in imaginary time:\n  ψ(β) = −ψ(0),  ψ̄(β) = −ψ̄(0).\n  (Bosons would instead be periodic.) This antiperiodicity quantizes the Matsubara frequencies to ω_n = (2n+1)π/β.\n\nFree / Gaussian case: when the action is quadratic, S_E = ∫dτ dτ′ ψ̄ G^{-1} ψ, the Grassmann integral evaluates to a determinant (rather than the inverse determinant one gets for bosons):\n\nZ = ∫ D(ψ̄, ψ) e^{−ψ̄ G^{-1} ψ} = det( G^{-1} ) = det( −∂_τ + μ − h )\n\nand equivalently ln Z = Tr ln(G^{-1}), giving the standard result Z = Π_k (1 + e^{−β(ε_k − μ)}) for a free Fermi gas.\n\nIn single-mode discrete (Matsubara/Trotter) form, the partition function is the limit of a product of Grassmann integrals over N time slices with the antiperiodic closure enforced at the boundary.</answer>\n<parameter name=\"work\">This is a standard graduate statistical-field-theory / many-body result (Negele & Orland, Altland & Simons). It is a physics knowledge question with no relation to the repository, so no file exploration was warranted. I derived/recalled the coherent-state path-integral representation, emphasizing the three fermion-specific features: Grassmann fields, antiperiodic boundary conditions ψ(β)=−ψ(0), and that the Gaussian integral yields det(G⁻¹) rather than 1/det.",
+            "work": "",
+            "prov": null,
+            "defensibility": 4,
+            "accuracy": "correct"
+          },
+          "fw-haiku": {
+            "answer": "The fermionic partition function Z in imaginary time representation using Feynman's path integral formalism is:\n\n**Z = Tr(e^{-βH}) = ∫[Dψ̄Dψ] exp{-S_E}**\n\nwhere:\n- Z is the partition function\n- β = 1/T is the inverse temperature\n- H is the Hamiltonian\n- Dψ̄Dψ denotes Berezin integration over anticommuting (Grassmann) fields\n- S_E is the Euclidean action: **S_E = ∫_0^β dτ ∫ d³x ψ̄(τ,x)(γ_E^μ ∂_μ + m)ψ(τ,x)**\n- τ = it is Euclidean (imaginary) time\n- Fermionic fields satisfy **anti-periodic boundary conditions**: ψ(τ+β) = -ψ(τ) and ψ̄(τ+β) = -ψ̄(τ)\n- For Gaussian fermionic integrals, Z evaluates as a functional determinant: Z ∝ det(operator)\n\nThe key distinguishing features compared to bosonic path integrals are: (1) Berezin integration rather than standard integration, (2) anti-periodic boundary conditions reflecting the fermionic anticommutation relations, and (3) the partition function proportional to the determinant (not the inverse determinant) of the kinetic operator.",
+            "work": "(1) The fermionic partition function in imaginary time path integral representation is defined as Z = Tr(e^{-βH}), where β = 1/T is the inverse temperature and H is the Hamiltonian.  [cites: 1, 2]\n(2) This partition function can be expressed as a functional integral over Grassmann fields: Z = ∫[Dψ̄Dψ] exp{-S_E}, where the integration measure Dψ̄Dψ denotes Berezin integration over anticommuting (Grassmann) variables, not standard Riemann integration.  [cites: 1, 7]\n(3) The Euclidean action S_E in the exponent is given by S_E = ∫_0^β dτ ∫ d³x ψ̄(τ,x)(γ_E^μ ∂_μ + m)ψ(τ,x), where τ is Euclidean (imaginary) time.  [cites: 1, 2]\n(4) Fermionic fields must satisfy anti-periodic boundary conditions in imaginary time: ψ(τ+β) = -ψ(τ) and ψ̄(τ+β) = -ψ̄(τ), which is a consequence of the anticommuting nature of Grassmann variables.  [cites: 1, 4]\n(5) For Gaussian (quadratic) fermionic path integrals, the partition function evaluates using the functional determinant formula: Z ∝ det(operator), where the determinant (not inverse determinant as in the bosonic case) arises from the anticommuting nature of the Grassmann variables.  [cites: 6]",
+            "prov": true,
+            "grounded": "5/5",
+            "facts": 7,
+            "defensibility": 4,
+            "accuracy": "correct"
+          },
+          "fw-haiku-opuscas": {
+            "answer": "The fermionic partition function Z in imaginary-time (Euclidean) path integral representation is:\n\n**Z = ∫ D(ψ†) Dψ exp(-S)**\n\nwhere the **Euclidean action** is:\n\n**S = ∫₀^β dτ [ψ†(τ) ∂_τ ψ(τ) + H(ψ†(τ), ψ(τ))]**\n\nand the **antiperiodic boundary conditions** are:\n\n**ψ(β) = -ψ(0)  and  ψ†(β) = -ψ†(0)**\n\n**Key points:**\n- The functional integral D(ψ†)Dψ is over Grassmann-valued (anticommuting) fields\n- β = 1/(k_B T) is the inverse temperature\n- The kinetic term generalizes to Σ_α ψ†_α ∂_τ ψ_α for multiple fermionic modes\n- H(ψ†, ψ) is the normal-ordered Hamiltonian with creation/annihilation operators replaced by Grassmann eigenvalues\n- The antiperiodic boundary conditions (not periodic, as for bosons) arise from the fermionic coherent-state closure relation in the trace, specifically the minus sign enforcing fermionic statistics\n- This form is derived via Trotter factorization of exp(-βH) into infinitesimal time slices, with coherent-state closure relations inserted between slices to produce the path integral in the continuum limit\n",
+            "work": "(1) The fermionic partition function begins from the trace definition Z = Tr exp(-betaH), where beta = 1/(k_B T) is the inverse temperature.  [cites: 1]\n(2) In the fermionic coherent-state representation, the trace is rewritten with antiperiodic boundary conditions (enforced by the minus sign in the bra) as Z = ∫ d(ψ†) dψ <-ψ| exp(-betaH) |ψ>, where ψ and ψ† are anticommuting Grassmann numbers.  [cites: 2]\n(3) The continuum imaginary-time path integral is obtained via Trotter factorization and insertion of fermionic coherent-state closure relations between each time slice, yielding Z = ∫ D(ψ†) Dψ exp(-S), where the functional integration is over Grassmann-valued fields obeying antiperiodic boundary conditions ψ(beta·ℏ) = -ψ(0).  [cites: 3, 7]\n(4) The Euclidean (imaginary-time) action in the path integral is S = ∫₀^(beta·ℏ) dτ [ψ†(ℏ ∂_τ - μ) ψ + H(ψ†, ψ)], where μ is the chemical potential and H(ψ†, ψ) is the normal-ordered Hamiltonian with operators replaced by Grassmann eigenvalues.  [cites: 4]\n(5) Setting ℏ = 1 and omitting the chemical potential (canonical ensemble), the standard textbook form is Z = ∫ D(ψ†) Dψ exp(-S) with S = ∫₀^β dτ [ψ† ∂_τ ψ + H(ψ†, ψ)], where the kinetic term sums over all modes: ∑_α ψ†_α ∂_τ ψ_α.  [cites: 5]\n(6) The antiperiodic boundary conditions ψ_α(β) = -ψ_α(0) arise from the Grassmann anticommutation relations and the closure of fermionic coherent states in the trace calculation.  [cites: 6]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 8,
+            "defensibility": 4,
+            "accuracy": "correct"
+          },
+          "fw-opus": {
+            "answer": "Z = ∫ D(ψ̄) Dψ exp(−S), with the Euclidean (imaginary-time) action\n\nS = ∫₀^(βℏ) dτ [ c̄(ℏ ∂_τ − μ) c + H(c̄, c) ]\n\nwhere the integration runs over Grassmann-valued fields ψ (and ψ̄, equivalently c, c̄) obeying the antiperiodic boundary condition ψ(βℏ) = −ψ(0). In the common textbook convention (ℏ = 1, no chemical potential), this reads\n\nZ = ∫ D(ψ̄) Dψ exp(−S), S = ∫₀^β dτ [ ψ̄ ∂_τ ψ + H(ψ̄, ψ) ],\n\n(for multiple modes the kinetic term is a sum over modes α: Σ_α ψ̄_α ∂_τ ψ_α), with the antiperiodic conditions ψ_α(β) = −ψ_α(0) and ψ̄_α(β) = −ψ̄_α(0).",
+            "work": "(1) The question asks for the fermionic partition function in the imaginary-time path-integral (Feynman) representation. The starting point is the thermal trace Z = Tr exp(−βH), with β = 1/(k_B T), reinterpreted as Euclidean-time evolution over imaginary time τ from 0 to βℏ.  [cites: given, 1]\n(2) In the fermionic coherent-state representation, this trace becomes a Grassmann integral Z = ∫ d(c̄) dc ⟨−c| exp(−βH) |c⟩, where the minus sign in the bra enforces antiperiodicity and c, c̄ are anticommuting Grassmann numbers.  [cites: 2]\n(3) Taking the continuum limit (via Trotter factorization e^{−βH} → product of e^{−εH} with coherent-state closure relations inserted, N→∞) yields the path-integral form Z = ∫ D(c̄) Dc exp(−S) over Grassmann fields obeying the antiperiodic boundary condition c(βℏ) = −c(0).  [cites: 3, 7, 8]\n(4) The Euclidean action appearing in the weight exp(−S) is S = ∫₀^(βℏ) dτ [ c̄(ℏ ∂_τ − μ) c + H(c̄, c) ], where μ is the chemical potential (grand canonical) and H(c̄, c) is the normal-ordered Hamiltonian with operators replaced by Grassmann eigenvalues.  [cites: 4]\n(5) In the standard textbook convention with ℏ = 1 and μ omitted, this is Z = ∫ D(ψ̄) Dψ exp(−S) with S = ∫₀^β dτ [ ψ̄ ∂_τ ψ + H(ψ̄, ψ) ], the kinetic term summed over modes α (Σ_α ψ̄_α ∂_τ ψ_α) for multiple modes.  [cites: 5]\n(6) The fermionic fields must satisfy antiperiodic boundary conditions ψ_α(β) = −ψ_α(0) and ψ̄_α(β) = −ψ̄_α(0), arising from the Grassmann nature of the fields and the coherent-state closure relation used to form the trace.  [cites: 6, 2]",
+            "prov": true,
+            "grounded": "6/6",
+            "facts": 8,
+            "defensibility": 4,
+            "accuracy": "correct"
+          }
+        }
+      }
+    ]
+  }
+}
