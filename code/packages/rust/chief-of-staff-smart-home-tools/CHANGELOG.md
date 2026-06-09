@@ -46,6 +46,10 @@ All notable changes to this package will be documented in this file.
   handlers over the D23 runtime read facade so Chief of Staff jobs can inspect
   event-stream backlog pressure and checkpointed event history without draining
   subscriptions.
+- Added `smart_home.list_command_results` and
+  `smart_home.get_command_result_summary` handlers over the D23 runtime read
+  facade so Chief of Staff jobs can inspect accepted and failed command results
+  without owning a parallel command audit log.
 - Added `smart_home.list_authorization_decisions` and
   `smart_home.get_authorization_summary` handlers over the D23 runtime read
   facade so Chief of Staff jobs can inspect allow/deny audit history without

@@ -18,10 +18,10 @@ use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
-    CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent,
-    DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health, IntegrationId, Metadata,
-    PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId,
-    SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
+    CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
+    DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health, IntegrationId,
+    Metadata, PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction,
+    SceneId, SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
@@ -50,25 +50,26 @@ use smart_home_runtime::{
     ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
     RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
     RuntimeClearDesiredStateToolOutput, RuntimeClearDesiredStateToolRequest,
-    RuntimeCommandToolRequest, RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest,
-    RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
-    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
-    RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
-    RuntimePairBridgeToolRequest, RuntimePairingPlanToolRequest, RuntimePairingSession,
-    RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
-    RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
-    RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
-    RuntimeReadToolRequest, RuntimeReportEventToolOutput, RuntimeReportEventToolRequest,
-    RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput,
-    RuntimeSetDesiredStateToolRequest, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
-    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
-    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
-    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
-    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
-    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
-    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
-    WorkerRestartReason, WorkerStatus,
+    RuntimeCommandResultQuery, RuntimeCommandResultRecord, RuntimeCommandResultSort,
+    RuntimeCommandResultSummary, RuntimeCommandToolRequest, RuntimeCompletePairingToolOutput,
+    RuntimeCompletePairingToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest,
+    RuntimeError, RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch,
+    RuntimeEventFilter, RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery,
+    RuntimeEventSort, RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest,
+    RuntimePairingPlanToolRequest, RuntimePairingSession, RuntimePairingSessionId,
+    RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery, RuntimePairingSessionSort,
+    RuntimePendingWorkSummary, RuntimePollEventsToolOutput, RuntimePollEventsToolRequest,
+    RuntimeReadSnapshot, RuntimeReadToolOutput, RuntimeReadToolRequest,
+    RuntimeReportEventToolOutput, RuntimeReportEventToolRequest, RuntimeRoomQuery, RuntimeRoomSort,
+    RuntimeRoomSummary, RuntimeSetDesiredStateToolOutput, RuntimeSetDesiredStateToolRequest,
+    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
+    RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
+    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
+    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
+    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
+    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
+    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
+    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -90,6 +91,9 @@ pub const SMART_HOME_POLL_EVENTS_TOOL_ID: &str = "smart_home.poll_events";
 pub const SMART_HOME_UNSUBSCRIBE_TOOL_ID: &str = "smart_home.unsubscribe";
 pub const SMART_HOME_LIST_SUBSCRIPTIONS_TOOL_ID: &str = "smart_home.list_subscriptions";
 pub const SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID: &str = "smart_home.inspect_event_log";
+pub const SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID: &str = "smart_home.list_command_results";
+pub const SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_command_result_summary";
 pub const SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID: &str =
     "smart_home.list_authorization_decisions";
 pub const SMART_HOME_GET_AUTHORIZATION_SUMMARY_TOOL_ID: &str =
@@ -364,6 +368,31 @@ impl SmartHomeToolBridge {
                         .execute_read_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "inspect_event_log"))
+                }
+                SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID => {
+                    let query = command_result_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::ListCommandResults { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "list_command_results"))
+                }
+                SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID => {
+                    let query = command_result_query(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetCommandResultSummary { query },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(
+                        output,
+                        "get_command_result_summary",
+                    ))
                 }
                 SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID => {
                     let query = authorization_decision_query(&arguments)?;
@@ -1007,6 +1036,8 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         unsubscribe_definition(),
         list_subscriptions_definition(),
         inspect_event_log_definition(),
+        list_command_results_definition(),
+        get_command_result_summary_definition(),
         list_authorization_decisions_definition(),
         get_authorization_summary_definition(),
         list_capability_grants_definition(),
@@ -1307,6 +1338,60 @@ fn inspect_event_log_definition() -> ToolDefinition {
                 SchemaProperty::new("count", JsonSchema::Integer),
             ],
             vec!["events", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn command_result_query_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("command_id", JsonSchema::String),
+            SchemaProperty::new("bridge_id", JsonSchema::String),
+            SchemaProperty::new("correlation_id", JsonSchema::String),
+            SchemaProperty::new("status", JsonSchema::String),
+            SchemaProperty::new("statuses", string_array_schema()),
+            SchemaProperty::new("from_checkpoint", JsonSchema::Integer),
+            SchemaProperty::new("sort", JsonSchema::String),
+            SchemaProperty::new("limit", JsonSchema::Integer),
+        ],
+        vec![],
+        false,
+    )
+}
+
+fn list_command_results_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID,
+        "List smart-home command results",
+        "List D23 smart-home command result events with checkpoint positions for command auditing.",
+        command_result_query_schema(),
+        object_schema(
+            vec![
+                SchemaProperty::new(
+                    "command_results",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("summary", JsonSchema::Any),
+                SchemaProperty::new("count", JsonSchema::Integer),
+            ],
+            vec!["command_results", "summary", "count"],
+            false,
+        ),
+    )
+}
+
+fn get_command_result_summary_definition() -> ToolDefinition {
+    read_definition(
+        SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID,
+        "Summarize smart-home command results",
+        "Summarize D23 smart-home command results by status for command auditing.",
+        command_result_query_schema(),
+        object_schema(
+            vec![SchemaProperty::new("summary", JsonSchema::Any)],
+            vec!["summary"],
             false,
         ),
     )
@@ -2416,6 +2501,33 @@ fn inspect_event_log_request(
     Ok(RuntimeReadToolRequest::InspectEventLog { query })
 }
 
+fn command_result_query(arguments: &JsonValue) -> Result<RuntimeCommandResultQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut query = RuntimeCommandResultQuery::new();
+    if let Some(command_id) = optional_string(arguments, "command_id")? {
+        query = query.for_command(CommandId::trusted(command_id));
+    }
+    if let Some(bridge_id) = optional_string(arguments, "bridge_id")? {
+        query = query.for_bridge(BridgeId::trusted(bridge_id));
+    }
+    if let Some(correlation_id) = optional_string(arguments, "correlation_id")? {
+        query = query.for_correlation(CorrelationId::trusted(correlation_id));
+    }
+    for status in optional_string_list(arguments, "status", "statuses")? {
+        query = query.with_status(parse_command_status(&status)?);
+    }
+    if let Some(from_checkpoint) = optional_u64(arguments, "from_checkpoint")? {
+        query = query.from_checkpoint(RuntimeEventCheckpoint::from_next_sequence(from_checkpoint));
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        query = query.sorted_by(parse_command_result_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        query = query.with_limit(limit as usize);
+    }
+    Ok(query)
+}
+
 fn authorization_decision_query(
     arguments: &JsonValue,
 ) -> Result<RuntimeAuthorizationDecisionQuery, ToolCallError> {
@@ -3159,6 +3271,17 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
             ("summary", event_log_summary_json(&summary)),
             ("count", integer(entries.len() as i64)),
         ]),
+        RuntimeReadToolOutput::CommandResults { results, summary } => object([
+            (
+                "command_results",
+                JsonValue::Array(results.iter().map(command_result_record_json).collect()),
+            ),
+            ("summary", command_result_summary_json(&summary)),
+            ("count", integer(results.len() as i64)),
+        ]),
+        RuntimeReadToolOutput::CommandResultSummary { summary } => {
+            object([("summary", command_result_summary_json(&summary))])
+        }
         RuntimeReadToolOutput::AuthorizationDecisions { decisions, summary } => object([
             (
                 "decisions",
@@ -5656,6 +5779,51 @@ fn event_log_record_json(record: &RuntimeEventLogRecord) -> JsonValue {
     ])
 }
 
+fn command_result_record_json(record: &RuntimeCommandResultRecord) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        (
+            "next_checkpoint",
+            integer(record.next_checkpoint.next_sequence() as i64),
+        ),
+        ("command_result", command_result_json(&record.result)),
+    ])
+}
+
+fn command_result_summary_json(summary: &RuntimeCommandResultSummary) -> JsonValue {
+    object([
+        ("total_results", integer(summary.total_results as i64)),
+        ("accepted_results", integer(summary.accepted_results as i64)),
+        ("rejected_results", integer(summary.rejected_results as i64)),
+        (
+            "timed_out_results",
+            integer(summary.timed_out_results as i64),
+        ),
+        ("failed_results", integer(summary.failed_results as i64)),
+        ("failure_results", integer(summary.failure_results() as i64)),
+        (
+            "first_sequence",
+            summary
+                .first_sequence
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "latest_sequence",
+            summary
+                .latest_sequence
+                .map(|value| integer(value as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_checkpoint",
+            integer(summary.next_checkpoint.next_sequence() as i64),
+        ),
+        ("has_results", JsonValue::Bool(summary.has_results())),
+        ("has_failures", JsonValue::Bool(summary.has_failures())),
+    ])
+}
+
 fn event_log_summary_json(summary: &RuntimeEventLogSummary) -> JsonValue {
     object([
         ("total_events", integer(summary.total_events as i64)),
@@ -6225,6 +6393,19 @@ fn parse_event_sort(label: &str) -> Result<RuntimeEventSort, ToolCallError> {
     }
 }
 
+fn parse_command_result_sort(label: &str) -> Result<RuntimeCommandResultSort, ToolCallError> {
+    match label {
+        "sequence_asc" | "oldest_first" => Ok(RuntimeCommandResultSort::SequenceAsc),
+        "sequence_desc" | "newest_first" => Ok(RuntimeCommandResultSort::SequenceDesc),
+        "status_then_sequence_desc" | "status_then_newest" | "status" => {
+            Ok(RuntimeCommandResultSort::StatusThenSequenceDesc)
+        }
+        _ => Err(validation_error(format!(
+            "unknown command result sort `{label}`"
+        ))),
+    }
+}
+
 fn parse_room_sort(label: &str) -> Result<RuntimeRoomSort, ToolCallError> {
     match label {
         "room_id" | "id" => Ok(RuntimeRoomSort::RoomId),
@@ -6419,6 +6600,18 @@ fn parse_command_type(label: &str) -> Result<CommandType, ToolCallError> {
         "set_lock" => Ok(CommandType::SetLock),
         "set_thermostat_setpoint" => Ok(CommandType::SetThermostatSetpoint),
         _ => Err(validation_error(format!("unknown command_type `{label}`"))),
+    }
+}
+
+fn parse_command_status(label: &str) -> Result<CommandStatus, ToolCallError> {
+    match label {
+        "accepted" | "accept" => Ok(CommandStatus::Accepted),
+        "rejected" | "reject" => Ok(CommandStatus::Rejected),
+        "timed_out" | "timeout" | "timedout" => Ok(CommandStatus::TimedOut),
+        "failed" | "failure" => Ok(CommandStatus::Failed),
+        _ => Err(validation_error(format!(
+            "unknown command result status `{label}`"
+        ))),
     }
 }
 
@@ -7389,7 +7582,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 41);
+        assert_eq!(definitions.len(), 43);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -7433,6 +7626,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_INSPECT_EVENT_LOG_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID));
@@ -7482,7 +7681,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            33
+            35
         );
         assert_eq!(
             export
@@ -7504,6 +7703,10 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID).is_some()
+        );
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
@@ -8462,6 +8665,77 @@ mod tests {
             Some(&integer(1))
         );
 
+        let list_command_results_request = request(
+            "call-list-command-results",
+            SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID,
+            object([
+                ("bridge_id", string("bridge-1")),
+                ("status", string("accepted")),
+                ("sort", string("newest_first")),
+                ("limit", integer(1)),
+            ]),
+            1_102,
+        );
+        let list_command_results_trace =
+            tool_runtime.invoke_with_events(&list_command_results_request);
+        assert!(list_command_results_trace.result.ok);
+        let list_command_results_output =
+            list_command_results_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(list_command_results_output, "count"),
+            Some(&integer(1))
+        );
+        let command_result_record = array_item(
+            field(list_command_results_output, "command_results").unwrap(),
+            0,
+        )
+        .unwrap();
+        let command_result_sequence =
+            integer_value(field(command_result_record, "sequence").unwrap()).unwrap();
+        assert_eq!(
+            field(command_result_record, "next_checkpoint"),
+            Some(&integer(command_result_sequence + 1))
+        );
+        assert_eq!(
+            field(
+                field(command_result_record, "command_result").unwrap(),
+                "status"
+            ),
+            Some(&string("accepted"))
+        );
+        assert_eq!(
+            field(
+                field(list_command_results_output, "summary").unwrap(),
+                "accepted_results"
+            ),
+            Some(&integer(1))
+        );
+
+        let command_result_summary_request = request(
+            "call-command-result-summary",
+            SMART_HOME_GET_COMMAND_RESULT_SUMMARY_TOOL_ID,
+            object([("statuses", JsonValue::Array(vec![string("accepted")]))]),
+            1_102,
+        );
+        let command_result_summary_trace =
+            tool_runtime.invoke_with_events(&command_result_summary_request);
+        assert!(command_result_summary_trace.result.ok);
+        let command_result_summary_output =
+            command_result_summary_trace.result.output.as_ref().unwrap();
+        let command_result_summary = field(command_result_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(command_result_summary, "total_results"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(command_result_summary, "failure_results"),
+            Some(&integer(0))
+        );
+        assert_eq!(
+            field(command_result_summary, "has_failures"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let list_authorization_request = request(
             "call-list-authorization-decisions",
             SMART_HOME_LIST_AUTHORIZATION_DECISIONS_TOOL_ID,
@@ -8775,6 +9049,8 @@ mod tests {
         journal.record_trace(pairing_sessions_request, pairing_sessions_trace);
         journal.record_trace(list_subscriptions_request, list_subscriptions_trace);
         journal.record_trace(inspect_event_log_request, inspect_event_log_trace);
+        journal.record_trace(list_command_results_request, list_command_results_trace);
+        journal.record_trace(command_result_summary_request, command_result_summary_trace);
         journal.record_trace(list_authorization_request, list_authorization_trace);
         journal.record_trace(authorization_summary_request, authorization_summary_trace);
         journal.record_trace(list_capability_grants_request, list_capability_grants_trace);
@@ -8790,9 +9066,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 41);
-        assert_eq!(journal_summary.completed_count, 41);
-        assert_eq!(journal.audit_records().len(), 41);
+        assert_eq!(journal_summary.invocation_count, 43);
+        assert_eq!(journal_summary.completed_count, 43);
+        assert_eq!(journal.audit_records().len(), 43);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
@@ -8806,7 +9082,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            38,
+            40,
             "read, subscribe, poll, unsubscribe, pairing, ingest, and desired-state calls record tool authorization, while command records tool and command authorization"
         );
         assert_eq!(
@@ -8963,6 +9239,22 @@ mod tests {
         assert!(!unsupported_filter.result.ok);
         assert_eq!(
             unsupported_filter
+                .result
+                .error
+                .as_ref()
+                .map(|error| error.kind),
+            Some(ToolErrorKind::ToolValidationError)
+        );
+
+        let unknown_command_status = tool_runtime.invoke_with_events(&request(
+            "call-invalid-command-results",
+            SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID,
+            object([("status", string("vanished"))]),
+            1_000,
+        ));
+        assert!(!unknown_command_status.result.ok);
+        assert_eq!(
+            unknown_command_status
                 .result
                 .error
                 .as_ref()
