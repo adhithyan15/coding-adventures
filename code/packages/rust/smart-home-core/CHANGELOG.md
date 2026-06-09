@@ -17,6 +17,9 @@ All notable changes to this package will be documented in this file.
   `smart_home.list_primitives`, and `smart_home.describe_primitive` tool
   descriptors for read-only integration-catalog and reusable-primitive
   inspection.
+- `smart_home.get_integration_catalog_summary` and
+  `smart_home.get_tool_catalog_summary` tool descriptors for compact read-only
+  catalog rollups.
 - `smart_home.poll_events` and `smart_home.unsubscribe` tool descriptors for
   model-facing event subscription lifecycle control.
 - `smart_home.list_subscriptions` and `smart_home.inspect_event_log` tool

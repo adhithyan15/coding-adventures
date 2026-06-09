@@ -15,13 +15,16 @@ use chief_of_staff_tool_api::{
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use smart_home_core::{
-    AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
+    canonical_integration_catalog_summary, smart_home_tool_catalog_summary, AgentId,
+    AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
     CommandId, CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand,
-    DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health, IntegrationId,
-    Metadata, PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction,
-    SceneId, SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
+    DeviceEvent, DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health,
+    IntegrationCatalogSummary, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
+    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope,
+    SmartHomeToolCatalogSummary, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
@@ -122,6 +125,9 @@ pub const SMART_HOME_LIST_INTEGRATIONS_TOOL_ID: &str = "smart_home.list_integrat
 pub const SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID: &str = "smart_home.describe_integration";
 pub const SMART_HOME_LIST_PRIMITIVES_TOOL_ID: &str = "smart_home.list_primitives";
 pub const SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID: &str = "smart_home.describe_primitive";
+pub const SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_catalog_summary";
+pub const SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID: &str = "smart_home.get_tool_catalog_summary";
 
 /// Shared, mutable smart-home runtime handle for in-process D18D handlers.
 pub type SharedSmartHomeRuntime = Rc<RefCell<SmartHomeRuntime>>;
@@ -184,6 +190,12 @@ impl SmartHomeToolBridge {
                 }
                 SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID => {
                     Ok(describe_primitive_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID => Ok(
+                    get_integration_catalog_summary_output_handler_output(&arguments)?,
+                ),
+                SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID => {
+                    Ok(get_tool_catalog_summary_output_handler_output(&arguments)?)
                 }
                 SMART_HOME_DISCOVER_TOOL_ID => {
                     let request = discover_request(&arguments)?;
@@ -722,6 +734,28 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                     "source_count",
                     "platform_count",
                 ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID,
+            "Get smart-home integration catalog summary",
+            "Return compact D23 integration descriptor coverage counts from the shared smart-home core catalog.",
+            object_schema(vec![], vec![], false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID,
+            "Get smart-home tool catalog summary",
+            "Return compact D18D smart-home tool descriptor counts from the shared smart-home core catalog.",
+            object_schema(vec![], vec![], false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
                 false,
             ),
         ),
@@ -2930,6 +2964,46 @@ fn describe_primitive_output_handler_output(
     ))
 }
 
+fn get_integration_catalog_summary_output_handler_output(
+    arguments: &JsonValue,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let summary = canonical_integration_catalog_summary();
+
+    Ok(ToolHandlerOutput::new(object([(
+        "summary",
+        integration_catalog_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_integration_catalog_summary")),
+            (
+                "total_integrations",
+                integer(summary.total_integrations as i64),
+            ),
+        ]),
+    ))
+}
+
+fn get_tool_catalog_summary_output_handler_output(
+    arguments: &JsonValue,
+) -> Result<ToolHandlerOutput, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let summary = smart_home_tool_catalog_summary();
+
+    Ok(
+        ToolHandlerOutput::new(object([("summary", tool_catalog_summary_json(&summary))]))
+            .with_event(
+                ToolEventKind::Progress,
+                object([
+                    ("operation", string("get_tool_catalog_summary")),
+                    ("total_tools", integer(summary.total_tools as i64)),
+                ]),
+            ),
+    )
+}
+
 fn discover_output_handler_output(output: RuntimeDiscoverToolOutput) -> ToolHandlerOutput {
     ToolHandlerOutput::new(discover_output_json(&output)).with_event(
         ToolEventKind::Progress,
@@ -4875,6 +4949,92 @@ fn describe_primitive_output_json(
         ("integration_count", integer(integrations.len() as i64)),
         ("source_count", integer(ecosystem_sources.len() as i64)),
         ("platform_count", integer(platforms.len() as i64)),
+    ])
+}
+
+fn integration_catalog_summary_json(summary: &IntegrationCatalogSummary) -> JsonValue {
+    object([
+        (
+            "total_integrations",
+            integer(summary.total_integrations as i64),
+        ),
+        (
+            "in_process_rust_integrations",
+            integer(summary.in_process_rust_integrations as i64),
+        ),
+        (
+            "rust_worker_process_integrations",
+            integer(summary.rust_worker_process_integrations as i64),
+        ),
+        (
+            "total_capability_mappings",
+            integer(summary.total_capability_mappings as i64),
+        ),
+        (
+            "unique_capabilities",
+            integer(summary.unique_capabilities as i64),
+        ),
+        (
+            "total_discovery_roles",
+            integer(summary.total_discovery_roles as i64),
+        ),
+        (
+            "total_pairing_roles",
+            integer(summary.total_pairing_roles as i64),
+        ),
+        (
+            "discoverable_integrations",
+            integer(summary.discoverable_integrations as i64),
+        ),
+        (
+            "pairable_integrations",
+            integer(summary.pairable_integrations as i64),
+        ),
+        (
+            "all_integrations_discoverable",
+            JsonValue::Bool(summary.all_integrations_discoverable()),
+        ),
+        (
+            "all_integrations_pairable",
+            JsonValue::Bool(summary.all_integrations_pairable()),
+        ),
+    ])
+}
+
+fn tool_catalog_summary_json(summary: &SmartHomeToolCatalogSummary) -> JsonValue {
+    object([
+        ("total_tools", integer(summary.total_tools as i64)),
+        ("read_tools", integer(summary.read_tools as i64)),
+        ("write_tools", integer(summary.write_tools as i64)),
+        ("external_tools", integer(summary.external_tools as i64)),
+        (
+            "read_only_tier_tools",
+            integer(summary.read_only_tier_tools as i64),
+        ),
+        (
+            "low_risk_tier_tools",
+            integer(summary.low_risk_tier_tools as i64),
+        ),
+        (
+            "high_risk_tier_tools",
+            integer(summary.high_risk_tier_tools as i64),
+        ),
+        (
+            "human_approval_tier_tools",
+            integer(summary.human_approval_tier_tools as i64),
+        ),
+        (
+            "total_required_capabilities",
+            integer(summary.total_required_capabilities as i64),
+        ),
+        (
+            "risky_tool_count",
+            integer(summary.risky_tool_count() as i64),
+        ),
+        (
+            "approval_gated_tool_count",
+            integer(summary.approval_gated_tool_count() as i64),
+        ),
     ])
 }
 
@@ -7582,7 +7742,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 43);
+        assert_eq!(definitions.len(), 45);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -7596,6 +7756,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -7681,7 +7847,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            35
+            37
         );
         assert_eq!(
             export
@@ -7702,6 +7868,11 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID).is_some());
         assert!(
@@ -7879,6 +8050,67 @@ mod tests {
                 "primitive"
             ),
             Some(&string("mdns"))
+        );
+
+        let integration_catalog_summary_request = request(
+            "call-integration-catalog-summary",
+            SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID,
+            object([]),
+            994,
+        );
+        let integration_catalog_summary_trace =
+            tool_runtime.invoke_with_events(&integration_catalog_summary_request);
+        assert!(integration_catalog_summary_trace.result.ok);
+        assert_eq!(
+            integration_catalog_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let integration_catalog_summary_output = integration_catalog_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let integration_catalog_summary =
+            field(integration_catalog_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(integration_catalog_summary, "total_integrations"),
+            Some(&integer(6))
+        );
+        assert_eq!(
+            field(integration_catalog_summary, "all_integrations_discoverable"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(integration_catalog_summary, "all_integrations_pairable"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let tool_catalog_summary_request = request(
+            "call-tool-catalog-summary",
+            SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID,
+            object([]),
+            995,
+        );
+        let tool_catalog_summary_trace =
+            tool_runtime.invoke_with_events(&tool_catalog_summary_request);
+        assert!(tool_catalog_summary_trace.result.ok);
+        assert_eq!(tool_catalog_summary_trace.summary().progress_event_count, 1);
+        let tool_catalog_summary_output =
+            tool_catalog_summary_trace.result.output.as_ref().unwrap();
+        let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(tool_catalog_summary, "total_tools"),
+            Some(&integer(45))
+        );
+        assert_eq!(
+            field(tool_catalog_summary, "read_tools"),
+            Some(&integer(37))
+        );
+        assert_eq!(
+            field(tool_catalog_summary, "risky_tool_count"),
+            Some(&integer(8))
         );
 
         let list_request = request(
@@ -9039,6 +9271,11 @@ mod tests {
         journal.record_trace(describe_integration_request, describe_integration_trace);
         journal.record_trace(list_primitives_request, list_primitives_trace);
         journal.record_trace(describe_primitive_request, describe_primitive_trace);
+        journal.record_trace(
+            integration_catalog_summary_request,
+            integration_catalog_summary_trace,
+        );
+        journal.record_trace(tool_catalog_summary_request, tool_catalog_summary_trace);
         journal.record_trace(list_request, list_trace);
         journal.record_trace(list_rooms_request, list_rooms_trace);
         journal.record_trace(list_scenes_request, list_scenes_trace);
@@ -9083,9 +9320,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 43);
-        assert_eq!(journal_summary.completed_count, 43);
-        assert_eq!(journal.audit_records().len(), 43);
+        assert_eq!(journal_summary.invocation_count, 45);
+        assert_eq!(journal_summary.completed_count, 45);
+        assert_eq!(journal.audit_records().len(), 45);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

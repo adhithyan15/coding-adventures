@@ -7,6 +7,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for the D23A smart-home integration catalog tools:
   `smart_home.list_integrations`, `smart_home.describe_integration`,
   `smart_home.list_primitives`, and `smart_home.describe_primitive`.
+- Added D18D handlers for compact shared-core catalog summaries:
+  `smart_home.get_integration_catalog_summary` and
+  `smart_home.get_tool_catalog_summary`.
 - Added D18D smart-home tool definitions and in-memory handlers over
   `SmartHomeRuntime`.
 - Added an end-to-end Hue-style fixture test that lists devices, commands a
