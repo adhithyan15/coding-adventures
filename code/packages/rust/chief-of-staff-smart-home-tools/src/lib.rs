@@ -36,13 +36,14 @@ use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
     activation_candidates_at_or_before_priority, activation_dependency_graph_from_reports,
     activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_runway_from_candidates, describe_primitive_family,
+    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
     ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
     find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
     primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
     primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
     readiness_report_for_plan, readiness_reports_at_or_before_priority,
     survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
     EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
     IntegrationActivationActionKind, IntegrationActivationActionSummary,
     IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
@@ -147,6 +148,10 @@ pub const SMART_HOME_LIST_INTEGRATION_POLICY_SURFACES_TOOL_ID: &str =
     "smart_home.list_integration_policy_surfaces";
 pub const SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_policy_surface_summary";
+pub const SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID: &str =
+    "smart_home.list_integration_platform_coverage";
+pub const SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_platform_coverage_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID: &str =
     "smart_home.list_integration_activation_plans";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID: &str =
@@ -257,6 +262,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID => {
                     let query = integration_policy_surface_query(&arguments)?;
                     Ok(get_integration_policy_surface_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID => {
+                    let query = integration_platform_coverage_query(&arguments)?;
+                    Ok(list_integration_platform_coverage_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID => {
+                    let query = integration_platform_coverage_query(&arguments)?;
+                    Ok(get_integration_platform_coverage_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID => {
                     let query = integration_activation_plan_query(&arguments)?;
@@ -922,6 +937,45 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration policy surface summary",
             "Return compact D23A policy-surface rollups for review, cloud, local, and privilege-tier planning.",
             integration_policy_surface_query_schema(false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID,
+            "List smart-home integration platform coverage",
+            "List D23A ecosystem platform source coverage against the reusable primitive backlog.",
+            integration_platform_coverage_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "platform_coverage",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                    SchemaProperty::new("source_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "platform_coverage",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                    "source_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID,
+            "Get smart-home integration platform coverage summary",
+            "Return compact D23A ecosystem platform coverage rollups for primitive-backlog planning.",
+            integration_platform_coverage_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3356,6 +3410,67 @@ fn integration_policy_surface_inventory_for_query(
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationPlatformCoverageQuery {
+    priority_at_or_before: u8,
+    platforms: Vec<EcosystemSurveyPlatform>,
+    primitives: Vec<PrimitiveFamily>,
+    only_with_backlog_overlap: Option<bool>,
+    limit: Option<usize>,
+}
+
+fn integration_platform_coverage_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationPlatformCoverageQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut platforms = Vec::new();
+    for platform in optional_string_list(arguments, "platform", "platforms")? {
+        platforms.push(parse_ecosystem_survey_platform(&platform)?);
+    }
+    let mut primitives = Vec::new();
+    for primitive in optional_string_list(arguments, "primitive", "primitives")? {
+        primitives.push(parse_primitive_family(&primitive)?);
+    }
+
+    Ok(IntegrationPlatformCoverageQuery {
+        priority_at_or_before: optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX),
+        platforms,
+        primitives,
+        only_with_backlog_overlap: optional_bool(arguments, "only_with_backlog_overlap")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_platform_coverage_for_query(
+    query: &IntegrationPlatformCoverageQuery,
+) -> (Vec<EcosystemPlatformCoverageItem>, usize, usize) {
+    let catalog = first_party_catalog();
+    let sources = ecosystem_survey_sources();
+    let catalog_count = catalog.len();
+    let source_count = sources.len();
+    let mut coverage = ecosystem_platform_coverage(&catalog, &sources, query.priority_at_or_before);
+
+    if !query.platforms.is_empty() {
+        coverage.retain(|item| query.platforms.contains(&item.platform));
+    }
+    if !query.primitives.is_empty() {
+        coverage.retain(|item| {
+            query
+                .primitives
+                .iter()
+                .all(|primitive| item.covers_primitive(*primitive))
+        });
+    }
+    if let Some(only_with_backlog_overlap) = query.only_with_backlog_overlap {
+        coverage.retain(|item| item.has_backlog_overlap() == only_with_backlog_overlap);
+    }
+    if let Some(limit) = query.limit {
+        coverage.truncate(limit);
+    }
+
+    (coverage, catalog_count, source_count)
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationPlanQuery {
     priority_at_or_before: u8,
     target_kind: Option<ActivationTargetKind>,
@@ -3961,6 +4076,70 @@ fn get_integration_policy_surface_summary_output_handler_output(
             (
                 "human_review_surface_entries",
                 integer(summary.human_review_surface_entries as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_platform_coverage_output_handler_output(
+    query: IntegrationPlatformCoverageQuery,
+) -> ToolHandlerOutput {
+    let (coverage, catalog_count, source_count) = integration_platform_coverage_for_query(&query);
+    let summary = EcosystemPlatformCoverageSummary::from_items(coverage.iter());
+    let count = coverage.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "platform_coverage",
+            JsonValue::Array(
+                coverage
+                    .iter()
+                    .map(ecosystem_platform_coverage_item_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            ecosystem_platform_coverage_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+        ("source_count", integer(source_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_platform_coverage")),
+            ("count", integer(count as i64)),
+            (
+                "covered_backlog_primitives",
+                integer(summary.covered_backlog_primitives as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_platform_coverage_summary_output_handler_output(
+    query: IntegrationPlatformCoverageQuery,
+) -> ToolHandlerOutput {
+    let (coverage, _, _) = integration_platform_coverage_for_query(&query);
+    let summary = EcosystemPlatformCoverageSummary::from_items(coverage.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        ecosystem_platform_coverage_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_platform_coverage_summary"),
+            ),
+            ("total_platforms", integer(summary.total_platforms as i64)),
+            (
+                "covered_backlog_primitives",
+                integer(summary.covered_backlog_primitives as i64),
             ),
         ]),
     )
@@ -6572,6 +6751,118 @@ fn integration_policy_surface_summary_json(summary: &IntegrationPolicySurfaceSum
             JsonValue::Bool(summary.has_high_risk_surface()),
         ),
     ])
+}
+
+fn ecosystem_platform_coverage_item_json(item: &EcosystemPlatformCoverageItem) -> JsonValue {
+    object([
+        ("platform", string(item.platform.as_str())),
+        ("display_name", string(item.display_name)),
+        ("source_url", string(item.source_url)),
+        ("source_surface", string(item.source_surface)),
+        ("contributes", string(item.contributes)),
+        (
+            "primitive_hints",
+            primitive_family_array_json(&item.primitive_hints),
+        ),
+        (
+            "primitive_hint_count",
+            integer(item.primitive_hint_count() as i64),
+        ),
+        (
+            "backlog_primitives",
+            primitive_family_array_json(&item.backlog_primitives),
+        ),
+        (
+            "backlog_primitive_count",
+            integer(item.backlog_primitive_count() as i64),
+        ),
+        (
+            "covered_backlog_primitives",
+            primitive_family_array_json(&item.covered_backlog_primitives),
+        ),
+        (
+            "covered_backlog_primitive_count",
+            integer(item.covered_backlog_primitive_count() as i64),
+        ),
+        (
+            "uncovered_backlog_primitives",
+            primitive_family_array_json(&item.uncovered_backlog_primitives),
+        ),
+        (
+            "uncovered_backlog_primitive_count",
+            integer(item.uncovered_backlog_primitive_count() as i64),
+        ),
+        (
+            "highest_backlog_priority",
+            item.highest_backlog_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "backlog_entry_count",
+            integer(item.backlog_entry_count as i64),
+        ),
+        (
+            "has_backlog_overlap",
+            JsonValue::Bool(item.has_backlog_overlap()),
+        ),
+    ])
+}
+
+fn ecosystem_platform_coverage_summary_json(
+    summary: &EcosystemPlatformCoverageSummary,
+) -> JsonValue {
+    object([
+        ("total_platforms", integer(summary.total_platforms as i64)),
+        (
+            "total_primitive_hints",
+            integer(summary.total_primitive_hints as i64),
+        ),
+        (
+            "unique_primitive_hints",
+            integer(summary.unique_primitive_hints as i64),
+        ),
+        (
+            "backlog_primitive_count",
+            integer(summary.backlog_primitive_count as i64),
+        ),
+        (
+            "covered_backlog_primitives",
+            integer(summary.covered_backlog_primitives as i64),
+        ),
+        (
+            "uncovered_backlog_primitives",
+            integer(summary.uncovered_backlog_primitives as i64),
+        ),
+        (
+            "platforms_with_backlog_overlap",
+            integer(summary.platforms_with_backlog_overlap as i64),
+        ),
+        (
+            "platforms_covering_all_backlog_primitives",
+            integer(summary.platforms_covering_all_backlog_primitives as i64),
+        ),
+        (
+            "first_covered_backlog_priority",
+            summary
+                .first_covered_backlog_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_uncovered_backlog_primitives",
+            JsonValue::Bool(summary.has_uncovered_backlog_primitives()),
+        ),
+    ])
+}
+
+fn primitive_family_array_json(primitives: &[PrimitiveFamily]) -> JsonValue {
+    JsonValue::Array(
+        primitives
+            .iter()
+            .map(|primitive| string(primitive.as_str()))
+            .collect(),
+    )
 }
 
 fn integration_entry_json(entry: &IntegrationCatalogEntry) -> JsonValue {
@@ -9365,6 +9656,29 @@ fn parse_policy_surface(label: &str) -> Result<IntegrationPolicySurface, ToolCal
     }
 }
 
+fn parse_ecosystem_survey_platform(label: &str) -> Result<EcosystemSurveyPlatform, ToolCallError> {
+    match label {
+        "home_assistant" => Ok(EcosystemSurveyPlatform::HomeAssistant),
+        "hubitat" => Ok(EcosystemSurveyPlatform::Hubitat),
+        "homey_pro" => Ok(EcosystemSurveyPlatform::HomeyPro),
+        "smartthings" => Ok(EcosystemSurveyPlatform::SmartThings),
+        "openhab" => Ok(EcosystemSurveyPlatform::OpenHab),
+        "homebridge" => Ok(EcosystemSurveyPlatform::Homebridge),
+        "iobroker" => Ok(EcosystemSurveyPlatform::IoBroker),
+        "domoticz" => Ok(EcosystemSurveyPlatform::Domoticz),
+        "jeedom" => Ok(EcosystemSurveyPlatform::Jeedom),
+        "homeseer" => Ok(EcosystemSurveyPlatform::HomeSeer),
+        "apple_home" => Ok(EcosystemSurveyPlatform::AppleHome),
+        "google_home" => Ok(EcosystemSurveyPlatform::GoogleHome),
+        "amazon_alexa" => Ok(EcosystemSurveyPlatform::AmazonAlexa),
+        "zwave_alliance" => Ok(EcosystemSurveyPlatform::ZWaveAlliance),
+        "thread_group" => Ok(EcosystemSurveyPlatform::ThreadGroup),
+        _ => Err(validation_error(format!(
+            "unknown ecosystem survey platform `{label}`"
+        ))),
+    }
+}
+
 fn parse_privilege_tier(label: &str) -> Result<PrivilegeTier, ToolCallError> {
     match label {
         "read_only" | "readonly" | "read" => Ok(PrivilegeTier::ReadOnly),
@@ -10130,6 +10444,22 @@ fn integration_policy_surface_query_schema(include_limit: bool) -> JsonSchema {
     object_schema(properties, Vec::new(), false)
 }
 
+fn integration_platform_coverage_query_schema(include_limit: bool) -> JsonSchema {
+    let mut properties = vec![
+        SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+        SchemaProperty::new("platform", JsonSchema::String),
+        SchemaProperty::new("platforms", string_array_schema()),
+        SchemaProperty::new("primitive", JsonSchema::String),
+        SchemaProperty::new("primitives", string_array_schema()),
+        SchemaProperty::new("only_with_backlog_overlap", JsonSchema::Boolean),
+    ];
+    if include_limit {
+        properties.push(SchemaProperty::new("limit", JsonSchema::Integer));
+    }
+
+    object_schema(properties, Vec::new(), false)
+}
+
 fn integration_activation_plan_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -10334,7 +10664,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 63);
+        assert_eq!(definitions.len(), 65);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -10360,6 +10690,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID));
@@ -10493,7 +10829,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            55
+            57
         );
         assert_eq!(
             export
@@ -10525,6 +10861,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_POLICY_SURFACE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -10819,11 +11163,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(63))
+            Some(&integer(65))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(55))
+            Some(&integer(57))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -10890,6 +11234,79 @@ mod tests {
         );
         assert_eq!(
             field(policy_surface_rollup, "has_high_risk_surface"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_platform_coverage_request = request(
+            "call-list-integration-platform-coverage",
+            SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                ("primitive", string("matter_commissioning")),
+                ("only_with_backlog_overlap", JsonValue::Bool(true)),
+                ("limit", integer(3)),
+            ]),
+            998,
+        );
+        let list_platform_coverage_trace =
+            tool_runtime.invoke_with_events(&list_platform_coverage_request);
+        assert!(list_platform_coverage_trace.result.ok);
+        assert_eq!(
+            list_platform_coverage_trace.summary().progress_event_count,
+            1
+        );
+        let list_platform_coverage_output =
+            list_platform_coverage_trace.result.output.as_ref().unwrap();
+        let platform_coverage_count =
+            integer_value(field(list_platform_coverage_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&platform_coverage_count));
+        assert_eq!(
+            array_len(field(list_platform_coverage_output, "platform_coverage").unwrap()),
+            Some(platform_coverage_count as usize)
+        );
+        let platform_coverage_summary = field(list_platform_coverage_output, "summary").unwrap();
+        assert!(
+            integer_value(field(platform_coverage_summary, "covered_backlog_primitives").unwrap())
+                .unwrap()
+                >= 1
+        );
+        let platform_coverage = array_item(
+            field(list_platform_coverage_output, "platform_coverage").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(platform_coverage, "has_backlog_overlap"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let platform_coverage_summary_request = request(
+            "call-integration-platform-coverage-summary",
+            SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID,
+            object([("priority_at_or_before", integer(1))]),
+            999,
+        );
+        let platform_coverage_summary_trace =
+            tool_runtime.invoke_with_events(&platform_coverage_summary_request);
+        assert!(platform_coverage_summary_trace.result.ok);
+        assert_eq!(
+            platform_coverage_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let platform_coverage_summary_output = platform_coverage_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let platform_coverage_rollup = field(platform_coverage_summary_output, "summary").unwrap();
+        assert_eq!(
+            field(platform_coverage_rollup, "total_platforms"),
+            Some(&integer(15))
+        );
+        assert_eq!(
+            field(platform_coverage_rollup, "has_uncovered_backlog_primitives"),
             Some(&JsonValue::Bool(true))
         );
 
@@ -12930,6 +13347,11 @@ mod tests {
         journal.record_trace(tool_catalog_summary_request, tool_catalog_summary_trace);
         journal.record_trace(list_policy_surfaces_request, list_policy_surfaces_trace);
         journal.record_trace(policy_surface_summary_request, policy_surface_summary_trace);
+        journal.record_trace(list_platform_coverage_request, list_platform_coverage_trace);
+        journal.record_trace(
+            platform_coverage_summary_request,
+            platform_coverage_summary_trace,
+        );
         journal.record_trace(list_activation_plans_request, list_activation_plans_trace);
         journal.record_trace(
             activation_plan_summary_request,
@@ -13029,9 +13451,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 63);
-        assert_eq!(journal_summary.completed_count, 63);
-        assert_eq!(journal.audit_records().len(), 63);
+        assert_eq!(journal_summary.invocation_count, 65);
+        assert_eq!(journal_summary.completed_count, 65);
+        assert_eq!(journal.audit_records().len(), 65);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

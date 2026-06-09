@@ -26,6 +26,8 @@ runtime and Chief of Staff tools a typed catalog for:
   to reusable primitive-family hints
 - ecosystem primitive coverage reports that connect those survey sources to
   rollout backlog primitives
+- ecosystem platform coverage rollups that show which surveyed platform
+  lessons overlap a priority-bounded reusable primitive backlog
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
