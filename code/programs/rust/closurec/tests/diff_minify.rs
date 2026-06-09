@@ -85,10 +85,18 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-039 was RESOLVED in CLOC12.46 — `needs_separator`
-    // now short-circuits to false when the next token's value
-    // starts with `` ` `` (template literal). `minify_tagged_template`
-    // flipped IGNORED → PASS. Harness back to 41/41.
+    // gap-040: numeric separator + scientific shortest-form.
+    // Upstream emits `var x=1E6;` for `var x=1_000_000;` —
+    // BOTH stripping underscores AND switching to scientific
+    // notation when shorter. Discovered by CLOC14.7.
+    ("numeric_separator", "gap-040: numeric separator + scientific shortest-form"),
+    // gap-041: nested function-decl produces a double
+    // synthetic `;`. Output: `function f(){function g(){};};`
+    // — Rule A should drop the inner synthetic `;` before
+    // the outer `}`, but it currently only filters SOURCE
+    // `;`, not previously-emitted synthetic ones.
+    // Discovered by CLOC14.7.
+    ("nested_function", "gap-041: nested function-decl double synthetic `;`"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
