@@ -53,6 +53,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation review queue entries that separate review-ready integrations from
   human-review integrations still blocked by primitives, capabilities, or
   dependencies
+- activation approval packets that bundle each human-review row with its
+  concrete actions, grouped constraints, policy risk, and dependency blockers
+  for approval preparation
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

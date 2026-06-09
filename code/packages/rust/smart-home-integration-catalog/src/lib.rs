@@ -1216,6 +1216,51 @@ pub struct IntegrationActivationReviewSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationApprovalPacket {
+    pub review: IntegrationActivationReviewItem,
+    pub actions: Vec<IntegrationActivationAction>,
+    pub action_summary: IntegrationActivationActionSummary,
+    pub constraints: Vec<IntegrationActivationConstraint>,
+    pub constraint_summary: IntegrationActivationConstraintSummary,
+    pub risks: Vec<IntegrationActivationRiskItem>,
+    pub risk_summary: IntegrationActivationRiskSummary,
+    pub dependency_graph: IntegrationActivationDependencyGraph,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationApprovalSummary {
+    pub total_packets: usize,
+    pub approval_ready_packets: usize,
+    pub blocked_packets: usize,
+    pub local_only_packets: usize,
+    pub cloud_required_packets: usize,
+    pub packets_with_policy_surfaces: usize,
+    pub packets_without_policy_surfaces: usize,
+    pub unique_policy_surfaces: usize,
+    pub total_actions: usize,
+    pub activate_integration_actions: usize,
+    pub review_policy_actions: usize,
+    pub provide_primitive_actions: usize,
+    pub grant_capability_actions: usize,
+    pub enable_dependency_actions: usize,
+    pub total_constraints: usize,
+    pub blocking_constraints: usize,
+    pub review_constraints: usize,
+    pub total_risks: usize,
+    pub policy_tier_risks: usize,
+    pub policy_surface_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub read_only_packets: usize,
+    pub low_risk_packets: usize,
+    pub human_approval_packets: usize,
+    pub high_risk_packets: usize,
+    pub first_approval_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationAgendaStage {
     pub priority: u8,
     pub candidates: Vec<IntegrationActivationCandidate>,
@@ -2573,6 +2618,187 @@ impl IntegrationActivationReviewSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.total_reviews > 0
+    }
+}
+
+impl IntegrationActivationApprovalPacket {
+    fn from_candidate(
+        catalog: &[IntegrationCatalogEntry],
+        candidate: &IntegrationActivationCandidate,
+        enabled_integrations: &[IntegrationId],
+    ) -> Option<Self> {
+        let review = IntegrationActivationReviewItem::from_candidate(catalog, candidate)?;
+        let actions = activation_actions_from_candidates(std::iter::once(candidate));
+        let action_summary = IntegrationActivationActionSummary::from_actions(actions.iter());
+        let constraints =
+            activation_constraints_from_candidates(catalog, std::iter::once(candidate));
+        let constraint_summary =
+            IntegrationActivationConstraintSummary::from_constraints(constraints.iter());
+        let risks = activation_risk_from_candidates(catalog, std::iter::once(candidate));
+        let risk_summary = IntegrationActivationRiskSummary::from_risks(risks.iter());
+        let dependency_graph = activation_dependency_graph_from_reports(
+            catalog,
+            std::iter::once(&candidate.readiness_report),
+            enabled_integrations,
+        );
+
+        Some(Self {
+            review,
+            actions,
+            action_summary,
+            constraints,
+            constraint_summary,
+            risks,
+            risk_summary,
+            dependency_graph,
+        })
+    }
+
+    pub fn requested_integration_id(&self) -> &IntegrationId {
+        &self.review.requested_integration_id
+    }
+
+    pub fn display_name(&self) -> &str {
+        &self.review.display_name
+    }
+
+    pub fn priority(&self) -> u8 {
+        self.review.priority
+    }
+
+    pub fn required_tier(&self) -> PrivilegeTier {
+        self.review.required_tier
+    }
+
+    pub fn approval_ready(&self) -> bool {
+        self.review.review_ready()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.review.has_blockers()
+            || self.constraint_summary.has_blockers()
+            || self.dependency_graph.has_blocking_dependencies()
+    }
+
+    pub fn has_policy_surfaces(&self) -> bool {
+        self.review.has_policy_surfaces()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        true
+    }
+}
+
+impl IntegrationActivationApprovalSummary {
+    pub fn from_packets<'a>(
+        packets: impl IntoIterator<Item = &'a IntegrationActivationApprovalPacket>,
+    ) -> Self {
+        let mut policy_surfaces = BTreeSet::new();
+        let mut summary = Self {
+            total_packets: 0,
+            approval_ready_packets: 0,
+            blocked_packets: 0,
+            local_only_packets: 0,
+            cloud_required_packets: 0,
+            packets_with_policy_surfaces: 0,
+            packets_without_policy_surfaces: 0,
+            unique_policy_surfaces: 0,
+            total_actions: 0,
+            activate_integration_actions: 0,
+            review_policy_actions: 0,
+            provide_primitive_actions: 0,
+            grant_capability_actions: 0,
+            enable_dependency_actions: 0,
+            total_constraints: 0,
+            blocking_constraints: 0,
+            review_constraints: 0,
+            total_risks: 0,
+            policy_tier_risks: 0,
+            policy_surface_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            read_only_packets: 0,
+            low_risk_packets: 0,
+            human_approval_packets: 0,
+            high_risk_packets: 0,
+            first_approval_priority: None,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for packet in packets {
+            summary.total_packets += 1;
+            if packet.approval_ready() {
+                summary.approval_ready_packets += 1;
+                summary.first_approval_priority =
+                    min_optional_priority(summary.first_approval_priority, Some(packet.priority()));
+            }
+            if packet.has_blockers() {
+                summary.blocked_packets += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(packet.priority()));
+            }
+            if packet.review.local_only {
+                summary.local_only_packets += 1;
+            }
+            if packet.review.cloud_required {
+                summary.cloud_required_packets += 1;
+            }
+            if packet.has_policy_surfaces() {
+                summary.packets_with_policy_surfaces += 1;
+            } else {
+                summary.packets_without_policy_surfaces += 1;
+            }
+            for surface in &packet.review.policy_surfaces {
+                policy_surfaces.insert(*surface);
+            }
+
+            summary.total_actions += packet.action_summary.total_actions;
+            summary.activate_integration_actions +=
+                packet.action_summary.activate_integration_actions;
+            summary.review_policy_actions += packet.action_summary.review_policy_actions;
+            summary.provide_primitive_actions += packet.action_summary.provide_primitive_actions;
+            summary.grant_capability_actions += packet.action_summary.grant_capability_actions;
+            summary.enable_dependency_actions += packet.action_summary.enable_dependency_actions;
+
+            summary.total_constraints += packet.constraint_summary.total_constraints;
+            summary.blocking_constraints += packet.constraint_summary.blocking_constraints;
+            summary.review_constraints += packet.constraint_summary.review_constraints;
+
+            summary.total_risks += packet.risk_summary.total_risks;
+            summary.policy_tier_risks += packet.risk_summary.policy_tier_risks;
+            summary.policy_surface_risks += packet.risk_summary.policy_surface_risks;
+
+            summary.total_dependency_edges += packet.dependency_graph.summary.total_edges;
+            summary.blocking_dependency_edges += packet.dependency_graph.summary.blocking_edges;
+
+            match packet.required_tier() {
+                PrivilegeTier::ReadOnly => summary.read_only_packets += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_packets += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_packets += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_packets += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(packet.required_tier());
+        }
+
+        summary.unique_policy_surfaces = policy_surfaces.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packets == 0
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.approval_ready_packets > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_packets > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.total_packets > 0
     }
 }
 
@@ -4954,6 +5180,43 @@ pub fn activation_reviews_at_or_before_priority(
     activation_reviews_from_candidates(catalog, candidates.iter())
 }
 
+pub fn activation_approval_packets_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationApprovalPacket> {
+    let mut packets = candidates
+        .into_iter()
+        .filter_map(|candidate| {
+            IntegrationActivationApprovalPacket::from_candidate(
+                catalog,
+                candidate,
+                enabled_integrations,
+            )
+        })
+        .collect::<Vec<_>>();
+
+    packets.sort_by(compare_activation_approval_packets);
+    packets
+}
+
+pub fn activation_approval_packets_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationApprovalPacket> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_approval_packets_from_candidates(catalog, candidates.iter(), enabled_integrations)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -6164,6 +6427,20 @@ fn compare_activation_reviews(
         })
 }
 
+fn compare_activation_approval_packets(
+    left: &IntegrationActivationApprovalPacket,
+    right: &IntegrationActivationApprovalPacket,
+) -> Ordering {
+    left.priority()
+        .cmp(&right.priority())
+        .then_with(|| right.required_tier().cmp(&left.required_tier()))
+        .then_with(|| left.display_name().cmp(right.display_name()))
+        .then_with(|| {
+            left.requested_integration_id()
+                .cmp(right.requested_integration_id())
+        })
+}
+
 fn compare_activation_dependency_nodes(
     left: &IntegrationActivationDependencyNode,
     right: &IntegrationActivationDependencyNode,
@@ -7219,6 +7496,119 @@ mod tests {
         assert!(catalog_reviews
             .iter()
             .any(IntegrationActivationReviewItem::has_policy_surfaces));
+    }
+
+    #[test]
+    fn activation_approval_packets_bundle_review_work_for_human_decisions() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+
+        let packets = activation_approval_packets_from_candidates(&[], candidates.iter(), &[]);
+
+        assert_eq!(packets.len(), 2);
+        let approval_ready = packets
+            .iter()
+            .find(|packet| packet.requested_integration_id().as_str() == "review_ready_bridge")
+            .unwrap();
+        assert!(approval_ready.approval_ready());
+        assert!(!approval_ready.has_blockers());
+        assert!(approval_ready.requires_attention());
+        assert!(approval_ready.action_summary.review_policy_actions >= 1);
+        assert!(approval_ready.constraint_summary.review_constraints >= 1);
+
+        let blocked = packets
+            .iter()
+            .find(|packet| packet.requested_integration_id().as_str() == "blocked_review_camera")
+            .unwrap();
+        assert!(!blocked.approval_ready());
+        assert!(blocked.has_blockers());
+        assert_eq!(blocked.required_tier(), PrivilegeTier::HighRisk);
+        assert!(blocked.action_summary.provide_primitive_actions >= 1);
+        assert!(blocked.constraint_summary.blocking_constraints >= 1);
+        assert!(blocked.risk_summary.total_risks >= 1);
+        assert!(blocked.dependency_graph.summary.total_edges >= 1);
+        assert!(blocked.dependency_graph.summary.blocking_edges >= 1);
+
+        let summary = IntegrationActivationApprovalSummary::from_packets(packets.iter());
+        assert_eq!(summary.total_packets, 2);
+        assert_eq!(summary.approval_ready_packets, 1);
+        assert_eq!(summary.blocked_packets, 1);
+        assert!(summary.total_actions > 0);
+        assert!(summary.review_policy_actions > 0);
+        assert!(summary.blocking_constraints > 0);
+        assert!(summary.total_risks > 0);
+        assert!(summary.total_dependency_edges > 0);
+        assert!(summary.blocking_dependency_edges > 0);
+        assert_eq!(summary.human_approval_packets, 1);
+        assert_eq!(summary.high_risk_packets, 1);
+        assert_eq!(summary.first_approval_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(2));
+        assert!(summary.has_approval_ready_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_packets = activation_approval_packets_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_packets
+            .iter()
+            .any(IntegrationActivationApprovalPacket::has_policy_surfaces));
     }
 
     #[test]
