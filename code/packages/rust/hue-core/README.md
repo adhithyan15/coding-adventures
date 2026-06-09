@@ -14,7 +14,7 @@ packages a typed surface for:
 - Hue command plans that retain generated requests and ignored capabilities for
   reconciliation telemetry
 - Hue command summaries for payload-free command planning and read-model
-  telemetry
+  telemetry, including light-surface and color-temperature helper predicates
 - Hue application registration requests and discovered-bridge pairing plans
 - Hue application registration local-HTTP request plans, response parsing, and
   no-secret Vault handoff metadata for physical-presence pairing
