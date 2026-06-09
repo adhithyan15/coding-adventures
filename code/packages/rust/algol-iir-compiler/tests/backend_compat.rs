@@ -15,6 +15,8 @@ const ALGOL_FOR_LIST: &str = "begin integer i, result; i := 0; result := 0; for 
 
 const ALGOL_COND_EXPR: &str = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
 
+const ALGOL_NESTED_BLOCKS: &str = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
+
 fn compile_case(source: &str, module_name: &str) -> interpreter_ir::IIRModule {
     compile_source(source, module_name).expect("ALGOL source should compile")
 }
@@ -39,6 +41,10 @@ fn algol_iir_validates_for_every_direct_backend() {
         (
             "cond_expr",
             compile_case(ALGOL_COND_EXPR, "algol_cond_expr_backend_compat"),
+        ),
+        (
+            "nested_blocks",
+            compile_case(ALGOL_NESTED_BLOCKS, "algol_nested_blocks_backend_compat"),
         ),
     ] {
         let checks = [
@@ -267,4 +273,55 @@ fn algol_conditional_expressions_lower_to_wasm_jvm_clr_beam_and_llvm() {
         llvm.contains("br i1"),
         "LLVM should lower conditional expressions as branches"
     );
+}
+
+#[test]
+fn algol_nested_blocks_lower_to_wasm_jvm_clr_beam_and_llvm() {
+    let module = compile_case(ALGOL_NESTED_BLOCKS, "algol_nested_blocks_backend_compat");
+    assert!(
+        module
+            .functions
+            .iter()
+            .flat_map(|func| func.instructions.iter())
+            .filter_map(|instr| instr.dest.as_deref())
+            .any(|dest| dest.starts_with("__algol_s")),
+        "ALGOL nested blocks should allocate scoped IIR slots for shadowed locals"
+    );
+
+    let wasm = iir_to_wasm::lower_iir_to_wasm(
+        &module,
+        &iir_to_wasm::IIRWasmConfig::new("AlgolNestedBlocks"),
+    )
+    .expect("ALGOL nested-block IIR should lower to WASM");
+    let wasm_bytes = iir_to_wasm::encode_module(&wasm).expect("WASM module should encode");
+    assert!(wasm_bytes.starts_with(b"\0asm"));
+
+    let jvm = iir_to_jvm_class_file::lower_iir_to_jvm(
+        &module,
+        &iir_to_jvm_class_file::IIRJvmConfig::new("AlgolNestedBlocks"),
+    )
+    .expect("ALGOL nested-block IIR should lower to JVM");
+    assert!(!jvm.methods.is_empty());
+
+    let clr = iir_to_cil_bytecode::lower_iir_to_cil(
+        &module,
+        &iir_to_cil_bytecode::IIRClrConfig::default(),
+    )
+    .expect("ALGOL nested-block IIR should lower to CLR");
+    assert!(!clr.methods.is_empty());
+
+    let beam = iir_to_beam::lower_iir_to_beam(
+        &module,
+        &iir_to_beam::IIRBeamConfig::new("algol_nested_blocks"),
+    )
+    .expect("ALGOL nested-block IIR should lower to BEAM");
+    let beam_bytes = iir_to_beam::encode_beam(&beam);
+    assert!(beam_bytes.starts_with(b"FOR1"));
+
+    let llvm = iir_to_llvm::lower_iir_to_llvm(
+        &module,
+        &iir_to_llvm::IIRLlvmConfig::new("algol_nested_blocks"),
+    )
+    .expect("ALGOL nested-block IIR should lower to LLVM");
+    assert!(llvm.contains("define i64 @main()"));
 }
