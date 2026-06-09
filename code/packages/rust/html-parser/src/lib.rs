@@ -847,6 +847,7 @@ pub struct BrowserDocument {
     pub navigation_groups: Vec<BrowserNavigationGroup>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
     pub command_elements: Vec<BrowserCommandElement>,
+    pub activation_descriptors: Vec<BrowserActivationDescriptor>,
     pub popovers: Vec<BrowserPopover>,
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
@@ -1850,6 +1851,47 @@ pub struct BrowserCommandElement {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserActivationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub command_kind: String,
+    pub activation_kind: String,
+    pub target_id: Option<String>,
+    pub target_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub disabled: bool,
+    pub focusable: bool,
+    pub tabindex: Option<String>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_pressed: Option<String>,
+    pub aria_current: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub control_type: Option<String>,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub effective_target: Option<String>,
+    pub form_owner: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: Option<String>,
+    pub form_target: Option<String>,
+    pub form_novalidate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserAriaCollection {
     pub element: String,
     pub id: Option<String>,
@@ -2811,6 +2853,11 @@ impl BrowserDocument {
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
         summary.disclosure_state_descriptors =
             browser_disclosure_state_descriptors(&summary.disclosures);
+        summary.activation_descriptors = browser_activation_descriptors(
+            &summary.command_elements,
+            &summary.popovers,
+            &summary.disclosures,
+        );
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -12428,6 +12475,150 @@ fn browser_command_element(
     })
 }
 
+fn browser_activation_descriptors(
+    commands: &[BrowserCommandElement],
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserActivationDescriptor> {
+    commands
+        .iter()
+        .map(|command| browser_activation_descriptor(command, popovers, disclosures))
+        .collect()
+}
+
+fn browser_activation_descriptor(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> BrowserActivationDescriptor {
+    BrowserActivationDescriptor {
+        element: command.element.clone(),
+        id: command.id.clone(),
+        role: command.role.clone(),
+        authored_role: command.authored_role.clone(),
+        command_kind: command.command_kind.clone(),
+        activation_kind: browser_activation_kind(command),
+        target_id: browser_activation_target_id(command),
+        target_kind: browser_activation_target_kind(command, popovers, disclosures),
+        text: command.text.clone(),
+        accessible_name: command.accessible_name.clone(),
+        accessible_description: command.accessible_description.clone(),
+        disabled: command.disabled,
+        focusable: command.focusable,
+        tabindex: command.tabindex.clone(),
+        accesskey: command.accesskey.clone(),
+        event_handlers: command.event_handlers.clone(),
+        handler_count: command.event_handlers.len(),
+        command: command.command.clone(),
+        command_for: command.command_for.clone(),
+        popover_target: command.popover_target.clone(),
+        popover_target_action: command.popover_target_action.clone(),
+        aria_controls: command.aria_controls.clone(),
+        aria_expanded: command.aria_expanded.clone(),
+        aria_haspopup: command.aria_haspopup.clone(),
+        aria_pressed: command.aria_pressed.clone(),
+        aria_current: command.aria_current.clone(),
+        aria_disabled: command.aria_disabled.clone(),
+        control_type: command.control_type.clone(),
+        href: command.href.clone(),
+        resolved_href: command.resolved_href.clone(),
+        effective_target: command.effective_target.clone(),
+        form_owner: command.form_owner.clone(),
+        form_action: command.form_action.clone(),
+        resolved_form_action: command.resolved_form_action.clone(),
+        form_method: command.form_method.clone(),
+        form_target: command.form_target.clone(),
+        form_novalidate: command.form_novalidate,
+    }
+}
+
+fn browser_activation_kind(command: &BrowserCommandElement) -> String {
+    if let Some(command_value) = &command.command {
+        return command_value.clone();
+    }
+    if command.popover_target.is_some() {
+        let action = command.popover_target_action.as_deref().unwrap_or("toggle");
+        return format!("popover-{action}");
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if let Some(control_type) = &command.control_type {
+        if matches!(
+            control_type.as_str(),
+            "submit" | "reset" | "button" | "image"
+        ) {
+            return format!("form-{control_type}");
+        }
+    }
+
+    command.command_kind.clone()
+}
+
+fn browser_activation_target_id(command: &BrowserCommandElement) -> Option<String> {
+    command
+        .command_for
+        .clone()
+        .or_else(|| command.popover_target.clone())
+        .or_else(|| command.aria_controls.first().cloned())
+}
+
+fn browser_activation_target_kind(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> String {
+    if let Some(command_for) = &command.command_for {
+        if let Some(disclosure) = disclosures
+            .iter()
+            .find(|disclosure| disclosure.id.as_deref() == Some(command_for.as_str()))
+        {
+            return if disclosure.element == "dialog" {
+                "dialog"
+            } else {
+                "disclosure"
+            }
+            .to_string();
+        }
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(command_for.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "command-target".to_string();
+    }
+    if let Some(popover_target) = &command.popover_target {
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(popover_target.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "popover-target".to_string();
+    }
+    if !command.aria_controls.is_empty() {
+        return "controlled-region".to_string();
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if command.form_owner.is_some()
+        || command.form_action.is_some()
+        || matches!(
+            command.control_type.as_deref(),
+            Some("submit" | "reset" | "image")
+        )
+    {
+        return "form".to_string();
+    }
+    if command.command_kind == "disclosure" {
+        return "disclosure".to_string();
+    }
+
+    "command".to_string()
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -19623,6 +19814,62 @@ mod tests {
         );
         assert!(render_tree.children[0].children[2].open);
         assert!(render_tree.children[0].children[3].open);
+    }
+
+    #[test]
+    fn browser_activation_descriptors_track_commands_popovers_and_disclosures() {
+        let document = parse_html(
+            "<body>\
+             <button id=menu aria-controls=panel aria-expanded=false command=show-modal commandfor=dialog onclick=showMenu()>Menu</button>\
+             <button id=toggle popovertarget=panel-pop popovertargetaction=show aria-expanded=false>Open panel</button>\
+             <div id=panel-pop popover=manual>Panel copy</div>\
+             <div id=action role=button tabindex=-1 aria-pressed=mixed onkeydown=keyAction()>Inline action</div>\
+             <dialog id=dialog open aria-label=\"Dialog\"><p>Dialog copy</p></dialog>\
+             <details id=more open><summary>More</summary><p>Extra</p></details>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.activation_descriptors.len(), 4);
+
+        let menu = &summary.activation_descriptors[0];
+        assert_eq!(menu.element, "button");
+        assert_eq!(menu.id.as_deref(), Some("menu"));
+        assert_eq!(menu.command_kind, "command");
+        assert_eq!(menu.activation_kind, "show-modal");
+        assert_eq!(menu.target_id.as_deref(), Some("dialog"));
+        assert_eq!(menu.target_kind, "dialog");
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+        assert_eq!(menu.event_handlers, vec!["onclick"]);
+        assert_eq!(menu.handler_count, 1);
+        assert!(menu.focusable);
+
+        let toggle = &summary.activation_descriptors[1];
+        assert_eq!(toggle.id.as_deref(), Some("toggle"));
+        assert_eq!(toggle.command_kind, "popover");
+        assert_eq!(toggle.activation_kind, "popover-show");
+        assert_eq!(toggle.target_id.as_deref(), Some("panel-pop"));
+        assert_eq!(toggle.target_kind, "popover");
+        assert_eq!(toggle.popover_target.as_deref(), Some("panel-pop"));
+        assert_eq!(toggle.popover_target_action.as_deref(), Some("show"));
+
+        let action = &summary.activation_descriptors[2];
+        assert_eq!(action.id.as_deref(), Some("action"));
+        assert_eq!(action.command_kind, "button");
+        assert_eq!(action.activation_kind, "button");
+        assert_eq!(action.target_kind, "command");
+        assert_eq!(action.aria_pressed.as_deref(), Some("mixed"));
+        assert_eq!(action.tabindex.as_deref(), Some("-1"));
+        assert!(!action.focusable);
+        assert_eq!(action.event_handlers, vec!["onkeydown"]);
+
+        let summary_control = &summary.activation_descriptors[3];
+        assert_eq!(summary_control.element, "summary");
+        assert_eq!(summary_control.command_kind, "disclosure");
+        assert_eq!(summary_control.activation_kind, "disclosure");
+        assert_eq!(summary_control.target_kind, "disclosure");
+        assert_eq!(summary_control.text, "More");
+        assert!(summary_control.focusable);
     }
 
     #[test]

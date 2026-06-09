@@ -47,6 +47,8 @@ lifecycle, and error/event-recovery concerns without evaluating script text.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
+Activation descriptor cases pin command, popover, disclosure, ARIA, focus, and
+inline handler routing metadata as a flat activation-planning inventory.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
