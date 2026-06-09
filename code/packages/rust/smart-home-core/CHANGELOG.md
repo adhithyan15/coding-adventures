@@ -23,6 +23,10 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_readiness` and
   `smart_home.get_integration_readiness_summary` tool descriptors for read-only
   integration activation blocker planning.
+- `smart_home.list_integration_readiness_gaps` and
+  `smart_home.get_integration_readiness_gap_summary` tool descriptors for
+  read-only grouped blocker planning across primitives, capabilities, and
+  delegated integration dependencies.
 - `smart_home.poll_events` and `smart_home.unsubscribe` tool descriptors for
   model-facing event subscription lifecycle control.
 - `smart_home.list_subscriptions` and `smart_home.inspect_event_log` tool
