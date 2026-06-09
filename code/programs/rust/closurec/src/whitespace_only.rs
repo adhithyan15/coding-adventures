@@ -362,11 +362,7 @@ pub fn whitespace_only_minify(
                             }
                         }
                         if is_string_literal(t) {
-                            out.push('"');
-                            push_quoted_string_content(
-                                &mut out, &t.value,
-                            );
-                            out.push('"');
+                            emit_quoted_string(&mut out, &t.value);
                         } else if is_number_literal(t) {
                             out.push_str(&normalize_number_value(&t.value));
                         } else {
@@ -462,9 +458,7 @@ pub fn whitespace_only_minify(
             }
         }
         if is_string_literal(tok) {
-            out.push('"');
-            push_quoted_string_content(&mut out, &tok.value);
-            out.push('"');
+            emit_quoted_string(&mut out, &tok.value);
         } else if is_number_literal(tok) {
             // gap-038: rewrite hex/oct/bin literals to
             // decimal when decimal is no longer than source.
@@ -964,6 +958,50 @@ fn push_quoted_string_content(out: &mut String, content: &str) {
             '\t' => out.push_str("\\t"),
             other => out.push(other),
         }
+    }
+}
+
+/// gap-043: pick the shorter delimiter for a string literal.
+/// Upstream Closure (under WHITESPACE_ONLY) re-quotes string
+/// literals to minimise the escape weight: when content has
+/// more `"` than `'`, switch to single-quoted form (so the
+/// `"` chars stay unescaped); otherwise keep double-quoted.
+/// Ties go to double per upstream's `CodePrinter` (verified
+/// by the JAR probe `'a'` → `"a"`).
+///
+/// This function emits the complete `"..."` or `'...'`
+/// sequence (delimiters + content) to `out`, with all
+/// content characters appropriately escaped for the chosen
+/// quote style. Backslash/control-char escapes are
+/// independent of quote choice.
+///
+/// Mirrors the logic in `closure-emitter`'s
+/// `choose_quote_and_escape` (closed CLOC12 gap-026). The
+/// AST emitter goes through that path; the CLI WHITESPACE_ONLY
+/// path uses this independent copy because it doesn't build
+/// an AST.
+fn emit_quoted_string(out: &mut String, content: &str) {
+    let dq = content.chars().filter(|c| *c == '"').count();
+    let sq = content.chars().filter(|c| *c == '\'').count();
+    if dq > sq {
+        // Single-quote wins — escape `\` and `'`.
+        out.push('\'');
+        for c in content.chars() {
+            match c {
+                '\'' => out.push_str("\\'"),
+                '\\' => out.push_str("\\\\"),
+                '\n' => out.push_str("\\n"),
+                '\r' => out.push_str("\\r"),
+                '\t' => out.push_str("\\t"),
+                other => out.push(other),
+            }
+        }
+        out.push('\'');
+    } else {
+        // Double-quote (default, tie-break).
+        out.push('"');
+        push_quoted_string_content(out, content);
+        out.push('"');
     }
 }
 
@@ -2071,6 +2109,49 @@ mod tests {
         assert_eq!(
             minify("do{a();b();}while(x);"),
             "do{a();b()}while(x);"
+        );
+    }
+
+    // ---- gap-043: CLI quote-choice optimisation ----------
+
+    /// **No quotes in content**: defaults to double quotes
+    /// (the existing behaviour). Tie-break to double per
+    /// upstream's `CodePrinter`.
+    #[test]
+    fn gap043_no_quotes_in_content_picks_double() {
+        assert_eq!(minify("var x=\"hello\";"), "var x=\"hello\";");
+    }
+
+    /// **Content has single quotes**: stick with double
+    /// (no escape savings from switching).
+    #[test]
+    fn gap043_single_quotes_only_stay_double() {
+        assert_eq!(
+            minify("var x=\"a'b'c\";"),
+            "var x=\"a'b'c\";"
+        );
+    }
+
+    /// **Content has more double than single quotes**:
+    /// switch to single-quoted form to avoid `\"` escapes.
+    /// This is the target fixture's case in compact form.
+    #[test]
+    fn gap043_more_double_switches_to_single() {
+        // Source contains escaped `"` (one) and no `'`.
+        // After switching to single quotes, the `"` no
+        // longer needs escaping.
+        assert_eq!(
+            minify(r#"var x="\"";"#),
+            r#"var x='"';"#
+        );
+    }
+
+    /// **Tie**: both `"` and `'` appear once. Double wins.
+    #[test]
+    fn gap043_tie_picks_double() {
+        assert_eq!(
+            minify(r#"var x="\"'";"#),
+            r#"var x="\"'";"#
         );
     }
 
