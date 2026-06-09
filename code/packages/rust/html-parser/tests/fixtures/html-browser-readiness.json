@@ -1358,6 +1358,11 @@
           { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown"] },
           { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
         ],
+        "activation_descriptors": [
+          { "element": "button", "id": "menu", "role": "control", "command_kind": "command", "activation_kind": "show-modal", "target_id": "dialog", "target_kind": "dialog", "text": "Menu", "accessible_name": "Menu", "focusable": true, "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "handler_count": 1, "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "control_type": "submit" },
+          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "activation_kind": "button", "target_kind": "command", "text": "Inline action", "accessible_name": "Inline action", "tabindex": "-1", "event_handlers": ["onkeydown"], "handler_count": 1, "aria_pressed": "mixed", "aria_current": "page" },
+          { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "activation_kind": "disclosure", "target_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
+        ],
         "popovers": [
           { "element": "div", "id": "action", "role": "block", "text": "Inline action", "popover": "manual" }
         ],

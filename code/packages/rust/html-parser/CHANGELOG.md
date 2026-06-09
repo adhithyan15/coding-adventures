@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness activation descriptors now expose command, popover,
+  disclosure, ARIA, focus, and inline handler routing metadata as a flat
+  activation-planning inventory.
 - Browser-readiness disclosure-state descriptors now expose details/dialog open
   state, grouped details names, summary text, modal/closedby behavior, and
   accessible naming metadata as a flat browser-planning inventory.

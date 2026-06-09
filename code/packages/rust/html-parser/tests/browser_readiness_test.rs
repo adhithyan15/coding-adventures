@@ -1,23 +1,23 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserAnchor, BrowserAriaCollection, BrowserAriaCollectionItem,
-    BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor, BrowserCommandElement,
-    BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
-    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
-    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext,
-    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
-    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAriaCollection,
+    BrowserAriaCollectionItem, BrowserAriaLiveRegion, BrowserAriaRange,
+    BrowserAriaRelationDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
+    BrowserDataAttribute, BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
+    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
+    BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor,
+    BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
+    BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -99,6 +99,8 @@ struct ExpectedBrowserDocument {
     section_landmarks: Vec<ExpectedSectionLandmark>,
     #[serde(default)]
     command_elements: Vec<ExpectedCommandElement>,
+    #[serde(default)]
+    activation_descriptors: Option<Vec<ExpectedActivationDescriptor>>,
     #[serde(default)]
     popovers: Vec<ExpectedPopover>,
     #[serde(default)]
@@ -1153,6 +1155,79 @@ struct ExpectedCommandElement {
     focusable: bool,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedActivationDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    #[serde(default)]
+    authored_role: Option<String>,
+    command_kind: String,
+    activation_kind: String,
+    #[serde(default)]
+    target_id: Option<String>,
+    target_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_pressed: Option<String>,
+    #[serde(default)]
+    aria_current: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    effective_target: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    form_action: Option<String>,
+    #[serde(default)]
+    resolved_form_action: Option<String>,
+    #[serde(default)]
+    form_method: Option<String>,
+    #[serde(default)]
+    form_target: Option<String>,
+    #[serde(default)]
+    form_novalidate: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2872,6 +2947,26 @@ fn browser_command_element_descriptor_metadata_tracks_activation_surfaces() {
 }
 
 #[test]
+fn browser_activation_descriptors_track_command_routes_and_state() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive activation fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive activation fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.activation_descriptors, expected.activation_descriptors,
+        "activation descriptors should preserve command, popover, disclosure, ARIA, focus, and inline handler routing metadata",
+    );
+}
+
+#[test]
 fn browser_popover_descriptor_metadata_tracks_hosts_and_invokers() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4226,6 +4321,16 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedDisclosure::into_browser_disclosure)
             .collect();
+        let command_elements: Vec<_> = self
+            .command_elements
+            .into_iter()
+            .map(ExpectedCommandElement::into_browser_command_element)
+            .collect();
+        let popovers: Vec<_> = self
+            .popovers
+            .into_iter()
+            .map(ExpectedPopover::into_browser_popover)
+            .collect();
         let disclosure_state_descriptors = self
             .disclosure_state_descriptors
             .map(|descriptors| {
@@ -4237,6 +4342,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_disclosure_state_descriptors(&disclosures));
+        let activation_descriptors = self
+            .activation_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedActivationDescriptor::into_browser_activation_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_activation_descriptors(&command_elements, &popovers, &disclosures)
+            });
 
         BrowserDocument {
             title: self.title,
@@ -4318,16 +4434,9 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedSectionLandmark::into_browser_section_landmark)
                 .collect(),
-            command_elements: self
-                .command_elements
-                .into_iter()
-                .map(ExpectedCommandElement::into_browser_command_element)
-                .collect(),
-            popovers: self
-                .popovers
-                .into_iter()
-                .map(ExpectedPopover::into_browser_popover)
-                .collect(),
+            command_elements,
+            activation_descriptors,
+            popovers,
             aria_collections: self
                 .aria_collections
                 .into_iter()
@@ -5038,6 +5147,150 @@ fn expected_disclosure_state_descriptor(
     }
 }
 
+fn expected_activation_descriptors(
+    commands: &[BrowserCommandElement],
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserActivationDescriptor> {
+    commands
+        .iter()
+        .map(|command| expected_activation_descriptor(command, popovers, disclosures))
+        .collect()
+}
+
+fn expected_activation_descriptor(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> BrowserActivationDescriptor {
+    BrowserActivationDescriptor {
+        element: command.element.clone(),
+        id: command.id.clone(),
+        role: command.role.clone(),
+        authored_role: command.authored_role.clone(),
+        command_kind: command.command_kind.clone(),
+        activation_kind: expected_activation_kind(command),
+        target_id: expected_activation_target_id(command),
+        target_kind: expected_activation_target_kind(command, popovers, disclosures),
+        text: command.text.clone(),
+        accessible_name: command.accessible_name.clone(),
+        accessible_description: command.accessible_description.clone(),
+        disabled: command.disabled,
+        focusable: command.focusable,
+        tabindex: command.tabindex.clone(),
+        accesskey: command.accesskey.clone(),
+        event_handlers: command.event_handlers.clone(),
+        handler_count: command.event_handlers.len(),
+        command: command.command.clone(),
+        command_for: command.command_for.clone(),
+        popover_target: command.popover_target.clone(),
+        popover_target_action: command.popover_target_action.clone(),
+        aria_controls: command.aria_controls.clone(),
+        aria_expanded: command.aria_expanded.clone(),
+        aria_haspopup: command.aria_haspopup.clone(),
+        aria_pressed: command.aria_pressed.clone(),
+        aria_current: command.aria_current.clone(),
+        aria_disabled: command.aria_disabled.clone(),
+        control_type: command.control_type.clone(),
+        href: command.href.clone(),
+        resolved_href: command.resolved_href.clone(),
+        effective_target: command.effective_target.clone(),
+        form_owner: command.form_owner.clone(),
+        form_action: command.form_action.clone(),
+        resolved_form_action: command.resolved_form_action.clone(),
+        form_method: command.form_method.clone(),
+        form_target: command.form_target.clone(),
+        form_novalidate: command.form_novalidate,
+    }
+}
+
+fn expected_activation_kind(command: &BrowserCommandElement) -> String {
+    if let Some(command_value) = &command.command {
+        return command_value.clone();
+    }
+    if command.popover_target.is_some() {
+        let action = command.popover_target_action.as_deref().unwrap_or("toggle");
+        return format!("popover-{action}");
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if let Some(control_type) = &command.control_type {
+        if matches!(
+            control_type.as_str(),
+            "submit" | "reset" | "button" | "image"
+        ) {
+            return format!("form-{control_type}");
+        }
+    }
+
+    command.command_kind.clone()
+}
+
+fn expected_activation_target_id(command: &BrowserCommandElement) -> Option<String> {
+    command
+        .command_for
+        .clone()
+        .or_else(|| command.popover_target.clone())
+        .or_else(|| command.aria_controls.first().cloned())
+}
+
+fn expected_activation_target_kind(
+    command: &BrowserCommandElement,
+    popovers: &[BrowserPopover],
+    disclosures: &[BrowserDisclosure],
+) -> String {
+    if let Some(command_for) = &command.command_for {
+        if let Some(disclosure) = disclosures
+            .iter()
+            .find(|disclosure| disclosure.id.as_deref() == Some(command_for.as_str()))
+        {
+            return if disclosure.element == "dialog" {
+                "dialog"
+            } else {
+                "disclosure"
+            }
+            .to_string();
+        }
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(command_for.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "command-target".to_string();
+    }
+    if let Some(popover_target) = &command.popover_target {
+        if popovers
+            .iter()
+            .any(|popover| popover.id.as_deref() == Some(popover_target.as_str()))
+        {
+            return "popover".to_string();
+        }
+        return "popover-target".to_string();
+    }
+    if !command.aria_controls.is_empty() {
+        return "controlled-region".to_string();
+    }
+    if command.href.is_some() {
+        return "navigation".to_string();
+    }
+    if command.form_owner.is_some()
+        || command.form_action.is_some()
+        || matches!(
+            command.control_type.as_deref(),
+            Some("submit" | "reset" | "image")
+        )
+    {
+        return "form".to_string();
+    }
+    if command.command_kind == "disclosure" {
+        return "disclosure".to_string();
+    }
+
+    "command".to_string()
+}
+
 fn expected_script_execution_descriptors(
     scripts: &[BrowserScript],
 ) -> Vec<BrowserScriptExecutionDescriptor> {
@@ -5593,6 +5846,50 @@ impl ExpectedCommandElement {
             event_handlers: self.event_handlers,
             focusable: self.focusable,
             disabled: self.disabled,
+        }
+    }
+}
+
+impl ExpectedActivationDescriptor {
+    fn into_browser_activation_descriptor(self) -> BrowserActivationDescriptor {
+        BrowserActivationDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            command_kind: self.command_kind,
+            activation_kind: self.activation_kind,
+            target_id: self.target_id,
+            target_kind: self.target_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            disabled: self.disabled,
+            focusable: self.focusable,
+            tabindex: self.tabindex,
+            accesskey: self.accesskey,
+            event_handlers: self.event_handlers,
+            handler_count: self.handler_count,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            aria_controls: self.aria_controls,
+            aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_pressed: self.aria_pressed,
+            aria_current: self.aria_current,
+            aria_disabled: self.aria_disabled,
+            control_type: self.control_type,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            effective_target: self.effective_target,
+            form_owner: self.form_owner,
+            form_action: self.form_action,
+            resolved_form_action: self.resolved_form_action,
+            form_method: self.form_method,
+            form_target: self.form_target,
+            form_novalidate: self.form_novalidate,
         }
     }
 }
