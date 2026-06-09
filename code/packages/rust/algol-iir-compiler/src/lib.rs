@@ -494,14 +494,28 @@ impl Compiler {
             ));
         }
         let elem = elems[0];
+        let body = direct_nodes(node)
+            .into_iter()
+            .find(|n| n.rule_name == "statement")
+            .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
+
         if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return Err(CompileError::Unsupported("for while elements".into()));
+            return self.emit_for_while(&var_name, elem, body);
         }
         if !direct_tokens(elem).iter().any(|t| t.value == "step") {
             return Err(CompileError::Unsupported(
                 "single-value for elements outside step/until form".into(),
             ));
         }
+        self.emit_for_step_until(&var_name, elem, body)
+    }
+
+    fn emit_for_step_until(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
         let arith_nodes: Vec<&GrammarASTNode> = direct_nodes(elem)
             .into_iter()
             .filter(|n| n.rule_name == "arith_expr")
@@ -527,14 +541,9 @@ impl Compiler {
             .ok_or_else(|| CompileError::Unsupported("non-constant for step values".into()))?;
         let cmp_op = if step_const >= 0 { "cmp_le" } else { "cmp_ge" };
 
-        let body = direct_nodes(node)
-            .into_iter()
-            .find(|n| n.rule_name == "statement")
-            .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
-
         self.emit(IIRInstr::new(
             "mov",
-            Some(var_name.clone()),
+            Some(var_name.to_string()),
             vec![Operand::Var(start.slot)],
             "i64",
         ));
@@ -546,7 +555,7 @@ impl Compiler {
         self.emit(IIRInstr::new(
             cmp_op,
             Some(cond.clone()),
-            vec![Operand::Var(var_name.clone()), Operand::Var(limit.slot)],
+            vec![Operand::Var(var_name.to_string()), Operand::Var(limit.slot)],
             "bool",
         ));
         self.emit(IIRInstr::new(
@@ -560,15 +569,68 @@ impl Compiler {
         self.emit(IIRInstr::new(
             "add",
             Some(next.clone()),
-            vec![Operand::Var(var_name.clone()), Operand::Var(step.slot)],
+            vec![Operand::Var(var_name.to_string()), Operand::Var(step.slot)],
             "i64",
         ));
         self.emit(IIRInstr::new(
             "mov",
-            Some(var_name),
+            Some(var_name.to_string()),
             vec![Operand::Var(next)],
             "i64",
         ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(loop_label)],
+            "void",
+        ));
+        self.emit_label(&end_label);
+        Ok(())
+    }
+
+    fn emit_for_while(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let arith_node = direct_nodes(elem)
+            .into_iter()
+            .find(|n| n.rule_name == "arith_expr")
+            .ok_or_else(|| CompileError::Malformed("while for element missing value".into()))?;
+        let cond_node = first_direct_node(elem, "bool_expr")
+            .ok_or_else(|| CompileError::Malformed("while for element missing condition".into()))?;
+
+        let loop_label = self.fresh_label("for_while_loop");
+        let end_label = self.fresh_label("for_while_end");
+        self.emit_label(&loop_label);
+
+        let value = self.emit_expr(arith_node)?;
+        if value.ty != ScalarType::Integer {
+            return Err(CompileError::Type(
+                "for while value expression must be integer".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(var_name.to_string()),
+            vec![Operand::Var(value.slot)],
+            "i64",
+        ));
+
+        let cond = self.emit_expr(cond_node)?;
+        if cond.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "for while condition must be boolean".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.slot), Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_statement(body)?;
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -1257,6 +1319,12 @@ mod tests {
     fn compiles_and_runs_for_step_until_sum() {
         let src = "begin integer i, result; result := 0; for i := 1 step 1 until 10 do result := result + i end";
         assert_eq!(run_i64(src), 55);
+    }
+
+    #[test]
+    fn compiles_and_runs_for_while_sum() {
+        let src = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
+        assert_eq!(run_i64(src), 15);
     }
 
     #[test]
