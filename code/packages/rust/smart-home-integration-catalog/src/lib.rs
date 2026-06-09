@@ -756,6 +756,31 @@ pub struct IntegrationActivationActionSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationAgendaStage {
+    pub priority: u8,
+    pub candidates: Vec<IntegrationActivationCandidate>,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+    pub actions: Vec<IntegrationActivationAction>,
+    pub action_summary: IntegrationActivationActionSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationAgendaSummary {
+    pub total_stages: usize,
+    pub total_candidates: usize,
+    pub total_actions: usize,
+    pub stages_with_activation_work: usize,
+    pub stages_with_blockers: usize,
+    pub stages_with_review_work: usize,
+    pub first_action_priority: Option<u8>,
+    pub first_activation_priority: Option<u8>,
+    pub first_blocker_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+    pub action_summary: IntegrationActivationActionSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationRunwayStage {
     pub priority: u8,
     pub candidates: Vec<IntegrationActivationCandidate>,
@@ -1395,6 +1420,124 @@ impl IntegrationActivationActionSummary {
 
     pub fn has_review_work(&self) -> bool {
         self.review_policy_actions > 0
+    }
+}
+
+impl IntegrationActivationAgendaStage {
+    pub fn from_candidates(
+        priority: u8,
+        mut candidates: Vec<IntegrationActivationCandidate>,
+    ) -> Self {
+        candidates.sort_by(compare_activation_candidates);
+        let candidate_summary =
+            IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        let actions = activation_actions_from_candidates(candidates.iter());
+        let action_summary = IntegrationActivationActionSummary::from_actions(actions.iter());
+
+        Self {
+            priority,
+            candidates,
+            candidate_summary,
+            actions,
+            action_summary,
+        }
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.action_summary.has_activation_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.action_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.action_summary.has_review_work()
+    }
+
+    pub fn has_actionable_candidates(&self) -> bool {
+        self.candidate_summary.has_actionable_candidates()
+    }
+}
+
+impl IntegrationActivationAgendaSummary {
+    pub fn from_stages<'a>(
+        stages: impl IntoIterator<Item = &'a IntegrationActivationAgendaStage>,
+    ) -> Self {
+        let mut candidates = Vec::new();
+        let mut actions = Vec::new();
+        let empty_candidates = Vec::<&IntegrationActivationCandidate>::new();
+        let empty_actions = Vec::<&IntegrationActivationAction>::new();
+        let mut summary = Self {
+            total_stages: 0,
+            total_candidates: 0,
+            total_actions: 0,
+            stages_with_activation_work: 0,
+            stages_with_blockers: 0,
+            stages_with_review_work: 0,
+            first_action_priority: None,
+            first_activation_priority: None,
+            first_blocker_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            candidate_summary: IntegrationActivationCandidateSummary::from_candidates(
+                empty_candidates,
+            ),
+            action_summary: IntegrationActivationActionSummary::from_actions(empty_actions),
+        };
+
+        for stage in stages {
+            summary.total_stages += 1;
+            summary.total_candidates += stage.candidates.len();
+            summary.total_actions += stage.actions.len();
+            if stage.has_activation_work() {
+                summary.stages_with_activation_work += 1;
+            }
+            if stage.has_blockers() {
+                summary.stages_with_blockers += 1;
+            }
+            if stage.has_review_work() {
+                summary.stages_with_review_work += 1;
+            }
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(stage.action_summary.highest_policy_tier)
+                .max(stage.candidate_summary.highest_policy_tier);
+            summary.first_action_priority = min_optional_priority(
+                summary.first_action_priority,
+                stage.action_summary.first_action_priority,
+            );
+            summary.first_activation_priority = min_optional_priority(
+                summary.first_activation_priority,
+                stage.action_summary.first_activation_priority,
+            );
+            summary.first_blocker_priority = min_optional_priority(
+                summary.first_blocker_priority,
+                stage.action_summary.first_blocker_priority,
+            );
+            candidates.extend(stage.candidates.iter());
+            actions.extend(stage.actions.iter());
+        }
+
+        summary.candidate_summary =
+            IntegrationActivationCandidateSummary::from_candidates(candidates);
+        summary.action_summary = IntegrationActivationActionSummary::from_actions(actions);
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_stages == 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.stages_with_activation_work > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.stages_with_blockers > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.stages_with_review_work > 0
     }
 }
 
@@ -2664,6 +2807,41 @@ pub fn activation_actions_at_or_before_priority(
     activation_actions_from_candidates(candidates.iter())
 }
 
+pub fn activation_agenda_from_candidates(
+    candidates: Vec<IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationAgendaStage> {
+    let mut stages_by_priority: BTreeMap<u8, Vec<IntegrationActivationCandidate>> = BTreeMap::new();
+    for candidate in candidates {
+        stages_by_priority
+            .entry(candidate.readiness_report.priority)
+            .or_default()
+            .push(candidate);
+    }
+
+    stages_by_priority
+        .into_iter()
+        .map(|(priority, candidates)| {
+            IntegrationActivationAgendaStage::from_candidates(priority, candidates)
+        })
+        .collect()
+}
+
+pub fn activation_agenda_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationAgendaStage> {
+    activation_agenda_from_candidates(activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
+}
+
 pub fn activation_runway_from_candidates(
     candidates: Vec<IntegrationActivationCandidate>,
 ) -> Vec<IntegrationActivationRunwayStage> {
@@ -3720,6 +3898,14 @@ fn compare_activation_actions(
         })
 }
 
+fn min_optional_priority(left: Option<u8>, right: Option<u8>) -> Option<u8> {
+    match (left, right) {
+        (Some(left), Some(right)) => Some(left.min(right)),
+        (Some(priority), None) | (None, Some(priority)) => Some(priority),
+        (None, None) => None,
+    }
+}
+
 fn compare_by_priority_then_name(
     left: &IntegrationCatalogEntry,
     right: &IntegrationCatalogEntry,
@@ -4351,6 +4537,87 @@ mod tests {
         assert_eq!(summary.first_action_priority, Some(1));
         assert_eq!(summary.first_activation_priority, Some(2));
         assert_eq!(summary.first_blocker_priority, Some(1));
+        assert!(summary.has_activation_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_agenda_groups_actions_by_rollout_wave() {
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 2,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_bridge"),
+            display_name: "Review Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_sensor"),
+            display_name: "Blocked Sensor".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 1,
+            missing_primitives: vec![PrimitiveFamily::Mqtt],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::LowRisk,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [ready_report, review_report, blocked_report].iter(),
+        );
+
+        let agenda = activation_agenda_from_candidates(candidates);
+
+        assert_eq!(agenda.len(), 2);
+        assert_eq!(agenda[0].priority, 1);
+        assert_eq!(agenda[0].candidate_summary.total_candidates, 2);
+        assert_eq!(agenda[0].action_summary.total_actions, 4);
+        assert_eq!(agenda[0].action_summary.review_policy_actions, 1);
+        assert_eq!(agenda[0].action_summary.provide_primitive_actions, 1);
+        assert!(agenda[0].has_blockers());
+        assert!(agenda[0].has_review_work());
+        assert!(!agenda[0].has_activation_work());
+        assert_eq!(agenda[1].priority, 2);
+        assert_eq!(agenda[1].candidate_summary.ready_to_activate_candidates, 1);
+        assert_eq!(agenda[1].action_summary.activate_integration_actions, 1);
+        assert!(agenda[1].has_activation_work());
+
+        let summary = IntegrationActivationAgendaSummary::from_stages(agenda.iter());
+        assert_eq!(summary.total_stages, 2);
+        assert_eq!(summary.total_candidates, 3);
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.stages_with_activation_work, 1);
+        assert_eq!(summary.stages_with_blockers, 1);
+        assert_eq!(summary.stages_with_review_work, 1);
+        assert_eq!(summary.first_action_priority, Some(1));
+        assert_eq!(summary.first_activation_priority, Some(2));
+        assert_eq!(summary.first_blocker_priority, Some(1));
+        assert_eq!(summary.candidate_summary.total_candidates, 3);
+        assert_eq!(summary.action_summary.total_actions, 5);
         assert!(summary.has_activation_work());
         assert!(summary.has_blockers());
         assert!(summary.has_review_work());

@@ -34,6 +34,8 @@ runtime and Chief of Staff tools a typed catalog for:
   after applying host-specific primitive, capability, and dependency context
 - activation actions that turn ready/review/blocker candidates into concrete
   activate, policy-review, primitive, capability, and dependency work items
+- activation agenda stages that combine candidates and concrete actions by
+  rollout priority wave for bounded Chief-of-Staff planning
 - activation runway stages that group those candidates by rollout priority wave
   with compact ready, review, and blocker rollups
 - readiness reports that compare activation plans against available primitives,
