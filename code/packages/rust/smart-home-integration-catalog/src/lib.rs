@@ -665,6 +665,118 @@ pub struct IntegrationReadinessReport {
     pub cloud_required: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessSummary {
+    pub total_reports: usize,
+    pub activation_ready_reports: usize,
+    pub blocked_reports: usize,
+    pub reports_requiring_human_review: usize,
+    pub cloud_required_reports: usize,
+    pub local_only_reports: usize,
+    pub direct_targets: usize,
+    pub delegated_integration_targets: usize,
+    pub delegated_standard_targets: usize,
+    pub reports_missing_primitives: usize,
+    pub reports_missing_capabilities: usize,
+    pub reports_missing_dependencies: usize,
+    pub unique_missing_primitives: usize,
+    pub unique_missing_capabilities: usize,
+    pub unique_missing_dependencies: usize,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+impl IntegrationReadinessSummary {
+    pub fn from_reports<'a>(
+        reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
+    ) -> Self {
+        let mut summary = Self {
+            total_reports: 0,
+            activation_ready_reports: 0,
+            blocked_reports: 0,
+            reports_requiring_human_review: 0,
+            cloud_required_reports: 0,
+            local_only_reports: 0,
+            direct_targets: 0,
+            delegated_integration_targets: 0,
+            delegated_standard_targets: 0,
+            reports_missing_primitives: 0,
+            reports_missing_capabilities: 0,
+            reports_missing_dependencies: 0,
+            unique_missing_primitives: 0,
+            unique_missing_capabilities: 0,
+            unique_missing_dependencies: 0,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+        let mut missing_primitives = BTreeSet::new();
+        let mut missing_capabilities = BTreeSet::new();
+        let mut missing_dependencies = BTreeSet::new();
+
+        for report in reports {
+            summary.total_reports += 1;
+            if report.activation_ready() {
+                summary.activation_ready_reports += 1;
+            } else {
+                summary.blocked_reports += 1;
+            }
+            if report.requires_human_review {
+                summary.reports_requiring_human_review += 1;
+            }
+            if report.cloud_required {
+                summary.cloud_required_reports += 1;
+            }
+            if report.local_only {
+                summary.local_only_reports += 1;
+            }
+            match &report.activation_target {
+                IntegrationActivationTarget::Direct => summary.direct_targets += 1,
+                IntegrationActivationTarget::DelegatedIntegration(_) => {
+                    summary.delegated_integration_targets += 1
+                }
+                IntegrationActivationTarget::DelegatedStandards(_) => {
+                    summary.delegated_standard_targets += 1
+                }
+            }
+            if !report.missing_primitives.is_empty() {
+                summary.reports_missing_primitives += 1;
+            }
+            if !report.missing_capabilities.is_empty() {
+                summary.reports_missing_capabilities += 1;
+            }
+            if !report.missing_dependencies.is_empty() {
+                summary.reports_missing_dependencies += 1;
+            }
+            for primitive in &report.missing_primitives {
+                missing_primitives.insert(*primitive);
+            }
+            for capability_id in &report.missing_capabilities {
+                missing_capabilities.insert(capability_id.clone());
+            }
+            for integration_id in &report.missing_dependencies {
+                missing_dependencies.insert(integration_id.clone());
+            }
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(report.highest_policy_tier);
+        }
+
+        summary.unique_missing_primitives = missing_primitives.len();
+        summary.unique_missing_capabilities = missing_capabilities.len();
+        summary.unique_missing_dependencies = missing_dependencies.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_reports == 0
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_reports > 0 && self.blocked_reports == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_reports > 0
+    }
+}
+
 impl IntegrationReadinessReport {
     pub fn activation_ready(&self) -> bool {
         self.missing_primitives.is_empty()
@@ -3096,6 +3208,18 @@ mod tests {
         assert!(hue.missing_capability(&CapabilityId::trusted("smart_home.command.light")));
         assert!(tasmota.missing_primitive(PrimitiveFamily::Mqtt));
         assert!(tasmota.missing_dependency(&IntegrationId::trusted("mqtt")));
+
+        let summary = IntegrationReadinessSummary::from_reports(reports.iter());
+        assert_eq!(summary.total_reports, reports.len());
+        assert!(summary.has_blockers());
+        assert!(summary.blocked_reports > 0);
+        assert!(summary.reports_missing_primitives > 0);
+        assert!(summary.reports_missing_capabilities > 0);
+        assert!(summary.reports_missing_dependencies > 0);
+        assert!(summary.unique_missing_primitives > 0);
+        assert!(summary.unique_missing_capabilities > 0);
+        assert!(summary.unique_missing_dependencies > 0);
+        assert!(!summary.all_ready());
     }
 
     #[test]

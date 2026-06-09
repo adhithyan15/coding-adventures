@@ -50,6 +50,8 @@ Current scope:
   reusable-primitive inspection
 - D18D catalog-summary descriptors for compact integration and tool surface
   inspection
+- D18D integration-readiness descriptors for bulk activation blocker reports
+  and compact readiness rollups
 - D18D scene inventory/read tool descriptors for model-facing scene lookup
 - D18D event lifecycle tool descriptors for subscribing, polling, and
   unsubscribing from runtime event streams

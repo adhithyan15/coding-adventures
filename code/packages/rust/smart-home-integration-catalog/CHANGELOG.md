@@ -33,6 +33,8 @@ All notable changes to this package will be documented in this file.
   dependencies, and review tiers before enabling an integration.
 - Integration readiness reports that expose missing primitive families, missing
   capability grants, and missing delegated integrations before activation.
+- Integration readiness summaries for compact activation-ready, blocker,
+  review, cloud, local, and delegated-target rollups.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.
