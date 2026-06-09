@@ -942,6 +942,11 @@
           { "source": "link", "href": "print.css", "resolved_href": "https://example.test/app/print.css", "rel": "alternate stylesheet", "rel_tokens": ["alternate", "stylesheet"], "title": "print", "disabled": true, "alternate": true },
           { "source": "style", "media": "print", "title": "print", "nonce": "inlineStyleNonce", "text": "body { color: black; }" }
         ],
+        "stylesheet_planning_descriptors": [
+          { "source": "link", "stylesheet_kind": "external", "href": "app.css", "resolved_href": "https://example.test/app/app.css", "rel": "stylesheet preload", "rel_tokens": ["stylesheet", "preload"], "rel_token_count": 2, "media": "screen", "title": "main", "applies_by_default": true, "integrity": "sha256-css", "crossorigin": "anonymous", "nonce": "styleNonce", "referrerpolicy": "no-referrer", "fetchpriority": "high", "blocking": "render", "blocking_tokens": ["render"], "blocking_token_count": 1, "render_blocking": true, "has_text": false, "text_length": 0 },
+          { "source": "link", "stylesheet_kind": "external", "href": "print.css", "resolved_href": "https://example.test/app/print.css", "rel": "alternate stylesheet", "rel_tokens": ["alternate", "stylesheet"], "rel_token_count": 2, "title": "print", "disabled": true, "alternate": true, "applies_by_default": false, "blocking_token_count": 0, "render_blocking": false, "has_text": false, "text_length": 0 },
+          { "source": "style", "stylesheet_kind": "inline", "media": "print", "title": "print", "nonce": "inlineStyleNonce", "rel_token_count": 0, "applies_by_default": true, "blocking_token_count": 0, "render_blocking": false, "has_text": true, "text_length": 22 }
+        ],
         "anchors": [],
         "headings": [],
         "loading_hint_descriptors": [

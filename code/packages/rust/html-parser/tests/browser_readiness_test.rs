@@ -18,8 +18,9 @@ use coding_adventures_html_parser::{
     BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
     BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet, BrowserTable,
-    BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -71,6 +72,8 @@ struct ExpectedBrowserDocument {
     script_execution_descriptors: Option<Vec<ExpectedScriptExecutionDescriptor>>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
+    #[serde(default)]
+    stylesheet_planning_descriptors: Option<Vec<ExpectedStylesheetPlanningDescriptor>>,
     #[serde(default)]
     document_policy_descriptors: Vec<ExpectedDocumentPolicyDescriptor>,
     #[serde(default)]
@@ -896,6 +899,56 @@ struct ExpectedStylesheet {
     blocking_tokens: Vec<String>,
     #[serde(default)]
     text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedStylesheetPlanningDescriptor {
+    source: String,
+    stylesheet_kind: String,
+    #[serde(default)]
+    href: Option<String>,
+    #[serde(default)]
+    resolved_href: Option<String>,
+    #[serde(default)]
+    rel: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    rel_token_count: usize,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    alternate: bool,
+    #[serde(default)]
+    applies_by_default: bool,
+    #[serde(default)]
+    integrity: Option<String>,
+    #[serde(default)]
+    crossorigin: Option<String>,
+    #[serde(default)]
+    nonce: Option<String>,
+    #[serde(default)]
+    referrerpolicy: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    blocking_token_count: usize,
+    #[serde(default)]
+    render_blocking: bool,
+    #[serde(default)]
+    has_text: bool,
+    #[serde(default)]
+    text_length: usize,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3974,6 +4027,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedImage::into_browser_image)
             .collect();
+        let stylesheets: Vec<_> = self
+            .stylesheets
+            .into_iter()
+            .map(ExpectedStylesheet::into_browser_stylesheet)
+            .collect();
         let media: Vec<_> = self
             .media
             .into_iter()
@@ -4024,6 +4082,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_script_execution_descriptors(&scripts));
+        let stylesheet_planning_descriptors = self
+            .stylesheet_planning_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedStylesheetPlanningDescriptor::into_browser_stylesheet_planning_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_stylesheet_planning_descriptors(&stylesheets));
         let image_candidate_descriptors = self
             .image_candidate_descriptors
             .map(|descriptors| {
@@ -4056,11 +4125,8 @@ impl ExpectedBrowserDocument {
             resources,
             scripts,
             script_execution_descriptors,
-            stylesheets: self
-                .stylesheets
-                .into_iter()
-                .map(ExpectedStylesheet::into_browser_stylesheet)
-                .collect(),
+            stylesheets,
+            stylesheet_planning_descriptors,
             document_policy_descriptors: self
                 .document_policy_descriptors
                 .into_iter()
@@ -4815,6 +4881,58 @@ fn expected_script_execution_descriptor(
     }
 }
 
+fn expected_stylesheet_planning_descriptors(
+    stylesheets: &[BrowserStylesheet],
+) -> Vec<BrowserStylesheetPlanningDescriptor> {
+    stylesheets
+        .iter()
+        .map(expected_stylesheet_planning_descriptor)
+        .collect()
+}
+
+fn expected_stylesheet_planning_descriptor(
+    stylesheet: &BrowserStylesheet,
+) -> BrowserStylesheetPlanningDescriptor {
+    let text_length = stylesheet
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserStylesheetPlanningDescriptor {
+        source: stylesheet.source.clone(),
+        stylesheet_kind: if stylesheet.href.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        href: stylesheet.href.clone(),
+        resolved_href: stylesheet.resolved_href.clone(),
+        rel: stylesheet.rel.clone(),
+        rel_tokens: stylesheet.rel_tokens.clone(),
+        rel_token_count: stylesheet.rel_tokens.len(),
+        type_hint: stylesheet.type_hint.clone(),
+        media: stylesheet.media.clone(),
+        title: stylesheet.title.clone(),
+        disabled: stylesheet.disabled,
+        alternate: stylesheet.alternate,
+        applies_by_default: !stylesheet.disabled && !stylesheet.alternate,
+        integrity: stylesheet.integrity.clone(),
+        crossorigin: stylesheet.crossorigin.clone(),
+        nonce: stylesheet.nonce.clone(),
+        referrerpolicy: stylesheet.referrerpolicy.clone(),
+        fetchpriority: stylesheet.fetchpriority.clone(),
+        blocking: stylesheet.blocking.clone(),
+        blocking_tokens: stylesheet.blocking_tokens.clone(),
+        blocking_token_count: stylesheet.blocking_tokens.len(),
+        render_blocking: stylesheet
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: stylesheet.text.is_some(),
+        text_length,
+    }
+}
+
 impl ExpectedResourceEndpointDescriptor {
     fn into_browser_resource_endpoint_descriptor(self) -> BrowserResourceEndpointDescriptor {
         let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
@@ -4941,6 +5059,40 @@ impl ExpectedStylesheet {
             blocking: self.blocking,
             blocking_tokens,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedStylesheetPlanningDescriptor {
+    fn into_browser_stylesheet_planning_descriptor(self) -> BrowserStylesheetPlanningDescriptor {
+        let rel_tokens = expected_tokens_from_raw(self.rel_tokens, self.rel.as_deref());
+        let blocking_tokens =
+            expected_tokens_from_raw(self.blocking_tokens, self.blocking.as_deref());
+        BrowserStylesheetPlanningDescriptor {
+            source: self.source,
+            stylesheet_kind: self.stylesheet_kind,
+            href: self.href,
+            resolved_href: self.resolved_href,
+            rel: self.rel,
+            rel_tokens,
+            rel_token_count: self.rel_token_count,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            disabled: self.disabled,
+            alternate: self.alternate,
+            applies_by_default: self.applies_by_default,
+            integrity: self.integrity,
+            crossorigin: self.crossorigin,
+            nonce: self.nonce,
+            referrerpolicy: self.referrerpolicy,
+            fetchpriority: self.fetchpriority,
+            blocking: self.blocking,
+            blocking_tokens,
+            blocking_token_count: self.blocking_token_count,
+            render_blocking: self.render_blocking,
+            has_text: self.has_text,
+            text_length: self.text_length,
         }
     }
 }
