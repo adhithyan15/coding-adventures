@@ -3782,6 +3782,28 @@ impl RuntimeReportEventToolRequest {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSetDesiredStateToolRequest {
+    pub desired_state: DesiredEntityState,
+}
+
+impl RuntimeSetDesiredStateToolRequest {
+    pub fn new(desired_state: DesiredEntityState) -> Self {
+        Self { desired_state }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeClearDesiredStateToolRequest {
+    pub entity_id: EntityId,
+}
+
+impl RuntimeClearDesiredStateToolRequest {
+    pub fn new(entity_id: EntityId) -> Self {
+        Self { entity_id }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeCommandToolRequest {
     pub entity_id: EntityId,
     pub command_type: CommandType,
@@ -4005,6 +4027,25 @@ pub struct RuntimeCompletePairingToolOutput {
 pub enum RuntimeReportEventToolOutput {
     Device(DeviceEvent),
     BridgeHealth(BridgeHealthReport),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSetDesiredStateToolOutput {
+    pub desired_state: DesiredEntityState,
+    pub replaced: bool,
+    pub previous: Option<DesiredEntityState>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeClearDesiredStateToolOutput {
+    pub entity_id: EntityId,
+    pub removed: Option<DesiredEntityState>,
+}
+
+impl RuntimeClearDesiredStateToolOutput {
+    pub fn removed(&self) -> bool {
+        self.removed.is_some()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4859,6 +4900,52 @@ impl SmartHomeRuntime {
                 Ok(RuntimeReportEventToolOutput::BridgeHealth(report))
             }
         }
+    }
+
+    pub fn execute_set_desired_state_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeSetDesiredStateToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeSetDesiredStateToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::SetDesiredState;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let desired_state = request.desired_state;
+        let previous = self.upsert_desired_state(desired_state.clone())?;
+        Ok(RuntimeSetDesiredStateToolOutput {
+            desired_state,
+            replaced: previous.is_some(),
+            previous,
+        })
+    }
+
+    pub fn execute_clear_desired_state_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeClearDesiredStateToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeClearDesiredStateToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::ClearDesiredState;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let entity_id = request.entity_id;
+        let removed = self.remove_desired_state(&entity_id);
+        Ok(RuntimeClearDesiredStateToolOutput { entity_id, removed })
     }
 
     pub fn complete_pairing_session(
@@ -8793,6 +8880,147 @@ mod tests {
             .registry()
             .state(&EntityId::trusted("entity-1"))
             .is_none());
+    }
+
+    #[test]
+    fn desired_state_tools_require_command_tool_grant_before_mutating_runtime() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+
+        let set_error = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )),
+                1_500,
+            )
+            .unwrap_err();
+        let clear_error = runtime
+            .execute_clear_desired_state_tool(
+                principal.clone(),
+                RuntimeClearDesiredStateToolRequest::new(EntityId::trusted("entity-1")),
+                1_501,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            set_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::SetDesiredState,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert!(matches!(
+            clear_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ClearDesiredState,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.desired_state_count(), 0);
+    }
+
+    #[test]
+    fn desired_state_tools_authorize_set_replace_and_clear() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-desired-state-command"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+
+        let first_output = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(
+                    DesiredEntityState::new(
+                        EntityId::trusted("entity-1"),
+                        vec![StateDelta {
+                            capability_id: CapabilityId::trusted("light.on_off"),
+                            value: Value::Bool(true),
+                        }],
+                    )
+                    .requested_by("agent:scene-planner")
+                    .with_command_timeout(750),
+                ),
+                1_500,
+            )
+            .unwrap();
+        let second_output = runtime
+            .execute_set_desired_state_tool(
+                principal.clone(),
+                RuntimeSetDesiredStateToolRequest::new(
+                    DesiredEntityState::new(
+                        EntityId::trusted("entity-1"),
+                        vec![StateDelta {
+                            capability_id: CapabilityId::trusted("light.on_off"),
+                            value: Value::Bool(false),
+                        }],
+                    )
+                    .requested_by("agent:scene-planner")
+                    .with_command_timeout(900),
+                ),
+                1_501,
+            )
+            .unwrap();
+        let clear_output = runtime
+            .execute_clear_desired_state_tool(
+                principal.clone(),
+                RuntimeClearDesiredStateToolRequest::new(EntityId::trusted("entity-1")),
+                1_502,
+            )
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(!first_output.replaced);
+        assert!(first_output.previous.is_none());
+        assert_eq!(
+            first_output.desired_state.requested_by,
+            "agent:scene-planner"
+        );
+        assert!(second_output.replaced);
+        assert_eq!(
+            second_output
+                .previous
+                .as_ref()
+                .map(|state| state.command_timeout_ms),
+            Some(750)
+        );
+        assert!(clear_output.removed());
+        assert_eq!(
+            clear_output
+                .removed
+                .as_ref()
+                .map(|state| state.command_timeout_ms),
+            Some(900)
+        );
+        assert_eq!(runtime.desired_state_count(), 0);
+        assert_eq!(decisions.len(), 3);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
     }
 
     #[test]
