@@ -37,6 +37,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationCandidate` and `IntegrationActivationCandidateSummary`
   for ranking ready, human-review, and blocked activation work after applying
   host-specific readiness context.
+- `IntegrationActivationRunwayStage` and `IntegrationActivationRunwaySummary`
+  for grouping activation candidates by rollout priority wave and identifying
+  actionable, review, and blocked stages.
 - Integration readiness reports that expose missing primitive families, missing
   capability grants, and missing delegated integrations before activation.
 - Integration readiness summaries for compact activation-ready, blocker,
