@@ -31,6 +31,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_workers` and `smart_home.get_worker_heartbeat_schedule`
   tool descriptors for read-only supervised bridge-worker inventory and
   heartbeat deadline inspection.
+- `smart_home.list_discovery_workers` and
+  `smart_home.get_discovery_summary` tool descriptors for read-only scheduled
+  discovery governance and freshness inspection.
 - `smart_home.get_supervision_plan` tool descriptor for read-only runtime
   supervision due-work previews.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`

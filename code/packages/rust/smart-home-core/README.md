@@ -61,6 +61,8 @@ Current scope:
   desired-state targets, and pairing-session status
 - D18D bridge-worker inventory descriptors for read-only supervisor and
   heartbeat deadline inspection
+- D18D discovery-governance descriptors for read-only scheduled discovery
+  worker inventory and compact discovery freshness summaries
 - D18D supervision planning tool descriptor for non-mutating due-work previews
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks

@@ -26,6 +26,7 @@ Chief of Staff job/session/agent
   -> D18D smart_home.discover / smart_home.command tool calls
   -> smart-home runtime authorization
   -> discovery records and unpaired bridge candidates
+  -> discovery worker inventory and discovery freshness summaries
   -> room topology and aggregate topology summary reads
   -> scene inventory and scene detail reads
   -> discovery worker health and retry state in smart_home.observe_supervision
@@ -48,6 +49,8 @@ Chief of Staff job/session/agent
 - `smart_home.list_primitives`
 - `smart_home.describe_primitive`
 - `smart_home.discover`
+- `smart_home.list_discovery_workers`
+- `smart_home.get_discovery_summary`
 - `smart_home.list_bridges`
 - `smart_home.list_devices`
 - `smart_home.list_rooms`
