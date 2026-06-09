@@ -37,27 +37,29 @@ use smart_home_integration_catalog::{
     activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
     activation_dependency_graph_from_reports, activation_health_from_candidates,
     activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
-    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
-    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
-    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
-    readiness_report_for_plan, readiness_reports_at_or_before_priority,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
-    IntegrationActivationActionKind, IntegrationActivationActionSummary,
-    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
-    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
-    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
-    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
-    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
-    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
-    IntegrationActivationHealthSummary, IntegrationActivationPlan,
-    IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
-    IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
-    IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    activation_risk_from_candidates, activation_runway_from_candidates, describe_primitive_family,
+    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
+    entries_requiring_primitive, find_entry, first_party_catalog,
+    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
+    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
+    readiness_gap_inventory_from_reports, readiness_report_for_plan,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
+    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
+    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
+    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
+    IntegrationActivationAgendaSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
+    IntegrationActivationConstraintSummary, IntegrationActivationDependencyEdge,
+    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
+    IntegrationActivationDependencySummary, IntegrationActivationHealthStage,
+    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRiskItem,
+    IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
+    IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
+    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
@@ -188,6 +190,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONSTRAINTS_TOOL_ID: &str =
     "smart_home.list_integration_activation_constraints";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_constraint_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
+    "smart_home.list_integration_activation_risk";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_risk_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID: &str =
     "smart_home.list_integration_activation_dependencies";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID: &str =
@@ -364,6 +370,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID => {
                     let query = integration_activation_constraint_query(&arguments)?;
                     Ok(get_integration_activation_constraint_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
+                    let query = integration_activation_risk_query(&arguments)?;
+                    Ok(list_integration_activation_risk_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_risk_query(&arguments)?;
+                    Ok(get_integration_activation_risk_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID => {
                     let query = integration_activation_dependency_query(&arguments)?;
@@ -1285,6 +1301,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation constraint summary",
             "Return compact D23A activation constraint counts for blockers, policy-review work, affected integrations, and first rollout priorities.",
             integration_activation_constraint_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
+            "List smart-home integration activation risk",
+            "List D23A activation risk rows grouped by policy tier and policy surface using host-specific readiness context.",
+            integration_activation_risk_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_risk", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_risk", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation risk summary",
+            "Return compact D23A activation risk counts for policy tier, policy surface, blocked, and review-gated rollout work.",
+            integration_activation_risk_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3822,6 +3867,16 @@ struct IntegrationActivationConstraintQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationRiskQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    risk_kind: Option<IntegrationActivationRiskKind>,
+    required_tier: Option<PrivilegeTier>,
+    policy_surface: Option<IntegrationPolicySurface>,
+    requires_attention: Option<bool>,
+    risk_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationDependencyQuery {
     readiness: IntegrationReadinessQuery,
     blocking_only: bool,
@@ -3892,6 +3947,30 @@ fn integration_activation_constraint_query(
             "constraint_requires_human_review",
         )?,
         constraint_limit: optional_u64(arguments, "constraint_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_risk_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationRiskQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let risk_kind = optional_string(arguments, "risk_kind")?
+        .map(|label| parse_activation_risk_kind(&label))
+        .transpose()?;
+    let required_tier = optional_string(arguments, "required_tier")?
+        .map(|tier| parse_privilege_tier(&tier))
+        .transpose()?;
+    let policy_surface = optional_string(arguments, "policy_surface")?
+        .map(|surface| parse_policy_surface(&surface))
+        .transpose()?;
+
+    Ok(IntegrationActivationRiskQuery {
+        candidates,
+        risk_kind,
+        required_tier,
+        policy_surface,
+        requires_attention: optional_bool(arguments, "requires_attention")?,
+        risk_limit: optional_u64(arguments, "risk_limit")?.map(|value| value as usize),
     })
 }
 
@@ -4135,6 +4214,33 @@ fn integration_activation_constraints_for_query(
     }
 
     (constraints, catalog_count)
+}
+
+fn integration_activation_risk_for_query(
+    query: &IntegrationActivationRiskQuery,
+) -> (Vec<IntegrationActivationRiskItem>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let (candidates, _) = integration_activation_candidates_for_query(&query.candidates);
+    let mut risks = activation_risk_from_candidates(&catalog, candidates.iter());
+
+    if let Some(kind) = query.risk_kind {
+        risks.retain(|risk| risk.kind == kind);
+    }
+    if let Some(required_tier) = query.required_tier {
+        risks.retain(|risk| risk.required_tier == required_tier);
+    }
+    if let Some(policy_surface) = query.policy_surface {
+        risks.retain(|risk| risk.policy_surface == Some(policy_surface));
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        risks.retain(|risk| risk.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.risk_limit {
+        risks.truncate(limit);
+    }
+
+    (risks, catalog_count)
 }
 
 fn integration_activation_actions_for_query(
@@ -4933,6 +5039,72 @@ fn get_integration_activation_constraint_summary_output_handler_output(
             (
                 "review_constraints",
                 integer(summary.review_constraints as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_risk_output_handler_output(
+    query: IntegrationActivationRiskQuery,
+) -> ToolHandlerOutput {
+    let (risks, catalog_count) = integration_activation_risk_for_query(&query);
+    let summary = IntegrationActivationRiskSummary::from_risks(risks.iter());
+    let count = risks.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_risk",
+            JsonValue::Array(risks.iter().map(activation_risk_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_risk_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_risk")),
+            ("risks", integer(count as i64)),
+            (
+                "policy_surface_risks",
+                integer(summary.policy_surface_risks as i64),
+            ),
+            (
+                "blocked_integrations",
+                integer(summary.blocked_integrations as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_risk_summary_output_handler_output(
+    query: IntegrationActivationRiskQuery,
+) -> ToolHandlerOutput {
+    let (risks, _) = integration_activation_risk_for_query(&query);
+    let summary = IntegrationActivationRiskSummary::from_risks(risks.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_risk_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_risk_summary"),
+            ),
+            ("total_risks", integer(summary.total_risks as i64)),
+            (
+                "blocked_integrations",
+                integer(summary.blocked_integrations as i64),
+            ),
+            (
+                "review_integrations",
+                integer(summary.review_integrations as i64),
             ),
         ]),
     )
@@ -8397,6 +8569,194 @@ fn integration_activation_constraint_summary_json(
     ])
 }
 
+fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
+    object([
+        ("risk_kind", string(risk.kind.as_str())),
+        ("risk_id", string(&risk.risk_id)),
+        ("display_name", string(&risk.display_name)),
+        (
+            "required_tier",
+            string(privilege_tier_label(risk.required_tier)),
+        ),
+        (
+            "policy_surface",
+            risk.policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("highest_priority", integer(risk.highest_priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                risk.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(risk.integration_count() as i64),
+        ),
+        (
+            "activation_ready_integration_ids",
+            JsonValue::Array(
+                risk.activation_ready_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "ready_to_activate_integration_ids",
+            JsonValue::Array(
+                risk.ready_to_activate_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "review_integration_ids",
+            JsonValue::Array(
+                risk.review_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "blocked_integration_ids",
+            JsonValue::Array(
+                risk.blocked_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "local_only_integration_ids",
+            JsonValue::Array(
+                risk.local_only_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "cloud_required_integration_ids",
+            JsonValue::Array(
+                risk.cloud_required_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "candidate_summary",
+            integration_activation_candidate_summary_json(&risk.candidate_summary),
+        ),
+        ("has_ready_work", JsonValue::Bool(risk.has_ready_work())),
+        ("has_review_work", JsonValue::Bool(risk.has_review_work())),
+        ("has_blockers", JsonValue::Bool(risk.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(risk.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_risk_summary_json(
+    summary: &IntegrationActivationRiskSummary,
+) -> JsonValue {
+    object([
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "policy_tier_risks",
+            integer(summary.policy_tier_risks as i64),
+        ),
+        (
+            "policy_surface_risks",
+            integer(summary.policy_surface_risks as i64),
+        ),
+        (
+            "total_risk_entries",
+            integer(summary.total_risk_entries as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "activation_ready_integrations",
+            integer(summary.activation_ready_integrations as i64),
+        ),
+        (
+            "ready_to_activate_integrations",
+            integer(summary.ready_to_activate_integrations as i64),
+        ),
+        (
+            "review_integrations",
+            integer(summary.review_integrations as i64),
+        ),
+        (
+            "blocked_integrations",
+            integer(summary.blocked_integrations as i64),
+        ),
+        (
+            "local_only_integrations",
+            integer(summary.local_only_integrations as i64),
+        ),
+        (
+            "cloud_required_integrations",
+            integer(summary.cloud_required_integrations as i64),
+        ),
+        ("read_only_risks", integer(summary.read_only_risks as i64)),
+        ("low_risk_risks", integer(summary.low_risk_risks as i64)),
+        (
+            "human_approval_risks",
+            integer(summary.human_approval_risks as i64),
+        ),
+        ("high_risk_risks", integer(summary.high_risk_risks as i64)),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_ready_work", JsonValue::Bool(summary.has_ready_work())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_dependency_node_json(node: &IntegrationActivationDependencyNode) -> JsonValue {
     object([
         ("integration_id", string(node.integration_id.as_str())),
@@ -10698,6 +11058,16 @@ fn parse_activation_constraint_kind(
     }
 }
 
+fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
+    match label {
+        "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
+        "policy_surface" | "surface" => Ok(IntegrationActivationRiskKind::PolicySurface),
+        _ => Err(validation_error(format!(
+            "unknown activation risk kind `{label}`"
+        ))),
+    }
+}
+
 fn activation_candidate_recommendation_label(
     recommendation: IntegrationActivationCandidateRecommendation,
 ) -> &'static str {
@@ -11494,6 +11864,26 @@ fn integration_activation_constraint_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_risk_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("risk_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("required_tier", JsonSchema::String));
+        properties.push(SchemaProperty::new("policy_surface", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("risk_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_dependency_query_schema() -> JsonSchema {
     let mut schema = integration_readiness_query_schema(true);
     if let JsonSchema::Object {
@@ -11618,7 +12008,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 71);
+        assert_eq!(definitions.len(), 73);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -11698,6 +12088,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID));
@@ -11801,7 +12197,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            63
+            65
         );
         assert_eq!(
             export
@@ -11905,6 +12301,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_CONSTRAINT_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -12159,11 +12563,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(71))
+            Some(&integer(73))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(63))
+            Some(&integer(65))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -13167,6 +13571,119 @@ mod tests {
         );
         assert_eq!(
             field(activation_constraint_rollup, "has_review_work"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_risk_request = request(
+            "call-list-integration-activation-risk",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("risk_kind", string("policy_surface")),
+                ("required_tier", string("human_approval")),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("risk_limit", integer(3)),
+            ]),
+            5_009,
+        );
+        let list_activation_risk_trace =
+            tool_runtime.invoke_with_events(&list_activation_risk_request);
+        assert!(list_activation_risk_trace.result.ok);
+        assert_eq!(list_activation_risk_trace.summary().progress_event_count, 1);
+        let list_activation_risk_output =
+            list_activation_risk_trace.result.output.as_ref().unwrap();
+        let activation_risk_count =
+            integer_value(field(list_activation_risk_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_risk_count));
+        let activation_risk_summary = field(list_activation_risk_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_risk_summary, "policy_surface_risks").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_risk_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_risk = array_item(
+            field(list_activation_risk_output, "activation_risk").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_risk, "risk_kind"),
+            Some(&string("policy_surface"))
+        );
+        assert_eq!(
+            field(activation_risk, "required_tier"),
+            Some(&string("human_approval"))
+        );
+        assert_eq!(
+            field(activation_risk, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(integer_value(field(activation_risk, "integration_count").unwrap()).unwrap() >= 1);
+
+        let activation_risk_summary_request = request(
+            "call-integration-activation-risk-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("risk_kind", string("policy_tier")),
+                ("requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_010,
+        );
+        let activation_risk_summary_trace =
+            tool_runtime.invoke_with_events(&activation_risk_summary_request);
+        assert!(activation_risk_summary_trace.result.ok);
+        assert_eq!(
+            activation_risk_summary_trace.summary().progress_event_count,
+            1
+        );
+        let activation_risk_summary_output = activation_risk_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_risk_rollup = field(activation_risk_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_risk_rollup, "policy_tier_risks").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_risk_rollup, "unique_integrations").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_risk_rollup, "requires_attention"),
             Some(&JsonValue::Bool(true))
         );
 
@@ -14724,6 +15241,11 @@ mod tests {
             activation_constraint_summary_request,
             activation_constraint_summary_trace,
         );
+        journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
+        journal.record_trace(
+            activation_risk_summary_request,
+            activation_risk_summary_trace,
+        );
         journal.record_trace(
             list_activation_dependencies_request,
             list_activation_dependencies_trace,
@@ -14792,9 +15314,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 71);
-        assert_eq!(journal_summary.completed_count, 71);
-        assert_eq!(journal.audit_records().len(), 71);
+        assert_eq!(journal_summary.invocation_count, 73);
+        assert_eq!(journal_summary.completed_count, 73);
+        assert_eq!(journal.audit_records().len(), 73);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

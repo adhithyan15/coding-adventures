@@ -1041,6 +1041,12 @@ pub enum IntegrationActivationConstraintKind {
     PolicyReview,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationRiskKind {
+    PolicyTier,
+    PolicySurface,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationCandidate {
     pub readiness_report: IntegrationReadinessReport,
@@ -1122,6 +1128,47 @@ pub struct IntegrationActivationConstraintSummary {
     pub affected_integrations: usize,
     pub first_blocking_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRiskItem {
+    pub kind: IntegrationActivationRiskKind,
+    pub risk_id: String,
+    pub display_name: String,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub highest_priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub activation_ready_integration_ids: Vec<IntegrationId>,
+    pub ready_to_activate_integration_ids: Vec<IntegrationId>,
+    pub review_integration_ids: Vec<IntegrationId>,
+    pub blocked_integration_ids: Vec<IntegrationId>,
+    pub local_only_integration_ids: Vec<IntegrationId>,
+    pub cloud_required_integration_ids: Vec<IntegrationId>,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRiskSummary {
+    pub total_risks: usize,
+    pub policy_tier_risks: usize,
+    pub policy_surface_risks: usize,
+    pub total_risk_entries: usize,
+    pub unique_integrations: usize,
+    pub activation_ready_integrations: usize,
+    pub ready_to_activate_integrations: usize,
+    pub review_integrations: usize,
+    pub blocked_integrations: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub read_only_risks: usize,
+    pub low_risk_risks: usize,
+    pub human_approval_risks: usize,
+    pub high_risk_risks: usize,
+    pub first_ready_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
 }
 
@@ -1791,6 +1838,233 @@ impl IntegrationActivationConstraintKind {
 impl IntegrationActivationConstraint {
     pub fn affected_integration_count(&self) -> usize {
         self.affected_integration_ids.len()
+    }
+}
+
+impl IntegrationActivationRiskKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::PolicyTier => "policy_tier",
+            Self::PolicySurface => "policy_surface",
+        }
+    }
+}
+
+impl IntegrationActivationRiskItem {
+    fn from_candidates(
+        kind: IntegrationActivationRiskKind,
+        risk_id: String,
+        display_name: String,
+        required_tier: PrivilegeTier,
+        policy_surface: Option<IntegrationPolicySurface>,
+        candidates: &[&IntegrationActivationCandidate],
+    ) -> Self {
+        let mut candidates = candidates.to_vec();
+        candidates.sort_by(|left, right| compare_activation_candidates(left, right));
+
+        let highest_priority = candidates
+            .iter()
+            .map(|candidate| candidate.readiness_report.priority)
+            .min()
+            .unwrap_or(u8::MAX);
+        let integration_ids = candidates
+            .iter()
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let activation_ready_integration_ids = candidates
+            .iter()
+            .filter(|candidate| candidate.activation_ready())
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let ready_to_activate_integration_ids = candidates
+            .iter()
+            .filter(|candidate| {
+                candidate.recommendation
+                    == IntegrationActivationCandidateRecommendation::ReadyToActivate
+            })
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let review_integration_ids = candidates
+            .iter()
+            .filter(|candidate| {
+                candidate.recommendation
+                    == IntegrationActivationCandidateRecommendation::NeedsHumanReview
+            })
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let blocked_integration_ids = candidates
+            .iter()
+            .filter(|candidate| candidate.is_blocked())
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let local_only_integration_ids = candidates
+            .iter()
+            .filter(|candidate| candidate.readiness_report.local_only)
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let cloud_required_integration_ids = candidates
+            .iter()
+            .filter(|candidate| candidate.readiness_report.cloud_required)
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let candidate_summary =
+            IntegrationActivationCandidateSummary::from_candidates(candidates.iter().copied());
+
+        Self {
+            kind,
+            risk_id,
+            display_name,
+            required_tier,
+            policy_surface,
+            highest_priority,
+            integration_ids,
+            activation_ready_integration_ids,
+            ready_to_activate_integration_ids,
+            review_integration_ids,
+            blocked_integration_ids,
+            local_only_integration_ids,
+            cloud_required_integration_ids,
+            candidate_summary,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_ready_work(&self) -> bool {
+        !self.ready_to_activate_integration_ids.is_empty()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.candidate_summary.has_review_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.candidate_summary.has_blockers()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_review_work() || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationRiskSummary {
+    pub fn from_risks<'a>(
+        risks: impl IntoIterator<Item = &'a IntegrationActivationRiskItem>,
+    ) -> Self {
+        let mut integrations = BTreeSet::new();
+        let mut activation_ready_integrations = BTreeSet::new();
+        let mut ready_to_activate_integrations = BTreeSet::new();
+        let mut review_integrations = BTreeSet::new();
+        let mut blocked_integrations = BTreeSet::new();
+        let mut local_only_integrations = BTreeSet::new();
+        let mut cloud_required_integrations = BTreeSet::new();
+        let mut summary = Self {
+            total_risks: 0,
+            policy_tier_risks: 0,
+            policy_surface_risks: 0,
+            total_risk_entries: 0,
+            unique_integrations: 0,
+            activation_ready_integrations: 0,
+            ready_to_activate_integrations: 0,
+            review_integrations: 0,
+            blocked_integrations: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            read_only_risks: 0,
+            low_risk_risks: 0,
+            human_approval_risks: 0,
+            high_risk_risks: 0,
+            first_ready_priority: None,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for risk in risks {
+            summary.total_risks += 1;
+            summary.total_risk_entries += risk.integration_count();
+            match risk.kind {
+                IntegrationActivationRiskKind::PolicyTier => summary.policy_tier_risks += 1,
+                IntegrationActivationRiskKind::PolicySurface => summary.policy_surface_risks += 1,
+            }
+            match risk.required_tier {
+                PrivilegeTier::ReadOnly => summary.read_only_risks += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_risks += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_risks += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_risks += 1,
+            }
+            for integration_id in &risk.integration_ids {
+                integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.activation_ready_integration_ids {
+                activation_ready_integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.ready_to_activate_integration_ids {
+                ready_to_activate_integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.review_integration_ids {
+                review_integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.blocked_integration_ids {
+                blocked_integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.local_only_integration_ids {
+                local_only_integrations.insert(integration_id.clone());
+            }
+            for integration_id in &risk.cloud_required_integration_ids {
+                cloud_required_integrations.insert(integration_id.clone());
+            }
+            if risk.has_ready_work() {
+                summary.first_ready_priority = min_optional_priority(
+                    summary.first_ready_priority,
+                    Some(risk.highest_priority),
+                );
+            }
+            if risk.has_review_work() {
+                summary.first_review_priority = min_optional_priority(
+                    summary.first_review_priority,
+                    Some(risk.highest_priority),
+                );
+            }
+            if risk.has_blockers() {
+                summary.first_blocked_priority = min_optional_priority(
+                    summary.first_blocked_priority,
+                    Some(risk.highest_priority),
+                );
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(risk.required_tier);
+        }
+
+        summary.unique_integrations = integrations.len();
+        summary.activation_ready_integrations = activation_ready_integrations.len();
+        summary.ready_to_activate_integrations = ready_to_activate_integrations.len();
+        summary.review_integrations = review_integrations.len();
+        summary.blocked_integrations = blocked_integrations.len();
+        summary.local_only_integrations = local_only_integrations.len();
+        summary.cloud_required_integrations = cloud_required_integrations.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_risks == 0
+    }
+
+    pub fn has_ready_work(&self) -> bool {
+        self.ready_to_activate_integrations > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_integrations > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integrations > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_review_work() || self.has_blockers()
     }
 }
 
@@ -4022,6 +4296,79 @@ pub fn activation_constraints_at_or_before_priority(
     activation_constraints_from_candidates(catalog, candidates.iter())
 }
 
+pub fn activation_risk_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationRiskItem> {
+    let mut candidates = candidates.into_iter().collect::<Vec<_>>();
+    candidates.sort_by(|left, right| compare_activation_candidates(left, right));
+
+    let mut by_tier: BTreeMap<PrivilegeTier, Vec<&IntegrationActivationCandidate>> =
+        BTreeMap::new();
+    let mut by_surface: BTreeMap<IntegrationPolicySurface, Vec<&IntegrationActivationCandidate>> =
+        BTreeMap::new();
+
+    for candidate in candidates {
+        by_tier
+            .entry(candidate.readiness_report.highest_policy_tier)
+            .or_default()
+            .push(candidate);
+
+        if let Some(entry) = find_entry(
+            catalog,
+            &candidate.readiness_report.requested_integration_id,
+        ) {
+            for surface in entry.policy_surfaces() {
+                by_surface.entry(surface).or_default().push(candidate);
+            }
+        }
+    }
+
+    let mut risks = Vec::new();
+    for (tier, candidates) in by_tier {
+        let tier_label = privilege_tier_label_for_catalog(tier);
+        risks.push(IntegrationActivationRiskItem::from_candidates(
+            IntegrationActivationRiskKind::PolicyTier,
+            format!("policy_tier:{tier_label}"),
+            tier_label.to_string(),
+            tier,
+            None,
+            &candidates,
+        ));
+    }
+
+    for (surface, candidates) in by_surface {
+        risks.push(IntegrationActivationRiskItem::from_candidates(
+            IntegrationActivationRiskKind::PolicySurface,
+            format!("policy_surface:{}", surface.as_str()),
+            surface.as_str().to_string(),
+            surface.required_tier(),
+            Some(surface),
+            &candidates,
+        ));
+    }
+
+    risks.sort_by(compare_activation_risks);
+    risks
+}
+
+pub fn activation_risk_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRiskItem> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_risk_from_candidates(catalog, candidates.iter())
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -5206,6 +5553,18 @@ fn compare_activation_constraints(
         .then_with(|| left.constraint_id.cmp(&right.constraint_id))
 }
 
+fn compare_activation_risks(
+    left: &IntegrationActivationRiskItem,
+    right: &IntegrationActivationRiskItem,
+) -> Ordering {
+    left.highest_priority
+        .cmp(&right.highest_priority)
+        .then_with(|| right.required_tier.cmp(&left.required_tier))
+        .then_with(|| left.kind.cmp(&right.kind))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+        .then_with(|| left.risk_id.cmp(&right.risk_id))
+}
+
 fn compare_activation_dependency_nodes(
     left: &IntegrationActivationDependencyNode,
     right: &IntegrationActivationDependencyNode,
@@ -5241,6 +5600,15 @@ fn min_optional_priority(left: Option<u8>, right: Option<u8>) -> Option<u8> {
         (Some(left), Some(right)) => Some(left.min(right)),
         (Some(priority), None) | (None, Some(priority)) => Some(priority),
         (None, None) => None,
+    }
+}
+
+fn privilege_tier_label_for_catalog(tier: PrivilegeTier) -> &'static str {
+    match tier {
+        PrivilegeTier::ReadOnly => "read_only",
+        PrivilegeTier::LowRisk => "low_risk",
+        PrivilegeTier::HumanApproval => "human_approval",
+        PrivilegeTier::HighRisk => "high_risk",
     }
 }
 
@@ -6007,6 +6375,74 @@ mod tests {
             &[],
         );
         assert_eq!(constraints, constraints_from_catalog);
+    }
+
+    #[test]
+    fn activation_risk_groups_candidates_by_policy_tier_and_surface() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let candidates = activation_candidates_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+
+        let risks = activation_risk_from_candidates(&catalog, candidates.iter());
+
+        assert!(risks
+            .iter()
+            .any(|risk| risk.kind == IntegrationActivationRiskKind::PolicyTier));
+        assert!(risks
+            .iter()
+            .any(|risk| risk.kind == IntegrationActivationRiskKind::PolicySurface));
+
+        let human_approval = risks
+            .iter()
+            .find(|risk| {
+                risk.kind == IntegrationActivationRiskKind::PolicyTier
+                    && risk.required_tier == PrivilegeTier::HumanApproval
+            })
+            .unwrap();
+        assert!(human_approval.integration_count() >= 1);
+        assert!(human_approval.requires_attention());
+
+        let review_surface = risks
+            .iter()
+            .find(|risk| {
+                risk.kind == IntegrationActivationRiskKind::PolicySurface
+                    && risk.required_tier >= PrivilegeTier::HumanApproval
+            })
+            .unwrap();
+        assert!(review_surface.policy_surface.is_some());
+        assert!(review_surface.integration_count() >= 1);
+        assert!(review_surface.requires_attention());
+
+        let summary = IntegrationActivationRiskSummary::from_risks(risks.iter());
+        assert_eq!(summary.total_risks, risks.len());
+        assert!(summary.policy_tier_risks > 0);
+        assert!(summary.policy_surface_risks > 0);
+        assert!(summary.unique_integrations <= summary.total_risk_entries);
+        assert!(summary.review_integrations > 0 || summary.blocked_integrations > 0);
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let risks_from_catalog = activation_risk_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert_eq!(risks, risks_from_catalog);
     }
 
     #[test]
