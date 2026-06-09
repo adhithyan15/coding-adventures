@@ -866,6 +866,7 @@ pub struct BrowserDocument {
     pub keyboard_interaction_descriptors: Vec<BrowserKeyboardInteractionDescriptor>,
     pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
     pub drag_drop_descriptors: Vec<BrowserDragDropDescriptor>,
+    pub clipboard_interaction_descriptors: Vec<BrowserClipboardInteractionDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2406,6 +2407,38 @@ pub struct BrowserDragDropDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserClipboardInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub clipboard_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub clipboard_handlers: Vec<String>,
+    pub copy_handlers: Vec<String>,
+    pub cut_handlers: Vec<String>,
+    pub paste_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub clipboard_blocked: bool,
+    pub clipboard_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -3016,6 +3049,8 @@ impl BrowserDocument {
         summary.input_planning_descriptors =
             browser_input_planning_descriptors(&summary.forms, &summary.interactive_elements);
         summary.drag_drop_descriptors = browser_drag_drop_descriptors(&summary);
+        summary.clipboard_interaction_descriptors =
+            browser_clipboard_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -13511,6 +13546,340 @@ fn browser_drag_kind(
     }
 }
 
+fn browser_clipboard_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserClipboardInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_clipboard_state(text_entry, matching_interactive) {
+                descriptors.push(browser_clipboard_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_clipboard_state(element) {
+            descriptors.push(browser_clipboard_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_clipboard_state(event_descriptor) {
+            descriptors.push(browser_clipboard_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_clipboard_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(&element.event_handlers, browser_input_event)
+                        .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_clipboard_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_clipboard_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_clipboard_event)
+        .is_empty()
+}
+
+fn browser_clipboard_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserClipboardInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_clipboard_event);
+    let copy_handlers = browser_event_handlers_by_kind(event_handlers, browser_copy_event);
+    let cut_handlers = browser_event_handlers_by_kind(event_handlers, browser_cut_event);
+    let paste_handlers = browser_event_handlers_by_kind(event_handlers, browser_paste_event);
+    let input_handlers = browser_event_handlers_by_kind(event_handlers, browser_input_event);
+    let clipboard_block_reasons =
+        browser_clipboard_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserClipboardInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        clipboard_kind: browser_clipboard_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: clipboard_handlers.len() + input_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        clipboard_blocked: !clipboard_block_reasons.is_empty(),
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserClipboardInteractionDescriptor {
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_clipboard_event);
+    let copy_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_copy_event);
+    let cut_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_cut_event);
+    let paste_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_paste_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_input_event);
+    let clipboard_block_reasons = browser_clipboard_block_reasons_for_interactive(element);
+
+    BrowserClipboardInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        clipboard_kind: browser_clipboard_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: clipboard_handlers.len() + input_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        clipboard_blocked: !clipboard_block_reasons.is_empty(),
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserClipboardInteractionDescriptor {
+    let clipboard_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_clipboard_event);
+    let copy_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_copy_event);
+    let cut_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_cut_event);
+    let paste_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_paste_event);
+    let input_handlers = Vec::new();
+    let clipboard_block_reasons = Vec::new();
+
+    BrowserClipboardInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        clipboard_kind: browser_clipboard_kind(
+            false,
+            false,
+            false,
+            &copy_handlers,
+            &cut_handlers,
+            &paste_handlers,
+            &input_handlers,
+            &clipboard_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: clipboard_handlers.len(),
+        clipboard_handlers,
+        copy_handlers,
+        cut_handlers,
+        paste_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        clipboard_blocked: false,
+        clipboard_block_reasons,
+    }
+}
+
+fn browser_clipboard_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_clipboard_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_clipboard_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_clipboard_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    copy_handlers: &[String],
+    cut_handlers: &[String],
+    paste_handlers: &[String],
+    input_handlers: &[String],
+    clipboard_block_reasons: &[String],
+) -> String {
+    if !clipboard_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !paste_handlers.is_empty() {
+        "paste-target".to_string()
+    } else if !cut_handlers.is_empty() {
+        "cut-target".to_string()
+    } else if !copy_handlers.is_empty() {
+        "copy-source".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-editor".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -15366,6 +15735,22 @@ fn browser_drop_event(handler: &str) -> bool {
         handler,
         "ondragenter" | "ondragleave" | "ondragover" | "ondrop"
     )
+}
+
+fn browser_clipboard_event(handler: &str) -> bool {
+    matches!(handler, "oncopy" | "oncut" | "onpaste")
+}
+
+fn browser_copy_event(handler: &str) -> bool {
+    handler == "oncopy"
+}
+
+fn browser_cut_event(handler: &str) -> bool {
+    handler == "oncut"
+}
+
+fn browser_paste_event(handler: &str) -> bool {
+    handler == "onpaste"
 }
 
 fn browser_input_event(handler: &str) -> bool {
@@ -21023,6 +21408,76 @@ mod tests {
         assert_eq!(secret.drag_kind, "blocked");
         assert!(secret.drag_source);
         assert_eq!(secret.drag_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_clipboard_interaction_descriptors_track_text_editing_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <input id=q name=q value=Draft onpaste=pasteQuery() oninput=filter()>\
+             <textarea id=notes readonly oncopy=copyNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only oncopy=copyEdit() oncut=cutEdit() \
+             onpaste=pasteEdit() onbeforeinput=beforeEdit()>Draft</div>\
+             <p id=secret hidden contenteditable onpaste=pasteSecret()>Secret</p>\
+             <main id=surface oncopy=copySurface()>Surface</main></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.clipboard_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query clipboard descriptor");
+        assert_eq!(query.clipboard_kind, "paste-target");
+        assert_eq!(query.paste_handlers, vec!["onpaste"]);
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.handler_count, 2);
+        assert!(!query.clipboard_blocked);
+
+        let notes = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes clipboard descriptor");
+        assert_eq!(notes.clipboard_kind, "blocked");
+        assert_eq!(notes.copy_handlers, vec!["oncopy"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.clipboard_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor clipboard descriptor");
+        assert_eq!(editor.clipboard_kind, "paste-target");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(
+            editor.clipboard_handlers,
+            vec!["oncopy", "oncut", "onpaste"]
+        );
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(editor.handler_count, 4);
+
+        let secret = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret clipboard descriptor");
+        assert_eq!(secret.clipboard_kind, "blocked");
+        assert_eq!(secret.paste_handlers, vec!["onpaste"]);
+        assert_eq!(secret.clipboard_block_reasons, vec!["hidden"]);
+
+        let surface = summary
+            .clipboard_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("surface"))
+            .expect("surface event-only clipboard descriptor");
+        assert_eq!(surface.clipboard_kind, "copy-source");
+        assert_eq!(surface.copy_handlers, vec!["oncopy"]);
     }
 
     #[test]
