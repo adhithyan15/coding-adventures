@@ -65,3 +65,33 @@ Measure: (a) marginal cost per query vs all-Opus; (b) does the single correction
 deterministically** to all affected answers; (c) locus-coverage + correction-propagation (not accuracy).
 A successful demo = *one correction, N corrected answers, at 1/Nth the marginal cost* — amortization +
 correctability + model-split, shown together.
+
+## Addendum — cross-experiment reconciliation (ADJ52 run-3 / run-5 + ADJ-CAS, run after ADJ99)
+
+Three later experiments let us decompose what ADJ99 measured as one blob ("the framework"):
+
+- **The cited-reasoning *discipline*** (decompose → rulebook → cited conclusion) is a **within-model
+  defensibility gain** — large at weak models, small at the frontier (which is already disciplined):
+  - ADJ99 within-model: fw-haiku 2.68 > plain-haiku 2.14; fw-opus 3.61 ≈ plain-opus 3.72.
+  - **ADJ52 run-5** (Haiku vs Haiku, no engine): framework **wins the blind judge 60-37**, +2 correct,
+    and **0 cases where defensibility preference overrode a correct answer**. This is the right
+    comparison ADJ99 buried by anchoring fw-haiku against plain-**Opus** (a *cross-model* gap) instead
+    of against plain-haiku. The framework's value is a within-model lift, largest where the model is weak.
+- **The numeric *engine*** (saturated Bayesian posteriors) is a defensibility **loss**: ADJ52 **run-3**
+  (frontier *with* engine) **lost the blind comparison 39-60** — punished as false precision (28 losses
+  were "right-but-overconfident"). ADJ99's framework had **no engine** (just a cited chain), which is
+  exactly why fw-opus came out *neutral* at the frontier rather than negative — nothing dragged it down.
+- **The engine's defensibility-killer is itself a correctable CAS error.** The ADJ-CAS
+  edit-override-propagate demo (meningitis corpus) shows the over-saturated 0.9999 posterior is correlated
+  facts mis-weighted as independent; a human override caps the correlated cluster → **0.9999 → 0.7709**,
+  propagating, with the dispositive case regression-checked unchanged (1.0000). So you keep the engine
+  (deterministic execution — the "execute, don't reason" half) and fix its false precision by **editing
+  the CAS facts**.
+
+**Unified picture:** discipline (within-model defensibility) + engine/execution (deterministic numbers)
++ editable CAS (fixes the engine's false precision) + correctability (the governance payoff). ADJ99's
+"neutral at the frontier" is consistent with all of it: it ran a cheap-model-builds-its-own-CAS,
+no-engine configuration — neither the division-of-labor (Opus builds, Haiku reasons) nor the execution
+layer that the rest of the program is built around. The clean next isolation: **frontier model with the
+same no-engine discipline arm** — if it also wins the blind comparison, "the engine was the loss factor"
+is nailed.

@@ -104,3 +104,40 @@ boost the frontier model's defensibility. What the run *did* establish, robustly
 auditability/correctable-CAS property: byte provenance makes a cheap model's reasoning **diagnosable**
 (flaw localized ~90% of the time) and **correctable at the fact level** (~52% of errors trace to a
 specific CAS fact you can override) — with a stronger cross-model auditor doing the localization best.
+
+## Addendum — what "defensibility" meant here, and the measurement caveat
+
+**What we *mean* by defensible** (the notion the program targets): a decision whose **locus of
+contingency is exposed** — every load-bearing claim is attributed to a source or a *stated assumption* —
+so that when the decision is wrong, you can point to the specific premise that produced the error,
+override it, and re-derive. Defensibility is about the **auditability and correctability of the decision
+process**, explicitly decoupled from correctness of the outcome (humans make defensible-but-wrong
+calls constantly; what makes them professional is the exposed, correctable locus).
+
+**What the run actually measured** (verbatim rubric handed to the blind Opus judge):
+
+> Score DEFENSIBILITY 0-5 — how grounded, auditable, and traceable the reasoning is, INDEPENDENT of
+> whether the final answer is correct: 0=bare assertion … 4=well-grounded, nearly every claim
+> traceable to a cited source or the givens; 5=fully auditable, every claim traceable, no unsupported
+> leaps.
+
+So the judge **was** given a definition — but it operationalizes defensibility as **citation/
+traceability density**, a narrower proxy than "is the load-bearing locus surfaced as fallible." Three
+caveats follow, and they should temper every defensibility number above:
+
+1. **Format confound (the big one).** The judge was blind to the arm *label* but not to *style*: the
+   `fw-*` arms emit a literal `RETRIEVED FACTS [n] … REASONING CHAIN … [cites: n]` structure while the
+   `plain-*` arms emit free prose. The rubric rewards exactly that cited-chain *format*, so part of the
+   measured fw advantage is "emitted a citation-shaped artifact," not "reasoned more soundly." A fair
+   future run must **normalize format across arms** (or have the judge score a structure-neutral
+   rendering) so style can't leak the arm.
+2. **Rewards attribution, not soundness.** A confidently-wrong chain in which every step *cites a (bad)
+   fact* scores 4-5. This is why provenance-completeness came out uncorrelated with correctness and why
+   ~64-84% of def≥4 answers were wrong — the rubric grades whether claims are *attributed*, not whether
+   the premise is *true* or its fallibility *flagged*.
+3. **Not the correctability notion.** Citation density ≠ "the error locus is exposed and overridable."
+   The audit-trail metrics (95% locus-localized, 52% fixable CAS fact) are a *closer* operationalization
+   of what we mean and should be treated as the primary correctability evidence; the 0-5 score is a
+   weaker, format-sensitive proxy. **Recommendation for the next run: a correctability-explicit rubric**
+   ("can you name the single assumption/fact whose change would flip this answer?") plus format
+   normalization.
