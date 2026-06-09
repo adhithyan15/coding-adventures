@@ -385,3 +385,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream byte-identity test:** `minify_for_await_of` seed fixture (general repro: `function f(){for(var v of a){a;}}`).
 - **Why it failed:** gap-032's flatten emitted content `(idx+1)..close_idx` verbatim, which always includes the trailing `;`. When the next token after the closing `}` was itself a `}`, that `;` became redundant — Rule A would have dropped a source `;` at that position, but Rule A doesn't re-scan pre-emitted content.
 - **Fix:** In gap-032's eligible branch, peek `kept.get(close_idx + 1)`. If it equals `}`, set emit_end to `close_idx - 1` (exclude the trailing `;` from the inline emission). The eligibility check already verified `last_before_close == ";"`, so this index is always the redundant `;`.
+
+### gap-050 — `new X()` with empty arg list drops parens
+
+- **Status:** OPEN — newly discovered by CLOC14.14.
+- **Upstream byte-identity test:** `minify_new_expr` seed fixture.
+- **Input:** `var x = new Foo();`
+- **Upstream:** `var x=new Foo;` (parens stripped)
+- **closurec:** `var x=new Foo();`
+- **Why it fails:** ECMAScript grammar accepts `new X` (no args) and `new X()` (empty args) as equivalent. Closure normalizes to the shorter `new X`. closurec passes the parens through verbatim.
+- **What it needs:** Token-level peephole: when sequence `new IDENT ( )` is emitted, suppress the `(` and `)`. Safe regardless of continuation — `new X` and `new X()` are operationally equivalent forms.
+
+### gap-046b — object-literal trailing comma drop
+
+- **Status:** OPEN — deferred follow-up from CLOC12.52 (gap-046). Same idea as gap-046 (drop `,` before `]`), but for `,` before `}` in OBJECT LITERAL contexts only. Needs brace_stack-aware discrimination (block `}` keeps `,`; object `}` drops it).
