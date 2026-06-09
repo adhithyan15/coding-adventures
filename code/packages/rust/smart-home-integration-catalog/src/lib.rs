@@ -717,6 +717,28 @@ pub struct IntegrationActivationCandidateSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunwayStage {
+    pub priority: u8,
+    pub candidates: Vec<IntegrationActivationCandidate>,
+    pub summary: IntegrationActivationCandidateSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunwaySummary {
+    pub total_stages: usize,
+    pub total_candidates: usize,
+    pub actionable_stages: usize,
+    pub ready_stages: usize,
+    pub review_stages: usize,
+    pub blocked_stages: usize,
+    pub first_actionable_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub next_ready_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationReadinessSummary {
     pub total_reports: usize,
     pub activation_ready_reports: usize,
@@ -1146,6 +1168,100 @@ impl IntegrationActivationCandidateSummary {
 
     pub fn has_review_work(&self) -> bool {
         self.needs_human_review_candidates > 0
+    }
+}
+
+impl IntegrationActivationRunwayStage {
+    pub fn from_candidates(
+        priority: u8,
+        mut candidates: Vec<IntegrationActivationCandidate>,
+    ) -> Self {
+        candidates.sort_by(compare_activation_candidates);
+        let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        Self {
+            priority,
+            candidates,
+            summary,
+        }
+    }
+
+    pub fn has_actionable_candidates(&self) -> bool {
+        self.summary.has_actionable_candidates()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.summary.has_review_work()
+    }
+}
+
+impl IntegrationActivationRunwaySummary {
+    pub fn from_stages<'a>(
+        stages: impl IntoIterator<Item = &'a IntegrationActivationRunwayStage>,
+    ) -> Self {
+        let stages = stages.into_iter().collect::<Vec<_>>();
+        let candidate_summary = IntegrationActivationCandidateSummary::from_candidates(
+            stages.iter().flat_map(|stage| stage.candidates.iter()),
+        );
+        let mut summary = Self {
+            total_stages: 0,
+            total_candidates: candidate_summary.total_candidates,
+            actionable_stages: 0,
+            ready_stages: 0,
+            review_stages: 0,
+            blocked_stages: 0,
+            first_actionable_priority: None,
+            first_blocked_priority: None,
+            next_ready_priority: None,
+            highest_policy_tier: candidate_summary.highest_policy_tier,
+            candidate_summary,
+        };
+
+        for stage in stages {
+            summary.total_stages += 1;
+            if stage.has_actionable_candidates() {
+                summary.actionable_stages += 1;
+                if summary.first_actionable_priority.is_none() {
+                    summary.first_actionable_priority = Some(stage.priority);
+                }
+            }
+            if stage.summary.ready_to_activate_candidates > 0 {
+                summary.ready_stages += 1;
+                if summary.next_ready_priority.is_none() {
+                    summary.next_ready_priority = Some(stage.priority);
+                }
+            }
+            if stage.has_review_work() {
+                summary.review_stages += 1;
+            }
+            if stage.has_blockers() {
+                summary.blocked_stages += 1;
+                if summary.first_blocked_priority.is_none() {
+                    summary.first_blocked_priority = Some(stage.priority);
+                }
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_stages == 0
+    }
+
+    pub fn has_actionable_stage(&self) -> bool {
+        self.actionable_stages > 0
+    }
+
+    pub fn has_blocked_stage(&self) -> bool {
+        self.blocked_stages > 0
+    }
+
+    pub fn has_review_stage(&self) -> bool {
+        self.review_stages > 0
     }
 }
 
@@ -2262,6 +2378,41 @@ pub fn activation_candidates_at_or_before_priority(
         enabled_integrations,
     );
     activation_candidates_from_reports(reports.iter())
+}
+
+pub fn activation_runway_from_candidates(
+    candidates: Vec<IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationRunwayStage> {
+    let mut stages_by_priority: BTreeMap<u8, Vec<IntegrationActivationCandidate>> = BTreeMap::new();
+    for candidate in candidates {
+        stages_by_priority
+            .entry(candidate.readiness_report.priority)
+            .or_default()
+            .push(candidate);
+    }
+
+    stages_by_priority
+        .into_iter()
+        .map(|(priority, candidates)| {
+            IntegrationActivationRunwayStage::from_candidates(priority, candidates)
+        })
+        .collect()
+}
+
+pub fn activation_runway_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRunwayStage> {
+    activation_runway_from_candidates(activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
 }
 
 pub fn readiness_gap_inventory_from_reports<'a>(
@@ -3732,6 +3883,81 @@ mod tests {
         assert!(summary.has_actionable_candidates());
         assert!(summary.has_blockers());
         assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_runway_groups_candidates_by_priority_wave() {
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 2,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_bridge"),
+            display_name: "Review Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_sensor"),
+            display_name: "Blocked Sensor".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: vec![PrimitiveFamily::Mqtt],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::LowRisk,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [ready_report, review_report, blocked_report].iter(),
+        );
+
+        let stages = activation_runway_from_candidates(candidates);
+
+        assert_eq!(stages.len(), 2);
+        assert_eq!(stages[0].priority, 1);
+        assert_eq!(stages[0].summary.total_candidates, 2);
+        assert_eq!(stages[0].summary.needs_human_review_candidates, 1);
+        assert_eq!(stages[0].summary.blocked_candidates, 1);
+        assert!(stages[0].has_actionable_candidates());
+        assert!(stages[0].has_blockers());
+        assert!(stages[0].has_review_work());
+        assert_eq!(stages[1].priority, 2);
+        assert_eq!(stages[1].summary.ready_to_activate_candidates, 1);
+
+        let summary = IntegrationActivationRunwaySummary::from_stages(stages.iter());
+        assert_eq!(summary.total_stages, 2);
+        assert_eq!(summary.total_candidates, 3);
+        assert_eq!(summary.actionable_stages, 2);
+        assert_eq!(summary.ready_stages, 1);
+        assert_eq!(summary.review_stages, 1);
+        assert_eq!(summary.blocked_stages, 1);
+        assert_eq!(summary.first_actionable_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(1));
+        assert_eq!(summary.next_ready_priority, Some(2));
+        assert_eq!(summary.candidate_summary.total_candidates, 3);
+        assert!(summary.has_actionable_stage());
+        assert!(summary.has_blocked_stage());
+        assert!(summary.has_review_stage());
         assert!(!summary.is_empty());
     }
 
