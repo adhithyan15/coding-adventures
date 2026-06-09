@@ -1173,6 +1173,49 @@ pub struct IntegrationActivationRiskSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReviewItem {
+    pub requested_integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub activation_target: IntegrationActivationTarget,
+    pub recommendation: IntegrationActivationCandidateRecommendation,
+    pub blocker_count: usize,
+    pub missing_primitives: Vec<PrimitiveFamily>,
+    pub missing_capabilities: Vec<CapabilityId>,
+    pub missing_dependencies: Vec<IntegrationId>,
+    pub policy_surfaces: Vec<IntegrationPolicySurface>,
+    pub required_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReviewSummary {
+    pub total_reviews: usize,
+    pub review_ready_integrations: usize,
+    pub blocked_review_integrations: usize,
+    pub reviews_missing_primitives: usize,
+    pub reviews_missing_capabilities: usize,
+    pub reviews_missing_dependencies: usize,
+    pub direct_targets: usize,
+    pub delegated_integration_targets: usize,
+    pub delegated_standard_targets: usize,
+    pub local_only_reviews: usize,
+    pub cloud_required_reviews: usize,
+    pub reviews_with_policy_surfaces: usize,
+    pub reviews_without_policy_surfaces: usize,
+    pub unique_policy_surfaces: usize,
+    pub total_blockers: usize,
+    pub read_only_reviews: usize,
+    pub low_risk_reviews: usize,
+    pub human_approval_reviews: usize,
+    pub high_risk_reviews: usize,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationAgendaStage {
     pub priority: u8,
     pub candidates: Vec<IntegrationActivationCandidate>,
@@ -2358,6 +2401,178 @@ impl IntegrationActivationRiskSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.has_review_work() || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationReviewItem {
+    fn from_candidate(
+        catalog: &[IntegrationCatalogEntry],
+        candidate: &IntegrationActivationCandidate,
+    ) -> Option<Self> {
+        if !candidate.requires_human_review() {
+            return None;
+        }
+
+        let report = &candidate.readiness_report;
+        let mut policy_surfaces = find_entry(catalog, &report.requested_integration_id)
+            .map(IntegrationCatalogEntry::policy_surfaces)
+            .unwrap_or_default();
+        policy_surfaces.sort();
+        policy_surfaces.dedup();
+        let required_tier = policy_surfaces
+            .iter()
+            .fold(report.highest_policy_tier, |tier, surface| {
+                tier.max(surface.required_tier())
+            });
+
+        Some(Self {
+            requested_integration_id: report.requested_integration_id.clone(),
+            display_name: report.display_name.clone(),
+            priority: report.priority,
+            activation_target: report.activation_target.clone(),
+            recommendation: candidate.recommendation,
+            blocker_count: candidate.blocker_count,
+            missing_primitives: report.missing_primitives.clone(),
+            missing_capabilities: report.missing_capabilities.clone(),
+            missing_dependencies: report.missing_dependencies.clone(),
+            policy_surfaces,
+            required_tier,
+            local_only: report.local_only,
+            cloud_required: report.cloud_required,
+        })
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.missing_primitives.is_empty()
+            && self.missing_capabilities.is_empty()
+            && self.missing_dependencies.is_empty()
+    }
+
+    pub fn review_ready(&self) -> bool {
+        self.activation_ready()
+            && self.recommendation == IntegrationActivationCandidateRecommendation::NeedsHumanReview
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        self.recommendation == IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites
+            || !self.activation_ready()
+    }
+
+    pub fn has_policy_surfaces(&self) -> bool {
+        !self.policy_surfaces.is_empty()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.is_blocked()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        true
+    }
+}
+
+impl IntegrationActivationReviewSummary {
+    pub fn from_reviews<'a>(
+        reviews: impl IntoIterator<Item = &'a IntegrationActivationReviewItem>,
+    ) -> Self {
+        let mut policy_surfaces = BTreeSet::new();
+        let mut summary = Self {
+            total_reviews: 0,
+            review_ready_integrations: 0,
+            blocked_review_integrations: 0,
+            reviews_missing_primitives: 0,
+            reviews_missing_capabilities: 0,
+            reviews_missing_dependencies: 0,
+            direct_targets: 0,
+            delegated_integration_targets: 0,
+            delegated_standard_targets: 0,
+            local_only_reviews: 0,
+            cloud_required_reviews: 0,
+            reviews_with_policy_surfaces: 0,
+            reviews_without_policy_surfaces: 0,
+            unique_policy_surfaces: 0,
+            total_blockers: 0,
+            read_only_reviews: 0,
+            low_risk_reviews: 0,
+            human_approval_reviews: 0,
+            high_risk_reviews: 0,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for review in reviews {
+            summary.total_reviews += 1;
+            if review.review_ready() {
+                summary.review_ready_integrations += 1;
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(review.priority));
+            }
+            if review.is_blocked() {
+                summary.blocked_review_integrations += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(review.priority));
+            }
+            if !review.missing_primitives.is_empty() {
+                summary.reviews_missing_primitives += 1;
+            }
+            if !review.missing_capabilities.is_empty() {
+                summary.reviews_missing_capabilities += 1;
+            }
+            if !review.missing_dependencies.is_empty() {
+                summary.reviews_missing_dependencies += 1;
+            }
+            match &review.activation_target {
+                IntegrationActivationTarget::Direct => summary.direct_targets += 1,
+                IntegrationActivationTarget::DelegatedIntegration(_) => {
+                    summary.delegated_integration_targets += 1
+                }
+                IntegrationActivationTarget::DelegatedStandards(_) => {
+                    summary.delegated_standard_targets += 1
+                }
+            }
+            if review.local_only {
+                summary.local_only_reviews += 1;
+            }
+            if review.cloud_required {
+                summary.cloud_required_reviews += 1;
+            }
+            if review.has_policy_surfaces() {
+                summary.reviews_with_policy_surfaces += 1;
+            } else {
+                summary.reviews_without_policy_surfaces += 1;
+            }
+            for surface in &review.policy_surfaces {
+                policy_surfaces.insert(*surface);
+            }
+            summary.total_blockers += review.blocker_count;
+            match review.required_tier {
+                PrivilegeTier::ReadOnly => summary.read_only_reviews += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_reviews += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_reviews += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_reviews += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(review.required_tier);
+        }
+
+        summary.unique_policy_surfaces = policy_surfaces.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_reviews == 0
+    }
+
+    pub fn has_review_ready_work(&self) -> bool {
+        self.review_ready_integrations > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_review_integrations > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.total_reviews > 0
     }
 }
 
@@ -4709,6 +4924,36 @@ pub fn activation_risk_at_or_before_priority(
     activation_risk_from_candidates(catalog, candidates.iter())
 }
 
+pub fn activation_reviews_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationReviewItem> {
+    let mut reviews = candidates
+        .into_iter()
+        .filter_map(|candidate| IntegrationActivationReviewItem::from_candidate(catalog, candidate))
+        .collect::<Vec<_>>();
+
+    reviews.sort_by(compare_activation_reviews);
+    reviews
+}
+
+pub fn activation_reviews_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationReviewItem> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_reviews_from_candidates(catalog, candidates.iter())
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -5905,6 +6150,20 @@ fn compare_activation_risks(
         .then_with(|| left.risk_id.cmp(&right.risk_id))
 }
 
+fn compare_activation_reviews(
+    left: &IntegrationActivationReviewItem,
+    right: &IntegrationActivationReviewItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.required_tier.cmp(&left.required_tier))
+        .then_with(|| left.display_name.cmp(&right.display_name))
+        .then_with(|| {
+            left.requested_integration_id
+                .cmp(&right.requested_integration_id)
+        })
+}
+
 fn compare_activation_dependency_nodes(
     left: &IntegrationActivationDependencyNode,
     right: &IntegrationActivationDependencyNode,
@@ -6850,6 +7109,116 @@ mod tests {
             &[],
         );
         assert_eq!(risks, risks_from_catalog);
+    }
+
+    #[test]
+    fn activation_reviews_queue_ready_and_blocked_human_review_work() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+
+        let reviews = activation_reviews_from_candidates(&[], candidates.iter());
+
+        assert_eq!(reviews.len(), 2);
+        let review_ready = reviews
+            .iter()
+            .find(|review| review.requested_integration_id.as_str() == "review_ready_bridge")
+            .unwrap();
+        assert!(review_ready.activation_ready());
+        assert!(review_ready.review_ready());
+        assert!(!review_ready.has_blockers());
+        assert!(review_ready.requires_attention());
+        assert_eq!(review_ready.required_tier, PrivilegeTier::HumanApproval);
+        let blocked_review = reviews
+            .iter()
+            .find(|review| review.requested_integration_id.as_str() == "blocked_review_camera")
+            .unwrap();
+        assert!(!blocked_review.activation_ready());
+        assert!(!blocked_review.review_ready());
+        assert!(blocked_review.has_blockers());
+        assert_eq!(blocked_review.blocker_count, 3);
+        assert_eq!(blocked_review.required_tier, PrivilegeTier::HighRisk);
+
+        let summary = IntegrationActivationReviewSummary::from_reviews(reviews.iter());
+        assert_eq!(summary.total_reviews, 2);
+        assert_eq!(summary.review_ready_integrations, 1);
+        assert_eq!(summary.blocked_review_integrations, 1);
+        assert_eq!(summary.reviews_missing_primitives, 1);
+        assert_eq!(summary.reviews_missing_capabilities, 1);
+        assert_eq!(summary.reviews_missing_dependencies, 1);
+        assert_eq!(summary.total_blockers, 3);
+        assert_eq!(summary.first_review_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(2));
+        assert_eq!(summary.local_only_reviews, 1);
+        assert_eq!(summary.cloud_required_reviews, 1);
+        assert_eq!(summary.human_approval_reviews, 1);
+        assert_eq!(summary.high_risk_reviews, 1);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert!(summary.has_review_ready_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_reviews = activation_reviews_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_reviews
+            .iter()
+            .any(IntegrationActivationReviewItem::has_policy_surfaces));
     }
 
     #[test]

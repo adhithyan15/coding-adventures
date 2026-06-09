@@ -43,6 +43,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A grouped activation constraint planning:
   `smart_home.list_integration_activation_constraints` and
   `smart_home.get_integration_activation_constraint_summary`.
+- Added D18D handlers for D23A activation human-review queue planning:
+  `smart_home.list_integration_activation_reviews` and
+  `smart_home.get_integration_activation_review_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.

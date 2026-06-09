@@ -50,6 +50,9 @@ runtime and Chief of Staff tools a typed catalog for:
   actions, constraints, policy risk, and dependency blockers for Chief planning
 - activation constraints that group unresolved primitive, capability,
   dependency, and policy-review surface work by affected integrations
+- activation review queue entries that separate review-ready integrations from
+  human-review integrations still blocked by primitives, capabilities, or
+  dependencies
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
