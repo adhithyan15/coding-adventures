@@ -862,6 +862,7 @@ pub struct BrowserDocument {
     pub embedded_policy_descriptors: Vec<BrowserEmbeddedPolicyDescriptor>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
     pub disclosures: Vec<BrowserDisclosure>,
+    pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
@@ -2260,6 +2261,29 @@ pub struct BrowserDisclosure {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDisclosureStateDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub disclosure_kind: String,
+    pub open: bool,
+    pub grouped: bool,
+    pub group_name: Option<String>,
+    pub has_summary: bool,
+    pub summary_text: Option<String>,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub aria_describedby: Vec<String>,
+    pub aria_modal: Option<String>,
+    pub modal: bool,
+    pub closedby: Option<String>,
+    pub text: String,
+    pub text_length: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserForm {
     pub id: Option<String>,
     pub action: Option<String>,
@@ -2785,6 +2809,8 @@ impl BrowserDocument {
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
+        summary.disclosure_state_descriptors =
+            browser_disclosure_state_descriptors(&summary.disclosures);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -11365,6 +11391,51 @@ fn browser_disclosure_element(
     })
 }
 
+fn browser_disclosure_state_descriptors(
+    disclosures: &[BrowserDisclosure],
+) -> Vec<BrowserDisclosureStateDescriptor> {
+    disclosures
+        .iter()
+        .map(browser_disclosure_state_descriptor)
+        .collect()
+}
+
+fn browser_disclosure_state_descriptor(
+    disclosure: &BrowserDisclosure,
+) -> BrowserDisclosureStateDescriptor {
+    let disclosure_kind = if disclosure.element == "dialog" {
+        "dialog"
+    } else {
+        "details"
+    };
+    let grouped = disclosure.element == "details" && disclosure.name.is_some();
+
+    BrowserDisclosureStateDescriptor {
+        element: disclosure.element.clone(),
+        id: disclosure.id.clone(),
+        name: disclosure.name.clone(),
+        disclosure_kind: disclosure_kind.to_string(),
+        open: disclosure.open,
+        grouped,
+        group_name: grouped.then(|| disclosure.name.clone()).flatten(),
+        has_summary: disclosure.summary_text.is_some(),
+        summary_text: disclosure.summary_text.clone(),
+        accessible_name: disclosure.accessible_name.clone(),
+        accessible_description: disclosure.accessible_description.clone(),
+        aria_label: disclosure.aria_label.clone(),
+        aria_labelledby: disclosure.aria_labelledby.clone(),
+        aria_describedby: disclosure.aria_describedby.clone(),
+        aria_modal: disclosure.aria_modal.clone(),
+        modal: disclosure
+            .aria_modal
+            .as_deref()
+            .is_some_and(|value| value.eq_ignore_ascii_case("true")),
+        closedby: disclosure.closedby.clone(),
+        text: disclosure.text.clone(),
+        text_length: disclosure.text.chars().count(),
+    }
+}
+
 fn browser_details_summary_text(element: &Element) -> Option<String> {
     if element.name != "details" {
         return None;
@@ -18463,6 +18534,61 @@ mod tests {
             Some("Review totals")
         );
         assert_eq!(dialog.aria_modal.as_deref(), Some("true"));
+        assert_eq!(dialog.closedby.as_deref(), Some("any"));
+        assert_eq!(dialog.text, "Confirm copy");
+    }
+
+    #[test]
+    fn browser_disclosure_state_descriptors_track_details_dialog_and_modal_state() {
+        let document = parse_html(
+            "<body>\
+             <details id=shipping name=checkout open aria-describedby=ship-help>\
+               <summary>Shipping options</summary><p id=ship-help>Choose speed</p>\
+             </details>\
+             <details id=billing name=checkout><summary>Billing</summary><p>Cards</p></details>\
+             <h2 id=dialog-title>Confirm order</h2>\
+             <p id=dialog-help>Review totals</p>\
+             <dialog id=confirm open aria-labelledby=dialog-title aria-describedby=dialog-help aria-modal=true closedby=any>\
+               <p>Confirm copy</p>\
+             </dialog>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.disclosure_state_descriptors.len(), 3);
+
+        let shipping = &summary.disclosure_state_descriptors[0];
+        assert_eq!(shipping.element, "details");
+        assert_eq!(shipping.id.as_deref(), Some("shipping"));
+        assert_eq!(shipping.disclosure_kind, "details");
+        assert!(shipping.open);
+        assert!(shipping.grouped);
+        assert_eq!(shipping.group_name.as_deref(), Some("checkout"));
+        assert!(shipping.has_summary);
+        assert_eq!(shipping.summary_text.as_deref(), Some("Shipping options"));
+        assert_eq!(
+            shipping.accessible_description.as_deref(),
+            Some("Choose speed")
+        );
+
+        let billing = &summary.disclosure_state_descriptors[1];
+        assert_eq!(billing.id.as_deref(), Some("billing"));
+        assert!(!billing.open);
+        assert!(billing.grouped);
+        assert_eq!(billing.summary_text.as_deref(), Some("Billing"));
+        assert_eq!(billing.text_length, "Billing Cards".chars().count());
+
+        let dialog = &summary.disclosure_state_descriptors[2];
+        assert_eq!(dialog.element, "dialog");
+        assert_eq!(dialog.disclosure_kind, "dialog");
+        assert!(dialog.open);
+        assert!(!dialog.grouped);
+        assert!(!dialog.has_summary);
+        assert_eq!(dialog.accessible_name.as_deref(), Some("Confirm order"));
+        assert_eq!(dialog.aria_labelledby, vec!["dialog-title"]);
+        assert_eq!(dialog.aria_describedby, vec!["dialog-help"]);
+        assert_eq!(dialog.aria_modal.as_deref(), Some("true"));
+        assert!(dialog.modal);
         assert_eq!(dialog.closedby.as_deref(), Some("any"));
         assert_eq!(dialog.text, "Confirm copy");
     }
