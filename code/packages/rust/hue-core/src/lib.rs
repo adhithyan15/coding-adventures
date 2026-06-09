@@ -715,8 +715,24 @@ impl HueCommandPlanSummary {
         self.light_commands > 0 || self.grouped_light_commands > 0
     }
 
+    pub fn lighting_write_count(&self) -> usize {
+        self.light_commands + self.grouped_light_commands
+    }
+
+    pub fn has_direct_light_commands(&self) -> bool {
+        self.light_commands > 0
+    }
+
     pub fn has_group_commands(&self) -> bool {
         self.grouped_light_commands > 0
+    }
+
+    pub fn mixes_direct_and_grouped_light_writes(&self) -> bool {
+        self.light_commands > 0 && self.grouped_light_commands > 0
+    }
+
+    pub fn has_color_temperature_writes(&self) -> bool {
+        self.color_temperature_commands > 0
     }
 
     pub fn has_scene_recalls(&self) -> bool {
@@ -2476,13 +2492,23 @@ mod tests {
             }
         );
         assert!(summary.has_lighting_writes());
+        assert_eq!(summary.lighting_write_count(), 6);
+        assert!(summary.has_direct_light_commands());
         assert!(summary.has_group_commands());
+        assert!(summary.mixes_direct_and_grouped_light_writes());
+        assert!(summary.has_color_temperature_writes());
         assert!(summary.has_scene_recalls());
         assert!(summary.touches_multiple_surfaces());
 
         let empty = HueCommandPlanSummary::empty();
         assert!(empty.is_empty());
         assert!(!empty.has_lighting_writes());
+        assert_eq!(empty.lighting_write_count(), 0);
+        assert!(!empty.has_direct_light_commands());
+        assert!(!empty.has_group_commands());
+        assert!(!empty.mixes_direct_and_grouped_light_writes());
+        assert!(!empty.has_color_temperature_writes());
+        assert!(!empty.has_scene_recalls());
         assert!(!empty.touches_multiple_surfaces());
     }
 
