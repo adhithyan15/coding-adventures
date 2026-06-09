@@ -24,8 +24,10 @@ use smart_home_core::{
     StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_discovery::{
-    DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource,
-    DiscoveryWorkerId, DiscoveryWorkerKind,
+    DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
+    DiscoveryPairingPlanSort, DiscoveryPairingPlanSummary, DiscoveryPairingTarget, DiscoveryRecord,
+    DiscoveryRecordSummary, DiscoverySignalStatus, DiscoverySignalSummary, DiscoverySource,
+    DiscoveryWorkerId, DiscoveryWorkerKind, PairingRequirement,
 };
 use smart_home_integration_catalog::{
     activation_plan_for_entry, describe_primitive_family, ecosystem_platforms_requiring_primitive,
@@ -50,19 +52,20 @@ use smart_home_runtime::{
     RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
     RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
     RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort,
-    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingSession,
-    RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
-    RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
-    RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
-    RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
-    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
-    RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
-    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
-    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
-    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
-    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
-    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
-    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
+    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingPlanToolRequest,
+    RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionInventorySummary,
+    RuntimePairingSessionQuery, RuntimePairingSessionSort, RuntimePendingWorkSummary,
+    RuntimePollEventsToolOutput, RuntimePollEventsToolRequest, RuntimeReadSnapshot,
+    RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort,
+    RuntimeRoomSummary, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
+    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
+    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
+    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
+    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
+    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
+    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
+    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
+    WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -71,6 +74,7 @@ pub const SMART_HOME_LIST_BRIDGES_TOOL_ID: &str = "smart_home.list_bridges";
 pub const SMART_HOME_DISCOVER_TOOL_ID: &str = "smart_home.discover";
 pub const SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID: &str = "smart_home.list_discovery_workers";
 pub const SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID: &str = "smart_home.get_discovery_summary";
+pub const SMART_HOME_GET_PAIRING_PLAN_TOOL_ID: &str = "smart_home.get_pairing_plan";
 pub const SMART_HOME_LIST_DEVICES_TOOL_ID: &str = "smart_home.list_devices";
 pub const SMART_HOME_LIST_ROOMS_TOOL_ID: &str = "smart_home.list_rooms";
 pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
@@ -198,6 +202,17 @@ impl SmartHomeToolBridge {
                         )
                         .map_err(runtime_error)?;
                     Ok(read_output_handler_output(output, "get_discovery_summary"))
+                }
+                SMART_HOME_GET_PAIRING_PLAN_TOOL_ID => {
+                    let request = pairing_plan_request(&arguments)?;
+                    let output = runtime
+                        .execute_read_tool(
+                            principal_id,
+                            RuntimeReadToolRequest::GetPairingPlan { request },
+                            now_ms,
+                        )
+                        .map_err(runtime_error)?;
+                    Ok(read_output_handler_output(output, "get_pairing_plan"))
                 }
                 SMART_HOME_LIST_BRIDGES_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -765,6 +780,49 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
                     "record_summary",
                     "signal_summary",
                 ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_PAIRING_PLAN_TOOL_ID,
+            "Get smart-home pairing plan",
+            "Read the D23 discovery pairing plan and host action queue without starting a pairing session.",
+            object_schema(
+                vec![
+                    SchemaProperty::new("integration_id", JsonSchema::String),
+                    SchemaProperty::new("integration_ids", string_array_schema()),
+                    SchemaProperty::new("source", JsonSchema::String),
+                    SchemaProperty::new("sources", string_array_schema()),
+                    SchemaProperty::new("signal_status", JsonSchema::String),
+                    SchemaProperty::new("signal_statuses", string_array_schema()),
+                    SchemaProperty::new("pairing_requirement", JsonSchema::String),
+                    SchemaProperty::new("pairing_requirements", string_array_schema()),
+                    SchemaProperty::new("action", JsonSchema::String),
+                    SchemaProperty::new("actions", string_array_schema()),
+                    SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+                    SchemaProperty::new("requires_human_action", JsonSchema::Boolean),
+                    SchemaProperty::new("actionable_only", JsonSchema::Boolean),
+                    SchemaProperty::new("sort", JsonSchema::String),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new("limit", JsonSchema::Integer),
+                ],
+                vec![],
+                false,
+            ),
+            object_schema(
+                vec![
+                    SchemaProperty::new("generated_at_ms", JsonSchema::Integer),
+                    SchemaProperty::new("ttl_ms", JsonSchema::Integer),
+                    SchemaProperty::new(
+                        "targets",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                ],
+                vec!["generated_at_ms", "ttl_ms", "targets", "summary", "count"],
                 false,
             ),
         ),
@@ -1855,6 +1913,51 @@ fn discovery_worker_query(arguments: &JsonValue) -> Result<DiscoveryWorkerQuery,
     Ok(query)
 }
 
+fn pairing_plan_request(
+    arguments: &JsonValue,
+) -> Result<RuntimePairingPlanToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut options = DiscoveryPairingPlanOptions::new();
+    for integration_id in optional_string_list(arguments, "integration_id", "integration_ids")? {
+        options = options.with_integration(IntegrationId::trusted(integration_id));
+    }
+    for source in optional_string_list(arguments, "source", "sources")? {
+        options = options.with_source(parse_discovery_source(&source)?);
+    }
+    for status in optional_string_list(arguments, "signal_status", "signal_statuses")? {
+        options = options.with_signal_status(parse_discovery_signal_status(&status)?);
+    }
+    for requirement in
+        optional_string_list(arguments, "pairing_requirement", "pairing_requirements")?
+    {
+        options = options.with_pairing_requirement(parse_pairing_requirement(&requirement)?);
+    }
+    for action in optional_string_list(arguments, "action", "actions")? {
+        options = options.with_action(parse_discovery_pairing_action(&action)?);
+    }
+    if let Some(priority) = optional_u8(arguments, "priority_at_or_before")? {
+        options = options.at_or_before_priority(priority);
+    }
+    if let Some(requires_human_action) = optional_bool(arguments, "requires_human_action")? {
+        options = options.requiring_human_action(requires_human_action);
+    }
+    if let Some(actionable_only) = optional_bool(arguments, "actionable_only")? {
+        options = options.actionable_only(actionable_only);
+    }
+    if let Some(sort) = optional_string(arguments, "sort")? {
+        options = options.sorted_by(parse_discovery_pairing_plan_sort(&sort)?);
+    }
+    if let Some(limit) = optional_u64(arguments, "limit")? {
+        options = options.limited_to(limit as usize);
+    }
+
+    let mut request = RuntimePairingPlanToolRequest::new().with_options(options);
+    if let Some(ttl_ms) = optional_u64(arguments, "ttl_ms")? {
+        request = request.with_ttl_ms(ttl_ms);
+    }
+    Ok(request)
+}
+
 fn list_devices_request(arguments: &JsonValue) -> Result<RuntimeReadToolRequest, ToolCallError> {
     Ok(RuntimeReadToolRequest::ListDevices {
         bridge_id: optional_string(arguments, "bridge_id")?.map(BridgeId::trusted),
@@ -2475,6 +2578,11 @@ fn read_output_json(output: RuntimeReadToolOutput) -> JsonValue {
                 discovery_signal_summary_json(&signal_summary),
             ),
         ]),
+        RuntimeReadToolOutput::PairingPlan {
+            ttl_ms,
+            plan,
+            summary,
+        } => pairing_plan_output_json(ttl_ms, &plan, &summary),
         RuntimeReadToolOutput::Bridges(bridges) => object([
             (
                 "bridges",
@@ -2863,6 +2971,122 @@ fn discovery_signal_summary_json(summary: &DiscoverySignalSummary) -> JsonValue 
         (
             "has_stale_or_expired_signals",
             JsonValue::Bool(summary.stale > 0 || summary.expired > 0),
+        ),
+    ])
+}
+
+fn pairing_plan_output_json(
+    ttl_ms: u64,
+    plan: &DiscoveryPairingPlan,
+    summary: &DiscoveryPairingPlanSummary,
+) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(plan.generated_at_ms as i64)),
+        ("ttl_ms", integer(ttl_ms as i64)),
+        (
+            "targets",
+            JsonValue::Array(plan.targets.iter().map(pairing_target_json).collect()),
+        ),
+        ("summary", pairing_plan_summary_json(summary)),
+        ("count", integer(plan.targets.len() as i64)),
+    ])
+}
+
+fn pairing_target_json(target: &DiscoveryPairingTarget) -> JsonValue {
+    object([
+        ("fingerprint", string(target.fingerprint.as_str())),
+        ("bridge_id", string(target.bridge_id.as_str())),
+        ("integration_id", string(target.integration_id.as_str())),
+        ("native_bridge_id", string(&target.native_bridge_id)),
+        ("display_name", optional_string_json(&target.display_name)),
+        ("priority", integer(target.priority as i64)),
+        ("source", string(target.source.as_str())),
+        ("confidence", string(target.confidence.as_str())),
+        ("signal_status", string(target.signal_status.as_str())),
+        (
+            "pairing_requirement",
+            string(target.pairing_requirement.as_str()),
+        ),
+        ("action", string(target.action.as_str())),
+        (
+            "requires_human_action",
+            JsonValue::Bool(target.requires_human_action()),
+        ),
+        ("is_actionable", JsonValue::Bool(target.is_actionable())),
+        ("address", optional_string_json(&target.address)),
+        ("discovered_at_ms", integer(target.discovered_at_ms as i64)),
+    ])
+}
+
+fn pairing_plan_summary_json(summary: &DiscoveryPairingPlanSummary) -> JsonValue {
+    object([
+        ("generated_at_ms", integer(summary.generated_at_ms as i64)),
+        ("total", integer(summary.total as i64)),
+        ("actionable", integer(summary.actionable as i64)),
+        ("ready", integer(summary.ready as i64)),
+        (
+            "requires_human_action",
+            integer(summary.requires_human_action as i64),
+        ),
+        (
+            "blocked_unknown_requirement",
+            integer(summary.blocked_unknown_requirement as i64),
+        ),
+        ("fresh", integer(summary.fresh as i64)),
+        ("stale", integer(summary.stale as i64)),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "by_source",
+            JsonValue::Array(
+                summary
+                    .by_source
+                    .iter()
+                    .map(|(source, count)| {
+                        object([
+                            ("source", string(source.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "by_pairing_requirement",
+            JsonValue::Array(
+                summary
+                    .by_pairing_requirement
+                    .iter()
+                    .map(|(requirement, count)| {
+                        object([
+                            ("pairing_requirement", string(requirement.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "by_action",
+            JsonValue::Array(
+                summary
+                    .by_action
+                    .iter()
+                    .map(|(action, count)| {
+                        object([
+                            ("action", string(action.as_str())),
+                            ("count", integer(*count as i64)),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ),
+        (
+            "next_actionable_target",
+            summary
+                .next_actionable_target
+                .as_ref()
+                .map(pairing_target_json)
+                .unwrap_or(JsonValue::Null),
         ),
     ])
 }
@@ -5680,6 +5904,75 @@ fn parse_discovery_source(label: &str) -> Result<DiscoverySource, ToolCallError>
     }
 }
 
+fn parse_discovery_signal_status(label: &str) -> Result<DiscoverySignalStatus, ToolCallError> {
+    match label {
+        "fresh" => Ok(DiscoverySignalStatus::Fresh),
+        "stale" => Ok(DiscoverySignalStatus::Stale),
+        "expired" => Ok(DiscoverySignalStatus::Expired),
+        _ => Err(validation_error(format!(
+            "unknown discovery signal status `{label}`"
+        ))),
+    }
+}
+
+fn parse_pairing_requirement(label: &str) -> Result<PairingRequirement, ToolCallError> {
+    match label {
+        "unknown" => Ok(PairingRequirement::Unknown),
+        "none" | "ready" => Ok(PairingRequirement::None),
+        "physical_presence" | "button" | "link_button" => Ok(PairingRequirement::PhysicalPresence),
+        "local_code" | "code" => Ok(PairingRequirement::LocalCode),
+        "credentials" => Ok(PairingRequirement::Credentials),
+        "oauth2" | "oauth" => Ok(PairingRequirement::OAuth2),
+        "certificate" | "cert" => Ok(PairingRequirement::Certificate),
+        "radio_inclusion" | "inclusion" => Ok(PairingRequirement::RadioInclusion),
+        "mqtt_credentials" | "mqtt" => Ok(PairingRequirement::MqttCredentials),
+        _ => Err(validation_error(format!(
+            "unknown pairing requirement `{label}`"
+        ))),
+    }
+}
+
+fn parse_discovery_pairing_action(label: &str) -> Result<DiscoveryPairingAction, ToolCallError> {
+    match label {
+        "ready" => Ok(DiscoveryPairingAction::Ready),
+        "press_physical_button" | "press_button" | "link_button" => {
+            Ok(DiscoveryPairingAction::PressPhysicalButton)
+        }
+        "enter_local_code" | "local_code" => Ok(DiscoveryPairingAction::EnterLocalCode),
+        "provide_credentials" | "credentials" => Ok(DiscoveryPairingAction::ProvideCredentials),
+        "complete_oauth2" | "oauth2" | "oauth" => Ok(DiscoveryPairingAction::CompleteOAuth2),
+        "install_certificate" | "certificate" => Ok(DiscoveryPairingAction::InstallCertificate),
+        "start_radio_inclusion" | "radio_inclusion" => {
+            Ok(DiscoveryPairingAction::StartRadioInclusion)
+        }
+        "configure_mqtt_credentials" | "mqtt_credentials" | "mqtt" => {
+            Ok(DiscoveryPairingAction::ConfigureMqttCredentials)
+        }
+        "investigate_unknown_requirement" | "unknown" => {
+            Ok(DiscoveryPairingAction::InvestigateUnknownRequirement)
+        }
+        _ => Err(validation_error(format!(
+            "unknown discovery pairing action `{label}`"
+        ))),
+    }
+}
+
+fn parse_discovery_pairing_plan_sort(
+    label: &str,
+) -> Result<DiscoveryPairingPlanSort, ToolCallError> {
+    match label {
+        "plan_rank" | "rank" => Ok(DiscoveryPairingPlanSort::PlanRank),
+        "newest_first" | "newest" => Ok(DiscoveryPairingPlanSort::NewestFirst),
+        "integration_then_bridge" | "integration" => {
+            Ok(DiscoveryPairingPlanSort::IntegrationThenBridge)
+        }
+        "source_preference" | "source" => Ok(DiscoveryPairingPlanSort::SourcePreference),
+        _ => Err(validation_error(format!(
+            "unknown discovery pairing plan sort `{label}`"
+        ))),
+    }
+}
+
 fn parse_integration_category(label: &str) -> Result<IntegrationCategory, ToolCallError> {
     match label {
         "protocol_standard" => Ok(IntegrationCategory::ProtocolStandard),
@@ -6509,7 +6802,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 36);
+        assert_eq!(definitions.len(), 37);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -6530,6 +6823,9 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_PAIRING_PLAN_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_ROOMS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_LIST_SCENES_TOOL_ID));
         assert!(export
@@ -6589,7 +6885,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            32
+            33
         );
         assert_eq!(
             export
@@ -6604,6 +6900,7 @@ mod tests {
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
@@ -6963,6 +7260,48 @@ mod tests {
             field(
                 field(discovery_summary_output, "signal_summary").unwrap(),
                 "fresh"
+            ),
+            Some(&integer(1))
+        );
+
+        let pairing_plan_request = request(
+            "call-get-pairing-plan",
+            SMART_HOME_GET_PAIRING_PLAN_TOOL_ID,
+            object([
+                ("integration_id", string("hue")),
+                ("source", string("mdns")),
+                ("pairing_requirement", string("physical_presence")),
+                ("actionable_only", JsonValue::Bool(true)),
+                ("ttl_ms", integer(1_000)),
+                ("limit", integer(1)),
+            ]),
+            1_057,
+        );
+        let pairing_plan_trace = tool_runtime.invoke_with_events(&pairing_plan_request);
+        assert!(pairing_plan_trace.result.ok);
+        let pairing_plan_output = pairing_plan_trace.result.output.as_ref().unwrap();
+        assert_eq!(field(pairing_plan_output, "count"), Some(&integer(1)));
+        let pairing_target = array_item(field(pairing_plan_output, "targets").unwrap(), 0).unwrap();
+        assert_eq!(
+            field(pairing_target, "bridge_id"),
+            Some(&string("hue.bridge.001788fffediscovered"))
+        );
+        assert_eq!(
+            field(pairing_target, "action"),
+            Some(&string("press_physical_button"))
+        );
+        assert_eq!(
+            field(pairing_target, "requires_human_action"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(field(pairing_plan_output, "summary").unwrap(), "actionable"),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(pairing_plan_output, "summary").unwrap(),
+                "requires_human_action"
             ),
             Some(&integer(1))
         );
@@ -7655,6 +7994,7 @@ mod tests {
         journal.record_trace(discover_request, discover_trace);
         journal.record_trace(list_discovery_workers_request, list_discovery_workers_trace);
         journal.record_trace(discovery_summary_request, discovery_summary_trace);
+        journal.record_trace(pairing_plan_request, pairing_plan_trace);
         journal.record_trace(capabilities_request, capabilities_trace);
         journal.record_trace(health_request, health_trace);
         journal.record_trace(list_workers_request, list_workers_trace);
@@ -7684,9 +8024,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 35);
-        assert_eq!(journal_summary.completed_count, 35);
-        assert_eq!(journal.audit_records().len(), 35);
+        assert_eq!(journal_summary.invocation_count, 36);
+        assert_eq!(journal_summary.completed_count, 36);
+        assert_eq!(journal.audit_records().len(), 36);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -7699,7 +8039,7 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            32,
+            33,
             "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
         );
     }

@@ -17,13 +17,15 @@ use smart_home_core::{
     SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
-    run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError, DiscoveryRecord,
-    DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource, DiscoveryUpsert,
-    DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-    DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork, MdnsWorkerScanExecutor,
-    MdnsWorkerScanPlan, MdnsWorkerScanReport, MdnsWorkerScanRequest, UdpMdnsWorkerScanExecutor,
-    MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
+    run_mdns_worker_scan_plan_with_executor, DiscoveryCatalog, DiscoveryError,
+    DiscoveryPairingPlan, DiscoveryPairingPlanOptions, DiscoveryPairingPlanSummary,
+    DiscoveryRecord, DiscoveryRecordSummary, DiscoverySignalSummary, DiscoverySource,
+    DiscoveryUpsert, DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind,
+    DiscoveryWorkerRun, DiscoveryWorkerRunStatus, DiscoveryWorkerRunSummary, MdnsScanNetwork,
+    MdnsWorkerScanExecutor, MdnsWorkerScanPlan, MdnsWorkerScanReport, MdnsWorkerScanRequest,
+    UdpMdnsWorkerScanExecutor, MDNS_DISCOVERY_SERVICE_TYPE_METADATA_KEY,
 };
+use smart_home_integration_catalog::first_party_catalog;
 use smart_home_registry::{
     AuthorizationDecisionSelector, DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts,
     RegistryError, RegistryTopologySummary, StateRefreshPlan, StateRefreshReason,
@@ -3213,6 +3215,37 @@ impl Default for RuntimeDiscoverToolRequest {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairingPlanToolRequest {
+    pub options: DiscoveryPairingPlanOptions,
+    pub ttl_ms: u64,
+}
+
+impl RuntimePairingPlanToolRequest {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_options(mut self, options: DiscoveryPairingPlanOptions) -> Self {
+        self.options = options;
+        self
+    }
+
+    pub fn with_ttl_ms(mut self, ttl_ms: u64) -> Self {
+        self.ttl_ms = ttl_ms;
+        self
+    }
+}
+
+impl Default for RuntimePairingPlanToolRequest {
+    fn default() -> Self {
+        Self {
+            options: DiscoveryPairingPlanOptions::new(),
+            ttl_ms: 60_000,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimeDiscoverToolOutput {
     pub generated_at_ms: u64,
     pub ttl_ms: u64,
@@ -3516,6 +3549,9 @@ pub enum RuntimeReadToolRequest {
     GetDiscoverySummary {
         request: RuntimeDiscoverToolRequest,
     },
+    GetPairingPlan {
+        request: RuntimePairingPlanToolRequest,
+    },
     ListBridges,
     ListDevices {
         bridge_id: Option<BridgeId>,
@@ -3585,6 +3621,7 @@ impl RuntimeReadToolRequest {
             Self::GetRuntimeSnapshot => SmartHomeTool::GetRuntimeSnapshot,
             Self::ListDiscoveryWorkers { .. } => SmartHomeTool::ListDiscoveryWorkers,
             Self::GetDiscoverySummary { .. } => SmartHomeTool::GetDiscoverySummary,
+            Self::GetPairingPlan { .. } => SmartHomeTool::GetPairingPlan,
             Self::ListBridges => SmartHomeTool::ListBridges,
             Self::ListDevices { .. } => SmartHomeTool::ListDevices,
             Self::ListRooms { .. } => SmartHomeTool::ListRooms,
@@ -3830,6 +3867,11 @@ pub enum RuntimeReadToolOutput {
         ttl_ms: u64,
         record_summary: DiscoveryRecordSummary,
         signal_summary: DiscoverySignalSummary,
+    },
+    PairingPlan {
+        ttl_ms: u64,
+        plan: DiscoveryPairingPlan,
+        summary: DiscoveryPairingPlanSummary,
     },
     Bridges(Vec<Bridge>),
     Devices(Vec<Device>),
@@ -4078,6 +4120,20 @@ impl SmartHomeRuntime {
             .collect::<Vec<_>>();
         let signal_summary = DiscoverySignalSummary::from_signals(&signals, now_ms);
         (record_summary, signal_summary)
+    }
+
+    pub fn discovery_pairing_plan_at(
+        &self,
+        request: &RuntimePairingPlanToolRequest,
+        now_ms: u64,
+    ) -> DiscoveryPairingPlan {
+        let catalog = first_party_catalog();
+        self.discovery.pairing_plan_with_options_at(
+            &catalog,
+            now_ms,
+            request.ttl_ms,
+            &request.options,
+        )
     }
 
     pub fn topology_summary(&self) -> RegistryTopologySummary {
@@ -4904,6 +4960,15 @@ impl SmartHomeRuntime {
                     ttl_ms: request.ttl_ms,
                     record_summary,
                     signal_summary,
+                })
+            }
+            RuntimeReadToolRequest::GetPairingPlan { request } => {
+                let plan = self.discovery_pairing_plan_at(&request, now_ms);
+                let summary = plan.summary();
+                Ok(RuntimeReadToolOutput::PairingPlan {
+                    ttl_ms: request.ttl_ms,
+                    plan,
+                    summary,
                 })
             }
             RuntimeReadToolRequest::ListBridges => Ok(RuntimeReadToolOutput::Bridges(
@@ -6087,10 +6152,10 @@ mod tests {
         StateDelta,
     };
     use smart_home_discovery::{
-        DiscoveryConfidence, DiscoveryRecord, DiscoverySource, DiscoveryUpsert,
-        DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind, DiscoveryWorkerRun,
-        DiscoveryWorkerRunStatus, MdnsResponsePacket, MdnsScanResult, MdnsWorkerScanRequest,
-        PairingRequirement,
+        DiscoveryConfidence, DiscoveryPairingAction, DiscoveryRecord, DiscoverySource,
+        DiscoveryUpsert, DiscoveryWorkerFailure, DiscoveryWorkerId, DiscoveryWorkerKind,
+        DiscoveryWorkerRun, DiscoveryWorkerRunStatus, MdnsResponsePacket, MdnsScanResult,
+        MdnsWorkerScanRequest, PairingRequirement,
     };
     use smart_home_registry::StateRefreshReason;
 
@@ -9078,6 +9143,24 @@ mod tests {
                 1_523,
             )
             .unwrap();
+        let pairing_plan = runtime
+            .execute_read_tool(
+                AgentId::trusted("agent:observer"),
+                RuntimeReadToolRequest::GetPairingPlan {
+                    request: RuntimePairingPlanToolRequest::new()
+                        .with_ttl_ms(1_000)
+                        .with_options(
+                            DiscoveryPairingPlanOptions::new()
+                                .with_integration(IntegrationId::trusted("hue"))
+                                .with_source(DiscoverySource::Mdns)
+                                .with_pairing_requirement(PairingRequirement::PhysicalPresence)
+                                .actionable_only(true)
+                                .limited_to(1),
+                        ),
+                },
+                1_524,
+            )
+            .unwrap();
 
         assert!(matches!(
             bridges,
@@ -9308,7 +9391,23 @@ mod tests {
                 && record_summary.fresh == 1
                 && signal_summary.fresh == 1
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 24);
+        assert!(matches!(
+            pairing_plan,
+            RuntimeReadToolOutput::PairingPlan {
+                ttl_ms,
+                plan,
+                summary,
+            } if ttl_ms == 1_000
+                && plan.generated_at_ms == 1_524
+                && plan.targets.len() == 1
+                && plan.targets[0].bridge_id
+                    == BridgeId::trusted("hue.bridge.001788fffediscovered")
+                && plan.targets[0].action == DiscoveryPairingAction::PressPhysicalButton
+                && summary.total == 1
+                && summary.actionable == 1
+                && summary.requires_human_action == 1
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 25);
         assert!(runtime
             .registry()
             .authorization_decisions()

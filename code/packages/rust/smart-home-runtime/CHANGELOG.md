@@ -80,6 +80,10 @@ All notable changes to this package will be documented in this file.
 - `RuntimeReadToolRequest::ListDiscoveryWorkers` and
   `RuntimeReadToolRequest::GetDiscoverySummary` for authorized D18D reads over
   scheduled discovery worker pressure and discovery freshness summaries.
+- `RuntimePairingPlanToolRequest` and
+  `RuntimeReadToolRequest::GetPairingPlan` for authorized D18D reads over
+  discovery pairing plans derived from recorded discovery signals and the
+  first-party integration catalog.
 - `RuntimeReadToolRequest::GetSupervisionPlan` for authorized D18D previews of
   non-mutating supervision due work.
 - `RuntimeSupervisionToolRequest` / `RuntimeSupervisionToolOutput` and
