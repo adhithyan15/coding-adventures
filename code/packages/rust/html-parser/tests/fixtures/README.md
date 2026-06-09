@@ -49,8 +49,8 @@ Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, flattened script execution descriptors, and
 loading-policy hints such as integrity, crossorigin, referrer policy, fetch
 priority, blocking, disabled state, and alternate stylesheets. Responsive image
-cases pin `srcset`/`sizes`, resolved
-candidate URLs, `picture/source` media/type hints, lazy loading, decoding, fetch
+cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
+descriptors, `picture/source` media/type hints, lazy loading, decoding, fetch
 priority, CORS/referrer policy, usemap, and server-side image-map state. Link
 resource cases pin relation-derived resource kinds, `as` hints,
 integrity/CORS/referrer policy, fetch priority, blocking, and responsive image
