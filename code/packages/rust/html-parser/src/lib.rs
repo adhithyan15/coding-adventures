@@ -862,6 +862,7 @@ pub struct BrowserDocument {
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
     pub embedded_policy_descriptors: Vec<BrowserEmbeddedPolicyDescriptor>,
     pub interactive_elements: Vec<BrowserInteractiveElement>,
+    pub focus_navigation_descriptors: Vec<BrowserFocusNavigationDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2255,6 +2256,40 @@ pub struct BrowserInteractiveElement {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFocusNavigationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub focus_kind: String,
+    pub focusable: bool,
+    pub sequential_focus: bool,
+    pub programmatic_focus: bool,
+    pub focus_blocked: bool,
+    pub focus_block_reasons: Vec<String>,
+    pub tabindex: Option<String>,
+    pub tabindex_order: Option<i32>,
+    pub accesskey: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_activedescendant: Option<String>,
+    pub aria_expanded: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -2858,6 +2893,8 @@ impl BrowserDocument {
             &summary.popovers,
             &summary.disclosures,
         );
+        summary.focus_navigation_descriptors =
+            browser_focus_navigation_descriptors(&summary.interactive_elements);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -12619,6 +12656,123 @@ fn browser_activation_target_kind(
     "command".to_string()
 }
 
+fn browser_focus_navigation_descriptors(
+    elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserFocusNavigationDescriptor> {
+    elements
+        .iter()
+        .filter(|element| browser_has_focus_navigation_state(element))
+        .map(browser_focus_navigation_descriptor)
+        .collect()
+}
+
+fn browser_has_focus_navigation_state(element: &BrowserInteractiveElement) -> bool {
+    element.focusable.is_some()
+        || element.tabindex.is_some()
+        || !element.accesskey.is_empty()
+        || element.contenteditable.is_some()
+        || element.disabled
+        || element.hidden
+        || element.inert
+        || element.aria_hidden
+        || element.aria_disabled.is_some()
+}
+
+fn browser_focus_navigation_descriptor(
+    element: &BrowserInteractiveElement,
+) -> BrowserFocusNavigationDescriptor {
+    let focusable = element.focusable.unwrap_or(false);
+    let tabindex_order = element
+        .tabindex
+        .as_deref()
+        .and_then(|tabindex| tabindex.trim().parse::<i32>().ok());
+    let focus_block_reasons = browser_focus_block_reasons(element);
+    let focus_blocked = !focus_block_reasons.is_empty();
+    let sequential_focus = focusable && tabindex_order.unwrap_or(0) >= 0;
+    let programmatic_focus = focusable || matches!(tabindex_order, Some(value) if value < 0);
+
+    BrowserFocusNavigationDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        focus_kind: browser_focus_kind(element, focusable, sequential_focus, programmatic_focus),
+        focusable,
+        sequential_focus,
+        programmatic_focus,
+        focus_blocked,
+        focus_block_reasons,
+        tabindex: element.tabindex.clone(),
+        tabindex_order,
+        accesskey: element.accesskey.clone(),
+        event_handlers: element.event_handlers.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_activedescendant: element.aria_activedescendant.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_disabled: element.aria_disabled.clone(),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        text: element.text.clone(),
+    }
+}
+
+fn browser_focus_kind(
+    element: &BrowserInteractiveElement,
+    focusable: bool,
+    sequential_focus: bool,
+    programmatic_focus: bool,
+) -> String {
+    if !browser_focus_block_reasons(element).is_empty() {
+        return "blocked".to_string();
+    }
+    if element.editing_mode.is_some() {
+        return "editing-host".to_string();
+    }
+    if sequential_focus {
+        return "sequential".to_string();
+    }
+    if programmatic_focus {
+        return "programmatic".to_string();
+    }
+    if !element.accesskey.is_empty() {
+        return "accesskey".to_string();
+    }
+    if focusable {
+        return "focusable".to_string();
+    }
+
+    "metadata".to_string()
+}
+
+fn browser_focus_block_reasons(element: &BrowserInteractiveElement) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -19870,6 +20024,61 @@ mod tests {
         assert_eq!(summary_control.target_kind, "disclosure");
         assert_eq!(summary_control.text, "More");
         assert!(summary_control.focusable);
+    }
+
+    #[test]
+    fn browser_focus_navigation_descriptors_track_order_editing_and_blockers() {
+        let document = parse_html(
+            "<body>\
+             <button id=menu tabindex=0 accesskey=\"m /\" aria-controls=panel>Menu</button>\
+             <section id=panel inert><p>Panel</p></section>\
+             <div id=action role=button tabindex=-1 contenteditable=plaintext-only onkeydown=keyAction()>Inline action</div>\
+             <p id=editable contenteditable>Editable copy</p>\
+             <p id=secret hidden>Hidden copy</p>\
+             <span id=decorative aria-hidden=true>Decorative</span>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.focus_navigation_descriptors.len(), 6);
+
+        let menu = &summary.focus_navigation_descriptors[0];
+        assert_eq!(menu.id.as_deref(), Some("menu"));
+        assert_eq!(menu.focus_kind, "sequential");
+        assert!(menu.focusable);
+        assert!(menu.sequential_focus);
+        assert!(menu.programmatic_focus);
+        assert_eq!(menu.tabindex_order, Some(0));
+        assert_eq!(menu.accesskey, vec!["m", "/"]);
+        assert_eq!(menu.aria_controls, vec!["panel"]);
+
+        let panel = &summary.focus_navigation_descriptors[1];
+        assert_eq!(panel.id.as_deref(), Some("panel"));
+        assert_eq!(panel.focus_kind, "blocked");
+        assert!(panel.focus_blocked);
+        assert_eq!(panel.focus_block_reasons, vec!["inert"]);
+
+        let action = &summary.focus_navigation_descriptors[2];
+        assert_eq!(action.id.as_deref(), Some("action"));
+        assert_eq!(action.focus_kind, "editing-host");
+        assert!(!action.focusable);
+        assert!(!action.sequential_focus);
+        assert!(action.programmatic_focus);
+        assert_eq!(action.tabindex_order, Some(-1));
+        assert_eq!(action.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(action.event_handlers, vec!["onkeydown"]);
+
+        let editable = &summary.focus_navigation_descriptors[3];
+        assert_eq!(editable.id.as_deref(), Some("editable"));
+        assert_eq!(editable.focus_kind, "editing-host");
+        assert!(editable.focusable);
+        assert!(editable.sequential_focus);
+        assert_eq!(editable.editing_mode.as_deref(), Some("richtext"));
+
+        let secret = &summary.focus_navigation_descriptors[4];
+        assert_eq!(secret.focus_block_reasons, vec!["hidden"]);
+        let decorative = &summary.focus_navigation_descriptors[5];
+        assert_eq!(decorative.focus_block_reasons, vec!["aria-hidden"]);
     }
 
     #[test]
