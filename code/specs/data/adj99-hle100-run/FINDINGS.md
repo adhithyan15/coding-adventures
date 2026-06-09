@@ -1,5 +1,17 @@
 # ADJ99 — HLE-100 run: FINDINGS
 
+> **⚠ CORRECTION (rescore).** The 0–5 "defensibility" numbers in this document measure **traceability
+> / citation density**, not defensibility. The judge rubric rewarded the cited-chain *format*, and a
+> one-line regex identifies the arm from that format with **100% accuracy** — so the "blind" judge was
+> not blind. The headline means below (2.14 / 3.72 / 2.68 / 3.61) and the H1/H2 verdicts should be read
+> as **traceability**, and superseded by the construct-valid rescore in
+> [`analysis/rescore/RESCORE_FINDINGS.md`](analysis/rescore/RESCORE_FINDINGS.md). Under a rubric that
+> scores whether the **load-bearing premise is exposed and flagged as fallible** (format-normalized so
+> style can't leak the arm), the framework's advantage **grows**, and **H2 flips from FALSIFIED to TRUE**
+> (fw-opus +0.45 over plain-opus, vs −0.11 here). The **audit-trail metrics in §"Audit-trail /
+> correctable-CAS" below are unaffected** — they were always the construct-valid evidence and remain the
+> primary result.
+
 **Status: COMPLETE.** 100 stratified HLE items, 4 arms each, run in 20 batches of 5.
 Raw data: `batches/batch_00.json … batch_19.json`; machine summary: `aggregate.json`.
 Defensibility = blind Opus judge, 0–5 (grounded / auditable / traceable reasoning, **independent of
