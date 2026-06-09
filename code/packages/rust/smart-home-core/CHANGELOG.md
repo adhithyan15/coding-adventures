@@ -54,6 +54,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_approval_summary` tool descriptors
   for read-only human-decision packet planning across review rows, actions,
   constraints, risk, and dependency blockers.
+- `smart_home.list_integration_activation_decisions` and
+  `smart_home.get_integration_activation_decision_summary` tool descriptors
+  for read-only approve/block queue planning derived from activation approval
+  packets.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.
