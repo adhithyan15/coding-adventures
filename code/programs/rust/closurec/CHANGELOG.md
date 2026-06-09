@@ -2,6 +2,53 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.54.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-040** — numeric separator stripping +
+  scientific shortest-form normalisation. **Harness now
+  reports `49 matched, 0 failed, 0 skipped (of 49 total)`
+  — fifth 100% milestone today** (17/17, 25/25, 33/33,
+  41/41, 49/49).
+- Extended `normalize_number_value()` to consider three
+  candidates: cleaned form (with `_` stripped), decimal,
+  and scientific. Picks the shortest with tie-break order
+  decimal > cleaned > scientific.
+- Added `scientific_form_of(n)` helper: for `n = m × 10^e`
+  with `m % 10 ≠ 0` and `e ≥ 1`, returns `Some("{m}E{e}")`.
+- Decimal source (no radix prefix) is now also considered
+  for normalisation — `1000` → `1E3`, `12000` → `12E3`.
+- Underscores in source are stripped before parsing
+  (`u128::from_str_radix` doesn't accept ES2021 numeric
+  separators).
+- Floating-point and exponential-source literals (anything
+  containing `.`, `e`, `E`) hit the early-return branch and
+  stay verbatim — those normalisations are separate gaps.
+
+### Added
+
+12 new `gap040_*` inline tests covering:
+- separator + scientific (`1_000`, `1_000_000`)
+- separator without trailing zeros (`1_234_567`)
+- hex + separator (`0xff_ff`)
+- bare decimal → scientific (`1000`)
+- decimal/scientific tie (`100`)
+- tiny decimal stays (`10`)
+- multi-digit mantissa scientific (`12000` → `12E3`)
+- mantissa-exponent tie (`1234500`)
+- zero/no-norm/float non-regression
+
+### Verified against upstream JAR
+
+All worked examples in the function docstring were verified
+against `closure-compiler-v20240317.jar` directly during
+implementation. Boundary cases confirmed:
+- `1000` → `1E3` (sci strictly shorter)
+- `100` → `100` (decimal-sci tie → decimal)
+- `12000` → `12E3` (multi-digit mantissa)
+- `1234500` → `1234500` (cleaned-decimal-sci tie → decimal)
+- `0xff_ff` → `65535` (decimal strictly shortest)
+
 ## [0.53.0] - 2026-06-09
 
 ### Changed

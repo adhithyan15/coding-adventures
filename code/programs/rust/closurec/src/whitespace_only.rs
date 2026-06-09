@@ -784,60 +784,87 @@ fn is_number_literal(tok: &lexer::token::Token) -> bool {
     matches!(tok.type_, lexer::token::TokenType::Number)
 }
 
-/// gap-038: rewrite hex / octal / binary integer literals to
-/// their decimal form when decimal is no longer than source.
+/// gap-038 + gap-040: rewrite numeric integer literals to
+/// their shortest representation among the three candidates
+/// {cleaned source form, decimal form, scientific form},
+/// matching upstream Closure's WHITESPACE_ONLY behaviour.
 ///
-/// Upstream Closure under WHITESPACE_ONLY normalises numeric
-/// literals to a shortest-form representation. For non-BigInt
-/// hex/oct/bin literals, the decimal form is chosen iff its
-/// string length is **less than or equal to** the source-form
-/// length — i.e. tie-breaks go to decimal.
+/// **The candidates:**
+///   - **Cleaned**: original `value` with ES2021 numeric
+///     separators (`_`) stripped. For hex/oct/bin, this
+///     keeps the radix prefix; for decimal, this is the
+///     plain digit run.
+///   - **Decimal**: `n.to_string()` — the canonical base-10
+///     form.
+///   - **Scientific**: when `n = m × 10^e` with `m % 10 ≠ 0`
+///     and `e ≥ 1`, the form `"{m}E{e}"`. None if `n == 0`
+///     or `e == 0`.
 ///
-/// **Worked examples** (verified against
-/// `closure-compiler-v20240317.jar`):
-///   `0xff`         (4 chars) → `255`             (3 chars) → DECIMAL wins
-///   `0xfff`        (5 chars) → `4095`            (4 chars) → DECIMAL wins
-///   `0xffffffff`  (10 chars) → `4294967295`     (10 chars) → DECIMAL wins (tie)
-///   `0xfffffffff` (11 chars) → `68719476735`    (11 chars) → DECIMAL wins (tie)
-///   `0xffffffffffff` (14 chars) → `281474976710655` (15 chars) → HEX wins
-///   `0o777`        (5 chars) → `511`             (3 chars) → DECIMAL wins
-///   `0b1010`       (6 chars) → `10`              (2 chars) → DECIMAL wins
+/// **Tie-break order** (when lengths are equal): decimal >
+/// cleaned > scientific. Verified against
+/// `closure-compiler-v20240317.jar` for boundary cases:
+///   - `0xffffffff` (10 cleaned hex) = `4294967295` (10
+///     decimal) → DECIMAL wins.
+///   - `100` (3 decimal) = `1E2` (3 scientific) → DECIMAL
+///     wins.
+///
+/// **Worked examples** (all verified against the JAR):
+///   `0xff` (4)       → `255` (3) → DECIMAL
+///   `0xffffffffffff` (14) → `281474976710655` (15) → CLEANED HEX
+///   `1_000` (5)      → cleaned `1000` (4), sci `1E3` (3) → SCIENTIFIC
+///   `1_000_000` (9)  → cleaned `1000000` (7), sci `1E6` (3) → SCIENTIFIC
+///   `1_234_567` (9)  → cleaned `1234567` (7), no sci → CLEANED
+///   `0xff_ff` (7)    → cleaned `0xffff` (6), decimal `65535` (5) → DECIMAL
+///   `12000` (5)      → sci `12E3` (4) → SCIENTIFIC
+///   `1234500` (7)    → sci `12345E2` (7) → DECIMAL (tie)
 ///
 /// **Not handled (left for follow-up gaps):**
-///   - BigInt literals (anything ending in `n`) need
-///     arbitrary-precision arithmetic. `0xfn` stays as
-///     `0xfn` rather than becoming `15n`.
-///   - Decimal floating-point normalisation: `0.5` → `.5`,
-///     `1e3` → `1E3`, `10.0` → `10`. These are different
-///     rules in different parts of the upstream code path.
-///   - Numbers that exceed `u128::MAX` parse as `None` and
-///     stay verbatim.
+///   - BigInt literals (suffix `n`) need bigint arithmetic.
+///   - Decimal floating-point shortest-form (`0.5` → `.5`,
+///     `10.0` → `10`).
+///   - Numbers exceeding `u128::MAX` stay verbatim.
 fn normalize_number_value(value: &str) -> String {
     // BigInt — defer to a future gap.
     if value.ends_with('n') {
         return value.to_string();
     }
-    // Try each radix prefix in turn. The prefixes are
-    // case-insensitive per §12.8.3.
-    let parsed: Option<u128> = if let Some(rest) = value
+    // gap-040: strip ES2021 numeric separators (`_`).
+    // `u128::from_str_radix` doesn't accept them; this also
+    // makes the cleaned form a candidate for shortest-form
+    // comparison.
+    let cleaned = if value.contains('_') {
+        value.replace('_', "")
+    } else {
+        value.to_string()
+    };
+    // Try each radix prefix in turn. Prefixes are
+    // case-insensitive per §12.8.3. The decimal branch
+    // (no radix prefix) also feeds into shortest-form for
+    // gap-040 — bare-decimal source can still be shorter
+    // in scientific form (e.g. `1000` → `1E3`).
+    let parsed: Option<u128> = if let Some(rest) = cleaned
         .strip_prefix("0x")
-        .or_else(|| value.strip_prefix("0X"))
+        .or_else(|| cleaned.strip_prefix("0X"))
     {
         u128::from_str_radix(rest, 16).ok()
-    } else if let Some(rest) = value
+    } else if let Some(rest) = cleaned
         .strip_prefix("0o")
-        .or_else(|| value.strip_prefix("0O"))
+        .or_else(|| cleaned.strip_prefix("0O"))
     {
         u128::from_str_radix(rest, 8).ok()
-    } else if let Some(rest) = value
+    } else if let Some(rest) = cleaned
         .strip_prefix("0b")
-        .or_else(|| value.strip_prefix("0B"))
+        .or_else(|| cleaned.strip_prefix("0B"))
     {
         u128::from_str_radix(rest, 2).ok()
+    } else if cleaned.chars().all(|c| c.is_ascii_digit()) {
+        // Bare decimal integer.
+        cleaned.parse::<u128>().ok()
     } else {
-        // Decimal or no radix prefix — leave alone. Decimal
-        // floating-point shortest-form is a separate concern
-        // (see function doc).
+        // Has a `.` or `e`/`E` or other non-integer
+        // character — leave alone. Decimal floating-point
+        // shortest-form (e.g. `0.5` → `.5`) is a separate
+        // future gap.
         return value.to_string();
     };
 
@@ -845,15 +872,49 @@ fn normalize_number_value(value: &str) -> String {
         // Doesn't fit in u128 — leave verbatim.
         return value.to_string();
     };
+
     let decimal = n.to_string();
-    // `<= value.len()` because upstream tie-breaks to decimal
-    // (verified via JAR probe: `0xffffffff` (10) → `4294967295` (10)
-    // → DECIMAL wins).
-    if decimal.len() <= value.len() {
+    let scientific = scientific_form_of(n);
+
+    // Pick shortest. Tie-break order: decimal > cleaned >
+    // scientific (verified via JAR probes for the boundary
+    // cases — see function-level doc).
+    let cleaned_len = cleaned.len();
+    let decimal_len = decimal.len();
+    let sci_len = scientific.as_ref().map(|s| s.len()).unwrap_or(usize::MAX);
+
+    let min_len = cleaned_len.min(decimal_len).min(sci_len);
+    if decimal_len == min_len {
         decimal
+    } else if cleaned_len == min_len {
+        cleaned
     } else {
-        value.to_string()
+        scientific.unwrap()
     }
+}
+
+/// gap-040: scientific shortest-form helper. For an integer
+/// `n = m × 10^e` with `m % 10 ≠ 0` and `e ≥ 1`, returns
+/// `Some("{m}E{e}")`. Returns `None` when `n == 0` or `e ==
+/// 0` (the latter because `"{n}E0"` is always longer than
+/// just `"{n}"`).
+///
+/// Upstream uses uppercase `E` (verified by JAR probes:
+/// `1e3` → `1E3`, `2e10` → `2E10`).
+fn scientific_form_of(n: u128) -> Option<String> {
+    if n == 0 {
+        return None;
+    }
+    let mut m = n;
+    let mut e: u32 = 0;
+    while m % 10 == 0 {
+        m /= 10;
+        e += 1;
+    }
+    if e == 0 {
+        return None;
+    }
+    Some(format!("{}E{}", m, e))
 }
 
 /// True iff this token came from a string-literal rule. The
@@ -1891,6 +1952,94 @@ mod tests {
         let big = "0x".to_string() + &"f".repeat(40); // u160 worth
         let src = format!("var x={};", big);
         assert_eq!(minify(&src), src);
+    }
+
+    // ---- gap-040: numeric separator + scientific ---------
+
+    /// Target fixture: `1_000_000` → `1E6`.
+    /// Stripped to `1000000` (7 chars), scientific `1E6`
+    /// (3 chars) → scientific wins.
+    #[test]
+    fn gap040_separator_scientific_million() {
+        assert_eq!(minify("var x=1_000_000;"), "var x=1E6;");
+    }
+
+    /// `1_000` → `1E3`. Decimal `1000` (4), sci `1E3` (3).
+    #[test]
+    fn gap040_separator_scientific_thousand() {
+        assert_eq!(minify("var x=1_000;"), "var x=1E3;");
+    }
+
+    /// `1_234_567` → `1234567`. No trailing zeros, no
+    /// scientific candidate. Cleaned (7) = decimal (7),
+    /// decimal wins on tie.
+    #[test]
+    fn gap040_separator_no_trailing_zeros() {
+        assert_eq!(minify("var x=1_234_567;"), "var x=1234567;");
+    }
+
+    /// `0xff_ff` → `65535`. Cleaned hex (6), decimal (5),
+    /// no sci → decimal.
+    #[test]
+    fn gap040_hex_with_separator() {
+        assert_eq!(minify("var x=0xff_ff;"), "var x=65535;");
+    }
+
+    /// Bare decimal `1000` → `1E3`. Cleaned (4) = decimal
+    /// (4), sci (3) → sci.
+    #[test]
+    fn gap040_bare_decimal_to_scientific() {
+        assert_eq!(minify("var x=1000;"), "var x=1E3;");
+    }
+
+    /// Tie: `100` decimal (3) ties with `1E2` scientific (3).
+    /// Decimal wins on tie.
+    #[test]
+    fn gap040_decimal_scientific_tie_picks_decimal() {
+        assert_eq!(minify("var x=100;"), "var x=100;");
+    }
+
+    /// `10` → `10`. Decimal (2) < sci `1E1` (3).
+    #[test]
+    fn gap040_tiny_decimal_unchanged() {
+        assert_eq!(minify("var x=10;"), "var x=10;");
+    }
+
+    /// `12000` → `12E3`. Mantissa not 1; verifies general
+    /// scientific form. Cleaned (5), decimal (5), sci `12E3`
+    /// (4) → sci wins.
+    #[test]
+    fn gap040_scientific_with_multi_digit_mantissa() {
+        assert_eq!(minify("var x=12000;"), "var x=12E3;");
+    }
+
+    /// `1234500` (7 chars) ties with sci `12345E2` (7
+    /// chars). Decimal wins on tie.
+    #[test]
+    fn gap040_decimal_sci_tie_picks_decimal() {
+        assert_eq!(minify("var x=1234500;"), "var x=1234500;");
+    }
+
+    /// **Non-regression**: `0` is the trivial case.
+    /// Scientific helper returns None for `n == 0`.
+    #[test]
+    fn gap040_zero_unchanged() {
+        assert_eq!(minify("var x=0;"), "var x=0;");
+    }
+
+    /// **Non-regression**: decimal source without trailing
+    /// zeros is unchanged.
+    #[test]
+    fn gap040_decimal_no_normalization() {
+        assert_eq!(minify("var x=12345;"), "var x=12345;");
+    }
+
+    /// **Non-regression**: floating-point literals are NOT
+    /// touched — they hit the early `return value.to_string()`
+    /// branch because they contain `.` (or `e`/`E`).
+    #[test]
+    fn gap040_float_left_alone() {
+        assert_eq!(minify("var x=1.5;"), "var x=1.5;");
     }
 
     // ---- gap-039: tagged template separator --------------
