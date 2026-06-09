@@ -2,6 +2,31 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.59.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-047** — synthetic `;` after a `}` is now
+  suppressed when the next non-trivia token is a
+  statement-starting keyword. ASI cleanly covers that
+  boundary; the `;` is wasted bytes. Harness now **87/89**
+  — **only gap-044 (lexer-level template substitution)
+  remains open**.
+- Added a 5th branch to the `}` 4-way decision machine
+  (gap-030/033/041): when `next_is_stmt_keyword`, neither
+  emit nor defer.
+- Keyword set: `var`, `let`, `const`, `function`, `class`,
+  `if`, `for`, `while`, `do`, `switch`, `try`, `return`,
+  `throw`, `break`, `continue`, `import`, `export`.
+- **EOF (None)** is NOT in the set — the gap-030 trailing
+  `;` after a final function-decl is preserved.
+
+### Added
+
+7 inline `gap047_*` tests including 5 explicit non-
+regression cases (EOF still emits, close-brace defer
+preserved, Other-block unaffected, return keyword,
+trychain continuation).
+
 ## [0.58.0] - 2026-06-09
 
 ### Changed
