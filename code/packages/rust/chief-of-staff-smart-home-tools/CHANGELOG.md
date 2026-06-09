@@ -28,6 +28,9 @@ All notable changes to this package will be documented in this file.
 - Added `smart_home.complete_pairing` over the D23 runtime mutation facade so
   Chief of Staff jobs can finish pairing ceremonies with VaultRef handles and
   non-secret metadata without owning credential material.
+- Added `smart_home.report_event` over the D23 runtime mutation facade so Chief
+  of Staff jobs can ingest adapter-observed device events and bridge-health
+  reports without owning registry mutation logic.
 - Added scheduled discovery worker observability to
   `smart_home.observe_supervision`, including worker status, due time, last run
   counts, and failure pressure from the D23 runtime.

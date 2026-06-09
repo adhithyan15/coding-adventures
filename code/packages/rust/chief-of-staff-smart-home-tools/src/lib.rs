@@ -18,10 +18,10 @@ use smart_home_core::{
     AgentId, AuthorizationDecision, AuthorizationDecisionLogSummary, AuthorizationOutcome,
     AuthorizationSubject, Bridge, BridgeId, Capability, CapabilityGrant,
     CapabilityGrantInventorySummary, CapabilityGrantScope, CapabilityGrantStatus, CapabilityId,
-    CommandResult, CommandStatus, CommandType, Device, DeviceCommand, DeviceEvent, DeviceEventType,
-    EntityId, EntityKind, Health, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
-    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
-    StateDelta, StateSnapshot, StateSource, Value, VaultRef,
+    CommandResult, CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent,
+    DeviceEventType, DeviceId, EntityId, EntityKind, EventId, Health, IntegrationId, Metadata,
+    PrivilegeTier, ProtocolFamily, ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId,
+    SceneScope, StateConfidence, StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
@@ -44,8 +44,8 @@ use smart_home_integration_catalog::{
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
 use smart_home_runtime::{
-    DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary, DesiredStateQuery,
-    DesiredStateSort, DiscoveryWorkerQuery, DiscoveryWorkerRunInstruction,
+    BridgeHealthReport, DesiredEntityState, DesiredStateAction, DesiredStateInventorySummary,
+    DesiredStateQuery, DesiredStateSort, DiscoveryWorkerQuery, DiscoveryWorkerRunInstruction,
     DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort, PairingSessionStatus,
     ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
     RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
@@ -57,15 +57,16 @@ use smart_home_runtime::{
     RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
     RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
     RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
-    RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
-    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
-    RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
-    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
-    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
-    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
-    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
-    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
-    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
+    RuntimeReadToolRequest, RuntimeReportEventToolOutput, RuntimeReportEventToolRequest,
+    RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary, RuntimeSubscribeToolOutput,
+    RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId,
+    RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot,
+    RuntimeSubscriptionSort, RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary,
+    RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot,
+    RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot,
+    SmartHomeRuntime, SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort,
+    SupervisionTickReport, WorkerHeartbeatDeadline, WorkerHeartbeatSchedule,
+    WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -81,6 +82,7 @@ pub const SMART_HOME_LIST_SCENES_TOOL_ID: &str = "smart_home.list_scenes";
 pub const SMART_HOME_DESCRIBE_SCENE_TOOL_ID: &str = "smart_home.describe_scene";
 pub const SMART_HOME_GET_STATE_TOOL_ID: &str = "smart_home.get_state";
 pub const SMART_HOME_COMMAND_TOOL_ID: &str = "smart_home.command";
+pub const SMART_HOME_REPORT_EVENT_TOOL_ID: &str = "smart_home.report_event";
 pub const SMART_HOME_SUBSCRIBE_TOOL_ID: &str = "smart_home.subscribe";
 pub const SMART_HOME_POLL_EVENTS_TOOL_ID: &str = "smart_home.poll_events";
 pub const SMART_HOME_UNSUBSCRIBE_TOOL_ID: &str = "smart_home.unsubscribe";
@@ -316,6 +318,13 @@ impl SmartHomeToolBridge {
                             ]),
                         ),
                     )
+                }
+                SMART_HOME_REPORT_EVENT_TOOL_ID => {
+                    let request = report_event_request(&arguments, now_ms)?;
+                    let output = runtime
+                        .execute_report_event_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(report_event_output_handler_output(output))
                 }
                 SMART_HOME_SUBSCRIBE_TOOL_ID => {
                     let request = subscribe_request(&arguments)?;
@@ -974,6 +983,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             collection_output_schema("bridges"),
         ),
         command_definition(),
+        report_event_definition(),
         subscribe_definition(),
         poll_events_definition(),
         unsubscribe_definition(),
@@ -1924,6 +1934,79 @@ fn command_definition() -> ToolDefinition {
     }
 }
 
+fn report_event_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_REPORT_EVENT_TOOL_ID.to_string(),
+        display_name: "Report smart-home event".to_string(),
+        description:
+            "Ingest one adapter-observed D23 device event or bridge-health report into the smart-home runtime."
+                .to_string(),
+        input_schema: object_schema(
+            vec![
+                SchemaProperty::new("event_kind", JsonSchema::String),
+                SchemaProperty::new("event_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("device_id", JsonSchema::String),
+                SchemaProperty::new("entity_id", JsonSchema::String),
+                SchemaProperty::new("event_type", JsonSchema::String),
+                SchemaProperty::new("observed_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("received_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("capability_id", JsonSchema::String),
+                SchemaProperty::new("value", JsonSchema::Any),
+                SchemaProperty::new("raw_ref", JsonSchema::String),
+                SchemaProperty::new("correlation_id", JsonSchema::String),
+                SchemaProperty::new("health", JsonSchema::String),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec!["event_kind", "event_id", "bridge_id"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("event_kind", JsonSchema::String),
+                SchemaProperty::new("event_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("device_id", JsonSchema::Any),
+                SchemaProperty::new("entity_id", JsonSchema::Any),
+                SchemaProperty::new("event_type", JsonSchema::Any),
+                SchemaProperty::new("health", JsonSchema::Any),
+                SchemaProperty::new("observed_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("received_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("state_delta", JsonSchema::Any),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec![
+                "event_kind",
+                "event_id",
+                "bridge_id",
+                "device_id",
+                "entity_id",
+                "event_type",
+                "health",
+                "observed_at_ms",
+                "received_at_ms",
+                "state_delta",
+                "metadata",
+            ],
+            false,
+        )),
+        side_effects: ToolSideEffects::External,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier1,
+        required_capabilities: vec!["smart_home:ingest".to_string()],
+        preferred_lock_scope: Some("smart_home.events".to_string()),
+        timeout_seconds: Some(10),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "events".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
+}
+
 fn discover_request(arguments: &JsonValue) -> Result<RuntimeDiscoverToolRequest, ToolCallError> {
     let _ = expect_object(arguments)?;
     let mut request = RuntimeDiscoverToolRequest::new();
@@ -2082,6 +2165,66 @@ fn command_request(arguments: &JsonValue) -> Result<RuntimeCommandToolRequest, T
         request = request.with_timeout_ms(timeout_ms);
     }
     Ok(request)
+}
+
+fn report_event_request(
+    arguments: &JsonValue,
+    now_ms: u64,
+) -> Result<RuntimeReportEventToolRequest, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    match required_string(arguments, "event_kind")?.as_str() {
+        "device" | "device_event" => report_device_event_request(arguments, now_ms),
+        "bridge_health" | "health" => report_bridge_health_request(arguments, now_ms),
+        label => Err(validation_error(format!(
+            "unknown report event kind `{label}`"
+        ))),
+    }
+}
+
+fn report_device_event_request(
+    arguments: &JsonValue,
+    now_ms: u64,
+) -> Result<RuntimeReportEventToolRequest, ToolCallError> {
+    let state_delta = match optional_string(arguments, "capability_id")? {
+        Some(capability_id) => Some(StateDelta {
+            capability_id: CapabilityId::trusted(capability_id),
+            value: optional_field(arguments, "value")
+                .map(json_to_smart_value)
+                .transpose()?
+                .unwrap_or(Value::Null),
+        }),
+        None => None,
+    };
+
+    Ok(RuntimeReportEventToolRequest::device(DeviceEvent {
+        event_id: EventId::trusted(required_string(arguments, "event_id")?),
+        bridge_id: BridgeId::trusted(required_string(arguments, "bridge_id")?),
+        device_id: optional_string(arguments, "device_id")?.map(DeviceId::trusted),
+        entity_id: optional_string(arguments, "entity_id")?.map(EntityId::trusted),
+        observed_at_ms: optional_u64(arguments, "observed_at_ms")?.unwrap_or(now_ms),
+        received_at_ms: optional_u64(arguments, "received_at_ms")?.unwrap_or(now_ms),
+        event_type: parse_device_event_type(&required_string(arguments, "event_type")?)?,
+        state_delta,
+        raw_ref: optional_string(arguments, "raw_ref")?,
+        correlation_id: optional_string(arguments, "correlation_id")?.map(CorrelationId::trusted),
+        metadata: optional_metadata(arguments)?,
+    }))
+}
+
+fn report_bridge_health_request(
+    arguments: &JsonValue,
+    now_ms: u64,
+) -> Result<RuntimeReportEventToolRequest, ToolCallError> {
+    Ok(RuntimeReportEventToolRequest::bridge_health(
+        BridgeHealthReport {
+            event_id: EventId::trusted(required_string(arguments, "event_id")?),
+            bridge_id: BridgeId::trusted(required_string(arguments, "bridge_id")?),
+            health: parse_health(&required_string(arguments, "health")?)?,
+            observed_at_ms: optional_u64(arguments, "observed_at_ms")?.unwrap_or(now_ms),
+            received_at_ms: optional_u64(arguments, "received_at_ms")?.unwrap_or(now_ms),
+            metadata: optional_metadata(arguments)?,
+        },
+    ))
 }
 
 fn subscribe_request(arguments: &JsonValue) -> Result<RuntimeSubscribeToolRequest, ToolCallError> {
@@ -2604,6 +2747,32 @@ fn complete_pairing_output_handler_output(
                     .unwrap_or(JsonValue::Null),
             ),
         ]),
+    )
+}
+
+fn report_event_output_handler_output(output: RuntimeReportEventToolOutput) -> ToolHandlerOutput {
+    let payload = report_event_output_json(&output);
+    ToolHandlerOutput::new(payload).with_event(
+        ToolEventKind::Progress,
+        match &output {
+            RuntimeReportEventToolOutput::Device(event) => object([
+                ("operation", string("report_event")),
+                ("event_kind", string("device")),
+                ("event_id", string(event.event_id.as_str())),
+                ("bridge_id", string(event.bridge_id.as_str())),
+                (
+                    "event_type",
+                    string(device_event_type_label(event.event_type)),
+                ),
+            ]),
+            RuntimeReportEventToolOutput::BridgeHealth(report) => object([
+                ("operation", string("report_event")),
+                ("event_kind", string("bridge_health")),
+                ("event_id", string(report.event_id.as_str())),
+                ("bridge_id", string(report.bridge_id.as_str())),
+                ("health", string(health_label(report.health))),
+            ]),
+        },
     )
 }
 
@@ -5072,6 +5241,67 @@ fn command_result_json(result: &CommandResult) -> JsonValue {
     ])
 }
 
+fn report_event_output_json(output: &RuntimeReportEventToolOutput) -> JsonValue {
+    match output {
+        RuntimeReportEventToolOutput::Device(event) => object([
+            ("event_kind", string("device")),
+            ("event_id", string(event.event_id.as_str())),
+            ("bridge_id", string(event.bridge_id.as_str())),
+            (
+                "device_id",
+                event
+                    .device_id
+                    .as_ref()
+                    .map(|device_id| string(device_id.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+            (
+                "entity_id",
+                event
+                    .entity_id
+                    .as_ref()
+                    .map(|entity_id| string(entity_id.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+            (
+                "event_type",
+                string(device_event_type_label(event.event_type)),
+            ),
+            ("health", JsonValue::Null),
+            ("observed_at_ms", integer(event.observed_at_ms as i64)),
+            ("received_at_ms", integer(event.received_at_ms as i64)),
+            (
+                "state_delta",
+                event
+                    .state_delta
+                    .as_ref()
+                    .map(state_delta_json)
+                    .unwrap_or(JsonValue::Null),
+            ),
+            (
+                "metadata",
+                JsonValue::Array(event.metadata.iter().map(metadata_json).collect()),
+            ),
+        ]),
+        RuntimeReportEventToolOutput::BridgeHealth(report) => object([
+            ("event_kind", string("bridge_health")),
+            ("event_id", string(report.event_id.as_str())),
+            ("bridge_id", string(report.bridge_id.as_str())),
+            ("device_id", JsonValue::Null),
+            ("entity_id", JsonValue::Null),
+            ("event_type", string("health")),
+            ("health", string(health_label(report.health))),
+            ("observed_at_ms", integer(report.observed_at_ms as i64)),
+            ("received_at_ms", integer(report.received_at_ms as i64)),
+            ("state_delta", JsonValue::Null),
+            (
+                "metadata",
+                JsonValue::Array(report.metadata.iter().map(metadata_json).collect()),
+            ),
+        ]),
+    }
+}
+
 fn event_delivery_batch_json(batch: &RuntimeEventDeliveryBatch) -> JsonValue {
     object([
         ("subscription_id", string(batch.subscription_id.as_str())),
@@ -5985,6 +6215,20 @@ fn parse_health(label: &str) -> Result<Health, ToolCallError> {
         "unsupported" => Ok(Health::Unsupported),
         "removed" => Ok(Health::Removed),
         _ => Err(validation_error(format!("unknown health `{label}`"))),
+    }
+}
+
+fn parse_device_event_type(label: &str) -> Result<DeviceEventType, ToolCallError> {
+    match label {
+        "discovered" => Ok(DeviceEventType::Discovered),
+        "updated" => Ok(DeviceEventType::Updated),
+        "removed" => Ok(DeviceEventType::Removed),
+        "unavailable" => Ok(DeviceEventType::Unavailable),
+        "error" => Ok(DeviceEventType::Error),
+        "health" => Ok(DeviceEventType::Health),
+        _ => Err(validation_error(format!(
+            "unknown device event type `{label}`"
+        ))),
     }
 }
 
@@ -6915,7 +7159,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 38);
+        assert_eq!(definitions.len(), 39);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -6949,6 +7193,7 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_COMPLETE_PAIRING_TOOL_ID));
+        assert!(export.tool_ids().contains(&SMART_HOME_REPORT_EVENT_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_SUBSCRIBE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_POLL_EVENTS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_UNSUBSCRIBE_TOOL_ID));
@@ -7013,11 +7258,18 @@ mod tests {
             export.summary.required_capability_count("smart_home:pair"),
             2
         );
+        assert_eq!(
+            export
+                .summary
+                .required_capability_count("smart_home:ingest"),
+            1
+        );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_REPORT_EVENT_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
@@ -7646,6 +7898,73 @@ mod tests {
         );
         assert_eq!(command_trace.summary().progress_event_count, 1);
 
+        let report_event_request = request(
+            "call-report-event",
+            SMART_HOME_REPORT_EVENT_TOOL_ID,
+            object([
+                ("event_kind", string("device")),
+                ("event_id", string("hue-event-1")),
+                ("bridge_id", string("bridge-1")),
+                ("device_id", string("device-1")),
+                ("entity_id", string("entity-light-1")),
+                ("event_type", string("updated")),
+                ("observed_at_ms", integer(1_101)),
+                ("received_at_ms", integer(1_101)),
+                ("capability_id", string("light.on_off")),
+                ("value", JsonValue::Bool(true)),
+                ("raw_ref", string("event-log://hue/bridge-1/1")),
+                ("correlation_id", string("hue-sse-1")),
+                ("metadata", object([("source", string("hue_sse"))])),
+            ]),
+            1_101,
+        );
+        let report_event_trace = tool_runtime.invoke_with_events(&report_event_request);
+        assert!(report_event_trace.result.ok);
+        assert_eq!(report_event_trace.summary().progress_event_count, 1);
+        let report_event_output = report_event_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(report_event_output, "event_kind"),
+            Some(&string("device"))
+        );
+        assert_eq!(
+            field(report_event_output, "event_type"),
+            Some(&string("updated"))
+        );
+        assert_eq!(
+            field(
+                field(report_event_output, "state_delta").unwrap(),
+                "capability_id"
+            ),
+            Some(&string("light.on_off"))
+        );
+
+        let report_health_request = request(
+            "call-report-health",
+            SMART_HOME_REPORT_EVENT_TOOL_ID,
+            object([
+                ("event_kind", string("bridge_health")),
+                ("event_id", string("hue-health-1")),
+                ("bridge_id", string("bridge-1")),
+                ("health", string("online")),
+                ("observed_at_ms", integer(1_102)),
+                ("received_at_ms", integer(1_102)),
+                ("metadata", object([("source", string("heartbeat"))])),
+            ]),
+            1_102,
+        );
+        let report_health_trace = tool_runtime.invoke_with_events(&report_health_request);
+        assert!(report_health_trace.result.ok);
+        assert_eq!(report_health_trace.summary().progress_event_count, 1);
+        let report_health_output = report_health_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(report_health_output, "event_kind"),
+            Some(&string("bridge_health"))
+        );
+        assert_eq!(
+            field(report_health_output, "health"),
+            Some(&string("online"))
+        );
+
         let runtime_snapshot_request = request(
             "call-runtime-snapshot",
             SMART_HOME_GET_RUNTIME_SNAPSHOT_TOOL_ID,
@@ -8039,6 +8358,14 @@ mod tests {
             field(state_output, "has_state"),
             Some(&JsonValue::Bool(true))
         );
+        assert_eq!(
+            field(field(state_output, "state").unwrap(), "source"),
+            Some(&string("event_stream"))
+        );
+        assert_eq!(
+            field(field(state_output, "state").unwrap(), "confidence"),
+            Some(&string("confirmed"))
+        );
 
         let unsubscribe_request = request(
             "call-unsubscribe",
@@ -8068,27 +8395,17 @@ mod tests {
         assert!(reconcile_trace.result.ok);
         assert_eq!(reconcile_trace.summary().progress_event_count, 1);
         let reconcile_output = reconcile_trace.result.output.as_ref().unwrap();
-        assert_eq!(field(reconcile_output, "action_count"), Some(&integer(1)));
+        assert_eq!(field(reconcile_output, "action_count"), Some(&integer(0)));
         assert_eq!(
             field(
                 field(reconcile_output, "summary").unwrap(),
                 "stale_state_count"
             ),
-            Some(&integer(1))
-        );
-        let reconcile_action = array_item(field(reconcile_output, "actions").unwrap(), 0).unwrap();
-        assert_eq!(
-            field(reconcile_action, "action_type"),
-            Some(&string("command_issued"))
-        );
-        assert_eq!(field(reconcile_action, "reason"), Some(&string("stale")));
-        assert_eq!(
-            field(field(reconcile_action, "command").unwrap(), "command_type"),
-            Some(&string("turn_on"))
+            Some(&integer(0))
         );
         assert_eq!(
-            field(field(reconcile_action, "result").unwrap(), "accepted"),
-            Some(&JsonValue::Bool(true))
+            array_len(field(reconcile_output, "actions").unwrap()),
+            Some(0)
         );
 
         let supervision_tick_request = request(
@@ -8157,6 +8474,8 @@ mod tests {
         journal.record_trace(pair_request, pair_trace);
         journal.record_trace(complete_pairing_request, complete_pairing_trace);
         journal.record_trace(command_request, command_trace);
+        journal.record_trace(report_event_request, report_event_trace);
+        journal.record_trace(report_health_request, report_health_trace);
         journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
         journal.record_trace(topology_summary_request, topology_summary_trace);
         journal.record_trace(supervision_plan_request, supervision_plan_trace);
@@ -8178,12 +8497,12 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 37);
-        assert_eq!(journal_summary.completed_count, 37);
-        assert_eq!(journal.audit_records().len(), 37);
+        assert_eq!(journal_summary.invocation_count, 39);
+        assert_eq!(journal_summary.completed_count, 39);
+        assert_eq!(journal.audit_records().len(), 39);
 
         let runtime = runtime.borrow();
-        assert_eq!(runtime.optimistic_state_count(), 1);
+        assert_eq!(runtime.optimistic_state_count(), 0);
         assert_eq!(runtime.pairing_session_count(), 1);
         assert!(matches!(
             runtime
@@ -8193,8 +8512,8 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            34,
-            "read, subscribe, poll, unsubscribe, and pairing calls record tool authorization, while command records tool and command authorization"
+            36,
+            "read, subscribe, poll, unsubscribe, pairing, and ingest calls record tool authorization, while command records tool and command authorization"
         );
         assert_eq!(
             runtime
@@ -8209,7 +8528,7 @@ mod tests {
     #[test]
     fn smart_home_handler_reports_runtime_authorization_denials() {
         let runtime = Rc::new(RefCell::new(hue_lighting_runtime()));
-        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+        let bridge = SmartHomeToolBridge::new(runtime.clone(), AgentId::trusted(AGENT_ID));
         let mut tool_runtime = InMemoryToolRuntime::new();
         bridge.register_all(&mut tool_runtime).unwrap();
 
@@ -8245,6 +8564,25 @@ mod tests {
             denied_pair.error.as_ref().map(|error| error.kind),
             Some(ToolErrorKind::ToolPermissionDenied)
         );
+
+        let denied_report = tool_runtime.invoke(&request(
+            "call-report-denied",
+            SMART_HOME_REPORT_EVENT_TOOL_ID,
+            object([
+                ("event_kind", string("device")),
+                ("event_id", string("denied-event-1")),
+                ("bridge_id", string("bridge-1")),
+                ("event_type", string("updated")),
+            ]),
+            1_000,
+        ));
+
+        assert!(!denied_report.ok);
+        assert_eq!(
+            denied_report.error.as_ref().map(|error| error.kind),
+            Some(ToolErrorKind::ToolPermissionDenied)
+        );
+        assert_eq!(runtime.borrow().registry().counts().events, 0);
     }
 
     #[test]
