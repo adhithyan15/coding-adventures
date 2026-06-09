@@ -92,6 +92,39 @@ fn is_i32_width(hint: &str) -> bool {
     matches!(hint, "bool" | "i8" | "i16" | "i32" | "u8" | "u16" | "u32")
 }
 
+/// The type hint of the instruction that defines `reg`, if any.
+fn producer_hint<'a>(func: &'a IIRFunction, reg: &str) -> Option<&'a str> {
+    func.instructions
+        .iter()
+        .find(|i| i.dest.as_deref() == Some(reg))
+        .map(|i| i.type_hint.as_str())
+}
+
+/// The `jmp_if_false` conditions that hold a **lisp value** rather than a
+/// machine boolean — and so need a lisp-truthiness test (`COND` whose clause
+/// guard is an atom, `nil`, a cons, or a variable, not a `pair?`/`EQ` result).
+///
+/// `jmp_if_false` branches when its condition is *false*, testing a raw `i32`
+/// against zero. A predicate result (`pair?`/`not`/`equal?`, hint `"bool"`) is
+/// exactly such an `i32`, so it is tested directly. But a lisp value is not: a
+/// lisp integer atom is **always true** (even `0` — only `nil` is false in
+/// McCarthy), and `nil` is a reference, not an `i32`. We detect a lisp-value
+/// condition structurally (its producer's hint is not `"bool"`) and the rebuild
+/// wraps it: `t = not(is_null(cond))` — i.e. `t` is 1 unless `cond` is `nil`.
+fn lisp_conditions(func: &IIRFunction) -> HashSet<String> {
+    let mut set = HashSet::new();
+    for instr in &func.instructions {
+        if instr.op == "jmp_if_false" {
+            if let Some(Operand::Var(c)) = instr.srcs.first() {
+                if producer_hint(func, c) != Some("bool") {
+                    set.insert(c.clone());
+                }
+            }
+        }
+    }
+    set
+}
+
 /// The `srcs` indices of `instr` that hold a **lisp value** (and so whose
 /// integer atoms must be boxed): `field_store`'s value operand, and the value
 /// arguments of a `pair?`/`equal?` call. Other positions (the builtin name, a
@@ -157,10 +190,12 @@ fn reference_registers(func: &IIRFunction) -> HashSet<String> {
 
 fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
     let ref_regs = reference_registers(func);
+    let lisp_conds = lisp_conditions(func);
 
     // ── 1. Which atoms must be boxed? Any non-reference value that flows into a
-    //       lisp-value position — a `field_store`'s value operand, or a
-    //       `pair?`/`equal?` argument. ──
+    //       lisp-value position — a `field_store`'s value operand, a
+    //       `pair?`/`equal?` argument, or a lisp-value `COND` guard (which is
+    //       boxed so its truthiness can be tested with `is_null`). ──
     let mut needs_box: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
         for idx in lisp_value_src_indices(instr) {
@@ -171,12 +206,23 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
             }
         }
     }
+    // A lisp-value condition that is an integer **atom** must be boxed before its
+    // `is_null` truthiness test. A condition that is already a reference (`nil` /
+    // a cons / a variable) needs no boxing.
+    for cond in &lisp_conds {
+        if !ref_regs.contains(cond)
+            && matches!(producer_hint(func, cond), Some("i64") | Some("i32"))
+        {
+            needs_box.insert(cond.clone());
+        }
+    }
 
-    // ── 2. Rebuild the body, narrowing boxable atom `const`s to i32 and
-    //       inserting a `box` before the first instruction that consumes each
-    //       in a lisp-value position. ──
+    // ── 2. Rebuild the body, narrowing boxable atom `const`s to i32, boxing the
+    //       lisp-value positions, and wrapping lisp-value `COND` guards with a
+    //       truthiness test. ──
     let mut new_instrs: Vec<IIRInstr> = Vec::with_capacity(func.instructions.len() + needs_box.len());
     let mut boxed: HashMap<String, String> = HashMap::new(); // atom reg → boxed reg
+    let mut truthy_counter = 0usize;
     for instr in std::mem::take(&mut func.instructions) {
         // Narrow an atom `const Int(n) : i64` that we are about to box to `i32`,
         // so `ref.i31` (which takes an i32) is well-typed. Out-of-range atoms are
@@ -187,6 +233,62 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
                     let mut c = instr.clone();
                     c.type_hint = "i32".to_string();
                     new_instrs.push(c);
+                    continue;
+                }
+            }
+        }
+
+        // A `jmp_if_false` whose guard is a lisp value: test lisp truthiness.
+        // Replace `jmp_if_false %cond, L` with
+        //   %n = is_null(%cond_boxed)        ;; 1 iff cond is nil
+        //   %t = not(%n)                     ;; 1 iff cond is truthy (non-nil)
+        //   jmp_if_false %t, L               ;; branch iff cond is nil/false
+        // so a lisp integer atom (even `0`) is true and only `nil` is false.
+        if instr.op == "jmp_if_false" {
+            if let Some(Operand::Var(cond)) = instr.srcs.first().cloned() {
+                // Only wrap a guard we can prove is a reference (so `is_null` is
+                // well-typed) or a boxable integer atom (which we box first). A
+                // lisp-value guard that is neither — e.g. a function parameter,
+                // not yet emitted by any McCarthy→wasm path — is left untouched
+                // rather than emitting `is_null` on a non-reference.
+                if lisp_conds.contains(&cond)
+                    && (ref_regs.contains(&cond) || needs_box.contains(&cond))
+                {
+                    let cond_ref = if needs_box.contains(&cond) {
+                        boxed
+                            .entry(cond.clone())
+                            .or_insert_with(|| {
+                                let b = format!("{cond}.box");
+                                new_instrs.push(IIRInstr::new(
+                                    "box",
+                                    Some(b.clone()),
+                                    vec![Operand::Var(cond.clone())],
+                                    REF_ANY,
+                                ));
+                                b
+                            })
+                            .clone()
+                    } else {
+                        cond.clone()
+                    };
+                    let n = format!("__isnil_{truthy_counter}");
+                    let t = format!("__truthy_{truthy_counter}");
+                    truthy_counter += 1;
+                    new_instrs.push(IIRInstr::new(
+                        "is_null",
+                        Some(n.clone()),
+                        vec![Operand::Var(cond_ref)],
+                        "bool",
+                    ));
+                    new_instrs.push(IIRInstr::new(
+                        "call_builtin",
+                        Some(t.clone()),
+                        vec![Operand::Var("not".to_string()), Operand::Var(n)],
+                        "bool",
+                    ));
+                    let mut j = instr.clone();
+                    j.srcs[0] = Operand::Var(t);
+                    new_instrs.push(j);
                     continue;
                 }
             }
@@ -426,6 +528,52 @@ mod tests {
 
         // No `any`/`polymorphic` hint survives.
         assert!(f.instructions.iter().all(|i| i.type_hint != "any" && i.type_hint != "polymorphic"));
+    }
+
+    #[test]
+    fn lisp_value_cond_gets_a_truthiness_test_but_a_bool_cond_does_not() {
+        // Two COND-style guards: one a lisp atom (`jmp_if_false v_atom`), one a
+        // machine boolean (`jmp_if_false v_bool` where v_bool is a `pair?`
+        // result). Only the lisp-value guard is wrapped with `is_null` + `not`.
+        let instrs = vec![
+            // lisp-value guard: a bare atom 5.
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(5)], "i64"),
+            IIRInstr::new("jmp_if_false", None, vec![Operand::Var("a".into()), Operand::Var("L1".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L1".into())], "void"),
+            // machine-boolean guard: a pair? result.
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(6)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("p".into()),
+                vec![Operand::Var("pair?".into()), Operand::Var("b".into())],
+                "bool",
+            ),
+            IIRInstr::new("jmp_if_false", None, vec![Operand::Var("p".into()), Operand::Var("L2".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L2".into())], "void"),
+            IIRInstr::new("const", Some("r".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "any"),
+        ];
+        let f = IIRFunction::new("main", vec![], "any", instrs);
+        let mut m = IIRModule::new("cond", "mccarthy-lisp");
+        m.entry_point = Some("main".to_string());
+        m.functions = vec![f];
+        lower_lisp_repr_structural(&mut m);
+        let f = &m.functions[0];
+
+        // The atom guard `a` is boxed and tested via is_null + not.
+        assert_eq!(ops(f).iter().filter(|o| **o == "is_null").count(), 1, "exactly the lisp guard tests is_null");
+
+        // The two jmp_if_false survive; the first now tests a `__truthy_*` reg
+        // (not the raw atom), the second still tests the raw `pair?` bool.
+        let jifs: Vec<&IIRInstr> = f.instructions.iter().filter(|i| i.op == "jmp_if_false").collect();
+        assert_eq!(jifs.len(), 2);
+        match (&jifs[0].srcs[0], &jifs[1].srcs[0]) {
+            (Operand::Var(c0), Operand::Var(c1)) => {
+                assert!(c0.starts_with("__truthy_"), "lisp guard wrapped: {c0}");
+                assert_eq!(c1, "p", "machine-bool guard tested directly");
+            }
+            _ => panic!("unexpected jmp_if_false operands"),
+        }
     }
 
     #[test]
