@@ -625,6 +625,112 @@ impl PrimitiveBacklogCoverageItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationPolicySurfaceInventoryItem {
+    pub surface: IntegrationPolicySurface,
+    pub required_tier: PrivilegeTier,
+    pub highest_priority: u8,
+    pub entry_count: usize,
+    pub local_entry_count: usize,
+    pub cloud_entry_count: usize,
+    pub human_review_entry_count: usize,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+impl IntegrationPolicySurfaceInventoryItem {
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids
+            .iter()
+            .any(|candidate| candidate == integration_id)
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.required_tier >= PrivilegeTier::HumanApproval
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationPolicySurfaceSummary {
+    pub total_surfaces: usize,
+    pub total_surface_entries: usize,
+    pub unique_integrations: usize,
+    pub local_surface_entries: usize,
+    pub cloud_surface_entries: usize,
+    pub human_review_surface_entries: usize,
+    pub read_only_surfaces: usize,
+    pub low_risk_surfaces: usize,
+    pub human_approval_surfaces: usize,
+    pub high_risk_surfaces: usize,
+    pub first_review_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+impl IntegrationPolicySurfaceSummary {
+    pub fn from_inventory<'a>(
+        items: impl IntoIterator<Item = &'a IntegrationPolicySurfaceInventoryItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_surfaces: 0,
+            total_surface_entries: 0,
+            unique_integrations: 0,
+            local_surface_entries: 0,
+            cloud_surface_entries: 0,
+            human_review_surface_entries: 0,
+            read_only_surfaces: 0,
+            low_risk_surfaces: 0,
+            human_approval_surfaces: 0,
+            high_risk_surfaces: 0,
+            first_review_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for item in items {
+            summary.total_surfaces += 1;
+            summary.total_surface_entries += item.entry_count;
+            summary.local_surface_entries += item.local_entry_count;
+            summary.cloud_surface_entries += item.cloud_entry_count;
+            summary.human_review_surface_entries += item.human_review_entry_count;
+            match item.required_tier {
+                PrivilegeTier::ReadOnly => summary.read_only_surfaces += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_surfaces += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_surfaces += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_surfaces += 1,
+            }
+            if item.requires_human_review() {
+                summary.first_review_priority = Some(
+                    summary
+                        .first_review_priority
+                        .map_or(item.highest_priority, |priority| {
+                            priority.min(item.highest_priority)
+                        }),
+                );
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(item.required_tier);
+            for integration_id in &item.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_surfaces == 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.human_approval_surfaces > 0
+            || self.high_risk_surfaces > 0
+            || self.human_review_surface_entries > 0
+    }
+
+    pub fn has_high_risk_surface(&self) -> bool {
+        self.high_risk_surfaces > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum IntegrationActivationTarget {
     Direct,
     DelegatedIntegration(IntegrationId),
@@ -2800,6 +2906,81 @@ pub fn primitive_backlog_with_ecosystem_coverage(
             }
         })
         .collect()
+}
+
+pub fn policy_surface_inventory(
+    catalog: &[IntegrationCatalogEntry],
+) -> Vec<IntegrationPolicySurfaceInventoryItem> {
+    policy_surface_inventory_at_or_before_priority(catalog, u8::MAX)
+}
+
+pub fn policy_surface_inventory_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+) -> Vec<IntegrationPolicySurfaceInventoryItem> {
+    #[derive(Default)]
+    struct SurfaceAccumulator {
+        highest_priority: u8,
+        local_entry_count: usize,
+        cloud_entry_count: usize,
+        human_review_entry_count: usize,
+        integration_ids: Vec<IntegrationId>,
+    }
+
+    let mut by_surface: BTreeMap<IntegrationPolicySurface, SurfaceAccumulator> = BTreeMap::new();
+
+    for entry in catalog.iter().filter(|entry| entry.priority <= priority) {
+        let surfaces = entry.policy_surfaces();
+        let local_only = entry_local_only(entry);
+        let cloud_required = entry_cloud_required(entry);
+        let requires_human_review = entry.highest_policy_tier() >= PrivilegeTier::HumanApproval;
+
+        for surface in surfaces {
+            let accumulator = by_surface.entry(surface).or_insert(SurfaceAccumulator {
+                highest_priority: entry.priority,
+                ..SurfaceAccumulator::default()
+            });
+            accumulator.highest_priority = accumulator.highest_priority.min(entry.priority);
+            if local_only {
+                accumulator.local_entry_count += 1;
+            }
+            if cloud_required {
+                accumulator.cloud_entry_count += 1;
+            }
+            if requires_human_review {
+                accumulator.human_review_entry_count += 1;
+            }
+            if !accumulator.integration_ids.contains(&entry.integration_id) {
+                accumulator
+                    .integration_ids
+                    .push(entry.integration_id.clone());
+            }
+        }
+    }
+
+    let mut inventory = by_surface
+        .into_iter()
+        .map(
+            |(surface, accumulator)| IntegrationPolicySurfaceInventoryItem {
+                surface,
+                required_tier: surface.required_tier(),
+                highest_priority: accumulator.highest_priority,
+                entry_count: accumulator.integration_ids.len(),
+                local_entry_count: accumulator.local_entry_count,
+                cloud_entry_count: accumulator.cloud_entry_count,
+                human_review_entry_count: accumulator.human_review_entry_count,
+                integration_ids: accumulator.integration_ids,
+            },
+        )
+        .collect::<Vec<_>>();
+    inventory.sort_by(|left, right| {
+        left.highest_priority
+            .cmp(&right.highest_priority)
+            .then_with(|| right.required_tier.cmp(&left.required_tier))
+            .then_with(|| right.entry_count.cmp(&left.entry_count))
+            .then_with(|| left.surface.cmp(&right.surface))
+    });
+    inventory
 }
 
 pub fn activation_plan_for_integration(
@@ -5162,6 +5343,36 @@ mod tests {
         assert!(local_actuators
             .iter()
             .any(|entry| entry.integration_id == IntegrationId::trusted("mqtt")));
+    }
+
+    #[test]
+    fn policy_surface_inventory_rolls_up_review_boundaries() {
+        let catalog = first_party_catalog();
+        let inventory = policy_surface_inventory(&catalog);
+        let entry_access = inventory
+            .iter()
+            .find(|item| item.surface == IntegrationPolicySurface::EntryAccess)
+            .unwrap();
+        let credentialed_cloud = inventory
+            .iter()
+            .find(|item| item.surface == IntegrationPolicySurface::CredentialedCloud)
+            .unwrap();
+        let summary = IntegrationPolicySurfaceSummary::from_inventory(&inventory);
+
+        assert_eq!(entry_access.required_tier, PrivilegeTier::HighRisk);
+        assert!(entry_access.includes_integration(&IntegrationId::trusted("zwave")));
+        assert!(entry_access.human_review_entry_count >= 1);
+        assert_eq!(
+            credentialed_cloud.required_tier,
+            PrivilegeTier::HumanApproval
+        );
+        assert!(credentialed_cloud.cloud_entry_count >= 1);
+        assert!(summary.total_surfaces >= 4);
+        assert!(summary.unique_integrations >= 4);
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert!(summary.has_review_work());
+        assert!(summary.has_high_risk_surface());
+        assert_eq!(summary.first_review_priority, Some(0));
     }
 
     #[test]

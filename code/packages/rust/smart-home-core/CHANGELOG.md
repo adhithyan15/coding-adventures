@@ -20,6 +20,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.get_integration_catalog_summary` and
   `smart_home.get_tool_catalog_summary` tool descriptors for compact read-only
   catalog rollups.
+- `smart_home.list_integration_policy_surfaces` and
+  `smart_home.get_integration_policy_surface_summary` tool descriptors for
+  read-only policy-surface planning rollups.
 - `smart_home.list_integration_activation_plans` and
   `smart_home.get_integration_activation_plan_summary` tool descriptors for
   read-only activation-plan listing and compact rollout plan summaries.

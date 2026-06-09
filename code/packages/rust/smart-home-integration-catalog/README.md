@@ -16,6 +16,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - target entity kind hints
 - computed D21/D18D policy surfaces for privacy, credentials, cloud accounts,
   local actuation, entry access, radio networks, and infrastructure control
+- policy-surface inventory and summary rollups for review, cloud, local, and
+  privilege-tier planning
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
