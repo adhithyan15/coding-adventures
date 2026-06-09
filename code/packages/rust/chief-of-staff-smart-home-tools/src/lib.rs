@@ -37,12 +37,12 @@ use smart_home_integration_catalog::{
     ecosystem_survey_sources, entries_requiring_primitive, find_entry, first_party_catalog,
     primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
     primitive_family_descriptors, query_integrations, readiness_report_for_plan,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationPlan,
-    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
-    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
-    IntegrationReadinessReport, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
+    IntegrationActivationPlan, IntegrationActivationTarget, IntegrationCatalogEntry,
+    IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationReadinessReport, IntegrationReadinessSummary, PrimitiveBacklogCoverageItem,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -128,6 +128,10 @@ pub const SMART_HOME_DESCRIBE_PRIMITIVE_TOOL_ID: &str = "smart_home.describe_pri
 pub const SMART_HOME_GET_INTEGRATION_CATALOG_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_catalog_summary";
 pub const SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID: &str = "smart_home.get_tool_catalog_summary";
+pub const SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID: &str =
+    "smart_home.list_integration_readiness";
+pub const SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_readiness_summary";
 
 /// Shared, mutable smart-home runtime handle for in-process D18D handlers.
 pub type SharedSmartHomeRuntime = Rc<RefCell<SmartHomeRuntime>>;
@@ -196,6 +200,16 @@ impl SmartHomeToolBridge {
                 ),
                 SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID => {
                     Ok(get_tool_catalog_summary_output_handler_output(&arguments)?)
+                }
+                SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(list_integration_readiness_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(get_integration_readiness_summary_output_handler_output(
+                        query,
+                    ))
                 }
                 SMART_HOME_DISCOVER_TOOL_ID => {
                     let request = discover_request(&arguments)?;
@@ -753,6 +767,38 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home tool catalog summary",
             "Return compact D18D smart-home tool descriptor counts from the shared smart-home core catalog.",
             object_schema(vec![], vec![], false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID,
+            "List smart-home integration readiness",
+            "List D23A integration activation readiness reports for the supplied primitive, capability, and dependency context.",
+            integration_readiness_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "readiness_reports",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["readiness_reports", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID,
+            "Get smart-home integration readiness summary",
+            "Return a compact readiness rollup for D23A integration activation planning in the supplied context.",
+            integration_readiness_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -2866,6 +2912,68 @@ fn integration_catalog_query(
     Ok(query)
 }
 
+#[derive(Debug, Clone)]
+struct IntegrationReadinessQuery {
+    priority_at_or_before: u8,
+    available_primitives: Vec<PrimitiveFamily>,
+    allowed_capabilities: Vec<CapabilityId>,
+    enabled_integrations: Vec<IntegrationId>,
+    activation_ready: Option<bool>,
+    requires_human_review: Option<bool>,
+    cloud_required: Option<bool>,
+    local_only: Option<bool>,
+    limit: Option<usize>,
+}
+
+fn integration_readiness_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationReadinessQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    Ok(IntegrationReadinessQuery {
+        priority_at_or_before: optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX),
+        available_primitives: optional_primitive_list(arguments, "available_primitives")?,
+        allowed_capabilities: optional_capability_id_list(arguments, "allowed_capability_ids")?,
+        enabled_integrations: optional_integration_id_list(arguments, "enabled_integrations")?,
+        activation_ready: optional_bool(arguments, "activation_ready")?,
+        requires_human_review: optional_bool(arguments, "requires_human_review")?,
+        cloud_required: optional_bool(arguments, "cloud_required")?,
+        local_only: optional_bool(arguments, "local_only")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_readiness_reports_for_query(
+    query: &IntegrationReadinessQuery,
+) -> (Vec<IntegrationReadinessReport>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let mut reports = readiness_reports_at_or_before_priority(
+        &catalog,
+        query.priority_at_or_before,
+        &query.available_primitives,
+        &query.allowed_capabilities,
+        &query.enabled_integrations,
+    );
+
+    if let Some(activation_ready) = query.activation_ready {
+        reports.retain(|report| report.activation_ready() == activation_ready);
+    }
+    if let Some(requires_human_review) = query.requires_human_review {
+        reports.retain(|report| report.requires_human_review == requires_human_review);
+    }
+    if let Some(cloud_required) = query.cloud_required {
+        reports.retain(|report| report.cloud_required == cloud_required);
+    }
+    if let Some(local_only) = query.local_only {
+        reports.retain(|report| report.local_only == local_only);
+    }
+    if let Some(limit) = query.limit {
+        reports.truncate(limit);
+    }
+
+    (reports, catalog_count)
+}
+
 fn list_integrations_output_handler_output(query: IntegrationCatalogQuery) -> ToolHandlerOutput {
     let catalog = first_party_catalog();
     let entries = query_integrations(&catalog, &query);
@@ -3001,6 +3109,52 @@ fn get_tool_catalog_summary_output_handler_output(
                     ("total_tools", integer(summary.total_tools as i64)),
                 ]),
             ),
+    )
+}
+
+fn list_integration_readiness_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let (reports, catalog_count) = integration_readiness_reports_for_query(&query);
+    let summary = IntegrationReadinessSummary::from_reports(reports.iter());
+    let count = reports.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "readiness_reports",
+            JsonValue::Array(reports.iter().map(readiness_report_json).collect()),
+        ),
+        ("summary", integration_readiness_summary_json(&summary)),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_readiness")),
+            ("count", integer(count as i64)),
+            ("blocked_reports", integer(summary.blocked_reports as i64)),
+        ]),
+    )
+}
+
+fn get_integration_readiness_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let (reports, _) = integration_readiness_reports_for_query(&query);
+    let summary = IntegrationReadinessSummary::from_reports(reports.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_readiness_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_integration_readiness_summary")),
+            ("total_reports", integer(summary.total_reports as i64)),
+            ("blocked_reports", integer(summary.blocked_reports as i64)),
+        ]),
     )
 }
 
@@ -5341,6 +5495,69 @@ fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
     ])
 }
 
+fn integration_readiness_summary_json(summary: &IntegrationReadinessSummary) -> JsonValue {
+    object([
+        ("total_reports", integer(summary.total_reports as i64)),
+        (
+            "activation_ready_reports",
+            integer(summary.activation_ready_reports as i64),
+        ),
+        ("blocked_reports", integer(summary.blocked_reports as i64)),
+        (
+            "reports_requiring_human_review",
+            integer(summary.reports_requiring_human_review as i64),
+        ),
+        (
+            "cloud_required_reports",
+            integer(summary.cloud_required_reports as i64),
+        ),
+        (
+            "local_only_reports",
+            integer(summary.local_only_reports as i64),
+        ),
+        ("direct_targets", integer(summary.direct_targets as i64)),
+        (
+            "delegated_integration_targets",
+            integer(summary.delegated_integration_targets as i64),
+        ),
+        (
+            "delegated_standard_targets",
+            integer(summary.delegated_standard_targets as i64),
+        ),
+        (
+            "reports_missing_primitives",
+            integer(summary.reports_missing_primitives as i64),
+        ),
+        (
+            "reports_missing_capabilities",
+            integer(summary.reports_missing_capabilities as i64),
+        ),
+        (
+            "reports_missing_dependencies",
+            integer(summary.reports_missing_dependencies as i64),
+        ),
+        (
+            "unique_missing_primitives",
+            integer(summary.unique_missing_primitives as i64),
+        ),
+        (
+            "unique_missing_capabilities",
+            integer(summary.unique_missing_capabilities as i64),
+        ),
+        (
+            "unique_missing_dependencies",
+            integer(summary.unique_missing_dependencies as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("all_ready", JsonValue::Bool(summary.all_ready())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+    ])
+}
+
 fn activation_target_json(target: &IntegrationActivationTarget) -> JsonValue {
     match target {
         IntegrationActivationTarget::Direct => object([("kind", string("direct"))]),
@@ -7674,6 +7891,24 @@ fn integration_catalog_query_schema() -> JsonSchema {
     )
 }
 
+fn integration_readiness_query_schema(include_limit: bool) -> JsonSchema {
+    let mut properties = vec![
+        SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+        SchemaProperty::new("available_primitives", string_array_schema()),
+        SchemaProperty::new("allowed_capability_ids", string_array_schema()),
+        SchemaProperty::new("enabled_integrations", string_array_schema()),
+        SchemaProperty::new("activation_ready", JsonSchema::Boolean),
+        SchemaProperty::new("requires_human_review", JsonSchema::Boolean),
+        SchemaProperty::new("cloud_required", JsonSchema::Boolean),
+        SchemaProperty::new("local_only", JsonSchema::Boolean),
+    ];
+    if include_limit {
+        properties.push(SchemaProperty::new("limit", JsonSchema::Integer));
+    }
+
+    object_schema(properties, Vec::new(), false)
+}
+
 fn empty_object_schema() -> JsonSchema {
     object_schema(Vec::new(), Vec::new(), false)
 }
@@ -7742,7 +7977,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 45);
+        assert_eq!(definitions.len(), 47);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -7762,6 +7997,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -7847,7 +8088,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            37
+            39
         );
         assert_eq!(
             export
@@ -7873,6 +8114,13 @@ mod tests {
                 .is_some()
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_TOOL_CATALOG_SUMMARY_TOOL_ID).is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID).is_some()
+        );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID)
+                .is_some()
+        );
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID).is_some());
         assert!(
@@ -8102,15 +8350,116 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(45))
+            Some(&integer(47))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(37))
+            Some(&integer(39))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
             Some(&integer(8))
+        );
+
+        let list_integration_readiness_request = request(
+            "call-list-integration-readiness",
+            SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+                ("limit", integer(3)),
+            ]),
+            996,
+        );
+        let list_integration_readiness_trace =
+            tool_runtime.invoke_with_events(&list_integration_readiness_request);
+        assert!(list_integration_readiness_trace.result.ok);
+        assert_eq!(
+            list_integration_readiness_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_integration_readiness_output = list_integration_readiness_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_integration_readiness_output, "count"),
+            Some(&integer(3))
+        );
+        let readiness_summary = field(list_integration_readiness_output, "summary").unwrap();
+        assert_eq!(field(readiness_summary, "total_reports"), Some(&integer(3)));
+        assert_eq!(
+            field(readiness_summary, "blocked_reports"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(readiness_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(readiness_summary, "unique_missing_primitives").unwrap()).unwrap()
+                >= 1
+        );
+
+        let integration_readiness_summary_request = request(
+            "call-integration-readiness-summary",
+            SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+            ]),
+            997,
+        );
+        let integration_readiness_summary_trace =
+            tool_runtime.invoke_with_events(&integration_readiness_summary_request);
+        assert!(integration_readiness_summary_trace.result.ok);
+        assert_eq!(
+            integration_readiness_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let integration_readiness_summary_output = integration_readiness_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let readiness_rollup = field(integration_readiness_summary_output, "summary").unwrap();
+        assert!(integer_value(field(readiness_rollup, "total_reports").unwrap()).unwrap() >= 3);
+        assert_eq!(
+            field(readiness_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
         );
 
         let list_request = request(
@@ -9276,6 +9625,14 @@ mod tests {
             integration_catalog_summary_trace,
         );
         journal.record_trace(tool_catalog_summary_request, tool_catalog_summary_trace);
+        journal.record_trace(
+            list_integration_readiness_request,
+            list_integration_readiness_trace,
+        );
+        journal.record_trace(
+            integration_readiness_summary_request,
+            integration_readiness_summary_trace,
+        );
         journal.record_trace(list_request, list_trace);
         journal.record_trace(list_rooms_request, list_rooms_trace);
         journal.record_trace(list_scenes_request, list_scenes_trace);
@@ -9320,9 +9677,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 45);
-        assert_eq!(journal_summary.completed_count, 45);
-        assert_eq!(journal.audit_records().len(), 45);
+        assert_eq!(journal_summary.invocation_count, 47);
+        assert_eq!(journal_summary.completed_count, 47);
+        assert_eq!(journal.audit_records().len(), 47);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
