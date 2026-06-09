@@ -36,6 +36,8 @@ All notable changes to this package will be documented in this file.
   discovery governance and freshness inspection.
 - `smart_home.get_pairing_plan` tool descriptor for read-only discovery
   pairing-plan inspection before pairing-session creation.
+- `smart_home.complete_pairing` tool descriptor for human-approved completion
+  of pairing sessions with VaultRef handles and non-secret metadata.
 - `smart_home.get_supervision_plan` tool descriptor for read-only runtime
   supervision due-work previews.
 - `smart_home.reconcile_desired_states` and `smart_home.run_supervision_tick`

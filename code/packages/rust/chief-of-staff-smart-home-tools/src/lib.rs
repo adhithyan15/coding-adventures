@@ -21,7 +21,7 @@ use smart_home_core::{
     CommandResult, CommandStatus, CommandType, Device, DeviceCommand, DeviceEvent, DeviceEventType,
     EntityId, EntityKind, Health, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily,
     ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
-    StateDelta, StateSnapshot, StateSource, Value,
+    StateDelta, StateSnapshot, StateSource, Value, VaultRef,
 };
 use smart_home_discovery::{
     DiscoveryPairingAction, DiscoveryPairingPlan, DiscoveryPairingPlanOptions,
@@ -49,23 +49,23 @@ use smart_home_runtime::{
     DiscoveryWorkerSchedulerSnapshot, DiscoveryWorkerSort, PairingSessionStatus,
     ReconciliationReason, RuntimeAuthorizationDecisionQuery, RuntimeAuthorizationDecisionSort,
     RuntimeCapabilityGrantQuery, RuntimeCapabilityGrantScopeKind, RuntimeCapabilityGrantSort,
-    RuntimeCommandToolRequest, RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError,
-    RuntimeEvent, RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter,
-    RuntimeEventLogRecord, RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort,
-    RuntimePairBridgeToolOutput, RuntimePairBridgeToolRequest, RuntimePairingPlanToolRequest,
-    RuntimePairingSession, RuntimePairingSessionId, RuntimePairingSessionInventorySummary,
-    RuntimePairingSessionQuery, RuntimePairingSessionSort, RuntimePendingWorkSummary,
-    RuntimePollEventsToolOutput, RuntimePollEventsToolRequest, RuntimeReadSnapshot,
-    RuntimeReadToolOutput, RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort,
-    RuntimeRoomSummary, RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest,
-    RuntimeSubscriptionBacklogStatus, RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary,
-    RuntimeSubscriptionQuery, RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort,
-    RuntimeSupervisionPlan, RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput,
-    RuntimeSupervisionToolRequest, RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput,
-    RuntimeUnsubscribeToolRequest, ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime,
-    SupervisedBridgeWorker, SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport,
-    WorkerHeartbeatDeadline, WorkerHeartbeatSchedule, WorkerRestartInstruction,
-    WorkerRestartReason, WorkerStatus,
+    RuntimeCommandToolRequest, RuntimeCompletePairingToolOutput, RuntimeCompletePairingToolRequest,
+    RuntimeDiscoverToolOutput, RuntimeDiscoverToolRequest, RuntimeError, RuntimeEvent,
+    RuntimeEventCheckpoint, RuntimeEventDeliveryBatch, RuntimeEventFilter, RuntimeEventLogRecord,
+    RuntimeEventLogSummary, RuntimeEventQuery, RuntimeEventSort, RuntimePairBridgeToolOutput,
+    RuntimePairBridgeToolRequest, RuntimePairingPlanToolRequest, RuntimePairingSession,
+    RuntimePairingSessionId, RuntimePairingSessionInventorySummary, RuntimePairingSessionQuery,
+    RuntimePairingSessionSort, RuntimePendingWorkSummary, RuntimePollEventsToolOutput,
+    RuntimePollEventsToolRequest, RuntimeReadSnapshot, RuntimeReadToolOutput,
+    RuntimeReadToolRequest, RuntimeRoomQuery, RuntimeRoomSort, RuntimeRoomSummary,
+    RuntimeSubscribeToolOutput, RuntimeSubscribeToolRequest, RuntimeSubscriptionBacklogStatus,
+    RuntimeSubscriptionId, RuntimeSubscriptionInventorySummary, RuntimeSubscriptionQuery,
+    RuntimeSubscriptionSnapshot, RuntimeSubscriptionSort, RuntimeSupervisionPlan,
+    RuntimeSupervisionPlanSummary, RuntimeSupervisionToolOutput, RuntimeSupervisionToolRequest,
+    RuntimeSupervisorSnapshot, RuntimeUnsubscribeToolOutput, RuntimeUnsubscribeToolRequest,
+    ScheduledDiscoveryWorkerSnapshot, SmartHomeRuntime, SupervisedBridgeWorker,
+    SupervisedWorkerQuery, SupervisedWorkerSort, SupervisionTickReport, WorkerHeartbeatDeadline,
+    WorkerHeartbeatSchedule, WorkerRestartInstruction, WorkerRestartReason, WorkerStatus,
 };
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -106,6 +106,7 @@ pub const SMART_HOME_RUN_SUPERVISION_TICK_TOOL_ID: &str = "smart_home.run_superv
 pub const SMART_HOME_DESCRIBE_CAPABILITIES_TOOL_ID: &str = "smart_home.describe_capabilities";
 pub const SMART_HOME_GET_HEALTH_TOOL_ID: &str = "smart_home.get_health";
 pub const SMART_HOME_PAIR_BRIDGE_TOOL_ID: &str = "smart_home.pair_bridge";
+pub const SMART_HOME_COMPLETE_PAIRING_TOOL_ID: &str = "smart_home.complete_pairing";
 pub const SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID: &str = "smart_home.observe_supervision";
 pub const SMART_HOME_LIST_INTEGRATIONS_TOOL_ID: &str = "smart_home.list_integrations";
 pub const SMART_HOME_DESCRIBE_INTEGRATION_TOOL_ID: &str = "smart_home.describe_integration";
@@ -502,6 +503,13 @@ impl SmartHomeToolBridge {
                         .execute_pair_bridge_tool(principal_id, request, now_ms)
                         .map_err(runtime_error)?;
                     Ok(pair_bridge_output_handler_output(output))
+                }
+                SMART_HOME_COMPLETE_PAIRING_TOOL_ID => {
+                    let request = complete_pairing_request(&arguments, now_ms)?;
+                    let output = runtime
+                        .execute_complete_pairing_tool(principal_id, request, now_ms)
+                        .map_err(runtime_error)?;
+                    Ok(complete_pairing_output_handler_output(output))
                 }
                 SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID => {
                     let _ = expect_object(&arguments)?;
@@ -985,6 +993,7 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
         reconcile_desired_states_definition(),
         run_supervision_tick_definition(),
         pair_bridge_definition(),
+        complete_pairing_definition(),
         read_definition(
             SMART_HOME_OBSERVE_SUPERVISION_TOOL_ID,
             "Observe smart-home supervision",
@@ -1803,6 +1812,65 @@ fn pair_bridge_definition() -> ToolDefinition {
     }
 }
 
+fn complete_pairing_definition() -> ToolDefinition {
+    ToolDefinition {
+        tool_id: SMART_HOME_COMPLETE_PAIRING_TOOL_ID.to_string(),
+        display_name: "Complete smart-home pairing".to_string(),
+        description:
+            "Complete a D23 bridge-pairing session using a VaultRef and non-secret metadata only."
+                .to_string(),
+        input_schema: object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("vault_ref", JsonSchema::String),
+                SchemaProperty::new("completed_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec!["session_id", "vault_ref"],
+            false,
+        ),
+        output_schema: Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("bridge_id", JsonSchema::String),
+                SchemaProperty::new("integration_id", JsonSchema::String),
+                SchemaProperty::new("requested_by", JsonSchema::String),
+                SchemaProperty::new("started_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("vault_ref", JsonSchema::Any),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec![
+                "session_id",
+                "bridge_id",
+                "integration_id",
+                "requested_by",
+                "started_at_ms",
+                "expires_at_ms",
+                "status",
+                "vault_ref",
+                "metadata",
+            ],
+            false,
+        )),
+        side_effects: ToolSideEffects::External,
+        idempotency: ToolIdempotency::Conditional,
+        concurrency: ToolConcurrency::Serialized,
+        streaming: ToolStreaming::Events,
+        required_tier: ToolPrivilegeTier::Tier2,
+        required_capabilities: vec!["smart_home:pair".to_string()],
+        preferred_lock_scope: Some("smart_home.pairing".to_string()),
+        timeout_seconds: Some(30),
+        tags: vec![
+            "smart_home".to_string(),
+            "runtime".to_string(),
+            "pairing".to_string(),
+        ],
+        stability: ToolStability::Experimental,
+    }
+}
+
 fn command_definition() -> ToolDefinition {
     ToolDefinition {
         tool_id: SMART_HOME_COMMAND_TOOL_ID.to_string(),
@@ -2268,6 +2336,22 @@ fn pair_bridge_request(
     Ok(request)
 }
 
+fn complete_pairing_request(
+    arguments: &JsonValue,
+    now_ms: u64,
+) -> Result<RuntimeCompletePairingToolRequest, ToolCallError> {
+    let mut request = RuntimeCompletePairingToolRequest::new(
+        RuntimePairingSessionId::trusted(required_string(arguments, "session_id")?),
+        VaultRef::trusted(required_string(arguments, "vault_ref")?),
+        optional_u64(arguments, "completed_at_ms")?.unwrap_or(now_ms),
+    );
+    let metadata = optional_metadata(arguments)?;
+    if !metadata.is_empty() {
+        request = request.with_metadata(metadata);
+    }
+    Ok(request)
+}
+
 fn integration_catalog_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationCatalogQuery, ToolCallError> {
@@ -2493,6 +2577,31 @@ fn pair_bridge_output_handler_output(output: RuntimePairBridgeToolOutput) -> Too
             (
                 "status",
                 string(pairing_status_label(output.session.status)),
+            ),
+        ]),
+    )
+}
+
+fn complete_pairing_output_handler_output(
+    output: RuntimeCompletePairingToolOutput,
+) -> ToolHandlerOutput {
+    ToolHandlerOutput::new(complete_pairing_output_json(&output)).with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("complete_pairing")),
+            ("session_id", string(output.session.session_id.as_str())),
+            (
+                "status",
+                string(pairing_status_label(output.session.status)),
+            ),
+            (
+                "vault_ref",
+                output
+                    .session
+                    .vault_ref
+                    .as_ref()
+                    .map(|vault_ref| string(vault_ref.as_str()))
+                    .unwrap_or(JsonValue::Null),
             ),
         ]),
     )
@@ -2863,6 +2972,10 @@ fn unsubscribe_output_json(output: &RuntimeUnsubscribeToolOutput) -> JsonValue {
 }
 
 fn pair_bridge_output_json(output: &RuntimePairBridgeToolOutput) -> JsonValue {
+    pairing_session_json(&output.session)
+}
+
+fn complete_pairing_output_json(output: &RuntimeCompletePairingToolOutput) -> JsonValue {
     pairing_session_json(&output.session)
 }
 
@@ -6802,7 +6915,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 37);
+        assert_eq!(definitions.len(), 38);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -6833,6 +6946,9 @@ mod tests {
             .contains(&SMART_HOME_DESCRIBE_SCENE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_COMMAND_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_PAIR_BRIDGE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_COMPLETE_PAIRING_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_SUBSCRIBE_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_POLL_EVENTS_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_UNSUBSCRIBE_TOOL_ID));
@@ -6895,12 +7011,13 @@ mod tests {
         );
         assert_eq!(
             export.summary.required_capability_count("smart_home:pair"),
-            1
+            2
         );
         assert!(smart_home_tool_definition(SMART_HOME_GET_STATE_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_DISCOVERY_SUMMARY_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
+        assert!(smart_home_tool_definition(SMART_HOME_COMPLETE_PAIRING_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_ROOMS_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_SCENES_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_DESCRIBE_SCENE_TOOL_ID).is_some());
@@ -7481,6 +7598,35 @@ mod tests {
             Some(&string("pending_user_presence"))
         );
 
+        let complete_pairing_request = request(
+            "call-complete-pairing",
+            SMART_HOME_COMPLETE_PAIRING_TOOL_ID,
+            object([
+                ("session_id", string("pairing-session-1")),
+                (
+                    "vault_ref",
+                    string("vault://smart-home/hue/bridge-1/app-key"),
+                ),
+                ("completed_at_ms", integer(1_050)),
+                (
+                    "metadata",
+                    object([("credential_kind", string("application_key"))]),
+                ),
+            ]),
+            1_050,
+        );
+        let complete_pairing_trace = tool_runtime.invoke_with_events(&complete_pairing_request);
+        assert!(complete_pairing_trace.result.ok);
+        let complete_pairing_output = complete_pairing_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(complete_pairing_output, "status"),
+            Some(&string("completed"))
+        );
+        assert_eq!(
+            field(complete_pairing_output, "vault_ref"),
+            Some(&string("vault://smart-home/hue/bridge-1/app-key"))
+        );
+
         let command_request = request(
             "call-turn-on",
             SMART_HOME_COMMAND_TOOL_ID,
@@ -7629,7 +7775,7 @@ mod tests {
             SMART_HOME_LIST_PAIRING_SESSIONS_TOOL_ID,
             object([
                 ("bridge_id", string("bridge-1")),
-                ("status", string("pending_user_presence")),
+                ("status", string("completed")),
                 ("sort", string("expires_at")),
             ]),
             1_100,
@@ -7648,7 +7794,14 @@ mod tests {
         assert_eq!(
             field(
                 field(pairing_sessions_output, "summary").unwrap(),
-                "pending_user_presence_sessions"
+                "completed_sessions"
+            ),
+            Some(&integer(1))
+        );
+        assert_eq!(
+            field(
+                field(pairing_sessions_output, "summary").unwrap(),
+                "sessions_with_vault_ref"
             ),
             Some(&integer(1))
         );
@@ -7949,11 +8102,11 @@ mod tests {
         let supervision_tick_output = supervision_tick_trace.result.output.as_ref().unwrap();
         assert_eq!(
             field(supervision_tick_output, "action_count"),
-            Some(&integer(2))
+            Some(&integer(1))
         );
         assert_eq!(
             array_len(field(supervision_tick_output, "expired_pairing_sessions").unwrap()),
-            Some(1)
+            Some(0)
         );
         assert_eq!(
             array_len(field(supervision_tick_output, "expired_entities").unwrap()),
@@ -7972,7 +8125,7 @@ mod tests {
                 field(supervision_tick_output, "summary").unwrap(),
                 "expired_pairing_session_count"
             ),
-            Some(&integer(1))
+            Some(&integer(0))
         );
         assert_eq!(
             field(
@@ -8002,6 +8155,7 @@ mod tests {
         journal.record_trace(supervision_request, supervision_trace);
         journal.record_trace(subscribe_request, subscribe_trace);
         journal.record_trace(pair_request, pair_trace);
+        journal.record_trace(complete_pairing_request, complete_pairing_trace);
         journal.record_trace(command_request, command_trace);
         journal.record_trace(runtime_snapshot_request, runtime_snapshot_trace);
         journal.record_trace(topology_summary_request, topology_summary_trace);
@@ -8024,9 +8178,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 36);
-        assert_eq!(journal_summary.completed_count, 36);
-        assert_eq!(journal.audit_records().len(), 36);
+        assert_eq!(journal_summary.invocation_count, 37);
+        assert_eq!(journal_summary.completed_count, 37);
+        assert_eq!(journal.audit_records().len(), 37);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 1);
@@ -8039,8 +8193,16 @@ mod tests {
         ));
         assert_eq!(
             runtime.registry().counts().authorization_decisions,
-            33,
-            "read, subscribe, poll, unsubscribe, and pair calls record tool authorization, while command records tool and command authorization"
+            34,
+            "read, subscribe, poll, unsubscribe, and pairing calls record tool authorization, while command records tool and command authorization"
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap()
+                .auth_ref,
+            Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
         );
     }
 

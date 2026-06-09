@@ -65,6 +65,8 @@ Current scope:
   worker inventory and compact discovery freshness summaries
 - D18D discovery pairing-plan descriptor for read-only host-action previews
   before pairing-session creation
+- D18D pairing-completion descriptor for human-approved VaultRef completion
+  without exposing raw credentials
 - D18D supervision planning tool descriptor for non-mutating due-work previews
 - D18D supervision execution tool descriptors for authorized desired-state
   reconciliation and runtime supervision ticks
