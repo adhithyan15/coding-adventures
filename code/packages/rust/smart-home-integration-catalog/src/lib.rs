@@ -625,6 +625,122 @@ impl PrimitiveBacklogCoverageItem {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EcosystemPlatformCoverageItem {
+    pub platform: EcosystemSurveyPlatform,
+    pub display_name: &'static str,
+    pub source_url: &'static str,
+    pub source_surface: &'static str,
+    pub contributes: &'static str,
+    pub primitive_hints: Vec<PrimitiveFamily>,
+    pub backlog_primitives: Vec<PrimitiveFamily>,
+    pub covered_backlog_primitives: Vec<PrimitiveFamily>,
+    pub uncovered_backlog_primitives: Vec<PrimitiveFamily>,
+    pub highest_backlog_priority: Option<u8>,
+    pub backlog_entry_count: usize,
+}
+
+impl EcosystemPlatformCoverageItem {
+    pub fn primitive_hint_count(&self) -> usize {
+        self.primitive_hints.len()
+    }
+
+    pub fn backlog_primitive_count(&self) -> usize {
+        self.backlog_primitives.len()
+    }
+
+    pub fn covered_backlog_primitive_count(&self) -> usize {
+        self.covered_backlog_primitives.len()
+    }
+
+    pub fn uncovered_backlog_primitive_count(&self) -> usize {
+        self.uncovered_backlog_primitives.len()
+    }
+
+    pub fn has_backlog_overlap(&self) -> bool {
+        !self.covered_backlog_primitives.is_empty()
+    }
+
+    pub fn covers_primitive(&self, primitive: PrimitiveFamily) -> bool {
+        self.primitive_hints.contains(&primitive)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EcosystemPlatformCoverageSummary {
+    pub total_platforms: usize,
+    pub total_primitive_hints: usize,
+    pub unique_primitive_hints: usize,
+    pub backlog_primitive_count: usize,
+    pub covered_backlog_primitives: usize,
+    pub uncovered_backlog_primitives: usize,
+    pub platforms_with_backlog_overlap: usize,
+    pub platforms_covering_all_backlog_primitives: usize,
+    pub first_covered_backlog_priority: Option<u8>,
+}
+
+impl EcosystemPlatformCoverageSummary {
+    pub fn from_items<'a>(
+        items: impl IntoIterator<Item = &'a EcosystemPlatformCoverageItem>,
+    ) -> Self {
+        let mut summary = Self {
+            total_platforms: 0,
+            total_primitive_hints: 0,
+            unique_primitive_hints: 0,
+            backlog_primitive_count: 0,
+            covered_backlog_primitives: 0,
+            uncovered_backlog_primitives: 0,
+            platforms_with_backlog_overlap: 0,
+            platforms_covering_all_backlog_primitives: 0,
+            first_covered_backlog_priority: None,
+        };
+        let mut primitive_hints = BTreeSet::new();
+        let mut backlog_primitives = BTreeSet::new();
+        let mut covered_backlog_primitives = BTreeSet::new();
+
+        for item in items {
+            summary.total_platforms += 1;
+            summary.total_primitive_hints += item.primitive_hint_count();
+            if item.has_backlog_overlap() {
+                summary.platforms_with_backlog_overlap += 1;
+            }
+            if item.backlog_primitive_count() > 0 && item.uncovered_backlog_primitive_count() == 0 {
+                summary.platforms_covering_all_backlog_primitives += 1;
+            }
+            summary.first_covered_backlog_priority = match (
+                summary.first_covered_backlog_priority,
+                item.highest_backlog_priority,
+            ) {
+                (Some(left), Some(right)) => Some(left.min(right)),
+                (None, Some(priority)) => Some(priority),
+                (priority, None) => priority,
+            };
+
+            for primitive in &item.primitive_hints {
+                primitive_hints.insert(*primitive);
+            }
+            for primitive in &item.backlog_primitives {
+                backlog_primitives.insert(*primitive);
+            }
+            for primitive in &item.covered_backlog_primitives {
+                covered_backlog_primitives.insert(*primitive);
+            }
+        }
+
+        summary.unique_primitive_hints = primitive_hints.len();
+        summary.backlog_primitive_count = backlog_primitives.len();
+        summary.covered_backlog_primitives = covered_backlog_primitives.len();
+        summary.uncovered_backlog_primitives = backlog_primitives
+            .difference(&covered_backlog_primitives)
+            .count();
+        summary
+    }
+
+    pub fn has_uncovered_backlog_primitives(&self) -> bool {
+        self.uncovered_backlog_primitives > 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationPolicySurfaceInventoryItem {
     pub surface: IntegrationPolicySurface,
     pub required_tier: PrivilegeTier,
@@ -2908,6 +3024,65 @@ pub fn primitive_backlog_with_ecosystem_coverage(
         .collect()
 }
 
+pub fn ecosystem_platform_coverage(
+    catalog: &[IntegrationCatalogEntry],
+    sources: &[EcosystemSurveySource],
+    priority: u8,
+) -> Vec<EcosystemPlatformCoverageItem> {
+    let backlog = primitive_backlog_at_or_before_priority(catalog, priority);
+    let backlog_primitives = backlog
+        .iter()
+        .map(|item| item.primitive)
+        .collect::<Vec<_>>();
+    let mut items = sources
+        .iter()
+        .map(|source| {
+            let covered_backlog_primitives = backlog
+                .iter()
+                .filter(|item| source.requires_primitive(item.primitive))
+                .map(|item| item.primitive)
+                .collect::<Vec<_>>();
+            let uncovered_backlog_primitives = backlog
+                .iter()
+                .filter(|item| !source.requires_primitive(item.primitive))
+                .map(|item| item.primitive)
+                .collect::<Vec<_>>();
+            let highest_backlog_priority = backlog
+                .iter()
+                .filter(|item| source.requires_primitive(item.primitive))
+                .map(|item| item.highest_priority)
+                .min();
+            let backlog_entry_count = backlog
+                .iter()
+                .filter(|item| source.requires_primitive(item.primitive))
+                .map(|item| item.entry_count)
+                .sum();
+
+            EcosystemPlatformCoverageItem {
+                platform: source.platform,
+                display_name: source.display_name,
+                source_url: source.source_url,
+                source_surface: source.source_surface,
+                contributes: source.contributes,
+                primitive_hints: source.primitive_hints.clone(),
+                backlog_primitives: backlog_primitives.clone(),
+                covered_backlog_primitives,
+                uncovered_backlog_primitives,
+                highest_backlog_priority,
+                backlog_entry_count,
+            }
+        })
+        .collect::<Vec<_>>();
+
+    items.sort_by(|left, right| {
+        right
+            .covered_backlog_primitive_count()
+            .cmp(&left.covered_backlog_primitive_count())
+            .then_with(|| left.platform.cmp(&right.platform))
+    });
+    items
+}
+
 pub fn policy_surface_inventory(
     catalog: &[IntegrationCatalogEntry],
 ) -> Vec<IntegrationPolicySurfaceInventoryItem> {
@@ -4545,6 +4720,32 @@ mod tests {
         assert!(coverage
             .iter()
             .all(|item| item.source_count == item.platform_count()));
+    }
+
+    #[test]
+    fn ecosystem_platform_coverage_rolls_sources_against_backlog() {
+        let catalog = first_party_catalog();
+        let sources = ecosystem_survey_sources();
+        let coverage = ecosystem_platform_coverage(&catalog, &sources, 1);
+        let summary = EcosystemPlatformCoverageSummary::from_items(coverage.iter());
+        let home_assistant = coverage
+            .iter()
+            .find(|item| item.platform == EcosystemSurveyPlatform::HomeAssistant)
+            .unwrap();
+        let thread_group = coverage
+            .iter()
+            .find(|item| item.platform == EcosystemSurveyPlatform::ThreadGroup)
+            .unwrap();
+
+        assert_eq!(coverage.len(), sources.len());
+        assert!(home_assistant.covers_primitive(PrimitiveFamily::Mqtt));
+        assert!(home_assistant.has_backlog_overlap());
+        assert!(thread_group.covers_primitive(PrimitiveFamily::MatterCommissioning));
+        assert!(thread_group.has_backlog_overlap());
+        assert_eq!(summary.total_platforms, sources.len());
+        assert!(summary.covered_backlog_primitives > 0);
+        assert!(summary.platforms_with_backlog_overlap >= 5);
+        assert!(summary.has_uncovered_backlog_primitives());
     }
 
     #[test]
