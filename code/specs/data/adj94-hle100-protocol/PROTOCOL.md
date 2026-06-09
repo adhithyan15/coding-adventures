@@ -111,12 +111,14 @@ All comparisons are **paired by item**. Report per-stratum (§5) as well as pool
 4. **Blind grader rubric** frozen; smoke-test on 3 known items (incl. an exact-match and a partial).
 5. **10-item pilot (2 batches)** end-to-end, all 7 arms + grading + provenance validation + URL-leak check, artifacts saved. Inspect for the ADJ87 context-contamination bug and the ADJ86 stall before committing to all 20 batches.
 
-## 12. Open decisions (need your sign-off)
-- **A — Sampling**: uniform-random 100, or **stratified by category** (recommended: stratified, so H1–H4 read per retrieval-vs-reasoning stratum).
-- **B — Samples per cell**: **N=1 per arm per item** (breadth from 100 items) vs N=2 (halves items for same cost). *Recommended: N=1*, re-sample only flagged close calls.
-- **C — Cost ceiling**: this is large — **~30–40 agents/item ≈ 3,000–4,000 agents, ~80–120M output tokens** across the full run. Confirm the budget, or cap (e.g., 50 items, or drop the closed-book arms which we already characterized in ADJ92).
-- **D — Closed-book enforcement**: prompt-prefix + URL-leak verification (soft, what we have) vs a hard tool-disabled agent type (if available). *Recommended: prompt + verify; report leak rate.*
-- **E — Pilot gate**: run the 10-item pilot and **stop for your review** before the remaining 18 batches? *Recommended: yes.*
+## 12. Decisions (RESOLVED — signed off)
+- **A — Sampling**: **stratified by category** (reasoning / lookup / recall), so H1–H4 read per stratum. ✅
+- **B — Samples per cell**: **N=1** per arm per item; re-sample only flagged close calls. ✅
+- **C — Scope**: **50 items × 7 arms** (10 batches of 5). ~1,800–2,200 agents, ~45–65M output tokens, ~7–9h. ✅
+- **D — Closed-book enforcement**: prompt-prefix + URL-leak verification; report leak rate. ✅
+- **E — Pilot gate**: **YES** — run the 10-item pilot (batches 1–2), then STOP for review before the remaining 8 batches. ✅
+
+Revised batch plan: **10 batches × 5 items**; pilot = batches 1–2 (items 1–10) → review gate → batches 3–10 (items 11–50).
 
 ## 13. Artifacts (all saved, for later adversarial configs)
 `items_100.json`, per-batch `results_batch_NN.json` (full per-arm outputs + work), `cas/<item_id>.json`,
