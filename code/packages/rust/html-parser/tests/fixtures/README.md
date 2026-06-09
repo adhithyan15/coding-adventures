@@ -49,6 +49,8 @@ names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
 Activation descriptor cases pin command, popover, disclosure, ARIA, focus, and
 inline handler routing metadata as a flat activation-planning inventory.
+Focus-navigation descriptor cases pin sequential focus, programmatic focus,
+editing hosts, access keys, and hidden/inert/disabled/ARIA focus blockers.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and

@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness focus-navigation descriptors now expose sequential focus,
+  programmatic focus, editing hosts, access keys, and hidden/inert/disabled/ARIA
+  focus blockers as a flat browser-planning inventory.
 - Browser-readiness activation descriptors now expose command, popover,
   disclosure, ARIA, focus, and inline handler routing metadata as a flat
   activation-planning inventory.

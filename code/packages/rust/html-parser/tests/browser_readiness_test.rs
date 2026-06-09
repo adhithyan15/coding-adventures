@@ -5,19 +5,20 @@ use coding_adventures_html_parser::{
     BrowserDataAttribute, BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
     BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
     BrowserDocumentPolicyDescriptor, BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor,
-    BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor, BrowserForm, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInteractiveElement, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor,
+    BrowserForm, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
+    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -127,6 +128,8 @@ struct ExpectedBrowserDocument {
     embedded_policy_descriptors: Option<Vec<ExpectedEmbeddedPolicyDescriptor>>,
     #[serde(default)]
     interactive_elements: Vec<ExpectedInteractiveElement>,
+    #[serde(default)]
+    focus_navigation_descriptors: Option<Vec<ExpectedFocusNavigationDescriptor>>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
@@ -1902,6 +1905,68 @@ struct ExpectedInteractiveElement {
     command_for: Option<String>,
     #[serde(default)]
     disabled: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFocusNavigationDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    focus_kind: String,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    sequential_focus: bool,
+    #[serde(default)]
+    programmatic_focus: bool,
+    #[serde(default)]
+    focus_blocked: bool,
+    #[serde(default)]
+    focus_block_reasons: Vec<String>,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    tabindex_order: Option<i32>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    text: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4011,6 +4076,26 @@ fn browser_interactive_element_metadata_tracks_focus_editing_and_commands() {
 }
 
 #[test]
+fn browser_focus_navigation_descriptors_track_focus_order_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive focus-navigation fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive focus-navigation fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.focus_navigation_descriptors,
+        case.expected.into_browser_document().focus_navigation_descriptors,
+        "focus-navigation descriptors should preserve focus order, programmatic focus, editing hosts, access keys, and blocked focus reasons",
+    );
+}
+
+#[test]
 fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4331,6 +4416,11 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedPopover::into_browser_popover)
             .collect();
+        let interactive_elements: Vec<_> = self
+            .interactive_elements
+            .into_iter()
+            .map(ExpectedInteractiveElement::into_browser_interactive_element)
+            .collect();
         let disclosure_state_descriptors = self
             .disclosure_state_descriptors
             .map(|descriptors| {
@@ -4353,6 +4443,17 @@ impl ExpectedBrowserDocument {
             .unwrap_or_else(|| {
                 expected_activation_descriptors(&command_elements, &popovers, &disclosures)
             });
+        let focus_navigation_descriptors = self
+            .focus_navigation_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedFocusNavigationDescriptor::into_browser_focus_navigation_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_focus_navigation_descriptors(&interactive_elements));
 
         BrowserDocument {
             title: self.title,
@@ -4473,11 +4574,8 @@ impl ExpectedBrowserDocument {
             media_playback_descriptors,
             embedded_contexts,
             embedded_policy_descriptors,
-            interactive_elements: self
-                .interactive_elements
-                .into_iter()
-                .map(ExpectedInteractiveElement::into_browser_interactive_element)
-                .collect(),
+            interactive_elements,
+            focus_navigation_descriptors,
             disclosures,
             disclosure_state_descriptors,
             component_hydration_targets: self
@@ -5289,6 +5387,123 @@ fn expected_activation_target_kind(
     }
 
     "command".to_string()
+}
+
+fn expected_focus_navigation_descriptors(
+    elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserFocusNavigationDescriptor> {
+    elements
+        .iter()
+        .filter(|element| expected_has_focus_navigation_state(element))
+        .map(expected_focus_navigation_descriptor)
+        .collect()
+}
+
+fn expected_has_focus_navigation_state(element: &BrowserInteractiveElement) -> bool {
+    element.focusable.is_some()
+        || element.tabindex.is_some()
+        || !element.accesskey.is_empty()
+        || element.contenteditable.is_some()
+        || element.disabled
+        || element.hidden
+        || element.inert
+        || element.aria_hidden
+        || element.aria_disabled.is_some()
+}
+
+fn expected_focus_navigation_descriptor(
+    element: &BrowserInteractiveElement,
+) -> BrowserFocusNavigationDescriptor {
+    let focusable = element.focusable.unwrap_or(false);
+    let tabindex_order = element
+        .tabindex
+        .as_deref()
+        .and_then(|tabindex| tabindex.trim().parse::<i32>().ok());
+    let focus_block_reasons = expected_focus_block_reasons(element);
+    let focus_blocked = !focus_block_reasons.is_empty();
+    let sequential_focus = focusable && tabindex_order.unwrap_or(0) >= 0;
+    let programmatic_focus = focusable || matches!(tabindex_order, Some(value) if value < 0);
+
+    BrowserFocusNavigationDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        focus_kind: expected_focus_kind(element, focusable, sequential_focus, programmatic_focus),
+        focusable,
+        sequential_focus,
+        programmatic_focus,
+        focus_blocked,
+        focus_block_reasons,
+        tabindex: element.tabindex.clone(),
+        tabindex_order,
+        accesskey: element.accesskey.clone(),
+        event_handlers: element.event_handlers.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_activedescendant: element.aria_activedescendant.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_disabled: element.aria_disabled.clone(),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        text: element.text.clone(),
+    }
+}
+
+fn expected_focus_kind(
+    element: &BrowserInteractiveElement,
+    focusable: bool,
+    sequential_focus: bool,
+    programmatic_focus: bool,
+) -> String {
+    if !expected_focus_block_reasons(element).is_empty() {
+        return "blocked".to_string();
+    }
+    if element.editing_mode.is_some() {
+        return "editing-host".to_string();
+    }
+    if sequential_focus {
+        return "sequential".to_string();
+    }
+    if programmatic_focus {
+        return "programmatic".to_string();
+    }
+    if !element.accesskey.is_empty() {
+        return "accesskey".to_string();
+    }
+    if focusable {
+        return "focusable".to_string();
+    }
+
+    "metadata".to_string()
+}
+
+fn expected_focus_block_reasons(element: &BrowserInteractiveElement) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
 }
 
 fn expected_script_execution_descriptors(
@@ -6405,6 +6620,43 @@ impl ExpectedInteractiveElement {
             command: self.command,
             command_for: self.command_for,
             disabled: self.disabled,
+        }
+    }
+}
+
+impl ExpectedFocusNavigationDescriptor {
+    fn into_browser_focus_navigation_descriptor(self) -> BrowserFocusNavigationDescriptor {
+        BrowserFocusNavigationDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            focus_kind: self.focus_kind,
+            focusable: self.focusable,
+            sequential_focus: self.sequential_focus,
+            programmatic_focus: self.programmatic_focus,
+            focus_blocked: self.focus_blocked,
+            focus_block_reasons: self.focus_block_reasons,
+            tabindex: self.tabindex,
+            tabindex_order: self.tabindex_order,
+            accesskey: self.accesskey,
+            event_handlers: self.event_handlers,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            aria_controls: self.aria_controls,
+            aria_activedescendant: self.aria_activedescendant,
+            aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_disabled: self.aria_disabled,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            text: self.text,
         }
     }
 }

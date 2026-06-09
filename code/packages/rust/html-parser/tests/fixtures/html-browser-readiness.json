@@ -1382,6 +1382,15 @@
           { "element": "p", "id": "secret", "role": "paragraph", "text": "Hidden copy", "hidden": true },
           { "element": "span", "id": "decorative", "role": "inline", "text": "Decorative", "aria_hidden": true }
         ],
+        "focus_navigation_descriptors": [
+          { "element": "button", "id": "menu", "role": "control", "focus_kind": "sequential", "focusable": true, "sequential_focus": true, "programmatic_focus": true, "tabindex": "0", "tabindex_order": 0, "accesskey": ["m", "/"], "event_handlers": ["onclick"], "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_activedescendant": "action", "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "text": "Menu" },
+          { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["inert"], "inert": true, "text": "Settings Choose options Inline action Editable copy" },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "focus_kind": "editing-host", "programmatic_focus": true, "tabindex": "-1", "tabindex_order": -1, "event_handlers": ["onkeydown"], "contenteditable": "plaintext-only", "editing_mode": "plaintext", "text": "Inline action" },
+          { "element": "p", "id": "editable", "role": "paragraph", "focus_kind": "editing-host", "focusable": true, "sequential_focus": true, "programmatic_focus": true, "contenteditable": "", "editing_mode": "richtext", "text": "Editable copy" },
+          { "element": "dialog", "id": "dialog", "role": "dialog", "focus_kind": "accesskey", "accesskey": ["d", "x"], "text": "Dialog copy" },
+          { "element": "p", "id": "secret", "role": "paragraph", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["hidden"], "hidden": true, "text": "Hidden copy" },
+          { "element": "span", "id": "decorative", "role": "inline", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["aria-hidden"], "aria_hidden": true, "text": "Decorative" }
+        ],
         "disclosures": [
           { "element": "dialog", "id": "dialog", "text": "Dialog copy", "open": true, "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true" },
           { "element": "details", "id": "more", "text": "More Extra", "summary_text": "More", "open": true, "accessible_name": "More" }
