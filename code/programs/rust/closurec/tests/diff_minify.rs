@@ -90,9 +90,18 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-045 was RESOLVED in CLOC12.51 — token-level
-    // pattern detect for `(`, IDENT, `)`, `=>` skips both
-    // parens. `minify_arrow_async` flipped IGNORED → PASS.
+    // gap-046: trailing comma in array (and object) literal
+    // should be dropped under WHITESPACE_ONLY. Upstream
+    // emits `var a=[1,2];` for `var a=[1,2,];`. Discovered
+    // by CLOC14.12.
+    ("trailing_array_comma", "gap-046: trailing literal comma drop"),
+    // gap-047: synthetic `;` after function-decl `}` should
+    // be suppressed when the next token is a keyword that
+    // starts a new statement (var, function, etc.) — ASI
+    // covers the boundary. Upstream emits
+    // `function add(a,b){return a+b}var sum=add(2,3);` for
+    // a multi-line input. Discovered by CLOC14.12.
+    ("multi_line_func", "gap-047: suppress trailing `;` before stmt-keyword"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
