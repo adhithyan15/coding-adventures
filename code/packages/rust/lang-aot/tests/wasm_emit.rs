@@ -313,3 +313,32 @@ fn mccarthy_symbols_run_on_wasm() {
     // Symbol ids are disjoint from integer atoms.
     assert_eq!(go("(EQ 'A 5)"), vec![0], "a symbol never equals an integer");
 }
+
+/// `LAMBDA`/`LABEL` + user calls + recursion run on wasm (LANG77 W2 / F7). The
+/// frontend lifts each `LAMBDA`/`LABEL` to its own function; the structural pass
+/// makes the call boundary uniform-anyref (params anyref, args boxed, returns
+/// anyref), so a lambda can be applied and a `LABEL` can recurse.
+#[test]
+fn mccarthy_lambda_and_recursion_run_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "lam").expect("emit lambda");
+        rt.load_and_run(&bytes, "main", &[]).expect("run lambda")
+    };
+
+    // Identity lambda returns its argument.
+    assert_eq!(go("((LAMBDA (X) X) 5)"), vec![5], "id lambda");
+    // A lambda that conses its argument; CAR reads it back.
+    assert_eq!(go("(CAR ((LAMBDA (X) (CONS X X)) 7))"), vec![7], "lambda body builds a cons");
+    // Two parameters, bound positionally.
+    assert_eq!(go("(CDR ((LAMBDA (X Y) (CONS X Y)) 3 4))"), vec![4], "two-arg lambda");
+    // A predicate inside a lambda.
+    assert_eq!(go("((LAMBDA (X) (EQ X X)) 5)"), vec![1], "EQ inside a lambda");
+    // A lambda returning a bare atom.
+    assert_eq!(go("((LAMBDA (X) 9) 5)"), vec![9], "lambda returns an atom");
+
+    // A recursive LABEL: walk down a list to its atom tail (no arithmetic in
+    // McCarthy 1.0). f(L) = if (ATOM L) then 99 else f(CDR L).
+    let rec = "((LABEL F (LAMBDA (L) (COND ((ATOM L) 99) ((EQ 1 1) (F (CDR L)))))) (CONS 1 (CONS 2 3)))";
+    assert_eq!(go(rec), vec![99], "recursive LABEL walks to the atom");
+}

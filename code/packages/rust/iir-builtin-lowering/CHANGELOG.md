@@ -4,6 +4,30 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.12.0] — 2026-06-09 — uniform-anyref function boundary (LANG77 / McCarthy W2)
+
+### Changed
+
+- `lower_lisp_repr_structural` now makes the **function-call boundary**
+  uniform-anyref, so a `LAMBDA`/`LABEL` can be applied and can recurse:
+  - a new `lisp_functions` module analysis (functions using the heap/predicates
+    or taking lisp params, closed under *calling*) replaces the per-function
+    `function_uses_heap` gate — every lisp function is processed, even a trivial
+    `(LAMBDA (X) X)`;
+  - each **lisp parameter** (`any`/`symbol`) is retyped to `ref<any>` and treated
+    as a reference;
+  - each argument of a `call` to a lisp function is **boxed** (`i31ref`) before
+    crossing the boundary, and the **call result** is a reference;
+  - a **non-entry** function (a lambda) returns `ref<any>` — boxing a scalar /
+    predicate-boolean / atom result — so every value crossing a boundary is an
+    `anyref`; the entry function still unboxes its result to `i32`.
+  - Recursion needs no special handling: a self-`call` is just a lisp call.
+- `lang-aot::concretize_scalar_any_for_wasm` correspondingly skips functions with
+  lisp params, keeping the two passes' partition exact.
+
+1 new test (the `((LAMBDA (X) X) 5)` boundary: param→ref<any>, arg boxed, return
+ref<any>, caller unboxes).
+
 ## [0.11.0] — 2026-06-09 — managed-backend symbol interning (LANG77 / McCarthy W1)
 
 ### Added

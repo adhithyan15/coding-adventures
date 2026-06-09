@@ -59,7 +59,7 @@ representation + per-builtin backend lowering.
 |---------|----------|----|----|----|----|----|----|----|-------------|
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
-| **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | uniform-anyref |
+| **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
@@ -86,10 +86,17 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   no new value type, no polymorphic `EQ`. `lang-aot::compile_source_to_wasm` runs
   it before the repr pass. `(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil, `(EQ 'A 5)` → nil
   (disjoint range), symbols through cons + `COND`, end-to-end on `wasm-runtime`.
-- ☐ **W2 — WASM `LAMBDA`/`LABEL`/user calls + recursion (F7).** Per-`LAMBDA`/
-  `LABEL` wasm function; `call`; bound params as anyref locals; closure value if
-  captured (env object). Recursion via the existing `call`. A recursive `LABEL`
-  (e.g. a length/append) runs end-to-end. **Completes WASM.**
+- ✅ **W2 — WASM `LAMBDA`/`LABEL`/user calls + recursion (F7).** The frontend
+  already lifts each `LAMBDA`/`LABEL` to its own function + `call`; the structural
+  pass now makes the **call boundary uniform-anyref** — a new `lisp_functions`
+  module analysis (heap/predicate/lisp-param users, closed under *calling*)
+  replaces the per-function gate; lisp **params** retype to `ref<any>`, **call
+  args** box to `i31ref`, **call results** are references, and a **non-entry**
+  function returns `ref<any>` (boxing a scalar/bool/atom). Recursion is just a
+  self-`call`, so it needs nothing extra. `((LAMBDA (X) X) 5)` → 5,
+  `(CDR ((LAMBDA (X Y) (CONS X Y)) 3 4))` → 4, `((LAMBDA (X) (EQ X X)) 5)` → T,
+  and a recursive `LABEL` walking a list to its atom — all end-to-end on
+  `wasm-runtime`. **WASM is now McCarthy-complete (F1–F7).**
 
 ### Phase B — JVM (replicate the uniform-ref model as `Object`)
 

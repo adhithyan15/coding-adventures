@@ -142,21 +142,83 @@ fn lisp_value_src_indices(instr: &IIRInstr) -> Vec<usize> {
     }
 }
 
-/// Apply the structural representation pass to every heap-using function.
+/// Whether a function takes **lisp-value parameters** — a `LAMBDA`/`LABEL`
+/// lifted to a function. The frontend types a lisp parameter `"any"` (or
+/// `"symbol"`); a Twig function's params are concrete (`i32`/`i64`). Such a
+/// function participates in the uniform-anyref **function boundary** even if its
+/// body touches no heap op (e.g. `(LAMBDA (X) X)`).
+fn has_lisp_param(func: &IIRFunction) -> bool {
+    func.params.iter().any(|(_, t)| t == "any" || t == "symbol" || t.starts_with("ref<"))
+}
+
+/// Compute the set of **lisp functions** in a module — those that use the
+/// uniform-anyref value model at their boundary. Seeded by functions that use
+/// the heap/predicates or take lisp params, then closed under *calling*: a
+/// function that `call`s a lisp function is itself lisp (its call site must box
+/// the args and treat the result as a reference). For a McCarthy module every
+/// function ends up lisp; a Twig module's pure-scalar functions never enter.
+fn lisp_functions(module: &IIRModule) -> HashSet<String> {
+    let mut lisp: HashSet<String> = module
+        .functions
+        .iter()
+        .filter(|f| function_uses_heap(f) || has_lisp_param(f))
+        .map(|f| f.name.clone())
+        .collect();
+    // Fixpoint: a caller of a lisp function is lisp.
+    loop {
+        let mut changed = false;
+        for f in &module.functions {
+            if lisp.contains(&f.name) {
+                continue;
+            }
+            let calls_lisp = f.instructions.iter().any(|i| {
+                i.op == "call"
+                    && matches!(i.srcs.first(), Some(Operand::Var(callee)) if lisp.contains(callee))
+            });
+            if calls_lisp {
+                lisp.insert(f.name.clone());
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+    lisp
+}
+
+/// The argument `srcs` indices of a `call` to a **lisp function** (so each atom
+/// argument is boxed as an `i31ref` before crossing the function boundary). The
+/// callee name is `srcs[0]`; the arguments are `srcs[1..]`.
+fn call_lisp_arg_indices(instr: &IIRInstr, lisp_funcs: &HashSet<String>) -> Vec<usize> {
+    if instr.op == "call" {
+        if let Some(Operand::Var(callee)) = instr.srcs.first() {
+            if lisp_funcs.contains(callee) {
+                return (1..instr.srcs.len()).collect();
+            }
+        }
+    }
+    Vec::new()
+}
+
+/// Apply the structural representation pass to every lisp function.
 ///
 /// Run by `lang-aot::compile_source_to_wasm` **after** `lower_heap_builtins`
 /// (so cons/car/cdr are already `alloc`/`field_*`) and alongside
 /// `concretize_scalar_any_for_wasm` (which handles the pure-scalar functions
-/// this pass skips). Safe to run on any module: a function with no heap op is
-/// left untouched.
+/// this pass skips). Safe to run on any module: a non-lisp function is left
+/// untouched. Lisp functions share a **uniform-anyref boundary** — every
+/// parameter, call argument, call result, and (non-entry) return is an
+/// `anyref` — so a `LAMBDA`/`LABEL` can be called and can recurse.
 pub fn lower_lisp_repr_structural(module: &mut IIRModule) {
     let entry = module.entry_point.clone();
+    let lisp_funcs = lisp_functions(module);
     for func in &mut module.functions {
-        if !function_uses_heap(func) {
+        if !lisp_funcs.contains(&func.name) {
             continue; // pure scalar — concretize_scalar_any_for_wasm owns it.
         }
         let is_entry = entry.as_deref() == Some(func.name.as_str());
-        lower_structural_function(func, is_entry);
+        lower_structural_function(func, is_entry, &lisp_funcs);
     }
 }
 
@@ -188,17 +250,53 @@ fn reference_registers(func: &IIRFunction) -> HashSet<String> {
     refs
 }
 
-fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
-    let ref_regs = reference_registers(func);
+fn lower_structural_function(
+    func: &mut IIRFunction,
+    is_entry: bool,
+    lisp_funcs: &HashSet<String>,
+) {
+    // ── 0. The function boundary is uniform-anyref. Every lisp parameter is an
+    //       `anyref` (a reference), and so is every result of a `call` to a lisp
+    //       function. Retype the params and seed the reference set with both. ──
+    for (_, ty) in func.params.iter_mut() {
+        if ty == "any" || ty == "symbol" {
+            *ty = REF_ANY.to_string();
+        }
+    }
+    let mut ref_regs = reference_registers(func);
+    for (name, ty) in &func.params {
+        if ty.starts_with("ref<") {
+            ref_regs.insert(name.clone());
+        }
+    }
+    for instr in &func.instructions {
+        if !call_lisp_arg_indices(instr, lisp_funcs).is_empty()
+            || (instr.op == "call"
+                && matches!(instr.srcs.first(), Some(Operand::Var(c)) if lisp_funcs.contains(c)))
+        {
+            if let Some(dest) = &instr.dest {
+                ref_regs.insert(dest.clone()); // a lisp call returns an anyref.
+            }
+        }
+    }
     let lisp_conds = lisp_conditions(func);
+
+    // The lisp-value source indices of an instruction: the structural positions
+    // (`field_store` value, `pair?`/`equal?` args) plus the arguments of a `call`
+    // to a lisp function (boxed before crossing the boundary).
+    let value_idxs_of = |instr: &IIRInstr| -> Vec<usize> {
+        let mut idxs = lisp_value_src_indices(instr);
+        idxs.extend(call_lisp_arg_indices(instr, lisp_funcs));
+        idxs
+    };
 
     // ── 1. Which atoms must be boxed? Any non-reference value that flows into a
     //       lisp-value position — a `field_store`'s value operand, a
-    //       `pair?`/`equal?` argument, or a lisp-value `COND` guard (which is
-    //       boxed so its truthiness can be tested with `is_null`). ──
+    //       `pair?`/`equal?` argument, a lisp `call` argument, or a lisp-value
+    //       `COND` guard (boxed so its truthiness can be tested with `is_null`). ──
     let mut needs_box: HashSet<String> = HashSet::new();
     for instr in &func.instructions {
-        for idx in lisp_value_src_indices(instr) {
+        for idx in value_idxs_of(instr) {
             if let Some(Operand::Var(val)) = instr.srcs.get(idx) {
                 if !ref_regs.contains(val) {
                     needs_box.insert(val.clone());
@@ -294,7 +392,7 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
             }
         }
 
-        let value_idxs = lisp_value_src_indices(&instr);
+        let value_idxs = value_idxs_of(&instr);
         if !value_idxs.is_empty() {
             let mut rewritten = instr.clone();
             for idx in value_idxs {
@@ -326,7 +424,8 @@ fn lower_structural_function(func: &mut IIRFunction, is_entry: bool) {
     }
     func.instructions = new_instrs;
 
-    // ── 3. The machine boundary: unbox the entry function's reference result. ──
+    // ── 3. The machine boundary: unbox the entry function's reference result;
+    //       a non-entry lisp function returns an `anyref` for its caller. ──
     set_return_representation(func, is_entry, &ref_regs);
 
     // ── 4. Defensive sweep: no `any`/`polymorphic` hint may survive (the
@@ -376,15 +475,42 @@ fn set_return_representation(func: &mut IIRFunction, is_entry: bool, ref_regs: &
         if func.return_type == "any" || func.return_type == "polymorphic" || func.return_type == REF_PAIR {
             func.return_type = REF_ANY.to_string();
         }
+    } else if !is_entry {
+        // A non-entry lisp function (a `LAMBDA`/`LABEL`) whose result is a
+        // **scalar** — a predicate boolean or an integer/symbol atom. The
+        // function boundary is uniform-anyref, so box it and return `ref<any>`.
+        // `box` (`ref.i31`) takes an i32, so narrow a boxable integer-atom const
+        // first; a predicate boolean is already i32.
+        if let Some(p) = func
+            .instructions
+            .iter_mut()
+            .find(|i| i.dest.as_deref() == Some(ret_reg.as_str()))
+        {
+            if p.op == "const" {
+                if let Some(Operand::Int(n)) = p.srcs.first() {
+                    if (I31_MIN..=I31_MAX).contains(n) {
+                        p.type_hint = "i32".to_string();
+                    }
+                }
+            }
+        }
+        let boxed_ret = format!("{ret_reg}.retbox");
+        func.instructions.insert(
+            ret_pos,
+            IIRInstr::new("box", Some(boxed_ret.clone()), vec![Operand::Var(ret_reg)], REF_ANY),
+        );
+        let ret = &mut func.instructions[ret_pos + 1];
+        ret.srcs = vec![Operand::Var(boxed_ret)];
+        ret.type_hint = REF_ANY.to_string();
+        func.return_type = REF_ANY.to_string();
     } else if func.return_type == "any"
         || func.return_type == "polymorphic"
         || func.instructions[ret_pos].type_hint == "any"
     {
-        // A non-reference scalar result in a heap function. Concretise the return
-        // type to the value's machine width: a **predicate** result (`pair?` /
-        // `not` / `equal?`, whose hint is `"bool"`) is an `i32`; everything else
-        // defaults to `i64`. Setting the `ret` instruction's hint too keeps the
-        // defensive `any` sweep from re-widening a boolean back to `i64`.
+        // The **entry** function returning a non-reference scalar (e.g. a bare
+        // `(EQ 5 5)` program). Concretise the return type to the value's width: a
+        // predicate result (hint `"bool"`) is i32, everything else i64. Setting
+        // the `ret` hint keeps the defensive `any` sweep from re-widening a bool.
         let width = func
             .instructions
             .iter()
@@ -607,6 +733,61 @@ mod tests {
         // No box/unbox inserted; return type untouched (concretize handles it).
         assert_eq!(m.functions[0].instructions.len(), before);
         assert!(m.functions[0].instructions.iter().all(|i| i.op != "box" && i.op != "unbox"));
+    }
+
+    #[test]
+    fn lambda_boundary_is_uniform_anyref() {
+        // `((LAMBDA (X) X) 5)`: a lambda `lam(X)` returning X, called from main.
+        // The boundary must be uniform anyref: X's param type → ref<any>, the
+        // call arg (5) boxed, the lambda return ref<any>, and main unboxes.
+        let lam = IIRFunction::new(
+            "lam",
+            vec![("X".to_string(), "any".to_string())],
+            "any",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("X".into())], "any")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "any",
+            vec![
+                IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(5)], "i64"),
+                IIRInstr::new(
+                    "call",
+                    Some("v1".into()),
+                    vec![Operand::Var("lam".into()), Operand::Var("v0".into())],
+                    "any",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("v1".into())], "any"),
+            ],
+        );
+        let mut m = IIRModule::new("lam", "mccarthy-lisp");
+        m.entry_point = Some("main".to_string());
+        m.functions = vec![lam, main];
+        lower_lisp_repr_structural(&mut m);
+
+        let lam = &m.functions[0];
+        let main = &m.functions[1];
+
+        // The lambda's parameter is now an anyref reference.
+        assert_eq!(lam.params[0].1, REF_ANY, "lisp param retyped to ref<any>");
+        // The lambda returns an anyref to its caller.
+        assert_eq!(lam.return_type, REF_ANY, "lambda returns ref<any>");
+
+        // main boxes the call argument (5) before the call.
+        assert_eq!(
+            main.instructions.iter().filter(|i| i.op == "box").count(),
+            1,
+            "the call argument is boxed"
+        );
+        let call = main.instructions.iter().find(|i| i.op == "call").unwrap();
+        match &call.srcs[1] {
+            Operand::Var(a) => assert!(a.ends_with(".box"), "call passes the boxed arg"),
+            other => panic!("unexpected call arg {other:?}"),
+        }
+        // main unboxes the call result at the entry/return boundary → i32.
+        assert_eq!(main.instructions.iter().filter(|i| i.op == "unbox").count(), 1);
+        assert_eq!(main.return_type, "i32");
     }
 
     #[test]

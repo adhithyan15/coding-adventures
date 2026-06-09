@@ -10,8 +10,10 @@ atoms boxed as `i31ref`, the cons cell a `$LispyPair` struct) — and the McCart
 predicates, `COND`, and symbols: `pair?`/`ATOM` (`(ATOM 5)` → 1; L3b-3a-4b),
 `EQ` atom equality (`(EQ 5 5)` → 1; L3b-3a-4c), `COND` with lisp-truthiness
 (`(COND (0 7) (5 9))` → 7 — `0` is truthy; L3b-3a-4d), and symbols
-(`(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil; W1). The McCarthy core —
-cons, `ATOM`, `EQ`, `COND`, symbols — now runs on the wasm backend.
+(`(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil; W1), and `LAMBDA`/`LABEL`/recursion
+(`((LAMBDA (X) X) 5)` → 5; a recursive `LABEL` walks a list; W2). The **full
+McCarthy core** — cons, `ATOM`, `EQ`, `COND`, symbols, and lambda/label/recursion
+(F1–F7) — now runs on the wasm backend.
 
 ## Stack position
 
