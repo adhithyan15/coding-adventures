@@ -30,6 +30,12 @@ runtime and Chief of Staff tools a typed catalog for:
   standard-backed products into primitive/capability/auth/policy requirements
 - activation plan summaries that count direct/delegated targets, review work,
   local/cloud boundaries, dependencies, and unique primitive/capability needs
+- activation candidates that rank ready, human-review, and blocked rollout work
+  after applying host-specific primitive, capability, and dependency context
+- activation actions that turn ready/review/blocker candidates into concrete
+  activate, policy-review, primitive, capability, and dependency work items
+- activation runway stages that group those candidates by rollout priority wave
+  with compact ready, review, and blocker rollups
 - readiness reports that compare activation plans against available primitives,
   allowed capabilities, and already-enabled dependency integrations
 - readiness summaries that roll activation blockers, review requirements, and

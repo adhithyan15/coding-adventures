@@ -683,6 +683,100 @@ pub struct IntegrationReadinessReport {
     pub cloud_required: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationCandidateRecommendation {
+    ReadyToActivate,
+    NeedsHumanReview,
+    BlockedOnPrerequisites,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationActionKind {
+    ActivateIntegration,
+    ReviewPolicy,
+    ProvidePrimitive,
+    GrantCapability,
+    EnableDependency,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationCandidate {
+    pub readiness_report: IntegrationReadinessReport,
+    pub recommendation: IntegrationActivationCandidateRecommendation,
+    pub blocker_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationCandidateSummary {
+    pub total_candidates: usize,
+    pub ready_to_activate_candidates: usize,
+    pub needs_human_review_candidates: usize,
+    pub blocked_candidates: usize,
+    pub activation_ready_candidates: usize,
+    pub candidates_requiring_human_review: usize,
+    pub candidates_missing_primitives: usize,
+    pub candidates_missing_capabilities: usize,
+    pub candidates_missing_dependencies: usize,
+    pub direct_targets: usize,
+    pub delegated_integration_targets: usize,
+    pub delegated_standard_targets: usize,
+    pub local_only_candidates: usize,
+    pub cloud_required_candidates: usize,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationAction {
+    pub kind: IntegrationActivationActionKind,
+    pub requested_integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub recommendation: IntegrationActivationCandidateRecommendation,
+    pub primitive: Option<PrimitiveFamily>,
+    pub capability_id: Option<CapabilityId>,
+    pub dependency_integration_id: Option<IntegrationId>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationActionSummary {
+    pub total_actions: usize,
+    pub activate_integration_actions: usize,
+    pub review_policy_actions: usize,
+    pub provide_primitive_actions: usize,
+    pub grant_capability_actions: usize,
+    pub enable_dependency_actions: usize,
+    pub actionable_integration_count: usize,
+    pub blocked_integration_count: usize,
+    pub unique_integrations: usize,
+    pub first_action_priority: Option<u8>,
+    pub first_activation_priority: Option<u8>,
+    pub first_blocker_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunwayStage {
+    pub priority: u8,
+    pub candidates: Vec<IntegrationActivationCandidate>,
+    pub summary: IntegrationActivationCandidateSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunwaySummary {
+    pub total_stages: usize,
+    pub total_candidates: usize,
+    pub actionable_stages: usize,
+    pub ready_stages: usize,
+    pub review_stages: usize,
+    pub blocked_stages: usize,
+    pub first_actionable_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub next_ready_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationReadinessSummary {
     pub total_reports: usize,
@@ -952,6 +1046,12 @@ impl IntegrationReadinessReport {
         !self.activation_ready()
     }
 
+    pub fn missing_prerequisite_count(&self) -> usize {
+        self.missing_primitives.len()
+            + self.missing_capabilities.len()
+            + self.missing_dependencies.len()
+    }
+
     pub fn missing_primitive(&self, primitive: PrimitiveFamily) -> bool {
         self.missing_primitives.contains(&primitive)
     }
@@ -973,6 +1073,422 @@ impl IntegrationReadinessReport {
             &self.activation_target,
             IntegrationActivationTarget::DelegatedIntegration(target) if target == integration_id
         )
+    }
+}
+
+impl IntegrationActivationCandidateRecommendation {
+    fn from_report(report: &IntegrationReadinessReport) -> Self {
+        if report.is_blocked() {
+            Self::BlockedOnPrerequisites
+        } else if report.requires_human_review {
+            Self::NeedsHumanReview
+        } else {
+            Self::ReadyToActivate
+        }
+    }
+
+    pub fn is_actionable(self) -> bool {
+        matches!(self, Self::ReadyToActivate | Self::NeedsHumanReview)
+    }
+}
+
+impl IntegrationActivationCandidate {
+    pub fn from_report(report: IntegrationReadinessReport) -> Self {
+        let blocker_count = report.missing_prerequisite_count();
+        let recommendation = IntegrationActivationCandidateRecommendation::from_report(&report);
+        Self {
+            readiness_report: report,
+            recommendation,
+            blocker_count,
+        }
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.readiness_report.activation_ready()
+    }
+
+    pub fn is_actionable(&self) -> bool {
+        self.recommendation.is_actionable()
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        self.recommendation == IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.readiness_report.requires_human_review
+    }
+}
+
+impl IntegrationActivationCandidateSummary {
+    pub fn from_candidates<'a>(
+        candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+    ) -> Self {
+        let mut summary = Self {
+            total_candidates: 0,
+            ready_to_activate_candidates: 0,
+            needs_human_review_candidates: 0,
+            blocked_candidates: 0,
+            activation_ready_candidates: 0,
+            candidates_requiring_human_review: 0,
+            candidates_missing_primitives: 0,
+            candidates_missing_capabilities: 0,
+            candidates_missing_dependencies: 0,
+            direct_targets: 0,
+            delegated_integration_targets: 0,
+            delegated_standard_targets: 0,
+            local_only_candidates: 0,
+            cloud_required_candidates: 0,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for candidate in candidates {
+            summary.total_candidates += 1;
+            match candidate.recommendation {
+                IntegrationActivationCandidateRecommendation::ReadyToActivate => {
+                    summary.ready_to_activate_candidates += 1
+                }
+                IntegrationActivationCandidateRecommendation::NeedsHumanReview => {
+                    summary.needs_human_review_candidates += 1
+                }
+                IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites => {
+                    summary.blocked_candidates += 1
+                }
+            }
+            if candidate.activation_ready() {
+                summary.activation_ready_candidates += 1;
+            }
+            if candidate.requires_human_review() {
+                summary.candidates_requiring_human_review += 1;
+            }
+            if !candidate.readiness_report.missing_primitives.is_empty() {
+                summary.candidates_missing_primitives += 1;
+            }
+            if !candidate.readiness_report.missing_capabilities.is_empty() {
+                summary.candidates_missing_capabilities += 1;
+            }
+            if !candidate.readiness_report.missing_dependencies.is_empty() {
+                summary.candidates_missing_dependencies += 1;
+            }
+            match &candidate.readiness_report.activation_target {
+                IntegrationActivationTarget::Direct => summary.direct_targets += 1,
+                IntegrationActivationTarget::DelegatedIntegration(_) => {
+                    summary.delegated_integration_targets += 1
+                }
+                IntegrationActivationTarget::DelegatedStandards(_) => {
+                    summary.delegated_standard_targets += 1
+                }
+            }
+            if candidate.readiness_report.local_only {
+                summary.local_only_candidates += 1;
+            }
+            if candidate.readiness_report.cloud_required {
+                summary.cloud_required_candidates += 1;
+            }
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(candidate.readiness_report.highest_policy_tier);
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_candidates == 0
+    }
+
+    pub fn has_actionable_candidates(&self) -> bool {
+        self.ready_to_activate_candidates > 0 || self.needs_human_review_candidates > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_candidates > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.needs_human_review_candidates > 0
+    }
+}
+
+impl IntegrationActivationActionKind {
+    fn sort_rank(self) -> u8 {
+        match self {
+            Self::ActivateIntegration => 0,
+            Self::ReviewPolicy => 1,
+            Self::ProvidePrimitive => 2,
+            Self::GrantCapability => 3,
+            Self::EnableDependency => 4,
+        }
+    }
+}
+
+impl IntegrationActivationAction {
+    pub fn activate(candidate: &IntegrationActivationCandidate) -> Self {
+        Self::from_candidate(
+            candidate,
+            IntegrationActivationActionKind::ActivateIntegration,
+        )
+    }
+
+    pub fn review_policy(candidate: &IntegrationActivationCandidate) -> Self {
+        Self::from_candidate(candidate, IntegrationActivationActionKind::ReviewPolicy)
+    }
+
+    pub fn provide_primitive(
+        candidate: &IntegrationActivationCandidate,
+        primitive: PrimitiveFamily,
+    ) -> Self {
+        Self {
+            primitive: Some(primitive),
+            ..Self::from_candidate(candidate, IntegrationActivationActionKind::ProvidePrimitive)
+        }
+    }
+
+    pub fn grant_capability(
+        candidate: &IntegrationActivationCandidate,
+        capability_id: CapabilityId,
+    ) -> Self {
+        Self {
+            capability_id: Some(capability_id),
+            ..Self::from_candidate(candidate, IntegrationActivationActionKind::GrantCapability)
+        }
+    }
+
+    pub fn enable_dependency(
+        candidate: &IntegrationActivationCandidate,
+        dependency_integration_id: IntegrationId,
+    ) -> Self {
+        Self {
+            dependency_integration_id: Some(dependency_integration_id),
+            ..Self::from_candidate(candidate, IntegrationActivationActionKind::EnableDependency)
+        }
+    }
+
+    pub fn is_activation(&self) -> bool {
+        self.kind == IntegrationActivationActionKind::ActivateIntegration
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        !self.is_activation()
+    }
+
+    fn from_candidate(
+        candidate: &IntegrationActivationCandidate,
+        kind: IntegrationActivationActionKind,
+    ) -> Self {
+        Self {
+            kind,
+            requested_integration_id: candidate.readiness_report.requested_integration_id.clone(),
+            display_name: candidate.readiness_report.display_name.clone(),
+            priority: candidate.readiness_report.priority,
+            recommendation: candidate.recommendation,
+            primitive: None,
+            capability_id: None,
+            dependency_integration_id: None,
+            highest_policy_tier: candidate.readiness_report.highest_policy_tier,
+        }
+    }
+}
+
+impl IntegrationActivationActionSummary {
+    pub fn from_actions<'a>(
+        actions: impl IntoIterator<Item = &'a IntegrationActivationAction>,
+    ) -> Self {
+        let mut unique_integrations = BTreeSet::new();
+        let mut actionable_integrations = BTreeSet::new();
+        let mut blocked_integrations = BTreeSet::new();
+        let mut summary = Self {
+            total_actions: 0,
+            activate_integration_actions: 0,
+            review_policy_actions: 0,
+            provide_primitive_actions: 0,
+            grant_capability_actions: 0,
+            enable_dependency_actions: 0,
+            actionable_integration_count: 0,
+            blocked_integration_count: 0,
+            unique_integrations: 0,
+            first_action_priority: None,
+            first_activation_priority: None,
+            first_blocker_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for action in actions {
+            summary.total_actions += 1;
+            unique_integrations.insert(action.requested_integration_id.clone());
+            summary.first_action_priority = Some(
+                summary
+                    .first_action_priority
+                    .map_or(action.priority, |priority| priority.min(action.priority)),
+            );
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(action.highest_policy_tier);
+            match action.kind {
+                IntegrationActivationActionKind::ActivateIntegration => {
+                    summary.activate_integration_actions += 1;
+                    actionable_integrations.insert(action.requested_integration_id.clone());
+                    summary.first_activation_priority = Some(
+                        summary
+                            .first_activation_priority
+                            .map_or(action.priority, |priority| priority.min(action.priority)),
+                    );
+                }
+                IntegrationActivationActionKind::ReviewPolicy => {
+                    summary.review_policy_actions += 1;
+                    blocked_integrations.insert(action.requested_integration_id.clone());
+                    summary.first_blocker_priority = Some(
+                        summary
+                            .first_blocker_priority
+                            .map_or(action.priority, |priority| priority.min(action.priority)),
+                    );
+                }
+                IntegrationActivationActionKind::ProvidePrimitive => {
+                    summary.provide_primitive_actions += 1;
+                    blocked_integrations.insert(action.requested_integration_id.clone());
+                    summary.first_blocker_priority = Some(
+                        summary
+                            .first_blocker_priority
+                            .map_or(action.priority, |priority| priority.min(action.priority)),
+                    );
+                }
+                IntegrationActivationActionKind::GrantCapability => {
+                    summary.grant_capability_actions += 1;
+                    blocked_integrations.insert(action.requested_integration_id.clone());
+                    summary.first_blocker_priority = Some(
+                        summary
+                            .first_blocker_priority
+                            .map_or(action.priority, |priority| priority.min(action.priority)),
+                    );
+                }
+                IntegrationActivationActionKind::EnableDependency => {
+                    summary.enable_dependency_actions += 1;
+                    blocked_integrations.insert(action.requested_integration_id.clone());
+                    summary.first_blocker_priority = Some(
+                        summary
+                            .first_blocker_priority
+                            .map_or(action.priority, |priority| priority.min(action.priority)),
+                    );
+                }
+            }
+        }
+
+        summary.unique_integrations = unique_integrations.len();
+        summary.actionable_integration_count = actionable_integrations.len();
+        summary.blocked_integration_count = blocked_integrations.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_actions == 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.activate_integration_actions > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.review_policy_actions > 0
+            || self.provide_primitive_actions > 0
+            || self.grant_capability_actions > 0
+            || self.enable_dependency_actions > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_policy_actions > 0
+    }
+}
+
+impl IntegrationActivationRunwayStage {
+    pub fn from_candidates(
+        priority: u8,
+        mut candidates: Vec<IntegrationActivationCandidate>,
+    ) -> Self {
+        candidates.sort_by(compare_activation_candidates);
+        let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        Self {
+            priority,
+            candidates,
+            summary,
+        }
+    }
+
+    pub fn has_actionable_candidates(&self) -> bool {
+        self.summary.has_actionable_candidates()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.summary.has_review_work()
+    }
+}
+
+impl IntegrationActivationRunwaySummary {
+    pub fn from_stages<'a>(
+        stages: impl IntoIterator<Item = &'a IntegrationActivationRunwayStage>,
+    ) -> Self {
+        let stages = stages.into_iter().collect::<Vec<_>>();
+        let candidate_summary = IntegrationActivationCandidateSummary::from_candidates(
+            stages.iter().flat_map(|stage| stage.candidates.iter()),
+        );
+        let mut summary = Self {
+            total_stages: 0,
+            total_candidates: candidate_summary.total_candidates,
+            actionable_stages: 0,
+            ready_stages: 0,
+            review_stages: 0,
+            blocked_stages: 0,
+            first_actionable_priority: None,
+            first_blocked_priority: None,
+            next_ready_priority: None,
+            highest_policy_tier: candidate_summary.highest_policy_tier,
+            candidate_summary,
+        };
+
+        for stage in stages {
+            summary.total_stages += 1;
+            if stage.has_actionable_candidates() {
+                summary.actionable_stages += 1;
+                if summary.first_actionable_priority.is_none() {
+                    summary.first_actionable_priority = Some(stage.priority);
+                }
+            }
+            if stage.summary.ready_to_activate_candidates > 0 {
+                summary.ready_stages += 1;
+                if summary.next_ready_priority.is_none() {
+                    summary.next_ready_priority = Some(stage.priority);
+                }
+            }
+            if stage.has_review_work() {
+                summary.review_stages += 1;
+            }
+            if stage.has_blockers() {
+                summary.blocked_stages += 1;
+                if summary.first_blocked_priority.is_none() {
+                    summary.first_blocked_priority = Some(stage.priority);
+                }
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_stages == 0
+    }
+
+    pub fn has_actionable_stage(&self) -> bool {
+        self.actionable_stages > 0
+    }
+
+    pub fn has_blocked_stage(&self) -> bool {
+        self.blocked_stages > 0
+    }
+
+    pub fn has_review_stage(&self) -> bool {
+        self.review_stages > 0
     }
 }
 
@@ -2061,6 +2577,128 @@ pub fn readiness_reports_at_or_before_priority(
         .collect()
 }
 
+pub fn activation_candidates_from_reports<'a>(
+    reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
+) -> Vec<IntegrationActivationCandidate> {
+    let mut candidates = reports
+        .into_iter()
+        .cloned()
+        .map(IntegrationActivationCandidate::from_report)
+        .collect::<Vec<_>>();
+
+    candidates.sort_by(compare_activation_candidates);
+    candidates
+}
+
+pub fn activation_candidates_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationCandidate> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_candidates_from_reports(reports.iter())
+}
+
+pub fn activation_actions_from_candidates<'a>(
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationAction> {
+    let mut actions = Vec::new();
+
+    for candidate in candidates {
+        if candidate.activation_ready() {
+            if candidate.requires_human_review() {
+                actions.push(IntegrationActivationAction::review_policy(candidate));
+            } else {
+                actions.push(IntegrationActivationAction::activate(candidate));
+            }
+        }
+
+        for primitive in &candidate.readiness_report.missing_primitives {
+            actions.push(IntegrationActivationAction::provide_primitive(
+                candidate, *primitive,
+            ));
+        }
+        for capability_id in &candidate.readiness_report.missing_capabilities {
+            actions.push(IntegrationActivationAction::grant_capability(
+                candidate,
+                capability_id.clone(),
+            ));
+        }
+        for integration_id in &candidate.readiness_report.missing_dependencies {
+            actions.push(IntegrationActivationAction::enable_dependency(
+                candidate,
+                integration_id.clone(),
+            ));
+        }
+        if candidate.is_blocked() && candidate.requires_human_review() {
+            actions.push(IntegrationActivationAction::review_policy(candidate));
+        }
+    }
+
+    actions.sort_by(compare_activation_actions);
+    actions
+}
+
+pub fn activation_actions_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationAction> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_actions_from_candidates(candidates.iter())
+}
+
+pub fn activation_runway_from_candidates(
+    candidates: Vec<IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationRunwayStage> {
+    let mut stages_by_priority: BTreeMap<u8, Vec<IntegrationActivationCandidate>> = BTreeMap::new();
+    for candidate in candidates {
+        stages_by_priority
+            .entry(candidate.readiness_report.priority)
+            .or_default()
+            .push(candidate);
+    }
+
+    stages_by_priority
+        .into_iter()
+        .map(|(priority, candidates)| {
+            IntegrationActivationRunwayStage::from_candidates(priority, candidates)
+        })
+        .collect()
+}
+
+pub fn activation_runway_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRunwayStage> {
+    activation_runway_from_candidates(activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
+}
+
 pub fn readiness_gap_inventory_from_reports<'a>(
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
 ) -> IntegrationReadinessGapInventory {
@@ -3038,6 +3676,50 @@ fn sort_query_results(entries: &mut Vec<&IntegrationCatalogEntry>, sort: Integra
     }
 }
 
+fn compare_activation_candidates(
+    left: &IntegrationActivationCandidate,
+    right: &IntegrationActivationCandidate,
+) -> Ordering {
+    left.recommendation
+        .cmp(&right.recommendation)
+        .then_with(|| {
+            left.readiness_report
+                .priority
+                .cmp(&right.readiness_report.priority)
+        })
+        .then_with(|| left.blocker_count.cmp(&right.blocker_count))
+        .then_with(|| {
+            left.readiness_report
+                .display_name
+                .cmp(&right.readiness_report.display_name)
+        })
+        .then_with(|| {
+            left.readiness_report
+                .requested_integration_id
+                .cmp(&right.readiness_report.requested_integration_id)
+        })
+}
+
+fn compare_activation_actions(
+    left: &IntegrationActivationAction,
+    right: &IntegrationActivationAction,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.kind.sort_rank().cmp(&right.kind.sort_rank()))
+        .then_with(|| left.display_name.cmp(&right.display_name))
+        .then_with(|| {
+            left.requested_integration_id
+                .cmp(&right.requested_integration_id)
+        })
+        .then_with(|| left.primitive.cmp(&right.primitive))
+        .then_with(|| left.capability_id.cmp(&right.capability_id))
+        .then_with(|| {
+            left.dependency_integration_id
+                .cmp(&right.dependency_integration_id)
+        })
+}
+
 fn compare_by_priority_then_name(
     left: &IntegrationCatalogEntry,
     right: &IntegrationCatalogEntry,
@@ -3431,6 +4113,248 @@ mod tests {
         assert!(report.local_only);
         assert!(!report.cloud_required);
         assert_eq!(report.highest_policy_tier, PrivilegeTier::HumanApproval);
+    }
+
+    #[test]
+    fn activation_candidates_rank_ready_review_and_blocked_work() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let tasmota = find_entry(&catalog, &IntegrationId::trusted("tasmota")).unwrap();
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = readiness_report_for_integration(
+            &catalog,
+            &hue.integration_id,
+            &hue.required_primitives,
+            &hue.required_capabilities,
+            &[],
+        )
+        .unwrap();
+        let blocked_report = readiness_report_for_integration(
+            &catalog,
+            &tasmota.integration_id,
+            &[],
+            &[CapabilityId::trusted("smart_home.read")],
+            &[],
+        )
+        .unwrap();
+
+        assert!(review_report.activation_ready());
+        assert!(review_report.requires_human_review);
+        assert!(blocked_report.is_blocked());
+
+        let candidates = activation_candidates_from_reports(
+            [blocked_report, review_report, ready_report].iter(),
+        );
+
+        assert_eq!(
+            candidates[0].recommendation,
+            IntegrationActivationCandidateRecommendation::ReadyToActivate
+        );
+        assert_eq!(
+            candidates[1].recommendation,
+            IntegrationActivationCandidateRecommendation::NeedsHumanReview
+        );
+        assert_eq!(
+            candidates[2].recommendation,
+            IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites
+        );
+        assert!(candidates[0].is_actionable());
+        assert!(candidates[2].is_blocked());
+        assert!(candidates[2].blocker_count > 0);
+
+        let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        assert_eq!(summary.total_candidates, 3);
+        assert_eq!(summary.ready_to_activate_candidates, 1);
+        assert_eq!(summary.needs_human_review_candidates, 1);
+        assert_eq!(summary.blocked_candidates, 1);
+        assert_eq!(summary.activation_ready_candidates, 2);
+        assert_eq!(summary.candidates_requiring_human_review, 2);
+        assert!(summary.candidates_missing_primitives > 0);
+        assert!(summary.candidates_missing_capabilities > 0);
+        assert!(summary.candidates_missing_dependencies > 0);
+        assert!(summary.has_actionable_candidates());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_runway_groups_candidates_by_priority_wave() {
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 2,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_bridge"),
+            display_name: "Review Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_sensor"),
+            display_name: "Blocked Sensor".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: vec![PrimitiveFamily::Mqtt],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::LowRisk,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [ready_report, review_report, blocked_report].iter(),
+        );
+
+        let stages = activation_runway_from_candidates(candidates);
+
+        assert_eq!(stages.len(), 2);
+        assert_eq!(stages[0].priority, 1);
+        assert_eq!(stages[0].summary.total_candidates, 2);
+        assert_eq!(stages[0].summary.needs_human_review_candidates, 1);
+        assert_eq!(stages[0].summary.blocked_candidates, 1);
+        assert!(stages[0].has_actionable_candidates());
+        assert!(stages[0].has_blockers());
+        assert!(stages[0].has_review_work());
+        assert_eq!(stages[1].priority, 2);
+        assert_eq!(stages[1].summary.ready_to_activate_candidates, 1);
+
+        let summary = IntegrationActivationRunwaySummary::from_stages(stages.iter());
+        assert_eq!(summary.total_stages, 2);
+        assert_eq!(summary.total_candidates, 3);
+        assert_eq!(summary.actionable_stages, 2);
+        assert_eq!(summary.ready_stages, 1);
+        assert_eq!(summary.review_stages, 1);
+        assert_eq!(summary.blocked_stages, 1);
+        assert_eq!(summary.first_actionable_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(1));
+        assert_eq!(summary.next_ready_priority, Some(2));
+        assert_eq!(summary.candidate_summary.total_candidates, 3);
+        assert!(summary.has_actionable_stage());
+        assert!(summary.has_blocked_stage());
+        assert!(summary.has_review_stage());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_actions_explain_ready_review_and_blocker_work() {
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 2,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_bridge"),
+            display_name: "Review Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_sensor"),
+            display_name: "Blocked Sensor".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 1,
+            missing_primitives: vec![PrimitiveFamily::Mqtt],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::LowRisk,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [ready_report, review_report, blocked_report].iter(),
+        );
+
+        let actions = activation_actions_from_candidates(candidates.iter());
+
+        assert_eq!(actions.len(), 5);
+        assert_eq!(
+            actions[0].kind,
+            IntegrationActivationActionKind::ReviewPolicy
+        );
+        assert_eq!(
+            actions[1].kind,
+            IntegrationActivationActionKind::ProvidePrimitive
+        );
+        assert_eq!(
+            actions[2].kind,
+            IntegrationActivationActionKind::GrantCapability
+        );
+        assert_eq!(
+            actions[3].kind,
+            IntegrationActivationActionKind::EnableDependency
+        );
+        assert_eq!(
+            actions[4].kind,
+            IntegrationActivationActionKind::ActivateIntegration
+        );
+        assert!(actions[0].blocks_activation());
+        assert!(actions[4].is_activation());
+
+        let summary = IntegrationActivationActionSummary::from_actions(actions.iter());
+        assert_eq!(summary.total_actions, 5);
+        assert_eq!(summary.activate_integration_actions, 1);
+        assert_eq!(summary.review_policy_actions, 1);
+        assert_eq!(summary.provide_primitive_actions, 1);
+        assert_eq!(summary.grant_capability_actions, 1);
+        assert_eq!(summary.enable_dependency_actions, 1);
+        assert_eq!(summary.unique_integrations, 3);
+        assert_eq!(summary.actionable_integration_count, 1);
+        assert_eq!(summary.blocked_integration_count, 2);
+        assert_eq!(summary.first_action_priority, Some(1));
+        assert_eq!(summary.first_activation_priority, Some(2));
+        assert_eq!(summary.first_blocker_priority, Some(1));
+        assert!(summary.has_activation_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
     }
 
     #[test]

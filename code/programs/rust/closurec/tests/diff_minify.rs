@@ -87,16 +87,12 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-044: JavaScript lexer does not yet support
     // template literal SUBSTITUTIONS (`${expr}` inside
-    // a backtick-delimited string). Basic templates
-    // (no substitution) pass (gap-039 verified). The
-    // lexer raises `Unexpected sequence \`\``  when it
-    // hits the closing backtick after the substitution.
-    // Substitution templates need multi-segment lexing
-    // (TEMPLATE_HEAD / TEMPLATE_MIDDLE / TEMPLATE_TAIL).
-    // This is a JS-grammar gap, NOT a whitespace_only
-    // bug. Discovered by CLOC14.9.
+    // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-045 was RESOLVED in CLOC12.51 — token-level
+    // pattern detect for `(`, IDENT, `)`, `=>` skips both
+    // parens. `minify_arrow_async` flipped IGNORED → PASS.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

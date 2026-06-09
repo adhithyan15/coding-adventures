@@ -60,6 +60,9 @@ pointer handler inventory, and hidden/inert/disabled blocked drag paths.
 Clipboard-interaction descriptor cases pin copy/cut/paste handlers, input
 hooks, editing hosts, text controls, and hidden/readonly/disabled blocked
 clipboard paths.
+Selection-interaction descriptor cases pin `onselect`/selection-change
+handlers, input hooks, editing hosts, text controls, and
+hidden/readonly/disabled blocked selection paths.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and

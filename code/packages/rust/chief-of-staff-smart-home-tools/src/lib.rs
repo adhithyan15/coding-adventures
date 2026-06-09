@@ -33,16 +33,22 @@ use smart_home_discovery::{
     DiscoveryWorkerId, DiscoveryWorkerKind, PairingRequirement,
 };
 use smart_home_integration_catalog::{
-    activation_plan_for_entry, activation_plans_at_or_before_priority, describe_primitive_family,
+    activation_actions_from_candidates, activation_candidates_at_or_before_priority,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_runway_from_candidates, describe_primitive_family,
     ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
     find_entry, first_party_catalog, primitive_backlog_at_or_before_priority,
     primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
     readiness_gap_inventory_from_reports, readiness_report_for_plan,
     readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
     ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationTarget,
-    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
-    IntegrationPolicySurface, IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationActivationAction, IntegrationActivationActionKind,
+    IntegrationActivationActionSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
+    IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
+    IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
     IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
     PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
@@ -135,6 +141,18 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID: &str =
     "smart_home.list_integration_activation_plans";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_plan_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID: &str =
+    "smart_home.list_integration_activation_candidates";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_candidate_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_actions";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_action_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID: &str =
+    "smart_home.list_integration_activation_runway";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_runway_summary";
 pub const SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID: &str =
     "smart_home.list_integration_readiness";
 pub const SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID: &str =
@@ -221,6 +239,34 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID => {
                     let query = integration_activation_plan_query(&arguments)?;
                     Ok(get_integration_activation_plan_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID => {
+                    let query = integration_activation_candidate_query(&arguments)?;
+                    Ok(list_integration_activation_candidates_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_candidate_query(&arguments)?;
+                    Ok(get_integration_activation_candidate_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID => {
+                    let query = integration_activation_action_query(&arguments)?;
+                    Ok(list_integration_activation_actions_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_action_query(&arguments)?;
+                    Ok(get_integration_activation_action_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID => {
+                    let query = integration_activation_runway_query(&arguments)?;
+                    Ok(list_integration_activation_runway_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_runway_query(&arguments)?;
+                    Ok(get_integration_activation_runway_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
@@ -830,6 +876,102 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation plan summary",
             "Return compact D23A activation-plan rollups for target shape, review, primitive, capability, and dependency planning.",
             integration_activation_plan_query_schema(false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID,
+            "List smart-home integration activation candidates",
+            "List ranked D23A activation candidates after applying host-specific primitive, capability, and dependency readiness context.",
+            integration_activation_candidate_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "activation_candidates",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_candidates", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation candidate summary",
+            "Return compact D23A activation candidate rollups for ready, review, and blocked rollout work.",
+            integration_activation_candidate_query_schema(false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID,
+            "List smart-home integration activation actions",
+            "List concrete D23A activation actions derived from ready, review, and blocked integration candidates.",
+            integration_activation_action_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "activation_actions",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_actions", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation action summary",
+            "Return compact D23A activation action rollups for activate, review, primitive, capability, and dependency work.",
+            integration_activation_action_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID,
+            "List smart-home integration activation runway",
+            "Group D23A activation candidates by rollout priority wave using host-specific primitive, capability, and dependency readiness context.",
+            integration_activation_runway_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "activation_runway",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_runway", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation runway summary",
+            "Return compact D23A rollout-priority runway rollups for actionable, review, and blocked activation waves.",
+            integration_activation_runway_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3112,6 +3254,71 @@ struct IntegrationReadinessGapQuery {
     limit_per_kind: Option<usize>,
 }
 
+#[derive(Debug, Clone)]
+struct IntegrationActivationCandidateQuery {
+    readiness: IntegrationReadinessQuery,
+    recommendation: Option<IntegrationActivationCandidateRecommendation>,
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationActionQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    action_kind: Option<IntegrationActivationActionKind>,
+    action_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationRunwayQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    stage_limit: Option<usize>,
+    candidates_per_stage_limit: Option<usize>,
+}
+
+fn integration_activation_candidate_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationCandidateQuery, ToolCallError> {
+    let readiness = integration_readiness_query(arguments)?;
+    let recommendation = optional_string(arguments, "recommendation")?
+        .map(|label| parse_activation_candidate_recommendation(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationCandidateQuery {
+        readiness,
+        recommendation,
+    })
+}
+
+fn integration_activation_runway_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationRunwayQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let stage_limit = optional_u64(arguments, "stage_limit")?.map(|value| value as usize);
+    let candidates_per_stage_limit =
+        optional_u64(arguments, "candidates_per_stage_limit")?.map(|value| value as usize);
+
+    Ok(IntegrationActivationRunwayQuery {
+        candidates,
+        stage_limit,
+        candidates_per_stage_limit,
+    })
+}
+
+fn integration_activation_action_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationActionQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let action_kind = optional_string(arguments, "action_kind")?
+        .map(|label| parse_activation_action_kind(&label))
+        .transpose()?;
+    let action_limit = optional_u64(arguments, "action_limit")?.map(|value| value as usize);
+
+    Ok(IntegrationActivationActionQuery {
+        candidates,
+        action_kind,
+        action_limit,
+    })
+}
+
 fn integration_readiness_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationReadinessQuery, ToolCallError> {
@@ -3180,6 +3387,79 @@ fn integration_readiness_gap_inventory_for_query(
         readiness_gap_inventory_from_reports(reports.iter()),
         catalog_count,
     )
+}
+
+fn integration_activation_candidates_for_query(
+    query: &IntegrationActivationCandidateQuery,
+) -> (Vec<IntegrationActivationCandidate>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let mut candidates = activation_candidates_at_or_before_priority(
+        &catalog,
+        query.readiness.priority_at_or_before,
+        &query.readiness.available_primitives,
+        &query.readiness.allowed_capabilities,
+        &query.readiness.enabled_integrations,
+    );
+
+    if let Some(recommendation) = query.recommendation {
+        candidates.retain(|candidate| candidate.recommendation == recommendation);
+    }
+    if let Some(activation_ready) = query.readiness.activation_ready {
+        candidates.retain(|candidate| candidate.activation_ready() == activation_ready);
+    }
+    if let Some(requires_human_review) = query.readiness.requires_human_review {
+        candidates.retain(|candidate| candidate.requires_human_review() == requires_human_review);
+    }
+    if let Some(cloud_required) = query.readiness.cloud_required {
+        candidates.retain(|candidate| candidate.readiness_report.cloud_required == cloud_required);
+    }
+    if let Some(local_only) = query.readiness.local_only {
+        candidates.retain(|candidate| candidate.readiness_report.local_only == local_only);
+    }
+    if let Some(limit) = query.readiness.limit {
+        candidates.truncate(limit);
+    }
+
+    (candidates, catalog_count)
+}
+
+fn integration_activation_runway_for_query(
+    query: &IntegrationActivationRunwayQuery,
+) -> (Vec<IntegrationActivationRunwayStage>, usize) {
+    let (candidates, catalog_count) =
+        integration_activation_candidates_for_query(&query.candidates);
+    let mut runway = activation_runway_from_candidates(candidates);
+
+    if let Some(limit) = query.candidates_per_stage_limit {
+        for stage in &mut runway {
+            stage.candidates.truncate(limit);
+            stage.summary =
+                IntegrationActivationCandidateSummary::from_candidates(stage.candidates.iter());
+        }
+    }
+    if let Some(limit) = query.stage_limit {
+        runway.truncate(limit);
+    }
+
+    (runway, catalog_count)
+}
+
+fn integration_activation_actions_for_query(
+    query: &IntegrationActivationActionQuery,
+) -> (Vec<IntegrationActivationAction>, usize) {
+    let (candidates, catalog_count) =
+        integration_activation_candidates_for_query(&query.candidates);
+    let mut actions = activation_actions_from_candidates(candidates.iter());
+
+    if let Some(action_kind) = query.action_kind {
+        actions.retain(|action| action.kind == action_kind);
+    }
+    if let Some(limit) = query.action_limit {
+        actions.truncate(limit);
+    }
+
+    (actions, catalog_count)
 }
 
 fn limited_slice<T>(items: &[T], limit: Option<usize>) -> &[T] {
@@ -3381,6 +3661,182 @@ fn get_integration_activation_plan_summary_output_handler_output(
                 "plans_requiring_human_review",
                 integer(summary.plans_requiring_human_review as i64),
             ),
+        ]),
+    )
+}
+
+fn list_integration_activation_candidates_output_handler_output(
+    query: IntegrationActivationCandidateQuery,
+) -> ToolHandlerOutput {
+    let (candidates, catalog_count) = integration_activation_candidates_for_query(&query);
+    let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+    let count = candidates.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_candidates",
+            JsonValue::Array(candidates.iter().map(activation_candidate_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_candidate_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_candidates"),
+            ),
+            ("count", integer(count as i64)),
+            (
+                "blocked_candidates",
+                integer(summary.blocked_candidates as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_candidate_summary_output_handler_output(
+    query: IntegrationActivationCandidateQuery,
+) -> ToolHandlerOutput {
+    let (candidates, _) = integration_activation_candidates_for_query(&query);
+    let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_candidate_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_candidate_summary"),
+            ),
+            ("total_candidates", integer(summary.total_candidates as i64)),
+            (
+                "blocked_candidates",
+                integer(summary.blocked_candidates as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_actions_output_handler_output(
+    query: IntegrationActivationActionQuery,
+) -> ToolHandlerOutput {
+    let (actions, catalog_count) = integration_activation_actions_for_query(&query);
+    let summary = IntegrationActivationActionSummary::from_actions(actions.iter());
+    let count = actions.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_actions",
+            JsonValue::Array(actions.iter().map(activation_action_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_action_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_actions")),
+            ("count", integer(count as i64)),
+            (
+                "activate_integration_actions",
+                integer(summary.activate_integration_actions as i64),
+            ),
+            (
+                "provide_primitive_actions",
+                integer(summary.provide_primitive_actions as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_action_summary_output_handler_output(
+    query: IntegrationActivationActionQuery,
+) -> ToolHandlerOutput {
+    let (actions, _) = integration_activation_actions_for_query(&query);
+    let summary = IntegrationActivationActionSummary::from_actions(actions.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_action_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_action_summary"),
+            ),
+            ("total_actions", integer(summary.total_actions as i64)),
+            (
+                "blocked_integration_count",
+                integer(summary.blocked_integration_count as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_runway_output_handler_output(
+    query: IntegrationActivationRunwayQuery,
+) -> ToolHandlerOutput {
+    let (runway, catalog_count) = integration_activation_runway_for_query(&query);
+    let summary = IntegrationActivationRunwaySummary::from_stages(runway.iter());
+    let count = runway.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_runway",
+            JsonValue::Array(runway.iter().map(activation_runway_stage_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_runway_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_runway")),
+            ("stages", integer(count as i64)),
+            ("total_candidates", integer(summary.total_candidates as i64)),
+            ("blocked_stages", integer(summary.blocked_stages as i64)),
+        ]),
+    )
+}
+
+fn get_integration_activation_runway_summary_output_handler_output(
+    query: IntegrationActivationRunwayQuery,
+) -> ToolHandlerOutput {
+    let (runway, _) = integration_activation_runway_for_query(&query);
+    let summary = IntegrationActivationRunwaySummary::from_stages(runway.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_runway_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_runway_summary"),
+            ),
+            ("total_stages", integer(summary.total_stages as i64)),
+            ("blocked_stages", integer(summary.blocked_stages as i64)),
         ]),
     )
 }
@@ -5835,6 +6291,324 @@ fn integration_activation_plan_summary_json(
     ])
 }
 
+fn activation_candidate_json(candidate: &IntegrationActivationCandidate) -> JsonValue {
+    object([
+        (
+            "requested_integration_id",
+            string(candidate.readiness_report.requested_integration_id.as_str()),
+        ),
+        (
+            "display_name",
+            string(&candidate.readiness_report.display_name),
+        ),
+        (
+            "recommendation",
+            string(activation_candidate_recommendation_label(
+                candidate.recommendation,
+            )),
+        ),
+        ("blocker_count", integer(candidate.blocker_count as i64)),
+        (
+            "activation_ready",
+            JsonValue::Bool(candidate.activation_ready()),
+        ),
+        ("is_actionable", JsonValue::Bool(candidate.is_actionable())),
+        ("is_blocked", JsonValue::Bool(candidate.is_blocked())),
+        (
+            "requires_human_review",
+            JsonValue::Bool(candidate.requires_human_review()),
+        ),
+        (
+            "readiness_report",
+            readiness_report_json(&candidate.readiness_report),
+        ),
+    ])
+}
+
+fn integration_activation_candidate_summary_json(
+    summary: &IntegrationActivationCandidateSummary,
+) -> JsonValue {
+    object([
+        ("total_candidates", integer(summary.total_candidates as i64)),
+        (
+            "ready_to_activate_candidates",
+            integer(summary.ready_to_activate_candidates as i64),
+        ),
+        (
+            "needs_human_review_candidates",
+            integer(summary.needs_human_review_candidates as i64),
+        ),
+        (
+            "blocked_candidates",
+            integer(summary.blocked_candidates as i64),
+        ),
+        (
+            "activation_ready_candidates",
+            integer(summary.activation_ready_candidates as i64),
+        ),
+        (
+            "candidates_requiring_human_review",
+            integer(summary.candidates_requiring_human_review as i64),
+        ),
+        (
+            "candidates_missing_primitives",
+            integer(summary.candidates_missing_primitives as i64),
+        ),
+        (
+            "candidates_missing_capabilities",
+            integer(summary.candidates_missing_capabilities as i64),
+        ),
+        (
+            "candidates_missing_dependencies",
+            integer(summary.candidates_missing_dependencies as i64),
+        ),
+        ("direct_targets", integer(summary.direct_targets as i64)),
+        (
+            "delegated_integration_targets",
+            integer(summary.delegated_integration_targets as i64),
+        ),
+        (
+            "delegated_standard_targets",
+            integer(summary.delegated_standard_targets as i64),
+        ),
+        (
+            "local_only_candidates",
+            integer(summary.local_only_candidates as i64),
+        ),
+        (
+            "cloud_required_candidates",
+            integer(summary.cloud_required_candidates as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_actionable_candidates",
+            JsonValue::Bool(summary.has_actionable_candidates()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+    ])
+}
+
+fn activation_action_json(action: &IntegrationActivationAction) -> JsonValue {
+    object([
+        (
+            "action_kind",
+            string(activation_action_kind_label(action.kind)),
+        ),
+        (
+            "requested_integration_id",
+            string(action.requested_integration_id.as_str()),
+        ),
+        ("display_name", string(&action.display_name)),
+        ("priority", integer(action.priority as i64)),
+        (
+            "recommendation",
+            string(activation_candidate_recommendation_label(
+                action.recommendation,
+            )),
+        ),
+        (
+            "primitive",
+            action
+                .primitive
+                .map(|primitive| string(primitive.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "capability_id",
+            action
+                .capability_id
+                .as_ref()
+                .map(|capability_id| string(capability_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependency_integration_id",
+            action
+                .dependency_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(action.highest_policy_tier)),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(action.blocks_activation()),
+        ),
+        ("is_activation", JsonValue::Bool(action.is_activation())),
+    ])
+}
+
+fn integration_activation_action_summary_json(
+    summary: &IntegrationActivationActionSummary,
+) -> JsonValue {
+    object([
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "activate_integration_actions",
+            integer(summary.activate_integration_actions as i64),
+        ),
+        (
+            "review_policy_actions",
+            integer(summary.review_policy_actions as i64),
+        ),
+        (
+            "provide_primitive_actions",
+            integer(summary.provide_primitive_actions as i64),
+        ),
+        (
+            "grant_capability_actions",
+            integer(summary.grant_capability_actions as i64),
+        ),
+        (
+            "enable_dependency_actions",
+            integer(summary.enable_dependency_actions as i64),
+        ),
+        (
+            "actionable_integration_count",
+            integer(summary.actionable_integration_count as i64),
+        ),
+        (
+            "blocked_integration_count",
+            integer(summary.blocked_integration_count as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "first_action_priority",
+            summary
+                .first_action_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_priority",
+            summary
+                .first_activation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocker_priority",
+            summary
+                .first_blocker_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+    ])
+}
+
+fn activation_runway_stage_json(stage: &IntegrationActivationRunwayStage) -> JsonValue {
+    object([
+        ("priority", integer(stage.priority as i64)),
+        (
+            "activation_candidates",
+            JsonValue::Array(
+                stage
+                    .candidates
+                    .iter()
+                    .map(activation_candidate_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_candidate_summary_json(&stage.summary),
+        ),
+        ("count", integer(stage.candidates.len() as i64)),
+        (
+            "has_actionable_candidates",
+            JsonValue::Bool(stage.has_actionable_candidates()),
+        ),
+        ("has_blockers", JsonValue::Bool(stage.has_blockers())),
+        ("has_review_work", JsonValue::Bool(stage.has_review_work())),
+    ])
+}
+
+fn integration_activation_runway_summary_json(
+    summary: &IntegrationActivationRunwaySummary,
+) -> JsonValue {
+    object([
+        ("total_stages", integer(summary.total_stages as i64)),
+        ("total_candidates", integer(summary.total_candidates as i64)),
+        (
+            "actionable_stages",
+            integer(summary.actionable_stages as i64),
+        ),
+        ("ready_stages", integer(summary.ready_stages as i64)),
+        ("review_stages", integer(summary.review_stages as i64)),
+        ("blocked_stages", integer(summary.blocked_stages as i64)),
+        (
+            "first_actionable_priority",
+            summary
+                .first_actionable_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_ready_priority",
+            summary
+                .next_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        (
+            "candidate_summary",
+            integration_activation_candidate_summary_json(&summary.candidate_summary),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_actionable_stage",
+            JsonValue::Bool(summary.has_actionable_stage()),
+        ),
+        (
+            "has_blocked_stage",
+            JsonValue::Bool(summary.has_blocked_stage()),
+        ),
+        (
+            "has_review_stage",
+            JsonValue::Bool(summary.has_review_stage()),
+        ),
+    ])
+}
+
 fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
     object([
         (
@@ -7833,6 +8607,72 @@ fn parse_activation_target_kind(label: &str) -> Result<ActivationTargetKind, Too
     }
 }
 
+fn parse_activation_candidate_recommendation(
+    label: &str,
+) -> Result<IntegrationActivationCandidateRecommendation, ToolCallError> {
+    match label {
+        "ready_to_activate" | "ready" | "activate" => {
+            Ok(IntegrationActivationCandidateRecommendation::ReadyToActivate)
+        }
+        "needs_human_review" | "human_review" | "review" => {
+            Ok(IntegrationActivationCandidateRecommendation::NeedsHumanReview)
+        }
+        "blocked_on_prerequisites" | "blocked" | "prerequisites" => {
+            Ok(IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation candidate recommendation `{label}`"
+        ))),
+    }
+}
+
+fn activation_candidate_recommendation_label(
+    recommendation: IntegrationActivationCandidateRecommendation,
+) -> &'static str {
+    match recommendation {
+        IntegrationActivationCandidateRecommendation::ReadyToActivate => "ready_to_activate",
+        IntegrationActivationCandidateRecommendation::NeedsHumanReview => "needs_human_review",
+        IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites => {
+            "blocked_on_prerequisites"
+        }
+    }
+}
+
+fn parse_activation_action_kind(
+    label: &str,
+) -> Result<IntegrationActivationActionKind, ToolCallError> {
+    match label {
+        "activate_integration" | "activate" | "ready" => {
+            Ok(IntegrationActivationActionKind::ActivateIntegration)
+        }
+        "review_policy" | "review" | "human_review" => {
+            Ok(IntegrationActivationActionKind::ReviewPolicy)
+        }
+        "provide_primitive" | "primitive" | "install_primitive" => {
+            Ok(IntegrationActivationActionKind::ProvidePrimitive)
+        }
+        "grant_capability" | "capability" | "grant" => {
+            Ok(IntegrationActivationActionKind::GrantCapability)
+        }
+        "enable_dependency" | "dependency" | "enable_integration" => {
+            Ok(IntegrationActivationActionKind::EnableDependency)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation action kind `{label}`"
+        ))),
+    }
+}
+
+fn activation_action_kind_label(kind: IntegrationActivationActionKind) -> &'static str {
+    match kind {
+        IntegrationActivationActionKind::ActivateIntegration => "activate_integration",
+        IntegrationActivationActionKind::ReviewPolicy => "review_policy",
+        IntegrationActivationActionKind::ProvidePrimitive => "provide_primitive",
+        IntegrationActivationActionKind::GrantCapability => "grant_capability",
+        IntegrationActivationActionKind::EnableDependency => "enable_dependency",
+    }
+}
+
 fn integration_category_label(category: IntegrationCategory) -> &'static str {
     match category {
         IntegrationCategory::ProtocolStandard => "protocol_standard",
@@ -8434,6 +9274,50 @@ fn integration_activation_plan_query_schema(include_limit: bool) -> JsonSchema {
     object_schema(properties, Vec::new(), false)
 }
 
+fn integration_activation_candidate_query_schema(include_limit: bool) -> JsonSchema {
+    let mut schema = integration_readiness_query_schema(include_limit);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("recommendation", JsonSchema::String));
+    }
+    schema
+}
+
+fn integration_activation_action_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("action_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("action_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
+fn integration_activation_runway_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("stage_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new(
+            "candidates_per_stage_limit",
+            JsonSchema::Integer,
+        ));
+    }
+    schema
+}
+
 fn integration_readiness_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -8538,7 +9422,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 51);
+        assert_eq!(definitions.len(), 57);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -8564,6 +9448,24 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID));
@@ -8661,7 +9563,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            43
+            49
         );
         assert_eq!(
             export
@@ -8693,6 +9595,30 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -8939,11 +9865,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(51))
+            Some(&integer(57))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(43))
+            Some(&integer(49))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -9024,6 +9950,353 @@ mod tests {
         assert_eq!(
             field(activation_plan_rollup, "has_review_work"),
             Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_candidates_request = request(
+            "call-list-integration-activation-candidates",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CANDIDATES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("recommendation", string("blocked_on_prerequisites")),
+                ("limit", integer(3)),
+            ]),
+            4_997,
+        );
+        let list_activation_candidates_trace =
+            tool_runtime.invoke_with_events(&list_activation_candidates_request);
+        assert!(list_activation_candidates_trace.result.ok);
+        assert_eq!(
+            list_activation_candidates_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_candidates_output = list_activation_candidates_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_activation_candidates_output, "count"),
+            Some(&integer(3))
+        );
+        let activation_candidate_summary =
+            field(list_activation_candidates_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_candidate_summary, "blocked_candidates"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(activation_candidate_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_candidate = array_item(
+            field(list_activation_candidates_output, "activation_candidates").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_candidate, "recommendation"),
+            Some(&string("blocked_on_prerequisites"))
+        );
+        assert_eq!(
+            field(activation_candidate, "is_blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(integer_value(field(activation_candidate, "blocker_count").unwrap()).unwrap() >= 1);
+
+        let activation_candidate_summary_request = request(
+            "call-integration-activation-candidate-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CANDIDATE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            4_998,
+        );
+        let activation_candidate_summary_trace =
+            tool_runtime.invoke_with_events(&activation_candidate_summary_request);
+        assert!(activation_candidate_summary_trace.result.ok);
+        assert_eq!(
+            activation_candidate_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_candidate_summary_output = activation_candidate_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_candidate_rollup =
+            field(activation_candidate_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_candidate_rollup, "total_candidates").unwrap()).unwrap()
+                >= 3
+        );
+        assert_eq!(
+            field(activation_candidate_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_candidate_rollup, "has_review_work"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let list_activation_actions_request = request(
+            "call-list-integration-activation-actions",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_ACTIONS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("action_kind", string("provide_primitive")),
+                ("action_limit", integer(3)),
+            ]),
+            4_999,
+        );
+        let list_activation_actions_trace =
+            tool_runtime.invoke_with_events(&list_activation_actions_request);
+        assert!(list_activation_actions_trace.result.ok);
+        assert_eq!(
+            list_activation_actions_trace.summary().progress_event_count,
+            1
+        );
+        let list_activation_actions_output = list_activation_actions_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert_eq!(
+            field(list_activation_actions_output, "count"),
+            Some(&integer(3))
+        );
+        let activation_action = array_item(
+            field(list_activation_actions_output, "activation_actions").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_action, "action_kind"),
+            Some(&string("provide_primitive"))
+        );
+        assert!(matches!(
+            field(activation_action, "primitive"),
+            Some(JsonValue::String(_))
+        ));
+        assert_eq!(
+            field(activation_action, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_action_summary = field(list_activation_actions_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_action_summary, "provide_primitive_actions"),
+            Some(&integer(3))
+        );
+        assert_eq!(
+            field(activation_action_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_action_summary_request = request(
+            "call-integration-activation-action-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_ACTION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_000,
+        );
+        let activation_action_summary_trace =
+            tool_runtime.invoke_with_events(&activation_action_summary_request);
+        assert!(activation_action_summary_trace.result.ok);
+        assert_eq!(
+            activation_action_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_action_summary_output = activation_action_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_action_rollup = field(activation_action_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_action_rollup, "total_actions").unwrap()).unwrap() >= 3
+        );
+        assert_eq!(
+            field(activation_action_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            optional_field(activation_action_rollup, "first_blocker_priority")
+                .and_then(integer_value)
+                .is_some()
+        );
+
+        let list_activation_runway_request = request(
+            "call-list-integration-activation-runway",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("stage_limit", integer(2)),
+                ("candidates_per_stage_limit", integer(2)),
+            ]),
+            5_001,
+        );
+        let list_activation_runway_trace =
+            tool_runtime.invoke_with_events(&list_activation_runway_request);
+        assert!(list_activation_runway_trace.result.ok);
+        assert_eq!(
+            list_activation_runway_trace.summary().progress_event_count,
+            1
+        );
+        let list_activation_runway_output =
+            list_activation_runway_trace.result.output.as_ref().unwrap();
+        assert_eq!(
+            field(list_activation_runway_output, "count"),
+            Some(&integer(2))
+        );
+        let activation_runway_summary = field(list_activation_runway_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_runway_summary, "total_stages"),
+            Some(&integer(2))
+        );
+        assert_eq!(
+            field(activation_runway_summary, "has_blocked_stage"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_runway_stage = array_item(
+            field(list_activation_runway_output, "activation_runway").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_runway_stage, "priority"),
+            Some(&integer(0))
+        );
+        assert!(integer_value(field(activation_runway_stage, "count").unwrap()).unwrap() >= 1);
+        assert_eq!(
+            field(activation_runway_stage, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_runway_summary_request = request(
+            "call-integration-activation-runway-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+            ]),
+            5_002,
+        );
+        let activation_runway_summary_trace =
+            tool_runtime.invoke_with_events(&activation_runway_summary_request);
+        assert!(activation_runway_summary_trace.result.ok);
+        assert_eq!(
+            activation_runway_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_runway_summary_output = activation_runway_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_runway_rollup = field(activation_runway_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_runway_rollup, "total_candidates").unwrap()).unwrap()
+                >= 3
+        );
+        assert_eq!(
+            field(activation_runway_rollup, "has_blocked_stage"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            optional_field(activation_runway_rollup, "first_blocked_priority")
+                .and_then(integer_value)
+                .is_some()
         );
 
         let list_integration_readiness_request = request(
@@ -10398,6 +11671,27 @@ mod tests {
             activation_plan_summary_trace,
         );
         journal.record_trace(
+            list_activation_candidates_request,
+            list_activation_candidates_trace,
+        );
+        journal.record_trace(
+            activation_candidate_summary_request,
+            activation_candidate_summary_trace,
+        );
+        journal.record_trace(
+            list_activation_actions_request,
+            list_activation_actions_trace,
+        );
+        journal.record_trace(
+            activation_action_summary_request,
+            activation_action_summary_trace,
+        );
+        journal.record_trace(list_activation_runway_request, list_activation_runway_trace);
+        journal.record_trace(
+            activation_runway_summary_request,
+            activation_runway_summary_trace,
+        );
+        journal.record_trace(
             list_integration_readiness_request,
             list_integration_readiness_trace,
         );
@@ -10457,9 +11751,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 51);
-        assert_eq!(journal_summary.completed_count, 51);
-        assert_eq!(journal.audit_records().len(), 51);
+        assert_eq!(journal_summary.invocation_count, 57);
+        assert_eq!(journal_summary.completed_count, 57);
+        assert_eq!(journal.audit_records().len(), 57);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

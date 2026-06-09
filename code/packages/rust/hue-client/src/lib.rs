@@ -296,6 +296,14 @@ impl HueSnapshotSummary {
         self.scene_actions > 0
     }
 
+    pub fn has_relationship_refs(&self) -> bool {
+        self.device_service_refs > 0 || self.area_child_refs > 0 || self.area_service_refs > 0
+    }
+
+    pub fn has_scene_state_projection(&self) -> bool {
+        self.stateful_scene_actions > 0 || self.desired_scene_state_fields > 0
+    }
+
     pub fn has_sensor_or_input_resources(&self) -> bool {
         self.motion_resources > 0 || self.button_resources > 0
     }
@@ -410,6 +418,30 @@ impl HueEventStreamSummary {
 
     pub fn has_unknown_resource_items(&self) -> bool {
         self.unknown_resource_items > 0
+    }
+
+    pub fn typed_resource_item_count(&self) -> usize {
+        self.total_resource_items
+            .saturating_sub(self.unknown_resource_items)
+    }
+
+    pub fn has_typed_resource_items(&self) -> bool {
+        self.typed_resource_item_count() > 0
+    }
+
+    pub fn has_multiple_resource_types(&self) -> bool {
+        usize::from(self.bridge_resource_items > 0)
+            + usize::from(self.device_resource_items > 0)
+            + usize::from(self.light_resource_items > 0)
+            + usize::from(self.grouped_light_resource_items > 0)
+            + usize::from(self.room_resource_items > 0)
+            + usize::from(self.zone_resource_items > 0)
+            + usize::from(self.scene_resource_items > 0)
+            + usize::from(self.motion_resource_items > 0)
+            + usize::from(self.button_resource_items > 0)
+            + usize::from(self.smart_scene_resource_items > 0)
+            + usize::from(self.unknown_resource_items > 0)
+            > 1
     }
 
     fn record_resource_item(&mut self, resource: &JsonValue) {
@@ -2048,6 +2080,9 @@ mod tests {
         assert!(summary.has_resource_items());
         assert!(summary.has_empty_records());
         assert!(summary.has_unknown_resource_items());
+        assert_eq!(summary.typed_resource_item_count(), 2);
+        assert!(summary.has_typed_resource_items());
+        assert!(summary.has_multiple_resource_types());
 
         let empty = HueEventStreamSummary::empty();
         assert!(empty.is_empty());
@@ -2055,6 +2090,9 @@ mod tests {
         assert!(!empty.has_resource_items());
         assert!(!empty.has_empty_records());
         assert!(!empty.has_unknown_resource_items());
+        assert_eq!(empty.typed_resource_item_count(), 0);
+        assert!(!empty.has_typed_resource_items());
+        assert!(!empty.has_multiple_resource_types());
     }
 
     #[test]
@@ -2514,6 +2552,8 @@ mod tests {
         assert!(summary.has_lighting_resources());
         assert!(summary.has_area_resources());
         assert!(summary.has_scene_actions());
+        assert!(summary.has_relationship_refs());
+        assert!(summary.has_scene_state_projection());
         assert!(summary.has_sensor_or_input_resources());
         assert!(summary.has_state_projection());
 
@@ -2522,6 +2562,8 @@ mod tests {
         assert!(!empty.has_lighting_resources());
         assert!(!empty.has_area_resources());
         assert!(!empty.has_scene_actions());
+        assert!(!empty.has_relationship_refs());
+        assert!(!empty.has_scene_state_projection());
         assert!(!empty.has_sensor_or_input_resources());
         assert!(!empty.has_state_projection());
     }

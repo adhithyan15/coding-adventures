@@ -23,6 +23,15 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_plans` and
   `smart_home.get_integration_activation_plan_summary` tool descriptors for
   read-only activation-plan listing and compact rollout plan summaries.
+- `smart_home.list_integration_activation_candidates` and
+  `smart_home.get_integration_activation_candidate_summary` tool descriptors
+  for read-only ranked activation candidate planning.
+- `smart_home.list_integration_activation_actions` and
+  `smart_home.get_integration_activation_action_summary` tool descriptors for
+  read-only concrete activation action planning.
+- `smart_home.list_integration_activation_runway` and
+  `smart_home.get_integration_activation_runway_summary` tool descriptors for
+  read-only rollout-priority activation wave planning.
 - `smart_home.list_integration_readiness` and
   `smart_home.get_integration_readiness_summary` tool descriptors for read-only
   integration activation blocker planning.
