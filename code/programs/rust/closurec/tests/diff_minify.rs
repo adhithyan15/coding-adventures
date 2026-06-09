@@ -85,13 +85,10 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-039: tagged template needs no separator between
-    // IDENT and template literal. Upstream emits
-    // `var x=tag\`hi\`;` but closurec emits
-    // `var x=tag \`hi\`;` — `needs_separator` treats
-    // template-literal tokens as word-like and inserts a
-    // space. Discovered by CLOC14.6.
-    ("tagged_template", "gap-039: IDENT-then-template needs no space"),
+    // gap-039 was RESOLVED in CLOC12.46 — `needs_separator`
+    // now short-circuits to false when the next token's value
+    // starts with `` ` `` (template literal). `minify_tagged_template`
+    // flipped IGNORED → PASS. Harness back to 41/41.
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name

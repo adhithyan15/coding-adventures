@@ -893,6 +893,20 @@ pub(crate) fn is_eof(tok: &lexer::token::Token) -> bool {
 /// True iff two adjacent tokens need a space between them to
 /// preserve their separate identity when re-tokenized.
 fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
+    // gap-039: tagged template literal. The grammar
+    // `TaggedTemplateExpression → MemberExpression TemplateLiteral`
+    // (§13.3.11) requires zero whitespace between the tag
+    // function and the template's opening `` ` ``. Without
+    // this short-circuit, two adjacent word-like tokens
+    // would get a separator inserted (e.g. `tag` IDENT
+    // followed by template literal whose value starts with
+    // `` ` ``), producing `tag \`hi\`` instead of upstream's
+    // `tag\`hi\``. Filter BEFORE the word-like rule so a
+    // template literal preceded by an IDENT / number /
+    // keyword still emits no space.
+    if b.value.starts_with('`') {
+        return false;
+    }
     // Conservative rule: both word-like → space; otherwise none.
     if is_word_like(a) && is_word_like(b) {
         return true;
@@ -1810,5 +1824,50 @@ mod tests {
         let big = "0x".to_string() + &"f".repeat(40); // u160 worth
         let src = format!("var x={};", big);
         assert_eq!(minify(&src), src);
+    }
+
+    // ---- gap-039: tagged template separator --------------
+
+    /// Target fixture: tagged template literal has no
+    /// separator between the tag function and the
+    /// `` ` ``-opening template.
+    #[test]
+    fn gap039_tagged_template_no_separator() {
+        assert_eq!(minify("var x=tag`hi`;"), "var x=tag`hi`;");
+    }
+
+    /// Tagged-template chains: `tag``hi`.length` (member
+    /// access after a tagged template) still works.
+    #[test]
+    fn gap039_member_after_tagged_template() {
+        assert_eq!(
+            minify("var x=tag`hi`.length;"),
+            "var x=tag`hi`.length;"
+        );
+    }
+
+    /// Bare template literal (not tagged) is unaffected —
+    /// the rule fires on next-starts-with-backtick whether
+    /// or not a tag IDENT precedes it. The previous token
+    /// before a bare `` ` `` is typically `=` (PUNCTUATION,
+    /// not word-like), so no separator would be needed
+    /// anyway.
+    #[test]
+    fn gap039_bare_template_literal() {
+        assert_eq!(minify("var x=`hi`;"), "var x=`hi`;");
+    }
+
+    /// **Composition with gap-035**: `var{a}=tag`hi`;` would
+    /// trigger both the `var{` separator (gap-035) and the
+    /// tagged-template no-separator (gap-039). gap-035 wins
+    /// inside `var`-to-`{`; gap-039 wins inside IDENT-to-`` ` ``.
+    /// They don't conflict because they fire on different
+    /// token-pair shapes.
+    #[test]
+    fn gap039_composes_with_gap035() {
+        assert_eq!(
+            minify("var{a}=tag`hi`;"),
+            "var {a}=tag`hi`;"
+        );
     }
 }
