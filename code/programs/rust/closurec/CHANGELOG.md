@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.56.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-043** — CLI quote-choice optimisation for
+  string literals. **Harness now 57/57 PASS — sixth 100%
+  milestone today** (17/17 → 25/25 → 33/33 → 41/41 → 49/49
+  → 57/57).
+- Added `emit_quoted_string(out, content)`: counts `"` vs
+  `'` occurrences in content. When `"` count > `'` count,
+  switches to single-quoted form (no `\"` escape needed
+  for the content's `"`). Otherwise default to double
+  (tie-break per upstream's `CodePrinter`).
+- Mirrors the logic in `closure-emitter`'s
+  `choose_quote_and_escape` (closed CLOC12 gap-026). The
+  CLI path uses an independent copy because it doesn't go
+  through the AST.
+- Both string-emit sites in the WHITESPACE_ONLY path now
+  call `emit_quoted_string` (main loop + gap-032 pre-emit).
+
+### Added
+
+4 new `gap043_*` inline tests:
+- `gap043_no_quotes_in_content_picks_double` — default
+  case
+- `gap043_single_quotes_only_stay_double` — no escape
+  savings from switching
+- `gap043_more_double_switches_to_single` — target case
+  (one `"`, no `'`)
+- `gap043_tie_picks_double` — tie-break verification
+
 ## [0.55.0] - 2026-06-09
 
 ### Changed

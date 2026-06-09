@@ -89,13 +89,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // arms body_position_next, so gap-032's single-statement
     // flatten fires on `do{a;}while(x);` → `do a;while(x);`.
     // `minify_do_while` flipped IGNORED → PASS.
-    // gap-043: CLI quote-choice optimisation for string
-    // literals. Upstream switches to `'` when content has
-    // escaped `"` characters (saves the backslash). The
-    // AST emitter has this (gap-026 closed in CLOC12.11)
-    // but the CLI WHITESPACE_ONLY path doesn't reuse that
-    // logic. Discovered by CLOC14.8.
-    ("escape_chars", "gap-043: CLI quote-choice"),
+    // gap-043 was RESOLVED in CLOC12.50 — `emit_quoted_string`
+    // helper picks the optimal delimiter (`"` vs `'`) based
+    // on which appears more in the content. `minify_escape_chars`
+    // flipped IGNORED → PASS. **Harness back to 57/57 — sixth
+    // 100% milestone today.**
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
