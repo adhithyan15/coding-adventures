@@ -59,7 +59,7 @@ representation + per-builtin backend lowering.
 |---------|----------|----|----|----|----|----|----|----|-------------|
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
-| **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | uniform-anyref |
+| **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
@@ -79,11 +79,13 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase A — finish WASM (the reference uniform-ref backend)
 
-- ☐ **W1 — WASM symbols (F6).** Lower `QUOTE`/symbol literals to interned
-  symbol *values* in the uniform-anyref model. Options: a distinct boxed symbol
-  object, or a reserved `i31` sub-range vs integers. `(EQ 'A 'A)` → T,
-  `(EQ 'A 'B)` → nil, end-to-end on `wasm-runtime`. Mirror the native
-  `intern_symbols` pass.
+- ✅ **W1 — WASM symbols (F6).** `iir-builtin-lowering::intern_symbols_structural`
+  (the managed twin of native `intern_symbols`) interns each symbol literal to a
+  distinct integer in a reserved range (`SYMBOL_ID_BASE = 2²⁹` + module-wide id),
+  retyped to `i32` so it boxes as an `i31ref` and `EQ` compares with `i32.eq` —
+  no new value type, no polymorphic `EQ`. `lang-aot::compile_source_to_wasm` runs
+  it before the repr pass. `(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil, `(EQ 'A 5)` → nil
+  (disjoint range), symbols through cons + `COND`, end-to-end on `wasm-runtime`.
 - ☐ **W2 — WASM `LAMBDA`/`LABEL`/user calls + recursion (F7).** Per-`LAMBDA`/
   `LABEL` wasm function; `call`; bound params as anyref locals; closure value if
   captured (env object). Recursion via the existing `call`. A recursive `LABEL`

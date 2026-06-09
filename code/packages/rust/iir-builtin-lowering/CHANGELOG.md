@@ -4,6 +4,21 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.11.0] — 2026-06-09 — managed-backend symbol interning (LANG77 / McCarthy W1)
+
+### Added
+
+- **`intern_symbols_structural`** — the managed/uniform-reference twin of
+  `intern_symbols`. Interns each symbol literal (`const Var(name) : symbol`) to a
+  distinct integer in a reserved high range (`SYMBOL_ID_BASE = 2²⁹` + module-wide
+  id) and retypes it to `i32`, so a symbol flows like any integer atom: the
+  structural pass boxes it as an `i31ref` and `EQ` compares the payloads with
+  `i32.eq`. Distinct symbols get distinct values (`(EQ 'A 'B)` → nil), same
+  symbols share one (`(EQ 'A 'A)` → T), and the reserved range keeps symbols
+  disjoint from integer atoms (`(EQ 'A 5)` → nil). No new value type, no
+  polymorphic `EQ`. Reusable across WASM/JVM/CLR/BEAM (each adapts the encoding;
+  the WASM path uses the integer ids directly). 4 new tests.
+
 ## [0.10.0] — 2026-06-09 — `COND` lisp-truthiness (LANG77 / McCarthy L3b-3a-4d)
 
 ### Changed

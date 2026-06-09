@@ -152,6 +152,11 @@ pub use lisp_repr_structural::lower_lisp_repr_structural;
 // so native symbols carry identity (for `EQ`) without runtime interning.
 // Runs before `lower_lisp_repr`.
 pub use symbol_intern::intern_symbols;
+// The managed-backend (uniform-reference) symbol interner (LANG77 / McCarthy
+// W1): interns symbol literals to distinct integers in a reserved range so they
+// box as `i31ref`s and `EQ` compares them with `i32.eq`. Twin of
+// `intern_symbols`. Run before `lower_lisp_repr_structural`.
+pub use symbol_intern::intern_symbols_structural;
 // Re-export the global/IO lowering entry point (LANG32).
 pub use global_io::lower_global_io;
 // Re-export the closure lowering entry point (LANG34).
