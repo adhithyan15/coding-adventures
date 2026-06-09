@@ -436,8 +436,29 @@ pub fn whitespace_only_minify(
                     && semi_count == 1
                     && last_before_close == ";";
                 if eligible {
+                    // gap-049: if the next token AFTER the
+                    // closing `}` is itself a `}` (outer
+                    // block boundary), the inlined trailing
+                    // `;` is redundant — Rule A would drop
+                    // a source `;` at this position, and
+                    // logically the inline `;` is occupying
+                    // exactly that slot. Without this
+                    // suppression we'd emit
+                    //   `function f(){for(var v of a)a;};`
+                    // when upstream Closure produces
+                    //   `function f(){for(var v of a)a};`.
+                    //
+                    // The check has to happen here (inside
+                    // the flatten) because once the
+                    // contents are pre-emitted, the main
+                    // state machine doesn't re-scan them
+                    // and Rule A only fires on tokens still
+                    // in `kept`.
+                    let next_after_close =
+                        kept.get(close_idx + 1).map(|t| t.value.as_str());
+                    let drop_trailing_semi = next_after_close == Some("}");
                     // Pre-emit content tokens (idx+1 ..
-                    // close_idx). Each token gets the same
+                    // emit_end). Each token gets the same
                     // separator + quoting treatment as the
                     // main loop, but the state machine isn't
                     // run on them — they're carried through
@@ -445,7 +466,15 @@ pub fn whitespace_only_minify(
                     // verified the contents are a single
                     // simple statement with no nested
                     // structure.
-                    for content_idx in (idx + 1)..close_idx {
+                    let emit_end = if drop_trailing_semi {
+                        // close_idx - 1 is the trailing `;`
+                        // (verified by `last_before_close ==
+                        // ";"` in the eligibility check).
+                        close_idx - 1
+                    } else {
+                        close_idx
+                    };
+                    for content_idx in (idx + 1)..emit_end {
                         let t = kept[content_idx];
                         if let Some(prev) = prev_emitted_tok {
                             if needs_separator(prev, t) {
@@ -1829,14 +1858,20 @@ mod tests {
         // so the outer block stays wrapped. The INNER
         // if-body, however, IS a single statement and DOES
         // get flattened by gap-032 — so `{a();}` becomes
-        // `a();`. The inner-flatten's `;` survives the
-        // outer block's closing `}` because the synthetic
-        // `;` from gap-032's pre-emit path bypasses rule A.
-        // Output is `if(x){if(y)a();}` — valid JS, just
-        // slightly less minimal than upstream might produce.
+        // `a();`. **gap-049 (CLOC12.56) further improves
+        // this**: the inner flatten now peeks the next
+        // token after its closing `}`. Since the outer
+        // block's `}` follows, the trailing `;` is
+        // suppressed. Output is `if(x){if(y)a()}` — one
+        // byte shorter than before (was `if(x){if(y)a();}`).
+        // Upstream Closure emits `if(x)if(y)a();` which is
+        // also more aggressive than us (it flattens the
+        // outer block too); matching that requires letting
+        // the outer flatten see through `if` keywords,
+        // which would be a separate future gap.
         assert_eq!(
             minify("if(x){if(y){a();}}"),
-            "if(x){if(y)a();}"
+            "if(x){if(y)a()}"
         );
     }
 
@@ -2531,6 +2566,68 @@ mod tests {
     #[test]
     fn gap046_empty_array_unchanged() {
         assert_eq!(minify("var a=[];"), "var a=[];");
+    }
+
+    // ---- gap-049: flattened for-body `;` suppression ----
+
+    /// Target case: for-of body flatten next to outer `}`.
+    #[test]
+    fn gap049_for_of_flat_drops_trailing_semi() {
+        assert_eq!(
+            minify("function f(){for(var v of a){a;}}"),
+            "function f(){for(var v of a)a};"
+        );
+    }
+
+    /// for-in body flatten — same family as for-of.
+    #[test]
+    fn gap049_for_in_flat_drops_trailing_semi() {
+        assert_eq!(
+            minify("function f(){for(var k in o){use(k);}}"),
+            "function f(){for(var k in o)use(k)};"
+        );
+    }
+
+    /// while-body flatten next to outer `}`.
+    #[test]
+    fn gap049_while_flat_drops_trailing_semi() {
+        assert_eq!(
+            minify("function f(){while(x){a();}}"),
+            "function f(){while(x)a()};"
+        );
+    }
+
+    /// **Non-regression**: flattened body NOT next to a
+    /// `}` keeps its `;`. `for(...) a();` at top level
+    /// still ends with `;` because next is EOF (gap-049
+    /// requires next-after-close to be specifically `}`).
+    #[test]
+    fn gap049_for_at_top_level_keeps_semi() {
+        assert_eq!(
+            minify("for(var v of a){a;}"),
+            "for(var v of a)a;"
+        );
+    }
+
+    /// **Non-regression**: if-body flattened at top level
+    /// keeps its `;` for the same reason.
+    #[test]
+    fn gap049_if_at_top_level_keeps_semi() {
+        assert_eq!(
+            minify("if(x){a();}"),
+            "if(x)a();"
+        );
+    }
+
+    /// **Non-regression**: if-else where the else-arm is
+    /// flattened next to outer `}`. The `;` of the else-arm
+    /// should still be suppressed.
+    #[test]
+    fn gap049_if_else_inside_function_drops_semi() {
+        assert_eq!(
+            minify("function f(){if(x){a();}else{b();}}"),
+            "function f(){if(x)a();else b()};"
+        );
     }
 
     // ---- gap-047: suppress `;` before stmt-keyword -------
