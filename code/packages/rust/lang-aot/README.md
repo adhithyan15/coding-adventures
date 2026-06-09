@@ -15,6 +15,11 @@ predicates, `COND`, and symbols: `pair?`/`ATOM` (`(ATOM 5)` → 1; L3b-3a-4b),
 McCarthy core** — cons, `ATOM`, `EQ`, `COND`, symbols, and lambda/label/recursion
 (F1–F7) — now runs on the wasm backend.
 
+`compile_source_to_jvm` is the second managed target (W3a): scalar McCarthy emits
+a JVM `.class` that **runs** — verified by running the entry method on the in-repo
+`jvm-simulator` (`42` → 42), no external `java`. The JVM cons/symbol/lambda value
+model (uniform-`Object`, replicating the wasm passes) is W3b+.
+
 ## Stack position
 
 ```
