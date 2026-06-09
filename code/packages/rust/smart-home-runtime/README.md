@@ -15,6 +15,8 @@ Included surfaces:
 - read-side event-log and subscription backlog queries for dashboards, tools,
   and tests that need bounded runtime inspection
 - compact event-log summaries for selected replay windows and event kinds
+- typed command-result queries and summaries over checkpointed runtime event
+  history
 - bounded event-bus delivery peeking and draining for subscription polling
 - compact delivery-batch summaries for subscription polling results without
   exposing event payloads
@@ -74,7 +76,8 @@ Included surfaces:
 - D18D-facing read tool facade for listing bridges/devices/scenes, describing
   scenes, reading room topology summaries, reading aggregate topology coverage,
   reading entity state, describing capabilities, inspecting bridge health,
-  listing event subscriptions, inspecting event-log entries, reading
+  listing event subscriptions, inspecting event-log entries, listing and
+  summarizing command results, reading
   authorization decisions and summaries, reading capability grants and
   summaries, reading compact runtime snapshots, listing desired-state targets,
   listing pairing sessions, listing supervised bridge workers, reading worker

@@ -17,6 +17,9 @@ All notable changes to this package will be documented in this file.
   model-facing event subscription lifecycle control.
 - `smart_home.list_subscriptions` and `smart_home.inspect_event_log` tool
   descriptors for read-only event-stream backlog and replay-log inspection.
+- `smart_home.list_command_results` and
+  `smart_home.get_command_result_summary` tool descriptors for read-only
+  command-result audit views over runtime event history.
 - `smart_home.list_authorization_decisions` and
   `smart_home.get_authorization_summary` tool descriptors for read-only
   authorization-audit inspection.
