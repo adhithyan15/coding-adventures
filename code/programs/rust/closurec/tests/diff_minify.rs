@@ -93,11 +93,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-048 was RESOLVED in CLOC12.55 — BigInt token
     // path now strips ES2021 `_` numeric separators.
     // `minify_bigint_separator` flipped IGNORED → PASS.
-    // gap-049: flattened single-stmt for-body keeps
-    // stray `;` before outer `}`. Reproduces with regular
-    // `for(var v of a){a;}` inside a function — not
-    // for-await-of-specific. Discovered by CLOC14.13.
-    ("for_await_of", "gap-049: flattened for-body trailing `;` before `}`"),
+    // gap-049 was RESOLVED in CLOC12.56 — gap-032's
+    // flatten now peeks the token after the closing `}`;
+    // if it's another `}`, the trailing `;` is suppressed
+    // from the inline emission. `minify_for_await_of`
+    // flipped IGNORED → PASS.
     // gap-046 was RESOLVED in CLOC12.52 — `,` immediately
     // before `]` is now suppressed. `minify_trailing_array_comma`
     // flipped IGNORED → PASS. Object-literal trailing comma

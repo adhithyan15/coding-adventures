@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.61.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-049** — gap-032's single-statement flatten now
+  peeks the token after the closing `}`. When the next token
+  is another `}`, the trailing `;` is suppressed from the
+  inline emission.
+- `function f(){for(var v of a){a;}}` → `function f(){for(var v of a)a};`
+  (was: `function f(){for(var v of a)a;};`)
+- Affects all loop/conditional flattening: `for`, `for-of`,
+  `for-in`, `for-await-of`, `while`, `if` (and the inner arm
+  of `if-else`). All produce one byte less when wrapped in a
+  function body or another block.
+
+### Fixed
+
+`gap032_nested_if_does_not_flatten` expectation tightened —
+`if(x){if(y){a();}}` now produces `if(x){if(y)a()}` (15 bytes)
+instead of `if(x){if(y)a();}` (17 bytes). Both are valid JS;
+the new form is one byte closer to upstream's
+`if(x)if(y)a();` (16 bytes, requires also flattening through
+the outer `if` keyword — a separate future improvement).
+
+### Added
+
+6 inline `gap049_*` tests covering for-of/for-in/while
+flattening + 3 explicit non-regression cases (top-level
+flatten preserves `;`, if-else inside function suppresses
+correctly).
+
 ## [0.60.0] - 2026-06-09
 
 ### Changed
