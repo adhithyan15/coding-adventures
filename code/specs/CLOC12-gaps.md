@@ -362,13 +362,12 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-048 — BigInt with numeric separator: strip `_` separators
 
-- **Status:** OPEN — newly discovered by CLOC14.13.
+- **Status:** **RESOLVED** in CLOC12.55 (PR pending). `minify_bigint_separator` flipped IGNORED → PASS.
 - **Upstream byte-identity test:** `minify_bigint_separator` seed fixture.
 - **Input:** `var a = 1_000_000n;`
 - **Upstream:** `var a=1000000n;` (separators stripped, BigInt suffix kept)
-- **closurec:** `var a=1_000_000n;` (separators not stripped)
-- **Why it fails:** gap-040 strips `_` separators from regular numeric literals via `normalize_number_value`, but the BigInt path (trailing `n`) is a separate token-shape branch that doesn't run through the same normalization. The same `1_000_000` body is allowed in both forms — just the BigInt branch isn't stripping it.
-- **What it needs:** Either (1) make the BigInt token-emit branch also call the separator-stripper before re-appending `n`, or (2) make the underlying tokenizer's numeric-literal value-extraction strip `_` for BOTH regular and BigInt forms (single fix). Option (2) is the cleaner one — separators are purely lexical sugar, not semantic.
+- **Why it failed:** `is_number_literal` did not recognize the lexer's `BIGINT` token type, so BigInt tokens never reached `normalize_number_value` — gap-040's separator-stripping never fired on them.
+- **Fix:** (1) Extend `is_number_literal` to accept `BIGINT` / `BIGINT_LITERAL` type-names. (2) In `normalize_number_value`, when the token ends with `n`, strip `_` from the body and re-append `n` (skip the radix-and-shortest-form path — that needs bigint arithmetic and is still deferred).
 
 ### gap-049 — flattened single-stmt for-body keeps trailing `;` before `}`
 

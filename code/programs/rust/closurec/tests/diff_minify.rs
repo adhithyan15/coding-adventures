@@ -90,12 +90,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-048: BigInt with numeric separator —
-    // `1_000_000n` should normalise to `1000000n` (the
-    // gap-040 separator-stripping for regular numbers
-    // does not extend to BigInt-suffix forms). Discovered
-    // by CLOC14.13.
-    ("bigint_separator", "gap-048: BigInt literal separator stripping"),
+    // gap-048 was RESOLVED in CLOC12.55 — BigInt token
+    // path now strips ES2021 `_` numeric separators.
+    // `minify_bigint_separator` flipped IGNORED → PASS.
     // gap-049: flattened single-stmt for-body keeps
     // stray `;` before outer `}`. Reproduces with regular
     // `for(var v of a){a;}` inside a function — not
