@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.63.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-046b** — object literal / object destructuring
+  trailing-comma elision. `{a:1,b:2,}` → `{a:1,b:2}`,
+  `var {a,b,}=o` → `var {a,b}=o`.
+
+### Added
+
+Token-level peephole right after gap-046's `,`-before-`]`
+drop: same shape, but for `,` before `}`. The drop is
+unconditional — in valid ECMAScript, `,` immediately before
+`}` can ONLY appear in object-literal / object-destructuring
+contexts (block bodies, class bodies, switch bodies don't
+allow `,` between members).
+
+7 inline `gap046b_*` tests covering target case + 5 explicit
+non-regression cases (no-comma forms, empty obj, call
+trailing comma, nested objects).
+
 ## [0.62.0] - 2026-06-09
 
 ### Changed

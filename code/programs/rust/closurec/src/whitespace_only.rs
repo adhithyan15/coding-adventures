@@ -404,6 +404,35 @@ pub fn whitespace_only_minify(
             continue;
         }
 
+        // gap-046b: drop a trailing `,` in object literals
+        // and object destructuring patterns. Upstream
+        // Closure normalises `{a:1,}` → `{a:1}` and
+        // `var {a,}=o` → `var {a}=o`.
+        //
+        // **Safe-to-drop unconditionally**: in VALID
+        // ECMAScript, a `,` immediately before `}` can ONLY
+        // appear in object-literal / object-destructuring
+        // contexts. Other `}` contexts can't have `,`
+        // directly preceding:
+        //   - Block: statements are `;`-separated (or ASI);
+        //     `{a, b}` parses as a block containing the
+        //     comma-expression `a, b` as an expression
+        //     statement, with `;` inserted before `}`. The
+        //     `,` is between `a` and `b`, not before `}`.
+        //   - Function body / arrow body: same as block.
+        //   - Class body: members have NO separator (no `,`
+        //     between methods/fields).
+        //   - switch body: `case` arms, no `,`.
+        //   - try/catch/finally body: same as block.
+        //
+        // So we can drop without checking brace_stack.
+        if val == ","
+            && kept.get(idx + 1).map(|t| t.value.as_str()) == Some("}")
+        {
+            idx += 1;
+            continue;
+        }
+
         // gap-032: single-statement block flattening. When a
         // `{` appears in body position and the block contains
         // exactly one simple statement ending with `;`, we
@@ -2618,6 +2647,65 @@ mod tests {
     #[test]
     fn gap046_empty_array_unchanged() {
         assert_eq!(minify("var a=[];"), "var a=[];");
+    }
+
+    // ---- gap-046b: trailing object comma drop ------------
+
+    /// Target case: object literal with trailing `,`.
+    #[test]
+    fn gap046b_obj_literal_trailing_comma_dropped() {
+        assert_eq!(
+            minify("var o={a:1,b:2,};"),
+            "var o={a:1,b:2};"
+        );
+    }
+
+    /// Object destructuring with trailing `,` — same shape.
+    #[test]
+    fn gap046b_obj_destruct_trailing_comma_dropped() {
+        assert_eq!(
+            minify("var {a,b,}=o;"),
+            "var {a,b}=o;"
+        );
+    }
+
+    /// Single-property object literal with trailing `,`.
+    #[test]
+    fn gap046b_obj_literal_single_with_comma() {
+        assert_eq!(minify("var o={a:1,};"), "var o={a:1};");
+    }
+
+    /// **Non-regression**: object WITHOUT trailing `,`
+    /// stays verbatim.
+    #[test]
+    fn gap046b_obj_literal_unchanged() {
+        assert_eq!(minify("var o={a:1};"), "var o={a:1};");
+    }
+
+    /// **Non-regression**: empty object `{}` is unchanged.
+    #[test]
+    fn gap046b_empty_obj_unchanged() {
+        assert_eq!(minify("var o={};"), "var o={};");
+    }
+
+    /// **Non-regression**: function-call trailing comma
+    /// `f(1,2,)` is `,` before `)`, NOT before `}`. The
+    /// peephole only fires on `,` before `}`, so calls
+    /// are unaffected.
+    #[test]
+    fn gap046b_call_trailing_comma_unchanged() {
+        assert_eq!(minify("f(1,2,);"), "f(1,2,);");
+    }
+
+    /// **Non-regression**: nested object `,` only drops
+    /// the immediate trailing comma; inner commas between
+    /// values are preserved.
+    #[test]
+    fn gap046b_nested_obj_inner_commas_preserved() {
+        assert_eq!(
+            minify("var o={a:{b:1,c:2,},d:3,};"),
+            "var o={a:{b:1,c:2},d:3};"
+        );
     }
 
     // ---- gap-049: flattened for-body `;` suppression ----
