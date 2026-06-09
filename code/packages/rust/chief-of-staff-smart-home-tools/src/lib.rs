@@ -57,8 +57,8 @@ use smart_home_integration_catalog::{
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
     IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
-    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -152,6 +152,10 @@ pub const SMART_HOME_LIST_INTEGRATION_PLATFORM_COVERAGE_TOOL_ID: &str =
     "smart_home.list_integration_platform_coverage";
 pub const SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_platform_coverage_summary";
+pub const SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID: &str =
+    "smart_home.list_integration_primitive_coverage";
+pub const SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_primitive_coverage_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID: &str =
     "smart_home.list_integration_activation_plans";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_PLAN_SUMMARY_TOOL_ID: &str =
@@ -272,6 +276,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID => {
                     let query = integration_platform_coverage_query(&arguments)?;
                     Ok(get_integration_platform_coverage_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID => {
+                    let query = integration_primitive_coverage_query(&arguments)?;
+                    Ok(list_integration_primitive_coverage_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID => {
+                    let query = integration_primitive_coverage_query(&arguments)?;
+                    Ok(get_integration_primitive_coverage_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID => {
                     let query = integration_activation_plan_query(&arguments)?;
@@ -976,6 +990,45 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration platform coverage summary",
             "Return compact D23A ecosystem platform coverage rollups for primitive-backlog planning.",
             integration_platform_coverage_query_schema(false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID,
+            "List smart-home integration primitive coverage",
+            "List D23A primitive-backlog ecosystem coverage rows and filter uncovered or thinly covered primitives.",
+            integration_primitive_coverage_query_schema(true),
+            object_schema(
+                vec![
+                    SchemaProperty::new(
+                        "primitive_coverage",
+                        JsonSchema::Array {
+                            items: Box::new(JsonSchema::Any),
+                        },
+                    ),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                    SchemaProperty::new("source_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "primitive_coverage",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                    "source_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID,
+            "Get smart-home integration primitive coverage summary",
+            "Return compact D23A primitive-backlog coverage rollups for ecosystem and rollout planning.",
+            integration_primitive_coverage_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3471,6 +3524,66 @@ fn integration_platform_coverage_for_query(
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationPrimitiveCoverageQuery {
+    priority_at_or_before: u8,
+    primitives: Vec<PrimitiveFamily>,
+    minimum_source_count: Option<usize>,
+    maximum_source_count: Option<usize>,
+    only_uncovered: Option<bool>,
+    limit: Option<usize>,
+}
+
+fn integration_primitive_coverage_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationPrimitiveCoverageQuery, ToolCallError> {
+    let _ = expect_object(arguments)?;
+    let mut primitives = Vec::new();
+    for primitive in optional_string_list(arguments, "primitive", "primitives")? {
+        primitives.push(parse_primitive_family(&primitive)?);
+    }
+
+    Ok(IntegrationPrimitiveCoverageQuery {
+        priority_at_or_before: optional_u8(arguments, "priority_at_or_before")?.unwrap_or(u8::MAX),
+        primitives,
+        minimum_source_count: optional_u64(arguments, "minimum_source_count")?
+            .map(|value| value as usize),
+        maximum_source_count: optional_u64(arguments, "maximum_source_count")?
+            .map(|value| value as usize),
+        only_uncovered: optional_bool(arguments, "only_uncovered")?,
+        limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_primitive_coverage_for_query(
+    query: &IntegrationPrimitiveCoverageQuery,
+) -> (Vec<PrimitiveBacklogCoverageItem>, usize, usize) {
+    let catalog = first_party_catalog();
+    let sources = ecosystem_survey_sources();
+    let catalog_count = catalog.len();
+    let source_count = sources.len();
+    let mut coverage =
+        primitive_backlog_with_ecosystem_coverage(&catalog, &sources, query.priority_at_or_before);
+
+    if !query.primitives.is_empty() {
+        coverage.retain(|item| query.primitives.contains(&item.primitive));
+    }
+    if let Some(minimum_source_count) = query.minimum_source_count {
+        coverage.retain(|item| item.source_count >= minimum_source_count);
+    }
+    if let Some(maximum_source_count) = query.maximum_source_count {
+        coverage.retain(|item| item.source_count <= maximum_source_count);
+    }
+    if let Some(only_uncovered) = query.only_uncovered {
+        coverage.retain(|item| (item.source_count == 0) == only_uncovered);
+    }
+    if let Some(limit) = query.limit {
+        coverage.truncate(limit);
+    }
+
+    (coverage, catalog_count, source_count)
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationPlanQuery {
     priority_at_or_before: u8,
     target_kind: Option<ActivationTargetKind>,
@@ -4140,6 +4253,67 @@ fn get_integration_platform_coverage_summary_output_handler_output(
             (
                 "covered_backlog_primitives",
                 integer(summary.covered_backlog_primitives as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_primitive_coverage_output_handler_output(
+    query: IntegrationPrimitiveCoverageQuery,
+) -> ToolHandlerOutput {
+    let (coverage, catalog_count, source_count) = integration_primitive_coverage_for_query(&query);
+    let summary = PrimitiveBacklogCoverageSummary::from_items(coverage.iter());
+    let count = coverage.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "primitive_coverage",
+            JsonValue::Array(
+                coverage
+                    .iter()
+                    .map(primitive_backlog_coverage_json)
+                    .collect(),
+            ),
+        ),
+        ("summary", primitive_backlog_coverage_summary_json(&summary)),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+        ("source_count", integer(source_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_primitive_coverage")),
+            ("count", integer(count as i64)),
+            (
+                "uncovered_primitives",
+                integer(summary.uncovered_primitives as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_primitive_coverage_summary_output_handler_output(
+    query: IntegrationPrimitiveCoverageQuery,
+) -> ToolHandlerOutput {
+    let (coverage, _, _) = integration_primitive_coverage_for_query(&query);
+    let summary = PrimitiveBacklogCoverageSummary::from_items(coverage.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        primitive_backlog_coverage_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_primitive_coverage_summary"),
+            ),
+            ("total_primitives", integer(summary.total_primitives as i64)),
+            (
+                "uncovered_primitives",
+                integer(summary.uncovered_primitives as i64),
             ),
         ]),
     )
@@ -8058,6 +8232,67 @@ fn primitive_backlog_coverage_json(item: &PrimitiveBacklogCoverageItem) -> JsonV
     ])
 }
 
+fn primitive_backlog_coverage_summary_json(summary: &PrimitiveBacklogCoverageSummary) -> JsonValue {
+    object([
+        ("total_primitives", integer(summary.total_primitives as i64)),
+        ("total_entries", integer(summary.total_entries as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "covered_primitives",
+            integer(summary.covered_primitives as i64),
+        ),
+        (
+            "uncovered_primitives",
+            integer(summary.uncovered_primitives as i64),
+        ),
+        (
+            "single_source_primitives",
+            integer(summary.single_source_primitives as i64),
+        ),
+        (
+            "multi_platform_primitives",
+            integer(summary.multi_platform_primitives as i64),
+        ),
+        (
+            "total_source_references",
+            integer(summary.total_source_references as i64),
+        ),
+        (
+            "total_platform_references",
+            integer(summary.total_platform_references as i64),
+        ),
+        (
+            "first_uncovered_priority",
+            summary
+                .first_uncovered_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_single_source_priority",
+            summary
+                .first_single_source_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "broadest_platform_count",
+            integer(summary.broadest_platform_count as i64),
+        ),
+        (
+            "has_uncovered_primitives",
+            JsonValue::Bool(summary.has_uncovered_primitives()),
+        ),
+        (
+            "has_single_source_primitives",
+            JsonValue::Bool(summary.has_single_source_primitives()),
+        ),
+    ])
+}
+
 fn ecosystem_source_json(source: &EcosystemSurveySource) -> JsonValue {
     object([
         ("platform", string(source.platform.as_str())),
@@ -10460,6 +10695,22 @@ fn integration_platform_coverage_query_schema(include_limit: bool) -> JsonSchema
     object_schema(properties, Vec::new(), false)
 }
 
+fn integration_primitive_coverage_query_schema(include_limit: bool) -> JsonSchema {
+    let mut properties = vec![
+        SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
+        SchemaProperty::new("primitive", JsonSchema::String),
+        SchemaProperty::new("primitives", string_array_schema()),
+        SchemaProperty::new("minimum_source_count", JsonSchema::Integer),
+        SchemaProperty::new("maximum_source_count", JsonSchema::Integer),
+        SchemaProperty::new("only_uncovered", JsonSchema::Boolean),
+    ];
+    if include_limit {
+        properties.push(SchemaProperty::new("limit", JsonSchema::Integer));
+    }
+
+    object_schema(properties, Vec::new(), false)
+}
+
 fn integration_activation_plan_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -10664,7 +10915,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 65);
+        assert_eq!(definitions.len(), 67);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -10696,6 +10947,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_PLANS_TOOL_ID));
@@ -10829,7 +11086,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            57
+            59
         );
         assert_eq!(
             export
@@ -10869,6 +11126,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_PLATFORM_COVERAGE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -11163,11 +11428,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(65))
+            Some(&integer(67))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(57))
+            Some(&integer(59))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -11308,6 +11573,84 @@ mod tests {
         assert_eq!(
             field(platform_coverage_rollup, "has_uncovered_backlog_primitives"),
             Some(&JsonValue::Bool(true))
+        );
+
+        let list_primitive_coverage_request = request(
+            "call-list-integration-primitive-coverage",
+            SMART_HOME_LIST_INTEGRATION_PRIMITIVE_COVERAGE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                ("minimum_source_count", integer(1)),
+                ("maximum_source_count", integer(1)),
+                ("limit", integer(3)),
+            ]),
+            1_000,
+        );
+        let list_primitive_coverage_trace =
+            tool_runtime.invoke_with_events(&list_primitive_coverage_request);
+        assert!(list_primitive_coverage_trace.result.ok);
+        assert_eq!(
+            list_primitive_coverage_trace.summary().progress_event_count,
+            1
+        );
+        let list_primitive_coverage_output = list_primitive_coverage_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let primitive_coverage_count =
+            integer_value(field(list_primitive_coverage_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&primitive_coverage_count));
+        assert_eq!(
+            array_len(field(list_primitive_coverage_output, "primitive_coverage").unwrap()),
+            Some(primitive_coverage_count as usize)
+        );
+        let primitive_coverage_summary = field(list_primitive_coverage_output, "summary").unwrap();
+        assert_eq!(
+            field(primitive_coverage_summary, "has_single_source_primitives"),
+            Some(&JsonValue::Bool(true))
+        );
+        let primitive_coverage = array_item(
+            field(list_primitive_coverage_output, "primitive_coverage").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(field(primitive_coverage, "source_count"), Some(&integer(1)));
+
+        let primitive_coverage_summary_request = request(
+            "call-integration-primitive-coverage-summary",
+            SMART_HOME_GET_INTEGRATION_PRIMITIVE_COVERAGE_SUMMARY_TOOL_ID,
+            object([("priority_at_or_before", integer(1))]),
+            1_001,
+        );
+        let primitive_coverage_summary_trace =
+            tool_runtime.invoke_with_events(&primitive_coverage_summary_request);
+        assert!(primitive_coverage_summary_trace.result.ok);
+        assert_eq!(
+            primitive_coverage_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let primitive_coverage_summary_output = primitive_coverage_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let primitive_coverage_rollup =
+            field(primitive_coverage_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(primitive_coverage_rollup, "total_primitives").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(primitive_coverage_rollup, "has_uncovered_primitives"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(field(primitive_coverage_rollup, "broadest_platform_count").unwrap())
+                .unwrap()
+                >= 2
         );
 
         let list_activation_plans_request = request(
@@ -13352,6 +13695,14 @@ mod tests {
             platform_coverage_summary_request,
             platform_coverage_summary_trace,
         );
+        journal.record_trace(
+            list_primitive_coverage_request,
+            list_primitive_coverage_trace,
+        );
+        journal.record_trace(
+            primitive_coverage_summary_request,
+            primitive_coverage_summary_trace,
+        );
         journal.record_trace(list_activation_plans_request, list_activation_plans_trace);
         journal.record_trace(
             activation_plan_summary_request,
@@ -13451,9 +13802,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 65);
-        assert_eq!(journal_summary.completed_count, 65);
-        assert_eq!(journal.audit_records().len(), 65);
+        assert_eq!(journal_summary.invocation_count, 67);
+        assert_eq!(journal_summary.completed_count, 67);
+        assert_eq!(journal.audit_records().len(), 67);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

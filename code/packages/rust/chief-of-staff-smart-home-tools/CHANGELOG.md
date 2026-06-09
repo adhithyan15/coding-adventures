@@ -16,6 +16,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A ecosystem platform coverage planning:
   `smart_home.list_integration_platform_coverage` and
   `smart_home.get_integration_platform_coverage_summary`.
+- Added D18D handlers for D23A primitive coverage gap planning:
+  `smart_home.list_integration_primitive_coverage` and
+  `smart_home.get_integration_primitive_coverage_summary`.
 - Added D18D handlers for bulk D23A integration activation-plan planning:
   `smart_home.list_integration_activation_plans` and
   `smart_home.get_integration_activation_plan_summary`.

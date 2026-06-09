@@ -39,6 +39,7 @@ Chief of Staff job/session/agent
   -> capability grant ledger reads and summaries
   -> policy-surface inventory and summary reads for review planning
   -> ecosystem platform coverage and summary reads for primitive planning
+  -> primitive coverage gap list and summary reads for backlog planning
   -> activation-plan list and summary reads for D23A rollout planning
   -> activation-candidate list and summary reads for ranked rollout planning
   -> activation-action list and summary reads for concrete unblock/activate work
@@ -68,6 +69,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_policy_surface_summary`
 - `smart_home.list_integration_platform_coverage`
 - `smart_home.get_integration_platform_coverage_summary`
+- `smart_home.list_integration_primitive_coverage`
+- `smart_home.get_integration_primitive_coverage_summary`
 - `smart_home.list_integration_activation_plans`
 - `smart_home.get_integration_activation_plan_summary`
 - `smart_home.list_integration_activation_candidates`
