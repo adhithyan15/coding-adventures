@@ -683,6 +683,39 @@ pub struct IntegrationReadinessReport {
     pub cloud_required: bool,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationCandidateRecommendation {
+    ReadyToActivate,
+    NeedsHumanReview,
+    BlockedOnPrerequisites,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationCandidate {
+    pub readiness_report: IntegrationReadinessReport,
+    pub recommendation: IntegrationActivationCandidateRecommendation,
+    pub blocker_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationCandidateSummary {
+    pub total_candidates: usize,
+    pub ready_to_activate_candidates: usize,
+    pub needs_human_review_candidates: usize,
+    pub blocked_candidates: usize,
+    pub activation_ready_candidates: usize,
+    pub candidates_requiring_human_review: usize,
+    pub candidates_missing_primitives: usize,
+    pub candidates_missing_capabilities: usize,
+    pub candidates_missing_dependencies: usize,
+    pub direct_targets: usize,
+    pub delegated_integration_targets: usize,
+    pub delegated_standard_targets: usize,
+    pub local_only_candidates: usize,
+    pub cloud_required_candidates: usize,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationReadinessSummary {
     pub total_reports: usize,
@@ -952,6 +985,12 @@ impl IntegrationReadinessReport {
         !self.activation_ready()
     }
 
+    pub fn missing_prerequisite_count(&self) -> usize {
+        self.missing_primitives.len()
+            + self.missing_capabilities.len()
+            + self.missing_dependencies.len()
+    }
+
     pub fn missing_primitive(&self, primitive: PrimitiveFamily) -> bool {
         self.missing_primitives.contains(&primitive)
     }
@@ -973,6 +1012,140 @@ impl IntegrationReadinessReport {
             &self.activation_target,
             IntegrationActivationTarget::DelegatedIntegration(target) if target == integration_id
         )
+    }
+}
+
+impl IntegrationActivationCandidateRecommendation {
+    fn from_report(report: &IntegrationReadinessReport) -> Self {
+        if report.is_blocked() {
+            Self::BlockedOnPrerequisites
+        } else if report.requires_human_review {
+            Self::NeedsHumanReview
+        } else {
+            Self::ReadyToActivate
+        }
+    }
+
+    pub fn is_actionable(self) -> bool {
+        matches!(self, Self::ReadyToActivate | Self::NeedsHumanReview)
+    }
+}
+
+impl IntegrationActivationCandidate {
+    pub fn from_report(report: IntegrationReadinessReport) -> Self {
+        let blocker_count = report.missing_prerequisite_count();
+        let recommendation = IntegrationActivationCandidateRecommendation::from_report(&report);
+        Self {
+            readiness_report: report,
+            recommendation,
+            blocker_count,
+        }
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.readiness_report.activation_ready()
+    }
+
+    pub fn is_actionable(&self) -> bool {
+        self.recommendation.is_actionable()
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        self.recommendation == IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites
+    }
+
+    pub fn requires_human_review(&self) -> bool {
+        self.readiness_report.requires_human_review
+    }
+}
+
+impl IntegrationActivationCandidateSummary {
+    pub fn from_candidates<'a>(
+        candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+    ) -> Self {
+        let mut summary = Self {
+            total_candidates: 0,
+            ready_to_activate_candidates: 0,
+            needs_human_review_candidates: 0,
+            blocked_candidates: 0,
+            activation_ready_candidates: 0,
+            candidates_requiring_human_review: 0,
+            candidates_missing_primitives: 0,
+            candidates_missing_capabilities: 0,
+            candidates_missing_dependencies: 0,
+            direct_targets: 0,
+            delegated_integration_targets: 0,
+            delegated_standard_targets: 0,
+            local_only_candidates: 0,
+            cloud_required_candidates: 0,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for candidate in candidates {
+            summary.total_candidates += 1;
+            match candidate.recommendation {
+                IntegrationActivationCandidateRecommendation::ReadyToActivate => {
+                    summary.ready_to_activate_candidates += 1
+                }
+                IntegrationActivationCandidateRecommendation::NeedsHumanReview => {
+                    summary.needs_human_review_candidates += 1
+                }
+                IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites => {
+                    summary.blocked_candidates += 1
+                }
+            }
+            if candidate.activation_ready() {
+                summary.activation_ready_candidates += 1;
+            }
+            if candidate.requires_human_review() {
+                summary.candidates_requiring_human_review += 1;
+            }
+            if !candidate.readiness_report.missing_primitives.is_empty() {
+                summary.candidates_missing_primitives += 1;
+            }
+            if !candidate.readiness_report.missing_capabilities.is_empty() {
+                summary.candidates_missing_capabilities += 1;
+            }
+            if !candidate.readiness_report.missing_dependencies.is_empty() {
+                summary.candidates_missing_dependencies += 1;
+            }
+            match &candidate.readiness_report.activation_target {
+                IntegrationActivationTarget::Direct => summary.direct_targets += 1,
+                IntegrationActivationTarget::DelegatedIntegration(_) => {
+                    summary.delegated_integration_targets += 1
+                }
+                IntegrationActivationTarget::DelegatedStandards(_) => {
+                    summary.delegated_standard_targets += 1
+                }
+            }
+            if candidate.readiness_report.local_only {
+                summary.local_only_candidates += 1;
+            }
+            if candidate.readiness_report.cloud_required {
+                summary.cloud_required_candidates += 1;
+            }
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(candidate.readiness_report.highest_policy_tier);
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_candidates == 0
+    }
+
+    pub fn has_actionable_candidates(&self) -> bool {
+        self.ready_to_activate_candidates > 0 || self.needs_human_review_candidates > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_candidates > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.needs_human_review_candidates > 0
     }
 }
 
@@ -2061,6 +2234,36 @@ pub fn readiness_reports_at_or_before_priority(
         .collect()
 }
 
+pub fn activation_candidates_from_reports<'a>(
+    reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
+) -> Vec<IntegrationActivationCandidate> {
+    let mut candidates = reports
+        .into_iter()
+        .cloned()
+        .map(IntegrationActivationCandidate::from_report)
+        .collect::<Vec<_>>();
+
+    candidates.sort_by(compare_activation_candidates);
+    candidates
+}
+
+pub fn activation_candidates_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationCandidate> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_candidates_from_reports(reports.iter())
+}
+
 pub fn readiness_gap_inventory_from_reports<'a>(
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
 ) -> IntegrationReadinessGapInventory {
@@ -3038,6 +3241,30 @@ fn sort_query_results(entries: &mut Vec<&IntegrationCatalogEntry>, sort: Integra
     }
 }
 
+fn compare_activation_candidates(
+    left: &IntegrationActivationCandidate,
+    right: &IntegrationActivationCandidate,
+) -> Ordering {
+    left.recommendation
+        .cmp(&right.recommendation)
+        .then_with(|| {
+            left.readiness_report
+                .priority
+                .cmp(&right.readiness_report.priority)
+        })
+        .then_with(|| left.blocker_count.cmp(&right.blocker_count))
+        .then_with(|| {
+            left.readiness_report
+                .display_name
+                .cmp(&right.readiness_report.display_name)
+        })
+        .then_with(|| {
+            left.readiness_report
+                .requested_integration_id
+                .cmp(&right.readiness_report.requested_integration_id)
+        })
+}
+
 fn compare_by_priority_then_name(
     left: &IntegrationCatalogEntry,
     right: &IntegrationCatalogEntry,
@@ -3431,6 +3658,81 @@ mod tests {
         assert!(report.local_only);
         assert!(!report.cloud_required);
         assert_eq!(report.highest_policy_tier, PrivilegeTier::HumanApproval);
+    }
+
+    #[test]
+    fn activation_candidates_rank_ready_review_and_blocked_work() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let tasmota = find_entry(&catalog, &IntegrationId::trusted("tasmota")).unwrap();
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = readiness_report_for_integration(
+            &catalog,
+            &hue.integration_id,
+            &hue.required_primitives,
+            &hue.required_capabilities,
+            &[],
+        )
+        .unwrap();
+        let blocked_report = readiness_report_for_integration(
+            &catalog,
+            &tasmota.integration_id,
+            &[],
+            &[CapabilityId::trusted("smart_home.read")],
+            &[],
+        )
+        .unwrap();
+
+        assert!(review_report.activation_ready());
+        assert!(review_report.requires_human_review);
+        assert!(blocked_report.is_blocked());
+
+        let candidates = activation_candidates_from_reports(
+            [blocked_report, review_report, ready_report].iter(),
+        );
+
+        assert_eq!(
+            candidates[0].recommendation,
+            IntegrationActivationCandidateRecommendation::ReadyToActivate
+        );
+        assert_eq!(
+            candidates[1].recommendation,
+            IntegrationActivationCandidateRecommendation::NeedsHumanReview
+        );
+        assert_eq!(
+            candidates[2].recommendation,
+            IntegrationActivationCandidateRecommendation::BlockedOnPrerequisites
+        );
+        assert!(candidates[0].is_actionable());
+        assert!(candidates[2].is_blocked());
+        assert!(candidates[2].blocker_count > 0);
+
+        let summary = IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        assert_eq!(summary.total_candidates, 3);
+        assert_eq!(summary.ready_to_activate_candidates, 1);
+        assert_eq!(summary.needs_human_review_candidates, 1);
+        assert_eq!(summary.blocked_candidates, 1);
+        assert_eq!(summary.activation_ready_candidates, 2);
+        assert_eq!(summary.candidates_requiring_human_review, 2);
+        assert!(summary.candidates_missing_primitives > 0);
+        assert!(summary.candidates_missing_capabilities > 0);
+        assert!(summary.candidates_missing_dependencies > 0);
+        assert!(summary.has_actionable_candidates());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(!summary.is_empty());
     }
 
     #[test]
