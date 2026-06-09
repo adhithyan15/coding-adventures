@@ -25,6 +25,10 @@ All notable changes to this package will be documented in this file.
 - `RuntimePairingCompletion` for completing pending pairing sessions with a
   VaultRef plus non-secret completion metadata that is copied into the session
   and bridge-health audit event.
+- `RuntimeCompletePairingToolRequest`,
+  `RuntimeCompletePairingToolOutput`, and
+  `SmartHomeRuntime::execute_complete_pairing_tool` for authorized D18D pairing
+  completion through the runtime-owned mutation path.
 - Runtime discovery catalog recording plus `RuntimeDiscoverToolRequest` and
   `RuntimeDiscoverToolOutput` for authorized discovery reads, freshness
   filtering, and unpaired bridge-candidate projection.

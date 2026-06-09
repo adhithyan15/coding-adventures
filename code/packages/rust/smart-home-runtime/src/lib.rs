@@ -3743,6 +3743,28 @@ impl RuntimePairBridgeToolRequest {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCompletePairingToolRequest {
+    pub completion: RuntimePairingCompletion,
+}
+
+impl RuntimeCompletePairingToolRequest {
+    pub fn new(
+        session_id: RuntimePairingSessionId,
+        vault_ref: VaultRef,
+        completed_at_ms: u64,
+    ) -> Self {
+        Self {
+            completion: RuntimePairingCompletion::new(session_id, vault_ref, completed_at_ms),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
+        self.completion = self.completion.with_metadata(metadata);
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeCommandToolRequest {
     pub entity_id: EntityId,
@@ -3955,6 +3977,11 @@ pub struct RuntimeUnsubscribeToolOutput {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimePairBridgeToolOutput {
+    pub session: RuntimePairingSession,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeCompletePairingToolOutput {
     pub session: RuntimePairingSession,
 }
 
@@ -4760,6 +4787,27 @@ impl SmartHomeRuntime {
         );
         Ok(RuntimePairBridgeToolOutput {
             session: self.start_pairing_session(session)?,
+        })
+    }
+
+    pub fn execute_complete_pairing_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeCompletePairingToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeCompletePairingToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::CompletePairing;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        Ok(RuntimeCompletePairingToolOutput {
+            session: self.complete_pairing_session_with(request.completion)?,
         })
     }
 
@@ -8229,7 +8277,7 @@ mod tests {
     }
 
     #[test]
-    fn pair_bridge_tool_requires_pair_grants_before_starting_session() {
+    fn pairing_tools_require_pair_grants_before_mutating_sessions() {
         let mut runtime = SmartHomeRuntime::new();
         runtime.upsert_bridge(bridge("bridge-1")).unwrap();
         let principal = AgentId::trusted("agent:installer");
@@ -8261,6 +8309,46 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.pairing_session(&session).is_none());
+
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                session.clone(),
+                runtime
+                    .registry()
+                    .bridge(&BridgeId::trusted("bridge-1"))
+                    .unwrap(),
+                principal.clone(),
+                1_000,
+                1_500,
+                Vec::new(),
+            ))
+            .unwrap();
+        let complete_error = runtime
+            .execute_complete_pairing_tool(
+                principal.clone(),
+                RuntimeCompletePairingToolRequest::new(
+                    session.clone(),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+                    1_200,
+                ),
+                1_200,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            complete_error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::CompletePairing,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.pair")]
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.pairing_session(&session).unwrap().vault_ref, None);
     }
 
     #[test]
@@ -8314,12 +8402,18 @@ mod tests {
         );
 
         let completed = runtime
-            .complete_pairing_session(
-                &session_id,
-                VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+            .execute_complete_pairing_tool(
+                principal.clone(),
+                RuntimeCompletePairingToolRequest::new(
+                    session_id.clone(),
+                    VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+                    1_200,
+                )
+                .with_metadata(vec![Metadata::new("pairing_kind", "hue_link_button")]),
                 1_200,
             )
-            .unwrap();
+            .unwrap()
+            .session;
         let bridge = runtime
             .registry()
             .bridge(&BridgeId::trusted("bridge-1"))
@@ -8343,6 +8437,10 @@ mod tests {
                     && event.metadata.iter().any(|metadata| {
                         metadata.key == "smart_home.pairing_session"
                             && metadata.value == "pairing-1"
+                    })
+                    && event.metadata.iter().any(|metadata| {
+                        metadata.key == "pairing_kind"
+                            && metadata.value == "hue_link_button"
                     })
                     && event.metadata.iter().all(|metadata| {
                         !metadata.value.contains("app-key")
@@ -8369,6 +8467,13 @@ mod tests {
         assert_eq!(
             runtime.pairing_session(&session_id).unwrap().vault_ref,
             Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+        assert_eq!(
+            runtime
+                .registry()
+                .authorization_decisions_for_principal(&principal)
+                .len(),
+            2
         );
     }
 

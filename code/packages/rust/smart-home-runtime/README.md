@@ -88,6 +88,8 @@ Included surfaces:
   events when subscriptions are retired
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
   only to Vault references and non-secret audit metadata, never raw credentials
+- D18D-facing complete-pairing facade that authorizes VaultRef completion
+  through the same pairing capability before mutating runtime session state
 - read-side queries for pairing sessions and desired-state supervision targets
 - pairing-session inventory summaries for bridge-pairing status, expiry, and
   VaultRef completion counts
