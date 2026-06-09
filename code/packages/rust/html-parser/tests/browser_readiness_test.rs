@@ -14,11 +14,11 @@ use coding_adventures_html_parser::{
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInteractiveElement, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPopover, BrowserPopoverInvoker, BrowserRefresh, BrowserResource,
-    BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
     BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
     BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
@@ -130,6 +130,8 @@ struct ExpectedBrowserDocument {
     interactive_elements: Vec<ExpectedInteractiveElement>,
     #[serde(default)]
     focus_navigation_descriptors: Option<Vec<ExpectedFocusNavigationDescriptor>>,
+    #[serde(default)]
+    keyboard_interaction_descriptors: Option<Vec<ExpectedKeyboardInteractionDescriptor>>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
@@ -1866,6 +1868,8 @@ struct ExpectedInteractiveElement {
     #[serde(default)]
     aria_required: Option<String>,
     #[serde(default)]
+    aria_keyshortcuts: Vec<String>,
+    #[serde(default)]
     aria_hidden: bool,
     #[serde(default)]
     hidden: bool,
@@ -1967,6 +1971,74 @@ struct ExpectedFocusNavigationDescriptor {
     aria_hidden: bool,
     #[serde(default)]
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedKeyboardInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    keyboard_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    sequential_focus: bool,
+    #[serde(default)]
+    programmatic_focus: bool,
+    #[serde(default)]
+    tabindex: Option<String>,
+    #[serde(default)]
+    tabindex_order: Option<i32>,
+    #[serde(default)]
+    accesskey: Vec<String>,
+    #[serde(default)]
+    aria_keyshortcuts: Vec<String>,
+    #[serde(default)]
+    keyboard_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_activedescendant: Option<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_disabled: Option<String>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    keyboard_blocked: bool,
+    #[serde(default)]
+    keyboard_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4096,6 +4168,28 @@ fn browser_focus_navigation_descriptors_track_focus_order_and_blockers() {
 }
 
 #[test]
+fn browser_keyboard_interaction_descriptors_track_shortcuts_handlers_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive keyboard fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive keyboard fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.keyboard_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .keyboard_interaction_descriptors,
+        "keyboard-interaction descriptors should preserve access keys, aria shortcuts, keyboard handlers, focus order, editing hosts, and blocked keyboard paths",
+    );
+}
+
+#[test]
 fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4454,6 +4548,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_focus_navigation_descriptors(&interactive_elements));
+        let keyboard_interaction_descriptors = self
+            .keyboard_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedKeyboardInteractionDescriptor::into_browser_keyboard_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_keyboard_interaction_descriptors(&interactive_elements));
 
         BrowserDocument {
             title: self.title,
@@ -4576,6 +4681,7 @@ impl ExpectedBrowserDocument {
             embedded_policy_descriptors,
             interactive_elements,
             focus_navigation_descriptors,
+            keyboard_interaction_descriptors,
             disclosures,
             disclosure_state_descriptors,
             component_hydration_targets: self
@@ -5504,6 +5610,131 @@ fn expected_focus_block_reasons(element: &BrowserInteractiveElement) -> Vec<Stri
         reasons.push("aria-disabled".to_string());
     }
     reasons
+}
+
+fn expected_keyboard_interaction_descriptors(
+    elements: &[BrowserInteractiveElement],
+) -> Vec<BrowserKeyboardInteractionDescriptor> {
+    elements
+        .iter()
+        .filter(|element| expected_has_keyboard_interaction_state(element))
+        .map(expected_keyboard_interaction_descriptor)
+        .collect()
+}
+
+fn expected_has_keyboard_interaction_state(element: &BrowserInteractiveElement) -> bool {
+    element.focusable.is_some()
+        || element.tabindex.is_some()
+        || !element.accesskey.is_empty()
+        || !element.aria_keyshortcuts.is_empty()
+        || !expected_event_handlers_by_kind(&element.event_handlers, expected_keyboard_event)
+            .is_empty()
+        || element.contenteditable.is_some()
+        || element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+        || element.disabled
+        || element.hidden
+        || element.inert
+        || element.aria_hidden
+        || element.aria_disabled.is_some()
+}
+
+fn expected_keyboard_interaction_descriptor(
+    element: &BrowserInteractiveElement,
+) -> BrowserKeyboardInteractionDescriptor {
+    let focusable = element.focusable.unwrap_or(false);
+    let tabindex_order = expected_tabindex_order(element.tabindex.as_deref());
+    let sequential_focus = focusable && tabindex_order.unwrap_or(0) >= 0;
+    let programmatic_focus = focusable || matches!(tabindex_order, Some(value) if value < 0);
+    let keyboard_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_keyboard_event);
+    let keyboard_block_reasons = expected_focus_block_reasons(element);
+    let keyboard_blocked = !keyboard_block_reasons.is_empty();
+
+    BrowserKeyboardInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        keyboard_kind: expected_keyboard_kind(element, &keyboard_handlers),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        focusable,
+        sequential_focus,
+        programmatic_focus,
+        tabindex: element.tabindex.clone(),
+        tabindex_order,
+        accesskey: element.accesskey.clone(),
+        aria_keyshortcuts: element.aria_keyshortcuts.clone(),
+        handler_count: keyboard_handlers.len(),
+        keyboard_handlers,
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_activedescendant: element.aria_activedescendant.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_disabled: element.aria_disabled.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        keyboard_blocked,
+        keyboard_block_reasons,
+    }
+}
+
+fn expected_keyboard_kind(
+    element: &BrowserInteractiveElement,
+    keyboard_handlers: &[String],
+) -> String {
+    if !expected_focus_block_reasons(element).is_empty() {
+        return "blocked".to_string();
+    }
+    if !element.aria_keyshortcuts.is_empty() {
+        return "aria-shortcut".to_string();
+    }
+    if !element.accesskey.is_empty() {
+        return "accesskey".to_string();
+    }
+    if !keyboard_handlers.is_empty() {
+        return "keyboard-handler".to_string();
+    }
+    if element.editing_mode.is_some() {
+        return "editing-host".to_string();
+    }
+    if element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+    {
+        return "command".to_string();
+    }
+
+    "focus".to_string()
+}
+
+fn expected_tabindex_order(tabindex: Option<&str>) -> Option<i32> {
+    tabindex.and_then(|tabindex| tabindex.trim().parse::<i32>().ok())
+}
+
+fn expected_event_handlers_by_kind(
+    event_handlers: &[String],
+    predicate: fn(&str) -> bool,
+) -> Vec<String> {
+    event_handlers
+        .iter()
+        .filter(|handler| predicate(handler.as_str()))
+        .cloned()
+        .collect()
+}
+
+fn expected_keyboard_event(handler: &str) -> bool {
+    matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
 }
 
 fn expected_script_execution_descriptors(
@@ -6600,6 +6831,7 @@ impl ExpectedInteractiveElement {
             aria_busy: self.aria_busy,
             aria_disabled: self.aria_disabled,
             aria_required: self.aria_required,
+            aria_keyshortcuts: self.aria_keyshortcuts,
             aria_hidden: self.aria_hidden,
             hidden: self.hidden,
             inert: self.inert,
@@ -6657,6 +6889,46 @@ impl ExpectedFocusNavigationDescriptor {
             inert: self.inert,
             aria_hidden: self.aria_hidden,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedKeyboardInteractionDescriptor {
+    fn into_browser_keyboard_interaction_descriptor(self) -> BrowserKeyboardInteractionDescriptor {
+        BrowserKeyboardInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            keyboard_kind: self.keyboard_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            focusable: self.focusable,
+            sequential_focus: self.sequential_focus,
+            programmatic_focus: self.programmatic_focus,
+            tabindex: self.tabindex,
+            tabindex_order: self.tabindex_order,
+            accesskey: self.accesskey,
+            aria_keyshortcuts: self.aria_keyshortcuts,
+            keyboard_handlers: self.keyboard_handlers,
+            handler_count: self.handler_count,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            aria_controls: self.aria_controls,
+            aria_activedescendant: self.aria_activedescendant,
+            aria_expanded: self.aria_expanded,
+            aria_haspopup: self.aria_haspopup,
+            aria_disabled: self.aria_disabled,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            keyboard_blocked: self.keyboard_blocked,
+            keyboard_block_reasons: self.keyboard_block_reasons,
         }
     }
 }

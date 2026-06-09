@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness keyboard-interaction descriptors now expose access keys,
+  ARIA shortcuts, keyboard handlers, focus order, editing hosts, and blocked
+  keyboard paths as a flat browser-planning inventory.
 - Browser-readiness focus-navigation descriptors now expose sequential focus,
   programmatic focus, editing hosts, access keys, and hidden/inert/disabled/ARIA
   focus blockers as a flat browser-planning inventory.
