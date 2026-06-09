@@ -56,6 +56,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation approval packets that bundle each human-review row with its
   concrete actions, grouped constraints, policy risk, and dependency blockers
   for approval preparation
+- activation decision rows that project approval packets into ready-to-approve
+  and prerequisite-blocked queues for Chief planning
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

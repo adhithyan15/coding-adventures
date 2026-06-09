@@ -73,6 +73,8 @@ Current scope:
 - D18D integration activation-approval descriptors for bundled human-decision
   packets that combine review rows with actions, constraints, risk, and
   dependency blockers
+- D18D integration activation-decision descriptors for read-only approve/block
+  queue planning derived from approval packets
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
