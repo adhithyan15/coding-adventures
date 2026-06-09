@@ -29,6 +29,9 @@ All notable changes to this package will be documented in this file.
   `RuntimeCompletePairingToolOutput`, and
   `SmartHomeRuntime::execute_complete_pairing_tool` for authorized D18D pairing
   completion through the runtime-owned mutation path.
+- `RuntimeReportEventToolRequest`, `RuntimeReportEventToolOutput`, and
+  `SmartHomeRuntime::execute_report_event_tool` for authorized D18D event
+  ingest through the runtime-owned device-event and bridge-health paths.
 - Runtime discovery catalog recording plus `RuntimeDiscoverToolRequest` and
   `RuntimeDiscoverToolOutput` for authorized discovery reads, freshness
   filtering, and unpaired bridge-candidate projection.

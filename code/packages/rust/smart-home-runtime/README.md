@@ -90,6 +90,8 @@ Included surfaces:
   only to Vault references and non-secret audit metadata, never raw credentials
 - D18D-facing complete-pairing facade that authorizes VaultRef completion
   through the same pairing capability before mutating runtime session state
+- D18D-facing report-event facade that authorizes adapter-observed device
+  events and bridge-health reports before mutating registry state
 - read-side queries for pairing sessions and desired-state supervision targets
 - pairing-session inventory summaries for bridge-pairing status, expiry, and
   VaultRef completion counts

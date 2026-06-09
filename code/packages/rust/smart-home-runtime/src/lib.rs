@@ -3766,6 +3766,22 @@ impl RuntimeCompletePairingToolRequest {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeReportEventToolRequest {
+    Device(DeviceEvent),
+    BridgeHealth(BridgeHealthReport),
+}
+
+impl RuntimeReportEventToolRequest {
+    pub fn device(event: DeviceEvent) -> Self {
+        Self::Device(event)
+    }
+
+    pub fn bridge_health(report: BridgeHealthReport) -> Self {
+        Self::BridgeHealth(report)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeCommandToolRequest {
     pub entity_id: EntityId,
     pub command_type: CommandType,
@@ -3983,6 +3999,12 @@ pub struct RuntimePairBridgeToolOutput {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RuntimeCompletePairingToolOutput {
     pub session: RuntimePairingSession,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeReportEventToolOutput {
+    Device(DeviceEvent),
+    BridgeHealth(BridgeHealthReport),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4809,6 +4831,34 @@ impl SmartHomeRuntime {
         Ok(RuntimeCompletePairingToolOutput {
             session: self.complete_pairing_session_with(request.completion)?,
         })
+    }
+
+    pub fn execute_report_event_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeReportEventToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeReportEventToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::ReportEvent;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        match request {
+            RuntimeReportEventToolRequest::Device(event) => {
+                self.apply_device_event(event.clone())?;
+                Ok(RuntimeReportEventToolOutput::Device(event))
+            }
+            RuntimeReportEventToolRequest::BridgeHealth(report) => {
+                self.apply_bridge_health(report.clone())?;
+                Ok(RuntimeReportEventToolOutput::BridgeHealth(report))
+            }
+        }
     }
 
     pub fn complete_pairing_session(
@@ -9613,6 +9663,144 @@ mod tests {
             .unwrap();
         assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
         assert_eq!(runtime.optimistic_state_count(), 0);
+    }
+
+    #[test]
+    fn report_event_tool_requires_ingest_grants_before_mutating_runtime() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:event-worker");
+        let error = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::device(DeviceEvent {
+                    event_id: EventId::trusted("event-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    device_id: Some(DeviceId::trusted("device-1")),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    observed_at_ms: 1_100,
+                    received_at_ms: 1_101,
+                    event_type: DeviceEventType::Updated,
+                    state_delta: Some(StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }),
+                    raw_ref: None,
+                    correlation_id: None,
+                    metadata: Vec::new(),
+                }),
+                1_101,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ReportEvent,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.ingest")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .is_none());
+        assert_eq!(runtime.registry().counts().events, 0);
+    }
+
+    #[test]
+    fn report_event_tool_authorizes_device_and_health_ingest() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:event-worker");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-ingest"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.ingest"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        runtime
+            .submit_command(command(CommandType::TurnOn, Value::Null), 1_000)
+            .unwrap();
+
+        let device_output = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::device(DeviceEvent {
+                    event_id: EventId::trusted("event-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    device_id: Some(DeviceId::trusted("device-1")),
+                    entity_id: Some(EntityId::trusted("entity-1")),
+                    observed_at_ms: 1_100,
+                    received_at_ms: 1_101,
+                    event_type: DeviceEventType::Updated,
+                    state_delta: Some(StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(false),
+                    }),
+                    raw_ref: Some("event-log://hue/bridge-1/42".to_string()),
+                    correlation_id: Some(CorrelationId::trusted("hue-event-42")),
+                    metadata: vec![Metadata::new("source", "hue_sse")],
+                }),
+                1_101,
+            )
+            .unwrap();
+        let health_output = runtime
+            .execute_report_event_tool(
+                principal.clone(),
+                RuntimeReportEventToolRequest::bridge_health(BridgeHealthReport {
+                    event_id: EventId::trusted("health-1"),
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    health: Health::Offline,
+                    observed_at_ms: 1_200,
+                    received_at_ms: 1_201,
+                    metadata: vec![Metadata::new("source", "heartbeat")],
+                }),
+                1_201,
+            )
+            .unwrap();
+        let snapshot = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            device_output,
+            RuntimeReportEventToolOutput::Device(DeviceEvent { event_id, .. })
+                if event_id == EventId::trusted("event-1")
+        ));
+        assert!(matches!(
+            health_output,
+            RuntimeReportEventToolOutput::BridgeHealth(BridgeHealthReport { event_id, health, .. })
+                if event_id == EventId::trusted("health-1") && health == Health::Offline
+        ));
+        assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
+        assert_eq!(
+            snapshot.value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(false))])
+        );
+        assert_eq!(runtime.optimistic_state_count(), 0);
+        assert_eq!(bridge.health, Health::Offline);
+        assert_eq!(runtime.registry().counts().events, 2);
+        assert_eq!(decisions.len(), 2);
+        assert!(decisions
+            .iter()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
     }
 
     #[test]
