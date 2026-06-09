@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.52.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-039** — tagged template literal needs no
+  separator between the tag function (IDENT) and the
+  template's opening `` ` ``. Harness back to **41/41 PASS**
+  — fourth 100% milestone in this rolling marathon.
+- Added a short-circuit at the top of `needs_separator`:
+  when next token's value starts with `` ` ``, return
+  false unconditionally. Runs BEFORE the word-like rule.
+- Matches §13.3.11 grammar:
+  `TaggedTemplateExpression → MemberExpression TemplateLiteral`
+  forbids whitespace between the two.
+
+### Added
+- 4 new `gap039_*` inline tests:
+  - target fixture (`tag\`hi\`` round-trip)
+  - member access after tagged template
+  - bare (untagged) template still works
+  - composition with gap-035 (`var{a}=tag\`hi\`;`)
+
 ## [0.51.0] - 2026-06-08
 
 ### Changed

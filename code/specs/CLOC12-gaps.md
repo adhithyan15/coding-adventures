@@ -292,7 +292,5 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-039 — tagged template needs no separator between IDENT and `` ` ``
 
-- **Status:** OPEN — newly discovered by CLOC14.6.
-- **Upstream byte-identity test:** `minify_tagged_template` seed fixture.
-- **Why it fails:** Upstream emits `var x=tag` `` ` `` `hi` `` ` `` `;` for ``var x=tag`hi`;``. closurec emits `var x=tag` `` ` `` `hi` `` ` `` `;` with a space — `needs_separator` currently classifies template-literal tokens as word-like (since they're tagged with some IDENT-adjacent kind in the lexer), so adjacent IDENT + template gets a separator. Tagged templates are a single syntactic unit (§13.3.11): `tag` immediately followed by `` ` `` opens a tag-call without any allowed whitespace between them.
-- **What it needs:** Refine `needs_separator`: when next token's value starts with `` ` ``, return false regardless of prev's word-likeness. Alternative: classify template-literal tokens as NOT word-like (but that may regress other shapes if anything currently relies on template-literal word-like-ness).
+- **Status:** **RESOLVED** in CLOC12.46 (PR pending). `minify_tagged_template` flipped IGNORED → PASS. **Harness back to 41/41 PASS** (fourth 100% milestone today).
+- **Resolution:** Added a short-circuit at the top of `needs_separator`: when the next token's value starts with `` ` ``, return false unconditionally. This filter runs BEFORE the word-like rule so any IDENT/keyword/number followed by a template literal emits no space — matching upstream's tagged-template grammar (§13.3.11) which forbids whitespace between the tag function and the template's opening backtick.
