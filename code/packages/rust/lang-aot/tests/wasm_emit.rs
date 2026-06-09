@@ -136,6 +136,20 @@ fn algol_for_list_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![39], "ALGOL for-list should sum mixed elements");
 }
 
+#[test]
+fn algol_conditional_expressions_emit_and_run_on_wasm() {
+    let source = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_cond_expr")
+        .expect("ALGOL conditional expressions should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL conditional expressions)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL conditional-expression wasm must run");
+    assert_eq!(result, vec![42], "ALGOL conditional expressions should return 42");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result

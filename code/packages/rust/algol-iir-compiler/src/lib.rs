@@ -683,7 +683,7 @@ impl Compiler {
         self.set_loc(node);
 
         if direct_tokens(node).iter().any(|t| t.value == "if") {
-            return Err(CompileError::Unsupported("conditional expressions".into()));
+            return self.emit_conditional_expr(node);
         }
 
         match node.rule_name.as_str() {
@@ -722,6 +722,105 @@ impl Compiler {
                 }
             }
         }
+    }
+
+    fn emit_conditional_expr(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        match node.rule_name.as_str() {
+            "arith_expr" => {
+                let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
+                    CompileError::Malformed("arithmetic conditional missing condition".into())
+                })?;
+                let then_node = first_direct_node(node, "simple_arith").ok_or_else(|| {
+                    CompileError::Malformed("arithmetic conditional missing then branch".into())
+                })?;
+                let else_node = direct_nodes(node)
+                    .into_iter()
+                    .find(|n| n.rule_name == "arith_expr")
+                    .ok_or_else(|| {
+                        CompileError::Malformed(
+                            "arithmetic conditional missing else branch".into(),
+                        )
+                    })?;
+                self.emit_conditional_branches(cond_node, then_node, else_node)
+            }
+            "bool_expr" => {
+                let bool_nodes: Vec<&GrammarASTNode> = direct_nodes(node)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "bool_expr")
+                    .collect();
+                if bool_nodes.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "boolean conditional should have condition and else bool_expr".into(),
+                    ));
+                }
+                let then_node = first_direct_node(node, "simple_bool").ok_or_else(|| {
+                    CompileError::Malformed("boolean conditional missing then branch".into())
+                })?;
+                self.emit_conditional_branches(bool_nodes[0], then_node, bool_nodes[1])
+            }
+            other => Err(CompileError::Unsupported(format!(
+                "conditional expressions in {other}"
+            ))),
+        }
+    }
+
+    fn emit_conditional_branches(
+        &mut self,
+        cond_node: &GrammarASTNode,
+        then_node: &GrammarASTNode,
+        else_node: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        let cond = self.emit_expr(cond_node)?;
+        if cond.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "conditional expression condition must be boolean".into(),
+            ));
+        }
+
+        let else_label = self.fresh_label("expr_else");
+        let end_label = self.fresh_label("expr_end");
+        let dest = self.fresh_temp();
+
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.slot), Operand::Var(else_label.clone())],
+            "void",
+        ));
+        let then_value = self.emit_expr(then_node)?;
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(then_value.slot)],
+            then_value.ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&else_label);
+        let else_value = self.emit_expr(else_node)?;
+        if then_value.ty != else_value.ty {
+            return Err(CompileError::Type(format!(
+                "conditional expression branches have types {} and {}",
+                then_value.ty.name(),
+                else_value.ty.name()
+            )));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(else_value.slot)],
+            else_value.ty.iir(),
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue {
+            slot: dest,
+            ty: then_value.ty,
+        })
     }
 
     fn emit_bool_wrapper(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
@@ -1375,6 +1474,18 @@ mod tests {
     fn compiles_and_runs_multi_element_for_list() {
         let src = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
         assert_eq!(run_i64(src), 39);
+    }
+
+    #[test]
+    fn compiles_and_runs_arithmetic_conditional_expression() {
+        let src = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i end";
+        assert_eq!(run_i64(src), 6);
+    }
+
+    #[test]
+    fn compiles_and_runs_boolean_conditional_expression() {
+        let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]
