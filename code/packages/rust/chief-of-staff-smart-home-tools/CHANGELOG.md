@@ -22,6 +22,9 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_discovery_summary` handlers over the D23 runtime read facade
   so Chief of Staff jobs can inspect scheduled discovery work and candidate
   freshness without owning discovery scheduler logic.
+- Added `smart_home.get_pairing_plan` over the D23 runtime read facade so Chief
+  of Staff jobs can inspect actionable discovery pairing plans before starting
+  a pairing session.
 - Added scheduled discovery worker observability to
   `smart_home.observe_supervision`, including worker status, due time, last run
   counts, and failure pressure from the D23 runtime.
