@@ -90,6 +90,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-050: `new Foo()` with empty arg list should
+    // drop the parens to `new Foo`. Discovered by CLOC14.14.
+    ("new_expr", "gap-050: `new X()` → `new X` (empty-paren drop)"),
     // gap-048 was RESOLVED in CLOC12.55 — BigInt token
     // path now strips ES2021 `_` numeric separators.
     // `minify_bigint_separator` flipped IGNORED → PASS.
