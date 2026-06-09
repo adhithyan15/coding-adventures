@@ -26,3 +26,5 @@
   on dashed path segments.
 - Added solid `PaintPath` stroke join lowering for bevel, round, and bounded
   miter joins.
+- Added dashed `PaintPath` continuing-run join lowering so dash runs that cross
+  contour corners share the same bevel, round, and bounded miter join geometry.
