@@ -347,15 +347,21 @@ fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
     ];
 
     for func in &mut module.functions {
-        // Does this function touch the lisp heap / reference model?
-        let uses_heap = func.instructions.iter().any(|i| {
+        // Does this function touch the lisp heap / reference model? A function
+        // with **lisp parameters** (a `LAMBDA`/`LABEL` — params typed `any` /
+        // `symbol` / `ref<…>`) participates in the uniform-anyref boundary and is
+        // owned by `lower_lisp_repr_structural`, so skip it here too (it has
+        // already retyped them to `ref<…>` by the time this runs).
+        let uses_lisp = func.params.iter().any(|(_, t)| {
+            t == "any" || t == "symbol" || t.starts_with("ref<")
+        }) || func.instructions.iter().any(|i| {
             HEAP_OPS.contains(&i.op.as_str())
                 || (i.op == "call_builtin"
                     && matches!(i.srcs.first(),
                         Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
                 || i.type_hint.starts_with("ref<")
         });
-        if uses_heap {
+        if uses_lisp {
             continue; // boxed-anyref value model — out of scope for the scalar slice.
         }
         // Pure scalar function: every `any`/`polymorphic` value is an i64.
