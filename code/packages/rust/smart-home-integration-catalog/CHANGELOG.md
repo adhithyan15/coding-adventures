@@ -61,6 +61,9 @@ All notable changes to this package will be documented in this file.
   `IntegrationActivationConstraintSummary` for grouping unresolved primitive,
   capability, dependency, and policy-review surface work by affected
   integrations.
+- `IntegrationActivationReviewItem` and `IntegrationActivationReviewSummary`
+  for exposing human-review queue entries with review-ready and blocked
+  rollups.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

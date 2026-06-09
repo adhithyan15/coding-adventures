@@ -68,6 +68,8 @@ Current scope:
   priority-wave health, action, constraint, risk, and dependency summaries
 - D18D integration activation-constraint descriptors for grouped primitive,
   capability, dependency, and policy-review blocker summaries
+- D18D integration activation-review descriptors for read-only human-review
+  queue entries and compact review-ready/blocker summaries
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

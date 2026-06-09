@@ -48,6 +48,7 @@ Chief of Staff job/session/agent
   -> activation-health list and summary reads for priority-wave readiness status
   -> activation-maintenance list and summary reads for combined wave health
   -> activation-constraint list and summary reads for grouped blockers/reviews
+  -> activation-review list and summary reads for human-review queue planning
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -91,6 +92,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_maintenance_summary`
 - `smart_home.list_integration_activation_constraints`
 - `smart_home.get_integration_activation_constraint_summary`
+- `smart_home.list_integration_activation_reviews`
+- `smart_home.get_integration_activation_review_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`
