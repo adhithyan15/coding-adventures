@@ -42,6 +42,7 @@ Chief of Staff job/session/agent
   -> activation-action list and summary reads for concrete unblock/activate work
   -> activation-agenda list and summary reads for concrete work by rollout wave
   -> activation-runway list and summary reads for rollout-priority waves
+  -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
   -> desired-state target set/clear through runtime authorization
   -> non-mutating supervision plan previews
@@ -71,6 +72,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_agenda_summary`
 - `smart_home.list_integration_activation_runway`
 - `smart_home.get_integration_activation_runway_summary`
+- `smart_home.list_integration_activation_dependencies`
+- `smart_home.get_integration_activation_dependency_summary`
 - `smart_home.list_integration_readiness`
 - `smart_home.get_integration_readiness_summary`
 - `smart_home.list_integration_readiness_gaps`

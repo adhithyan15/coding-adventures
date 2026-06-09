@@ -34,20 +34,22 @@ use smart_home_discovery::{
 };
 use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
-    activation_candidates_at_or_before_priority, activation_plan_for_entry,
-    activation_plans_at_or_before_priority, activation_runway_from_candidates,
-    describe_primitive_family, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
-    entries_requiring_primitive, find_entry, first_party_catalog,
-    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
-    readiness_report_for_plan, readiness_reports_at_or_before_priority,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
-    IntegrationActivationActionKind, IntegrationActivationActionSummary,
-    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
-    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationPlan,
-    IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
+    activation_candidates_at_or_before_priority, activation_dependency_graph_from_reports,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_runway_from_candidates, describe_primitive_family,
+    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
+    find_entry, first_party_catalog, primitive_backlog_at_or_before_priority,
+    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
+    readiness_gap_inventory_from_reports, readiness_report_for_plan,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
+    IntegrationActivationAction, IntegrationActivationActionKind,
+    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
+    IntegrationActivationAgendaSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationRunwayStage,
     IntegrationActivationRunwaySummary, IntegrationActivationTarget, IntegrationCatalogEntry,
     IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
@@ -159,6 +161,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RUNWAY_TOOL_ID: &str =
     "smart_home.list_integration_activation_runway";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_runway_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID: &str =
+    "smart_home.list_integration_activation_dependencies";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_dependency_summary";
 pub const SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID: &str =
     "smart_home.list_integration_readiness";
 pub const SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID: &str =
@@ -283,6 +289,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID => {
                     let query = integration_activation_runway_query(&arguments)?;
                     Ok(get_integration_activation_runway_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID => {
+                    let query = integration_activation_dependency_query(&arguments)?;
+                    Ok(list_integration_activation_dependencies_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_dependency_query(&arguments)?;
+                    Ok(get_integration_activation_dependency_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
@@ -1020,6 +1034,46 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation runway summary",
             "Return compact D23A rollout-priority runway rollups for actionable, review, and blocked activation waves.",
             integration_activation_runway_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID,
+            "List smart-home integration activation dependencies",
+            "List D23A integration activation dependency nodes and prerequisite edges using host-specific readiness context.",
+            integration_activation_dependency_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("dependency_nodes", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("dependency_edges", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("node_count", JsonSchema::Integer),
+                    SchemaProperty::new("edge_count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "dependency_nodes",
+                    "dependency_edges",
+                    "summary",
+                    "node_count",
+                    "edge_count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation dependency summary",
+            "Return compact D23A activation dependency graph counts for satisfied and blocking prerequisite edges.",
+            integration_activation_dependency_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -3330,6 +3384,14 @@ struct IntegrationActivationRunwayQuery {
     candidates_per_stage_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone)]
+struct IntegrationActivationDependencyQuery {
+    readiness: IntegrationReadinessQuery,
+    blocking_only: bool,
+    node_limit: Option<usize>,
+    edge_limit: Option<usize>,
+}
+
 fn integration_activation_candidate_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationActivationCandidateQuery, ToolCallError> {
@@ -3356,6 +3418,18 @@ fn integration_activation_runway_query(
         candidates,
         stage_limit,
         candidates_per_stage_limit,
+    })
+}
+
+fn integration_activation_dependency_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationDependencyQuery, ToolCallError> {
+    let readiness = integration_readiness_query(arguments)?;
+    Ok(IntegrationActivationDependencyQuery {
+        readiness,
+        blocking_only: optional_bool(arguments, "blocking_only")?.unwrap_or(false),
+        node_limit: optional_u64(arguments, "node_limit")?.map(|value| value as usize),
+        edge_limit: optional_u64(arguments, "edge_limit")?.map(|value| value as usize),
     })
 }
 
@@ -3461,6 +3535,32 @@ fn integration_readiness_gap_inventory_for_query(
         readiness_gap_inventory_from_reports(reports.iter()),
         catalog_count,
     )
+}
+
+fn integration_activation_dependency_graph_for_query(
+    query: &IntegrationActivationDependencyQuery,
+) -> (IntegrationActivationDependencyGraph, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let (reports, _) = integration_readiness_reports_for_query(&query.readiness);
+    let mut graph = activation_dependency_graph_from_reports(
+        &catalog,
+        reports.iter(),
+        &query.readiness.enabled_integrations,
+    );
+
+    if query.blocking_only {
+        graph.edges.retain(|edge| edge.blocks_activation);
+    }
+    if let Some(limit) = query.node_limit {
+        graph.nodes.truncate(limit);
+    }
+    if let Some(limit) = query.edge_limit {
+        graph.edges.truncate(limit);
+    }
+    graph.summary = IntegrationActivationDependencySummary::from_graph(&graph.nodes, &graph.edges);
+
+    (graph, catalog_count)
 }
 
 fn integration_activation_candidates_for_query(
@@ -4000,6 +4100,84 @@ fn get_integration_activation_runway_summary_output_handler_output(
             ),
             ("total_stages", integer(summary.total_stages as i64)),
             ("blocked_stages", integer(summary.blocked_stages as i64)),
+        ]),
+    )
+}
+
+fn list_integration_activation_dependencies_output_handler_output(
+    query: IntegrationActivationDependencyQuery,
+) -> ToolHandlerOutput {
+    let (graph, catalog_count) = integration_activation_dependency_graph_for_query(&query);
+    let node_count = graph.nodes.len();
+    let edge_count = graph.edges.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "dependency_nodes",
+            JsonValue::Array(
+                graph
+                    .nodes
+                    .iter()
+                    .map(activation_dependency_node_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "dependency_edges",
+            JsonValue::Array(
+                graph
+                    .edges
+                    .iter()
+                    .map(activation_dependency_edge_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_dependency_summary_json(&graph.summary),
+        ),
+        ("node_count", integer(node_count as i64)),
+        ("edge_count", integer(edge_count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_dependencies"),
+            ),
+            ("nodes", integer(node_count as i64)),
+            ("edges", integer(edge_count as i64)),
+            (
+                "blocking_edges",
+                integer(graph.summary.blocking_edges as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_dependency_summary_output_handler_output(
+    query: IntegrationActivationDependencyQuery,
+) -> ToolHandlerOutput {
+    let (graph, _) = integration_activation_dependency_graph_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_dependency_summary_json(&graph.summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_dependency_summary"),
+            ),
+            ("total_edges", integer(graph.summary.total_edges as i64)),
+            (
+                "blocking_edges",
+                integer(graph.summary.blocking_edges as i64),
+            ),
         ]),
     )
 }
@@ -6877,6 +7055,156 @@ fn integration_activation_runway_summary_json(
     ])
 }
 
+fn activation_dependency_node_json(node: &IntegrationActivationDependencyNode) -> JsonValue {
+    object([
+        ("integration_id", string(node.integration_id.as_str())),
+        ("display_name", string(&node.display_name)),
+        ("priority", integer(node.priority as i64)),
+        (
+            "activation_target",
+            activation_target_json(&node.activation_target),
+        ),
+        (
+            "depends_on_integrations",
+            JsonValue::Array(
+                node.depends_on_integrations
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "dependent_integration_ids",
+            JsonValue::Array(
+                node.dependent_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "missing_dependencies",
+            JsonValue::Array(
+                node.missing_dependencies
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "dependency_count",
+            integer(node.depends_on_integrations.len() as i64),
+        ),
+        (
+            "dependent_count",
+            integer(node.dependent_integration_ids.len() as i64),
+        ),
+        (
+            "missing_dependency_count",
+            integer(node.missing_dependencies.len() as i64),
+        ),
+        ("enabled", JsonValue::Bool(node.enabled)),
+        ("activation_ready", JsonValue::Bool(node.activation_ready)),
+        (
+            "requires_human_review",
+            JsonValue::Bool(node.requires_human_review),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(node.highest_policy_tier)),
+        ),
+    ])
+}
+
+fn activation_dependency_edge_json(edge: &IntegrationActivationDependencyEdge) -> JsonValue {
+    object([
+        (
+            "dependency_integration_id",
+            string(edge.dependency_integration_id.as_str()),
+        ),
+        (
+            "dependent_integration_id",
+            string(edge.dependent_integration_id.as_str()),
+        ),
+        (
+            "dependency_display_name",
+            edge.dependency_display_name
+                .as_ref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_display_name",
+            string(&edge.dependent_display_name),
+        ),
+        (
+            "dependency_priority",
+            edge.dependency_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_priority",
+            integer(edge.dependent_priority as i64),
+        ),
+        ("satisfied", JsonValue::Bool(edge.satisfied)),
+        ("blocks_activation", JsonValue::Bool(edge.blocks_activation)),
+    ])
+}
+
+fn integration_activation_dependency_summary_json(
+    summary: &IntegrationActivationDependencySummary,
+) -> JsonValue {
+    object([
+        ("total_nodes", integer(summary.total_nodes as i64)),
+        ("enabled_nodes", integer(summary.enabled_nodes as i64)),
+        (
+            "activation_ready_nodes",
+            integer(summary.activation_ready_nodes as i64),
+        ),
+        ("blocked_nodes", integer(summary.blocked_nodes as i64)),
+        (
+            "nodes_with_dependencies",
+            integer(summary.nodes_with_dependencies as i64),
+        ),
+        (
+            "nodes_with_dependents",
+            integer(summary.nodes_with_dependents as i64),
+        ),
+        (
+            "nodes_with_missing_dependencies",
+            integer(summary.nodes_with_missing_dependencies as i64),
+        ),
+        ("total_edges", integer(summary.total_edges as i64)),
+        ("satisfied_edges", integer(summary.satisfied_edges as i64)),
+        ("blocking_edges", integer(summary.blocking_edges as i64)),
+        (
+            "unknown_dependency_edges",
+            integer(summary.unknown_dependency_edges as i64),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_dependency_edges",
+            JsonValue::Bool(summary.has_dependency_edges()),
+        ),
+        (
+            "has_blocking_dependencies",
+            JsonValue::Bool(summary.has_blocking_dependencies()),
+        ),
+    ])
+}
+
 fn readiness_report_json(report: &IntegrationReadinessReport) -> JsonValue {
     object([
         (
@@ -9607,6 +9935,26 @@ fn integration_activation_runway_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_dependency_query_schema() -> JsonSchema {
+    let mut schema = integration_readiness_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "node_limit".to_string();
+        }
+        properties.push(SchemaProperty::new("edge_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("blocking_only", JsonSchema::Boolean));
+    }
+    schema
+}
+
 fn integration_readiness_query_schema(include_limit: bool) -> JsonSchema {
     let mut properties = vec![
         SchemaProperty::new("priority_at_or_before", JsonSchema::Integer),
@@ -9711,7 +10059,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 59);
+        assert_eq!(definitions.len(), 61);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -9761,6 +10109,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID));
@@ -9858,7 +10212,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            51
+            53
         );
         assert_eq!(
             export
@@ -9922,6 +10276,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_RUNWAY_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -10168,11 +10530,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(59))
+            Some(&integer(61))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(51))
+            Some(&integer(53))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -10717,6 +11079,135 @@ mod tests {
             optional_field(activation_runway_rollup, "first_blocked_priority")
                 .and_then(integer_value)
                 .is_some()
+        );
+
+        let list_activation_dependencies_request = request(
+            "call-list-integration-activation-dependencies",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DEPENDENCIES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+            ]),
+            5_005,
+        );
+        let list_activation_dependencies_trace =
+            tool_runtime.invoke_with_events(&list_activation_dependencies_request);
+        assert!(list_activation_dependencies_trace.result.ok);
+        assert_eq!(
+            list_activation_dependencies_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_dependencies_output = list_activation_dependencies_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        assert!(
+            integer_value(field(list_activation_dependencies_output, "node_count").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(list_activation_dependencies_output, "edge_count").unwrap())
+                .unwrap()
+                >= 2
+        );
+        assert!(
+            array_len(field(list_activation_dependencies_output, "dependency_nodes").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            array_len(field(list_activation_dependencies_output, "dependency_edges").unwrap())
+                .unwrap()
+                >= 2
+        );
+        let activation_dependency_summary =
+            field(list_activation_dependencies_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_dependency_summary, "satisfied_edges").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_dependency_summary, "blocking_edges").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_dependency_summary, "has_blocking_dependencies"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_dependency_summary_request = request(
+            "call-integration-activation-dependency-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DEPENDENCY_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("blocking_only", JsonValue::Bool(true)),
+                ("edge_limit", integer(2)),
+            ]),
+            5_006,
+        );
+        let activation_dependency_summary_trace =
+            tool_runtime.invoke_with_events(&activation_dependency_summary_request);
+        assert!(activation_dependency_summary_trace.result.ok);
+        assert_eq!(
+            activation_dependency_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_dependency_summary_output = activation_dependency_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_dependency_rollup =
+            field(activation_dependency_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_dependency_rollup, "total_edges").unwrap()).unwrap()
+                <= 2
+        );
+        assert_eq!(
+            field(activation_dependency_rollup, "has_blocking_dependencies"),
+            Some(&JsonValue::Bool(true))
         );
 
         let list_integration_readiness_request = request(
@@ -12117,6 +12608,14 @@ mod tests {
             activation_runway_summary_trace,
         );
         journal.record_trace(
+            list_activation_dependencies_request,
+            list_activation_dependencies_trace,
+        );
+        journal.record_trace(
+            activation_dependency_summary_request,
+            activation_dependency_summary_trace,
+        );
+        journal.record_trace(
             list_integration_readiness_request,
             list_integration_readiness_trace,
         );
@@ -12176,9 +12675,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 59);
-        assert_eq!(journal_summary.completed_count, 59);
-        assert_eq!(journal.audit_records().len(), 59);
+        assert_eq!(journal_summary.invocation_count, 61);
+        assert_eq!(journal_summary.completed_count, 61);
+        assert_eq!(journal.audit_records().len(), 61);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
