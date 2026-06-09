@@ -4,6 +4,31 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.10.0] — 2026-06-09 — `COND` lisp-truthiness (LANG77 / McCarthy L3b-3a-4d)
+
+### Changed
+
+- `lower_lisp_repr_structural` now wraps **lisp-value `COND` guards** with a
+  truthiness test, so `COND` branches with McCarthy semantics on wasm. A
+  `jmp_if_false` whose condition is a predicate result (hint `"bool"`) is tested
+  directly, but a condition that is a **lisp value** (an integer atom, `nil`, a
+  cons, a variable) is rewritten:
+
+  ```
+  %n = is_null(%cond_boxed)   ;; 1 iff cond is nil
+  %t = not(%n)                ;; 1 iff cond is truthy (non-nil)
+  jmp_if_false %t, L          ;; branch iff cond is nil/false
+  ```
+
+  so a lisp integer atom — **even `0`** — is true, and only `nil` is false
+  (integer atoms are boxed as `i31ref` first so `is_null` is well-typed). The
+  result funnel is unchanged (it already returns the clause's value, or `nil` as
+  `0`, through the loose value model — uniform funnel boxing is deferred because
+  it would make a `nil` return unbox-trap).
+
+1 new test (a lisp-value guard is wrapped with `is_null`/`not`; a machine-boolean
+guard is tested directly).
+
 ## [0.9.0] — 2026-06-08 — predicate atoms box (LANG77 / McCarthy L3b-3a-4b)
 
 ### Changed

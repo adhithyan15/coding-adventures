@@ -7,8 +7,10 @@ end-to-end natively; symbol/cons backend support is L3b.)  As of L3b-3a-3c,
 `compile_source_to_wasm` also compiles McCarthy **cons** programs to a runnable
 WasmGC module — `(CAR (CONS 7 9))` → `7` on the in-repo `wasm-runtime` (integer
 atoms boxed as `i31ref`, the cons cell a `$LispyPair` struct) — and the McCarthy
-predicates: `pair?`/`ATOM` (`(ATOM 5)` → 1, `(ATOM (CONS 1 2))` → 0; L3b-3a-4b)
-and `EQ` atom equality (`(EQ 5 5)` → 1, `(EQ 5 6)` → 0; L3b-3a-4c).
+predicates and `COND`: `pair?`/`ATOM` (`(ATOM 5)` → 1; L3b-3a-4b), `EQ` atom
+equality (`(EQ 5 5)` → 1; L3b-3a-4c), and `COND` with lisp-truthiness
+(`(COND (0 7) (5 9))` → 7 — `0` is truthy; L3b-3a-4d). The McCarthy core —
+cons, `ATOM`, `EQ`, `COND` — now runs on the wasm backend.
 
 ## Stack position
 

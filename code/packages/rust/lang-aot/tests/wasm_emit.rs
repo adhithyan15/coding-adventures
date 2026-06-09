@@ -235,3 +235,28 @@ fn mccarthy_eq_atom_equality_runs_on_wasm() {
         "(CAR (CONS 3 4)) = 3"
     );
 }
+
+/// `COND` runs on wasm (LANG77 L3b-3a-4d): the clause guards branch with lisp
+/// truthiness — a predicate result tests directly, while a lisp value is wrapped
+/// `not(is_null(...))`, so an integer atom (even `0`) is true and only `nil` is
+/// false. The control flow (`jmp_if_false`/`label`/`jmp`/`mov`) already lowered.
+#[test]
+fn mccarthy_cond_runs_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "cond").expect("emit COND");
+        rt.load_and_run(&bytes, "main", &[]).expect("run COND")
+    };
+
+    // First clause true (a predicate guard): 5 is an atom → 7.
+    assert_eq!(go("(COND ((ATOM 5) 7) (5 9))"), vec![7]);
+    // First clause false → second clause's atom guard `5` is truthy → 9.
+    assert_eq!(go("(COND ((ATOM (CONS 1 2)) 7) (5 9))"), vec![9]);
+    // The atom `0` is TRUE in lisp (only `nil` is false) → first clause fires.
+    assert_eq!(go("(COND (0 7) (5 9))"), vec![7], "0 is truthy in lisp");
+    // No clause matches (the only guard is false) → nil result (exit 0).
+    assert_eq!(go("(COND ((ATOM (CONS 1 2)) 7))"), vec![0], "no clause → nil");
+    // An `EQ` guard: true and false branches.
+    assert_eq!(go("(COND ((EQ 1 1) 7) (5 9))"), vec![7]);
+    assert_eq!(go("(COND ((EQ 1 2) 7) (5 9))"), vec![9]);
+}
