@@ -289,3 +289,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
   - **Decimal floating-point shortest-form** (`0.5` → `.5`, `10.0` → `10`) is a different normalisation family handled elsewhere in upstream's code path.
   - **Scientific notation uppercasing** (`1e3` → `1E3`) is a separate rule — pure case change, not numeric normalisation.
   - **u128 overflow**: literals exceeding `u128::MAX` parse as `None` and stay verbatim rather than panicking.
+
+### gap-039 — tagged template needs no separator between IDENT and `` ` ``
+
+- **Status:** OPEN — newly discovered by CLOC14.6.
+- **Upstream byte-identity test:** `minify_tagged_template` seed fixture.
+- **Why it fails:** Upstream emits `var x=tag` `` ` `` `hi` `` ` `` `;` for ``var x=tag`hi`;``. closurec emits `var x=tag` `` ` `` `hi` `` ` `` `;` with a space — `needs_separator` currently classifies template-literal tokens as word-like (since they're tagged with some IDENT-adjacent kind in the lexer), so adjacent IDENT + template gets a separator. Tagged templates are a single syntactic unit (§13.3.11): `tag` immediately followed by `` ` `` opens a tag-call without any allowed whitespace between them.
+- **What it needs:** Refine `needs_separator`: when next token's value starts with `` ` ``, return false regardless of prev's word-likeness. Alternative: classify template-literal tokens as NOT word-like (but that may regress other shapes if anything currently relies on template-literal word-like-ness).

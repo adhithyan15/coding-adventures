@@ -85,18 +85,13 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-037 was RESOLVED in CLOC12.44 — `async` keyword at
-    // stmt boundary now propagates the boundary to the
-    // following `function` keyword via the
-    // `saw_async_kw_at_boundary` flag. `minify_async` flipped
-    // IGNORED → PASS.
-    // gap-038 was RESOLVED in CLOC12.45 — hex/oct/bin
-    // integer literals now normalise to decimal when
-    // decimal length is <= source length (tie-break to
-    // decimal), matching upstream's shortest-form rule.
-    // `minify_hex_number` flipped IGNORED → PASS.
-    // **The byte-identity harness now reports 33 matched,
-    // 0 failed, 0 skipped (of 33 total).**
+    // gap-039: tagged template needs no separator between
+    // IDENT and template literal. Upstream emits
+    // `var x=tag\`hi\`;` but closurec emits
+    // `var x=tag \`hi\`;` — `needs_separator` treats
+    // template-literal tokens as word-like and inserts a
+    // space. Discovered by CLOC14.6.
+    ("tagged_template", "gap-039: IDENT-then-template needs no space"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
