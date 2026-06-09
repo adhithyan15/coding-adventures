@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A rollout-priority activation runway planning:
   `smart_home.list_integration_activation_runway` and
   `smart_home.get_integration_activation_runway_summary`.
+- Added D18D handlers for D23A activation health planning:
+  `smart_home.list_integration_activation_health` and
+  `smart_home.get_integration_activation_health_summary`.
 - Added D18D handlers for D23A integration activation dependency graph
   planning: `smart_home.list_integration_activation_dependencies` and
   `smart_home.get_integration_activation_dependency_summary`.

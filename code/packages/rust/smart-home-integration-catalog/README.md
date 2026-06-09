@@ -44,6 +44,8 @@ runtime and Chief of Staff tools a typed catalog for:
   rollout priority wave for bounded Chief-of-Staff planning
 - activation runway stages that group those candidates by rollout priority wave
   with compact ready, review, and blocker rollups
+- activation health stages that add priority-wave ready, review, blocked, and
+  missing-prerequisite gap rollups for compact platform status inspection
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
   and blocking edges after applying host-specific enabled-integration context
 - readiness reports that compare activation plans against available primitives,

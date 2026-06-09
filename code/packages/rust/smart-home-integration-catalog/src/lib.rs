@@ -1002,6 +1002,29 @@ pub enum IntegrationActivationCandidateRecommendation {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationHealthStatus {
+    Ready,
+    NeedsReview,
+    Blocked,
+    Empty,
+}
+
+impl IntegrationActivationHealthStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+            Self::Empty => "empty",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationActionKind {
     ActivateIntegration,
     ReviewPolicy,
@@ -1216,6 +1239,41 @@ pub struct IntegrationActivationDependencySummary {
     pub unknown_dependency_edges: usize,
     pub first_blocked_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationHealthStage {
+    pub priority: u8,
+    pub health_status: IntegrationActivationHealthStatus,
+    pub integration_ids: Vec<IntegrationId>,
+    pub ready_to_activate_integration_ids: Vec<IntegrationId>,
+    pub review_integration_ids: Vec<IntegrationId>,
+    pub blocked_integration_ids: Vec<IntegrationId>,
+    pub candidate_summary: IntegrationActivationCandidateSummary,
+    pub gap_inventory: IntegrationReadinessGapInventory,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationHealthSummary {
+    pub total_stages: usize,
+    pub total_integrations: usize,
+    pub ready_stages: usize,
+    pub review_stages: usize,
+    pub blocked_stages: usize,
+    pub empty_stages: usize,
+    pub activation_ready_integrations: usize,
+    pub ready_to_activate_integrations: usize,
+    pub review_integrations: usize,
+    pub blocked_integrations: usize,
+    pub primitive_gap_count: usize,
+    pub capability_gap_count: usize,
+    pub dependency_gap_count: usize,
+    pub total_unique_gaps: usize,
+    pub first_ready_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
 }
 
 impl IntegrationActivationPlanSummary {
@@ -1504,6 +1562,182 @@ impl IntegrationActivationDependencyGraph {
 
     pub fn has_blocking_dependencies(&self) -> bool {
         self.summary.has_blocking_dependencies()
+    }
+}
+
+impl IntegrationActivationHealthStage {
+    pub fn from_candidates(
+        priority: u8,
+        mut candidates: Vec<IntegrationActivationCandidate>,
+    ) -> Self {
+        candidates.sort_by(compare_activation_candidates);
+        let candidate_summary =
+            IntegrationActivationCandidateSummary::from_candidates(candidates.iter());
+        let reports = candidates
+            .iter()
+            .map(|candidate| candidate.readiness_report.clone())
+            .collect::<Vec<_>>();
+        let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+        let integration_ids = candidates
+            .iter()
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let ready_to_activate_integration_ids = candidates
+            .iter()
+            .filter(|candidate| {
+                candidate.recommendation
+                    == IntegrationActivationCandidateRecommendation::ReadyToActivate
+            })
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let review_integration_ids = candidates
+            .iter()
+            .filter(|candidate| {
+                candidate.recommendation
+                    == IntegrationActivationCandidateRecommendation::NeedsHumanReview
+            })
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let blocked_integration_ids = candidates
+            .iter()
+            .filter(|candidate| candidate.is_blocked())
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let health_status = activation_health_status_for_summary(&candidate_summary);
+
+        Self {
+            priority,
+            health_status,
+            integration_ids,
+            ready_to_activate_integration_ids,
+            review_integration_ids,
+            blocked_integration_ids,
+            candidate_summary,
+            gap_inventory,
+        }
+    }
+
+    pub fn has_ready_work(&self) -> bool {
+        self.candidate_summary.ready_to_activate_candidates > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.candidate_summary.needs_human_review_candidates > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.candidate_summary.blocked_candidates > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.health_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationHealthSummary {
+    pub fn from_stages<'a>(
+        stages: impl IntoIterator<Item = &'a IntegrationActivationHealthStage>,
+    ) -> Self {
+        let mut primitive_gaps = BTreeSet::new();
+        let mut capability_gaps = BTreeSet::new();
+        let mut dependency_gaps = BTreeSet::new();
+        let mut summary = Self {
+            total_stages: 0,
+            total_integrations: 0,
+            ready_stages: 0,
+            review_stages: 0,
+            blocked_stages: 0,
+            empty_stages: 0,
+            activation_ready_integrations: 0,
+            ready_to_activate_integrations: 0,
+            review_integrations: 0,
+            blocked_integrations: 0,
+            primitive_gap_count: 0,
+            capability_gap_count: 0,
+            dependency_gap_count: 0,
+            total_unique_gaps: 0,
+            first_ready_priority: None,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for stage in stages {
+            summary.total_stages += 1;
+            summary.total_integrations += stage.candidate_summary.total_candidates;
+            summary.activation_ready_integrations +=
+                stage.candidate_summary.activation_ready_candidates;
+            summary.ready_to_activate_integrations +=
+                stage.candidate_summary.ready_to_activate_candidates;
+            summary.review_integrations += stage.candidate_summary.needs_human_review_candidates;
+            summary.blocked_integrations += stage.candidate_summary.blocked_candidates;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(stage.candidate_summary.highest_policy_tier);
+
+            if stage.candidate_summary.is_empty() {
+                summary.empty_stages += 1;
+            }
+            if stage.has_ready_work() {
+                summary.ready_stages += 1;
+                summary.first_ready_priority =
+                    min_optional_priority(summary.first_ready_priority, Some(stage.priority));
+            }
+            if stage.has_review_work() {
+                summary.review_stages += 1;
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(stage.priority));
+            }
+            if stage.has_blockers() {
+                summary.blocked_stages += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(stage.priority));
+            }
+
+            for gap in &stage.gap_inventory.primitive_gaps {
+                primitive_gaps.insert(gap.primitive);
+            }
+            for gap in &stage.gap_inventory.capability_gaps {
+                capability_gaps.insert(gap.capability_id.clone());
+            }
+            for gap in &stage.gap_inventory.dependency_gaps {
+                dependency_gaps.insert(gap.integration_id.clone());
+            }
+        }
+
+        summary.primitive_gap_count = primitive_gaps.len();
+        summary.capability_gap_count = capability_gaps.len();
+        summary.dependency_gap_count = dependency_gaps.len();
+        summary.total_unique_gaps = summary.primitive_gap_count
+            + summary.capability_gap_count
+            + summary.dependency_gap_count;
+        summary.overall_status = activation_health_status_from_counts(
+            summary.ready_to_activate_integrations,
+            summary.review_integrations,
+            summary.blocked_integrations,
+        );
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_stages == 0
+    }
+
+    pub fn has_ready_work(&self) -> bool {
+        self.ready_to_activate_integrations > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_integrations > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integrations > 0 || self.total_unique_gaps > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.overall_status.requires_attention()
     }
 }
 
@@ -3458,6 +3692,41 @@ pub fn activation_runway_at_or_before_priority(
     ))
 }
 
+pub fn activation_health_from_candidates(
+    candidates: Vec<IntegrationActivationCandidate>,
+) -> Vec<IntegrationActivationHealthStage> {
+    let mut stages_by_priority: BTreeMap<u8, Vec<IntegrationActivationCandidate>> = BTreeMap::new();
+    for candidate in candidates {
+        stages_by_priority
+            .entry(candidate.readiness_report.priority)
+            .or_default()
+            .push(candidate);
+    }
+
+    stages_by_priority
+        .into_iter()
+        .map(|(priority, candidates)| {
+            IntegrationActivationHealthStage::from_candidates(priority, candidates)
+        })
+        .collect()
+}
+
+pub fn activation_health_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationHealthStage> {
+    activation_health_from_candidates(activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -4545,6 +4814,32 @@ fn sort_query_results(entries: &mut Vec<&IntegrationCatalogEntry>, sort: Integra
     }
 }
 
+fn activation_health_status_for_summary(
+    summary: &IntegrationActivationCandidateSummary,
+) -> IntegrationActivationHealthStatus {
+    activation_health_status_from_counts(
+        summary.ready_to_activate_candidates,
+        summary.needs_human_review_candidates,
+        summary.blocked_candidates,
+    )
+}
+
+fn activation_health_status_from_counts(
+    ready_to_activate_count: usize,
+    review_count: usize,
+    blocked_count: usize,
+) -> IntegrationActivationHealthStatus {
+    if blocked_count > 0 {
+        IntegrationActivationHealthStatus::Blocked
+    } else if review_count > 0 {
+        IntegrationActivationHealthStatus::NeedsReview
+    } else if ready_to_activate_count > 0 {
+        IntegrationActivationHealthStatus::Ready
+    } else {
+        IntegrationActivationHealthStatus::Empty
+    }
+}
+
 fn compare_activation_candidates(
     left: &IntegrationActivationCandidate,
     right: &IntegrationActivationCandidate,
@@ -5218,6 +5513,110 @@ mod tests {
         assert!(summary.has_actionable_stage());
         assert!(summary.has_blocked_stage());
         assert!(summary.has_review_stage());
+        assert!(!summary.is_empty());
+    }
+
+    #[test]
+    fn activation_health_rolls_up_priority_stage_attention() {
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 2,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_bridge"),
+            display_name: "Review Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_sensor"),
+            display_name: "Blocked Sensor".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 1,
+            missing_primitives: vec![PrimitiveFamily::Mqtt],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::LowRisk,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [ready_report, review_report, blocked_report].iter(),
+        );
+
+        let health = activation_health_from_candidates(candidates);
+
+        assert_eq!(health.len(), 2);
+        assert_eq!(health[0].priority, 1);
+        assert_eq!(
+            health[0].health_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(health[0].requires_attention());
+        assert!(health[0].has_review_work());
+        assert!(health[0].has_blockers());
+        assert_eq!(health[0].candidate_summary.total_candidates, 2);
+        assert_eq!(health[0].gap_inventory.primitive_gap_count(), 1);
+        assert_eq!(health[0].gap_inventory.capability_gap_count(), 1);
+        assert_eq!(health[0].gap_inventory.dependency_gap_count(), 1);
+        assert!(health[0]
+            .blocked_integration_ids
+            .contains(&IntegrationId::trusted("blocked_sensor")));
+        assert!(health[0]
+            .review_integration_ids
+            .contains(&IntegrationId::trusted("review_bridge")));
+        assert_eq!(health[1].priority, 2);
+        assert_eq!(
+            health[1].health_status,
+            IntegrationActivationHealthStatus::Ready
+        );
+        assert!(health[1]
+            .ready_to_activate_integration_ids
+            .contains(&IntegrationId::trusted("read_only_probe")));
+
+        let summary = IntegrationActivationHealthSummary::from_stages(health.iter());
+        assert_eq!(summary.total_stages, 2);
+        assert_eq!(summary.total_integrations, 3);
+        assert_eq!(summary.ready_stages, 1);
+        assert_eq!(summary.review_stages, 1);
+        assert_eq!(summary.blocked_stages, 1);
+        assert_eq!(summary.ready_to_activate_integrations, 1);
+        assert_eq!(summary.review_integrations, 1);
+        assert_eq!(summary.blocked_integrations, 1);
+        assert_eq!(summary.primitive_gap_count, 1);
+        assert_eq!(summary.capability_gap_count, 1);
+        assert_eq!(summary.dependency_gap_count, 1);
+        assert_eq!(summary.total_unique_gaps, 3);
+        assert_eq!(summary.first_ready_priority, Some(2));
+        assert_eq!(summary.first_review_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(1));
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.requires_attention());
+        assert!(summary.has_ready_work());
+        assert!(summary.has_review_work());
+        assert!(summary.has_blockers());
         assert!(!summary.is_empty());
     }
 

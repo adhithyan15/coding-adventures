@@ -50,6 +50,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationRunwayStage` and `IntegrationActivationRunwaySummary`
   for grouping activation candidates by rollout priority wave and identifying
   actionable, review, and blocked stages.
+- `IntegrationActivationHealthStage` and `IntegrationActivationHealthSummary`
+  for compact ready, review, blocked, and missing-prerequisite priority-wave
+  status rollups.
 - `IntegrationActivationDependencyGraph` plus node, edge, and summary types for
   exposing satisfied and blocking integration prerequisites in rollout plans.
 - Integration readiness reports that expose missing primitive families, missing
