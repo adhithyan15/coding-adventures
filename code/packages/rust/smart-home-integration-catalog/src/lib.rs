@@ -685,6 +685,40 @@ pub struct IntegrationReadinessSummary {
     pub highest_policy_tier: PrivilegeTier,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessPrimitiveGap {
+    pub primitive: PrimitiveFamily,
+    pub highest_priority: u8,
+    pub blocked_report_count: usize,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessCapabilityGap {
+    pub capability_id: CapabilityId,
+    pub highest_priority: u8,
+    pub blocked_report_count: usize,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessDependencyGap {
+    pub integration_id: IntegrationId,
+    pub highest_priority: u8,
+    pub blocked_report_count: usize,
+    pub requested_integration_ids: Vec<IntegrationId>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessGapInventory {
+    pub total_reports: usize,
+    pub activation_ready_reports: usize,
+    pub blocked_reports: usize,
+    pub primitive_gaps: Vec<IntegrationReadinessPrimitiveGap>,
+    pub capability_gaps: Vec<IntegrationReadinessCapabilityGap>,
+    pub dependency_gaps: Vec<IntegrationReadinessDependencyGap>,
+}
+
 impl IntegrationReadinessSummary {
     pub fn from_reports<'a>(
         reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -774,6 +808,36 @@ impl IntegrationReadinessSummary {
 
     pub fn has_blockers(&self) -> bool {
         self.blocked_reports > 0
+    }
+}
+
+impl IntegrationReadinessGapInventory {
+    pub fn is_empty(&self) -> bool {
+        self.total_reports == 0
+    }
+
+    pub fn has_gaps(&self) -> bool {
+        self.total_unique_gaps() > 0
+    }
+
+    pub fn all_ready(&self) -> bool {
+        self.total_reports > 0 && !self.has_gaps()
+    }
+
+    pub fn primitive_gap_count(&self) -> usize {
+        self.primitive_gaps.len()
+    }
+
+    pub fn capability_gap_count(&self) -> usize {
+        self.capability_gaps.len()
+    }
+
+    pub fn dependency_gap_count(&self) -> usize {
+        self.dependency_gaps.len()
+    }
+
+    pub fn total_unique_gaps(&self) -> usize {
+        self.primitive_gap_count() + self.capability_gap_count() + self.dependency_gap_count()
     }
 }
 
@@ -1895,6 +1959,116 @@ pub fn readiness_reports_at_or_before_priority(
             )
         })
         .collect()
+}
+
+pub fn readiness_gap_inventory_from_reports<'a>(
+    reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
+) -> IntegrationReadinessGapInventory {
+    let mut total_reports = 0;
+    let mut activation_ready_reports = 0;
+    let mut blocked_reports = 0;
+    let mut primitive_gaps: BTreeMap<PrimitiveFamily, (u8, BTreeSet<IntegrationId>)> =
+        BTreeMap::new();
+    let mut capability_gaps: BTreeMap<CapabilityId, (u8, BTreeSet<IntegrationId>)> =
+        BTreeMap::new();
+    let mut dependency_gaps: BTreeMap<IntegrationId, (u8, BTreeSet<IntegrationId>)> =
+        BTreeMap::new();
+
+    for report in reports {
+        total_reports += 1;
+        if report.activation_ready() {
+            activation_ready_reports += 1;
+        } else {
+            blocked_reports += 1;
+        }
+
+        for primitive in &report.missing_primitives {
+            let (highest_priority, integration_ids) = primitive_gaps
+                .entry(*primitive)
+                .or_insert((report.priority, BTreeSet::new()));
+            *highest_priority = (*highest_priority).min(report.priority);
+            integration_ids.insert(report.requested_integration_id.clone());
+        }
+        for capability_id in &report.missing_capabilities {
+            let (highest_priority, integration_ids) = capability_gaps
+                .entry(capability_id.clone())
+                .or_insert((report.priority, BTreeSet::new()));
+            *highest_priority = (*highest_priority).min(report.priority);
+            integration_ids.insert(report.requested_integration_id.clone());
+        }
+        for integration_id in &report.missing_dependencies {
+            let (highest_priority, requested_integration_ids) = dependency_gaps
+                .entry(integration_id.clone())
+                .or_insert((report.priority, BTreeSet::new()));
+            *highest_priority = (*highest_priority).min(report.priority);
+            requested_integration_ids.insert(report.requested_integration_id.clone());
+        }
+    }
+
+    let mut primitive_gaps = primitive_gaps
+        .into_iter()
+        .map(
+            |(primitive, (highest_priority, integration_ids))| IntegrationReadinessPrimitiveGap {
+                primitive,
+                highest_priority,
+                blocked_report_count: integration_ids.len(),
+                integration_ids: integration_ids.into_iter().collect(),
+            },
+        )
+        .collect::<Vec<_>>();
+    primitive_gaps.sort_by(|left, right| {
+        left.highest_priority
+            .cmp(&right.highest_priority)
+            .then_with(|| right.blocked_report_count.cmp(&left.blocked_report_count))
+            .then_with(|| left.primitive.cmp(&right.primitive))
+    });
+
+    let mut capability_gaps = capability_gaps
+        .into_iter()
+        .map(|(capability_id, (highest_priority, integration_ids))| {
+            IntegrationReadinessCapabilityGap {
+                capability_id,
+                highest_priority,
+                blocked_report_count: integration_ids.len(),
+                integration_ids: integration_ids.into_iter().collect(),
+            }
+        })
+        .collect::<Vec<_>>();
+    capability_gaps.sort_by(|left, right| {
+        left.highest_priority
+            .cmp(&right.highest_priority)
+            .then_with(|| right.blocked_report_count.cmp(&left.blocked_report_count))
+            .then_with(|| left.capability_id.cmp(&right.capability_id))
+    });
+
+    let mut dependency_gaps = dependency_gaps
+        .into_iter()
+        .map(
+            |(integration_id, (highest_priority, requested_integration_ids))| {
+                IntegrationReadinessDependencyGap {
+                    integration_id,
+                    highest_priority,
+                    blocked_report_count: requested_integration_ids.len(),
+                    requested_integration_ids: requested_integration_ids.into_iter().collect(),
+                }
+            },
+        )
+        .collect::<Vec<_>>();
+    dependency_gaps.sort_by(|left, right| {
+        left.highest_priority
+            .cmp(&right.highest_priority)
+            .then_with(|| right.blocked_report_count.cmp(&left.blocked_report_count))
+            .then_with(|| left.integration_id.cmp(&right.integration_id))
+    });
+
+    IntegrationReadinessGapInventory {
+        total_reports,
+        activation_ready_reports,
+        blocked_reports,
+        primitive_gaps,
+        capability_gaps,
+        dependency_gaps,
+    }
 }
 
 pub fn readiness_report_for_plan(
@@ -3220,6 +3394,29 @@ mod tests {
         assert!(summary.unique_missing_capabilities > 0);
         assert!(summary.unique_missing_dependencies > 0);
         assert!(!summary.all_ready());
+
+        let gaps = readiness_gap_inventory_from_reports(reports.iter());
+        assert_eq!(gaps.total_reports, reports.len());
+        assert_eq!(gaps.blocked_reports, summary.blocked_reports);
+        assert!(gaps.has_gaps());
+        assert!(gaps.primitive_gap_count() > 0);
+        assert!(gaps.capability_gap_count() > 0);
+        assert!(gaps.dependency_gap_count() > 0);
+        assert!(gaps.primitive_gaps.first().unwrap().highest_priority <= 1);
+        assert!(gaps
+            .primitive_gaps
+            .iter()
+            .any(|gap| gap.primitive == PrimitiveFamily::LocalPairing
+                && gap.integration_ids.contains(&IntegrationId::trusted("hue"))));
+        assert!(gaps
+            .capability_gaps
+            .iter()
+            .any(|gap| gap.capability_id == CapabilityId::trusted("smart_home.command.light")));
+        assert!(gaps.dependency_gaps.iter().any(|gap| gap.integration_id
+            == IntegrationId::trusted("mqtt")
+            && gap
+                .requested_integration_ids
+                .contains(&IntegrationId::trusted("tasmota"))));
     }
 
     #[test]

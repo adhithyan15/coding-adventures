@@ -36,13 +36,16 @@ use smart_home_integration_catalog::{
     activation_plan_for_entry, describe_primitive_family, ecosystem_platforms_requiring_primitive,
     ecosystem_survey_sources, entries_requiring_primitive, find_entry, first_party_catalog,
     primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_report_for_plan,
-    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
-    ConnectivityClass, DiscoveryMechanism, EcosystemSurveySource, ImplementationStatus,
-    IntegrationActivationPlan, IntegrationActivationTarget, IntegrationCatalogEntry,
-    IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
-    IntegrationReadinessReport, IntegrationReadinessSummary, PrimitiveBacklogCoverageItem,
-    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
+    readiness_report_for_plan, readiness_reports_at_or_before_priority,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationPlan,
+    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogItem,
+    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -132,6 +135,10 @@ pub const SMART_HOME_LIST_INTEGRATION_READINESS_TOOL_ID: &str =
     "smart_home.list_integration_readiness";
 pub const SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_readiness_summary";
+pub const SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID: &str =
+    "smart_home.list_integration_readiness_gaps";
+pub const SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_readiness_gap_summary";
 
 /// Shared, mutable smart-home runtime handle for in-process D18D handlers.
 pub type SharedSmartHomeRuntime = Rc<RefCell<SmartHomeRuntime>>;
@@ -208,6 +215,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID => {
                     let query = integration_readiness_query(&arguments)?;
                     Ok(get_integration_readiness_summary_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID => {
+                    let query = integration_readiness_gap_query(&arguments)?;
+                    Ok(list_integration_readiness_gaps_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID => {
+                    let query = integration_readiness_query(&arguments)?;
+                    Ok(get_integration_readiness_gap_summary_output_handler_output(
                         query,
                     ))
                 }
@@ -798,6 +815,46 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID,
             "Get smart-home integration readiness summary",
             "Return a compact readiness rollup for D23A integration activation planning in the supplied context.",
+            integration_readiness_query_schema(false),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID,
+            "List smart-home integration readiness gaps",
+            "Group D23A integration readiness blockers by missing primitive, capability, and delegated integration dependency.",
+            integration_readiness_gap_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("primitive_gaps", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("capability_gaps", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("dependency_gaps", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "primitive_gaps",
+                    "capability_gaps",
+                    "dependency_gaps",
+                    "summary",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID,
+            "Get smart-home integration readiness gap summary",
+            "Return a compact blocker-group rollup for D23A integration readiness planning in the supplied context.",
             integration_readiness_query_schema(false),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
@@ -2925,6 +2982,12 @@ struct IntegrationReadinessQuery {
     limit: Option<usize>,
 }
 
+#[derive(Debug, Clone)]
+struct IntegrationReadinessGapQuery {
+    readiness: IntegrationReadinessQuery,
+    limit_per_kind: Option<usize>,
+}
+
 fn integration_readiness_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationReadinessQuery, ToolCallError> {
@@ -2939,6 +3002,17 @@ fn integration_readiness_query(
         cloud_required: optional_bool(arguments, "cloud_required")?,
         local_only: optional_bool(arguments, "local_only")?,
         limit: optional_u64(arguments, "limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_readiness_gap_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationReadinessGapQuery, ToolCallError> {
+    let readiness = integration_readiness_query(arguments)?;
+    let limit_per_kind = optional_u64(arguments, "limit_per_kind")?.map(|value| value as usize);
+    Ok(IntegrationReadinessGapQuery {
+        readiness,
+        limit_per_kind,
     })
 }
 
@@ -2972,6 +3046,23 @@ fn integration_readiness_reports_for_query(
     }
 
     (reports, catalog_count)
+}
+
+fn integration_readiness_gap_inventory_for_query(
+    query: &IntegrationReadinessQuery,
+) -> (IntegrationReadinessGapInventory, usize) {
+    let (reports, catalog_count) = integration_readiness_reports_for_query(query);
+    (
+        readiness_gap_inventory_from_reports(reports.iter()),
+        catalog_count,
+    )
+}
+
+fn limited_slice<T>(items: &[T], limit: Option<usize>) -> &[T] {
+    match limit {
+        Some(limit) => &items[..items.len().min(limit)],
+        None => items,
+    }
 }
 
 fn list_integrations_output_handler_output(query: IntegrationCatalogQuery) -> ToolHandlerOutput {
@@ -3154,6 +3245,69 @@ fn get_integration_readiness_summary_output_handler_output(
             ("operation", string("get_integration_readiness_summary")),
             ("total_reports", integer(summary.total_reports as i64)),
             ("blocked_reports", integer(summary.blocked_reports as i64)),
+        ]),
+    )
+}
+
+fn list_integration_readiness_gaps_output_handler_output(
+    query: IntegrationReadinessGapQuery,
+) -> ToolHandlerOutput {
+    let (inventory, catalog_count) =
+        integration_readiness_gap_inventory_for_query(&query.readiness);
+    let primitive_gaps = limited_slice(&inventory.primitive_gaps, query.limit_per_kind);
+    let capability_gaps = limited_slice(&inventory.capability_gaps, query.limit_per_kind);
+    let dependency_gaps = limited_slice(&inventory.dependency_gaps, query.limit_per_kind);
+
+    ToolHandlerOutput::new(object([
+        (
+            "primitive_gaps",
+            JsonValue::Array(primitive_gaps.iter().map(primitive_gap_json).collect()),
+        ),
+        (
+            "capability_gaps",
+            JsonValue::Array(capability_gaps.iter().map(capability_gap_json).collect()),
+        ),
+        (
+            "dependency_gaps",
+            JsonValue::Array(dependency_gaps.iter().map(dependency_gap_json).collect()),
+        ),
+        (
+            "summary",
+            integration_readiness_gap_summary_json(&inventory),
+        ),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_readiness_gaps")),
+            (
+                "total_unique_gaps",
+                integer(inventory.total_unique_gaps() as i64),
+            ),
+            ("blocked_reports", integer(inventory.blocked_reports as i64)),
+        ]),
+    )
+}
+
+fn get_integration_readiness_gap_summary_output_handler_output(
+    query: IntegrationReadinessQuery,
+) -> ToolHandlerOutput {
+    let (inventory, _) = integration_readiness_gap_inventory_for_query(&query);
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_readiness_gap_summary_json(&inventory),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("get_integration_readiness_gap_summary")),
+            (
+                "total_unique_gaps",
+                integer(inventory.total_unique_gaps() as i64),
+            ),
+            ("blocked_reports", integer(inventory.blocked_reports as i64)),
         ]),
     )
 }
@@ -5558,6 +5712,122 @@ fn integration_readiness_summary_json(summary: &IntegrationReadinessSummary) -> 
     ])
 }
 
+fn integration_readiness_gap_summary_json(
+    inventory: &IntegrationReadinessGapInventory,
+) -> JsonValue {
+    object([
+        ("total_reports", integer(inventory.total_reports as i64)),
+        (
+            "activation_ready_reports",
+            integer(inventory.activation_ready_reports as i64),
+        ),
+        ("blocked_reports", integer(inventory.blocked_reports as i64)),
+        (
+            "primitive_gap_count",
+            integer(inventory.primitive_gap_count() as i64),
+        ),
+        (
+            "capability_gap_count",
+            integer(inventory.capability_gap_count() as i64),
+        ),
+        (
+            "dependency_gap_count",
+            integer(inventory.dependency_gap_count() as i64),
+        ),
+        (
+            "total_unique_gaps",
+            integer(inventory.total_unique_gaps() as i64),
+        ),
+        ("is_empty", JsonValue::Bool(inventory.is_empty())),
+        ("all_ready", JsonValue::Bool(inventory.all_ready())),
+        ("has_gaps", JsonValue::Bool(inventory.has_gaps())),
+        (
+            "top_primitive_gap",
+            inventory
+                .primitive_gaps
+                .first()
+                .map(primitive_gap_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "top_capability_gap",
+            inventory
+                .capability_gaps
+                .first()
+                .map(capability_gap_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "top_dependency_gap",
+            inventory
+                .dependency_gaps
+                .first()
+                .map(dependency_gap_json)
+                .unwrap_or(JsonValue::Null),
+        ),
+    ])
+}
+
+fn primitive_gap_json(gap: &IntegrationReadinessPrimitiveGap) -> JsonValue {
+    object([
+        ("primitive", string(gap.primitive.as_str())),
+        ("highest_priority", integer(gap.highest_priority as i64)),
+        (
+            "blocked_report_count",
+            integer(gap.blocked_report_count as i64),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                gap.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn capability_gap_json(gap: &IntegrationReadinessCapabilityGap) -> JsonValue {
+    object([
+        ("capability_id", string(gap.capability_id.as_str())),
+        ("highest_priority", integer(gap.highest_priority as i64)),
+        (
+            "blocked_report_count",
+            integer(gap.blocked_report_count as i64),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                gap.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
+fn dependency_gap_json(gap: &IntegrationReadinessDependencyGap) -> JsonValue {
+    object([
+        ("integration_id", string(gap.integration_id.as_str())),
+        ("highest_priority", integer(gap.highest_priority as i64)),
+        (
+            "blocked_report_count",
+            integer(gap.blocked_report_count as i64),
+        ),
+        (
+            "requested_integration_ids",
+            JsonValue::Array(
+                gap.requested_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+    ])
+}
+
 fn activation_target_json(target: &IntegrationActivationTarget) -> JsonValue {
     match target {
         IntegrationActivationTarget::Direct => object([("kind", string("direct"))]),
@@ -7909,6 +8179,24 @@ fn integration_readiness_query_schema(include_limit: bool) -> JsonSchema {
     object_schema(properties, Vec::new(), false)
 }
 
+fn integration_readiness_gap_query_schema() -> JsonSchema {
+    let mut schema = integration_readiness_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "limit_per_kind".to_string();
+        }
+    }
+    schema
+}
+
 fn empty_object_schema() -> JsonSchema {
     object_schema(Vec::new(), Vec::new(), false)
 }
@@ -7977,7 +8265,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 47);
+        assert_eq!(definitions.len(), 49);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -8003,6 +8291,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID));
         assert!(export.tool_ids().contains(&SMART_HOME_DISCOVER_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -8088,7 +8382,7 @@ mod tests {
         assert!(export.tool_ids().contains(&SMART_HOME_GET_HEALTH_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            39
+            41
         );
         assert_eq!(
             export
@@ -8121,6 +8415,14 @@ mod tests {
             smart_home_tool_definition(SMART_HOME_GET_INTEGRATION_READINESS_SUMMARY_TOOL_ID)
                 .is_some()
         );
+        assert!(
+            smart_home_tool_definition(SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID)
+                .is_some()
+        );
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID
+        )
+        .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_GET_PAIRING_PLAN_TOOL_ID).is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_COMMAND_RESULTS_TOOL_ID).is_some());
         assert!(
@@ -8350,11 +8652,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(47))
+            Some(&integer(49))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(39))
+            Some(&integer(41))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -8461,6 +8763,108 @@ mod tests {
             field(readiness_rollup, "has_blockers"),
             Some(&JsonValue::Bool(true))
         );
+
+        let list_integration_readiness_gaps_request = request(
+            "call-list-integration-readiness-gaps",
+            SMART_HOME_LIST_INTEGRATION_READINESS_GAPS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+                ("limit_per_kind", integer(2)),
+            ]),
+            998,
+        );
+        let list_integration_readiness_gaps_trace =
+            tool_runtime.invoke_with_events(&list_integration_readiness_gaps_request);
+        assert!(list_integration_readiness_gaps_trace.result.ok);
+        assert_eq!(
+            list_integration_readiness_gaps_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_integration_readiness_gaps_output = list_integration_readiness_gaps_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let gap_summary = field(list_integration_readiness_gaps_output, "summary").unwrap();
+        assert_eq!(field(gap_summary, "has_gaps"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(gap_summary, "total_unique_gaps").unwrap()).unwrap() >= 3);
+        assert!(integer_value(field(gap_summary, "primitive_gap_count").unwrap()).unwrap() >= 1);
+        let primitive_gaps =
+            field(list_integration_readiness_gaps_output, "primitive_gaps").unwrap();
+        let JsonValue::Array(primitive_gap_values) = primitive_gaps else {
+            panic!("primitive_gaps must be an array");
+        };
+        assert!(!primitive_gap_values.is_empty());
+        assert!(primitive_gap_values.len() <= 2);
+        assert!(
+            integer_value(
+                field(primitive_gap_values.first().unwrap(), "highest_priority").unwrap()
+            )
+            .unwrap()
+                <= 1
+        );
+
+        let integration_readiness_gap_summary_request = request(
+            "call-integration-readiness-gap-summary",
+            SMART_HOME_GET_INTEGRATION_READINESS_GAP_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(1)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("activation_ready", JsonValue::Bool(false)),
+            ]),
+            999,
+        );
+        let integration_readiness_gap_summary_trace =
+            tool_runtime.invoke_with_events(&integration_readiness_gap_summary_request);
+        assert!(integration_readiness_gap_summary_trace.result.ok);
+        assert_eq!(
+            integration_readiness_gap_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let integration_readiness_gap_summary_output = integration_readiness_gap_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let gap_rollup = field(integration_readiness_gap_summary_output, "summary").unwrap();
+        assert_eq!(field(gap_rollup, "has_gaps"), Some(&JsonValue::Bool(true)));
+        assert!(integer_value(field(gap_rollup, "total_unique_gaps").unwrap()).unwrap() >= 3);
+        assert!(matches!(
+            field(gap_rollup, "top_primitive_gap"),
+            Some(JsonValue::Object(_))
+        ));
 
         let list_request = request(
             "call-list-devices",
@@ -9633,6 +10037,14 @@ mod tests {
             integration_readiness_summary_request,
             integration_readiness_summary_trace,
         );
+        journal.record_trace(
+            list_integration_readiness_gaps_request,
+            list_integration_readiness_gaps_trace,
+        );
+        journal.record_trace(
+            integration_readiness_gap_summary_request,
+            integration_readiness_gap_summary_trace,
+        );
         journal.record_trace(list_request, list_trace);
         journal.record_trace(list_rooms_request, list_rooms_trace);
         journal.record_trace(list_scenes_request, list_scenes_trace);
@@ -9677,9 +10089,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 47);
-        assert_eq!(journal_summary.completed_count, 47);
-        assert_eq!(journal.audit_records().len(), 47);
+        assert_eq!(journal_summary.invocation_count, 49);
+        assert_eq!(journal_summary.completed_count, 49);
+        assert_eq!(journal.audit_records().len(), 49);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

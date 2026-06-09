@@ -13,6 +13,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for bulk D23A integration readiness planning:
   `smart_home.list_integration_readiness` and
   `smart_home.get_integration_readiness_summary`.
+- Added D18D handlers for grouped D23A integration readiness blocker planning:
+  `smart_home.list_integration_readiness_gaps` and
+  `smart_home.get_integration_readiness_gap_summary`.
 - Added D18D smart-home tool definitions and in-memory handlers over
   `SmartHomeRuntime`.
 - Added an end-to-end Hue-style fixture test that lists devices, commands a

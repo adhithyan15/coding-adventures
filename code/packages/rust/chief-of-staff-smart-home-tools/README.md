@@ -58,6 +58,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_tool_catalog_summary`
 - `smart_home.list_integration_readiness`
 - `smart_home.get_integration_readiness_summary`
+- `smart_home.list_integration_readiness_gaps`
+- `smart_home.get_integration_readiness_gap_summary`
 - `smart_home.discover`
 - `smart_home.list_discovery_workers`
 - `smart_home.get_discovery_summary`
