@@ -38,6 +38,9 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_runway` and
   `smart_home.get_integration_activation_runway_summary` tool descriptors for
   read-only rollout-priority activation wave planning.
+- `smart_home.list_integration_activation_health` and
+  `smart_home.get_integration_activation_health_summary` tool descriptors for
+  read-only rollout-priority activation health planning.
 - `smart_home.list_integration_activation_dependencies` and
   `smart_home.get_integration_activation_dependency_summary` tool descriptors
   for read-only activation dependency graph planning.

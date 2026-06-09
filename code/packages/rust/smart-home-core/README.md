@@ -62,6 +62,8 @@ Current scope:
   work by rollout-priority wave
 - D18D integration activation-runway descriptors for rollout-priority wave
   grouping and compact actionable/blocker summaries
+- D18D integration activation-health descriptors for priority-wave ready,
+  review, blocked, and missing-prerequisite status summaries
 - D18D integration-readiness descriptors for bulk activation blocker reports
   and compact readiness rollups
 - D18D integration-readiness gap descriptors for grouped primitive,
