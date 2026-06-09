@@ -182,6 +182,13 @@ pub enum LangAotError {
     /// the modern *managed* targets the worked example reaches (LANG77 /
     /// McCarthy L3b-3).
     WasmBackendError(String),
+    /// The JVM (Java class-file) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-jvm-class-file` (a validation failure, or
+    /// an op/type its lowering does not yet handle).  The JVM is the second of
+    /// the modern *managed* targets, replicating the WASM uniform-reference value
+    /// model with `Object`/`Integer` boxing (LANG77 / McCarthy W3).
+    JvmBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -195,6 +202,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
             LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
+            LangAotError::JvmBackendError(m) => write!(f, "jvm: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
@@ -424,6 +432,86 @@ pub fn compile_source_to_wasm(
         .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))?;
     iir_to_wasm::encode_module(&wasm)
         .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))
+}
+
+/// Retype a **scalar** module's `any`/`polymorphic`/`i64` values to JVM `i32`,
+/// for the JVM run-foundation (LANG77 / McCarthy W3a). Like
+/// `concretize_scalar_any_for_wasm`, but the managed target here is the JVM, and
+/// the in-repo `jvm-simulator` (used to verify) is a 32-bit integer machine — so
+/// a scalar program's entry returns `int` (`ireturn`), not `long`. We leave
+/// heap/reference functions alone (cons/symbols/lambda are W3b+, where the
+/// uniform-`Object` value model lands).
+fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || i.type_hint.starts_with("ref<")
+            });
+        if uses_lisp {
+            continue; // uniform-Object value model — JVM W3b+.
+        }
+        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        if to_i32(&func.return_type) {
+            func.return_type = "i32".to_string();
+        }
+        for instr in &mut func.instructions {
+            if to_i32(&instr.type_hint) {
+                instr.type_hint = "i32".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → **JVM class file** bytes (LANG77 / McCarthy W3).
+///
+/// The second of the modern *managed* `--emit` targets. The JVM has its own
+/// uniform-reference value model (`Object` references, `Integer` boxing) — the
+/// analogue of the WASM `anyref`/`i31ref` model. **W3a (this slice)** wires the
+/// pipeline and runs **scalar** programs: source → IIR → `concretize_scalar_any_for_jvm`
+/// → `iir-to-jvm-class-file` → a serialized `.class`. The cons/symbol/lambda value
+/// model (the uniform-`Object` replication of the WASM passes) lands in W3b+.
+///
+/// Verified end-to-end by *running* the emitted class's entry method on the
+/// in-repo `jvm-simulator` (see the `jvm_emit` tests) — no external `java`.
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `JvmBackendError` — `iir-to-jvm-class-file` rejected the (lowered) IIR.
+pub fn compile_source_to_jvm(
+    language: Language,
+    source: &str,
+    class_name: &str,
+) -> Result<Vec<u8>, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, class_name)?;
+    concretize_scalar_any_for_jvm(&mut module);
+
+    let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
+    let class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
+        .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))?;
+    Ok(iir_to_jvm_class_file::serialize_jvm_class_file(&class))
+}
+
+/// Cross-platform: source file → IIR → JVM class file (`.class`) on disk.
+///
+/// Thin wrapper over [`compile_source_to_jvm`]. Pair with `--emit=jvm`.
+pub fn compile_file_to_jvm(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("Main");
+    let bytes = compile_source_to_jvm(language, &source, stem)?;
+    std::fs::write(out, bytes)?;
+    Ok(())
 }
 
 /// Cross-platform: source file → IIR → WebAssembly binary (`.wasm`) on disk.

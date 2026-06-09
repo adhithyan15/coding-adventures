@@ -100,11 +100,20 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase B — JVM (replicate the uniform-ref model as `Object`)
 
-- ☐ **W3 — JVM cons (F2).** A `$LispyPair` class (two `Object` fields);
+- ✅ **W3a — JVM run-foundation (F1, scalar).** `lang-aot::compile_source_to_jvm` /
+  `compile_file_to_jvm` + `concretize_scalar_any_for_jvm` (scalar `any`/`i64` →
+  JVM `i32`) → `iir-to-jvm-class-file` → a serialized `.class`. **Verified by
+  RUNNING** — parse the emitted bytes (`jvm-class-file::parse_class_file`) and run
+  the entry method on the in-repo **`jvm-simulator`** (zero external `java`,
+  mirroring `wasm-runtime`): `42`→42, `0`→0, `7`→7, Twig `42`→42. Establishes the
+  JVM pipeline + run-verify harness that W3b+ build on.
+- ☐ **W3b — JVM cons (F2).** A `$LispyPair` class (two `Object` fields);
   `cons`/`car`/`cdr` → `new`/`getfield`/… ; integers boxed as `java.lang.Integer`
   (or a small `LispyInt`); `lower_lisp_repr_structural` adapted to JVM boxing.
-  `(CAR (CONS 7 9))` → 7, run on a JVM (or the in-repo class-file
-  verifier/interpreter, mirroring how wasm used `wasm-runtime`).
+  `(CAR (CONS 7 9))` → 7. NOTE: `jvm-simulator` is a 32-bit integer machine (no
+  object/heap execution), so W3b's run-verify needs either an extended simulator
+  or the real `java` (Temurin 21, available via mise + used in CI) — decide when
+  W3b starts.
 - ☐ **W4 — JVM `ATOM`/`EQ`/`COND` (F3–F5).** `instanceof $LispyPair` for `pair?`;
   `Integer.equals`/identity for `EQ`; truthiness for `COND`.
 - ☐ **W5 — JVM symbols + lambda (F6–F7).** Interned symbol objects; lambda →
