@@ -90,11 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-046: trailing comma in array (and object) literal
-    // should be dropped under WHITESPACE_ONLY. Upstream
-    // emits `var a=[1,2];` for `var a=[1,2,];`. Discovered
-    // by CLOC14.12.
-    ("trailing_array_comma", "gap-046: trailing literal comma drop"),
+    // gap-046 was RESOLVED in CLOC12.52 — `,` immediately
+    // before `]` is now suppressed. `minify_trailing_array_comma`
+    // flipped IGNORED → PASS. Object-literal trailing comma
+    // (gap-046b) deferred.
     // gap-047: synthetic `;` after function-decl `}` should
     // be suppressed when the next token is a keyword that
     // starts a new statement (var, function, etc.) — ASI

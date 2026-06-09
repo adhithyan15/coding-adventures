@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.58.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-046** (array case) — trailing comma in array
+  literal is now suppressed. Harness 86/89. Only gap-044
+  (lexer-level template substitution) and gap-047 (suppress
+  synthetic `;` before stmt-keyword) remain.
+- Top-of-loop check: when current is `,` AND next non-trivia
+  is `]`, skip the comma. Handles `[1,2,]` → `[1,2]` and
+  degenerate elision `[1,,]` → `[1,]` (matches upstream's
+  lossy normalisation under WHITESPACE_ONLY).
+- Object-literal case deferred to gap-046b.
+
+### Added
+- 6 inline `gap046_*` tests covering target, single-
+  element, inner-comma non-regression, elision
+  normalisation, call-expr non-regression, empty array.
+
 ## [0.57.0] - 2026-06-09
 
 ### Changed
