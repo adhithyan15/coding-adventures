@@ -64,6 +64,10 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationReviewItem` and `IntegrationActivationReviewSummary`
   for exposing human-review queue entries with review-ready and blocked
   rollups.
+- `IntegrationActivationApprovalPacket` and
+  `IntegrationActivationApprovalSummary` for bundling review rows with concrete
+  actions, grouped constraints, policy risk, and dependency blockers before a
+  human approval request.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
