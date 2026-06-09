@@ -856,6 +856,57 @@ pub struct IntegrationReadinessGapInventory {
     pub dependency_gaps: Vec<IntegrationReadinessDependencyGap>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDependencyNode {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub activation_target: IntegrationActivationTarget,
+    pub depends_on_integrations: Vec<IntegrationId>,
+    pub dependent_integration_ids: Vec<IntegrationId>,
+    pub missing_dependencies: Vec<IntegrationId>,
+    pub enabled: bool,
+    pub activation_ready: bool,
+    pub requires_human_review: bool,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDependencyEdge {
+    pub dependency_integration_id: IntegrationId,
+    pub dependent_integration_id: IntegrationId,
+    pub dependency_display_name: Option<String>,
+    pub dependent_display_name: String,
+    pub dependency_priority: Option<u8>,
+    pub dependent_priority: u8,
+    pub satisfied: bool,
+    pub blocks_activation: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDependencyGraph {
+    pub nodes: Vec<IntegrationActivationDependencyNode>,
+    pub edges: Vec<IntegrationActivationDependencyEdge>,
+    pub summary: IntegrationActivationDependencySummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDependencySummary {
+    pub total_nodes: usize,
+    pub enabled_nodes: usize,
+    pub activation_ready_nodes: usize,
+    pub blocked_nodes: usize,
+    pub nodes_with_dependencies: usize,
+    pub nodes_with_dependents: usize,
+    pub nodes_with_missing_dependencies: usize,
+    pub total_edges: usize,
+    pub satisfied_edges: usize,
+    pub blocking_edges: usize,
+    pub unknown_dependency_edges: usize,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -1057,6 +1108,91 @@ impl IntegrationReadinessGapInventory {
 
     pub fn total_unique_gaps(&self) -> usize {
         self.primitive_gap_count() + self.capability_gap_count() + self.dependency_gap_count()
+    }
+}
+
+impl IntegrationActivationDependencySummary {
+    pub fn from_graph(
+        nodes: &[IntegrationActivationDependencyNode],
+        edges: &[IntegrationActivationDependencyEdge],
+    ) -> Self {
+        let mut summary = Self {
+            total_nodes: nodes.len(),
+            enabled_nodes: 0,
+            activation_ready_nodes: 0,
+            blocked_nodes: 0,
+            nodes_with_dependencies: 0,
+            nodes_with_dependents: 0,
+            nodes_with_missing_dependencies: 0,
+            total_edges: edges.len(),
+            satisfied_edges: 0,
+            blocking_edges: 0,
+            unknown_dependency_edges: 0,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for node in nodes {
+            if node.enabled {
+                summary.enabled_nodes += 1;
+            }
+            if node.activation_ready {
+                summary.activation_ready_nodes += 1;
+            } else {
+                summary.blocked_nodes += 1;
+                summary.first_blocked_priority = Some(
+                    summary
+                        .first_blocked_priority
+                        .map_or(node.priority, |priority| priority.min(node.priority)),
+                );
+            }
+            if !node.depends_on_integrations.is_empty() {
+                summary.nodes_with_dependencies += 1;
+            }
+            if !node.dependent_integration_ids.is_empty() {
+                summary.nodes_with_dependents += 1;
+            }
+            if !node.missing_dependencies.is_empty() {
+                summary.nodes_with_missing_dependencies += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(node.highest_policy_tier);
+        }
+
+        for edge in edges {
+            if edge.satisfied {
+                summary.satisfied_edges += 1;
+            }
+            if edge.blocks_activation {
+                summary.blocking_edges += 1;
+            }
+            if edge.dependency_display_name.is_none() {
+                summary.unknown_dependency_edges += 1;
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_nodes == 0
+    }
+
+    pub fn has_dependency_edges(&self) -> bool {
+        self.total_edges > 0
+    }
+
+    pub fn has_blocking_dependencies(&self) -> bool {
+        self.blocking_edges > 0
+    }
+}
+
+impl IntegrationActivationDependencyGraph {
+    pub fn is_empty(&self) -> bool {
+        self.summary.is_empty()
+    }
+
+    pub fn has_blocking_dependencies(&self) -> bool {
+        self.summary.has_blocking_dependencies()
     }
 }
 
@@ -2877,6 +3013,98 @@ pub fn activation_runway_at_or_before_priority(
     ))
 }
 
+pub fn activation_dependency_graph_from_reports<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationDependencyGraph {
+    let reports = reports.into_iter().cloned().collect::<Vec<_>>();
+    let mut dependent_ids_by_dependency: BTreeMap<IntegrationId, BTreeSet<IntegrationId>> =
+        BTreeMap::new();
+    let mut edges = Vec::new();
+
+    for report in &reports {
+        for dependency_id in activation_dependency_ids_for_report(catalog, report) {
+            dependent_ids_by_dependency
+                .entry(dependency_id.clone())
+                .or_default()
+                .insert(report.requested_integration_id.clone());
+            let dependency = find_entry(catalog, &dependency_id);
+            let satisfied = enabled_integrations
+                .iter()
+                .any(|enabled| enabled == &dependency_id);
+            edges.push(IntegrationActivationDependencyEdge {
+                dependency_integration_id: dependency_id,
+                dependent_integration_id: report.requested_integration_id.clone(),
+                dependency_display_name: dependency.map(|entry| entry.display_name.clone()),
+                dependent_display_name: report.display_name.clone(),
+                dependency_priority: dependency.map(|entry| entry.priority),
+                dependent_priority: report.priority,
+                satisfied,
+                blocks_activation: !satisfied,
+            });
+        }
+    }
+
+    let mut nodes = reports
+        .iter()
+        .map(|report| {
+            let integration_id = report.requested_integration_id.clone();
+            let mut depends_on_integrations = activation_dependency_ids_for_report(catalog, report);
+            depends_on_integrations.sort();
+            depends_on_integrations.dedup();
+            let dependent_integration_ids = dependent_ids_by_dependency
+                .remove(&integration_id)
+                .map(|ids| ids.into_iter().collect())
+                .unwrap_or_default();
+            let enabled = enabled_integrations
+                .iter()
+                .any(|enabled| enabled == &integration_id);
+
+            IntegrationActivationDependencyNode {
+                integration_id,
+                display_name: report.display_name.clone(),
+                priority: report.priority,
+                activation_target: report.activation_target.clone(),
+                depends_on_integrations,
+                dependent_integration_ids,
+                missing_dependencies: report.missing_dependencies.clone(),
+                enabled,
+                activation_ready: report.activation_ready(),
+                requires_human_review: report.requires_human_review,
+                highest_policy_tier: report.highest_policy_tier,
+            }
+        })
+        .collect::<Vec<_>>();
+
+    nodes.sort_by(compare_activation_dependency_nodes);
+    edges.sort_by(compare_activation_dependency_edges);
+    let summary = IntegrationActivationDependencySummary::from_graph(&nodes, &edges);
+
+    IntegrationActivationDependencyGraph {
+        nodes,
+        edges,
+        summary,
+    }
+}
+
+pub fn activation_dependency_graph_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationActivationDependencyGraph {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations)
+}
+
 pub fn readiness_gap_inventory_from_reports<'a>(
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
 ) -> IntegrationReadinessGapInventory {
@@ -3808,6 +4036,24 @@ fn missing_dependencies_for_plan(
         .collect()
 }
 
+fn activation_dependency_ids_for_report(
+    catalog: &[IntegrationCatalogEntry],
+    report: &IntegrationReadinessReport,
+) -> Vec<IntegrationId> {
+    let mut dependencies =
+        activation_plan_for_integration(catalog, &report.requested_integration_id)
+            .map(|plan| plan.depends_on_integrations)
+            .unwrap_or_default();
+    if let IntegrationActivationTarget::DelegatedIntegration(target) = &report.activation_target {
+        if !dependencies.contains(target) {
+            dependencies.push(target.clone());
+        }
+    }
+    dependencies.sort();
+    dependencies.dedup();
+    dependencies
+}
+
 fn dedupe_policy_surfaces(
     surfaces: Vec<IntegrationPolicySurface>,
 ) -> Vec<IntegrationPolicySurface> {
@@ -3892,6 +4138,36 @@ fn compare_activation_actions(
         })
         .then_with(|| left.primitive.cmp(&right.primitive))
         .then_with(|| left.capability_id.cmp(&right.capability_id))
+        .then_with(|| {
+            left.dependency_integration_id
+                .cmp(&right.dependency_integration_id)
+        })
+}
+
+fn compare_activation_dependency_nodes(
+    left: &IntegrationActivationDependencyNode,
+    right: &IntegrationActivationDependencyNode,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.display_name.cmp(&right.display_name))
+        .then_with(|| left.integration_id.cmp(&right.integration_id))
+}
+
+fn compare_activation_dependency_edges(
+    left: &IntegrationActivationDependencyEdge,
+    right: &IntegrationActivationDependencyEdge,
+) -> Ordering {
+    left.dependent_priority
+        .cmp(&right.dependent_priority)
+        .then_with(|| {
+            left.dependent_display_name
+                .cmp(&right.dependent_display_name)
+        })
+        .then_with(|| {
+            left.dependent_integration_id
+                .cmp(&right.dependent_integration_id)
+        })
         .then_with(|| {
             left.dependency_integration_id
                 .cmp(&right.dependency_integration_id)
@@ -4721,6 +4997,76 @@ mod tests {
             && gap
                 .requested_integration_ids
                 .contains(&IntegrationId::trusted("tasmota"))));
+    }
+
+    #[test]
+    fn activation_dependency_graph_tracks_satisfied_and_blocking_edges() {
+        let catalog = first_party_catalog();
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+        ];
+        let graph = activation_dependency_graph_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[IntegrationId::trusted("mqtt")],
+        );
+
+        assert!(!graph.is_empty());
+        assert!(graph.summary.has_dependency_edges());
+        assert!(graph.summary.satisfied_edges > 0);
+        assert!(graph.summary.blocking_edges > 0);
+        assert!(graph.summary.nodes_with_dependencies > 0);
+        assert!(graph.summary.nodes_with_dependents > 0);
+        assert!(graph.summary.nodes_with_missing_dependencies > 0);
+
+        let tasmota = graph
+            .nodes
+            .iter()
+            .find(|node| node.integration_id == IntegrationId::trusted("tasmota"))
+            .unwrap();
+        assert!(tasmota
+            .depends_on_integrations
+            .contains(&IntegrationId::trusted("mqtt")));
+        assert!(tasmota.missing_dependencies.is_empty());
+
+        let tapo = graph
+            .nodes
+            .iter()
+            .find(|node| node.integration_id == IntegrationId::trusted("tplink_tapo"))
+            .unwrap();
+        assert!(tapo
+            .missing_dependencies
+            .contains(&IntegrationId::trusted("tplink")));
+
+        let satisfied = graph
+            .edges
+            .iter()
+            .find(|edge| {
+                edge.dependent_integration_id == IntegrationId::trusted("tasmota")
+                    && edge.dependency_integration_id == IntegrationId::trusted("mqtt")
+            })
+            .unwrap();
+        assert!(satisfied.satisfied);
+        assert!(!satisfied.blocks_activation);
+
+        let blocked = graph
+            .edges
+            .iter()
+            .find(|edge| {
+                edge.dependent_integration_id == IntegrationId::trusted("tplink_tapo")
+                    && edge.dependency_integration_id == IntegrationId::trusted("tplink")
+            })
+            .unwrap();
+        assert!(!blocked.satisfied);
+        assert!(blocked.blocks_activation);
+        assert_eq!(
+            blocked.dependency_display_name.as_deref(),
+            Some("TP-Link Smart Home")
+        );
     }
 
     #[test]
