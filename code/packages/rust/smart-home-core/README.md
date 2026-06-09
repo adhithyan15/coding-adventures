@@ -54,6 +54,8 @@ Current scope:
   and compact activation-plan rollups
 - D18D integration activation-candidate descriptors for ranked ready, review,
   and blocked rollout planning
+- D18D integration activation-action descriptors for concrete activate,
+  policy-review, primitive, capability, and dependency work planning
 - D18D integration activation-runway descriptors for rollout-priority wave
   grouping and compact actionable/blocker summaries
 - D18D integration-readiness descriptors for bulk activation blocker reports
