@@ -315,9 +315,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-042 — `do` keyword should arm body_position_next
 
-- **Status:** OPEN — newly discovered by CLOC14.8.
-- **Upstream byte-identity test:** `minify_do_while` seed fixture.
-- **Why it fails:** Upstream emits `do a;while(x);` for `do{a;}while(x);`. closurec emits `do{a}while(x);`. The state machine arms `body_position_next = true` for `if`/`while`/`for` (and indirectly for `else`), but not for `do`. As a result gap-032's single-statement flatten doesn't fire on the do-body.
+- **Status:** **RESOLVED** in CLOC12.49 (PR pending). `minify_do_while` flipped IGNORED → PASS. Harness 56/57 (only gap-043 left).
+- **Resolution:** Added `else if val == "do"` branch arming `body_position_next = true`. Unlike `if`/`while`/`for` which arm via the `next_paren_is_control_flow_head` mechanism (their body opens after `)`), `do` opens its body slot IMMEDIATELY per §13.7.2. gap-032's single-statement flatten then fires correctly. 2 inline tests added; also documented a separate latent issue with empty-body do-while (`do{}while(x);` produces a spurious space between `;` and `while`) that's a `prev_emitted_tok` update bug in gap-031, orthogonal to this gap.
 - **What it needs:** Add `do` to the keyword arm list (alongside `if`/`while`/`for`) — but note `do` arms body_position_next IMMEDIATELY (no following `(`), unlike the others. Insert at the right `else if val == "do"` branch arming `body_position_next = true`.
 
 ### gap-043 — CLI quote-choice optimisation

@@ -85,12 +85,10 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-042: `do` keyword should arm body_position_next
-    // so that single-statement do-bodies flatten via
-    // gap-032 (just like `if`/`while`/`for`). Upstream
-    // emits `do a;while(x);` for `do{a;}while(x);`.
-    // Discovered by CLOC14.8.
-    ("do_while", "gap-042: do-keyword should arm body_position_next"),
+    // gap-042 was RESOLVED in CLOC12.49 — `do` keyword now
+    // arms body_position_next, so gap-032's single-statement
+    // flatten fires on `do{a;}while(x);` → `do a;while(x);`.
+    // `minify_do_while` flipped IGNORED → PASS.
     // gap-043: CLI quote-choice optimisation for string
     // literals. Upstream switches to `'` when content has
     // escaped `"` characters (saves the backslash). The
