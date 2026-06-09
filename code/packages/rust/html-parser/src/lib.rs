@@ -833,6 +833,7 @@ pub struct BrowserDocument {
     pub scripts: Vec<BrowserScript>,
     pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
+    pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
@@ -1095,6 +1096,34 @@ pub struct BrowserStylesheet {
     pub blocking: Option<String>,
     pub blocking_tokens: Vec<String>,
     pub text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStylesheetPlanningDescriptor {
+    pub source: String,
+    pub stylesheet_kind: String,
+    pub href: Option<String>,
+    pub resolved_href: Option<String>,
+    pub rel: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub rel_token_count: usize,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub disabled: bool,
+    pub alternate: bool,
+    pub applies_by_default: bool,
+    pub integrity: Option<String>,
+    pub crossorigin: Option<String>,
+    pub nonce: Option<String>,
+    pub referrerpolicy: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub blocking_token_count: usize,
+    pub render_blocking: bool,
+    pub has_text: bool,
+    pub text_length: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2724,6 +2753,8 @@ impl BrowserDocument {
         );
         summary.script_execution_descriptors =
             browser_script_execution_descriptors(&summary.scripts);
+        summary.stylesheet_planning_descriptors =
+            browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
@@ -10496,6 +10527,58 @@ fn browser_script_execution_descriptor(script: &BrowserScript) -> BrowserScriptE
             .iter()
             .any(|token| token.eq_ignore_ascii_case("render")),
         has_text: script.text.is_some(),
+        text_length,
+    }
+}
+
+fn browser_stylesheet_planning_descriptors(
+    stylesheets: &[BrowserStylesheet],
+) -> Vec<BrowserStylesheetPlanningDescriptor> {
+    stylesheets
+        .iter()
+        .map(browser_stylesheet_planning_descriptor)
+        .collect()
+}
+
+fn browser_stylesheet_planning_descriptor(
+    stylesheet: &BrowserStylesheet,
+) -> BrowserStylesheetPlanningDescriptor {
+    let text_length = stylesheet
+        .text
+        .as_ref()
+        .map(|text| text.chars().count())
+        .unwrap_or_default();
+    BrowserStylesheetPlanningDescriptor {
+        source: stylesheet.source.clone(),
+        stylesheet_kind: if stylesheet.href.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        href: stylesheet.href.clone(),
+        resolved_href: stylesheet.resolved_href.clone(),
+        rel: stylesheet.rel.clone(),
+        rel_tokens: stylesheet.rel_tokens.clone(),
+        rel_token_count: stylesheet.rel_tokens.len(),
+        type_hint: stylesheet.type_hint.clone(),
+        media: stylesheet.media.clone(),
+        title: stylesheet.title.clone(),
+        disabled: stylesheet.disabled,
+        alternate: stylesheet.alternate,
+        applies_by_default: !stylesheet.disabled && !stylesheet.alternate,
+        integrity: stylesheet.integrity.clone(),
+        crossorigin: stylesheet.crossorigin.clone(),
+        nonce: stylesheet.nonce.clone(),
+        referrerpolicy: stylesheet.referrerpolicy.clone(),
+        fetchpriority: stylesheet.fetchpriority.clone(),
+        blocking: stylesheet.blocking.clone(),
+        blocking_tokens: stylesheet.blocking_tokens.clone(),
+        blocking_token_count: stylesheet.blocking_tokens.len(),
+        render_blocking: stylesheet
+            .blocking_tokens
+            .iter()
+            .any(|token| token.eq_ignore_ascii_case("render")),
+        has_text: stylesheet.text.is_some(),
         text_length,
     }
 }
@@ -19409,6 +19492,61 @@ mod tests {
         assert_eq!(inline_style.source, "style");
         assert_eq!(inline_style.media.as_deref(), Some("print"));
         assert_eq!(inline_style.text.as_deref(), Some("body { color: black; }"));
+
+        assert_eq!(summary.stylesheet_planning_descriptors.len(), 3);
+        let main_descriptor = &summary.stylesheet_planning_descriptors[0];
+        assert_eq!(main_descriptor.source, "link");
+        assert_eq!(main_descriptor.stylesheet_kind, "external");
+        assert_eq!(main_descriptor.href.as_deref(), Some("app.css"));
+        assert_eq!(
+            main_descriptor.resolved_href.as_deref(),
+            Some("https://example.test/app/app.css")
+        );
+        assert_eq!(
+            main_descriptor.rel_tokens,
+            vec!["stylesheet".to_string(), "preload".to_string()]
+        );
+        assert_eq!(main_descriptor.rel_token_count, 2);
+        assert_eq!(main_descriptor.media.as_deref(), Some("screen"));
+        assert_eq!(main_descriptor.title.as_deref(), Some("main"));
+        assert!(main_descriptor.applies_by_default);
+        assert!(!main_descriptor.alternate);
+        assert!(!main_descriptor.disabled);
+        assert_eq!(main_descriptor.integrity.as_deref(), Some("sha256-css"));
+        assert_eq!(main_descriptor.crossorigin.as_deref(), Some("anonymous"));
+        assert_eq!(main_descriptor.nonce, None);
+        assert_eq!(
+            main_descriptor.referrerpolicy.as_deref(),
+            Some("no-referrer")
+        );
+        assert_eq!(main_descriptor.fetchpriority.as_deref(), Some("high"));
+        assert_eq!(main_descriptor.blocking.as_deref(), Some("render"));
+        assert_eq!(main_descriptor.blocking_tokens, vec!["render"]);
+        assert_eq!(main_descriptor.blocking_token_count, 1);
+        assert!(main_descriptor.render_blocking);
+        assert!(!main_descriptor.has_text);
+        assert_eq!(main_descriptor.text_length, 0);
+
+        let alternate_descriptor = &summary.stylesheet_planning_descriptors[1];
+        assert_eq!(alternate_descriptor.stylesheet_kind, "external");
+        assert!(alternate_descriptor.alternate);
+        assert!(alternate_descriptor.disabled);
+        assert!(!alternate_descriptor.applies_by_default);
+        assert_eq!(alternate_descriptor.rel_token_count, 2);
+        assert!(!alternate_descriptor.render_blocking);
+
+        let inline_descriptor = &summary.stylesheet_planning_descriptors[2];
+        assert_eq!(inline_descriptor.source, "style");
+        assert_eq!(inline_descriptor.stylesheet_kind, "inline");
+        assert_eq!(inline_descriptor.media.as_deref(), Some("print"));
+        assert_eq!(inline_descriptor.title.as_deref(), Some("print"));
+        assert_eq!(inline_descriptor.nonce, None);
+        assert!(inline_descriptor.applies_by_default);
+        assert!(inline_descriptor.has_text);
+        assert_eq!(
+            inline_descriptor.text_length,
+            "body { color: black; }".chars().count()
+        );
 
         assert_eq!(summary.scripts.len(), 4);
         let module_script = &summary.scripts[0];

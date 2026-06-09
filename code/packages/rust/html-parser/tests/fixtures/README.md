@@ -46,10 +46,10 @@ annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
 flattened playback descriptors with source/track counts.
 Script/style cases pin module/classic script kind, async/defer/nomodule flags,
-inline script/style text, flattened script execution descriptors, and
-loading-policy hints such as integrity, crossorigin, referrer policy, fetch
-priority, blocking, disabled state, and alternate stylesheets. Responsive image
-cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
+inline script/style text, flattened script execution and stylesheet planning
+descriptors, and loading-policy hints such as integrity, crossorigin, referrer
+policy, fetch priority, blocking, disabled state, and alternate stylesheets.
+Responsive image cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
 descriptors, `picture/source` media/type hints, lazy loading, decoding, fetch
 priority, CORS/referrer policy, usemap, and server-side image-map state. Link
 resource cases pin relation-derived resource kinds, `as` hints,
