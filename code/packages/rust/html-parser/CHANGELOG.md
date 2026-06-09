@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness selection-interaction descriptors now expose `onselect` and
+  selection-change handlers, input hooks, editing hosts, text controls, and
+  blocked selection paths as a flat browser-planning inventory.
 - Browser-readiness clipboard-interaction descriptors now expose copy/cut/paste
   handlers, input hooks, editing hosts, text controls, and blocked clipboard
   paths as a flat browser-planning inventory.

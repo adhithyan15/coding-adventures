@@ -867,6 +867,7 @@ pub struct BrowserDocument {
     pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
     pub drag_drop_descriptors: Vec<BrowserDragDropDescriptor>,
     pub clipboard_interaction_descriptors: Vec<BrowserClipboardInteractionDescriptor>,
+    pub selection_interaction_descriptors: Vec<BrowserSelectionInteractionDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2439,6 +2440,37 @@ pub struct BrowserClipboardInteractionDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSelectionInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub selection_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub selection_handlers: Vec<String>,
+    pub select_handlers: Vec<String>,
+    pub selection_change_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub selection_blocked: bool,
+    pub selection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -3051,6 +3083,8 @@ impl BrowserDocument {
         summary.drag_drop_descriptors = browser_drag_drop_descriptors(&summary);
         summary.clipboard_interaction_descriptors =
             browser_clipboard_interaction_descriptors(&summary);
+        summary.selection_interaction_descriptors =
+            browser_selection_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -13880,6 +13914,332 @@ fn browser_clipboard_kind(
     }
 }
 
+fn browser_selection_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserSelectionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_selection_state(text_entry, matching_interactive) {
+                descriptors.push(browser_selection_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_selection_state(element) {
+            descriptors.push(browser_selection_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_selection_state(event_descriptor) {
+            descriptors.push(browser_selection_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_selection_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(
+                        &element.event_handlers,
+                        browser_selection_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_selection_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_selection_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event)
+        .is_empty()
+}
+
+fn browser_selection_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserSelectionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let selection_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_event);
+    let select_handlers = browser_event_handlers_by_kind(event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_input_event);
+    let selection_block_reasons =
+        browser_selection_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserSelectionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        selection_kind: browser_selection_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_input_event);
+    let selection_block_reasons = browser_selection_block_reasons_for_interactive(element);
+
+    BrowserSelectionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_select_event);
+    let selection_change_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_selection_change_event,
+    );
+    let input_handlers = Vec::new();
+    let selection_block_reasons = Vec::new();
+
+    BrowserSelectionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: selection_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        selection_blocked: false,
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_selection_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_selection_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_selection_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    select_handlers: &[String],
+    selection_change_handlers: &[String],
+    input_handlers: &[String],
+    selection_block_reasons: &[String],
+) -> String {
+    if !selection_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !selection_change_handlers.is_empty() {
+        "selection-change".to_string()
+    } else if !select_handlers.is_empty() {
+        "select-handler".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-selection".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -15751,6 +16111,30 @@ fn browser_cut_event(handler: &str) -> bool {
 
 fn browser_paste_event(handler: &str) -> bool {
     handler == "onpaste"
+}
+
+fn browser_selection_event(handler: &str) -> bool {
+    matches!(handler, "onselect" | "onselectionchange")
+}
+
+fn browser_select_event(handler: &str) -> bool {
+    handler == "onselect"
+}
+
+fn browser_selection_change_event(handler: &str) -> bool {
+    handler == "onselectionchange"
+}
+
+fn browser_selection_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
 }
 
 fn browser_input_event(handler: &str) -> bool {
@@ -21478,6 +21862,73 @@ mod tests {
             .expect("surface event-only clipboard descriptor");
         assert_eq!(surface.clipboard_kind, "copy-source");
         assert_eq!(surface.copy_handlers, vec!["oncopy"]);
+    }
+
+    #[test]
+    fn browser_selection_interaction_descriptors_track_text_editing_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <input id=q name=q value=Draft onselect=selectQuery() oninput=filter()>\
+             <textarea id=notes readonly onselect=selectNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only onselectionchange=selectEdit() \
+             onbeforeinput=beforeEdit()>Draft</div>\
+             <p id=secret hidden contenteditable onselect=selectSecret()>Secret</p>\
+             <main id=surface onselect=selectSurface()>Surface</main></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.selection_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query selection descriptor");
+        assert_eq!(query.selection_kind, "select-handler");
+        assert_eq!(query.select_handlers, vec!["onselect"]);
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.handler_count, 2);
+        assert!(!query.selection_blocked);
+
+        let notes = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes selection descriptor");
+        assert_eq!(notes.selection_kind, "blocked");
+        assert_eq!(notes.select_handlers, vec!["onselect"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.selection_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor selection descriptor");
+        assert_eq!(editor.selection_kind, "selection-change");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.selection_change_handlers, vec!["onselectionchange"]);
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(editor.handler_count, 2);
+
+        let secret = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret selection descriptor");
+        assert_eq!(secret.selection_kind, "blocked");
+        assert_eq!(secret.select_handlers, vec!["onselect"]);
+        assert_eq!(secret.selection_block_reasons, vec!["hidden"]);
+
+        let surface = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("surface"))
+            .expect("surface event-only selection descriptor");
+        assert_eq!(surface.selection_kind, "select-handler");
+        assert_eq!(surface.select_handlers, vec!["onselect"]);
     }
 
     #[test]

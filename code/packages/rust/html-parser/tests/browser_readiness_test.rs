@@ -21,9 +21,9 @@ use coding_adventures_html_parser::{
     BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
     BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -139,6 +139,8 @@ struct ExpectedBrowserDocument {
     drag_drop_descriptors: Option<Vec<ExpectedDragDropDescriptor>>,
     #[serde(default)]
     clipboard_interaction_descriptors: Option<Vec<ExpectedClipboardInteractionDescriptor>>,
+    #[serde(default)]
+    selection_interaction_descriptors: Option<Vec<ExpectedSelectionInteractionDescriptor>>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
@@ -2241,6 +2243,62 @@ struct ExpectedClipboardInteractionDescriptor {
     clipboard_blocked: bool,
     #[serde(default)]
     clipboard_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedSelectionInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    selection_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    selection_handlers: Vec<String>,
+    #[serde(default)]
+    select_handlers: Vec<String>,
+    #[serde(default)]
+    selection_change_handlers: Vec<String>,
+    #[serde(default)]
+    input_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    selection_blocked: bool,
+    #[serde(default)]
+    selection_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4454,6 +4512,28 @@ fn browser_clipboard_interaction_descriptors_track_editing_handlers_and_blockers
 }
 
 #[test]
+fn browser_selection_interaction_descriptors_track_editing_handlers_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive selection fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive selection fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.selection_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .selection_interaction_descriptors,
+        "selection-interaction descriptors should preserve select handlers, selection-change hooks, editing hosts, and blocked selection paths",
+    );
+}
+
+#[test]
 fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4879,6 +4959,23 @@ impl ExpectedBrowserDocument {
                     &event_handler_descriptors,
                 )
             });
+        let selection_interaction_descriptors = self
+            .selection_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedSelectionInteractionDescriptor::into_browser_selection_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_selection_interaction_descriptors(
+                    &forms,
+                    &interactive_elements,
+                    &event_handler_descriptors,
+                )
+            });
 
         BrowserDocument {
             title: self.title,
@@ -5001,6 +5098,7 @@ impl ExpectedBrowserDocument {
             input_planning_descriptors,
             drag_drop_descriptors,
             clipboard_interaction_descriptors,
+            selection_interaction_descriptors,
             disclosures,
             disclosure_state_descriptors,
             component_hydration_targets: self
@@ -6999,6 +7097,333 @@ fn expected_clipboard_kind(
     }
 }
 
+fn expected_selection_interaction_descriptors(
+    forms: &[BrowserForm],
+    interactive_elements: &[BrowserInteractiveElement],
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserSelectionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if expected_text_entry_has_selection_state(text_entry, matching_interactive) {
+                descriptors.push(expected_selection_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if expected_interactive_has_selection_state(element) {
+            descriptors.push(expected_selection_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if expected_event_descriptor_has_selection_state(event_descriptor) {
+            descriptors.push(expected_selection_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn expected_text_entry_has_selection_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !expected_event_handlers_by_kind(&element.event_handlers, expected_selection_event)
+                    .is_empty()
+                    || !expected_event_handlers_by_kind(
+                        &element.event_handlers,
+                        expected_selection_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn expected_interactive_has_selection_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !expected_event_handlers_by_kind(&element.event_handlers, expected_selection_event)
+            .is_empty()
+}
+
+fn expected_event_descriptor_has_selection_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_selection_event)
+        .is_empty()
+}
+
+fn expected_selection_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserSelectionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let selection_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_selection_event);
+    let select_handlers = expected_event_handlers_by_kind(event_handlers, expected_select_event);
+    let selection_change_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_selection_change_event);
+    let input_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_selection_input_event);
+    let selection_block_reasons =
+        expected_selection_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserSelectionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        selection_kind: expected_selection_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn expected_selection_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_selection_event);
+    let select_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_select_event);
+    let selection_change_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_selection_change_event);
+    let input_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_selection_input_event);
+    let selection_block_reasons = expected_selection_block_reasons_for_interactive(element);
+
+    BrowserSelectionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        selection_kind: expected_selection_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn expected_selection_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_selection_event);
+    let select_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_select_event);
+    let selection_change_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_selection_change_event,
+    );
+    let input_handlers = Vec::new();
+    let selection_block_reasons = Vec::new();
+
+    BrowserSelectionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        selection_kind: expected_selection_kind(
+            false,
+            false,
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: selection_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        selection_blocked: false,
+        selection_block_reasons,
+    }
+}
+
+fn expected_selection_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(expected_selection_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn expected_selection_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn expected_selection_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    select_handlers: &[String],
+    selection_change_handlers: &[String],
+    input_handlers: &[String],
+    selection_block_reasons: &[String],
+) -> String {
+    if !selection_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !selection_change_handlers.is_empty() {
+        "selection-change".to_string()
+    } else if !select_handlers.is_empty() {
+        "select-handler".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-selection".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
 fn expected_tabindex_order(tabindex: Option<&str>) -> Option<i32> {
     tabindex.and_then(|tabindex| tabindex.trim().parse::<i32>().ok())
 }
@@ -7056,6 +7481,30 @@ fn expected_cut_event(handler: &str) -> bool {
 
 fn expected_paste_event(handler: &str) -> bool {
     handler == "onpaste"
+}
+
+fn expected_selection_event(handler: &str) -> bool {
+    matches!(handler, "onselect" | "onselectionchange")
+}
+
+fn expected_select_event(handler: &str) -> bool {
+    handler == "onselect"
+}
+
+fn expected_selection_change_event(handler: &str) -> bool {
+    handler == "onselectionchange"
+}
+
+fn expected_selection_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
 }
 
 fn expected_script_execution_descriptors(
@@ -8368,6 +8817,42 @@ impl ExpectedClipboardInteractionDescriptor {
             aria_hidden: self.aria_hidden,
             clipboard_blocked: self.clipboard_blocked,
             clipboard_block_reasons: self.clipboard_block_reasons,
+        }
+    }
+}
+
+impl ExpectedSelectionInteractionDescriptor {
+    fn into_browser_selection_interaction_descriptor(
+        self,
+    ) -> BrowserSelectionInteractionDescriptor {
+        BrowserSelectionInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            selection_kind: self.selection_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            value: self.value,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            spellcheck: self.spellcheck,
+            selection_handlers: self.selection_handlers,
+            select_handlers: self.select_handlers,
+            selection_change_handlers: self.selection_change_handlers,
+            input_handlers: self.input_handlers,
+            handler_count: self.handler_count,
+            focusable: self.focusable,
+            readonly: self.readonly,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            selection_blocked: self.selection_blocked,
+            selection_block_reasons: self.selection_block_reasons,
         }
     }
 }
