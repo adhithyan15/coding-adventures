@@ -150,6 +150,20 @@ fn algol_conditional_expressions_emit_and_run_on_wasm() {
     assert_eq!(result, vec![42], "ALGOL conditional expressions should return 42");
 }
 
+#[test]
+fn algol_nested_blocks_emit_and_run_on_wasm() {
+    let source = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_nested_blocks")
+        .expect("ALGOL nested blocks should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL nested blocks)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL nested-block wasm must run");
+    assert_eq!(result, vec![42], "ALGOL nested blocks should return 42");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result

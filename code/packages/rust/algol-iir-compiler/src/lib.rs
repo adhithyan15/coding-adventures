@@ -6,8 +6,8 @@
 //!
 //! The first slice is intentionally conservative: it supports scalar
 //! `integer` and `boolean` programs only. ALGOL features that need a richer
-//! runtime model, such as arrays, procedures, strings, reals, switches, nested
-//! declaration scopes, and by-name calls, fail with explicit errors instead of
+//! runtime model, such as arrays, procedures, strings, reals, switches, and
+//! by-name calls, fail with explicit errors instead of
 //! silently producing partial IR.
 
 #![warn(missing_docs)]
@@ -141,6 +141,12 @@ struct ExprValue {
     ty: ScalarType,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct VarBinding {
+    slot: String,
+    ty: ScalarType,
+}
+
 #[derive(Debug, Clone)]
 enum Piece<'a> {
     Node(&'a GrammarASTNode),
@@ -151,7 +157,8 @@ struct Compiler {
     instrs: Vec<IIRInstr>,
     source_map: Vec<SourceLoc>,
     current_loc: Cell<SourceLoc>,
-    vars: HashMap<String, ScalarType>,
+    scopes: Vec<HashMap<String, VarBinding>>,
+    scope_counter: usize,
     temp_counter: usize,
     label_counter: usize,
     register_names: HashSet<String>,
@@ -165,7 +172,8 @@ impl Default for Compiler {
             instrs: Vec::new(),
             source_map: Vec::new(),
             current_loc: Cell::new(SourceLoc::SYNTHETIC),
-            vars: HashMap::new(),
+            scopes: vec![HashMap::new()],
+            scope_counter: 0,
             temp_counter: 0,
             label_counter: 0,
             register_names: HashSet::new(),
@@ -185,8 +193,13 @@ impl Compiler {
             }
         }
 
-        let (return_type, return_src) = match self.vars.get("result").copied() {
-            Some(ty) => (ty.iir(), Operand::Var("result".to_string())),
+        let (return_type, return_src) = match self
+            .scopes
+            .first()
+            .and_then(|scope| scope.get("result"))
+            .cloned()
+        {
+            Some(binding) => (binding.ty.iir(), Operand::Var(binding.slot)),
             None => {
                 self.emit(IIRInstr::new(
                     "const",
@@ -228,14 +241,8 @@ impl Compiler {
     fn emit_block(&mut self, node: &GrammarASTNode, is_root: bool) -> Result<(), CompileError> {
         self.set_loc(node);
 
-        if !is_root
-            && direct_nodes(node)
-                .iter()
-                .any(|n| n.rule_name == "declaration")
-        {
-            return Err(CompileError::Unsupported(
-                "nested block declarations and lexical scope".into(),
-            ));
+        if !is_root {
+            self.push_scope();
         }
 
         for child in direct_nodes(node) {
@@ -247,6 +254,9 @@ impl Compiler {
             if child.rule_name == "statement" {
                 self.emit_statement(child)?;
             }
+        }
+        if !is_root {
+            self.pop_scope();
         }
         Ok(())
     }
@@ -273,15 +283,10 @@ impl Compiler {
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
-            if self.vars.insert(name.clone(), ty).is_some() {
-                return Err(CompileError::Type(format!(
-                    "duplicate declaration for {name:?}"
-                )));
-            }
-            self.register_names.insert(name.clone());
+            let slot = self.declare_var(&name, ty)?;
             self.emit(IIRInstr::new(
                 "const",
-                Some(name),
+                Some(slot),
                 vec![ty.default_operand()],
                 ty.iir(),
             ));
@@ -378,19 +383,19 @@ impl Compiler {
             let var_node = first_direct_node(left, "variable")
                 .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
             let name = self.simple_variable_name(var_node)?;
-            let expected = self.require_var(&name)?;
-            if expected != rhs.ty {
+            let binding = self.require_var(&name)?;
+            if binding.ty != rhs.ty {
                 return Err(CompileError::Type(format!(
                     "cannot assign {} expression to {} variable {name:?}",
                     rhs.ty.name(),
-                    expected.name()
+                    binding.ty.name()
                 )));
             }
             self.emit(IIRInstr::new(
                 "mov",
-                Some(name),
+                Some(binding.slot),
                 vec![Operand::Var(rhs.slot.clone())],
-                expected.iir(),
+                binding.ty.iir(),
             ));
         }
         Ok(())
@@ -475,8 +480,8 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
-        let var_ty = self.require_var(&var_name)?;
-        if var_ty != ScalarType::Integer {
+        let var_binding = self.require_var(&var_name)?;
+        if var_binding.ty != ScalarType::Integer {
             return Err(CompileError::Type(format!(
                 "for variable {var_name:?} must be integer"
             )));
@@ -497,7 +502,7 @@ impl Compiler {
             .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
 
         for elem in elems {
-            self.emit_for_element(&var_name, elem, body)?;
+            self.emit_for_element(&var_binding.slot, elem, body)?;
         }
         Ok(())
     }
@@ -689,8 +694,11 @@ impl Compiler {
         match node.rule_name.as_str() {
             "variable" => {
                 let name = self.simple_variable_name(node)?;
-                let ty = self.require_var(&name)?;
-                Ok(ExprValue { slot: name, ty })
+                let binding = self.require_var(&name)?;
+                Ok(ExprValue {
+                    slot: binding.slot,
+                    ty: binding.ty,
+                })
             }
             "proc_call" => Err(CompileError::Unsupported(
                 "procedure calls in expressions".into(),
@@ -910,8 +918,11 @@ impl Compiler {
             }
             ("NAME", _) => {
                 let name = token.value.clone();
-                let ty = self.require_var(&name)?;
-                Ok(ExprValue { slot: name, ty })
+                let binding = self.require_var(&name)?;
+                Ok(ExprValue {
+                    slot: binding.slot,
+                    ty: binding.ty,
+                })
             }
             _ => Err(CompileError::Malformed(format!(
                 "unexpected atom token {} {:?}",
@@ -1189,10 +1200,49 @@ impl Compiler {
         name
     }
 
-    fn require_var(&self, name: &str) -> Result<ScalarType, CompileError> {
-        self.vars
-            .get(name)
-            .copied()
+    fn push_scope(&mut self) {
+        self.scope_counter += 1;
+        self.scopes.push(HashMap::new());
+    }
+
+    fn pop_scope(&mut self) {
+        if self.scopes.len() > 1 {
+            self.scopes.pop();
+        }
+    }
+
+    fn declare_var(&mut self, name: &str, ty: ScalarType) -> Result<String, CompileError> {
+        let slot = if self.scopes.len() == 1 {
+            name.to_string()
+        } else {
+            format!("__algol_s{}_{}", self.scope_counter, name)
+        };
+        let current = self
+            .scopes
+            .last_mut()
+            .expect("compiler always keeps a root scope");
+        if current.contains_key(name) {
+            return Err(CompileError::Type(format!(
+                "duplicate declaration for {name:?}"
+            )));
+        }
+        current.insert(
+            name.to_string(),
+            VarBinding {
+                slot: slot.clone(),
+                ty,
+            },
+        );
+        self.register_names.insert(slot.clone());
+        Ok(slot)
+    }
+
+    fn require_var(&self, name: &str) -> Result<VarBinding, CompileError> {
+        self.scopes
+            .iter()
+            .rev()
+            .find_map(|scope| scope.get(name))
+            .cloned()
             .ok_or_else(|| CompileError::Type(format!("use of undeclared variable {name:?}")))
     }
 
@@ -1485,6 +1535,12 @@ mod tests {
     #[test]
     fn compiles_and_runs_boolean_conditional_expression() {
         let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_block_shadowing() {
+        let src = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
         assert_eq!(run_i64(src), 42);
     }
 

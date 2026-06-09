@@ -109,3 +109,29 @@ fn algol_conditional_expression_program_runs_through_generic_jit() {
     }
     assert_eq!(result.as_i64(), Some(42));
 }
+
+#[test]
+fn algol_nested_block_program_runs_through_generic_jit() {
+    let source = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
+    let mut module = compile_source(source, "algol_nested_blocks_jit").expect("ALGOL should compile");
+    let main = module.get_function("main").expect("main exists");
+    assert_eq!(
+        main.type_status,
+        interpreter_ir::FunctionTypeStatus::FullyTyped
+    );
+
+    let mut vm = VMCore::new();
+    let backend = GenericCirJit::new();
+    let error_handle = backend.error_handle();
+    let mut jit = JITCore::new(&mut vm, Box::new(backend));
+
+    let result = jit
+        .execute_with_jit(&mut vm, &mut module, "main", &[])
+        .expect("JIT execution should succeed")
+        .unwrap_or(Value::Null);
+
+    if let Some(err) = error_handle.lock().unwrap().clone() {
+        panic!("GenericCirJit reported an error: {err}");
+    }
+    assert_eq!(result.as_i64(), Some(42));
+}
