@@ -865,6 +865,7 @@ pub struct BrowserDocument {
     pub focus_navigation_descriptors: Vec<BrowserFocusNavigationDescriptor>,
     pub keyboard_interaction_descriptors: Vec<BrowserKeyboardInteractionDescriptor>,
     pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
+    pub drag_drop_descriptors: Vec<BrowserDragDropDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2380,6 +2381,31 @@ pub struct BrowserInputPlanningDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserDragDropDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub drag_kind: String,
+    pub text: String,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub drag_source: bool,
+    pub drop_target: bool,
+    pub drag_handlers: Vec<String>,
+    pub drop_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub drag_blocked: bool,
+    pub drag_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -2989,6 +3015,7 @@ impl BrowserDocument {
             browser_keyboard_interaction_descriptors(&summary.interactive_elements);
         summary.input_planning_descriptors =
             browser_input_planning_descriptors(&summary.forms, &summary.interactive_elements);
+        summary.drag_drop_descriptors = browser_drag_drop_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -13185,6 +13212,305 @@ fn browser_text_entry_input_kind(text_entry: &BrowserFormTextEntry) -> &'static 
     }
 }
 
+fn browser_drag_drop_descriptors(document: &BrowserDocument) -> Vec<BrowserDragDropDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if browser_interactive_has_drag_drop_state(element, event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for global in &document.global_state_descriptors {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == global.element && descriptor.id == global.id)
+        {
+            continue;
+        }
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &global.element,
+            global.id.as_deref(),
+        );
+        if browser_global_has_drag_drop_state(global, event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_global(
+                global,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_drag_drop_state(event_descriptor) {
+            descriptors.push(browser_drag_drop_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_matching_event_descriptor<'a>(
+    event_descriptors: &'a [BrowserEventHandlerDescriptor],
+    element: &str,
+    id: Option<&str>,
+) -> Option<&'a BrowserEventHandlerDescriptor> {
+    event_descriptors.iter().find(|descriptor| {
+        descriptor.source == "element"
+            && descriptor.element == element
+            && descriptor.id.as_deref() == id
+    })
+}
+
+fn browser_interactive_has_drag_drop_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    element.draggable.is_some()
+        || event_descriptor
+            .map(browser_event_descriptor_has_drag_drop_state)
+            .unwrap_or(false)
+}
+
+fn browser_global_has_drag_drop_state(
+    global: &BrowserGlobalStateDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    global.draggable.is_some()
+        || event_descriptor
+            .map(browser_event_descriptor_has_drag_drop_state)
+            .unwrap_or(false)
+}
+
+fn browser_event_descriptor_has_drag_drop_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event).is_empty()
+        || !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event)
+            .is_empty()
+}
+
+fn browser_drag_drop_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drag_event)
+        })
+        .unwrap_or_default();
+    let drop_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drop_event)
+        })
+        .unwrap_or_default();
+    let pointer_handlers = event_descriptor
+        .map(|descriptor| descriptor.pointer_handlers.clone())
+        .unwrap_or_default();
+    let drag_block_reasons = browser_drag_block_reasons_for_interactive(element);
+    let drag_source = browser_draggable_source(element.draggable_state.as_deref());
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        classes: Vec::new(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: element.text.clone(),
+        draggable: element.draggable.clone(),
+        draggable_state: element.draggable_state.clone(),
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        drag_blocked: !drag_block_reasons.is_empty(),
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_drop_descriptor_from_global(
+    global: &BrowserGlobalStateDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drag_event)
+        })
+        .unwrap_or_default();
+    let drop_handlers = event_descriptor
+        .map(|descriptor| {
+            browser_event_handlers_by_kind(&descriptor.event_handlers, browser_drop_event)
+        })
+        .unwrap_or_default();
+    let pointer_handlers = event_descriptor
+        .map(|descriptor| descriptor.pointer_handlers.clone())
+        .unwrap_or_default();
+    let drag_block_reasons = browser_drag_block_reasons_for_global(global);
+    let drag_source = browser_draggable_source(global.draggable_state.as_deref());
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: global.element.clone(),
+        id: global.id.clone(),
+        classes: global.classes.clone(),
+        role: browser_content_role(&global.element).map(ToOwned::to_owned),
+        authored_role: None,
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: global.text.clone(),
+        draggable: global.draggable.clone(),
+        draggable_state: global.draggable_state.clone(),
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers,
+        disabled: false,
+        hidden: global.hidden,
+        inert: global.inert,
+        aria_hidden: false,
+        drag_blocked: !drag_block_reasons.is_empty(),
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_drop_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserDragDropDescriptor {
+    let drag_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event);
+    let drop_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event);
+    let drag_block_reasons = Vec::new();
+    let drag_source = false;
+    let drop_target = !drop_handlers.is_empty();
+
+    BrowserDragDropDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        classes: event_descriptor.classes.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        drag_kind: browser_drag_kind(
+            drag_source,
+            drop_target,
+            &drag_handlers,
+            &event_descriptor.pointer_handlers,
+            &drag_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        draggable: None,
+        draggable_state: None,
+        drag_source,
+        drop_target,
+        handler_count: drag_handlers.len() + drop_handlers.len(),
+        drag_handlers,
+        drop_handlers,
+        pointer_handlers: event_descriptor.pointer_handlers.clone(),
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        drag_blocked: false,
+        drag_block_reasons,
+    }
+}
+
+fn browser_drag_block_reasons_for_interactive(element: &BrowserInteractiveElement) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_drag_block_reasons_for_global(global: &BrowserGlobalStateDescriptor) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if global.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if global.inert {
+        reasons.push("inert".to_string());
+    }
+    reasons
+}
+
+fn browser_draggable_source(draggable_state: Option<&str>) -> bool {
+    matches!(draggable_state, Some("true") | Some("auto"))
+}
+
+fn browser_drag_kind(
+    drag_source: bool,
+    drop_target: bool,
+    drag_handlers: &[String],
+    pointer_handlers: &[String],
+    drag_block_reasons: &[String],
+) -> String {
+    if !drag_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if drag_source && drop_target {
+        "drag-source-and-drop-target".to_string()
+    } else if drag_source {
+        "drag-source".to_string()
+    } else if drop_target {
+        "drop-target".to_string()
+    } else if !drag_handlers.is_empty() {
+        "drag-handler".to_string()
+    } else if !pointer_handlers.is_empty() {
+        "pointer-handler".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -15028,6 +15354,17 @@ fn browser_pointer_event(handler: &str) -> bool {
             | "ondragover"
             | "ondrop"
             | "onwheel"
+    )
+}
+
+fn browser_drag_event(handler: &str) -> bool {
+    matches!(handler, "ondrag" | "ondragstart" | "ondragend")
+}
+
+fn browser_drop_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ondragenter" | "ondragleave" | "ondragover" | "ondrop"
     )
 }
 
@@ -20629,6 +20966,63 @@ mod tests {
         assert_eq!(hidden.input_kind, "editing-host");
         assert!(hidden.input_blocked);
         assert_eq!(hidden.input_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_drag_drop_descriptors_track_sources_targets_handlers_and_blockers() {
+        let document = parse_html(
+            "<body><main id=board ondragover=allowDrop() ondrop=dropCard()>Board</main>\
+             <div id=card draggable=true ondragstart=startDrag() ondragend=endDrag()>Card</div>\
+             <button id=target draggable=auto disabled ondragenter=enterDrop() ondrop=dropButton()>Target</button>\
+             <p id=secret hidden draggable=true>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.drag_drop_descriptors.len(), 4);
+
+        let board = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("board"))
+            .expect("board drop target descriptor");
+        assert_eq!(board.drag_kind, "drop-target");
+        assert!(board.drop_target);
+        assert_eq!(board.drop_handlers, vec!["ondragover", "ondrop"]);
+        assert_eq!(board.handler_count, 2);
+
+        let card = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("card"))
+            .expect("card drag source descriptor");
+        assert_eq!(card.drag_kind, "drag-source");
+        assert_eq!(card.draggable.as_deref(), Some("true"));
+        assert_eq!(card.draggable_state.as_deref(), Some("true"));
+        assert!(card.drag_source);
+        assert_eq!(card.drag_handlers, vec!["ondragstart", "ondragend"]);
+        assert!(!card.drag_blocked);
+
+        let target = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("target"))
+            .expect("target drop descriptor");
+        assert_eq!(target.drag_kind, "blocked");
+        assert_eq!(target.draggable_state.as_deref(), Some("auto"));
+        assert!(target.drag_source);
+        assert!(target.drop_target);
+        assert_eq!(target.drop_handlers, vec!["ondragenter", "ondrop"]);
+        assert_eq!(target.drag_block_reasons, vec!["disabled"]);
+
+        let secret = summary
+            .drag_drop_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret blocked drag descriptor");
+        assert_eq!(secret.drag_kind, "blocked");
+        assert!(secret.drag_source);
+        assert_eq!(secret.drag_block_reasons, vec!["hidden"]);
     }
 
     #[test]
