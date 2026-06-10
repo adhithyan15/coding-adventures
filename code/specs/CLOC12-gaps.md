@@ -444,3 +444,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.65 (PR pending). Extends the gap-055 whole-arm pre-pass with prefixes `=>`, `return`, `throw`.
 - **Guards:** property-name guard (don't strip `gen.throw((e))` / `it.return((b))`); arrow-brace guard (don't strip `()=>({a:1})` — block ambiguity). All token checks via `is_structural_punct`.
 - **Note:** the inner-redundant-paren strip `gen.throw((e))`→`gen.throw(e)` is a SEPARATE future gap (nested grouping parens in call args), not gap-056.
+
+### gap-057 — paren elision around member-expression object
+
+- **Status:** OPEN — discovered by CLOC14.26. `minify_paren_then_member` ignored.
+- **Input:** `var v = (a).b;` → **Upstream:** `var v=a.b;`
+- **What it needs:** Token peephole `( SINGLE ) .` → drop parens. Must NOT strip when `(` is statement-leading (could flip to block/function parse) or contents are comma-op. Needs design.
