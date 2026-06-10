@@ -109,6 +109,74 @@ question — the shape the engine adjudicates, generalised across domains.
 3. **Full run: N = 100**, one orchestrated pre-registered workflow, batched (≤10 concurrent per the
    rate-limit lesson), results + CIs + per-domain table.
 
+## Addendum A — the IR is TYPED (extraction schema; non-negotiable)
+
+Both arms' extraction emits a **typed** IR. Nothing untyped reaches the reasoner (engine or emitted
+program) — an untyped fact cannot be computed over correctly, and an unpolarized fact silently flips
+verdicts. Every fact/slot carries:
+
+```jsonc
+{
+  "value": "...",                       // the typed value
+  "type": "stated" | "inferred",
+  "span": "verbatim source bytes",      // stated: provenance
+  "basis_span": "...", "entailment": "ENTAILED" | "LEAP",   // inferred: justification (ADJ61 gate)
+  "polarity": "affirmed" | "denied" | "inherit",            // ADJ03 — "not liable", "no allergy", "excluded"
+  "quantity": { "magnitude": 1200, "unit": "USD" },          // ADJ21/22 — typed unit, NOT a bare number
+  "modality": "categorical" | "conditional" | "uncertain",   // ADJ01
+  "uncertainty": null | "..."
+}
+```
+
+- **Polarity (ADJ03)** is mandatory: a denied condition (`not liable`, `no known drug allergy`, `coverage
+  excluded`) is represented as `polarity:denied`, never dropped or affirmed. The polarity/modality
+  consistency check runs over the IR before the engine fires.
+- **Units (ADJ21/22)** are mandatory on every quantity: `{magnitude, unit}`. The program/engine does the
+  unit algebra (km→m, h→s, °→rad, %→fraction); UNIT1 and PHYS1 are wrong without it. A coverage check
+  ensures **every quantity in the source is typed-and-represented or explicitly discarded-with-reason**
+  (ADJ02/ADJ22) — no number silently dropped.
+- **Type + provenance**: `stated(span)` or `inferred(basis_span + entailment)` — no fact inferred
+  without a justification (the ADJ61 entailment gate).
+
+## Addendum B — program-emission track (the LLM translates; a PROGRAM reasons)
+
+For **computational** items (`stratum: program-required` — math, physics, chemistry, units, finance;
+`items_pilot_compute.json`), the model must **not** compute in its forward pass (LLMs are weak at
+math/multi-step derivation — the ADJ99 "self-contained derivation drifted" failure). Instead:
+
+1. **Translate** the messy source → the typed IR above (quantities with units + polarity + provenance).
+2. **Emit a program** in a tool that does the actual work — **SymPy** (algebra/calculus/ODEs),
+   **RDKit** (chemistry), NumPy/SciPy, or the repo's own `arithmetic`/`symbol-core`/`cas-matrix`/`stats`
+   packages — that computes the answer **from the typed IR facts** (not from re-stated numbers).
+3. **Execute** the program in a sandbox; the captured output is the answer.
+
+**Byte-provenance is enforced on the program's inputs**, the same discipline as everywhere else:
+- **Coverage** — every source quantity is either consumed by the program (traced to its `span`) or
+  carries an explicit `discarded(reason)` (the PHYS1 "2 m wide" / FIN1 "branch 4021" distractors test
+  this — a silently-dropped distractor is a coverage failure, *and* a distractor used as input is a
+  fabrication-class error).
+- **Justification** — every program input is `stated(span)` or `inferred(basis+ENTAILED)`; no input
+  invented. The program literally cannot reference a value that isn't a typed, provenanced IR fact.
+
+This is the **general form of the adjudication engine**: rules are the fixed program; SymPy/RDKit are
+emitted programs; both consume the same typed, provenanced IR and own the answer. It is also the direct
+mechanism behind paper-2 MYCIN (CPU-bound reasoning over derived rules).
+
+### Metrics added for the program track
+- **Accuracy** = executed program output within `tolerance` of `gold_answer` (gold itself
+  tool-computed; see `compute_gold.py`).
+- **Program-input provenance**: coverage-complete (every source quantity represented/discarded) +
+  fabrication count (inputs not traceable to a span/basis). *Predicted 0 fabrication, full coverage.*
+- **Defensibility (corrected, dual-judge)**: the emitted program + typed-IR fact table *is* the
+  auditable derivation — a reviewer checks the program and the input provenance, not the model's prose.
+
+### Hypotheses added
+- **H5 (program ≫ in-head):** on `program-required` items, FRAMEWORK (emit-program) beats BARE
+  (reason-in-head) on **both accuracy and defensibility** — the gap is largest exactly where ADJ99
+  showed in-head derivation drifts.
+- **H6 (program provenance clean):** FRAMEWORK program-input fabrication = 0 and coverage complete
+  (distractors discarded-with-reason, never silently dropped or used).
+
 ## Resolved decisions (ADJ86's open list)
 - ✅ **Both models** {Haiku, Opus} (the defensibility-parity axis is core, not optional).
 - ✅ **Corrected metric** (locus-exposure + format-normalized + dual-judge), not the format-confounded
