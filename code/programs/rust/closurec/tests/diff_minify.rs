@@ -90,6 +90,15 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-056: paren elision after `return`/`throw`/`=>`
+    // prefix. `return (a+b);` → `return a+b;`. Discovered by
+    // CLOC14.26.
+    ("return_paren_expr", "gap-056: paren after return/throw/=> prefix"),
+    ("throw_paren_expr",  "gap-056: paren after return/throw/=> prefix"),
+    ("arrow_paren_body",  "gap-056: paren after return/throw/=> prefix"),
+    // gap-057: paren elision around member-expression object.
+    // `(a).b` → `a.b`. Discovered by CLOC14.26.
+    ("paren_then_member", "gap-057: paren around member-object"),
     // gap-053 was RESOLVED in CLOC12.62 — token-stream
     // pre-pass strips outer `(` `)` around `= ( ... ) ;`
     // when contents have no top-level `,` and don't start

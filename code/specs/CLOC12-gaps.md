@@ -432,3 +432,17 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `void(0);`
 - **Upstream:** `void 0;` (parens stripped)
 - **Fix:** Token-stream pre-pass: when prev is `void`/`typeof`/`delete` and next is `( SINGLE )` with SINGLE being one safe token (ident/num/string), drop both parens.
+
+### gap-056 — paren elision after `return` / `throw` / `=>` prefix
+
+- **Status:** OPEN — discovered by CLOC14.26.
+- **Fixtures:** `minify_return_paren_expr`, `minify_throw_paren_expr`, `minify_arrow_paren_body`.
+- **Input/Upstream:** `return (a+b);`→`return a+b;`; `throw (new Error("x"));`→`throw new Error("x");`; `x => (x+1)`→`x=>x+1`.
+- **What it needs:** Same whole-arm token peephole as gap-055 with prefixes `return`/`throw`/`=>`. Re-stitcher must still insert keyword-operand separator. Use `is_structural_punct` guard.
+
+### gap-057 — paren elision around member-expression object
+
+- **Status:** OPEN — discovered by CLOC14.26.
+- **Fixture:** `minify_paren_then_member`.
+- **Input:** `var v = (a).b;` → **Upstream:** `var v=a.b;`.
+- **What it needs:** Token peephole `( SINGLE ) .` → drop parens. Must NOT strip when `(` is statement-leading (could flip to block/function parse) or contents are comma-op. Needs design.

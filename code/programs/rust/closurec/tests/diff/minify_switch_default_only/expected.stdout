@@ -1,1 +1,1 @@
-switch(x){default:use()};
+switch(x){default:y()};
