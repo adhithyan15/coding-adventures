@@ -230,31 +230,16 @@ pub fn whitespace_only_minify(
     // declarators if parens dropped) and don't start with
     // `function` (could be IIFE — keeping conservative).
     // Drop both the `(` and the matching `)`.
-    //
-    // Examples:
-    //   `var t = (x == null);`  → `var t = x == null;`
-    //   `var t = (a, b);`       → kept unchanged (comma op)
-    //   `var t = (function(){})();` → kept unchanged
-    //   `var x = (a + b), y = (c + d);` → both drop
-    //
-    // The transformation removes tokens at positions i and
-    // close_idx. To avoid renumbering issues during the
-    // walk, collect drop indices and apply after.
     {
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 2 < kept.len() {
             if kept[i].value == "=" && kept[i + 1].value == "(" {
-                // Scan for matching `)` at depth 0,
-                // tracking flags.
                 let open_idx = i + 1;
                 let mut depth: i32 = 1;
                 let mut has_top_level_comma = false;
                 let mut starts_with_function =
                     kept.get(open_idx + 1).map(|t| t.value.as_str()) == Some("function");
-                // also bail if contents start with `class` or
-                // anything else that could be ambiguous mid-
-                // expression. For now just `function`.
                 let _ = &mut starts_with_function;
                 let mut close_idx: Option<usize> = None;
                 let mut j = open_idx + 1;
@@ -286,7 +271,6 @@ pub fn whitespace_only_minify(
                     {
                         drops.push(open_idx);
                         drops.push(close_idx);
-                        // Continue scanning past close.
                         i = close_idx + 1;
                         continue;
                     }
@@ -294,7 +278,49 @@ pub fn whitespace_only_minify(
             }
             i += 1;
         }
-        // Apply drops in reverse order.
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
+    // gap-054: paren elision around unary operand.
+    // Pattern: `void ( SINGLE )` / `typeof ( SINGLE )` /
+    // `delete ( SINGLE )` where SINGLE is exactly one
+    // token of a "safe" kind (numeric literal, string
+    // literal, or simple identifier). Drop both parens.
+    //
+    // Multi-token contents (`void(a+b)`, `delete(o.x)`)
+    // are left alone — upstream is more aggressive on
+    // `delete(o.x)`, deferred.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 3 < kept.len() {
+            let is_unary_kw = matches!(
+                kept[i].value.as_str(),
+                "void" | "typeof" | "delete"
+            );
+            if is_unary_kw
+                && kept[i + 1].value == "("
+                && kept[i + 3].value == ")"
+            {
+                let operand = kept[i + 2].value.as_str();
+                let is_safe = !operand.is_empty()
+                    && (operand.starts_with(|c: char| {
+                        c.is_ascii_alphabetic() || c == '_' || c == '$'
+                    }) || operand.starts_with(|c: char| c.is_ascii_digit())
+                        || operand.starts_with('"')
+                        || operand.starts_with('\''));
+                if is_safe {
+                    drops.push(i + 1);
+                    drops.push(i + 3);
+                    i += 4;
+                    continue;
+                }
+            }
+            i += 1;
+        }
         drops.sort_unstable();
         for &drop_idx in drops.iter().rev() {
             kept.remove(drop_idx);
