@@ -414,9 +414,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-052 — trailing `;` after `}` at EOF for control-flow / label-block bodies
 
-- **Status:** OPEN — newly discovered by CLOC14.18.
-- **Upstream byte-identity tests:** `minify_labeled_block`, `minify_double_break_continue` seed fixtures.
+- **Status:** **RESOLVED** in CLOC12.61 (PR pending). `minify_labeled_block` and `minify_double_break_continue` flip IGNORED → PASS.
 - **Input:** `for(;;){if(x)break;if(y)continue;use();}` and `foo:{a();break foo;b();}`
 - **Upstream:** Same with trailing `;`.
-- **Why it fails:** gap-030's trailing-`;` rule only fires for function-decl `}`, class `}`, switch `}`, and try-chain endings. Upstream also emits `;` after for-body `}`, while-body `}`, label-block `}`, etc.
-- **What it needs:** Extend gap-030's `kind_wants_semi` decision: `BlockKind::Other` at EOF (and not at_stmt_keyword via gap-047) should also want a `;`. Currently `Other` returns false unconditionally; needs an EOF-context check.
+- **Fix:** Change `BlockKind::Other => false` in `kind_wants_semi` to `BlockKind::Other => next_val.is_none()`. EOF-only — mid-stream Other-blocks still emit no `;`.

@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.65.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-052** — trailing `;` after `}` at EOF for
+  `BlockKind::Other` (control-flow body, labeled block,
+  bare block). `if(x){a;b;}` at EOF → `if(x){a;b};` matches
+  upstream Closure.
+
+One-line fix in the gap-030 `}`-handler decision machine:
+`BlockKind::Other => false` becomes `BlockKind::Other =>
+next_val.is_none()` — EOF-only.
+
+### Fixed
+
+5 pre-existing tests had pinned the OLD (incorrect) behavior:
+gap032_multi_stmt_body_does_not_flatten,
+gap032_nested_if_does_not_flatten,
+gap032_nested_brace_does_not_flatten,
+gap032_top_level_block_does_not_flatten,
+gap036_switch_as_property_does_not_arm. All updated to
+match upstream (with trailing `;`).
+
 ## [0.64.0] - 2026-06-09
 
 ### Changed
