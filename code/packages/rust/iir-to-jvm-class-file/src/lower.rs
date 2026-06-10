@@ -176,6 +176,7 @@ const RETURN: u8 = 0xB1;  // return void
 // ── Method invocation ──────────────────────────────────────────────────────
 const INVOKESTATIC: u8 = 0xB8;   // invoke static method (2-byte CP index)
 const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
+const CHECKCAST: u8 = 0xC0;      // checkcast (2-byte CP class index)
 
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
@@ -605,6 +606,10 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // Any variable holding a pair (or nil) gets a Ref slot, which uses
         // aload/astore rather than iload/istore.
         "ref<LispyPair>" => Some(JvmType::Ref),
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) is a `java.lang.Object`
+        // — an `Integer` for an atom, an `Object[]` for a cons cell. Uses
+        // aload/astore like any other reference.
+        "ref<any>" => Some(JvmType::Ref),
         // LANG36: A closure is a `long[]` array reference.
         // Variables holding closures use aload/astore (Ref = reference type).
         "closure" => Some(JvmType::Ref),
@@ -651,6 +656,8 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         // The JVM method descriptor for a reference parameter/return is
         // "Ljava/lang/Object;" (the erasure of the actual Object[] type).
         "ref<LispyPair>" => "Ljava/lang/Object;",
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) erases to Object.
+        "ref<any>" => "Ljava/lang/Object;",
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -2785,6 +2792,68 @@ fn lower_function(
             //   `goto`  offset  = (P+8) - (P+4) = 4.           ✓ (lands on istore)
             //
             // This is 8 bytes of code (before istore), analogous to emit_int_compare.
+            // ── box — wrap an i32 atom as a `java.lang.Integer` (McCarthy W3b) ──
+            //
+            // The managed value model is uniform-reference: an atom stored in a
+            // cons cell (`Object[]`) or passed where a lisp value is expected is
+            // boxed. The wasm backend lowers `box` to `ref.i31`; the JVM lowers it
+            // to `Integer.valueOf(I)` — the same shared IIR op, a per-backend
+            // boxing. Bytecode:  iload src ; invokestatic Integer.valueOf ; astore dest.
+            "box" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "box has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "box srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_iload(&mut code, src_slot);
+                let mref = cp.add_methodref(
+                    "java/lang/Integer",
+                    "valueOf",
+                    "(I)Ljava/lang/Integer;",
+                );
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── unbox — unwrap a `java.lang.Integer` reference to its i32 value ──
+            //
+            // The dual of `box`: `checkcast Integer ; Integer.intValue()`. Used at
+            // the entry/return boundary (the wasm backend lowers `unbox` to
+            // `i31.get_s`). Bytecode:  aload src ; checkcast Integer ; invokevirtual
+            // Integer.intValue ; istore dest.
+            "unbox" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "unbox has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "unbox srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_aload(&mut code, src_slot);
+                let cidx = cp.add_class("java/lang/Integer");
+                code.push(CHECKCAST);
+                code.extend_from_slice(&cidx.to_be_bytes());
+                let mref = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_istore(&mut code, dest_slot);
+            }
+
             "is_null" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),

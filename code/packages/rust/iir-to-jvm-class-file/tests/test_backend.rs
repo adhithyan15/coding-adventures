@@ -2342,3 +2342,32 @@ fn g3_print_i64_class_serializes_with_cafebabe_magic() {
         &bytes[0..4]
     );
 }
+
+/// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and
+/// `unbox` to `checkcast` (0xC0) + `Integer.intValue()` (invokevirtual 0xB6).
+#[test]
+fn mccarthy_w3b_box_unbox_lower_to_integer() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("b".into()), vec![Operand::Var("a".into())], "ref<any>"),
+            IIRInstr::new("unbox", Some("c".into()), vec![Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    let code = &class
+        .methods
+        .iter()
+        .find(|m| m.name == "main")
+        .unwrap()
+        .code_attribute()
+        .unwrap()
+        .code;
+    assert!(code.contains(&0xB8u8), "box → invokestatic Integer.valueOf");
+    assert!(code.contains(&0xC0u8), "unbox → checkcast Integer");
+    assert!(code.contains(&0xB6u8), "unbox → invokevirtual intValue");
+}

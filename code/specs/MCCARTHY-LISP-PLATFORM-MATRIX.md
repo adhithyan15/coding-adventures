@@ -60,7 +60,7 @@ representation + per-builtin backend lowering.
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
-| **JVM** | `iir-to-jvm-class-file` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-Object |
+| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -107,13 +107,16 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   the entry method on the in-repo **`jvm-simulator`** (zero external `java`,
   mirroring `wasm-runtime`): `42`→42, `0`→0, `7`→7, Twig `42`→42. Establishes the
   JVM pipeline + run-verify harness that W3b+ build on.
-- ☐ **W3b — JVM cons (F2).** A `$LispyPair` class (two `Object` fields);
-  `cons`/`car`/`cdr` → `new`/`getfield`/… ; integers boxed as `java.lang.Integer`
-  (or a small `LispyInt`); `lower_lisp_repr_structural` adapted to JVM boxing.
-  `(CAR (CONS 7 9))` → 7. NOTE: `jvm-simulator` is a 32-bit integer machine (no
-  object/heap execution), so W3b's run-verify needs either an extended simulator
-  or the real `java` (Temurin 21, available via mise + used in CI) — decide when
-  W3b starts.
+- ✅ **W3b — JVM cons (F2).** cons cells are `Object[]` (the JVM backend already
+  lowered `alloc`/`field_*` for `ref<LispyPair>` → `anewarray`/`aastore`/`aaload`);
+  this slice added the missing **atom boxing** — `box` → `Integer.valueOf(I)`,
+  `unbox` → `checkcast Integer` + `intValue()` — plus the `ref<any>`→`Object` type,
+  and wired `lang-aot::compile_source_to_jvm` to run the *same* structural passes
+  as wasm. The pass output is **backend-agnostic** (`box`/`unbox`/`alloc`/`field_*`);
+  wasm lowers to `i31ref`/`$LispyPair`, JVM to `Integer`/`Object[]` — the reusable
+  primitive. **Verified on the real `java`** (Temurin 21; cons cells are `Object[]`
+  the `jvm-simulator` can't run): `(CAR (CONS 7 9))`→7, `(CDR (CONS 7 9))`→9,
+  nested cons→2, via an injected `main` launcher (`tests/jvm_cons.rs`).
 - ☐ **W4 — JVM `ATOM`/`EQ`/`COND` (F3–F5).** `instanceof $LispyPair` for `pair?`;
   `Integer.equals`/identity for `EQ`; truthiness for `COND`.
 - ☐ **W5 — JVM symbols + lambda (F6–F7).** Interned symbol objects; lambda →
