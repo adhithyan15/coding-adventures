@@ -63,7 +63,7 @@ representation + per-builtin backend lowering.
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
-| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
+| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
@@ -245,11 +245,20 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     RUNNING on a clang-built executable **linked against `lispy_runtime.c`**:
     `(CAR (CONS 7 9))`→7, `(CDR (CONS 7 9))`→9, `(CAR (CDR (CONS 1 (CONS 2 3))))`→2,
     scalar `42`→42 (`lang-aot/tests/llvm_cons.rs`).
-  - ☐ **W12b-2 — LLVM predicates (F3–F5).** pair?/equal?/not lowering is already
-    emitted (`lispy_pair_p`/`lispy_equal`/`lispy_not` in `LISPY_BUILTINS`); needs the
-    **tagged-boolean result** handling (a predicate returns `__twig_lispy_tag_true/false`,
-    not 0/1) + the `COND` `trunc void` fix (`lispy_truthy` clause test).
-    `(ATOM 7)`→1, `(EQ 7 7)`→1, `(COND …)`.
+  - ✅ **W12b-2 — LLVM predicates ATOM/EQ (F3–F4).** Closed the deferred
+    boolean-result gap in the shared `lower_lisp_repr`: a predicate result is a
+    tagged boolean (`LISPY_TRUE=5`/`FALSE=3`), so the program-exit coercion is now
+    type-directed — a **bool** result uses `lispy_truthy` (→ 0/1), an **int** result
+    uses `lispy_unbox_int` (`>>3`). (Unboxing true gave `5>>3=0` — the bug.) Verified
+    by RUNNING (clang + `lispy_runtime.c`): `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0,
+    `(EQ 7 7)`→1, `(EQ 7 8)`→0 (`lang-aot/tests/llvm_predicates.rs`). Reusable for all
+    tagged-word backends; `iir-to-llvm` unchanged.
+  - ☐ **W12b-3 — LLVM `COND` (F5).** Needs **PHI nodes**: `COND` assigns the result
+    var in each clause block, but the backend tracks `const`/`mov` as compile-time
+    aliases (only valid in straight-line code), so a var assigned across branches
+    collapses to its last assignment (the emitted `unbox` reads the NIL clause). Needs
+    SSA merge (PHI, or alloca/store/load) + the `jmp_if` void-cond fix + an explicit
+    fallthrough `br` for all-`const`/`mov` (empty) blocks.
 - ☐ **W13 — LLVM symbols + lambda (F6–F7).** **Completes LLVM.**
 
 ### Phase F — native AOT + JIT completion
