@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.68.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-055** — paren elision around a whole-arm
+  sub-expression following `?` or `:`. Matches upstream on
+  ternary arms (`x?(a=1):(b=2)` → `x?a=1:b=2`), object-literal
+  values (`{a:(b+c)}` → `{a:b+c}`), and label/case bodies
+  (`foo:(x);` → `foo:x;`).
+
+### Added
+
+Token-stream pre-pass: when prev is `?` or `:` and next is
+`(`, scan to the matching `)`. Drop both parens iff:
+- the token after `)` is an arm-terminator (`:`/`;`/`,`/`)`/
+  `]`/`}`/EOF) — so the parens span the COMPLETE arm; and
+- no top-level `,` inside (preserves the comma operator).
+
+Whole-arm guard prevents precedence-shift bugs:
+`x?(a=1)+2:c` stays (next-after-`)` is `+`). `?.` lexes as a
+single OPTIONAL_CHAIN token so optional calls (`a?.(b)`) are
+never matched. 9 edge cases verified against upstream.
+
+(Skipping no versions — 0.68.0 follows 0.67.0.)
+
 ## [0.67.0] - 2026-06-10
 
 ### Changed

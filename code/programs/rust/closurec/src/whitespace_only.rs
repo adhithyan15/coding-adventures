@@ -327,6 +327,101 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-055: paren elision around a *whole-arm* sub-
+    // expression that follows `?` or `:`. Upstream Closure
+    // strips redundant grouping parens around:
+    //   - ternary then-arm:   `x?(E):y`   → `x?E:y`
+    //   - ternary else-arm:   `x?y:(E)`   → `x?y:E`
+    //   - object-literal val:  `{a:(E)}`  → `{a:E}`
+    //   - label / `case` body: `foo:(E);` → `foo:E;`
+    //
+    // SAFETY — three guards, all necessary:
+    //
+    //   1. WHOLE-ARM: the token AFTER the matching `)` must be
+    //      a delimiter that ends the sub-expression (`:` for a
+    //      then-arm, or one of `, ; ) ] }` / EOF for an else-
+    //      arm / value). Otherwise dropping changes precedence,
+    //      e.g. `x?(a=1)+2:c` must stay (next-after-`)` is `+`).
+    //
+    //   2. NO TOP-LEVEL COMMA: `(a,b)` is a comma operator —
+    //      semantically distinct from `a,b` in these positions.
+    //      Upstream keeps it; so do we.
+    //
+    //   3. STRUCTURAL-ONLY token matching: a string / regex /
+    //      template literal stores its *content* in `.value`
+    //      (delimiters stripped), so a one-char string `")"`
+    //      has `.value == ")"`. We MUST gate every bracket /
+    //      comma / `?` / `:` comparison on `is_structural_punct`
+    //      — else a bracket char inside a literal corrupts the
+    //      depth counter and the wrong token gets removed,
+    //      producing broken output like `x?):y` from
+    //      `x?(")"):y`.
+    //
+    // `?.` lexes as a single OPTIONAL_CHAIN token, so the
+    // `prev == "?"` test never fires on optional chaining
+    // (`a?.(b)` is left untouched).
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 1;
+        while i + 1 < kept.len() {
+            let prev_is_arm_open = is_structural_punct(&kept[i - 1], "?")
+                || is_structural_punct(&kept[i - 1], ":");
+            if prev_is_arm_open && is_structural_punct(&kept[i], "(") {
+                let open_idx = i;
+                let mut depth: i32 = 1;
+                let mut has_top_level_comma = false;
+                let mut close_idx: Option<usize> = None;
+                let mut j = open_idx + 1;
+                while j < kept.len() {
+                    let t = &kept[j];
+                    if is_structural_punct(t, "(")
+                        || is_structural_punct(t, "[")
+                        || is_structural_punct(t, "{")
+                    {
+                        depth += 1;
+                    } else if is_structural_punct(t, ")") {
+                        depth -= 1;
+                        if depth == 0 {
+                            close_idx = Some(j);
+                            break;
+                        }
+                    } else if is_structural_punct(t, "]")
+                        || is_structural_punct(t, "}")
+                    {
+                        depth -= 1;
+                    } else if depth == 1 && is_structural_punct(t, ",") {
+                        has_top_level_comma = true;
+                    }
+                    j += 1;
+                }
+                if let Some(close_idx) = close_idx {
+                    let arm_complete = match kept.get(close_idx + 1) {
+                        None => true,
+                        Some(t) => {
+                            is_structural_punct(t, ":")
+                                || is_structural_punct(t, ";")
+                                || is_structural_punct(t, ",")
+                                || is_structural_punct(t, ")")
+                                || is_structural_punct(t, "]")
+                                || is_structural_punct(t, "}")
+                        }
+                    };
+                    if arm_complete && !has_top_level_comma {
+                        drops.push(open_idx);
+                        drops.push(close_idx);
+                        i = close_idx + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -1570,6 +1665,26 @@ fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
 ///
 /// String literals are NOT word-like in this sense: `"a""b"`
 /// re-tokenizes correctly as two strings.
+/// True iff `tok` is a *structural punctuator* whose `.value`
+/// equals `val` — i.e. a real operator/bracket token and NOT a
+/// literal that merely happens to CONTAIN that character.
+///
+/// This matters because a string/regex/template literal stores
+/// its *content* in `.value` (the lexer strips the delimiters),
+/// so a one-character string `")"` has `.value == ")"`. Any
+/// token-level peephole that depth-tracks brackets by comparing
+/// `.value` against `"("` / `")"` / `","` MUST gate on this, or
+/// a bracket char inside a literal corrupts the depth count and
+/// the wrong token gets matched/removed.
+///
+/// Word-like tokens (REGEX, TEMPLATE*, BIGINT, NAME, …) and
+/// string literals are the only kinds that can smuggle a bracket
+/// character into `.value`; excluding both leaves exactly the
+/// punctuator tokens.
+fn is_structural_punct(tok: &lexer::token::Token, val: &str) -> bool {
+    tok.value == val && !is_string_literal(tok) && !is_word_like(tok)
+}
+
 fn is_word_like(tok: &lexer::token::Token) -> bool {
     // Prefer the grammar's type_name when present; fall back to
     // the structural TokenType for the basic categories.
