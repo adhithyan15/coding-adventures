@@ -2371,3 +2371,50 @@ fn mccarthy_w3b_box_unbox_lower_to_integer() {
     assert!(code.contains(&0xC0u8), "unbox → checkcast Integer");
     assert!(code.contains(&0xB6u8), "unbox → invokevirtual intValue");
 }
+
+/// McCarthy W4: the lisp predicates lower to JVM bytecode — `pair?` →
+/// `instanceof` (0xC1), `not` → `ixor` (0x82), `equal?` → `checkcast` (0xC0) +
+/// `invokevirtual intValue` (0xB6) + `if_icmpne` (0xA0, via emit_int_compare).
+#[test]
+fn mccarthy_w4_predicates_lower() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("p".into()),
+                vec![Operand::Var("pair?".into()), Operand::Var("ab".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("n".into()),
+                vec![Operand::Var("not".into()), Operand::Var("p".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("e".into()),
+                vec![Operand::Var("equal?".into()), Operand::Var("ab".into()), Operand::Var("ab".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("e".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    let code = &class
+        .methods
+        .iter()
+        .find(|m| m.name == "main")
+        .unwrap()
+        .code_attribute()
+        .unwrap()
+        .code;
+    assert!(code.contains(&0xC1u8), "pair? → instanceof");
+    assert!(code.contains(&0x82u8), "not → ixor");
+    assert!(code.contains(&0xA0u8), "equal? → if_icmpne (compare-to-bool)");
+}

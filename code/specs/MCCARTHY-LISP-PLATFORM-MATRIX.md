@@ -60,7 +60,7 @@ representation + per-builtin backend lowering.
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
-| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-Object |
+| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -117,10 +117,21 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   primitive. **Verified on the real `java`** (Temurin 21; cons cells are `Object[]`
   the `jvm-simulator` can't run): `(CAR (CONS 7 9))`→7, `(CDR (CONS 7 9))`→9,
   nested cons→2, via an injected `main` launcher (`tests/jvm_cons.rs`).
-- ☐ **W4 — JVM `ATOM`/`EQ`/`COND` (F3–F5).** `instanceof $LispyPair` for `pair?`;
-  `Integer.equals`/identity for `EQ`; truthiness for `COND`.
+- ✅ **W4 — JVM `ATOM`/`EQ`/`COND` (F3–F5).** The JVM backend lowers the *shared*
+  structural-pass predicates: `pair?` → `instanceof [Ljava/lang/Object;` (a cons
+  is an `Object[]`), `not` → `ixor 1`, `equal?` → unbox both `Integer`s + a
+  `if_icmpeq`-synthesised 0/1. `jmp_if_false`/`is_null` were already lowered, so
+  `COND` works too. Verified on the real `java` (`tests/jvm_predicates.rs`, a
+  **descriptor-aware** launcher: predicate→`()I`, COND-over-int→`()J`):
+  `(ATOM 5)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 5 5)`→1, `(EQ 5 6)`→0,
+  `(COND ((EQ 1 1) 7) (5 9))`→7, fall-through→9.
 - ☐ **W5 — JVM symbols + lambda (F6–F7).** Interned symbol objects; lambda →
-  method or `invokedynamic`/inner class. **Completes JVM.**
+  method (the uniform-anyref boundary, mirroring wasm W2). **NOTE:** symbol ids
+  use the high reserved range (`SYMBOL_ID_BASE = 2²⁹`), an `i32` const too large
+  for `bipush`/`sipush` — it must lower via `ldc` + a CONSTANT_Integer pool entry.
+  A first attempt crashed the JVM (`constantTag.cpp ShouldNotReachHere`), so W5
+  must fix/verify the JVM backend's large-`i32`-const (`ldc`) path first.
+  **Completes JVM.**
 
 ### Phase C — CLR (replicate as `object`)
 

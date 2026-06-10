@@ -3,6 +3,22 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] — 2026-06-09 — lisp predicates `pair?`/`not`/`equal?` (McCarthy W4)
+
+### Added
+
+- **`call_builtin` lowering for the McCarthy predicates** (F3–F5), the JVM
+  counterparts of the wasm `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`:
+  - `pair?`  → `aload ; instanceof [Ljava/lang/Object; ; istore` — a cons is an
+    `Object[]`, an atom an `Integer`, nil `null` (so `instanceof` is 0/1).
+  - `not`    → `iload ; iconst_1 ; ixor ; istore` (logical not of a 0/1 bool).
+  - `equal?` → unbox both `Integer`s (`checkcast` + `intValue`) then
+    `if_icmpne`-synthesised 0/1 — `EQ` on atoms is integer equality.
+  Added `pair?`/`not`/`equal?` to `CALL_BUILTIN_SUPPORTED_NAMES`, the `INSTANCEOF`
+  (0xC1) opcode, and `builtin_dest`/`builtin_arg` operand helpers. With the
+  already-lowered `jmp_if_false`/`is_null`, McCarthy `ATOM`/`EQ`/`COND` now run on
+  a real JVM: `(ATOM 5)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 5 5)`→1, `(COND …)`.
+
 ## [0.8.0] — 2026-06-09 — `box`/`unbox` + `ref<any>` (McCarthy W3b)
 
 ### Added

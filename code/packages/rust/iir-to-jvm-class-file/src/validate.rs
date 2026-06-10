@@ -103,7 +103,10 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// dedicated host class (`env/BasicRuntime`) rather than overloading
 /// `BFRuntime` because BASIC and Brainfuck have different I/O models:
 /// BF is byte-stream oriented, BASIC's PRINT is line/value oriented.
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar", "print_i64"];
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
+    // McCarthy W4 (F3–F5): the lisp predicates — `pair?` (instanceof Object[]),
+    // `not` (logical not), `equal?` (unbox + if_icmpeq).
+    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///
