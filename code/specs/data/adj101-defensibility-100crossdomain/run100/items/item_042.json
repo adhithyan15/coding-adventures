@@ -1,0 +1,7 @@
+{
+ "idx": 42,
+ "id": "INS-3",
+ "scenario": "A windstorm tore shingles off an insured home, and the assessed covered roof loss is $15,000. The policy is in force and windstorm is a covered peril.",
+ "policy": "Under the homeowner's wind policy, roof damage from a windstorm is covered. The insurer applies a 2% windstorm deductible calculated on the dwelling's insured value of $300,000, then pays the remainder of the covered loss.",
+ "question": "How much will the insurer pay on this windstorm roof claim?"
+}

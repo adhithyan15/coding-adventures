@@ -1,0 +1,7 @@
+{
+ "idx": 86,
+ "id": "CON-7",
+ "scenario": "An Enterprise Plus customer accumulated qualifying credits totaling 45% of its $20,000 monthly fee in a single month.",
+ "policy": "The standard SLA caps total monthly service credits at 30% of the monthly fee. Notwithstanding the standard cap, customers on the Enterprise Plus tier are subject to a 50% monthly credit cap.",
+ "question": "What total service credit is payable for that month?"
+}

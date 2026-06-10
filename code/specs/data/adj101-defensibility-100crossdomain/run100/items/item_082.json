@@ -1,0 +1,7 @@
+{
+ "idx": 82,
+ "id": "CON-3",
+ "scenario": "The customer's stated timezone is US Eastern. A standard support request was submitted on Wednesday at 11:00 Eastern. The provider responded at 14:30 Eastern the same day.",
+ "policy": "Support requests submitted during business hours (Monday-Friday, 09:00-17:00 in the customer's stated timezone) carry a 4-hour response SLA. Requests submitted outside business hours are deemed received at the start of the next business day.",
+ "question": "Did the provider meet the response SLA?"
+}

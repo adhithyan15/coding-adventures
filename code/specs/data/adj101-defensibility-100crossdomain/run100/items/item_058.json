@@ -1,0 +1,7 @@
+{
+ "idx": 58,
+ "id": "BUI-9",
+ "scenario": "An exterior wood sill plate sits 10 inches above finished grade and 14 inches from exposed earth. The wood is untreated, ordinary framing lumber, but it rests on a continuous impervious moisture barrier that fully separates it from the earth.",
+ "policy": "All exterior wood framing within 18 inches of exposed earth must be of naturally durable or preservative-treated wood to resist decay, except where the wood is separated from the earth by a continuous, impervious moisture barrier and is at least 8 inches above the finished grade.",
+ "question": "Does the untreated sill plate violate the decay-resistance requirement?"
+}

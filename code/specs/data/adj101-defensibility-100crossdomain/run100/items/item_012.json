@@ -1,0 +1,7 @@
+{
+ "idx": 12,
+ "id": "STA-3",
+ "scenario": "A customer slipped on a spilled drink. A waiter saw the spill and reported it to the manager 25 minutes before the fall, but no one cleaned it up before the customer slipped.",
+ "policy": "A restaurant is liable for a slip-and-fall injury only if a hazardous condition existed and an employee had actual knowledge of it for at least 15 minutes before the fall without remedying it.",
+ "question": "Is the restaurant liable for the injury?"
+}

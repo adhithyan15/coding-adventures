@@ -1,0 +1,7 @@
+{
+ "idx": 67,
+ "id": "EMP-8",
+ "scenario": "Nadia has been employed for 2 months. Her job requisition designates her role as 'remote-first.' She has requested to work remotely.",
+ "policy": "General rule: remote-work requests are granted only to employees with at least 1 year of tenure. Override: this tenure requirement does not apply to employees whose role is designated 'remote-first' in the job requisition, who may work remotely from their first day.",
+ "question": "Should Nadia's remote-work request be granted?"
+}

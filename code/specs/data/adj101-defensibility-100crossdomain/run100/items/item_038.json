@@ -1,0 +1,7 @@
+{
+ "idx": 38,
+ "id": "BEN-9",
+ "scenario": "Walter is registered as legally blind with the state registry. He applies for the Public Transit Pass.",
+ "policy": "All applicants for the Public Transit Pass must pay a $25 annual administration fee, except applicants who are registered as legally blind, who receive the pass at no charge.",
+ "question": "What administration fee must Walter pay for the Public Transit Pass?"
+}

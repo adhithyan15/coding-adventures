@@ -1,0 +1,7 @@
+{
+ "idx": 36,
+ "id": "BEN-7",
+ "scenario": "The Nguyen household has four members. One adult member is a verified full-time caregiver for the household's disabled child. They apply for Food Assistance.",
+ "policy": "The standard Food Assistance benefit is $200 per month for a household of four. However, notwithstanding the standard amount, any household in which a member is a verified full-time caregiver for a disabled dependent receives a flat enhanced benefit of $320 per month, which replaces the standard amount.",
+ "question": "What is the Nguyen household's monthly Food Assistance benefit?"
+}

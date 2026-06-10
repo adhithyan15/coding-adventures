@@ -1,0 +1,7 @@
+{
+ "idx": 45,
+ "id": "INS-6",
+ "scenario": "A warehouse fire destroyed insured inventory worth $80,000. The policy was active, premiums were current, and fire is a listed covered peril. An inspection after the fire confirmed a sprinkler system was installed throughout the building.",
+ "policy": "A commercial property policy covers fire loss to insured inventory. Coverage applies only if the business maintained its contractually required functioning sprinkler system at the time of loss; if the sprinkler system was inoperative at the time of loss, the fire loss is excluded.",
+ "question": "Is the fire loss to inventory covered?"
+}
