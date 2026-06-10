@@ -66,6 +66,29 @@ extractor from laundering an over-read as `ENTAILED`). But entailment alone is *
 applied indiscriminately it over-abstains. The gate is **entailment × decision-sensitivity**: abstain
 only on a LEAP that is *outcome-pivotal*. That is the next-iteration fix, and it reuses ADJ65 directly.
 
+## Update — decision-sensitivity gate implemented (`decision_sensitivity_gate.py`)
+
+The entailment × decision-sensitivity gate (boolean LEAP → negation-pivotality test; numeric LEAP →
+kept unless removal yields a *different determinate* answer) was built and run on the existing data:
+
+| | baseline | blunt gate | **sensitivity gate** |
+|---|---|---|---|
+| underdetermined → INDETERMINATE | 24/30 | 27/30 | **26/30** |
+| clean-determinate → DETERMINATE | 26/30 | 20/30 | **23/30** |
+| overall verdict match | 88/100 | 74/100 | **82/100** |
+
+- ✅ **Catches the boolean fabrications:** TAX-4, TAX-6 now abstain (were confident DETERMINATE).
+- ✅ **Fixes the numeric over-abstention:** MED-2, IMM-2, CON-2 are **kept determinate** (the blunt
+  gate's main failure — over-precise LEAP values whose imprecision doesn't change the verdict).
+- **Residual (82 vs 88):** 3 clean items (INS-2, CON-3, ACA-3) + a few override/exception items still
+  false-abstain — a **single** adversary occasionally LEAP-flags a *pivotal boolean* that is actually
+  adequately established. The fix is the **N-reader majority vote** (the CAS-write gate design): N
+  independent adversaries reduce false LEAPs. This is the empirical motivation for that design.
+
+Framing: verdict-match undersells this — the gate moves failures from **confident fabrication** (bad)
+to **abstention-with-a-named-locus** (safe), which is the defensible direction. The remaining gap is
+single-adversary calibration → N readers.
+
 ## Reproduce
-`build_entailment_checks.py` → `adversarial_entail.workflow.js` (240 checks) → `apply_entail_rerun.py`.
-Verdicts: `entail_verdicts.json`; full comparison: `entail_gated_results.json`.
+`build_entailment_checks.py` → `adversarial_entail.workflow.js` (240 checks) → `apply_entail_rerun.py`
+(blunt) → `decision_sensitivity_gate.py` (entailment × sensitivity). Verdicts: `entail_verdicts.json`.
