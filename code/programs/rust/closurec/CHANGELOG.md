@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.71.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-058** — the ES2021 `_` numeric separator is now
+  stripped from FLOAT and scientific literals, not just integers:
+  - `1_000.5` → `1000.5`
+  - `1_0e3`   → `10e3`
+
+  `normalize_number_value`'s float/scientific branch previously
+  returned the literal verbatim (separators intact). It now
+  returns `cleaned` — the value with every `_` already removed —
+  so separators are stripped while the float/scientific *shape*
+  is otherwise untouched. Full float shortest-form (`0.5` → `.5`,
+  `1000e3` → `1E6`) remains a separate deferred gap. The
+  separator is purely lexical sugar, so its removal needs no
+  numeric reasoning and is always safe.
+
 ## [0.70.0] - 2026-06-10
 
 ### Changed
