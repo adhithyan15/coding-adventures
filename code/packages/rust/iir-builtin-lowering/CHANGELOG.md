@@ -4,6 +4,24 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.14.0] — 2026-06-10 — boolean program-result coercion (LANG77 / McCarthy W12b-2)
+
+Closes the long-deferred "booleans land in L3b-2c-2" gap in `lower_lisp_repr`'s
+program-exit handling. A value produced by a predicate (`pair?`/`equal?`/`not`) is
+a tagged **boolean** (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), not a tagged integer —
+so `insert_unbox_before_lisp_rets` is now **type-directed**:
+
+- an INTEGER result is unboxed (`lispy_unbox_int`, `>> 3`) as before;
+- a BOOLEAN result (its producing instruction carries the `bool` type hint) is run
+  through `lispy_truthy` (→ raw `0`/`1`). Unboxing a true (`5 >> 3 = 0`) would have
+  reported *false* — the bug this fixes.
+
+Reusable for every tagged-word backend (LLVM/AOT/JIT) that links `lispy_runtime.c`.
+Verified end-to-end in `lang-aot` on the LLVM/clang path: `(ATOM 7)`→1,
+`(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(EQ 7 8)`→0. Updated the
+`tagged_cond_is_wrapped_with_truthy` unit test (the bool-typed `ret` now also
+truthy-coerces) and added `integer_result_unboxed_boolean_result_truthied`.
+
 ## [0.13.0] — 2026-06-09 — reference funnels + lisp-call result type (LANG77 / McCarthy W5b)
 
 ### Fixed

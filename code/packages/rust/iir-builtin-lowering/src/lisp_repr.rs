@@ -353,6 +353,20 @@ fn insert_unbox_before_lisp_rets(func: &mut IIRFunction, boxed_regs: &HashSet<St
         return;
     }
 
+    // McCarthy boolean-result handling (the L3b-2c-2 gap, closed in W12b-2): a
+    // value produced by a predicate (`pair?`/`equal?`/`not`) is a tagged boolean
+    // (`LISPY_TRUE = 5` / `LISPY_FALSE = 3`), NOT a tagged integer. Unboxing it
+    // (`>> 3`) would give `0` for *true* — wrong. So at the program-exit boundary
+    // a boolean result is coerced with `lispy_truthy` (→ raw `0`/`1`) instead of
+    // `lispy_unbox_int`. A register is "boolean" if the instruction that produced
+    // it carries the `bool` type hint (the predicates do).
+    let bool_regs: HashSet<String> = func
+        .instructions
+        .iter()
+        .filter(|i| i.type_hint == "bool")
+        .filter_map(|i| i.dest.clone())
+        .collect();
+
     let old = std::mem::take(&mut func.instructions);
     let mut new_instrs: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
     let mut unbox_counter = 0usize;
@@ -369,13 +383,20 @@ fn insert_unbox_before_lisp_rets(func: &mut IIRFunction, boxed_regs: &HashSet<St
 
         match ret_boxed_reg {
             Some(boxed) => {
-                // %u = call_builtin "lispy_unbox_int", %boxed  : i64
+                // A boolean result → `lispy_truthy` (→ 0/1); an integer result →
+                // `lispy_unbox_int` (→ `>> 3`). Both yield a raw `i64`.
+                let coerce = if bool_regs.contains(&boxed) {
+                    TRUTHY_BUILTIN
+                } else {
+                    UNBOX_BUILTIN
+                };
+                // %u = call_builtin "<coerce>", %boxed  : i64
                 let u_reg = format!("__unbox_{unbox_counter}");
                 unbox_counter += 1;
                 new_instrs.push(IIRInstr::new(
                     "call_builtin",
                     Some(u_reg.clone()),
-                    vec![Operand::Var(UNBOX_BUILTIN.to_string()), Operand::Var(boxed)],
+                    vec![Operand::Var(coerce.to_string()), Operand::Var(boxed)],
                     "i64",
                 ));
                 // ret %u
@@ -614,13 +635,48 @@ mod tests {
             ret("a"),
         ]);
         lower_lisp_repr(&mut m);
-        assert_eq!(count_builtin(&m, "lispy_truthy"), 1, "tagged cond must be wrapped");
+        // TWO `lispy_truthy` calls now: (1) the `COND` clause-test wrap, and
+        // (2) the bool-typed `ret a` result coercion (McCarthy W12b-2 — a
+        // boolean program result becomes raw 0/1 via `truthy`, not `unbox_int`).
+        assert_eq!(count_builtin(&m, "lispy_truthy"), 2, "cond test + bool result both wrapped");
+        // The boolean result is coerced with `lispy_truthy`, NOT `lispy_unbox_int`.
+        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 0, "bool result must not be unboxed");
         // The jmp_if_false now tests the truthy result, not the raw tagged bool.
         let jif = m.functions[0].instructions.iter().find(|i| i.op == "jmp_if_false").unwrap();
         assert!(
             matches!(&jif.srcs[0], Operand::Var(v) if v.starts_with("__truthy_")),
             "jmp_if_false must test the truthy result, got {:?}", jif.srcs[0],
         );
+    }
+
+    /// McCarthy W12b-2 — the program-exit coercion is **type-directed**:
+    /// an INTEGER result is unboxed (`>> 3`), a BOOLEAN result (a predicate) is
+    /// run through `lispy_truthy` (→ raw 0/1). Unboxing `LISPY_TRUE` (=5) would
+    /// give `5 >> 3 = 0` — *wrong* for true. So a bool result must never be unboxed.
+    #[test]
+    fn integer_result_unboxed_boolean_result_truthied() {
+        // (CAR (CONS 7 9)) — an integer result → unbox, NOT truthy.
+        let mut int_m = module(vec![
+            konst("a", 56, "i64"),
+            konst("b", 72, "i64"),
+            call_builtin(Some("p"), "lispy_cons", &["a", "b"], "ref<LispyPair>"),
+            call_builtin(Some("h"), "lispy_car", &["p"], "i64"),
+            ret("h"),
+        ]);
+        lower_lisp_repr(&mut int_m);
+        assert_eq!(count_builtin(&int_m, "lispy_unbox_int"), 1, "int result is unboxed");
+        assert_eq!(count_builtin(&int_m, "lispy_truthy"), 0, "int result is not truthied");
+
+        // (ATOM 7) = (not (pair? 7)) — a boolean result → truthy, NOT unbox.
+        let mut bool_m = module(vec![
+            konst("v0", 56, "i64"),
+            call_builtin(Some("p"), "lispy_pair_p", &["v0"], "bool"),
+            call_builtin(Some("a"), "lispy_not", &["p"], "bool"),
+            ret("a"),
+        ]);
+        lower_lisp_repr(&mut bool_m);
+        assert_eq!(count_builtin(&bool_m, "lispy_truthy"), 1, "bool result is truthied");
+        assert_eq!(count_builtin(&bool_m, "lispy_unbox_int"), 0, "bool result is NOT unboxed");
     }
 
     /// A raw machine condition (e.g. a Twig `cmp` result, not in boxed_regs)

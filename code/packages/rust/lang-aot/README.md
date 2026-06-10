@@ -68,8 +68,11 @@ the result, `42` → 42 (W12a). It uses the `clang` already on the box (no
 **Cons** runs too (W12b-1, F2): the native lisp pipeline
 (`lower_heap_builtins_runtime`→`intern_symbols`→`lower_lisp_repr`) lowers cons/car/cdr
 to `call @__twig_lispy_*`, and the test **links `lispy_runtime.c`** into the
-clang-built executable — `(CAR (CONS 7 9))` → 7, `(CDR (CONS 7 9))` → 9. The
-predicate/symbol/lambda steps (F3–F7) are W12b-2+.
+clang-built executable — `(CAR (CONS 7 9))` → 7, `(CDR (CONS 7 9))` → 9.
+**Predicates** run too (W12b-2, F3–F4): a predicate returns a *tagged* boolean, so
+the shared `lower_lisp_repr` coerces a boolean program result with `lispy_truthy`
+(→ 0/1) rather than `lispy_unbox_int` — `(ATOM 7)` → 1, `(EQ 7 7)` → 1,
+`(EQ 7 8)` → 0. `COND` (F5, needs PHI nodes) and symbols/lambda (F6–F7) are W12b-3+.
 
 ## Stack position
 
