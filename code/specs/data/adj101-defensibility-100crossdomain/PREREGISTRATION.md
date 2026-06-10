@@ -162,20 +162,37 @@ This is the **general form of the adjudication engine**: rules are the fixed pro
 emitted programs; both consume the same typed, provenanced IR and own the answer. It is also the direct
 mechanism behind paper-2 MYCIN (CPU-bound reasoning over derived rules).
 
-### Metrics added for the program track
-- **Accuracy** = executed program output within `tolerance` of `gold_answer` (gold itself
-  tool-computed; see `compute_gold.py`).
-- **Program-input provenance**: coverage-complete (every source quantity represented/discarded) +
-  fabrication count (inputs not traceable to a span/basis). *Predicted 0 fabrication, full coverage.*
-- **Defensibility (corrected, dual-judge)**: the emitted program + typed-IR fact table *is* the
-  auditable derivation — a reviewer checks the program and the input provenance, not the model's prose.
+### Metrics added for the program track — correctness is INFORMATIONAL, not the target
 
-### Hypotheses added
-- **H5 (program ≫ in-head):** on `program-required` items, FRAMEWORK (emit-program) beats BARE
-  (reason-in-head) on **both accuracy and defensibility** — the gap is largest exactly where ADJ99
-  showed in-head derivation drifts.
-- **H6 (program provenance clean):** FRAMEWORK program-input fabrication = 0 and coverage complete
-  (distractors discarded-with-reason, never silently dropped or used).
+Where ADJ86 went wrong was scoring these on **getting the right answer**. In the rescored paradigm a
+wrong program is *fine* if its audit trail leads to **exactly** where it went wrong and the error is
+**correctable in one move**. So the program track is scored on the same axis as everything else —
+auditability + localizability + correctability — and accuracy is reported only as context.
+
+- **PRIMARY — auditability**: every program input is a typed, provenanced IR fact
+  (`stated(span)` / `inferred(basis+ENTAILED)`); every source quantity is used or `discarded(reason)`;
+  no magic numbers in the program. (`provenance_program.py` → `auditable`.)
+- **PRIMARY — localizability**: when the answer is wrong, the trail names the **exact** culprit. The
+  workhorse is the **value-vs-span faithfulness** check — a fact whose magnitude contradicts its own
+  cited bytes (e.g. `25` claimed from span `"20 m/s"`) is flagged at that fact. `error_locus` orders
+  the places to look: unfaithful facts → un-entailed assumptions → fabrications → exec errors.
+- **PRIMARY — correctability**: a single **override** of the located fact re-derives the answer with
+  **zero model calls** (`override_facts`; the override is itself audited). This is the program-track
+  instance of E2 (localize→fix→persist) and MYCIN's *fix-the-fact-not-the-weight*.
+- **SECONDARY / informational — accuracy**: executed output within `tolerance` of the tool-computed
+  `gold_answer` (`compute_gold.py`). Reported, never the headline. A **defensible-but-wrong** program
+  (auditable, error localized, one-move correctable) is a SUCCESS for the thesis; a
+  **confidently-right black box** is not the goal.
+
+### Hypotheses added (on the correctability axis)
+- **H5 (auditable + correctable ≫ in-head):** on `program-required` items, FRAMEWORK (emit-program)
+  beats BARE (reason-in-head) on **defensibility, localizability, and correctability** — largest exactly
+  where ADJ99 showed in-head derivation drifts. When FRAMEWORK is *wrong*, the error localizes to a
+  named fact/assumption and a single override fixes it; when BARE is wrong, it is a confident,
+  un-localizable prose error.
+- **H6 (program provenance clean):** FRAMEWORK program-input fabrication = 0, coverage complete
+  (distractors `discarded(reason)`, never silently dropped or used), and **every wrong answer traces to
+  a specific, overridable fact/assumption** — never "the model just miscalculated."
 
 ## Resolved decisions (ADJ86's open list)
 - ✅ **Both models** {Haiku, Opus} (the defensibility-parity axis is core, not optional).
