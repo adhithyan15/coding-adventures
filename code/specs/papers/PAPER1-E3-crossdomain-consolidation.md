@@ -24,10 +24,18 @@ gates, CAS, and engine are unchanged. E3 is the breadth evidence for that claim 
 | Naturalization law (8 U.S.C. 1427) | [ADJ71](ADJ71-cas-program-cache-experiment.md) | CAS program-cache: ground once → compiled library → held-out case runs with **zero answer-time model calls** |
 | 3 stress sub-domains (n>1) | [ADJ56](ADJ56-cross-domain-stress-test.md) | three grounded corpora, case-blind, no per-domain code |
 | 6 non-medical domains | [ADJ59](ADJ59-cross-domain-validation.md) | head-to-head vs plain Claude, blind judge, held-aside ground truth |
+| **10 regulatory/legal domains × 10 (corpus-1)** | [**run100**](../data/adj101-defensibility-100crossdomain/run100/) | the pre-registered 100-item benchmark; byte-accounting 100/100, no hallucinated rules 100/100 |
+| **10 *new* regulatory/legal domains × 10 (fresh, gold-vetted)** | [**run100b**](../data/adj101-defensibility-100crossdomain/run100b/) | unseen domains; byte-accounting 98/100, no hallucinated rules 100/100, abstention 26/30 |
 | Methodology / breadth survey | [ADJ19](ADJ19-cross-domain-empirical-bench.md), ADJ38 | the cross-domain bench shape; 7-domain catalog + gaps |
 
 Spanning **clinical, financial, legal, regulatory, coding, and general knowledge-work** domains on
-one unchanged pipeline.
+one unchanged pipeline — now anchored by a **pre-registered 200-item benchmark across 20 distinct
+regulatory/legal domains** (run100 + run100b), the largest and most rigorous breadth evidence in the
+program. The 20 domains: tax filing, employment leave, insurance claims, benefits eligibility,
+building permits, academic appeals, consumer credit, contract disputes (corpus-1); plus
+healthcare-billing, environmental-permitting, consumer-warranty, securities-compliance, food-safety,
+rental-housing, professional-licensing, customs-import, data-privacy, workers-compensation
+(corpus-2, **never seen by the framework before the run**).
 
 ## 3. The honest results (this is the point — not a clean sweep)
 
@@ -50,23 +58,45 @@ one unchanged pipeline.
   reuse payoff in a *non-clinical* domain: ground once, compile a library, and execute a held-out case
   with **zero answer-time model calls** — the same mechanism E2 measures (this is the cross-domain
   evidence for the derive-once claim, and the bridge to paper 2's MYCIN proof).
+- **The 200-item benchmark (run100 + run100b) — breadth + measurement validity at scale.** The
+  byte-provenance *spine replicates across 20 domains and two independent corpora*: rulebook
+  byte-accounting **100/100 (corpus-1)** and **98/100 (corpus-2, the 2 misses being the input gate
+  firing, not leaking)**, **no hallucinated rules 100/100** in both. Abstention discipline holds out
+  of sample: underdetermined items → INDETERMINATE (abstain, not fabricate) **24/30** and **26/30**;
+  the combined adjudication gate (N-reader entailment × decision-sensitivity × precedence) leaves
+  **zero confident-wrong verdicts** — every residual is a safe abstention, an input-gate flag, or a
+  genuine conflict. Crucially, the **same adversarial reading reflexively audited the benchmark's own
+  gold**: it caught **3 mislabeled-determinate items (corpus-1)** and **4 mislabeled-underdetermined
+  items (corpus-2)** *before* scoring — the ADJ99 measurement-validity theme recurring on fresh data.
+  This is the strongest single piece of E3 breadth evidence and ties the cross-domain claim to the
+  paper's measurement-validity contribution.
 
 ## 4. How this maps to the paper's contributions
 
-- Supports the **stage-contract / rulebook-parameterized** claim (C1): one machinery, many domains.
+- Supports the **stage-contract / rulebook-parameterized** claim (C1): one machinery, 20+ domains,
+  no per-domain code — with the 200-item benchmark as the quantitative anchor (byte-accounting and
+  no-hallucinated-rules hold across both corpora).
 - The ADJ59 commitment fix and the ADJ56 failure modes are **honesty ballast** for the discussion:
   they bound the claim to *auditability/correctability*, not accuracy supremacy — exactly the
   goal-shift the paper argues for.
-- ADJ71's zero-model-call cross-domain reuse foreshadows E2's `propagate_yield` and paper 2.
+- ADJ71's zero-model-call cross-domain reuse foreshadows E2's recurring-cost result and paper 2.
+- The run100/run100b **reflexive gold audit** is direct cross-domain support for the
+  **measurement-validity** thread (the ADJ99 rescore's lesson): the framework's adversarial reading
+  catches errors in its own benchmark's gold, at scale, on unseen domains.
 
 ## 5. What E3 is NOT
 Not a new benchmark and not an accuracy leaderboard. It is a breadth-and-honesty consolidation:
 *same machinery, many domains, here is where it helps, where it merely matches, and the two ways it
 fails.* Any accuracy numbers quoted are secondary and inherit each source run's scoring caveats.
 
-## 6. Open consolidation tasks (small)
-- Build one summary figure/table (domain × {ran-with-no-code-change?, framework-vs-plain outcome,
-  failure-mode-observed}) sourced directly from each run's artifacts.
-- Re-state every quoted number with a pointer to its source `code/specs/data/adj*/` artifact
-  (byte-provenance applied to the paper itself; see W6).
-- Confirm the ADJ59 numbers post the ground-truth-leak fix (§5 of ADJ59) are the ones cited.
+## 6. Consolidation status
+- **Primary quantitative anchor — DONE:** the 200-item benchmark (run100 + run100b) supplies the
+  domain × {ran-with-no-code-change, byte-accounting, no-hallucinated-rules, abstention,
+  gold-audit-hits} table directly from `run100*/run100_results.json` + `FINDINGS.md`. Every number
+  here traces to a committed artifact (byte-provenance applied to the paper itself; W6).
+- **Legacy runs (ADJ49/56/59/70/71) — qualitative ballast:** retained for the breadth narrative and
+  the two named failure modes; their accuracy numbers inherit each source run's scoring caveats and
+  are secondary to the pre-registered benchmark.
+- **Remaining (optional polish):** one publication figure rendering the 20-domain table; confirm the
+  ADJ59 numbers cited are the post-ground-truth-leak-fix ones (§5 of ADJ59). Neither blocks the
+  manuscript — the load-bearing E3 evidence is the 200-item benchmark, which is complete and merged.

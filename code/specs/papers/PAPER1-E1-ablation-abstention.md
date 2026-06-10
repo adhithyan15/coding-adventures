@@ -108,3 +108,29 @@ PS accuracy stays up. That is C2/C3 made a slam-dunk rather than a pilot.
 4. Re-score style-invariantly; bootstrap CIs; per-model + pooled tables.
 5. FINDINGS with the honest nulls and the capability-floor boundary.
 Output: `code/specs/data/e1-ablation-confirmatory/` mirroring the ADJ run layout.
+
+## 8. Closure status (paper-1 finalization)
+
+For the manuscript, E1 is reported as **pilot + at-scale corroboration**, with one component deferred
+— honestly scoped, not overclaimed:
+
+- **The lever (H1/H2) — established at pilot, not yet frontier-confirmed.** ADJ73 cleanly isolates
+  *justification of discards* (not coverage bookkeeping) as the mechanism that attacks omission, at
+  the qwen2.5:3b scale where omission occurs. This is the C2/C3 evidence the paper carries. It is a
+  **pilot**: n is small and the PS-adversarial/frontier tier (H4) has **not** been run.
+- **The abstention gate (H3) — corroborated at scale by E3's benchmark.** The companion claim (abstain
+  rather than fabricate on uncovered items) is independently supported, out of sample, by the 200-item
+  cross-domain benchmark (run100 + run100b): underdetermined items resolve to INDETERMINATE
+  **24/30** and **26/30**, with **zero confident fabrications** surviving the gate. The structural
+  engine-INDETERMINATE there is a different *mechanism* from the discard-justification prompt ablation,
+  but it is direct large-n evidence for the same *behavior* the gate targets.
+- **Capability-floor boundary — corroborated by E2.** ADJ73's "the contract hurts below the floor"
+  boundary (1.5b) is reinforced by E2's recurring-cost result: qwen2.5:1.5b misses a buried override
+  on 7/7 cases raw, but is 7/7 *through the framework* — capability paid once into the pipeline lifts a
+  sub-threshold model above threshold. This is the on-thesis capability-floor story, now measured twice.
+- **The one deferred run: H4 (frontier omission ablation).** Inducing omission in a *capable* model
+  (the PS-adversarial tier) and re-running the bare/coverage/justified ladder there remains unrun.
+  **Recommendation for the paper:** report E1 as pilot (H1/H2) + at-scale abstention corroboration
+  (H3 via E3) + capability-floor (E2), and place H4 in **Future Work / Limitations** — explicitly
+  stating the lever is demonstrated where omission occurs (≤3B) and its frontier generality is open.
+  This keeps E1 honest and unblocks the manuscript without a marginal-value frontier run.
