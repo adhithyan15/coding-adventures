@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0] — 2026-06-10 — McCarthy predicates: isinst + xor + ref-aware compares (W7)
+
+- `isinst <typeTok>` (0x75): the `pair?` type test — keep a heap `object[]` ref,
+  else push `null` (the CLR twin of JVM `instanceof` / wasm `ref.test`).
+- `xor` (0x61): McCarthy logical `not` lowers to `x ^ 1`.
+- Comparison opcodes (`ceq`/`cgt`/`clt`) are now **reference-aware** via a new
+  `as_cmp_int` (null→0, heap ref→1) so `pair?`/`is_null` can `ceq` a reference
+  against `ldnull` without the strict arithmetic guard firing.
+- **Fix:** `ldnull` is `0x14` (was mis-defined as `0x01` = `break`); a latent bug
+  the cons path never hit but `pair?`/`is_null` do. Existing consumers unaffected.
+
 All notable changes to this project will be documented in this file.
 
 ## [0.2.0] - 2026-06-10 — object/reference value model (LANG77 / McCarthy W6b)

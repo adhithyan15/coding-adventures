@@ -1,5 +1,14 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.9.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W7, F3–F5)
+
+Lower the structural pass's `pair?`/`not`/`equal?` `call_builtin`s on the CLR:
+`pair?` → `isinst object[]; ldnull; ceq; ldc.i4.0; ceq`; `not` → `x ^ 1`;
+`equal?` → `unbox.any int32; unbox.any int32; ceq`. `COND` reuses the existing
+`jmp_if_true`/`jmp_if_false`. Whitelisted the three names in the validator.
+`(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(COND …)` all run on the
+`clr-simulator`. These are the CLR twins of the JVM `instanceof`/`ixor`/`if_icmpeq`.
+
 ## [0.8.0] — 2026-06-10 — McCarthy cons: `box`/`unbox` lowering (W6b)
 
 Lower the shared structural pass's `box`/`unbox` ops: `box` → `ldloc ; box [int32] ; stloc`,

@@ -228,6 +228,11 @@ pub enum CILOpcode {
     /// Stack: `..., obj → ..., value`. Unwraps a boxed `int32` at the
     /// entry/return boundary.
     UnboxAny  = 0xA5,
+    /// `isinst <typeTok>` (0x75) — McCarthy W7 `pair?`. Stack: `..., obj → ...,
+    /// result`, where `result` is `obj` if it is an instance of the token's type
+    /// (an `object[]` cons cell) else `null`. The CLR counterpart of the JVM
+    /// `instanceof` and the wasm `ref.test`.
+    IsInst    = 0x75,
     PrefixFe  = 0xFE,
 }
 
@@ -560,6 +565,12 @@ impl CILBytecodeBuilder {
     /// Emit `unbox.any <type_token>` (0xA5): the dual of `box`.
     pub fn emit_unbox_any(&mut self, token: u32) {
         self.emit_token_instruction(CILOpcode::UnboxAny, token);
+    }
+
+    /// Emit `isinst <type_token>` (0x75): McCarthy W7 `pair?` — push the operand
+    /// if it is an instance of the token's type (`object[]`), else `null`.
+    pub fn emit_isinst(&mut self, token: u32) {
+        self.emit_token_instruction(CILOpcode::IsInst, token);
     }
 
     // ── Comparison opcodes (two-byte, 0xFE prefix) ────────────────────────

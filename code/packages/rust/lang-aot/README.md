@@ -33,7 +33,9 @@ emits CIL that **runs** on the in-repo `clr-simulator` (`42` → 42; W6a), and
 object/reference value model). It runs the *same* structural passes as the
 wasm/JVM paths; the CLR backend lowers the backend-agnostic
 `box`/`unbox`/`alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cells.
-The remaining CLR predicates/symbols/lambda (F3–F7) are W7–W8.
+McCarthy's predicates run too (W7, F3–F5): `(ATOM 7)`→1, `(EQ 7 7)`→1,
+`(COND …)` — `pair?`→`isinst object[]`, `not`→`x^1`, `equal?`→`unbox; unbox; ceq`.
+The remaining CLR symbols + lambda (F6–F7) are W8.
 
 `compile_source_to_beam` is the fourth managed target and the first on the
 **Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real

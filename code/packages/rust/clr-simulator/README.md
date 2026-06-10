@@ -16,6 +16,12 @@ reference opcodes `newarr`, `stelem.ref`, `ldelem.ref`, `dup`, and identity
 `box`/`unbox.any` run — enough to execute the `System.Object[]` cons cells the
 IIR→CIL backend emits for McCarthy Lisp (LANG77 / W6b).
 
+Since 0.3.0 it runs McCarthy's **predicates** (W7): `isinst` (the `pair?` type
+test — keep a heap ref, else `null`), `xor` (logical `not` = `x^1`), and
+**reference-aware** `ceq`/`cgt`/`clt` (so `pair?`/`is_null` can compare a
+reference against `ldnull`). This release also fixes `ldnull` to its real CIL
+opcode `0x14` (was `0x01`), a latent bug the cons path never exercised.
+
 ## Usage
 
 ```rust
