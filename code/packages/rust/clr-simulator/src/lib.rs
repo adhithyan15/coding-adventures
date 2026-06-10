@@ -45,7 +45,7 @@ use std::fmt;
 // ===========================================================================
 
 pub const OP_NOP: u8 = 0x00;
-pub const OP_LDNULL: u8 = 0x01;
+pub const OP_LDNULL: u8 = 0x14;
 pub const OP_LDLOC_0: u8 = 0x06;
 pub const OP_LDLOC_3: u8 = 0x09;
 pub const OP_STLOC_0: u8 = 0x0A;
@@ -65,6 +65,8 @@ pub const OP_ADD: u8 = 0x58;
 pub const OP_SUB: u8 = 0x59;
 pub const OP_MUL: u8 = 0x5A;
 pub const OP_DIV: u8 = 0x5B;
+/// `xor` (0x61) — McCarthy W7 logical `not` lowers to `x ^ 1`.
+pub const OP_XOR: u8 = 0x61;
 /// `box <typeTok>` — McCarthy W6b. Boxes a value type into an object reference.
 /// In this loose model the `Int` already roundtrips through `object[]`, so `box`
 /// is identity (skips the 4-byte type token). Mirrors the wasm `i31` box no-op.
@@ -79,6 +81,10 @@ pub const OP_STELEM_REF: u8 = 0xA4;
 /// `unbox.any <typeTok>` — McCarthy W6b. The dual of `box`; identity here (skips
 /// the 4-byte type token).
 pub const OP_UNBOX_ANY: u8 = 0xA5;
+/// `isinst <typeTok>` (0x75) — McCarthy W7 `pair?`. Pops a reference; pushes it
+/// back if it is an `object[]` (a cons cell), else pushes `null`. The CLR
+/// counterpart of the JVM `instanceof` and the wasm `ref.test`.
+pub const OP_ISINST: u8 = 0x75;
 pub const OP_PREFIX_FE: u8 = 0xFE;
 
 /// DoS guard: the maximum `newarr` length the simulator will allocate. A single
@@ -111,6 +117,19 @@ impl Value {
         match self {
             Value::Int(n) => n,
             Value::Ref(_) => panic!("expected an int on the CLR stack, found a reference"),
+        }
+    }
+
+    /// Reference-aware integer projection for **comparison** opcodes only
+    /// (`ceq`/`cgt`/`clt`). Unlike [`as_int`], this does not panic on a
+    /// reference: `null` ranks 0 and any heap reference ranks 1, matching their
+    /// truthiness. This lets `pair?`/`is_null` compare a reference against
+    /// `ldnull` without the strict arithmetic guard firing.
+    fn as_cmp_int(self) -> i32 {
+        match self {
+            Value::Int(n) => n,
+            Value::Ref(None) => 0,
+            Value::Ref(Some(_)) => 1,
         }
     }
 
@@ -323,6 +342,21 @@ impl CLRSimulator {
             self.pc += 5; // opcode + 4-byte type token
             return self.trace(pc, "unbox.any", stack_before, "unbox.any (identity)".to_string());
         }
+        if opcode_byte == OP_ISINST {
+            // isinst <typeTok>: the McCarthy `pair?` type test. A cons cell is a
+            // heap `object[]` (`Ref(Some)`); an atom is a boxed int (`Int`); nil
+            // is `Ref(None)`. So "is this an object[]?" ≡ "is it a heap ref?":
+            // keep `Ref(Some)`, otherwise push `null`. The token is ignored (the
+            // loose model has exactly one reference kind — the cons array).
+            let value = self.pop().expect("isinst operand");
+            let result = match value {
+                Value::Ref(Some(i)) => Value::Ref(Some(i)),
+                _ => Value::Ref(None),
+            };
+            self.stack.push(Some(result));
+            self.pc += 5; // opcode + 4-byte type token
+            return self.trace(pc, "isinst", stack_before, format!("{value} isinst object[] → {result}"));
+        }
 
         // Arithmetic operations.
         if opcode_byte == OP_ADD {
@@ -333,6 +367,9 @@ impl CLRSimulator {
         }
         if opcode_byte == OP_MUL {
             return self.execute_arithmetic(stack_before, "mul", |a, b| a.wrapping_mul(b));
+        }
+        if opcode_byte == OP_XOR {
+            return self.execute_arithmetic(stack_before, "xor", |a, b| a ^ b);
         }
         if opcode_byte == OP_DIV {
             let b_val = self.pop_int();
@@ -415,8 +452,15 @@ impl CLRSimulator {
     fn execute_two_byte_opcode(&mut self, stack_before: Vec<Option<Value>>) -> CLRTrace {
         let pc = self.pc;
         let second_byte = self.bytecode[pc + 1];
-        let b = self.pop_int();
-        let a = self.pop_int();
+        // Comparisons are reference-aware: McCarthy `pair?`/`is_null` compare a
+        // reference against `null` (`isinst …; ldnull; ceq`). Map a reference to
+        // its truthiness rank for the compare — `null` → 0, a cons ref → 1 — so
+        // `ceq` against `ldnull` (0) answers "is it null?" without panicking.
+        // Atoms remain their integer value (this never collides: an atom that
+        // happens to be 0/1 is only ever compared with `equal?`, which unboxes
+        // both sides to genuine ints first).
+        let b = self.pop().expect("Cannot compare null").as_cmp_int();
+        let a = self.pop().expect("Cannot compare null").as_cmp_int();
         let (mnemonic, op_str, result) = match second_byte {
             CEQ_BYTE => ("ceq", "==", if a == b { 1 } else { 0 }),
             CGT_BYTE => ("cgt", ">", if a > b { 1 } else { 0 }),
