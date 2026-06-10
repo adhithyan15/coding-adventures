@@ -432,3 +432,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `void(0);`
 - **Upstream:** `void 0;` (parens stripped)
 - **Fix:** Token-stream pre-pass: when prev is `void`/`typeof`/`delete` and next is `( SINGLE )` with SINGLE being one safe token (ident/num/string), drop both parens.
+
+### gap-055 — paren elision around ternary arms (single-expression)
+
+- **Status:** OPEN — newly discovered by CLOC14.25 AFTER 3 consecutive zero rounds. Marathon was NOT converged.
+- **Upstream byte-identity test:** `minify_ternary_assign` seed fixture.
+- **Input:** `var r = x>0?(a=1):(b=2);`
+- **Upstream:** `var r=x>0?a=1:b=2;`
+- **closurec:** `var r=x>0?(a=1):(b=2);`
+- **Why it fails:** closurec passes source parens through. Upstream strips parens around ternary arms when contents are a single assignment — `=` binds tighter than `?:` so parens are redundant.
+- **What it needs:** Token-level peephole: when prev is `?` or `:` (ternary context) and next is `(`, scan to matching `)`. If contents are single expression (no `,` at depth 0, no `?` at depth 0), drop both parens.
