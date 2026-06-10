@@ -1,0 +1,11 @@
+{
+  "facts": {
+    "mass_methane": {"magnitude": 25.0, "unit": "g", "polarity": "affirmed", "type": "stated", "span": "25.0 grams of methane"},
+    "carbon_ratio_ch4_to_co2": {"magnitude": 1.0, "unit": "mol CO2 per mol CH4", "polarity": "affirmed", "type": "inferred", "basis_span": "carbon dioxide and water are produced", "entailment": "ENTAILED"}
+  },
+  "discarded": [
+    {"span": "21 degrees Celsius", "reason": "ambient bench temperature; combustion stoichiometry depends only on molar masses and the 1:1 carbon mole ratio, not temperature."}
+  ],
+  "quantity_spans": ["25.0 grams of methane", "21 degrees Celsius"],
+  "program": "from rdkit import Chem\nfrom rdkit.Chem import Descriptors\nmw_ch4 = Descriptors.MolWt(Chem.MolFromSmiles('C'))\nmw_co2 = Descriptors.MolWt(Chem.MolFromSmiles('O=C=O'))\nmass_ch4 = facts['mass_methane']['magnitude']\nratio = facts['carbon_ratio_ch4_to_co2']['magnitude']\nmoles_ch4 = mass_ch4 / mw_ch4\nmoles_co2 = moles_ch4 * ratio\nRESULT = moles_co2 * mw_co2\n"
+}

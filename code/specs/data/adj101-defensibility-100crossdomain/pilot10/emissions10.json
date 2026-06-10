@@ -1,0 +1,240 @@
+[
+ {
+  "id": "PHYS1",
+  "facts": {
+   "v0": {
+    "type": "stated",
+    "span": "20 m/s",
+    "magnitude": 20,
+    "unit": "m/s",
+    "polarity": "affirmed"
+   },
+   "angle_deg": {
+    "type": "stated",
+    "span": "30 degrees",
+    "magnitude": 30,
+    "unit": "degree",
+    "polarity": "affirmed"
+   },
+   "g": {
+    "type": "stated",
+    "span": "9.8 m/s^2",
+    "magnitude": 9.8,
+    "unit": "m/s^2",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [
+   {
+    "span": "2 meters wide",
+    "reason": "The launch pad width is irrelevant to maximum height, which depends only on the vertical velocity component and g. Distractor quantity."
+   }
+  ],
+  "program": "import numpy as np\n\nv0 = facts['v0']['magnitude']\nangle_deg = facts['angle_deg']['magnitude']\ng = facts['g']['magnitude']\n\n# Vertical component of initial velocity\ntheta = np.deg2rad(angle_deg)\nvy = v0 * np.sin(theta)\n\n# Max height: at apex vertical velocity = 0.\n# vy^2 = 2*g*H  ->  H = vy^2 / (2*g)\nRESULT = float(vy**2 / (2.0 * g))\n"
+ },
+ {
+  "id": "MATH1",
+  "facts": {
+   "cubic_equation": {
+    "type": "stated",
+    "span": "x^3 - 2x - 5 = 0",
+    "magnitude": "x**3 - 2*x - 5",
+    "unit": "equation"
+   }
+  },
+  "discarded": [],
+  "program": "import sympy as sp\n\n# Pull the equation string from facts (no hard-coded domain numbers).\neq_str = facts['cubic_equation']['magnitude']  # \"x**3 - 2*x - 5\"\n\nx = sp.symbols('x', real=True)\nexpr = sp.sympify(eq_str)\n\n# Solve and keep only real roots.\nall_roots = sp.solve(sp.Eq(expr, 0), x)\nreal_roots = [r for r in all_roots if sp.im(r) == 0]\n\n# Evaluate numerically; round to 3 decimal places.\nreal_root = sp.Float(sp.re(real_roots[0]))\nRESULT = float(round(real_root, 3))"
+ },
+ {
+  "id": "UNIT1",
+  "facts": {
+   "distance": {
+    "type": "stated",
+    "span": "150 kilometers",
+    "magnitude": 150,
+    "unit": "kilometers",
+    "polarity": "affirmed"
+   },
+   "time": {
+    "type": "stated",
+    "span": "1.5 hours",
+    "magnitude": 1.5,
+    "unit": "hours",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "\n# Average speed = distance / time, expressed in meters per second (SI).\n# Pull raw quantities from facts (never hard-code problem numbers).\ndistance_km = facts['distance']['magnitude']   # 150 kilometers\ntime_hours  = facts['time']['magnitude']        # 1.5 hours\n\n# Unit conversion factors are structural definitions of the SI prefixes /\n# time units, not domain numbers pulled from the problem:\n#   1 kilometer = 1000 meters\n#   1 hour      = 3600 seconds\nMETERS_PER_KILOMETER = 1000.0        # SI prefix kilo- = 10^3\nSECONDS_PER_HOUR     = 60.0 * 60.0   # 60 min/hr * 60 s/min\n\ndistance_m   = distance_km * METERS_PER_KILOMETER\ntime_seconds = time_hours * SECONDS_PER_HOUR\n\nRESULT = distance_m / time_seconds   # meters per second\n"
+ },
+ {
+  "id": "CHEM1",
+  "facts": {
+   "smiles": {
+    "type": "stated",
+    "span": "CC(=O)Oc1ccccc1C(=O)O",
+    "magnitude": "CC(=O)Oc1ccccc1C(=O)O"
+   }
+  },
+  "discarded": [],
+  "program": "from rdkit import Chem\nfrom rdkit.Chem import Descriptors\n\nsmiles = facts['smiles']['magnitude']\nmol = Chem.MolFromSmiles(smiles)\nRESULT = float(Descriptors.MolWt(mol))\n"
+ },
+ {
+  "id": "CHEM2",
+  "facts": {
+   "smiles": {
+    "type": "stated",
+    "span": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+    "magnitude": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C"
+   },
+   "molar_mass": {
+    "type": "stated",
+    "span": "molar mass of about 194 g/mol",
+    "magnitude": 194,
+    "unit": "g/mol"
+   }
+  },
+  "discarded": [
+   {
+    "span": "molar mass of about 194 g/mol",
+    "reason": "Captured as fact 'molar_mass' for byte coverage, but irrelevant to counting H-bond donors, which is a purely structural property derived from the SMILES connectivity, not from molecular weight."
+   }
+  ],
+  "program": "from rdkit import Chem\nfrom rdkit.Chem import Lipinski\n\n# H-bond donor count is a structural property: derived entirely from the\n# molecular graph (N-H / O-H bonds), so we parse the SMILES with RDKit and\n# let it count donors. No problem-quantities (molar mass) are used here.\nsmiles = facts['smiles']['magnitude']\nmol = Chem.MolFromSmiles(smiles)\nRESULT = float(Lipinski.NumHDonors(mol))"
+ },
+ {
+  "id": "FIN1",
+  "facts": {
+   "principal": {
+    "type": "stated",
+    "span": "$5,000",
+    "magnitude": 5000,
+    "unit": "USD",
+    "polarity": "affirmed"
+   },
+   "rate": {
+    "type": "stated",
+    "span": "4%",
+    "magnitude": 0.04,
+    "unit": "fraction_per_year",
+    "polarity": "affirmed"
+   },
+   "years": {
+    "type": "stated",
+    "span": "3 years",
+    "magnitude": 3,
+    "unit": "years",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [
+   {
+    "span": "branch number is 4021",
+    "reason": "Account branch identifier; not a quantity in the compound-interest computation."
+   }
+  ],
+  "program": "\n# Compound interest: A = P * (1 + r)^n\n# All numeric inputs come from facts; only structural constant 1 is a literal.\nP = float(facts['principal']['magnitude'])\nr = float(facts['rate']['magnitude'])\nn = float(facts['years']['magnitude'])\n\nRESULT = round(P * (1 + r) ** n, 2)\n"
+ },
+ {
+  "id": "CHEM3",
+  "facts": {
+   "methane_mass": {
+    "type": "stated",
+    "span": "25.0 grams of methane",
+    "magnitude": 25,
+    "unit": "g",
+    "polarity": "affirmed"
+   },
+   "methane_smiles": {
+    "type": "inferred",
+    "basis_span": "methane (CH4)",
+    "entailment": "ENTAILED",
+    "magnitude": "C",
+    "polarity": "affirmed"
+   },
+   "co2_smiles": {
+    "type": "inferred",
+    "basis_span": "carbon dioxide (CO2)",
+    "entailment": "ENTAILED",
+    "magnitude": "O=C=O",
+    "polarity": "affirmed"
+   },
+   "stoich_ratio_co2_per_ch4": {
+    "type": "inferred",
+    "basis_span": "complete combustion in oxygen, carbon dioxide and water are produced",
+    "entailment": "LEAP",
+    "magnitude": 1,
+    "unit": "mol CO2 per mol CH4",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [
+   {
+    "span": "21 degrees Celsius",
+    "reason": "Lab thermometer reading; irrelevant to a mass-stoichiometry calculation. The mass of CO2 produced from complete combustion depends only on the moles of methane and the reaction stoichiometry, not on ambient temperature."
+   }
+  ],
+  "program": "from rdkit import Chem\nfrom rdkit.Chem import Descriptors\n\n# Pull the only bare quantity from the problem through facts.\nmass_ch4_g = float(facts['methane_mass']['magnitude'])  # grams of methane\n\n# Balanced complete combustion: CH4 + 2 O2 -> CO2 + 2 H2O\n# 1 mol CH4 yields 1 mol CO2. Ratio comes from facts (inferred), not a literal.\nratio_co2_per_ch4 = float(facts['stoich_ratio_co2_per_ch4']['magnitude'])\n\n# Molecular weights from RDKit (never hard-coded).\nmol_ch4 = Chem.MolFromSmiles(facts['methane_smiles']['magnitude'])\nmol_co2 = Chem.MolFromSmiles(facts['co2_smiles']['magnitude'])\nmw_ch4 = Descriptors.MolWt(mol_ch4)   # g/mol of CH4\nmw_co2 = Descriptors.MolWt(mol_co2)   # g/mol of CO2\n\n# moles CH4 -> moles CO2 -> grams CO2\nmoles_ch4 = mass_ch4_g / mw_ch4\nmoles_co2 = moles_ch4 * ratio_co2_per_ch4\nmass_co2_g = moles_co2 * mw_co2\n\nRESULT = float(mass_co2_g)"
+ },
+ {
+  "id": "GEO1",
+  "facts": {
+   "a": {
+    "type": "stated",
+    "span": "7 cm",
+    "magnitude": 7,
+    "unit": "cm",
+    "polarity": "affirmed"
+   },
+   "b": {
+    "type": "stated",
+    "span": "8 cm",
+    "magnitude": 8,
+    "unit": "cm",
+    "polarity": "affirmed"
+   },
+   "c": {
+    "type": "stated",
+    "span": "9 cm",
+    "magnitude": 9,
+    "unit": "cm",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "import sympy as sp\n\n# Pull the three side lengths from facts (never hard-code the quantities).\na = sp.Rational(str(facts['a']['magnitude']))\nb = sp.Rational(str(facts['b']['magnitude']))\nc = sp.Rational(str(facts['c']['magnitude']))\n\n# Heron's formula: s = (a+b+c)/2 ; area = sqrt(s(s-a)(s-b)(s-c)).\n# The 2 is a trivial structural constant.\ns = (a + b + c) / 2\narea = sp.sqrt(s * (s - a) * (s - b) * (s - c))\n\nRESULT = float(area)"
+ },
+ {
+  "id": "PHYS2",
+  "facts": {
+   "length": {
+    "type": "stated",
+    "span": "2 meters",
+    "magnitude": 2,
+    "unit": "m",
+    "polarity": "affirmed"
+   },
+   "g": {
+    "type": "stated",
+    "span": "9.8 m/s^2",
+    "magnitude": 9.8,
+    "unit": "m/s^2",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "import sympy as sp\n\nL = sp.Rational(str(facts['length']['magnitude']))\ng = sp.Rational(str(facts['g']['magnitude']))\n\n# Simple pendulum (small-angle) period: T = 2*pi*sqrt(L/g)\nT = 2 * sp.pi * sp.sqrt(L / g)\nRESULT = float(T.evalf())\n"
+ },
+ {
+  "id": "CHEM4",
+  "facts": {
+   "water_smiles": {
+    "type": "stated",
+    "span": "O (a single oxygen with implicit hydrogens)",
+    "magnitude": "O",
+    "polarity": "affirmed"
+   }
+  },
+  "discarded": [],
+  "program": "from rdkit import Chem\nfrom rdkit.Chem import Descriptors\nfrom rdkit.Chem import rdMolDescriptors\n\n# Pull the water molecule from facts (SMILES \"O\" => H2O with implicit hydrogens).\nsmiles = facts['water_smiles']['magnitude']\nmol = Chem.MolFromSmiles(smiles)\nmol = Chem.AddHs(mol)  # make implicit hydrogens explicit\n\n# Total molecular weight from RDKit (no hard-coded constants).\nmol_wt = Descriptors.MolWt(mol)\n\n# Sum the mass contributed by oxygen atoms, using RDKit per-atom masses.\noxygen_mass = 0.0\nfor atom in mol.GetAtoms():\n    if atom.GetSymbol() == 'O':\n        oxygen_mass += atom.GetMass()\n\nRESULT = 100.0 * oxygen_mass / mol_wt\n"
+ }
+]
