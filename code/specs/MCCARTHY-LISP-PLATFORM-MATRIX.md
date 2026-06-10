@@ -62,7 +62,7 @@ representation + per-builtin backend lowering.
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
-| **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | Erlang terms |
+| **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
@@ -215,9 +215,16 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   dispatches the predicate set + rejects others). **Verified by RUNNING** on a real
   `erl`: `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(COND …)`→100/200
   (`lang-aot/tests/beam_predicates.rs`).
-- ☐ **W11 — BEAM symbols + lambda (F6–F7).** Symbols = Erlang atoms; lambda = fun.
-  **Completes BEAM.** (Mind the OTP-27 AtU8 atom-format constraint from
-  `ir-to-beam`.)
+- ✅ **W11 — BEAM symbols + lambda (F6–F7). 🎉 COMPLETES BEAM (F1–F7).**
+  **Symbols (F6):** one-line pipeline addition — `compile_source_to_beam` runs the
+  shared `intern_symbols_structural`, interning each symbol to a stable `i32` id
+  (`SYMBOL_ID_BASE = 1<<29`, the SAME id as wasm/JVM/CLR), carried as a native
+  Erlang integer; `EQ` → `is_eq_exact`. **Lambda (F7) needed NOTHING extra** — a
+  `(LAMBDA …)` application is a method `call`, already lowered natively (a BEAM
+  fun). **Verified by RUNNING** on a real `erl`: `(QUOTE A)`→536870912,
+  `(EQ (QUOTE A) (QUOTE A))`→1, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
+  `((LAMBDA (X) (EQ X (QUOTE A))) (QUOTE A))`→1
+  (`lang-aot/tests/beam_symbols_lambda.rs`). **BEAM is the FIFTH backend at F1–F7.**
 
 ### Phase E — LLVM (tagged-word, like native)
 
