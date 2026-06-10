@@ -450,3 +450,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.66. `minify_paren_then_member` flips IGNORED → PASS.
 - **Input:** `var v = (a).b;` → **Upstream:** `var v=a.b;`
 - **Fix:** Token-stream pre-pass: drop the grouping parens in the shape `GROUPING_PREFIX ( IDENT ) .`. Three guards make it provably safe — (1) GROUPING not CALL: the token before `(` must be a punctuation/operator other than `)`/`]`/`?.`, so call/index/optional-call parens (`f(a).b`, `a[i](b).c`, `x?.(a).b`) are never touched; (2) SINGLE PLAIN IDENTIFIER inside — numbers (`(1).toString()`), keywords, literals, regex are all excluded; (3) the token after `)` must be `.` (member position). A statement-leading `(` is harmless here because the single-identifier content can never be `{`/`function`, so there's no block/function ambiguity. `(a)[i]` and `(a)(x)` are safe too but deferred.
+
+### gap-058 — numeric separator in float literals
+
+- **Status:** OPEN — discovered by CLOC14.29. `minify_numeric_underscore_float` ignored.
+- **Input:** `var x=1_000.5;` → **Upstream:** `var x=1000.5;`
+- **What it needs:** Extend the gap-040 numeric-separator stripping (which handled integer + scientific forms) to cover the fractional part of a float literal — strip `_` from `1_000.5` too. Likely the separator strip is keyed on a token shape that doesn't match a NUMBER with a `.`-fraction.
+
+### gap-059 — member access on a `new` expression
+
+- **Status:** OPEN — discovered by CLOC14.29. `minify_new_member_chain` ignored.
+- **Input:** `var x=new A().b;` → **Upstream:** `var x=(new A).b;`
+- **What it needs:** Two coordinated transforms: (1) drop the empty call parens of `new A()` (gap-050 does this standalone), and (2) wrap the result in parens when a `.member` follows — `new A.b` would parse as `new (A.b)`, so upstream emits `(new A).b` to preserve "construct A, then read .b". Non-trivial: needs `new`-expression-aware paren insertion in the token re-stitcher. Design before implementing.
