@@ -1,0 +1,7 @@
+{
+ "idx": 77,
+ "id": "CUS-8",
+ "scenario": "Vireo Health imports a small parcel of a controlled pharmaceutical substance with a declared value of $400. The company attempts to clear it as an informal entry without using a licensed customs broker.",
+ "policy": "Commercial shipments valued at $2,500 or more require a formal customs entry filed by a licensed customs broker. Notwithstanding the value threshold, any shipment containing controlled pharmaceutical substances must be filed as a formal customs entry by a licensed broker regardless of value.",
+ "question": "May Vireo clear this parcel as an informal entry without a licensed broker?"
+}

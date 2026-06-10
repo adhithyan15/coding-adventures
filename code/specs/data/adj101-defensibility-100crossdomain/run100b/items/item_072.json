@@ -1,0 +1,7 @@
+{
+ "idx": 72,
+ "id": "CUS-3",
+ "scenario": "Norwood Electronics classified a shipment of laptop chargers under a tariff code carrying a 3% duty rate. The correct code carried a 7% duty rate. The declared customs value of the chargers was $50,000.",
+ "policy": "An importer who misclassifies goods under an incorrect tariff code is liable for a penalty equal to 200% of the duty that was underpaid as a result of the misclassification. If the misclassification resulted in no underpayment of duty, no penalty is owed.",
+ "question": "What penalty does Norwood Electronics owe for the misclassification?"
+}

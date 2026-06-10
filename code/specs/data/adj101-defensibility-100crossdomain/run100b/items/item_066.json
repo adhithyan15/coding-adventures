@@ -1,0 +1,7 @@
+{
+ "idx": 66,
+ "id": "PRO-7",
+ "scenario": "An applicant for a security guard license has one felony conviction from 2015 that was formally expunged by court order in 2020.",
+ "policy": "An applicant with a felony conviction is disqualified from receiving a private-security guard license. Override: if the conviction has been formally expunged or pardoned, it must not be treated as a disqualifying conviction.",
+ "question": "Is the applicant disqualified on the basis of the conviction?"
+}

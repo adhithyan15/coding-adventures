@@ -1,0 +1,8 @@
+{
+ "idx": 8,
+ "policy": "The plan applies a $250 inpatient hospital admission copay to every inpatient admission, except when the admission is a readmission to the same hospital within 30 days of discharge for the same condition, in which case no admission copay applies.",
+ "scenario": "Helen was discharged from Mercy Hospital on April 2 after treatment for pneumonia. On April 18 she was readmitted to Mercy Hospital for the same pneumonia, 16 days after discharge. The standard inpatient admission copay is $250.",
+ "question": "What admission copay does Helen owe for the April 18 readmission?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "$0"
+}

@@ -1,0 +1,8 @@
+{
+ "idx": 11,
+ "policy": "A discharge of stormwater associated with industrial activity requires coverage under an NPDES permit. Coverage is obtained by filing a Notice of Intent (NOI) at least 30 days before the discharge begins. Discharges that begin before the 30-day waiting period elapses are unpermitted.",
+ "scenario": "Harbor Metals filed its complete NOI on March 1. Its new outfall began discharging industrial stormwater on March 12.",
+ "question": "Was Harbor Metals' March 12 discharge permitted?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "unpermitted"
+}

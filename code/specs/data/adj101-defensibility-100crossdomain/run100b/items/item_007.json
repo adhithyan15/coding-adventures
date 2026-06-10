@@ -1,0 +1,7 @@
+{
+ "idx": 7,
+ "id": "HEA-8",
+ "scenario": "Carlos required an emergency appendectomy after arriving at the hospital with acute appendicitis. The procedure normally requires prior authorization, and no prior authorization was on file. The surgery was performed during the documented emergency and is otherwise a covered service.",
+ "policy": "Claims for services requiring prior authorization are denied if no authorization is on file. Notwithstanding the prior-authorization requirement, services rendered during a bona fide medical emergency are exempt from prior authorization and must be paid if otherwise covered.",
+ "question": "Should the appendectomy claim be denied for lack of prior authorization?"
+}

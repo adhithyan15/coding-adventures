@@ -1,0 +1,8 @@
+{
+ "idx": 86,
+ "policy": "Generally, a controller must respond to a data subject access request by providing a copy of the personal data within one month. However, where requests from a data subject are manifestly unfounded or excessive, in particular because of their repetitive character, the controller may refuse to act on the request.",
+ "scenario": "Felix has sent retailer Quillmart an identical, complete data access request every single business day for the past three weeks, each demanding a fresh full copy of all his data; Quillmart has fully answered the first one and confirms nothing in his data has changed since. Quillmart refused to act on the latest in the series.",
+ "question": "Was Quillmart permitted to refuse the latest request?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "yes"
+}

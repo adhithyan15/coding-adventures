@@ -1,0 +1,8 @@
+{
+ "idx": 41,
+ "policy": "A food handler must be excluded from working with or around food if diagnosed with an illness due to Norovirus, and may not return to food-handling duties until more than 48 hours have passed since symptoms (vomiting and diarrhea) resolved.",
+ "scenario": "A line cook was diagnosed with Norovirus. Her vomiting and diarrhea fully resolved on Monday at 8:00 AM. She reports for a food-handling shift on Tuesday at 9:00 AM, which is 25 hours after her symptoms resolved.",
+ "question": "May she work food-handling duties on this Tuesday shift?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "may not return"
+}

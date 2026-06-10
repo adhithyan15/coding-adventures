@@ -1,0 +1,8 @@
+{
+ "idx": 37,
+ "policy": "General rule: any person who acquires beneficial ownership of more than 5% of a class of a company's registered equity securities must file a Schedule 13D within 10 days. Override: a qualified institutional investor that holds the securities in the ordinary course of business and not with the purpose of changing or influencing control of the issuer may instead file the short-form Schedule 13G, and is not required to file Schedule 13D.",
+ "scenario": "Beacon Asset Management, a registered investment adviser and qualified institutional investor, acquired 7% of Solis Corp's registered common stock in the ordinary course of its business. Beacon has no purpose or intent to change or influence control of Solis.",
+ "question": "Is Beacon required to file a Schedule 13D?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "not required to file Schedule 13D"
+}

@@ -1,0 +1,8 @@
+{
+ "idx": 2,
+ "policy": "A claim must be denied for timely-filing if it is submitted more than 90 days after the date of service. Claims submitted within 90 days are eligible for processing.",
+ "scenario": "A provider rendered a service on March 1 and submitted the claim on March 20, which is 19 days after the date of service.",
+ "question": "Should the claim be denied for timely-filing?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "not denied"
+}

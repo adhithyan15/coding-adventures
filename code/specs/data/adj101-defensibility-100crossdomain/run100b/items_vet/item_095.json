@@ -1,0 +1,8 @@
+{
+ "idx": 95,
+ "policy": "An occupational disease is compensable only if the employee was exposed to the disease-causing hazard during employment AND the last injurious exposure occurred while working for the employer against whom the claim is filed.",
+ "scenario": "Hector worked 18 years as a sandblaster and was diagnosed with silicosis, a disease caused by inhaling silica dust. He files a claim against his most recent employer, FineCoat Inc., where he worked for the last three years. Sandblasting at FineCoat routinely generated silica dust, and Hector worked on the line daily.",
+ "question": "Is Hector's silicosis claim against FineCoat compensable?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the last injurious exposure occurred at FineCoat"
+}

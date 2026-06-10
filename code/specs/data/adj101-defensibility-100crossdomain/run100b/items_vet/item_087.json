@@ -1,0 +1,8 @@
+{
+ "idx": 87,
+ "policy": "A controller must obtain parental consent before processing the personal data of a child under 13. Notwithstanding the foregoing, no parental consent is required where the processing is solely for the purpose of providing security to the online service and is limited to what is necessary for that purpose.",
+ "scenario": "KidQuest, an online game, processes 11-year-old Mia's account login IP addresses for the sole purpose of detecting and blocking account hijacking attempts, retaining only what is needed for that security function. KidQuest did not obtain consent from Mia's parents for this IP processing.",
+ "question": "Did KidQuest violate the consent requirement by processing Mia's login IP addresses without parental consent?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "no"
+}
