@@ -1540,10 +1540,18 @@ fn normalize_number_value(value: &str) -> String {
         cleaned.parse::<u128>().ok()
     } else {
         // Has a `.` or `e`/`E` or other non-integer
-        // character — leave alone. Decimal floating-point
-        // shortest-form (e.g. `0.5` → `.5`) is a separate
-        // future gap.
-        return value.to_string();
+        // character. We do NOT attempt full shortest-form
+        // normalization here (e.g. `0.5` → `.5`, `1000e3` →
+        // `1E6`) — that's a separate deferred gap. BUT the
+        // ES2021 `_` numeric separator is PURELY LEXICAL
+        // sugar, so it must still be stripped even for
+        // floats and scientific forms (gap-058):
+        //   `1_000.5` → `1000.5`   (separator removed)
+        //   `1_0e3`   → `10e3`     (separator removed)
+        // `cleaned` is `value` with every `_` already
+        // removed, so returning it strips separators while
+        // leaving the float/sci shape otherwise untouched.
+        return cleaned;
     };
 
     let Some(n) = parsed else {
@@ -2861,6 +2869,33 @@ mod tests {
     #[test]
     fn gap040_zero_unchanged() {
         assert_eq!(minify("var x=0;"), "var x=0;");
+    }
+
+    // ---- gap-058: numeric separator in float literals ----
+
+    /// gap-058: a `_` separator in a FLOAT literal is purely
+    /// lexical sugar and must be stripped, even though full
+    /// float shortest-form (`0.5` → `.5`) stays deferred.
+    /// `1_000.5` → `1000.5` (matches upstream).
+    #[test]
+    fn gap058_float_separator_stripped() {
+        assert_eq!(minify("var x=1_000.5;"), "var x=1000.5;");
+    }
+
+    /// gap-058: separator in the mantissa of a scientific
+    /// literal is likewise stripped (`1_0e3` → `10e3`). The
+    /// `e`-exponent shape is otherwise left untouched (sci
+    /// shortest-form is a separate deferred gap).
+    #[test]
+    fn gap058_scientific_mantissa_separator_stripped() {
+        assert_eq!(minify("var x=1_0e3;"), "var x=10e3;");
+    }
+
+    /// gap-058 non-regression: a float with NO separator is
+    /// returned verbatim (no spurious shortest-form rewrite).
+    #[test]
+    fn gap058_plain_float_unchanged() {
+        assert_eq!(minify("var x=3.14;"), "var x=3.14;");
     }
 
     /// **Non-regression**: decimal source without trailing

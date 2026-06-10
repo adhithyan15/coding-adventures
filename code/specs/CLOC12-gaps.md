@@ -453,9 +453,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-058 — numeric separator in float literals
 
-- **Status:** OPEN — discovered by CLOC14.29. `minify_numeric_underscore_float` ignored.
+- **Status:** **RESOLVED** in CLOC12.67. `minify_numeric_underscore_float` flips IGNORED → PASS.
 - **Input:** `var x=1_000.5;` → **Upstream:** `var x=1000.5;`
-- **What it needs:** Extend the gap-040 numeric-separator stripping (which handled integer + scientific forms) to cover the fractional part of a float literal — strip `_` from `1_000.5` too. Likely the separator strip is keyed on a token shape that doesn't match a NUMBER with a `.`-fraction.
+- **Fix:** `normalize_number_value`'s float/scientific branch returned the value verbatim (leaving `_` in). It now returns `cleaned` (the value with every `_` already stripped) instead — separators removed for floats/scientific too. Full float shortest-form (`0.5` → `.5`, `1000e3` → `1E6`) remains a separate deferred gap; only the purely-lexical separator stripping is added here.
 
 ### gap-059 — member access on a `new` expression
 
