@@ -22,6 +22,13 @@ test — keep a heap ref, else `null`), `xor` (logical `not` = `x^1`), and
 reference against `ldnull`). This release also fixes `ldnull` to its real CIL
 opcode `0x14` (was `0x01`), a latent bug the cons path never exercised.
 
+Since 0.4.0 it runs McCarthy **lambda** (W8b) via an inter-method **call-frame**
+model: `load_program(methods, entry)` registers a method table, `call
+<MethodDef>` pops the callee's args + pushes a frame + transfers control, `ret`
+pops the frame (or halts at the entry), and `ldarg.N` reads a parameter.
+Recursion depth is DoS-capped at `MAX_CALL_DEPTH`. The operand stack + heap are
+shared across frames; single-method programs still use `load` unchanged.
+
 ## Usage
 
 ```rust
