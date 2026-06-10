@@ -61,7 +61,7 @@ representation + per-builtin backend lowering.
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
-| **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | uniform-object |
+| **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -177,7 +177,16 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   `clr-simulator` 0.3.0 gained `isinst`/`xor` + ref-aware `ceq` (and an `ldnull`
   opcode fix). `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(COND …)`
   verified on the simulator (`lang-aot/tests/cil_predicates.rs`).
-- ☐ **W8 — CLR symbols + lambda (F6–F7).** **Completes CLR.**
+- ◑ **W8 — CLR symbols + lambda (F6–F7).** *In progress.* **Completes CLR when done.**
+  - ✅ **W8a — CLR symbols (F6).** **Zero new backend code** — the shared
+    `intern_symbols_structural` pass interns symbols to `i32` ids (`SYMBOL_ID_BASE
+    = 1<<29`) and W6b boxing + W7 `equal?`/`pair?`/`jmp_if` execute them.
+    `(QUOTE A)`→536870912, `(EQ (QUOTE A) (QUOTE A))`→1, `(EQ (QUOTE A) (QUOTE B))`
+    →0, `(ATOM (QUOTE A))`→1, on the simulator (`lang-aot/tests/cil_symbols.rs`).
+  - ☐ **W8b — CLR lambda (F7).** Accept `call`/`ref<any>` in the validator (the
+    `call` arm already computes the MethodDef token + boxes args via the structural
+    pass), and extend `clr-simulator` with **inter-method call frames** (it currently
+    runs only `main`). Verify `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7 on the simulator.
 
 ### Phase D — BEAM (Erlang terms)
 
