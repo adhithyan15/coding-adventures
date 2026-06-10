@@ -201,6 +201,15 @@ const OP_GET_LIST: u8 = 65;
 /// boolean comparisons.
 const OP_IS_NIL: u8 = 52;
 
+/// `{is_nonempty_list, {f,Fail}, Src}` — McCarthy W10 `pair?`.
+///
+/// Falls through if Src is a non-empty list cell `[H|T]` (a McCarthy cons),
+/// jumps to Fail otherwise (an integer atom, `[]` = nil, etc.). The native
+/// Erlang-terms twin of the JVM `instanceof Object[]` / CLR `isinst object[]` /
+/// wasm `ref.test` — but here the cons cell IS a list, so the test is a
+/// primitive BEAM type-guard. OTP 28: opcode 56.
+const OP_IS_NONEMPTY_LIST: u8 = 56;
+
 // ===========================================================================
 // IIRBeamConfig
 // ===========================================================================
@@ -1335,6 +1344,84 @@ pub fn lower_iir_to_beam(
                     ]));
 
                     // Step D: convergence label — both paths meet here.
+                    instrs.push(BEAMInstruction::new(
+                        OP_LABEL, vec![BEAMOperand::u(synth as u64)],
+                    ));
+                }
+
+                // ── call_builtin: McCarthy predicates (W10, F3–F5) ───────────
+                //
+                // The structural decomposition `ATOM x` → `not (pair? x)` and
+                // `EQ a b` → `equal? a b` arrives here as `call_builtin` with
+                // `srcs[0] = Var(name)`; `COND` lowers to the already-handled
+                // `jmp_if_*`. Each predicate produces a 0/1 boolean via the SAME
+                // synthesis as the `cmp_*` ops — preload 0, run a BEAM type/equality
+                // test that branches to a synth label on FALSE, move 1 on the
+                // (true) fall-through, converge at the label:
+                //   pair?  → is_nonempty_list {f,synth} {x,r}   (a cons IS [H|T])
+                //   equal? → is_eq_exact      {f,synth} {x,a} {x,b}   (`=:=`)
+                //   not    → is_eq_exact      {f,synth} {x,r} {i,0}   (x == 0)
+                // These are the native-Erlang twins of the JVM instanceof/ixor/
+                // if_icmpeq and the CLR isinst/xor/ceq.
+                "call_builtin" => {
+                    let builtin = match instr.srcs.first() {
+                        Some(Operand::Var(n)) => n.clone(),
+                        _ => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "call_builtin: srcs[0] must be the builtin name".into(),
+                        }),
+                    };
+                    let rd = match &instr.dest {
+                        Some(name) => var_reg!(name),
+                        None => return Err(IIRBeamError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!("call_builtin {builtin:?} must have a dest"),
+                        }),
+                    };
+                    // Allocate the synthetic convergence label.
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many predicate instructions".into(),
+                        }
+                    })?;
+                    let synth = label_counter;
+                    // Build the per-predicate test operands (branch to synth on FALSE).
+                    let test = match builtin.as_str() {
+                        "pair?" => {
+                            let r = operand_reg!(get_src!(instr, 1));
+                            BEAMInstruction::new(OP_IS_NONEMPTY_LIST, vec![
+                                BEAMOperand::f(synth), BEAMOperand::x(r),
+                            ])
+                        }
+                        "equal?" => {
+                            let a = operand_reg!(get_src!(instr, 1));
+                            let b = operand_reg!(get_src!(instr, 2));
+                            BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                                BEAMOperand::f(synth), BEAMOperand::x(a), BEAMOperand::x(b),
+                            ])
+                        }
+                        "not" => {
+                            // Logical not of a 0/1 boolean: `x == 0`.
+                            let r = operand_reg!(get_src!(instr, 1));
+                            BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
+                                BEAMOperand::f(synth), BEAMOperand::x(r), BEAMOperand::i(0),
+                            ])
+                        }
+                        other => return Err(IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: format!("call_builtin {other:?}: not in the BEAM predicate set (pair?/equal?/not)"),
+                        }),
+                    };
+                    // Step A: preload 0 (false). Step B: the test. Step C: move 1
+                    // on fall-through (true). Step D: convergence label.
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(0), BEAMOperand::x(rd),
+                    ]));
+                    instrs.push(test);
+                    instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                        BEAMOperand::i(1), BEAMOperand::x(rd),
+                    ]));
                     instrs.push(BEAMInstruction::new(
                         OP_LABEL, vec![BEAMOperand::u(synth as u64)],
                     ));
