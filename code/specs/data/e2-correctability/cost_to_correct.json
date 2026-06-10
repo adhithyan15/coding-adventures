@@ -1,0 +1,59 @@
+{
+ "thesis": "cost-to-correct should be paid ONCE and not recur over the same facts",
+ "why_the_localize_null_matters": "finding the error costs ~the same in both arms (see localize_results.json), so the ENTIRE cost-to-correct difference is fix+propagate+recurrence",
+ "cost_decomposition": {
+  "find": "\u2248 equal (localize null)",
+  "fix": {
+   "framework": "edit 1 fact",
+   "prose": "rewrite 1 answer"
+  },
+  "propagate_M_minus_1_current": {
+   "framework": 0,
+   "prose": "M-1 rewrites"
+  },
+  "recurrence_G_future": {
+   "framework": 0,
+   "prose": "G re-errors (no persistence)"
+  },
+  "total": {
+   "framework": "O(1) paid once",
+   "prose": "O(M+G) recurring"
+  }
+ },
+ "framework_arm_evidence": {
+  "meningitis_single_override": {
+   "edits": 3,
+   "target_corrected": "0.9999 -> 0.7709",
+   "regression_sibling": "1.0 -> 1.0 (unchanged)",
+   "answer_time_model_calls": 0
+  },
+  "tax_derive_once": {
+   "compiled_once": "TAX-1 rulebook (byte-verified) -> content-addressed library, no model",
+   "held_out_cases_decided": 3,
+   "answer_time_model_calls": 0
+  }
+ },
+ "cost_curves": [
+  {
+   "scenario": "TAX filing-threshold fact shared across cases",
+   "current_cases_sharing_fact_M": 3,
+   "future_cases_G": 10,
+   "framework_total_corrections": 1,
+   "framework_answer_time_model_calls": 0,
+   "prose_total_corrections": 13,
+   "prose_persists": false,
+   "asymmetry": "framework O(1) vs prose O(3+10)=13; ratio grows without bound in G"
+  },
+  {
+   "scenario": "meningitis CSF-correlation fact shared across cases",
+   "current_cases_sharing_fact_M": 2,
+   "future_cases_G": 10,
+   "framework_total_corrections": 1,
+   "framework_answer_time_model_calls": 0,
+   "prose_total_corrections": 12,
+   "prose_persists": false,
+   "asymmetry": "framework O(1) vs prose O(2+10)=12; ratio grows without bound in G"
+  }
+ ],
+ "prose_arm_recurrence": "see recurring_cost/ (empirical: plain Claude re-commits the same fact-error across fresh sibling cases; correction does not persist)"
+}

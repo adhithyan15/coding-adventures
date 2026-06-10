@@ -5,18 +5,30 @@ Pre-registration: [`00-preregistration.md`](00-preregistration.md). This run rep
 **pre-registered honest null** the spec said we must be able to surface — and a sharper,
 more defensible reframe of where the framework's correctability payoff actually lives.
 
-## TL;DR
+## TL;DR — the metric is cost-to-correct, paid ONCE, not recurring
 
-| panel | hypothesis | result |
+The real question is **cost-to-correct: the cost should be paid one time and not recur over the
+same facts.** Decomposed against that metric:
+
+| component | hypothesis | result |
 |---|---|---|
-| **Localize-by-reading** (RQ1) | framework trail lets a blind reviewer find the error more often than prose | **NULL** — dead even after the format-confound guard |
-| **Fix-locality** (RQ2) | framework fix = one local edit; prose = rewrite | **supported** (worked CAS examples) |
-| **Persist + propagate** (RQ3) | one override propagates to siblings at 0 answer-time model calls | **supported** — the real correctability win |
+| **find** the error (RQ1) | trail lets a reviewer find it more often than prose | **NULL** — dead even after the format-confound guard |
+| **fix** it (RQ2) | framework = edit one fact; prose = rewrite the answer | **supported** |
+| **propagate + recurrence** (RQ3) | one edit covers all current + future cases at 0 model calls; prose re-errs forever | **supported** — the real win |
 
-**The headline correction:** *correctability ≠ localizability-by-reading.* A strong reviewer
-localizes errors in good prose just as well as in a structured trail. The framework's payoff is
-**the editable, re-derivable artifact** (fix one fact → persists → propagates), which prose
-fundamentally cannot do — not making a reviewer better at *spotting* errors by reading.
+**The localize null is not a weakness — it clears the ground.** Since *finding* the error costs
+about the same in both arms, the entire cost-to-correct difference lives in what happens **after**:
+
+```
+framework total = 1            (paid once, O(1), non-recurring)
+prose total     = M + G        (recurring, O(M+G): M current + G future cases sharing the fact)
+```
+
+Plain prose has **no persistence layer** — each answer is stateless, so a correction to one answer
+does nothing for the next case and a fresh case confidently re-asserts the same false fact. The
+framework writes the correction **once** into the CAS; every dependent case, present and future,
+inherits it for free. *Correctability ≠ localizability-by-reading; it is non-recurring cost.*
+(Cost model + curves: `cost_to_correct.json`.)
 
 ## 1. The localize panel is a clean null
 
