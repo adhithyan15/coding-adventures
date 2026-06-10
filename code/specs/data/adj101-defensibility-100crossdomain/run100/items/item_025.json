@@ -1,0 +1,7 @@
+{
+ "idx": 25,
+ "id": "TAX-6",
+ "scenario": "Theo is claimed as a dependent on his parents' return and had $3,000 of unearned income from dividends this year. He is enrolled at a university and turned 21 during the year.",
+ "policy": "A dependent's unearned income is taxed at the parent's marginal rate (the 'kiddie tax') only if the dependent is under age 19 at year-end, or under age 24 at year-end and a full-time student. Otherwise, the dependent's unearned income is taxed at the dependent's own rate.",
+ "question": "Is Theo's unearned income taxed at his parents' marginal rate under the kiddie tax?"
+}

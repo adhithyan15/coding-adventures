@@ -1,0 +1,8 @@
+{
+ "check_id": 138,
+ "idx": 54,
+ "slot": "landlord_made_reasonable_efforts",
+ "claimed_value": true,
+ "scenario": "Lena broke her 12-month lease and moved out on August 1 with four months remaining. The unit sat empty and was not re-rented for those four months. The landlord now demands four months of rent from Lena. The landlord listed the unit on a major rental website the day after Lena left.",
+ "cited_span": "The landlord listed the unit on a major rental website the day after Lena left"
+}

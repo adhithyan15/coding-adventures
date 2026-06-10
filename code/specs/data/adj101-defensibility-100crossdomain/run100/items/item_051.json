@@ -1,0 +1,7 @@
+{
+ "idx": 51,
+ "id": "BUI-2",
+ "scenario": "A second-story bedroom has a single window used as its emergency escape opening. When fully opened, the window provides a net clear opening that is 22 inches wide and 34 inches high, for a net clear opening area of 5.19 square feet.",
+ "policy": "Every sleeping room below the fourth story must have at least one emergency escape and rescue opening with a minimum net clear opening of 5.7 square feet, a minimum net clear opening height of 24 inches, and a minimum net clear opening width of 20 inches. All three minimums must be met simultaneously by the same opening.",
+ "question": "Does this window satisfy the emergency escape and rescue opening requirement?"
+}

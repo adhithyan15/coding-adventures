@@ -1,0 +1,8 @@
+{
+ "check_id": 35,
+ "idx": 14,
+ "slot": "injury_occurred",
+ "claimed_value": "true",
+ "scenario": "A consumer was injured when a folding ladder collapsed beneath him, and an inspection confirmed the ladder had a manufacturing defect in its hinge. He was standing on the ladder when it gave way.",
+ "cited_span": "A consumer was injured when a folding ladder collapsed beneath him"
+}

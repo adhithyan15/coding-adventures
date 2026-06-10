@@ -1,0 +1,7 @@
+{
+ "idx": 23,
+ "id": "CON-4",
+ "scenario": "Tom bought a power drill on January 5 and the chuck mechanism failed in June due to a manufacturing defect. He has his dated purchase receipt and the defect has been confirmed by the manufacturer. Tom recalls filling out the registration card that came in the box and mailing it shortly after his purchase.",
+ "policy": "The warranty covers repair of a defective component at no charge, but only if the product was registered with the manufacturer within 90 days of purchase. Unregistered products receive no warranty coverage.",
+ "question": "Is the repair covered at no charge under the warranty?"
+}

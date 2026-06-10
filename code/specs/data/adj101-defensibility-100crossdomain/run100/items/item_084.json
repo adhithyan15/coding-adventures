@@ -1,0 +1,7 @@
+{
+ "idx": 84,
+ "id": "CON-5",
+ "scenario": "The service was down for 6 hours during a regional power grid failure. The provider's datacenter lost utility power, and its on-site backup generator did not start, extending the outage. The provider attributes the entire outage to the grid failure and claims a Force Majeure exclusion.",
+ "policy": "Downtime caused by a Force Majeure event is excluded from uptime calculations. Force Majeure includes natural disasters, war, and government action, but expressly excludes failures of the provider's own equipment or software.",
+ "question": "Is the full 6-hour outage excluded from the uptime calculation as Force Majeure?"
+}

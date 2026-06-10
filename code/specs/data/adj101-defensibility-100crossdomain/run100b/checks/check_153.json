@@ -1,0 +1,8 @@
+{
+ "check_id": 153,
+ "idx": 58,
+ "slot": "unpaid_rent",
+ "claimed_value": "true",
+ "scenario": "When Raj moved out he had withheld two months of rent. During those exact two months the city had declared the unit legally uninhabitable due to a sewage backup, and Raj had withheld rent through the lawful procedure. The landlord seeks to apply Raj's deposit to the two months of withheld rent.",
+ "cited_span": "he had withheld two months of rent"
+}

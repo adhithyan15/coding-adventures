@@ -1,0 +1,8 @@
+{
+ "idx": 32,
+ "policy": "A securities offering qualifies for the Regulation D Rule 506(b) exemption only if it involves no general solicitation AND sells to no more than 35 non-accredited investors. If either condition is violated, the offering does not qualify for the 506(b) exemption.",
+ "scenario": "Helios Energy raised capital through a private placement. It conducted no general solicitation or advertising. The offering was sold to 12 accredited investors and 40 non-accredited investors.",
+ "question": "Does the offering qualify for the Rule 506(b) exemption?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "does not qualify"
+}

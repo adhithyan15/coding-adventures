@@ -1,0 +1,8 @@
+{
+ "check_id": 11,
+ "idx": 6,
+ "slot": "procedure_type",
+ "claimed_value": "reconstructive_surgery_following_mastectomy",
+ "scenario": "After a mastectomy to treat breast cancer, Anita underwent breast reconstruction surgery performed by an in-network surgeon. The plan administrator initially flagged the procedure under the cosmetic-procedure exclusion. The billed amount subject to standard in-network cost-sharing would result in a $300 patient share.",
+ "cited_span": "After a mastectomy to treat breast cancer, Anita underwent breast reconstruction surgery performed by an in-network surgeon."
+}

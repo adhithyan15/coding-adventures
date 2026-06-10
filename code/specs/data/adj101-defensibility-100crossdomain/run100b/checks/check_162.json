@@ -1,0 +1,8 @@
+{
+ "check_id": 162,
+ "idx": 61,
+ "slot": "application_type",
+ "claimed_value": "initial",
+ "scenario": "An applicant submits an initial license application listing three disciplines: hairstyling, esthetics, and nail technology.",
+ "cited_span": "submits an initial license application"
+}

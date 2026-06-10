@@ -1,0 +1,7 @@
+{
+ "idx": 43,
+ "id": "INS-4",
+ "scenario": "An insured died by suicide. The claim file confirms the cause of death and that the policy was active and premiums fully paid at the time of death.",
+ "policy": "A life insurance policy pays the full death benefit for any covered death. However, if the insured dies during the first two years of the policy (the contestability period) and the death is by suicide, the insurer pays only a refund of premiums rather than the death benefit.",
+ "question": "Does the insurer pay the full death benefit or only a refund of premiums?"
+}

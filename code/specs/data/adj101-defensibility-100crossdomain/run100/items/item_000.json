@@ -1,0 +1,7 @@
+{
+ "idx": 0,
+ "id": "MED-1",
+ "scenario": "Mr. Halloran is recovering in the PACU after a knee arthroscopy. His current Aldrete score is documented as 8: activity 2, respiration 2, circulation 2, consciousness 2, oxygen saturation 0.",
+ "policy": "A patient may be discharged from the post-anesthesia care unit (PACU) only when their Aldrete score is 9 or higher. A score below 9 requires continued monitoring.",
+ "question": "May Mr. Halloran be discharged from the PACU now?"
+}

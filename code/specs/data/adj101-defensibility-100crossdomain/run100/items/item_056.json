@@ -1,0 +1,7 @@
+{
+ "idx": 56,
+ "id": "BUI-7",
+ "scenario": "A 150-square-foot habitable den has only 6 square feet of window glazing (4% of floor area). The den is equipped with a permanently installed lighting system that produces an average illumination of 8 footcandles measured 30 inches above the floor across the entire room.",
+ "policy": "General rule: Every habitable room must have an aggregate glazing (window) area of not less than 8% of the room's floor area to provide natural light. Override: Natural light is not required, and the 8% glazing rule does not apply, where artificial light is provided capable of producing an average illumination of 6 footcandles over the area of the room at a height of 30 inches above the floor.",
+ "question": "Does the den comply with the natural-light requirement?"
+}

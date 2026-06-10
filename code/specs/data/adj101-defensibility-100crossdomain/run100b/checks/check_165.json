@@ -1,0 +1,8 @@
+{
+ "check_id": 165,
+ "idx": 63,
+ "slot": "license_lapsed",
+ "claimed_value": true,
+ "scenario": "A registered nurse's license expired and was never renewed. She now wishes to return to practice and asks what reinstatement requires.",
+ "cited_span": "A registered nurse's license expired and was never renewed."
+}

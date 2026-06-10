@@ -1,0 +1,8 @@
+{
+ "check_id": 172,
+ "idx": 69,
+ "slot": "worked_on_public_holiday",
+ "claimed_value": true,
+ "scenario": "Grace worked 8 hours on a designated public holiday. Her regular rate is $25/hour. Grace is classified as 'essential operations.'",
+ "cited_span": "Grace worked 8 hours on a designated public holiday."
+}

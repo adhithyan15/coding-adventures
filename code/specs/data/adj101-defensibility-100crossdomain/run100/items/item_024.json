@@ -1,0 +1,7 @@
+{
+ "idx": 24,
+ "id": "TAX-5",
+ "scenario": "An importer brings in a batch of woven cotton scarves, which appear on the eligible-goods schedule. The scarves were shipped to the importer's warehouse from a distribution hub located in a member country.",
+ "policy": "Goods qualify for duty-free treatment under the trade agreement only if they both (a) are listed on the eligible-goods schedule and (b) originate in a member country, as evidenced by a valid certificate of origin. Both requirements must be met.",
+ "question": "Do the scarves qualify for duty-free treatment under the trade agreement?"
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 4,
+ "id": "MED-5",
+ "scenario": "The pharmacy receives a handwritten order for warfarin for Mr. Castellano. The pharmacist notes the dose is written in the prescriber's usual hurried script and that the indication and frequency are clearly documented as 'daily, for atrial fibrillation.'",
+ "policy": "A drug order written with a trailing zero after a decimal point (e.g., '5.0 mg') must be returned to the prescriber for clarification, because the trailing zero is a recognized error-prone notation. Orders without a trailing zero are processed normally.",
+ "question": "Must this warfarin order be returned to the prescriber for clarification?"
+}

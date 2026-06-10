@@ -1,0 +1,8 @@
+{
+ "idx": 9,
+ "policy": "Late-payment interest of 1.5% is assessed on any patient balance not paid within 60 days of the statement date, except for balances that are under active dispute through the plan's formal appeals process, on which no interest accrues while the appeal is pending.",
+ "scenario": "Devon received a statement dated January 5 for a $400 balance. He filed a formal appeal of the charge through the plan's appeals process on January 20, and the appeal is still pending. It is now March 30, more than 60 days after the statement date, and the balance remains unpaid.",
+ "question": "Has late-payment interest accrued on Devon's $400 balance?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "no interest"
+}

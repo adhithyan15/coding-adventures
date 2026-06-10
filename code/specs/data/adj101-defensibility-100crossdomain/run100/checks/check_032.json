@@ -1,0 +1,8 @@
+{
+ "check_id": 32,
+ "idx": 13,
+ "slot": "bar_served_patron",
+ "claimed_value": true,
+ "scenario": "After leaving a bar where he had four drinks, a patron caused a car crash and was found to be over the legal blood-alcohol limit. The bar's staff served him all four drinks over the course of the evening.",
+ "cited_span": "The bar's staff served him all four drinks over the course of the evening."
+}

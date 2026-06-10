@@ -1,0 +1,8 @@
+{
+ "check_id": 112,
+ "idx": 46,
+ "slot": "counted_refrigerated_days",
+ "claimed_value": 4,
+ "scenario": "A kitchen prepares ready-to-eat chicken salad on Day 0 and refrigerates it. On Day 3 it is moved to the freezer. It remains frozen for 20 days, then is thawed and returned to refrigeration on Day 23. The inspector checks it on Day 24.",
+ "cited_span": "refrigerates it ... On Day 3 it is moved to the freezer ... returned to refrigeration on Day 23. The inspector checks it on Day 24."
+}

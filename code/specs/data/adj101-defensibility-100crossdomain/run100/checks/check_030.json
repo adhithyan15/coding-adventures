@@ -1,0 +1,8 @@
+{
+ "check_id": 30,
+ "idx": 12,
+ "slot": "employee_actual_knowledge",
+ "claimed_value": true,
+ "scenario": "A customer slipped on a spilled drink. A waiter saw the spill and reported it to the manager 25 minutes before the fall, but no one cleaned it up before the customer slipped.",
+ "cited_span": "A waiter saw the spill and reported it to the manager"
+}

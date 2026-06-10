@@ -1,0 +1,8 @@
+{
+ "idx": 6,
+ "policy": "Cosmetic procedures are not covered and the patient is fully liable for the charge. However, notwithstanding the cosmetic exclusion, reconstructive surgery following a mastectomy is a mandated covered benefit and is paid subject only to standard in-network cost-sharing.",
+ "scenario": "After a mastectomy to treat breast cancer, Anita underwent breast reconstruction surgery performed by an in-network surgeon. The plan administrator initially flagged the procedure under the cosmetic-procedure exclusion. The billed amount subject to standard in-network cost-sharing would result in a $300 patient share.",
+ "question": "Is Anita fully liable for the reconstruction charge, or does she owe only the standard $300 cost-share?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "$300"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 157,
+ "idx": 59,
+ "slot": "needed_for_disability",
+ "claimed_value": true,
+ "scenario": "Greta's lease contains a clear no-pets clause. She keeps a dog in the unit. The dog is a verified assistance animal that Greta needs for a documented disability, and she has provided the landlord with the required verification. The landlord seeks to evict her solely for keeping the dog.",
+ "cited_span": "a verified assistance animal that Greta needs for a documented disability"
+}

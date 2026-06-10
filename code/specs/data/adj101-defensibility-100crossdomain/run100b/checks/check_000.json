@@ -1,0 +1,8 @@
+{
+ "check_id": 0,
+ "idx": 0,
+ "slot": "verified_emergency",
+ "claimed_value": false,
+ "scenario": "Maria has a closed HMO with no out-of-network benefits. She electively visited Dr. Lee, an out-of-network dermatologist, for a routine mole check. The visit was billed at $220. The visit was not an emergency.",
+ "cited_span": "The visit was not an emergency"
+}

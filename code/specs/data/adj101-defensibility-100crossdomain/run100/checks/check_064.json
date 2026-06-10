@@ -1,0 +1,8 @@
+{
+ "check_id": 64,
+ "idx": 26,
+ "slot": "is_tangible_good",
+ "claimed_value": true,
+ "scenario": "A customer buys $50 worth of unprepared grocery food (raw vegetables and dried beans) at a supermarket.",
+ "cited_span": "grocery food (raw vegetables and dried beans)"
+}

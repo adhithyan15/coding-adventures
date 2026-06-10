@@ -1,0 +1,8 @@
+{
+ "check_id": 169,
+ "idx": 66,
+ "slot": "conviction_expunged_or_pardoned",
+ "claimed_value": true,
+ "scenario": "An applicant for a security guard license has one felony conviction from 2015 that was formally expunged by court order in 2020.",
+ "cited_span": "formally expunged by court order in 2020"
+}

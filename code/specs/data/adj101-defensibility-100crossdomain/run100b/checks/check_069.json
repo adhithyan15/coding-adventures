@@ -1,0 +1,8 @@
+{
+ "check_id": 69,
+ "idx": 30,
+ "slot": "current_public_information_met",
+ "claimed_value": true,
+ "scenario": "Dana is an affiliate (officer) of Acme Corp, a fully reporting SEC company that has filed all required periodic reports on time. Dana acquired restricted shares of Acme in a private placement and has held them for nine months before proposing to sell a quantity within the applicable volume limits.",
+ "cited_span": "that has filed all required periodic reports on time"
+}

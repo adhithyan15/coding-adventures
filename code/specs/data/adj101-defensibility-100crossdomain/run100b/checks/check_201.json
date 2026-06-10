@@ -1,0 +1,8 @@
+{
+ "check_id": 201,
+ "idx": 78,
+ "slot": "has_sanitary_inspection_certificate",
+ "claimed_value": false,
+ "scenario": "Orchard Foods imports a refrigerated container of fresh produce. The shipment is consigned to the Riverside Quarantine Facility, which holds a current government license. Orchard did not obtain a sanitary inspection certificate.",
+ "cited_span": "Orchard did not obtain a sanitary inspection certificate."
+}

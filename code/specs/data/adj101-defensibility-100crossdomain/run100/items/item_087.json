@@ -1,0 +1,7 @@
+{
+ "idx": 87,
+ "id": "CON-8",
+ "scenario": "The provider gave 5 days' notice of a maintenance window announced to run from 02:00 to 03:00. The maintenance actually ran from 02:00 to 03:50, a 50-minute overrun.",
+ "policy": "Planned maintenance windows are excluded from downtime provided the provider gives at least 48 hours' advance notice. However, any maintenance that exceeds its announced window by more than 30 minutes is counted as downtime in full, regardless of notice given.",
+ "question": "Is this maintenance counted as downtime?"
+}

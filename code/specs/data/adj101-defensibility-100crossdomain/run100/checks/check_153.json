@@ -1,0 +1,8 @@
+{
+ "check_id": 153,
+ "idx": 60,
+ "slot": "hours_worked",
+ "claimed_value": 47,
+ "scenario": "Maria's hourly rate is $20. During the workweek she clocked a total of 47 hours of work, which excludes her unpaid meal breaks. Compute her overtime pay for the week (the overtime portion only).",
+ "cited_span": "she clocked a total of 47 hours of work, which excludes her unpaid meal breaks"
+}

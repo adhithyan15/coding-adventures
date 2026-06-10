@@ -1,0 +1,8 @@
+{
+ "check_id": 29,
+ "idx": 11,
+ "slot": "days_between_filing_and_discharge",
+ "claimed_value": 11,
+ "scenario": "Harbor Metals filed its complete NOI on March 1. Its new outfall began discharging industrial stormwater on March 12.",
+ "cited_span": "filed its complete NOI on March 1 ... began discharging ... on March 12"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 84,
+ "idx": 36,
+ "slot": "tippee_traded_on_mnpi",
+ "claimed_value": true,
+ "scenario": "Avery received a tip about Crest Corp's unannounced earnings miss from an insider, Sam. Avery traded on the information and profited. It is established that Sam disclosed the information by accident during an unrelated conversation and received no personal benefit of any kind — no money, no gift, no reputational gain, and no familial or friendship benefit.",
+ "cited_span": "Avery traded on the information and profited"
+}

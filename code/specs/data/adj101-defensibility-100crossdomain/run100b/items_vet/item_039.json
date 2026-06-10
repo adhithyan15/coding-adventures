@@ -1,0 +1,8 @@
+{
+ "idx": 39,
+ "policy": "Securities sold in an exempt offering are 'restricted securities' subject to resale limits, except that securities sold under a Regulation A Tier 2 offering to a person who is not an affiliate of the issuer are freely tradable and are not restricted securities.",
+ "scenario": "Priya, who is not and has never been an affiliate of the issuer Lumen Foods, purchased shares directly in Lumen Foods' qualified Regulation A Tier 2 offering. She now wishes to resell the shares.",
+ "question": "Are Priya's shares restricted securities subject to resale limits?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "not restricted"
+}

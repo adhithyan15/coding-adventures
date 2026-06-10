@@ -1,0 +1,7 @@
+{
+ "idx": 1,
+ "id": "MED-2",
+ "scenario": "A nurse is preparing an acetaminophen dose for a child weighing 20 kg who has not received any acetaminophen in the last 12 hours. The provider has ordered weight-based dosing per protocol.",
+ "policy": "Acetaminophen dosing for children is 15 mg per kilogram of body weight per dose, not to exceed 1000 mg per dose. Doses are given no more frequently than every 4 hours.",
+ "question": "What is the correct single dose of acetaminophen for this child?"
+}

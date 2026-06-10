@@ -1,0 +1,7 @@
+{
+ "idx": 43,
+ "id": "FOO-4",
+ "scenario": "A kitchen cooks a large batch of beef chili at lunch. Staff log that it reached 70 degrees F exactly 1 hour 45 minutes after cooking ended. The chili was then moved to the walk-in cooler. At the next check the chili measured 41 degrees F.",
+ "policy": "Cooked TCS food cooled from 135 degrees F to 70 degrees F within 2 hours, and then from 70 degrees F to 41 degrees F within an additional 4 hours, is safe to refrigerate and reuse. Food failing either cooling window must be discarded.",
+ "question": "Is the chili safe to reuse?"
+}

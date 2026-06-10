@@ -1,0 +1,8 @@
+{
+ "check_id": 224,
+ "idx": 87,
+ "slot": "processing_solely_for_security",
+ "claimed_value": true,
+ "scenario": "KidQuest, an online game, processes 11-year-old Mia's account login IP addresses for the sole purpose of detecting and blocking account hijacking attempts, retaining only what is needed for that security function. KidQuest did not obtain consent from Mia's parents for this IP processing.",
+ "cited_span": "for the sole purpose of detecting and blocking account hijacking attempts"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 128,
+ "idx": 53,
+ "slot": "roofed_floor_area",
+ "claimed_value": 160,
+ "scenario": "A homeowner builds a detached backyard shed with a roofed floor area of 160 square feet on a concrete slab. The shed has a single door and two windows, sits 8 feet from the property line, and is used only for garden tool storage.",
+ "cited_span": "a roofed floor area of 160 square feet"
+}

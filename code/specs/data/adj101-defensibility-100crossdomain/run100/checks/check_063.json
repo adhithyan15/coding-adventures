@@ -1,0 +1,8 @@
+{
+ "check_id": 63,
+ "idx": 26,
+ "slot": "is_unprepared_grocery_food",
+ "claimed_value": true,
+ "scenario": "A customer buys $50 worth of unprepared grocery food (raw vegetables and dried beans) at a supermarket.",
+ "cited_span": "unprepared grocery food (raw vegetables and dried beans)"
+}

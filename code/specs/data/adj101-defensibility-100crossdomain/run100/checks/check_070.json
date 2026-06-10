@@ -1,0 +1,8 @@
+{
+ "check_id": 70,
+ "idx": 29,
+ "slot": "is_imported_alcohol",
+ "claimed_value": true,
+ "scenario": "A returning traveler declares a single 0.75-liter bottle of wine brought in solely for their own personal use.",
+ "cited_span": "a single 0.75-liter bottle of wine brought in"
+}

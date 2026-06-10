@@ -1,0 +1,8 @@
+{
+ "check_id": 219,
+ "idx": 85,
+ "slot": "consent_withdrawn",
+ "claimed_value": true,
+ "scenario": "Lendwise, a lender, had been emailing marketing offers to former borrower Ana based on her consent, and also retained her loan repayment history. Ana withdrew her consent in writing. Lendwise stopped the marketing emails but continued to retain her loan repayment history, stating it does so for all closed accounts.",
+ "cited_span": "Ana withdrew her consent in writing."
+}

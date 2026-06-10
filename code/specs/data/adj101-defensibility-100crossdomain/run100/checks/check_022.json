@@ -1,0 +1,8 @@
+{
+ "check_id": 22,
+ "idx": 10,
+ "slot": "dog_bit_person",
+ "claimed_value": true,
+ "scenario": "A leashed dog lunged and bit a passerby on a public sidewalk, causing a wound that required $1,400 in stitches and treatment. The dog's owner was holding the leash at the time.",
+ "cited_span": "A leashed dog lunged and bit a passerby on a public sidewalk"
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 29,
+ "id": "CON-10",
+ "scenario": "Raj's phone battery degraded to 72% of its maximum rated capacity 8 months after purchase, confirmed by the manufacturer's diagnostic tool. He requested a free battery replacement.",
+ "policy": "Consumable parts such as batteries and filters are excluded from the warranty's free-replacement coverage, except that a battery whose maximum capacity falls below 80% within the first year is treated as a covered defect eligible for free replacement.",
+ "question": "Is Raj's battery replacement covered under the warranty?"
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 40,
+ "id": "INS-1",
+ "scenario": "A policyholder's car was damaged in a collision. The repair shop's itemized estimate is $4,200. The policy is active and the collision is a covered peril.",
+ "policy": "Under the auto collision policy, the insurer pays the cost of repair minus a $500 deductible, but total payout for any single collision is capped at the vehicle's actual cash value of $12,000.",
+ "question": "How much will the insurer pay for this repair?"
+}

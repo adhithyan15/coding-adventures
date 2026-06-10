@@ -1,0 +1,8 @@
+{
+ "check_id": 244,
+ "idx": 96,
+ "slot": "activity_type",
+ "claimed_value": "recreational",
+ "scenario": "Tomas attended the company's annual softball game on a Saturday and broke his ankle sliding into base. His manager had sent an email stating: 'Attendance at the softball game is mandatory for all sales staff; absence will be noted in your review.' Tomas is on the sales staff.",
+ "cited_span": "Tomas attended the company's annual softball game on a Saturday and broke his ankle sliding into base"
+}

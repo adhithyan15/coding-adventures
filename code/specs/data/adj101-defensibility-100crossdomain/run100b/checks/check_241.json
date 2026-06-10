@@ -1,0 +1,8 @@
+{
+ "check_id": 241,
+ "idx": 95,
+ "slot": "exposed_to_hazard_during_employment",
+ "claimed_value": true,
+ "scenario": "Hector worked 18 years as a sandblaster and was diagnosed with silicosis, a disease caused by inhaling silica dust. He files a claim against his most recent employer, FineCoat Inc., where he worked for the last three years. Sandblasting at FineCoat routinely generated silica dust, and Hector worked on the line daily.",
+ "cited_span": "Sandblasting at FineCoat routinely generated silica dust, and Hector worked on the line daily"
+}

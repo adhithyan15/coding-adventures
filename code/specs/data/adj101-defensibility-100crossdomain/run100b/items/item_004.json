@@ -1,0 +1,7 @@
+{
+ "idx": 4,
+ "id": "HEA-5",
+ "scenario": "Tom went to an out-of-network hospital ER with chest pain and shortness of breath. The ER billed his plan. The claim is now being adjudicated for the correct cost-sharing level.",
+ "policy": "An emergency room visit is covered at the in-network cost-sharing level regardless of the hospital's network status. However, if the visit is later determined to be a non-emergency (not a prudent-layperson emergency), the out-of-network ER is reimbursed at the lower out-of-network rate.",
+ "question": "Should the visit be reimbursed at the in-network or out-of-network rate?"
+}

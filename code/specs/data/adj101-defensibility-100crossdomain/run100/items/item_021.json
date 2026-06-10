@@ -1,0 +1,7 @@
+{
+ "idx": 21,
+ "id": "TAX-2",
+ "scenario": "A shipment of ceramic tiles arrives at the border with a declared customs value of $2,000.",
+ "policy": "Imported goods are subject to a customs duty of 5% of the declared customs value. The duty owed is computed as 5% multiplied by the declared customs value.",
+ "question": "How much customs duty is owed on the shipment?"
+}

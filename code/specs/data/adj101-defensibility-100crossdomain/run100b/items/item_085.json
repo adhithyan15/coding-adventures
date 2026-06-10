@@ -1,0 +1,7 @@
+{
+ "idx": 85,
+ "id": "DAT-6",
+ "scenario": "Lendwise, a lender, had been emailing marketing offers to former borrower Ana based on her consent, and also retained her loan repayment history. Ana withdrew her consent in writing. Lendwise stopped the marketing emails but continued to retain her loan repayment history, stating it does so for all closed accounts.",
+ "policy": "When a data subject withdraws consent, the controller must stop processing that relied on that consent. However, processing may continue to the extent it rests on a separate, independent lawful basis (such as a legal obligation to retain records).",
+ "question": "Is Lendwise permitted to continue retaining Ana's loan repayment history after she withdrew consent?"
+}

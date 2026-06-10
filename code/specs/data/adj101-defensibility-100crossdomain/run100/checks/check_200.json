@@ -1,0 +1,8 @@
+{
+ "check_id": 200,
+ "idx": 81,
+ "slot": "acknowledgment_minutes",
+ "claimed_value": 23,
+ "scenario": "A complete production outage began at 09:00. The customer opened a ticket at 09:02. The provider sent an acknowledgment at 09:25 and a first substantive response at 09:40.",
+ "cited_span": "The customer opened a ticket at 09:02. The provider sent an acknowledgment at 09:25"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 91,
+ "idx": 40,
+ "slot": "covered_peril",
+ "claimed_value": true,
+ "scenario": "A policyholder's car was damaged in a collision. The repair shop's itemized estimate is $4,200. The policy is active and the collision is a covered peril.",
+ "cited_span": "the collision is a covered peril"
+}
