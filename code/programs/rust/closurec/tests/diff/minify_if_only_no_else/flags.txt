@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_if_only_no_else/input/a.js
+--compilation_level
+WHITESPACE_ONLY
