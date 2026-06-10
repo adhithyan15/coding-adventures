@@ -4,6 +4,28 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.13.0] — 2026-06-09 — reference funnels + lisp-call result type (LANG77 / McCarthy W5b)
+
+### Fixed
+
+- `lower_lisp_repr_structural` now produces IIR a **strict** backend (JVM/CLR/
+  BEAM) can type, where the loose wasm model previously got away with ambiguity:
+  - **Lisp `call` results are retyped `ref<any>`.** The frontend hints a call
+    `i64`; a lisp function returns the uniform-anyref value, so the call result is
+    a reference. (The JVM stored an `Object` result into a `long` slot otherwise —
+    a recursive `LABEL` returned garbage.)
+  - **Reference funnels.** A `COND` `mov`s each clause's value into one result
+    register. If any clause yields a reference (a cons, `nil`, or a lisp call
+    result — e.g. a recursive `LABEL`), the funnel must be a reference in *every*
+    clause. `ref`-ness is now propagated through `mov` chains to a fixpoint, and
+    the rebuild **boxes each atom clause into the funnel** (`mov %fun, %atom` →
+    `box %fun, %atom`) and retypes the reference clauses — instead of boxing the
+    whole funnel once at `ret`, which mis-boxed a clause that already held a
+    reference.
+
+These make McCarthy `LAMBDA`/`LABEL`/recursion and mixed atom/cons `COND` run on
+the JVM. wasm is unaffected (regression-tested). 1 new test.
+
 ## [0.12.0] — 2026-06-09 — uniform-anyref function boundary (LANG77 / McCarthy W2)
 
 ### Changed
