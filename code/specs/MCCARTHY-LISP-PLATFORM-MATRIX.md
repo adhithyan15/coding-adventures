@@ -63,7 +63,7 @@ representation + per-builtin backend lowering.
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
-| **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
+| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
@@ -238,9 +238,18 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     native executable — exit code = result: `42`→42, `7`→7, `0`→0, `100`→100, Twig
     `42`→42. Uses the `clang` already on the box (no `lli`/`qemu` needed; self-skips if
     absent). The LLVM analogue of `wasm-runtime`/`clr-simulator`/real `erl`.
-  - ☐ **W12b — LLVM cons + predicates (F2–F5).** Lower cons/car/cdr/pair?/equal?/not →
-    `call __twig_lispy_*`, link `lispy_runtime.c` in the clang harness, COND via
-    `lispy_truthy`. `(CAR (CONS 7 9))`→7 on the clang-built executable.
+  - ✅ **W12b-1 — LLVM cons (F2).** Lower cons/car/cdr → `call @__twig_lispy_*`
+    (the `LISPY_BUILTINS` table maps `lispy_*`→runtime symbols; `ref<LispyPair>`/`any`
+    carried as a tagged `i64`). `compile_source_to_llvm` runs the native lisp pipeline
+    (`lower_heap_builtins_runtime`→`intern_symbols`→`lower_lisp_repr`). Verified by
+    RUNNING on a clang-built executable **linked against `lispy_runtime.c`**:
+    `(CAR (CONS 7 9))`→7, `(CDR (CONS 7 9))`→9, `(CAR (CDR (CONS 1 (CONS 2 3))))`→2,
+    scalar `42`→42 (`lang-aot/tests/llvm_cons.rs`).
+  - ☐ **W12b-2 — LLVM predicates (F3–F5).** pair?/equal?/not lowering is already
+    emitted (`lispy_pair_p`/`lispy_equal`/`lispy_not` in `LISPY_BUILTINS`); needs the
+    **tagged-boolean result** handling (a predicate returns `__twig_lispy_tag_true/false`,
+    not 0/1) + the `COND` `trunc void` fix (`lispy_truthy` clause test).
+    `(ATOM 7)`→1, `(EQ 7 7)`→1, `(COND …)`.
 - ☐ **W13 — LLVM symbols + lambda (F6–F7).** **Completes LLVM.**
 
 ### Phase F — native AOT + JIT completion

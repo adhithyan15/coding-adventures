@@ -194,6 +194,14 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         "i64" | "u64" => Ok("i64"),
         "f32" => Ok("float"),
         "f64" => Ok("double"),
+        // McCarthy W12b (tagged-word lisp): a lisp value is a tagged 64-bit word
+        // (the C runtime's `LispyValue`), and the polymorphic `any` flows as the
+        // same word. A lisp heap reference (`ref<LispyPair>`, and any future
+        // `ref<Lispy…>`) is likewise carried as a tagged `i64` — the runtime owns
+        // the cell layout, the backend only moves words and calls `__twig_lispy_*`.
+        // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
+        "any" => Ok("i64"),
+        t if t.starts_with("ref<Lispy") => Ok("i64"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),
@@ -244,6 +252,43 @@ const SUPPORTED_OPS: &[&str] = &[
 /// global names commonly use `__` for runtime / launcher symbols, and the
 /// downstream linker resolves the host implementation.
 const SUPPORTED_BUILTINS: &[&str] = &["print_i64"];
+
+/// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
+/// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
+/// same runtime the native AOT backend links. Each entry is
+/// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
+/// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
+/// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
+/// `lower_lisp_repr`; they map to the runtime's `__twig_lispy_*` symbols.
+///
+/// | iir name         | runtime symbol            | McCarthy primitive            |
+/// |------------------|---------------------------|-------------------------------|
+/// | `lispy_cons`     | `__twig_lispy_cons`       | `CONS` — build a pair `[a|b]`  |
+/// | `lispy_car`/`cdr`| `__twig_lispy_car`/`cdr`  | `CAR`/`CDR`                    |
+/// | `lispy_pair_p`   | `__twig_lispy_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `lispy_equal`    | `__twig_lispy_equal`      | `EQ`                          |
+/// | `lispy_not`      | `__twig_lispy_not`        | logical `not`                 |
+/// | `lispy_truthy`   | `__twig_lispy_truthy`     | `COND` clause test            |
+/// | `lispy_box_int`  | `__twig_lispy_box_int`    | int → tagged word             |
+/// | `lispy_unbox_int`| `__twig_lispy_unbox_int`  | tagged word → int (result)    |
+/// | `lispy_nil`      | `__twig_lispy_nil`        | `()` / nil                    |
+const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
+    ("lispy_cons", "__twig_lispy_cons", 2),
+    ("lispy_car", "__twig_lispy_car", 1),
+    ("lispy_cdr", "__twig_lispy_cdr", 1),
+    ("lispy_pair_p", "__twig_lispy_pair_p", 1),
+    ("lispy_equal", "__twig_lispy_equal", 2),
+    ("lispy_not", "__twig_lispy_not", 1),
+    ("lispy_truthy", "__twig_lispy_truthy", 1),
+    ("lispy_box_int", "__twig_lispy_box_int", 1),
+    ("lispy_unbox_int", "__twig_lispy_unbox_int", 1),
+    ("lispy_nil", "__twig_lispy_nil", 0),
+];
+
+/// Look up a `lispy_*` builtin by its IIR name.
+fn lispy_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
+    LISPY_BUILTINS.iter().find(|(n, _, _)| *n == name)
+}
 
 /// Pre-flight validation for IIR → LLVM lowering.
 ///
@@ -363,12 +408,19 @@ pub fn lower_iir_to_llvm(
     // Currently the only supported builtin is `print_i64` (LLVM convention
     // chosen for BASIC's PRINT — see `SUPPORTED_BUILTINS` doc above).
     let mut used_print_i64 = false;
+    // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
+    // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
+    let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
     for f in &module.functions {
         for i in &f.instructions {
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
                     if name == "print_i64" {
                         used_print_i64 = true;
+                    } else if let Some(b) = lispy_builtin(name) {
+                        if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
+                            used_lispy.push(b);
+                        }
                     }
                 }
             }
@@ -377,6 +429,13 @@ pub fn lower_iir_to_llvm(
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
+    }
+    if !used_lispy.is_empty() {
+        out.push('\n');
+        for (_iir_name, symbol, arity) in &used_lispy {
+            let params = vec!["i64"; *arity].join(", ");
+            out.push_str(&format!("declare i64 @{symbol}({params})\n"));
+        }
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
@@ -1004,6 +1063,21 @@ fn lower_call_builtin(
             detail: "call_builtin requires srcs[0] = Operand::Var(builtin_name)".into(),
         }),
     };
+    // McCarthy W12b: a tagged-word lisp builtin lowers to a `call` into the C
+    // runtime. Every arg + the result is an `i64` (tagged word); the dest gets a
+    // fresh SSA name registered in the env so later instructions can use it.
+    if let Some((_iir_name, symbol, arity)) = lispy_builtin(&name) {
+        let dest = require_dest(instr, &name, state.fn_name)?.to_string();
+        let mut args = Vec::with_capacity(*arity);
+        for k in 0..*arity {
+            // srcs[0] is the builtin name; the operands start at srcs[1].
+            let a = resolve_operand(instr.srcs.get(1 + k), &state.env, "i64", state.fn_name)?;
+            args.push(format!("i64 {a}"));
+        }
+        out.push_str(&format!("  %{dest} = call i64 @{symbol}({})\n", args.join(", ")));
+        state.env.insert(dest.clone(), format!("%{dest}"));
+        return Ok(());
+    }
     if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
         return Err(IIRLlvmError::UnsupportedOp {
             function: state.fn_name.into(),

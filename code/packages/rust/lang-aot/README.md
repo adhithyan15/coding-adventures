@@ -65,7 +65,11 @@ emits LLVM IR that **runs**: the test emits host-triple IR (`clang -dumpmachine`
 builds it with `clang -x ir`, and runs the native executable — its exit code is
 the result, `42` → 42 (W12a). It uses the `clang` already on the box (no
 `lli`/`qemu`), the LLVM analogue of `wasm-runtime`/the `clr-simulator`/real `erl`.
-The cons/predicate/symbol/lambda lowering (`call __twig_lispy_*`) is W12b+.
+**Cons** runs too (W12b-1, F2): the native lisp pipeline
+(`lower_heap_builtins_runtime`→`intern_symbols`→`lower_lisp_repr`) lowers cons/car/cdr
+to `call @__twig_lispy_*`, and the test **links `lispy_runtime.c`** into the
+clang-built executable — `(CAR (CONS 7 9))` → 7, `(CDR (CONS 7 9))` → 9. The
+predicate/symbol/lambda steps (F3–F7) are W12b-2+.
 
 ## Stack position
 

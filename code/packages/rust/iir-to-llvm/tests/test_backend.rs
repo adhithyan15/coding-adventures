@@ -888,3 +888,67 @@ fn errors_display_without_panic() {
     let _ = format!("{}", IIRLlvmError::InvalidOperand { function: "f".into(), detail: "bad".into() });
     let _ = format!("{}", IIRLlvmError::UndefinedVariable { function: "f".into(), name: "nope".into() });
 }
+
+/// McCarthy W12b: a tagged-word lisp builtin (`call_builtin "lispy_cons"`) lowers
+/// to a `call i64 @__twig_lispy_cons(i64, i64)` and emits exactly one matching
+/// `declare`. A lisp heap reference type (`ref<LispyPair>`) is accepted (carried
+/// as a tagged `i64`); a non-lisp `ref<Foo>` is still rejected (see
+/// `validate_rejects_unsupported_type`).
+#[test]
+fn lispy_cons_lowers_to_runtime_call() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(56)], "i64"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(72)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("p".into()),
+                vec![
+                    Operand::Var("lispy_cons".into()),
+                    Operand::Var("a".into()),
+                    Operand::Var("b".into()),
+                ],
+                "ref<LispyPair>",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("h".into()),
+                vec![Operand::Var("lispy_car".into()), Operand::Var("p".into())],
+                "any",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("h".into())], "any"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("declare i64 @__twig_lispy_cons(i64, i64)"), "cons declare; got:\n{ll}");
+    assert!(ll.contains("declare i64 @__twig_lispy_car(i64)"), "car declare; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__twig_lispy_cons(i64 "), "cons call site; got:\n{ll}");
+    assert!(ll.contains("= call i64 @__twig_lispy_car(i64 "), "car call site; got:\n{ll}");
+    // Exactly one declare per used builtin (no duplicates from two call sites).
+    assert_eq!(ll.matches("declare i64 @__twig_lispy_cons").count(), 1, "one cons declare");
+}
+
+/// An unknown `lispy_*`-shaped builtin that is NOT in `LISPY_BUILTINS` is rejected.
+#[test]
+fn unknown_builtin_still_rejected() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("x".into()),
+                vec![Operand::Var("lispy_bogus".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i64"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default())
+        .expect_err("unknown builtin must be rejected");
+    assert!(matches!(err, IIRLlvmError::UnsupportedOp { .. }), "got: {err:?}");
+}
