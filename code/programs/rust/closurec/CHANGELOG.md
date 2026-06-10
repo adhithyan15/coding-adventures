@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.69.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-056** — paren elision after the `return` /
+  `throw` statement keywords and the concise-arrow `=>`
+  prefix. Extends the gap-055 whole-arm peephole:
+  - `return (a+b);`            → `return a+b;`
+  - `throw (new Error("x"));`  → `throw new Error("x");`
+  - `x => (x+1)`               → `x=>x+1`
+
+### Added — prefix set + two new guards
+
+The gap-055 pre-pass now also fires when the token before
+`(` is `=>`, `return`, or `throw`. Two prefix-specific
+safety guards:
+
+- **property-name guard** — `return`/`throw` are stripped
+  only as STATEMENT keywords, never as property names:
+  `gen.throw((e))` / `it.return((b))` (preceded by `.`/`?.`)
+  are left untouched.
+- **arrow-brace guard** — a concise arrow body that starts
+  with `{` is ambiguous (`x=>{...}` is a function BLOCK), so
+  `()=>({a:1})` keeps its parens. After `?`/`:`/`return`/
+  `throw` the operand is unambiguously an expression, so `{`
+  is fine there (`return ({a:1})` → `return{a:1}`).
+
+All comparisons continue to route through `is_structural_punct`
+(the gap-055 literal-content guard).
+
 ## [0.68.0] - 2026-06-10
 
 ### Changed

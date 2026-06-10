@@ -364,9 +364,29 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 1;
         while i + 1 < kept.len() {
-            let prev_is_arm_open = is_structural_punct(&kept[i - 1], "?")
-                || is_structural_punct(&kept[i - 1], ":");
-            if prev_is_arm_open && is_structural_punct(&kept[i], "(") {
+            // ---- prefix classification (gap-055 + gap-056) ----
+            // gap-055 prefixes: ternary `?` / `:` (also covers
+            // object-literal value and label/case bodies).
+            let prev = &kept[i - 1];
+            let is_arm_prefix = is_structural_punct(prev, "?")
+                || is_structural_punct(prev, ":");
+            // gap-056 prefixes: concise-arrow body (`=>`) and the
+            // statement keywords `return` / `throw`.
+            let is_arrow_prefix = is_structural_punct(prev, "=>");
+            // `return` / `throw` must be the STATEMENT keyword,
+            // not a property name (`gen.throw(e)`, `it.return()`).
+            // A property name is preceded by a member accessor
+            // (`.` or `?.`); a statement keyword is at the start
+            // of the token stream or preceded by anything else.
+            let is_ret_throw_prefix = (prev.value == "return"
+                || prev.value == "throw")
+                && !is_string_literal(prev)
+                && (i < 2
+                    || (!is_structural_punct(&kept[i - 2], ".")
+                        && !is_structural_punct(&kept[i - 2], "?.")));
+            let prefix_matches =
+                is_arm_prefix || is_arrow_prefix || is_ret_throw_prefix;
+            if prefix_matches && is_structural_punct(&kept[i], "(") {
                 let open_idx = i;
                 let mut depth: i32 = 1;
                 let mut has_top_level_comma = false;
@@ -406,7 +426,20 @@ pub fn whitespace_only_minify(
                                 || is_structural_punct(t, "}")
                         }
                     };
-                    if arm_complete && !has_top_level_comma {
+                    // gap-056 arrow guard: a concise arrow body
+                    // that starts with `{` is AMBIGUOUS — bare
+                    // `x=>{...}` parses as a function BLOCK body,
+                    // not an object literal, so `x=>({a:1})` must
+                    // keep its parens. (After `?`/`:`/`return`/
+                    // `throw` the operand is unambiguously an
+                    // expression, so `{` is fine there.)
+                    let arrow_brace_body = is_arrow_prefix
+                        && kept
+                            .get(open_idx + 1)
+                            .map(|t| is_structural_punct(t, "{"))
+                            .unwrap_or(false);
+                    if arm_complete && !has_top_level_comma && !arrow_brace_body
+                    {
                         drops.push(open_idx);
                         drops.push(close_idx);
                         i = close_idx + 1;
