@@ -61,7 +61,7 @@ representation + per-builtin backend lowering.
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
-| **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
+| **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -153,7 +153,7 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   in-repo **`clr-simulator`** (zero external `dotnet`, mirroring `jvm-simulator`):
   `42`→42, `0`→0, `7`→7, Twig `42`→42. Establishes the CLR pipeline + run-verify
   harness that W6b+ build on.
-- ◑ **W6b — CLR cons (F2).** *In progress.*
+- ✅ **W6b — CLR cons (F2).** Completed in two sub-slices.
   - ✅ **W6b-1 — `clr-simulator` object/reference value model.** Real `dotnet`
     turned out non-viable as an in-repo runner (no PE/assembly emitter, no
     `ilasm`), so — per the backend's design intent ("artifact ready for the CLR
@@ -164,12 +164,14 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     (`nib-clr`, `brainfuck-clr`, `iir-to-cil`) green. This is the in-repo
     run-verify substrate for CLR objects (the analog of `wasm-execution`'s
     `GcStruct`).
-  - ☐ **W6b-2 — McCarthy cons on the simulator.** Add the `iir-to-cil` atom
-    boxing (`box [mscorlib]System.Int32` / `unbox.any`), remove `box`/`unbox`
-    from its `UNSUPPORTED_OPS`, retype `ref<any>`→`object`, run the shared
-    structural passes (incl. the JVM strict-backend fixes) in
-    `lang-aot::compile_source_to_cil`, and verify `(CAR (CONS 7 9))`→7 on the
-    extended `clr-simulator`.
+  - ✅ **W6b-2 — McCarthy cons on the simulator.** Added the `iir-to-cil` atom
+    boxing (`box [int32]` / `unbox.any` — new `Box`/`UnboxAny` opcodes +
+    `emit_box`/`emit_unbox_any` + `INT32_TYPE_TOKEN` in `ir-to-cil-bytecode`),
+    removed `box`/`unbox` from `UNSUPPORTED_OPS` (the validator already accepted
+    `ref<any>`), and ran the shared structural passes (incl. the JVM
+    strict-backend fixes) in `lang-aot::compile_source_to_cil_artifact`.
+    `(CAR (CONS 7 9))`→7, `(CDR (CONS 7 9))`→9, nested cons→2, on the
+    object-capable `clr-simulator` (`tests/cil_cons.rs`).
 - ☐ **W7 — CLR `ATOM`/`EQ`/`COND` (F3–F5).** `isinst`; equality; truthiness.
 - ☐ **W8 — CLR symbols + lambda (F6–F7).** **Completes CLR.**
 

@@ -27,10 +27,13 @@ the JVM `ldc` constant-pool path. And `LAMBDA`/`LABEL`/recursion (W5b):
 `((LAMBDA (X) X) 5)` → 5, a recursive `LABEL` → 99. **The JVM backend is now
 McCarthy-complete (F1–F7)** — the second managed backend after WASM.
 
-`compile_source_to_cil_artifact` is the third managed target (W6a): scalar
-McCarthy emits CIL that **runs** — verified on the in-repo `clr-simulator`
-(`42` → 42), no external `dotnet`. The CLR cons/symbol/lambda value model
-(uniform-`object`, reusing the JVM strict-backend fixes) is W6b+.
+`compile_source_to_cil_artifact` is the third managed target: scalar McCarthy
+emits CIL that **runs** on the in-repo `clr-simulator` (`42` → 42; W6a), and
+**cons** too — `(CAR (CONS 7 9))` → 7 (W6b, after the simulator gained an
+object/reference value model). It runs the *same* structural passes as the
+wasm/JVM paths; the CLR backend lowers the backend-agnostic
+`box`/`unbox`/`alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cells.
+The remaining CLR predicates/symbols/lambda (F3–F7) are W7–W8.
 
 `compile_source_to_beam` is the fourth managed target and the first on the
 **Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real

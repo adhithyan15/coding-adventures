@@ -594,6 +594,14 @@ pub fn compile_source_to_cil_artifact(
     name: &str,
 ) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
     let mut module = compile_source_to_iir(language, source, name)?;
+    // The managed value-model pipeline — the same backend-agnostic structural
+    // passes the wasm/JVM paths use. The CLR backend lowers `box`/`unbox`/
+    // `alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cons cells
+    // (where wasm uses `i31ref`/`$LispyPair` and the JVM `Integer`/`Object[]`).
+    // A no-op for a module without cons/symbols (W6a scalar still flows through).
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_cil(&mut module);
 
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);

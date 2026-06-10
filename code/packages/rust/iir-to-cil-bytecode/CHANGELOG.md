@@ -1,5 +1,14 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.8.0] — 2026-06-10 — McCarthy cons: `box`/`unbox` lowering (W6b)
+
+Lower the shared structural pass's `box`/`unbox` ops: `box` → `ldloc ; box [int32] ; stloc`,
+`unbox` → `ldloc ; unbox.any [int32] ; stloc`. With the already-supported
+`alloc`/`field_*` (`newarr`/`stelem.ref`/`ldelem.ref` over `System.Object[]`),
+McCarthy **cons** runs: `(CAR (CONS 7 9))` → 7 on the in-repo `clr-simulator`.
+Removed `box`/`unbox` from `UNSUPPORTED_OPS`; the validator already accepted
+`ref<any>` and now lists `box`/`unbox` as heap ops.
+
 All notable changes to this crate are documented here.
 
 ## [0.7.0] — 2026-06-01 (G4 — `print_i64` host call → `env.BasicRuntime::PrintI64(int64)`)
