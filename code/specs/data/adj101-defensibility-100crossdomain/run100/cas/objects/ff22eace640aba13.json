@@ -1,0 +1,24 @@
+{
+ "hash": "ff22eace640aba13",
+ "domain": "tax-duty",
+ "policy": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600. If gross income is below the threshold, no return is required.",
+ "rules": [
+  {
+   "id": "must-file",
+   "when": {
+    "gross_income": ">= 14600"
+   },
+   "then": "REQUIRED_TO_FILE",
+   "source_span": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600."
+  },
+  {
+   "id": "no-return-below-threshold",
+   "when": {
+    "gross_income": "< 14600"
+   },
+   "then": "NOT_REQUIRED_TO_FILE",
+   "source_span": "If gross income is below the threshold, no return is required."
+  }
+ ],
+ "provenance": "every rule source_span verified verbatim in policy (byte-accounting clean)"
+}
