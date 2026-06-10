@@ -195,6 +195,12 @@ pub enum LangAotError {
     /// the modern *managed* targets, replicating the WASM/JVM uniform-reference
     /// value model with `object`/boxing (LANG77 / McCarthy W6).
     ClrBackendError(String),
+    /// The BEAM (Erlang VM) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-beam`.  BEAM uses the native **Erlang
+    /// terms** value model (integers, atoms, list cells) rather than the
+    /// structural uniform-reference model of WASM/JVM/CLR (LANG77 / McCarthy W9).
+    BeamBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -210,6 +216,7 @@ impl fmt::Display for LangAotError {
             LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
             LangAotError::JvmBackendError(m) => write!(f, "jvm: {m}"),
             LangAotError::ClrBackendError(m) => write!(f, "clr: {m}"),
+            LangAotError::BeamBackendError(m) => write!(f, "beam: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
@@ -592,6 +599,72 @@ pub fn compile_source_to_cil_artifact(
     let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
     iir_to_cil_bytecode::lower_iir_to_cil(&module, &config)
         .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
+}
+
+/// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
+/// BEAM run-foundation (LANG77 / McCarthy W9a). Unlike the WASM/JVM/CLR
+/// simulators (32-bit), the BEAM has **native arbitrary-precision integers**, so
+/// the natural concrete type is `i64` (the `iir-to-beam` backend's integer
+/// width). The `iir-to-beam` validator rejects `any`/`polymorphic`, so a scalar
+/// program must be concretised before lowering. Heap/reference functions
+/// (cons/symbols/lambda — W9+, the native Erlang-terms model) are left alone.
+fn concretize_scalar_any_for_beam(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || i.type_hint.starts_with("ref<")
+            });
+        if uses_lisp {
+            continue; // native Erlang-terms value model — BEAM W9+.
+        }
+        let to_i64 = |t: &str| t == "any" || t == "polymorphic";
+        if to_i64(&func.return_type) {
+            func.return_type = "i64".to_string();
+        }
+        for instr in &mut func.instructions {
+            if to_i64(&instr.type_hint) {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → a **BEAM module** (`.beam` bytes) (LANG77 / W9).
+///
+/// The fourth managed `--emit` target — and the first on the **Erlang VM**, whose
+/// native value model (integers, atoms, list cells) replaces the structural
+/// uniform-reference model of WASM/JVM/CLR. **W9a (this slice)** wires the
+/// pipeline and runs **scalar** programs: source → IIR →
+/// `concretize_scalar_any_for_beam` → `iir-to-beam` → `encode_beam`. The cons/
+/// symbol/lambda Erlang-terms lowering lands in W9+.
+///
+/// `module_name` must be a valid Erlang atom (lowercase, `[a-z][a-z0-9_]*`); the
+/// emitted module exports `main/0`, so a runner loads it and calls
+/// `<module_name>:main()`. Verified end-to-end by running on a real `erl` (OTP).
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `BeamBackendError` — `iir-to-beam` rejected the (lowered) IIR.
+pub fn compile_source_to_beam(
+    language: Language,
+    source: &str,
+    module_name: &str,
+) -> Result<Vec<u8>, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, module_name)?;
+    concretize_scalar_any_for_beam(&mut module);
+
+    let config = iir_to_beam::IIRBeamConfig::new(module_name);
+    let beam = iir_to_beam::lower_iir_to_beam(&module, &config)
+        .map_err(|e| LangAotError::BeamBackendError(format!("{e:?}")))?;
+    Ok(iir_to_beam::encode_beam(&beam))
 }
 
 /// Cross-platform: source file → IIR → JVM class file (`.class`) on disk.
