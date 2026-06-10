@@ -228,9 +228,19 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase E — LLVM (tagged-word, like native)
 
-- ☐ **W12 — LLVM cons + predicates (F2–F5).** Reuse the tagged-word C runtime
-  (`lispy_runtime.c`) the native AOT path links; lower cons/car/cdr/pair?/eq via
-  `call` to `__twig_lispy_*`; COND truthiness via `lispy_truthy`.
+- ◑ **W12 — LLVM cons + predicates (F2–F5).** *In progress.* Reuse the tagged-word
+  C runtime (`lispy_runtime.c`) the native AOT path links; lower cons/car/cdr/pair?/eq
+  via `call` to `__twig_lispy_*`; COND truthiness via `lispy_truthy`.
+  - ✅ **W12a — LLVM scalar run-foundation (F1, verify-by-running).** Established the
+    LLVM execution substrate: `compile_source_to_llvm[_with_target]` (concretize
+    `any`→`i64`, lower to LLVM IR). `lang-aot/tests/llvm_scalar.rs` emits **host**-
+    triple IR (`clang -dumpmachine`), compiles it with `clang -x ir`, and **runs** the
+    native executable — exit code = result: `42`→42, `7`→7, `0`→0, `100`→100, Twig
+    `42`→42. Uses the `clang` already on the box (no `lli`/`qemu` needed; self-skips if
+    absent). The LLVM analogue of `wasm-runtime`/`clr-simulator`/real `erl`.
+  - ☐ **W12b — LLVM cons + predicates (F2–F5).** Lower cons/car/cdr/pair?/equal?/not →
+    `call __twig_lispy_*`, link `lispy_runtime.c` in the clang harness, COND via
+    `lispy_truthy`. `(CAR (CONS 7 9))`→7 on the clang-built executable.
 - ☐ **W13 — LLVM symbols + lambda (F6–F7).** **Completes LLVM.**
 
 ### Phase F — native AOT + JIT completion

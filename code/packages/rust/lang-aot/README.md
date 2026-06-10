@@ -59,6 +59,14 @@ native list cell `[H|T]`, `car`/`cdr` are `hd`/`tl`, integers are native.
 `(LAMBDA …)` application is a method `call`, already lowered as a BEAM fun). The
 BEAM is the fifth backend to reach full McCarthy support after VM, WASM, JVM, CLR.
 
+`compile_source_to_llvm` targets **LLVM IR** — the first **tagged-word** backend
+(the LLVM/AOT/JIT family that links the shared `lispy_runtime.c`). Scalar McCarthy
+emits LLVM IR that **runs**: the test emits host-triple IR (`clang -dumpmachine`),
+builds it with `clang -x ir`, and runs the native executable — its exit code is
+the result, `42` → 42 (W12a). It uses the `clang` already on the box (no
+`lli`/`qemu`), the LLVM analogue of `wasm-runtime`/the `clr-simulator`/real `erl`.
+The cons/predicate/symbol/lambda lowering (`call __twig_lispy_*`) is W12b+.
+
 ## Stack position
 
 ```
