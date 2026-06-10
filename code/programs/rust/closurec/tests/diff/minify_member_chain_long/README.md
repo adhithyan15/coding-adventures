@@ -1,0 +1,4 @@
+# minify_member_chain_long
+
+Captured from upstream Google Closure Compiler **v20240317** under WHITESPACE_ONLY.
+closurec matches byte-for-byte. **PASS**.
