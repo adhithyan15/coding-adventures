@@ -23,7 +23,9 @@ passes as the wasm path; the JVM backend lowers the backend-agnostic
 `box`/`unbox`/`alloc`/`field_*` + `pair?`/`not`/`equal?` to `Integer`/`Object[]` +
 `instanceof`/`ixor`/`if_icmpeq` (where wasm uses `i31ref`/`$LispyPair`/`ref.test`).
 **Symbols** run too (W5a): `(EQ 'X 'X)` → 1 — their interned ids (`2²⁹`) load via
-the JVM `ldc` constant-pool path. The remaining JVM lambda (F7) is W5b.
+the JVM `ldc` constant-pool path. And `LAMBDA`/`LABEL`/recursion (W5b):
+`((LAMBDA (X) X) 5)` → 5, a recursive `LABEL` → 99. **The JVM backend is now
+McCarthy-complete (F1–F7)** — the second managed backend after WASM.
 
 ## Stack position
 

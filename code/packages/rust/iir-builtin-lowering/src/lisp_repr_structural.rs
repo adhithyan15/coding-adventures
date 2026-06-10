@@ -269,14 +269,46 @@ fn lower_structural_function(
             ref_regs.insert(name.clone());
         }
     }
-    for instr in &func.instructions {
-        if !call_lisp_arg_indices(instr, lisp_funcs).is_empty()
-            || (instr.op == "call"
-                && matches!(instr.srcs.first(), Some(Operand::Var(c)) if lisp_funcs.contains(c)))
-        {
+    for instr in &mut func.instructions {
+        let is_lisp_call = instr.op == "call"
+            && matches!(instr.srcs.first(), Some(Operand::Var(c)) if lisp_funcs.contains(c));
+        if is_lisp_call || !call_lisp_arg_indices(instr, lisp_funcs).is_empty() {
             if let Some(dest) = &instr.dest {
                 ref_regs.insert(dest.clone()); // a lisp call returns an anyref.
             }
+        }
+        // A lisp `call` returns `ref<any>` (the callee's uniform-anyref result).
+        // The frontend hints the call `i64`; retype it so a **strict** backend
+        // (JVM/CLR/BEAM) stores the result as a reference, not a machine int.
+        // (The loose wasm model tolerated the stale hint; the JVM does not.)
+        if is_lisp_call {
+            instr.type_hint = REF_ANY.to_string();
+        }
+    }
+
+    // ── Reference funnels. A `COND` lowers each clause to `mov %funnel, value`
+    //    into one result register. If *any* clause yields a reference — a cons,
+    //    `nil`, or a lisp `call` result (e.g. a recursive `LABEL`) — the funnel
+    //    must be a reference in *every* clause, else a strict backend can't give
+    //    the register one type. Propagate `ref`-ness through `mov` chains to a
+    //    fixpoint; the rebuild then **boxes** each atom-valued `mov` into the
+    //    funnel (instead of boxing the whole funnel once at `ret`, which is wrong
+    //    when a clause already put a reference there). ──
+    loop {
+        let mut changed = false;
+        for instr in &func.instructions {
+            if instr.op != "mov" {
+                continue;
+            }
+            if let (Some(dest), Some(Operand::Var(src))) = (&instr.dest, instr.srcs.first()) {
+                if ref_regs.contains(src) && !ref_regs.contains(dest) {
+                    ref_regs.insert(dest.clone());
+                    changed = true;
+                }
+            }
+        }
+        if !changed {
+            break;
         }
     }
     let lisp_conds = lisp_conditions(func);
@@ -312,6 +344,17 @@ fn lower_structural_function(
             && matches!(producer_hint(func, cond), Some("i64") | Some("i32"))
         {
             needs_box.insert(cond.clone());
+        }
+    }
+    // An **atom** moved into a reference funnel is boxed *into* the funnel (the
+    // `mov` becomes a `box`). Mark its source so any feeding `const` narrows to i32.
+    for instr in &func.instructions {
+        if instr.op == "mov" {
+            if let (Some(dest), Some(Operand::Var(src))) = (&instr.dest, instr.srcs.first()) {
+                if ref_regs.contains(dest) && !ref_regs.contains(src) {
+                    needs_box.insert(src.clone());
+                }
+            }
         }
     }
 
@@ -388,6 +431,33 @@ fn lower_structural_function(
                     j.srcs[0] = Operand::Var(t);
                     new_instrs.push(j);
                     continue;
+                }
+            }
+        }
+
+        // A `mov` into a **reference funnel** (a `COND` result that some clause
+        // fills with a reference): make every clause's value a reference. A
+        // reference source becomes a `ref<any>` move; an atom source is boxed
+        // *into* the funnel (`box %funnel = %atom`), so the funnel needs no
+        // boxing at `ret`.
+        if instr.op == "mov" {
+            if let Some(dest) = instr.dest.clone() {
+                if ref_regs.contains(&dest) {
+                    if let Some(Operand::Var(src)) = instr.srcs.first().cloned() {
+                        if ref_regs.contains(&src) {
+                            let mut m = instr.clone();
+                            m.type_hint = REF_ANY.to_string();
+                            new_instrs.push(m);
+                        } else {
+                            new_instrs.push(IIRInstr::new(
+                                "box",
+                                Some(dest),
+                                vec![Operand::Var(src)],
+                                REF_ANY,
+                            ));
+                        }
+                        continue;
+                    }
                 }
             }
         }
@@ -788,6 +858,56 @@ mod tests {
         // main unboxes the call result at the entry/return boundary → i32.
         assert_eq!(main.instructions.iter().filter(|i| i.op == "unbox").count(), 1);
         assert_eq!(main.return_type, "i32");
+    }
+
+    #[test]
+    fn reference_funnel_boxes_atom_branches() {
+        // A `COND`-style funnel: one clause yields a reference (a cons), another
+        // an atom. The funnel must become a uniform reference — the atom `mov` is
+        // boxed *into* it, the ref `mov` is retyped, and `ret` returns `ref<any>`
+        // WITHOUT a final whole-funnel box (which would mis-box the cons clause).
+        // This is the case a recursive `LABEL` hits (the recursive call result is
+        // the reference clause); it must work on a strict backend like the JVM.
+        let f = IIRFunction::new(
+            "label_0",
+            vec![("L".to_string(), "any".to_string())],
+            "any",
+            vec![
+                // clause A: funnel <- a cons (reference)
+                IIRInstr::new("alloc", Some("p".into()), vec![], REF_PAIR),
+                IIRInstr::new("mov", Some("fun".into()), vec![Operand::Var("p".into())], "i64"),
+                // clause B: funnel <- an atom (needs boxing into the funnel)
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(99)], "i64"),
+                IIRInstr::new("mov", Some("fun".into()), vec![Operand::Var("a".into())], "i64"),
+                IIRInstr::new("ret", None, vec![Operand::Var("fun".into())], "any"),
+            ],
+        );
+        let mut m = IIRModule::new("rec", "mccarthy-lisp");
+        m.entry_point = Some("main".to_string()); // label_0 is non-entry
+        m.functions = vec![f];
+        lower_lisp_repr_structural(&mut m);
+        let f = &m.functions[0];
+
+        // The atom branch `mov fun = a` became `box fun = a`.
+        assert!(
+            f.instructions
+                .iter()
+                .any(|i| i.op == "box" && i.dest.as_deref() == Some("fun")),
+            "atom branch is boxed into the funnel"
+        );
+        // The reference branch stays a (ref<any>) move, never boxed.
+        assert!(
+            f.instructions.iter().any(|i| i.op == "mov"
+                && i.dest.as_deref() == Some("fun")
+                && i.type_hint == REF_ANY),
+            "reference branch is a ref<any> move"
+        );
+        // The funnel is returned as a reference WITHOUT a trailing whole-funnel box.
+        assert!(
+            !f.instructions.iter().any(|i| i.dest.as_deref() == Some("fun.retbox")),
+            "no whole-funnel retbox (each clause already produced a reference)"
+        );
+        assert_eq!(f.return_type, REF_ANY, "non-entry funnel function returns ref<any>");
     }
 
     #[test]

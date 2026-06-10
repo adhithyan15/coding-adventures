@@ -60,7 +60,7 @@ representation + per-builtin backend lowering.
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
-| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | uniform-Object |
+| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -133,10 +133,17 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   that large const, so symbols now run: `(EQ 'X 'X)`→1, `(EQ 'X 'Y)`→0,
   `(QUOTE X)`→its id, `(ATOM 'X)`→1, on a real `java` (`tests/jvm_symbols.rs`).
   The shared `intern_symbols_structural` pass (same as wasm W1) needed no change.
-- ☐ **W5b — JVM lambda/`LABEL`/recursion (F7).** The uniform-anyref function
-  boundary on the JVM, mirroring wasm W2: lisp params → `Object`, call args boxed,
-  a lambda → a `static` method returning `Object`, recursion via `invokestatic`.
-  `((LAMBDA (X) X) 5)`→5 and a recursive `LABEL`, on a real `java`. **Completes JVM.**
+- ✅ **W5b — JVM lambda/`LABEL`/recursion (F7).** The JVM backend already lowered
+  the uniform-anyref boundary (`Object`-param/return methods + `invokestatic`); the
+  gap was in the *shared* structural pass, where the loose wasm model had hidden
+  two strict-backend bugs: a lisp `call` result was hinted `i64` (the JVM stored an
+  `Object` into a `long` slot), and a `COND` **funnel** mixing atom and reference
+  clauses was boxed wholesale at `ret`. Fixed both in `lower_lisp_repr_structural`
+  (call results → `ref<any>`; reference funnels box each atom clause *into* the
+  funnel via a `mov`-chain fixpoint). `((LAMBDA (X) X) 5)`→5, multi-arg,
+  `(CAR ((LAMBDA (X) (CONS X X)) 7))`→7, a recursive `LABEL`→99, and a mixed
+  atom/cons `COND`→7, on a real `java` (`tests/jvm_lambda.rs`). wasm unaffected.
+  **JVM is now McCarthy-complete (F1–F7).**
 
 ### Phase C — CLR (replicate as `object`)
 
