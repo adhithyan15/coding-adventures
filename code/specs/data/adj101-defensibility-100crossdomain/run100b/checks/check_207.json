@@ -1,0 +1,8 @@
+{
+ "check_id": 207,
+ "idx": 80,
+ "slot": "hours_to_notify",
+ "claimed_value": 79,
+ "scenario": "On Monday at 09:00, Northvale Bank's security team confirmed that an attacker had exfiltrated a database containing customers' unencrypted checking account numbers and routing numbers. The team notified the supervisory authority on Thursday at 16:00 the same week.",
+ "cited_span": "On Monday at 09:00, Northvale Bank's security team confirmed that an attacker had exfiltrated a database ... The team notified the supervisory authority on Thursday at 16:00 the same week."
+}

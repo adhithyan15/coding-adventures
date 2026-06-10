@@ -1,0 +1,8 @@
+{
+ "check_id": 2,
+ "idx": 0,
+ "slot": "out_of_network_provider",
+ "claimed_value": true,
+ "scenario": "Maria has a closed HMO with no out-of-network benefits. She electively visited Dr. Lee, an out-of-network dermatologist, for a routine mole check. The visit was billed at $220. The visit was not an emergency.",
+ "cited_span": "She electively visited Dr. Lee, an out-of-network dermatologist"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 37,
+ "idx": 16,
+ "slot": "tmdl_issued",
+ "claimed_value": true,
+ "scenario": "Millbrook Tannery holds an NPDES permit allowing 8 mg/L of total nitrogen. The state issued a TMDL for the receiving creek assigning Millbrook a wasteload allocation of 4 mg/L total nitrogen. Millbrook is discharging at 7 mg/L.",
+ "cited_span": "The state issued a TMDL for the receiving creek"
+}

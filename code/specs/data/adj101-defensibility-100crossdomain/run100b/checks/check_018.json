@@ -1,0 +1,8 @@
+{
+ "check_id": 18,
+ "idx": 8,
+ "slot": "same_condition",
+ "claimed_value": true,
+ "scenario": "Helen was discharged from Mercy Hospital on April 2 after treatment for pneumonia. On April 18 she was readmitted to Mercy Hospital for the same pneumonia, 16 days after discharge. The standard inpatient admission copay is $250.",
+ "cited_span": "readmitted to Mercy Hospital for the same pneumonia"
+}

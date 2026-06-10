@@ -1,0 +1,8 @@
+{
+ "check_id": 133,
+ "idx": 52,
+ "slot": "emergency",
+ "claimed_value": false,
+ "scenario": "On a Tuesday at 2 p.m., the landlord used his key to enter Dana's unit to inspect a dripping faucet Dana had reported a week earlier. The faucet was a slow, non-urgent drip. The landlord had sent no notice of any kind before entering.",
+ "cited_span": "The faucet was a slow, non-urgent drip."
+}

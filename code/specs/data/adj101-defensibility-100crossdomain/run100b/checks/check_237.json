@@ -1,0 +1,8 @@
+{
+ "check_id": 237,
+ "idx": 92,
+ "slot": "days_to_report",
+ "claimed_value": 50,
+ "scenario": "On March 1, Priya twisted her knee lifting a box at the warehouse. She did not mention it to anyone at first. She finally reported the injury to her supervisor on April 20 of the same year, 50 days later.",
+ "cited_span": "She finally reported the injury to her supervisor on April 20 of the same year, 50 days later."
+}
