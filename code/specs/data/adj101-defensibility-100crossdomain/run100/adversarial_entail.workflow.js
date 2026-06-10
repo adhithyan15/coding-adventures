@@ -8,7 +8,7 @@ const CHECKS = '/Users/adhithya/Downloads/coding-adventures/code/specs/data/adj1
 const parsed = Array.isArray(args) ? { ids: args } : (typeof args === 'string' ? JSON.parse(args) : args)
 const ids = parsed.ids || parsed
 const MODEL = parsed.model // undefined -> session model (Opus); 'sonnet'/'haiku' for the N-reader panel
-const BATCH = 12
+const BATCH = 10
 
 const SCHEMA = {
   type: 'object', additionalProperties: false,

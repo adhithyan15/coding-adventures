@@ -6,7 +6,7 @@ export const meta = {
 
 const ITEMS_DIR = '/Users/adhithya/Downloads/coding-adventures/code/specs/data/adj101-defensibility-100crossdomain/run100/items'
 const indices = Array.isArray(args) ? args : JSON.parse(args)
-const BATCH = 12
+const BATCH = 10
 
 const SLOT = { type: 'object', properties: {
   value: {}, span: { type: 'string' }, type: { type: 'string', enum: ['stated', 'inferred'] },
