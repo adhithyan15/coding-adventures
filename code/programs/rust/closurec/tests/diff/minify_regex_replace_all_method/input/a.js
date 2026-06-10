@@ -1,0 +1,1 @@
+var n = s.replace(/x/g, "y");

@@ -90,6 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-055: paren elision around ternary arms when content
+    // is a single assignment expression. `x>0?(a=1):(b=2)` →
+    // upstream `x>0?a=1:b=2`. Discovered by CLOC14.25.
+    ("ternary_assign", "gap-055: paren elision around ternary arms"),
     // gap-053 was RESOLVED in CLOC12.62 — token-stream
     // pre-pass strips outer `(` `)` around `= ( ... ) ;`
     // when contents have no top-level `,` and don't start
