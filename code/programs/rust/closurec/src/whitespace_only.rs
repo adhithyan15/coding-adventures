@@ -797,7 +797,16 @@ pub fn whitespace_only_minify(
                     // `catch` / `finally`.
                     !next_is_chain_continuation
                 }
-                BlockKind::Other => false,
+                // gap-052: extend trailing-`;` to Other-blocks
+                // at EOF. Upstream Closure emits `;` after ANY
+                // top-level `}` at EOF (`if(x){...};`,
+                // `foo:{...};`, `for(;;){...};`, bare
+                // `{a;b;};`). Mid-stream Other-`}` blocks
+                // still don't get a `;` — that would change
+                // statement boundaries inside expressions or
+                // produce stray `;` inside multi-statement
+                // sequences.
+                BlockKind::Other => next_val.is_none(),
             };
             // gap-041: when a synthetic `;` is owed at this
             // `}` AND the very next non-trivia token is
@@ -1992,7 +2001,7 @@ mod tests {
     fn gap032_multi_stmt_body_does_not_flatten() {
         assert_eq!(
             minify("if(x){a();b();}"),
-            "if(x){a();b()}"
+            "if(x){a();b()};"
         );
     }
 
@@ -2026,7 +2035,7 @@ mod tests {
         // which would be a separate future gap.
         assert_eq!(
             minify("if(x){if(y){a();}}"),
-            "if(x){if(y)a()}"
+            "if(x){if(y)a()};"
         );
     }
 
@@ -2036,7 +2045,7 @@ mod tests {
     fn gap032_nested_brace_does_not_flatten() {
         assert_eq!(
             minify("if(x){{a();}}"),
-            "if(x){{a()}}"
+            "if(x){{a()}};"
         );
     }
 
@@ -2097,7 +2106,7 @@ mod tests {
     /// a statement in its own right.
     #[test]
     fn gap032_top_level_block_does_not_flatten() {
-        assert_eq!(minify("{a;}"), "{a}");
+        assert_eq!(minify("{a;}"), "{a};");
     }
 
     /// Function-decl body MUST NOT flatten — not in body
@@ -2236,7 +2245,7 @@ mod tests {
     fn gap036_switch_as_property_does_not_arm() {
         assert_eq!(
             minify("var o={switch:1};while(x){a;b;}"),
-            "var o={switch:1};while(x){a;b}"
+            "var o={switch:1};while(x){a;b};"
         );
     }
 

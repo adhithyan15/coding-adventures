@@ -95,10 +95,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // inner-call form `(fn(){...}())` normalizes to
     // outer-call form `(fn(){...})()`. `minify_fn_expr_iife`
     // flipped IGNORED → PASS.
-    // gap-052: trailing `;` after `}` at EOF for control-
-    // flow body / label block bodies. Discovered by CLOC14.18.
-    ("labeled_block", "gap-052: trailing `;` after `}` at EOF for label-block"),
-    ("double_break_continue", "gap-052: trailing `;` after `}` at EOF for for-body"),
+    // gap-052 was RESOLVED in CLOC12.61 — `BlockKind::Other`
+    // at EOF now wants `;`. `minify_labeled_block` and
+    // `minify_double_break_continue` flipped IGNORED → PASS.
     // gap-050 was RESOLVED in CLOC12.57 — token-level
     // peephole drops the empty `()` after `new IDENT`
     // when the follower is safe. `minify_new_expr`
