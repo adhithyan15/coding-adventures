@@ -90,6 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-053: paren elision around RHS of var-init. `var t =
+    // (x == null);` → upstream `var t=x==null;`. Discovered
+    // by CLOC14.20.
+    ("null_undef_compare", "gap-053: paren elision around var-init RHS"),
     // gap-051 was RESOLVED in CLOC12.60 — token-stream
     // pre-pass reorders `} ( ) )` to `} ) ( )`. IIFE
     // inner-call form `(fn(){...}())` normalizes to

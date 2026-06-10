@@ -418,3 +418,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `for(;;){if(x)break;if(y)continue;use();}` and `foo:{a();break foo;b();}`
 - **Upstream:** Same with trailing `;`.
 - **Fix:** Change `BlockKind::Other => false` in `kind_wants_semi` to `BlockKind::Other => next_val.is_none()`. EOF-only — mid-stream Other-blocks still emit no `;`.
+
+### gap-053 — paren elision around var-init RHS
+
+- **Status:** OPEN — newly discovered by CLOC14.20.
+- **Upstream byte-identity test:** `minify_null_undef_compare` seed fixture.
+- **Input:** `var t = (x == null);`
+- **Upstream:** `var t=x==null;` (outer parens stripped)
+- **closurec:** `var t=(x==null);`
+- **Why it fails:** closurec passes the source `(` `)` through. Upstream strips outer parens around an expression that's the entire RHS — they're redundant.
+- **What it needs:** Token-level peephole: when `=` is followed by `(`, scan forward for the matching `)`, check that the very next token after `)` is `;` (or `,` for next declarator). If yes, the parens enclose the whole RHS and can be dropped. Beware of nested parens (use depth tracking) and the special case of arrow/IIFE which keep their parens.
