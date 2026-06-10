@@ -10,6 +10,12 @@ This crate simulates a subset of .NET CLR bytecode. Unlike the JVM (which encode
 
 Includes ldc.i4 (compact and extended forms), ldloc/stloc, add, sub, mul, div, nop, ldnull, br.s, brfalse.s, brtrue.s, ret, and two-byte comparison opcodes (ceq, cgt, clt).
 
+Since 0.2.0 it also executes **reference types**: a stack/local slot is a
+`Value` (`Int(i32)` or `Ref(Option<usize>)` into an object heap), and the
+reference opcodes `newarr`, `stelem.ref`, `ldelem.ref`, `dup`, and identity
+`box`/`unbox.any` run — enough to execute the `System.Object[]` cons cells the
+IIR→CIL backend emits for McCarthy Lisp (LANG77 / W6b).
+
 ## Usage
 
 ```rust

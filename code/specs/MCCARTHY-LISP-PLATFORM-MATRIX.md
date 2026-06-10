@@ -153,13 +153,23 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   in-repo **`clr-simulator`** (zero external `dotnet`, mirroring `jvm-simulator`):
   `42`→42, `0`→0, `7`→7, Twig `42`→42. Establishes the CLR pipeline + run-verify
   harness that W6b+ build on.
-- ☐ **W6b — CLR cons (F2).** cons cells are `object[]` (the CLR backend already
-  lowers `alloc`/`field_*` for `ref<LispyPair>` → `newarr`/`stelem`/`ldelem`);
-  add the atom boxing (`box [mscorlib]System.Int32` / `unbox.any`), remove
-  `box`/`unbox` from its `UNSUPPORTED_OPS`, and run the shared structural passes
-  (incl. the JVM strict-backend fixes). NOTE: `clr-simulator` is a 32-bit integer
-  machine (no object/heap execution), so W6b's run-verify needs the real `dotnet`
-  (9.0.313, available via mise) — mirror the JVM W3b real-`java` harness.
+- ◑ **W6b — CLR cons (F2).** *In progress.*
+  - ✅ **W6b-1 — `clr-simulator` object/reference value model.** Real `dotnet`
+    turned out non-viable as an in-repo runner (no PE/assembly emitter, no
+    `ilasm`), so — per the backend's design intent ("artifact ready for the CLR
+    simulator") — extended `clr-simulator` (0.2.0) to execute **reference types**:
+    a `Value { Int | Ref }` stack model + an object heap + `newarr`/`stelem.ref`/
+    `ldelem.ref`/`dup` and identity `box`/`unbox.any` (the loose model, like the
+    wasm `i31`). Scalar behaviour unchanged; all CLR-backend consumers
+    (`nib-clr`, `brainfuck-clr`, `iir-to-cil`) green. This is the in-repo
+    run-verify substrate for CLR objects (the analog of `wasm-execution`'s
+    `GcStruct`).
+  - ☐ **W6b-2 — McCarthy cons on the simulator.** Add the `iir-to-cil` atom
+    boxing (`box [mscorlib]System.Int32` / `unbox.any`), remove `box`/`unbox`
+    from its `UNSUPPORTED_OPS`, retype `ref<any>`→`object`, run the shared
+    structural passes (incl. the JVM strict-backend fixes) in
+    `lang-aot::compile_source_to_cil`, and verify `(CAR (CONS 7 9))`→7 on the
+    extended `clr-simulator`.
 - ☐ **W7 — CLR `ATOM`/`EQ`/`COND` (F3–F5).** `isinst`; equality; truthiness.
 - ☐ **W8 — CLR symbols + lambda (F6–F7).** **Completes CLR.**
 
