@@ -421,10 +421,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-053 — paren elision around var-init RHS
 
-- **Status:** OPEN — newly discovered by CLOC14.20.
-- **Upstream byte-identity test:** `minify_null_undef_compare` seed fixture.
+- **Status:** **RESOLVED** in CLOC12.62 (PR pending). `minify_null_undef_compare` flips IGNORED → PASS.
 - **Input:** `var t = (x == null);`
 - **Upstream:** `var t=x==null;` (outer parens stripped)
-- **closurec:** `var t=(x==null);`
-- **Why it fails:** closurec passes the source `(` `)` through. Upstream strips outer parens around an expression that's the entire RHS — they're redundant.
-- **What it needs:** Token-level peephole: when `=` is followed by `(`, scan forward for the matching `)`, check that the very next token after `)` is `;` (or `,` for next declarator). If yes, the parens enclose the whole RHS and can be dropped. Beware of nested parens (use depth tracking) and the special case of arrow/IIFE which keep their parens.
+- **Fix:** Token-stream pre-pass: scan for `= ( ... )` where contents have no `,` at depth 0 and don't start with `function`. If token after matching `)` is `;`, `,`, or EOF, drop both `(` and `)`. Multiple drops collected and applied in reverse to preserve indices.
