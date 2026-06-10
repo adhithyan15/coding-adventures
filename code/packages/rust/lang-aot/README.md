@@ -22,7 +22,8 @@ in-repo `jvm-simulator` (`42` → 42; W3a), **cons** runs on a real JVM —
 passes as the wasm path; the JVM backend lowers the backend-agnostic
 `box`/`unbox`/`alloc`/`field_*` + `pair?`/`not`/`equal?` to `Integer`/`Object[]` +
 `instanceof`/`ixor`/`if_icmpeq` (where wasm uses `i31ref`/`$LispyPair`/`ref.test`).
-The remaining JVM symbols + lambda (F6–F7) are W5.
+**Symbols** run too (W5a): `(EQ 'X 'X)` → 1 — their interned ids (`2²⁹`) load via
+the JVM `ldc` constant-pool path. The remaining JVM lambda (F7) is W5b.
 
 ## Stack position
 

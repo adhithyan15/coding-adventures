@@ -110,6 +110,7 @@ const DCONST_1: u8 = 0x0F;  // push double 1.0
 const BIPUSH: u8 = 0x10;    // push byte (sign-extended to int)
 const SIPUSH: u8 = 0x11;    // push short (sign-extended to int)
 const LDC: u8 = 0x12;       // push constant from CP (1-byte index)
+const LDC_W: u8 = 0x13;     // push int/float constant from CP (2-byte index)
 const LDC2_W: u8 = 0x14;    // push long/double constant from CP (2-byte index)
 
 // ── Local variable loads ───────────────────────────────────────────────────
@@ -878,11 +879,42 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
             code.extend_from_slice(&(v as i16).to_be_bytes());
         }
         _ => {
-            // Out of sipush range.  In v1 we emit ldc with a placeholder index.
-            // Tests that use large constants would need a proper CP builder.
-            code.push(LDC);
-            code.push(0); // placeholder CP index
+            // Out of sipush range: this path requires a constant-pool entry, so
+            // callers with an `int` literal beyond ±32767 MUST use
+            // `emit_iconst_cp` instead. Reaching here would emit an invalid `ldc`
+            // (placeholder index 0 → a JVM `constantTag` crash), so we refuse:
+            // a 0-byte no-op leaves the stack short, which the verifier/test
+            // catches loudly rather than corrupting a class. (McCarthy W5a fixed
+            // every user-constant call site to route large values through the CP.)
+            debug_assert!(
+                false,
+                "emit_iconst called with out-of-sipush-range value {value}; \
+                 use emit_iconst_cp (constant-pool ldc) instead"
+            );
         }
+    }
+}
+
+/// Push an `int` constant, using the **constant pool** (`ldc`/`ldc_w`) for values
+/// outside the `bipush`/`sipush` range. The constant-pool-aware companion of
+/// [`emit_iconst`]: every call site that emits a *user-controlled* integer
+/// literal (a `const`, a `mov`/`ret` immediate, a `call` argument) must use this,
+/// since an interned symbol id or any literal ≥ 2¹⁵ would otherwise hit the
+/// (now-`debug_assert`-guarded) invalid-`ldc` path. Structural indices (field
+/// numbers, slot counts, arg counts) stay on [`emit_iconst`] — they are always
+/// small (McCarthy W5a).
+fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) {
+    if (-32768..=32767).contains(&value) {
+        emit_iconst(code, value);
+        return;
+    }
+    let idx = cp.add_integer(value);
+    if idx <= 0xFF {
+        code.push(LDC);
+        code.push(idx as u8);
+    } else {
+        code.push(LDC_W);
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -1297,6 +1329,14 @@ impl ConstantPoolBuilder {
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
     }
 
+    /// Add a `CONSTANT_Integer` entry (deduplicated) and return its 1-based
+    /// index, for an `int` literal too large for `bipush`/`sipush` and so loaded
+    /// with `ldc`/`ldc_w` (McCarthy W5a — e.g. an interned symbol id ≥ 2²⁹).
+    fn add_integer(&mut self, value: i32) -> u16 {
+        let key = format!("Integer:{}", value);
+        self.add_entry(key, JvmConstantPoolEntry::Integer(value))
+    }
+
     /// Add a Class entry referencing a UTF8 name.
     fn add_class(&mut self, class_name: &str) -> u16 {
         let name_idx = self.add_utf8(class_name);
@@ -1601,7 +1641,7 @@ fn lower_function(
                             JvmType::Long => emit_lconst(&mut code, *v),
                             JvmType::Float => emit_fconst(&mut code, *v as f32),
                             JvmType::Double => emit_dconst(&mut code, *v as f64),
-                            _ => emit_iconst(&mut code, *v as i32),
+                            _ => emit_iconst_cp(&mut code, cp, *v as i32),
                         }
                     }
                     Operand::Bool(b) => {
@@ -1615,7 +1655,7 @@ fn lower_function(
                             _ => {
                                 // Integer destination with float source — unusual
                                 // but not necessarily wrong (e.g. casting).
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                             }
                         }
                     }
@@ -1882,7 +1922,7 @@ fn lower_function(
                     }
                     Some(Operand::Int(v)) => {
                         // Constant mov — unusual but valid; emit iconst.
-                        emit_iconst(&mut code, *v as i32);
+                        emit_iconst_cp(&mut code, cp, *v as i32);
                         emit_istore(&mut code, dest_slot);
                     }
                     Some(Operand::Bool(b)) => {
@@ -1982,7 +2022,7 @@ fn lower_function(
                                 code.push(LRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *v as i32);
+                                emit_iconst_cp(&mut code, cp, *v as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -2003,7 +2043,7 @@ fn lower_function(
                                 code.push(DRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -2305,7 +2345,7 @@ fn lower_function(
                             let (slot, jtype) = lookup_var(n)?;
                             emit_typed_load(&mut code, slot, jtype);
                         }
-                        Operand::Int(v) => emit_iconst(&mut code, *v as i32),
+                        Operand::Int(v) => emit_iconst_cp(&mut code, cp, *v as i32),
                         Operand::Bool(b) => emit_iconst(&mut code, if *b { 1 } else { 0 }),
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
                         // LANG32: Str is a compile-time string literal — not
