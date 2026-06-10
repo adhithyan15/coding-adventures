@@ -4,8 +4,10 @@ export const meta = {
   phases: [{ title: 'Translate', detail: 'one translator agent per item' }],
 }
 
-// args = [{id, source, question, quantity_spans}, ...] (10 items)
-const items = Array.isArray(args) ? args : JSON.parse(args)
+// args = [{id, source, question, quantity_spans}, ...]  OR  {model, items}
+const parsed = Array.isArray(args) ? { items: args } : (typeof args === 'string' ? JSON.parse(args) : args)
+const items = parsed.items || parsed
+const MODEL = parsed.model // undefined -> inherit session model (Opus); 'haiku' for the weak-model arm
 
 const FACT = {
   type: 'object',
@@ -64,7 +66,7 @@ phase('Translate')
 log(`Translating ${items.length} computational items into provenanced facts + emitted programs.`)
 const emissions = await parallel(
   items.map((it) => () =>
-    agent(contract(it), { label: `translate:${it.id}`, phase: 'Translate', schema: SCHEMA })
+    agent(contract(it), { label: `translate:${it.id}`, phase: 'Translate', schema: SCHEMA, ...(MODEL ? { model: MODEL } : {}) })
       .then((e) => (e ? { id: it.id, ...e } : { id: it.id, _error: true })))
 )
 return emissions
