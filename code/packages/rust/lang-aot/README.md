@@ -16,12 +16,13 @@ McCarthy core** — cons, `ATOM`, `EQ`, `COND`, symbols, and lambda/label/recurs
 (F1–F7) — now runs on the wasm backend.
 
 `compile_source_to_jvm` is the second managed target: scalar McCarthy runs on the
-in-repo `jvm-simulator` (`42` → 42; W3a), and **cons** runs on a real JVM —
-`(CAR (CONS 7 9))` → 7 (W3b). It runs the *same* structural passes as the wasm
-path; the JVM backend lowers the backend-agnostic `box`/`unbox`/`alloc`/`field_*`
-to `Integer.valueOf`/`intValue` + `Object[]` cells (where wasm uses
-`i31ref`/`$LispyPair`). The remaining JVM predicates/symbols/lambda (F3–F7) are
-W4–W5.
+in-repo `jvm-simulator` (`42` → 42; W3a), **cons** runs on a real JVM —
+`(CAR (CONS 7 9))` → 7 (W3b) — and now `ATOM`/`EQ`/`COND` too: `(ATOM 5)` → 1,
+`(EQ 5 5)` → 1, `(COND ((EQ 1 1) 7) (5 9))` → 7 (W4). It runs the *same* structural
+passes as the wasm path; the JVM backend lowers the backend-agnostic
+`box`/`unbox`/`alloc`/`field_*` + `pair?`/`not`/`equal?` to `Integer`/`Object[]` +
+`instanceof`/`ixor`/`if_icmpeq` (where wasm uses `i31ref`/`$LispyPair`/`ref.test`).
+The remaining JVM symbols + lambda (F6–F7) are W5.
 
 ## Stack position
 

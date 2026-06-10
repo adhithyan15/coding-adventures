@@ -177,6 +177,7 @@ const RETURN: u8 = 0xB1;  // return void
 const INVOKESTATIC: u8 = 0xB8;   // invoke static method (2-byte CP index)
 const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
 const CHECKCAST: u8 = 0xC0;      // checkcast (2-byte CP class index)
+const INSTANCEOF: u8 = 0xC1;     // instanceof (2-byte CP class index) → push 0/1
 
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
@@ -1022,6 +1023,36 @@ fn emit_dconst(code: &mut Vec<u8>, value: f64) {
 ///
 /// Stack state on entry: `[…, int1, int2]`
 /// Stack state on exit:  `[…, 0_or_1]`
+/// Extract a `call_builtin`'s dest register name, or a descriptive error
+/// (McCarthy W4 predicate lowering).
+fn builtin_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+) -> Result<&'a str, IIRJvmError> {
+    instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+        function: fname.to_string(),
+        detail: format!("call_builtin {name:?} requires a dest register"),
+    })
+}
+
+/// Extract a `call_builtin`'s `srcs[idx]` as a variable name (the builtin name
+/// is `srcs[0]`, so arguments start at `idx == 1`).
+fn builtin_arg(
+    instr: &interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+    idx: usize,
+) -> Result<String, IIRJvmError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Var(s)) => Ok(s.clone()),
+        _ => Err(IIRJvmError::InvalidOperand {
+            function: fname.to_string(),
+            detail: format!("call_builtin {name:?} requires srcs[{idx}] = Operand::Var"),
+        }),
+    }
+}
+
 fn emit_int_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
     // if_icmpXX at current PC, offset to iconst_0 (7 bytes forward)
     code.push(cmp_opcode);
@@ -2173,6 +2204,68 @@ fn lower_function(
                         let mref = cp.add_methodref(BASIC_RUNTIME_CLASS, "println", "(J)V");
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
+                    }
+                    // ── McCarthy W4: the lisp predicates (F3–F5). ──
+                    //
+                    // The structural pass emits these as the *same* backend-agnostic
+                    // `call_builtin`s the wasm path uses (where they lower to
+                    // `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`). On the JVM the
+                    // uniform-`Object` model makes them:
+                    //   pair?   → `instanceof Object[]`   (a cons is an Object[])
+                    //   not     → logical not of a 0/1 bool
+                    //   equal?  → unbox both Integers and `if_icmpeq`
+                    "pair?" => {
+                        // Is the (boxed) lisp value a cons cell? A cons is an
+                        // `Object[]`; an atom is an `Integer`; nil is `null`.
+                        let dest_name = builtin_dest(instr, fname, "pair?")?;
+                        let arg = builtin_arg(instr, fname, "pair?", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_aload(&mut code, arg_slot);
+                        let cidx = cp.add_class("[Ljava/lang/Object;");
+                        code.push(INSTANCEOF);
+                        code.extend_from_slice(&cidx.to_be_bytes());
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "not" => {
+                        // Logical not of a 0/1 machine boolean: `arg ^ 1`.
+                        let dest_name = builtin_dest(instr, fname, "not")?;
+                        let arg = builtin_arg(instr, fname, "not", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_iload(&mut code, arg_slot);
+                        code.push(ICONST_1);
+                        code.push(IXOR);
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "equal?" => {
+                        // `EQ` on atoms: unbox both `Integer`s and compare. The
+                        // structural pass guarantees both args are boxed atoms
+                        // (symbols interned to ints, integers as ints), so the
+                        // identity test reduces to integer equality.
+                        let dest_name = builtin_dest(instr, fname, "equal?")?;
+                        let a = builtin_arg(instr, fname, "equal?", 1)?;
+                        let b = builtin_arg(instr, fname, "equal?", 2)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (a_slot, _) = lookup_var(&a)?;
+                        let (b_slot, _) = lookup_var(&b)?;
+                        let int_cidx = cp.add_class("java/lang/Integer");
+                        let intval = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                        // unbox a
+                        emit_aload(&mut code, a_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // unbox b
+                        emit_aload(&mut code, b_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
+                        emit_int_compare(&mut code, IF_ICMPNE);
+                        emit_istore(&mut code, dest_slot);
                     }
                     _ => {
                         // Validator should have rejected this; defense in depth.
