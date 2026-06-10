@@ -3,6 +3,25 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] — 2026-06-09 — `box`/`unbox` + `ref<any>` (McCarthy W3b)
+
+### Added
+
+- **`box` / `unbox` lowering** — the managed uniform-reference value model's
+  atom boxing, the JVM counterpart of the wasm backend's `i31ref`:
+  - `box`  → `iload ; invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer; ; astore`
+  - `unbox`→ `aload ; checkcast java/lang/Integer ; invokevirtual Integer.intValue()I ; istore`
+  These are the *same* backend-agnostic IIR ops the wasm path consumes — the
+  structural representation pass emits them, each backend lowers them — so a
+  McCarthy cons program (`(CAR (CONS 7 9))` → 7) now runs on a real JVM. Removed
+  `box`/`unbox` from `UNSUPPORTED_OPS`.
+- **`ref<any>` type** — maps to `JvmType::Ref` (descriptor `Ljava/lang/Object;`):
+  a boxed lisp value is an `Integer` (atom) or `Object[]` (cons cell).
+
+(cons cells were already `Object[]` allocations via `alloc`/`field_*` for
+`ref<LispyPair>`; this release adds the atom boxing that lets integers live in
+those cells and be read back out.)
+
 ## [0.7.0] — 2026-06-01 (G3 — `print_i64` host import → `env/BasicRuntime.println(J)V`)
 
 ### Added — `call_builtin "print_i64"` whitelisted and lowered

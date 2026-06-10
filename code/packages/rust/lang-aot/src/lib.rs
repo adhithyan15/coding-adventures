@@ -490,13 +490,37 @@ pub fn compile_source_to_jvm(
     source: &str,
     class_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
+    let class = compile_source_to_jvm_class(language, source, class_name)?;
+    Ok(iir_to_jvm_class_file::serialize_jvm_class_file(&class))
+}
+
+/// Cross-platform: source → IIR → a **`JvmClassFile`** (the structured class,
+/// pre-serialization).
+///
+/// The shared core of [`compile_source_to_jvm`]; exposed so a caller can inspect
+/// or augment the class before serializing — e.g. a test that injects a
+/// `main([Ljava/lang/String;)V` launcher to run the entry method on a real JVM.
+///
+/// Runs the **managed value-model pipeline**, identical to the wasm path: the
+/// structural passes emit *backend-agnostic* `box`/`unbox`/`alloc`/`field_*`
+/// ops, and the JVM backend lowers them to `Integer.valueOf`/`intValue` +
+/// `Object[]` cons cells (where wasm uses `i31ref`/`$LispyPair`). That shared
+/// representation is exactly the reusable primitive a future lisp-family language
+/// inherits for free.
+pub fn compile_source_to_jvm_class(
+    language: Language,
+    source: &str,
+    class_name: &str,
+) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
     let mut module = compile_source_to_iir(language, source, class_name)?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
     concretize_scalar_any_for_jvm(&mut module);
 
     let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
-    let class = iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
-        .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))?;
-    Ok(iir_to_jvm_class_file::serialize_jvm_class_file(&class))
+    iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
+        .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))
 }
 
 /// Cross-platform: source file → IIR → JVM class file (`.class`) on disk.
