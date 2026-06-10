@@ -60,7 +60,7 @@ use std::collections::{BTreeMap, HashMap};
 use interpreter_ir::{IIRModule, Operand};
 use ir_to_cil_bytecode::backend::{CILMethodArtifact, CILProgramArtifact};
 use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder, CILOpcode};
-use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN};
+use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN, INT32_TYPE_TOKEN};
 
 /// Sentinel token for `System.Console.WriteLine(int64)`.
 ///
@@ -1359,6 +1359,41 @@ pub fn lower_iir_to_cil(
                     builder.emit_ldc_i4(field_idx);             // push index
                     emit_load(&mut builder, &value, fn_name)?;  // push value
                     builder.emit_stelem_ref();                   // array[idx] = value
+                }
+
+                // ── box dest src ; unbox.any dest src (McCarthy W6b) ──────────
+                //
+                // The uniform-reference value model's atom boxing — the CLR
+                // counterpart of the wasm `i31ref` and the JVM `Integer`. The
+                // shared structural pass emits these `box`/`unbox` ops; on the CLR
+                // a boxed `int32` lives in an `object[]` cons cell.
+                //   box      → ldloc src ; box [int32] ; stloc dest
+                //   unbox.any→ ldloc src ; unbox.any [int32] ; stloc dest
+                "box" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "box instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_box(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+                "unbox" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "unbox instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── is_null dest x ────────────────────────────────────────────

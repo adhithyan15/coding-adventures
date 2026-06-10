@@ -97,8 +97,7 @@ const UNSUPPORTED_OPS: &[&str] = &[
     // "load_mem"   — Brainfuck: now supported (ldelem.u1 over env.BFRuntime::__tape).
     // "store_mem"  — Brainfuck: now supported (stelem.i1 over env.BFRuntime::__tape).
     // "alloc"      — promoted in Phase 2 (ref<LispyPair> only)
-    "box",
-    "unbox",
+    // "box" / "unbox" — promoted in McCarthy W6b (box [int32] / unbox.any [int32]).
     // "field_load" — promoted in Phase 2
     // "field_store" — promoted in Phase 2
     // "is_null"    — promoted in Phase 2
@@ -368,6 +367,8 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                     "alloc" | "field_load" | "field_store" | "is_null"
                     | "const" | "ret" | "load_reg" | "store_reg"
                     | "jmp_if_true" | "jmp_if_false" | "mov"
+                    // McCarthy W6b: `box` produces a `ref<any>` (boxed int32).
+                    | "box" | "unbox"
                 );
                 if !(is_supported_ref && is_heap_op) {
                     errors.push(format!(
