@@ -435,6 +435,18 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-055 — paren elision around ternary arms (single-expression)
 
-- **Status:** **RESOLVED** in CLOC12.64 (PR pending). Discovered by CLOC14.25 AFTER 3 consecutive zero rounds (marathon was NOT converged). `minify_ternary_assign` flips IGNORED → PASS.
+- **Status:** **RESOLVED** in CLOC12.64. Discovered by CLOC14.25 AFTER 3 consecutive zero rounds (marathon was NOT converged). `minify_ternary_assign` flips IGNORED → PASS.
 - **Input:** `var r = x>0?(a=1):(b=2);` → **Upstream:** `var r=x>0?a=1:b=2;`
 - **Fix:** Token-stream pre-pass: when prev is `?` or `:` and next is `(`, scan to matching `)`. Drop both parens iff the token after `)` is an arm-terminator (`:`/`;`/`,`/`)`/`]`/`}`/EOF — parens span the WHOLE arm) and no top-level `,` inside. Whole-arm guard prevents precedence shifts (`x?(a=1)+2:c` stays). `?.` lexes as single OPTIONAL_CHAIN token so optional calls are safe.
+
+### gap-056 — paren elision after `return` / `throw` / `=>` (RESOLVED)
+
+- **Status:** **RESOLVED** in CLOC12.65 (PR pending). Extends the gap-055 whole-arm pre-pass with prefixes `=>`, `return`, `throw`.
+- **Guards:** property-name guard (don't strip `gen.throw((e))` / `it.return((b))`); arrow-brace guard (don't strip `()=>({a:1})` — block ambiguity). All token checks via `is_structural_punct`.
+- **Note:** the inner-redundant-paren strip `gen.throw((e))`→`gen.throw(e)` is a SEPARATE future gap (nested grouping parens in call args), not gap-056.
+
+### gap-057 — paren elision around member-expression object
+
+- **Status:** OPEN — discovered by CLOC14.26. `minify_paren_then_member` ignored.
+- **Input:** `var v = (a).b;` → **Upstream:** `var v=a.b;`
+- **What it needs:** Token peephole `( SINGLE ) .` → drop parens. Must NOT strip when `(` is statement-leading (could flip to block/function parse) or contents are comma-op. Needs design.
