@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_null_undefined_lit/input/a.js
+--compilation_level
+WHITESPACE_ONLY
