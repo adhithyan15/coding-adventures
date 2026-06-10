@@ -49,6 +49,7 @@ mod _lexer_grammar;
 mod _parser_grammar;
 
 use lexer::grammar_lexer::GrammarLexer;
+use logic_engine::Differential;
 use parser::grammar_parser::{GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
@@ -85,4 +86,24 @@ pub fn parse(src: &str) -> Result<Program, CompileError> {
 pub fn compile(src: &str) -> Result<LoweredProgram, CompileError> {
     let program = parse(src)?;
     lower(&program).map_err(CompileError::Lower)
+}
+
+/// Run a **differential** over a lowered program's `? h` query lines:
+/// treat the program's queries as the competing hypotheses, rank them by
+/// posterior, and return the comparative [`Differential`] decision (argmax
+/// + between-hypothesis margin, with a kickback when an open uncertainty
+/// could flip the ranking).
+///
+/// This is the natural reading of a multi-`?` adj-lang program: the queries
+/// *are* the differential. A program with a single `?` yields a
+/// determinate, single-hypothesis result.
+pub fn decide(lowered: &LoweredProgram) -> Differential {
+    logic_engine::differential(&lowered.queries, &lowered.kb)
+}
+
+/// Source text → differential decision in one step (`compile` then
+/// [`decide`]).
+pub fn compile_and_decide(src: &str) -> Result<Differential, CompileError> {
+    let lowered = compile(src)?;
+    Ok(decide(&lowered))
 }

@@ -17,6 +17,16 @@ engine exposes:
 - `observe <term>` — assert a Certain Fact.
 - `? <conclusion>` — query the engine.
 
+### Differential over the `?` queries (v0.4)
+
+A program's `? h` lines are read as the set of **competing hypotheses**.
+`compile_and_decide(src)` (or `decide(&lowered)`) runs
+`logic_engine::differential` over them: ranks by posterior, picks the argmax,
+reports the between-hypothesis margin, and kicks back when an open uncertainty
+could flip the ranking. A multi-`?` program is therefore a differential
+(bacterial vs viral vs fungal); a single `?` yields a determinate result. No
+grammar change — the competing set is already the `?` lines.
+
 Every clause can carry annotations:
 
 - `source "<text>"` — citation string.

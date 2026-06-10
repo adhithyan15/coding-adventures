@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2026-06-10
+
+### Added
+
+- **`differential(hypotheses, kb)` — the cross-hypothesis decision
+  primitive.** `lr_aggregate` scores one hypothesis at a time; the
+  differential ranks a set of *competing* hypotheses (bacterial vs
+  viral vs fungal meningitis, charge A vs B, deal-vs-no-deal), picks
+  the argmax, and reports the **between-hypothesis margin**. This is
+  the operation MYCIN actually performs and the engine previously
+  lacked — nothing ranked competing conclusions or measured the gap.
+- `DifferentialDecision` — `Determinate { leader, margin }` when the
+  leader out-ranks the runner-up *even under the worst-case resolution
+  of every open uncertainty* (leader's VOI band pushed down, runner-up's
+  up); `Kickback { leader, runner_up, recommended_resolutions }` when
+  the bands cross (an unresolved finding — or an exact tie — could flip
+  the ranking). This is the cross-hypothesis analogue of
+  `LRAggregateResult::suggest_kickback`, which only bounded a single
+  hypothesis. Decision = argmax + sensitivity (ADJ65), deterministic and
+  CPU-only — no softmax, no temperature.
+- `RankedHypothesis` carries each hypothesis's full `LRAggregateResult`
+  (proof DAG included) so the differential is auditable end to end, plus
+  a `normalized_share` (posterior ÷ Σ posteriors) flagged as a
+  display-only convenience that assumes the hypotheses are exhaustive and
+  mutually exclusive (the LR model does not).
+- Re-exported `differential`, `Differential`, `DifferentialDecision`,
+  `RankedHypothesis` from the crate root.
+
 ## [0.6.0] - 2026-06-02
 
 ### Added

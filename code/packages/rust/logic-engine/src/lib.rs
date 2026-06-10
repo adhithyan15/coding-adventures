@@ -32,6 +32,7 @@
 //! Not in this slice: proof DAG construction, EnumerateAll / AutoDetect
 //! mode implementations, weighted model counting.
 
+pub mod differential;
 pub mod enumerate;
 pub mod lr_aggregate;
 pub mod proof_dag;
@@ -42,6 +43,7 @@ use std::collections::HashMap;
 
 use logic_core::{LogicVar, Substitution, Term, unify};
 
+pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
