@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_shorthand_method/input/a.js
+--compilation_level
+WHITESPACE_ONLY
