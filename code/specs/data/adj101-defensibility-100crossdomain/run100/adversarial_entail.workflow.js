@@ -5,7 +5,9 @@ export const meta = {
 }
 
 const CHECKS = '/Users/adhithya/Downloads/coding-adventures/code/specs/data/adj101-defensibility-100crossdomain/run100/checks'
-const ids = Array.isArray(args) ? args : JSON.parse(args)
+const parsed = Array.isArray(args) ? { ids: args } : (typeof args === 'string' ? JSON.parse(args) : args)
+const ids = parsed.ids || parsed
+const MODEL = parsed.model // undefined -> session model (Opus); 'sonnet'/'haiku' for the N-reader panel
 const BATCH = 12
 
 const SCHEMA = {
@@ -33,7 +35,7 @@ function judge(cid) {
     `- Return LEAP if the value requires an assumption, a categorization the bytes don't compel, or a ` +
     `fact the scenario never states. When in doubt, LEAP.\n\n` +
     `Echo the check_id. Return the structured verdict.`
-  return agent(prompt, { label: `entail:${cid}`, phase: 'Adjudicate-entailment', schema: SCHEMA })
+  return agent(prompt, { label: `entail:${cid}`, phase: 'Adjudicate-entailment', schema: SCHEMA, ...(MODEL ? { model: MODEL } : {}) })
     .then((v) => (v ? { ...v, check_id: cid } : null))
 }
 
