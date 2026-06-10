@@ -3,6 +3,26 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.6.0] — 2026-06-10 (McCarthy W12b-3 — `COND` via alloca SSA-merge — LLVM core F1–F5)
+
+Lowers McCarthy `COND` (a cross-block value merge) and completes the LLVM core
+(F1–F5).
+
+- **Stack-slot promotion (`collect_slot_vars` + `lower_instr_with_slots`):** a
+  variable assigned in 2+ instructions (a `COND` result written per clause) gets an
+  entry `alloca`; each assignment becomes a `store i64 …, ptr %v.slot`, each read a
+  `load i64, ptr %v.slot`. Single-assignment vars keep the `const`/`mov` side-map
+  (fast path, no slot). This is the naive-frontend / `opt -mem2reg` pattern, so no
+  PHI-predecessor analysis is needed.
+- **Block-terminator hygiene (`FnState::block_open`):** a `label` reached while the
+  current block is still open (its body was all tracked-not-emitted `const`/`mov`)
+  emits an explicit fallthrough `br` first — no two labels back-to-back.
+- **`jmp_if` void-cond:** when the `jmp_if_*` carries no operand type (`void`) — its
+  condition is the `i64` 0/1 from `lispy_truthy` — it lowers to `icmp ne i64 %c, 0`
+  instead of an invalid `trunc void`.
+- Verified by RUNNING in `lang-aot` (clang + `lispy_runtime.c`):
+  `(COND ((ATOM 7) 11) ((ATOM 8) 22))`→11, second-clause→22, nested `COND`→44.
+
 ## [0.5.0] — 2026-06-10 (McCarthy W12b-1 — tagged-word lisp `cons`/`car`/`cdr` → `__twig_lispy_*`)
 
 Lowers the **tagged-word lisp** builtins to `call`s into the shared C runtime

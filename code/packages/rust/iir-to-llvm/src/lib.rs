@@ -480,6 +480,22 @@ struct FnState<'a> {
     /// Module-wide map of every user-defined function's signature.  Built
     /// up-front by `lower_iir_to_llvm` before any function body is lowered.
     callee_sigs: &'a HashMap<String, FnSig>,
+    /// Is the current LLVM basic block still **open** (no terminator yet)?
+    /// LLVM requires every block to end in a terminator (`br`/`ret`/…). IIR
+    /// blocks fall through to the next `label` implicitly, and a block whose
+    /// body is all tracked-not-emitted `const`/`mov` emits nothing — so two
+    /// `label`s can land back-to-back. Before emitting a `label` while a block
+    /// is open we synthesize an explicit `br` fallthrough. `false` after
+    /// `jmp`/`ret`; `true` at entry and after every `label`/`jmp_if_*`.
+    /// (McCarthy W12b-3 — needed once `COND`'s clause blocks appeared.)
+    block_open: bool,
+    /// Variables that are assigned in **more than one place** (e.g. a `COND`
+    /// result var written in each clause block). The `const`/`mov` side-map
+    /// trick only models straight-line SSA, so a cross-block variable collapses
+    /// to its last assignment. We instead give each such variable a stack slot
+    /// (`alloca`): every assignment becomes a `store`, every read a `load`. This
+    /// is the naive-frontend / `opt -mem2reg` pattern (McCarthy W12b-3, F5).
+    slots: std::collections::HashSet<String>,
 }
 
 impl FnState<'_> {
@@ -523,12 +539,22 @@ fn lower_function(
     // This side-map trick (rather than emitting `%dest = add 0, x` no-ops
     // for const/mov) keeps output close to what `opt -mem2reg` would
     // produce — short, idiomatic, easy to eyeball-verify.
+    // McCarthy W12b-3: any variable assigned in 2+ instructions is promoted to a
+    // stack slot (an `alloca` in the entry block). All slots are `i64` — every
+    // tagged-word / scalar lisp value is an i64 in this backend.
+    let slots = collect_slot_vars(func);
+    for slot in &slots {
+        out.push_str(&format!("  %{slot}.slot = alloca i64\n"));
+    }
+
     let mut state = FnState {
         env: HashMap::new(),
         env_i1: HashMap::new(),
         counter: 0,
         fn_name: &func.name,
         callee_sigs,
+        block_open: true, // the entry block is open until its first terminator.
+        slots,
     };
     for (pname, _) in &func.params {
         state.env.insert(pname.clone(), format!("%{pname}"));
@@ -536,10 +562,93 @@ fn lower_function(
 
     // ── Body ──────────────────────────────────────────────────────────────
     for instr in &func.instructions {
-        lower_instr(instr, &mut state, out)?;
+        lower_instr_with_slots(instr, &mut state, out)?;
     }
 
     out.push_str("}\n");
+    Ok(())
+}
+
+/// Collect the variables that are the `dest` of **two or more** instructions in
+/// `func`. Such a variable cannot be modelled by the `const`/`mov` compile-time
+/// side-map (which keeps only the latest binding and so is valid only within a
+/// single straight-line block); it needs a stack slot so each assignment is a
+/// real `store` and each read a real `load` (McCarthy W12b-3, F5 — `COND`).
+fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
+    use std::collections::HashMap as Map;
+    let mut counts: Map<&str, usize> = Map::new();
+    for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            *counts.entry(dest.as_str()).or_insert(0) += 1;
+        }
+    }
+    counts
+        .into_iter()
+        .filter(|&(_, n)| n >= 2)
+        .map(|(name, _)| name.to_string())
+        .collect()
+}
+
+/// Wrap [`lower_instr`] with the slot (`alloca`/`load`/`store`) protocol:
+///
+/// 1. **Pre-load:** for every `Var` source operand that is a slot, emit
+///    `%t = load i64, ptr %v.slot` and temporarily rebind it in `env` so the
+///    instruction reads the loaded value.
+/// 2. Lower the instruction normally.
+/// 3. **Post-store:** if `dest` is a slot, emit `store i64 <value>, ptr %v.slot`
+///    (the value the instruction left in `env[dest]` — a literal for `const`/`mov`
+///    or an SSA name for an emitted op) and then drop `env[dest]` so the variable
+///    is only ever read back through its slot.
+/// 4. Restore the env bindings overridden in step 1.
+///
+/// Redundant loads/stores are fine: `opt -mem2reg` collapses them, and an
+/// un-optimized `clang -O0` build runs them correctly.
+fn lower_instr_with_slots(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if state.slots.is_empty() {
+        return lower_instr(instr, state, out); // fast path — no promoted vars.
+    }
+
+    // 1. Pre-load slot source operands.
+    let mut saved: Vec<(String, Option<String>)> = Vec::new();
+    for op in &instr.srcs {
+        if let Operand::Var(name) = op {
+            if state.slots.contains(name) {
+                let fresh = state.fresh("ld");
+                out.push_str(&format!("  {fresh} = load i64, ptr %{name}.slot\n"));
+                let old = state.env.insert(name.clone(), fresh);
+                saved.push((name.clone(), old));
+            }
+        }
+    }
+
+    // 2. Lower the instruction.
+    lower_instr(instr, state, out)?;
+
+    // 3. Post-store a slot destination.
+    if let Some(dest) = &instr.dest {
+        if state.slots.contains(dest) {
+            if let Some(val) = state.env.get(dest).cloned() {
+                out.push_str(&format!("  store i64 {val}, ptr %{dest}.slot\n"));
+            }
+            state.env.remove(dest); // future reads go through the slot's load.
+        }
+    }
+
+    // 4. Restore the env bindings we overrode for the pre-loads.
+    for (name, old) in saved {
+        match old {
+            Some(v) => {
+                state.env.insert(name, v);
+            }
+            None => {
+                state.env.remove(&name);
+            }
+        }
+    }
     Ok(())
 }
 
@@ -571,6 +680,7 @@ fn lower_instr(
         // ── ret_void ────────────────────────────────────────────────────
         "ret_void" => {
             out.push_str("  ret void\n");
+            state.block_open = false; // `ret` terminates the block.
             Ok(())
         }
 
@@ -580,6 +690,7 @@ fn lower_instr(
             let operand =
                 resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
             out.push_str(&format!("  ret {ty} {operand}\n"));
+            state.block_open = false; // `ret` terminates the block.
             Ok(())
         }
 
@@ -629,7 +740,15 @@ fn lower_instr(
                     detail: "label requires srcs[0] = Operand::Var(name)".into(),
                 }),
             };
+            // If the current block never got a terminator (its body was all
+            // tracked-not-emitted `const`/`mov`), LLVM would see two labels
+            // back-to-back — an invalid empty block. Synthesize the implicit
+            // fallthrough as an explicit `br` to this label (McCarthy W12b-3).
+            if state.block_open {
+                out.push_str(&format!("  br label %{name}\n"));
+            }
             out.push_str(&format!("{name}:\n"));
+            state.block_open = true;
             Ok(())
         }
 
@@ -643,6 +762,7 @@ fn lower_instr(
                 }),
             };
             out.push_str(&format!("  br label %{target}\n"));
+            state.block_open = false; // unconditional branch terminates the block.
             Ok(())
         }
 
@@ -864,6 +984,14 @@ fn lower_jmp_if(
         let cond_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
         if cond_ty == "i1" {
             cond_op
+        } else if cond_ty == "void" {
+            // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
+            // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
+            // the condition is the `i64` 0/1 from `lispy_truthy`. Compare it
+            // against zero to get the `i1` — `trunc void …` would be invalid.
+            let i1 = state.fresh("tobool");
+            out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));
+            i1
         } else {
             let i1 = state.fresh("trunc");
             out.push_str(&format!("  {i1} = trunc {cond_ty} {cond_op} to i1\n"));
@@ -884,6 +1012,9 @@ fn lower_jmp_if(
         "  br i1 {cond_i1}, label %{t_label}, label %{f_label}\n"
     ));
     out.push_str(&format!("{fallthrough}:\n"));
+    // The conditional branch terminated the prior block; we are now in the
+    // freshly-opened fallthrough block (needs its own terminator later).
+    state.block_open = true;
     Ok(())
 }
 
