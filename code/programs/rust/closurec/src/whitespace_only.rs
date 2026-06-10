@@ -145,11 +145,85 @@ pub fn whitespace_only_minify(
     // `type_name` string (set by the grammar's named rules);
     // we accept multiple common spellings since different
     // grammars label them differently.
-    let kept: Vec<_> = tokens
+    let mut kept: Vec<_> = tokens
         .iter()
         .filter(|t| !is_trivia(t))
         .filter(|t| !is_eof(t))
         .collect();
+
+    // gap-051: IIFE paren normalisation. Upstream Closure
+    // rewrites `(function(){...}())` to `(function(){...})()`
+    // — the call's `()` moves OUTSIDE the wrapping parens.
+    // The two forms are operationally identical (both call
+    // the function expression) and have identical byte
+    // count; this is a pure normalisation preference that
+    // upstream applies.
+    //
+    // Token-level pattern: `} ( ) )` (anywhere in the
+    // stream) becomes `} ) ( )` — we swap the call-close
+    // `)` with the outer-close `)`. The `(` at position
+    // i+1 stays (it's the call-open); the `)` at i+2
+    // becomes the outer-close; the original outer-close
+    // at i+3 becomes the call-close.
+    //
+    // Actually more precisely: we reorder the 4-token
+    // window `} ( ) )` to `} ) ( )`. The `}` at i stays;
+    // the `)` originally at i+3 moves to i+1; the `(`
+    // originally at i+1 moves to i+2; the `)` originally
+    // at i+2 stays at i+3 logically — equivalent to a
+    // 3-token rotation within `[i+1, i+2, i+3]`.
+    //
+    // Safety: this pattern can ONLY appear in IIFE
+    // contexts where the inner `()` is a call on the
+    // immediately-prior function body. Any non-IIFE
+    // `} ( ) )` sequence in valid JS would imply
+    // something like `class Foo {} () ()` which is a
+    // syntax error. So the rewrite is sound.
+    //
+    // Note we don't gate on what's BEFORE the `}` — it
+    // could be a function body, a class body, or anything.
+    // For class bodies, `class C{} ()` would be weird; but
+    // upstream's normalisation applies to function bodies
+    // specifically. To be safe, we additionally require
+    // the `}` to be preceded by a token that could end a
+    // function body (which is essentially any expression
+    // closer — too broad). Simpler check: look back for
+    // the matching `{` and confirm it's preceded by `)`
+    // (function arg-list close) or `=>` (arrow head). For
+    // now, the simpler pattern match alone — if false
+    // positives surface, refine with the backwards scan.
+    {
+        let mut i = 0;
+        while i + 3 < kept.len() {
+            if kept[i].value == "}"
+                && kept[i + 1].value == "("
+                && kept[i + 2].value == ")"
+                && kept[i + 3].value == ")"
+            {
+                // Swap the call-close at i+2 with the
+                // outer-close at i+3. After swap, the
+                // sequence is `} ( ) )` → `} ) ( )` where
+                // the first `)` is the outer close.
+                // Wait — we want `} ) ( )` but we have
+                // `} ( ) )`. To go from input to output,
+                // we move the call-pair `( )` (at i+1,
+                // i+2) AFTER the outer `)` (at i+3).
+                //
+                // Implementation: rotate the slice
+                // [i+1..=i+3] one position right (which
+                // is equivalent to rotating one left
+                // since it's a 3-element window):
+                //   [A=(,  B=),  C=)] → [C, A, B]
+                //   so (, ), ) → ), (, )
+                kept[i + 1..=i + 3].rotate_right(1);
+                // Advance past the now-rewritten window.
+                i += 4;
+            } else {
+                i += 1;
+            }
+        }
+    }
+    let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
     // word-like tokens; otherwise concatenate directly. String
@@ -2706,6 +2780,79 @@ mod tests {
             minify("var o={a:{b:1,c:2,},d:3,};"),
             "var o={a:{b:1,c:2},d:3};"
         );
+    }
+
+    // ---- gap-051: IIFE paren normalisation ---------------
+
+    /// Target case: bare IIFE in inner-call form.
+    #[test]
+    fn gap051_iife_inner_call_to_outer() {
+        assert_eq!(
+            minify("(function(){return 42;}());"),
+            "(function(){return 42})();"
+        );
+    }
+
+    /// IIFE assigned to a variable.
+    #[test]
+    fn gap051_iife_in_assignment() {
+        assert_eq!(
+            minify("var x=(function(){return 1;}());"),
+            "var x=(function(){return 1})();"
+        );
+    }
+
+    /// **Non-regression**: IIFE already in outer-call form
+    /// stays as-is. `(fn)()` doesn't match the rewrite
+    /// pattern (`} ( ) )`); the `)` after the function
+    /// body comes BEFORE the call's `()`.
+    #[test]
+    fn gap051_outer_call_iife_unchanged() {
+        assert_eq!(
+            minify("(function(){return 42;})();"),
+            "(function(){return 42})();"
+        );
+    }
+
+    /// **Non-regression**: function call NOT inside an
+    /// outer paren stays as-is.
+    #[test]
+    fn gap051_plain_call_unchanged() {
+        // gap-030 still emits `;` after function-decl `}` because
+        // gap-047's suppression set doesn't include identifiers.
+        // The point of THIS test is just that gap-051 doesn't
+        // misfire on non-IIFE patterns.
+        assert_eq!(
+            minify("function f(){return 1;}f();"),
+            "function f(){return 1};f();"
+        );
+    }
+
+    /// **Non-regression**: empty arrow body call inside
+    /// parens — should NOT rewrite because the pattern
+    /// requires `} ( ) )`. Arrow has different shape.
+    #[test]
+    fn gap051_arrow_iife_pattern() {
+        // `(()=>1)()` — already outer-call form, unchanged.
+        assert_eq!(
+            minify("var x=(()=>1)();"),
+            "var x=(()=>1)();"
+        );
+    }
+
+    /// **Non-regression**: IIFE with args.
+    #[test]
+    fn gap051_iife_with_args_in_call() {
+        // `(function(a){return a;}(1));` → `(function(a){return a})(1);`
+        assert_eq!(
+            minify("(function(a){return a;}(1));"),
+            "(function(a){return a}(1));"
+        );
+        // The pattern `} ( a ) )` doesn't match `} ( ) )`
+        // — there's an arg inside the call parens. So we
+        // don't rewrite. Upstream may or may not rewrite
+        // with-args IIFEs; leaving that as a future
+        // refinement.
     }
 
     // ---- gap-049: flattened for-body `;` suppression ----

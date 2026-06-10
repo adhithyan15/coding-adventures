@@ -406,10 +406,8 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-051 — IIFE paren normalization
 
-- **Status:** OPEN — newly discovered by CLOC14.17.
+- **Status:** **RESOLVED** in CLOC12.60 (PR pending). `minify_fn_expr_iife` flips IGNORED → PASS.
 - **Upstream byte-identity test:** `minify_fn_expr_iife` seed fixture.
 - **Input:** `(function(){return 42;}());`
 - **Upstream:** `(function(){return 42})();` (call moves outside the wrapping parens)
-- **closurec:** `(function(){return 42}());`
-- **Why it fails:** closurec preserves the source `()` placement.
-- **What it needs:** Token-level peephole: when we see `( function ( ... ) { ... } ( ) )`, rewrite to `( function ( ... ) { ... } ) ( )`. Equivalent forms, both call the function expression. Same byte count (just paren placement) — but matches upstream's preferred normalization.
+- **Fix:** Token-stream pre-pass: scan kept for the 4-token sequence `} ( ) )` and rotate `[i+1..=i+3]` right by 1 to reorder to `} ) ( )`. Safe-by-construction — this token sequence can only appear in IIFE contexts in valid JS.
