@@ -428,5 +428,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-054 — paren elision around unary operand
 
-- **Status:** **PARTIAL** in CLOC12.63 (PR pending). Single-token cases match upstream. Multi-token member expressions (`delete(o.x)`) deferred.
+- **Status:** **PARTIAL** — RESOLVED in CLOC12.63 for single-token operands. Multi-token member expressions (`delete(o.x)`) deferred.
+- **Input:** `void(0);`
+- **Upstream:** `void 0;` (parens stripped)
 - **Fix:** Token-stream pre-pass: when prev is `void`/`typeof`/`delete` and next is `( SINGLE )` with SINGLE being one safe token (ident/num/string), drop both parens.

@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_simple_arith_chain/input/a.js
+--compilation_level
+WHITESPACE_ONLY

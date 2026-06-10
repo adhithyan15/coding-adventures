@@ -95,6 +95,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // when contents have no top-level `,` and don't start
     // with `function`. `minify_null_undef_compare` flipped
     // IGNORED → PASS.
+    // gap-054 was RESOLVED in CLOC12.63 — token-stream
+    // pre-pass strips parens around single-token operand
+    // of `void`/`typeof`/`delete`. `minify_void_zero_call`
+    // flipped IGNORED → PASS.
     // gap-051 was RESOLVED in CLOC12.60 — token-stream
     // pre-pass reorders `} ( ) )` to `} ) ( )`. IIFE
     // inner-call form `(fn(){...}())` normalizes to
