@@ -2,6 +2,25 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.64.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-051** — IIFE paren normalisation.
+  `(function(){...}())` → `(function(){...})()` — the call
+  `()` moves outside the wrapping parens. Same byte count;
+  matches upstream Closure's preferred normalisation.
+
+### Added
+
+Token-stream pre-pass right after `kept` is built: scan for
+`} ( ) )` 4-token sequence and rotate `[i+1..=i+3]` right by
+1 to reorder to `} ) ( )`. Safe-by-construction — this
+token sequence can ONLY appear in IIFE contexts in valid JS.
+
+6 inline `gap051_*` tests covering target case + 4 explicit
+non-regression cases (already-outer-call form, plain
+function call, arrow IIFE, IIFE-with-args).
+
 ## [0.63.0] - 2026-06-09
 
 ### Changed
