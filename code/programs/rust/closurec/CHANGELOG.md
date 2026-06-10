@@ -2,28 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.67.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-054** — paren elision around unary operand.
+  `void(0);` → `void 0;` matches upstream. Also handles
+  `typeof(x);` → `typeof x;`, `delete(o);` → `delete o;`.
+
+Token-stream pre-pass for `KW ( SINGLE )` where KW is
+`void`/`typeof`/`delete` and SINGLE is one safe token.
+Conservative: multi-token operands left alone.
+
 ## [0.66.0] - 2026-06-10
 
 ### Changed
 - **CLOSES gap-053** — paren elision around var-init RHS.
   `var t = (x == null);` → `var t=x==null;` matches upstream.
 
-### Added
-
-Token-stream pre-pass that scans for `= ( ... )` where:
-- the contents have no `,` at depth 0 (would be comma op,
-  changing meaning to multi-declarator)
-- the contents don't start with `function` (could be IIFE)
-- the token after matching `)` is `;`, `,`, or EOF
-
-When all conditions met, both `(` and matching `)` are
-removed from `kept`. Multiple drops collected and applied
-in reverse to preserve indices.
-
-Edge cases verified manually:
-- `var t = (a, b);` → kept (comma operator)
-- `var t = (function(){})();` → kept (IIFE)
-- `var x = (a + b), y = (c + d);` → both drop
+Token-stream pre-pass that scans for `= ( ... )` where the
+contents have no `,` at depth 0, don't start with `function`,
+and are followed by `;`/`,`/EOF.
 
 ## [0.65.0] - 2026-06-09
 

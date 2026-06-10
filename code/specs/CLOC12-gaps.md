@@ -424,4 +424,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** **RESOLVED** in CLOC12.62 (PR pending). `minify_null_undef_compare` flips IGNORED → PASS.
 - **Input:** `var t = (x == null);`
 - **Upstream:** `var t=x==null;` (outer parens stripped)
-- **Fix:** Token-stream pre-pass: scan for `= ( ... )` where contents have no `,` at depth 0 and don't start with `function`. If token after matching `)` is `;`, `,`, or EOF, drop both `(` and `)`. Multiple drops collected and applied in reverse to preserve indices.
+- **Fix:** Token-stream pre-pass: scan for `= ( ... )` where contents have no `,` at depth 0 and don't start with `function`. If token after matching `)` is `;`, `,`, or EOF, drop both `(` and `)`.
+
+### gap-054 — paren elision around unary operand
+
+- **Status:** **PARTIAL** in CLOC12.63 (PR pending). Single-token cases match upstream. Multi-token member expressions (`delete(o.x)`) deferred.
+- **Fix:** Token-stream pre-pass: when prev is `void`/`typeof`/`delete` and next is `( SINGLE )` with SINGLE being one safe token (ident/num/string), drop both parens.
