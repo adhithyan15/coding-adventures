@@ -90,6 +90,14 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-058 (CLOC14.29): numeric separator inside a FLOAT
+    // literal is not stripped — `1_000.5` → `1000.5` upstream.
+    // gap-040 covered integer/scientific forms only.
+    ("numeric_underscore_float", "gap-058: numeric separator in float literal"),
+    // gap-059 (CLOC14.29): member access on a `new` expression.
+    // Upstream drops the empty call parens AND re-wraps to keep
+    // precedence: `new A().b` → `(new A).b`.
+    ("new_member_chain", "gap-059: new-expr member `new A().b` → `(new A).b`"),
     // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
     // arms, return/throw/=> prefixes, and member-object parens
     // (`(a).b` → `a.b`) now pass and are no longer ignored.
