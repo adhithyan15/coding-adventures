@@ -1,6 +1,6 @@
 [package]
 name = "iir-to-llvm"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 description = "IIR → textual LLVM IR backend — emits .ll source for an LLVM target triple.  v0.4.0 (LLVM04): adds `call` of user-defined functions (per-arg types resolved via pre-built callee-signature map) and `call_builtin print_i64` → `declare/call @__print_i64(i64)`, completing the LLVM backend's user-callable surface."
 

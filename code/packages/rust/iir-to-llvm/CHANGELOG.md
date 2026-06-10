@@ -3,6 +3,25 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.5.0] — 2026-06-10 (McCarthy W12b-1 — tagged-word lisp `cons`/`car`/`cdr` → `__twig_lispy_*`)
+
+Lowers the **tagged-word lisp** builtins to `call`s into the shared C runtime
+(`twig-aot/runtime/lispy_runtime.c`) — the SAME runtime the native AOT path links,
+so any lisp-family frontend inherits it.
+
+- `LISPY_BUILTINS` table maps the `lispy_*` IIR names (from
+  `iir_builtin_lowering::lower_heap_builtins_runtime`/`lower_lisp_repr`) to the
+  runtime's `__twig_lispy_*` symbols: `cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/
+  `truthy`/`box_int`/`unbox_int`/`nil`. Each is `i64 (i64 × arity)` — a lisp value
+  is a tagged 64-bit word.
+- `call_builtin "lispy_*"` lowers to `%d = call i64 @__twig_lispy_*(i64 …)`; one
+  `declare` per used builtin is emitted in the module header (first-seen order, deduped).
+- `llvm_type_for`: `any` and a lisp reference (`ref<Lispy…>`) map to `i64` (the
+  tagged word). A NON-lisp `ref<Foo>` stays `UnsupportedType`.
+- **Verified by RUNNING** end-to-end in `lang-aot` (clang links `lispy_runtime.c`):
+  `(CAR (CONS 7 9))`→7, `(CDR …)`→9, nested→2. Predicates (pair?/equal?/not, COND)
+  are emitted but their tagged-boolean result handling is W12b-2.
+
 ## [0.4.0] — 2026-06-01 (LLVM04 — `call` + `call_builtin print_i64` + `lang-aot --emit=llvm-ir`)
 
 ### Added — user-defined `call`

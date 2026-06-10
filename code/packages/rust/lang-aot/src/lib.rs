@@ -414,6 +414,18 @@ pub fn compile_source_to_llvm_with_target(
     target_triple: &str,
 ) -> Result<String, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // The TAGGED-WORD lisp pipeline (McCarthy W12b) — the SAME passes the native
+    // AOT path runs, NOT the managed structural pass. `lower_heap_builtins_runtime`
+    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "lispy_*"`;
+    // `intern_symbols` assigns each symbol a tagged immediate; `lower_lisp_repr`
+    // boxes integer literals to tagged words and inserts the final `lispy_unbox_int`
+    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
+    // `call @__twig_lispy_*` into `lispy_runtime.c`. A no-op for a scalar program.
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::intern_symbols(&mut module);
+    iir_builtin_lowering::lower_lisp_repr(&mut module);
+    // Concretise any residual scalar `any` (a pure-integer program never enters
+    // the lisp passes above) to `i64`.
     concretize_scalar_any_for_llvm(&mut module);
     let cfg = iir_to_llvm::IIRLlvmConfig::new(module_name).with_target(target_triple);
     iir_to_llvm::lower_iir_to_llvm(&module, &cfg)
