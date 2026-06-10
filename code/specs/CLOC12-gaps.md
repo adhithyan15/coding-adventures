@@ -447,6 +447,6 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-057 — paren elision around member-expression object
 
-- **Status:** OPEN — discovered by CLOC14.26. `minify_paren_then_member` ignored.
+- **Status:** **RESOLVED** in CLOC12.66. `minify_paren_then_member` flips IGNORED → PASS.
 - **Input:** `var v = (a).b;` → **Upstream:** `var v=a.b;`
-- **What it needs:** Token peephole `( SINGLE ) .` → drop parens. Must NOT strip when `(` is statement-leading (could flip to block/function parse) or contents are comma-op. Needs design.
+- **Fix:** Token-stream pre-pass: drop the grouping parens in the shape `GROUPING_PREFIX ( IDENT ) .`. Three guards make it provably safe — (1) GROUPING not CALL: the token before `(` must be a punctuation/operator other than `)`/`]`/`?.`, so call/index/optional-call parens (`f(a).b`, `a[i](b).c`, `x?.(a).b`) are never touched; (2) SINGLE PLAIN IDENTIFIER inside — numbers (`(1).toString()`), keywords, literals, regex are all excluded; (3) the token after `)` must be `.` (member position). A statement-leading `(` is harmless here because the single-identifier content can never be `{`/`function`, so there's no block/function ambiguity. `(a)[i]` and `(a)(x)` are safe too but deferred.

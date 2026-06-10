@@ -455,6 +455,72 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-057: member-object paren elision -----------------
+    // `(a).b` → `a.b`. Upstream Closure strips the grouping parens
+    // around a member-expression's OBJECT when the object is a
+    // single identifier, because `.` (member access) binds tighter
+    // than anything the parens could be protecting — for a lone
+    // identifier there is nothing to protect.
+    //
+    // Three guards make this provably safe:
+    //
+    //   1. GROUPING, NOT CALL: the `(` must be a *grouping* paren,
+    //      never a call/index paren. `f(a).b` is a CALL on `f`;
+    //      stripping would corrupt it to `fa.b`. A `(` is a
+    //      call/index paren exactly when it directly follows a
+    //      *value* (identifier / literal / `)` / `]`) or the
+    //      optional-call operator `?.`. So we require the token
+    //      BEFORE `(` to be a punctuation/operator token that is
+    //      NOT `)`, `]`, or `?.` — or for `(` to start the stream.
+    //      `x?.(a).b` (optional call) is left untouched.
+    //
+    //   2. SINGLE PLAIN IDENTIFIER: the parens must wrap exactly
+    //      one token, and that token must be a plain identifier
+    //      (`is_plain_identifier`). Numbers are excluded (`(1).x`
+    //      → `1.x` mis-lexes), as are keywords/literals/regex.
+    //
+    //   3. MEMBER ACCESS FOLLOWS: the token after `)` must be `.`
+    //      — this is the member-object position. (`(a)[i]` and
+    //      `(a)(x)` are also safe for a lone identifier but are
+    //      left to a follow-up; the byte-identity fixture only
+    //      exercises `.`.)
+    //
+    // Every bracket/operator comparison goes through the
+    // structural-punct guards so a literal whose content looks
+    // like punctuation (e.g. the string `")"`) can never be
+    // mistaken for a delimiter.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 3 < kept.len() {
+            if is_structural_punct(&kept[i], "(") {
+                let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(p) => {
+                        is_punct(p)
+                            && !is_structural_punct(p, ")")
+                            && !is_structural_punct(p, "]")
+                            && !is_structural_punct(p, "?.")
+                    }
+                };
+                let inner_ok = is_plain_identifier(&kept[i + 1]);
+                let close_ok = is_structural_punct(&kept[i + 2], ")");
+                let member_follows = is_structural_punct(&kept[i + 3], ".");
+                if grouping && inner_ok && close_ok && member_follows {
+                    drops.push(i); // open `(`
+                    drops.push(i + 2); // close `)`
+                    i += 3;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -1718,6 +1784,43 @@ fn is_structural_punct(tok: &lexer::token::Token, val: &str) -> bool {
     tok.value == val && !is_string_literal(tok) && !is_word_like(tok)
 }
 
+/// True for any punctuation/operator token — i.e. a token that is
+/// neither word-like (identifier/number/keyword/regex/template/…)
+/// nor a string literal. We use this to recognise the *category*
+/// of a token (operator vs value) without caring which operator
+/// it is. Like `is_structural_punct`, it deliberately rejects
+/// string literals whose `.value` happens to look like an
+/// operator (e.g. a one-char string `"+"`).
+fn is_punct(tok: &lexer::token::Token) -> bool {
+    !is_word_like(tok) && !is_string_literal(tok)
+}
+
+/// gap-057: True only for a *plain identifier* token (`a`, `_x`,
+/// `$y`, `#priv`) — the one shape that is unconditionally safe to
+/// expose as a bare member-expression object when its grouping
+/// parens are stripped (`(a).b` → `a.b`).
+///
+/// Deliberately EXCLUDES:
+///   - NUMBER — `(1).toString()` must NOT become `1.toString()`
+///     (`1.` lexes as a malformed number; the `.` would be eaten).
+///   - KEYWORD — `this`/`super`/etc. are safe in principle but
+///     out of scope for the minimal fixture; left for a follow-up.
+///   - REGEX / TEMPLATE / STRING — their `.value` carries content,
+///     and member access on them is a separate concern.
+fn is_plain_identifier(tok: &lexer::token::Token) -> bool {
+    if is_string_literal(tok) {
+        return false;
+    }
+    if let Some(name) = &tok.type_name {
+        let upper = name.to_ascii_uppercase();
+        return matches!(
+            upper.as_str(),
+            "NAME" | "IDENT" | "IDENTIFIER" | "PRIVATE_NAME"
+        );
+    }
+    matches!(tok.type_, lexer::token::TokenType::Name)
+}
+
 fn is_word_like(tok: &lexer::token::Token) -> bool {
     // Prefer the grammar's type_name when present; fall back to
     // the structural TokenType for the basic categories.
@@ -2919,15 +3022,55 @@ mod tests {
         );
     }
 
-    /// **Non-regression**: `(x)` followed by `.` (member
-    /// access on a parenthesised expression) — NOT an
-    /// arrow. The token at idx+3 is `.` not `=>`.
+    /// `(x)` followed by `.` is a member access on a
+    /// parenthesised expression — NOT an arrow (the token at
+    /// idx+3 is `.`, not `=>`), so gap-045's arrow logic must
+    /// leave it alone. As of gap-057 (CLOC12.66), the SEPARATE
+    /// member-object pre-pass legitimately strips the redundant
+    /// grouping parens around the single identifier `a`, so the
+    /// canonical output is now `var x=a.b;` (matching upstream).
     #[test]
-    fn gap045_parens_not_arrow_unchanged() {
+    fn gap057_member_object_paren_stripped() {
+        assert_eq!(minify("var x=(a).b;"), "var x=a.b;");
+    }
+
+    /// gap-057 safety: a CALL paren must never be stripped —
+    /// `f(a).b` is a call on `f`, not a grouping paren. Dropping
+    /// the parens would corrupt it to `fa.b`.
+    #[test]
+    fn gap057_call_paren_preserved() {
+        assert_eq!(minify("var x=f(a).b;"), "var x=f(a).b;");
+    }
+
+    /// gap-057 safety: an OPTIONAL CALL `x?.(a)` is a call, not a
+    /// grouping paren — must stay (else `x?.a.b` changes meaning).
+    #[test]
+    fn gap057_optional_call_preserved() {
+        assert_eq!(minify("var x=y?.(a).b;"), "var x=y?.(a).b;");
+    }
+
+    /// gap-057 safety: a NUMBER object must keep its parens —
+    /// `(1).toString()` → `1.toString()` would mis-lex `1.`.
+    #[test]
+    fn gap057_number_object_preserved() {
         assert_eq!(
-            minify("var x=(a).b;"),
-            "var x=(a).b;"
+            minify("var x=(1).toString();"),
+            "var x=(1).toString();"
         );
+    }
+
+    /// gap-057 safety: a multi-token object is NOT a single
+    /// identifier — `(a+b).c` must keep its parens (precedence).
+    #[test]
+    fn gap057_compound_object_preserved() {
+        assert_eq!(minify("var x=(a+b).c;"), "var x=(a+b).c;");
+    }
+
+    /// gap-057 safety: a string-literal whose content is `)` must
+    /// not corrupt the depth scan (structural-punct guard).
+    #[test]
+    fn gap057_string_content_not_bracket() {
+        assert_eq!(minify("var x=(a)[\")\"];"), "var x=(a)[\")\"];");
     }
 
     // ---- gap-046: trailing array comma drop --------------

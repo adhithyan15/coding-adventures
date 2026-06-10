@@ -90,11 +90,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-055 RESOLVED (CLOC12.64), gap-056 RESOLVED
-    // (CLOC12.65) — ternary-arm + return/throw/=> paren
-    // elision now pass. gap-057 (member-object paren `(a).b`)
-    // is still OPEN.
-    ("paren_then_member", "gap-057: paren around member-object `(a).b`"),
+    // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
+    // arms, return/throw/=> prefixes, and member-object parens
+    // (`(a).b` → `a.b`) now pass and are no longer ignored.
     // gap-053 was RESOLVED in CLOC12.62 — token-stream
     // pre-pass strips outer `(` `)` around `= ( ... ) ;`
     // when contents have no top-level `,` and don't start
