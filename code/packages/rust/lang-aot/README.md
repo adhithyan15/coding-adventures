@@ -35,7 +35,11 @@ wasm/JVM paths; the CLR backend lowers the backend-agnostic
 `box`/`unbox`/`alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cells.
 McCarthy's predicates run too (W7, F3–F5): `(ATOM 7)`→1, `(EQ 7 7)`→1,
 `(COND …)` — `pair?`→`isinst object[]`, `not`→`x^1`, `equal?`→`unbox; unbox; ceq`.
-The remaining CLR symbols + lambda (F6–F7) are W8.
+**Symbols** (W8a, F6) run with *zero new backend code*: the shared
+`intern_symbols_structural` pass interns each symbol to an `i32` id
+(`SYMBOL_ID_BASE = 1<<29`), so `(QUOTE A)`→536870912 and `(EQ (QUOTE A) (QUOTE A))`
+→1 fall out of W6b boxing + W7 `equal?`. The remaining CLR lambda (F7) is W8b
+(`call` lowering + simulator call frames).
 
 `compile_source_to_beam` is the fourth managed target and the first on the
 **Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real
