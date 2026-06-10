@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.66.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-053** — paren elision around var-init RHS.
+  `var t = (x == null);` → `var t=x==null;` matches upstream.
+
+### Added
+
+Token-stream pre-pass that scans for `= ( ... )` where:
+- the contents have no `,` at depth 0 (would be comma op,
+  changing meaning to multi-declarator)
+- the contents don't start with `function` (could be IIFE)
+- the token after matching `)` is `;`, `,`, or EOF
+
+When all conditions met, both `(` and matching `)` are
+removed from `kept`. Multiple drops collected and applied
+in reverse to preserve indices.
+
+Edge cases verified manually:
+- `var t = (a, b);` → kept (comma operator)
+- `var t = (function(){})();` → kept (IIFE)
+- `var x = (a + b), y = (c + d);` → both drop
+
 ## [0.65.0] - 2026-06-09
 
 ### Changed
@@ -9,20 +32,6 @@ All notable changes to the `coding-adventures-closurec` binary will be documente
   `BlockKind::Other` (control-flow body, labeled block,
   bare block). `if(x){a;b;}` at EOF → `if(x){a;b};` matches
   upstream Closure.
-
-One-line fix in the gap-030 `}`-handler decision machine:
-`BlockKind::Other => false` becomes `BlockKind::Other =>
-next_val.is_none()` — EOF-only.
-
-### Fixed
-
-5 pre-existing tests had pinned the OLD (incorrect) behavior:
-gap032_multi_stmt_body_does_not_flatten,
-gap032_nested_if_does_not_flatten,
-gap032_nested_brace_does_not_flatten,
-gap032_top_level_block_does_not_flatten,
-gap036_switch_as_property_does_not_arm. All updated to
-match upstream (with trailing `;`).
 
 ## [0.64.0] - 2026-06-09
 

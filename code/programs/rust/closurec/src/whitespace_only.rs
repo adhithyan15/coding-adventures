@@ -223,6 +223,84 @@ pub fn whitespace_only_minify(
             }
         }
     }
+    // gap-053: paren elision around var-init RHS.
+    // Pattern: `= ( ... ) ;` or `= ( ... ) ,` where the
+    // contents inside `(...)` have no top-level `,` (would
+    // be a comma operator that would change to multiple
+    // declarators if parens dropped) and don't start with
+    // `function` (could be IIFE — keeping conservative).
+    // Drop both the `(` and the matching `)`.
+    //
+    // Examples:
+    //   `var t = (x == null);`  → `var t = x == null;`
+    //   `var t = (a, b);`       → kept unchanged (comma op)
+    //   `var t = (function(){})();` → kept unchanged
+    //   `var x = (a + b), y = (c + d);` → both drop
+    //
+    // The transformation removes tokens at positions i and
+    // close_idx. To avoid renumbering issues during the
+    // walk, collect drop indices and apply after.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 2 < kept.len() {
+            if kept[i].value == "=" && kept[i + 1].value == "(" {
+                // Scan for matching `)` at depth 0,
+                // tracking flags.
+                let open_idx = i + 1;
+                let mut depth: i32 = 1;
+                let mut has_top_level_comma = false;
+                let mut starts_with_function =
+                    kept.get(open_idx + 1).map(|t| t.value.as_str()) == Some("function");
+                // also bail if contents start with `class` or
+                // anything else that could be ambiguous mid-
+                // expression. For now just `function`.
+                let _ = &mut starts_with_function;
+                let mut close_idx: Option<usize> = None;
+                let mut j = open_idx + 1;
+                while j < kept.len() {
+                    match kept[j].value.as_str() {
+                        "(" | "[" | "{" => depth += 1,
+                        ")" => {
+                            depth -= 1;
+                            if depth == 0 {
+                                close_idx = Some(j);
+                                break;
+                            }
+                        }
+                        "]" | "}" => depth -= 1,
+                        "," if depth == 1 => {
+                            has_top_level_comma = true;
+                        }
+                        _ => {}
+                    }
+                    j += 1;
+                }
+                if let Some(close_idx) = close_idx {
+                    let next_after = kept.get(close_idx + 1).map(|t| t.value.as_str());
+                    let next_terminates =
+                        matches!(next_after, Some(";") | Some(",") | None);
+                    if next_terminates
+                        && !has_top_level_comma
+                        && !starts_with_function
+                    {
+                        drops.push(open_idx);
+                        drops.push(close_idx);
+                        // Continue scanning past close.
+                        i = close_idx + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        // Apply drops in reverse order.
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
