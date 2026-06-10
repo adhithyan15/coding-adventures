@@ -57,6 +57,16 @@ pub const OP_LDC_I4_8: u8 = 0x1E;
 pub const OP_LDC_I4_S: u8 = 0x1F;
 pub const OP_LDC_I4: u8 = 0x20;
 pub const OP_DUP: u8 = 0x25;
+/// `ldarg.0`..`ldarg.3` (0x02–0x05) — McCarthy W8b (lambda). Push method
+/// parameter N onto the stack (the CLR counterpart of the JVM `aload`/`iload`
+/// of a parameter slot and the wasm `local.get` of a function param).
+pub const OP_LDARG_0: u8 = 0x02;
+pub const OP_LDARG_3: u8 = 0x05;
+/// `ldarg.s <idx>` (0x0E + u8) — McCarthy W8b. Push parameter `idx` (4–255).
+pub const OP_LDARG_S: u8 = 0x0E;
+/// `call <methodTok>` (0x28 + 4-byte token) — McCarthy W8b (lambda). Invoke
+/// another method: pop its arguments, push a call frame, transfer control.
+pub const OP_CALL: u8 = 0x28;
 pub const OP_RET: u8 = 0x2A;
 pub const OP_BR_S: u8 = 0x2B;
 pub const OP_BRFALSE_S: u8 = 0x2C;
@@ -92,6 +102,14 @@ pub const OP_PREFIX_FE: u8 = 0xFE;
 /// adversarial length could request tens of GB and OOM. 1M elements is far above
 /// any real McCarthy program (a cons cell is length 2) yet bounds the allocation.
 pub const MAX_ARRAY_LEN: usize = 1 << 20;
+
+/// DoS guard: the maximum call-frame depth (McCarthy W8b). McCarthy lambda makes
+/// `call` recursion possible; an adversarial or runaway program could recurse
+/// unboundedly and exhaust the host stack. The `run` step budget already bounds
+/// total work, but a depth cap turns deep recursion into a controlled panic
+/// rather than a host-stack overflow. 10_000 frames is far beyond any real
+/// McCarthy evaluation yet safely below the host stack limit.
+pub const MAX_CALL_DEPTH: usize = 10_000;
 
 // Two-byte opcode second bytes (after the 0xFE prefix).
 pub const CEQ_BYTE: u8 = 0x01;
@@ -173,6 +191,28 @@ pub struct CLRTrace {
 // ===========================================================================
 
 /// The CLR simulator -- a type-inferring stack-based virtual machine.
+/// One method in the program's method table (McCarthy W8b). Indexed by its
+/// `MethodDef` ordinal: the `call <0x0600_00NN>` token resolves to
+/// `methods[NN - 1]`.
+#[derive(Clone, Debug)]
+pub struct MethodCode {
+    pub body: Vec<u8>,
+    pub num_locals: usize,
+    pub num_args: usize,
+}
+
+/// A saved caller context, pushed by `call` and restored by `ret` (W8b). The
+/// operand `stack` and `heap` are shared across frames (CIL passes args + the
+/// return value on the shared operand stack); only the per-method registers
+/// (`pc`, `bytecode`, `locals`, `args`, `cur_method`) are saved/restored.
+struct Frame {
+    return_pc: usize,
+    return_method: usize,
+    return_bytecode: Vec<u8>,
+    return_locals: Vec<Option<Value>>,
+    return_args: Vec<Option<Value>>,
+}
+
 pub struct CLRSimulator {
     pub stack: Vec<Option<Value>>,
     pub locals: Vec<Option<Value>>,
@@ -182,6 +222,16 @@ pub struct CLRSimulator {
     pub pc: usize,
     pub bytecode: Vec<u8>,
     pub halted: bool,
+    /// Method parameters of the currently-executing method (W8b). `ldarg.N`
+    /// reads `args[N]`; populated by `call`, restored by `ret`.
+    pub args: Vec<Option<Value>>,
+    /// The whole program's method table, indexed by `MethodDef` ordinal − 1
+    /// (W8b). Empty/single-entry for legacy single-method programs.
+    methods: Vec<MethodCode>,
+    /// The index (into `methods`) of the currently-executing method (W8b).
+    cur_method: usize,
+    /// The call stack of saved caller contexts (W8b).
+    frames: Vec<Frame>,
 }
 
 impl CLRSimulator {
@@ -193,15 +243,36 @@ impl CLRSimulator {
             pc: 0,
             bytecode: Vec::new(),
             halted: false,
+            args: Vec::new(),
+            methods: Vec::new(),
+            cur_method: 0,
+            frames: Vec::new(),
         }
     }
 
-    /// Load bytecode and configure local variable count.
+    /// Load a single method's bytecode and configure local variable count. This
+    /// is the legacy single-method entry point (no `call`s); it registers a
+    /// one-method table so `ret` halts cleanly.
     pub fn load(&mut self, bytecode: &[u8], num_locals: usize) {
-        self.bytecode = bytecode.to_vec();
+        self.load_program(
+            vec![MethodCode { body: bytecode.to_vec(), num_locals, num_args: 0 }],
+            0,
+        );
+    }
+
+    /// Load a whole program (method table) and start executing at `entry`
+    /// (McCarthy W8b — lambda). `call <0x0600_00NN>` dispatches to
+    /// `methods[NN − 1]`; `ret` returns to the caller (or halts at the entry).
+    pub fn load_program(&mut self, methods: Vec<MethodCode>, entry: usize) {
+        assert!(entry < methods.len(), "entry method index out of range");
         self.stack.clear();
-        self.locals = vec![None; num_locals];
         self.heap.clear();
+        self.frames.clear();
+        self.cur_method = entry;
+        self.bytecode = methods[entry].body.clone();
+        self.locals = vec![None; methods[entry].num_locals];
+        self.args = vec![None; methods[entry].num_args];
+        self.methods = methods;
         self.pc = 0;
         self.halted = false;
     }
@@ -235,6 +306,25 @@ impl CLRSimulator {
         if opcode_byte == OP_NOP {
             self.pc += 1;
             return self.trace(pc, "nop", stack_before, "no operation".to_string());
+        }
+
+        // ── McCarthy W8b (lambda): method parameters ──
+        // ldarg.0..3 (0x02–0x05): push the method parameter at that index.
+        if (OP_LDARG_0..=OP_LDARG_3).contains(&opcode_byte) {
+            let idx = (opcode_byte - OP_LDARG_0) as usize;
+            let val = self.args.get(idx).copied().flatten()
+                .expect("ldarg: parameter index out of range or uninitialised");
+            self.stack.push(Some(val));
+            self.pc += 1;
+            return self.trace(pc, &format!("ldarg.{idx}"), stack_before, format!("push arg[{idx}] = {val}"));
+        }
+        if opcode_byte == OP_LDARG_S {
+            let idx = self.bytecode[pc + 1] as usize;
+            let val = self.args.get(idx).copied().flatten()
+                .expect("ldarg.s: parameter index out of range or uninitialised");
+            self.stack.push(Some(val));
+            self.pc += 2;
+            return self.trace(pc, "ldarg.s", stack_before, format!("push arg[{idx}] = {val}"));
         }
 
         if opcode_byte == OP_LDNULL {
@@ -381,10 +471,67 @@ impl CLRSimulator {
             return self.trace(pc, "div", stack_before, format!("pop {b_val} and {a_val}, push {result}"));
         }
 
+        // ── call <methodTok> (0x28) — McCarthy W8b (lambda) ──
+        // The 4-byte token is a MethodDef: 0x0600_00NN → methods[NN − 1]. Pop the
+        // callee's N args off the (shared) operand stack — the LAST pushed is the
+        // LAST arg — into a fresh `args` vector, save the caller's registers, and
+        // transfer control to the callee. The return value comes back on the
+        // shared stack at `ret`.
+        if opcode_byte == OP_CALL {
+            let token = u32::from_le_bytes([
+                self.bytecode[pc + 1], self.bytecode[pc + 2],
+                self.bytecode[pc + 3], self.bytecode[pc + 4],
+            ]);
+            // MethodDef tables are 0x06 in the high byte; ordinal is 1-based.
+            let ordinal = (token & 0x00FF_FFFF) as usize;
+            assert!(ordinal >= 1, "call: invalid MethodDef token 0x{token:08X}");
+            let callee_idx = ordinal - 1;
+            let callee = self.methods.get(callee_idx)
+                .unwrap_or_else(|| panic!("call: no method for token 0x{token:08X}"))
+                .clone();
+            // DoS guard: bound recursion depth (turns runaway recursion into a
+            // controlled panic instead of a host-stack overflow).
+            assert!(
+                self.frames.len() < MAX_CALL_DEPTH,
+                "call depth exceeded the simulator cap {MAX_CALL_DEPTH} (runaway recursion?)"
+            );
+            // Pop args (in order: arg[0] was pushed first, so pop into reverse).
+            let mut callee_args = vec![None; callee.num_args];
+            for slot in callee_args.iter_mut().rev() {
+                *slot = Some(self.pop().expect("call: not enough arguments on the stack"));
+            }
+            // Save the caller's context; `pc + 5` is the return address.
+            self.frames.push(Frame {
+                return_pc: pc + 5,
+                return_method: self.cur_method,
+                return_bytecode: std::mem::take(&mut self.bytecode),
+                return_locals: std::mem::take(&mut self.locals),
+                return_args: std::mem::take(&mut self.args),
+            });
+            // Enter the callee.
+            self.cur_method = callee_idx;
+            self.bytecode = callee.body;
+            self.locals = vec![None; callee.num_locals];
+            self.args = callee_args;
+            self.pc = 0;
+            return self.trace(pc, "call", stack_before, format!("call method #{callee_idx} (token 0x{token:08X})"));
+        }
+
         if opcode_byte == OP_RET {
+            // The return value (if any) is left on the shared operand stack. If
+            // there is a caller frame, restore it and continue; otherwise this is
+            // the entry method returning → halt.
+            if let Some(frame) = self.frames.pop() {
+                self.cur_method = frame.return_method;
+                self.bytecode = frame.return_bytecode;
+                self.locals = frame.return_locals;
+                self.args = frame.return_args;
+                self.pc = frame.return_pc;
+                return self.trace(pc, "ret", stack_before, "return to caller".to_string());
+            }
             self.pc += 1;
             self.halted = true;
-            return self.trace(pc, "ret", stack_before, "return".to_string());
+            return self.trace(pc, "ret", stack_before, "return (halt)".to_string());
         }
 
         if opcode_byte == OP_BR_S {

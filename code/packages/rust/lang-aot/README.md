@@ -38,8 +38,11 @@ McCarthy's predicates run too (W7, F3–F5): `(ATOM 7)`→1, `(EQ 7 7)`→1,
 **Symbols** (W8a, F6) run with *zero new backend code*: the shared
 `intern_symbols_structural` pass interns each symbol to an `i32` id
 (`SYMBOL_ID_BASE = 1<<29`), so `(QUOTE A)`→536870912 and `(EQ (QUOTE A) (QUOTE A))`
-→1 fall out of W6b boxing + W7 `equal?`. The remaining CLR lambda (F7) is W8b
-(`call` lowering + simulator call frames).
+→1 fall out of W6b boxing + W7 `equal?`. **Lambda** (W8b, F7) **completes the CLR
+backend (F1–F7):** `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7 — the lambda is hoisted to
+its own method, applied via `call <MethodDef>`, and run on `clr-simulator` 0.4.0's
+inter-method call-frame model. The CLR is the third managed backend to reach full
+McCarthy support after WASM and JVM.
 
 `compile_source_to_beam` is the fourth managed target and the first on the
 **Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real

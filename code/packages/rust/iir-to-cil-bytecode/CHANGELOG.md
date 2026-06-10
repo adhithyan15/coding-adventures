@@ -1,5 +1,13 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.10.0] — 2026-06-10 — McCarthy lambda: accept `call`/`ref<any>` (W8b, F7)
+
+The validator now accepts the `call` op with a `ref<any>` type — a lisp function
+call returns the callee's uniform-reference result. The `call` lowering already
+computed the `MethodDef` token + pushed args (boxed by the structural pass); this
+one-line allowlist addition lets McCarthy `(LAMBDA …)` applications validate and
+emit. `((LAMBDA (X) (CAR X)) (CONS 7 9))` → 7 on the `clr-simulator`.
+
 ## [0.9.0] — 2026-06-10 — McCarthy predicates: ATOM / EQ / COND (W7, F3–F5)
 
 Lower the structural pass's `pair?`/`not`/`equal?` `call_builtin`s on the CLR:

@@ -1,6 +1,6 @@
 [package]
 name = "iir-to-cil-bytecode"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 description = "IIR → CIL bytecode backend — lowers IIRModule to CILProgramArtifact.  v0.7.0 (G4): whitelist call_builtin print_i64 and lower it to call env.BasicRuntime::PrintI64(int64), mirroring iir-to-wasm v0.8.0 (env.__print_i64) and iir-to-jvm-class-file v0.7.0 (env/BasicRuntime.println(J)V).  Together they let BASIC's PRINT reach real wasm, JVM, and CLR bytecode."
 

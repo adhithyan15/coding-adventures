@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.0] — 2026-06-10 — McCarthy lambda: inter-method call frames (W8b, F7)
+
+- A whole-program **method table** + **call-frame** model: `load_program(methods, entry)`
+  registers all methods (indexed by `MethodDef` ordinal); `load` now delegates to it.
+- `call <methodTok>` (0x28): resolve the token to `methods[ordinal-1]`, pop the
+  callee's args off the shared operand stack into a fresh `args` vector, push a
+  caller frame, transfer control. `ret` pops the frame (or halts at the entry).
+- `ldarg.0..3` (0x02–0x05) / `ldarg.s` (0x0E): push method parameter N.
+- DoS guard: `MAX_CALL_DEPTH = 10_000` turns runaway recursion into a controlled
+  panic rather than a host-stack overflow.
+- The operand stack + heap are shared across frames (CIL passes args + the return
+  value on the operand stack); only per-method registers are saved/restored.
+  Single-method programs (scalar/cons/predicates) are unchanged — `load` still works.
+
 ## [0.3.0] — 2026-06-10 — McCarthy predicates: isinst + xor + ref-aware compares (W7)
 
 - `isinst <typeTok>` (0x75): the `pair?` type test — keep a heap `object[]` ref,

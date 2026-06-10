@@ -370,6 +370,9 @@ pub fn validate_iir_for_clr(module: &IIRModule) -> Vec<String> {
                     | "jmp_if_true" | "jmp_if_false" | "mov"
                     // McCarthy W6b: `box` produces a `ref<any>` (boxed int32).
                     | "box" | "unbox"
+                    // McCarthy W8b (lambda): a lisp `call` returns `ref<any>`
+                    // (the callee's uniform-reference result).
+                    | "call"
                 );
                 if !(is_supported_ref && is_heap_op) {
                     errors.push(format!(
