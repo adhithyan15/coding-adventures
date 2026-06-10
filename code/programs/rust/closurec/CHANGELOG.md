@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.70.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-057** — member-object paren elision:
+  `(a).b` → `a.b`. Upstream Closure (WHITESPACE_ONLY) strips
+  the redundant grouping parens around a member-expression's
+  object when that object is a single identifier.
+
+### Added — gap-057 pre-pass + safety guards
+
+A new token-stream pre-pass (separate from the gap-055/056
+arm-elision block) drops the grouping parens in the shape
+`GROUPING_PREFIX ( IDENT ) .`. Three guards make it
+provably safe:
+
+- **grouping-not-call guard** — the token before `(` must be
+  a punctuation/operator other than `)`, `]`, or `?.`. This
+  keeps CALL and index parens intact: `f(a).b` stays
+  `f(a).b`, `x?.(a).b` (optional call) stays untouched.
+- **single-identifier guard** — the parens must wrap exactly
+  one plain-identifier token. Numbers are excluded
+  (`(1).toString()` must keep its parens — `1.` mis-lexes);
+  so are keywords, strings, regex, and templates.
+- **member-position guard** — the token after `)` must be
+  `.`. (`(a)[i]` and `(a)(x)` are also safe for a lone
+  identifier but are left to a follow-up.)
+
+All bracket/operator comparisons route through the existing
+`is_structural_punct` guard, so a string literal whose
+content looks like punctuation (e.g. `")"`) can never
+corrupt the depth scan.
+
+Helpers added: `is_punct` (operator-vs-value category test)
+and `is_plain_identifier` (NAME/IDENT only).
+
 ## [0.69.0] - 2026-06-10
 
 ### Changed
