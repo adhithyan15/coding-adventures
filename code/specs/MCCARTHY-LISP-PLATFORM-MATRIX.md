@@ -147,7 +147,19 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase C — CLR (replicate as `object`)
 
-- ☐ **W6 — CLR cons (F2).** `$LispyPair` type, `newobj`/`ldfld`; boxed ints.
+- ✅ **W6a — CLR run-foundation (F1, scalar).** `lang-aot::compile_source_to_cil_artifact`
+  + `concretize_scalar_any_for_cil` (scalar `any`/`i64` → CLR `i32`) →
+  `iir-to-cil-bytecode`. **Verified by RUNNING** — the entry method's CIL on the
+  in-repo **`clr-simulator`** (zero external `dotnet`, mirroring `jvm-simulator`):
+  `42`→42, `0`→0, `7`→7, Twig `42`→42. Establishes the CLR pipeline + run-verify
+  harness that W6b+ build on.
+- ☐ **W6b — CLR cons (F2).** cons cells are `object[]` (the CLR backend already
+  lowers `alloc`/`field_*` for `ref<LispyPair>` → `newarr`/`stelem`/`ldelem`);
+  add the atom boxing (`box [mscorlib]System.Int32` / `unbox.any`), remove
+  `box`/`unbox` from its `UNSUPPORTED_OPS`, and run the shared structural passes
+  (incl. the JVM strict-backend fixes). NOTE: `clr-simulator` is a 32-bit integer
+  machine (no object/heap execution), so W6b's run-verify needs the real `dotnet`
+  (9.0.313, available via mise) — mirror the JVM W3b real-`java` harness.
 - ☐ **W7 — CLR `ATOM`/`EQ`/`COND` (F3–F5).** `isinst`; equality; truthiness.
 - ☐ **W8 — CLR symbols + lambda (F6–F7).** **Completes CLR.**
 

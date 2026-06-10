@@ -189,6 +189,12 @@ pub enum LangAotError {
     /// the modern *managed* targets, replicating the WASM uniform-reference value
     /// model with `Object`/`Integer` boxing (LANG77 / McCarthy W3).
     JvmBackendError(String),
+    /// The CLR (.NET CIL) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-cil-bytecode`.  The CLR is the third of
+    /// the modern *managed* targets, replicating the WASM/JVM uniform-reference
+    /// value model with `object`/boxing (LANG77 / McCarthy W6).
+    ClrBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -203,6 +209,7 @@ impl fmt::Display for LangAotError {
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
             LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
             LangAotError::JvmBackendError(m) => write!(f, "jvm: {m}"),
+            LangAotError::ClrBackendError(m) => write!(f, "clr: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
@@ -521,6 +528,70 @@ pub fn compile_source_to_jvm_class(
     let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
     iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
         .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))
+}
+
+/// Retype a **scalar** module's `any`/`polymorphic`/`i64` values to CLR `i32`,
+/// for the CLR run-foundation (LANG77 / McCarthy W6a). The CLR twin of
+/// `concretize_scalar_any_for_jvm`: the in-repo `clr-simulator` (used to verify)
+/// is a 32-bit integer machine and `iir-to-cil-bytecode`'s entry returns
+/// `int32`, so a scalar program's result is an `int`. Heap/reference functions
+/// (cons/symbols/lambda — W6b+) are left for the uniform-`object` value model.
+fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || i.type_hint.starts_with("ref<")
+            });
+        if uses_lisp {
+            continue; // uniform-object value model — CLR W6b+.
+        }
+        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        if to_i32(&func.return_type) {
+            func.return_type = "i32".to_string();
+        }
+        for instr in &mut func.instructions {
+            if to_i32(&instr.type_hint) {
+                instr.type_hint = "i32".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → a **CLR CIL artifact** (LANG77 / McCarthy W6).
+///
+/// The third of the modern *managed* `--emit` targets. The CLR has its own
+/// uniform-reference value model (`object` references, value-type boxing) — the
+/// analogue of the WASM `anyref` / JVM `Object` models. **W6a (this slice)** wires
+/// the pipeline and runs **scalar** programs: source → IIR →
+/// `concretize_scalar_any_for_cil` → `iir-to-cil-bytecode`. The cons/symbol/lambda
+/// value model (the uniform-`object` replication of the shared structural passes)
+/// lands in W6b+.
+///
+/// Verified end-to-end by *running* the emitted entry method's CIL on the in-repo
+/// `clr-simulator` (see the `cil_emit` tests) — no external `dotnet`.
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `ClrBackendError` — `iir-to-cil-bytecode` rejected the (lowered) IIR.
+pub fn compile_source_to_cil_artifact(
+    language: Language,
+    source: &str,
+    name: &str,
+) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, name)?;
+    concretize_scalar_any_for_cil(&mut module);
+
+    let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
+    iir_to_cil_bytecode::lower_iir_to_cil(&module, &config)
+        .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
 }
 
 /// Cross-platform: source file → IIR → JVM class file (`.class`) on disk.
