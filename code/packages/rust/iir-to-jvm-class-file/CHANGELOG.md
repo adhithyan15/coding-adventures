@@ -3,6 +3,28 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.10.0] — 2026-06-09 — large-`int` constants via the constant pool (McCarthy W5a / F6)
+
+### Fixed
+
+- **`int` literals beyond ±32767 now lower correctly.** `emit_iconst`'s
+  out-of-`sipush`-range path emitted `ldc 0` — a reference to the *reserved*
+  constant-pool slot 0 — which crashed real JVMs at class load
+  (`constantTag.cpp ShouldNotReachHere`). Added `emit_iconst_cp`, which appends a
+  `CONSTANT_Integer` entry (`ConstantPoolBuilder::add_integer`) and emits
+  `ldc`/`ldc_w` (the `LDC_W` 0x13 opcode for a CP index > 255). Every
+  *user-constant* call site (a `const`, a `mov`/`ret` immediate, a `call`
+  argument) now routes through it; the old invalid path is `debug_assert`-guarded.
+  Structural indices (field numbers, slot/arg counts) stay on `emit_iconst` — they
+  are always small.
+
+### Enabled
+
+- **McCarthy symbols (F6) on the JVM.** A symbol interns to an id in a high
+  reserved range (`SYMBOL_ID_BASE = 2²⁹`), exactly the large-`int` const this
+  fixes — so `(EQ 'X 'X)` → T, `(EQ 'X 'Y)` → nil, `(QUOTE X)` → its id now run on
+  a real JVM.
+
 ## [0.9.0] — 2026-06-09 — lisp predicates `pair?`/`not`/`equal?` (McCarthy W4)
 
 ### Added

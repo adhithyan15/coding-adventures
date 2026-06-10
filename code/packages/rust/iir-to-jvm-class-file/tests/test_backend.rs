@@ -2418,3 +2418,34 @@ fn mccarthy_w4_predicates_lower() {
     assert!(code.contains(&0x82u8), "not → ixor");
     assert!(code.contains(&0xA0u8), "equal? → if_icmpne (compare-to-bool)");
 }
+
+/// McCarthy W5a: a large `int` const (beyond ±32767 — e.g. an interned symbol id
+/// ≥ 2²⁹) lowers via `ldc`/`ldc_w` + a `CONSTANT_Integer` pool entry, NOT the old
+/// invalid `ldc 0` placeholder (which crashed real JVMs at `constantTag`).
+#[test]
+fn mccarthy_w5a_large_int_const_uses_constant_pool() {
+    let big = 536_870_912i64; // 2^29 — a symbol id; needs ldc.
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(big)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    // A CONSTANT_Integer(2^29) entry must exist in the pool.
+    assert!(
+        class.constant_pool.iter().any(|e| matches!(
+            e,
+            Some(jvm_class_file::JvmConstantPoolEntry::Integer(v)) if *v == big as i32
+        )),
+        "large const must add a CONSTANT_Integer pool entry"
+    );
+    let code = &class.methods.iter().find(|m| m.name == "main").unwrap()
+        .code_attribute().unwrap().code;
+    // ldc (0x12) or ldc_w (0x13) — and never a bare `ldc 0` (index 0 reserved).
+    let ldc_pos = code.iter().position(|&b| b == 0x12 || b == 0x13).expect("ldc/ldc_w emitted");
+    assert_ne!(code[ldc_pos + 1], 0, "ldc index must not be the reserved slot 0");
+}

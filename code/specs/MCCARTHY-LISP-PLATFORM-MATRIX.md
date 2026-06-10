@@ -60,7 +60,7 @@ representation + per-builtin backend lowering.
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
 | **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
-| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | uniform-Object |
+| **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
@@ -125,13 +125,18 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
   **descriptor-aware** launcher: predicate→`()I`, COND-over-int→`()J`):
   `(ATOM 5)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 5 5)`→1, `(EQ 5 6)`→0,
   `(COND ((EQ 1 1) 7) (5 9))`→7, fall-through→9.
-- ☐ **W5 — JVM symbols + lambda (F6–F7).** Interned symbol objects; lambda →
-  method (the uniform-anyref boundary, mirroring wasm W2). **NOTE:** symbol ids
-  use the high reserved range (`SYMBOL_ID_BASE = 2²⁹`), an `i32` const too large
-  for `bipush`/`sipush` — it must lower via `ldc` + a CONSTANT_Integer pool entry.
-  A first attempt crashed the JVM (`constantTag.cpp ShouldNotReachHere`), so W5
-  must fix/verify the JVM backend's large-`i32`-const (`ldc`) path first.
-  **Completes JVM.**
+- ✅ **W5a — JVM symbols (F6) + the large-`int` `ldc` fix.** The JVM `const`
+  lowering emitted `ldc 0` (the *reserved* CP slot) for any `int` beyond ±32767 —
+  which crashed real JVMs (`constantTag.cpp ShouldNotReachHere`). Added
+  `emit_iconst_cp` (a `CONSTANT_Integer` entry + `ldc`/`ldc_w`) and routed every
+  user-constant site through it. A symbol id (`SYMBOL_ID_BASE = 2²⁹`) is exactly
+  that large const, so symbols now run: `(EQ 'X 'X)`→1, `(EQ 'X 'Y)`→0,
+  `(QUOTE X)`→its id, `(ATOM 'X)`→1, on a real `java` (`tests/jvm_symbols.rs`).
+  The shared `intern_symbols_structural` pass (same as wasm W1) needed no change.
+- ☐ **W5b — JVM lambda/`LABEL`/recursion (F7).** The uniform-anyref function
+  boundary on the JVM, mirroring wasm W2: lisp params → `Object`, call args boxed,
+  a lambda → a `static` method returning `Object`, recursion via `invokestatic`.
+  `((LAMBDA (X) X) 5)`→5 and a recursive `LABEL`, on a real `java`. **Completes JVM.**
 
 ### Phase C — CLR (replicate as `object`)
 

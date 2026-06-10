@@ -1,6 +1,6 @@
 [package]
 name = "iir-to-jvm-class-file"
-version = "0.9.0"
+version = "0.10.0"
 edition = "2021"
 description = "IIR → JVM class file backend — lowers IIRModule to JvmClassFile.  v0.7.0 (G3): whitelist call_builtin print_i64 and lower it to invokestatic env/BasicRuntime.println(J)V, mirroring iir-to-wasm v0.8.0's env.__print_i64 host import.  Together they let BASIC's PRINT reach real JVM and wasm bytecode."
 
