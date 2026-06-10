@@ -1,0 +1,8 @@
+{
+ "check_id": 83,
+ "idx": 36,
+ "slot": "member_verified_fulltime_caregiver_for_disabled_dependent",
+ "claimed_value": true,
+ "scenario": "The Nguyen household has four members. One adult member is a verified full-time caregiver for the household's disabled child. They apply for Food Assistance.",
+ "cited_span": "One adult member is a verified full-time caregiver for the household's disabled child."
+}

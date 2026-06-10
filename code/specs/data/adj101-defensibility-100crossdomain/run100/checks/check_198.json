@@ -1,0 +1,8 @@
+{
+ "check_id": 198,
+ "idx": 80,
+ "slot": "days_since_affected_month",
+ "claimed_value": 18,
+ "scenario": "In March, the provider's measured uptime was 99.5%. The monthly fee was $4,000. The customer submitted a credit request on April 10, 18 days after the end of March.",
+ "cited_span": "18 days after the end of March"
+}

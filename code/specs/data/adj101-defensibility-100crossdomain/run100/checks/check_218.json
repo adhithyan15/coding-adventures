@@ -1,0 +1,8 @@
+{
+ "check_id": 218,
+ "idx": 89,
+ "slot": "uptime_report_published",
+ "claimed_value": false,
+ "scenario": "Qualifying downtime occurred in August. The provider never published the required August uptime report. The customer requested the credit on October 15, 76 days after the end of August.",
+ "cited_span": "The provider never published the required August uptime report."
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 37,
+ "idx": 15,
+ "slot": "tort_committed_by_employee",
+ "claimed_value": true,
+ "scenario": "A delivery-company driver, while behind the wheel of the company van during his shift, rear-ended another car and injured its driver.",
+ "cited_span": "A delivery-company driver, while behind the wheel of the company van during his shift, rear-ended another car and injured its driver"
+}

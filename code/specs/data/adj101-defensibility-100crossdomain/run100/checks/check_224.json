@@ -1,0 +1,8 @@
+{
+ "check_id": 224,
+ "idx": 92,
+ "slot": "submitted_after_deadline",
+ "claimed_value": true,
+ "scenario": "A grant's current budget period ends on December 31. The PI submitted the annual progress report on October 15 of the same year.",
+ "cited_span": "submitted on October 15; deadline is 90 days before December 31 (October 2); October 15 is after October 2"
+}

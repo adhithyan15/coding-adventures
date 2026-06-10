@@ -1,0 +1,8 @@
+{
+ "check_id": 225,
+ "idx": 93,
+ "slot": "charge_type",
+ "claimed_value": "conference_travel",
+ "scenario": "A postdoc funded under a marine-microbiology grant charged $1,800 in registration and airfare to attend an international scientific conference, and submitted receipts and a completed travel authorization form on time.",
+ "cited_span": "charged $1,800 in registration and airfare to attend an international scientific conference"
+}

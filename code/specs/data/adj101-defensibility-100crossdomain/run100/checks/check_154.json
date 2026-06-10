@@ -1,0 +1,8 @@
+{
+ "check_id": 154,
+ "idx": 61,
+ "slot": "age_years",
+ "claimed_value": 19,
+ "scenario": "Devon started working at the company on March 1, 2024 and has worked continuously since. As of today, March 1, 2026, he has completed 24 months of continuous service. Devon is 19 years old.",
+ "cited_span": "Devon is 19 years old"
+}

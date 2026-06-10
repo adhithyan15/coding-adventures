@@ -1,0 +1,8 @@
+{
+ "check_id": 214,
+ "idx": 88,
+ "slot": "severity_1",
+ "claimed_value": true,
+ "scenario": "A Severity-1 incident remained unresolved after 3 hours. Within the first hour, the provider confirmed and documented that the root cause was an outage at an upstream third-party network provider outside its control. The provider did not escalate to a senior engineer.",
+ "cited_span": "A Severity-1 incident"
+}

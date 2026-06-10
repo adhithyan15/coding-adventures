@@ -1,0 +1,8 @@
+{
+ "check_id": 192,
+ "idx": 77,
+ "slot": "countable_unlawful_presence_days",
+ "claimed_value": 50,
+ "scenario": "Diego accrued 200 days of unlawful presence in total. Of those, 150 days occurred while he was 17 years old, and the remaining 50 days occurred after he turned 18. He then departed.",
+ "cited_span": "time spent unlawfully present while under the age of 18 does not count toward the 180 days"
+}

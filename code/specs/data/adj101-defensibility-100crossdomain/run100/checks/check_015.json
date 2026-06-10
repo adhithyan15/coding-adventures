@@ -1,0 +1,8 @@
+{
+ "check_id": 15,
+ "idx": 7,
+ "slot": "clinician_reasonably_believes_threat",
+ "claimed_value": true,
+ "scenario": "During a session, Mr. Doyle, a competent adult outpatient, tells his psychiatrist Dr. Marsh in clear and credible terms that he intends to seriously harm his named coworker within the week. Mr. Doyle refuses to sign any release of his records and demands confidentiality.",
+ "cited_span": "tells his psychiatrist Dr. Marsh in clear and credible terms that he intends to seriously harm his named coworker"
+}

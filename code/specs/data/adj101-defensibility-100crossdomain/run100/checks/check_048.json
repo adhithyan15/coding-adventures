@@ -1,0 +1,8 @@
+{
+ "check_id": 48,
+ "idx": 18,
+ "slot": "loss_cause",
+ "claimed_value": "government_seizure",
+ "scenario": "A passenger's checked suitcase was confiscated and never returned after customs authorities seized it during a lawful government inspection at the destination airport.",
+ "cited_span": "after customs authorities seized it during a lawful government inspection at the destination airport"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 131,
+ "idx": 54,
+ "slot": "alarm_inside_each_sleeping_room",
+ "claimed_value": true,
+ "scenario": "A two-story dwelling has three bedrooms, all on the second floor clustered around a single hallway. There is a working smoke alarm inside each of the three bedrooms, one in the second-floor hallway outside the bedrooms, and one on the first floor.",
+ "cited_span": "There is a working smoke alarm inside each of the three bedrooms"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 178,
+ "idx": 72,
+ "slot": "has_advanced_degree",
+ "claimed_value": false,
+ "scenario": "Priya holds only a bachelor's degree and has 6 years of progressive professional experience after earning it. Her job offer requires exactly this profile.",
+ "cited_span": "Priya holds only a bachelor's degree"
+}

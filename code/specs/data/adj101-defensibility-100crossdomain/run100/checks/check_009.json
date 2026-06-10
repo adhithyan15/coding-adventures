@@ -1,0 +1,8 @@
+{
+ "check_id": 9,
+ "idx": 6,
+ "slot": "faraday_meets_stemi",
+ "claimed_value": true,
+ "scenario": "In the emergency department, three patients are waiting. Mr. Yi has the highest standard triage acuity (a level 1 trauma). Ms. Faraday has a lower triage acuity but her ECG shows confirmed ST-elevation meeting STEMI criteria. A third patient is stable.",
+ "cited_span": "her ECG shows confirmed ST-elevation meeting STEMI criteria"
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 59,
+ "idx": 24,
+ "slot": "on_eligible_schedule",
+ "claimed_value": true,
+ "scenario": "An importer brings in a batch of woven cotton scarves, which appear on the eligible-goods schedule. The scarves were shipped to the importer's warehouse from a distribution hub located in a member country.",
+ "cited_span": "which appear on the eligible-goods schedule"
+}

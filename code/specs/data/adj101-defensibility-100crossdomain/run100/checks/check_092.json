@@ -1,0 +1,8 @@
+{
+ "check_id": 92,
+ "idx": 40,
+ "slot": "payout_before_cap",
+ "claimed_value": 3700,
+ "scenario": "A policyholder's car was damaged in a collision. The repair shop's itemized estimate is $4,200. The policy is active and the collision is a covered peril.",
+ "cited_span": "repair cost $4,200 minus $500 deductible = $3,700"
+}

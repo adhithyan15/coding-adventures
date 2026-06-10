@@ -1,0 +1,8 @@
+{
+ "check_id": 138,
+ "idx": 56,
+ "slot": "habitable_room",
+ "claimed_value": true,
+ "scenario": "A 150-square-foot habitable den has only 6 square feet of window glazing (4% of floor area). The den is equipped with a permanently installed lighting system that produces an average illumination of 8 footcandles measured 30 inches above the floor across the entire room.",
+ "cited_span": "A 150-square-foot habitable den"
+}

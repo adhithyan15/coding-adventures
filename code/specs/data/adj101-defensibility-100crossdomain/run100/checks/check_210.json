@@ -1,0 +1,8 @@
+{
+ "check_id": 210,
+ "idx": 87,
+ "slot": "is_planned_maintenance",
+ "claimed_value": true,
+ "scenario": "The provider gave 5 days' notice of a maintenance window announced to run from 02:00 to 03:00. The maintenance actually ran from 02:00 to 03:50, a 50-minute overrun.",
+ "cited_span": "The provider gave 5 days' notice of a maintenance window announced to run from 02:00 to 03:00."
+}

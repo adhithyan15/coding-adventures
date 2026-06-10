@@ -1,0 +1,8 @@
+{
+ "check_id": 157,
+ "idx": 62,
+ "slot": "shift_consecutive_hours",
+ "claimed_value": 5.75,
+ "scenario": "Priya, a non-exempt employee, was scheduled for and worked a single continuous shift of 5 hours and 45 minutes with no break.",
+ "cited_span": "worked a single continuous shift of 5 hours and 45 minutes"
+}
