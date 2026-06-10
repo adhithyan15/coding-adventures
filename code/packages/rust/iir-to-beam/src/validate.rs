@@ -95,7 +95,9 @@ use interpreter_ir::{IIRModule, Operand};
 //                     call_ext erlang:apply/3.
 
 const UNSUPPORTED_OPS: &[&str] = &[
-    "call_builtin",
+    // "call_builtin"  — McCarthy W10: now lowered for the predicate set
+    //   (pair?/equal?/not) → is_nonempty_list/is_eq_exact 0/1 synthesis. The
+    //   lowering arm returns UnsupportedOp for any other builtin name.
     "io_in",
     // "io_out"       — LANG32: now supported (erlang:display/1).
     // "global_store" — LANG32: now supported (erlang:put/2).

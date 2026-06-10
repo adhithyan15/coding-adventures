@@ -251,16 +251,29 @@ fn test_float_const_rejected() {
 // 8. test_call_builtin_rejected
 // ===========================================================================
 
-/// `call_builtin` must be rejected — it requires a NIF bridge.
+/// `call_builtin` is no longer rejected by the *validator* (McCarthy W10 lowers
+/// the predicate set `pair?`/`equal?`/`not`). An *unsupported* builtin name
+/// (here `println`) is instead rejected at *lowering* time with `UnsupportedOp`.
 #[test]
-fn test_call_builtin_rejected() {
-    let errs = validate_for_beam(&make_module_single(vec![IIRInstr::new(
+fn test_unsupported_call_builtin_rejected_at_lowering() {
+    let m = make_module_single(vec![IIRInstr::new(
         "call_builtin",
         Some("v".into()),
         vec![Operand::Var("println".into())],
         "void",
-    )]));
-    assert!(errs.iter().any(|e| e.contains("UnsupportedOp")));
+    )]);
+    // The validator now accepts `call_builtin` (it's lowered, not pre-rejected)…
+    let errs = validate_for_beam(&m);
+    assert!(
+        !errs.iter().any(|e| e.contains("UnsupportedOp")),
+        "validator should no longer pre-reject call_builtin; got: {errs:?}"
+    );
+    // …but lowering an unsupported builtin name fails with UnsupportedOp.
+    let err = lower_iir_to_beam(&m, &cfg()).expect_err("println is not a BEAM builtin");
+    assert!(
+        format!("{err:?}").contains("UnsupportedOp"),
+        "expected UnsupportedOp from lowering, got: {err:?}"
+    );
 }
 
 // ===========================================================================

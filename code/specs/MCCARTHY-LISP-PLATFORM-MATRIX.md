@@ -62,7 +62,7 @@ representation + per-builtin backend lowering.
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
-| **BEAM** | `iir-to-beam` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
+| **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
@@ -208,7 +208,13 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     cells). **Verified by RUNNING** on a real `erl`: `(CAR (CONS 7 9))`→7,
     `(CDR (CONS 7 9))`→9, nested→2, `(CONS 7 9)`→`[7|9]` (a native list cell)
     (`lang-aot/tests/beam_cons.rs`).
-- ☐ **W10 — BEAM `ATOM`/`EQ`/`COND` (F3–F5).** `is_tuple`/guards; `=:=`; truthiness.
+- ✅ **W10 — BEAM `ATOM`/`EQ`/`COND` (F3–F5).** Native Erlang guards via the same
+  0/1 synthesis the `cmp_*` ops use: `pair?`→`is_nonempty_list` (a cons IS `[H|T]`),
+  `equal?`→`is_eq_exact` (`=:=`), `not`→`is_eq_exact x 0` (`x==0`); `COND`→`jmp_if`.
+  Removed `call_builtin` from the BEAM `UNSUPPORTED_OPS` (the lowering arm now
+  dispatches the predicate set + rejects others). **Verified by RUNNING** on a real
+  `erl`: `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(COND …)`→100/200
+  (`lang-aot/tests/beam_predicates.rs`).
 - ☐ **W11 — BEAM symbols + lambda (F6–F7).** Symbols = Erlang atoms; lambda = fun.
   **Completes BEAM.** (Mind the OTP-27 AtU8 atom-format constraint from
   `ir-to-beam`.)
