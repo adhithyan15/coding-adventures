@@ -251,28 +251,39 @@ fn test_float_const_rejected() {
 // 8. test_call_builtin_rejected
 // ===========================================================================
 
-/// `call_builtin` is no longer rejected by the *validator* (McCarthy W10 lowers
-/// the predicate set `pair?`/`equal?`/`not`). An *unsupported* builtin name
-/// (here `println`) is instead rejected at *lowering* time with `UnsupportedOp`.
+/// McCarthy W10: `call_builtin` is supported by the BEAM backend ONLY for the
+/// predicate set (`pair?`/`equal?`/`not`). The validator accepts those and
+/// rejects every other builtin name with `UnsupportedOp` — keeping validation in
+/// sync with the lowering arm so `generate()` never panics on a validated module.
 #[test]
-fn test_unsupported_call_builtin_rejected_at_lowering() {
-    let m = make_module_single(vec![IIRInstr::new(
+fn test_call_builtin_predicate_set_validates_others_rejected() {
+    // An UNSUPPORTED builtin name (`println`) is rejected by the validator.
+    let bad = make_module_single(vec![IIRInstr::new(
         "call_builtin",
         Some("v".into()),
         vec![Operand::Var("println".into())],
         "void",
     )]);
-    // The validator now accepts `call_builtin` (it's lowered, not pre-rejected)…
-    let errs = validate_for_beam(&m);
     assert!(
-        !errs.iter().any(|e| e.contains("UnsupportedOp")),
-        "validator should no longer pre-reject call_builtin; got: {errs:?}"
+        validate_for_beam(&bad).iter().any(|e| e.contains("UnsupportedOp")),
+        "validator must reject an unsupported call_builtin name"
     );
-    // …but lowering an unsupported builtin name fails with UnsupportedOp.
-    let err = lower_iir_to_beam(&m, &cfg()).expect_err("println is not a BEAM builtin");
+
+    // A SUPPORTED predicate (`pair?`) passes validation (it is lowered to a BEAM
+    // type-guard). It must not produce an `UnsupportedOp` from the call_builtin check.
+    let good = make_module_single(vec![
+        IIRInstr::new("const", Some("x".into()), vec![Operand::Int(7)], "i64"),
+        IIRInstr::new(
+            "call_builtin",
+            Some("p".into()),
+            vec![Operand::Var("pair?".into()), Operand::Var("x".into())],
+            "i64",
+        ),
+        IIRInstr::new("ret", None, vec![Operand::Var("p".into())], "i64"),
+    ]);
     assert!(
-        format!("{err:?}").contains("UnsupportedOp"),
-        "expected UnsupportedOp from lowering, got: {err:?}"
+        !validate_for_beam(&good).iter().any(|e| e.contains("predicate set")),
+        "validator must accept the `pair?` predicate: {:?}", validate_for_beam(&good)
     );
 }
 
