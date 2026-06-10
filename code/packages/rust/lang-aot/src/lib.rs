@@ -351,6 +351,75 @@ pub fn compile_file_to_llvm_ir(
     Ok(())
 }
 
+/// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
+/// LLVM backend (LANG77 / McCarthy W12a). The LLVM backend is a typed SSA IR, so
+/// — like wasm/JVM/CLR/BEAM — a polymorphic scalar value must be given a concrete
+/// type before lowering; for a pure-integer McCarthy program that type is `i64`.
+/// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
+/// routed through `lispy_runtime.c`, W12b+) are left alone.
+fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| {
+            t == "any" || t == "symbol" || t.starts_with("ref<")
+        }) || func.instructions.iter().any(|i| {
+            HEAP_OPS.contains(&i.op.as_str())
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                || i.type_hint.starts_with("ref<")
+        });
+        if uses_lisp {
+            continue; // tagged-word C-runtime value model — W12b+.
+        }
+        if func.return_type == "any" || func.return_type == "polymorphic" {
+            func.return_type = "i64".to_string();
+        }
+        for instr in &mut func.instructions {
+            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → **LLVM IR text** (`.ll`) for the default,
+/// reproducible target (`x86_64-unknown-linux-gnu`) — McCarthy W12a.
+///
+/// The fifth `--emit` value model and the first **tagged-word** target (the
+/// LLVM/AOT/JIT family that links the shared `lispy_runtime.c`, as opposed to the
+/// managed object models of wasm/JVM/CLR or BEAM's native terms). This scalar
+/// run-foundation concretises `any`→`i64` and lowers to LLVM IR; the cons /
+/// predicate / symbol / lambda lowering (`call __twig_lispy_*`) is W12b+.
+pub fn compile_source_to_llvm(
+    language: Language,
+    source: &str,
+    module_name: &str,
+) -> Result<String, LangAotError> {
+    compile_source_to_llvm_with_target(language, source, module_name, "x86_64-unknown-linux-gnu")
+}
+
+/// As [`compile_source_to_llvm`], but with a caller-chosen target triple. The
+/// **verify-by-running** harness passes the *host* triple (`clang -dumpmachine`)
+/// so `clang -x ir <out>.ll` produces a native executable that runs on the test
+/// machine — the LLVM analogue of `wasm-runtime` / the `clr-simulator` / real
+/// `erl`, but using the real `clang` already on the box.
+pub fn compile_source_to_llvm_with_target(
+    language: Language,
+    source: &str,
+    module_name: &str,
+    target_triple: &str,
+) -> Result<String, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, module_name)?;
+    concretize_scalar_any_for_llvm(&mut module);
+    let cfg = iir_to_llvm::IIRLlvmConfig::new(module_name).with_target(target_triple);
+    iir_to_llvm::lower_iir_to_llvm(&module, &cfg)
+        .map_err(|e| LangAotError::LlvmBackendError(format!("{e}")))
+}
+
 /// Concretise the polymorphic `"any"`/`"polymorphic"` type hints of a **purely
 /// scalar** function to `"i64"`, so it can flow through the typed WASM backend
 /// (LANG77 / McCarthy L3b-3a-2).
