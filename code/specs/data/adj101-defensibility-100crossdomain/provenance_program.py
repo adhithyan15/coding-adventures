@@ -46,17 +46,32 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", (s or "")).strip().lower()
 
 
-def check_justification(facts: dict) -> list:
-    """Return the list of fact names whose provenance is missing (fabrications)."""
-    bad = []
+def _norm_formula(s: str) -> str:
+    """Normalize a formula/equation string for faithfulness comparison: x**3 == x^3, 2*x == 2x, no
+    spaces, drop a trailing '=0'. A notation transform (math -> python syntax) is not a mis-extraction."""
+    t = _norm(s).replace("**", "^").replace("*", "").replace(" ", "")
+    return t[:-2] if t.endswith("=0") else t
+
+
+def check_justification(facts: dict) -> dict:
+    """Split facts by provenance quality:
+      - fabrications: NO provenance at all (stated w/o span, or inferred w/o basis_span).
+      - surfaced_assumptions: inferred WITH a basis but the gate said LEAP (not entailed by the
+        bytes). These are NOT fabrications — they are the audit working: the assumption is surfaced
+        and flagged for a human to verify/override (the provenance-engine assumption discipline).
+    Fully grounded iff stated(span) or inferred(basis + ENTAILED)."""
+    fabrications, assumptions = [], []
     for name, f in facts.items():
         typ = f.get("type")
         if typ == "stated" and f.get("span"):
             continue
-        if typ == "inferred" and f.get("basis_span") and f.get("entailment") == "ENTAILED":
+        if typ == "inferred" and f.get("basis_span"):
+            if f.get("entailment") == "ENTAILED":
+                continue
+            assumptions.append(name)   # surfaced, basis-backed assumption (auditable)
             continue
-        bad.append(name)
-    return bad
+        fabrications.append(name)      # no provenance -> genuine fabrication
+    return {"fabrications": fabrications, "surfaced_assumptions": assumptions}
 
 
 # A quantity in the source = a number (optionally with a unit/word). Coarse but effective for coverage.
@@ -87,24 +102,37 @@ def check_coverage(quantity_spans: list, facts: dict, discarded: list) -> list:
     return missing
 
 
+# Unit-scale factors: a typed magnitude is faithful to its span modulo a common unit conversion —
+# e.g. "4%" -> 0.04 (x100), SI prefixes (km<->m x1000). This is REQUIRED because the IR is unit-typed:
+# the whole point of typing is that 4% becomes the fraction 0.04, so the raw "4" still lives in the span.
+_UNIT_SCALES = (1.0, 100.0, 0.01, 1000.0, 0.001, 60.0, 3600.0)
+
+
 def check_faithfulness(facts: dict) -> list:
-    """Stated facts whose magnitude does NOT appear in their own cited span — a localized
-    mis-extraction. This is the workhorse of localizability: most wrong answers come from a fact
-    whose VALUE contradicts the BYTES it claims to come from, and the audit catches it at that exact
-    fact. (Distinct from a fabrication, which has no span at all.)"""
+    """Stated NUMERIC facts whose magnitude does not match their own cited span (modulo a unit
+    conversion) — a localized mis-extraction. Non-numeric data facts (SMILES, equations, labels) are
+    NOT quantities and are skipped (their faithfulness is the string appearing in the span). This is
+    the workhorse of localizability: a value that contradicts its cited bytes is caught at that fact."""
     bad = []
     for name, f in facts.items():
         if f.get("type") != "stated":
             continue
-        mag = f.get("magnitude")
-        span = f.get("span")
+        mag, span = f.get("magnitude"), f.get("span")
         if mag is None or not span:
             continue
-        span_vals = _numeric_values(span)
         try:
-            if not any(abs(float(mag) - v) < 1e-9 for v in span_vals):
-                bad.append(name)
+            magf = float(mag)
         except (TypeError, ValueError):
+            # non-numeric datum (e.g. a SMILES/equation string): faithful iff it appears in the span,
+            # modulo notation (x**3 vs x^3, 2*x vs 2x, spacing) — a syntax transform is not a mis-extraction.
+            if isinstance(mag, str) and _norm_formula(mag) and _norm_formula(mag) not in _norm_formula(span):
+                bad.append(name)
+            continue
+        span_vals = _numeric_values(span)
+        if not span_vals:
+            continue  # span carries no number to check against (e.g. a worded quantity)
+        if not any(abs(magf * k - v) < 1e-6 or abs(magf / k - v) < 1e-6
+                   for v in span_vals for k in _UNIT_SCALES):
             bad.append(name)
     return bad
 
@@ -181,7 +209,9 @@ def adjudicate_program(quantity_spans: list, emission: dict, gold=None, toleranc
     quantity_spans: the item's declared quantity-bearing phrases (used or discarded must cover them).
     """
     facts = emission.get("facts", {})
-    fabrications = check_justification(facts)        # facts with no provenance at all
+    just = check_justification(facts)
+    fabrications = just["fabrications"]              # facts with NO provenance at all
+    surfaced_assumptions = just["surfaced_assumptions"]  # inferred+basis but LEAP — auditable, verify
     unfaithful = check_faithfulness(facts)           # facts whose value contradicts their cited span
     missing_coverage = check_coverage(quantity_spans, facts, emission.get("discarded", []))
     magic = magic_numbers(emission.get("program", ""))
@@ -194,16 +224,19 @@ def adjudicate_program(quantity_spans: list, emission: dict, gold=None, toleranc
     if gold is not None and isinstance(result, (int, float)):
         correct = abs(result - gold) <= max(tolerance, 1e-9)
 
-    # The error locus: where an auditor should look. Mis-extracted facts (value != cited bytes) are the
-    # usual culprit and are named explicitly; assumptions/LEAP inferences are the next place to look.
-    assumptions = [n for n, f in facts.items()
-                   if f.get("type") == "inferred" and f.get("entailment") != "ENTAILED"]
+    # The error locus: where an auditor should look, in order. A mis-extracted fact (value != cited
+    # bytes) or a fabrication is fixed first; a surfaced assumption is verified/overridden; an exec
+    # error points at the program.
     error_locus = {
-        "unfaithful_facts": unfaithful,      # value contradicts its own span -> fix here first
-        "assumptions": assumptions,          # inferred-but-not-entailed -> verify/override
-        "fabrications": fabrications,        # no provenance -> reject or ground
+        "unfaithful_facts": unfaithful,
+        "fabrications": fabrications,
+        "surfaced_assumptions": surfaced_assumptions,
         "exec_error": run["stderr"] or None,
     }
+    # AUDITABLE = nothing un-provenanced slipped through: no fabrication, no value-vs-span
+    # contradiction, no silently dropped quantity, no laundered magic number. A SURFACED ASSUMPTION
+    # does NOT break auditability — it is the audit working (flagged for human verification).
+    auditable = not (fabrications or unfaithful or missing_coverage or magic)
     return {
         "result": result,
         "exec_ok": run["exec_ok"],
@@ -211,9 +244,10 @@ def adjudicate_program(quantity_spans: list, emission: dict, gold=None, toleranc
         # provenance / auditability signals (the PRIMARY axis)
         "fabrications": fabrications,
         "unfaithful_facts": unfaithful,
+        "surfaced_assumptions": surfaced_assumptions,
         "missing_coverage": missing_coverage,
         "magic_numbers": magic,
-        "auditable": not fabrications and not missing_coverage and not magic,
+        "auditable": auditable,
         "error_locus": error_locus,          # when wrong, this names where to look + override
         # correctness is reported but SECONDARY
         "correct": correct,

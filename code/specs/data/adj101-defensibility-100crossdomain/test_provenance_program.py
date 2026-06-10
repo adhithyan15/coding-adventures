@@ -47,7 +47,25 @@ def test_fabricated_fact_flagged():
 def test_inferred_with_entailment_passes_justification():
     facts_inf = {**FACTS, "half_g": {"magnitude": 4.9, "type": "inferred",
                                      "basis_span": "9.8 m/s^2", "entailment": "ENTAILED"}}
-    assert P.check_justification(facts_inf) == []  # entailed + basis -> justified
+    j = P.check_justification(facts_inf)
+    assert j["fabrications"] == [] and j["surfaced_assumptions"] == []  # entailed + basis -> grounded
+
+
+def test_leap_inference_is_surfaced_assumption_not_fabrication():
+    facts_leap = {**FACTS, "ratio": {"magnitude": 1, "type": "inferred",
+                                     "basis_span": "carbon dioxide produced", "entailment": "LEAP"}}
+    j = P.check_justification(facts_leap)
+    assert j["fabrications"] == [] and j["surfaced_assumptions"] == ["ratio"]  # auditable, not fabricated
+
+
+def test_unit_converted_value_is_faithful():
+    # 4% typed as the fraction 0.04 must NOT be flagged unfaithful (the IR is unit-typed)
+    assert P.check_faithfulness({"rate": {"magnitude": 0.04, "type": "stated", "span": "4%"}}) == []
+
+
+def test_non_numeric_datum_not_flagged_unfaithful():
+    # a SMILES string fact is data, not a quantity -> not flagged when the string is in the span
+    assert P.check_faithfulness({"smiles": {"magnitude": "O=C=O", "type": "stated", "span": "SMILES O=C=O"}}) == []
 
 
 # --- the rescored paradigm for programs: WRONG is fine if it's localized + correctable -------------

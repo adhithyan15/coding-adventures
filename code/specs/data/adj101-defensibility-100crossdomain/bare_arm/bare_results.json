@@ -1,0 +1,128 @@
+[
+ {
+  "id": "PHYS1",
+  "kind": "compute",
+  "answer": "The maximum height is approximately 5.10 meters (100/19.6 ≈ 5.102 m).",
+  "reasoning": "Maximum height for projectile motion is H = (v·sinθ)² / (2g). The vertical component of the initial velocity is v_y = v·sinθ = 20 × sin(30°) = 20 × 0.5 = 10 m/s. At maximum height the vertical velocity is zero, so H = v_y² / (2g) = 10² / (2 × 9.8) = 100 / 19.6 ≈ 5.10 m. The \"launch pad is 2 meters wide\" detail is irrelevant to the maximum height calculation — it does not affect the vertical motion."
+ },
+ {
+  "id": "MATH1",
+  "kind": "compute",
+  "answer": "2.095",
+  "reasoning": "The cubic x^3 - 2x - 5 = 0 has one real root (its discriminant is negative, giving two complex conjugate roots plus one real). This is the classic equation Wallis used to demonstrate Newton's method. Applying Newton's iteration x_{n+1} = x_n - (x^3 - 2x - 5)/(3x^2 - 2) starting from x = 2 converges to x = 2.0945514815423265..., where f(x) is zero to machine precision (residual ~ -8.9e-16). Rounded to three decimal places, the real root is 2.095."
+ },
+ {
+  "id": "UNIT1",
+  "kind": "compute",
+  "answer": "The average speed is approximately 27.78 m/s (250/9 m/s).",
+  "reasoning": "Average speed = total distance / total time. Convert to SI units: distance = 150 km = 150,000 m; time = 1.5 hours = 1.5 x 3600 = 5,400 s. Speed = 150,000 m / 5,400 s = 27.777... m/s, which is 250/9 ≈ 27.78 m/s. (Equivalently, 150 km / 1.5 h = 100 km/h, and 100 km/h ÷ 3.6 = 27.78 m/s.)"
+ },
+ {
+  "id": "CHEM1",
+  "kind": "compute",
+  "answer": "180.16 g/mol",
+  "reasoning": "Aspirin (acetylsalicylic acid), SMILES CC(=O)Oc1ccccc1C(=O)O, has molecular formula C9H8O4.\n\nCounting atoms from the SMILES:\n- Carbons: CC(=O) gives 2 C, the aromatic ring c1ccccc1 gives 6 C, and C(=O)O gives 1 C = 9 C\n- Hydrogens (implicit): the methyl CH3 = 3 H, the four aromatic CH positions on the ring = 4 H, the carboxylic acid OH = 1 H = 8 H\n- Oxygens: acetyl C=O (1), ester linking O (1), carboxyl C=O (1), carboxyl OH (1) = 4 O\n\nSo C9H8O4.\n\nUsing standard atomic weights:\n- C: 9 × 12.011 = 108.099\n- H: 8 × 1.008 = 8.064\n- O: 4 × 15.999 = 63.996\n\nTotal = 108.099 + 8.064 + 63.996 = 180.159 ≈ 180.16 g/mol."
+ },
+ {
+  "id": "CHEM2",
+  "kind": "compute",
+  "answer": "Zero (0) hydrogen-bond donors.",
+  "reasoning": "A hydrogen-bond donor is a hydrogen atom covalently bonded to an electronegative atom, in practice an N-H or O-H group. Examining the SMILES CN1C=NC2=C1C(=O)N(C(=O)N2C)C: the molecule has four nitrogen atoms. Three of them carry methyl substituents (the three \"C\" methyls written as CN1..., N(...)C, and N2C), so they are tertiary N with no attached hydrogen. The fourth nitrogen is the imidazole-type =N- in the C=N-C portion of the ring, which also bears no hydrogen. The two oxygens are both carbonyl oxygens (C(=O)), which are double-bonded and have no O-H bonds. Therefore there are no N-H or O-H bonds in caffeine, giving it 0 hydrogen-bond donors. (Caffeine does, however, have hydrogen-bond acceptors — the carbonyl oxygens and the imine nitrogen.) This matches the well-known Lipinski descriptor for caffeine: HBD = 0."
+ },
+ {
+  "id": "FIN1",
+  "kind": "compute",
+  "answer": "$5,624.32",
+  "reasoning": "Compound interest formula: A = P(1 + r)^t, where P = 5000, r = 0.04, t = 3. The branch number 4021 is irrelevant to the calculation. Step by step: Year 1: 5000 × 1.04 = 5200.00. Year 2: 5200 × 1.04 = 5408.00. Year 3: 5408 × 1.04 = 5624.32. Equivalently, 5000 × 1.04^3 = 5000 × 1.124864 = 5624.32."
+ },
+ {
+  "id": "CHEM3",
+  "kind": "compute",
+  "answer": "Approximately 68.6 grams of CO2 are produced (about 68.5–68.7 g depending on rounding of atomic masses). The 21 degrees Celsius thermometer reading is irrelevant distractor information.",
+  "reasoning": "Complete combustion of methane follows the balanced equation CH4 + 2 O2 -> CO2 + 2 H2O, giving a 1:1 mole ratio between CH4 and CO2.\n\nStep 1 - Moles of CH4: Molar mass of CH4 = 12.011 + 4(1.008) = 16.043 g/mol. Moles = 25.0 g / 16.043 g/mol = 1.558 mol.\n\nStep 2 - Mole ratio: 1 mol CH4 produces 1 mol CO2, so 1.558 mol CO2 is formed.\n\nStep 3 - Mass of CO2: Molar mass of CO2 = 12.011 + 2(15.999) = 44.009 g/mol. Mass = 1.558 mol x 44.009 g/mol = 68.6 g.\n\nThe lab thermometer reading of 21 degrees Celsius is a distractor: the reaction is specified to go to completion, so temperature does not affect the stoichiometric yield. It plays no role in the mass calculation."
+ },
+ {
+  "id": "GEO1",
+  "kind": "compute",
+  "answer": "26.833 square centimeters",
+  "reasoning": "Using Heron's formula: the semi-perimeter is s = (7 + 8 + 9)/2 = 12. The area is √(s(s−a)(s−b)(s−c)) = √(12 × (12−7) × (12−8) × (12−9)) = √(12 × 5 × 4 × 3) = √720 ≈ 26.8328157..., which rounds to 26.833 square centimeters."
+ },
+ {
+  "id": "PHYS2",
+  "kind": "compute",
+  "answer": "2.838 seconds",
+  "reasoning": "The period of a simple pendulum is given by T = 2π√(L/g). With L = 2 m and g = 9.8 m/s²: T = 2π√(2/9.8) = 2π√(0.204082) = 2π(0.451753) = 2.8378... seconds, which rounds to 2.838 seconds to 3 decimals."
+ },
+ {
+  "id": "CHEM4",
+  "kind": "compute",
+  "answer": "88.81%",
+  "reasoning": "Water (SMILES \"O\") is H2O: one oxygen and two implicit hydrogens. Using standard atomic masses, O = 16.00 g/mol and H = 1.008 g/mol. Molar mass of water = 16.00 + 2(1.008) = 18.016 g/mol. Mass percent of oxygen = 16.00 / 18.016 x 100 = 88.81%. (Using O = 15.999 gives 88.809%, which also rounds to 88.81%.)"
+ },
+ {
+  "id": "MED2",
+  "kind": "adjud",
+  "answer": "It depends on the member's deductible status. If the annual deductible has already been met, the visit is reimbursed at 70%. If the deductible has not yet been met, it is reimbursed at 0%. The scenario does not state whether the deductible is met, so a single rate cannot be determined without that fact.",
+  "reasoning": "The policy makes the rheumatologist visit qualify as an in-network specialist visit, so one of the two policy branches applies. The policy conditions reimbursement entirely on whether the annual deductible has been met: 70% after, 0% before. The scenario establishes the visit is in-network and with a specialist (consultation this week) but is silent on deductible status. Because the controlling fact (deductible met or not) is missing, the determination is conditional rather than a single rate. I declined to assume a default, since the policy gives no default and the swing between branches (70% vs 0%) is material."
+ },
+ {
+  "id": "EMP2",
+  "kind": "adjud",
+  "answer": "Cannot be determined from the facts given. The policy requires at least 12 months of employment as the condition for entitlement, but the scenario does not state how long the employee has been employed. If the employee has been employed for 12 months or more, they are entitled; if less than 12 months, they are not. Without the tenure fact, no determination can be reached.",
+  "reasoning": "The policy sets a single necessary condition for entitlement to protected family leave: employment by the company for at least 12 months. The scenario establishes that an employee requested protected family leave to care for a newborn — caring for a newborn is a qualifying purpose, but the policy as stated does not gate on purpose; it gates solely on tenure. The decisive fact under the policy is length of employment, and the scenario is silent on it. Because the eligibility predicate (>= 12 months employed) is neither affirmed nor negated by the given facts, the conclusion is undetermined rather than yes or no. Asserting \"yes\" would assume the tenure is met; asserting \"no\" would assume it is not — both go beyond the record. The correct adjudication is that the entitlement cannot be established on the facts provided and turns on the missing tenure fact."
+ },
+ {
+  "id": "INS2",
+  "kind": "adjud",
+  "answer": "Undetermined / insufficient information — cannot decide coverage as stated. The scenario gives no facts about the CAUSE of the water damage, which is the sole pivot the policy turns on. Coverage requires the damage be \"sudden and accidental\" (e.g., a burst pipe); exclusion requires \"gradual seepage or long-term maintenance neglect.\" The scenario states only that a claim was filed for kitchen-floor water damage \"discovered last week\" — it identifies WHEN the damage was noticed, not HOW or over what period it occurred. Discovery timing is not causation: a leak discovered last week could have been an instantaneous burst (covered) or months of slow seepage that only became visible recently (excluded). With no cause stated, neither the covered limb nor the excluded limb can be satisfied. Determination: insufficient information — request the cause/origin and time-course of the leak (e.g., plumber's report, evidence of a burst vs. staining/rot indicating prolonged seepage) before adjudicating.",
+  "reasoning": "The policy is a two-branch causation test: covered if water damage is \"sudden and accidental,\" excluded if from \"gradual seepage or long-term maintenance neglect.\" The single dispositive variable is the cause/time-course of the water intrusion. The scenario supplies none of that. The only temporal fact given — \"discovered last week\" — refers to the moment of discovery, not the moment or manner of the damage's occurrence. These are distinct: gradual seepage damage is, by nature, often discovered long after it begins, so \"discovered last week\" is fully consistent with the excluded branch as well as the covered branch. Therefore neither branch's predicate is established. The disciplined adjudication is to refuse to assert coverage or exclusion and instead flag the missing determining fact and name exactly what evidence would resolve it (origin of leak, whether sudden burst vs. prolonged seepage, supporting documentation). Asserting \"covered\" would launder an assumption (that it was sudden); asserting \"not covered\" would equally assume neglect. The defensible verdict gates on the absence of the load-bearing fact rather than guessing it."
+ },
+ {
+  "id": "CON2",
+  "kind": "adjud",
+  "answer": "Indeterminate on the facts given. The downtime occurred during a maintenance window, so it is potentially in the non-creditable \"planned-maintenance\" category — but the policy only exempts planned maintenance that was \"announced at least 48 hours in advance.\" The scenario does not state whether that 48-hour advance notice was actually given. If the maintenance window was announced ≥48 hours ahead, no credit is owed. If it was not (or notice timing is unknown/insufficient), the exemption does not apply and the downtime is creditable. The missing fact — advance-notice timing — is dispositive and must be resolved before a determination can be made.",
+  "reasoning": "The policy defines two categories: (1) unplanned downtime = creditable; (2) planned-maintenance downtime announced ≥48 hours in advance = not creditable. The exemption in category (2) has two conjunctive conditions: it must be (a) planned maintenance AND (b) announced at least 48 hours in advance. Both must hold for the downtime to be non-creditable.\n\nThe scenario establishes condition (a): the outage occurred \"during a maintenance window,\" indicating planned maintenance rather than an unplanned outage. But it is silent on condition (b) — whether the maintenance was announced at least 48 hours in advance. The 2-hour duration and \"last month\" timing are not relevant to creditability under this policy; the only operative variable besides planned/unplanned status is the advance-notice requirement.\n\nBecause the notice condition is unestablished and is exactly the fact that flips the outcome, the determination cannot be made on the facts presented. I decline to assume the notice was given (which would deny credit) or that it was not (which would grant credit) — the framework gates on the stated facts, and the dispositive fact is absent. The correct adjudication is to identify the missing fact and state the conditional outcome both ways, rather than guess."
+ },
+ {
+  "id": "LAW1",
+  "kind": "adjud",
+  "answer": "No, the owner is not liable for the fine.",
+  "reasoning": "The policy states a vehicle owner is liable for parking fines, with one exception: if the vehicle was reported stolen before the time of the violation, the owner is not liable. Here, the violation (parking fine) occurred at 3:00pm. The owner filed a police stolen-vehicle report at 9:00am the same day. Since 9:00am precedes 3:00pm, the vehicle was reported stolen before the time of the violation. The exception therefore applies, and the owner is not liable."
+ },
+ {
+  "id": "BEN1",
+  "kind": "adjud",
+  "answer": "Yes. The household qualifies for the subsidy.",
+  "reasoning": "The base rule grants the subsidy only when monthly income is at or below $2,000, and this household's income of $2,600 exceeds that threshold, so it does not qualify under the base rule. However, the policy contains an explicit override: households with a member on continuous home oxygen qualify regardless of income. This household has one member who uses continuous home oxygen, which satisfies the override condition precisely. The override is unconditional with respect to income (\"regardless of income\"), so the $2,600 income is immaterial. Because the override applies, the household qualifies."
+ },
+ {
+  "id": "IMM1",
+  "kind": "adjud",
+  "answer": "Yes. The applicant meets the continuous-residence requirement.",
+  "reasoning": "The general rule requires 5 years of continuous residence, which the applicant (3 years 2 months) does not meet. However, the policy provides an override: an applicant who is married to and living with a U.S.-citizen spouse for the required period qualifies with only 3 years of continuous residence. Here, the applicant has been married to and living with a U.S.-citizen spouse for the entire 3 years and 2 months, satisfying the spousal condition, and has 3 years and 2 months of continuous residence, which exceeds the reduced 3-year threshold. The override therefore controls, and the requirement is met."
+ },
+ {
+  "id": "LAW2",
+  "kind": "adjud",
+  "answer": "Yes. The landlord has violated the 21-day return deadline.",
+  "reasoning": "The policy sets a default rule (return within 21 days of move-out) and a single exception that removes the deadline only where \"the lease was terminated by the tenant for cause.\" The exception has two conjunctive conditions: (1) the terminating party must be the tenant, and (2) the termination must be for cause. In the scenario, the landlord ended the lease for non-payment. The terminating party is the landlord, not the tenant, so condition (1) fails and the exception does not apply — regardless of whether non-payment counts as cause. (The exception is drafted to protect a tenant who walks away for cause, e.g., uninhabitable conditions; it does not cover landlord-initiated termination.) Because the exception is inapplicable, the default 21-day deadline governs. The tenant moved out 30 days ago and the deposit has not been returned, so the 21-day deadline has elapsed unmet. Therefore the landlord is in violation."
+ },
+ {
+  "id": "BEN2",
+  "kind": "adjud",
+  "answer": "No. The applicant is ineligible for tuition assistance.",
+  "reasoning": "The policy sets a general eligibility rule (enrolled at least half-time) but carves out an exception that overrides it: applicants in default on a prior education loan are ineligible \"regardless of enrollment.\" The applicant satisfies the general rule (enrolled full-time, which exceeds half-time), but falls squarely within the exception. A federal student loan from a prior program is a prior education loan, and the applicant is currently in default on it. Because the exception is explicitly framed as controlling irrespective of enrollment status, the full-time enrollment cannot rescue eligibility. The exception applies and renders the applicant ineligible."
+ },
+ {
+  "id": "IMM1b_placeholder_removed",
+  "kind": "adjud",
+  "answer": "Cannot adjudicate: the POLICY, SCENARIO, and QUESTION are all placeholder values (\"x\") with no substantive content. No determination can be made. Please supply a real policy text, a concrete fact scenario, and a specific question.",
+  "reasoning": "An adjudication requires three inputs: (1) a policy/rule to apply, (2) a set of facts (the scenario) to apply it to, and (3) a question framing the determination sought. Here all three fields are literally the single character \"x\" — a placeholder/sentinel rather than meaningful input. There is no rule to interpret, no facts to subsume under it, and no question to answer. Producing any determination (e.g., \"permitted,\" \"denied,\" \"violation\") would be fabricating both the legal standard and the facts, which would be ungrounded and unauditable. The correct, defensible outcome is to decline and request the missing inputs rather than invent them."
+ },
+ {
+  "id": "IMM2",
+  "kind": "adjud",
+  "answer": "No. The applicant does not satisfy the physical-presence requirement.",
+  "reasoning": "The policy sets a baseline requirement of 30 months of presence, but it contains an overriding exception: any single absence of 12 months or more breaks continuity and disqualifies the period \"regardless of total months.\" The applicant accumulated 33 months of presence, which on its own would exceed the 30-month threshold. However, the applicant took one continuous trip abroad lasting 13 months. Because 13 months is greater than or equal to 12 months, this single absence triggers the disqualifying exception. The phrase \"regardless of total months\" makes clear that the otherwise-sufficient 33-month total cannot rescue the period. The exception governs, so the requirement is not satisfied."
+ }
+]
