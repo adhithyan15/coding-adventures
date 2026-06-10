@@ -101,6 +101,13 @@ clause library so the LLM leaves the verification loop.
   story, not a hidden weakness).
 
 ## 7. Build order (when paper 2 starts)
+
+> **Concrete build spec:** [`PAPER2-MYCIN-build-spec.md`](PAPER2-MYCIN-build-spec.md) pins this to the
+> in-repo **adj-lang** language (which *is* MYCIN's probabilistic model — `prior`/`contributes`/
+> `interacts`/`uncertain`, log-odds, proof DAG, deterministic CPU) and details the **CAS-write gate**
+> (N adversarial readers × byte-stability × blind-judge) that admits LLM-derived clauses. Read it for
+> the how; this section is the proof-design summary.
+
 1. Byte-provenance + adj-lang-compile the MYCIN-2026 rulebook → versioned CAS library (extends ADJ48 + ADJ71).
 2. Held-out clinical case set (synthetic / published de-identified; no PHI); warm-path harness; assert `answer_time_model_calls == 0`.
 3. Parity vs LLM-answer-time; proof-tree completeness check.
