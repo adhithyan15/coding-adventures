@@ -1,0 +1,20 @@
+{
+ "_doc": "Recurring-cost experiment. ONE policy with a buried, counterintuitive OVERRIDE that beats the headline rule. Every case hinges on the SAME shared fact (the override). The default rule cues ENTITLED (distance > 50 mi, stated prominently); the override quietly flips it to NOT_ENTITLED when the destination is a property the employee already owned. Fast prose reasoning anchors on the prominent distance and misses the buried override — and because each answer is a stateless call, that error RECURS on every case with no way to install a durable fix. The framework encodes the override as a rule ONCE; the engine then decides every case (present + held-out) deterministically at zero answer-time model calls.",
+ "policy": "Relocation Bonus Policy.\nSection 1. An employee who relocates their primary residence more than 50 miles closer to their assigned work site is entitled to the relocation bonus.\nSection 2. Override: The relocation bonus does not apply when the destination residence is a property the employee (or their spouse) already owned at the time the role was offered. This self-owned-destination exclusion applies regardless of distance.",
+ "question": "Is the employee entitled to the relocation bonus? Answer ENTITLED or NOT_ENTITLED.",
+ "shared_fact": "destination_already_owned (the Section 2 override) is dispositive in every override case and beats the Section 1 distance rule.",
+ "slots_schema": {
+  "relocation_distance_miles": "numeric — miles relocated closer to the work site",
+  "destination_already_owned": "true/false — did the employee (or spouse) already own the destination residence when the role was offered"
+ },
+ "cases": [
+  {"id": "OV-1", "kind": "override", "scenario": "Dana accepted a new assignment and relocated her primary residence 120 miles closer to the work site. She moved into a lakeside house that she has personally owned since 2019.", "facts": {"relocation_distance_miles": 120, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "OV-2", "kind": "override", "scenario": "Marcus took the role and moved his household 75 miles closer to the office. The destination is a condominium he inherited and has held title to for the past six years.", "facts": {"relocation_distance_miles": 75, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "OV-3", "kind": "override", "scenario": "Priya relocated 210 miles closer to her assigned site when she was offered the position. She and her spouse moved into a family home the two of them have owned jointly for years.", "facts": {"relocation_distance_miles": 210, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "OV-4", "kind": "override", "scenario": "When offered the role, Lou moved 95 miles closer to work. He settled into a cabin he purchased back in 2017.", "facts": {"relocation_distance_miles": 95, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "OV-5", "kind": "override", "scenario": "Aisha relocated her primary residence 140 miles closer to the new work site. The townhouse she moved into is one she has owned for a decade.", "facts": {"relocation_distance_miles": 140, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "OV-6", "kind": "override", "scenario": "Ben moved 60 miles closer to his assigned site upon accepting the offer, into a duplex that he owns.", "facts": {"relocation_distance_miles": 60, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "HO-1", "kind": "held_out_override", "scenario": "Sofia relocated 80 miles closer to her work site when offered the role, moving into a beach condominium she already owned at the time.", "facts": {"relocation_distance_miles": 80, "destination_already_owned": true}, "gold": "NOT_ENTITLED"},
+  {"id": "HO-2", "kind": "control_not_owned", "scenario": "Theo relocated 90 miles closer to the office for his new assignment. He signed a brand-new lease on an apartment there; he owns no property at the destination.", "facts": {"relocation_distance_miles": 90, "destination_already_owned": false}, "gold": "ENTITLED"}
+ ]
+}

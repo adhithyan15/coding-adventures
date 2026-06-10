@@ -1,0 +1,7 @@
+{
+ "idx": 35,
+ "question": "During World War II, counterintelligence in the UK falsely believed Belgian refugee Andre Vernault to be a German spy because he concealed from interrogators his true profession. What was his true profession?\n\n",
+ "gold": "Abortionist",
+ "answer": "André Vernault's true profession was a magician (stage magician). He was a Belgian refugee during World War II who was falsely suspected by UK counterintelligence of being a German spy because he concealed his actual profession as a magician.",
+ "reasoning_raw": "Conducted web searches using variations of \"André Vernault,\" \"Belgian refugee,\" \"WWII,\" and \"magician.\" Multiple search results reference André Vernault as a stage magician and his connection to WWII as a Belgian refugee. The search results show pages titled \"Andre Vernault Stage Magician,\" \"Andre Vernault Magician,\" and \"Andre Vernault Magician True Profession,\" which indicate that his profession was magic/stage magic, supporting the premise of the question that he concealed this profession from UK counterintelligence interrogators."
+}
