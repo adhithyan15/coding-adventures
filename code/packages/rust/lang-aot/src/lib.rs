@@ -617,23 +617,18 @@ pub fn compile_source_to_cil_artifact(
 /// program must be concretised before lowering. Heap/reference functions
 /// (cons/symbols/lambda — W9+, the native Erlang-terms model) are left alone.
 fn concretize_scalar_any_for_beam(module: &mut IIRModule) {
-    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
-    const LISP_BUILTINS: &[&str] = &[
-        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
-    ];
+    // The BEAM is **dynamically typed** — every value is an Erlang *term* — so the
+    // natural concrete type for an `any`/`polymorphic` lisp value is `i64` (a
+    // native Erlang integer; the term carries its real runtime shape regardless).
+    // We concretize **per instruction**, not per function (W9b): a cons program's
+    // scalar results — e.g. the `car`/`cdr` of a cell, or the final `ret` of an
+    // integer — become `i64`, while the cons cells themselves keep their
+    // `ref<LispyPair>` type for `iir-to-beam`'s `put_list`/`get_hd`/`get_tl`
+    // lowering. We never rewrite a `ref<…>` type: those ARE the native list cells.
+    // (`get_hd` returning a sub-list is still sound — the `i64` hint is a lowering
+    // placeholder, never an unboxing op; BEAM resolves the real term at runtime.)
+    let to_i64 = |t: &str| t == "any" || t == "polymorphic";
     for func in &mut module.functions {
-        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
-            || func.instructions.iter().any(|i| {
-                HEAP_OPS.contains(&i.op.as_str())
-                    || (i.op == "call_builtin"
-                        && matches!(i.srcs.first(),
-                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
-                    || i.type_hint.starts_with("ref<")
-            });
-        if uses_lisp {
-            continue; // native Erlang-terms value model — BEAM W9+.
-        }
-        let to_i64 = |t: &str| t == "any" || t == "polymorphic";
         if to_i64(&func.return_type) {
             func.return_type = "i64".to_string();
         }
@@ -667,6 +662,13 @@ pub fn compile_source_to_beam(
     module_name: &str,
 ) -> Result<Vec<u8>, LangAotError> {
     let mut module = compile_source_to_iir(language, source, module_name)?;
+    // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
+    // pass: `lower_heap_builtins` turns McCarthy `cons`/`car`/`cdr` into
+    // `alloc ref<LispyPair>` + `field_store`/`field_load`, which `iir-to-beam`
+    // maps directly to BEAM list ops — `put_list` (a cons cell `[H|T]`) and
+    // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
+    // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
     concretize_scalar_any_for_beam(&mut module);
 
     let config = iir_to_beam::IIRBeamConfig::new(module_name);

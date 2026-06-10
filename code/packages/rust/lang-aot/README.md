@@ -44,10 +44,14 @@ its own method, applied via `call <MethodDef>`, and run on `clr-simulator` 0.4.0
 inter-method call-frame model. The CLR is the third managed backend to reach full
 McCarthy support after WASM and JVM.
 
-`compile_source_to_beam` is the fourth managed target and the first on the
-**Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real
-`erl` (OTP), `42` → 42. BEAM uses the native Erlang-terms value model
-(integers/atoms/list cells), so its cons/symbol/lambda lowering (W9+) is its own.
+`compile_source_to_beam` targets the **Erlang VM**: scalar McCarthy emits a
+`.beam` that **runs** on a real `erl` (OTP), `42` → 42 (W9a), and **cons** too —
+`(CAR (CONS 7 9))` → 7, `(CONS 7 9)` → `[7|9]` (W9b). BEAM uses the **native
+Erlang-terms** value model, NOT the boxing structural pass: a cons cell is a
+native list cell `[H|T]`, `car`/`cdr` are `hd`/`tl`, integers are native.
+`lower_heap_builtins` produces `alloc`/`field_*` that `iir-to-beam` maps to
+`put_list`/`get_hd`/`get_tl`. The remaining BEAM predicates/symbols/lambda
+(F3–F7) are W10–W11.
 
 ## Stack position
 
