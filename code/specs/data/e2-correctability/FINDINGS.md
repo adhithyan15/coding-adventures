@@ -30,6 +30,24 @@ framework writes the correction **once** into the CAS; every dependent case, pre
 inherits it for free. *Correctability ≠ localizability-by-reading; it is non-recurring cost.*
 (Cost model + curves: `cost_to_correct.json`.)
 
+### Empirically measured (`recurring_cost/`): recurring error is capability-graded, the framework erases it
+
+One policy with a buried **override** (the shared dispositive fact), 7 override cases + 1 control.
+Prose arm re-reasons the override on every stateless call; framework derives it into a byte-verified
+rule **once** then decides every case at **0 answer-time model calls**.
+
+| prose model | override correct | miss-rate | | framework (rule derived once) |
+|---|---|---|---|---|
+| qwen2.5:1.5b | **0/7** | **1.0** | | **7/7 + control, 0 answer-time calls** |
+| qwen2.5:0.5b | 3/7 | 0.57 | | (same rule, any model) |
+| qwen2.5:3b / llama3.1:8b / Haiku | 7/7 | 0.0 | | |
+
+- A **capable** model (Haiku, 3B+) re-derives the buried override correctly every call — so for it the
+  recurring cost is redundant work + lost determinism + *no place to store a correction*, not error.
+- A **sub-threshold** model (1.5B) misses the override on **all 7** cases (recurring error) — but the
+  **same 1.5B model through the framework is 7/7**. Capability paid once into the pipeline lifts a
+  cheap model above threshold: *intelligence accumulates in the framework, not the weights.*
+
 ## 1. The localize panel is a clean null
 
 96 cells = 48 matched **both-arms-wrong** items × {framework, plain}, drawn from the ADJ99 HLE

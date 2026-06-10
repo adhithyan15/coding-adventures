@@ -90,7 +90,12 @@ model = {
 # fold in the empirical prose recurrence if it has been run
 emp = os.path.join(HERE, "recurring_cost", "recurrence_results.json")
 if os.path.exists(emp):
-    model["prose_arm_recurrence_empirical"] = json.load(open(emp))
+    model["prose_arm_recurrence_empirical_haiku"] = json.load(open(emp))["summary"]
+weak = os.path.join(HERE, "recurring_cost", "recurrence_weak.json")
+if os.path.exists(weak):
+    w = json.load(open(weak))["summary"]
+    model["prose_arm_recurrence_empirical_weak_models"] = w["prose_arm_by_model"]
+    model["recurrence_capability_graded_finding"] = w["finding"]
 
 json.dump(model, open(os.path.join(HERE, "cost_to_correct.json"), "w"), indent=1)
 print(json.dumps(model, indent=1))
