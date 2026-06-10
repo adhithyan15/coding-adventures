@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.4.0] - 2026-06-10 — differential decision over `?` queries
+
+### Added
+
+- **`decide(&LoweredProgram) -> Differential`** and
+  **`compile_and_decide(src) -> Differential`** — treat a program's `? h`
+  query lines as the set of *competing hypotheses* and run the new
+  `logic_engine::differential` over them: rank by posterior, pick the
+  argmax, report the between-hypothesis margin, and kick back when an open
+  uncertainty could flip the ranking. A multi-`?` adj-lang program is now
+  directly a differential (the natural reading); a single-`?` program
+  yields a determinate single-hypothesis result. No grammar change — the
+  competing set is already expressible as multiple `?` lines.
+
 ## [0.3.0] - 2026-06-02 — grammar-driven frontend
 
 ### Changed
