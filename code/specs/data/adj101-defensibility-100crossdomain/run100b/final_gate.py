@@ -90,18 +90,18 @@ def n(p, rs):
 
 
 und = [r for r in rows if r["stratum"] == "underdetermined-baited"]
-clean = [r for r in rows if r["stratum"] == "clean-determinate"]
-# residual clean-determinate abstentions where the panel agrees the slot is LEAP => gold error, not gate error
-clean_abst = [r for r in clean if r["final"] != "DETERMINATE"]
-gold_errors = [r for r in clean_abst if r["nulled"]]  # abstained because a majority-LEAP slot was nulled
+det = [r for r in rows if r["stratum"] != "underdetermined-baited"]  # clean + override + exception
+# residual determinate-stratum abstentions where the panel agrees the slot is LEAP => gold error, not gate error
+det_abst = [r for r in det if r["final"] != "DETERMINATE"]
+gold_errors = [r for r in det_abst if r["nulled"]]  # abstained because a majority-LEAP slot was nulled
 
 summary = {
-    "verdict_match_vs_gold": {"baseline": "88/100", "blunt_gate": "74/100",
-                              "sensitivity_only": "82/100",
+    "corpus": "run100b (fresh, gold-vetted, 10 unseen domains)",
+    "verdict_match_vs_gold": {"baseline": "86/100", "blunt_gate(null any LEAP)": "see ENTAILMENT_GATE_FINDINGS",
                               "N-reader x sensitivity x precedence": f"{n(lambda r: r['final']==r['gold'], rows)}/100"},
     "underdetermined -> INDETERMINATE": f"{n(lambda r: r['final']=='INDETERMINATE', und)}/{len(und)}",
-    "clean-determinate -> DETERMINATE": f"{n(lambda r: r['final']=='DETERMINATE', clean)}/{len(clean)}",
-    "residual clean abstentions": [r["id"] for r in clean_abst],
+    "determinate strata -> DETERMINATE": f"{n(lambda r: r['final']=='DETERMINATE', det)}/{len(det)}",
+    "residual determinate-stratum abstentions": [r["id"] for r in det_abst],
     "...of which panel says the nulled slot IS unestablished (=> GOLD likely wrong, abstention correct)":
         [(r["id"], r["nulled"]) for r in gold_errors],
 }
