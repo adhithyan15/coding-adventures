@@ -87,6 +87,50 @@ def check_coverage(quantity_spans: list, facts: dict, discarded: list) -> list:
     return missing
 
 
+def check_faithfulness(facts: dict) -> list:
+    """Stated facts whose magnitude does NOT appear in their own cited span — a localized
+    mis-extraction. This is the workhorse of localizability: most wrong answers come from a fact
+    whose VALUE contradicts the BYTES it claims to come from, and the audit catches it at that exact
+    fact. (Distinct from a fabrication, which has no span at all.)"""
+    bad = []
+    for name, f in facts.items():
+        if f.get("type") != "stated":
+            continue
+        mag = f.get("magnitude")
+        span = f.get("span")
+        if mag is None or not span:
+            continue
+        span_vals = _numeric_values(span)
+        try:
+            if not any(abs(float(mag) - v) < 1e-9 for v in span_vals):
+                bad.append(name)
+        except (TypeError, ValueError):
+            bad.append(name)
+    return bad
+
+
+def _numeric_values(text: str) -> set:
+    out = set()
+    for m in _QTY.finditer(text or ""):
+        try:
+            out.add(float(m.group(0).replace(",", "")))
+        except ValueError:
+            pass
+    return out
+
+
+def override_facts(emission: dict, overrides: dict) -> dict:
+    """Return a corrected emission with named facts' magnitudes overridden — the 'fix the fact, not
+    the weight' move. Re-running adjudicate_program on the result re-derives with ZERO model calls."""
+    facts = json.loads(json.dumps(emission.get("facts", {})))  # deep copy
+    for name, new_mag in overrides.items():
+        if name in facts:
+            facts[name]["magnitude"] = new_mag
+            facts[name].setdefault("_override", {})["from"] = emission["facts"][name].get("magnitude")
+            facts[name]["_override"]["to"] = new_mag
+    return {**emission, "facts": facts}
+
+
 def magic_numbers(program: str) -> list:
     """Numeric literals in the program that are not allowed structural constants -> un-provenanced inputs."""
     out = []
@@ -137,22 +181,41 @@ def adjudicate_program(quantity_spans: list, emission: dict, gold=None, toleranc
     quantity_spans: the item's declared quantity-bearing phrases (used or discarded must cover them).
     """
     facts = emission.get("facts", {})
-    fabrications = check_justification(facts)
+    fabrications = check_justification(facts)        # facts with no provenance at all
+    unfaithful = check_faithfulness(facts)           # facts whose value contradicts their cited span
     missing_coverage = check_coverage(quantity_spans, facts, emission.get("discarded", []))
     magic = magic_numbers(emission.get("program", ""))
     run = execute(emission.get("program", ""), facts)
     result = run["result"]
+
+    # Correctness is INFORMATIONAL in the rescored paradigm, not the target. The target is whether the
+    # trail is auditable and the error, when present, is localized + correctable.
     correct = None
     if gold is not None and isinstance(result, (int, float)):
         correct = abs(result - gold) <= max(tolerance, 1e-9)
+
+    # The error locus: where an auditor should look. Mis-extracted facts (value != cited bytes) are the
+    # usual culprit and are named explicitly; assumptions/LEAP inferences are the next place to look.
+    assumptions = [n for n, f in facts.items()
+                   if f.get("type") == "inferred" and f.get("entailment") != "ENTAILED"]
+    error_locus = {
+        "unfaithful_facts": unfaithful,      # value contradicts its own span -> fix here first
+        "assumptions": assumptions,          # inferred-but-not-entailed -> verify/override
+        "fabrications": fabrications,        # no provenance -> reject or ground
+        "exec_error": run["stderr"] or None,
+    }
     return {
         "result": result,
         "exec_ok": run["exec_ok"],
         "stderr": run["stderr"],
-        "fabrications": fabrications,            # facts lacking provenance
-        "missing_coverage": missing_coverage,    # source quantities silently dropped
-        "magic_numbers": magic,                  # un-provenanced numeric literals in the program
-        "provenance_clean": not fabrications and not missing_coverage and not magic,
+        # provenance / auditability signals (the PRIMARY axis)
+        "fabrications": fabrications,
+        "unfaithful_facts": unfaithful,
+        "missing_coverage": missing_coverage,
+        "magic_numbers": magic,
+        "auditable": not fabrications and not missing_coverage and not magic,
+        "error_locus": error_locus,          # when wrong, this names where to look + override
+        # correctness is reported but SECONDARY
         "correct": correct,
     }
 
