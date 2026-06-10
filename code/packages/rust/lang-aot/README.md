@@ -52,8 +52,12 @@ native list cell `[H|T]`, `car`/`cdr` are `hd`/`tl`, integers are native.
 `lower_heap_builtins` produces `alloc`/`field_*` that `iir-to-beam` maps to
 `put_list`/`get_hd`/`get_tl`. Its **predicates** run too (W10, F3–F5):
 `(ATOM 7)`→1, `(EQ 7 7)`→1, `(COND …)` — `pair?`→`is_nonempty_list`,
-`equal?`→`is_eq_exact` (`=:=`), `not`→`x==0`. The remaining BEAM symbols + lambda
-(F6–F7) are W11.
+`equal?`→`is_eq_exact` (`=:=`), `not`→`x==0`. **Symbols + lambda** (W11, F6–F7)
+**complete the BEAM backend (F1–F7):** `(QUOTE A)`→536870912 (the shared
+`intern_symbols_structural` id, same as the other backends), and
+`((LAMBDA (X) (CAR X)) (CONS 7 9))`→7 — lambda needed no BEAM-specific work (a
+`(LAMBDA …)` application is a method `call`, already lowered as a BEAM fun). The
+BEAM is the fifth backend to reach full McCarthy support after VM, WASM, JVM, CLR.
 
 ## Stack position
 

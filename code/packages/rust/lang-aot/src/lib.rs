@@ -669,6 +669,14 @@ pub fn compile_source_to_beam(
     // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
     // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
+    // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,
+    // and `EQ` on symbols becomes integer equality (`is_eq_exact`). We use the
+    // SAME structural interning the wasm/JVM/CLR backends use, so a given symbol
+    // gets the SAME id on every "intern-to-integer" backend (it matters for the
+    // cross-backend conformance suite). Lambda (F7) needs nothing extra — it is
+    // already a method `call`, which `iir-to-beam` lowers natively (a BEAM fun).
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
     concretize_scalar_any_for_beam(&mut module);
 
     let config = iir_to_beam::IIRBeamConfig::new(module_name);
