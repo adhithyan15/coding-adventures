@@ -411,3 +411,12 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `(function(){return 42;}());`
 - **Upstream:** `(function(){return 42})();` (call moves outside the wrapping parens)
 - **Fix:** Token-stream pre-pass: scan kept for the 4-token sequence `} ( ) )` and rotate `[i+1..=i+3]` right by 1 to reorder to `} ) ( )`. Safe-by-construction — this token sequence can only appear in IIFE contexts in valid JS.
+
+### gap-052 — trailing `;` after `}` at EOF for control-flow / label-block bodies
+
+- **Status:** OPEN — newly discovered by CLOC14.18.
+- **Upstream byte-identity tests:** `minify_labeled_block`, `minify_double_break_continue` seed fixtures.
+- **Input:** `for(;;){if(x)break;if(y)continue;use();}` and `foo:{a();break foo;b();}`
+- **Upstream:** Same with trailing `;`.
+- **Why it fails:** gap-030's trailing-`;` rule only fires for function-decl `}`, class `}`, switch `}`, and try-chain endings. Upstream also emits `;` after for-body `}`, while-body `}`, label-block `}`, etc.
+- **What it needs:** Extend gap-030's `kind_wants_semi` decision: `BlockKind::Other` at EOF (and not at_stmt_keyword via gap-047) should also want a `;`. Currently `Other` returns false unconditionally; needs an EOF-context check.
