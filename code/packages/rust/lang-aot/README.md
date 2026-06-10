@@ -27,6 +27,11 @@ the JVM `ldc` constant-pool path. And `LAMBDA`/`LABEL`/recursion (W5b):
 `((LAMBDA (X) X) 5)` → 5, a recursive `LABEL` → 99. **The JVM backend is now
 McCarthy-complete (F1–F7)** — the second managed backend after WASM.
 
+`compile_source_to_cil_artifact` is the third managed target (W6a): scalar
+McCarthy emits CIL that **runs** — verified on the in-repo `clr-simulator`
+(`42` → 42), no external `dotnet`. The CLR cons/symbol/lambda value model
+(uniform-`object`, reusing the JVM strict-backend fixes) is W6b+.
+
 ## Stack position
 
 ```
