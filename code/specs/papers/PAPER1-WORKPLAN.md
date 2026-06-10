@@ -10,13 +10,17 @@
 The skeleton's `#47–#50` task pointers are **stale** (they resolve to unrelated merged feature
 PRs, not these experiments). Real status, mapped to the ADJ corpus:
 
+> **Update 2026-06-10:** all four experiments now have their load-bearing data. E2 ran (and was
+> reframed — see below); the 200-item benchmark (run100 + run100b) landed for E3; E4's cross-judge
+> completed. The only deferred item is E1's frontier ablation tier (H4), now in Limitations.
+
 | # | experiment | real status | evidence on disk | what's left |
 |---|---|---|---|---|
 | E0 | two worked HLE runs (Palmyrene stable-error; hummingbird unstable-gap) | **DONE** | ADJ72 | — |
-| E1 | mechanistic ablation — *justified-discards is the lever* | **PILOT done, mixed** | `adj73-omission-ablation/` | confirmatory run + **abstention gate** (W4) |
-| E2 | correction-loop — *localize → fix → persist; framework vs prose* | **parts only** | ADJ96/97/98, ADJ99 audit-trail, ADJ-CAS edit-override (`8ca017932`) | assemble the **head-to-head cost-to-correct study** (W2) — *the headline* |
-| E3 | cross-domain matrix — *same machinery, only the rulebook changes* | **data scattered** | ADJ49/56/59/70/71 + clinical demo | single **consolidated results artifact** (W3) |
-| E4 | HLE/defensibility screening harness — *blind controls; correctness + defensibility + error bars; cross-model byte-stability* | **data in; metric just corrected** | ADJ87–100; rescore PR #5261 | **cross-judge robustness** pass + adopt corrected rubric (W5) |
+| E1 | mechanistic ablation — *justified-discards is the lever* | **PILOT + at-scale corroboration** | `adj73-omission-ablation/` (lever ≤3B); abstention via E3 benchmark; capability-floor via E2 | H4 frontier tier → **Limitations** (E1 §8); no blocking run |
+| E2 | cost-to-correct, framework vs prose — *the headline* | **DONE** | `e2-correctability/` (localize null; fix/propagate + recurrence win; cost_to_correct.json) | — (manuscript prose) |
+| E3 | cross-domain matrix — *same machinery, only the rulebook changes* | **DONE** | 200-item benchmark (run100 + run100b) + ADJ49/56/59/70/71 ballast | — (optional figure) |
+| E4 | HLE/defensibility screening harness | **DONE** | ADJ99 rescore (PR #5261) + Sonnet cross-judge (`w5-crossjudge/`) | — |
 
 ## What the ADJ99 rescore (PR #5261) changed for the paper
 
@@ -34,20 +38,21 @@ Consequences for the manuscript:
 - It is still **single-judge** (n=1/cell). Not load-bearing until a second, ideally non-Opus,
   judge reproduces the direction → W5.
 
-## Remaining work items (one PR each)
+## Work items — all complete
 
-| id | item | kind | depends on | priority |
-|---|---|---|---|---|
-| **W1** | this doc + skeleton refresh | docs | — | done-in-this-PR |
-| **W2** | E2 correctability head-to-head **spec** | spec | — | **P0 (headline)** |
-| **W3** | E3 cross-domain **consolidation** writeup | analysis (existing data) | — | P1 |
-| **W4** | E1 confirmatory ablation + abstention-gate **spec** | spec | — | P1 |
-| **W5** | E4 **cross-judge robustness** run (non-Opus 2nd judge over normalized ADJ99 traces) | experiment (Workflow) | #5261 | P1 |
-| **W6** | cross-cutting **protocol** doc (reproducibility / correctness-scoring / contamination) | docs | — | P2 |
+| id | item | kind | status |
+|---|---|---|---|
+| **W1** | this doc + skeleton refresh | docs | ✅ done |
+| **W2** | E2 correctability head-to-head spec | spec | ✅ done → **run done** (`e2-correctability/`) |
+| **W3** | E3 cross-domain consolidation writeup | analysis | ✅ done (refreshed with the 200-item benchmark) |
+| **W4** | E1 confirmatory ablation + abstention-gate spec | spec | ✅ done → closure in E1 §8 (H4 deferred) |
+| **W5** | E4 cross-judge robustness run | experiment | ✅ done (`w5-crossjudge/`) |
+| **W6** | cross-cutting protocol doc | docs | ✅ done |
+| **B1–B3** | pre-register + build + run the 200-item benchmark | experiment | ✅ done (run100 + run100b) |
 
-Specs (W2/W4) precede their compute runs deliberately — *Specs → Tests → Implementation*
-(repo standard). W3 and W5 are the two that touch real result data; W3 only aggregates what
-exists, W5 is the one new LLM run.
+**Paper-1 data is complete.** What remains is manuscript prose (assemble the four experiments into
+the skeleton's narrative) and optional polish (publication figures). The one scientific item placed
+in Limitations rather than run: E1's H4 frontier omission tier.
 
 ## Cross-cutting requirements (tracked in W6, surfaced from the skeleton's Threats/Repro)
 
@@ -62,10 +67,13 @@ exists, W5 is the one new LLM run.
 
 ## Headline reminder
 
-E2 (cost-to-correct, framework vs prose) remains the most defensible single result — it measures
-what nobody else measures and can't be scooped by accuracy or hallucination-detection work. It is
-the **rate-limiter on the paper** and is currently only assembled in parts. Build it next (W2 spec,
-then the run).
+E2 (cost-to-correct, framework vs prose) is the most defensible single result and is now **complete**.
+Its claim was sharpened by the run: the localize-by-reading panel is a **null** (a strong reviewer
+reads prose as well as the trail, after the format-confound guard), so the headline rests on
+**non-recurring cost-to-correct** — the fix lives in an editable artifact, paid once, propagating,
+where stateless prose re-incurs the same error forever. The capability-graded recurrence result
+(1.5B raw 0/7 → +framework 7/7) is the one-number expression of the program's thesis: *intelligence
+accumulates in the framework, not the weights.*
 
 ## Out of scope here (paper 2)
 
