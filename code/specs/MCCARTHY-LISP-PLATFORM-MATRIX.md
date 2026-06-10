@@ -62,7 +62,7 @@ representation + per-builtin backend lowering.
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
-| **BEAM** | `iir-to-beam` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
+| **BEAM** | `iir-to-beam` | ✅ | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
@@ -192,7 +192,7 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase D — BEAM (Erlang terms)
 
-- ◑ **W9 — BEAM cons (F2).** *In progress.* Cons as a list cell `[a|b]`;
+- ✅ **W9 — BEAM cons (F2).** Cons as a list cell `[a|b]`;
   `car`/`cdr` = `hd`/`tl`; integers are native Erlang integers; nil = `[]`.
   - ✅ **W9a — BEAM run-foundation (F1, scalar).** `lang-aot::compile_source_to_beam`
     + `concretize_scalar_any_for_beam` (scalar `any` → `i64`) → `iir-to-beam` →
@@ -200,9 +200,14 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     (OTP 28): `42`→42, `0`→0, `7`→7, Twig `42`→42. Started as a parallel stream
     (independent of the held CLR W6b PR); reuses the backend's established
     real-`erl` round-trip harness. Establishes the BEAM pipeline.
-  - ☐ **W9b — BEAM cons.** Lower `cons`/`car`/`cdr` to BEAM list ops
+  - ✅ **W9b — BEAM cons.** `cons`/`car`/`cdr` → BEAM list ops
     (`put_list`/`get_hd`/`get_tl`) — the native Erlang-terms model (NOT the
-    structural uniform-ref pass). `(CAR (CONS 7 9))`→7 on a real `erl`.
+    structural uniform-ref pass). `compile_source_to_beam` now runs
+    `lower_heap_builtins` (cons → `alloc`/`field_*`, which `iir-to-beam` already
+    lowers) and concretizes `any`→`i64` per-instruction (leaving `ref<LispyPair>`
+    cells). **Verified by RUNNING** on a real `erl`: `(CAR (CONS 7 9))`→7,
+    `(CDR (CONS 7 9))`→9, nested→2, `(CONS 7 9)`→`[7|9]` (a native list cell)
+    (`lang-aot/tests/beam_cons.rs`).
 - ☐ **W10 — BEAM `ATOM`/`EQ`/`COND` (F3–F5).** `is_tuple`/guards; `=:=`; truthiness.
 - ☐ **W11 — BEAM symbols + lambda (F6–F7).** Symbols = Erlang atoms; lambda = fun.
   **Completes BEAM.** (Mind the OTP-27 AtU8 atom-format constraint from
