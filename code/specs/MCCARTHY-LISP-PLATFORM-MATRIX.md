@@ -175,8 +175,17 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase D — BEAM (Erlang terms)
 
-- ☐ **W9 — BEAM cons (F2).** Cons as a 2-tuple (or proper list cell); `car`/`cdr`
-  = element access; integers are native Erlang integers; nil = `[]`/`nil` atom.
+- ◑ **W9 — BEAM cons (F2).** *In progress.* Cons as a list cell `[a|b]`;
+  `car`/`cdr` = `hd`/`tl`; integers are native Erlang integers; nil = `[]`.
+  - ✅ **W9a — BEAM run-foundation (F1, scalar).** `lang-aot::compile_source_to_beam`
+    + `concretize_scalar_any_for_beam` (scalar `any` → `i64`) → `iir-to-beam` →
+    `encode_beam`. **Verified by RUNNING** the emitted `.beam` on a real `erl`
+    (OTP 28): `42`→42, `0`→0, `7`→7, Twig `42`→42. Started as a parallel stream
+    (independent of the held CLR W6b PR); reuses the backend's established
+    real-`erl` round-trip harness. Establishes the BEAM pipeline.
+  - ☐ **W9b — BEAM cons.** Lower `cons`/`car`/`cdr` to BEAM list ops
+    (`put_list`/`get_hd`/`get_tl`) — the native Erlang-terms model (NOT the
+    structural uniform-ref pass). `(CAR (CONS 7 9))`→7 on a real `erl`.
 - ☐ **W10 — BEAM `ATOM`/`EQ`/`COND` (F3–F5).** `is_tuple`/guards; `=:=`; truthiness.
 - ☐ **W11 — BEAM symbols + lambda (F6–F7).** Symbols = Erlang atoms; lambda = fun.
   **Completes BEAM.** (Mind the OTP-27 AtU8 atom-format constraint from

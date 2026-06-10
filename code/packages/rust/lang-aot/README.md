@@ -32,6 +32,11 @@ McCarthy emits CIL that **runs** — verified on the in-repo `clr-simulator`
 (`42` → 42), no external `dotnet`. The CLR cons/symbol/lambda value model
 (uniform-`object`, reusing the JVM strict-backend fixes) is W6b+.
 
+`compile_source_to_beam` is the fourth managed target and the first on the
+**Erlang VM** (W9a): scalar McCarthy emits a `.beam` that **runs** on a real
+`erl` (OTP), `42` → 42. BEAM uses the native Erlang-terms value model
+(integers/atoms/list cells), so its cons/symbol/lambda lowering (W9+) is its own.
+
 ## Stack position
 
 ```
