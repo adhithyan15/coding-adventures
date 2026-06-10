@@ -403,3 +403,13 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Upstream:** `var o={a:1,b:2};`
 - **Why it failed:** closurec's whitespace_only re-stitcher passed `,` through verbatim.
 - **Fix:** Mirror gap-046's `,`-before-`]` peephole for `,`-before-`}`. Brace_stack discrimination is NOT needed: in valid ECMAScript, `,` immediately before `}` can only appear in object-literal / object-destructuring contexts. Block bodies separate statements with `;`, class bodies have no separator, switch/try have no comma. So the drop is safe unconditionally.
+
+### gap-051 — IIFE paren normalization
+
+- **Status:** OPEN — newly discovered by CLOC14.17.
+- **Upstream byte-identity test:** `minify_fn_expr_iife` seed fixture.
+- **Input:** `(function(){return 42;}());`
+- **Upstream:** `(function(){return 42})();` (call moves outside the wrapping parens)
+- **closurec:** `(function(){return 42}());`
+- **Why it fails:** closurec preserves the source `()` placement.
+- **What it needs:** Token-level peephole: when we see `( function ( ... ) { ... } ( ) )`, rewrite to `( function ( ... ) { ... } ) ( )`. Equivalent forms, both call the function expression. Same byte count (just paren placement) — but matches upstream's preferred normalization.

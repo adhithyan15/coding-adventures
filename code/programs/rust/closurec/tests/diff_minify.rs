@@ -90,6 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-051: IIFE paren normalization. Upstream rewrites
+    // `(fn()())` form to `(fn)()` form — call moves outside
+    // the wrapping parens. Discovered by CLOC14.17.
+    ("fn_expr_iife", "gap-051: IIFE `(fn(()))` → `(fn)()` normalization"),
     // gap-050 was RESOLVED in CLOC12.57 — token-level
     // peephole drops the empty `()` after `new IDENT`
     // when the follower is safe. `minify_new_expr`
