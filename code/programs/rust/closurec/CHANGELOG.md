@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.72.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-059** (minimal slice) — member/call on a `new`
+  expression now wraps in parens: `new A().b` → `(new A).b`.
+  Upstream wraps because `new A.b` parses as `new (A.b)` (a
+  different program), and drops the empty `()` arg list.
+
+### Added — gap-059 token pre-pass
+
+A new pre-pass wraps the new-expression WITHOUT synthesising
+tokens: the empty arg-list `()` already contributes a `(` and a
+`)`, so the pass just REORDERS them — moving the `(` to before
+`new` (`new A ( ) .` → `( new A ) .`). Minimal safe slice:
+single plain-identifier callee, empty arg list, followed by
+`.`/`[`/`(`. Guards: operator `new` only (a property `.new` is
+left alone), all bracket checks via `is_structural_punct`.
+Complements gap-050 (which drops `new A()` → `new A` only when
+NO member/call follows — exactly the cases this pass handles).
+
+Verified against the upstream JAR: `new A().b` → `(new A).b`,
+`.b.c`/`[i]`/`()` chains likewise wrap, standalone `new A()` →
+`new A` (unchanged), and `a.new()` (property) is untouched.
+Member-callee (`new a.b.C().d`) and arg-bearing (`new A(y).b`)
+shapes are deferred follow-ups.
+
+Updated three former gap-050 "keeps_parens" unit tests — they
+asserted the pre-gap-059 (upstream-divergent) output and now
+assert the wrapped form.
+
 ## [0.71.0] - 2026-06-10
 
 ### Changed

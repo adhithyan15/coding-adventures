@@ -459,6 +459,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-059 — member access on a `new` expression
 
-- **Status:** OPEN — discovered by CLOC14.29. `minify_new_member_chain` ignored.
+- **Status:** **RESOLVED** in CLOC12.68 (minimal slice). `minify_new_member_chain` flips IGNORED → PASS.
 - **Input:** `var x=new A().b;` → **Upstream:** `var x=(new A).b;`
-- **What it needs:** Two coordinated transforms: (1) drop the empty call parens of `new A()` (gap-050 does this standalone), and (2) wrap the result in parens when a `.member` follows — `new A.b` would parse as `new (A.b)`, so upstream emits `(new A).b` to preserve "construct A, then read .b". Non-trivial: needs `new`-expression-aware paren insertion in the token re-stitcher. Design before implementing.
+- **Fix:** Token pre-pass that wraps the `new`-expression in parens when it's the object/callee of a following `.`/`[`/`(`. Implemented WITHOUT synthesising tokens: the empty arg-list `()` already provides a `(` and `)`, so the pass just REORDERS them — moves the `(` to before `new`, leaving the `)` after the identifier (`new A ( ) .` → `( new A ) .`). Guards: operator `new` only (not the property `.new`/`?.new`), single plain-identifier callee, empty arg-list, followed by `.`/`[`/`(`; all bracket checks via `is_structural_punct`. Complements gap-050 (which drops `new A()`→`new A` only when NOT followed by member/call). Verified against JAR for `.b`, `.b.c`, `[i]`, `()`, standalone, and property-`new`.
+- **Deferred (follow-up):** member-callee `new a.b.C().d` → `(new a.b.C).d`, and arg-bearing `new A(y).b` → `(new A(y)).b`. The minimal slice handles single-identifier empty-arg new-expressions (the fixture); these broader shapes need callee-extent + arg-list scanning.

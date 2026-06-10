@@ -521,6 +521,69 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-059: member/call on a `new` expression ----------
+    // `new A().b` → `(new A).b`. When a NewExpression is the
+    // OBJECT of a member access (`.`/`[`) or the CALLEE of a
+    // call (`(`), upstream Closure wraps the whole `new …` in
+    // parens — because `new A.b` would parse as `new (A.b)`
+    // (member access binds tighter than argument-less `new`),
+    // which is a DIFFERENT program. It also drops the empty
+    // `()` arg list (cf. gap-050, which only drops it when no
+    // member/call follows — exactly the cases this pass does
+    // NOT handle, so the two are complementary).
+    //
+    // We implement the wrap WITHOUT synthesising tokens: the
+    // empty arg-list already contributes a `(` and a `)` to the
+    // stream, so we just REORDER them — move the `(` to before
+    // `new`, leaving the `)` after the identifier:
+    //
+    //   `new A ( ) .`   →   `( new A ) .`
+    //   [new,A,(,),.]       [(,new,A,),.]
+    //
+    // Minimal safe slice (matches the byte-identity fixture
+    // `minify_new_member_chain`):
+    //   - single plain-identifier callee (`new A`, not
+    //     `new a.b.C` — member-callee deferred),
+    //   - EMPTY arg list `()` (arg-bearing `new A(y).b` →
+    //     `(new A(y)).b` is a deferred follow-up),
+    //   - followed by `.`, `[`, or `(`.
+    //
+    // Guards:
+    //   - operator `new`, not the property name `.new`/`?.new`
+    //     (a property `new` is preceded by a member accessor),
+    //   - all bracket checks go through `is_structural_punct`
+    //     so a string/regex/template whose value looks like a
+    //     bracket can never trigger the reorder.
+    {
+        let mut i = 0;
+        while i + 4 < kept.len() {
+            let is_operator_new = kept[i].value == "new"
+                && !is_string_literal(kept[i])
+                && (i == 0
+                    || (!is_structural_punct(&kept[i - 1], ".")
+                        && !is_structural_punct(&kept[i - 1], "?.")));
+            if is_operator_new
+                && is_simple_identifier_token(Some(kept[i + 1]))
+                && is_structural_punct(&kept[i + 2], "(")
+                && is_structural_punct(&kept[i + 3], ")")
+                && (is_structural_punct(&kept[i + 4], ".")
+                    || is_structural_punct(&kept[i + 4], "[")
+                    || is_structural_punct(&kept[i + 4], "("))
+            {
+                // Reorder: pull the `(` (empty arg-list open)
+                // out from i+2 and re-insert it before `new`.
+                // The `)` stays put — now closing the wrap.
+                let open = kept.remove(i + 2);
+                kept.insert(i, open);
+                // Past `( new IDENT )`; the member/call token
+                // is now at i+4 and re-scanned next iteration.
+                i += 4;
+                continue;
+            }
+            i += 1;
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -3387,34 +3450,53 @@ mod tests {
     }
 
     /// **Non-regression**: `new Foo().bar` — dropping the
-    /// `()` would change parse to `new Foo.bar` (different
-    /// constructor). Must keep parens.
+    /// gap-059 (was gap-050 "keeps_parens"): `new Foo().bar`
+    /// is now WRAPPED to `(new Foo).bar`. Dropping the `()`
+    /// without wrapping would mis-parse as `new(Foo.bar)`, so
+    /// upstream wraps the NewExpression. The old behavior
+    /// (leaving `new Foo().bar` intact) diverged from upstream;
+    /// gap-059 makes it byte-identical.
     #[test]
-    fn gap050_new_call_then_member_keeps_parens() {
-        assert_eq!(
-            minify("var x=new Foo().bar;"),
-            "var x=new Foo().bar;"
-        );
+    fn gap059_new_call_then_member_wraps() {
+        assert_eq!(minify("var x=new Foo().bar;"), "var x=(new Foo).bar;");
     }
 
-    /// **Non-regression**: `new Foo()[x]` — same family;
-    /// element-access on result vs constructor of `Foo[x]`.
+    /// gap-059: `new Foo()[0]` → `(new Foo)[0]` (computed
+    /// member triggers the same wrap).
     #[test]
-    fn gap050_new_call_then_bracket_keeps_parens() {
-        assert_eq!(
-            minify("var x=new Foo()[0];"),
-            "var x=new Foo()[0];"
-        );
+    fn gap059_new_call_then_bracket_wraps() {
+        assert_eq!(minify("var x=new Foo()[0];"), "var x=(new Foo)[0];");
     }
 
-    /// **Non-regression**: `new Foo()()` — chained call on
-    /// result. Dropping would lose the chained call.
+    /// gap-059: `new Foo()()` → `(new Foo)()` (call on the
+    /// constructed object triggers the wrap; the chained call
+    /// is preserved).
     #[test]
-    fn gap050_new_call_then_call_keeps_parens() {
-        assert_eq!(
-            minify("var x=new Foo()();"),
-            "var x=new Foo()();"
-        );
+    fn gap059_new_call_then_call_wraps() {
+        assert_eq!(minify("var x=new Foo()();"), "var x=(new Foo)();");
+    }
+
+    /// gap-059 non-regression: standalone `new Foo()` (no
+    /// member/call follows) is still just `new Foo` (gap-050),
+    /// NOT wrapped.
+    #[test]
+    fn gap059_standalone_new_not_wrapped() {
+        assert_eq!(minify("var x=new Foo();"), "var x=new Foo;");
+    }
+
+    /// gap-059 guard: a property named `new` (`a.new()`) is
+    /// NOT the `new` operator, so no wrap.
+    #[test]
+    fn gap059_property_new_not_wrapped() {
+        assert_eq!(minify("var x=a.new().b;"), "var x=a.new().b;");
+    }
+
+    /// gap-059 deferred: arg-bearing `new Foo(y).b` is left
+    /// untouched by the minimal slice (upstream wraps it to
+    /// `(new Foo(y)).b` — a follow-up).
+    #[test]
+    fn gap059_arg_bearing_new_deferred() {
+        assert_eq!(minify("var x=new Foo(y).b;"), "var x=new Foo(y).b;");
     }
 
     /// **Non-regression**: `new Foo() + 1` — `+` binds
