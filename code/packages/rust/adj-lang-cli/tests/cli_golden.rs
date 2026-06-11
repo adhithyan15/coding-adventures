@@ -196,6 +196,22 @@ fn solve_for_emits_solved_values() {
 }
 
 #[test]
+fn solve_substitutes_observed_facts() {
+    // base_rate is observed (not an unknown) → substituted as a constant, so
+    // premium = base_rate + 300 = 1500. This is the realistic mixed case.
+    let (ok, s) = run(
+        "adjcli_solve_subst.adj",
+        "symbol premium : money(usd)\n\
+         observe base_rate(1200)\n\
+         constrain premium = base_rate + 300\n\
+         solve for { premium }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved\""), "{s}");
+    assert!(s.contains("\"name\":\"premium\",\"value\":1500"), "{s}");
+}
+
+#[test]
 fn unsupported_constraint_reports_a_reason_not_an_answer() {
     // An inequality is out of this slice's scope → unsupported, never a fake value.
     let (ok, s) = run(

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0] - 2026-06-11 — observed-value substitution (ADJ constraints track B3)
+
+### Changed
+
+- **`solve(&ConstraintSystem, &KnowledgeBase)`** — now takes the program's KB.
+  A constraint reference that is **not** an unknown but **is** an observed fact
+  (`observe base_rate(1200)`) is substituted by its value before solving, so a
+  realistic mixed program solves:
+  `symbol premium; constrain premium = base_rate + 300; solve for {premium}`
+  → `premium = 1500`. (Previously every reference was treated as an unknown, so
+  any constraint mentioning an observed fact was singular.) Unknowns and
+  unobserved references are left symbolic. 2 new tests.
+
 ## [0.1.0] - 2026-06-11 — linear-equality solving (ADJ constraints track B2a)
 
 ### Added

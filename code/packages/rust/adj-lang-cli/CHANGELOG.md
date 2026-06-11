@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1] - 2026-06-11 — solver substitutes observed facts (ADJ constraints track B3)
+
+### Changed
+
+- The `solve` call now passes the KB (`solve(&lowered.constraints, &lowered.kb)`),
+  so a constraint that references an observed fact is solved with that fact's
+  value substituted (`adj-constraint-solver` 0.2.0). 1 new golden test.
+
 ## [0.3.0] - 2026-06-11 — constraint solving in the CLI (ADJ constraints track B2b)
 
 ### Added

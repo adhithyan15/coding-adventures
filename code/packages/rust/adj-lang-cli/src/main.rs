@@ -278,7 +278,10 @@ fn main() -> ExitCode {
     let solve_section = if lowered.constraints.is_empty() {
         String::new()
     } else {
-        format!(",\"solve\":{}", solve_json(&solve(&lowered.constraints)))
+        format!(
+            ",\"solve\":{}",
+            solve_json(&solve(&lowered.constraints, &lowered.kb))
+        )
     };
 
     println!(
