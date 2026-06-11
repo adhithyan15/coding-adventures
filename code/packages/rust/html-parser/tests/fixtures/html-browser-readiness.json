@@ -1277,17 +1277,17 @@
     {
       "id": "event-handler-page",
       "description": "Browser document summaries expose inline event handler attributes without evaluating script text.",
-      "input": "<html onreadystatechange=ready><body onload=boot onunload=teardown><main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button><video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback><input value=Draft oninput=edit onchange=commit></main></body></html>",
+      "input": "<html onreadystatechange=ready><body onload=boot onunload=teardown ontransitionend=bodyTransition><main id=app onclick=delegate onanimationstart=animate ontransitionend=transitioned><button onclick=save onkeydown=shortcut>Save</button><video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback><input value=Draft oninput=edit onchange=commit></main></body></html>",
       "expected": {
         "title": null,
         "base_href": null,
         "base_target": null,
         "document_event_handlers": ["onreadystatechange"],
-        "body_event_handlers": ["onload", "onunload"],
+        "body_event_handlers": ["onload", "onunload", "ontransitionend"],
         "event_handler_descriptors": [
           { "element": "html", "role": "block", "source": "document", "event_handlers": ["onreadystatechange"], "handler_count": 1, "lifecycle_handlers": ["onreadystatechange"], "text": "Save" },
-          { "element": "body", "role": "block", "source": "body", "event_handlers": ["onload", "onunload"], "handler_count": 2, "lifecycle_handlers": ["onload", "onunload"], "text": "Save" },
-          { "element": "main", "id": "app", "role": "main", "source": "element", "event_handlers": ["onclick"], "handler_count": 1, "activation_handlers": ["onclick"], "text": "Save" },
+          { "element": "body", "role": "block", "source": "body", "event_handlers": ["onload", "onunload", "ontransitionend"], "handler_count": 3, "lifecycle_handlers": ["onload", "onunload"], "text": "Save" },
+          { "element": "main", "id": "app", "role": "main", "source": "element", "event_handlers": ["onclick", "onanimationstart", "ontransitionend"], "handler_count": 3, "activation_handlers": ["onclick"], "text": "Save" },
           { "element": "button", "role": "control", "source": "element", "event_handlers": ["onclick", "onkeydown"], "handler_count": 2, "activation_handlers": ["onclick"], "keyboard_handlers": ["onkeydown"], "text": "Save" },
           { "element": "video", "role": "media", "source": "element", "event_handlers": ["onplay", "onpause"], "handler_count": 2, "media_handlers": ["onplay", "onpause"] },
           { "element": "img", "role": "image", "source": "element", "event_handlers": ["onerror"], "handler_count": 1, "error_handlers": ["onerror"] },
@@ -1313,7 +1313,7 @@
           { "kind": "video", "src": null, "resolved_src": null, "controls": true }
         ],
         "interactive_elements": [
-          { "element": "main", "id": "app", "role": "main", "text": "Save", "event_handlers": ["onclick"] },
+          { "element": "main", "id": "app", "role": "main", "text": "Save", "event_handlers": ["onclick", "onanimationstart", "ontransitionend"] },
           { "element": "button", "role": "control", "text": "Save", "accessible_name": "Save", "event_handlers": ["onclick", "onkeydown"] },
           { "element": "video", "role": "media", "text": "", "event_handlers": ["onplay", "onpause"] },
           { "element": "img", "role": "image", "text": "", "event_handlers": ["onerror"] },

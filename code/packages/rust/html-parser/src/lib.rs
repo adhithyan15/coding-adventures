@@ -829,6 +829,7 @@ pub struct BrowserDocument {
     pub body_event_handlers: Vec<String>,
     pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
     pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
+    pub animation_interaction_descriptors: Vec<BrowserAnimationInteractionDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1372,6 +1373,31 @@ pub struct BrowserLifecycleEventDescriptor {
     pub document_scope: bool,
     pub body_scope: bool,
     pub error_recovery: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnimationInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub animation_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub animation_handlers: Vec<String>,
+    pub animation_start_handlers: Vec<String>,
+    pub animation_iteration_handlers: Vec<String>,
+    pub animation_end_handlers: Vec<String>,
+    pub animation_cancel_handlers: Vec<String>,
+    pub transition_handlers: Vec<String>,
+    pub transition_run_handlers: Vec<String>,
+    pub transition_start_handlers: Vec<String>,
+    pub transition_end_handlers: Vec<String>,
+    pub transition_cancel_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3220,6 +3246,8 @@ impl BrowserDocument {
         summary.pointer_interaction_descriptors = browser_pointer_interaction_descriptors(&summary);
         summary.scroll_interaction_descriptors = browser_scroll_interaction_descriptors(&summary);
         summary.lifecycle_event_descriptors = browser_lifecycle_event_descriptors(&summary);
+        summary.animation_interaction_descriptors =
+            browser_animation_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -15405,6 +15433,124 @@ fn browser_lifecycle_kind(
     }
 }
 
+fn browser_animation_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserAnimationInteractionDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_animation_interaction_state(descriptor))
+        .map(browser_animation_interaction_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_animation_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_animation_interaction_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserAnimationInteractionDescriptor {
+    let animation_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_event);
+    let animation_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_start_event);
+    let animation_iteration_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_iteration_event,
+    );
+    let animation_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_end_event);
+    let animation_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_cancel_event);
+    let transition_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_event);
+    let transition_run_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_run_event);
+    let transition_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_start_event);
+    let transition_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_end_event);
+    let transition_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_cancel_event);
+
+    BrowserAnimationInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        animation_kind: browser_animation_interaction_kind(
+            &animation_handlers,
+            &animation_start_handlers,
+            &animation_iteration_handlers,
+            &animation_end_handlers,
+            &animation_cancel_handlers,
+            &transition_handlers,
+            &transition_run_handlers,
+            &transition_start_handlers,
+            &transition_end_handlers,
+            &transition_cancel_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: animation_handlers.len() + transition_handlers.len(),
+        animation_handlers,
+        animation_start_handlers,
+        animation_iteration_handlers,
+        animation_end_handlers,
+        animation_cancel_handlers,
+        transition_handlers,
+        transition_run_handlers,
+        transition_start_handlers,
+        transition_end_handlers,
+        transition_cancel_handlers,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_animation_interaction_kind(
+    animation_handlers: &[String],
+    animation_start_handlers: &[String],
+    animation_iteration_handlers: &[String],
+    animation_end_handlers: &[String],
+    animation_cancel_handlers: &[String],
+    transition_handlers: &[String],
+    transition_run_handlers: &[String],
+    transition_start_handlers: &[String],
+    transition_end_handlers: &[String],
+    transition_cancel_handlers: &[String],
+) -> String {
+    if !animation_cancel_handlers.is_empty() || !transition_cancel_handlers.is_empty() {
+        "animation-cancel".to_string()
+    } else if !animation_handlers.is_empty() && !transition_handlers.is_empty() {
+        "animation-transition".to_string()
+    } else if !animation_iteration_handlers.is_empty() {
+        "animation-iteration".to_string()
+    } else if !animation_end_handlers.is_empty() {
+        "animation-end".to_string()
+    } else if !animation_start_handlers.is_empty() {
+        "animation-start".to_string()
+    } else if !transition_end_handlers.is_empty() {
+        "transition-end".to_string()
+    } else if !transition_start_handlers.is_empty() {
+        "transition-start".to_string()
+    } else if !transition_run_handlers.is_empty() {
+        "transition-run".to_string()
+    } else if !animation_handlers.is_empty() {
+        "animation".to_string()
+    } else {
+        "transition".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -17380,6 +17526,56 @@ fn browser_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn browser_animation_interaction_event(handler: &str) -> bool {
+    browser_animation_event(handler) || browser_transition_event(handler)
+}
+
+fn browser_animation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onanimationstart" | "onanimationiteration" | "onanimationend" | "onanimationcancel"
+    )
+}
+
+fn browser_animation_start_event(handler: &str) -> bool {
+    handler == "onanimationstart"
+}
+
+fn browser_animation_iteration_event(handler: &str) -> bool {
+    handler == "onanimationiteration"
+}
+
+fn browser_animation_end_event(handler: &str) -> bool {
+    handler == "onanimationend"
+}
+
+fn browser_animation_cancel_event(handler: &str) -> bool {
+    handler == "onanimationcancel"
+}
+
+fn browser_transition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontransitionrun" | "ontransitionstart" | "ontransitionend" | "ontransitioncancel"
+    )
+}
+
+fn browser_transition_run_event(handler: &str) -> bool {
+    handler == "ontransitionrun"
+}
+
+fn browser_transition_start_event(handler: &str) -> bool {
+    handler == "ontransitionstart"
+}
+
+fn browser_transition_end_event(handler: &str) -> bool {
+    handler == "ontransitionend"
+}
+
+fn browser_transition_cancel_event(handler: &str) -> bool {
+    handler == "ontransitioncancel"
 }
 
 fn browser_form_event(handler: &str) -> bool {
@@ -23636,6 +23832,74 @@ mod tests {
             .expect("dialog lifecycle descriptor");
         assert_eq!(dialog.lifecycle_kind, "error-recovery");
         assert_eq!(dialog.error_handlers, vec!["oncancel"]);
+    }
+
+    #[test]
+    fn browser_animation_interaction_descriptors_track_css_animation_and_transition_hooks() {
+        let html = "<html onanimationstart=docIntro>\
+             <body ontransitionend=bodyDone>\
+             <section id=hero onanimationstart=start onanimationiteration=loop onanimationend=end>Hero</section>\
+             <aside id=panel ontransitionrun=run ontransitionstart=startTransition ontransitionend=endTransition>Panel</aside>\
+             <div id=mixed onanimationend=endAnimation ontransitioncancel=cancelTransition>Mixed</div>\
+             <p id=cancelled onanimationcancel=cancelAnimation>Cancelled</p></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.animation_interaction_descriptors.len(), 6);
+
+        let document = &summary.animation_interaction_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.animation_kind, "animation-start");
+        assert_eq!(document.animation_start_handlers, vec!["onanimationstart"]);
+        assert!(document.document_scope);
+
+        let body = &summary.animation_interaction_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.animation_kind, "transition-end");
+        assert_eq!(body.transition_end_handlers, vec!["ontransitionend"]);
+        assert!(body.body_scope);
+
+        let hero = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("hero animation descriptor");
+        assert_eq!(hero.animation_kind, "animation-iteration");
+        assert_eq!(
+            hero.animation_handlers,
+            vec!["onanimationstart", "onanimationiteration", "onanimationend"]
+        );
+        assert_eq!(hero.handler_count, 3);
+
+        let panel = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("panel"))
+            .expect("panel transition descriptor");
+        assert_eq!(panel.animation_kind, "transition-end");
+        assert_eq!(panel.transition_run_handlers, vec!["ontransitionrun"]);
+        assert_eq!(panel.transition_start_handlers, vec!["ontransitionstart"]);
+        assert_eq!(panel.transition_end_handlers, vec!["ontransitionend"]);
+
+        let mixed = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("mixed"))
+            .expect("mixed animation descriptor");
+        assert_eq!(mixed.animation_kind, "animation-cancel");
+        assert_eq!(mixed.animation_end_handlers, vec!["onanimationend"]);
+        assert_eq!(mixed.transition_cancel_handlers, vec!["ontransitioncancel"]);
+
+        let cancelled = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cancelled"))
+            .expect("cancelled animation descriptor");
+        assert_eq!(cancelled.animation_kind, "animation-cancel");
+        assert_eq!(
+            cancelled.animation_cancel_handlers,
+            vec!["onanimationcancel"]
+        );
     }
 
     #[test]
