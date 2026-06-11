@@ -53,9 +53,11 @@ real `clang`). The full McCarthy **F1–F7** set runs today — scalar, **cons/c
 `(EQ (QUOTE A) (QUOTE A))`→1, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7, and a recursive
 `LABEL`→7 on real CoreCLR; `tests/clr_real_scalar.rs` + `clr_real_cons.rs` +
 `clr_real_predicates.rs` + `clr_real_symbols.rs` + `clr_real_lambda.rs`, gated on
-`dotnet`+`ilasm` via the shared `tests/clr_support` harness). The remaining worklist
-item (C6) wires this real-CoreCLR path into the W16 conformance matrix, after which
-the CLR column is verified on real .NET rather than the in-repo simulator.
+`dotnet`+`ilasm` via the shared `tests/clr_support` harness). The W16 conformance
+suite (`tests/conformance.rs`) now carries a ninth **`CLR-real`** column that runs
+the same programs on real .NET (19 programs × 9 backends all agree locally), so the
+CLR column is verified on real CoreCLR rather than only the in-repo simulator — the
+**CLR-real verification chapter (C1–C6) is complete**.
 
 `compile_source_to_beam` targets the **Erlang VM**: scalar McCarthy emits a
 `.beam` that **runs** on a real `erl` (OTP), `42` → 42 (W9a), and **cons** too —

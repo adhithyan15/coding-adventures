@@ -89,14 +89,22 @@ other external-tool backends.
   `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
   `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, a COND-body lambda→100, and a recursive
   `LABEL` descending CARs→7. **This closes McCarthy F1–F7 on the CLR's real runtime.**
-- ☐ **C6 — wire real-CoreCLR CLR into the conformance suite.** Add a `run_clr_real`
-  arm to `lang-aot/tests/conformance.rs` (gated on `dotnet`+`ilasm`) so the W16
-  table runs the CLR column on **real .NET**; ensure CI installs `ilasm`
-  (`dotnet restore` of the ILAsm pack) so the upgrade holds on every PR.
+- ✅ **C6 — wire real-CoreCLR CLR into the conformance suite.** `lang-aot/tests/
+  conformance.rs` gained a ninth backend column, **`CLR-real`** (`run_clr_real`),
+  that runs each McCarthy program on real .NET via the shared `clr_support` harness
+  (textual `.il` → real `ilasm` → real `dotnet`), gated on `dotnet`+`ilasm` so the
+  in-process simulator `CLR` column stays the floor. Locally: **19 programs × 9
+  backends, all agree.** CI (`.github/workflows/ci.yml`) installs `ilasm` whenever
+  .NET is set up — a `<PackageDownload>` of the RID-specific
+  `runtime.<rid>.Microsoft.NETCore.ILAsm` runtime pack into the NuGet cache where
+  `find_ilasm()` searches — so the upgrade holds in CI, not just locally.
 
-## End state
+## End state — ACHIEVED ✅
 
 CLR joins JVM/BEAM/LLVM/native as a backend verified on its **real runtime**, and
 the cross-backend conformance matrix is genuinely stronger — the CLR column proven
 by real CoreCLR, not an in-house simulator. The `clr-simulator` remains for fast,
 zero-dependency unit checks; the real-runtime path is the verification of record.
+All of C1–C6 are complete: McCarthy F1–F7 (scalar, cons, predicates+COND, symbols,
+lambda/LABEL/recursion) all run on **real CoreCLR**, and the W16 capstone exercises
+the CLR column on real .NET.

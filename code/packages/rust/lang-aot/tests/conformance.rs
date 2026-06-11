@@ -14,14 +14,19 @@
 //! | JIT         | tagged-word    | `lang_aot::run_mccarthy_on_jit`               |
 //! | WASM        | uniform-anyref | `wasm-runtime`                                |
 //! | JVM         | object/boxing  | a real `java` (cons is `Object[]`) — gated    |
-//! | CLR         | object/boxing  | `clr-simulator`                               |
+//! | CLR         | object/boxing  | `clr-simulator` (in-process floor)            |
+//! | CLR-real    | object/boxing  | real `ilasm` + real `dotnet` (`.il`) — gated  |
 //! | BEAM        | Erlang terms   | a real `erl` — gated                          |
 //! | LLVM        | tagged-word    | `clang` + `lispy_runtime.c` — gated           |
 //! | native AOT  | tagged-word    | `aarch64`/`x86_64` object + system `ld` — gated, macOS |
 //!
 //! External-tool backends return `None` (skip) when the tool is absent, so the
 //! suite still proves uniformity across whatever is installed; the in-process
-//! backends (VM / JIT / WASM / CLR) always run and must agree.
+//! backends (VM / JIT / WASM / CLR) always run and must agree. The **CLR-real**
+//! column is the capstone of the CLR-real verification chapter: it runs the same
+//! McCarthy programs on the actual .NET runtime (textual `.il` → real `ilasm` →
+//! real `dotnet`), upgrading the CLR column from an in-house simulator to the real
+//! runtime whenever `dotnet`+`ilasm` are present.
 //!
 //! ## Why integer-result programs
 //!
@@ -38,6 +43,12 @@ use lang_aot::{
 };
 
 use lispy_runtime::LispyValue;
+
+// The shared real-CoreCLR harness (`compile_source_to_cil_text` → real `ilasm` →
+// real `dotnet`), reused by the per-feature `clr_real_*` tests. Lives in a
+// subdirectory so Cargo doesn't compile it as its own test binary.
+#[path = "clr_support/mod.rs"]
+mod clr_support;
 
 // ── The conformance table: McCarthy F1–F7, every result an integer. ──
 const PROGRAMS: &[(&str, i64)] = &[
@@ -277,6 +288,16 @@ fn run_native(_src: &str) -> Option<i64> {
     None // the in-repo native-executable link path is macOS-only today
 }
 
+// ── Backend 9: CLR on **real CoreCLR** — the CLR-real chapter's capstone wiring.
+//    Emits textual `.il`, assembles it with real `ilasm`, and runs it on real
+//    `dotnet` (via the shared `clr_support` harness). Gated on `dotnet`+`ilasm`:
+//    skips (returns `None`) when either is absent, so the in-process simulator
+//    `CLR` column above remains the conformance floor while this column proves the
+//    SAME programs on the actual .NET runtime when the toolchain is installed. ──
+fn run_clr_real(src: &str) -> Option<i64> {
+    clr_support::run_on_real_clr(src, "w16")
+}
+
 /// The capstone: every backend that can run a program computes the same integer.
 #[test]
 fn mccarthy_is_uniform_across_every_backend() {
@@ -289,6 +310,7 @@ fn mccarthy_is_uniform_across_every_backend() {
         ("BEAM", run_beam),
         ("LLVM", run_llvm),
         ("native-AOT", run_native),
+        ("CLR-real", run_clr_real),
     ];
 
     let mut exercised: std::collections::BTreeSet<&str> = std::collections::BTreeSet::new();
