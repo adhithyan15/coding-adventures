@@ -527,6 +527,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-068 — redundant parens around a `new` callee
 
-- **Status:** OPEN — discovered by CLOC14.34. `minify_new_paren_callee` + `minify_new_paren_member` ignored.
+- **Status:** **RESOLVED** in CLOC12.76. `minify_new_paren_callee` + `minify_new_paren_member` flip IGNORED → PASS.
 - **Input:** `new(f)();` → **Upstream:** `new f;` (also `new(a.b);` → `new a.b;`)
 - **What it needs:** Strip the grouping parens around the CALLEE of a `NewExpression` when the callee is a simple reference (identifier or member chain). For the call form `new(f)()` this composes with the gap-050 empty-paren drop (`new f()` → `new f`). The simple-reference / precedence caveat from gap-065 applies — an operator inner (`new(a+b)`) must keep its parens.
+- **CLOC12.76:** strips `new ( <identifier-dot chain> )`, anchored on the `new` KEYWORD (guarded against a property named `new` — `o.new(f)` is a method call). The trailing empty `()` of the call form is dropped by gap-050 in the emit loop. Operator inner `new(a+b)` keeps its parens (would parse as `(new a)+b`). **Note — separate pre-existing divergence (gap-069 candidate):** when the parens are KEPT, upstream emits a space `new (a+b)` while closurec emits `new(a+b)`; both are valid and equivalent, but not byte-identical. Deferred. 5 unit tests.

@@ -2,6 +2,26 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.80.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-068** — redundant parens around a `new` callee:
+  `new(f)()` → `new f`, `new(a.b)` → `new a.b`. Sibling of
+  gap-065/066.
+
+### Added — gap-068 token pre-pass
+
+Strips the grouping parens around a `new` callee when the callee
+is a simple reference (identifier + `.IDENT` chain), anchored on
+the `new` KEYWORD. The trailing empty `()` of the call form
+(`new(f)()`) is then dropped by the existing gap-050 empty-paren
+elision in the emit loop. Guards: operator `new` only (not a
+property named `new` — `o.new(f)` is a method call), not a
+string literal whose content is `new`; all bracket checks via
+`is_structural_punct`. Operator inner `new(a+b)` keeps its
+parens (`new a+b` would parse as `(new a)+b`). 5 new gap068_*
+unit tests.
+
 ## [0.79.0] - 2026-06-11
 
 ### Changed
