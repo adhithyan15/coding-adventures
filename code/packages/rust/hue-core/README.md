@@ -32,7 +32,8 @@ packages a typed surface for:
   projection
 - Hue state update summaries for read models and event-stream telemetry
 - unified Hue state update streams and rollups across light, grouped-light,
-  motion, and button resources
+  motion, and button resources, including mixed-surface, owner-coverage, and
+  partial-state helper predicates
 - Hue snapshot and scene desired-state values keyed by canonical D23 capability
   ids such as `light.on_off` and `light.brightness`
 - Hue mDNS and cloud-fallback discovery observations normalized into D23

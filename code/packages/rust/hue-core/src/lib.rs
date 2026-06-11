@@ -2025,8 +2025,35 @@ impl HueStateUpdateSetSummary {
         self.light_surface_updates > 0
     }
 
+    pub fn light_surface_update_count(&self) -> usize {
+        self.light_updates + self.grouped_light_updates
+    }
+
+    pub fn mixes_direct_and_grouped_light_updates(&self) -> bool {
+        self.light_updates > 0 && self.grouped_light_updates > 0
+    }
+
     pub fn has_sensor_or_input_updates(&self) -> bool {
         self.sensor_or_input_updates > 0
+    }
+
+    pub fn resource_family_count(&self) -> usize {
+        usize::from(self.light_updates > 0)
+            + usize::from(self.grouped_light_updates > 0)
+            + usize::from(self.motion_updates > 0)
+            + usize::from(self.button_updates > 0)
+    }
+
+    pub fn touches_multiple_resource_families(&self) -> bool {
+        self.resource_family_count() > 1
+    }
+
+    pub fn all_updates_have_owner(&self) -> bool {
+        self.total_updates > 0 && self.updates_with_owner == self.total_updates
+    }
+
+    pub fn has_partial_state_projection(&self) -> bool {
+        self.updates_with_state > 0 && self.updates_with_state < self.total_updates
     }
 
     pub fn projects_deltas(&self) -> bool {
@@ -3676,9 +3703,35 @@ mod tests {
             }
         );
         assert!(summary.has_light_surfaces());
+        assert_eq!(summary.light_surface_update_count(), 2);
+        assert!(summary.mixes_direct_and_grouped_light_updates());
         assert!(summary.has_sensor_or_input_updates());
+        assert_eq!(summary.resource_family_count(), 4);
+        assert!(summary.touches_multiple_resource_families());
+        assert!(!summary.all_updates_have_owner());
+        assert!(!summary.has_partial_state_projection());
         assert!(summary.projects_deltas());
-        assert!(HueStateUpdateSetSummary::empty().is_empty());
+
+        let partial = HueStateUpdateSetSummary {
+            total_updates: 3,
+            light_updates: 1,
+            updates_with_state: 1,
+            updates_with_owner: 3,
+            light_surface_updates: 1,
+            ..HueStateUpdateSetSummary::empty()
+        };
+        assert_eq!(partial.resource_family_count(), 1);
+        assert!(partial.all_updates_have_owner());
+        assert!(partial.has_partial_state_projection());
+
+        let empty = HueStateUpdateSetSummary::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.light_surface_update_count(), 0);
+        assert!(!empty.mixes_direct_and_grouped_light_updates());
+        assert_eq!(empty.resource_family_count(), 0);
+        assert!(!empty.touches_multiple_resource_families());
+        assert!(!empty.all_updates_have_owner());
+        assert!(!empty.has_partial_state_projection());
     }
 
     #[test]
