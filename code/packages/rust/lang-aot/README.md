@@ -47,12 +47,13 @@ McCarthy support after WASM and JVM.
 `compile_source_to_cil_text` is the **real-CoreCLR** path (CLR-real C1): the same
 lowered program emitted as textual `.il`, assembled by real `ilasm` into a loadable
 PE, and run on real `dotnet` — the CLR analog of `compile_source_to_llvm` (`.ll` →
-real `clang`). Scalar + **cons/car/cdr** run today (`42`→42, `(CAR (CONS 7 9))`→7 on
-real CoreCLR; `tests/clr_real_scalar.rs` + `clr_real_cons.rs`, gated on
-`dotnet`+`ilasm` via the shared `tests/clr_support` harness); predicates/COND/symbols/
-lambda land per the `CLR-REAL-RUNTIME-VERIFICATION` worklist, after which the CLR
-column of the W16 conformance matrix is verified on real .NET rather than the in-repo
-simulator.
+real `clang`). Scalar, **cons/car/cdr**, and **predicates + `COND`** run today
+(`42`→42, `(CAR (CONS 7 9))`→7, `(ATOM 7)`→1, `(EQ 7 7)`→1,
+`(COND ((ATOM 7) 11) …)`→11 on real CoreCLR; `tests/clr_real_scalar.rs` +
+`clr_real_cons.rs` + `clr_real_predicates.rs`, gated on `dotnet`+`ilasm` via the
+shared `tests/clr_support` harness); symbols and lambda land per the
+`CLR-REAL-RUNTIME-VERIFICATION` worklist, after which the CLR column of the W16
+conformance matrix is verified on real .NET rather than the in-repo simulator.
 
 `compile_source_to_beam` targets the **Erlang VM**: scalar McCarthy emits a
 `.beam` that **runs** on a real `erl` (OTP), `42` → 42 (W9a), and **cons** too —

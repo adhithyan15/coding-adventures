@@ -13,14 +13,22 @@
 //! program to the real toolchain and let it own the metadata (PE headers, the
 //! `#~`/`#Strings`/`#Blob` streams, token resolution). No hand-rolled metadata.
 //!
-//! ## Scope (C1)
+//! ## Scope (C1–C3)
 //!
-//! Scalar McCarthy — the entry function as a straight line of integer `const` /
-//! `mov` / `ret`. Each register becomes an `int32` local; the entry computes an
-//! `int32`, and a generated launcher prints it so a runner reads the result by
-//! running. Every other op returns [`IIRClrError::UnsupportedOp`], so later slices
-//! (cons → `newarr object`, predicates, `COND`, symbols, lambda) extend the op
-//! match incrementally — `ilasm` already handles the metadata each will need.
+//! * **C1 — scalar:** the entry function as a straight line of integer `const` /
+//!   `mov` / `ret`; each register an `int32` local, a generated launcher prints
+//!   the result so a runner reads it by running.
+//! * **C2 — cons / car / cdr:** a cons cell is a 2-element `System.Object[]`
+//!   (`alloc` → `newarr object`), atoms are `box`ed `System.Int32`, `field_*` are
+//!   `stelem.ref`/`ldelem.ref`, with mixed-type locals (`object[]`/`object`/`int32`).
+//! * **C3 — predicates + COND:** `pair?` → `isinst object[]; ldnull; ceq; ldc.i4.0;
+//!   ceq`, `not` → `xor 1`, `equal?` → `unbox.any int32` ×2 + `ceq`; `COND` lowers
+//!   to `label` (`<name>:`) / `jmp` (`br`) / `jmp_if_false` (`brfalse`), and a nil
+//!   fall-through `const … : ref<…>` becomes `ldnull` (never `ldc.i4 0`).
+//!
+//! Every other op returns [`IIRClrError::UnsupportedOp`], so the remaining slices
+//! (symbols, lambda / LABEL) extend the op match incrementally — `ilasm` already
+//! handles the metadata each will need.
 
 use crate::lower::{IIRClrConfig, IIRClrError};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
@@ -40,6 +48,36 @@ fn var_src<'a>(
             function: f.name.clone(),
             detail: format!("{op} src[{idx}] must be a variable, got {other:?}"),
         }),
+    }
+}
+
+/// Validate a branch-target / label name before it is written **verbatim** into
+/// the `.il` text that real `ilasm` assembles.
+///
+/// Unlike register operands — which never reach the output as names (they are
+/// resolved to numeric `V_<slot>` indices) — a `label`/`jmp`/`jmp_if_*` target is
+/// an `Operand::Var(String)`, an arbitrary unbounded string, emitted directly as
+/// `<name>:` / `br <name>`. If that string carried whitespace, newlines, `}`, or
+/// CIL directives (`.entrypoint`, `.method`, `//` comments…), a hostile IIR could
+/// inject arbitrary CIL into the assembled program. We therefore fail **closed**:
+/// only a non-empty run of `[A-Za-z0-9_$]` (a safe subset of legal CIL identifier
+/// characters) is accepted; anything else is an `InvalidOperand`. The binary
+/// emitter is immune by construction (it resolves labels to numeric offsets); this
+/// gives the textual emitter the same guarantee. Synthetic COND labels
+/// (`L_cond_next_<n>`) always pass; source-derived names (C4/C5 symbols, LABEL)
+/// are checked here before they can reach `ilasm`.
+fn checked_label<'a>(f: &IIRFunction, name: &'a str) -> Result<&'a str, IIRClrError> {
+    let valid = !name.is_empty()
+        && name
+            .chars()
+            .all(|c| c.is_ascii_alphanumeric() || c == '_' || c == '$');
+    if valid {
+        Ok(name)
+    } else {
+        Err(IIRClrError::InvalidOperand {
+            function: f.name.clone(),
+            detail: format!("label/branch target {name:?} is not a valid CIL identifier"),
+        })
     }
 }
 
@@ -157,27 +195,53 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
     for instr in &f.instructions {
         match instr.op.as_str() {
             // const <dest> = Int(n)  →  ldc.i4 n; stloc V_<dest>
+            //
+            // A `const` whose *result type* is a reference (`ref<…>`) is the
+            // McCarthy **nil** — an empty list is a null `object[]`. The structural
+            // `COND` lowering emits `const <r> = 0 : ref<LispyPair>` for the
+            // fall-through when no clause matched. Storing an `int32` into an
+            // object-typed local is ill-typed CIL, so emit a genuine `ldnull` (the
+            // canonical nil), never `ldc.i4 0`. (Mirrors the binary emitter's
+            // `ldnull` nil case in `lower.rs`.)
             "const" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "const must have a dest".to_string(),
                 })?;
-                let n = match instr.srcs.first() {
-                    Some(Operand::Int(n)) => *n,
-                    other => {
-                        return Err(IIRClrError::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!("const expects an integer literal, got {other:?}"),
-                        })
+                if instr.type_hint.starts_with("ref<") {
+                    // Only nil (0 / absent) is representable as a constant reference.
+                    match instr.srcs.first() {
+                        Some(Operand::Int(0)) | None => {}
+                        other => {
+                            return Err(IIRClrError::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!(
+                                    "const of reference type {:?} must be nil (0), got {other:?}",
+                                    instr.type_hint
+                                ),
+                            })
+                        }
                     }
-                };
-                // The CLR McCarthy model is `int32`; a scalar literal fits there.
-                let n32 = i32::try_from(n).map_err(|_| IIRClrError::InvalidOperand {
-                    function: f.name.clone(),
-                    detail: format!("integer literal {n} out of int32 range"),
-                })?;
-                let _ = writeln!(il, "    ldc.i4 {n32}");
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    let _ = writeln!(il, "    ldnull");
+                    let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                } else {
+                    let n = match instr.srcs.first() {
+                        Some(Operand::Int(n)) => *n,
+                        other => {
+                            return Err(IIRClrError::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!("const expects an integer literal, got {other:?}"),
+                            })
+                        }
+                    };
+                    // The CLR McCarthy model is `int32`; a scalar literal fits there.
+                    let n32 = i32::try_from(n).map_err(|_| IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: format!("integer literal {n} out of int32 range"),
+                    })?;
+                    let _ = writeln!(il, "    ldc.i4 {n32}");
+                    let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                }
             }
             // mov <dest>, <src>  →  ldloc V_<src>; stloc V_<dest>
             "mov" => {
@@ -272,7 +336,104 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                 let _ = writeln!(il, "    ldelem.ref");
                 let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
             }
-            // Later slices extend this match (predicates, COND, symbols, lambda).
+            // ── Control flow (COND lowers to label / jmp / jmp_if_*) ──────────
+            //
+            // McCarthy `COND` is lowered by the shared structural pass to a chain
+            // of `jmp_if_false`/`jmp` over `label`s. CIL labels are not opcodes —
+            // they are named positions in the byte stream — so a `label` emits a
+            // `<name>:` anchor and the branches reference it by name. `ilasm`
+            // resolves every name to the right offset.
+            //
+            // label <name>  →  `<name>:`
+            "label" => {
+                let name = checked_label(f, var_src(f, instr, 0, "label")?)?;
+                let _ = writeln!(il, "  {name}:");
+            }
+            // jmp <label>  →  br <label>   (unconditional branch)
+            "jmp" => {
+                let label = checked_label(f, var_src(f, instr, 0, "jmp")?)?;
+                let _ = writeln!(il, "    br {label}");
+            }
+            // jmp_if_false <cond>, <label>  →  ldloc cond; brfalse <label>
+            "jmp_if_false" => {
+                let cond = var_src(f, instr, 0, "jmp_if_false")?;
+                let label = checked_label(f, var_src(f, instr, 1, "jmp_if_false")?)?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(cond)?);
+                let _ = writeln!(il, "    brfalse {label}");
+            }
+            // jmp_if_true <cond>, <label>  →  ldloc cond; brtrue <label>
+            "jmp_if_true" => {
+                let cond = var_src(f, instr, 0, "jmp_if_true")?;
+                let label = checked_label(f, var_src(f, instr, 1, "jmp_if_true")?)?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(cond)?);
+                let _ = writeln!(il, "    brtrue {label}");
+            }
+            // ── McCarthy predicate primitives (call_builtin) ──────────────────
+            //
+            // The structural pass decomposes the source predicates into three
+            // boolean builtins, each a small CIL idiom (the CLR twins of the JVM
+            // `instanceof`/`ixor`/`if_icmpeq` and the wasm `ref.test`/`i32.eqz`/
+            // `i32.eq`). Mirrors the binary emitter's `call_builtin` arm in
+            // `lower.rs`.
+            //
+            // | builtin  | layout                            | CIL |
+            // |----------|-----------------------------------|-----|
+            // | `pair?`  | [Var("pair?"), Var(x)]; dest      | `ldloc x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
+            // | `not`    | [Var("not"), Var(x)]; dest        | `ldloc x; ldc.i4.1; xor` |
+            // | `equal?` | [Var("equal?"), Var(a), Var(b)]   | `ldloc a; unbox.any int32; ldloc b; unbox.any int32; ceq` |
+            "call_builtin" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "call_builtin must have a dest".to_string(),
+                })?;
+                let builtin = var_src(f, instr, 0, "call_builtin")?;
+                match builtin {
+                    // Is the (boxed) lisp value a cons cell? A cons is an `object[]`
+                    // (heap ref); an atom is a boxed int; nil is null. `isinst`
+                    // leaves the ref or null; the two `ceq`s turn that into a clean
+                    // 1 (pair) / 0 (not): the first `ceq ldnull` answers "is it null
+                    // (≠ pair)?", the second (`== 0`) flips it back to "was a pair".
+                    "pair?" => {
+                        let arg = var_src(f, instr, 1, "pair?")?;
+                        let _ = writeln!(il, "    ldloc V_{}", slot(arg)?);
+                        let _ = writeln!(il, "    isinst object[]");
+                        let _ = writeln!(il, "    ldnull");
+                        let _ = writeln!(il, "    ceq");
+                        let _ = writeln!(il, "    ldc.i4.0");
+                        let _ = writeln!(il, "    ceq");
+                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    }
+                    // Logical not of a 0/1 bool: `x ^ 1`. (Distinct from a machine
+                    // bitwise-complement `not`; this is McCarthy's boolean not.)
+                    "not" => {
+                        let arg = var_src(f, instr, 1, "not")?;
+                        let _ = writeln!(il, "    ldloc V_{}", slot(arg)?);
+                        let _ = writeln!(il, "    ldc.i4.1");
+                        let _ = writeln!(il, "    xor");
+                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    }
+                    // `EQ` on atoms: unbox both and compare. The structural pass
+                    // guarantees both args are boxed atoms (symbols interned to ints,
+                    // integers as ints), so identity reduces to integer equality.
+                    "equal?" => {
+                        let a = var_src(f, instr, 1, "equal?")?;
+                        let b = var_src(f, instr, 2, "equal?")?;
+                        let _ = writeln!(il, "    ldloc V_{}", slot(a)?);
+                        let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
+                        let _ = writeln!(il, "    ldloc V_{}", slot(b)?);
+                        let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
+                        let _ = writeln!(il, "    ceq");
+                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    }
+                    other => {
+                        return Err(IIRClrError::UnsupportedOp {
+                            function: f.name.clone(),
+                            op: format!("call_builtin {other:?}"),
+                        })
+                    }
+                }
+            }
+            // Later slices extend this match (symbols, lambda).
             other => {
                 return Err(IIRClrError::UnsupportedOp {
                     function: f.name.clone(),
@@ -358,8 +519,165 @@ mod tests {
     }
 
     #[test]
+    fn atom_emits_isinst_xor_predicate_chain() {
+        // `(ATOM 7)` lowers to `not (pair? (box 7))`: box the int, test it against
+        // object[], collapse to a 0/1 bool, then xor-1 to negate.
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("v0b".into()), vec![Operand::Var("v0".into())], "ref<any>"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v1".into()),
+                vec![Operand::Var("pair?".into()), Operand::Var("v0b".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("v2".into()),
+                vec![Operand::Var("not".into()), Operand::Var("v1".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v2".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        // pair?: isinst object[]; ldnull; ceq; ldc.i4.0; ceq
+        assert!(il.contains("isinst object[]"), "pair? → isinst object[]; got:\n{il}");
+        assert!(il.contains("ceq"), "pair? collapses ref/null to a bool with ceq");
+        // not: ldc.i4.1; xor
+        assert!(il.contains("ldc.i4.1\n    xor"), "not → xor 1; got:\n{il}");
+        // The bool register is a raw int32 local.
+        assert!(il.contains("int32 V_"), "predicate result is an int32 local");
+    }
+
+    #[test]
+    fn eq_emits_double_unbox_then_ceq() {
+        // `(EQ 7 7)` lowers to `equal? (box 7) (box 7)`: unbox both, compare.
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+            IIRInstr::new("box", Some("bb".into()), vec![Operand::Var("b".into())], "ref<any>"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("equal?".into()),
+                    Operand::Var("ab".into()),
+                    Operand::Var("bb".into()),
+                ],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert_eq!(
+            il.matches("unbox.any [System.Runtime]System.Int32").count(),
+            2,
+            "equal? unboxes both operands; got:\n{il}"
+        );
+        assert!(il.contains("ceq"), "equal? → ceq");
+    }
+
+    #[test]
+    fn cond_emits_branches_labels_and_nil_fallthrough() {
+        // A minimal COND skeleton: branch on a bool to a label, an unconditional
+        // jump to the end, and a nil (`const 0 : ref<LispyPair>`) fall-through that
+        // must become `ldnull` (not `ldc.i4 0`) so the object-typed local is sound.
+        let instrs = vec![
+            IIRInstr::new("const", Some("c".into()), vec![Operand::Int(1)], "bool"),
+            IIRInstr::new(
+                "jmp_if_false",
+                None,
+                vec![Operand::Var("c".into()), Operand::Var("L_next".into())],
+                "void",
+            ),
+            IIRInstr::new("const", Some("r".into()), vec![Operand::Int(11)], "i32"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("L_end".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L_next".into())], "void"),
+            IIRInstr::new("const", Some("nil".into()), vec![Operand::Int(0)], "ref<LispyPair>"),
+            IIRInstr::new("label", None, vec![Operand::Var("L_end".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("brfalse L_next"), "jmp_if_false → brfalse; got:\n{il}");
+        assert!(il.contains("br L_end"), "jmp → br");
+        assert!(il.contains("L_next:"), "label → named anchor");
+        assert!(il.contains("L_end:"), "label → named anchor");
+        // The nil const must be ldnull, and its local must be object[] (a list).
+        assert!(il.contains("ldnull"), "const-of-ref-type nil → ldnull; got:\n{il}");
+        assert!(il.contains("object[] V_"), "nil local is object[]");
+        // It must NOT store an int 0 into the reference local.
+        assert!(!il.contains("ldc.i4 0\n    stloc"), "nil must not be ldc.i4 0");
+    }
+
+    #[test]
+    fn malicious_label_name_is_rejected_not_injected() {
+        // A hostile IIR label carrying CIL directives / newlines must NOT reach the
+        // `.il` text — `checked_label` fails closed on any non-identifier character.
+        for bad in [
+            "L_end\n    .entrypoint\n  ", // newline + directive injection
+            "L }",                        // brace closes the method early
+            "L_end // comment",           // line comment
+            "",                           // empty
+        ] {
+            let instrs = vec![
+                IIRInstr::new("label", None, vec![Operand::Var(bad.into())], "void"),
+                IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ];
+            let mut m = IIRModule::new("Main", "mccarthy-lisp");
+            m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+            m.entry_point = Some("main".into());
+            let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
+            assert!(
+                matches!(err, IIRClrError::InvalidOperand { .. }),
+                "label {bad:?} must be rejected, got {err:?}"
+            );
+        }
+        // A legitimate synthetic COND label still passes.
+        let instrs = vec![
+            IIRInstr::new("label", None, vec![Operand::Var("L_cond_next_1".into())], "void"),
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        assert!(emit_il(&m, &IIRClrConfig::new("Main")).unwrap().contains("L_cond_next_1:"));
+    }
+
+    #[test]
+    fn const_of_reference_type_rejects_non_nil() {
+        // A non-zero constant of reference type is not representable (only nil is a
+        // constant ref) — reject rather than emit an ill-typed store.
+        let instrs = vec![
+            IIRInstr::new("const", Some("x".into()), vec![Operand::Int(5)], "ref<LispyPair>"),
+            IIRInstr::new("ret", None, vec![Operand::Var("x".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
+        assert!(matches!(err, IIRClrError::InvalidOperand { .. }));
+    }
+
+    #[test]
     fn unsupported_op_is_rejected_not_emitted() {
-        // A predicate (`call_builtin`) is C3 — C2 must reject it explicitly, not emit junk.
+        // A `call_builtin` to a name outside the CLR whitelist (only pair?/not/
+        // equal? are emittable today) must be rejected explicitly, not emit junk —
+        // e.g. `lispy_cons` is a heap builtin handled structurally, never here.
         let mut m = scalar_module(1);
         m.functions[0].instructions.insert(
             0,

@@ -57,9 +57,16 @@ other external-tool backends.
   the ref-only `microsoft.netcore.ilasm`). Verified by RUNNING on **real CoreCLR**
   (`tests/clr_real_cons.rs`): `(CAR (CONS 7 9))`→7, `(CDR …)`→9,
   `(CAR (CDR (CONS 1 (CONS 2 3))))`→2.
-- ☐ **C3 — predicates + COND (F3–F5).** `pair?`→`isinst object[]`, `not`→`xor 1`,
-  `equal?`→`unbox;unbox;ceq`, `COND` truthiness → branch. Verify `(ATOM 7)`→1,
-  `(EQ 7 7)`→1, `(COND …)`→11.
+- ✅ **C3 — predicates + COND (F3–F5).** `emit_il` gained `call_builtin "pair?"` →
+  `isinst object[]; ldnull; ceq; ldc.i4.0; ceq` (the **textual** `isinst object[]`
+  form — `ilasm` rejects an explicit `[System.Runtime]System.Object[]` scope there),
+  `"not"` → `ldc.i4.1; xor`, `"equal?"` → `unbox.any int32` ×2 + `ceq`; and the
+  `COND` control flow `label` → `<name>:`, `jmp` → `br`, `jmp_if_false` → `brfalse`
+  (`jmp_if_true` → `brtrue`). A `const` of reference type (the `COND` nil
+  fall-through) emits `ldnull`, not `ldc.i4 0`. Verified by RUNNING on **real
+  CoreCLR** (`tests/clr_real_predicates.rs`): `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0,
+  `(EQ 7 7)`→1, `(EQ 7 8)`→0, `(COND ((ATOM 7) 11) …)`→11,
+  `(COND ((ATOM (CONS 1 2)) 11) ((EQ 5 5) 22))`→22.
 - ☐ **C4 — symbols (F6).** Interned symbol ids (the shared
   `intern_symbols_structural`); `(EQ (QUOTE A) (QUOTE A))`→1, distinct→0.
 - ☐ **C5 — lambda / LABEL / recursion (F7).** Each hoisted lambda as its own

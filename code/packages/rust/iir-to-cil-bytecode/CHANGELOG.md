@@ -1,5 +1,36 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.13.0] — 2026-06-11 — textual `.il`: predicates + COND (CLR-real C3)
+
+`emit_il` grows the McCarthy predicate primitives and `COND` control flow:
+
+- `call_builtin "pair?"` → `isinst object[]; ldnull; ceq; ldc.i4.0; ceq` (a clean
+  0/1 bool: is the boxed value a cons cell?). Note the **textual** form is
+  `isinst object[]` — `ilasm` rejects an explicit `[System.Runtime]System.Object[]`
+  assembly scope in that position (syntax error), unlike the `newarr` element type.
+- `call_builtin "not"` → `ldc.i4.1; xor` (boolean negation of a 0/1 value).
+- `call_builtin "equal?"` → `unbox.any [System.Runtime]System.Int32` on both
+  operands + `ceq` (atom identity reduces to integer equality; symbols are interned
+  to ints upstream).
+- `COND` lowering: `label` → a `<name>:` anchor, `jmp` → `br <name>`,
+  `jmp_if_false` → `ldloc cond; brfalse <name>` (and `jmp_if_true` → `brtrue`).
+- `const` of a **reference** type (`ref<…>`) is the McCarthy nil — emit `ldnull`
+  (the canonical null `object[]`), never `ldc.i4 0`, which would be an ill-typed
+  store into an object-typed local. A non-zero reference constant is rejected.
+
+**Security:** branch-target / label names are the one IIR-supplied *string* (not a
+numeric slot) that reaches the `.il` text, so they are validated by a new
+`checked_label` helper — only `[A-Za-z0-9_$]` passes, anything else (newlines,
+braces, `.`-directives, `//` comments) is rejected as `InvalidOperand`. This closes
+a latent CIL-injection vector before the source-derived names of C4/C5 land. Unit
+test `malicious_label_name_is_rejected_not_injected`.
+
+Verified by RUNNING on real CoreCLR (`lang-aot/tests/clr_real_predicates.rs`):
+`(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 7 7)`→1, `(EQ 7 8)`→0,
+`(COND ((ATOM 7) 11) …)`→11, `(COND ((ATOM (CONS 1 2)) 11) ((EQ 5 5) 22))`→22. New
+unit tests: `atom_emits_isinst_xor_predicate_chain`, `eq_emits_double_unbox_then_ceq`,
+`cond_emits_branches_labels_and_nil_fallthrough`, `const_of_reference_type_rejects_non_nil`.
+
 ## [0.12.0] — 2026-06-11 — textual `.il`: cons / car / cdr (CLR-real C2)
 
 `emit_il` grows the cons value model: `alloc` → `ldc.i4.2; newarr
