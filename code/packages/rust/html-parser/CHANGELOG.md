@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness fullscreen-interaction descriptors now expose embedded
+  fullscreen permission hints, `allowfullscreen` state, fullscreen event hooks,
+  and document/body fullscreen callbacks as a flat browser-planning inventory.
 - Browser-readiness animation-interaction descriptors now expose CSS animation
   and transition event hooks, timeline phase grouping, document/body scope, and
   cancellation paths as a flat browser-planning inventory.

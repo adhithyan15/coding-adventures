@@ -830,6 +830,7 @@ pub struct BrowserDocument {
     pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
     pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
     pub animation_interaction_descriptors: Vec<BrowserAnimationInteractionDescriptor>,
+    pub fullscreen_interaction_descriptors: Vec<BrowserFullscreenInteractionDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1396,6 +1397,29 @@ pub struct BrowserAnimationInteractionDescriptor {
     pub transition_end_handlers: Vec<String>,
     pub transition_cancel_handlers: Vec<String>,
     pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFullscreenInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub fullscreen_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub fullscreen_handlers: Vec<String>,
+    pub fullscreen_change_handlers: Vec<String>,
+    pub fullscreen_error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
+    pub embedded_context: bool,
     pub document_scope: bool,
     pub body_scope: bool,
 }
@@ -3248,6 +3272,8 @@ impl BrowserDocument {
         summary.lifecycle_event_descriptors = browser_lifecycle_event_descriptors(&summary);
         summary.animation_interaction_descriptors =
             browser_animation_interaction_descriptors(&summary);
+        summary.fullscreen_interaction_descriptors =
+            browser_fullscreen_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -15551,6 +15577,190 @@ fn browser_animation_interaction_kind(
     }
 }
 
+fn browser_fullscreen_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserFullscreenInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for policy in &document.embedded_policy_descriptors {
+        if !policy.allowfullscreen && !browser_allow_fullscreen_policy(policy.allow.as_deref()) {
+            continue;
+        }
+
+        let matching_event_descriptor =
+            document
+                .event_handler_descriptors
+                .iter()
+                .find(|event_descriptor| {
+                    browser_fullscreen_descriptor_matches_policy(event_descriptor, policy)
+                });
+        descriptors.push(browser_fullscreen_descriptor_from_embedded_policy(
+            policy,
+            matching_event_descriptor,
+        ));
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if !browser_event_descriptor_has_fullscreen_interaction_state(event_descriptor) {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            browser_fullscreen_descriptor_matches_event(descriptor, event_descriptor)
+        }) {
+            continue;
+        }
+        descriptors.push(browser_fullscreen_descriptor_from_event(event_descriptor));
+    }
+
+    descriptors
+}
+
+fn browser_fullscreen_descriptor_matches_policy(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+    policy: &BrowserEmbeddedPolicyDescriptor,
+) -> bool {
+    event_descriptor.element == policy.element
+        && event_descriptor.id.as_deref() == policy.browsing_context_name.as_deref()
+}
+
+fn browser_fullscreen_descriptor_matches_event(
+    descriptor: &BrowserFullscreenInteractionDescriptor,
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+}
+
+fn browser_event_descriptor_has_fullscreen_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event).is_empty()
+}
+
+fn browser_fullscreen_descriptor_from_embedded_policy(
+    policy: &BrowserEmbeddedPolicyDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserFullscreenInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_default();
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_error_event);
+    let allow_tokens = browser_permission_policy_tokens(policy.allow.as_deref());
+    let fullscreen_allowed =
+        policy.allowfullscreen || browser_allow_fullscreen_policy(policy.allow.as_deref());
+
+    BrowserFullscreenInteractionDescriptor {
+        element: policy.element.clone(),
+        id: policy.browsing_context_name.clone(),
+        classes: event_descriptor
+            .map(|descriptor| descriptor.classes.clone())
+            .unwrap_or_default(),
+        role: event_descriptor.and_then(|descriptor| descriptor.role.clone()),
+        source: "embedded-policy".to_string(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            fullscreen_allowed,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: policy.fallback_text.clone(),
+        event_handlers,
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: policy.allow.clone(),
+        allow_tokens,
+        allowfullscreen: policy.allowfullscreen,
+        fullscreen_allowed,
+        embedded_context: true,
+        document_scope: false,
+        body_scope: false,
+    }
+}
+
+fn browser_fullscreen_descriptor_from_event(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserFullscreenInteractionDescriptor {
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_error_event);
+
+    BrowserFullscreenInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            false,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: None,
+        allow_tokens: Vec::new(),
+        allowfullscreen: false,
+        fullscreen_allowed: false,
+        embedded_context: false,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_fullscreen_interaction_kind(
+    fullscreen_allowed: bool,
+    fullscreen_change_handlers: &[String],
+    fullscreen_error_handlers: &[String],
+) -> String {
+    if fullscreen_allowed && !fullscreen_error_handlers.is_empty() {
+        "fullscreen-policy-error".to_string()
+    } else if fullscreen_allowed && !fullscreen_change_handlers.is_empty() {
+        "fullscreen-policy-change".to_string()
+    } else if fullscreen_allowed {
+        "fullscreen-enabled".to_string()
+    } else if !fullscreen_error_handlers.is_empty() {
+        "fullscreen-error".to_string()
+    } else {
+        "fullscreen-change".to_string()
+    }
+}
+
+fn browser_allow_fullscreen_policy(allow: Option<&str>) -> bool {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .any(|feature| feature == "fullscreen")
+}
+
+fn browser_permission_policy_tokens(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .collect()
+}
+
+fn browser_permission_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .split_whitespace()
+        .next()
+        .map(str::to_ascii_lowercase)
+        .filter(|feature| !feature.is_empty())
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -17576,6 +17786,18 @@ fn browser_transition_end_event(handler: &str) -> bool {
 
 fn browser_transition_cancel_event(handler: &str) -> bool {
     handler == "ontransitioncancel"
+}
+
+fn browser_fullscreen_event(handler: &str) -> bool {
+    matches!(handler, "onfullscreenchange" | "onfullscreenerror")
+}
+
+fn browser_fullscreen_change_event(handler: &str) -> bool {
+    handler == "onfullscreenchange"
+}
+
+fn browser_fullscreen_error_event(handler: &str) -> bool {
+    handler == "onfullscreenerror"
 }
 
 fn browser_form_event(handler: &str) -> bool {
@@ -23900,6 +24122,65 @@ mod tests {
             cancelled.animation_cancel_handlers,
             vec!["onanimationcancel"]
         );
+    }
+
+    #[test]
+    fn browser_fullscreen_interaction_descriptors_track_policy_and_event_hooks() {
+        let html = "<html onfullscreenchange=docFullscreen>\
+             <body onfullscreenerror=bodyFullscreenError>\
+             <iframe id=player name=player src=player.html allow=\"fullscreen; geolocation\" allowfullscreen \
+                 onfullscreenchange=frameFullscreen onfullscreenerror=frameFullscreenError>Fallback</iframe>\
+             <div id=viewer onfullscreenchange=viewerFullscreen>Viewer</div></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.fullscreen_interaction_descriptors.len(), 4);
+
+        let frame = &summary.fullscreen_interaction_descriptors[0];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.id.as_deref(), Some("player"));
+        assert_eq!(frame.source, "embedded-policy");
+        assert_eq!(frame.fullscreen_kind, "fullscreen-policy-error");
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert_eq!(frame.allow_tokens, vec!["fullscreen", "geolocation"]);
+        assert!(frame.allowfullscreen);
+        assert!(frame.fullscreen_allowed);
+        assert!(frame.embedded_context);
+        assert_eq!(
+            frame.fullscreen_handlers,
+            vec!["onfullscreenchange", "onfullscreenerror"]
+        );
+        assert_eq!(frame.fullscreen_change_handlers, vec!["onfullscreenchange"]);
+        assert_eq!(frame.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert_eq!(frame.handler_count, 2);
+
+        let document = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document fullscreen descriptor");
+        assert_eq!(document.fullscreen_kind, "fullscreen-change");
+        assert!(document.document_scope);
+
+        let body = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body fullscreen descriptor");
+        assert_eq!(body.fullscreen_kind, "fullscreen-error");
+        assert_eq!(body.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert!(body.body_scope);
+
+        let viewer = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("viewer"))
+            .expect("viewer fullscreen descriptor");
+        assert_eq!(viewer.fullscreen_kind, "fullscreen-change");
+        assert_eq!(
+            viewer.fullscreen_change_handlers,
+            vec!["onfullscreenchange"]
+        );
+        assert!(!viewer.fullscreen_allowed);
     }
 
     #[test]
