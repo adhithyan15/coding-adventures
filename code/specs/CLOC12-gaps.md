@@ -509,9 +509,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-066 — redundant parens after `extends`
 
-- **Status:** OPEN — discovered by CLOC14.33. `minify_class_extends_paren` ignored.
+- **Status:** **RESOLVED** in CLOC12.75 (minimal safe slice). `minify_class_extends_paren` flips IGNORED → PASS.
 - **Input:** `class A extends(B){}` → **Upstream:** `class A extends B{}`
 - **What it needs:** After the `extends` keyword, a parenthesized simple reference (`(B)`) is redundant — strip the parens. Same simple-reference / precedence caveat as gap-065.
+- **CLOC12.75 (minimal safe slice):** strips `extends ( <identifier-dot chain> )` only (identifier + `.IDENT` accessors), anchored on the `extends` KEYWORD (guarded against a property named `extends` — `o.extends(x)` is a method call). **Deliberately conservative vs upstream:** `extends(B||C)` is KEPT — `B||C` is not a LeftHandSideExpression, so `extends B||C` would be invalid JS (upstream strips it anyway, emitting arguably-invalid output). Call-chain inners (`extends(f())`) deferred. 5 unit tests.
 
 ### Additional divergences observed by CLOC14.33 (deferred, not yet fixtured)
 

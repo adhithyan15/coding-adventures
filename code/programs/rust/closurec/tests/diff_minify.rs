@@ -94,9 +94,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // tagged-template callee (`(f)(x)`→`f(x)`, `(a.b)(x)`→
     // `a.b(x)`) are now stripped; those three fixtures are
     // enforced again.
-    // gap-066 (CLOC14.33): redundant parens after `extends` —
-    // `class A extends(B){}` → `class A extends B{}`.
-    ("class_extends_paren", "gap-066: redundant parens after `extends`"),
+    // gap-066 RESOLVED in CLOC12.75 — redundant parens after
+    // `extends` (`class A extends(B){}` → `class A extends B{}`)
+    // are now stripped; `minify_class_extends_paren` enforced.
     // gap-064 RESOLVED in CLOC12.73 — `new A(")")` no longer
     // misreads the string `)` arg as the empty-paren close
     // (the gap-050 drop now gates on `is_structural_punct`).

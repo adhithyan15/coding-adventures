@@ -624,6 +624,73 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-066: redundant parens after `extends` ------------
+    // `class A extends(B){}` → `class A extends B{}`. After the
+    // `extends` keyword a parenthesized simple reference is
+    // redundant — the class body `{` delimits the heritage
+    // clause, so `extends B{` is unambiguous.
+    //
+    // Minimal safe slice: the inner must be a *simple reference*
+    // — a plain identifier plus zero-or-more `.IDENT` accessors
+    // (mirroring gap-065). The scan stops at the first non-
+    // `.IDENT` token, so:
+    //   - `extends(B||C)` keeps its parens — `B||C` is NOT a
+    //     LeftHandSideExpression, so `extends B||C` would be
+    //     INVALID JS (upstream strips it anyway, producing
+    //     arguably-invalid output; we stay safe and conservative).
+    //   - `extends(f())` (call-chain inner) is left for a
+    //     follow-up — not yet fixtured.
+    //
+    // Guards:
+    //   - the `(` must directly follow the `extends` KEYWORD, not
+    //     a string literal whose content is `extends` and not a
+    //     PROPERTY named `extends` (`obj.extends(x)` is a method
+    //     call — prev-prev must not be `.`/`?.`),
+    //   - all bracket/accessor checks via `is_structural_punct`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 1;
+        while i + 1 < kept.len() {
+            let after_extends = kept[i - 1].value == "extends"
+                && !is_string_literal(kept[i - 1])
+                && match i.checked_sub(2).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(pp) => {
+                        !is_structural_punct(pp, ".")
+                            && !is_structural_punct(pp, "?.")
+                    }
+                };
+            if after_extends
+                && is_structural_punct(&kept[i], "(")
+                && is_plain_identifier(&kept[i + 1])
+            {
+                // Consume the `.IDENT` member chain.
+                let mut p = i + 1;
+                while p + 2 < kept.len()
+                    && is_structural_punct(&kept[p + 1], ".")
+                    && is_plain_identifier(&kept[p + 2])
+                {
+                    p += 2;
+                }
+                let close_ok = kept
+                    .get(p + 1)
+                    .map(|t| is_structural_punct(t, ")"))
+                    .unwrap_or(false);
+                if close_ok {
+                    drops.push(i); // open `(`
+                    drops.push(p + 1); // close `)`
+                    i = p + 2;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // ---- gap-059: member/call on a `new` expression ----------
     // `new A().b` → `(new A).b`. When a NewExpression is the
     // OBJECT of a member access (`.`/`[`) or the CALLEE of a
@@ -3576,6 +3643,44 @@ mod tests {
     #[test]
     fn gap065_call_paren_not_stripped() {
         assert_eq!(minify("f(g)(x);"), "f(g)(x);");
+    }
+
+    // ---- gap-066: redundant parens after `extends` -------
+
+    /// gap-066: `class A extends(B){}` → `class A extends B{}`.
+    #[test]
+    fn gap066_extends_paren_stripped() {
+        assert_eq!(minify("class A extends(B){}"), "class A extends B{};");
+    }
+
+    /// gap-066: member-chain superclass — `extends(a.b)` →
+    /// `extends a.b`.
+    #[test]
+    fn gap066_extends_member_chain() {
+        assert_eq!(minify("class A extends(a.b){}"), "class A extends a.b{};");
+    }
+
+    /// gap-066: class EXPRESSION heritage also stripped.
+    #[test]
+    fn gap066_class_expression_extends() {
+        assert_eq!(minify("var x=class extends(B){};"), "var x=class extends B{};");
+    }
+
+    /// gap-066 SAFETY: an operator superclass keeps its parens —
+    /// `extends(B||C)` must NOT become `extends B||C` (which is
+    /// INVALID JS — `B||C` is not a LeftHandSideExpression).
+    /// closurec stays safe here even though upstream strips it.
+    #[test]
+    fn gap066_operator_heritage_keeps_parens() {
+        assert_eq!(minify("class A extends(B||C){}"), "class A extends(B||C){};");
+    }
+
+    /// gap-066 SAFETY: a PROPERTY named `extends` is a method
+    /// call, not a class heritage — `o.extends(x)` must NOT have
+    /// its call parens stripped.
+    #[test]
+    fn gap066_extends_property_not_stripped() {
+        assert_eq!(minify("o.extends(x);"), "o.extends(x);");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
