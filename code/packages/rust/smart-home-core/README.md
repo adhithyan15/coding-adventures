@@ -83,6 +83,8 @@ Current scope:
   dossier, evidence, risk, action, and dependency blocker rollups
 - D18D integration activation-briefing descriptors for Chief-ready activation,
   approval, review, blocker, risk, and dependency briefing sections
+- D18D integration activation-dashboard descriptors for Chief-ready
+  priority-wave status cards derived from readouts and briefing rows
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

@@ -53,6 +53,7 @@ Chief of Staff job/session/agent
   -> activation-decision list and summary reads for approve/block queue planning
   -> activation-evidence list and summary reads for approval/block evidence rows
   -> activation-dossier list and summary reads for bundled decision evidence
+  -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -110,6 +111,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_readout_summary`
 - `smart_home.list_integration_activation_briefing_items`
 - `smart_home.get_integration_activation_briefing_summary`
+- `smart_home.list_integration_activation_dashboard`
+- `smart_home.get_integration_activation_dashboard_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`

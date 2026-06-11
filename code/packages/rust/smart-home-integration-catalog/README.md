@@ -66,6 +66,8 @@ runtime and Chief of Staff tools a typed catalog for:
   dossier, evidence, risk, action, and dependency blocker rollups
 - activation briefing rows that split readouts into Chief-ready activation,
   approval, review, blocker, risk, and dependency briefing sections
+- activation dashboard cards that condense readouts and briefing rows into
+  priority-wave Chief status cards
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
