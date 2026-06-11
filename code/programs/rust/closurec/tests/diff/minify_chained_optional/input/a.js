@@ -1,1 +1,1 @@
-var x=a?.b?.c;
+var c=a?.b?.c?.d;
