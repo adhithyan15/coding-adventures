@@ -36,38 +36,40 @@ use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
     activation_approval_packets_from_candidates, activation_briefing_items_from_readouts,
     activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
-    activation_decisions_from_candidates, activation_dependency_graph_from_reports,
-    activation_dossiers_from_candidates, activation_evidence_from_candidates,
-    activation_health_from_candidates, activation_maintenance_from_candidates,
-    activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_readouts_from_candidates, activation_reviews_from_candidates,
-    activation_risk_from_candidates, activation_runway_from_candidates, describe_primitive_family,
-    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
-    entries_requiring_primitive, find_entry, first_party_catalog,
-    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
-    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
-    readiness_gap_inventory_from_reports, readiness_report_for_plan,
-    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
-    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
-    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
-    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
-    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
-    IntegrationActivationAgendaSummary, IntegrationActivationApprovalPacket,
-    IntegrationActivationApprovalSummary, IntegrationActivationBriefingItem,
-    IntegrationActivationBriefingItemKind, IntegrationActivationBriefingSummary,
-    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
-    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
-    IntegrationActivationDecisionItem, IntegrationActivationDecisionStatus,
-    IntegrationActivationDecisionSummary, IntegrationActivationDependencyEdge,
-    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
-    IntegrationActivationDependencySummary, IntegrationActivationDossierItem,
-    IntegrationActivationDossierSummary, IntegrationActivationEvidenceItem,
-    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
-    IntegrationActivationEvidenceSummary, IntegrationActivationHealthStage,
-    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
-    IntegrationActivationMaintenanceSummary, IntegrationActivationMaintenanceWindow,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationReadoutStage,
+    activation_dashboard_cards_from_readouts, activation_decisions_from_candidates,
+    activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
+    activation_evidence_from_candidates, activation_health_from_candidates,
+    activation_maintenance_from_candidates, activation_plan_for_entry,
+    activation_plans_at_or_before_priority, activation_readouts_from_candidates,
+    activation_reviews_from_candidates, activation_risk_from_candidates,
+    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
+    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
+    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
+    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
+    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
+    readiness_report_for_plan, readiness_reports_at_or_before_priority,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
+    IntegrationActivationActionKind, IntegrationActivationActionSummary,
+    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
+    IntegrationActivationApprovalPacket, IntegrationActivationApprovalSummary,
+    IntegrationActivationBriefingItem, IntegrationActivationBriefingItemKind,
+    IntegrationActivationBriefingSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
+    IntegrationActivationConstraintSummary, IntegrationActivationDashboardCard,
+    IntegrationActivationDashboardSummary, IntegrationActivationDecisionItem,
+    IntegrationActivationDecisionStatus, IntegrationActivationDecisionSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
+    IntegrationActivationEvidenceItem, IntegrationActivationEvidenceKind,
+    IntegrationActivationEvidenceStatus, IntegrationActivationEvidenceSummary,
+    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
+    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
+    IntegrationActivationMaintenanceWindow, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationReadoutStage,
     IntegrationActivationReadoutSummary, IntegrationActivationReviewItem,
     IntegrationActivationReviewSummary, IntegrationActivationRiskItem,
     IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
@@ -236,6 +238,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_BRIEFING_ITEMS_TOOL_ID: &str =
     "smart_home.list_integration_activation_briefing_items";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_BRIEFING_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_briefing_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID: &str =
+    "smart_home.list_integration_activation_dashboard";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_dashboard_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -492,6 +498,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_BRIEFING_SUMMARY_TOOL_ID => {
                     let query = integration_activation_briefing_query(&arguments)?;
                     Ok(get_integration_activation_briefing_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID => {
+                    let query = integration_activation_dashboard_query(&arguments)?;
+                    Ok(list_integration_activation_dashboard_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_dashboard_query(&arguments)?;
+                    Ok(get_integration_activation_dashboard_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -1695,6 +1711,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation briefing summary",
             "Return compact D23A activation briefing counts across action, approval, review, blocker, risk, and dependency sections.",
             integration_activation_briefing_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID,
+            "List smart-home integration activation dashboard",
+            "List Chief-ready D23A activation dashboard cards derived from readouts and briefing rows by priority wave.",
+            integration_activation_dashboard_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_dashboard", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_dashboard", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation dashboard summary",
+            "Return compact D23A activation dashboard counts across priority-wave cards, briefing sections, actions, risk, and blockers.",
+            integration_activation_dashboard_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4350,6 +4395,12 @@ struct IntegrationActivationBriefingQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationDashboardQuery {
+    readouts: IntegrationActivationReadoutQuery,
+    card_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -4617,6 +4668,15 @@ fn integration_activation_briefing_query(
         readouts,
         item_kind,
         item_limit: optional_u64(arguments, "item_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_dashboard_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationDashboardQuery, ToolCallError> {
+    Ok(IntegrationActivationDashboardQuery {
+        readouts: integration_activation_readout_query(arguments)?,
+        card_limit: optional_u64(arguments, "card_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5172,6 +5232,19 @@ fn integration_activation_briefing_items_for_query(
     }
 
     (items, catalog_count)
+}
+
+fn integration_activation_dashboard_cards_for_query(
+    query: &IntegrationActivationDashboardQuery,
+) -> (Vec<IntegrationActivationDashboardCard>, usize) {
+    let (readouts, catalog_count) = integration_activation_readouts_for_query(&query.readouts);
+    let mut cards = activation_dashboard_cards_from_readouts(readouts.iter());
+
+    if let Some(limit) = query.card_limit {
+        cards.truncate(limit);
+    }
+
+    (cards, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -6506,6 +6579,72 @@ fn get_integration_activation_briefing_summary_output_handler_output(
             ("total_items", integer(summary.total_items as i64)),
             ("blocker_items", integer(summary.blocker_items as i64)),
             ("approval_items", integer(summary.approval_items as i64)),
+        ]),
+    )
+}
+
+fn list_integration_activation_dashboard_output_handler_output(
+    query: IntegrationActivationDashboardQuery,
+) -> ToolHandlerOutput {
+    let (cards, catalog_count) = integration_activation_dashboard_cards_for_query(&query);
+    let summary = IntegrationActivationDashboardSummary::from_cards(cards.iter());
+    let count = cards.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_dashboard",
+            JsonValue::Array(cards.iter().map(activation_dashboard_card_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_dashboard_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_dashboard")),
+            ("activation_dashboard_cards", integer(count as i64)),
+            (
+                "cards_requiring_attention",
+                integer(summary.cards_requiring_attention as i64),
+            ),
+            (
+                "cards_with_blockers",
+                integer(summary.cards_with_blockers as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_dashboard_summary_output_handler_output(
+    query: IntegrationActivationDashboardQuery,
+) -> ToolHandlerOutput {
+    let (cards, _) = integration_activation_dashboard_cards_for_query(&query);
+    let summary = IntegrationActivationDashboardSummary::from_cards(cards.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_dashboard_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_dashboard_summary"),
+            ),
+            ("total_cards", integer(summary.total_cards as i64)),
+            (
+                "cards_requiring_attention",
+                integer(summary.cards_requiring_attention as i64),
+            ),
+            (
+                "cards_with_blockers",
+                integer(summary.cards_with_blockers as i64),
+            ),
         ]),
     )
 }
@@ -11699,6 +11838,215 @@ fn integration_activation_briefing_summary_json(
     ])
 }
 
+fn activation_dashboard_card_json(card: &IntegrationActivationDashboardCard) -> JsonValue {
+    object([
+        ("priority", integer(card.priority as i64)),
+        ("health_status", string(card.health_status.as_str())),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                card.integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(card.integration_count() as i64),
+        ),
+        (
+            "briefing_item_count",
+            integer(card.briefing_item_count as i64),
+        ),
+        (
+            "next_briefing_kind",
+            card.next_briefing_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "briefing_summary",
+            integration_activation_briefing_summary_json(&card.briefing_summary),
+        ),
+        ("action_count", integer(card.action_count as i64)),
+        ("dossier_count", integer(card.dossier_count as i64)),
+        ("evidence_count", integer(card.evidence_count as i64)),
+        ("risk_count", integer(card.risk_count as i64)),
+        (
+            "dependency_edge_count",
+            integer(card.dependency_edge_count as i64),
+        ),
+        (
+            "blocking_dependency_edge_count",
+            integer(card.blocking_dependency_edge_count as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(card.highest_policy_tier)),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(card.has_activation_work),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(card.has_approval_ready_work),
+        ),
+        ("has_review_work", JsonValue::Bool(card.has_review_work)),
+        ("has_blockers", JsonValue::Bool(card.has_blockers)),
+        ("has_risks", JsonValue::Bool(card.has_risks)),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(card.has_dependency_blockers),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(card.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_dashboard_summary_json(
+    summary: &IntegrationActivationDashboardSummary,
+) -> JsonValue {
+    object([
+        ("total_cards", integer(summary.total_cards as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        ("ready_cards", integer(summary.ready_cards as i64)),
+        ("review_cards", integer(summary.review_cards as i64)),
+        ("blocked_cards", integer(summary.blocked_cards as i64)),
+        ("empty_cards", integer(summary.empty_cards as i64)),
+        (
+            "cards_requiring_attention",
+            integer(summary.cards_requiring_attention as i64),
+        ),
+        (
+            "cards_with_activation_work",
+            integer(summary.cards_with_activation_work as i64),
+        ),
+        (
+            "cards_with_approval_work",
+            integer(summary.cards_with_approval_work as i64),
+        ),
+        (
+            "cards_with_review_work",
+            integer(summary.cards_with_review_work as i64),
+        ),
+        (
+            "cards_with_blockers",
+            integer(summary.cards_with_blockers as i64),
+        ),
+        ("cards_with_risks", integer(summary.cards_with_risks as i64)),
+        (
+            "cards_with_dependency_blockers",
+            integer(summary.cards_with_dependency_blockers as i64),
+        ),
+        (
+            "total_briefing_items",
+            integer(summary.total_briefing_items as i64),
+        ),
+        ("activation_items", integer(summary.activation_items as i64)),
+        ("approval_items", integer(summary.approval_items as i64)),
+        ("review_items", integer(summary.review_items as i64)),
+        ("blocker_items", integer(summary.blocker_items as i64)),
+        ("risk_items", integer(summary.risk_items as i64)),
+        ("dependency_items", integer(summary.dependency_items as i64)),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("total_dossiers", integer(summary.total_dossiers as i64)),
+        ("total_evidence", integer(summary.total_evidence as i64)),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "first_activation_priority",
+            summary
+                .first_activation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_priority",
+            summary
+                .first_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_risk_priority",
+            summary
+                .first_risk_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_priority",
+            summary
+                .first_dependency_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(summary.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("has_risks", JsonValue::Bool(summary.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(summary.has_dependency_blockers()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -15299,6 +15647,19 @@ fn integration_activation_briefing_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_dashboard_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_readout_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("card_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -15443,7 +15804,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 89);
+        assert_eq!(definitions.len(), 91);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -15678,9 +16039,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_BRIEFING_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            81
+            83
         );
         assert_eq!(
             export
@@ -15848,6 +16215,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_BRIEFING_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -16102,11 +16477,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(89))
+            Some(&integer(91))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(81))
+            Some(&integer(83))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -18166,6 +18541,136 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_dashboard_request = request(
+            "call-list-integration-activation-dashboard",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("card_limit", integer(3)),
+            ]),
+            5_023,
+        );
+        let list_activation_dashboard_trace =
+            tool_runtime.invoke_with_events(&list_activation_dashboard_request);
+        assert!(list_activation_dashboard_trace.result.ok);
+        assert_eq!(
+            list_activation_dashboard_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_dashboard_output = list_activation_dashboard_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_dashboard_count =
+            integer_value(field(list_activation_dashboard_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_dashboard_count));
+        let activation_dashboard_summary =
+            field(list_activation_dashboard_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_dashboard_summary, "total_cards"),
+            Some(&integer(activation_dashboard_count))
+        );
+        assert_eq!(
+            field(activation_dashboard_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_dashboard_attention = integer_value(
+            field(activation_dashboard_summary, "cards_requiring_attention").unwrap(),
+        )
+        .unwrap();
+        assert!(activation_dashboard_attention >= 1);
+        let activation_dashboard_card = array_item(
+            field(list_activation_dashboard_output, "activation_dashboard").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_dashboard_card, "priority").is_some());
+        assert!(field(activation_dashboard_card, "health_status").is_some());
+        assert!(field(activation_dashboard_card, "integration_ids").is_some());
+        assert!(field(activation_dashboard_card, "integration_count").is_some());
+        assert!(field(activation_dashboard_card, "briefing_summary").is_some());
+        assert!(field(activation_dashboard_card, "briefing_item_count").is_some());
+        assert!(field(activation_dashboard_card, "next_briefing_kind").is_some());
+        assert_eq!(
+            field(activation_dashboard_card, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_dashboard_summary_request = request(
+            "call-integration-activation-dashboard-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("blocked_only", JsonValue::Bool(true)),
+            ]),
+            5_024,
+        );
+        let activation_dashboard_summary_trace =
+            tool_runtime.invoke_with_events(&activation_dashboard_summary_request);
+        assert!(activation_dashboard_summary_trace.result.ok);
+        assert_eq!(
+            activation_dashboard_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_dashboard_summary_output = activation_dashboard_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_dashboard_rollup =
+            field(activation_dashboard_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_dashboard_rollup, "cards_with_blockers").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_dashboard_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_dashboard_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -19897,6 +20402,14 @@ mod tests {
             activation_briefing_summary_request,
             activation_briefing_summary_trace,
         );
+        journal.record_trace(
+            list_activation_dashboard_request,
+            list_activation_dashboard_trace,
+        );
+        journal.record_trace(
+            activation_dashboard_summary_request,
+            activation_dashboard_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -19970,9 +20483,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 89);
-        assert_eq!(journal_summary.completed_count, 89);
-        assert_eq!(journal.audit_records().len(), 89);
+        assert_eq!(journal_summary.invocation_count, 91);
+        assert_eq!(journal_summary.completed_count, 91);
+        assert_eq!(journal.audit_records().len(), 91);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
