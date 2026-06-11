@@ -38,35 +38,37 @@ use smart_home_integration_catalog::{
     activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
     activation_dashboard_cards_from_readouts, activation_decisions_from_candidates,
     activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
-    activation_evidence_from_candidates, activation_health_from_candidates,
-    activation_maintenance_from_candidates, activation_plan_for_entry,
-    activation_plans_at_or_before_priority, activation_readouts_from_candidates,
-    activation_reviews_from_candidates, activation_risk_from_candidates,
-    activation_runway_from_candidates, activation_timeline_milestones_from_dashboard_cards,
-    describe_primitive_family, ecosystem_platform_coverage,
-    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
-    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
-    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
-    readiness_report_for_plan, readiness_reports_at_or_before_priority,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
-    IntegrationActivationActionKind, IntegrationActivationActionSummary,
-    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
-    IntegrationActivationApprovalPacket, IntegrationActivationApprovalSummary,
-    IntegrationActivationBriefingItem, IntegrationActivationBriefingItemKind,
-    IntegrationActivationBriefingSummary, IntegrationActivationCandidate,
-    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
-    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
-    IntegrationActivationConstraintSummary, IntegrationActivationDashboardCard,
-    IntegrationActivationDashboardSummary, IntegrationActivationDecisionItem,
-    IntegrationActivationDecisionStatus, IntegrationActivationDecisionSummary,
-    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
-    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
-    IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
-    IntegrationActivationEvidenceItem, IntegrationActivationEvidenceKind,
-    IntegrationActivationEvidenceStatus, IntegrationActivationEvidenceSummary,
+    activation_evidence_from_candidates, activation_forecasts_from_timeline_milestones,
+    activation_health_from_candidates, activation_maintenance_from_candidates,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_readouts_from_candidates, activation_reviews_from_candidates,
+    activation_risk_from_candidates, activation_runway_from_candidates,
+    activation_timeline_milestones_from_dashboard_cards, describe_primitive_family,
+    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
+    entries_requiring_primitive, find_entry, first_party_catalog,
+    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
+    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
+    readiness_gap_inventory_from_reports, readiness_report_for_plan,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
+    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
+    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
+    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
+    IntegrationActivationAgendaSummary, IntegrationActivationApprovalPacket,
+    IntegrationActivationApprovalSummary, IntegrationActivationBriefingItem,
+    IntegrationActivationBriefingItemKind, IntegrationActivationBriefingSummary,
+    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
+    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
+    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
+    IntegrationActivationDashboardCard, IntegrationActivationDashboardSummary,
+    IntegrationActivationDecisionItem, IntegrationActivationDecisionStatus,
+    IntegrationActivationDecisionSummary, IntegrationActivationDependencyEdge,
+    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
+    IntegrationActivationDependencySummary, IntegrationActivationDossierItem,
+    IntegrationActivationDossierSummary, IntegrationActivationEvidenceItem,
+    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
+    IntegrationActivationEvidenceSummary, IntegrationActivationForecastAction,
+    IntegrationActivationForecastItem, IntegrationActivationForecastSummary,
     IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
     IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
     IntegrationActivationMaintenanceWindow, IntegrationActivationPlan,
@@ -248,6 +250,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID: &str =
     "smart_home.list_integration_activation_timeline";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_timeline_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_FORECASTS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_forecasts";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_FORECAST_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_forecast_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -524,6 +530,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_timeline_query(&arguments)?;
                     Ok(get_integration_activation_timeline_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_FORECASTS_TOOL_ID => {
+                    let query = integration_activation_forecast_query(&arguments)?;
+                    Ok(list_integration_activation_forecasts_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_FORECAST_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_forecast_query(&arguments)?;
+                    Ok(get_integration_activation_forecast_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -1785,6 +1801,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation timeline summary",
             "Return compact D23A activation timeline counts across ordered milestones, priority waves, blockers, approvals, and activation work.",
             integration_activation_timeline_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_FORECASTS_TOOL_ID,
+            "List smart-home integration activation forecasts",
+            "List Chief-ready D23A activation forecast rows derived from timeline milestones, classifying each priority wave into the next activation, approval, review, blocker, dependency, risk, or monitor action.",
+            integration_activation_forecast_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_forecasts", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_forecasts", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_FORECAST_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation forecast summary",
+            "Return compact D23A activation forecast counts for next action, attention, activation, approval, review, blockers, dependencies, and risks.",
+            integration_activation_forecast_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4453,6 +4498,14 @@ struct IntegrationActivationTimelineQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationForecastQuery {
+    timeline: IntegrationActivationTimelineQuery,
+    forecast_action: Option<IntegrationActivationForecastAction>,
+    requires_attention: Option<bool>,
+    forecast_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -4744,6 +4797,22 @@ fn integration_activation_timeline_query(
         dashboard: integration_activation_dashboard_query(arguments)?,
         milestone_kind,
         milestone_limit: optional_u64(arguments, "milestone_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_forecast_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationForecastQuery, ToolCallError> {
+    let forecast_action = optional_string(arguments, "forecast_action")?
+        .or(optional_string(arguments, "next_action")?)
+        .map(|label| parse_activation_forecast_action(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationForecastQuery {
+        timeline: integration_activation_timeline_query(arguments)?,
+        forecast_action,
+        requires_attention: optional_bool(arguments, "requires_attention")?,
+        forecast_limit: optional_u64(arguments, "forecast_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5328,6 +5397,26 @@ fn integration_activation_timeline_milestones_for_query(
     }
 
     (milestones, catalog_count)
+}
+
+fn integration_activation_forecasts_for_query(
+    query: &IntegrationActivationForecastQuery,
+) -> (Vec<IntegrationActivationForecastItem>, usize) {
+    let (milestones, catalog_count) =
+        integration_activation_timeline_milestones_for_query(&query.timeline);
+    let mut forecasts = activation_forecasts_from_timeline_milestones(milestones);
+
+    if let Some(action) = query.forecast_action {
+        forecasts.retain(|forecast| forecast.forecast_action == action);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        forecasts.retain(|forecast| forecast.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.forecast_limit {
+        forecasts.truncate(limit);
+    }
+
+    (forecasts, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -6798,6 +6887,78 @@ fn get_integration_activation_timeline_summary_output_handler_output(
             (
                 "milestones_with_blockers",
                 integer(summary.milestones_with_blockers as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_forecasts_output_handler_output(
+    query: IntegrationActivationForecastQuery,
+) -> ToolHandlerOutput {
+    let (forecasts, catalog_count) = integration_activation_forecasts_for_query(&query);
+    let summary = IntegrationActivationForecastSummary::from_forecasts(forecasts.iter());
+    let count = forecasts.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_forecasts",
+            JsonValue::Array(forecasts.iter().map(activation_forecast_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_forecast_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_forecasts")),
+            ("activation_forecasts", integer(count as i64)),
+            (
+                "forecasts_requiring_attention",
+                integer(summary.forecasts_requiring_attention as i64),
+            ),
+            (
+                "next_action",
+                summary
+                    .next_action
+                    .map(|action| string(action.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_forecast_summary_output_handler_output(
+    query: IntegrationActivationForecastQuery,
+) -> ToolHandlerOutput {
+    let (forecasts, _) = integration_activation_forecasts_for_query(&query);
+    let summary = IntegrationActivationForecastSummary::from_forecasts(forecasts.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_forecast_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_forecast_summary"),
+            ),
+            ("total_forecasts", integer(summary.total_forecasts as i64)),
+            (
+                "forecasts_requiring_attention",
+                integer(summary.forecasts_requiring_attention as i64),
+            ),
+            (
+                "next_action",
+                summary
+                    .next_action
+                    .map(|action| string(action.as_str()))
+                    .unwrap_or(JsonValue::Null),
             ),
         ]),
     )
@@ -12460,6 +12621,316 @@ fn integration_activation_timeline_summary_json(
     ])
 }
 
+fn activation_forecast_json(forecast: &IntegrationActivationForecastItem) -> JsonValue {
+    object([
+        ("sequence", integer(forecast.sequence as i64)),
+        ("priority", integer(forecast.priority as i64)),
+        ("forecast_action", string(forecast.forecast_action.as_str())),
+        (
+            "milestone_kind",
+            forecast
+                .milestone_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("health_status", string(forecast.health_status.as_str())),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                forecast
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(forecast.integration_count() as i64),
+        ),
+        (
+            "briefing_item_count",
+            integer(forecast.briefing_item_count as i64),
+        ),
+        ("action_count", integer(forecast.action_count as i64)),
+        ("dossier_count", integer(forecast.dossier_count as i64)),
+        ("evidence_count", integer(forecast.evidence_count as i64)),
+        ("risk_count", integer(forecast.risk_count as i64)),
+        (
+            "dependency_edge_count",
+            integer(forecast.dependency_edge_count as i64),
+        ),
+        (
+            "blocking_dependency_edge_count",
+            integer(forecast.blocking_dependency_edge_count as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(forecast.highest_policy_tier)),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(forecast.has_activation_work()),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(forecast.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(forecast.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(forecast.has_blockers())),
+        ("has_risks", JsonValue::Bool(forecast.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(forecast.has_dependency_blockers()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(forecast.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_forecast_summary_json(
+    summary: &IntegrationActivationForecastSummary,
+) -> JsonValue {
+    object([
+        ("total_forecasts", integer(summary.total_forecasts as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        ("ready_forecasts", integer(summary.ready_forecasts as i64)),
+        ("review_forecasts", integer(summary.review_forecasts as i64)),
+        (
+            "blocked_forecasts",
+            integer(summary.blocked_forecasts as i64),
+        ),
+        ("empty_forecasts", integer(summary.empty_forecasts as i64)),
+        (
+            "activate_wave_forecasts",
+            integer(summary.activate_wave_forecasts as i64),
+        ),
+        (
+            "prepare_approval_forecasts",
+            integer(summary.prepare_approval_forecasts as i64),
+        ),
+        (
+            "queue_review_forecasts",
+            integer(summary.queue_review_forecasts as i64),
+        ),
+        (
+            "resolve_blocker_forecasts",
+            integer(summary.resolve_blocker_forecasts as i64),
+        ),
+        (
+            "enable_dependency_forecasts",
+            integer(summary.enable_dependency_forecasts as i64),
+        ),
+        (
+            "review_risk_forecasts",
+            integer(summary.review_risk_forecasts as i64),
+        ),
+        (
+            "monitor_wave_forecasts",
+            integer(summary.monitor_wave_forecasts as i64),
+        ),
+        (
+            "forecasts_requiring_attention",
+            integer(summary.forecasts_requiring_attention as i64),
+        ),
+        (
+            "forecasts_with_activation_work",
+            integer(summary.forecasts_with_activation_work as i64),
+        ),
+        (
+            "forecasts_with_approval_work",
+            integer(summary.forecasts_with_approval_work as i64),
+        ),
+        (
+            "forecasts_with_review_work",
+            integer(summary.forecasts_with_review_work as i64),
+        ),
+        (
+            "forecasts_with_blockers",
+            integer(summary.forecasts_with_blockers as i64),
+        ),
+        (
+            "forecasts_with_risks",
+            integer(summary.forecasts_with_risks as i64),
+        ),
+        (
+            "forecasts_with_dependency_blockers",
+            integer(summary.forecasts_with_dependency_blockers as i64),
+        ),
+        (
+            "total_briefing_items",
+            integer(summary.total_briefing_items as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("total_dossiers", integer(summary.total_dossiers as i64)),
+        ("total_evidence", integer(summary.total_evidence as i64)),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "next_action",
+            summary
+                .next_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_sequence",
+            summary
+                .next_action_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action_priority",
+            summary
+                .next_action_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_sequence",
+            summary
+                .first_activation_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_sequence",
+            summary
+                .first_approval_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_sequence",
+            summary
+                .first_review_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_sequence",
+            summary
+                .first_blocked_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_risk_sequence",
+            summary
+                .first_risk_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_sequence",
+            summary
+                .first_dependency_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_sequence",
+            summary
+                .first_attention_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_priority",
+            summary
+                .first_activation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_priority",
+            summary
+                .first_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_risk_priority",
+            summary
+                .first_risk_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_priority",
+            summary
+                .first_dependency_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(summary.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("has_risks", JsonValue::Bool(summary.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(summary.has_dependency_blockers()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -15035,6 +15506,35 @@ fn parse_activation_briefing_item_kind(
     }
 }
 
+fn parse_activation_forecast_action(
+    label: &str,
+) -> Result<IntegrationActivationForecastAction, ToolCallError> {
+    match label {
+        "resolve_blockers" | "resolve_blocker" | "blocker" | "blockers" => {
+            Ok(IntegrationActivationForecastAction::ResolveBlockers)
+        }
+        "enable_dependencies" | "enable_dependency" | "dependency" | "dependencies" => {
+            Ok(IntegrationActivationForecastAction::EnableDependencies)
+        }
+        "prepare_approval" | "approval" | "approve" | "ready_to_approve" => {
+            Ok(IntegrationActivationForecastAction::PrepareApproval)
+        }
+        "queue_review" | "review" | "human_review" | "policy_review" => {
+            Ok(IntegrationActivationForecastAction::QueueReview)
+        }
+        "review_risk" | "risk" | "risks" => Ok(IntegrationActivationForecastAction::ReviewRisk),
+        "activate_wave" | "activation" | "activate" | "ready_to_activate" => {
+            Ok(IntegrationActivationForecastAction::ActivateWave)
+        }
+        "monitor_wave" | "monitor" | "watch" => {
+            Ok(IntegrationActivationForecastAction::MonitorWave)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation forecast action `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -16088,6 +16588,21 @@ fn integration_activation_timeline_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_forecast_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_timeline_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("forecast_action", JsonSchema::String));
+        properties.push(SchemaProperty::new("next_action", JsonSchema::String));
+        properties.push(SchemaProperty::new("forecast_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -16232,7 +16747,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 93);
+        assert_eq!(definitions.len(), 95);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -16479,9 +16994,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_FORECASTS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_FORECAST_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            85
+            87
         );
         assert_eq!(
             export
@@ -16919,11 +17440,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(93))
+            Some(&integer(95))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(85))
+            Some(&integer(87))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -19247,6 +19768,139 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_forecasts_request = request(
+            "call-list-integration-activation-forecasts",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_FORECASTS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("forecast_limit", integer(3)),
+            ]),
+            5_027,
+        );
+        let list_activation_forecasts_trace =
+            tool_runtime.invoke_with_events(&list_activation_forecasts_request);
+        assert!(list_activation_forecasts_trace.result.ok);
+        assert_eq!(
+            list_activation_forecasts_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_forecasts_output = list_activation_forecasts_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_forecast_count =
+            integer_value(field(list_activation_forecasts_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_forecast_count));
+        let activation_forecast_summary =
+            field(list_activation_forecasts_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_forecast_summary, "total_forecasts"),
+            Some(&integer(activation_forecast_count))
+        );
+        assert_eq!(
+            field(activation_forecast_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(
+                field(activation_forecast_summary, "forecasts_requiring_attention").unwrap(),
+            )
+            .unwrap()
+                >= 1
+        );
+        let activation_forecast = array_item(
+            field(list_activation_forecasts_output, "activation_forecasts").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_forecast, "sequence").is_some());
+        assert!(field(activation_forecast, "priority").is_some());
+        assert!(field(activation_forecast, "forecast_action").is_some());
+        assert!(field(activation_forecast, "milestone_kind").is_some());
+        assert!(field(activation_forecast, "health_status").is_some());
+        assert!(field(activation_forecast, "integration_ids").is_some());
+        assert!(field(activation_forecast, "integration_count").is_some());
+        assert_eq!(
+            field(activation_forecast, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_forecast_summary_request = request(
+            "call-integration-activation-forecast-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_FORECAST_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("forecast_action", string("resolve_blockers")),
+                ("requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_028,
+        );
+        let activation_forecast_summary_trace =
+            tool_runtime.invoke_with_events(&activation_forecast_summary_request);
+        assert!(activation_forecast_summary_trace.result.ok);
+        assert_eq!(
+            activation_forecast_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_forecast_summary_output = activation_forecast_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_forecast_rollup =
+            field(activation_forecast_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_forecast_rollup, "resolve_blocker_forecasts").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_forecast_rollup, "next_action"),
+            Some(&string("resolve_blockers"))
+        );
+        assert_eq!(
+            field(activation_forecast_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -20994,6 +21648,14 @@ mod tests {
             activation_timeline_summary_request,
             activation_timeline_summary_trace,
         );
+        journal.record_trace(
+            list_activation_forecasts_request,
+            list_activation_forecasts_trace,
+        );
+        journal.record_trace(
+            activation_forecast_summary_request,
+            activation_forecast_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -21067,9 +21729,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 93);
-        assert_eq!(journal_summary.completed_count, 93);
-        assert_eq!(journal.audit_records().len(), 93);
+        assert_eq!(journal_summary.invocation_count, 95);
+        assert_eq!(journal_summary.completed_count, 95);
+        assert_eq!(journal.audit_records().len(), 95);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

@@ -79,6 +79,10 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_timeline` and
   `smart_home.get_integration_activation_timeline_summary` tool descriptors
   for read-only Chief activation milestone views derived from dashboard cards.
+- `smart_home.list_integration_activation_forecasts` and
+  `smart_home.get_integration_activation_forecast_summary` tool descriptors
+  for read-only Chief next-action classification derived from activation
+  timeline milestones.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.
