@@ -831,6 +831,7 @@ pub struct BrowserDocument {
     pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
     pub animation_interaction_descriptors: Vec<BrowserAnimationInteractionDescriptor>,
     pub fullscreen_interaction_descriptors: Vec<BrowserFullscreenInteractionDescriptor>,
+    pub context_menu_interaction_descriptors: Vec<BrowserContextMenuInteractionDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1422,6 +1423,39 @@ pub struct BrowserFullscreenInteractionDescriptor {
     pub embedded_context: bool,
     pub document_scope: bool,
     pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserContextMenuInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub context_menu_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub event_handlers: Vec<String>,
+    pub contextmenu_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub context_menu_blocked: bool,
+    pub context_menu_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3274,6 +3308,8 @@ impl BrowserDocument {
             browser_animation_interaction_descriptors(&summary);
         summary.fullscreen_interaction_descriptors =
             browser_fullscreen_interaction_descriptors(&summary);
+        summary.context_menu_interaction_descriptors =
+            browser_context_menu_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -15761,6 +15797,224 @@ fn browser_permission_policy_feature(directive: &str) -> Option<String> {
         .filter(|feature| !feature.is_empty())
 }
 
+fn browser_context_menu_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserContextMenuInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if browser_interactive_has_context_menu_state(element, event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_context_menu_state(event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_context_menu_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || element
+            .authored_role
+            .as_deref()
+            .is_some_and(browser_menu_role)
+        || (element.popover.is_some()
+            && element
+                .authored_role
+                .as_deref()
+                .is_some_and(browser_menu_role))
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()))
+        || event_descriptor
+            .map(browser_event_descriptor_has_context_menu_state)
+            .unwrap_or(false)
+}
+
+fn browser_event_descriptor_has_context_menu_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_context_menu_event)
+        .is_empty()
+}
+
+fn browser_context_menu_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserContextMenuInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_else(|| element.event_handlers.clone());
+    let contextmenu_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_context_menu_event);
+    let pointer_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_pointer_interaction_event);
+    let keyboard_handlers = browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = browser_pointer_block_reasons_for_interactive(element);
+    let menu_role = element
+        .authored_role
+        .as_deref()
+        .is_some_and(browser_menu_role);
+    let menu_invoker = browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()));
+
+    BrowserContextMenuInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            menu_invoker,
+            menu_role,
+            element.popover.is_some() && menu_role,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        popover: element.popover.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        event_handlers,
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        context_menu_blocked: !context_menu_block_reasons.is_empty(),
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserContextMenuInteractionDescriptor {
+    let contextmenu_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_context_menu_event,
+    );
+    let pointer_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    );
+    let keyboard_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = Vec::new();
+
+    BrowserContextMenuInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: "event-handler".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            false,
+            false,
+            false,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_haspopup: None,
+        aria_controls: Vec::new(),
+        aria_expanded: None,
+        popover: None,
+        popover_target: None,
+        popover_target_action: None,
+        command: None,
+        command_for: None,
+        event_handlers: event_descriptor.event_handlers.clone(),
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        context_menu_blocked: false,
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_kind(
+    menu_invoker: bool,
+    menu_role: bool,
+    popover_surface: bool,
+    contextmenu_handlers: &[String],
+    keyboard_handlers: &[String],
+    context_menu_block_reasons: &[String],
+) -> String {
+    if !context_menu_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !contextmenu_handlers.is_empty() && menu_invoker {
+        "custom-menu-handler".to_string()
+    } else if !contextmenu_handlers.is_empty() {
+        "context-menu-handler".to_string()
+    } else if menu_invoker {
+        "menu-invoker".to_string()
+    } else if popover_surface {
+        "menu-surface".to_string()
+    } else if menu_role {
+        "menu-item".to_string()
+    } else if !keyboard_handlers.is_empty() {
+        "keyboard-menu".to_string()
+    } else {
+        "context-menu".to_string()
+    }
+}
+
+fn browser_aria_haspopup_menu(value: Option<&str>) -> bool {
+    matches!(value, Some("true" | "menu"))
+}
+
+fn browser_menu_role(role: &str) -> bool {
+    matches!(
+        role,
+        "menu" | "menubar" | "menuitem" | "menuitemcheckbox" | "menuitemradio"
+    )
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -17645,6 +17899,10 @@ fn browser_scroll_interaction_event(handler: &str) -> bool {
 
 fn browser_click_event(handler: &str) -> bool {
     matches!(handler, "onclick" | "ondblclick" | "oncontextmenu")
+}
+
+fn browser_context_menu_event(handler: &str) -> bool {
+    handler == "oncontextmenu"
 }
 
 fn browser_drag_event(handler: &str) -> bool {
@@ -23757,6 +24015,75 @@ mod tests {
         assert_eq!(secret.pointer_kind, "blocked");
         assert_eq!(secret.pointer_handlers, vec!["onpointerdown"]);
         assert_eq!(secret.pointer_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_context_menu_interaction_descriptors_track_menu_hooks_and_blockers() {
+        let document = parse_html(
+            "<body><button id=menu tabindex=0 aria-haspopup=menu aria-expanded=false aria-controls=commands \
+                popovertarget=commands popovertargetaction=toggle oncontextmenu=openMenu()>Menu</button>\
+             <div id=commands role=menu popover=manual><button id=cut role=menuitem onkeydown=cutKey()>Cut</button></div>\
+             <main id=canvas oncontextmenu=canvasMenu() onpointerdown=start()>Canvas</main>\
+             <button id=secret hidden aria-haspopup=menu oncontextmenu=secretMenu()>Secret</button></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.context_menu_interaction_descriptors.len(), 5);
+
+        let menu = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("menu"))
+            .expect("menu context descriptor");
+        assert_eq!(menu.context_menu_kind, "custom-menu-handler");
+        assert_eq!(menu.aria_haspopup.as_deref(), Some("menu"));
+        assert_eq!(menu.aria_controls, vec!["commands"]);
+        assert_eq!(menu.popover_target.as_deref(), Some("commands"));
+        assert_eq!(menu.popover_target_action.as_deref(), Some("toggle"));
+        assert_eq!(menu.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(menu.handler_count, 1);
+        assert!(menu.focusable);
+
+        let commands = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("commands"))
+            .expect("commands menu surface descriptor");
+        assert_eq!(commands.context_menu_kind, "menu-surface");
+        assert_eq!(commands.authored_role.as_deref(), Some("menu"));
+        assert_eq!(commands.popover.as_deref(), Some("manual"));
+
+        let cut = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cut"))
+            .expect("cut menuitem descriptor");
+        assert_eq!(cut.context_menu_kind, "menu-item");
+        assert_eq!(cut.authored_role.as_deref(), Some("menuitem"));
+        assert_eq!(cut.keyboard_handlers, vec!["onkeydown"]);
+
+        let canvas = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("canvas"))
+            .expect("canvas context descriptor");
+        assert_eq!(canvas.context_menu_kind, "context-menu-handler");
+        assert_eq!(canvas.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(
+            canvas.pointer_handlers,
+            vec!["oncontextmenu", "onpointerdown"]
+        );
+
+        let secret = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret context descriptor");
+        assert_eq!(secret.context_menu_kind, "blocked");
+        assert!(secret.context_menu_blocked);
+        assert_eq!(secret.context_menu_block_reasons, vec!["hidden"]);
+        assert_eq!(secret.contextmenu_handlers, vec!["oncontextmenu"]);
     }
 
     #[test]

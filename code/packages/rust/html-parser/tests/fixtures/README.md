@@ -53,6 +53,9 @@ flat browser-planning inventory.
 Fullscreen-interaction descriptor cases pin embedded fullscreen permission
 hints, `allowfullscreen` state, fullscreen event hooks, and document/body
 fullscreen callbacks as a flat browser-planning inventory.
+Context-menu interaction descriptor cases pin `oncontextmenu` hooks, ARIA
+menu-popup invokers, menu/menuitem roles, popover menu surfaces, and
+hidden/inert/disabled blocked context-menu paths.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
