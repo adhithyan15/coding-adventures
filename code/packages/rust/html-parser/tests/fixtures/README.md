@@ -69,6 +69,9 @@ blocked pointer paths.
 Scroll-interaction descriptor cases pin `onscroll`/`onscrollend`, wheel/touch
 routing, ARIA scrollbar value state, and hidden/inert/disabled blocked scroll
 paths.
+Composition-interaction descriptor cases pin IME composition events,
+beforeinput/input hooks, text controls, editing hosts, and hidden, readonly, or
+disabled blocked composition paths.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
