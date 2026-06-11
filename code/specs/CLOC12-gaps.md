@@ -472,9 +472,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-061 — arg-bearing new-expression member
 
-- **Status:** OPEN — discovered by CLOC14.30. `minify_new_with_args_member` ignored.
+- **Status:** **RESOLVED** in CLOC12.71. `minify_new_with_args_member` flips IGNORED → PASS.
 - **Input:** `var x=new A(y).b;` → **Upstream:** `var x=(new A(y)).b;`
-- **What it needs:** gap-059 only handles the EMPTY arg list `()` (which it reorders). Non-empty args (`(y)`) can't be reordered the same way — the wrap needs a synthetic open-paren before `new` and a synthetic close-paren after the (non-empty) arg-list `)`. Follow-up of gap-059.
+- **Fix:** A new pre-pass that, unlike gap-059/060, INSERTS synthetic parens (the non-empty arg list has no spare parens to reorder). Two synthetic grouping tokens — one `(` and one `)` — are cloned from the source's own parens and declared before `kept` so they outlive it; the pass inserts `&`-references to them (a `(` before `new`, a `)` after the arg-list's depth-balanced close). Reuses the gap-060 callee scan; handles member-chain callees, multiple args, and nested-call args (`new A(f(x)).b`). Guards: operator `new` only; non-empty args (empty is gap-059/060's reorder); follower ∈ `.`/`[`/`(`; all checks via `is_structural_punct`. This completes the new-expression-member family (gap-059/060/061).
 
 ### gap-062 — redundant double-paren collapse
 
