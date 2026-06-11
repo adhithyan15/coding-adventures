@@ -97,6 +97,7 @@ from spice_engine import (
     CornerMcResult,
     CornerNoiseResult,
     CornerOverride,
+    CornerPssResult,
     CornerSensResult,
     CornerSParameterResult,
     CornerSpec,
@@ -160,6 +161,7 @@ from spice_engine import (
     format_corner_adaptive_transient_table,
     format_corner_mc_table,
     format_corner_noise_table,
+    format_corner_pss_table,
     format_corner_s_parameter_table,
     format_corner_sens_table,
     format_corner_transient_table,
@@ -169,6 +171,7 @@ from spice_engine import (
     format_mc_table,
     format_noise_table,
     format_pole_zero_table,
+    format_pss_table,
     format_s_parameter_table,
     format_sens_table,
     format_tf_table,
@@ -185,6 +188,7 @@ from spice_engine import (
     pole_zero_rlc_lowpass,
     pole_zero_rlc_notch,
     pss,
+    pss_corners,
     pss_newton_candidate,
     pss_newton_iteration,
     pss_newton_solve,
@@ -511,6 +515,69 @@ def test_pss_returns_solved_steady_state_period() -> None:
     assert result.steady_state.points[-1].time == pytest.approx(result.period)
     assert result.steady_state.points[0].node_voltages["out"] == pytest.approx(
         result.solve.final_state_vector[0].value
+    )
+
+
+def test_pss_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "0", 1_000.0))
+
+    nominal = pss(
+        c,
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+    result = pss_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rload-high", (CornerOverride("R1", "resistance", 2_000.0),)),
+        ],
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+
+    assert nominal is not None
+    assert result is not None
+    assert isinstance(result, CornerPssResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rload-high"]
+    assert result.points[0].result.converged
+    assert result.points[1].result.converged
+    assert result.points[0].result.period == pytest.approx(1.0e-3)
+    assert result.points[1].result.steady_state.points[1].branch_currents["I(V1)"] == pytest.approx(-5.0e-4)
+    assert format_pss_table(nominal, ["V(in)", "I(V1)"]) == (
+        "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+    )
+    assert format_corner_pss_table(result, ["V(in)", "I(V1)"]) == (
+        "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "nominal\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+        "rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n"
+        "rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n"
+        "rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n"
+        "rload-high\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n"
     )
 
 

@@ -1417,6 +1417,118 @@ def format_corner_adaptive_transient_table(
     return "\n".join(rows)
 
 
+def format_pss_table(
+    result: PssResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format one-period PSS steady-state samples as a stable text table."""
+    selected_probes = probes or _default_transient_output_probes(result.steady_state.points)
+    rows = [
+        "\t".join(
+            [
+                "Index",
+                "Period",
+                "TimeStep",
+                "Converged",
+                "Iterations",
+                "ResidualL2",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for index, point in enumerate(result.steady_state.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_pss_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(result.period),
+                    _format_table_number(result.time_step),
+                    str(result.converged).lower(),
+                    str(result.solve.iteration_count),
+                    _format_table_number(result.solve.final_residual.residual_l2_norm),
+                    _format_table_number(point.time),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_pss_table(
+    result: CornerPssResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner PSS steady-state samples as a stable text table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.result.steady_state.points)
+            for corner in result.points
+            if corner.result.steady_state.points
+        ),
+        [],
+    )
+    rows = [
+        "\t".join(
+            [
+                "Corner",
+                "Index",
+                "Period",
+                "TimeStep",
+                "Converged",
+                "Iterations",
+                "ResidualL2",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.steady_state.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_pss_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(corner.result.period),
+                        _format_table_number(corner.result.time_step),
+                        str(corner.result.converged).lower(),
+                        str(corner.result.solve.iteration_count),
+                        _format_table_number(
+                            corner.result.solve.final_residual.residual_l2_norm
+                        ),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None = None) -> str:
     """Format AC phasors as a stable SPICE-style text table."""
     points = result.points if isinstance(result, AcResult) else result
@@ -2185,6 +2297,21 @@ class PssResult:
     period: float
     time_step: float
     converged: bool
+
+
+@dataclass(frozen=True)
+class CornerPssPoint:
+    """PSS result for one named analysis corner."""
+
+    corner_name: str
+    result: PssResult
+
+
+@dataclass(frozen=True)
+class CornerPssResult:
+    """Multi-corner periodic steady-state analysis result."""
+
+    points: list[CornerPssPoint]
 
 
 @dataclass
@@ -5318,6 +5445,37 @@ def pss(
         time_step=solve.final_residual.time_step,
         converged=solve.converged and steady_state.converged,
     )
+
+
+def pss_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+    max_newton_iterations: int = 8,
+) -> CornerPssResult | None:
+    """Solve PSS at each named corner, returning ``None`` if any corner is non-periodic."""
+    points: list[CornerPssPoint] = []
+    for corner in corners:
+        result = pss(
+            _circuit_with_corner(circuit, corner),
+            steps_per_period=steps_per_period,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+            residual_tol=residual_tol,
+            perturbation=perturbation,
+            max_newton_iterations=max_newton_iterations,
+        )
+        if result is None:
+            return None
+        points.append(CornerPssPoint(corner_name=corner.name, result=result))
+    return CornerPssResult(points=points)
 
 
 # ---------------------------------------------------------------------------

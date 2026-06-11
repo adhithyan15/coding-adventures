@@ -4,6 +4,10 @@
 
 ### Added
 
+- **PSS text output and named-corner wrappers** — `format_pss_table()`,
+  `pss_corners()`, and `format_corner_pss_table()` now expose stable
+  periodic-steady-state output and named-corner PSS parity with the Rust engine.
+
 - **Transient named-corner wrappers** — `transient_corners()` and
   `transient_adaptive_corners()` now run fixed-step and LTE-adaptive transient
   analyses across named corner specs, with matching stable

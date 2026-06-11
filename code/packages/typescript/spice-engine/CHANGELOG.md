@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `formatPssTable`, `pssCorners`, and `formatCornerPssTable` for stable
+  periodic-steady-state output and named-corner PSS parity in the native web
+  package.
 - Add `transientCorners` and `transientAdaptiveCorners` for named-corner
   fixed-step and LTE-adaptive transient analysis, plus
   `formatCornerTransientTable` and `formatCornerAdaptiveTransientTable` for
