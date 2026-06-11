@@ -869,6 +869,7 @@ pub struct BrowserDocument {
     pub clipboard_interaction_descriptors: Vec<BrowserClipboardInteractionDescriptor>,
     pub selection_interaction_descriptors: Vec<BrowserSelectionInteractionDescriptor>,
     pub pointer_interaction_descriptors: Vec<BrowserPointerInteractionDescriptor>,
+    pub scroll_interaction_descriptors: Vec<BrowserScrollInteractionDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
@@ -2507,6 +2508,38 @@ pub struct BrowserPointerInteractionDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScrollInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub scroll_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_valuenow: Option<String>,
+    pub aria_valuemin: Option<String>,
+    pub aria_valuemax: Option<String>,
+    pub aria_valuetext: Option<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_readonly: Option<String>,
+    pub tabindex: Option<String>,
+    pub scroll_handlers: Vec<String>,
+    pub wheel_handlers: Vec<String>,
+    pub touch_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub scroll_blocked: bool,
+    pub scroll_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -3122,6 +3155,7 @@ impl BrowserDocument {
         summary.selection_interaction_descriptors =
             browser_selection_interaction_descriptors(&summary);
         summary.pointer_interaction_descriptors = browser_pointer_interaction_descriptors(&summary);
+        summary.scroll_interaction_descriptors = browser_scroll_interaction_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -14528,6 +14562,308 @@ fn browser_pointer_kind(
     }
 }
 
+fn browser_scroll_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserScrollInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for range in &document.aria_ranges {
+        if range.role != "scrollbar" {
+            continue;
+        }
+        let matching_interactive = range.id.as_deref().and_then(|id| {
+            document
+                .interactive_elements
+                .iter()
+                .find(|element| element.id.as_deref() == Some(id))
+        });
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &range.element,
+            range.id.as_deref(),
+        );
+        descriptors.push(browser_scroll_descriptor_from_aria_range(
+            range,
+            matching_interactive,
+            event_descriptor,
+        ));
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_scroll_state(element) {
+            descriptors.push(browser_scroll_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_scroll_state(event_descriptor) {
+            descriptors.push(browser_scroll_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_scroll_state(element: &BrowserInteractiveElement) -> bool {
+    element.authored_role.as_deref() == Some("scrollbar")
+        || !browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_scroll_interaction_event,
+        )
+        .is_empty()
+}
+
+fn browser_event_descriptor_has_scroll_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_scroll_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_scroll_descriptor_from_aria_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserScrollInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let scroll_handlers = browser_event_handlers_by_kind(event_handlers, browser_scroll_event);
+    let wheel_handlers = browser_event_handlers_by_kind(event_handlers, browser_wheel_event);
+    let touch_handlers = browser_event_handlers_by_kind(event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_range(range, matching_interactive);
+
+    BrowserScrollInteractionDescriptor {
+        element: range.element.clone(),
+        id: range.id.clone(),
+        role: Some(range.role.clone()),
+        authored_role: Some(range.role.clone()),
+        source: "aria-range".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "aria-range",
+            Some(range.role.as_str()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: range.text.clone(),
+        accessible_name: range.accessible_name.clone(),
+        accessible_description: range.accessible_description.clone(),
+        aria_valuenow: range.aria_valuenow.clone(),
+        aria_valuemin: range.aria_valuemin.clone(),
+        aria_valuemax: range.aria_valuemax.clone(),
+        aria_valuetext: range.aria_valuetext.clone(),
+        aria_orientation: range.aria_orientation.clone(),
+        aria_disabled: range.aria_disabled.clone(),
+        aria_readonly: range.aria_readonly.clone(),
+        tabindex: range.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(false),
+        disabled: matching_interactive
+            .map(|element| element.disabled)
+            .unwrap_or(false),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_interactive(element);
+
+    BrowserScrollInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "interactive",
+            element.authored_role.as_deref().or(element.role.as_deref()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: element.aria_disabled.clone(),
+        aria_readonly: None,
+        tabindex: element.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_touch_event);
+    let scroll_block_reasons = Vec::new();
+
+    BrowserScrollInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        scroll_kind: browser_scroll_kind(
+            event_descriptor.source.as_str(),
+            event_descriptor.role.as_deref(),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: None,
+        aria_readonly: None,
+        tabindex: None,
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        scroll_blocked: false,
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_block_reasons_for_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if range.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_scroll_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_scroll_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_scroll_kind(
+    source: &str,
+    role: Option<&str>,
+    scroll_handlers: &[String],
+    wheel_handlers: &[String],
+    touch_handlers: &[String],
+    scroll_block_reasons: &[String],
+) -> String {
+    if !scroll_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if role == Some("scrollbar") {
+        "scrollbar".to_string()
+    } else if !scroll_handlers.is_empty() {
+        "scroll-handler".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-scroll-target".to_string()
+    } else if source == "document" {
+        "document-scroll".to_string()
+    } else if source == "body" {
+        "body-scroll".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -16400,6 +16736,14 @@ fn browser_touch_event(handler: &str) -> bool {
 
 fn browser_wheel_event(handler: &str) -> bool {
     handler == "onwheel"
+}
+
+fn browser_scroll_event(handler: &str) -> bool {
+    matches!(handler, "onscroll" | "onscrollend")
+}
+
+fn browser_scroll_interaction_event(handler: &str) -> bool {
+    browser_scroll_event(handler) || browser_wheel_event(handler) || browser_touch_event(handler)
 }
 
 fn browser_click_event(handler: &str) -> bool {
@@ -22313,6 +22657,74 @@ mod tests {
         assert_eq!(secret.pointer_kind, "blocked");
         assert_eq!(secret.pointer_handlers, vec!["onpointerdown"]);
         assert_eq!(secret.pointer_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_scroll_interaction_descriptors_track_handlers_scrollbars_and_blockers() {
+        let document = parse_html(
+            "<html onscroll=docScroll()><body onscrollend=bodyDone()>\
+             <main id=feed tabindex=0 onscroll=scrollFeed() onwheel=wheelFeed()>Feed</main>\
+             <div id=timeline role=scrollbar aria-label=Timeline aria-valuemin=0 aria-valuemax=300 \
+             aria-valuenow=120 aria-orientation=vertical tabindex=0>Timeline</div>\
+             <section id=touch ontouchmove=touchScroll()>Touch</section>\
+             <aside id=hidden hidden onscroll=hiddenScroll()>Hidden</aside></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.scroll_interaction_descriptors.len(), 6);
+
+        let timeline = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("timeline"))
+            .expect("timeline scrollbar descriptor");
+        assert_eq!(timeline.scroll_kind, "scrollbar");
+        assert_eq!(timeline.source, "aria-range");
+        assert_eq!(timeline.aria_valuenow.as_deref(), Some("120"));
+        assert_eq!(timeline.aria_orientation.as_deref(), Some("vertical"));
+        assert_eq!(timeline.tabindex.as_deref(), Some("0"));
+
+        let feed = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("feed"))
+            .expect("feed scroll descriptor");
+        assert_eq!(feed.scroll_kind, "scroll-handler");
+        assert_eq!(feed.scroll_handlers, vec!["onscroll"]);
+        assert_eq!(feed.wheel_handlers, vec!["onwheel"]);
+        assert_eq!(feed.handler_count, 2);
+        assert!(feed.focusable);
+
+        let touch = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("touch"))
+            .expect("touch scroll descriptor");
+        assert_eq!(touch.scroll_kind, "touch-scroll-target");
+        assert_eq!(touch.touch_handlers, vec!["ontouchmove"]);
+
+        let hidden = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hidden"))
+            .expect("hidden scroll descriptor");
+        assert_eq!(hidden.scroll_kind, "blocked");
+        assert_eq!(hidden.scroll_block_reasons, vec!["hidden"]);
+
+        let document_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document scroll descriptor");
+        assert_eq!(document_scroll.scroll_handlers, vec!["onscroll"]);
+
+        let body_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body scroll descriptor");
+        assert_eq!(body_scroll.scroll_handlers, vec!["onscrollend"]);
     }
 
     #[test]

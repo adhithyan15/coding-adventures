@@ -66,6 +66,9 @@ hidden/readonly/disabled blocked selection paths.
 Pointer-interaction descriptor cases pin click, mouse, touch, pointer, wheel,
 drag/drop handler routing, command/editing context, and hidden/inert/disabled
 blocked pointer paths.
+Scroll-interaction descriptor cases pin `onscroll`/`onscrollend`, wheel/touch
+routing, ARIA scrollbar value state, and hidden/inert/disabled blocked scroll
+paths.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
