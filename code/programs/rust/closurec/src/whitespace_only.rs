@@ -2050,6 +2050,35 @@ fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
     {
         return true;
     }
+    // gap-063: same-sign `+`/`-` adjacency (CORRECTNESS). If the
+    // previous operator token ENDS with `+`/`-` and the next
+    // operator token STARTS with the SAME sign character, gluing
+    // them together would form a spurious compound operator:
+    //
+    //   `-` `-a`  →  `--a`   (decrement, NOT double negation!)
+    //   `+` `+a`  →  `++a`   (increment)
+    //   `--` `-a` →  `---a`,  `a` `+` `++b` → `a+++b`, …
+    //
+    // Insert a space to keep the operators distinct. Different
+    // signs (`+` then `-`) are unambiguous (`+-`) and need none.
+    //
+    // CRITICAL GUARD: both sides must be real PUNCTUATOR tokens
+    // (`is_punct`), never string/regex/template literals. A
+    // one-char string `"-"` stores `.value == "-"` (delimiters
+    // stripped), so without this gate `"a-"` followed by a `-`
+    // operator — emitted as `"a-"-…` where the char before `-`
+    // is the closing quote, not `-` — would wrongly get a space.
+    // `is_punct` excludes literals, so only genuine operators
+    // whose emitted text equals `.value` are considered.
+    if is_punct(a) && is_punct(b) {
+        let a_last = a.value.chars().last();
+        let b_first = b.value.chars().next();
+        if (a_last == Some('+') && b_first == Some('+'))
+            || (a_last == Some('-') && b_first == Some('-'))
+        {
+            return true;
+        }
+    }
     false
 }
 
@@ -2194,6 +2223,54 @@ mod tests {
         let out = minify(src);
         assert!(out.contains("return typeof"), "got: {out:?}");
         assert!(out.contains("typeof x"), "got: {out:?}");
+    }
+
+    // ---- gap-063: same-sign `+`/`-` adjacency (CORRECTNESS) ----
+
+    /// gap-063: `- -a` (double negation) must NOT collapse to
+    /// `--a` (pre-decrement) — a different program.
+    #[test]
+    fn gap063_double_minus_keeps_space() {
+        assert_eq!(minify("var x=- -a;"), "var x=- -a;");
+    }
+
+    /// gap-063: `+ +a` must NOT collapse to `++a`.
+    #[test]
+    fn gap063_double_plus_keeps_space() {
+        assert_eq!(minify("var x=+ +a;"), "var x=+ +a;");
+    }
+
+    /// gap-063: binary minus then unary minus — `a- -b` must stay
+    /// `a- -b`, not become `a--b`.
+    #[test]
+    fn gap063_binary_then_unary_minus() {
+        assert_eq!(minify("var x=a- -b;"), "var x=a- -b;");
+    }
+
+    /// gap-063: `- --a` (negate a pre-decrement) keeps the space
+    /// between the `-` and `--` operators.
+    #[test]
+    fn gap063_minus_then_predecrement() {
+        assert_eq!(minify("var x=- --a;"), "var x=- --a;");
+    }
+
+    /// gap-063: DIFFERENT signs are unambiguous — `a+ -b` joins
+    /// to `a+-b` (no spurious operator possible).
+    #[test]
+    fn gap063_different_signs_join() {
+        assert_eq!(minify("var x=a+ -b;"), "var x=a+-b;");
+    }
+
+    /// gap-063 GUARD: a string literal whose content ends in `-`
+    /// must NOT trigger the rule against a following `-` operator
+    /// — the emitted char before the operator is the closing
+    /// quote, not `-`. `"a-"-1` stays `"a-"-1` (no spurious
+    /// space). This is why the rule gates on `is_punct`.
+    #[test]
+    fn gap063_string_ending_in_sign_not_spaced() {
+        assert_eq!(minify("var x=\"a-\"-1;"), "var x=\"a-\"-1;");
+        // ...but the two REAL `-` operators after it still space:
+        assert_eq!(minify("var y=\"a-\"- -b;"), "var y=\"a-\"- -b;");
     }
 
     #[test]

@@ -485,11 +485,11 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-063 — same-sign `+`/`-` token adjacency (CORRECTNESS)
 
-- **Status:** OPEN — discovered by CLOC14.31. `minify_neg_neg` ignored.
-- **Input:** `var x=- -a;` → **Upstream:** `var x=- -a;` → **closurec (WRONG):** `var x=--a;`
+- **Status:** **RESOLVED** in CLOC12.72. `minify_neg_neg` flips IGNORED → PASS.
+- **Input:** `var x=- -a;` → **Upstream:** `var x=- -a;` → **closurec (was WRONG):** `var x=--a;`
 - **Severity:** This is a **semantic-corruption** bug, not a formatting nicety. The re-stitcher joins two adjacent tokens that both begin with `+` (or both with `-`), forming a spurious compound operator: `- -a` (negate the negation of `a`) becomes `--a` (pre-decrement of `a`) — a different program. Characterized cases (all currently WRONG in closurec):
   - `- -a` → `--a`, `+ +a` → `++a`
   - `a- -b` → `a--b`, `a+ +b` → `a++b`
   - `- --a` → `---a`, `+ ++a` → `+++a`, `a- --b` → `a---b`
   - Correct (already OK): `a+ -b` → `a+-b` (different signs — `+-` is unambiguous).
-- **What it needs:** The emit adjacency rule (whitespace_only re-stitcher) must insert a single space between two emitted tokens when the previous token's LAST char and the next token's FIRST char are both `+`, or both `-`. This mirrors the classic minifier rule that prevents `+`/`++`/`-`/`--` boundary merges. Fix lands in CLOC12.72.
+- **Fix (CLOC12.72):** `needs_separator()` gains a same-sign rule — insert a space when the previous token's LAST char and the next token's FIRST char are both `+`, or both `-`. **CRITICAL GUARD:** both sides must be real punctuator tokens (`is_punct`), never string/regex/template literals. A one-char string `"-"` stores `.value == "-"` (delimiters stripped), so without the `is_punct` gate a string ending in `-` (`"a-"`) followed by a `-` operator — emitted as `"a-"-…` where the char before the operator is the closing quote — would wrongly get a space. Verified: `"a-"-1` stays `"a-"-1` and `"a-"- -b` spaces only between the two real `-` operators. 6 unit tests added.
