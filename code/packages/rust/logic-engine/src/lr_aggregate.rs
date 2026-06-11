@@ -36,11 +36,11 @@
 
 use logic_core::{Substitution, Term};
 
-use crate::{
-    ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase, PriorClauseId,
-    Provenance, UncertaintyMarkerId,
-};
 use crate::proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
+use crate::{
+    ContributionClauseId, FactId, JointContributionClauseId, KnowledgeBase,
+    PredicateContributionClauseId, PriorClauseId, Provenance, UncertaintyMarkerId,
+};
 
 // ---------------------------------------------------------------------------
 // Clause types
@@ -160,6 +160,101 @@ impl ContributionClause {
     }
 
     /// Builder-style: attach a citation.
+    pub fn with_provenance(mut self, provenance: Provenance) -> Self {
+        self.provenance = provenance;
+        self
+    }
+}
+
+/// A numeric comparison operator for a predicate-gated contribution.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CmpOp {
+    Ge,
+    Le,
+    Gt,
+    Lt,
+    Eq,
+}
+
+impl CmpOp {
+    /// Evaluate `lhs <op> rhs` over f64. `Eq` uses an absolute tolerance
+    /// so a fact extracted as `14600` matches a threshold `14600.0`.
+    pub fn eval(&self, lhs: f64, rhs: f64) -> bool {
+        match self {
+            CmpOp::Ge => lhs >= rhs,
+            CmpOp::Le => lhs <= rhs,
+            CmpOp::Gt => lhs > rhs,
+            CmpOp::Lt => lhs < rhs,
+            CmpOp::Eq => (lhs - rhs).abs() < 1e-9,
+        }
+    }
+
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            CmpOp::Ge => ">=",
+            CmpOp::Le => "<=",
+            CmpOp::Gt => ">",
+            CmpOp::Lt => "<",
+            CmpOp::Eq => "==",
+        }
+    }
+}
+
+/// A **predicate-gated** likelihood-ratio contribution — the bridge that lets
+/// adj-lang express a DETERMINISTIC rule as the saturating limit of a
+/// probabilistic one. "When the observed numeric value of `slot` satisfies
+/// `slot <op> value`, multiply the conclusion's odds by `exp(logit_delta)`."
+/// A deterministic rule is simply a very large `logit_delta` (a saturating LR);
+/// DETERMINATE / INDETERMINATE / CONFLICT then fall out of the differential
+/// (leader / insufficient-evidence / kickback) — no separate engine.
+///
+/// The predicate is evaluated on CPU against the observed valued fact
+/// `slot(V)` (V a `Term::Num`), so the model never does the comparison.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PredicateContributionClause {
+    pub id: PredicateContributionClauseId,
+    pub conclusion: Term,
+    pub slot: String,
+    pub op: CmpOp,
+    pub value: f64,
+    pub logit_delta: f64,
+    pub provenance: Provenance,
+}
+
+impl PredicateContributionClause {
+    pub fn new(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        value: f64,
+        logit_delta: f64,
+    ) -> Self {
+        Self {
+            id: PredicateContributionClauseId(u64::MAX),
+            conclusion,
+            slot: slot.into(),
+            op,
+            value,
+            logit_delta,
+            provenance: Provenance::unattributed(),
+        }
+    }
+
+    /// Construct from an LR magnitude (panics on `lr <= 0`).
+    pub fn from_lr(
+        conclusion: Term,
+        slot: impl Into<String>,
+        op: CmpOp,
+        value: f64,
+        lr: f64,
+    ) -> Self {
+        assert!(
+            lr > 0.0,
+            "PredicateContributionClause::from_lr requires lr > 0.0; got {lr}"
+        );
+        Self::new(conclusion, slot, op, value, lr.ln())
+    }
+
     pub fn with_provenance(mut self, provenance: Provenance) -> Self {
         self.provenance = provenance;
         self
@@ -689,6 +784,29 @@ pub fn lr_aggregate(query: &Term, kb: &KnowledgeBase) -> LRAggregateResult {
         }
     }
 
+    // Step 3b: predicate-gated contributions. For each, read the observed numeric
+    // value of its slot and evaluate the predicate on CPU; if true, apply its
+    // logit_delta. A saturating logit_delta makes this a deterministic rule.
+    for pc in kb.predicate_contributions_for(query) {
+        if let Some(observed) = kb.observed_value(&pc.slot) {
+            if pc.op.eval(observed, pc.value) {
+                any_contribution_active = true;
+                steps.push(ProofStep {
+                    goal: query.clone(),
+                    origin: DerivationOrigin::FromPredicateContribution {
+                        clause_id: pc.id,
+                        slot: pc.slot.clone(),
+                        op: pc.op,
+                        threshold: pc.value,
+                        observed,
+                        logit_delta: pc.logit_delta,
+                    },
+                });
+                running_logit += pc.logit_delta;
+            }
+        }
+    }
+
     if !any_contribution_active {
         warnings.push(LrAggregateWarning::NoContributionsActive {
             conclusion: query.clone(),
@@ -938,18 +1056,145 @@ mod tests {
         let mut kb = KnowledgeBase::new();
         kb.add_prior(PriorClause::from_probability(atom("acs"), 0.10))
             .unwrap();
-        kb.add_contribution(ContributionClause::from_lr(
-            atom("acs"),
-            atom("ev"),
-            1.0,
-        ));
+        kb.add_contribution(ContributionClause::from_lr(atom("acs"), atom("ev"), 1.0));
         kb.add_fact(Fact::certain(atom("ev")));
         let result = lr_aggregate(&atom("acs"), &kb);
         // Posterior == prior (LR=1.0 is a no-op multiplier on odds).
         assert!(approx_eq(result.posterior, 0.10, 1e-12));
-        assert!(result.warnings.iter().any(|w| matches!(
-            w,
-            LrAggregateWarning::DegenerateContribution { .. }
-        )));
+        assert!(result
+            .warnings
+            .iter()
+            .any(|w| matches!(w, LrAggregateWarning::DegenerateContribution { .. })));
+    }
+
+    // ---- predicate-gated contributions (deterministic = saturating) ----
+
+    use logic_core::int;
+
+    #[test]
+    fn cmpop_evaluates_each_operator() {
+        assert!(CmpOp::Ge.eval(14600.0, 14600.0));
+        assert!(CmpOp::Ge.eval(18000.0, 14600.0));
+        assert!(!CmpOp::Ge.eval(14000.0, 14600.0));
+        assert!(CmpOp::Le.eval(10.0, 20.0));
+        assert!(CmpOp::Gt.eval(2.0, 1.0));
+        assert!(!CmpOp::Gt.eval(1.0, 1.0));
+        assert!(CmpOp::Lt.eval(1.0, 2.0));
+        assert!(CmpOp::Eq.eval(5.0, 5.0));
+        assert!(!CmpOp::Eq.eval(5.0, 5.1));
+        assert_eq!(CmpOp::Ge.symbol(), ">=");
+        assert_eq!(CmpOp::Eq.symbol(), "==");
+    }
+
+    #[test]
+    #[should_panic(expected = "lr > 0.0")]
+    fn predicate_contribution_with_negative_lr_panics() {
+        let _ = PredicateContributionClause::from_lr(
+            atom("required_to_file"),
+            "gross_income",
+            CmpOp::Ge,
+            14600.0,
+            -1.0,
+        );
+    }
+
+    #[test]
+    fn predicate_fires_when_threshold_met_and_saturates() {
+        // Deterministic rule via a huge LR: "income >= 14600 ⇒ required to
+        // file". Observe a valued slot above threshold; verdict saturates.
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(
+            atom("required_to_file"),
+            0.10,
+        ))
+        .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("required_to_file"),
+            "gross_income",
+            CmpOp::Ge,
+            14600.0,
+            1e6,
+        ));
+        kb.add_fact(Fact::certain(compound("gross_income", vec![int(18000)])));
+
+        let result = lr_aggregate(&atom("required_to_file"), &kb);
+        assert!(result.posterior > 0.9999, "got {}", result.posterior);
+
+        // The proof carries the literal comparison that fired — the model
+        // never computed it.
+        let step = result.dag.proofs[0]
+            .steps
+            .iter()
+            .find_map(|s| match &s.origin {
+                DerivationOrigin::FromPredicateContribution {
+                    slot,
+                    op,
+                    threshold,
+                    observed,
+                    ..
+                } => Some((slot.clone(), op.symbol(), *threshold, *observed)),
+                _ => None,
+            })
+            .expect("a predicate step should be present");
+        assert_eq!(step, ("gross_income".to_string(), ">=", 14600.0, 18000.0));
+    }
+
+    #[test]
+    fn predicate_does_not_fire_below_threshold() {
+        // Income under threshold: the dispositive contribution never fires,
+        // so the verdict stays at the prior (INDETERMINATE territory — the
+        // evidence-sufficiency guard upstream turns this into abstention).
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(
+            atom("required_to_file"),
+            0.10,
+        ))
+        .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("required_to_file"),
+            "gross_income",
+            CmpOp::Ge,
+            14600.0,
+            1e6,
+        ));
+        kb.add_fact(Fact::certain(compound("gross_income", vec![int(9000)])));
+
+        let result = lr_aggregate(&atom("required_to_file"), &kb);
+        assert!(
+            approx_eq(result.posterior, 0.10, 1e-9),
+            "got {}",
+            result.posterior
+        );
+        assert!(!result.dag.proofs[0]
+            .steps
+            .iter()
+            .any(|s| matches!(s.origin, DerivationOrigin::FromPredicateContribution { .. })));
+    }
+
+    #[test]
+    fn predicate_uses_latest_observation_of_slot() {
+        // A later `observe` of the same slot supersedes the earlier value.
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(
+            atom("required_to_file"),
+            0.10,
+        ))
+        .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("required_to_file"),
+            "gross_income",
+            CmpOp::Ge,
+            14600.0,
+            1e6,
+        ));
+        kb.add_fact(Fact::certain(compound("gross_income", vec![int(9000)])));
+        kb.add_fact(Fact::certain(compound("gross_income", vec![int(20000)])));
+
+        let result = lr_aggregate(&atom("required_to_file"), &kb);
+        assert!(
+            result.posterior > 0.9999,
+            "latest value should fire; got {}",
+            result.posterior
+        );
     }
 }

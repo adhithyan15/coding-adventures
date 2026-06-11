@@ -65,8 +65,70 @@ fn two_hypothesis_differential_ranks_and_decides() {
 }
 
 #[test]
+fn predicate_gated_contribution_emits_cited_comparison_step() {
+    // A DETERMINISTIC rule as a saturating LR: income at/above the filing
+    // threshold ⇒ required to file. The proof step records the literal
+    // comparison the engine evaluated on the CPU (slot/op/threshold/observed).
+    let (ok, s) = run(
+        "adjcli_predicate.adj",
+        "prior 0.10 for required_to_file\n  source \"IRS Pub 501\" trust authoritative\n\
+         contributes 1000000 from gross_income >= 14600 to required_to_file\n  source \"IRS Pub 501 (2024)\" trust authoritative\n\
+         observe gross_income(18000)\n? required_to_file\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"predicate\""), "{s}");
+    assert!(s.contains("\"slot\":\"gross_income\""), "{s}");
+    assert!(s.contains("\"op\":\">=\""), "{s}");
+    assert!(s.contains("\"threshold\":14600"), "{s}");
+    assert!(s.contains("\"observed\":18000"), "{s}");
+    assert!(s.contains("\"source\":\"IRS Pub 501 (2024)\""), "{s}");
+    // saturating LR ⇒ posterior ≈ 1.0
+    assert!(
+        s.contains("\"posterior\":0.99") || s.contains("\"posterior\":1"),
+        "{s}"
+    );
+}
+
+#[test]
+fn predicate_below_threshold_does_not_fire() {
+    // Income under the threshold: the predicate step never appears, and the
+    // posterior stays at the prior.
+    let (ok, s) = run(
+        "adjcli_predicate_below.adj",
+        "prior 0.10 for required_to_file\n\
+         contributes 1000000 from gross_income >= 14600 to required_to_file\n\
+         observe gross_income(9000)\n? required_to_file\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        !s.contains("\"kind\":\"predicate\""),
+        "predicate should not fire: {s}"
+    );
+    assert!(s.contains("\"posterior\":0.1"), "{s}");
+}
+
+#[test]
 fn compile_error_is_reported_as_json() {
     let (ok, s) = run("adjcli_bad.adj", "this is not adj-lang at all !!!\n");
     assert!(!ok, "expected non-zero exit on bad input");
     assert!(s.contains("\"error\""), "expected error JSON: {s}");
+}
+
+#[test]
+fn malformed_numeric_clauses_do_not_panic_the_cli() {
+    // Regression: a non-positive LR / out-of-range prior / overflowing
+    // literal must be a clean `{"error":...}` (exit 1), never a panic.
+    for src in [
+        "contributes -5 from x to y\n? y\n",
+        "prior 2 for x\n? x\n",
+        "observe gross_income(1e400)\n? required_to_file\n",
+    ] {
+        let (ok, s) = run("adjcli_malformed.adj", src);
+        assert!(!ok, "expected non-zero exit for {src:?}: {s}");
+        assert!(
+            s.contains("\"error\""),
+            "expected error JSON for {src:?}: {s}"
+        );
+        assert!(!s.contains("panic"), "must not panic for {src:?}: {s}");
+    }
 }

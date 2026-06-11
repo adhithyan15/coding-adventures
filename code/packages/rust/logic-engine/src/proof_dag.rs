@@ -13,8 +13,10 @@
 
 use logic_core::{Substitution, Term};
 
+use crate::lr_aggregate::CmpOp;
 use crate::{
-    ContributionClauseId, FactId, JointContributionClauseId, PriorClauseId, RuleId,
+    ContributionClauseId, FactId, JointContributionClauseId, PredicateContributionClauseId,
+    PriorClauseId, RuleId,
 };
 
 /// Why a particular step succeeded.
@@ -72,6 +74,26 @@ pub enum DerivationOrigin {
         evidence_fact_ids: Vec<FactId>,
         /// log(joint LR). Inline.
         joint_logit_delta: f64,
+    },
+    /// The step applied a **predicate-gated** contribution: the observed
+    /// numeric value of `slot` satisfied `slot <op> threshold`, so the
+    /// clause's `logit_delta` was added to the running log-odds. This is
+    /// how a DETERMINISTIC rule expresses itself — a saturating
+    /// `logit_delta` over a CPU-evaluated numeric predicate. The audit
+    /// reader sees the literal comparison that fired (`observed`,
+    /// `op.symbol()`, `threshold`), never a model-computed number.
+    FromPredicateContribution {
+        clause_id: PredicateContributionClauseId,
+        /// The valued slot whose observation was compared.
+        slot: String,
+        /// The comparison operator (`>=`, `<=`, `>`, `<`, `==`).
+        op: CmpOp,
+        /// The right-hand threshold the clause was written against.
+        threshold: f64,
+        /// The observed numeric value read from the valued fact `slot(V)`.
+        observed: f64,
+        /// log(LR) applied because the predicate held. Inline.
+        logit_delta: f64,
     },
 }
 
@@ -179,6 +201,12 @@ pub(crate) fn collect_ids(steps: &[ProofStep]) -> (Vec<FactId>, Vec<RuleId>) {
             DerivationOrigin::FromJointContribution {
                 evidence_fact_ids, ..
             } => facts.extend(evidence_fact_ids.iter().copied()),
+            // Predicate-gated contributions read a Certain valued slot
+            // on CPU; the fired comparison (observed/op/threshold) is the
+            // provenance carried inline on the step. They contribute no
+            // probabilistic propositional variable to WMC, so they add no
+            // FactId here.
+            DerivationOrigin::FromPredicateContribution { .. } => {}
         }
     }
     facts.sort();

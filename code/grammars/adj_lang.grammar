@@ -34,7 +34,19 @@ statement   = prior_decl
 
 prior_decl       = "prior" NUMBER "for" term { annotation } ;
 
-contributes_decl = "contributes" NUMBER "from" term "to" term { annotation } ;
+contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation } ;
+
+# Evidence is either a numeric PREDICATE over a valued slot
+# (`gross_income >= 14600`) or an ordinary term (`pmh(hypertension)`).
+# The predicate alternative is tried first; because both start with an
+# IDENT, the parser relies on full backtracking — `predicate` consumes
+# the IDENT, fails when it does not find a comparison operator, and the
+# alternation falls back to `term`. A predicate-gated contribution
+# lowers to a saturating likelihood ratio: "deterministic" is just a
+# very large LR over a CPU-evaluated comparison, not a second engine.
+evidence  = predicate | term ;
+
+predicate = IDENT ( GE | LE | GT | LT | EQEQ ) NUMBER ;
 
 interacts_decl   = "interacts" NUMBER "when" term "and" term { "and" term } "for" term { annotation } ;
 
@@ -76,4 +88,4 @@ trust_tier = "consensus"
 # adversarial nesting.
 # ----------------------------------------------------------------
 
-term = IDENT [ LPAREN term { COMMA term } RPAREN ] ;
+term = IDENT [ LPAREN ( term | NUMBER ) { COMMA ( term | NUMBER ) } RPAREN ] ;
