@@ -212,6 +212,10 @@ const V1_BUILTINS: &[BuiltinSig] = &[
     BuiltinSig { name: "lispy_not",       n_args: 1, returns: true },
     BuiltinSig { name: "lispy_equal",     n_args: 2, returns: true },
     BuiltinSig { name: "lispy_truthy",    n_args: 1, returns: true },
+    // LANG77 W13b — the universal program-exit coercion for a polymorphic
+    // (lambda / `any`) result: dispatch on the runtime tag.
+    // `int64_t __twig_lispy_to_exit_code(uint64_t)`.
+    BuiltinSig { name: "lispy_to_exit_code", n_args: 1, returns: true },
 ];
 
 fn lookup_builtin(name: &str) -> Option<BuiltinSig> {
@@ -1463,6 +1467,26 @@ mod tests {
         ] {
             assert!(symbols.contains(&want), "missing {want}: {symbols:?}");
         }
+    }
+
+    /// W14b (F7): the universal exit coercion `lispy_to_exit_code` — the program
+    /// boundary for a polymorphic lambda result — lowers to a BL into the runtime.
+    #[test]
+    fn lispy_to_exit_code_lowers() {
+        assert!(lookup_builtin("lispy_to_exit_code").is_some(), "builtin must be registered");
+        let cir = vec![
+            const_u64("x", 5 << 3),
+            call_builtin(Some("r"), "lispy_to_exit_code", &["x"]),
+            ret_u64("r"),
+        ];
+        let (bytes, ext) = compile_with_relocs(&ctx("exit_coerce", &[], "u64"), &cir)
+            .unwrap_or_else(|e| panic!("to_exit_code must lower: {e}"));
+        assert!(!bytes.is_empty() && bytes.len() % 4 == 0);
+        let symbols: Vec<&str> = ext.iter().map(|r| r.symbol.as_str()).collect();
+        assert!(
+            symbols.contains(&"__twig_lispy_to_exit_code"),
+            "missing __twig_lispy_to_exit_code: {symbols:?}",
+        );
     }
 
     #[test]

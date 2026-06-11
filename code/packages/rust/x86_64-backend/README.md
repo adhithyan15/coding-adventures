@@ -60,6 +60,7 @@ Matches the aarch64-backend baseline through LANG38:
 | Returns | `ret_<ty>`, `ret_void` |
 | Moves | `mov_<ty>` |
 | Type guards | `type_assert` (lowered to `UD2` trap — AOT has no deopt) |
+| Lisp runtime (LANG77) | `call_builtin "lispy_*"` → `CALL __twig_lispy_*` — cons/car/cdr, ATOM/EQ predicates, COND truthiness, and `lispy_to_exit_code` (W14b — the polymorphic lambda-result exit coercion) |
 
 
 ## Register allocation

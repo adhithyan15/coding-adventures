@@ -1,5 +1,12 @@
 # Changelog — `x86_64-backend`
 
+## 0.11.0 — 2026-06-10 — McCarthy lambda (F7): `lispy_to_exit_code` builtin (LANG77 / W14b)
+
+Adds `lispy_to_exit_code` to `V1_BUILTINS` (→ `call __twig_lispy_to_exit_code`), the
+universal program-exit coercion for a polymorphic lambda result (W13b) — mirroring
+the `aarch64-backend` change so native McCarthy lambda is uniform across both host
+arches. New unit test `lispy_to_exit_code_lowers`.
+
 ## 0.10.0 — 2026-06-04 — ATOM/EQ predicate + truthy helpers (LANG77 / McCarthy L3b-2c-2)
 
 Adds four `V1_BUILTINS` rows — `lispy_pair_p` (1), `lispy_not` (1),

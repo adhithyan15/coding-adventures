@@ -55,3 +55,19 @@ fn mccarthy_core_runs_natively_on_macos() {
     assert_eq!(run("(EQ (QUOTE A) (QUOTE A))", "n_sym_t"), 1);
     assert_eq!(run("(EQ (QUOTE A) (QUOTE B))", "n_sym_f"), 0);
 }
+
+#[test]
+fn mccarthy_lambda_runs_natively_on_macos() {
+    if !ld_available() { eprintln!("no system linker — skipping"); return; }
+    // F7 — `LAMBDA`: arg boxed across the call, polymorphic result coerced at exit
+    // by `__twig_lispy_to_exit_code`. Native AOT is the seventh backend to run these.
+    assert_eq!(run("((LAMBDA (X) X) 5)", "n_lam_id"), 5);
+    assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))", "n_lam_car"), 7);
+    assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))", "n_lam_cdr"), 9);
+    assert_eq!(run("((LAMBDA (X Y) (EQ X Y)) 3 3)", "n_lam_eq_t"), 1);
+    assert_eq!(run("((LAMBDA (X Y) (EQ X Y)) 3 4)", "n_lam_eq_f"), 0);
+    assert_eq!(run("((LAMBDA (X) (ATOM X)) 7)", "n_lam_atom"), 1);
+    // lambda body is itself a COND (composes F5 + F7).
+    assert_eq!(run("((LAMBDA (N) (COND ((EQ N 0) 100) ((EQ 1 1) 200))) 0)", "n_lam_c0"), 100);
+    assert_eq!(run("((LAMBDA (N) (COND ((EQ N 0) 100) ((EQ 1 1) 200))) 9)", "n_lam_c9"), 200);
+}
