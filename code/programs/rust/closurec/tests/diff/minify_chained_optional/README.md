@@ -1,7 +1,7 @@
-# minify_chained_optional — chained optional member access a?.b?.c
+# minify_chained_optional — long optional-chaining chain
 
-Input: `var x=a?.b?.c;`
+Input: `var c=a?.b?.c?.d;`
 
-Upstream Closure v20240317 (WHITESPACE_ONLY): `var x=a?.b?.c;`
+Upstream Closure v20240317 (WHITESPACE_ONLY): `var c=a?.b?.c?.d;`
 
-Captured by CLOC14.28 byte-identity exploration.
+Captured by CLOC14.32 byte-identity exploration.
