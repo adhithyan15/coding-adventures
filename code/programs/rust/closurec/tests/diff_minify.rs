@@ -90,6 +90,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-063 (CLOC14.31): the re-stitcher joins two adjacent
+    // tokens that BOTH start with `+` (or both `-`), forming a
+    // spurious `++`/`--`/`+++`/`---` operator. `- -a` must stay
+    // `- -a` (double negation), not become `--a` (decrement) —
+    // a SEMANTIC change. Needs a same-sign space rule in the
+    // emit adjacency logic.
+    ("neg_neg", "gap-063: `- -a` must not collapse to `--a` (decrement)"),
     // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
     // arms, return/throw/=> prefixes, and member-object parens
     // (`(a).b` → `a.b`) now pass and are no longer ignored.

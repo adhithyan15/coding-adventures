@@ -482,3 +482,14 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `var x=((a+b))*c;` → **Upstream:** `var x=(a+b)*c;`
 - **Fix:** Token pre-pass — when a GROUPING `(` is directly followed by another `(` and the inner group's matching `)` is directly followed by the outer `)` (purely-nested `(( ... ))`), drop the outer pair. Guards: the outer `(` must be a grouping paren (prev is punct other than `)`/`]`/`?.`, or start) so a CALL paren like `f((a,b))` is never collapsed to `f(a,b)`; no top-level comma inside; all bracket checks via `is_structural_punct`.
 - **Deferred (follow-up):** upstream eliminates parens far more aggressively — `((a))` → `a`, `(a)+(b)` → `a+b`, `f((a))` → `f(a)`. This slice strips only ONE directly-nested grouping layer; the broader redundant-paren pass is future work. (Note: `((a,b))` standalone is already correctly handled by gap-053's var-init paren elision.)
+
+### gap-063 — same-sign `+`/`-` token adjacency (CORRECTNESS)
+
+- **Status:** OPEN — discovered by CLOC14.31. `minify_neg_neg` ignored.
+- **Input:** `var x=- -a;` → **Upstream:** `var x=- -a;` → **closurec (WRONG):** `var x=--a;`
+- **Severity:** This is a **semantic-corruption** bug, not a formatting nicety. The re-stitcher joins two adjacent tokens that both begin with `+` (or both with `-`), forming a spurious compound operator: `- -a` (negate the negation of `a`) becomes `--a` (pre-decrement of `a`) — a different program. Characterized cases (all currently WRONG in closurec):
+  - `- -a` → `--a`, `+ +a` → `++a`
+  - `a- -b` → `a--b`, `a+ +b` → `a++b`
+  - `- --a` → `---a`, `+ ++a` → `+++a`, `a- --b` → `a---b`
+  - Correct (already OK): `a+ -b` → `a+-b` (different signs — `+-` is unambiguous).
+- **What it needs:** The emit adjacency rule (whitespace_only re-stitcher) must insert a single space between two emitted tokens when the previous token's LAST char and the next token's FIRST char are both `+`, or both `-`. This mirrors the classic minifier rule that prevents `+`/`++`/`-`/`--` boundary merges. Fix lands in CLOC12.72.
