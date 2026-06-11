@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `transientCorners` and `transientAdaptiveCorners` for named-corner
+  fixed-step and LTE-adaptive transient analysis, plus
+  `formatCornerTransientTable` and `formatCornerAdaptiveTransientTable` for
+  stable tab-separated corner waveform output.
 - Add multi-corner advanced analysis wrappers with `mcDcCorners`,
   `sensDcCorners`, `noiseAcCorners`, and `sParametersCorners`, matching the
   Rust engine surface for these SPICE outputs in the native web package.

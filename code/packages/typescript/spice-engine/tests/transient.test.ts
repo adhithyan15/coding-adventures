@@ -19,6 +19,8 @@ import {
   distortionFromFourier,
   distortionFromTransient,
   estimatePeriod,
+  formatCornerAdaptiveTransientTable,
+  formatCornerTransientTable,
   formatDcTable,
   formatDistortionTable,
   formatFourierTable,
@@ -45,6 +47,8 @@ import {
   resistor,
   transient,
   transientAdaptive,
+  transientAdaptiveCorners,
+  transientCorners,
   transmissionLine,
   voltageSource,
   voltageSourceWithWaveform,
@@ -1168,6 +1172,58 @@ describe("transient", () => {
       "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
+  });
+
+  it("runs transient waveforms per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+
+    const result = transientCorners(circuit, 1.0e-3, 2.0e-3, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "r2-high",
+        overrides: [{ elementName: "R2", parameter: "resistance", value: 2_000.0 }],
+      },
+    ]);
+
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "r2-high"]);
+    expectClose(result.points[0].points.at(-1)?.voltage("mid"), 5.0);
+    expectClose(result.points[1].points.at(-1)?.voltage("mid"), 20.0 / 3.0);
+    expect(formatCornerTransientTable(result, ["V(vin)", "V(mid)", "I(V1)"])).toBe(
+      "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
+        "nominal\t0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "nominal\t1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "r2-high\t0\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n" +
+        "r2-high\t1\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n",
+    );
+  });
+
+  it("runs adaptive transient waveforms per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const result = transientAdaptiveCorners(circuit, 1.0e-3, 2.0e-3, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "r1-high",
+        overrides: [{ elementName: "R1", parameter: "resistance", value: 2_000.0 }],
+      },
+    ], { method: "trap", tolerance: 1.0, minStep: 1.0e-3, maxStep: 1.0e-3 });
+
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "r1-high"]);
+    expectClose(result.points[0].result.points.at(-1)?.voltage("out"), 7.777777777777778e-1);
+    expectClose(result.points[1].result.points.at(-1)?.voltage("out"), 5.2e-1);
+    expect(formatCornerAdaptiveTransientTable(result, ["V(vin)", "V(out)", "I(V1)"])).toBe(
+      "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\tV(vin)\tV(out)\tI(V1)\n" +
+        "nominal\ttrap\t0\ttrue\t0\t1.000000e-03\t1.000000e+00\t3.333333e-01\t-6.666667e-04\n" +
+        "nominal\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t7.777778e-01\t-2.222222e-04\n" +
+        "r1-high\ttrap\t0\ttrue\t0\t1.000000e-03\t1.000000e+00\t2.000000e-01\t-4.000000e-04\n" +
+        "r1-high\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t5.200000e-01\t-2.400000e-04\n",
     );
   });
 

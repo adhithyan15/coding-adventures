@@ -92,6 +92,7 @@ from spice_engine import (
     Capacitor,
     Circuit,
     CornerAcSweepResult,
+    CornerAdaptiveTransientResult,
     CornerDcSweepResult,
     CornerMcResult,
     CornerNoiseResult,
@@ -101,6 +102,7 @@ from spice_engine import (
     CornerSpec,
     CornerSweepResult,
     CornerTfResult,
+    CornerTransientResult,
     CurrentSource,
     DcSweepPoint,
     DcSweepResult,
@@ -155,10 +157,12 @@ from spice_engine import (
     distortion_from_transient,
     estimate_period,
     format_ac_table,
+    format_corner_adaptive_transient_table,
     format_corner_mc_table,
     format_corner_noise_table,
     format_corner_s_parameter_table,
     format_corner_sens_table,
+    format_corner_transient_table,
     format_dc_table,
     format_distortion_table,
     format_fourier_table,
@@ -194,6 +198,8 @@ from spice_engine import (
     tf,
     tf_corners,
     transient,
+    transient_adaptive_corners,
+    transient_corners,
     waveform_period,
 )
 from spice_engine.engine import (
@@ -6879,6 +6885,72 @@ def test_tf_corners_runs_transfer_function_per_corner() -> None:
     assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
     assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
     assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])
+
+
+def test_transient_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1000.0),
+        Resistor("R2", "mid", "0", 1000.0),
+    ])
+
+    result = transient_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+    )
+
+    assert isinstance(result, CornerTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r2-high"]
+    assert [point.points[-1].node_voltages["mid"] for point in result.points] == pytest.approx([5.0, 20.0 / 3.0])
+    assert format_corner_transient_table(result, ["V(vin)", "V(mid)", "I(V1)"]) == (
+        "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\n"
+        "nominal\t0\t0.000000e+00\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t1\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t2\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "r2-high\t0\t0.000000e+00\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t1\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t2\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+    )
+
+
+def test_transient_adaptive_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 1.0),
+        Resistor("R1", "vin", "out", 1000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = transient_adaptive_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r1-high", (CornerOverride("R1", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+        method="trap",
+        tol_lte=1.0,
+        min_step=1.0e-3,
+        max_step=1.0e-3,
+    )
+
+    assert isinstance(result, CornerAdaptiveTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r1-high"]
+    assert [point.result.points[-1].node_voltages["out"] for point in result.points] == pytest.approx([8.8888889e-1, 6.4e-1])
+    assert format_corner_adaptive_transient_table(result, ["V(vin)", "V(out)", "I(V1)"]) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\tV(vin)\tV(out)\tI(V1)\n"
+        "nominal\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-1.000000e-03\n"
+        "nominal\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t6.666667e-01\t-3.333333e-04\n"
+        "nominal\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t8.888889e-01\t-1.111111e-04\n"
+        "r1-high\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-5.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t4.000000e-01\t-3.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t6.400000e-01\t-1.800000e-04\n"
+    )
 
 
 def test_mc_dc_corners_runs_trials_per_corner_and_formats_tables() -> None:
