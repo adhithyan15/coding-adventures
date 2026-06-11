@@ -55,6 +55,7 @@ fn main() -> ExitCode {
         EmitMode::Armv7Bin     => input.with_extension("bin"),
         EmitMode::Intel4004Bin => input.with_extension("bin"),
         EmitMode::Ge225Bin => input.with_extension("bin"),
+        EmitMode::Ibm704Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -115,6 +116,15 @@ enum EmitMode {
     /// decoder.  The GE-225 (1959) was the mainframe at Dartmouth
     /// College where Dartmouth BASIC was DESIGNED in 1964.
     Ge225Bin,
+    /// Flat `.bin` of 36-bit IBM 704 instruction words, packed as
+    /// 5 bytes per word (low byte first, high 4 bits of the top
+    /// byte always zero).  Cross-platform.  Downstream consumers:
+    /// any IBM 704 emulator, period scholarship, replica hardware.
+    /// The IBM 704 (1954) is the vacuum-tube mainframe McCarthy's
+    /// students ran the FIRST LISP implementation on at MIT in
+    /// 1959 — the closing half of the **CAR/CDR birthplace
+    /// round-trip**.
+    Ibm704Bin,
 }
 
 struct CliArgs {
@@ -194,9 +204,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "armv7" | "arm" | "arm32" => Ok(EmitMode::Armv7Bin),
         "intel4004" | "i4004" | "4004" => Ok(EmitMode::Intel4004Bin),
         "ge225" | "ge-225" | "225" => Ok(EmitMode::Ge225Bin),
+        "ibm704" | "ibm-704" | "704" => Ok(EmitMode::Ibm704Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704"
         )),
     }
 }
@@ -261,6 +272,15 @@ Options:
                                                 simulator or decode 3 bytes at a time
                                                 (the mainframe where Dartmouth BASIC
                                                 was DESIGNED in 1964)
+                             ibm704 | ibm-704 | 704
+                                              → flat .bin of 36-bit IBM 704 instruction
+                                                words via ibm704-backend (packed 5 bytes
+                                                per word, low byte first, top 4 bits of
+                                                the high byte zero); cross-platform; the
+                                                silicon Lisp was BORN on at MIT in 1959
+                                                — the birthplace round-trip (CAR/CDR
+                                                are literal 704 instruction-field
+                                                mnemonics)
   -h, --help               Show this help.\
 ");
 }
@@ -320,6 +340,16 @@ fn dispatch(
     // a custom decoder.
     if emit == EmitMode::Ge225Bin {
         return lang_aot::compile_file_to_ge225_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // IBM 704 .bin emission is also cross-platform — write each
+    // 36-bit instruction word as 5 bytes (low byte first, high 4
+    // bits of the top byte zero) as ibm704-backend emits them.
+    // The IBM 704 (1954) is the silicon Lisp was BORN on at MIT
+    // in 1959; CAR/CDR are literal 704 instruction-field
+    // mnemonics.  Downstream is always an emulator or replica.
+    if emit == EmitMode::Ibm704Bin {
+        return lang_aot::compile_file_to_ibm704_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]
