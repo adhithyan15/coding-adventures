@@ -367,6 +367,18 @@ fn insert_unbox_before_lisp_rets(func: &mut IIRFunction, boxed_regs: &HashSet<St
         .filter_map(|i| i.dest.clone())
         .collect();
 
+    // McCarthy symbol-result handling (F6): a SYMBOL is already a finished tagged
+    // immediate from `intern_symbols` (`(id << shift) | TAG_SYMBOL`), NOT a boxed
+    // integer — `lispy_unbox_int` (`>> 3`) would corrupt the id+tag. The program
+    // result IS the tagged symbol word, so such a `ret` is returned verbatim (just
+    // retyped to `i64`, the tagged-word width).
+    let symbol_regs: HashSet<String> = func
+        .instructions
+        .iter()
+        .filter(|i| i.type_hint == SYMBOL_HINT)
+        .filter_map(|i| i.dest.clone())
+        .collect();
+
     let old = std::mem::take(&mut func.instructions);
     let mut new_instrs: Vec<IIRInstr> = Vec::with_capacity(old.len() + 2);
     let mut unbox_counter = 0usize;
@@ -382,6 +394,15 @@ fn insert_unbox_before_lisp_rets(func: &mut IIRFunction, boxed_regs: &HashSet<St
         };
 
         match ret_boxed_reg {
+            Some(boxed) if symbol_regs.contains(&boxed) => {
+                // A symbol result is returned as its tagged word (no coercion).
+                new_instrs.push(IIRInstr::new(
+                    "ret",
+                    None,
+                    vec![Operand::Var(boxed)],
+                    "i64",
+                ));
+            }
             Some(boxed) => {
                 // A boolean result → `lispy_truthy` (→ 0/1); an integer result →
                 // `lispy_unbox_int` (→ `>> 3`). Both yield a raw `i64`.
@@ -677,6 +698,24 @@ mod tests {
         lower_lisp_repr(&mut bool_m);
         assert_eq!(count_builtin(&bool_m, "lispy_truthy"), 1, "bool result is truthied");
         assert_eq!(count_builtin(&bool_m, "lispy_unbox_int"), 0, "bool result is NOT unboxed");
+    }
+
+    /// McCarthy W13 (F6): a SYMBOL program result is returned verbatim (its tagged
+    /// immediate) — NOT `unbox_int`'d (`>> 3` would corrupt the id+tag) and NOT
+    /// `truthy`'d. `(QUOTE A)` lowers to `const … : symbol` then a bare `ret`.
+    #[test]
+    fn symbol_result_returned_verbatim() {
+        let mut m = module(vec![
+            // `(QUOTE A)` after intern: a finished tagged symbol immediate.
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Var("A".into())], SYMBOL_HINT),
+            ret("s"),
+        ]);
+        lower_lisp_repr(&mut m);
+        assert_eq!(count_builtin(&m, "lispy_unbox_int"), 0, "a symbol result is NOT unboxed");
+        assert_eq!(count_builtin(&m, "lispy_truthy"), 0, "a symbol result is NOT truthied");
+        // The final instruction is a bare `ret` of the symbol register.
+        let last = m.functions[0].instructions.last().unwrap();
+        assert_eq!(last.op, "ret", "ends with a bare ret of the tagged symbol word");
     }
 
     /// A raw machine condition (e.g. a Twig `cmp` result, not in boxed_regs)

@@ -202,6 +202,8 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
         "any" => Ok("i64"),
         t if t.starts_with("ref<Lispy") => Ok("i64"),
+        // McCarthy W13 (F6): an interned symbol is a tagged 64-bit immediate.
+        "symbol" => Ok("i64"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),

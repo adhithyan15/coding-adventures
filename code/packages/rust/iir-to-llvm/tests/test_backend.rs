@@ -1004,3 +1004,21 @@ fn single_assignment_stays_on_the_side_map() {
     assert!(!ll.contains("alloca"), "no slot for a single-assignment var; got:\n{ll}");
     assert!(ll.contains("ret i64 42"), "const folds straight into ret; got:\n{ll}");
 }
+
+/// McCarthy W13 (F6): a `symbol`-typed value (an interned tagged immediate) maps
+/// to an `i64` and validates — it is a tagged 64-bit word like `any`/`ref<Lispy…>`.
+#[test]
+fn symbol_typed_const_validates_and_lowers() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("s".into()), vec![Operand::Int(2)], "symbol"),
+            IIRInstr::new("ret", None, vec![Operand::Var("s".into())], "i64"),
+        ],
+    );
+    assert!(validate_for_llvm(&module_with(f.clone())).is_empty(), "symbol const must validate");
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("ret i64 2"), "symbol immediate flows as i64; got:\n{ll}");
+}

@@ -3,6 +3,14 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.7.0] — 2026-06-10 (McCarthy W13a — lisp symbols (F6))
+
+`llvm_type_for("symbol")` now maps to `i64` — an interned McCarthy symbol is a
+tagged 64-bit immediate (from `iir_builtin_lowering::intern_symbols`), so it flows
+as a tagged word like `any`/`ref<Lispy…>`. With this, `(QUOTE A)`, symbol `EQ`, and
+symbols inside `COND` all validate and lower. Verified by RUNNING in `lang-aot`
+(clang + `lispy_runtime.c`): `(EQ (QUOTE A) (QUOTE A))`→1, `(EQ (QUOTE A) (QUOTE B))`→0.
+
 ## [0.6.0] — 2026-06-10 (McCarthy W12b-3 — `COND` via alloca SSA-merge — LLVM core F1–F5)
 
 Lowers McCarthy `COND` (a cross-block value merge) and completes the LLVM core

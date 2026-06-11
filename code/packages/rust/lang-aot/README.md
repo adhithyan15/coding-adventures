@@ -74,8 +74,11 @@ the shared `lower_lisp_repr` coerces a boolean program result with `lispy_truthy
 (→ 0/1) rather than `lispy_unbox_int` — `(ATOM 7)` → 1, `(EQ 7 7)` → 1,
 `(EQ 7 8)` → 0. **`COND`** runs too (W12b-3, F5): a clause-result variable assigned
 across blocks is promoted to a stack slot (`alloca`/`store`/`load`, a cross-block SSA
-merge) — `(COND ((ATOM 7) 11) ((ATOM 8) 22))` → 11, nested `COND` → 44. **LLVM is now
-F1–F5**; only symbols + lambda (F6–F7) remain (W13).
+merge) — `(COND ((ATOM 7) 11) ((ATOM 8) 22))` → 11, nested `COND` → 44.
+**Symbols** run too (W13a, F6): an interned symbol is a tagged `i64` immediate, and a
+bare symbol result is returned verbatim (not unboxed) — `(EQ (QUOTE A) (QUOTE A))` →
+1, `(EQ (QUOTE A) (QUOTE B))` → 0, `(ATOM (QUOTE A))` → 1. **LLVM is now F1–F6**; only
+lambda (F7, W13b) remains.
 
 ## Stack position
 
