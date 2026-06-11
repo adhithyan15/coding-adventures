@@ -173,3 +173,49 @@ fn malformed_numeric_clauses_do_not_panic_the_cli() {
         assert!(!s.contains("panic"), "must not panic for {src:?}: {s}");
     }
 }
+
+// ---- constraint solving in the CLI (ADJ constraints track B2b) ----
+
+#[test]
+fn solve_for_emits_solved_values() {
+    // x + y = 10 ; x - y = 2 → x = 6, y = 4.
+    let (ok, s) = run(
+        "adjcli_solve.adj",
+        "symbol x : scalar\n\
+             symbol y : scalar\n\
+             constrain x + y = 10\n\
+             constrain x - y = 2\n\
+             solve for { x, y }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"solve\":{"), "expected a solve section: {s}");
+    assert!(s.contains("\"outcome\":\"solved\""), "{s}");
+    assert!(s.contains("\"name\":\"x\",\"value\":6"), "{s}");
+    assert!(s.contains("\"name\":\"y\",\"value\":4"), "{s}");
+    assert!(s.contains("\"from_constraints\":[0,1]"), "{s}");
+}
+
+#[test]
+fn unsupported_constraint_reports_a_reason_not_an_answer() {
+    // An inequality is out of this slice's scope → unsupported, never a fake value.
+    let (ok, s) = run(
+        "adjcli_unsupported.adj",
+        "symbol x : scalar\nconstrain x <= 10\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"unsupported\""), "{s}");
+    assert!(s.contains("\"reason\""), "{s}");
+}
+
+#[test]
+fn a_pure_rulebook_emits_no_solve_section() {
+    let (ok, s) = run(
+        "adjcli_nosolve.adj",
+        "prior 0.10 for acs\n  source \"x\" trust empirical\n? acs\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        !s.contains("\"solve\""),
+        "no constraint system → no solve key: {s}"
+    );
+}

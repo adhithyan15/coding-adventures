@@ -13,7 +13,10 @@
 //!                 "proof": [ { "kind":"prior|contribution|interaction|predicate", "logit",
 //!                              "evidence?", "slot?", "op?", "threshold?", "observed?",
 //!                              "source", "locator", "trust" } ] } ],
-//!   "decision": { "type":"determinate|kickback|empty", ... } }
+//!   "decision": { "type":"determinate|kickback|empty", ... },
+//!   "solve": { "outcome":"solved", "assignments":[{"name","value"}],
+//!              "from_constraints":[...] } }   // present only when the program
+//!                                              // declared a constraint system
 //! ```
 //!
 //! Every proof step carries the cited `source`/`locator`/`trust` of the clause it
@@ -26,6 +29,7 @@ use std::process::ExitCode;
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 
+use adj_constraint_solver::{solve, SolveOutcome};
 use adj_lang::{compile, decide};
 use logic_core::Term;
 use logic_engine::{
@@ -267,11 +271,54 @@ fn main() -> ExitCode {
         .iter()
         .map(|q| format!("\"{}\"", esc(&format!("{}", q))))
         .collect();
+
+    // The constraint sublanguage (ADJ constraints): if the program declared a
+    // constraint system, solve it on the CPU and emit the outcome. Absent a
+    // constraint system, the `solve` key is omitted entirely.
+    let solve_section = if lowered.constraints.is_empty() {
+        String::new()
+    } else {
+        format!(",\"solve\":{}", solve_json(&solve(&lowered.constraints)))
+    };
+
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}}}",
         queries.join(","),
         ranked.join(","),
-        decision
+        decision,
+        solve_section
     );
     ExitCode::SUCCESS
+}
+
+/// Render a [`SolveOutcome`] as JSON. A solved system lists each unknown's
+/// value plus the constraints that determined it (provenance); an
+/// out-of-scope or singular system reports why, never a fabricated answer.
+fn solve_json(outcome: &SolveOutcome) -> String {
+    match outcome {
+        SolveOutcome::Solved {
+            assignments,
+            from_constraints,
+        } => {
+            let vars: Vec<String> = assignments
+                .iter()
+                .map(|(name, value)| {
+                    format!("{{\"name\":\"{}\",\"value\":{}}}", esc(name), jnum(*value))
+                })
+                .collect();
+            let cites: Vec<String> = from_constraints.iter().map(|i| i.to_string()).collect();
+            format!(
+                "{{\"outcome\":\"solved\",\"assignments\":[{}],\"from_constraints\":[{}]}}",
+                vars.join(","),
+                cites.join(",")
+            )
+        }
+        SolveOutcome::NoUniqueSolution => "{\"outcome\":\"no_unique_solution\"}".to_string(),
+        SolveOutcome::Unsupported { reason } => {
+            format!(
+                "{{\"outcome\":\"unsupported\",\"reason\":\"{}\"}}",
+                esc(reason)
+            )
+        }
+    }
 }
