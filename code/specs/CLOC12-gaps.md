@@ -466,9 +466,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-060 — member-callee new-expression
 
-- **Status:** OPEN — discovered by CLOC14.30. `minify_new_member_callee` ignored.
+- **Status:** **RESOLVED** in CLOC12.70. `minify_new_member_callee` flips IGNORED → PASS.
 - **Input:** `var x=new a.b.C().d;` → **Upstream:** `var x=(new a.b.C).d;`
-- **What it needs:** Extend gap-059's new-expr wrap to a MEMBER-CHAIN callee (`a.b.C`), not just a single identifier. The pre-pass must scan the callee extent (identifiers + `.`/`[...]` member access) between `new` and the `(`, then wrap. Follow-up of gap-059.
+- **Fix:** Generalized gap-059's new-expr reorder to a member-chain callee. The callee scan now consumes the leading identifier plus zero-or-more `.IDENT` accessors before the empty `()`, then reorders the `(` to before `new` (same no-synthetic-token trick). The single-identifier case (gap-059) is the zero-accessor special case, so the two are unified in one pass. Computed `[...]` callees and arg-bearing forms (gap-061) remain deferred. Standalone member-callee `new a.b.C()` → `new a.b.C` (no member follows) is a SEPARATE gap-050 limitation (gap-050 only handles single-identifier callees), not gap-060.
 
 ### gap-061 — arg-bearing new-expression member
 
