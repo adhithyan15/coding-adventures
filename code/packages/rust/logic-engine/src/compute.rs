@@ -46,6 +46,7 @@
 //! the model: 40 / 100, each operand cited to the byte-grounded fact that
 //! produced it.
 
+use crate::dimension::{DimOp, Dimension};
 use crate::{FactId, KnowledgeBase};
 
 /// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`) take two
@@ -135,11 +136,15 @@ impl DerivationNode {
     }
 }
 
-/// A computed value bound to a name, with its full derivation tree.
+/// A computed value bound to a name, with its full derivation tree and the
+/// [`Dimension`] the engine inferred for it (so a predicate firing over a
+/// derived value — `csf_ratio <= 0.4` — knows `csf_ratio` is a dimensionless
+/// `Scalar`, and the faithfulness gate has rejected any unit-mismatched op).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Derived {
     pub name: String,
     pub value: f64,
+    pub dim: Dimension,
     pub tree: DerivationNode,
 }
 
@@ -171,6 +176,15 @@ pub enum ComputeError {
     /// silently make a predicate not fire (a quiet wrong answer). The whole
     /// point of provenance-through-math is that no number is silently wrong.
     NonFinite { op: ComputeOp },
+    /// A binary operation mixed incompatible dimensions — `usd + days`,
+    /// `usd + eur` without a conversion. The faithfulness gate (track A4): the
+    /// engine, not the model, decides this is a category error. Carries the two
+    /// dimension tags so the audit reader sees exactly which units clashed.
+    DimensionMismatch {
+        op: ComputeOp,
+        lhs: String,
+        rhs: String,
+    },
 }
 
 /// Maximum nesting depth for a computation expression. A genuine adjudication
@@ -188,48 +202,92 @@ pub fn compute(
     expr: &ComputeExpr,
     kb: &KnowledgeBase,
 ) -> Result<Derived, ComputeError> {
-    let tree = eval(expr, kb, 0)?;
+    let (tree, dim) = eval(expr, kb, 0)?;
     let value = tree.value();
     Ok(Derived {
         name: name.into(),
         value,
+        dim,
         tree,
     })
 }
 
-/// Recursively evaluate a sub-expression into a derivation node. `depth` is the
-/// current nesting level; it bounds the recursion at [`MAX_EVAL_DEPTH`].
-fn eval(expr: &ComputeExpr, kb: &KnowledgeBase, depth: usize) -> Result<DerivationNode, ComputeError> {
+/// Map a binary [`ComputeOp`] to the dimensional [`DimOp`]. Aggregation
+/// operators have no binary dimensional rule (their result dimension is handled
+/// in the `Agg` arm), so they return `None`.
+fn dim_op(op: ComputeOp) -> Option<DimOp> {
+    match op {
+        ComputeOp::Add => Some(DimOp::Add),
+        ComputeOp::Sub => Some(DimOp::Sub),
+        ComputeOp::Mul => Some(DimOp::Mul),
+        ComputeOp::Div => Some(DimOp::Div),
+        _ => None,
+    }
+}
+
+/// Recursively evaluate a sub-expression into a derivation node **and its
+/// dimension**. `depth` bounds the recursion at [`MAX_EVAL_DEPTH`]. The
+/// dimension is checked at each binary op via [`Dimension::combine`], so a
+/// unit-mismatched formula (`usd + days`) is a clean
+/// [`ComputeError::DimensionMismatch`], not a silently-wrong number.
+fn eval(
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+    depth: usize,
+) -> Result<(DerivationNode, Dimension), ComputeError> {
     if depth >= MAX_EVAL_DEPTH {
         return Err(ComputeError::TooDeep {
             limit: MAX_EVAL_DEPTH,
         });
     }
     match expr {
-        ComputeExpr::Lit(x) => Ok(DerivationNode::Lit { value: *x }),
+        // A literal is dimensionless (Scalar). The no-magic-numbers gate (3d)
+        // will check it's a declared constant; dimensionally it's the identity.
+        ComputeExpr::Lit(x) => Ok((DerivationNode::Lit { value: *x }, Dimension::Scalar)),
 
         ComputeExpr::Ref(slot) => {
-            // Observed fact first (carries a FactId for byte provenance);
-            // then a previously-bound derived value.
-            if let Some((value, fact_id)) = kb.observed_value_with_fact(slot) {
-                Ok(DerivationNode::Leaf {
-                    slot: slot.clone(),
-                    value,
-                    fact_id,
-                })
-            } else if let Some(d) = kb.derived_for(slot) {
-                Ok(DerivationNode::DerivedRef {
-                    name: slot.clone(),
-                    value: d.value,
-                })
+            // Observed fact first (carries a FactId for byte provenance + its
+            // dimension); then a previously-bound derived value (with its dim).
+            if let Some((d, fact_id)) = kb.observed_dimensioned(slot) {
+                Ok((
+                    DerivationNode::Leaf {
+                        slot: slot.clone(),
+                        value: d.magnitude,
+                        fact_id,
+                    },
+                    d.dim,
+                ))
+            } else if let Some(derived) = kb.derived_for(slot) {
+                Ok((
+                    DerivationNode::DerivedRef {
+                        name: slot.clone(),
+                        value: derived.value,
+                    },
+                    derived.dim.clone(),
+                ))
             } else {
                 Err(ComputeError::UnknownSlot { slot: slot.clone() })
             }
         }
 
         ComputeExpr::Bin(op, a, b) => {
-            let lhs = eval(a, kb, depth + 1)?;
-            let rhs = eval(b, kb, depth + 1)?;
+            let (lhs, dim_l) = eval(a, kb, depth + 1)?;
+            let (rhs, dim_r) = eval(b, kb, depth + 1)?;
+            // Dimensional check FIRST: usd + days is a category error regardless
+            // of the magnitudes.
+            let dimop = dim_op(*op).ok_or(ComputeError::MalformedExpr {
+                detail: "aggregation operator in binary position",
+            })?;
+            let result_dim =
+                Dimension::combine(dimop, &dim_l, &dim_r).map_err(|e| match e {
+                    crate::DimError::Mismatch { lhs, rhs, .. } => {
+                        ComputeError::DimensionMismatch {
+                            op: *op,
+                            lhs,
+                            rhs,
+                        }
+                    }
+                })?;
             let (x, y) = (lhs.value(), rhs.value());
             let result = match op {
                 ComputeOp::Add => x + y,
@@ -241,20 +299,19 @@ fn eval(expr: &ComputeExpr, kb: &KnowledgeBase, depth: usize) -> Result<Derivati
                     }
                     x / y
                 }
-                _ => {
-                    return Err(ComputeError::MalformedExpr {
-                        detail: "aggregation operator in binary position",
-                    })
-                }
+                _ => unreachable!("dim_op already rejected non-binary ops"),
             };
             if !result.is_finite() {
                 return Err(ComputeError::NonFinite { op: *op });
             }
-            Ok(DerivationNode::Op {
-                op: *op,
-                operands: vec![lhs, rhs],
-                result,
-            })
+            Ok((
+                DerivationNode::Op {
+                    op: *op,
+                    operands: vec![lhs, rhs],
+                    result,
+                },
+                result_dim,
+            ))
         }
 
         ComputeExpr::Agg(op, slot) => {
@@ -288,11 +345,24 @@ fn eval(expr: &ComputeExpr, kb: &KnowledgeBase, depth: usize) -> Result<Derivati
             if !result.is_finite() {
                 return Err(ComputeError::NonFinite { op: *op });
             }
-            Ok(DerivationNode::Op {
-                op: *op,
-                operands,
-                result,
-            })
+            // `count` is a dimensionless tally; sum/min/max/avg keep the slot's
+            // dimension (the magnitudes share it). Read it from the slot, or
+            // Scalar if the slot has no dimensioned observation.
+            let result_dim = if *op == ComputeOp::Count {
+                Dimension::Scalar
+            } else {
+                kb.observed_dimensioned(slot)
+                    .map(|(d, _)| d.dim)
+                    .unwrap_or(Dimension::Scalar)
+            };
+            Ok((
+                DerivationNode::Op {
+                    op: *op,
+                    operands,
+                    result,
+                },
+                result_dim,
+            ))
         }
     }
 }
@@ -309,6 +379,80 @@ mod tests {
             kb.add_fact(f);
         }
         kb
+    }
+
+    // ---- the dimensional faithfulness gate (track A4) ----
+
+    fn money(slot: &str, amount: i64, ccy: &str) -> crate::Fact {
+        crate::Fact::certain(compound(slot, vec![compound("money", vec![int(amount), atom(ccy)])]))
+    }
+    fn refexpr(slot: &str) -> ComputeExpr {
+        ComputeExpr::Ref(slot.into())
+    }
+    fn bin(op: ComputeOp, a: ComputeExpr, b: ComputeExpr) -> ComputeExpr {
+        ComputeExpr::Bin(op, Box::new(a), Box::new(b))
+    }
+
+    #[test]
+    fn same_currency_add_is_allowed_and_keeps_the_dimension() {
+        let kb = kb_with(vec![money("a", 100, "usd"), money("b", 50, "usd")]);
+        let d = compute("total", &bin(ComputeOp::Add, refexpr("a"), refexpr("b")), &kb).unwrap();
+        assert_eq!(d.value, 150.0);
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    #[test]
+    fn mixed_currency_add_is_a_dimension_mismatch() {
+        let kb = kb_with(vec![money("a", 100, "usd"), money("b", 50, "eur")]);
+        let err = compute("x", &bin(ComputeOp::Add, refexpr("a"), refexpr("b")), &kb).unwrap_err();
+        assert!(matches!(
+            err,
+            ComputeError::DimensionMismatch { op: ComputeOp::Add, .. }
+        ));
+    }
+
+    #[test]
+    fn money_plus_days_is_a_category_error() {
+        let kb = kb_with(vec![
+            money("price", 100, "usd"),
+            Fact::certain(compound("age", vec![compound("duration", vec![int(5), atom("days")])])),
+        ]);
+        let err = compute("x", &bin(ComputeOp::Add, refexpr("price"), refexpr("age")), &kb).unwrap_err();
+        assert!(matches!(err, ComputeError::DimensionMismatch { .. }));
+    }
+
+    #[test]
+    fn money_over_money_is_a_dimensionless_ratio() {
+        let kb = kb_with(vec![money("debt", 3000, "usd"), money("income", 10000, "usd")]);
+        let d = compute("dti", &bin(ComputeOp::Div, refexpr("debt"), refexpr("income")), &kb).unwrap();
+        assert!((d.value - 0.3).abs() < 1e-12);
+        assert_eq!(d.dim, Dimension::Scalar, "a ratio of like dimensions is dimensionless");
+    }
+
+    #[test]
+    fn money_scaled_by_a_scalar_literal_stays_money() {
+        let kb = kb_with(vec![money("base", 1000, "usd")]);
+        // base * 2 → money(usd). (Mul with a Scalar literal is transparent.)
+        let d = compute(
+            "scaled",
+            &bin(ComputeOp::Mul, refexpr("base"), ComputeExpr::Lit(2.0)),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(d.value, 2000.0);
+        assert_eq!(d.dim, Dimension::Money("usd".into()));
+    }
+
+    #[test]
+    fn bare_number_formulas_are_scalar_and_unaffected() {
+        // Regression: the pre-A4 numeric behaviour is unchanged for Scalars.
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(2)])),
+            Fact::certain(compound("b", vec![int(3)])),
+        ]);
+        let d = compute("s", &bin(ComputeOp::Add, refexpr("a"), refexpr("b")), &kb).unwrap();
+        assert_eq!(d.value, 5.0);
+        assert_eq!(d.dim, Dimension::Scalar);
     }
 
     #[test]
