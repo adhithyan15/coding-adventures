@@ -1,5 +1,20 @@
 # Changelog — vm-core
 
+## [0.3.0] — 2026-06-10 (McCarthy W15b — lambda-frame register sizing)
+
+### Fixed
+
+- `VMFrame::for_function` now sizes the register file to
+  `max(register_count, params.len())`. A frontend may under-report
+  `register_count` for a function whose only registers are its parameters — a
+  hoisted McCarthy `LAMBDA` body like `(LAMBDA (X) X)` reports `register_count = 0` —
+  and the dispatcher writes the call arguments directly at indices `0..params.len()`.
+  Previously the register file was sized to `register_count` alone, so a lambda call
+  indexed past the end of `registers` and **panicked**. This mirrors how `assign`
+  already grows the file for under-reported *locals*. Unblocks McCarthy `LAMBDA`/
+  `LABEL` on the universal JIT (the eighth and final backend). New unit test
+  `for_function_sizes_registers_to_cover_params_when_count_underreports`.
+
 ## [0.2.1] — 2026-05-22
 
 ### Added (LANG74 follow-up — universal `mov` dispatch)

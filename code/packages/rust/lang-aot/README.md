@@ -89,11 +89,13 @@ the leading-`_` C decoration), and lambda runs via one `lispy_to_exit_code` row 
 each native backend's `V1_BUILTINS` (W14b) — the seventh backend.
 
 `run_mccarthy_on_jit(source)` runs McCarthy on the **universal JIT** —
-`jit-core::GenericCirJit`, the eighth and last backend (W15a, F1–F6). The JIT
+`jit-core::GenericCirJit`, the **eighth and final backend** (W15, **F1–F7**). The JIT
 dispatches `call_builtin "lispy_*"` to Rust callbacks backed by the shared
 `lispy-runtime` crate (the C runtime's Rust twin), with a `LispyValue` riding inside
 the VM's `Value::Int` as its bit pattern — `(CAR (CONS 7 9))` → 7, `(ATOM 7)` → 1,
-nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1. Lambda (F7) is W15b.
+nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1, `((LAMBDA (X) X) 5)` → 5, and a
+recursive `LABEL` → 7. **With the JIT, McCarthy 1960 LISP now runs on every LANG VM
+backend (F1–F7): VM, native AOT, JIT, WASM, JVM, CLR, BEAM, LLVM.**
 
 ## Stack position
 

@@ -64,7 +64,7 @@ representation + per-builtin backend lowering.
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged-word |
-| **JIT** | `jit-core` + `lispy-runtime` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
+| **JIT** | `jit-core` + `lispy-runtime` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
 furthest along; the managed backends are the frontier.)
@@ -314,8 +314,9 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     macOS arm64: `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
     `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, `((LAMBDA (X) (ATOM X)) 7)`→1,
     lambda-with-`COND`-body→100/200 (`lang-aot/tests/macos_native_lisp.rs`).
-- ◑ **W15 — JIT McCarthy core (F1–F7).** *In progress.* Drive McCarthy through the
-  universal JIT (`jit-core::GenericCirJit`) — the eighth and last backend.
+- ✅ **W15 — JIT McCarthy core (F1–F7). DONE — JIT COMPLETE.** The **eighth and final
+  backend** finishes all seven features. **McCarthy 1960 LISP now runs on every LANG
+  VM backend (F1–F7): VM, native AOT, JIT, WASM, JVM, CLR, BEAM, LLVM.**
   - ✅ **W15a — JIT F1–F6 (scalar / cons / ATOM / EQ / COND / symbols).** The JIT
     dispatches `call_builtin "lispy_*"` to **Rust callbacks** (not native `__twig_lispy_*`
     calls), so the lisp ops are registered against the shared **`lispy-runtime`** crate
@@ -325,10 +326,18 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     (existing primitives — not duplicated). New reusable entry `lang_aot::run_mccarthy_on_jit`.
     Verified by RUNNING (`lang-aot/tests/jit_mccarthy.rs`): `(CAR (CONS 7 9))`→7,
     `(ATOM 7)`→1, `(EQ 7 7)`→1, nested `COND`→44, `(EQ (QUOTE A) (QUOTE A))`→1.
-  - ☐ **W15b — JIT `LAMBDA` (F7). Completes the JIT — and McCarthy across all eight
-    backends.** The VM's user-`call` path (`vm-core::dispatch`) panics on a lambda
-    frame today; that must be fixed (or the JIT taught to call user functions) before
-    a lambda runs. The lowered IIR + `lispy_to_exit_code` coercion already exist.
+  - ✅ **W15b — JIT `LAMBDA`/`LABEL` (F7). COMPLETES THE JIT — and McCarthy across all
+    eight backends.** Two small fixes: (1) `vm-core::VMFrame::for_function` now sizes
+    the register file to `max(register_count, params.len())` — a hoisted `LAMBDA` body
+    reports `register_count = 0`, so the dispatcher's direct `registers[i] = arg` write
+    indexed past the end and panicked; (2) `jit_lisp` registers `lispy_to_exit_code`
+    (the polymorphic-result coercion — a tag dispatch derived from `LispyValue`'s
+    predicates, the only builtin lambda needs beyond W15a's set). Verified by RUNNING
+    (`lang-aot/tests/jit_mccarthy.rs`): `((LAMBDA (X) X) 5)`→5,
+    `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7, `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1,
+    lambda-with-`COND`-body→100/200, and a recursive `LABEL` (`FF` descending the
+    car-spine to the leftmost atom)→7. Recursion depth is bounded by the JIT's fuel
+    step-cap.
 
 ### Phase G — conformance
 

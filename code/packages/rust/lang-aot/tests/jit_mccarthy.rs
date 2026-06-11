@@ -7,8 +7,8 @@
 //! computed integer result, exactly as the wasm/jvm/clr suites do with their
 //! in-repo simulators.
 //!
-//! `LAMBDA` (F7) is NOT covered here: the VM's user-`call` path panics on a lambda
-//! frame today, which is the separate W15b slice.
+//! `LAMBDA`/`LABEL` (F7) is covered by `lambda_and_label_f7` (W15b) — the JIT is now
+//! McCarthy-complete (F1–F7), the eighth and final backend.
 
 use lang_aot::run_mccarthy_on_jit;
 
@@ -53,4 +53,23 @@ fn symbols_f6() {
     assert_eq!(run("(EQ (QUOTE A) (QUOTE B))"), 0);
     assert_eq!(run("(ATOM (QUOTE A))"), 1);
     assert_eq!(run("(COND ((EQ (QUOTE A) (QUOTE A)) 11) ((EQ 1 1) 22))"), 11);
+}
+
+#[test]
+fn lambda_and_label_f7() {
+    // Direct application: the argument is boxed across the call and the
+    // polymorphic result coerced at the program exit by `lispy_to_exit_code`.
+    assert_eq!(run("((LAMBDA (X) X) 5)"), 5);
+    assert_eq!(run("((LAMBDA (X) (CAR X)) (CONS 7 9))"), 7);
+    assert_eq!(run("((LAMBDA (X) (CDR X)) (CONS 7 9))"), 9);
+    // A predicate body → boolean result, truthy-coerced to 0/1.
+    assert_eq!(run("((LAMBDA (X Y) (EQ X Y)) 3 3)"), 1);
+    assert_eq!(run("((LAMBDA (X Y) (EQ X Y)) 3 4)"), 0);
+    assert_eq!(run("((LAMBDA (X) (ATOM X)) 7)"), 1);
+    // Lambda body is a COND over the parameter (composes F5 + F7).
+    assert_eq!(run("((LAMBDA (N) (COND ((EQ N 0) 100) ((EQ 1 1) 200))) 0)"), 100);
+    assert_eq!(run("((LAMBDA (N) (COND ((EQ N 0) 100) ((EQ 1 1) 200))) 9)"), 200);
+    // LABEL: a recursive closure. `FF` descends the car-spine to the leftmost atom.
+    assert_eq!(run("((LABEL FF (LAMBDA (X) (COND ((ATOM X) X) ((QUOTE T) (FF (CAR X)))))) (CONS (CONS 7 8) 9))"), 7);
+    assert_eq!(run("((LABEL FF (LAMBDA (X) (COND ((ATOM X) X) ((QUOTE T) (FF (CAR X)))))) 42)"), 42);
 }
