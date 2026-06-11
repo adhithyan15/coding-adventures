@@ -83,7 +83,17 @@ into the lambda, and the polymorphic result is coerced at the program exit by
 `__twig_lispy_to_exit_code` (a runtime tag switch) — `((LAMBDA (X) X) 5)` → 5,
 `((LAMBDA (X) (CAR X)) (CONS 7 9))` → 7, `((LAMBDA (X Y) (EQ X Y)) 3 3)` → 1,
 lambda-with-`COND`-body → 100/200. **LLVM is now McCarthy-complete (F1–F7)** — the
-sixth backend to finish, after VM/WASM/JVM/CLR/BEAM.
+sixth backend to finish, after VM/WASM/JVM/CLR/BEAM. **Native AOT** completed too
+(W14): the macOS Mach-O runtime-link gap closed (W14a — external symbols now carry
+the leading-`_` C decoration), and lambda runs via one `lispy_to_exit_code` row in
+each native backend's `V1_BUILTINS` (W14b) — the seventh backend.
+
+`run_mccarthy_on_jit(source)` runs McCarthy on the **universal JIT** —
+`jit-core::GenericCirJit`, the eighth and last backend (W15a, F1–F6). The JIT
+dispatches `call_builtin "lispy_*"` to Rust callbacks backed by the shared
+`lispy-runtime` crate (the C runtime's Rust twin), with a `LispyValue` riding inside
+the VM's `Value::Int` as its bit pattern — `(CAR (CONS 7 9))` → 7, `(ATOM 7)` → 1,
+nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1. Lambda (F7) is W15b.
 
 ## Stack position
 

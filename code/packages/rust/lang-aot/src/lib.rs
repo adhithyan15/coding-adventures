@@ -47,6 +47,10 @@ use std::path::Path;
 
 use interpreter_ir::module::IIRModule;
 
+/// McCarthy Lisp on the universal JIT backend (W15).
+pub mod jit_lisp;
+pub use jit_lisp::run_mccarthy_on_jit;
+
 /// Source language a `lang-aot` invocation is compiling.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Language {
@@ -144,6 +148,9 @@ pub enum LangAotError {
     /// Carries the human-readable string from `iir-to-llvm` (which already
     /// includes the failing function name and the unsupported op/type).
     LlvmBackendError(String),
+    /// The universal JIT (`jit-core`) rejected or trapped while running the IIR
+    /// (McCarthy W15). Carries the JIT/VM error string.
+    JitBackendError(String),
     /// The RV32I backend rejected the IIR.
     ///
     /// Carries the human-readable string from `iir-to-riscv` (which
@@ -213,6 +220,7 @@ impl fmt::Display for LangAotError {
             LangAotError::AotError(e) => write!(f, "{e}"),
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
+            LangAotError::JitBackendError(m) => write!(f, "jit: {m}"),
             LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
             LangAotError::JvmBackendError(m) => write!(f, "jvm: {m}"),
             LangAotError::ClrBackendError(m) => write!(f, "clr: {m}"),
