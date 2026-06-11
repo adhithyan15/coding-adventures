@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness pointer-interaction descriptors now expose click, mouse,
+  touch, pointer, wheel, and drag/drop handler routing plus command/editing
+  context and blocked pointer paths as a flat browser-planning inventory.
 - Browser-readiness selection-interaction descriptors now expose `onselect` and
   selection-change handlers, input hooks, editing hosts, text controls, and
   blocked selection paths as a flat browser-planning inventory.

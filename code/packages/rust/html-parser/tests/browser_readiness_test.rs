@@ -18,12 +18,12 @@ use coding_adventures_html_parser::{
     BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor, BrowserLink,
     BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
     BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -141,6 +141,8 @@ struct ExpectedBrowserDocument {
     clipboard_interaction_descriptors: Option<Vec<ExpectedClipboardInteractionDescriptor>>,
     #[serde(default)]
     selection_interaction_descriptors: Option<Vec<ExpectedSelectionInteractionDescriptor>>,
+    #[serde(default)]
+    pointer_interaction_descriptors: Option<Vec<ExpectedPointerInteractionDescriptor>>,
     #[serde(default)]
     disclosures: Vec<ExpectedDisclosure>,
     #[serde(default)]
@@ -2299,6 +2301,70 @@ struct ExpectedSelectionInteractionDescriptor {
     selection_blocked: bool,
     #[serde(default)]
     selection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedPointerInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    pointer_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    draggable: Option<String>,
+    #[serde(default)]
+    draggable_state: Option<String>,
+    #[serde(default)]
+    pointer_handlers: Vec<String>,
+    #[serde(default)]
+    mouse_handlers: Vec<String>,
+    #[serde(default)]
+    touch_handlers: Vec<String>,
+    #[serde(default)]
+    wheel_handlers: Vec<String>,
+    #[serde(default)]
+    click_handlers: Vec<String>,
+    #[serde(default)]
+    drag_handlers: Vec<String>,
+    #[serde(default)]
+    drop_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    pointer_blocked: bool,
+    #[serde(default)]
+    pointer_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4534,6 +4600,28 @@ fn browser_selection_interaction_descriptors_track_editing_handlers_and_blockers
 }
 
 #[test]
+fn browser_pointer_interaction_descriptors_track_handlers_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive pointer fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive pointer fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.pointer_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .pointer_interaction_descriptors,
+        "pointer-interaction descriptors should preserve click, mouse, touch, pointer, wheel, drag/drop routing, command/editing context, and blocked pointer paths",
+    );
+}
+
+#[test]
 fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4976,6 +5064,22 @@ impl ExpectedBrowserDocument {
                     &event_handler_descriptors,
                 )
             });
+        let pointer_interaction_descriptors = self
+            .pointer_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedPointerInteractionDescriptor::into_browser_pointer_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_pointer_interaction_descriptors(
+                    &interactive_elements,
+                    &event_handler_descriptors,
+                )
+            });
 
         BrowserDocument {
             title: self.title,
@@ -5099,6 +5203,7 @@ impl ExpectedBrowserDocument {
             drag_drop_descriptors,
             clipboard_interaction_descriptors,
             selection_interaction_descriptors,
+            pointer_interaction_descriptors,
             disclosures,
             disclosure_state_descriptors,
             component_hydration_targets: self
@@ -7424,6 +7529,262 @@ fn expected_selection_kind(
     }
 }
 
+fn expected_pointer_interaction_descriptors(
+    interactive_elements: &[BrowserInteractiveElement],
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserPointerInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in interactive_elements {
+        if expected_interactive_has_pointer_state(element) {
+            descriptors.push(expected_pointer_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if expected_event_descriptor_has_pointer_state(event_descriptor) {
+            descriptors.push(expected_pointer_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn expected_interactive_has_pointer_state(element: &BrowserInteractiveElement) -> bool {
+    element.draggable.is_some()
+        || element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+        || element.popover_target_action.is_some()
+        || !expected_event_handlers_by_kind(
+            &element.event_handlers,
+            expected_pointer_interaction_event,
+        )
+        .is_empty()
+}
+
+fn expected_event_descriptor_has_pointer_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_pointer_interaction_event,
+    )
+    .is_empty()
+}
+
+fn expected_pointer_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers = expected_event_handlers_by_kind(
+        &element.event_handlers,
+        expected_pointer_interaction_event,
+    );
+    let mouse_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_mouse_event);
+    let touch_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_touch_event);
+    let wheel_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_wheel_event);
+    let click_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_click_event);
+    let drag_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_drag_event);
+    let drop_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_drop_event);
+    let pointer_block_reasons = expected_pointer_block_reasons_for_interactive(element);
+
+    BrowserPointerInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        pointer_kind: expected_pointer_kind(
+            element.draggable_state.as_deref(),
+            element.command.is_some()
+                || element.command_for.is_some()
+                || element.popover_target.is_some()
+                || element.popover_target_action.is_some(),
+            element.editing_mode.is_some(),
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: (element.element == "button").then(|| "submit".to_string()),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        draggable: element.draggable.clone(),
+        draggable_state: element.draggable_state.clone(),
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        pointer_blocked: !pointer_block_reasons.is_empty(),
+        pointer_block_reasons,
+    }
+}
+
+fn expected_pointer_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_pointer_interaction_event,
+    );
+    let mouse_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_mouse_event);
+    let touch_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_touch_event);
+    let wheel_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_wheel_event);
+    let click_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_click_event);
+    let drag_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_drag_event);
+    let drop_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_drop_event);
+    let pointer_block_reasons = Vec::new();
+
+    BrowserPointerInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        pointer_kind: expected_pointer_kind(
+            None,
+            false,
+            false,
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        command: None,
+        command_for: None,
+        popover_target: None,
+        popover_target_action: None,
+        contenteditable: None,
+        editing_mode: None,
+        draggable: None,
+        draggable_state: None,
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        pointer_blocked: false,
+        pointer_block_reasons,
+    }
+}
+
+fn expected_pointer_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn expected_pointer_kind(
+    draggable_state: Option<&str>,
+    command_target: bool,
+    editing_host: bool,
+    pointer_handlers: &[String],
+    mouse_handlers: &[String],
+    touch_handlers: &[String],
+    wheel_handlers: &[String],
+    click_handlers: &[String],
+    drag_handlers: &[String],
+    drop_handlers: &[String],
+    pointer_block_reasons: &[String],
+) -> String {
+    if !pointer_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if expected_draggable_source(draggable_state) && !drop_handlers.is_empty() {
+        "drag-source-and-drop-target".to_string()
+    } else if expected_draggable_source(draggable_state) || !drag_handlers.is_empty() {
+        "drag-source".to_string()
+    } else if !drop_handlers.is_empty() {
+        "drop-target".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-target".to_string()
+    } else if pointer_handlers
+        .iter()
+        .any(|handler| handler.starts_with("onpointer"))
+    {
+        "pointer-target".to_string()
+    } else if !mouse_handlers.is_empty() {
+        "mouse-target".to_string()
+    } else if !click_handlers.is_empty() {
+        "click-target".to_string()
+    } else if command_target {
+        "command-target".to_string()
+    } else if editing_host {
+        "editing-target".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
 fn expected_tabindex_order(tabindex: Option<&str>) -> Option<i32> {
     tabindex.and_then(|tabindex| tabindex.trim().parse::<i32>().ok())
 }
@@ -7454,6 +7815,71 @@ fn expected_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn expected_pointer_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onpointerdown"
+            | "onpointermove"
+            | "onpointerup"
+            | "onpointercancel"
+            | "onpointerenter"
+            | "onpointerleave"
+            | "onpointerover"
+            | "onpointerout"
+            | "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+            | "ontouchstart"
+            | "ontouchmove"
+            | "ontouchend"
+            | "ontouchcancel"
+            | "ondrag"
+            | "ondragstart"
+            | "ondragend"
+            | "ondragenter"
+            | "ondragleave"
+            | "ondragover"
+            | "ondrop"
+            | "onwheel"
+    )
+}
+
+fn expected_pointer_interaction_event(handler: &str) -> bool {
+    expected_pointer_event(handler) || expected_click_event(handler)
+}
+
+fn expected_mouse_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+    )
+}
+
+fn expected_touch_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontouchstart" | "ontouchmove" | "ontouchend" | "ontouchcancel"
+    )
+}
+
+fn expected_wheel_event(handler: &str) -> bool {
+    handler == "onwheel"
+}
+
+fn expected_click_event(handler: &str) -> bool {
+    matches!(handler, "onclick" | "ondblclick" | "oncontextmenu")
 }
 
 fn expected_drag_event(handler: &str) -> bool {
@@ -8853,6 +9279,44 @@ impl ExpectedSelectionInteractionDescriptor {
             aria_hidden: self.aria_hidden,
             selection_blocked: self.selection_blocked,
             selection_block_reasons: self.selection_block_reasons,
+        }
+    }
+}
+
+impl ExpectedPointerInteractionDescriptor {
+    fn into_browser_pointer_interaction_descriptor(self) -> BrowserPointerInteractionDescriptor {
+        BrowserPointerInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            pointer_kind: self.pointer_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            control_type: self.control_type,
+            command: self.command,
+            command_for: self.command_for,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            draggable: self.draggable,
+            draggable_state: self.draggable_state,
+            pointer_handlers: self.pointer_handlers,
+            mouse_handlers: self.mouse_handlers,
+            touch_handlers: self.touch_handlers,
+            wheel_handlers: self.wheel_handlers,
+            click_handlers: self.click_handlers,
+            drag_handlers: self.drag_handlers,
+            drop_handlers: self.drop_handlers,
+            handler_count: self.handler_count,
+            focusable: self.focusable,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            pointer_blocked: self.pointer_blocked,
+            pointer_block_reasons: self.pointer_block_reasons,
         }
     }
 }
