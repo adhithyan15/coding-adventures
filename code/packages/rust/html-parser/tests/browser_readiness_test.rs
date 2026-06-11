@@ -3,30 +3,30 @@ use coding_adventures_html_parser::{
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
     BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor,
     BrowserClipboardInteractionDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
-    BrowserCompositionInteractionDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
-    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
-    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor,
-    BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
-    BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserFullscreenInteractionDescriptor,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
-    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
+    BrowserDataAttribute, BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
+    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
+    BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
+    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
+    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
+    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
+    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
+    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
+    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
+    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
+    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -77,6 +77,8 @@ struct ExpectedBrowserDocument {
     animation_interaction_descriptors: Option<Vec<ExpectedAnimationInteractionDescriptor>>,
     #[serde(default)]
     fullscreen_interaction_descriptors: Option<Vec<ExpectedFullscreenInteractionDescriptor>>,
+    #[serde(default)]
+    context_menu_interaction_descriptors: Option<Vec<ExpectedContextMenuInteractionDescriptor>>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -756,6 +758,65 @@ struct ExpectedFullscreenInteractionDescriptor {
     document_scope: bool,
     #[serde(default)]
     body_scope: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedContextMenuInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    source: String,
+    context_menu_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    aria_haspopup: Option<String>,
+    #[serde(default)]
+    aria_controls: Vec<String>,
+    #[serde(default)]
+    aria_expanded: Option<String>,
+    #[serde(default)]
+    popover: Option<String>,
+    #[serde(default)]
+    popover_target: Option<String>,
+    #[serde(default)]
+    popover_target_action: Option<String>,
+    #[serde(default)]
+    command: Option<String>,
+    #[serde(default)]
+    command_for: Option<String>,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    contextmenu_handlers: Vec<String>,
+    #[serde(default)]
+    pointer_handlers: Vec<String>,
+    #[serde(default)]
+    keyboard_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    context_menu_blocked: bool,
+    #[serde(default)]
+    context_menu_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -5200,6 +5261,28 @@ fn browser_fullscreen_interaction_descriptors_track_embedded_policy_hints() {
     );
 }
 
+#[test]
+fn browser_context_menu_interaction_descriptors_track_menu_invokers_and_handlers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("ARIA interaction fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA interaction fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.context_menu_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .context_menu_interaction_descriptors,
+        "context-menu descriptors should preserve ARIA menu invokers and contextmenu hooks",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         let metadata = self.metadata.into_browser_document_metadata();
@@ -5371,6 +5454,22 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let context_menu_interaction_descriptors = self
+            .context_menu_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedContextMenuInteractionDescriptor::into_browser_context_menu_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_context_menu_interaction_descriptors(
+                    &interactive_elements,
+                    &event_handler_descriptors,
+                )
+            });
         let disclosure_state_descriptors = self
             .disclosure_state_descriptors
             .map(|descriptors| {
@@ -5541,6 +5640,7 @@ impl ExpectedBrowserDocument {
             lifecycle_event_descriptors,
             animation_interaction_descriptors,
             fullscreen_interaction_descriptors,
+            context_menu_interaction_descriptors,
             body_text: self.body_text,
             metas: self
                 .metas
@@ -6026,6 +6126,44 @@ impl ExpectedFullscreenInteractionDescriptor {
             embedded_context: self.embedded_context,
             document_scope: self.document_scope,
             body_scope: self.body_scope,
+        }
+    }
+}
+
+impl ExpectedContextMenuInteractionDescriptor {
+    fn into_browser_context_menu_interaction_descriptor(
+        self,
+    ) -> BrowserContextMenuInteractionDescriptor {
+        BrowserContextMenuInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            source: self.source,
+            context_menu_kind: self.context_menu_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            aria_haspopup: self.aria_haspopup,
+            aria_controls: self.aria_controls,
+            aria_expanded: self.aria_expanded,
+            popover: self.popover,
+            popover_target: self.popover_target,
+            popover_target_action: self.popover_target_action,
+            command: self.command,
+            command_for: self.command_for,
+            event_handlers: self.event_handlers,
+            contextmenu_handlers: self.contextmenu_handlers,
+            pointer_handlers: self.pointer_handlers,
+            keyboard_handlers: self.keyboard_handlers,
+            handler_count: self.handler_count,
+            focusable: self.focusable,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            context_menu_blocked: self.context_menu_blocked,
+            context_menu_block_reasons: self.context_menu_block_reasons,
         }
     }
 }
@@ -9435,6 +9573,233 @@ fn expected_permission_policy_feature(directive: &str) -> Option<String> {
         .filter(|feature| !feature.is_empty())
 }
 
+fn expected_context_menu_interaction_descriptors(
+    interactive_elements: &[BrowserInteractiveElement],
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserContextMenuInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in interactive_elements {
+        let event_descriptor = expected_matching_event_descriptor(
+            event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if expected_interactive_has_context_menu_state(element, event_descriptor) {
+            descriptors.push(expected_context_menu_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if expected_event_descriptor_has_context_menu_state(event_descriptor) {
+            descriptors.push(expected_context_menu_descriptor_from_event(
+                event_descriptor,
+            ));
+        }
+    }
+
+    descriptors
+}
+
+fn expected_interactive_has_context_menu_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    expected_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || element
+            .authored_role
+            .as_deref()
+            .is_some_and(expected_menu_role)
+        || (element.popover.is_some()
+            && element
+                .authored_role
+                .as_deref()
+                .is_some_and(expected_menu_role))
+        || (element.popover_target.is_some()
+            && expected_aria_haspopup_menu(element.aria_haspopup.as_deref()))
+        || event_descriptor
+            .map(expected_event_descriptor_has_context_menu_state)
+            .unwrap_or(false)
+}
+
+fn expected_event_descriptor_has_context_menu_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_context_menu_event,
+    )
+    .is_empty()
+}
+
+fn expected_context_menu_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserContextMenuInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_else(|| element.event_handlers.clone());
+    let contextmenu_handlers =
+        expected_event_handlers_by_kind(&event_handlers, expected_context_menu_event);
+    let pointer_handlers =
+        expected_event_handlers_by_kind(&event_handlers, expected_pointer_interaction_event);
+    let keyboard_handlers =
+        expected_event_handlers_by_kind(&event_handlers, expected_keyboard_event);
+    let handler_count = contextmenu_handlers.len() + keyboard_handlers.len();
+    let context_menu_block_reasons = expected_pointer_block_reasons_for_interactive(element);
+    let menu_role = element
+        .authored_role
+        .as_deref()
+        .is_some_and(expected_menu_role);
+    let menu_invoker = expected_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || (element.popover_target.is_some()
+            && expected_aria_haspopup_menu(element.aria_haspopup.as_deref()));
+
+    BrowserContextMenuInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        context_menu_kind: expected_context_menu_kind(
+            menu_invoker,
+            menu_role,
+            element.popover.is_some() && menu_role,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        popover: element.popover.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        event_handlers,
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        handler_count,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        context_menu_blocked: !context_menu_block_reasons.is_empty(),
+        context_menu_block_reasons,
+    }
+}
+
+fn expected_context_menu_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserContextMenuInteractionDescriptor {
+    let contextmenu_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_context_menu_event,
+    );
+    let pointer_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_pointer_interaction_event,
+    );
+    let keyboard_handlers =
+        expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_keyboard_event);
+    let handler_count = contextmenu_handlers.len() + keyboard_handlers.len();
+    let context_menu_block_reasons = Vec::new();
+
+    BrowserContextMenuInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: "event-handler".to_string(),
+        context_menu_kind: expected_context_menu_kind(
+            false,
+            false,
+            false,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_haspopup: None,
+        aria_controls: Vec::new(),
+        aria_expanded: None,
+        popover: None,
+        popover_target: None,
+        popover_target_action: None,
+        command: None,
+        command_for: None,
+        event_handlers: event_descriptor.event_handlers.clone(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        handler_count,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        context_menu_blocked: false,
+        context_menu_block_reasons,
+    }
+}
+
+fn expected_context_menu_kind(
+    menu_invoker: bool,
+    menu_role: bool,
+    popover_surface: bool,
+    contextmenu_handlers: &[String],
+    keyboard_handlers: &[String],
+    context_menu_block_reasons: &[String],
+) -> String {
+    if !context_menu_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !contextmenu_handlers.is_empty() && menu_invoker {
+        "custom-menu-handler".to_string()
+    } else if !contextmenu_handlers.is_empty() {
+        "context-menu-handler".to_string()
+    } else if menu_invoker {
+        "menu-invoker".to_string()
+    } else if popover_surface {
+        "menu-surface".to_string()
+    } else if menu_role {
+        "menu-item".to_string()
+    } else if !keyboard_handlers.is_empty() {
+        "keyboard-menu".to_string()
+    } else {
+        "context-menu".to_string()
+    }
+}
+
+fn expected_aria_haspopup_menu(value: Option<&str>) -> bool {
+    matches!(value, Some("true" | "menu"))
+}
+
+fn expected_menu_role(role: &str) -> bool {
+    matches!(
+        role,
+        "menu" | "menubar" | "menuitem" | "menuitemcheckbox" | "menuitemradio"
+    )
+}
+
 fn expected_keyboard_event(handler: &str) -> bool {
     matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
 }
@@ -9608,6 +9973,10 @@ fn expected_scroll_interaction_event(handler: &str) -> bool {
 
 fn expected_click_event(handler: &str) -> bool {
     matches!(handler, "onclick" | "ondblclick" | "oncontextmenu")
+}
+
+fn expected_context_menu_event(handler: &str) -> bool {
+    handler == "oncontextmenu"
 }
 
 fn expected_drag_event(handler: &str) -> bool {

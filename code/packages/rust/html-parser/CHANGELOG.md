@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness context-menu interaction descriptors now expose
+  `oncontextmenu` hooks, ARIA menu-popup invokers, menu/menuitem roles, popover
+  menu surfaces, and hidden/inert/disabled blockers as a flat browser-planning
+  inventory.
 - Browser-readiness fullscreen-interaction descriptors now expose embedded
   fullscreen permission hints, `allowfullscreen` state, fullscreen event hooks,
   and document/body fullscreen callbacks as a flat browser-planning inventory.
