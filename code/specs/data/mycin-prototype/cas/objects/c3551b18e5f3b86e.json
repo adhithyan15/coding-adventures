@@ -1,0 +1,9 @@
+{
+ "hash": "c3551b18e5f3b86e",
+ "domain": "meningitis_differential",
+ "supersedes": "286c17aaf48ff32d",
+ "rulebook_path": "rulebook/meningitis_v2.adj",
+ "edit": "CSF-correlation override: neutralize glucose/protein/lactate, keep neutrophilic",
+ "removed_clauses": [],
+ "provenance": "ADJ56 — meningitis CSF over-saturation; fix the fact, not the weight"
+}
