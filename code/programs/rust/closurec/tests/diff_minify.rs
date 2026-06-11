@@ -90,15 +90,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-064 (CLOC14.32, CORRECTNESS): the gap-050 `new X()` →
-    // `new X` empty-paren drop checks `kept[idx+1].value == ")"`
-    // WITHOUT `is_structural_punct`, so a string argument whose
-    // content is `)` (stored `.value == ")"`) is mistaken for
-    // the empty-arg close paren. `new A(")")` → `new A);` —
-    // mangled, invalid JS (drops the string arg + leaves a stray
-    // `)`). Fix: gate the check on `is_structural_punct`.
-    ("new_str_paren_arg",    "gap-064: string `)` arg misread as empty-paren close"),
-    ("new_str_paren_member", "gap-064: same bug under arg-bearing member wrap"),
+    // gap-064 RESOLVED in CLOC12.73 — `new A(")")` no longer
+    // misreads the string `)` arg as the empty-paren close
+    // (the gap-050 drop now gates on `is_structural_punct`).
+    // `minify_new_str_paren_arg` + `minify_new_str_paren_member`
+    // are enforced again.
     // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
     // arms, return/throw/=> prefixes, and member-object parens
     // (`(a).b` → `a.b`) now pass and are no longer ignored.

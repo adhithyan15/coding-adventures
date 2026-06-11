@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.77.0] - 2026-06-11
+
+### Fixed
+- **CLOSES gap-064 (CORRECTNESS)** — string `)` argument misread
+  as empty-paren close. The gap-050 `new X()` → `new X`
+  empty-paren-drop pass checked `kept[idx+1].value == ")"`
+  WITHOUT the `is_structural_punct` guard, so a string argument
+  whose content is `)` (stored `.value == ")"` after the lexer
+  strips delimiters) was mistaken for the empty-arg close paren.
+  `new A(")")` was mangled to `new A);` (invalid JS — dropped the
+  string arg and left a stray `)`); `new A(")").b` to
+  `(new A)).b`. Discovered by the CLOC14.32 byte-identity
+  harness.
+
+### Changed — gap-064 fix
+
+Line 976 now gates the close-paren check on
+`is_structural_punct(t, ")")`, so only a genuine `)` punctuator
+token triggers the empty-paren elision — a string/regex/template
+argument never can. The sibling `next2_blocks_drop` checks were
+left as-is: they only ever BLOCK a drop (fail-safe — at worst a
+missed optimization on malformed input, never wrong output). The
+genuine empty-paren drop (`new A()` → `new A`) and real args
+(`new A(x)`) are preserved. `minify_new_str_paren_arg` +
+`minify_new_str_paren_member` flip IGNORED → PASS. 3 new
+gap064_* unit tests.
+
 ## [0.76.0] - 2026-06-11
 
 ### Fixed

@@ -496,7 +496,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-064 — string `)` argument misread as empty-paren close (CORRECTNESS)
 
-- **Status:** OPEN — discovered by CLOC14.32. `minify_new_str_paren_arg` + `minify_new_str_paren_member` ignored.
-- **Input:** `var z=new A(")");` → **Upstream:** `var z=new A(")");` → **closurec (WRONG):** `var z=new A);`
+- **Status:** **RESOLVED** in CLOC12.73. `minify_new_str_paren_arg` + `minify_new_str_paren_member` flip IGNORED → PASS.
+- **Input:** `var z=new A(")");` → **Upstream:** `var z=new A(")");` → **closurec (was WRONG):** `var z=new A);`
 - **Severity:** **Semantic corruption producing invalid JS.** The gap-050 `new X()` → `new X` empty-paren-drop pass checks `kept[idx+1].value == ")"` at `code/programs/rust/closurec/src/whitespace_only.rs:976` **without** the `is_structural_punct` guard. A string argument whose content is `)` stores `.value == ")"` (the lexer strips delimiters), so the pass mistakes the string for the empty-arg close paren — dropping the `(` and the string, leaving a stray real `)`. Second manifestation: `new A(")").b` → `(new A)).b` (broken). Plain calls (`f(")")`) are unaffected — only the `new`-expr empty-paren path has the unguarded check.
 - **What it needs (CLOC12.73):** Change line 976 from `kept.get(idx + 1).map(|t| t.value.as_str()) == Some(")")` to `kept.get(idx + 1).map(|t| is_structural_punct(t, ")")).unwrap_or(false)`. Audit the sibling `.value == "("/")"` checks in the same region (lines ~218/324/968-971, the arrow-elision `kept[idx+2/3].value` checks at ~991-992) for the same latent bug and gate them on `is_structural_punct` too.
