@@ -64,7 +64,7 @@ representation + per-builtin backend lowering.
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
 | **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged-word |
-| **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
+| **JIT** | `jit-core` + `lispy-runtime` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
 furthest along; the managed backends are the frontier.)
@@ -314,7 +314,21 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     macOS arm64: `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
     `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, `((LAMBDA (X) (ATOM X)) 7)`→1,
     lambda-with-`COND`-body→100/200 (`lang-aot/tests/macos_native_lisp.rs`).
-- ☐ **W15 — JIT McCarthy core (F1–F7).** Drive McCarthy through the JIT path.
+- ◑ **W15 — JIT McCarthy core (F1–F7).** *In progress.* Drive McCarthy through the
+  universal JIT (`jit-core::GenericCirJit`) — the eighth and last backend.
+  - ✅ **W15a — JIT F1–F6 (scalar / cons / ATOM / EQ / COND / symbols).** The JIT
+    dispatches `call_builtin "lispy_*"` to **Rust callbacks** (not native `__twig_lispy_*`
+    calls), so the lisp ops are registered against the shared **`lispy-runtime`** crate
+    (the C runtime's Rust twin — identical `u64` tagged-word model). A `LispyValue`
+    rides inside `Value::Int` as its bit pattern; the JIT moves it opaquely. The
+    `unbox_int`/`truthy` exit coercions are derived from `LispyValue::as_int`/`is_truthy`
+    (existing primitives — not duplicated). New reusable entry `lang_aot::run_mccarthy_on_jit`.
+    Verified by RUNNING (`lang-aot/tests/jit_mccarthy.rs`): `(CAR (CONS 7 9))`→7,
+    `(ATOM 7)`→1, `(EQ 7 7)`→1, nested `COND`→44, `(EQ (QUOTE A) (QUOTE A))`→1.
+  - ☐ **W15b — JIT `LAMBDA` (F7). Completes the JIT — and McCarthy across all eight
+    backends.** The VM's user-`call` path (`vm-core::dispatch`) panics on a lambda
+    frame today; that must be fixed (or the JIT taught to call user functions) before
+    a lambda runs. The lowered IIR + `lispy_to_exit_code` coercion already exist.
 
 ### Phase G — conformance
 
