@@ -41,6 +41,25 @@ COMMA             = ","
 QUESTION          = "?"
 
 # ----------------------------------------------------------------
+# Comparison operators — for predicate-gated contributions
+# (`contributes <lr> from <slot> >= <value> to <verdict>`), the
+# surface form of a DETERMINISTIC rule expressed as the saturating
+# limit of a probabilistic one.
+#
+# CRITICAL ordering: the two-character operators (>=, <=, ==) MUST be
+# listed before the single-character ones (>, <). The lexer matches
+# patterns in definition order, first match wins — if `>` came first,
+# `>=` would tokenise as GT then a stray `=`. Longest-operator-first
+# is the maximal-munch discipline made explicit by ordering.
+# ----------------------------------------------------------------
+
+GE                = ">="
+LE                = "<="
+EQEQ              = "=="
+GT                = ">"
+LT                = "<"
+
+# ----------------------------------------------------------------
 # Literals.
 #
 # NUMBER allows an optional leading minus + optional decimal +

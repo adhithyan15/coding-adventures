@@ -18,7 +18,44 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Term {
     Atom(String),
-    Compound { functor: String, args: Vec<Term> },
+    /// A numeric literal — appears as a compound argument in a *valued*
+    /// fact, e.g. `gross_income(18000)`. Carried as `f64`; the lowerer
+    /// converts it to `logic_core::Term::Num`. Valued facts are what
+    /// predicate-gated contributions read on the CPU.
+    Num(f64),
+    Compound {
+        functor: String,
+        args: Vec<Term>,
+    },
+}
+
+/// The evidence side of a `contributes` clause — either an ordinary
+/// term or a numeric **predicate** over a valued slot.
+///
+/// `from pmh(hypertension) to acs`  →  [`Evidence::Term`]
+/// `from gross_income >= 14600 to required_to_file`  →  [`Evidence::Predicate`]
+///
+/// The predicate form is the surface syntax for a deterministic rule:
+/// it lowers to a predicate-gated contribution whose likelihood ratio
+/// is large enough to saturate. The comparison itself runs on the CPU
+/// at decision time — the model that authored the rulebook never
+/// evaluated it.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Evidence {
+    Term(Term),
+    Predicate { slot: String, op: CmpOp, value: f64 },
+}
+
+/// A numeric comparison operator in a predicate. Mirrors
+/// [`logic_engine::CmpOp`]; kept as a separate surface type so the AST
+/// has no engine dependency.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CmpOp {
+    Ge,
+    Le,
+    Gt,
+    Lt,
+    Eq,
 }
 
 /// One source line in an Adj-Lang program.
@@ -31,9 +68,10 @@ pub enum Statement {
         annotations: Vec<Annotation>,
     },
     /// `contributes <lr> from <evidence> to <conclusion>` (+ annotations).
+    /// `evidence` is either a term or a numeric predicate (see [`Evidence`]).
     Contributes {
         lr: f64,
-        evidence: Term,
+        evidence: Evidence,
         conclusion: Term,
         annotations: Vec<Annotation>,
     },

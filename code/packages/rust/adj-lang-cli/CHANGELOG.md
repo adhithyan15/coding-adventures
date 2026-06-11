@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0] - 2026-06-10 — predicate proof steps
+
+### Added
+
+- Render the new `predicate` proof-step kind in the JSON proof DAG:
+  `{"kind":"predicate","slot","op","threshold","observed","logit",
+  "source","locator","trust"}`. A predicate-gated contribution that fires
+  shows the **literal comparison the engine evaluated on the CPU**
+  (`gross_income >= 14600`, observed `18000`) alongside its citation — the
+  byte-cited audit trail for a deterministic rule, reconstructable without
+  the model.
+
 ## [0.1.0] - 2026-06-10 — initial CLI driver
 
 ### Added

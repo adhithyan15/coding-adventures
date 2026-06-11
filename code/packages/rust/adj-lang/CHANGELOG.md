@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.5.0] - 2026-06-10 — predicate evidence + valued facts
+
+### Added
+
+- **Numeric predicate evidence in `contributes`** — first-class operator
+  syntax: `contributes <lr> from <slot> >= <value> to <verdict>`. The five
+  comparison operators `>= <= > < ==` lower to a
+  `logic_engine::PredicateContributionClause`; a saturating `lr` makes the
+  rule **deterministic** (deterministic = the saturating limit of a
+  probabilistic LR, evaluated on the CPU at decision time — the model that
+  authored the rulebook never ran the comparison).
+- **Valued facts** — `observe gross_income(18000)`: numeric literals are now
+  allowed as compound arguments (`term = IDENT [ LPAREN ( term | NUMBER )
+  { COMMA ( term | NUMBER ) } RPAREN ]`). These are the facts predicates
+  read. New `ast::Term::Num(f64)`.
+- New AST types: `ast::Evidence { Term | Predicate { slot, op, value } }`
+  (the evidence side of `contributes`) and `ast::CmpOp`. `Statement::Contributes`
+  now carries `evidence: Evidence` instead of `evidence: Term`.
+
+### Grammar
+
+- `.tokens`: added comparison-operator tokens `GE LE EQEQ GT LT`
+  (two-character operators listed before single-character ones so maximal
+  munch tokenises `>=` before `>`).
+- `.grammar`: `contributes_decl` now takes `evidence = predicate | term`;
+  the `predicate | term` alternation relies on the parser's full
+  backtracking (both start with `IDENT`). Regenerated
+  `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
 ## [0.4.0] - 2026-06-10 — differential decision over `?` queries
 
 ### Added

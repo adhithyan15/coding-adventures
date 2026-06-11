@@ -12,10 +12,35 @@ engine exposes:
 
 - `prior <p> for <conclusion>` — Bayesian baseline.
 - `contributes <lr> from <evidence> to <conclusion>` — atomic LR.
+  `<evidence>` is either a term (`pmh(hypertension)`) or a numeric
+  **predicate** over a valued slot (`gross_income >= 14600`).
 - `interacts <lr> when <e1> and <e2> [and ...] for <conclusion>` —
   joint-evidence interaction term.
-- `observe <term>` — assert a Certain Fact.
+- `observe <term>` — assert a Certain Fact. Terms may carry numeric
+  arguments (`observe gross_income(18000)`) — the *valued facts* that
+  predicates read.
 - `? <conclusion>` — query the engine.
+
+### Predicate-gated contributions — deterministic = saturating probabilistic (v0.5)
+
+A **deterministic** rule is just the saturating limit of a probabilistic
+one. Write a numeric predicate as the evidence and give it a large LR:
+
+```
+prior 0.10 for required_to_file
+contributes 1000000 from gross_income >= 14600 to required_to_file
+  source "IRS Pub 501 (2024)" trust authoritative
+observe gross_income(18000)
+? required_to_file
+```
+
+The engine evaluates `gross_income >= 14600` on the CPU at decision time —
+the model that authored the rulebook never ran the comparison. The proof
+step records the literal comparison that fired (`slot`, `op`, `threshold`,
+`observed`), so the audit trail shows the numbers, not a model's claim.
+DETERMINATE / INDETERMINATE / CONFLICT still fall out of the differential
+(leader / insufficient-evidence / kickback) — **one engine, not two**.
+Operators: `>= <= > < ==`.
 
 ### Differential over the `?` queries (v0.4)
 

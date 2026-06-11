@@ -19,19 +19,40 @@
 //! - `source` may appear at most once per statement; multiple
 //!   `source` annotations are a [`LowerError::DuplicateAnnotation`].
 
-use logic_core::{atom as core_atom, compound, Term as CoreTerm};
+use logic_core::{atom as core_atom, compound, float as core_float, Term as CoreTerm};
 use logic_engine::{
-    ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase, PriorClause,
-    Provenance, TrustTier, UncertaintyMarker,
+    CmpOp as EngineCmpOp, ContributionClause, Fact, JointContributionClause, KbError,
+    KnowledgeBase, PredicateContributionClause, PriorClause, Provenance, TrustTier,
+    UncertaintyMarker,
 };
 
-use crate::ast::{Annotation, Program, Statement, Term as AstTerm, TrustTierName};
+use crate::ast::{Annotation, CmpOp, Evidence, Program, Statement, Term as AstTerm, TrustTierName};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum LowerError {
-    DuplicatePrior { conclusion_name: String },
-    DuplicateAnnotation { name: &'static str },
-    EngineRejected { detail: String },
+    DuplicatePrior {
+        conclusion_name: String,
+    },
+    DuplicateAnnotation {
+        name: &'static str,
+    },
+    EngineRejected {
+        detail: String,
+    },
+    /// A `prior <p>` whose probability is not in the open interval
+    /// `(0.0, 1.0)`. The engine's `PriorClause::from_probability`
+    /// asserts this; we catch it at lowering time so a malformed
+    /// rulebook produces a clean diagnostic instead of a process panic.
+    InvalidProbability {
+        value: f64,
+    },
+    /// A `contributes <lr>` / `interacts <lr>` whose likelihood ratio is
+    /// not strictly positive and finite. LR is a ratio of probabilities,
+    /// so `lr <= 0` (or non-finite) is a modeller error — rejected here
+    /// rather than panicking in `from_lr`.
+    InvalidLikelihoodRatio {
+        value: f64,
+    },
 }
 
 /// The result of lowering — a populated KB and any queries to run.
@@ -53,15 +74,21 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 conclusion,
                 annotations,
             } => {
+                // Guard the engine's `from_probability` assertion: a
+                // probability outside (0, 1) would panic. Reject it as a
+                // clean lowering error instead.
+                if !(probability.is_finite() && *probability > 0.0 && *probability < 1.0) {
+                    return Err(LowerError::InvalidProbability {
+                        value: *probability,
+                    });
+                }
                 let prov = annotations_to_provenance(annotations)?;
                 let clause = PriorClause::from_probability(lower_term(conclusion), *probability)
                     .with_provenance(prov);
                 kb.add_prior(clause).map_err(|e| match e {
-                    KbError::ConflictingPriors { conclusion, .. } => {
-                        LowerError::DuplicatePrior {
-                            conclusion_name: format!("{conclusion:?}"),
-                        }
-                    }
+                    KbError::ConflictingPriors { conclusion, .. } => LowerError::DuplicatePrior {
+                        conclusion_name: format!("{conclusion:?}"),
+                    },
                 })?;
             }
             Statement::Contributes {
@@ -70,14 +97,31 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 conclusion,
                 annotations,
             } => {
+                check_lr(*lr)?;
                 let prov = annotations_to_provenance(annotations)?;
-                let clause = ContributionClause::from_lr(
-                    lower_term(conclusion),
-                    lower_term(evidence),
-                    *lr,
-                )
-                .with_provenance(prov);
-                kb.add_contribution(clause);
+                match evidence {
+                    // Ordinary term evidence → single-source LR contribution.
+                    Evidence::Term(t) => {
+                        let clause =
+                            ContributionClause::from_lr(lower_term(conclusion), lower_term(t), *lr)
+                                .with_provenance(prov);
+                        kb.add_contribution(clause);
+                    }
+                    // Numeric predicate evidence → predicate-gated contribution.
+                    // The comparison is evaluated on the CPU at decision time;
+                    // a saturating `lr` makes the rule deterministic.
+                    Evidence::Predicate { slot, op, value } => {
+                        let clause = PredicateContributionClause::from_lr(
+                            lower_term(conclusion),
+                            slot.clone(),
+                            lower_cmp_op(*op),
+                            *value,
+                            *lr,
+                        )
+                        .with_provenance(prov);
+                        kb.add_predicate_contribution(clause);
+                    }
+                }
             }
             Statement::Interacts {
                 lr,
@@ -85,6 +129,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 conclusion,
                 annotations,
             } => {
+                check_lr(*lr)?;
                 let prov = annotations_to_provenance(annotations)?;
                 let clause = JointContributionClause::from_lr(
                     lower_term(conclusion),
@@ -119,12 +164,35 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     Ok(LoweredProgram { kb, queries })
 }
 
+/// Reject a likelihood ratio that the engine's `from_lr` constructors
+/// would panic on (`lr <= 0`) or that is non-finite. Centralised so the
+/// `contributes` and `interacts` paths share one guard.
+fn check_lr(lr: f64) -> Result<(), LowerError> {
+    if lr.is_finite() && lr > 0.0 {
+        Ok(())
+    } else {
+        Err(LowerError::InvalidLikelihoodRatio { value: lr })
+    }
+}
+
 fn lower_term(t: &AstTerm) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
+        AstTerm::Num(x) => core_float(*x),
         AstTerm::Compound { functor, args } => {
             compound(functor, args.iter().map(lower_term).collect())
         }
+    }
+}
+
+/// Map the surface comparison operator to the engine's [`EngineCmpOp`].
+fn lower_cmp_op(op: CmpOp) -> EngineCmpOp {
+    match op {
+        CmpOp::Ge => EngineCmpOp::Ge,
+        CmpOp::Le => EngineCmpOp::Le,
+        CmpOp::Gt => EngineCmpOp::Gt,
+        CmpOp::Lt => EngineCmpOp::Lt,
+        CmpOp::Eq => EngineCmpOp::Eq,
     }
 }
 
@@ -344,6 +412,100 @@ mod tests {
     }
 
     #[test]
+    fn negative_contributes_lr_is_a_clean_error_not_a_panic() {
+        // Regression: a malformed rulebook must not panic the process.
+        // `contributes -5 ...` would hit the engine's `assert!(lr > 0.0)`.
+        for src in [
+            "contributes -5 from x to y",
+            "contributes 0 from x to y",
+            "interacts -1 when a and b for y",
+        ] {
+            let err = compile(src).unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    crate::CompileError::Lower(LowerError::InvalidLikelihoodRatio { .. })
+                ),
+                "expected InvalidLikelihoodRatio for {src:?}, got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn out_of_range_prior_is_a_clean_error_not_a_panic() {
+        for src in ["prior 2 for x", "prior 0 for x", "prior -0.5 for x"] {
+            let err = compile(src).unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    crate::CompileError::Lower(LowerError::InvalidProbability { .. })
+                ),
+                "expected InvalidProbability for {src:?}, got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn non_finite_number_literal_is_rejected_at_parse() {
+        // 1e400 overflows f64 to +inf; reject it rather than flow inf on.
+        let err = compile("observe gross_income(1e400)").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Adapt(_)),
+            "expected an adapter BadToken error, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn predicate_gated_contribution_fires_end_to_end() {
+        // A DETERMINISTIC rule as a saturating LR: "income at/above the
+        // filing threshold ⇒ required to file." The model authored the
+        // rulebook; the comparison runs in the engine at decision time.
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+              source "IRS Pub 501 (2024), filing threshold single < 65"
+              trust authoritative
+            observe gross_income(18000)
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let result = search(query, &lowered.kb, SearchMode::LRAggregate);
+        match result {
+            SearchResult::LRAggregateResult { posterior, dag, .. } => {
+                assert!(posterior > 0.9999, "should saturate, got {posterior}");
+                // The proof carries the literal comparison that fired.
+                let fired = dag.proofs[0].steps.iter().any(|s| {
+                    matches!(
+                        s.origin,
+                        logic_engine::DerivationOrigin::FromPredicateContribution { .. }
+                    )
+                });
+                assert!(fired, "expected a predicate-contribution step");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn predicate_below_threshold_stays_at_prior() {
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+            observe gross_income(9000)
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!((posterior - 0.10).abs() < 1e-9, "got {posterior}");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn locator_annotation_is_carried_through() {
         let src = r#"
             contributes 1.5 from x to y
@@ -352,9 +514,6 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let contribs = lowered.kb.contributions_for(&core_atom("y"));
-        assert_eq!(
-            contribs[0].provenance.locator.as_deref(),
-            Some("§3.2")
-        );
+        assert_eq!(contribs[0].provenance.locator.as_deref(), Some("§3.2"));
     }
 }

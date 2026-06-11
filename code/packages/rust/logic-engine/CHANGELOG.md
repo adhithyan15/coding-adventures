@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2026-06-10 — predicate-gated contributions (deterministic = saturating probabilistic)
+
+### Added
+
+- **`PredicateContributionClause` + `CmpOp`** — a likelihood-ratio
+  contribution gated by a numeric comparison over a *valued slot*:
+  "when the observed value of `slot` satisfies `slot <op> value`,
+  multiply the conclusion's odds by `exp(logit_delta)`." This is the
+  bridge that lets the framework express a **deterministic** rule as
+  the saturating limit of a probabilistic one — a hard rule is just a
+  very large LR over a CPU-evaluated predicate. DETERMINATE /
+  INDETERMINATE / CONFLICT continue to fall out of the existing
+  `differential` (leader / insufficient-evidence / kickback); there is
+  **no second engine**.
+- `CmpOp` — `Ge` / `Le` / `Gt` / `Lt` / `Eq` with `eval(lhs, rhs)`
+  (the comparison the engine runs on the CPU) and `symbol()` (for
+  audit rendering). `Eq` uses an absolute tolerance so an integer
+  observation matches a float threshold.
+- `KnowledgeBase::add_predicate_contribution`,
+  `predicate_contributions_for`, and `observed_value(slot)` — the
+  last reads the numeric value of the latest `Certain` valued fact
+  `slot(V)` (V a `Term::Num`). Predicate clauses also count toward
+  `participates_in_lr_aggregation`.
+- `DerivationOrigin::FromPredicateContribution { clause_id, slot, op,
+  threshold, observed, logit_delta }` — the proof step records the
+  *literal* comparison that fired, so the audit trail shows the
+  numbers the engine compared. The model never computes the
+  comparison; it only authored the rule.
+
 ## [0.7.0] - 2026-06-10
 
 ### Added

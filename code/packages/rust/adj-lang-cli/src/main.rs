@@ -10,8 +10,9 @@
 //! ```json
 //! { "queries": [...],
 //!   "ranked": [ { "hypothesis", "posterior", "posterior_logit", "normalized_share",
-//!                 "proof": [ { "kind":"prior|contribution|interaction", "logit",
-//!                              "evidence?", "source", "locator", "trust" } ] } ],
+//!                 "proof": [ { "kind":"prior|contribution|interaction|predicate", "logit",
+//!                              "evidence?", "slot?", "op?", "threshold?", "observed?",
+//!                              "source", "locator", "trust" } ] } ],
 //!   "decision": { "type":"determinate|kickback|empty", ... } }
 //! ```
 //!
@@ -98,6 +99,7 @@ fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> Str
     let prior = kb.prior_for(hyp);
     let contribs = kb.contributions_for(hyp);
     let joints = kb.joint_contributions_for(hyp);
+    let predicates = kb.predicate_contributions_for(hyp);
     let mut steps: Vec<String> = Vec::new();
     if let Some(proof) = result.dag.proofs.first() {
         for st in &proof.steps {
@@ -144,6 +146,36 @@ fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> Str
                             prov(&j.provenance)
                         ));
                     }
+                }
+                // A predicate-gated contribution: the audit trail shows the
+                // literal comparison that fired (slot, op, threshold, the
+                // observed value). The model never computed this — the
+                // engine evaluated it on the CPU.
+                DerivationOrigin::FromPredicateContribution {
+                    clause_id,
+                    slot,
+                    op,
+                    threshold,
+                    observed,
+                    logit_delta,
+                } => {
+                    let pv = predicates
+                        .iter()
+                        .find(|p| p.id == *clause_id)
+                        .map(|p| prov(&p.provenance))
+                        .unwrap_or_else(|| {
+                            "\"source\":\"\",\"locator\":null,\"trust\":\"unattributed\""
+                                .to_string()
+                        });
+                    steps.push(format!(
+                        "{{\"kind\":\"predicate\",\"slot\":\"{}\",\"op\":\"{}\",\"threshold\":{},\"observed\":{},\"logit\":{},{}}}",
+                        esc(slot),
+                        esc(op.symbol()),
+                        jnum(*threshold),
+                        jnum(*observed),
+                        jnum(*logit_delta),
+                        pv
+                    ));
                 }
                 _ => {}
             }

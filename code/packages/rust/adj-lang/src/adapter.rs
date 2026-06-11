@@ -30,7 +30,7 @@
 use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
-use crate::ast::{Annotation, Program, Statement, Term, TrustTierName};
+use crate::ast::{Annotation, CmpOp, Evidence, Program, Statement, Term, TrustTierName};
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -43,9 +43,7 @@ use crate::ast::{Annotation, Program, Statement, Term, TrustTierName};
 #[derive(Debug, Clone, PartialEq)]
 pub enum AdapterError {
     /// The parse tree's root rule was not `program`.
-    NotProgram {
-        actual: String,
-    },
+    NotProgram { actual: String },
     /// A node had a rule name the adapter did not expect at this
     /// position. Carries the expected name(s) for debugging.
     UnexpectedRule {
@@ -69,9 +67,7 @@ pub enum AdapterError {
     /// An unknown trust tier keyword reached the adapter; should be
     /// impossible if the grammar's `trust_tier` rule stays in sync
     /// with [`TrustTierName`].
-    UnknownTrustTier {
-        actual: String,
-    },
+    UnknownTrustTier { actual: String },
 }
 
 /// Adapt the root `program` node.
@@ -130,17 +126,34 @@ fn adapt_prior(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_contributes(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // contributes_decl = "contributes" NUMBER "from" term "to" term { annotation }
+    // contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation }
+    //
+    // The LR is the only NUMBER token that is a *direct* child of
+    // contributes_decl: a predicate's threshold lives inside the nested
+    // `evidence`/`predicate` node, so `expect_number_at(node, 1)` is
+    // unambiguous. Likewise the conclusion is the only *direct* `term`
+    // child — term-shaped evidence is nested inside the `evidence` node.
     let lr = expect_number_at(node, 1)?;
-    let terms = collect_term_children(node);
-    let evidence = terms.first().cloned().ok_or(AdapterError::MissingChild {
-        rule: "contributes_decl".into(),
-        position: "evidence term",
-    })?;
-    let conclusion = terms.get(1).cloned().ok_or(AdapterError::MissingChild {
-        rule: "contributes_decl".into(),
-        position: "conclusion term",
-    })?;
+    let evidence_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "evidence" => Some(n),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "contributes_decl".into(),
+            position: "evidence",
+        })?;
+    let evidence = adapt_evidence(evidence_node)?;
+    let conclusion =
+        collect_term_children(node)
+            .into_iter()
+            .next()
+            .ok_or(AdapterError::MissingChild {
+                rule: "contributes_decl".into(),
+                position: "conclusion term",
+            })?;
     let annotations = collect_annotations(node)?;
     Ok(Statement::Contributes {
         lr,
@@ -148,6 +161,66 @@ fn adapt_contributes(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         conclusion,
         annotations,
     })
+}
+
+fn adapt_evidence(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
+    // evidence = predicate | term
+    //
+    // The matched alternative is flattened into `evidence`'s children
+    // (grammar groups/alternations don't introduce wrapper nodes), so
+    // the first child node is either a `predicate` or a `term`.
+    let child = first_child_node(node, "evidence", "predicate or term")?;
+    match child.rule_name.as_str() {
+        "predicate" => adapt_predicate(child),
+        "term" => Ok(Evidence::Term(adapt_term(child)?)),
+        other => Err(AdapterError::UnexpectedRule {
+            expected: "predicate or term",
+            actual: other.to_string(),
+        }),
+    }
+}
+
+fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
+    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) NUMBER
+    //
+    // The slot IDENT and the operator are both lexed as TokenType::Name
+    // (the operator carries a custom type_name like "GE"), so we
+    // distinguish by *value*: the operator's value is one of the five
+    // comparison symbols; everything else Name-typed is the slot.
+    let mut slot: Option<String> = None;
+    let mut op: Option<CmpOp> = None;
+    let mut value: Option<f64> = None;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.value.as_str() {
+                ">=" => op = Some(CmpOp::Ge),
+                "<=" => op = Some(CmpOp::Le),
+                ">" => op = Some(CmpOp::Gt),
+                "<" => op = Some(CmpOp::Lt),
+                "==" => op = Some(CmpOp::Eq),
+                _ if t.type_ == TokenType::Number => {
+                    value = Some(parse_finite(&t.value, t.type_, "predicate")?);
+                }
+                _ if t.type_ == TokenType::Name && slot.is_none() => {
+                    slot = Some(t.value.clone());
+                }
+                _ => {}
+            }
+        }
+    }
+    let slot = slot.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "slot identifier",
+    })?;
+    let op = op.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "comparison operator",
+    })?;
+    let value = value.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "threshold NUMBER",
+    })?;
+    Ok(Evidence::Predicate { slot, op, value })
 }
 
 fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -214,17 +287,34 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
             actual: node.rule_name.clone(),
         });
     }
-    // term = IDENT [ LPAREN term { COMMA term } RPAREN ]
-    let mut idents = node.children.iter().filter_map(|c| match c {
-        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
-        // grammar-tools emits IDENT-typed identifiers as TokenType::Name
-        _ => None,
-    });
-    let functor = idents.next().ok_or(AdapterError::MissingChild {
-        rule: "term".into(),
-        position: "identifier",
-    })?;
-    let args = collect_term_children(node);
+    // term = IDENT [ LPAREN ( term | NUMBER ) { COMMA ( term | NUMBER ) } RPAREN ]
+    //
+    // The functor is the first (and only) Name token that is a *direct*
+    // child — each term argument's own IDENT is nested inside that
+    // argument's `term` node. Arguments may be terms or numeric literals
+    // (valued facts like `gross_income(18000)`); we walk the children in
+    // source order so mixed argument lists keep their positions.
+    let functor = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "term".into(),
+            position: "identifier",
+        })?;
+    let mut args = Vec::new();
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
+                args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+            }
+            _ => {}
+        }
+    }
     if args.is_empty() {
         Ok(Term::Atom(functor))
     } else {
@@ -307,6 +397,23 @@ fn trust_tier_from_node(node: &GrammarASTNode) -> Result<TrustTierName, AdapterE
 // Helpers
 // ---------------------------------------------------------------------------
 
+/// Parse a NUMBER lexeme to `f64`, rejecting non-finite values. Rust's
+/// `f64::from_str` accepts overflowing literals like `1e400` (→ `inf`);
+/// an infinite or NaN threshold is meaningless in a rulebook, so we
+/// reject it here with an accurate diagnostic rather than letting it
+/// silently flow downstream.
+fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterError> {
+    match raw.parse::<f64>() {
+        Ok(x) if x.is_finite() => Ok(x),
+        _ => Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: raw.to_string(),
+            reason: "not a finite f64",
+        }),
+    }
+}
+
 fn collect_term_children(node: &GrammarASTNode) -> Vec<Term> {
     node.children
         .iter()
@@ -317,9 +424,7 @@ fn collect_term_children(node: &GrammarASTNode) -> Vec<Term> {
         .collect()
 }
 
-fn collect_annotations(
-    node: &GrammarASTNode,
-) -> Result<Vec<Annotation>, AdapterError> {
+fn collect_annotations(node: &GrammarASTNode) -> Result<Vec<Annotation>, AdapterError> {
     let mut out = Vec::new();
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
@@ -419,7 +524,11 @@ mod tests {
 
     fn parse_one(src: &str) -> Statement {
         let program = parse(src).expect("parse");
-        program.statements.into_iter().next().expect("at least one statement")
+        program
+            .statements
+            .into_iter()
+            .next()
+            .expect("at least one statement")
     }
 
     #[test]
@@ -451,13 +560,85 @@ mod tests {
                 annotations,
             } => {
                 assert_eq!(lr, 1.5);
-                assert!(matches!(evidence, Term::Compound { ref functor, .. } if functor == "pmh"));
+                assert!(matches!(
+                    evidence,
+                    Evidence::Term(Term::Compound { ref functor, .. }) if functor == "pmh"
+                ));
                 assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
                 assert_eq!(annotations.len(), 2);
                 assert!(matches!(annotations[0], Annotation::Source(_)));
-                assert!(matches!(annotations[1], Annotation::Trust(TrustTierName::Empirical)));
+                assert!(matches!(
+                    annotations[1],
+                    Annotation::Trust(TrustTierName::Empirical)
+                ));
             }
             other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn round_trips_predicate_evidence() {
+        // contributes <lr> from <slot> >= <value> to <verdict>
+        let src = "contributes 1000000 from gross_income >= 14600 to required_to_file";
+        match parse_one(src) {
+            Statement::Contributes {
+                lr,
+                evidence,
+                conclusion,
+                ..
+            } => {
+                assert_eq!(lr, 1_000_000.0);
+                match evidence {
+                    Evidence::Predicate { slot, op, value } => {
+                        assert_eq!(slot, "gross_income");
+                        assert_eq!(op, CmpOp::Ge);
+                        assert_eq!(value, 14600.0);
+                    }
+                    other => panic!("expected predicate evidence, got {other:?}"),
+                }
+                assert!(matches!(conclusion, Term::Atom(n) if n == "required_to_file"));
+            }
+            other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_five_comparison_operators_round_trip() {
+        for (sym, expected) in &[
+            (">=", CmpOp::Ge),
+            ("<=", CmpOp::Le),
+            (">", CmpOp::Gt),
+            ("<", CmpOp::Lt),
+            ("==", CmpOp::Eq),
+        ] {
+            let src = format!("contributes 2.0 from age {sym} 18 to adult");
+            match parse_one(&src) {
+                Statement::Contributes {
+                    evidence: Evidence::Predicate { op, value, slot },
+                    ..
+                } => {
+                    assert_eq!(op, *expected, "operator {sym}");
+                    assert_eq!(value, 18.0);
+                    assert_eq!(slot, "age");
+                }
+                other => panic!("expected predicate Contributes for {sym}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn round_trips_valued_observation() {
+        // observe <slot>(<number>) — a valued fact the predicate reads.
+        match parse_one("observe gross_income(18000)") {
+            Statement::Observe { term } => match term {
+                Term::Compound { functor, args } => {
+                    assert_eq!(functor, "gross_income");
+                    assert_eq!(args.len(), 1);
+                    assert!(matches!(args[0], Term::Num(x) if x == 18000.0));
+                }
+                other => panic!("expected compound, got {other:?}"),
+            },
+            other => panic!("expected Observe, got {other:?}"),
         }
     }
 
