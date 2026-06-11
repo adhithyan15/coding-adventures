@@ -316,6 +316,20 @@ fn solve_json(outcome: &SolveOutcome) -> String {
                 cites.join(",")
             )
         }
+        SolveOutcome::SolvedRoots {
+            var,
+            roots,
+            from_constraints,
+        } => {
+            let rs: Vec<String> = roots.iter().map(|r| jnum(*r)).collect();
+            let cites: Vec<String> = from_constraints.iter().map(|i| i.to_string()).collect();
+            format!(
+                "{{\"outcome\":\"solved_roots\",\"var\":\"{}\",\"roots\":[{}],\"from_constraints\":[{}]}}",
+                esc(var),
+                rs.join(","),
+                cites.join(",")
+            )
+        }
         SolveOutcome::NoUniqueSolution => "{\"outcome\":\"no_unique_solution\"}".to_string(),
         SolveOutcome::Unsupported { reason } => {
             format!(

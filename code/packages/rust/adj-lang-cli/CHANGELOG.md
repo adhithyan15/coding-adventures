@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.2] - 2026-06-11 — emit nonlinear roots (ADJ constraints track C3)
+
+### Added
+
+- Render the new `SolveOutcome::SolvedRoots` as
+  `{"outcome":"solved_roots","var":…,"roots":[…],"from_constraints":[…]}`, so a
+  nonlinear single-unknown equation (`constrain x * x = 4`) emits its real roots
+  (`[-2, 2]`). 1 new golden test.
+
 ## [0.3.1] - 2026-06-11 — solver substitutes observed facts (ADJ constraints track B3)
 
 ### Changed

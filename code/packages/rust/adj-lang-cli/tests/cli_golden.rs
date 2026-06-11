@@ -196,6 +196,19 @@ fn solve_for_emits_solved_values() {
 }
 
 #[test]
+fn solve_emits_roots_for_a_nonlinear_equation() {
+    // x*x = 4 → real roots {-2, 2}.
+    let (ok, s) = run(
+        "adjcli_quad.adj",
+        "symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"solved_roots\""), "{s}");
+    assert!(s.contains("\"var\":\"x\""), "{s}");
+    assert!(s.contains("\"roots\":[-2,2]"), "{s}");
+}
+
+#[test]
 fn solve_substitutes_observed_facts() {
     // base_rate is observed (not an unknown) → substituted as a constant, so
     // premium = base_rate + 300 = 1500. This is the realistic mixed case.

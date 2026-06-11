@@ -23,6 +23,8 @@
 use std::collections::HashSet;
 
 use adj_lang::{ConstraintSystem, RelOp};
+use cas_solve::frac::Frac;
+use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
 use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
@@ -34,6 +36,14 @@ pub enum SolveOutcome {
     /// reader follows these back to the constraints' source bytes).
     Solved {
         assignments: Vec<(String, f64)>,
+        from_constraints: Vec<usize>,
+    },
+    /// A single unknown satisfying a **nonlinear** (degree 2–4) equality — its
+    /// real roots (possibly several). E.g. `x*x = 4 → {-2, 2}`. The audit reader
+    /// follows `from_constraints` back to the equation.
+    SolvedRoots {
+        var: String,
+        roots: Vec<f64>,
         from_constraints: Vec<usize>,
     },
     /// The linear system is singular, under-/over-determined, or not square
@@ -70,6 +80,23 @@ pub fn solve(cs: &ConstraintSystem, kb: &KnowledgeBase) -> SolveOutcome {
     // problem is feasibility/optimization, not a linear solve — defer it.
     if cs.constraints.iter().any(|c| c.op != RelOp::Eq) {
         return unsupported("inequality constraints — feasibility/LP is track C1/C2");
+    }
+
+    // Single-unknown NONLINEAR fallback: one unknown, one equality whose
+    // `lhs − rhs` is a univariate polynomial of degree 2–4 (`x*x = 4`). Solve
+    // it exactly via cas-solve's closed-form root finders. Degree ≤ 1 falls
+    // through to the linear path below.
+    if variables.len() == 1 && cs.constraints.len() == 1 {
+        let c = &cs.constraints[0];
+        let lhs_s = substitute_observed(&c.lhs, &var_set, kb);
+        let rhs_s = substitute_observed(&c.rhs, &var_set, kb);
+        if let (Some(pl), Some(pr)) = (poly_of(&lhs_s, &variables[0]), poly_of(&rhs_s, &variables[0]))
+        {
+            let p = poly_sub(&pl, &pr);
+            if poly_degree(&p) >= 2 {
+                return solve_univariate_poly(&variables[0], &p);
+            }
+        }
     }
 
     // Translate each `lhs = rhs` into a symbolic-ir Equal equation, first
@@ -142,6 +169,205 @@ fn substitute_observed(
             Box::new(substitute_observed(b, variables, kb)),
         ),
         ComputeExpr::Agg(_, _) => e.clone(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Univariate polynomial path (nonlinear single-unknown equalities, track C3)
+// ---------------------------------------------------------------------------
+
+/// A univariate polynomial as coefficients indexed by power
+/// (`p[0] + p[1]·x + p[2]·x² + …`).
+type Poly = Vec<f64>;
+
+/// Build the polynomial of `e` in the single unknown `x`, or `None` if `e`
+/// isn't a polynomial in `x` (e.g. division *by* `x`, an aggregation, or a free
+/// reference — observed refs have already been substituted to literals).
+fn poly_of(e: &ComputeExpr, x: &str) -> Option<Poly> {
+    match e {
+        ComputeExpr::Ref(name) if name == x => Some(vec![0.0, 1.0]),
+        ComputeExpr::Ref(_) => None,
+        ComputeExpr::Lit(c) => Some(vec![*c]),
+        ComputeExpr::Bin(op, a, b) => {
+            let pa = poly_of(a, x)?;
+            let pb = poly_of(b, x)?;
+            match op {
+                ComputeOp::Add => Some(poly_add(&pa, &pb)),
+                ComputeOp::Sub => Some(poly_sub(&pa, &pb)),
+                ComputeOp::Mul => Some(poly_mul(&pa, &pb)),
+                // Division is polynomial only by a non-zero constant.
+                ComputeOp::Div => {
+                    if poly_degree(&pb) == 0 && pb[0] != 0.0 {
+                        Some(pa.iter().map(|c| c / pb[0]).collect())
+                    } else {
+                        None
+                    }
+                }
+                _ => None,
+            }
+        }
+        ComputeExpr::Agg(_, _) => None,
+    }
+}
+
+fn poly_add(a: &Poly, b: &Poly) -> Poly {
+    let mut out = vec![0.0; a.len().max(b.len())];
+    for (i, c) in a.iter().enumerate() {
+        out[i] += c;
+    }
+    for (i, c) in b.iter().enumerate() {
+        out[i] += c;
+    }
+    out
+}
+
+fn poly_sub(a: &Poly, b: &Poly) -> Poly {
+    let mut out = vec![0.0; a.len().max(b.len())];
+    for (i, c) in a.iter().enumerate() {
+        out[i] += c;
+    }
+    for (i, c) in b.iter().enumerate() {
+        out[i] -= c;
+    }
+    out
+}
+
+fn poly_mul(a: &Poly, b: &Poly) -> Poly {
+    if a.is_empty() || b.is_empty() {
+        return Vec::new();
+    }
+    let mut out = vec![0.0; a.len() + b.len() - 1];
+    for (i, ca) in a.iter().enumerate() {
+        for (j, cb) in b.iter().enumerate() {
+            out[i + j] += ca * cb;
+        }
+    }
+    out
+}
+
+/// The degree — the highest power with a non-(near-)zero coefficient.
+fn poly_degree(p: &Poly) -> usize {
+    p.iter()
+        .rposition(|c| c.abs() > 1e-12)
+        .unwrap_or(0)
+}
+
+/// Solve a univariate polynomial equation `p(x) = 0` of degree 2–4 via
+/// cas-solve's exact closed forms, returning the **real** roots as f64.
+fn solve_univariate_poly(var: &str, p: &Poly) -> SolveOutcome {
+    let deg = poly_degree(p);
+    // Coefficient `i` of `p`, as an exact Frac (or bail if not representable).
+    let f = |i: usize| -> Option<Frac> { f64_to_frac(*p.get(i).unwrap_or(&0.0)) };
+    let result = match deg {
+        2 => {
+            let (Some(a), Some(b), Some(c)) = (f(2), f(1), f(0)) else {
+                return unsupported("non-representable quadratic coefficient");
+            };
+            solve_quadratic(a, b, c)
+        }
+        3 => {
+            let (Some(a), Some(b), Some(c), Some(d)) = (f(3), f(2), f(1), f(0)) else {
+                return unsupported("non-representable cubic coefficient");
+            };
+            solve_cubic(a, b, c, d)
+        }
+        4 => {
+            let (Some(a), Some(b), Some(c), Some(d), Some(e)) = (f(4), f(3), f(2), f(1), f(0))
+            else {
+                return unsupported("non-representable quartic coefficient");
+            };
+            solve_quartic(a, b, c, d, e)
+        }
+        _ => return unsupported("nonlinear degree > 4 is not supported"),
+    };
+    let roots_ir = match result {
+        SolveResult::Solutions(rs) => rs,
+        // Every x satisfies it — not a finite root set.
+        SolveResult::All => return unsupported("the equation is an identity (all x)"),
+    };
+    // Keep the real roots (drop complex ones — their evaluation fails), dedup
+    // near-equal values, and present them in ascending order.
+    let mut roots: Vec<f64> = roots_ir.iter().filter_map(eval_ir_root).collect();
+    roots.retain(|r| r.is_finite());
+    roots.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+    roots.dedup_by(|a, b| (*a - *b).abs() < 1e-9);
+    if roots.is_empty() {
+        return unsupported("no real roots");
+    }
+    SolveOutcome::SolvedRoots {
+        var: var.to_string(),
+        roots,
+        from_constraints: vec![0],
+    }
+}
+
+/// Numerically evaluate a root IR node to an f64. Handles exact rationals and
+/// the closed-form irrational/`Sqrt` shapes cas-solve emits; a complex root
+/// (containing the imaginary unit) or any unrecognised head returns `None`, so
+/// complex roots are simply dropped from the real-root set.
+fn eval_ir_root(node: &IRNode) -> Option<f64> {
+    match node {
+        IRNode::Integer(n) => Some(*n as f64),
+        IRNode::Rational(n, d) if *d != 0 => Some(*n as f64 / *d as f64),
+        IRNode::Float(x) => Some(*x),
+        IRNode::Apply(a) => {
+            let head = match &a.head {
+                IRNode::Symbol(h) => h.as_str(),
+                _ => return None,
+            };
+            let arg = |i: usize| a.args.get(i).and_then(eval_ir_root);
+            match head {
+                "Add" => a.args.iter().map(eval_ir_root).sum::<Option<f64>>(),
+                "Sub" => Some(arg(0)? - arg(1)?),
+                "Mul" => a.args.iter().map(eval_ir_root).product::<Option<f64>>(),
+                "Div" => {
+                    let d = arg(1)?;
+                    if d == 0.0 {
+                        None
+                    } else {
+                        Some(arg(0)? / d)
+                    }
+                }
+                "Neg" => Some(-arg(0)?),
+                "Sqrt" => {
+                    let v = arg(0)?;
+                    if v < 0.0 {
+                        None
+                    } else {
+                        Some(v.sqrt())
+                    }
+                }
+                "Pow" => Some(arg(0)?.powf(arg(1)?)),
+                _ => None,
+            }
+        }
+        _ => None,
+    }
+}
+
+/// Convert an f64 to an exact `Frac` (`round(x·10^k)/10^k` for the smallest
+/// `k ≤ 9` that represents it), or `None` for non-finite / out-of-range.
+fn f64_to_frac(x: f64) -> Option<Frac> {
+    if !x.is_finite() {
+        return None;
+    }
+    if x.fract() == 0.0 && x.abs() < i64::MAX as f64 {
+        return Some(Frac::from_int(x as i64));
+    }
+    let mut denom: i64 = 1;
+    for _ in 0..9 {
+        denom *= 10;
+        let scaled = x * denom as f64;
+        if scaled.fract().abs() < 1e-9 && scaled.abs() < i64::MAX as f64 {
+            return Some(Frac::new(scaled.round() as i64, denom));
+        }
+    }
+    let denom = 1_000_000_000i64;
+    let scaled = x * denom as f64;
+    if scaled.abs() < i64::MAX as f64 {
+        Some(Frac::new(scaled.round() as i64, denom))
+    } else {
+        None
     }
 }
 
@@ -356,6 +582,75 @@ mod tests {
         }
     }
 
+    fn roots(out: &SolveOutcome) -> Vec<f64> {
+        match out {
+            SolveOutcome::SolvedRoots { roots, .. } => roots.clone(),
+            other => panic!("expected SolvedRoots, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn quadratic_x_squared_equals_four() {
+        let r = roots(&solve_src("symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n"));
+        assert_eq!(r.len(), 2);
+        assert!((r[0] - -2.0).abs() < 1e-6, "{r:?}");
+        assert!((r[1] - 2.0).abs() < 1e-6, "{r:?}");
+    }
+
+    #[test]
+    fn quadratic_with_two_rational_roots() {
+        // x^2 - 5x + 6 = 0  →  {2, 3}.
+        let r = roots(&solve_src(
+            "symbol x : scalar\nconstrain x * x - 5 * x + 6 = 0\nsolve for { x }\n",
+        ));
+        assert_eq!(r.len(), 2);
+        assert!((r[0] - 2.0).abs() < 1e-6, "{r:?}");
+        assert!((r[1] - 3.0).abs() < 1e-6, "{r:?}");
+    }
+
+    #[test]
+    fn quadratic_with_irrational_roots_evaluated_numerically() {
+        // x^2 = 2  →  ±√2 ≈ ±1.41421356.
+        let r = roots(&solve_src("symbol x : scalar\nconstrain x * x = 2\nsolve for { x }\n"));
+        assert_eq!(r.len(), 2);
+        assert!((r[0] - -2.0_f64.sqrt()).abs() < 1e-6, "{r:?}");
+        assert!((r[1] - 2.0_f64.sqrt()).abs() < 1e-6, "{r:?}");
+    }
+
+    #[test]
+    fn cubic_three_real_roots() {
+        // (x-1)(x-2)(x-3) = x^3 - 6x^2 + 11x - 6 = 0 → {1,2,3}.
+        let r = roots(&solve_src(
+            "symbol x : scalar\n\
+             constrain x * x * x - 6 * x * x + 11 * x - 6 = 0\n\
+             solve for { x }\n",
+        ));
+        assert_eq!(r.len(), 3);
+        for (got, want) in r.iter().zip([1.0, 2.0, 3.0]) {
+            assert!((got - want).abs() < 1e-5, "{r:?}");
+        }
+    }
+
+    #[test]
+    fn quadratic_with_no_real_roots_is_unsupported() {
+        // x^2 + 1 = 0 has only complex roots → no real roots.
+        let out = solve_src("symbol x : scalar\nconstrain x * x + 1 = 0\nsolve for { x }\n");
+        assert!(matches!(out, SolveOutcome::Unsupported { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn nonlinear_with_an_observed_coefficient() {
+        // area = side^2, area observed 9  →  side = ±3.
+        let r = roots(&solve_src(
+            "symbol side : scalar\n\
+             observe area(9)\n\
+             constrain side * side = area\n\
+             solve for { side }\n",
+        ));
+        assert_eq!(r.len(), 2);
+        assert!((r[1] - 3.0).abs() < 1e-6, "{r:?}");
+    }
+
     #[test]
     fn a_non_square_system_has_no_unique_solution() {
         // two unknowns, one equation.
@@ -374,12 +669,19 @@ mod tests {
     }
 
     #[test]
-    fn a_nonlinear_term_is_unsupported_not_wrong() {
-        // x * x = 4 is non-linear — we must NOT pretend to solve it.
+    fn multi_unknown_nonlinear_is_unsupported_not_wrong() {
+        // x * y = 4 is non-linear in TWO unknowns — beyond the univariate
+        // polynomial path; we must NOT pretend to solve it.
         let out = solve_src(
-            "symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n",
+            "symbol x : scalar\nsymbol y : scalar\nconstrain x * y = 4\nsolve for { x, y }\n",
         );
-        assert!(matches!(out, SolveOutcome::Unsupported { .. }));
+        assert!(
+            matches!(
+                out,
+                SolveOutcome::Unsupported { .. } | SolveOutcome::NoUniqueSolution
+            ),
+            "{out:?}"
+        );
     }
 
     #[test]
