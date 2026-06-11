@@ -67,8 +67,15 @@ other external-tool backends.
   CoreCLR** (`tests/clr_real_predicates.rs`): `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0,
   `(EQ 7 7)`→1, `(EQ 7 8)`→0, `(COND ((ATOM 7) 11) …)`→11,
   `(COND ((ATOM (CONS 1 2)) 11) ((EQ 5 5) 22))`→22.
-- ☐ **C4 — symbols (F6).** Interned symbol ids (the shared
-  `intern_symbols_structural`); `(EQ (QUOTE A) (QUOTE A))`→1, distinct→0.
+- ✅ **C4 — symbols (F6).** **No new emit ops.** The shared
+  `intern_symbols_structural` pass lowers each `(QUOTE S)` to a *tagged integer id*
+  (`A` → `0x20000000`, `B` → `0x20000001`, …); on the CLR value model that id is
+  just a boxed `System.Int32` atom, so `EQ`/`ATOM` on symbols reuse the C1–C3
+  `const`/`box`/`equal?`/`pair?` path unchanged. Verified by RUNNING on **real
+  CoreCLR** (`tests/clr_real_symbols.rs`): `(EQ (QUOTE A) (QUOTE A))`→1,
+  `(EQ (QUOTE A) (QUOTE B))`→0, `(ATOM (QUOTE A))`→1,
+  `(EQ (QUOTE FOO) (QUOTE FOO))`→1, `(EQ (QUOTE FOO) (QUOTE BAR))`→0. Unit test
+  `symbol_eq_emits_tagged_id_consts_unboxed_and_compared` pins the value model.
 - ☐ **C5 — lambda / LABEL / recursion (F7).** Each hoisted lambda as its own
   `.method`; application via `call <Method>`; recursion. Verify
   `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7 and a recursive `LABEL`.

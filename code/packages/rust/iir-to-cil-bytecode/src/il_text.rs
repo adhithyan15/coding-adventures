@@ -13,7 +13,7 @@
 //! program to the real toolchain and let it own the metadata (PE headers, the
 //! `#~`/`#Strings`/`#Blob` streams, token resolution). No hand-rolled metadata.
 //!
-//! ## Scope (C1–C3)
+//! ## Scope (C1–C4)
 //!
 //! * **C1 — scalar:** the entry function as a straight line of integer `const` /
 //!   `mov` / `ret`; each register an `int32` local, a generated launcher prints
@@ -26,9 +26,14 @@
 //!   to `label` (`<name>:`) / `jmp` (`br`) / `jmp_if_false` (`brfalse`), and a nil
 //!   fall-through `const … : ref<…>` becomes `ldnull` (never `ldc.i4 0`).
 //!
-//! Every other op returns [`IIRClrError::UnsupportedOp`], so the remaining slices
-//! (symbols, lambda / LABEL) extend the op match incrementally — `ilasm` already
-//! handles the metadata each will need.
+//! * **C4 — symbols:** no new ops. `intern_symbols_structural` lowers each `(QUOTE
+//!   S)` to a *tagged integer id* (`A` → `0x20000000`, …), which on the CLR is just
+//!   a boxed `System.Int32` atom — so `EQ`/`ATOM` on symbols reuse the C1–C3
+//!   `const`/`box`/`equal?`/`pair?` path unchanged.
+//!
+//! Every other op returns [`IIRClrError::UnsupportedOp`], so the remaining slice
+//! (lambda / LABEL) extends the op match incrementally — `ilasm` already handles
+//! the metadata it will need.
 
 use crate::lower::{IIRClrConfig, IIRClrError};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
@@ -584,6 +589,44 @@ mod tests {
             "equal? unboxes both operands; got:\n{il}"
         );
         assert!(il.contains("ceq"), "equal? → ceq");
+    }
+
+    #[test]
+    fn symbol_eq_emits_tagged_id_consts_unboxed_and_compared() {
+        // `(EQ (QUOTE A) (QUOTE A))` after `intern_symbols_structural`: each symbol
+        // is a *tagged integer id* (here `A` → 0x20000000 = 536870912), boxed as an
+        // atom — the exact scalar/predicate shape C1–C3 already emit. Symbols need
+        // NO new CIL ops: two equal `ldc.i4 <id>`, boxed, then `equal?`-unboxed.
+        const SYM_A: i64 = 0x2000_0000; // 536870912, the interned id of `A`
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(SYM_A)], "i32"),
+            IIRInstr::new("const", Some("v1".into()), vec![Operand::Int(SYM_A)], "i32"),
+            IIRInstr::new("box", Some("v0b".into()), vec![Operand::Var("v0".into())], "ref<any>"),
+            IIRInstr::new("box", Some("v1b".into()), vec![Operand::Var("v1".into())], "ref<any>"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("r".into()),
+                vec![
+                    Operand::Var("equal?".into()),
+                    Operand::Var("v0b".into()),
+                    Operand::Var("v1b".into()),
+                ],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("ldc.i4 536870912"), "tagged symbol id is a const; got:\n{il}");
+        assert!(il.contains("box [System.Runtime]System.Int32"), "symbol id boxed as an atom");
+        assert_eq!(
+            il.matches("unbox.any [System.Runtime]System.Int32").count(),
+            2,
+            "equal? unboxes both symbol ids"
+        );
     }
 
     #[test]
