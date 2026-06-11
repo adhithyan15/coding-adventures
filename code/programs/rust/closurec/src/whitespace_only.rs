@@ -540,45 +540,62 @@ pub fn whitespace_only_minify(
     //   `new A ( ) .`   →   `( new A ) .`
     //   [new,A,(,),.]       [(,new,A,),.]
     //
-    // Minimal safe slice (matches the byte-identity fixture
-    // `minify_new_member_chain`):
-    //   - single plain-identifier callee (`new A`, not
-    //     `new a.b.C` — member-callee deferred),
+    // Safe slice (matches `minify_new_member_chain` (gap-059)
+    // AND `minify_new_member_callee` (gap-060)):
+    //   - the CALLEE is a plain identifier optionally followed
+    //     by `.IDENT` member accessors: `new A` (gap-059) or
+    //     `new a.b.C` (gap-060). Computed `[...]` callees are a
+    //     deferred follow-up.
     //   - EMPTY arg list `()` (arg-bearing `new A(y).b` →
-    //     `(new A(y)).b` is a deferred follow-up),
+    //     `(new A(y)).b` is a deferred follow-up — it can't use
+    //     the reorder trick since the args aren't empty),
     //   - followed by `.`, `[`, or `(`.
     //
     // Guards:
     //   - operator `new`, not the property name `.new`/`?.new`
     //     (a property `new` is preceded by a member accessor),
-    //   - all bracket checks go through `is_structural_punct`
-    //     so a string/regex/template whose value looks like a
-    //     bracket can never trigger the reorder.
+    //   - all bracket / accessor checks go through
+    //     `is_structural_punct` so a string/regex/template whose
+    //     value looks like a bracket can never trigger it.
     {
         let mut i = 0;
-        while i + 4 < kept.len() {
+        while i + 1 < kept.len() {
             let is_operator_new = kept[i].value == "new"
                 && !is_string_literal(kept[i])
                 && (i == 0
                     || (!is_structural_punct(&kept[i - 1], ".")
                         && !is_structural_punct(&kept[i - 1], "?.")));
             if is_operator_new
-                && is_simple_identifier_token(Some(kept[i + 1]))
-                && is_structural_punct(&kept[i + 2], "(")
-                && is_structural_punct(&kept[i + 3], ")")
-                && (is_structural_punct(&kept[i + 4], ".")
-                    || is_structural_punct(&kept[i + 4], "[")
-                    || is_structural_punct(&kept[i + 4], "("))
+                && is_simple_identifier_token(kept.get(i + 1).copied())
             {
-                // Reorder: pull the `(` (empty arg-list open)
-                // out from i+2 and re-insert it before `new`.
-                // The `)` stays put — now closing the wrap.
-                let open = kept.remove(i + 2);
-                kept.insert(i, open);
-                // Past `( new IDENT )`; the member/call token
-                // is now at i+4 and re-scanned next iteration.
-                i += 4;
-                continue;
+                // Scan the callee extent: the leading identifier
+                // (at i+1) plus zero or more `.IDENT` accessors.
+                let mut p = i + 2;
+                while p + 1 < kept.len()
+                    && is_structural_punct(&kept[p], ".")
+                    && is_simple_identifier_token(Some(kept[p + 1]))
+                {
+                    p += 2;
+                }
+                // Expect EMPTY args `( )` at p, p+1 then a
+                // member/call follower at p+2.
+                if p + 2 < kept.len()
+                    && is_structural_punct(&kept[p], "(")
+                    && is_structural_punct(&kept[p + 1], ")")
+                    && (is_structural_punct(&kept[p + 2], ".")
+                        || is_structural_punct(&kept[p + 2], "[")
+                        || is_structural_punct(&kept[p + 2], "("))
+                {
+                    // Reorder: pull the `(` (empty arg-list open)
+                    // out from p and re-insert it before `new`.
+                    // The `)` stays put — now closing the wrap.
+                    let open = kept.remove(p);
+                    kept.insert(i, open);
+                    // Past `( new <callee> )`; the follower is
+                    // now at p+2 and re-scanned next iteration.
+                    i = p + 2;
+                    continue;
+                }
             }
             i += 1;
         }
@@ -3552,6 +3569,31 @@ mod tests {
     #[test]
     fn gap059_new_call_then_member_wraps() {
         assert_eq!(minify("var x=new Foo().bar;"), "var x=(new Foo).bar;");
+    }
+
+    /// gap-060: member-CALLEE new-expr — `new a.b.C().d` →
+    /// `(new a.b.C).d`. The callee scan consumes the `.IDENT`
+    /// accessor chain (`a.b.C`) before the empty `()`.
+    #[test]
+    fn gap060_member_callee_new_wraps() {
+        assert_eq!(minify("var x=new a.b.C().d;"), "var x=(new a.b.C).d;");
+    }
+
+    /// gap-060: member callee + computed-member follower —
+    /// `new a.b().c[0]` → `(new a.b).c[0]` (only the new-expr
+    /// is wrapped; the trailing chain is untouched).
+    #[test]
+    fn gap060_member_callee_then_member_chain() {
+        assert_eq!(minify("var x=new a.b().c;"), "var x=(new a.b).c;");
+    }
+
+    /// gap-060 non-regression: a member-callee new with NO
+    /// following member/call is left to gap-050's domain (and
+    /// gap-050 only handles single-identifier callees, so this
+    /// stays as-is — a separate deferred gap, not gap-060).
+    #[test]
+    fn gap060_member_callee_standalone_unchanged() {
+        assert_eq!(minify("var x=new a.b.C();"), "var x=new a.b.C();");
     }
 
     /// gap-059: `new Foo()[0]` → `(new Foo)[0]` (computed

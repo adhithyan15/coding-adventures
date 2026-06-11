@@ -2,6 +2,24 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.74.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-060** — member-callee new-expression wrap:
+  `new a.b.C().d` → `(new a.b.C).d`. Generalizes gap-059 from a
+  single-identifier callee to a member-chain callee.
+
+### Changed — gap-059 pre-pass generalized
+
+The new-expr wrap pre-pass (gap-059) now scans a CALLEE EXTENT
+— the leading identifier plus zero-or-more `.IDENT` accessors —
+before the empty `()`, instead of requiring exactly one
+identifier. The single-identifier case (gap-059) is the
+zero-accessor special case, so both are handled by one unified
+pass that reorders the `(` to before `new` (no synthetic
+tokens). Computed `[...]` callees and arg-bearing forms
+(gap-061) stay deferred. 3 new gap060_* unit tests.
+
 ## [0.73.0] - 2026-06-10
 
 ### Changed
