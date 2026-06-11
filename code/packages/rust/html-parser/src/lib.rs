@@ -844,6 +844,7 @@ pub struct BrowserDocument {
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
@@ -1296,6 +1297,36 @@ pub struct BrowserComponentHydrationTarget {
 pub struct BrowserDataAttribute {
     pub name: String,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_novalidate: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub validation_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub required: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_attribute_count: usize,
+    pub validation_barred_reason: Option<String>,
+    pub validation_blocked: bool,
+    pub validation_block_reasons: Vec<String>,
+    pub submitter_ids: Vec<String>,
+    pub submitter_novalidate_ids: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3310,6 +3341,7 @@ impl BrowserDocument {
             browser_fullscreen_interaction_descriptors(&summary);
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
+        summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -19721,6 +19753,142 @@ fn browser_form_policy_submitter_descriptor(
     }
 }
 
+fn browser_form_validation_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormValidationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_validation_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_validation_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormValidationDescriptor> {
+    if !browser_form_control_has_validation_state(control) {
+        return None;
+    }
+
+    let validation_block_reasons = browser_form_validation_block_reasons(control);
+    let submitter_ids = browser_form_submitter_ids(form);
+    let submitter_novalidate_ids = browser_form_submitter_novalidate_ids(form);
+    Some(BrowserFormValidationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_novalidate: form.novalidate,
+        element: browser_form_validation_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        validation_kind: browser_form_validation_kind(
+            control,
+            form.novalidate,
+            &submitter_novalidate_ids,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        checked: control.checked,
+        required: control.required,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        will_validate: control.will_validate,
+        validation_attribute_count: control.validation_attributes.len(),
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        validation_blocked: !validation_block_reasons.is_empty(),
+        validation_block_reasons,
+        submitter_ids,
+        submitter_novalidate_ids,
+    })
+}
+
+fn browser_form_control_has_validation_state(control: &BrowserFormControl) -> bool {
+    control.will_validate
+        || control.required
+        || !control.validation_attributes.is_empty()
+        || control.validation_barred_reason.is_some()
+}
+
+fn browser_form_validation_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if let Some(reason) = &control.validation_barred_reason {
+        reasons.push(format!("validation-barred:{reason}"));
+    }
+    if control.disabled
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:disabled")
+    {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:readonly")
+    {
+        reasons.push("readonly".to_string());
+    }
+    reasons
+}
+
+fn browser_form_validation_kind(
+    control: &BrowserFormControl,
+    form_novalidate: bool,
+    submitter_novalidate_ids: &[String],
+) -> String {
+    if control.validation_barred_reason.is_some() {
+        "barred-control".to_string()
+    } else if form_novalidate {
+        "form-novalidate-candidate".to_string()
+    } else if !submitter_novalidate_ids.is_empty() {
+        "submitter-novalidate-candidate".to_string()
+    } else if control.required {
+        "required-candidate".to_string()
+    } else if !control.validation_attributes.is_empty() {
+        "constraint-candidate".to_string()
+    } else if control.will_validate {
+        "validation-candidate".to_string()
+    } else {
+        "validation-metadata".to_string()
+    }
+}
+
+fn browser_form_validation_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_submitter_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
+fn browser_form_submitter_novalidate_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter(|submitter| submitter.novalidate)
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
 fn collect_form_labels_for_form(
     body_root: &[Node],
     target_form: &Element,
@@ -23502,6 +23670,85 @@ mod tests {
         assert_eq!(summary_control.target_kind, "disclosure");
         assert_eq!(summary_control.text, "More");
         assert!(summary_control.focusable);
+    }
+
+    #[test]
+    fn browser_form_validation_descriptors_track_candidates_bypass_and_barred_controls() {
+        let document = parse_browser_document(
+            "<form id=signup name=signup novalidate>\
+             <label for=email>Email</label><input id=email name=email type=email required minlength=3 maxlength=80>\
+             <input id=age name=age type=number min=18 max=120 step=1>\
+             <textarea id=bio name=bio readonly maxlength=200>About me</textarea>\
+             <input id=token type=hidden name=token value=abc>\
+             <button id=save>Save</button><button id=draft formnovalidate>Draft</button>\
+             </form>\
+             <input id=external form=signup name=outside required>",
+        )
+        .expect("form validation descriptor document should parse");
+
+        let descriptors = &document.form_validation_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "age", "bio", "token", "save", "draft", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("signup"));
+        assert_eq!(email.form_name.as_deref(), Some("signup"));
+        assert!(email.form_novalidate);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.validation_kind, "form-novalidate-candidate");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(email.labels, vec!["Email"]);
+        assert!(email.will_validate);
+        assert!(email.required);
+        assert_eq!(
+            email.validation_attributes,
+            vec!["required", "minlength", "maxlength"]
+        );
+        assert_eq!(email.validation_attribute_count, 3);
+        assert!(!email.validation_blocked);
+        assert_eq!(email.submitter_ids, vec!["save", "draft"]);
+        assert_eq!(email.submitter_novalidate_ids, vec!["save", "draft"]);
+
+        let age = &descriptors[1];
+        assert_eq!(age.validation_kind, "form-novalidate-candidate");
+        assert_eq!(age.validation_attributes, vec!["min", "max", "step"]);
+
+        let bio = &descriptors[2];
+        assert_eq!(bio.element, "textarea");
+        assert_eq!(bio.validation_kind, "barred-control");
+        assert_eq!(bio.validation_barred_reason.as_deref(), Some("readonly"));
+        assert!(bio.validation_blocked);
+        assert_eq!(
+            bio.validation_block_reasons,
+            vec!["validation-barred:readonly"]
+        );
+
+        let token = &descriptors[3];
+        assert_eq!(token.validation_kind, "barred-control");
+        assert_eq!(
+            token.validation_barred_reason.as_deref(),
+            Some("input-type-hidden")
+        );
+
+        let save = &descriptors[4];
+        assert_eq!(save.validation_kind, "form-novalidate-candidate");
+        assert!(save.will_validate);
+
+        let draft = &descriptors[5];
+        assert_eq!(draft.validation_kind, "form-novalidate-candidate");
+        assert!(draft.will_validate);
+
+        let external = &descriptors[6];
+        assert_eq!(external.form_owner.as_deref(), Some("signup"));
+        assert_eq!(external.validation_kind, "form-novalidate-candidate");
+        assert_eq!(external.validation_attributes, vec!["required"]);
     }
 
     #[test]

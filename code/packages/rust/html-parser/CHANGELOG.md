@@ -6,6 +6,10 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness form-validation descriptors now expose validation
+  candidates, constraint attributes, barred controls, form-level `novalidate`,
+  and submitter-level validation bypass hints as a flat browser-planning
+  inventory.
 - Browser-readiness context-menu interaction descriptors now expose
   `oncontextmenu` hooks, ARIA menu-popup invokers, menu/menuitem roles, popover
   menu surfaces, and hidden/inert/disabled blockers as a flat browser-planning

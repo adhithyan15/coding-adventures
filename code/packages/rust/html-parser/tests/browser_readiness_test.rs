@@ -14,19 +14,20 @@ use coding_adventures_html_parser::{
     BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
     BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
-    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -100,6 +101,8 @@ struct ExpectedBrowserDocument {
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
+    #[serde(default)]
+    form_validation_descriptors: Option<Vec<ExpectedFormValidationDescriptor>>,
     anchors: Vec<ExpectedAnchor>,
     headings: Vec<ExpectedHeading>,
     #[serde(default)]
@@ -886,6 +889,59 @@ struct ExpectedFormPolicySubmitterDescriptor {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormValidationDescriptor {
+    #[serde(default)]
+    form_id: Option<String>,
+    #[serde(default)]
+    form_name: Option<String>,
+    #[serde(default)]
+    form_novalidate: bool,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    validation_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    accessible_description: Option<String>,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    checked: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    validation_attributes: Vec<String>,
+    #[serde(default)]
+    validation_attribute_count: usize,
+    #[serde(default)]
+    validation_barred_reason: Option<String>,
+    #[serde(default)]
+    validation_blocked: bool,
+    #[serde(default)]
+    validation_block_reasons: Vec<String>,
+    #[serde(default)]
+    submitter_ids: Vec<String>,
+    #[serde(default)]
+    submitter_novalidate_ids: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3938,6 +3994,26 @@ fn browser_form_validation_control_descriptors_track_candidates_and_barred_contr
 }
 
 #[test]
+fn browser_form_validation_descriptors_track_flat_candidates_and_bypass_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form validation descriptor fixture should parse");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.form_validation_descriptors, expected.form_validation_descriptors,
+        "form validation descriptors should flatten validation candidates, barred controls, and submitter bypass hints",
+    );
+}
+
+#[test]
 fn browser_form_output_descriptor_metadata_tracks_for_references_and_labels() {
     let document = parse_browser_document(
         "<form id=calc>\
@@ -5454,6 +5530,15 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let form_validation_descriptors = self
+            .form_validation_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedFormValidationDescriptor::into_browser_form_validation_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_form_validation_descriptors(&forms));
         let context_menu_interaction_descriptors = self
             .context_menu_interaction_descriptors
             .map(|descriptors| {
@@ -5673,6 +5758,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
                 .collect(),
+            form_validation_descriptors,
             anchors: self
                 .anchors
                 .into_iter()
@@ -10477,6 +10563,175 @@ impl ExpectedFormPolicySubmitterDescriptor {
             value: self.value,
         }
     }
+}
+
+impl ExpectedFormValidationDescriptor {
+    fn into_browser_form_validation_descriptor(self) -> BrowserFormValidationDescriptor {
+        BrowserFormValidationDescriptor {
+            form_id: self.form_id,
+            form_name: self.form_name,
+            form_novalidate: self.form_novalidate,
+            element: self.element,
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            validation_kind: self.validation_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            accessible_description: self.accessible_description,
+            labels: self.labels,
+            value: self.value,
+            checked: self.checked,
+            required: self.required,
+            disabled: self.disabled,
+            readonly: self.readonly,
+            will_validate: self.will_validate,
+            validation_attributes: self.validation_attributes,
+            validation_attribute_count: self.validation_attribute_count,
+            validation_barred_reason: self.validation_barred_reason,
+            validation_blocked: self.validation_blocked,
+            validation_block_reasons: self.validation_block_reasons,
+            submitter_ids: self.submitter_ids,
+            submitter_novalidate_ids: self.submitter_novalidate_ids,
+        }
+    }
+}
+
+fn expected_form_validation_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormValidationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| expected_form_validation_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn expected_form_validation_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormValidationDescriptor> {
+    if !expected_form_control_has_validation_state(control) {
+        return None;
+    }
+
+    let validation_block_reasons = expected_form_validation_block_reasons(control);
+    let submitter_ids = expected_form_submitter_ids(form);
+    let submitter_novalidate_ids = expected_form_submitter_novalidate_ids(form);
+    Some(BrowserFormValidationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_novalidate: form.novalidate,
+        element: expected_form_validation_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        validation_kind: expected_form_validation_kind(
+            control,
+            form.novalidate,
+            &submitter_novalidate_ids,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        checked: control.checked,
+        required: control.required,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        will_validate: control.will_validate,
+        validation_attribute_count: control.validation_attributes.len(),
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        validation_blocked: !validation_block_reasons.is_empty(),
+        validation_block_reasons,
+        submitter_ids,
+        submitter_novalidate_ids,
+    })
+}
+
+fn expected_form_control_has_validation_state(control: &BrowserFormControl) -> bool {
+    control.will_validate
+        || control.required
+        || !control.validation_attributes.is_empty()
+        || control.validation_barred_reason.is_some()
+}
+
+fn expected_form_validation_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if let Some(reason) = &control.validation_barred_reason {
+        reasons.push(format!("validation-barred:{reason}"));
+    }
+    if control.disabled
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:disabled")
+    {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:readonly")
+    {
+        reasons.push("readonly".to_string());
+    }
+    reasons
+}
+
+fn expected_form_validation_kind(
+    control: &BrowserFormControl,
+    form_novalidate: bool,
+    submitter_novalidate_ids: &[String],
+) -> String {
+    if control.validation_barred_reason.is_some() {
+        "barred-control".to_string()
+    } else if form_novalidate {
+        "form-novalidate-candidate".to_string()
+    } else if !submitter_novalidate_ids.is_empty() {
+        "submitter-novalidate-candidate".to_string()
+    } else if control.required {
+        "required-candidate".to_string()
+    } else if !control.validation_attributes.is_empty() {
+        "constraint-candidate".to_string()
+    } else if control.will_validate {
+        "validation-candidate".to_string()
+    } else {
+        "validation-metadata".to_string()
+    }
+}
+
+fn expected_form_validation_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn expected_form_submitter_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
+fn expected_form_submitter_novalidate_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter(|submitter| submitter.novalidate)
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
 }
 
 fn expected_tokens_from_raw(tokens: Vec<String>, raw: Option<&str>) -> Vec<String> {
