@@ -1,5 +1,46 @@
 # Changelog
 
+## 2.28.0 - 2026-05-29
+
+### Added
+
+- **Track I1 of `macsyma-truly-finish-plan.md`** — closed-form
+  recogniser for canonical infinite series in the new module
+  `cas_summation/series_closed_forms.py`.  Pattern-matches the
+  summand against the classical zeta / eta / factorial Taylor
+  shapes and emits the closed form when `hi = %inf`:
+  - `sum(1/k^(2m), k, 1, %inf)` → `ζ(2m) · π^(2m)` for `m = 1..6`
+    (Basel through `ζ(12) = 691·π¹²/638512875`).
+  - `sum((-1)^(k-1)/k, k, 1, %inf)` → `log(2)` (Mercator).
+  - `sum((-1)^(k-1)/k^(2m), k, 1, %inf)` → `η(2m) · π^(2m)` for
+    `m = 1..3` (Dirichlet eta).
+  - `sum(1/k!, k, 0, %inf)` → `%e`.
+  - `sum(x^k/k!, k, 0, %inf)` → `exp(x)` (symbolic `x ≠ k`).
+  - `sum((-1)^k · x^(2k)/(2k)!, k, 0, %inf)` → `cos(x)`.
+  - `sum((-1)^k · x^(2k+1)/(2k+1)!, k, 0, %inf)` → `sin(x)`.
+  - `sum(x^(2k)/(2k)!, k, 0, %inf)` → `cosh(x)`.
+  - `sum(x^(2k+1)/(2k+1)!, k, 0, %inf)` → `sinh(x)`.
+- New handler wired into the dispatcher between the existing
+  `try_special_infinite` (Basel + Leibniz) and the Gosper /
+  numeric-small-range paths; pre-existing tests stay on their
+  original code paths.
+- **One generic Bernoulli helper** computes `B_n` via the textbook
+  recurrence `B_0 = 1; Σ_{j=0}^{n} C(n+1, j) · B_j = 0`.  Six
+  even-zeta exponents (m = 1..6) and three even-eta exponents
+  (m = 1..3) share the same code — no per-degree tables.  The
+  recurrence depth is bounded by `n ≤ 12`, so the helper is
+  provably terminating.
+- All numeric work is exact (`fractions.Fraction`); the closed
+  forms emerge as `π^(2m) / denom` IR shapes that match the
+  parser-emitted forms verified by the test suite.
+
+### Notes
+
+- Falls through (returns `None`) for: odd zeta `ζ(2m+1)`, indices
+  past `m > 6`, wrong lower bound (zeta requires `lo=1`, Taylor
+  requires `lo=0`), finite upper bound, and any non-table summand
+  (`sin(k)`, `log(k)`, etc.).
+
 ## 2.27.0 - 2026-05-29
 
 ### Added

@@ -72,6 +72,7 @@ from cas_summation.geometric_sum import geometric_sum_ir
 from cas_summation.gosper import try_gosper_sum
 from cas_summation.poly_sum import poly_sum_ir
 from cas_summation.product_eval import evaluate_product_expr
+from cas_summation.series_closed_forms import try_closed_form_series
 from cas_summation.special_sums import try_special_infinite
 
 # ---------------------------------------------------------------------------
@@ -1627,6 +1628,20 @@ def evaluate_sum(
     # ── 5. Classic infinite series ──────────────────────────────────────────
     if inf_upper:
         result = try_special_infinite(f, k, lo)
+        if result is not None:
+            return vm.eval(result)
+
+    # ── 5a. Track I1 — closed-form transcendental infinite sums ─────────────
+    # Recognises the canonical zeta(2m), eta(2m), eta(1) = log(2),
+    # e_series, exp/cos/sin/cosh/sinh Taylor series.  Only fires for
+    # ``hi = %inf``; finite ranges go through Gosper / Faulhaber etc.
+    # Placed after :func:`try_special_infinite` so its pre-existing
+    # patterns (Leibniz π/4, the older Basel routes) keep their existing
+    # IR shapes and tests; ``try_closed_form_series`` only fires on
+    # patterns the legacy handler refuses (e.g. ``Σ 1/k⁶``, the eta
+    # family, sin/cos/sinh/cosh).
+    if inf_upper:
+        result = try_closed_form_series(f, k, lo, hi)
         if result is not None:
             return vm.eval(result)
 
