@@ -1,0 +1,7 @@
+{
+ "idx": 5,
+ "key": "bacterial_meningitis::csf_lactate(elevated)",
+ "lr": 22.9,
+ "computed": "pooled LR+ reported directly = 22.9",
+ "byte_quote": "likelihood ratio positive 22.9 (95% CI: 12.6-41.9), likelihood ratio negative 0.07 (95% CI: 0.05-0.12), and diagnostic odds ratio 313 (95% CI: 141-698)."
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 6,
+ "key": "bacterial_meningitis::serum_procalcitonin(elevated)",
+ "lr": 27.3,
+ "computed": "pooled LR+ reported directly = 27.3",
+ "byte_quote": "The pooled sensitivity, specificity, positive likelihood ratio, negative likelihood ratio, and diagnostic odds ratio (DOR) for PCT were 0.90 (95% confidence interval (CI) 0.84-0.94), 0.98 (95% CI 0.97-0.99), 27.3 (95% CI 8.2-91.1)"
+}
