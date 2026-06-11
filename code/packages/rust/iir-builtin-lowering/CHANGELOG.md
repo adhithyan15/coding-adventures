@@ -4,6 +4,16 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.15.0] — 2026-06-10 — symbol program-result handling (LANG77 / McCarthy W13a)
+
+Extends the type-directed program-exit coercion in `lower_lisp_repr` (the bool case
+landed in 0.14.0) to **symbols**: a SYMBOL result is already a finished tagged
+immediate from `intern_symbols` (`(id << shift) | TAG_SYMBOL`), so it must NOT be
+`lispy_unbox_int`'d (`>> 3` would corrupt the id+tag). Such a `ret` is returned
+verbatim (its tagged word). Reusable for every tagged-word backend; verified
+end-to-end on the LLVM/clang path (`(EQ (QUOTE A) (QUOTE A))`→1). New unit test
+`symbol_result_returned_verbatim`.
+
 ## [0.14.0] — 2026-06-10 — boolean program-result coercion (LANG77 / McCarthy W12b-2)
 
 Closes the long-deferred "booleans land in L3b-2c-2" gap in `lower_lisp_repr`'s

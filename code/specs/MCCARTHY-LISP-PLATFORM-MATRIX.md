@@ -63,7 +63,7 @@ representation + per-builtin backend lowering.
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
-| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | tagged-word |
+| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
@@ -264,7 +264,21 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     `br`. Verified by RUNNING (clang + `lispy_runtime.c`):
     `(COND ((ATOM 7) 11) …)`→11, second-clause→22, **nested `COND`**→44
     (`lang-aot/tests/llvm_cond.rs`). **LLVM core F1–F5 complete.**
-- ☐ **W13 — LLVM symbols + lambda (F6–F7).** **Completes LLVM.**
+- ◑ **W13 — LLVM symbols + lambda (F6–F7).** *In progress.* **Completes LLVM.**
+  - ✅ **W13a — LLVM symbols (F6).** `intern_symbols` already runs in the LLVM
+    pipeline; two fixes finish it: `llvm_type_for("symbol") = i64` (a tagged
+    immediate), and the shared `lower_lisp_repr` returns a **symbol** result verbatim
+    (its tagged word) instead of `unbox_int`'ing it (`>> 3` would corrupt id+tag) —
+    the same type-directed exit coercion as bools (W12b-2). Verified by RUNNING
+    (clang + `lispy_runtime.c`): `(EQ (QUOTE A) (QUOTE A))`→1, `(EQ (QUOTE A) (QUOTE B))`→0,
+    `(ATOM (QUOTE A))`→1, symbol-in-`COND`→11, `(QUOTE A)`→its tagged word
+    (`lang-aot/tests/llvm_symbols.rs`).
+  - ☐ **W13b — LLVM lambda (F7). Completes LLVM.** The lambda *mechanism* already
+    works (`(LAMBDA …)` → an emitted function + a `call`; `((LAMBDA (X) X) 5)`→5).
+    The open work is the **entry coercion of a polymorphic `call` result**: a lambda
+    returning a tagged int/bool/cons isn't unboxed/truthy'd at the program exit
+    (`((LAMBDA (X) (CAR X)) (CONS 7 9))`→56 = boxed 7, not 7). Needs the lambda's
+    return type threaded to the entry ret, or a runtime-tag-dispatched coercion.
 
 ### Phase F — native AOT + JIT completion
 

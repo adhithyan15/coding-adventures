@@ -85,7 +85,8 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.4.0  | `call` + `call_builtin print_i64` extern declarations.      |
 | v0.5.0  | Tagged-word lisp `cons`/`car`/`cdr` → `call @__twig_lispy_*` (McCarthy W12b-1). |
 | v0.6.0  | `COND` via stack-slot (`alloca`) SSA-merge + `jmp_if` void-cond + empty-block `br` (McCarthy W12b-3). |
-| (later) | Lisp symbols + lambda (W13), GC, debug info via `!dbg`. |
+| v0.7.0  | Lisp symbols — `symbol` type → `i64` tagged immediate (McCarthy W13a). |
+| (later) | Lisp lambda result coercion (W13b), GC, debug info via `!dbg`. |
 
 See [`code/specs/iir-to-llvm.md`](../../../specs/iir-to-llvm.md) for the
 full spec and [`code/specs/MULTILANG-BACKEND-PLAN.md`](../../../specs/MULTILANG-BACKEND-PLAN.md)
