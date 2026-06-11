@@ -719,6 +719,22 @@ impl HueCommandPlanSummary {
         self.light_commands + self.grouped_light_commands
     }
 
+    pub fn target_surface_count(&self) -> usize {
+        usize::from(self.light_commands > 0)
+            + usize::from(self.grouped_light_commands > 0)
+            + usize::from(self.scene_commands > 0)
+    }
+
+    pub fn light_capability_write_count(&self) -> usize {
+        self.on_off_commands + self.brightness_commands + self.color_temperature_commands
+    }
+
+    pub fn light_capability_kind_count(&self) -> usize {
+        usize::from(self.on_off_commands > 0)
+            + usize::from(self.brightness_commands > 0)
+            + usize::from(self.color_temperature_commands > 0)
+    }
+
     pub fn has_direct_light_commands(&self) -> bool {
         self.light_commands > 0
     }
@@ -735,15 +751,24 @@ impl HueCommandPlanSummary {
         self.color_temperature_commands > 0
     }
 
+    pub fn writes_multiple_light_capability_kinds(&self) -> bool {
+        self.light_capability_kind_count() > 1
+    }
+
     pub fn has_scene_recalls(&self) -> bool {
         self.scene_recall_commands > 0
     }
 
+    pub fn has_only_light_surface_writes(&self) -> bool {
+        self.has_lighting_writes() && self.scene_commands == 0
+    }
+
+    pub fn has_only_scene_recalls(&self) -> bool {
+        self.scene_commands > 0 && self.scene_commands == self.total_commands
+    }
+
     pub fn touches_multiple_surfaces(&self) -> bool {
-        usize::from(self.light_commands > 0)
-            + usize::from(self.grouped_light_commands > 0)
-            + usize::from(self.scene_commands > 0)
-            > 1
+        self.target_surface_count() > 1
     }
 }
 
@@ -2520,22 +2545,45 @@ mod tests {
         );
         assert!(summary.has_lighting_writes());
         assert_eq!(summary.lighting_write_count(), 6);
+        assert_eq!(summary.target_surface_count(), 3);
+        assert_eq!(summary.light_capability_write_count(), 6);
+        assert_eq!(summary.light_capability_kind_count(), 3);
         assert!(summary.has_direct_light_commands());
         assert!(summary.has_group_commands());
         assert!(summary.mixes_direct_and_grouped_light_writes());
         assert!(summary.has_color_temperature_writes());
+        assert!(summary.writes_multiple_light_capability_kinds());
         assert!(summary.has_scene_recalls());
+        assert!(!summary.has_only_light_surface_writes());
+        assert!(!summary.has_only_scene_recalls());
         assert!(summary.touches_multiple_surfaces());
+
+        let light_only = HueCommandPlanSummary::from_commands(commands.iter().take(6));
+        assert!(light_only.has_only_light_surface_writes());
+        assert!(!light_only.has_only_scene_recalls());
+
+        let scene_only = HueCommandPlanSummary::from_commands(commands.iter().skip(6));
+        assert_eq!(scene_only.target_surface_count(), 1);
+        assert_eq!(scene_only.light_capability_write_count(), 0);
+        assert_eq!(scene_only.light_capability_kind_count(), 0);
+        assert!(!scene_only.has_only_light_surface_writes());
+        assert!(scene_only.has_only_scene_recalls());
 
         let empty = HueCommandPlanSummary::empty();
         assert!(empty.is_empty());
         assert!(!empty.has_lighting_writes());
         assert_eq!(empty.lighting_write_count(), 0);
+        assert_eq!(empty.target_surface_count(), 0);
+        assert_eq!(empty.light_capability_write_count(), 0);
+        assert_eq!(empty.light_capability_kind_count(), 0);
         assert!(!empty.has_direct_light_commands());
         assert!(!empty.has_group_commands());
         assert!(!empty.mixes_direct_and_grouped_light_writes());
         assert!(!empty.has_color_temperature_writes());
+        assert!(!empty.writes_multiple_light_capability_kinds());
         assert!(!empty.has_scene_recalls());
+        assert!(!empty.has_only_light_surface_writes());
+        assert!(!empty.has_only_scene_recalls());
         assert!(!empty.touches_multiple_surfaces());
     }
 
