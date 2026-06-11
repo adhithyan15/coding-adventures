@@ -284,6 +284,7 @@ const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
     ("lispy_truthy", "__twig_lispy_truthy", 1),
     ("lispy_box_int", "__twig_lispy_box_int", 1),
     ("lispy_unbox_int", "__twig_lispy_unbox_int", 1),
+    ("lispy_to_exit_code", "__twig_lispy_to_exit_code", 1),
     ("lispy_nil", "__twig_lispy_nil", 0),
 ];
 

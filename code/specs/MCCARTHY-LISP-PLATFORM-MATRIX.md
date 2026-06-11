@@ -63,7 +63,7 @@ representation + per-builtin backend lowering.
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
-| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
+| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
@@ -264,7 +264,8 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     `br`. Verified by RUNNING (clang + `lispy_runtime.c`):
     `(COND ((ATOM 7) 11) …)`→11, second-clause→22, **nested `COND`**→44
     (`lang-aot/tests/llvm_cond.rs`). **LLVM core F1–F5 complete.**
-- ◑ **W13 — LLVM symbols + lambda (F6–F7).** *In progress.* **Completes LLVM.**
+- ✅ **W13 — LLVM symbols + lambda (F6–F7). DONE — LLVM COMPLETE (F1–F7).** Sixth
+  backend to finish all seven features (after VM/WASM/JVM/CLR/BEAM).
   - ✅ **W13a — LLVM symbols (F6).** `intern_symbols` already runs in the LLVM
     pipeline; two fixes finish it: `llvm_type_for("symbol") = i64` (a tagged
     immediate), and the shared `lower_lisp_repr` returns a **symbol** result verbatim
@@ -273,12 +274,21 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     (clang + `lispy_runtime.c`): `(EQ (QUOTE A) (QUOTE A))`→1, `(EQ (QUOTE A) (QUOTE B))`→0,
     `(ATOM (QUOTE A))`→1, symbol-in-`COND`→11, `(QUOTE A)`→its tagged word
     (`lang-aot/tests/llvm_symbols.rs`).
-  - ☐ **W13b — LLVM lambda (F7). Completes LLVM.** The lambda *mechanism* already
-    works (`(LAMBDA …)` → an emitted function + a `call`; `((LAMBDA (X) X) 5)`→5).
-    The open work is the **entry coercion of a polymorphic `call` result**: a lambda
-    returning a tagged int/bool/cons isn't unboxed/truthy'd at the program exit
-    (`((LAMBDA (X) (CAR X)) (CONS 7 9))`→56 = boxed 7, not 7). Needs the lambda's
-    return type threaded to the entry ret, or a runtime-tag-dispatched coercion.
+  - ✅ **W13b — LLVM lambda (F7). COMPLETES LLVM.** The lambda *mechanism* was
+    already free from the shared pipeline; W13b closed the two value-model gaps:
+    (1) **argument boxing** — a lambda's params are lisp values, so an integer atom
+    argument is boxed (`lisp_arg_regs` now includes user-`call` args; without it a
+    raw `5` reads as tag `0b101` = `#t`, `7` as `0b111` = a pair); (2) **polymorphic
+    result coercion** — the entry sees a `call` typed `any` (runtime tag unknown), so
+    a new shared runtime helper `__twig_lispy_to_exit_code` dispatches on the tag at
+    RUN time (int → `>> 3`, `#t`/`#f`/nil → `1`/`0`/`0`, symbol/pair → verbatim). Both
+    gated on the source language so the pass stays a faithful no-op for Twig (which
+    also types untyped params `any`). The helper lives in `lispy_runtime.c`, so the
+    native AOT (W14) and JIT (W15) tagged-word backends inherit it. Verified by
+    RUNNING (clang + `lispy_runtime.c`): `((LAMBDA (X) X) 5)`→5,
+    `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7, `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1,
+    `((LAMBDA (X) (ATOM X)) 7)`→1, lambda-with-`COND`-body→100/200
+    (`lang-aot/tests/llvm_lambda.rs`).
 
 ### Phase F — native AOT + JIT completion
 
