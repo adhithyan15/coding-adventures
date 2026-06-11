@@ -1,5 +1,57 @@
 # Changelog
 
+## 2.27.0 — 2026-05-29
+
+### Added — Track H2 (Gosper hypergeometric summation port)
+
+Ports the Python ``cas_summation.gosper`` module (Track H1, PR #5366) to
+TypeScript ``cas-summation``.  When the summand ``a(k)`` is a
+hypergeometric term — a product of a polynomial in ``k`` with constant-
+base exponentials ``c^(αk+β)`` and ``GammaFunc(k+s)`` factors — and the
+upper bound is finite, ``evaluateSum`` now attempts Gosper's algorithm
+to find an antidifference ``T(k)`` satisfying ``T(k+1) − T(k) = a(k)``
+and returns the closed form ``T(hi+1) − T(lo)``.
+
+This unlocks closed forms for the classical hypergeometric shapes the
+existing narrow recognisers miss, e.g.:
+
+- ``∑_{k=1}^{N} k·2^k = (N−1)·2^(N+1) + 2``
+- ``∑_{k=0}^{N} k·k! = (N+1)! − 1``
+
+### Changes
+
+- ``src/gosper.ts``: new module — full Gosper pipeline (structural
+  decomposition → ratio computation → Petkovšek shift-coprime
+  normalisation → Gosper degree bound → linear system solve via
+  Gaussian elimination over exact ``bigint`` rationals).  Mirrors the
+  Python module 1:1 including the boundary-singularity cancellation
+  step that handles removable factorial denominators at ``k = lo``.
+
+- ``src/gosper.ts``: defensive ``MAX_POLY_DEGREE = 64`` cap on
+  polynomial exponents during IR-to-poly conversion.  Without this,
+  an adversarial summand like ``Pow(k, 10**9)`` would balloon the
+  internal polynomial representation into a memory-bomb.  Gosper-
+  summable expressions in practice have very small polynomial degree
+  (typically ≤ 5).
+
+- ``src/index.ts``: wire ``tryGosperSum`` into the dispatch chain at the
+  same insertion point as Python (step 5b in ``summation.py``) — after
+  all narrow recognisers (constant, geometric, Faulhaber, telescoping,
+  classic infinite series, small-range numeric) and before the
+  Apart-retry telescope chain and the unevaluated fallthrough.  Guarded
+  by ``if (!infUpper)`` to mirror Python: Gosper returns
+  ``T(hi+1) − T(lo)`` which is only meaningful for finite ``hi``;
+  infinite upper bounds belong to the limit-aware paths above.
+
+- ``tests/gosper.test.ts``: 15 tests — 4 acceptance cases (``k·2^k``,
+  ``k·k!``, ``2^k`` regression, mixed-handler dispatcher), 2 fall-
+  through safety cases (``sin(k)``, ``log(k)``), 2 regression cases
+  (Faulhaber and constant handlers still take priority), 4 internal
+  helper tests, 2 structural pieces (``decompose`` + ``hypRatio``),
+  and 1 DoS-cap test verifying ``Pow(k, 10**9)`` is refused promptly.
+
+- ``package.json``: minor bump to 2.27.0.
+
 ## 2.26.0 - 2026-06-06
 
 ### Added

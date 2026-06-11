@@ -2,9 +2,13 @@ use std::cmp::Ordering;
 
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, LOG, MUL, NEG, POW, SUB};
 
+pub mod gosper;
+
 pub const SUM: &str = "Sum";
 pub const PRODUCT: &str = "Product";
 pub const GAMMA_FUNC: &str = "GammaFunc";
+
+pub use gosper::{try_gosper_sum, MAX_POLY_DEGREE};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Rational {
@@ -367,6 +371,24 @@ fn evaluate_sum_inner(
             if ok {
                 return total.to_ir();
             }
+        }
+    }
+
+    // Track H2 — Gosper hypergeometric closed-form attempt.  Runs after
+    // all narrow recognisers (constant, geometric, Faulhaber, telescoping,
+    // special infinite series, small-range numeric) but before the
+    // Apart-retry telescope chain and the unevaluated fallthrough.
+    //
+    // Mirrors the Python dispatch insertion point in
+    // `cas_summation.summation` (step 5b): Gosper only runs for *finite*
+    // upper bounds because it returns `T(hi+1) − T(lo)` which is only
+    // meaningful when `hi+1` is a real value.  Infinite upper bounds
+    // belong to the dedicated limit-aware paths above (telescope at ∞,
+    // classic series).  This guard also preserves the Phase 41
+    // fall-through contract for non-vanishing telescopes.
+    if !inf_upper {
+        if let Some(gosper_result) = gosper::try_gosper_sum(&f, &k, &lo, &hi) {
+            return eval_fn(gosper_result);
         }
     }
 
