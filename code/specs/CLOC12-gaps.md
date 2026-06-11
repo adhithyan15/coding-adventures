@@ -478,6 +478,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-062 — redundant double-paren collapse
 
-- **Status:** OPEN — discovered by CLOC14.30. `minify_double_paren_arith` ignored.
+- **Status:** **RESOLVED** in CLOC12.69 (minimal slice). `minify_double_paren_arith` flips IGNORED → PASS.
 - **Input:** `var x=((a+b))*c;` → **Upstream:** `var x=(a+b)*c;`
-- **What it needs:** When a `(` is immediately followed by `(` and the inner group's matching `)` is immediately followed by the outer `)` (i.e. directly-nested grouping parens `(( ... ))`), strip one layer. Must NOT touch call/grouping-distinct shapes — only adjacent redundant grouping parens.
+- **Fix:** Token pre-pass — when a GROUPING `(` is directly followed by another `(` and the inner group's matching `)` is directly followed by the outer `)` (purely-nested `(( ... ))`), drop the outer pair. Guards: the outer `(` must be a grouping paren (prev is punct other than `)`/`]`/`?.`, or start) so a CALL paren like `f((a,b))` is never collapsed to `f(a,b)`; no top-level comma inside; all bracket checks via `is_structural_punct`.
+- **Deferred (follow-up):** upstream eliminates parens far more aggressively — `((a))` → `a`, `(a)+(b)` → `a+b`, `f((a))` → `f(a)`. This slice strips only ONE directly-nested grouping layer; the broader redundant-paren pass is future work. (Note: `((a,b))` standalone is already correctly handled by gap-053's var-init paren elision.)

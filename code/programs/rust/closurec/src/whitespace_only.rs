@@ -584,6 +584,99 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-062: redundant double-paren collapse ------------
+    // `((a+b))*c` → `(a+b)*c`. When a GROUPING `(` is directly
+    // followed by another `(`, and the inner group's matching
+    // `)` is directly followed by the outer `)`, the OUTER layer
+    // is a redundant grouping — strip it.
+    //
+    // Minimal safe slice (matches `minify_double_paren_arith`):
+    //   - the outer `(` must be a GROUPING paren, never a call /
+    //     index paren. `f((a))` (outer is f's call) and
+    //     `a[(x)]`-style are left to a follow-up — otherwise we
+    //     could turn `f((a,b))` (one comma-operator arg) into
+    //     `f(a,b)` (two args), changing the program.
+    //   - the two open parens must be ADJACENT (`( (`),
+    //   - the inner group's `)` must be IMMEDIATELY followed by
+    //     the outer `)` (so the parens nest with nothing between
+    //     them — purely redundant),
+    //   - NO top-level comma inside the inner group (extra
+    //     conservatism; comma-operator grouping is deferred).
+    //
+    // Upstream actually eliminates parens more aggressively
+    // (`((a))` → `a`, `(a)+(b)` → `a+b`); this slice only strips
+    // ONE directly-nested grouping layer. All bracket / comma
+    // checks route through `is_structural_punct` so a string /
+    // regex / template whose value looks like a bracket can
+    // never trigger the collapse.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            if is_structural_punct(&kept[i], "(")
+                && is_structural_punct(&kept[i + 1], "(")
+            {
+                let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(p) => {
+                        is_punct(p)
+                            && !is_structural_punct(p, ")")
+                            && !is_structural_punct(p, "]")
+                            && !is_structural_punct(p, "?.")
+                    }
+                };
+                if grouping {
+                    // Depth-scan from the inner `(` (at i+1) to
+                    // its matching `)`, tracking a top-level
+                    // comma.
+                    let mut depth: i32 = 1;
+                    let mut inner_close: Option<usize> = None;
+                    let mut has_comma = false;
+                    let mut j = i + 2;
+                    while j < kept.len() {
+                        let t = &kept[j];
+                        if is_structural_punct(t, "(")
+                            || is_structural_punct(t, "[")
+                            || is_structural_punct(t, "{")
+                        {
+                            depth += 1;
+                        } else if is_structural_punct(t, ")") {
+                            depth -= 1;
+                            if depth == 0 {
+                                inner_close = Some(j);
+                                break;
+                            }
+                        } else if is_structural_punct(t, "]")
+                            || is_structural_punct(t, "}")
+                        {
+                            depth -= 1;
+                        } else if depth == 1 && is_structural_punct(t, ",") {
+                            has_comma = true;
+                        }
+                        j += 1;
+                    }
+                    if let Some(jc) = inner_close {
+                        let outer_close_follows = kept
+                            .get(jc + 1)
+                            .map(|t| is_structural_punct(t, ")"))
+                            .unwrap_or(false);
+                        if outer_close_follows && !has_comma {
+                            drops.push(i); // outer `(`
+                            drops.push(jc + 1); // outer `)`
+                            i = jc + 2;
+                            continue;
+                        }
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -3497,6 +3590,39 @@ mod tests {
     #[test]
     fn gap059_arg_bearing_new_deferred() {
         assert_eq!(minify("var x=new Foo(y).b;"), "var x=new Foo(y).b;");
+    }
+
+    // ---- gap-062: redundant double-paren collapse --------
+
+    /// gap-062: `((a+b))*c` → `(a+b)*c` — one redundant
+    /// directly-nested grouping-paren layer is stripped.
+    #[test]
+    fn gap062_double_paren_collapses_one_layer() {
+        assert_eq!(minify("var x=((a+b))*c;"), "var x=(a+b)*c;");
+    }
+
+    /// gap-062 safety: a CALL paren must never be stripped —
+    /// `f((a,b))` (one comma-operator arg) must NOT become
+    /// `f(a,b)` (two args). The outer `(` follows `f` (a
+    /// callable), so the grouping guard skips it.
+    #[test]
+    fn gap062_call_paren_with_comma_preserved() {
+        assert_eq!(minify("f((a,b));"), "f((a,b));");
+    }
+
+    /// gap-062 safety: a single call-arg grouping where the
+    /// outer is a call paren is left alone by THIS pass
+    /// (`g((a)+(b))` — outer is g's call). Deferred follow-up.
+    #[test]
+    fn gap062_call_arg_grouping_preserved() {
+        assert_eq!(minify("g((a)+(b));"), "g((a)+(b));");
+    }
+
+    /// gap-062 non-regression: a single grouping layer is NOT
+    /// touched (`(a+b)*c` stays — nothing redundant to strip).
+    #[test]
+    fn gap062_single_paren_unchanged() {
+        assert_eq!(minify("var x=(a+b)*c;"), "var x=(a+b)*c;");
     }
 
     /// **Non-regression**: `new Foo() + 1` — `+` binds

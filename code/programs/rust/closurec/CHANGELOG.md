@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.73.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-062** (minimal slice) — redundant double-paren
+  collapse: `((a+b))*c` → `(a+b)*c`. One directly-nested
+  grouping-paren layer is stripped.
+
+### Added — gap-062 token pre-pass
+
+When a GROUPING `(` is directly followed by another `(` and the
+inner group's matching `)` is directly followed by the outer
+`)` (purely-nested `(( ... ))`), the outer pair is dropped.
+Guards: the outer `(` must be a grouping paren (so a CALL paren
+like `f((a,b))` is never collapsed to `f(a,b)` — a different
+program); no top-level comma inside; all bracket checks via
+`is_structural_punct`.
+
+Upstream eliminates parens more aggressively (`((a))` → `a`,
+`(a)+(b)` → `a+b`, `f((a))` → `f(a)`); this slice strips only
+one directly-nested grouping layer — the broader pass is a
+follow-up. Four guard unit tests added.
+
 ## [0.72.0] - 2026-06-10
 
 ### Changed
