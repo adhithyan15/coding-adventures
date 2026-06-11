@@ -58,7 +58,7 @@ representation + per-builtin backend lowering.
 | Backend | Crate(s) | F1 | F2 | F3 | F4 | F5 | F6 | F7 | Value model |
 |---------|----------|----|----|----|----|----|----|----|-------------|
 | **VM** | `mccarthy-lisp-vm` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged (interpreter over `lispy-runtime`) |
-| **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | tagged-word |
+| **AOT native** | `twig-aot` + `aarch64`/`x86_64-backend` + `lispy_runtime.c` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | tagged-word |
 | **WASM** | `iir-to-wasm` + `wasm-*` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-anyref |
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
@@ -292,9 +292,8 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase F — native AOT + JIT completion
 
-- ◑ **W14 — native AOT `LAMBDA`/`LABEL` (F7).** *In progress.* Finish closures/
-  user-calls on the tagged-word native backend (cons/ATOM/EQ/COND/symbols already
-  done in L3b-2).
+- ✅ **W14 — native AOT `LAMBDA`/`LABEL` (F7). DONE — NATIVE AOT COMPLETE (F1–F7).**
+  Seventh backend to finish all seven features (after VM/WASM/JVM/CLR/BEAM/LLVM).
   - ✅ **W14a — close the macOS Mach-O runtime-link gap.** The native object
     referenced the runtime helpers by their raw C name (`__twig_lispy_car`), but the
     `cc`-built archive — Mach-O C ABI — exports them decorated (`___twig_lispy_car`),
@@ -305,11 +304,16 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     Verified by RUNNING natively on macOS arm64: `(CAR (CONS 7 9))`→7, `(ATOM 7)`→1,
     `(EQ 7 7)`→1, `(COND …)`→11, `(EQ (QUOTE A) (QUOTE A))`→1
     (`lang-aot/tests/macos_native_lisp.rs`). **F2–F6 now run natively on macOS too.**
-  - ☐ **W14b — native backend `LAMBDA` (F7).** The native `aarch64-backend` still
-    refuses a lambda program (`untyped or unsupported op`): it needs the lisp
-    tagged-word typing (`any`/`ref<Lispy…>` → `i64`, as the LLVM backend does) and
-    `lispy_to_exit_code` in its `call_builtin` table. The shared IIR machinery
-    (arg boxing, result coercion) and the runtime helper already exist from W13b.
+  - ✅ **W14b — native backend `LAMBDA` (F7).** The reusable-primitives thesis at
+    its sharpest: native lambda was **one builtin-table row** away. All the machinery
+    already existed — cross-function `call` (from Twig `fib`), `any`/`ref<Lispy…>`
+    tagged-word values (from cons), arg boxing + result coercion (shared, W13b). The
+    only gap was `lispy_to_exit_code` missing from the `aarch64`/`x86_64` backends'
+    `V1_BUILTINS` table, so the `call_builtin` to it was refused as an unsupported op.
+    Adding the row to both backends makes native lambda run. Verified by RUNNING on
+    macOS arm64: `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
+    `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, `((LAMBDA (X) (ATOM X)) 7)`→1,
+    lambda-with-`COND`-body→100/200 (`lang-aot/tests/macos_native_lisp.rs`).
 - ☐ **W15 — JIT McCarthy core (F1–F7).** Drive McCarthy through the JIT path.
 
 ### Phase G — conformance
