@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-06-11 — dimensional faithfulness gate (ADJ constraints track A4)
+
+### Changed
+
+- **`compute` is now dimension-aware.** Alongside the f64 magnitude, the
+  evaluator tracks each value's `Dimension` (read from its fact via
+  `dimensioned_value`) and checks every binary op through `Dimension::combine`,
+  so a unit-mismatched formula — `usd + days`, `usd + eur` without a conversion
+  — is a clean **`ComputeError::DimensionMismatch`** instead of a
+  silently-wrong number. This is the faithfulness gate: the engine, not the
+  model, decides a category error is a category error.
+  - `usd + usd → usd`; `money / money → scalar` (a dimensionless ratio,
+    e.g. debt-to-income); `money × scalar → money`; bare-number formulas stay
+    `Scalar` (the pre-A4 numeric behaviour is unchanged).
+- **`Derived` gains a `dim: Dimension`** field — the inferred dimension of the
+  computed value, so a predicate firing over it (`csf_ratio <= 0.4`) knows
+  `csf_ratio` is a `Scalar` and the audit shows the unit. (Additive: callers
+  that pass a `Derived` through unchanged are unaffected.)
+
+### Added
+
+- `KnowledgeBase::observed_dimensioned(slot)` — the dimensioned (`magnitude +
+  Dimension`) observation of a slot with its `FactId`, for the gate.
+- `ComputeError::DimensionMismatch { op, lhs, rhs }` carrying the two clashing
+  unit tags for the audit reader.
+
 ## [0.13.0] - 2026-06-11 — date arithmetic (deadlines & durations, ADJ constraints track A3)
 
 ### Added

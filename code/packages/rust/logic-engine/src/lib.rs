@@ -529,6 +529,27 @@ impl KnowledgeBase {
             .map(|(id, v)| (v, id))
     }
 
+    /// The observed **dimensioned** value of a slot (magnitude + its
+    /// [`Dimension`](crate::Dimension)) with its [`FactId`]. Same
+    /// latest-observation-wins rule as [`observed_value_with_fact`], but reads
+    /// the unit/currency too, so the faithfulness gate (track A4) can reject
+    /// `usd + days`. Returns `None` for a date/time term (those have no scalar
+    /// magnitude — see [`dimensioned_value`](crate::dimensioned_value)).
+    pub fn observed_dimensioned(&self, slot: &str) -> Option<(crate::Dimensioned, FactId)> {
+        self.facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    crate::dimensioned_value(&args[0]).map(|d| (f.id, d))
+                }
+                _ => None,
+            })
+            .max_by_key(|(id, _)| id.0)
+            .map(|(id, d)| (d, id))
+    }
+
     /// Every observed numeric value of a slot, in fact-insertion order, with
     /// each value's [`FactId`]. This is what aggregations (`sum`/`count`/…)
     /// reduce — each observation becomes a cited leaf in the derivation tree.
