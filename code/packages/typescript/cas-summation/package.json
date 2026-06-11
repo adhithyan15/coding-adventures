@@ -17,6 +17,8 @@
   },
   "devDependencies": {
     "@coding-adventures/cas-factor": "file:../cas-factor",
+    "@coding-adventures/cas-pattern-matching": "file:../cas-pattern-matching",
+    "@coding-adventures/cas-simplify": "file:../cas-simplify",
     "@coding-adventures/symbolic-vm": "file:../symbolic-vm",
     "@types/node": "^22.0.0",
     "@vitest/coverage-v8": "^4.1.0",
