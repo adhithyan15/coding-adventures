@@ -7,6 +7,8 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Thread role, MLE command, TLV, scan-mask, and mode primitives.
+- Payload-free MLE message summaries for attach, parent-selection, and
+  diagnostic TLV context.
 - Typed MLE Status TLV helpers for validating and extracting raw status codes.
 - MLE message parser/encoder and a deterministic parent/child attach-state
   skeleton for simulator-first Thread work.
