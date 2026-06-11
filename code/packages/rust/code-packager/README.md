@@ -75,6 +75,13 @@ Minimal Mach-O executable (`MH_EXECUTE`):
 - 32-byte `mach_header_64` + `LC_SEGMENT_64` + `section_64 __TEXT/__text` + `LC_MAIN`
 - Default `load_address = 0x100000000` (arm64/x86_64 standard)
 
+**C symbol decoration.** Mach-O decorates C symbols with a leading underscore
+(`main` → `_main`). The object emitter owns this: defined entry/data symbols
+(`_main`, `_twig_globals`) *and* external/undefined symbols (e.g. a runtime call
+`__twig_lispy_car` → `___twig_lispy_car`) are written into the string table with the
+`_` prefix, so the linker resolves them against the C runtime archive. The ELF
+emitter does **not** decorate — ELF C symbols have no leading underscore.
+
 ### PE32+ (Windows)
 
 Minimal PE32+ console executable:
