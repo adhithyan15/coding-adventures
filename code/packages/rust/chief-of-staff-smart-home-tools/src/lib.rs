@@ -36,34 +36,36 @@ use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
     activation_approval_packets_from_candidates, activation_candidates_at_or_before_priority,
     activation_constraints_from_candidates, activation_decisions_from_candidates,
-    activation_dependency_graph_from_reports, activation_evidence_from_candidates,
-    activation_health_from_candidates, activation_maintenance_from_candidates,
-    activation_plan_for_entry, activation_plans_at_or_before_priority,
-    activation_reviews_from_candidates, activation_risk_from_candidates,
-    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
-    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
-    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
-    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
-    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
-    readiness_report_for_plan, readiness_reports_at_or_before_priority,
-    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
-    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
-    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
-    IntegrationActivationActionKind, IntegrationActivationActionSummary,
-    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
-    IntegrationActivationApprovalPacket, IntegrationActivationApprovalSummary,
-    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
-    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
-    IntegrationActivationDecisionItem, IntegrationActivationDecisionStatus,
-    IntegrationActivationDecisionSummary, IntegrationActivationDependencyEdge,
-    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
-    IntegrationActivationDependencySummary, IntegrationActivationEvidenceItem,
-    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
-    IntegrationActivationEvidenceSummary, IntegrationActivationHealthStage,
-    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
-    IntegrationActivationMaintenanceSummary, IntegrationActivationMaintenanceWindow,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationReviewItem,
+    activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
+    activation_evidence_from_candidates, activation_health_from_candidates,
+    activation_maintenance_from_candidates, activation_plan_for_entry,
+    activation_plans_at_or_before_priority, activation_reviews_from_candidates,
+    activation_risk_from_candidates, activation_runway_from_candidates, describe_primitive_family,
+    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
+    entries_requiring_primitive, find_entry, first_party_catalog,
+    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
+    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
+    readiness_gap_inventory_from_reports, readiness_report_for_plan,
+    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
+    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
+    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
+    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
+    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
+    IntegrationActivationAgendaSummary, IntegrationActivationApprovalPacket,
+    IntegrationActivationApprovalSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
+    IntegrationActivationConstraintSummary, IntegrationActivationDecisionItem,
+    IntegrationActivationDecisionStatus, IntegrationActivationDecisionSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
+    IntegrationActivationEvidenceItem, IntegrationActivationEvidenceKind,
+    IntegrationActivationEvidenceStatus, IntegrationActivationEvidenceSummary,
+    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
+    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
+    IntegrationActivationMaintenanceWindow, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationReviewItem,
     IntegrationActivationReviewSummary, IntegrationActivationRiskItem,
     IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
     IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
@@ -219,6 +221,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EVIDENCE_TOOL_ID: &str =
     "smart_home.list_integration_activation_evidence";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_evidence_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_dossiers";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_dossier_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -447,6 +453,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_evidence_query(&arguments)?;
                     Ok(get_integration_activation_evidence_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID => {
+                    let query = integration_activation_dossier_query(&arguments)?;
+                    Ok(list_integration_activation_dossiers_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_dossier_query(&arguments)?;
+                    Ok(get_integration_activation_dossier_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -1548,6 +1564,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation evidence summary",
             "Return compact counts for activation evidence supporting approvals, policy review, and blocker decisions.",
             integration_activation_evidence_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID,
+            "List smart-home integration activation dossiers",
+            "List compact D23A activation dossiers that bundle approval decisions with supporting blocker, review, risk, and dependency evidence.",
+            integration_activation_dossier_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_dossiers", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_dossiers",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation dossier summary",
+            "Return compact counts for D23A activation dossiers and their bundled decision evidence.",
+            integration_activation_dossier_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4169,6 +4219,18 @@ struct IntegrationActivationEvidenceQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationDossierQuery {
+    candidates: IntegrationActivationCandidateQuery,
+    decision_status: Option<IntegrationActivationDecisionStatus>,
+    required_tier: Option<PrivilegeTier>,
+    policy_surface: Option<IntegrationPolicySurface>,
+    approval_ready: Option<bool>,
+    blocked_only: Option<bool>,
+    requires_attention: Option<bool>,
+    dossier_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -4369,6 +4431,32 @@ fn integration_activation_evidence_query(
         blocked_only: optional_bool(arguments, "blocked_only")?,
         requires_attention: optional_bool(arguments, "requires_attention")?,
         evidence_limit: optional_u64(arguments, "evidence_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_dossier_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationDossierQuery, ToolCallError> {
+    let candidates = integration_activation_candidate_query(arguments)?;
+    let decision_status = optional_string(arguments, "decision_status")?
+        .map(|label| parse_activation_decision_status(&label))
+        .transpose()?;
+    let required_tier = optional_string(arguments, "required_tier")?
+        .map(|tier| parse_privilege_tier(&tier))
+        .transpose()?;
+    let policy_surface = optional_string(arguments, "policy_surface")?
+        .map(|surface| parse_policy_surface(&surface))
+        .transpose()?;
+
+    Ok(IntegrationActivationDossierQuery {
+        candidates,
+        decision_status,
+        required_tier,
+        policy_surface,
+        approval_ready: optional_bool(arguments, "approval_ready")?,
+        blocked_only: optional_bool(arguments, "blocked_only")?,
+        requires_attention: optional_bool(arguments, "requires_attention")?,
+        dossier_limit: optional_u64(arguments, "dossier_limit")?.map(|value| value as usize),
     })
 }
 
@@ -4808,6 +4896,50 @@ fn integration_activation_evidence_for_query(
     }
 
     (evidence, catalog_count)
+}
+
+fn integration_activation_dossiers_for_query(
+    query: &IntegrationActivationDossierQuery,
+) -> (Vec<IntegrationActivationDossierItem>, usize) {
+    let catalog = first_party_catalog();
+    let catalog_count = catalog.len();
+    let (candidates, _) = integration_activation_candidates_for_query(&query.candidates);
+    let mut dossiers = activation_dossiers_from_candidates(
+        &catalog,
+        candidates.iter(),
+        &query.candidates.readiness.enabled_integrations,
+    );
+
+    if let Some(decision_status) = query.decision_status {
+        dossiers.retain(|dossier| dossier.decision.decision_status == decision_status);
+    }
+    if let Some(required_tier) = query.required_tier {
+        dossiers.retain(|dossier| dossier.required_tier() == required_tier);
+    }
+    if let Some(policy_surface) = query.policy_surface {
+        dossiers.retain(|dossier| {
+            dossier
+                .decision
+                .packet
+                .review
+                .policy_surfaces
+                .contains(&policy_surface)
+        });
+    }
+    if let Some(approval_ready) = query.approval_ready {
+        dossiers.retain(|dossier| dossier.approval_ready() == approval_ready);
+    }
+    if let Some(blocked_only) = query.blocked_only {
+        dossiers.retain(|dossier| dossier.has_blockers() == blocked_only);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        dossiers.retain(|dossier| dossier.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.dossier_limit {
+        dossiers.truncate(limit);
+    }
+
+    (dossiers, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -5959,6 +6091,66 @@ fn get_integration_activation_evidence_summary_output_handler_output(
                 integer(summary.blocking_evidence as i64),
             ),
             ("review_evidence", integer(summary.review_evidence as i64)),
+        ]),
+    )
+}
+
+fn list_integration_activation_dossiers_output_handler_output(
+    query: IntegrationActivationDossierQuery,
+) -> ToolHandlerOutput {
+    let (dossiers, catalog_count) = integration_activation_dossiers_for_query(&query);
+    let summary = IntegrationActivationDossierSummary::from_dossiers(dossiers.iter());
+    let count = dossiers.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_dossiers",
+            JsonValue::Array(dossiers.iter().map(activation_dossier_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_dossier_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_dossiers")),
+            ("activation_dossiers", integer(count as i64)),
+            (
+                "ready_to_approve_dossiers",
+                integer(summary.ready_to_approve_dossiers as i64),
+            ),
+            ("blocked_dossiers", integer(summary.blocked_dossiers as i64)),
+        ]),
+    )
+}
+
+fn get_integration_activation_dossier_summary_output_handler_output(
+    query: IntegrationActivationDossierQuery,
+) -> ToolHandlerOutput {
+    let (dossiers, _) = integration_activation_dossiers_for_query(&query);
+    let summary = IntegrationActivationDossierSummary::from_dossiers(dossiers.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_dossier_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_dossier_summary"),
+            ),
+            ("total_dossiers", integer(summary.total_dossiers as i64)),
+            (
+                "ready_to_approve_dossiers",
+                integer(summary.ready_to_approve_dossiers as i64),
+            ),
+            ("blocked_dossiers", integer(summary.blocked_dossiers as i64)),
         ]),
     )
 }
@@ -10531,6 +10723,170 @@ fn integration_activation_evidence_summary_json(
     ])
 }
 
+fn activation_dossier_json(dossier: &IntegrationActivationDossierItem) -> JsonValue {
+    object([
+        (
+            "decision_status",
+            string(dossier.decision.decision_status.as_str()),
+        ),
+        (
+            "integration_id",
+            string(dossier.requested_integration_id().as_str()),
+        ),
+        (
+            "requested_integration_id",
+            string(dossier.requested_integration_id().as_str()),
+        ),
+        ("display_name", string(dossier.display_name())),
+        ("priority", integer(dossier.priority() as i64)),
+        (
+            "required_tier",
+            string(privilege_tier_label(dossier.required_tier())),
+        ),
+        (
+            "local_only",
+            JsonValue::Bool(dossier.decision.packet.review.local_only),
+        ),
+        (
+            "cloud_required",
+            JsonValue::Bool(dossier.decision.packet.review.cloud_required),
+        ),
+        ("approval_ready", JsonValue::Bool(dossier.approval_ready())),
+        ("has_blockers", JsonValue::Bool(dossier.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(dossier.has_review_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(dossier.requires_attention()),
+        ),
+        (
+            "activation_decision",
+            activation_decision_json(&dossier.decision),
+        ),
+        (
+            "evidence",
+            JsonValue::Array(
+                dossier
+                    .evidence
+                    .iter()
+                    .map(activation_evidence_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "evidence_summary",
+            integration_activation_evidence_summary_json(&dossier.evidence_summary),
+        ),
+    ])
+}
+
+fn integration_activation_dossier_summary_json(
+    summary: &IntegrationActivationDossierSummary,
+) -> JsonValue {
+    object([
+        ("total_dossiers", integer(summary.total_dossiers as i64)),
+        (
+            "ready_to_approve_dossiers",
+            integer(summary.ready_to_approve_dossiers as i64),
+        ),
+        ("blocked_dossiers", integer(summary.blocked_dossiers as i64)),
+        (
+            "local_only_dossiers",
+            integer(summary.local_only_dossiers as i64),
+        ),
+        (
+            "cloud_required_dossiers",
+            integer(summary.cloud_required_dossiers as i64),
+        ),
+        (
+            "dossiers_with_policy_surfaces",
+            integer(summary.dossiers_with_policy_surfaces as i64),
+        ),
+        (
+            "dossiers_without_policy_surfaces",
+            integer(summary.dossiers_without_policy_surfaces as i64),
+        ),
+        (
+            "unique_policy_surfaces",
+            integer(summary.unique_policy_surfaces as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        (
+            "total_constraints",
+            integer(summary.total_constraints as i64),
+        ),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        ("total_evidence", integer(summary.total_evidence as i64)),
+        (
+            "supporting_evidence",
+            integer(summary.supporting_evidence as i64),
+        ),
+        ("review_evidence", integer(summary.review_evidence as i64)),
+        (
+            "blocking_evidence",
+            integer(summary.blocking_evidence as i64),
+        ),
+        (
+            "read_only_dossiers",
+            integer(summary.read_only_dossiers as i64),
+        ),
+        (
+            "low_risk_dossiers",
+            integer(summary.low_risk_dossiers as i64),
+        ),
+        (
+            "human_approval_dossiers",
+            integer(summary.human_approval_dossiers as i64),
+        ),
+        (
+            "high_risk_dossiers",
+            integer(summary.high_risk_dossiers as i64),
+        ),
+        (
+            "first_approval_priority",
+            summary
+                .first_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(summary.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -14022,6 +14378,33 @@ fn integration_activation_evidence_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_dossier_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_candidate_query_schema(true);
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        if let Some(limit) = properties
+            .iter_mut()
+            .find(|property| property.name == "limit")
+        {
+            limit.name = "dossier_limit".to_string();
+        }
+        properties.push(SchemaProperty::new("decision_status", JsonSchema::String));
+        properties.push(SchemaProperty::new("required_tier", JsonSchema::String));
+        properties.push(SchemaProperty::new("policy_surface", JsonSchema::String));
+        properties.push(SchemaProperty::new("approval_ready", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("blocked_only", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "requires_attention",
+            JsonSchema::Boolean,
+        ));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -14166,7 +14549,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 83);
+        assert_eq!(definitions.len(), 85);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -14383,9 +14766,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            75
+            77
         );
         assert_eq!(
             export
@@ -14529,6 +14918,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_EVIDENCE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -14783,11 +15180,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(83))
+            Some(&integer(85))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(75))
+            Some(&integer(77))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -16444,6 +16841,125 @@ mod tests {
         );
         assert_eq!(
             field(activation_evidence_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let list_activation_dossiers_request = request(
+            "call-list-integration-activation-dossiers",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_DOSSIERS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("dossier_limit", integer(3)),
+            ]),
+            5_017,
+        );
+        let list_activation_dossiers_trace =
+            tool_runtime.invoke_with_events(&list_activation_dossiers_request);
+        assert!(list_activation_dossiers_trace.result.ok);
+        assert_eq!(
+            list_activation_dossiers_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_dossiers_output = list_activation_dossiers_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_dossier_count =
+            integer_value(field(list_activation_dossiers_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_dossier_count));
+        let activation_dossier_summary = field(list_activation_dossiers_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_dossier_summary, "total_dossiers").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_dossier_summary, "total_evidence").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_dossier_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_dossier = array_item(
+            field(list_activation_dossiers_output, "activation_dossiers").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(matches!(
+            field(activation_dossier, "decision_status"),
+            Some(JsonValue::String(_))
+        ));
+        assert!(field(activation_dossier, "activation_decision").is_some());
+        assert!(field(activation_dossier, "evidence_summary").is_some());
+        assert!(array_len(field(activation_dossier, "evidence").unwrap()).unwrap() >= 1);
+
+        let activation_dossier_summary_request = request(
+            "call-integration-activation-dossier-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_DOSSIER_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("decision_status", string("blocked")),
+            ]),
+            5_018,
+        );
+        let activation_dossier_summary_trace =
+            tool_runtime.invoke_with_events(&activation_dossier_summary_request);
+        assert!(activation_dossier_summary_trace.result.ok);
+        assert_eq!(
+            activation_dossier_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_dossier_summary_output = activation_dossier_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_dossier_rollup =
+            field(activation_dossier_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_dossier_rollup, "blocked_dossiers").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_dossier_rollup, "has_blockers"),
             Some(&JsonValue::Bool(true))
         );
 
@@ -18154,6 +18670,14 @@ mod tests {
             activation_evidence_summary_request,
             activation_evidence_summary_trace,
         );
+        journal.record_trace(
+            list_activation_dossiers_request,
+            list_activation_dossiers_trace,
+        );
+        journal.record_trace(
+            activation_dossier_summary_request,
+            activation_dossier_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -18227,9 +18751,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 83);
-        assert_eq!(journal_summary.completed_count, 83);
-        assert_eq!(journal.audit_records().len(), 83);
+        assert_eq!(journal_summary.invocation_count, 85);
+        assert_eq!(journal_summary.completed_count, 85);
+        assert_eq!(journal.audit_records().len(), 85);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
