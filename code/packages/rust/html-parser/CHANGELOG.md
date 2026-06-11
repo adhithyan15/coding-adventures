@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness composition-interaction descriptors now expose IME
+  composition events, beforeinput/input hooks, text controls, editing hosts, and
+  blocked composition paths as a flat browser-planning inventory.
 - Browser-readiness scroll-interaction descriptors now expose `onscroll`,
   `onscrollend`, wheel/touch routing, ARIA scrollbar value state, and blocked
   scroll paths as a flat browser-planning inventory.

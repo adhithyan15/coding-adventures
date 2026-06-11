@@ -2,29 +2,29 @@ use coding_adventures_html_parser::{
     parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAriaCollection,
     BrowserAriaCollectionItem, BrowserAriaLiveRegion, BrowserAriaRange,
     BrowserAriaRelationDescriptor, BrowserClipboardInteractionDescriptor, BrowserCommandElement,
-    BrowserComponentHydrationTarget, BrowserDataAttribute, BrowserDataAttributeDescriptor,
-    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
-    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor,
-    BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
-    BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton,
-    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
-    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
-    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
-    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserComponentHydrationTarget, BrowserCompositionInteractionDescriptor, BrowserDataAttribute,
+    BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
+    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
+    BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
+    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
+    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
+    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
+    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
+    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -142,6 +142,8 @@ struct ExpectedBrowserDocument {
     clipboard_interaction_descriptors: Option<Vec<ExpectedClipboardInteractionDescriptor>>,
     #[serde(default)]
     selection_interaction_descriptors: Option<Vec<ExpectedSelectionInteractionDescriptor>>,
+    #[serde(default)]
+    composition_interaction_descriptors: Option<Vec<ExpectedCompositionInteractionDescriptor>>,
     #[serde(default)]
     pointer_interaction_descriptors: Option<Vec<ExpectedPointerInteractionDescriptor>>,
     #[serde(default)]
@@ -2304,6 +2306,72 @@ struct ExpectedSelectionInteractionDescriptor {
     selection_blocked: bool,
     #[serde(default)]
     selection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedCompositionInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: Option<String>,
+    #[serde(default)]
+    authored_role: Option<String>,
+    #[serde(default)]
+    source: String,
+    composition_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    control_type: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    contenteditable: Option<String>,
+    #[serde(default)]
+    editing_mode: Option<String>,
+    #[serde(default)]
+    spellcheck: Option<String>,
+    #[serde(default)]
+    inputmode: Option<String>,
+    #[serde(default)]
+    enterkeyhint: Option<String>,
+    #[serde(default)]
+    composition_handlers: Vec<String>,
+    #[serde(default)]
+    composition_start_handlers: Vec<String>,
+    #[serde(default)]
+    composition_update_handlers: Vec<String>,
+    #[serde(default)]
+    composition_end_handlers: Vec<String>,
+    #[serde(default)]
+    beforeinput_handlers: Vec<String>,
+    #[serde(default)]
+    input_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    inert: bool,
+    #[serde(default)]
+    aria_hidden: bool,
+    #[serde(default)]
+    composition_blocked: bool,
+    #[serde(default)]
+    composition_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4661,6 +4729,28 @@ fn browser_selection_interaction_descriptors_track_editing_handlers_and_blockers
 }
 
 #[test]
+fn browser_composition_interaction_descriptors_track_ime_and_input_hooks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "interactive-element-state-page")
+        .expect("interactive composition fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("interactive composition fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.composition_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .composition_interaction_descriptors,
+        "composition-interaction descriptors should preserve beforeinput/input hooks, editing hosts, text controls, and blocked composition paths",
+    );
+}
+
+#[test]
 fn browser_pointer_interaction_descriptors_track_handlers_and_blockers() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5152,6 +5242,23 @@ impl ExpectedBrowserDocument {
                     &event_handler_descriptors,
                 )
             });
+        let composition_interaction_descriptors = self
+            .composition_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedCompositionInteractionDescriptor::into_browser_composition_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_composition_interaction_descriptors(
+                    &forms,
+                    &interactive_elements,
+                    &event_handler_descriptors,
+                )
+            });
         let pointer_interaction_descriptors = self
             .pointer_interaction_descriptors
             .map(|descriptors| {
@@ -5304,6 +5411,7 @@ impl ExpectedBrowserDocument {
             drag_drop_descriptors,
             clipboard_interaction_descriptors,
             selection_interaction_descriptors,
+            composition_interaction_descriptors,
             pointer_interaction_descriptors,
             scroll_interaction_descriptors,
             disclosures,
@@ -7631,6 +7739,397 @@ fn expected_selection_kind(
     }
 }
 
+fn expected_composition_interaction_descriptors(
+    forms: &[BrowserForm],
+    interactive_elements: &[BrowserInteractiveElement],
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserCompositionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if expected_text_entry_has_composition_state(text_entry, matching_interactive) {
+                descriptors.push(expected_composition_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if expected_interactive_has_composition_state(element) {
+            descriptors.push(expected_composition_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if expected_event_descriptor_has_composition_state(event_descriptor) {
+            descriptors.push(expected_composition_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn expected_text_entry_has_composition_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !expected_event_handlers_by_kind(
+                    &element.event_handlers,
+                    expected_composition_event,
+                )
+                .is_empty()
+                    || !expected_event_handlers_by_kind(
+                        &element.event_handlers,
+                        expected_text_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn expected_interactive_has_composition_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !expected_event_handlers_by_kind(&element.event_handlers, expected_composition_event)
+            .is_empty()
+        || !expected_event_handlers_by_kind(&element.event_handlers, expected_text_input_event)
+            .is_empty()
+}
+
+fn expected_event_descriptor_has_composition_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !expected_event_handlers_by_kind(&event_descriptor.event_handlers, expected_composition_event)
+        .is_empty()
+        || !expected_event_handlers_by_kind(
+            &event_descriptor.event_handlers,
+            expected_text_input_event,
+        )
+        .is_empty()
+}
+
+fn expected_composition_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserCompositionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let composition_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_composition_event);
+    let composition_start_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_composition_start_event);
+    let composition_update_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_composition_update_event);
+    let composition_end_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_composition_end_event);
+    let beforeinput_handlers =
+        expected_event_handlers_by_kind(event_handlers, expected_beforeinput_event);
+    let input_handlers = expected_event_handlers_by_kind(event_handlers, expected_text_input_event);
+    let composition_block_reasons =
+        expected_composition_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserCompositionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        source: "text-entry".to_string(),
+        composition_kind: expected_composition_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn expected_composition_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_composition_event);
+    let composition_start_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_composition_start_event);
+    let composition_update_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_composition_update_event);
+    let composition_end_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_composition_end_event);
+    let beforeinput_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_beforeinput_event);
+    let input_handlers =
+        expected_event_handlers_by_kind(&element.event_handlers, expected_text_input_event);
+    let composition_block_reasons = expected_composition_block_reasons_for_interactive(element);
+
+    BrowserCompositionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        composition_kind: expected_composition_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn expected_composition_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_composition_event,
+    );
+    let composition_start_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_composition_start_event,
+    );
+    let composition_update_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_composition_update_event,
+    );
+    let composition_end_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_composition_end_event,
+    );
+    let beforeinput_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_beforeinput_event,
+    );
+    let input_handlers = expected_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        expected_text_input_event,
+    );
+    let composition_block_reasons = Vec::new();
+
+    BrowserCompositionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        composition_kind: expected_composition_kind(
+            false,
+            false,
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        composition_blocked: false,
+        composition_block_reasons,
+    }
+}
+
+fn expected_composition_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(expected_composition_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn expected_composition_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn expected_composition_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    composition_handlers: &[String],
+    beforeinput_handlers: &[String],
+    input_handlers: &[String],
+    composition_block_reasons: &[String],
+) -> String {
+    if !composition_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionstart")
+    {
+        "ime-session".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionupdate")
+    {
+        "ime-update".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionend")
+    {
+        "ime-commit".to_string()
+    } else if !beforeinput_handlers.is_empty() {
+        "beforeinput-target".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-target".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
 fn expected_pointer_interaction_descriptors(
     interactive_elements: &[BrowserInteractiveElement],
     event_handler_descriptors: &[BrowserEventHandlerDescriptor],
@@ -8344,6 +8843,33 @@ fn expected_selection_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn expected_composition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "oncompositionstart" | "oncompositionupdate" | "oncompositionend"
+    )
+}
+
+fn expected_composition_start_event(handler: &str) -> bool {
+    handler == "oncompositionstart"
+}
+
+fn expected_composition_update_event(handler: &str) -> bool {
+    handler == "oncompositionupdate"
+}
+
+fn expected_composition_end_event(handler: &str) -> bool {
+    handler == "oncompositionend"
+}
+
+fn expected_beforeinput_event(handler: &str) -> bool {
+    handler == "onbeforeinput"
+}
+
+fn expected_text_input_event(handler: &str) -> bool {
+    matches!(handler, "onbeforeinput" | "oninput")
 }
 
 fn expected_script_execution_descriptors(
@@ -9692,6 +10218,47 @@ impl ExpectedSelectionInteractionDescriptor {
             aria_hidden: self.aria_hidden,
             selection_blocked: self.selection_blocked,
             selection_block_reasons: self.selection_block_reasons,
+        }
+    }
+}
+
+impl ExpectedCompositionInteractionDescriptor {
+    fn into_browser_composition_interaction_descriptor(
+        self,
+    ) -> BrowserCompositionInteractionDescriptor {
+        BrowserCompositionInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            source: self.source,
+            composition_kind: self.composition_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            value: self.value,
+            contenteditable: self.contenteditable,
+            editing_mode: self.editing_mode,
+            spellcheck: self.spellcheck,
+            inputmode: self.inputmode,
+            enterkeyhint: self.enterkeyhint,
+            composition_handlers: self.composition_handlers,
+            composition_start_handlers: self.composition_start_handlers,
+            composition_update_handlers: self.composition_update_handlers,
+            composition_end_handlers: self.composition_end_handlers,
+            beforeinput_handlers: self.beforeinput_handlers,
+            input_handlers: self.input_handlers,
+            handler_count: self.handler_count,
+            focusable: self.focusable,
+            readonly: self.readonly,
+            disabled: self.disabled,
+            hidden: self.hidden,
+            inert: self.inert,
+            aria_hidden: self.aria_hidden,
+            composition_blocked: self.composition_blocked,
+            composition_block_reasons: self.composition_block_reasons,
         }
     }
 }
