@@ -67,6 +67,32 @@ tree** back to the cited facts, so a reviewer can audit the arithmetic — the
 model never evaluates it. **Space your operators** (`a - 5`, not `a-5`): a `-`
 glued to a digit lexes as a negative literal.
 
+### Constraints — `symbol` / `constrain` / `solve` / `check` (v0.7)
+
+The model extracts the policy's **unknowns and constraints**; the engine solves
+them (the solver backends land in the next slice). The surface:
+
+```
+symbol premium : money(usd)
+observe base_rate(1200)
+observe cap(2000)
+
+constrain premium >= base_rate
+constrain premium <= cap
+
+solve for { premium }          % find a value satisfying the constraints
+% or:  check                   % is the constraint set satisfiable?
+```
+
+- `symbol <name> : <sort>` declares an unknown (`sort` = `scalar`, `money(usd)`, …).
+- `constrain <expr> <relop> <expr>` with `relop ∈ { >= <= > < == = != }`;
+  operands are arithmetic exprs over symbols, observed slots, earlier `let`s,
+  and numbers. Compare against a typed value by `observe`-ing it and using its
+  name (constraint operands are arithmetic exprs, not term literals).
+- `solve for { … }` / `check` drive the solver. The lowerer builds a
+  `ConstraintSystem` (on `LoweredProgram.constraints`) with each constraint's
+  sides kept as unevaluated expression trees.
+
 ### Differential over the `?` queries (v0.4)
 
 A program's `? h` lines are read as the set of **competing hypotheses**.

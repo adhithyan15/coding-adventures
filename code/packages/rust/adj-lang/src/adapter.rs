@@ -31,7 +31,8 @@ use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, Statement, Term, TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, RelOp, Statement, Term,
+    TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -109,8 +110,12 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "observe_decl" => adapt_observe(child),
         "query_decl" => adapt_query(child),
         "let_decl" => adapt_let(child),
+        "symbol_decl" => adapt_symbol(child),
+        "constrain_decl" => adapt_constrain(child),
+        "solve_decl" => adapt_solve(child),
+        "check_decl" => Ok(Statement::Check),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl",
             actual: other.to_string(),
         }),
     }
@@ -309,6 +314,100 @@ fn adapt_let(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     })?;
     let expr = adapt_expr(expr_node)?;
     Ok(Statement::Let { name, expr })
+}
+
+fn adapt_symbol(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // symbol_decl = "symbol" IDENT COLON term
+    // The name is the first Name token that isn't the `symbol` keyword; the
+    // sort is the (only) direct `term` child.
+    let name = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "symbol" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbol_decl".into(),
+            position: "symbol name",
+        })?;
+    let sort = expect_term_child(node, "symbol_decl")?;
+    Ok(Statement::Symbol { name, sort })
+}
+
+fn adapt_constrain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // constrain_decl = "constrain" expr relop expr
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "left-hand expr",
+    })?)?;
+    let rhs = adapt_expr(exprs.get(1).ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "right-hand expr",
+    })?)?;
+    let relop_node = first_named_child(node, "relop").ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "relop",
+    })?;
+    let op = rel_op_from_node(relop_node)?;
+    Ok(Statement::Constrain { lhs, op, rhs })
+}
+
+fn adapt_solve(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // solve_decl = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE
+    // Every Name token except the `solve` / `for` keywords is a target.
+    let names: Vec<String> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if t.type_ == TokenType::Name && t.value != "solve" && t.value != "for" =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .collect();
+    if names.is_empty() {
+        return Err(AdapterError::MissingChild {
+            rule: "solve_decl".into(),
+            position: "at least one target symbol",
+        });
+    }
+    Ok(Statement::SolveFor { names })
+}
+
+/// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the
+/// operator's literal value.
+fn rel_op_from_node(node: &GrammarASTNode) -> Result<RelOp, AdapterError> {
+    node.children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => match t.value.as_str() {
+                ">=" => Some(RelOp::Ge),
+                "<=" => Some(RelOp::Le),
+                ">" => Some(RelOp::Gt),
+                "<" => Some(RelOp::Lt),
+                "==" | "=" => Some(RelOp::Eq),
+                "!=" => Some(RelOp::Ne),
+                _ => None,
+            },
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "relop".into(),
+            position: "relational operator",
+        })
 }
 
 /// `expr = term_expr { ( PLUS | MINUS ) term_expr }` — left-associative

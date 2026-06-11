@@ -27,9 +27,47 @@ use logic_engine::{
 };
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, Statement, Term as AstTerm,
-    TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, RelOp, Statement,
+    Term as AstTerm, TrustTierName,
 };
+
+/// One lowered constraint: `lhs <op> rhs`, with both sides kept as
+/// **unevaluated** [`ComputeExpr`] trees (they reference symbols the solver
+/// will assign, so they cannot be computed yet — that is the solver's job in
+/// track B2).
+#[derive(Debug, Clone, PartialEq)]
+pub struct LoweredConstraint {
+    pub lhs: ComputeExpr,
+    pub op: RelOp,
+    pub rhs: ComputeExpr,
+}
+
+/// The typed constraint system a program builds from its `symbol` /
+/// `constrain` / `solve for` / `check` statements (ADJ constraints track B).
+/// Track B1 builds and exposes it; the solver backends are wired in B2.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ConstraintSystem {
+    /// Declared unknowns: `(name, sort)`, where `sort` is a dimensional sort
+    /// term (`scalar`, `money(usd)`, …).
+    pub symbols: Vec<(String, CoreTerm)>,
+    /// The asserted (in)equalities.
+    pub constraints: Vec<LoweredConstraint>,
+    /// The unknowns a `solve for { … }` asked to solve.
+    pub solve_for: Vec<String>,
+    /// Whether a `check` (feasibility query) was requested.
+    pub check: bool,
+}
+
+impl ConstraintSystem {
+    /// `true` iff the program declared no constraint machinery at all (the
+    /// common case for a pure prior/contributes rulebook).
+    pub fn is_empty(&self) -> bool {
+        self.symbols.is_empty()
+            && self.constraints.is_empty()
+            && self.solve_for.is_empty()
+            && !self.check
+    }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum LowerError {
@@ -65,17 +103,20 @@ pub enum LowerError {
     },
 }
 
-/// The result of lowering — a populated KB and any queries to run.
+/// The result of lowering — a populated KB, any queries to run, and the
+/// (possibly empty) constraint system the program declared.
 #[derive(Debug)]
 pub struct LoweredProgram {
     pub kb: KnowledgeBase,
     pub queries: Vec<CoreTerm>,
+    pub constraints: ConstraintSystem,
 }
 
-/// Lower an [`ast::Program`] to a populated KB + queries.
+/// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
 pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut kb = KnowledgeBase::new();
     let mut queries = Vec::new();
+    let mut constraints = ConstraintSystem::default();
 
     for stmt in &program.statements {
         match stmt {
@@ -182,10 +223,33 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .with_provenance(prov);
                 kb.add_uncertainty_marker(marker);
             }
+            // ---- constraint sublanguage (track B) ----
+            Statement::Symbol { name, sort } => {
+                constraints.symbols.push((name.clone(), lower_term(sort)));
+            }
+            Statement::Constrain { lhs, op, rhs } => {
+                // Keep both sides unevaluated — they mention symbols the solver
+                // will assign. lower_expr is a pure ExprAst → ComputeExpr map.
+                constraints.constraints.push(LoweredConstraint {
+                    lhs: lower_expr(lhs),
+                    op: *op,
+                    rhs: lower_expr(rhs),
+                });
+            }
+            Statement::SolveFor { names } => {
+                constraints.solve_for.extend(names.iter().cloned());
+            }
+            Statement::Check => {
+                constraints.check = true;
+            }
         }
     }
 
-    Ok(LoweredProgram { kb, queries })
+    Ok(LoweredProgram {
+        kb,
+        queries,
+        constraints,
+    })
 }
 
 /// Reject a likelihood ratio that the engine's `from_lr` constructors
@@ -689,5 +753,78 @@ mod tests {
             ),
             "got {err:?}"
         );
+    }
+
+    // ---- constraint sublanguage (ADJ constraints track B1) ----
+
+    #[test]
+    fn symbol_constrain_solve_check_build_a_constraint_system() {
+        // A small eligibility set: premium is unknown, bounded above by 2000
+        // and below by the observed base_rate; solve for it.
+        let src = r#"
+            symbol premium : money(usd)
+            symbol months  : scalar
+            observe base_rate(1200)
+            constrain premium <= 2000
+            constrain premium >= base_rate
+            constrain months >= 6
+            solve for { premium, months }
+        "#;
+        let lowered = compile(src).unwrap();
+        let cs = &lowered.constraints;
+        assert!(!cs.is_empty());
+        assert_eq!(cs.symbols.len(), 2);
+        assert_eq!(cs.symbols[0].0, "premium");
+        assert!(matches!(
+            &cs.symbols[0].1,
+            core_compound_money @ _ if format!("{core_compound_money:?}").contains("money")
+        ));
+        assert_eq!(cs.symbols[1].0, "months");
+        assert_eq!(cs.constraints.len(), 3);
+        assert_eq!(cs.constraints[0].op, crate::ast::RelOp::Le);
+        assert_eq!(cs.constraints[1].op, crate::ast::RelOp::Ge);
+        assert_eq!(cs.solve_for, vec!["premium".to_string(), "months".to_string()]);
+        assert!(!cs.check);
+    }
+
+    #[test]
+    fn check_sets_the_feasibility_flag() {
+        let lowered = compile("constrain x >= 1\ncheck").unwrap();
+        assert!(lowered.constraints.check);
+        assert_eq!(lowered.constraints.constraints.len(), 1);
+    }
+
+    #[test]
+    fn constraint_operands_lower_to_unevaluated_compute_exprs() {
+        // `constrain total = a + b * c` — the rhs stays a ComputeExpr tree
+        // (not evaluated; it mentions symbols the solver will assign).
+        let lowered = compile("constrain total = a + b * 2").unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Eq);
+        assert!(matches!(c.lhs, logic_engine::ComputeExpr::Ref(_)));
+        // rhs is a + (b * 2): an Add whose right operand is a Mul.
+        assert!(matches!(c.rhs, logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Add, _, _)));
+    }
+
+    #[test]
+    fn all_relational_operators_parse() {
+        for (src, want) in [
+            ("constrain a >= 1", crate::ast::RelOp::Ge),
+            ("constrain a <= 1", crate::ast::RelOp::Le),
+            ("constrain a > 1", crate::ast::RelOp::Gt),
+            ("constrain a < 1", crate::ast::RelOp::Lt),
+            ("constrain a == 1", crate::ast::RelOp::Eq),
+            ("constrain a = 1", crate::ast::RelOp::Eq),
+            ("constrain a != 1", crate::ast::RelOp::Ne),
+        ] {
+            let lowered = compile(src).unwrap();
+            assert_eq!(lowered.constraints.constraints[0].op, want, "for {src:?}");
+        }
+    }
+
+    #[test]
+    fn a_pure_rulebook_has_an_empty_constraint_system() {
+        let lowered = compile("prior 0.10 for acs\n? acs").unwrap();
+        assert!(lowered.constraints.is_empty());
     }
 }

@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.7.0] - 2026-06-11 — constraint sublanguage (symbols + constrain/solve/check, ADJ constraints B1)
+
+### Added
+
+- **`symbol <name> : <sort>`** — declare an unknown the engine will solve for
+  (`sort` is a dimensional sort term: `scalar`, `money(usd)`, …).
+- **`constrain <expr> <relop> <expr>`** — assert an (in)equality. `relop` is
+  `>= <= > < == = !=`; operands reuse the `let` arithmetic `expr`, so a
+  constraint may mention observed slots, earlier `let`s, and symbols. (Typed
+  literals like `money(2000, usd)` are referenced via an `observe`d name, since
+  constraint operands are arithmetic exprs.)
+- **`solve for { a, b, … }`** — name the unknowns to solve for; **`check`** —
+  ask whether the constraint set is satisfiable.
+- New AST: `Statement::{Symbol, Constrain, SolveFor, Check}` + `RelOp`.
+- **`ConstraintSystem`** (`symbols`, `constraints`, `solve_for`, `check`),
+  exposed on `LoweredProgram.constraints`. The lowerer builds it, keeping each
+  constraint's two sides as **unevaluated `ComputeExpr` trees** (they mention
+  symbols the solver assigns). **No solving yet** — the reuse solver backends
+  (`cas-solve` / `SatTactic` / `LiaTactic`) are wired in track B2.
+
+### Grammar
+
+- `.tokens`: added `COLON` (`:`) and `NE` (`!=`, listed before `>`/`<` for
+  maximal munch).
+- `.grammar`: `symbol_decl` / `constrain_decl` / `relop` / `solve_decl` /
+  `check_decl`. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
 ## [0.6.0] - 2026-06-11 — `let` + arithmetic (computed values, ADJ expansion step 3b)
 
 ### Added

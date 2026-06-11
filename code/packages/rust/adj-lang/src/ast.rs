@@ -137,6 +137,37 @@ pub enum Statement {
         conclusion: Term,
         annotations: Vec<Annotation>,
     },
+    /// `symbol <name> : <sort>` — declare an **unknown** the engine will
+    /// solve for (ADJ constraints, track B). `sort` is a dimensional sort
+    /// term (`scalar`, `money(usd)`, …).
+    Symbol { name: String, sort: Term },
+    /// `constrain <lhs> <relop> <rhs>` — assert an (in)equality the solver
+    /// must satisfy. Operands reuse the `let` arithmetic [`ExprAst`], so a
+    /// constraint may mention observed slots, earlier `let`s, and symbols.
+    Constrain {
+        lhs: ExprAst,
+        op: RelOp,
+        rhs: ExprAst,
+    },
+    /// `solve for { a, b, … }` — drive the solver to find values for the
+    /// named unknowns satisfying the accumulated constraints.
+    SolveFor { names: Vec<String> },
+    /// `check` — ask whether the accumulated constraint set is satisfiable
+    /// (feasibility / contradiction).
+    Check,
+}
+
+/// A relational operator in a `constrain` clause.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RelOp {
+    Ge,
+    Le,
+    Gt,
+    Lt,
+    /// Equality — surface `=` or `==`.
+    Eq,
+    /// Inequality — surface `!=`.
+    Ne,
 }
 
 /// Per-statement annotation. Multiple annotations per statement
