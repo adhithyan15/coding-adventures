@@ -521,9 +521,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-067 — labeled single-statement block flatten
 
-- **Status:** OPEN — discovered by CLOC14.34. `minify_label_block_flatten` ignored.
+- **Status:** **RESOLVED** in CLOC12.77 (provably-safe minimal slice). `minify_label_block_flatten` flips IGNORED → PASS.
 - **Input:** `label:{break label}` → **Upstream:** `label:break label;`
 - **What it needs:** When a `LabeledStatement`'s body is a `BlockStatement` containing exactly ONE statement, the braces are redundant — flatten `label:{S}` → `label:S`. A multi-statement block keeps its braces (`label:{a();break label}` stays — pinned by `minify_label_block_multi`). Same family as gap-010/032 (block flattening) but in a labeled-statement context.
+- **CLOC12.77 (provably-safe slice):** flattens `IDENT : { <completion-keyword> … }` where the label sits at a hard statement boundary (prev token is `;`/`}`/start — `{` is EXCLUDED, since a `{`-preceded `IDENT:{…}` is an object-literal value like `{x:{break:1}}`), the body's first token is `break`/`continue`/`return`/`throw` (unambiguously a statement — never an object value or a declaration), and it is a single statement. The `{` is dropped and the `}` becomes the terminating `;` (a synthetic `;` is injected when the body had no trailing `;`). **Conservative trade-off:** nested labels (`outer:{inner:{break outer}}`) only flatten the innermost (a missed optimization, not a corruption); expression-statement and `var`-declaration bodies are deferred. 5 unit tests; object-literal/ternary safety verified.
 
 ### gap-068 — redundant parens around a `new` callee
 

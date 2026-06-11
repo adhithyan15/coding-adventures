@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.81.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-067** (provably-safe minimal slice) — a labeled
+  single-statement block flattens: `label:{break label}` →
+  `label:break label;`.
+
+### Added — gap-067 token pre-pass + synthetic `;`
+
+Flattens `IDENT : { <completion-keyword> … }` (body starting
+with `break`/`continue`/`return`/`throw`) when the label sits at
+a hard statement boundary. CRITICAL SAFETY: the boundary set is
+`;`/`}`/start and DELIBERATELY EXCLUDES `{`, so an object-literal
+value `{x:{break:1}}` (whose inner `IDENT:{…}` is preceded by the
+object's `{`) and a ternary `a?b:{c}` are never touched. The
+completion-keyword body guard proves the `{` is a block, not an
+object. The opening `{` is dropped; the closing `}` becomes the
+statement terminator — a synthetic `;` token (cloned from the
+stream and re-typed) is injected when the body had no trailing
+`;`. Multi-statement bodies keep their braces; nested labels
+flatten only the innermost (conservative). 5 new gap067_* unit
+tests (incl. object-literal + ternary safety).
+
 ## [0.80.0] - 2026-06-11
 
 ### Changed
