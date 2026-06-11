@@ -1874,6 +1874,60 @@ pub struct IntegrationActivationDashboardSummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationTimelineMilestone {
+    pub sequence: usize,
+    pub priority: u8,
+    pub milestone_kind: Option<IntegrationActivationBriefingItemKind>,
+    pub dashboard_card: IntegrationActivationDashboardCard,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationTimelineSummary {
+    pub total_milestones: usize,
+    pub unique_integrations: usize,
+    pub ready_milestones: usize,
+    pub review_milestones: usize,
+    pub blocked_milestones: usize,
+    pub empty_milestones: usize,
+    pub blocker_milestones: usize,
+    pub review_queue_milestones: usize,
+    pub approval_milestones: usize,
+    pub activation_milestones: usize,
+    pub risk_milestones: usize,
+    pub dependency_milestones: usize,
+    pub milestones_requiring_attention: usize,
+    pub milestones_with_activation_work: usize,
+    pub milestones_with_approval_work: usize,
+    pub milestones_with_review_work: usize,
+    pub milestones_with_blockers: usize,
+    pub milestones_with_risks: usize,
+    pub milestones_with_dependency_blockers: usize,
+    pub total_briefing_items: usize,
+    pub total_actions: usize,
+    pub total_dossiers: usize,
+    pub total_evidence: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub first_activation_sequence: Option<usize>,
+    pub first_approval_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_risk_sequence: Option<usize>,
+    pub first_dependency_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_activation_priority: Option<u8>,
+    pub first_approval_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_risk_priority: Option<u8>,
+    pub first_dependency_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -3275,6 +3329,261 @@ impl IntegrationActivationDashboardSummary {
 
     pub fn has_dependency_blockers(&self) -> bool {
         self.cards_with_dependency_blockers > 0 || self.dependency_items > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.overall_status.requires_attention()
+            || self.has_approval_ready_work()
+            || self.has_review_work()
+            || self.has_blockers()
+            || self.has_risks()
+            || self.has_dependency_blockers()
+    }
+}
+
+impl IntegrationActivationTimelineMilestone {
+    fn from_dashboard_card(
+        sequence: usize,
+        dashboard_card: IntegrationActivationDashboardCard,
+    ) -> Self {
+        Self {
+            sequence,
+            priority: dashboard_card.priority,
+            milestone_kind: dashboard_card.next_briefing_kind,
+            dashboard_card,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.dashboard_card.integration_count()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.dashboard_card.requires_attention()
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.dashboard_card.has_activation_work
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.dashboard_card.has_approval_ready_work
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.dashboard_card.has_review_work
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.dashboard_card.has_blockers
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.dashboard_card.has_risks
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.dashboard_card.has_dependency_blockers
+    }
+}
+
+impl IntegrationActivationTimelineSummary {
+    pub fn from_milestones<'a>(
+        milestones: impl IntoIterator<Item = &'a IntegrationActivationTimelineMilestone>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_milestones: 0,
+            unique_integrations: 0,
+            ready_milestones: 0,
+            review_milestones: 0,
+            blocked_milestones: 0,
+            empty_milestones: 0,
+            blocker_milestones: 0,
+            review_queue_milestones: 0,
+            approval_milestones: 0,
+            activation_milestones: 0,
+            risk_milestones: 0,
+            dependency_milestones: 0,
+            milestones_requiring_attention: 0,
+            milestones_with_activation_work: 0,
+            milestones_with_approval_work: 0,
+            milestones_with_review_work: 0,
+            milestones_with_blockers: 0,
+            milestones_with_risks: 0,
+            milestones_with_dependency_blockers: 0,
+            total_briefing_items: 0,
+            total_actions: 0,
+            total_dossiers: 0,
+            total_evidence: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            first_activation_sequence: None,
+            first_approval_sequence: None,
+            first_review_sequence: None,
+            first_blocked_sequence: None,
+            first_risk_sequence: None,
+            first_dependency_sequence: None,
+            first_attention_sequence: None,
+            first_activation_priority: None,
+            first_approval_priority: None,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            first_risk_priority: None,
+            first_dependency_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for milestone in milestones {
+            summary.total_milestones += 1;
+            for integration_id in &milestone.dashboard_card.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match milestone.dashboard_card.health_status {
+                IntegrationActivationHealthStatus::Ready => summary.ready_milestones += 1,
+                IntegrationActivationHealthStatus::NeedsReview => summary.review_milestones += 1,
+                IntegrationActivationHealthStatus::Blocked => summary.blocked_milestones += 1,
+                IntegrationActivationHealthStatus::Empty => summary.empty_milestones += 1,
+            }
+            match milestone.milestone_kind {
+                Some(IntegrationActivationBriefingItemKind::Blocker) => {
+                    summary.blocker_milestones += 1
+                }
+                Some(IntegrationActivationBriefingItemKind::Review) => {
+                    summary.review_queue_milestones += 1
+                }
+                Some(IntegrationActivationBriefingItemKind::Approval) => {
+                    summary.approval_milestones += 1
+                }
+                Some(IntegrationActivationBriefingItemKind::Activation) => {
+                    summary.activation_milestones += 1
+                }
+                Some(IntegrationActivationBriefingItemKind::Risk) => summary.risk_milestones += 1,
+                Some(IntegrationActivationBriefingItemKind::Dependency) => {
+                    summary.dependency_milestones += 1
+                }
+                None => {}
+            }
+
+            let card = &milestone.dashboard_card;
+            summary.total_briefing_items += card.briefing_item_count;
+            summary.total_actions += card.action_count;
+            summary.total_dossiers += card.dossier_count;
+            summary.total_evidence += card.evidence_count;
+            summary.total_risks += card.risk_count;
+            summary.total_dependency_edges += card.dependency_edge_count;
+            summary.blocking_dependency_edges += card.blocking_dependency_edge_count;
+            summary.highest_policy_tier = summary.highest_policy_tier.max(card.highest_policy_tier);
+
+            if milestone.requires_attention() {
+                summary.milestones_requiring_attention += 1;
+                summary.first_attention_sequence = summary
+                    .first_attention_sequence
+                    .or(Some(milestone.sequence));
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(milestone.priority),
+                );
+            }
+            if milestone.has_activation_work() {
+                summary.milestones_with_activation_work += 1;
+                summary.first_activation_sequence = summary
+                    .first_activation_sequence
+                    .or(Some(milestone.sequence));
+                summary.first_activation_priority = min_optional_priority(
+                    summary.first_activation_priority,
+                    Some(milestone.priority),
+                );
+            }
+            if milestone.has_approval_ready_work() {
+                summary.milestones_with_approval_work += 1;
+                summary.first_approval_sequence =
+                    summary.first_approval_sequence.or(Some(milestone.sequence));
+                summary.first_approval_priority = min_optional_priority(
+                    summary.first_approval_priority,
+                    Some(milestone.priority),
+                );
+            }
+            if milestone.has_review_work() {
+                summary.milestones_with_review_work += 1;
+                summary.first_review_sequence =
+                    summary.first_review_sequence.or(Some(milestone.sequence));
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(milestone.priority));
+            }
+            if milestone.has_blockers() {
+                summary.milestones_with_blockers += 1;
+                summary.first_blocked_sequence =
+                    summary.first_blocked_sequence.or(Some(milestone.sequence));
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(milestone.priority));
+            }
+            if milestone.has_risks() {
+                summary.milestones_with_risks += 1;
+                summary.first_risk_sequence =
+                    summary.first_risk_sequence.or(Some(milestone.sequence));
+                summary.first_risk_priority =
+                    min_optional_priority(summary.first_risk_priority, Some(milestone.priority));
+            }
+            if milestone.has_dependency_blockers() {
+                summary.milestones_with_dependency_blockers += 1;
+                summary.first_dependency_sequence = summary
+                    .first_dependency_sequence
+                    .or(Some(milestone.sequence));
+                summary.first_dependency_priority = min_optional_priority(
+                    summary.first_dependency_priority,
+                    Some(milestone.priority),
+                );
+            }
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status =
+            if summary.blocked_milestones > 0 || summary.milestones_with_blockers > 0 {
+                IntegrationActivationHealthStatus::Blocked
+            } else if summary.review_milestones > 0
+                || summary.milestones_with_review_work > 0
+                || summary.milestones_with_approval_work > 0
+            {
+                IntegrationActivationHealthStatus::NeedsReview
+            } else if summary.ready_milestones > 0 || summary.milestones_with_activation_work > 0 {
+                IntegrationActivationHealthStatus::Ready
+            } else {
+                IntegrationActivationHealthStatus::Empty
+            };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_milestones == 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.milestones_with_activation_work > 0 || self.activation_milestones > 0
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.milestones_with_approval_work > 0 || self.approval_milestones > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.milestones_with_review_work > 0 || self.review_queue_milestones > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.milestones_with_blockers > 0 || self.blocker_milestones > 0
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.milestones_with_risks > 0 || self.risk_milestones > 0
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.milestones_with_dependency_blockers > 0 || self.dependency_milestones > 0
     }
 
     pub fn requires_attention(&self) -> bool {
@@ -7189,6 +7498,62 @@ pub fn activation_dashboard_cards_at_or_before_priority(
     activation_dashboard_cards_from_readouts(readouts.iter())
 }
 
+pub fn activation_timeline_milestones_from_dashboard_cards(
+    mut cards: Vec<IntegrationActivationDashboardCard>,
+) -> Vec<IntegrationActivationTimelineMilestone> {
+    cards.sort_by(compare_activation_dashboard_cards);
+    let mut milestones = cards
+        .into_iter()
+        .enumerate()
+        .map(|(index, card)| {
+            IntegrationActivationTimelineMilestone::from_dashboard_card(index + 1, card)
+        })
+        .collect::<Vec<_>>();
+    milestones.sort_by(compare_activation_timeline_milestones);
+    for (index, milestone) in milestones.iter_mut().enumerate() {
+        milestone.sequence = index + 1;
+    }
+    milestones
+}
+
+pub fn activation_timeline_milestones_from_readouts<'a>(
+    readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+) -> Vec<IntegrationActivationTimelineMilestone> {
+    activation_timeline_milestones_from_dashboard_cards(activation_dashboard_cards_from_readouts(
+        readouts,
+    ))
+}
+
+pub fn activation_timeline_milestones_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationTimelineMilestone> {
+    activation_timeline_milestones_from_dashboard_cards(activation_dashboard_cards_from_candidates(
+        catalog,
+        candidates,
+        enabled_integrations,
+    ))
+}
+
+pub fn activation_timeline_milestones_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationTimelineMilestone> {
+    activation_timeline_milestones_from_dashboard_cards(
+        activation_dashboard_cards_at_or_before_priority(
+            catalog,
+            priority,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        ),
+    )
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -8513,6 +8878,25 @@ fn compare_activation_dashboard_cards(
                 .cmp(&left.has_approval_ready_work)
         })
         .then_with(|| right.has_activation_work.cmp(&left.has_activation_work))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_timeline_milestones(
+    left: &IntegrationActivationTimelineMilestone,
+    right: &IntegrationActivationTimelineMilestone,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| left.milestone_kind.cmp(&right.milestone_kind))
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| {
+            right
+                .has_approval_ready_work()
+                .cmp(&left.has_approval_ready_work())
+        })
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -10421,6 +10805,125 @@ mod tests {
         assert!(catalog_cards
             .iter()
             .any(IntegrationActivationDashboardCard::requires_attention));
+    }
+
+    #[test]
+    fn activation_timeline_milestones_order_dashboard_cards_by_wave() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+        let milestones = activation_timeline_milestones_from_candidates(&[], candidates, &[]);
+
+        assert_eq!(milestones.len(), 3);
+        assert_eq!(milestones[0].sequence, 1);
+        assert_eq!(milestones[0].priority, 1);
+        assert_eq!(
+            milestones[0].milestone_kind,
+            Some(IntegrationActivationBriefingItemKind::Blocker)
+        );
+        assert!(milestones[0].requires_attention());
+        assert!(milestones[0].has_approval_ready_work());
+        assert_eq!(milestones[1].sequence, 2);
+        assert_eq!(milestones[1].priority, 2);
+        assert!(milestones[1].has_dependency_blockers());
+        assert_eq!(milestones[2].sequence, 3);
+        assert_eq!(milestones[2].priority, 3);
+        assert!(milestones[2].has_activation_work());
+
+        let summary = IntegrationActivationTimelineSummary::from_milestones(milestones.iter());
+        assert_eq!(summary.total_milestones, 3);
+        assert_eq!(summary.unique_integrations, 3);
+        assert_eq!(summary.ready_milestones, 1);
+        assert_eq!(summary.review_milestones, 1);
+        assert_eq!(summary.blocked_milestones, 1);
+        assert!(summary.blocker_milestones >= 1);
+        assert!(summary.activation_milestones >= 1);
+        assert!(summary.milestones_requiring_attention >= 1);
+        assert!(summary.total_briefing_items >= 4);
+        assert!(summary.total_actions > 0);
+        assert!(summary.total_dossiers > 0);
+        assert!(summary.total_evidence > 0);
+        assert!(summary.total_risks > 0);
+        assert!(summary.blocking_dependency_edges > 0);
+        assert_eq!(summary.first_attention_sequence, Some(1));
+        assert_eq!(summary.first_attention_priority, Some(1));
+        assert_eq!(summary.first_approval_sequence, Some(1));
+        assert_eq!(summary.first_blocked_sequence, Some(1));
+        assert_eq!(summary.first_activation_sequence, Some(3));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_activation_work());
+        assert!(summary.has_approval_ready_work());
+        assert!(summary.has_review_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_risks());
+        assert!(summary.has_dependency_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_milestones = activation_timeline_milestones_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_milestones
+            .iter()
+            .any(IntegrationActivationTimelineMilestone::requires_attention));
     }
 
     #[test]
