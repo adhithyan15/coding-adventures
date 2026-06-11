@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness animation-interaction descriptors now expose CSS animation
+  and transition event hooks, timeline phase grouping, document/body scope, and
+  cancellation paths as a flat browser-planning inventory.
 - Browser-readiness lifecycle-event descriptors now expose document/body load
   and unload hooks, visibility/history/network lifecycle handlers, and
   element-level error recovery as a flat browser-planning inventory.

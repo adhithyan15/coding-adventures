@@ -1,31 +1,31 @@
 use coding_adventures_html_parser::{
-    parse_browser_document, BrowserActivationDescriptor, BrowserAnchor, BrowserAriaCollection,
-    BrowserAriaCollectionItem, BrowserAriaLiveRegion, BrowserAriaRange,
-    BrowserAriaRelationDescriptor, BrowserClipboardInteractionDescriptor, BrowserCommandElement,
-    BrowserComponentHydrationTarget, BrowserCompositionInteractionDescriptor, BrowserDataAttribute,
-    BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
-    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
-    BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
-    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
-    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
-    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
-    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
-    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    parse_browser_document, BrowserActivationDescriptor, BrowserAnchor,
+    BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
+    BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor,
+    BrowserClipboardInteractionDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
+    BrowserCompositionInteractionDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
+    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor,
+    BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
+    BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormSelect,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
+    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
+    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
+    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -72,6 +72,8 @@ struct ExpectedBrowserDocument {
     event_handler_descriptors: Vec<ExpectedEventHandlerDescriptor>,
     #[serde(default)]
     lifecycle_event_descriptors: Option<Vec<ExpectedLifecycleEventDescriptor>>,
+    #[serde(default)]
+    animation_interaction_descriptors: Option<Vec<ExpectedAnimationInteractionDescriptor>>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -669,6 +671,49 @@ struct ExpectedLifecycleEventDescriptor {
     body_scope: bool,
     #[serde(default)]
     error_recovery: bool,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAnimationInteractionDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    role: Option<String>,
+    source: String,
+    animation_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    animation_handlers: Vec<String>,
+    #[serde(default)]
+    animation_start_handlers: Vec<String>,
+    #[serde(default)]
+    animation_iteration_handlers: Vec<String>,
+    #[serde(default)]
+    animation_end_handlers: Vec<String>,
+    #[serde(default)]
+    animation_cancel_handlers: Vec<String>,
+    #[serde(default)]
+    transition_handlers: Vec<String>,
+    #[serde(default)]
+    transition_run_handlers: Vec<String>,
+    #[serde(default)]
+    transition_start_handlers: Vec<String>,
+    #[serde(default)]
+    transition_end_handlers: Vec<String>,
+    #[serde(default)]
+    transition_cancel_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    document_scope: bool,
+    #[serde(default)]
+    body_scope: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -5069,6 +5114,28 @@ fn browser_lifecycle_event_descriptors_track_load_and_error_recovery_hooks() {
     );
 }
 
+#[test]
+fn browser_animation_interaction_descriptors_track_css_timeline_hooks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "event-handler-page")
+        .expect("event handler fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("event handler fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.animation_interaction_descriptors,
+        case.expected
+            .into_browser_document()
+            .animation_interaction_descriptors,
+        "animation-interaction descriptors should preserve CSS animation and transition inline hooks",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         let metadata = self.metadata.into_browser_document_metadata();
@@ -5116,6 +5183,19 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_lifecycle_event_descriptors(&event_handler_descriptors));
+        let animation_interaction_descriptors = self
+            .animation_interaction_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedAnimationInteractionDescriptor::into_browser_animation_interaction_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| {
+                expected_animation_interaction_descriptors(&event_handler_descriptors)
+            });
         let global_state_descriptors: Vec<_> = self
             .global_state_descriptors
             .into_iter()
@@ -5379,6 +5459,7 @@ impl ExpectedBrowserDocument {
             body_event_handlers: self.body_event_handlers,
             event_handler_descriptors,
             lifecycle_event_descriptors,
+            animation_interaction_descriptors,
             body_text: self.body_text,
             metas: self
                 .metas
@@ -5806,6 +5887,36 @@ impl ExpectedLifecycleEventDescriptor {
             document_scope: self.document_scope,
             body_scope: self.body_scope,
             error_recovery: self.error_recovery,
+        }
+    }
+}
+
+impl ExpectedAnimationInteractionDescriptor {
+    fn into_browser_animation_interaction_descriptor(
+        self,
+    ) -> BrowserAnimationInteractionDescriptor {
+        BrowserAnimationInteractionDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            role: self.role,
+            source: self.source,
+            animation_kind: self.animation_kind,
+            text: self.text,
+            event_handlers: self.event_handlers,
+            animation_handlers: self.animation_handlers,
+            animation_start_handlers: self.animation_start_handlers,
+            animation_iteration_handlers: self.animation_iteration_handlers,
+            animation_end_handlers: self.animation_end_handlers,
+            animation_cancel_handlers: self.animation_cancel_handlers,
+            transition_handlers: self.transition_handlers,
+            transition_run_handlers: self.transition_run_handlers,
+            transition_start_handlers: self.transition_start_handlers,
+            transition_end_handlers: self.transition_end_handlers,
+            transition_cancel_handlers: self.transition_cancel_handlers,
+            handler_count: self.handler_count,
+            document_scope: self.document_scope,
+            body_scope: self.body_scope,
         }
     }
 }
@@ -8903,6 +9014,133 @@ fn expected_lifecycle_kind(
     }
 }
 
+fn expected_animation_interaction_descriptors(
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserAnimationInteractionDescriptor> {
+    event_handler_descriptors
+        .iter()
+        .filter(|descriptor| expected_event_descriptor_has_animation_interaction_state(descriptor))
+        .map(expected_animation_interaction_descriptor)
+        .collect()
+}
+
+fn expected_event_descriptor_has_animation_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_animation_interaction_event,
+    )
+    .is_empty()
+}
+
+fn expected_animation_interaction_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserAnimationInteractionDescriptor {
+    let animation_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_animation_event);
+    let animation_start_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_animation_start_event);
+    let animation_iteration_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_animation_iteration_event,
+    );
+    let animation_end_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_animation_end_event);
+    let animation_cancel_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_animation_cancel_event,
+    );
+    let transition_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_transition_event);
+    let transition_run_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_transition_run_event);
+    let transition_start_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_transition_start_event,
+    );
+    let transition_end_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_transition_end_event);
+    let transition_cancel_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_transition_cancel_event,
+    );
+
+    BrowserAnimationInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        animation_kind: expected_animation_interaction_kind(
+            &animation_handlers,
+            &animation_start_handlers,
+            &animation_iteration_handlers,
+            &animation_end_handlers,
+            &animation_cancel_handlers,
+            &transition_handlers,
+            &transition_run_handlers,
+            &transition_start_handlers,
+            &transition_end_handlers,
+            &transition_cancel_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        animation_handlers,
+        animation_start_handlers,
+        animation_iteration_handlers,
+        animation_end_handlers,
+        animation_cancel_handlers,
+        transition_handlers,
+        transition_run_handlers,
+        transition_start_handlers,
+        transition_end_handlers,
+        transition_cancel_handlers,
+        handler_count: descriptor
+            .event_handlers
+            .iter()
+            .filter(|handler| expected_animation_interaction_event(handler.as_str()))
+            .count(),
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn expected_animation_interaction_kind(
+    animation_handlers: &[String],
+    animation_start_handlers: &[String],
+    animation_iteration_handlers: &[String],
+    animation_end_handlers: &[String],
+    animation_cancel_handlers: &[String],
+    transition_handlers: &[String],
+    transition_run_handlers: &[String],
+    transition_start_handlers: &[String],
+    transition_end_handlers: &[String],
+    transition_cancel_handlers: &[String],
+) -> String {
+    if !animation_cancel_handlers.is_empty() || !transition_cancel_handlers.is_empty() {
+        "animation-cancel".to_string()
+    } else if !animation_handlers.is_empty() && !transition_handlers.is_empty() {
+        "animation-transition".to_string()
+    } else if !animation_iteration_handlers.is_empty() {
+        "animation-iteration".to_string()
+    } else if !animation_end_handlers.is_empty() {
+        "animation-end".to_string()
+    } else if !animation_start_handlers.is_empty() {
+        "animation-start".to_string()
+    } else if !transition_end_handlers.is_empty() {
+        "transition-end".to_string()
+    } else if !transition_start_handlers.is_empty() {
+        "transition-start".to_string()
+    } else if !transition_run_handlers.is_empty() {
+        "transition-run".to_string()
+    } else if !animation_handlers.is_empty() {
+        "animation".to_string()
+    } else {
+        "transition".to_string()
+    }
+}
+
 fn expected_keyboard_event(handler: &str) -> bool {
     matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
 }
@@ -8918,6 +9156,56 @@ fn expected_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn expected_animation_interaction_event(handler: &str) -> bool {
+    expected_animation_event(handler) || expected_transition_event(handler)
+}
+
+fn expected_animation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onanimationstart" | "onanimationiteration" | "onanimationend" | "onanimationcancel"
+    )
+}
+
+fn expected_animation_start_event(handler: &str) -> bool {
+    handler == "onanimationstart"
+}
+
+fn expected_animation_iteration_event(handler: &str) -> bool {
+    handler == "onanimationiteration"
+}
+
+fn expected_animation_end_event(handler: &str) -> bool {
+    handler == "onanimationend"
+}
+
+fn expected_animation_cancel_event(handler: &str) -> bool {
+    handler == "onanimationcancel"
+}
+
+fn expected_transition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontransitionrun" | "ontransitionstart" | "ontransitionend" | "ontransitioncancel"
+    )
+}
+
+fn expected_transition_run_event(handler: &str) -> bool {
+    handler == "ontransitionrun"
+}
+
+fn expected_transition_start_event(handler: &str) -> bool {
+    handler == "ontransitionstart"
+}
+
+fn expected_transition_end_event(handler: &str) -> bool {
+    handler == "ontransitionend"
+}
+
+fn expected_transition_cancel_event(handler: &str) -> bool {
+    handler == "ontransitioncancel"
 }
 
 fn expected_load_lifecycle_event(handler: &str) -> bool {

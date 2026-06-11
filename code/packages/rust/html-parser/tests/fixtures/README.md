@@ -47,6 +47,9 @@ lifecycle, and error/event-recovery concerns without evaluating script text.
 Lifecycle-event descriptor cases pin document/body load and unload hooks,
 visibility/history/network lifecycle handlers, and element-level error recovery
 as a flat browser-planning inventory.
+Animation-interaction descriptor cases pin CSS animation and transition event
+hooks, timeline phase grouping, document/body scope, and cancellation paths as a
+flat browser-planning inventory.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
