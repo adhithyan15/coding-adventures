@@ -691,6 +691,76 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-068: redundant parens around a `new` callee ------
+    // `new(f)()` → `new f`, `new(a.b)` → `new a.b`. After the
+    // `new` keyword a parenthesized simple reference is redundant
+    // — member access (`.`) binds tighter than an argument-less
+    // `new`, so `new a.b` constructs `a.b` just like `new(a.b)`.
+    //
+    // This pass only STRIPS the parens around the callee. For the
+    // call form `new(f)()` the trailing empty `()` is then
+    // dropped by the existing gap-050 empty-paren elision in the
+    // emit loop (which runs after this pre-pass): `new f()` →
+    // `new f`.
+    //
+    // Minimal safe slice (mirrors gap-066): the inner must be a
+    // *simple reference* — a plain identifier plus zero-or-more
+    // `.IDENT` accessors. The scan stops at the first non-`.IDENT`
+    // token, so an operator inner `new(a+b)` keeps its parens
+    // (`new a+b` would parse as `(new a)+b` — a different
+    // program). Computed `[...]` and call-chain inners are
+    // deferred.
+    //
+    // Guards:
+    //   - operator `new`, not a PROPERTY named `new`
+    //     (`o.new(f)` is a method call — prev-prev must not be
+    //     `.`/`?.`), and not a string literal whose content is
+    //     `new`,
+    //   - all bracket/accessor checks via `is_structural_punct`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 1;
+        while i + 1 < kept.len() {
+            let after_new = kept[i - 1].value == "new"
+                && !is_string_literal(kept[i - 1])
+                && match i.checked_sub(2).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(pp) => {
+                        !is_structural_punct(pp, ".")
+                            && !is_structural_punct(pp, "?.")
+                    }
+                };
+            if after_new
+                && is_structural_punct(&kept[i], "(")
+                && is_plain_identifier(&kept[i + 1])
+            {
+                // Consume the `.IDENT` member chain.
+                let mut p = i + 1;
+                while p + 2 < kept.len()
+                    && is_structural_punct(&kept[p + 1], ".")
+                    && is_plain_identifier(&kept[p + 2])
+                {
+                    p += 2;
+                }
+                let close_ok = kept
+                    .get(p + 1)
+                    .map(|t| is_structural_punct(t, ")"))
+                    .unwrap_or(false);
+                if close_ok {
+                    drops.push(i); // open `(`
+                    drops.push(p + 1); // close `)`
+                    i = p + 2;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // ---- gap-059: member/call on a `new` expression ----------
     // `new A().b` → `(new A).b`. When a NewExpression is the
     // OBJECT of a member access (`.`/`[`) or the CALLEE of a
@@ -3681,6 +3751,39 @@ mod tests {
     #[test]
     fn gap066_extends_property_not_stripped() {
         assert_eq!(minify("o.extends(x);"), "o.extends(x);");
+    }
+
+    // ---- gap-068: redundant parens around a `new` callee ----
+
+    /// gap-068: `new(f)()` → `new f` — strip the callee parens
+    /// (then the empty `()` is dropped by gap-050).
+    #[test]
+    fn gap068_new_call_paren_stripped() {
+        assert_eq!(minify("new(f)();"), "new f;");
+    }
+
+    /// gap-068: `new(a.b)` → `new a.b` — member-chain callee.
+    #[test]
+    fn gap068_new_member_paren_stripped() {
+        assert_eq!(minify("new(a.b);"), "new a.b;");
+        assert_eq!(minify("new(a.b.c);"), "new a.b.c;");
+    }
+
+    /// gap-068 SAFETY: an operator callee keeps its parens —
+    /// `new(a+b)` must NOT become `new a+b` (which parses as
+    /// `(new a)+b` — a different program).
+    #[test]
+    fn gap068_operator_callee_keeps_parens() {
+        // closurec keeps the parens; it does not strip (the
+        // emit-time `new`/`(` spacing is a separate concern).
+        assert!(minify("new(a+b);").contains("(a+b)"));
+    }
+
+    /// gap-068 SAFETY: a PROPERTY named `new` is a method call,
+    /// not a NewExpression — `o.new(f)` must NOT be stripped.
+    #[test]
+    fn gap068_new_property_not_stripped() {
+        assert_eq!(minify("o.new(f);"), "o.new(f);");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —

@@ -95,12 +95,9 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // A multi-statement labeled block keeps its braces (boundary
     // pinned by minify_label_block_multi).
     ("label_block_flatten", "gap-067: labeled single-statement block flatten"),
-    // gap-068 (CLOC14.34): redundant parens around a `new`
-    // callee — `new(f)()` → `new f`, `new(a.b)` → `new a.b`.
-    // (Composes with the gap-050 empty-paren drop for the call
-    // form.)
-    ("new_paren_callee", "gap-068: parens around new callee `new(f)()`"),
-    ("new_paren_member", "gap-068: parens around new member callee"),
+    // gap-068 RESOLVED in CLOC12.76 — redundant parens around a
+    // `new` callee (`new(f)()` → `new f`, `new(a.b)` → `new a.b`)
+    // are now stripped; both fixtures enforced.
     // gap-065 RESOLVED in CLOC12.74 — parens around a call /
     // tagged-template callee (`(f)(x)`→`f(x)`, `(a.b)(x)`→
     // `a.b(x)`) are now stripped; those three fixtures are
