@@ -503,7 +503,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-065 — redundant parens around a call / tagged-template callee
 
-- **Status:** OPEN — discovered by CLOC14.33. `minify_paren_call_callee` + `minify_paren_member_callee` + `minify_paren_tagged_callee` ignored.
+- **Status:** **RESOLVED** in CLOC12.74. `minify_paren_call_callee` + `minify_paren_member_callee` + `minify_paren_tagged_callee` flip IGNORED → PASS.
 - **Input:** `(f)(x);` → **Upstream:** `f(x);` (also `(a.b)(x)` → `a.b(x)`, `` (f)`t` `` → `` f`t` ``)
 - **What it needs:** Strip redundant parens around the CALLEE of a `CallExpression` / `TaggedTemplateExpression` when the inner expression is a *simple reference* — a bare identifier or a member-access chain (`.`/`[]`/`?.`). **Boundary (must NOT strip):** a sequence-expr callee `(a,b)(x)` keeps its parens (comma binds looser than call); any inner expression of lower precedence than the call/member would change meaning if unwrapped. Token-level: when a `(` is at an expression-callee position, its inner group is a plain reference chain, and the matching `)` is immediately followed by `(`/`` ` `` (call/tag), drop the paren pair. All bracket checks via `is_structural_punct`.
 

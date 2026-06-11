@@ -539,6 +539,91 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-065: callee paren elision ------------------------
+    // `(f)(x)` → `f(x)`. Sibling of gap-057: upstream strips the
+    // grouping parens around the CALLEE of a call / tagged
+    // template when the callee is a *simple reference* — a plain
+    // identifier optionally followed by a `.IDENT` member chain:
+    //
+    //   `(f)(x)`      →  `f(x)`
+    //   `(a.b)(x)`    →  `a.b(x)`
+    //   `(f)`tpl``    →  `f`tpl``   (tagged template)
+    //
+    // `.` and `(`/`` ` `` all bind tighter than anything a
+    // grouping paren could be protecting around a bare reference,
+    // so removal is meaning-preserving. The guards mirror gap-057:
+    //
+    //   1. GROUPING, NOT CALL: the `(` must be a grouping paren
+    //      (prev token is punct other than `)`/`]`/`?.`, or start
+    //      of stream) — never a call/index paren. `f(g)(x)` keeps
+    //      its parens (the `(g)` is f's call).
+    //   2. SIMPLE REFERENCE: the inner is a plain identifier plus
+    //      zero-or-more `.IDENT` accessors. NO commas, operators,
+    //      computed `[...]`, or calls inside — `(a,b)(x)` (a
+    //      sequence) and `(a+b)(x)` keep their parens because
+    //      unwrapping would change meaning. (The scan simply
+    //      stops at the first non-`.IDENT` token; if that isn't
+    //      the matching `)`, nothing is dropped.)
+    //   3. CALL / TAG FOLLOWS: the token after `)` must be a real
+    //      `(` call paren or a template literal (tagged template).
+    //
+    // All bracket checks route through `is_structural_punct`; the
+    // tagged-template follower is gated on `is_word_like` so a
+    // string whose content starts with `` ` `` can't trigger it.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 2 < kept.len() {
+            if is_structural_punct(&kept[i], "(")
+                && is_plain_identifier(&kept[i + 1])
+            {
+                let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(p) => {
+                        is_punct(p)
+                            && !is_structural_punct(p, ")")
+                            && !is_structural_punct(p, "]")
+                            && !is_structural_punct(p, "?.")
+                    }
+                };
+                if grouping {
+                    // Consume the `.IDENT` member chain.
+                    let mut p = i + 1;
+                    while p + 2 < kept.len()
+                        && is_structural_punct(&kept[p + 1], ".")
+                        && is_plain_identifier(&kept[p + 2])
+                    {
+                        p += 2;
+                    }
+                    // Expect the matching `)` immediately, then a
+                    // call `(` or a tagged-template literal.
+                    let close_ok = kept
+                        .get(p + 1)
+                        .map(|t| is_structural_punct(t, ")"))
+                        .unwrap_or(false);
+                    let call_or_tag = kept
+                        .get(p + 2)
+                        .map(|t| {
+                            is_structural_punct(t, "(")
+                                || (is_word_like(t) && t.value.starts_with('`'))
+                        })
+                        .unwrap_or(false);
+                    if close_ok && call_or_tag {
+                        drops.push(i); // open `(`
+                        drops.push(p + 1); // close `)`
+                        i = p + 2;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // ---- gap-059: member/call on a `new` expression ----------
     // `new A().b` → `(new A).b`. When a NewExpression is the
     // OBJECT of a member access (`.`/`[`) or the CALLEE of a
@@ -3449,6 +3534,48 @@ mod tests {
     #[test]
     fn gap057_member_object_paren_stripped() {
         assert_eq!(minify("var x=(a).b;"), "var x=a.b;");
+    }
+
+    // ---- gap-065: callee paren elision -------------------
+
+    /// gap-065: `(f)(x)` → `f(x)` — parens around a bare
+    /// identifier callee are redundant.
+    #[test]
+    fn gap065_call_callee_paren_stripped() {
+        assert_eq!(minify("(f)(x);"), "f(x);");
+    }
+
+    /// gap-065: `(a.b)(x)` → `a.b(x)` — member-chain callee.
+    #[test]
+    fn gap065_member_callee_paren_stripped() {
+        assert_eq!(minify("(a.b)(x);"), "a.b(x);");
+    }
+
+    /// gap-065: `` (f)`t` `` → `` f`t` `` — tagged-template callee.
+    #[test]
+    fn gap065_tagged_callee_paren_stripped() {
+        assert_eq!(minify("(f)`t`;"), "f`t`;");
+    }
+
+    /// gap-065 boundary: a SEQUENCE callee keeps its parens —
+    /// `(a,b)(x)` must NOT become `a,b(x)` (different program).
+    #[test]
+    fn gap065_sequence_callee_keeps_parens() {
+        assert_eq!(minify("(a,b)(x);"), "(a,b)(x);");
+    }
+
+    /// gap-065 boundary: an OPERATOR callee keeps its parens —
+    /// `(a+b)(x)` must NOT become `a+b(x)`.
+    #[test]
+    fn gap065_operator_callee_keeps_parens() {
+        assert_eq!(minify("(a+b)(x);"), "(a+b)(x);");
+    }
+
+    /// gap-065 safety: a CALL paren must never be stripped —
+    /// `f(g)(x)` keeps `(g)` (it is f's call, not a grouping).
+    #[test]
+    fn gap065_call_paren_not_stripped() {
+        assert_eq!(minify("f(g)(x);"), "f(g)(x);");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
