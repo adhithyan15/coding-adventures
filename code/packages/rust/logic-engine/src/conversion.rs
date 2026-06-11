@@ -148,7 +148,9 @@ fn convertible_tag(dim: &Dimension) -> Option<&str> {
         Dimension::Money(c) => Some(c),
         Dimension::Unit(u) => Some(u),
         Dimension::Duration(u) => Some(u),
-        Dimension::Scalar | Dimension::Percent => None,
+        // Scalar/Percent have nothing to convert; Date is a point in time, not
+        // a magnitude — its arithmetic is in the `datetime` module.
+        Dimension::Scalar | Dimension::Percent | Dimension::Date => None,
     }
 }
 

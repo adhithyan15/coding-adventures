@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.13.0] - 2026-06-11 — date arithmetic (deadlines & durations, ADJ constraints track A3)
+
+### Added
+
+- **`datetime` module** — calendar arithmetic on the CPU for adjudication
+  deadlines ("is the claim within 365 days of purchase?"). A date is a *point
+  in time*, so it gets the new `Dimension::Date` and its arithmetic lives here,
+  not in the generic `Dimension::combine` (which now rejects any `Date`
+  operand, steering callers to these functions):
+  - `days_between(a, b)` → a `Duration("days")` dimensioned value (so a deadline
+    predicate `elapsed <= 365` fires over it).
+  - `date_add(date, days)` → the resulting `(y, m, d)` (`Date + Duration → Date`).
+  - `before(a, b)` / `after(a, b)` → a boolean ordering.
+  - `read_date` validates month (`1..=12`) and day (`1..=days_in_month`, leap-aware)
+    so `date(2025, 13, 40)` is a clean `None`; `read_duration_days` reads
+    `duration(n, days|weeks)`.
+- `days_from_civil` / `civil_from_days` — Howard Hinnant's public-domain
+  proleptic-Gregorian ↔ day-ordinal algorithm, **inlined** (not a dependency).
+  The repo's `datetime-core` is the right library but pulls `numeric-tower` /
+  `r-vector` / `wall-clock` — too heavy for the core engine; the algorithm is
+  ~25 lines of exact integer math, so we inline it and keep `logic-engine`
+  dependency-free.
+- `Dimension::Date`; `dimensioned_value` now returns `None` for `date`/`time`/
+  `datetime` terms (their leading field is a year, not a scalar magnitude).
+
+### Security (from /security-review, both LOW, fixed in-PR)
+
+- All ordinal arithmetic is overflow-safe on attacker-controlled fields: `read_date`
+  bounds the year to `±1_000_000`; `date_add` uses `checked_add` + an ordinal
+  bound; `read_duration_days` uses `checked_mul` + a bound; and the raw
+  `days_from_civil`/`civil_from_days` helpers are now `pub(crate)` (internal),
+  so the public surface (`days_between`/`date_add`/`before`/`after`) can't be
+  handed an unbounded `i64` that would overflow.
+
+Time-of-day and full datetime arithmetic are a follow-up; this slice is dates +
+durations (the deadline case). See
+`code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
 ## [0.12.0] - 2026-06-11 — currency conversions (ADJ constraints track A2)
 
 ### Added

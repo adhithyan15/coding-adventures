@@ -64,6 +64,13 @@ pub enum Dimension {
     Percent,
     /// A length of time in a named unit (`Duration("days")`).
     Duration(String),
+    /// A calendar date (a point in time, not a magnitude). Date arithmetic
+    /// goes through the dedicated [`datetime`](crate::datetime) functions
+    /// (`days_between`, `date_add`, `before`/`after`), never through
+    /// [`combine`](Dimension::combine) — adding two dates is meaningless, and
+    /// `Date − Date → Duration` / `Date + Duration → Date` have their own
+    /// (ordinal) semantics. `combine` therefore rejects any `Date` operand.
+    Date,
 }
 
 impl Dimension {
@@ -76,6 +83,7 @@ impl Dimension {
             Dimension::Unit(u) => u.clone(),
             Dimension::Percent => "%".to_string(),
             Dimension::Duration(u) => u.clone(),
+            Dimension::Date => "date".to_string(),
         }
     }
 
@@ -88,6 +96,16 @@ impl Dimension {
     /// category error. This is the whole point of the module: the engine, not
     /// the model, decides whether `usd + days` is allowed (it isn't).
     pub fn combine(op: DimOp, lhs: &Dimension, rhs: &Dimension) -> Result<Dimension, DimError> {
+        // Dates are points in time, not magnitudes: their arithmetic
+        // (Date−Date→Duration, Date+Duration→Date) lives in the `datetime`
+        // module, so a Date reaching the generic algebra is a misuse.
+        if *lhs == Dimension::Date || *rhs == Dimension::Date {
+            return Err(DimError::Mismatch {
+                op,
+                lhs: lhs.tag(),
+                rhs: rhs.tag(),
+            });
+        }
         match op {
             // Additive: dimensions must match exactly. No silent coercion.
             DimOp::Add | DimOp::Sub => {
@@ -203,6 +221,12 @@ pub fn dimensioned_value(value: &Term) -> Option<Dimensioned> {
         Term::Num(Number::Int(i)) => Some(Dimensioned::scalar(*i as f64)),
         Term::Num(Number::Float(x)) => Some(Dimensioned::scalar(*x)),
         Term::Compound { functor, args } => {
+            // Dates/times are multi-field points in time, not scalar-magnitude
+            // wrappers — `date(2025, 1, 15)`'s leading `2025` is a year, not a
+            // magnitude. They are read by the `datetime` module instead.
+            if matches!(functor.as_str(), "date" | "time" | "datetime") {
+                return None;
+            }
             let magnitude = match args.first()? {
                 Term::Num(Number::Int(i)) => *i as f64,
                 Term::Num(Number::Float(x)) => *x,

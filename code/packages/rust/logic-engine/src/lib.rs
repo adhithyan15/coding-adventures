@@ -34,6 +34,7 @@
 
 pub mod compute;
 pub mod conversion;
+pub mod datetime;
 pub mod dimension;
 pub mod differential;
 pub mod enumerate;
@@ -49,6 +50,9 @@ use logic_core::{unify, LogicVar, Number, Substitution, Term};
 pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
 pub use conversion::{
     add_or_sub, convert_value, ConvError, Conversion, ConversionTable,
+};
+pub use datetime::{
+    after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
 };
 pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
