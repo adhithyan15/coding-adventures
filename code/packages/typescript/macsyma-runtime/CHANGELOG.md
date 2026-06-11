@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.4.0] — 2026-05-29
 
 - Feed the TypeScript MACSYMA session assumption context into direct
   `abs`, `sqrt`, and `log` evaluation, matching Python reference behavior
