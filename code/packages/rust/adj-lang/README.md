@@ -42,6 +42,31 @@ DETERMINATE / INDETERMINATE / CONFLICT still fall out of the differential
 (leader / insufficient-evidence / kickback) — **one engine, not two**.
 Operators: `>= <= > < ==`.
 
+### `let` + arithmetic — computed values (v0.6)
+
+The model writes the **formula**; the engine computes it on the CPU and a
+predicate fires over the result like any observed slot:
+
+```
+observe csf_glucose(quantity(40, mg_dl))
+observe serum_glucose(quantity(100, mg_dl))
+observe line_item(12000)
+observe line_item(6000)
+
+let csf_ratio = csf_glucose / serum_glucose     % = 0.4
+let total     = sum(line_item)                  % = 18000
+
+contributes 1000000 from csf_ratio <= 0.4 to bacterial
+contributes 1000000 from total    >= 14600 to required_to_file
+```
+
+`<expr>` is `+ - * /` (standard precedence, parentheses), references to
+observed slots and earlier `let`s, numeric literals, and aggregations
+`sum/count/min/max/avg(slot)`. Every computed value carries a **derivation
+tree** back to the cited facts, so a reviewer can audit the arithmetic — the
+model never evaluates it. **Space your operators** (`a - 5`, not `a-5`): a `-`
+glued to a digit lexes as a negative literal.
+
 ### Differential over the `?` queries (v0.4)
 
 A program's `? h` lines are read as the set of **competing hypotheses**.

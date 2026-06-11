@@ -109,6 +109,28 @@ fn predicate_fires_over_typed_value_literal() {
 }
 
 #[test]
+fn let_computed_value_drives_a_predicate() {
+    // ADJ step 3b: a `let` formula is computed on the CPU and a predicate
+    // fires over the derived value — the model wrote only the formula.
+    let (ok, s) = run(
+        "adjcli_let.adj",
+        "prior 0.30 for bacterial\n  source \"x\" trust empirical\n\
+         observe csf_glucose(40)\n\
+         observe serum_glucose(100)\n\
+         let csf_ratio = csf_glucose / serum_glucose\n\
+         contributes 1000000 from csf_ratio <= 0.5 to bacterial\n  source \"Spanos 1989\" trust authoritative\n\
+         ? bacterial\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"hypothesis\":\"bacterial\""), "{s}");
+    // csf_ratio = 0.4 <= 0.5 fires the saturating rule → posterior ≈ 1.
+    assert!(
+        s.contains("\"posterior\":0.99") || s.contains("\"posterior\":1"),
+        "derived-value predicate should fire: {s}"
+    );
+}
+
+#[test]
 fn predicate_below_threshold_does_not_fire() {
     // Income under the threshold: the predicate step never appears, and the
     // posterior stays at the prior.

@@ -30,7 +30,9 @@
 use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
-use crate::ast::{Annotation, CmpOp, Evidence, Program, Statement, Term, TrustTierName};
+use crate::ast::{
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, Statement, Term, TrustTierName,
+};
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -106,8 +108,9 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "uncertain_decl" => adapt_uncertain(child),
         "observe_decl" => adapt_observe(child),
         "query_decl" => adapt_query(child),
+        "let_decl" => adapt_let(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl",
             actual: other.to_string(),
         }),
     }
@@ -278,6 +281,166 @@ fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     // query_decl = QUESTION term
     let conclusion = expect_term_child(node, "query_decl")?;
     Ok(Statement::Query { conclusion })
+}
+
+fn adapt_let(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // let_decl = "let" IDENT EQUALS expr
+    //
+    // Two Name tokens are direct children: the `let` keyword and the
+    // binding name. `let` is not a reserved keyword (it lexes as a plain
+    // Name), so we take the first Name token whose value isn't "let".
+    let name = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "let" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .next()
+        .ok_or(AdapterError::MissingChild {
+            rule: "let_decl".into(),
+            position: "binding name",
+        })?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "let_decl".into(),
+        position: "expr",
+    })?;
+    let expr = adapt_expr(expr_node)?;
+    Ok(Statement::Let { name, expr })
+}
+
+/// `expr = term_expr { ( PLUS | MINUS ) term_expr }` — left-associative
+/// fold over `+`/`-`, looser than `*`/`/`.
+fn adapt_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    fold_binary(node, "expr", "term_expr", adapt_term_expr)
+}
+
+/// `term_expr = factor { ( STAR | SLASH ) factor }` — left-associative
+/// fold over `*`/`/`.
+fn adapt_term_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    fold_binary(node, "term_expr", "factor", adapt_factor)
+}
+
+/// Shared left-fold for the two binary-precedence levels: walk the
+/// node's children in source order, building `Bin(op, acc, rhs)` as each
+/// `(operator-token, operand)` pair appears. The operands are child
+/// nodes named `operand_rule`, adapted by `adapt_operand`.
+fn fold_binary(
+    node: &GrammarASTNode,
+    rule: &'static str,
+    operand_rule: &'static str,
+    adapt_operand: fn(&GrammarASTNode) -> Result<ExprAst, AdapterError>,
+) -> Result<ExprAst, AdapterError> {
+    let mut acc: Option<ExprAst> = None;
+    let mut pending_op: Option<ArithOp> = None;
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == operand_rule => {
+                let operand = adapt_operand(n)?;
+                acc = Some(match (acc.take(), pending_op.take()) {
+                    (None, _) => operand,
+                    (Some(lhs), Some(op)) => ExprAst::Bin(op, Box::new(lhs), Box::new(operand)),
+                    (Some(lhs), None) => lhs, // defensive: two operands, no op
+                });
+            }
+            ASTNodeOrToken::Token(t) => {
+                if let Some(op) = arith_op_from_value(&t.value) {
+                    pending_op = Some(op);
+                }
+            }
+            _ => {}
+        }
+    }
+    acc.ok_or(AdapterError::MissingChild {
+        rule: rule.into(),
+        position: "at least one operand",
+    })
+}
+
+/// `factor = agg | NUMBER | IDENT | LPAREN expr RPAREN`.
+fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    // A parsed `agg` or parenthesised `expr` appears as a named child node;
+    // a bare NUMBER or IDENT appears as a token. Check nodes first.
+    if let Some(agg) = first_named_child(node, "agg") {
+        return adapt_agg(agg);
+    }
+    if let Some(inner) = first_named_child(node, "expr") {
+        return adapt_expr(inner);
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Number {
+                return Ok(ExprAst::Lit(parse_finite(&t.value, t.type_, "factor")?));
+            }
+            if t.type_ == TokenType::Name {
+                return Ok(ExprAst::Ref(t.value.clone()));
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: "factor".into(),
+        position: "agg / number / identifier / parenthesised expr",
+    })
+}
+
+/// `agg = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN`.
+/// Two Name tokens: the aggregation keyword and the slot it reduces.
+fn adapt_agg(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let names: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    let op =
+        names
+            .first()
+            .and_then(|kw| agg_op_from_keyword(kw))
+            .ok_or(AdapterError::MissingChild {
+                rule: "agg".into(),
+                position: "aggregation keyword",
+            })?;
+    let slot = names
+        .get(1)
+        .map(|s| s.to_string())
+        .ok_or(AdapterError::MissingChild {
+            rule: "agg".into(),
+            position: "slot identifier",
+        })?;
+    Ok(ExprAst::Agg(op, slot))
+}
+
+fn arith_op_from_value(v: &str) -> Option<ArithOp> {
+    match v {
+        "+" => Some(ArithOp::Add),
+        "-" => Some(ArithOp::Sub),
+        "*" => Some(ArithOp::Mul),
+        "/" => Some(ArithOp::Div),
+        _ => None,
+    }
+}
+
+fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
+    match kw {
+        "sum" => Some(AggOp::Sum),
+        "count" => Some(AggOp::Count),
+        "min" => Some(AggOp::Min),
+        "max" => Some(AggOp::Max),
+        "avg" => Some(AggOp::Avg),
+        _ => None,
+    }
+}
+
+/// Find the first direct child node with the given rule name.
+fn first_named_child<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarASTNode> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Node(n) if n.rule_name == rule => Some(n),
+        _ => None,
+    })
 }
 
 fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {

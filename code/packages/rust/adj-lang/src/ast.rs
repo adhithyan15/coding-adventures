@@ -58,6 +58,41 @@ pub enum CmpOp {
     Eq,
 }
 
+/// A binary arithmetic operator in a `let` formula.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArithOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
+/// An aggregation operator in a `let` formula — reduces every
+/// observation of a slot.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AggOp {
+    Sum,
+    Count,
+    Min,
+    Max,
+    Avg,
+}
+
+/// The formula of a `let <name> = <expr>` binding. Mirrors
+/// `logic_engine::ComputeExpr`; kept as a separate surface type so the
+/// AST has no engine dependency (the lowerer converts it).
+#[derive(Debug, Clone, PartialEq)]
+pub enum ExprAst {
+    /// A reference to a slot (observed fact or a previously-bound `let`).
+    Ref(String),
+    /// A numeric literal written into the formula.
+    Lit(f64),
+    /// A binary arithmetic operation.
+    Bin(ArithOp, Box<ExprAst>, Box<ExprAst>),
+    /// An aggregation over every observation of a slot.
+    Agg(AggOp, String),
+}
+
 /// One source line in an Adj-Lang program.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Statement {
@@ -87,6 +122,11 @@ pub enum Statement {
     Observe { term: Term },
     /// `? <conclusion>` — query the engine for the posterior.
     Query { conclusion: Term },
+    /// `let <name> = <expr>` — bind a **computed** value (ADJ expansion
+    /// step 3). The model writes only the formula; the engine evaluates
+    /// `expr` on the CPU into a derivation tree and binds it to `name`,
+    /// after which a predicate can fire over it like an observed slot.
+    Let { name: String, expr: ExprAst },
     /// `uncertain { <e1>, <e2>, ... } for <conclusion>` — annotate
     /// the conclusion with a domain of candidate evidence terms,
     /// none of which has been observed. The LR aggregator surfaces
