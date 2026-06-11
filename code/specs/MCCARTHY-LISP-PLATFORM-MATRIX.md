@@ -63,7 +63,7 @@ representation + per-builtin backend lowering.
 | **JVM** | `iir-to-jvm-class-file` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-Object |
 | **CLR** | `iir-to-cil-bytecode` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | uniform-object |
 | **BEAM** | `iir-to-beam` | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | Erlang terms |
-| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | ☐ | tagged-word |
+| **LLVM** | `iir-to-llvm` | ✅ | ✅ | ✅ | ✅ | ✅ | ☐ | ☐ | tagged-word |
 | **JIT** | (lang JIT path) | ✅ | ☐ | ☐ | ☐ | ☐ | ☐ | ☐ | tagged-word |
 
 (F-cell `✅` = verified end-to-end; `☐` = not yet. The VM and native AOT are the
@@ -228,9 +228,10 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase E — LLVM (tagged-word, like native)
 
-- ◑ **W12 — LLVM cons + predicates (F2–F5).** *In progress.* Reuse the tagged-word
-  C runtime (`lispy_runtime.c`) the native AOT path links; lower cons/car/cdr/pair?/eq
-  via `call` to `__twig_lispy_*`; COND truthiness via `lispy_truthy`.
+- ✅ **W12 — LLVM cons + predicates (F2–F5). DONE** (via sub-slices W12a/W12b-1/2/3).
+  Reused the tagged-word C runtime (`lispy_runtime.c`) the native AOT path links;
+  lowered cons/car/cdr/pair?/eq via `call` to `__twig_lispy_*`; `COND` truthiness via
+  `lispy_truthy`. **LLVM core F1–F5 complete; only symbols+lambda (W13) remain.**
   - ✅ **W12a — LLVM scalar run-foundation (F1, verify-by-running).** Established the
     LLVM execution substrate: `compile_source_to_llvm[_with_target]` (concretize
     `any`→`i64`, lower to LLVM IR). `lang-aot/tests/llvm_scalar.rs` emits **host**-
@@ -253,12 +254,16 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
     by RUNNING (clang + `lispy_runtime.c`): `(ATOM 7)`→1, `(ATOM (CONS 1 2))`→0,
     `(EQ 7 7)`→1, `(EQ 7 8)`→0 (`lang-aot/tests/llvm_predicates.rs`). Reusable for all
     tagged-word backends; `iir-to-llvm` unchanged.
-  - ☐ **W12b-3 — LLVM `COND` (F5).** Needs **PHI nodes**: `COND` assigns the result
-    var in each clause block, but the backend tracks `const`/`mov` as compile-time
-    aliases (only valid in straight-line code), so a var assigned across branches
-    collapses to its last assignment (the emitted `unbox` reads the NIL clause). Needs
-    SSA merge (PHI, or alloca/store/load) + the `jmp_if` void-cond fix + an explicit
-    fallthrough `br` for all-`const`/`mov` (empty) blocks.
+  - ✅ **W12b-3 — LLVM `COND` (F5).** Solved the cross-block SSA merge the
+    naive-frontend way: a variable assigned in 2+ instructions (a `COND` result
+    written per clause) is promoted to a stack **slot** — an entry `alloca`, a
+    `store` per assignment, a `load` per read (what `opt -mem2reg` would collapse);
+    single-assignment vars keep the `const`/`mov` side-map. Two supporting fixes:
+    `jmp_if` on the `i64` `lispy_truthy` result compares `!= 0` (not `trunc void`),
+    and an all-`const`/`mov` (empty) clause block still gets an explicit fallthrough
+    `br`. Verified by RUNNING (clang + `lispy_runtime.c`):
+    `(COND ((ATOM 7) 11) …)`→11, second-clause→22, **nested `COND`**→44
+    (`lang-aot/tests/llvm_cond.rs`). **LLVM core F1–F5 complete.**
 - ☐ **W13 — LLVM symbols + lambda (F6–F7).** **Completes LLVM.**
 
 ### Phase F — native AOT + JIT completion

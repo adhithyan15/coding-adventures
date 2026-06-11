@@ -72,7 +72,10 @@ clang-built executable — `(CAR (CONS 7 9))` → 7, `(CDR (CONS 7 9))` → 9.
 **Predicates** run too (W12b-2, F3–F4): a predicate returns a *tagged* boolean, so
 the shared `lower_lisp_repr` coerces a boolean program result with `lispy_truthy`
 (→ 0/1) rather than `lispy_unbox_int` — `(ATOM 7)` → 1, `(EQ 7 7)` → 1,
-`(EQ 7 8)` → 0. `COND` (F5, needs PHI nodes) and symbols/lambda (F6–F7) are W12b-3+.
+`(EQ 7 8)` → 0. **`COND`** runs too (W12b-3, F5): a clause-result variable assigned
+across blocks is promoted to a stack slot (`alloca`/`store`/`load`, a cross-block SSA
+merge) — `(COND ((ATOM 7) 11) ((ATOM 8) 22))` → 11, nested `COND` → 44. **LLVM is now
+F1–F5**; only symbols + lambda (F6–F7) remain (W13).
 
 ## Stack position
 

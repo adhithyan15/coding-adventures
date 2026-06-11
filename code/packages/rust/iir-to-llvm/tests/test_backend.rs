@@ -952,3 +952,55 @@ fn unknown_builtin_still_rejected() {
         .expect_err("unknown builtin must be rejected");
     assert!(matches!(err, IIRLlvmError::UnsupportedOp { .. }), "got: {err:?}");
 }
+
+/// McCarthy W12b-3: a variable assigned in 2+ instructions (here `m`, written in
+/// two blocks like a `COND` result) is promoted to a stack slot — an entry
+/// `alloca`, a `store` per assignment, and a `load` per read. A clause block with
+/// no emitted instructions still gets an explicit fallthrough `br` (no two labels
+/// back-to-back), and `ret` reads the merged value through a `load`.
+#[test]
+fn multi_assigned_var_is_promoted_to_alloca() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            // if cond goto L_else
+            IIRInstr::new("const", Some("c".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("jmp_if_false", None,
+                vec![Operand::Var("c".into()), Operand::Var("L_else".into())], "void"),
+            IIRInstr::new("const", Some("m".into()), vec![Operand::Int(11)], "i64"),
+            IIRInstr::new("jmp", None, vec![Operand::Var("L_end".into())], "void"),
+            IIRInstr::new("label", None, vec![Operand::Var("L_else".into())], "void"),
+            IIRInstr::new("const", Some("m".into()), vec![Operand::Int(22)], "i64"),
+            IIRInstr::new("label", None, vec![Operand::Var("L_end".into())], "void"),
+            IIRInstr::new("ret", None, vec![Operand::Var("m".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("%m.slot = alloca i64"), "entry alloca for the merge var; got:\n{ll}");
+    assert!(ll.contains("store i64 11, ptr %m.slot"), "store of the then-value; got:\n{ll}");
+    assert!(ll.contains("store i64 22, ptr %m.slot"), "store of the else-value; got:\n{ll}");
+    assert!(ll.contains("= load i64, ptr %m.slot"), "load before ret; got:\n{ll}");
+    // The `c == 0` clause test (i64 truthy) compares against zero, not `trunc void`.
+    assert!(ll.contains("icmp ne i64"), "void-typed jmp_if compares against zero; got:\n{ll}");
+    assert!(!ll.contains("trunc void"), "must never emit `trunc void`; got:\n{ll}");
+}
+
+/// A purely straight-line function (no var assigned twice) takes the fast path:
+/// no `alloca`/`store`/`load` is emitted — the `const`/`mov` side-map still wins.
+#[test]
+fn single_assignment_stays_on_the_side_map() {
+    let f = IIRFunction::new(
+        "answer",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(!ll.contains("alloca"), "no slot for a single-assignment var; got:\n{ll}");
+    assert!(ll.contains("ret i64 42"), "const folds straight into ret; got:\n{ll}");
+}
