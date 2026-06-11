@@ -1682,6 +1682,59 @@ pub struct IntegrationActivationMaintenanceSummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReadoutStage {
+    pub priority: u8,
+    pub health_status: IntegrationActivationHealthStatus,
+    pub integration_ids: Vec<IntegrationId>,
+    pub maintenance_window: IntegrationActivationMaintenanceWindow,
+    pub dossiers: Vec<IntegrationActivationDossierItem>,
+    pub dossier_summary: IntegrationActivationDossierSummary,
+    pub evidence_summary: IntegrationActivationEvidenceSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationReadoutSummary {
+    pub total_readouts: usize,
+    pub total_integrations: usize,
+    pub ready_readouts: usize,
+    pub review_readouts: usize,
+    pub blocked_readouts: usize,
+    pub empty_readouts: usize,
+    pub activation_ready_integrations: usize,
+    pub ready_to_activate_integrations: usize,
+    pub review_integrations: usize,
+    pub blocked_integrations: usize,
+    pub readouts_with_activation_work: usize,
+    pub readouts_with_approval_work: usize,
+    pub readouts_with_review_work: usize,
+    pub readouts_with_blockers: usize,
+    pub readouts_with_risks: usize,
+    pub readouts_with_dependency_blockers: usize,
+    pub total_actions: usize,
+    pub activate_integration_actions: usize,
+    pub review_policy_actions: usize,
+    pub blocking_constraints: usize,
+    pub review_constraints: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_dossiers: usize,
+    pub ready_to_approve_dossiers: usize,
+    pub blocked_dossiers: usize,
+    pub total_evidence: usize,
+    pub supporting_evidence: usize,
+    pub review_evidence: usize,
+    pub blocking_evidence: usize,
+    pub first_ready_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_activation_priority: Option<u8>,
+    pub first_approval_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -2388,6 +2441,273 @@ impl IntegrationActivationMaintenanceSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.overall_status.requires_attention() || self.has_review_work() || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationReadoutStage {
+    pub fn from_candidates(
+        catalog: &[IntegrationCatalogEntry],
+        priority: u8,
+        mut candidates: Vec<IntegrationActivationCandidate>,
+        enabled_integrations: &[IntegrationId],
+    ) -> Self {
+        candidates.sort_by(compare_activation_candidates);
+        let integration_ids = candidates
+            .iter()
+            .map(|candidate| candidate.readiness_report.requested_integration_id.clone())
+            .collect::<Vec<_>>();
+        let maintenance_window = IntegrationActivationMaintenanceWindow::from_candidates(
+            catalog,
+            priority,
+            candidates.clone(),
+            enabled_integrations,
+        );
+        let dossiers =
+            activation_dossiers_from_candidates(catalog, candidates.iter(), enabled_integrations);
+        let dossier_summary = IntegrationActivationDossierSummary::from_dossiers(dossiers.iter());
+        let evidence_summary = IntegrationActivationEvidenceSummary::from_evidence(
+            dossiers.iter().flat_map(|dossier| dossier.evidence.iter()),
+        );
+        let health_status = maintenance_window.health_status;
+
+        Self {
+            priority,
+            health_status,
+            integration_ids,
+            maintenance_window,
+            dossiers,
+            dossier_summary,
+            evidence_summary,
+        }
+    }
+
+    pub fn candidate_summary(&self) -> &IntegrationActivationCandidateSummary {
+        &self.maintenance_window.candidate_summary
+    }
+
+    pub fn action_summary(&self) -> &IntegrationActivationActionSummary {
+        &self.maintenance_window.action_summary
+    }
+
+    pub fn constraint_summary(&self) -> &IntegrationActivationConstraintSummary {
+        &self.maintenance_window.constraint_summary
+    }
+
+    pub fn risk_summary(&self) -> &IntegrationActivationRiskSummary {
+        &self.maintenance_window.risk_summary
+    }
+
+    pub fn dependency_summary(&self) -> &IntegrationActivationDependencySummary {
+        &self.maintenance_window.dependency_summary
+    }
+
+    pub fn has_ready_work(&self) -> bool {
+        self.maintenance_window.has_ready_work()
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.maintenance_window.has_activation_work()
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.dossier_summary.has_approval_ready_work()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.maintenance_window.has_review_work()
+            || self.dossier_summary.has_review_work()
+            || self.evidence_summary.has_review_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.maintenance_window.has_blockers()
+            || self.dossier_summary.has_blockers()
+            || self.evidence_summary.has_blockers()
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.maintenance_window.has_risks()
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.maintenance_window.has_dependency_blockers()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.maintenance_window.requires_attention()
+            || self.dossier_summary.requires_attention()
+            || self.evidence_summary.requires_attention()
+    }
+}
+
+impl IntegrationActivationReadoutSummary {
+    pub fn from_readouts<'a>(
+        readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+    ) -> Self {
+        let mut summary = Self {
+            total_readouts: 0,
+            total_integrations: 0,
+            ready_readouts: 0,
+            review_readouts: 0,
+            blocked_readouts: 0,
+            empty_readouts: 0,
+            activation_ready_integrations: 0,
+            ready_to_activate_integrations: 0,
+            review_integrations: 0,
+            blocked_integrations: 0,
+            readouts_with_activation_work: 0,
+            readouts_with_approval_work: 0,
+            readouts_with_review_work: 0,
+            readouts_with_blockers: 0,
+            readouts_with_risks: 0,
+            readouts_with_dependency_blockers: 0,
+            total_actions: 0,
+            activate_integration_actions: 0,
+            review_policy_actions: 0,
+            blocking_constraints: 0,
+            review_constraints: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_dossiers: 0,
+            ready_to_approve_dossiers: 0,
+            blocked_dossiers: 0,
+            total_evidence: 0,
+            supporting_evidence: 0,
+            review_evidence: 0,
+            blocking_evidence: 0,
+            first_ready_priority: None,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            first_activation_priority: None,
+            first_approval_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for readout in readouts {
+            summary.total_readouts += 1;
+            summary.total_integrations += readout.candidate_summary().total_candidates;
+            summary.activation_ready_integrations +=
+                readout.candidate_summary().activation_ready_candidates;
+            summary.ready_to_activate_integrations +=
+                readout.candidate_summary().ready_to_activate_candidates;
+            summary.review_integrations +=
+                readout.candidate_summary().needs_human_review_candidates;
+            summary.blocked_integrations += readout.candidate_summary().blocked_candidates;
+
+            summary.total_actions += readout.action_summary().total_actions;
+            summary.activate_integration_actions +=
+                readout.action_summary().activate_integration_actions;
+            summary.review_policy_actions += readout.action_summary().review_policy_actions;
+            summary.blocking_constraints += readout.constraint_summary().blocking_constraints;
+            summary.review_constraints += readout.constraint_summary().review_constraints;
+            summary.total_risks += readout.risk_summary().total_risks;
+            summary.total_dependency_edges += readout.dependency_summary().total_edges;
+            summary.blocking_dependency_edges += readout.dependency_summary().blocking_edges;
+
+            summary.total_dossiers += readout.dossier_summary.total_dossiers;
+            summary.ready_to_approve_dossiers += readout.dossier_summary.ready_to_approve_dossiers;
+            summary.blocked_dossiers += readout.dossier_summary.blocked_dossiers;
+            summary.total_evidence += readout.evidence_summary.total_evidence;
+            summary.supporting_evidence += readout.evidence_summary.supporting_evidence;
+            summary.review_evidence += readout.evidence_summary.review_evidence;
+            summary.blocking_evidence += readout.evidence_summary.blocking_evidence;
+
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(readout.candidate_summary().highest_policy_tier)
+                .max(readout.action_summary().highest_policy_tier)
+                .max(readout.constraint_summary().highest_policy_tier)
+                .max(readout.risk_summary().highest_policy_tier)
+                .max(readout.dependency_summary().highest_policy_tier)
+                .max(readout.dossier_summary.highest_policy_tier)
+                .max(readout.evidence_summary.highest_policy_tier);
+
+            match readout.health_status {
+                IntegrationActivationHealthStatus::Ready => summary.ready_readouts += 1,
+                IntegrationActivationHealthStatus::NeedsReview => summary.review_readouts += 1,
+                IntegrationActivationHealthStatus::Blocked => summary.blocked_readouts += 1,
+                IntegrationActivationHealthStatus::Empty => summary.empty_readouts += 1,
+            }
+
+            if readout.has_activation_work() {
+                summary.readouts_with_activation_work += 1;
+                summary.first_activation_priority = min_optional_priority(
+                    summary.first_activation_priority,
+                    Some(readout.priority),
+                );
+            }
+            if readout.has_approval_ready_work() {
+                summary.readouts_with_approval_work += 1;
+                summary.first_approval_priority =
+                    min_optional_priority(summary.first_approval_priority, Some(readout.priority));
+            }
+            if readout.has_ready_work() {
+                summary.first_ready_priority =
+                    min_optional_priority(summary.first_ready_priority, Some(readout.priority));
+            }
+            if readout.has_review_work() {
+                summary.readouts_with_review_work += 1;
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(readout.priority));
+            }
+            if readout.has_blockers() {
+                summary.readouts_with_blockers += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(readout.priority));
+            }
+            if readout.has_risks() {
+                summary.readouts_with_risks += 1;
+            }
+            if readout.has_dependency_blockers() {
+                summary.readouts_with_dependency_blockers += 1;
+            }
+        }
+
+        summary.overall_status = activation_health_status_from_counts(
+            summary.ready_to_activate_integrations,
+            summary.review_integrations,
+            summary.blocked_integrations,
+        );
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_readouts == 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.activate_integration_actions > 0
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.ready_to_approve_dossiers > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_integrations > 0
+            || self.review_policy_actions > 0
+            || self.review_constraints > 0
+            || self.review_evidence > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_integrations > 0
+            || self.blocking_constraints > 0
+            || self.blocking_dependency_edges > 0
+            || self.blocking_evidence > 0
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.total_risks > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.overall_status.requires_attention()
+            || self.has_approval_ready_work()
+            || self.has_review_work()
+            || self.has_blockers()
     }
 }
 
@@ -6135,6 +6455,55 @@ pub fn activation_dossiers_at_or_before_priority(
     activation_dossiers_from_candidates(catalog, candidates.iter(), enabled_integrations)
 }
 
+pub fn activation_readouts_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationReadoutStage> {
+    let mut readouts_by_priority: BTreeMap<u8, Vec<IntegrationActivationCandidate>> =
+        BTreeMap::new();
+    for candidate in candidates {
+        readouts_by_priority
+            .entry(candidate.readiness_report.priority)
+            .or_default()
+            .push(candidate);
+    }
+
+    let mut readouts = readouts_by_priority
+        .into_iter()
+        .map(|(priority, candidates)| {
+            IntegrationActivationReadoutStage::from_candidates(
+                catalog,
+                priority,
+                candidates,
+                enabled_integrations,
+            )
+        })
+        .collect::<Vec<_>>();
+    readouts.sort_by(compare_activation_readouts);
+    readouts
+}
+
+pub fn activation_readouts_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationReadoutStage> {
+    activation_readouts_from_candidates(
+        catalog,
+        activation_candidates_at_or_before_priority(
+            catalog,
+            priority,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        ),
+        enabled_integrations,
+    )
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -7414,6 +7783,23 @@ fn compare_activation_dossiers(
                 .total_evidence
                 .cmp(&left.evidence_summary.total_evidence)
         })
+}
+
+fn compare_activation_readouts(
+    left: &IntegrationActivationReadoutStage,
+    right: &IntegrationActivationReadoutStage,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| {
+            right
+                .has_approval_ready_work()
+                .cmp(&left.has_approval_ready_work())
+        })
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| right.has_risks().cmp(&left.has_risks()))
 }
 
 fn compare_activation_dependency_nodes(
@@ -8931,6 +9317,145 @@ mod tests {
         assert!(catalog_dossiers
             .iter()
             .any(IntegrationActivationDossierItem::has_policy_surfaces));
+    }
+
+    #[test]
+    fn activation_readouts_roll_up_wave_health_dossiers_and_evidence() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+
+        let readouts = activation_readouts_from_candidates(&[], candidates, &[]);
+
+        assert_eq!(readouts.len(), 3);
+        let approval_ready = readouts
+            .iter()
+            .find(|readout| readout.priority == 1)
+            .unwrap();
+        assert_eq!(
+            approval_ready.health_status,
+            IntegrationActivationHealthStatus::NeedsReview
+        );
+        assert!(approval_ready.has_approval_ready_work());
+        assert!(approval_ready.has_review_work());
+        assert_eq!(approval_ready.dossier_summary.ready_to_approve_dossiers, 1);
+        assert!(approval_ready.evidence_summary.has_supporting_evidence());
+
+        let blocked = readouts
+            .iter()
+            .find(|readout| readout.priority == 2)
+            .unwrap();
+        assert_eq!(
+            blocked.health_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(blocked.has_blockers());
+        assert!(blocked.has_review_work());
+        assert_eq!(blocked.dossier_summary.blocked_dossiers, 1);
+        assert!(blocked.evidence_summary.has_blockers());
+        assert!(blocked.dependency_summary().has_blocking_dependencies());
+
+        let ready = readouts
+            .iter()
+            .find(|readout| readout.priority == 3)
+            .unwrap();
+        assert_eq!(
+            ready.health_status,
+            IntegrationActivationHealthStatus::Ready
+        );
+        assert!(ready.has_activation_work());
+        assert!(!ready.has_approval_ready_work());
+
+        let summary = IntegrationActivationReadoutSummary::from_readouts(readouts.iter());
+        assert_eq!(summary.total_readouts, 3);
+        assert_eq!(summary.ready_readouts, 1);
+        assert_eq!(summary.review_readouts, 1);
+        assert_eq!(summary.blocked_readouts, 1);
+        assert_eq!(summary.total_dossiers, 2);
+        assert_eq!(summary.ready_to_approve_dossiers, 1);
+        assert_eq!(summary.blocked_dossiers, 1);
+        assert_eq!(summary.readouts_with_activation_work, 1);
+        assert_eq!(summary.readouts_with_approval_work, 1);
+        assert_eq!(summary.readouts_with_blockers, 2);
+        assert!(summary.total_evidence > 0);
+        assert!(summary.supporting_evidence > 0);
+        assert!(summary.review_evidence > 0);
+        assert!(summary.blocking_evidence > 0);
+        assert_eq!(summary.first_approval_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(1));
+        assert_eq!(summary.first_activation_priority, Some(3));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_activation_work());
+        assert!(summary.has_approval_ready_work());
+        assert!(summary.has_review_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_readouts = activation_readouts_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_readouts
+            .iter()
+            .any(|readout| readout.dossier_summary.total_dossiers > 0));
     }
 
     #[test]

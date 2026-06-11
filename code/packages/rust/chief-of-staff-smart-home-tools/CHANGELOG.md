@@ -49,6 +49,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation approval packet planning:
   `smart_home.list_integration_activation_approvals` and
   `smart_home.get_integration_activation_approval_summary`.
+- Added D18D handlers for D23A activation readout planning:
+  `smart_home.list_integration_activation_readouts` and
+  `smart_home.get_integration_activation_readout_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.

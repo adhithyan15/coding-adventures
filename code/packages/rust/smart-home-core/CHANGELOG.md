@@ -64,6 +64,10 @@ All notable changes to this package will be documented in this file.
 - `smart_home.list_integration_activation_dossiers` and
   `smart_home.get_integration_activation_dossier_summary` tool descriptors
   for read-only bundled activation decision and evidence planning.
+- `smart_home.list_integration_activation_readouts` and
+  `smart_home.get_integration_activation_readout_summary` tool descriptors
+  for read-only priority-wave activation readouts across health, dossiers,
+  evidence, risk, action, and dependency blockers.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.
