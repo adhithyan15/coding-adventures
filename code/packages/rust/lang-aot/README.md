@@ -97,6 +97,14 @@ nested `COND` → 44, `(EQ (QUOTE A) (QUOTE A))` → 1, `((LAMBDA (X) X) 5)` →
 recursive `LABEL` → 7. **With the JIT, McCarthy 1960 LISP now runs on every LANG VM
 backend (F1–F7): VM, native AOT, JIT, WASM, JVM, CLR, BEAM, LLVM.**
 
+`tests/conformance.rs` (W16) is the capstone: one shared table of **19** McCarthy
+programs (F1–F7) run through **all eight backends**, each asserting the identical
+integer result. The four in-process backends (VM/JIT/WASM/CLR) always run; JVM
+(`java`), BEAM (`erl`), LLVM (`clang`), and native AOT (`ld`) skip gracefully when
+their tool is absent. One source, eight code generators, three value models
+(tagged-word / uniform-anyref / object-boxing / Erlang-terms), **one answer** — the
+proof the platform is complete and uniform.
+
 ## Stack position
 
 ```
