@@ -1,5 +1,11 @@
 # McCarthy LISP — Full Platform Implementation Matrix
 
+> ## ✅ COMPLETE — McCarthy 1960 LISP runs F1–F7 on all eight LANG VM backends.
+> Every feature (scalar, cons/car/cdr, ATOM, EQ, COND, symbols, LAMBDA/LABEL/
+> recursion) runs on VM, native AOT, JIT, WASM, JVM, CLR, BEAM, and LLVM. The W16
+> conformance suite proves uniformity: one source × 8 backends × 19 programs → one
+> answer. All W1–W16 worklist items are shipped.
+
 **Goal:** a *complete* McCarthy 1960 LISP on **every** backend the LANG VM
 supports — VM, AOT (native), JIT, WASM, JVM, CLR, BEAM, LLVM — so the same
 `.lisp` source runs identically everywhere.
@@ -341,9 +347,19 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase G — conformance
 
-- ☐ **W16 — cross-backend conformance suite.** One table of McCarthy programs ×
-  every backend, each asserting the identical result — the proof that McCarthy
-  is complete and uniform across the whole LANG VM. Wire into CI.
+- ✅ **W16 — cross-backend conformance suite. DONE — THE PLATFORM MATRIX IS COMPLETE.**
+  `lang-aot/tests/conformance.rs` runs one shared table of **19** McCarthy programs
+  (F1–F7: scalar, cons/car/cdr, ATOM, EQ, COND, symbols, `LAMBDA`/`LABEL`/recursion)
+  through **all eight backends** and asserts the *identical* integer result from
+  each: VM (`mccarthy_lisp_vm`), JIT (`run_mccarthy_on_jit`), WASM (`wasm-runtime`),
+  CLR (`clr-simulator`), JVM (real `java`), BEAM (real `erl`), LLVM (`clang` +
+  `lispy_runtime.c`), native AOT (system `ld`). The four pure-in-process backends
+  (VM/JIT/WASM/CLR) are the conformance floor — they must run every program; the
+  external-tool backends skip gracefully when their tool is absent (so CI proves
+  uniformity across whatever is installed). On a fully-equipped host all eight agree
+  on all 19 programs. **This is the proof: one source, eight independent code
+  generators, three value models (tagged-word / uniform-anyref / object-boxing /
+  Erlang-terms), one answer.**
 
 ---
 
