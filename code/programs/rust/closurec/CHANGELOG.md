@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.79.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-066** (minimal safe slice) — redundant parens
+  after `extends`: `class A extends(B){}` → `class A extends B{}`
+  (also `extends(a.b)` → `extends a.b`, class expressions).
+
+### Added — gap-066 token pre-pass
+
+Strips the grouping parens after the `extends` KEYWORD when the
+superclass is a simple reference (identifier + `.IDENT` chain).
+Guards: anchored on the `extends` keyword, not a string literal
+whose content is `extends`, and not a PROPERTY named `extends`
+(`o.extends(x)` is a method call — prev-prev must not be
+`.`/`?.`); all bracket checks via `is_structural_punct`.
+
+DELIBERATELY CONSERVATIVE vs upstream: `extends(B||C)` keeps its
+parens because `B||C` is not a LeftHandSideExpression, so
+`extends B||C` would be INVALID JS (upstream strips it anyway,
+producing arguably-invalid output). Call-chain inners
+(`extends(f())`) are deferred. 5 new gap066_* unit tests.
+
 ## [0.78.0] - 2026-06-11
 
 ### Changed
