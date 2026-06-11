@@ -1048,6 +1048,35 @@ impl IntegrationActivationBriefingItemKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationForecastAction {
+    ResolveBlockers,
+    EnableDependencies,
+    PrepareApproval,
+    QueueReview,
+    ReviewRisk,
+    ActivateWave,
+    MonitorWave,
+}
+
+impl IntegrationActivationForecastAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ResolveBlockers => "resolve_blockers",
+            Self::EnableDependencies => "enable_dependencies",
+            Self::PrepareApproval => "prepare_approval",
+            Self::QueueReview => "queue_review",
+            Self::ReviewRisk => "review_risk",
+            Self::ActivateWave => "activate_wave",
+            Self::MonitorWave => "monitor_wave",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        !matches!(self, Self::ActivateWave | Self::MonitorWave)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationDecisionStatus {
     ReadyToApprove,
     BlockedOnPrerequisites,
@@ -1910,6 +1939,82 @@ pub struct IntegrationActivationTimelineSummary {
     pub total_risks: usize,
     pub total_dependency_edges: usize,
     pub blocking_dependency_edges: usize,
+    pub first_activation_sequence: Option<usize>,
+    pub first_approval_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_risk_sequence: Option<usize>,
+    pub first_dependency_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_activation_priority: Option<u8>,
+    pub first_approval_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_risk_priority: Option<u8>,
+    pub first_dependency_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationForecastItem {
+    pub sequence: usize,
+    pub priority: u8,
+    pub forecast_action: IntegrationActivationForecastAction,
+    pub milestone_kind: Option<IntegrationActivationBriefingItemKind>,
+    pub health_status: IntegrationActivationHealthStatus,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub briefing_item_count: usize,
+    pub action_count: usize,
+    pub dossier_count: usize,
+    pub evidence_count: usize,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub has_activation_work: bool,
+    pub has_approval_ready_work: bool,
+    pub has_review_work: bool,
+    pub has_blockers: bool,
+    pub has_risks: bool,
+    pub has_dependency_blockers: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationForecastSummary {
+    pub total_forecasts: usize,
+    pub unique_integrations: usize,
+    pub ready_forecasts: usize,
+    pub review_forecasts: usize,
+    pub blocked_forecasts: usize,
+    pub empty_forecasts: usize,
+    pub activate_wave_forecasts: usize,
+    pub prepare_approval_forecasts: usize,
+    pub queue_review_forecasts: usize,
+    pub resolve_blocker_forecasts: usize,
+    pub enable_dependency_forecasts: usize,
+    pub review_risk_forecasts: usize,
+    pub monitor_wave_forecasts: usize,
+    pub forecasts_requiring_attention: usize,
+    pub forecasts_with_activation_work: usize,
+    pub forecasts_with_approval_work: usize,
+    pub forecasts_with_review_work: usize,
+    pub forecasts_with_blockers: usize,
+    pub forecasts_with_risks: usize,
+    pub forecasts_with_dependency_blockers: usize,
+    pub total_briefing_items: usize,
+    pub total_actions: usize,
+    pub total_dossiers: usize,
+    pub total_evidence: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub next_action: Option<IntegrationActivationForecastAction>,
+    pub next_action_sequence: Option<usize>,
+    pub next_action_priority: Option<u8>,
     pub first_activation_sequence: Option<usize>,
     pub first_approval_sequence: Option<usize>,
     pub first_review_sequence: Option<usize>,
@@ -3588,6 +3693,317 @@ impl IntegrationActivationTimelineSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.overall_status.requires_attention()
+            || self.has_approval_ready_work()
+            || self.has_review_work()
+            || self.has_blockers()
+            || self.has_risks()
+            || self.has_dependency_blockers()
+    }
+}
+
+impl IntegrationActivationForecastItem {
+    fn from_milestone(milestone: IntegrationActivationTimelineMilestone) -> Self {
+        let card = &milestone.dashboard_card;
+        let forecast_action = if milestone.has_dependency_blockers() {
+            IntegrationActivationForecastAction::EnableDependencies
+        } else if milestone.has_blockers() {
+            IntegrationActivationForecastAction::ResolveBlockers
+        } else if milestone.has_approval_ready_work() {
+            IntegrationActivationForecastAction::PrepareApproval
+        } else if milestone.has_review_work() {
+            IntegrationActivationForecastAction::QueueReview
+        } else if milestone.has_activation_work() {
+            IntegrationActivationForecastAction::ActivateWave
+        } else if milestone.has_risks() {
+            IntegrationActivationForecastAction::ReviewRisk
+        } else {
+            IntegrationActivationForecastAction::MonitorWave
+        };
+        let requires_attention =
+            forecast_action.requires_attention() || milestone.requires_attention();
+
+        Self {
+            sequence: milestone.sequence,
+            priority: milestone.priority,
+            forecast_action,
+            milestone_kind: milestone.milestone_kind,
+            health_status: card.health_status,
+            integration_ids: card.integration_ids.clone(),
+            integration_count: card.integration_count(),
+            briefing_item_count: card.briefing_item_count,
+            action_count: card.action_count,
+            dossier_count: card.dossier_count,
+            evidence_count: card.evidence_count,
+            risk_count: card.risk_count,
+            dependency_edge_count: card.dependency_edge_count,
+            blocking_dependency_edge_count: card.blocking_dependency_edge_count,
+            highest_policy_tier: card.highest_policy_tier,
+            has_activation_work: card.has_activation_work,
+            has_approval_ready_work: card.has_approval_ready_work,
+            has_review_work: card.has_review_work,
+            has_blockers: card.has_blockers,
+            has_risks: card.has_risks,
+            has_dependency_blockers: card.has_dependency_blockers,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.has_activation_work
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.has_approval_ready_work
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.has_review_work
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.has_blockers
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.has_risks
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.has_dependency_blockers
+    }
+}
+
+impl IntegrationActivationForecastSummary {
+    pub fn from_forecasts<'a>(
+        forecasts: impl IntoIterator<Item = &'a IntegrationActivationForecastItem>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_forecasts: 0,
+            unique_integrations: 0,
+            ready_forecasts: 0,
+            review_forecasts: 0,
+            blocked_forecasts: 0,
+            empty_forecasts: 0,
+            activate_wave_forecasts: 0,
+            prepare_approval_forecasts: 0,
+            queue_review_forecasts: 0,
+            resolve_blocker_forecasts: 0,
+            enable_dependency_forecasts: 0,
+            review_risk_forecasts: 0,
+            monitor_wave_forecasts: 0,
+            forecasts_requiring_attention: 0,
+            forecasts_with_activation_work: 0,
+            forecasts_with_approval_work: 0,
+            forecasts_with_review_work: 0,
+            forecasts_with_blockers: 0,
+            forecasts_with_risks: 0,
+            forecasts_with_dependency_blockers: 0,
+            total_briefing_items: 0,
+            total_actions: 0,
+            total_dossiers: 0,
+            total_evidence: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            next_action: None,
+            next_action_sequence: None,
+            next_action_priority: None,
+            first_activation_sequence: None,
+            first_approval_sequence: None,
+            first_review_sequence: None,
+            first_blocked_sequence: None,
+            first_risk_sequence: None,
+            first_dependency_sequence: None,
+            first_attention_sequence: None,
+            first_activation_priority: None,
+            first_approval_priority: None,
+            first_review_priority: None,
+            first_blocked_priority: None,
+            first_risk_priority: None,
+            first_dependency_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for forecast in forecasts {
+            summary.total_forecasts += 1;
+            for integration_id in &forecast.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match forecast.health_status {
+                IntegrationActivationHealthStatus::Ready => summary.ready_forecasts += 1,
+                IntegrationActivationHealthStatus::NeedsReview => summary.review_forecasts += 1,
+                IntegrationActivationHealthStatus::Blocked => summary.blocked_forecasts += 1,
+                IntegrationActivationHealthStatus::Empty => summary.empty_forecasts += 1,
+            }
+
+            match forecast.forecast_action {
+                IntegrationActivationForecastAction::ActivateWave => {
+                    summary.activate_wave_forecasts += 1;
+                    summary.first_activation_sequence = summary
+                        .first_activation_sequence
+                        .or(Some(forecast.sequence));
+                    summary.first_activation_priority = min_optional_priority(
+                        summary.first_activation_priority,
+                        Some(forecast.priority),
+                    );
+                }
+                IntegrationActivationForecastAction::PrepareApproval => {
+                    summary.prepare_approval_forecasts += 1;
+                    summary.first_approval_sequence =
+                        summary.first_approval_sequence.or(Some(forecast.sequence));
+                    summary.first_approval_priority = min_optional_priority(
+                        summary.first_approval_priority,
+                        Some(forecast.priority),
+                    );
+                }
+                IntegrationActivationForecastAction::QueueReview => {
+                    summary.queue_review_forecasts += 1;
+                    summary.first_review_sequence =
+                        summary.first_review_sequence.or(Some(forecast.sequence));
+                    summary.first_review_priority = min_optional_priority(
+                        summary.first_review_priority,
+                        Some(forecast.priority),
+                    );
+                }
+                IntegrationActivationForecastAction::ResolveBlockers => {
+                    summary.resolve_blocker_forecasts += 1;
+                    summary.first_blocked_sequence =
+                        summary.first_blocked_sequence.or(Some(forecast.sequence));
+                    summary.first_blocked_priority = min_optional_priority(
+                        summary.first_blocked_priority,
+                        Some(forecast.priority),
+                    );
+                }
+                IntegrationActivationForecastAction::EnableDependencies => {
+                    summary.enable_dependency_forecasts += 1;
+                    summary.first_dependency_sequence = summary
+                        .first_dependency_sequence
+                        .or(Some(forecast.sequence));
+                    summary.first_dependency_priority = min_optional_priority(
+                        summary.first_dependency_priority,
+                        Some(forecast.priority),
+                    );
+                }
+                IntegrationActivationForecastAction::ReviewRisk => {
+                    summary.review_risk_forecasts += 1;
+                    summary.first_risk_sequence =
+                        summary.first_risk_sequence.or(Some(forecast.sequence));
+                    summary.first_risk_priority =
+                        min_optional_priority(summary.first_risk_priority, Some(forecast.priority));
+                }
+                IntegrationActivationForecastAction::MonitorWave => {
+                    summary.monitor_wave_forecasts += 1;
+                }
+            }
+
+            if summary.next_action.is_none()
+                && forecast.forecast_action != IntegrationActivationForecastAction::MonitorWave
+            {
+                summary.next_action = Some(forecast.forecast_action);
+                summary.next_action_sequence = Some(forecast.sequence);
+                summary.next_action_priority = Some(forecast.priority);
+            }
+
+            summary.total_briefing_items += forecast.briefing_item_count;
+            summary.total_actions += forecast.action_count;
+            summary.total_dossiers += forecast.dossier_count;
+            summary.total_evidence += forecast.evidence_count;
+            summary.total_risks += forecast.risk_count;
+            summary.total_dependency_edges += forecast.dependency_edge_count;
+            summary.blocking_dependency_edges += forecast.blocking_dependency_edge_count;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(forecast.highest_policy_tier);
+
+            if forecast.requires_attention() {
+                summary.forecasts_requiring_attention += 1;
+                summary.first_attention_sequence =
+                    summary.first_attention_sequence.or(Some(forecast.sequence));
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(forecast.priority),
+                );
+            }
+            if forecast.has_activation_work() {
+                summary.forecasts_with_activation_work += 1;
+            }
+            if forecast.has_approval_ready_work() {
+                summary.forecasts_with_approval_work += 1;
+            }
+            if forecast.has_review_work() {
+                summary.forecasts_with_review_work += 1;
+            }
+            if forecast.has_blockers() {
+                summary.forecasts_with_blockers += 1;
+            }
+            if forecast.has_risks() {
+                summary.forecasts_with_risks += 1;
+            }
+            if forecast.has_dependency_blockers() {
+                summary.forecasts_with_dependency_blockers += 1;
+            }
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status =
+            if summary.blocked_forecasts > 0 || summary.forecasts_with_blockers > 0 {
+                IntegrationActivationHealthStatus::Blocked
+            } else if summary.review_forecasts > 0
+                || summary.forecasts_with_review_work > 0
+                || summary.forecasts_with_approval_work > 0
+            {
+                IntegrationActivationHealthStatus::NeedsReview
+            } else if summary.ready_forecasts > 0 || summary.forecasts_with_activation_work > 0 {
+                IntegrationActivationHealthStatus::Ready
+            } else {
+                IntegrationActivationHealthStatus::Empty
+            };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_forecasts == 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.forecasts_with_activation_work > 0 || self.activate_wave_forecasts > 0
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.forecasts_with_approval_work > 0 || self.prepare_approval_forecasts > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.forecasts_with_review_work > 0 || self.queue_review_forecasts > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.forecasts_with_blockers > 0 || self.resolve_blocker_forecasts > 0
+    }
+
+    pub fn has_risks(&self) -> bool {
+        self.forecasts_with_risks > 0 || self.review_risk_forecasts > 0
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.forecasts_with_dependency_blockers > 0 || self.enable_dependency_forecasts > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.forecasts_requiring_attention > 0
+            || self.overall_status.requires_attention()
             || self.has_approval_ready_work()
             || self.has_review_work()
             || self.has_blockers()
@@ -7554,6 +7970,63 @@ pub fn activation_timeline_milestones_at_or_before_priority(
     )
 }
 
+pub fn activation_forecasts_from_timeline_milestones(
+    mut milestones: Vec<IntegrationActivationTimelineMilestone>,
+) -> Vec<IntegrationActivationForecastItem> {
+    milestones.sort_by(compare_activation_timeline_milestones);
+    let mut forecasts = milestones
+        .into_iter()
+        .map(IntegrationActivationForecastItem::from_milestone)
+        .collect::<Vec<_>>();
+    forecasts.sort_by(compare_activation_forecasts);
+    for (index, forecast) in forecasts.iter_mut().enumerate() {
+        forecast.sequence = index + 1;
+    }
+    forecasts
+}
+
+pub fn activation_forecasts_from_dashboard_cards(
+    cards: Vec<IntegrationActivationDashboardCard>,
+) -> Vec<IntegrationActivationForecastItem> {
+    activation_forecasts_from_timeline_milestones(
+        activation_timeline_milestones_from_dashboard_cards(cards),
+    )
+}
+
+pub fn activation_forecasts_from_readouts<'a>(
+    readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+) -> Vec<IntegrationActivationForecastItem> {
+    activation_forecasts_from_dashboard_cards(activation_dashboard_cards_from_readouts(readouts))
+}
+
+pub fn activation_forecasts_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationForecastItem> {
+    activation_forecasts_from_dashboard_cards(activation_dashboard_cards_from_candidates(
+        catalog,
+        candidates,
+        enabled_integrations,
+    ))
+}
+
+pub fn activation_forecasts_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationForecastItem> {
+    activation_forecasts_from_dashboard_cards(activation_dashboard_cards_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -8888,6 +9361,26 @@ fn compare_activation_timeline_milestones(
     left.priority
         .cmp(&right.priority)
         .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| left.milestone_kind.cmp(&right.milestone_kind))
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| {
+            right
+                .has_approval_ready_work()
+                .cmp(&left.has_approval_ready_work())
+        })
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_forecasts(
+    left: &IntegrationActivationForecastItem,
+    right: &IntegrationActivationForecastItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| left.forecast_action.cmp(&right.forecast_action))
         .then_with(|| left.milestone_kind.cmp(&right.milestone_kind))
         .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
         .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
@@ -10924,6 +11417,121 @@ mod tests {
         assert!(catalog_milestones
             .iter()
             .any(IntegrationActivationTimelineMilestone::requires_attention));
+    }
+
+    #[test]
+    fn activation_forecasts_classify_timeline_milestones_into_next_actions() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+        let forecasts = activation_forecasts_from_candidates(&[], candidates, &[]);
+
+        assert_eq!(forecasts.len(), 3);
+        assert_eq!(forecasts[0].sequence, 1);
+        assert_eq!(forecasts[0].priority, 1);
+        assert!(forecasts[0].requires_attention());
+        assert_eq!(forecasts[2].sequence, 3);
+        assert_eq!(forecasts[2].priority, 3);
+        assert_eq!(
+            forecasts[2].forecast_action,
+            IntegrationActivationForecastAction::ActivateWave
+        );
+        assert!(forecasts.iter().any(|forecast| forecast.forecast_action
+            == IntegrationActivationForecastAction::EnableDependencies
+            || forecast.forecast_action == IntegrationActivationForecastAction::ResolveBlockers));
+
+        let summary = IntegrationActivationForecastSummary::from_forecasts(forecasts.iter());
+        assert_eq!(summary.total_forecasts, 3);
+        assert_eq!(summary.unique_integrations, 3);
+        assert_eq!(summary.activate_wave_forecasts, 1);
+        assert!(summary.resolve_blocker_forecasts + summary.enable_dependency_forecasts >= 1);
+        assert!(summary.forecasts_requiring_attention >= 1);
+        assert!(summary.forecasts_with_activation_work >= 1);
+        assert!(summary.forecasts_with_approval_work >= 1);
+        assert!(summary.forecasts_with_blockers >= 1);
+        assert!(summary.total_briefing_items >= 4);
+        assert!(summary.total_actions > 0);
+        assert!(summary.total_dossiers > 0);
+        assert!(summary.total_evidence > 0);
+        assert!(summary.total_risks > 0);
+        assert!(summary.blocking_dependency_edges > 0);
+        assert!(summary.next_action.is_some());
+        assert_eq!(summary.next_action_sequence, Some(1));
+        assert_eq!(summary.next_action_priority, Some(1));
+        assert_eq!(summary.first_attention_sequence, Some(1));
+        assert_eq!(summary.first_activation_sequence, Some(3));
+        assert_eq!(summary.first_activation_priority, Some(3));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_activation_work());
+        assert!(summary.has_approval_ready_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_forecasts = activation_forecasts_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_forecasts
+            .iter()
+            .any(IntegrationActivationForecastItem::requires_attention));
     }
 
     #[test]

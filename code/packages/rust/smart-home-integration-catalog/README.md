@@ -70,6 +70,9 @@ runtime and Chief of Staff tools a typed catalog for:
   priority-wave Chief status cards
 - activation timeline milestones that order dashboard cards into a Chief-ready
   wave sequence
+- activation forecast rows that classify timeline milestones into Chief-ready
+  next actions for blockers, dependencies, approvals, reviews, risks,
+  activation, and monitoring
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

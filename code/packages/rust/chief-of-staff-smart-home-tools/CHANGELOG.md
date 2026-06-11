@@ -61,6 +61,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation timeline milestone planning:
   `smart_home.list_integration_activation_timeline` and
   `smart_home.get_integration_activation_timeline_summary`.
+- Added D18D handlers for D23A activation forecast next-action planning:
+  `smart_home.list_integration_activation_forecasts` and
+  `smart_home.get_integration_activation_forecast_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.

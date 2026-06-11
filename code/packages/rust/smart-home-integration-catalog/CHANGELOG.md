@@ -68,6 +68,10 @@ All notable changes to this package will be documented in this file.
   `IntegrationActivationApprovalSummary` for bundling review rows with concrete
   actions, grouped constraints, policy risk, and dependency blockers before a
   human approval request.
+- `IntegrationActivationForecastItem` and
+  `IntegrationActivationForecastSummary` for classifying activation timeline
+  milestones into Chief-ready next actions across blockers, dependencies,
+  approvals, reviews, risks, activation, and monitoring.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
