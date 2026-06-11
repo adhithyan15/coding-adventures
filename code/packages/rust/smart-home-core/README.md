@@ -77,6 +77,8 @@ Current scope:
   queue planning derived from approval packets
 - D18D integration activation-evidence descriptors for read-only evidence rows
   behind approval and blocker decisions
+- D18D integration activation-dossier descriptors for read-only bundled
+  decision and evidence planning
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

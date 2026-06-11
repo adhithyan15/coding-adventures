@@ -1412,6 +1412,41 @@ pub struct IntegrationActivationEvidenceSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDossierItem {
+    pub decision: IntegrationActivationDecisionItem,
+    pub evidence: Vec<IntegrationActivationEvidenceItem>,
+    pub evidence_summary: IntegrationActivationEvidenceSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationDossierSummary {
+    pub total_dossiers: usize,
+    pub ready_to_approve_dossiers: usize,
+    pub blocked_dossiers: usize,
+    pub local_only_dossiers: usize,
+    pub cloud_required_dossiers: usize,
+    pub dossiers_with_policy_surfaces: usize,
+    pub dossiers_without_policy_surfaces: usize,
+    pub unique_policy_surfaces: usize,
+    pub total_actions: usize,
+    pub total_constraints: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_evidence: usize,
+    pub supporting_evidence: usize,
+    pub review_evidence: usize,
+    pub blocking_evidence: usize,
+    pub read_only_dossiers: usize,
+    pub low_risk_dossiers: usize,
+    pub human_approval_dossiers: usize,
+    pub high_risk_dossiers: usize,
+    pub first_approval_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationAgendaStage {
     pub priority: u8,
     pub candidates: Vec<IntegrationActivationCandidate>,
@@ -3402,6 +3437,174 @@ impl IntegrationActivationEvidenceSummary {
 
     pub fn has_blockers(&self) -> bool {
         self.blocking_evidence > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_review_work() || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationDossierItem {
+    fn from_decision(decision: IntegrationActivationDecisionItem) -> Self {
+        let mut evidence = IntegrationActivationEvidenceItem::from_decision(&decision);
+        evidence.sort_by(compare_activation_evidence);
+        let evidence_summary = IntegrationActivationEvidenceSummary::from_evidence(evidence.iter());
+
+        Self {
+            decision,
+            evidence,
+            evidence_summary,
+        }
+    }
+
+    pub fn requested_integration_id(&self) -> &IntegrationId {
+        self.decision.requested_integration_id()
+    }
+
+    pub fn display_name(&self) -> &str {
+        self.decision.display_name()
+    }
+
+    pub fn priority(&self) -> u8 {
+        self.decision.priority()
+    }
+
+    pub fn required_tier(&self) -> PrivilegeTier {
+        self.decision.required_tier()
+    }
+
+    pub fn approval_ready(&self) -> bool {
+        self.decision.approval_ready()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.decision.has_blockers() || self.evidence_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.evidence_summary.has_review_work()
+    }
+
+    pub fn has_policy_surfaces(&self) -> bool {
+        self.decision.has_policy_surfaces()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_review_work() || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationDossierSummary {
+    pub fn from_dossiers<'a>(
+        dossiers: impl IntoIterator<Item = &'a IntegrationActivationDossierItem>,
+    ) -> Self {
+        let mut policy_surfaces = BTreeSet::new();
+        let mut summary = Self {
+            total_dossiers: 0,
+            ready_to_approve_dossiers: 0,
+            blocked_dossiers: 0,
+            local_only_dossiers: 0,
+            cloud_required_dossiers: 0,
+            dossiers_with_policy_surfaces: 0,
+            dossiers_without_policy_surfaces: 0,
+            unique_policy_surfaces: 0,
+            total_actions: 0,
+            total_constraints: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_evidence: 0,
+            supporting_evidence: 0,
+            review_evidence: 0,
+            blocking_evidence: 0,
+            read_only_dossiers: 0,
+            low_risk_dossiers: 0,
+            human_approval_dossiers: 0,
+            high_risk_dossiers: 0,
+            first_approval_priority: None,
+            first_blocked_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for dossier in dossiers {
+            summary.total_dossiers += 1;
+            match dossier.decision.decision_status {
+                IntegrationActivationDecisionStatus::ReadyToApprove => {
+                    summary.ready_to_approve_dossiers += 1;
+                    summary.first_approval_priority = min_optional_priority(
+                        summary.first_approval_priority,
+                        Some(dossier.priority()),
+                    );
+                }
+                IntegrationActivationDecisionStatus::BlockedOnPrerequisites => {
+                    summary.blocked_dossiers += 1;
+                    summary.first_blocked_priority = min_optional_priority(
+                        summary.first_blocked_priority,
+                        Some(dossier.priority()),
+                    );
+                }
+            }
+
+            if dossier.decision.packet.review.local_only {
+                summary.local_only_dossiers += 1;
+            }
+            if dossier.decision.packet.review.cloud_required {
+                summary.cloud_required_dossiers += 1;
+            }
+            if dossier.has_policy_surfaces() {
+                summary.dossiers_with_policy_surfaces += 1;
+            } else {
+                summary.dossiers_without_policy_surfaces += 1;
+            }
+            for surface in &dossier.decision.packet.review.policy_surfaces {
+                policy_surfaces.insert(*surface);
+            }
+
+            summary.total_actions += dossier.decision.packet.action_summary.total_actions;
+            summary.total_constraints +=
+                dossier.decision.packet.constraint_summary.total_constraints;
+            summary.total_risks += dossier.decision.packet.risk_summary.total_risks;
+            summary.total_dependency_edges +=
+                dossier.decision.packet.dependency_graph.summary.total_edges;
+            summary.blocking_dependency_edges += dossier
+                .decision
+                .packet
+                .dependency_graph
+                .summary
+                .blocking_edges;
+
+            summary.total_evidence += dossier.evidence_summary.total_evidence;
+            summary.supporting_evidence += dossier.evidence_summary.supporting_evidence;
+            summary.review_evidence += dossier.evidence_summary.review_evidence;
+            summary.blocking_evidence += dossier.evidence_summary.blocking_evidence;
+
+            match dossier.required_tier() {
+                PrivilegeTier::ReadOnly => summary.read_only_dossiers += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_dossiers += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_dossiers += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_dossiers += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(dossier.required_tier());
+        }
+
+        summary.unique_policy_surfaces = policy_surfaces.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_dossiers == 0
+    }
+
+    pub fn has_approval_ready_work(&self) -> bool {
+        self.ready_to_approve_dossiers > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_evidence > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_dossiers > 0 || self.blocking_evidence > 0
     }
 
     pub fn requires_attention(&self) -> bool {
@@ -5894,6 +6097,44 @@ pub fn activation_evidence_at_or_before_priority(
     activation_evidence_from_candidates(catalog, candidates.iter(), enabled_integrations)
 }
 
+pub fn activation_dossiers_from_decisions(
+    decisions: impl IntoIterator<Item = IntegrationActivationDecisionItem>,
+) -> Vec<IntegrationActivationDossierItem> {
+    let mut dossiers = decisions
+        .into_iter()
+        .map(IntegrationActivationDossierItem::from_decision)
+        .collect::<Vec<_>>();
+
+    dossiers.sort_by(compare_activation_dossiers);
+    dossiers
+}
+
+pub fn activation_dossiers_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationDossierItem> {
+    let decisions = activation_decisions_from_candidates(catalog, candidates, enabled_integrations);
+    activation_dossiers_from_decisions(decisions)
+}
+
+pub fn activation_dossiers_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationDossierItem> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_dossiers_from_candidates(catalog, candidates.iter(), enabled_integrations)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -7148,6 +7389,31 @@ fn compare_activation_evidence(
                 .cmp(&right.requested_integration_id)
         })
         .then_with(|| left.detail_id.cmp(&right.detail_id))
+}
+
+fn compare_activation_dossiers(
+    left: &IntegrationActivationDossierItem,
+    right: &IntegrationActivationDossierItem,
+) -> Ordering {
+    compare_activation_decisions(&left.decision, &right.decision)
+        .then_with(|| {
+            right
+                .evidence_summary
+                .blocking_evidence
+                .cmp(&left.evidence_summary.blocking_evidence)
+        })
+        .then_with(|| {
+            right
+                .evidence_summary
+                .review_evidence
+                .cmp(&left.evidence_summary.review_evidence)
+        })
+        .then_with(|| {
+            right
+                .evidence_summary
+                .total_evidence
+                .cmp(&left.evidence_summary.total_evidence)
+        })
 }
 
 fn compare_activation_dependency_nodes(
@@ -8558,6 +8824,113 @@ mod tests {
         assert!(catalog_evidence
             .iter()
             .any(|item| item.policy_surface.is_some()));
+    }
+
+    #[test]
+    fn activation_dossiers_bundle_decisions_with_evidence_rollups() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+
+        let dossiers = activation_dossiers_from_candidates(&[], candidates.iter(), &[]);
+
+        assert_eq!(dossiers.len(), 2);
+        let ready = dossiers
+            .iter()
+            .find(|dossier| dossier.requested_integration_id().as_str() == "review_ready_bridge")
+            .unwrap();
+        assert!(ready.approval_ready());
+        assert!(!ready.has_blockers());
+        assert!(ready.evidence_summary.has_supporting_evidence());
+        assert!(ready.evidence_summary.has_review_work());
+        assert!(!ready.evidence.is_empty());
+
+        let blocked = dossiers
+            .iter()
+            .find(|dossier| dossier.requested_integration_id().as_str() == "blocked_review_camera")
+            .unwrap();
+        assert!(blocked.has_blockers());
+        assert!(blocked.requires_attention());
+        assert!(blocked.evidence_summary.has_blockers());
+        assert_eq!(blocked.required_tier(), PrivilegeTier::HighRisk);
+
+        let summary = IntegrationActivationDossierSummary::from_dossiers(dossiers.iter());
+        assert_eq!(summary.total_dossiers, 2);
+        assert_eq!(summary.ready_to_approve_dossiers, 1);
+        assert_eq!(summary.blocked_dossiers, 1);
+        assert!(summary.total_evidence >= ready.evidence.len() + blocked.evidence.len());
+        assert!(summary.supporting_evidence > 0);
+        assert!(summary.review_evidence > 0);
+        assert!(summary.blocking_evidence > 0);
+        assert_eq!(summary.first_approval_priority, Some(1));
+        assert_eq!(summary.first_blocked_priority, Some(2));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert!(summary.has_approval_ready_work());
+        assert!(summary.has_review_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_dossiers = activation_dossiers_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_dossiers
+            .iter()
+            .any(IntegrationActivationDossierItem::has_policy_surfaces));
     }
 
     #[test]
