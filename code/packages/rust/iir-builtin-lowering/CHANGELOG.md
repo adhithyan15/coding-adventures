@@ -4,6 +4,28 @@ All notable changes to this crate are documented here.
 
 ---
 
+## [0.16.0] — 2026-06-10 — lambda value-model: arg boxing + polymorphic result coercion (LANG77 / McCarthy W13b)
+
+Closes the two tagged-word value-model gaps a `LAMBDA` exposes in `lower_lisp_repr`
+(F7), reusing the managed pass's lisp-function partition (`lisp_functions`, now
+`pub(crate)`):
+
+- **Argument boxing** — `lisp_arg_regs` now includes the arguments of a `call` to a
+  **lisp function** (not just lisp builtins), so an integer atom passed to a lambda
+  is boxed (`n << 3`). Without it a raw `5` reads as tag `0b101` (`#t`) and `7` as
+  `0b111` (a heap pair) inside the body.
+- **Polymorphic result coercion** — a lambda result is a `call` typed `any` of
+  unknown runtime tag, so the entry-exit coercion wraps it with the new
+  `lispy_to_exit_code` (a RUNTIME tag switch) instead of the static
+  `unbox_int`/`truthy`/verbatim that the int/bool/symbol cases use.
+- **Language gate** — both behaviours fire only for a lisp module (`language ==
+  "mccarthy-lisp"`). Twig shares this pass and also types untyped params `any`, so
+  the gate keeps the pass a faithful no-op for Twig (regression-tested:
+  `non_lisp_call_is_left_untouched`).
+
+New unit tests `lambda_call_boxes_int_arg_and_coerces_result` +
+`non_lisp_call_is_left_untouched`.
+
 ## [0.15.0] — 2026-06-10 — symbol program-result handling (LANG77 / McCarthy W13a)
 
 Extends the type-directed program-exit coercion in `lower_lisp_repr` (the bool case

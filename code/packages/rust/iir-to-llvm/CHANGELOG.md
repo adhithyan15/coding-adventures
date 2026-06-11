@@ -3,6 +3,16 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.8.0] — 2026-06-10 (McCarthy W13b — lisp lambda (F7) — LLVM COMPLETE)
+
+Registers the universal exit-coercion runtime helper so the LLVM backend can
+declare + call it: `LISPY_BUILTINS` gains `("lispy_to_exit_code",
+"__twig_lispy_to_exit_code", 1)`. A lambda result is a `call` typed `any` whose
+runtime tag is unknown at compile time; the shared `lower_lisp_repr` now emits
+`lispy_to_exit_code` for it, and this entry lets the backend lower that to a
+`call i64 @__twig_lispy_to_exit_code(i64)`. With it, **LLVM is McCarthy-complete
+(F1–F7)** — verified by RUNNING in `lang-aot` (`lang-aot/tests/llvm_lambda.rs`).
+
 ## [0.7.0] — 2026-06-10 (McCarthy W13a — lisp symbols (F6))
 
 `llvm_type_for("symbol")` now maps to `i64` — an interned McCarthy symbol is a

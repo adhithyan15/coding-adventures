@@ -164,6 +164,36 @@ int64_t __twig_lispy_truthy(uint64_t v) {
     return (v == LISPY_FALSE || v == LISPY_NIL) ? 0 : 1;
 }
 
+/* __twig_lispy_to_exit_code — coerce ANY tagged LispyValue to a raw exit code,
+ * dispatching on its RUNTIME tag.  This is the program-exit boundary for a
+ * value whose tag the compiler cannot know statically — a lambda result (F7),
+ * which the frontend types as the polymorphic `any`.  The static coercions each
+ * cover one tag; this switch covers them all at once:
+ *
+ *   tag (v & 0b111)  value           exit code
+ *   ───────────────  ──────────────  ──────────────────────────────────────
+ *   0b000  INT       boxed integer   arithmetic  v >> 3   (sign-extended)
+ *   0b101  TRUE      #t              1
+ *   0b011  FALSE     #f              0
+ *   0b001  NIL       ()              0   (nil is falsy, like #f)
+ *   0b010  SYMBOL    interned atom   the tagged word verbatim (stable id+tag)
+ *   0b111  HEAP      cons pair       the tagged word verbatim (stable pointer)
+ *
+ * Agreement with the static helpers (so this is a safe superset):
+ *   to_exit_code(box_int n) == unbox_int(box_int n) == n
+ *   to_exit_code(#t/#f/nil) == truthy(#t/#f/nil)    == 1/0/0
+ *   to_exit_code(symbol)    == (symbol returned verbatim)
+ */
+int64_t __twig_lispy_to_exit_code(uint64_t v) {
+    switch (v & LISPY_TAG_BITS) {
+        case LISPY_TAG_INT:   return ((int64_t)v) >> 3;  /* integer atom    */
+        case LISPY_TAG_TRUE:  return 1;                  /* #t              */
+        case LISPY_TAG_FALSE: return 0;                  /* #f              */
+        case LISPY_TAG_NIL:   return 0;                  /* () is falsy     */
+        default:              return (int64_t)v;         /* symbol / pair   */
+    }
+}
+
 /* `equal?` — structural deep equality, returning a tagged boolean.
  *
  *   - Two atoms (neither is a pair) are equal iff their bits are equal.

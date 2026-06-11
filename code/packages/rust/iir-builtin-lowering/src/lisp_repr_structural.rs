@@ -157,7 +157,7 @@ fn has_lisp_param(func: &IIRFunction) -> bool {
 /// function that `call`s a lisp function is itself lisp (its call site must box
 /// the args and treat the result as a reference). For a McCarthy module every
 /// function ends up lisp; a Twig module's pure-scalar functions never enter.
-fn lisp_functions(module: &IIRModule) -> HashSet<String> {
+pub(crate) fn lisp_functions(module: &IIRModule) -> HashSet<String> {
     let mut lisp: HashSet<String> = module
         .functions
         .iter()

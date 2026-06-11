@@ -77,8 +77,13 @@ across blocks is promoted to a stack slot (`alloca`/`store`/`load`, a cross-bloc
 merge) — `(COND ((ATOM 7) 11) ((ATOM 8) 22))` → 11, nested `COND` → 44.
 **Symbols** run too (W13a, F6): an interned symbol is a tagged `i64` immediate, and a
 bare symbol result is returned verbatim (not unboxed) — `(EQ (QUOTE A) (QUOTE A))` →
-1, `(EQ (QUOTE A) (QUOTE B))` → 0, `(ATOM (QUOTE A))` → 1. **LLVM is now F1–F6**; only
-lambda (F7, W13b) remains.
+1, `(EQ (QUOTE A) (QUOTE B))` → 0, `(ATOM (QUOTE A))` → 1.
+**Lambda** runs too (W13b, F7): an integer atom argument is boxed before crossing
+into the lambda, and the polymorphic result is coerced at the program exit by
+`__twig_lispy_to_exit_code` (a runtime tag switch) — `((LAMBDA (X) X) 5)` → 5,
+`((LAMBDA (X) (CAR X)) (CONS 7 9))` → 7, `((LAMBDA (X Y) (EQ X Y)) 3 3)` → 1,
+lambda-with-`COND`-body → 100/200. **LLVM is now McCarthy-complete (F1–F7)** — the
+sixth backend to finish, after VM/WASM/JVM/CLR/BEAM.
 
 ## Stack position
 
