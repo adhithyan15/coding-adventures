@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness scroll-interaction descriptors now expose `onscroll`,
+  `onscrollend`, wheel/touch routing, ARIA scrollbar value state, and blocked
+  scroll paths as a flat browser-planning inventory.
 - Browser-readiness pointer-interaction descriptors now expose click, mouse,
   touch, pointer, wheel, and drag/drop handler routing plus command/editing
   context and blocked pointer paths as a flat browser-planning inventory.
