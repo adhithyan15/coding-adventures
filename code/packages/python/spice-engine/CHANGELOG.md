@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Transient named-corner wrappers** — `transient_corners()` and
+  `transient_adaptive_corners()` now run fixed-step and LTE-adaptive transient
+  analyses across named corner specs, with matching stable
+  `format_corner_transient_table()` and
+  `format_corner_adaptive_transient_table()` output helpers.
+
 - **Multi-corner advanced analysis wrappers** — `mc_dc_corners()`,
   `sens_dc_corners()`, `noise_ac_corners()`, and `s_parameters_corners()` now
   run the corresponding analyses across named corner specs, matching the Rust

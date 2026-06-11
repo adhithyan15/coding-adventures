@@ -695,6 +695,24 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface CornerTransientPoint {
+  readonly cornerName: string;
+  readonly points: readonly TransientPoint[];
+}
+
+export interface CornerTransientResult {
+  readonly points: readonly CornerTransientPoint[];
+}
+
+export interface CornerAdaptiveTransientPoint {
+  readonly cornerName: string;
+  readonly result: AdaptiveTransientResult;
+}
+
+export interface CornerAdaptiveTransientResult {
+  readonly points: readonly CornerAdaptiveTransientPoint[];
+}
+
 export interface FourierHarmonic {
   readonly harmonic: number;
   readonly frequencyHz: number;
@@ -2340,6 +2358,78 @@ export function formatTransientTable(
   return rows.join("\n");
 }
 
+export function formatCornerTransientTable(
+  result: CornerTransientResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.points.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.points)
+  );
+  const rows = [["Corner", "Index", "Time", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerTransientTable",
+          ),
+        ),
+      );
+      rows.push([corner.cornerName, String(index), formatTableNumber(point.time), ...values].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerAdaptiveTransientTable(
+  result: CornerAdaptiveTransientResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.result.points.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.result.points)
+  );
+  const rows = [[
+    "Corner",
+    "Method",
+    "StepsRejected",
+    "Converged",
+    "Index",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerAdaptiveTransientTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        corner.result.method,
+        String(corner.result.stepsRejected),
+        String(corner.result.converged),
+        String(index),
+        formatTableNumber(point.time),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatAcTable(
   points: readonly AcPoint[],
   probes?: readonly string[],
@@ -3536,6 +3626,21 @@ export function transient(
   return points;
 }
 
+export function transientCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  corners: readonly CornerSpec[],
+  method: TransientMethod = "euler",
+): CornerTransientResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      points: transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+    })),
+  };
+}
+
 export function fourier(
   points: readonly TransientPoint[],
   fundamentalFrequencyHz: number,
@@ -3802,6 +3907,26 @@ export function transientAdaptive(
   }
 
   return { points, method, stepsRejected, converged: true };
+}
+
+export function transientAdaptiveCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  corners: readonly CornerSpec[],
+  options: AdaptiveTransientOptions = {},
+): CornerAdaptiveTransientResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientAdaptive(
+        circuitWithCorner(circuit, corner),
+        timeStep,
+        stopTime,
+        options,
+      ),
+    })),
+  };
 }
 
 export function pssResidual(

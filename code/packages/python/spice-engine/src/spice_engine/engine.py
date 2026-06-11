@@ -365,8 +365,8 @@ def _map_bsource_expr_nodes(expr: str | None, instance_name: str, node_map: dict
     return "".join(result)
 
 
-def _clone_subckt_element(element: object, instance_name: str, node_map: dict[str, str]) -> Element:
-    name = f"{instance_name}.{getattr(element, 'name')}"
+def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[str, str]) -> Element:
+    name = f"{instance_name}.{element.name}"
     if isinstance(element, Resistor):
         return Resistor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.resistance)
     if isinstance(element, Capacitor):
@@ -485,6 +485,36 @@ class TransientResult:
     converged: bool
     method: str = "trap"
     steps_rejected: int = 0
+
+
+@dataclass(frozen=True)
+class CornerTransientPoint:
+    """Transient waveform result for one named analysis corner."""
+
+    corner_name: str
+    points: list[TransientPoint]
+
+
+@dataclass(frozen=True)
+class CornerTransientResult:
+    """Multi-corner transient waveform result."""
+
+    points: list[CornerTransientPoint]
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveTransientPoint:
+    """Adaptive transient waveform result for one named analysis corner."""
+
+    corner_name: str
+    result: TransientResult
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveTransientResult:
+    """Multi-corner adaptive transient waveform result."""
+
+    points: list[CornerAdaptiveTransientPoint]
 
 
 @dataclass(frozen=True)
@@ -1286,6 +1316,103 @@ def format_transient_table(
             for probe in selected_probes
         ]
         rows.append("\t".join([str(index), _format_table_number(point.time), *values]))
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_transient_table(
+    result: CornerTransientResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner transient samples as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.points)
+            for corner in result.points
+            if corner.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "Time", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_transient_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_adaptive_transient_table(
+    result: CornerAdaptiveTransientResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner adaptive transient samples as a stable table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.result.points)
+            for corner in result.points
+            if corner.result.points
+        ),
+        [],
+    )
+    rows = [
+        "\t".join(
+            [
+                "Corner",
+                "Method",
+                "StepsRejected",
+                "Converged",
+                "Index",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_adaptive_transient_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        corner.result.method,
+                        str(corner.result.steps_rejected),
+                        str(corner.result.converged).lower(),
+                        str(index),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
     rows.append("")
     return "\n".join(rows)
 
@@ -3824,7 +3951,7 @@ def _transmission_line_sample_at(
     if target_time <= samples[0][0]:
         _, v1, i1, v2, i2 = samples[0]
         return (v1, i1, v2, i2)
-    for left, right in zip(samples, samples[1:]):
+    for left, right in zip(samples, samples[1:], strict=False):
         if target_time <= right[0]:
             t0, v10, i10, v20, i20 = left
             t1, v11, i11, v21, i21 = right
@@ -4633,6 +4760,71 @@ def transient(
 
     return TransientResult(points=points, converged=True,
                            method=method, steps_rejected=steps_rejected)
+
+
+def transient_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerTransientResult:
+    """Run fixed-step transient analysis at each named corner."""
+    return CornerTransientResult(
+        points=[
+            CornerTransientPoint(
+                corner_name=corner.name,
+                points=transient(
+                    _circuit_with_corner(circuit, corner),
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    method=method,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ).points,
+            )
+            for corner in corners
+        ]
+    )
+
+
+def transient_adaptive_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerAdaptiveTransientResult:
+    """Run LTE-adaptive transient analysis at each named corner."""
+    return CornerAdaptiveTransientResult(
+        points=[
+            CornerAdaptiveTransientPoint(
+                corner_name=corner.name,
+                result=transient(
+                    _circuit_with_corner(circuit, corner),
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    method=method,
+                    adaptive=True,
+                    tol_lte=tol_lte,
+                    min_step=min_step,
+                    max_step=max_step,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
 
 
 def pss_residual(

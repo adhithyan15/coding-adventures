@@ -244,9 +244,8 @@ def waveform_period(waveform: Waveform) -> float | None:
         ):
             return 1.0 / waveform.frequency
         return None
-    if isinstance(waveform, PulseWaveform):
-        if math.isfinite(waveform.period) and waveform.period > 0.0:
-            return waveform.period
+    if isinstance(waveform, PulseWaveform) and math.isfinite(waveform.period) and waveform.period > 0.0:
+        return waveform.period
     return None
 
 
