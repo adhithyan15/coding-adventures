@@ -1,0 +1,29 @@
+{
+  "_doc": "Held-out clinical vignettes (messy prose) for the warm path. The LLM DECOMPOSES each into typed IR (dictionary findings + byte spans + a discard list); it does NOT diagnose. Each vignette deliberately contains distractor details (demographics, unrelated history) so the discard read has real spans to adjudicate. gold = the defensible answer a clinician would give at that decision point.",
+  "cases": [
+    {
+      "id": "MEN-1",
+      "gold": "bacterial_meningitis",
+      "gold_note": "Gram stain positive + neutrophilic CSF + low glucose = bacterial, confirmable.",
+      "vignette": "A 58-year-old man with a history of hypertension and a 20-pack-year smoking history presents with 12 hours of fever, severe headache, and neck stiffness. He takes lisinopril. On exam he is photophobic. Lumbar puncture shows a CSF white-cell count of 2200/uL with 95% neutrophils; CSF:serum glucose ratio is 0.18; CSF protein is 2.4 g/L; CSF lactate is 7.1 mmol/L. The CSF Gram stain shows gram-positive diplococci. He had a brief generalized seizure in the emergency department. Serum procalcitonin is 6.2 ng/mL."
+    },
+    {
+      "id": "MEN-2",
+      "gold": "bacterial_meningitis",
+      "gold_note": "Pre-culture: strong CSF chemistry but Gram stain unrevealing and culture pending — high suspicion, not certainty. The over-saturation case.",
+      "vignette": "A 41-year-old woman, otherwise healthy, develops fever and confusion over 8 hours. Her only medication is an oral contraceptive. CSF analysis: white-cell count 1500/uL, neutrophil-predominant; CSF:serum glucose ratio 0.25; protein 2.0 g/L; lactate 5.8 mmol/L. She had a witnessed convulsion on arrival. The Gram stain was reported as showing no organisms, and cultures are still pending. Procalcitonin was not sent."
+    },
+    {
+      "id": "MEN-3",
+      "gold": "viral_meningitis",
+      "gold_note": "Lymphocytic CSF, normal glucose and lactate, positive enterovirus PCR = viral/aseptic.",
+      "vignette": "A 24-year-old previously well graduate student presents in late summer with 2 days of headache, low-grade fever, and mild neck discomfort after a recent gastrointestinal illness. CSF shows 180 white cells/uL with 88% lymphocytes; CSF:serum glucose ratio is 0.62 (normal); CSF lactate is 1.9 mmol/L (normal); protein is mildly elevated. CSF enterovirus RT-PCR returns positive. He never had a seizure and is fully alert."
+    },
+    {
+      "id": "MEN-4",
+      "gold": "indeterminate",
+      "gold_note": "Early/sparse: mild pleocytosis only, the dispositive chemistries not yet back — expect a kickback (too close to commit).",
+      "vignette": "A 33-year-old man presents with 6 hours of headache and feeling feverish after a camping trip; he mentions a tick bite last week. Initial CSF shows a mildly elevated white-cell count but the differential, glucose, protein, lactate, Gram stain, and cultures are all still pending at the time of this note. He is alert with no seizure."
+    }
+  ]
+}

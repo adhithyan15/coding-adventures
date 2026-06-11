@@ -1,0 +1,78 @@
+{
+ "case_id": "MEN-1",
+ "findings": [
+  {
+   "term": "csf_neutrophilic_pleocytosis(high)",
+   "span": "CSF white-cell count of 2200/uL with 95% neutrophils",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_glucose(low)",
+   "span": "CSF:serum glucose ratio is 0.18",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_protein(elevated)",
+   "span": "CSF protein is 2.4 g/L",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_lactate(elevated)",
+   "span": "CSF lactate is 7.1 mmol/L",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "csf_gram_stain(positive)",
+   "span": "The CSF Gram stain shows gram-positive diplococci",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "seizure(present)",
+   "span": "He had a brief generalized seizure in the emergency department",
+   "type": "stated",
+   "polarity": "affirmed"
+  },
+  {
+   "term": "serum_procalcitonin(elevated)",
+   "span": "Serum procalcitonin is 6.2 ng/mL",
+   "type": "stated",
+   "polarity": "affirmed"
+  }
+ ],
+ "discard": [
+  {
+   "span": "A 58-year-old man",
+   "reason": "Demographics; age/sex not a dictionary finding term."
+  },
+  {
+   "span": "a history of hypertension",
+   "reason": "Unrelated comorbidity; no dictionary term."
+  },
+  {
+   "span": "a 20-pack-year smoking history",
+   "reason": "Risk-factor history; not a dispositive meningitis finding."
+  },
+  {
+   "span": "12 hours of fever, severe headache, and neck stiffness",
+   "reason": "Meningismus symptoms; no dictionary functor for fever/headache/neck stiffness."
+  },
+  {
+   "span": "He takes lisinopril",
+   "reason": "Medication; not a finding in the closed set."
+  },
+  {
+   "span": "On exam he is photophobic",
+   "reason": "Symptom (photophobia); no dictionary functor."
+  },
+  {
+   "span": "Lumbar puncture shows",
+   "reason": "Procedure framing; the values it introduces are captured as findings."
+  }
+ ],
+ "inference_justifications": []
+}
