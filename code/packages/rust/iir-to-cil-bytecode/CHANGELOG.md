@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.14.0] — 2026-06-11 — textual `.il`: symbols (CLR-real C4)
+
+**No new emit ops** — symbols reuse the existing value model. The shared
+`intern_symbols_structural` pass lowers each `(QUOTE S)` to a *tagged integer id*
+(`A` → `0x20000000`, `B` → `0x20000001`, …); on the CLR that id is just a boxed
+`System.Int32` atom, the exact scalar/predicate shape C1–C3 already emit. So
+`(EQ (QUOTE A) (QUOTE A))` is two equal `ldc.i4 536870912` consts, boxed, then
+`equal?`-unboxed + `ceq`; `(ATOM (QUOTE A))` is `not (pair? boxed-int)`. New unit
+test `symbol_eq_emits_tagged_id_consts_unboxed_and_compared` pins the value model;
+the real-CoreCLR proof is `lang-aot/tests/clr_real_symbols.rs`.
+
 ## [0.13.0] — 2026-06-11 — textual `.il`: predicates + COND (CLR-real C3)
 
 `emit_il` grows the McCarthy predicate primitives and `COND` control flow:
