@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0] - 2026-06-11 — constraint solving in the CLI (ADJ constraints track B2b)
+
+### Added
+
+- When a `.adj` program declares a constraint system (`symbol` / `constrain` /
+  `solve for`), the CLI now calls `adj_constraint_solver::solve` and emits a
+  **`solve`** section in the JSON output:
+  - `{"outcome":"solved","assignments":[{"name","value"}],"from_constraints":[…]}`
+    — solved values, each cited to the constraints that determined them.
+  - `{"outcome":"no_unique_solution"}` (singular / non-square), or
+    `{"outcome":"unsupported","reason":…}` (inequality, non-linear term,
+    aggregation) — **never a fabricated answer**.
+  - The `solve` key is omitted entirely for a pure prior/contributes rulebook.
+- New dependency on `adj-constraint-solver`. Linear-equality systems only this
+  slice; feasibility (`check` → SAT/UNSAT via `constraint-engine`) and
+  optimization follow.
+
 ## [0.2.0] - 2026-06-10 — predicate proof steps
 
 ### Added
