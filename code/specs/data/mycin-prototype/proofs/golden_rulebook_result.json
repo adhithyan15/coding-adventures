@@ -1,0 +1,14 @@
+{
+ "claim": "derive once, reuse indefinitely, inference is CPU-bound",
+ "cas_library": "c3551b18e5f3b86e",
+ "cold_path_one_time_model_reads": 36,
+ "warm_path_answer_time_model_calls_total": 0,
+ "cases_decided_off_the_single_library": 4,
+ "decisions": {
+  "MEN-1": "determinate -> bacterial_meningitis",
+  "MEN-2": "determinate -> viral_meningitis",
+  "MEN-3": "determinate -> viral_meningitis",
+  "MEN-4": "determinate -> viral_meningitis"
+ },
+ "reproducible": "same input + same CAS version + same query = same proof DAG, byte-for-byte"
+}
