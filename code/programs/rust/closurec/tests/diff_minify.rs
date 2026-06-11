@@ -90,15 +90,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-065 (CLOC14.33): upstream strips redundant parens
-    // around the CALLEE of a call / tagged template when the
-    // inner expression is a simple reference (identifier or
-    // member access): `(f)(x)` → `f(x)`, `(a.b)(x)` → `a.b(x)`,
-    // `(f)`t`` → `f`t``. A sequence-expr callee `(a,b)(x)` keeps
-    // its parens (lower precedence) — that's the boundary.
-    ("paren_call_callee",   "gap-065: parens around call callee `(f)(x)`"),
-    ("paren_member_callee", "gap-065: parens around member-expr call callee"),
-    ("paren_tagged_callee", "gap-065: parens around tagged-template callee"),
+    // gap-065 RESOLVED in CLOC12.74 — parens around a call /
+    // tagged-template callee (`(f)(x)`→`f(x)`, `(a.b)(x)`→
+    // `a.b(x)`) are now stripped; those three fixtures are
+    // enforced again.
     // gap-066 (CLOC14.33): redundant parens after `extends` —
     // `class A extends(B){}` → `class A extends B{}`.
     ("class_extends_paren", "gap-066: redundant parens after `extends`"),

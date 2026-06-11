@@ -2,6 +2,27 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.78.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-065** — callee paren elision: `(f)(x)` → `f(x)`,
+  `(a.b)(x)` → `a.b(x)`, `` (f)`t` `` → `` f`t` ``. Sibling of
+  gap-057 (member-object paren elision).
+
+### Added — gap-065 token pre-pass
+
+A pre-pass (mirroring gap-057's structure) strips the grouping
+parens around the CALLEE of a call / tagged template when the
+callee is a *simple reference* — a plain identifier plus
+zero-or-more `.IDENT` accessors. Guards: GROUPING-not-CALL (the
+`(` must follow punctuation other than `)`/`]`/`?.`, or start —
+so `f(g)(x)` keeps `(g)`); the inner must be a bare
+identifier-dot chain (the scan stops at the first non-`.IDENT`
+token, so `(a,b)(x)` and `(a+b)(x)` keep their parens); the
+follower must be a real `(` call paren or a template literal
+(tagged template, gated on `is_word_like`). All bracket checks
+via `is_structural_punct`. 6 new gap065_* unit tests.
+
 ## [0.77.0] - 2026-06-11
 
 ### Fixed
