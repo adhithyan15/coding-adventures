@@ -1,6 +1,6 @@
 [package]
 name = "vm-core"
-version = "0.2.1"
+version = "0.3.0"
 edition = "2021"
 description = "Generic register interpreter for InterpreterIR — the vm-core of the LANG pipeline"
 

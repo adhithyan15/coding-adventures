@@ -83,7 +83,14 @@ impl VMFrame {
         register_count: usize,
         return_dest: Option<usize>,
     ) -> Self {
-        let mut frame = VMFrame::new(fn_name, register_count, return_dest);
+        // A function always needs at least one register slot per parameter: the
+        // dispatcher places the call arguments directly at indices `0..params.len()`.
+        // A frontend may under-report `register_count` (e.g. a hoisted `LAMBDA` body
+        // whose only register is its parameter reports `0`), so size the register
+        // file to cover the parameters regardless — mirroring how `assign` grows the
+        // file for under-reported *locals*. Without this a lambda call indexes past
+        // the end of `registers` and panics.
+        let mut frame = VMFrame::new(fn_name, register_count.max(params.len()), return_dest);
         for (idx, (param_name, _)) in params.iter().enumerate() {
             frame.name_to_reg.insert(param_name.clone(), idx);
         }
@@ -156,6 +163,24 @@ mod tests {
         frame.registers[1] = Value::Int(20);
         assert_eq!(frame.resolve("a"), Some(&Value::Int(10)));
         assert_eq!(frame.resolve("b"), Some(&Value::Int(20)));
+    }
+
+    /// A frontend may under-report `register_count` for a function whose only
+    /// registers are its parameters — a hoisted McCarthy `LAMBDA` body like
+    /// `(LAMBDA (X) X)` reports `register_count = 0`. The register file must still
+    /// be sized to hold the parameters, or the dispatcher's direct
+    /// `registers[i] = arg` writes index past the end and panics (McCarthy W15b).
+    #[test]
+    fn for_function_sizes_registers_to_cover_params_when_count_underreports() {
+        let params = vec![("x".to_string(), "any".to_string())];
+        let mut frame = VMFrame::for_function("lambda_0", &params, 0, None);
+        assert!(
+            frame.registers.len() >= params.len(),
+            "register file must cover the parameters even when register_count under-reports",
+        );
+        // The dispatcher writes the argument directly by index — must not panic.
+        frame.registers[0] = Value::Int(5);
+        assert_eq!(frame.resolve("x"), Some(&Value::Int(5)));
     }
 
     #[test]

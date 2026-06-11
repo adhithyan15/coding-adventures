@@ -103,6 +103,29 @@ fn b_truthy(a: &[Value]) -> Value {
 fn b_unbox_int(a: &[Value]) -> Value {
     Value::Int(a.first().and_then(|x| to_lv(x).as_int()).unwrap_or(0))
 }
+/// `lispy_to_exit_code` — the program-exit coercion for a **polymorphic** result
+/// (a `LAMBDA` whose return type is `any`): dispatch on the runtime tag, exactly as
+/// `__twig_lispy_to_exit_code` does in `lispy_runtime.c`. Integer → its raw value;
+/// `#t`/`#f`/nil → `1`/`0`/`0`; a symbol or pair → its tagged word verbatim. Built
+/// from `LispyValue`'s existing predicates — not duplicated.
+fn b_to_exit_code(a: &[Value]) -> Value {
+    Value::Int(
+        a.first()
+            .map(|x| {
+                let lv = to_lv(x);
+                if let Some(n) = lv.as_int() {
+                    n
+                } else if lv.is_true() {
+                    1
+                } else if lv.is_false() || lv.is_nil() {
+                    0
+                } else {
+                    lv.bits() as i64 // symbol / pair: the tagged word, verbatim
+                }
+            })
+            .unwrap_or(0),
+    )
+}
 
 /// Register every McCarthy `lispy_*` builtin on a VM + JIT pair, backed by the
 /// shared `lispy_runtime` crate. Each is registered on both the VM (the
@@ -118,6 +141,7 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
         ("lispy_equal", b_equal),
         ("lispy_truthy", b_truthy),
         ("lispy_unbox_int", b_unbox_int),
+        ("lispy_to_exit_code", b_to_exit_code),
     ] {
         vm.builtins_mut().register(name, move |args: &[Value]| Ok(f(args)));
         backend.register_builtin(name, move |args: &[Value]| f(args));
@@ -133,8 +157,8 @@ fn register_lispy_builtins(vm: &mut VMCore, backend: &GenericCirJit) {
 /// module is driven through [`JITCore::execute_with_jit`].
 ///
 /// Returns `Ok(None)` if the entry point returns no value (a `void` program).
-/// Covers McCarthy F1–F6 (scalar / cons / ATOM / EQ / COND / symbols). `LAMBDA`
-/// (F7) is W15b — the VM's user-`call` path needs work first.
+/// Covers all of McCarthy F1–F7 (scalar / cons / ATOM / EQ / COND / symbols /
+/// `LAMBDA` / `LABEL` / recursion) — the JIT is the eighth and final backend.
 pub fn run_mccarthy_on_jit(source: &str) -> Result<Option<i64>, LangAotError> {
     let mut module = compile_source_to_iir(Language::McCarthyLisp, source, "jit")?;
     iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
