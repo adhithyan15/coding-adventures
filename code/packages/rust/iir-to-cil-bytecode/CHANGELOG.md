@@ -1,5 +1,16 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.12.0] — 2026-06-11 — textual `.il`: cons / car / cdr (CLR-real C2)
+
+`emit_il` grows the cons value model: `alloc` → `ldc.i4.2; newarr
+[System.Runtime]System.Object` (a McCarthy cons cell is a 2-element reference
+array), `box`/`unbox.any [System.Runtime]System.Int32` for integer atoms,
+`field_store` → `stelem.ref`, `field_load` → `ldelem.ref`. Locals are now typed
+per producing instruction — a cons cell local is `object[]`, a boxed atom `object`,
+a raw int `int32` (`cil_local_type`) — so `ilasm` verifies the program. Verified by
+RUNNING on real CoreCLR (`lang-aot/tests/clr_real_cons.rs`): `(CAR (CONS 7 9))`→7,
+`(CDR …)`→9, nested→2. New unit test `cons_car_emits_object_array_box_and_unbox`.
+
 ## [0.11.0] — 2026-06-11 — textual `.il` emitter for the real-CoreCLR path (CLR-real C1)
 
 New `il_text` module + `emit_il(module, config) -> String`: emits **textual CIL**

@@ -47,9 +47,16 @@ other external-tool backends.
   (`lang-aot/tests/clr_real_scalar.rs`): `42`→42, `0`→0, `7`→7 — `.il` → real
   `ilasm` → real PE → real `dotnet`. Every other op returns `UnsupportedOp`, so the
   op match grows per slice below.
-- ☐ **C2 — cons / car / cdr (F2).** `(CONS a b)` → `newarr object` + `stelem.ref`
-  ×2; `CAR`/`CDR` → `ldelem.ref` index 0/1; integer atoms `box`/`unbox.any
-  [System.Int32]`. Verify `(CAR (CONS 7 9))`→7, `(CDR …)`→9 on real `dotnet`.
+- ✅ **C2 — cons / car / cdr (F2).** `emit_il` gained `alloc` → `newarr
+  [System.Runtime]System.Object` (a 2-element cons cell), `box`/`unbox.any
+  [System.Runtime]System.Int32`, `field_store` → `stelem.ref`, `field_load` →
+  `ldelem.ref`, and **mixed-type locals** (a cons cell is `object[]`, a boxed atom
+  `object`, a raw int `int32`). The shared `ilasm`/`dotnet` harness was extracted to
+  `tests/clr_support/mod.rs` (with a robust `find_ilasm` that searches *every*
+  `*ilasm*` NuGet package — the binary lives only in the `runtime.<rid>.*` pack, not
+  the ref-only `microsoft.netcore.ilasm`). Verified by RUNNING on **real CoreCLR**
+  (`tests/clr_real_cons.rs`): `(CAR (CONS 7 9))`→7, `(CDR …)`→9,
+  `(CAR (CDR (CONS 1 (CONS 2 3))))`→2.
 - ☐ **C3 — predicates + COND (F3–F5).** `pair?`→`isinst object[]`, `not`→`xor 1`,
   `equal?`→`unbox;unbox;ceq`, `COND` truthiness → branch. Verify `(ATOM 7)`→1,
   `(EQ 7 7)`→1, `(COND …)`→11.
