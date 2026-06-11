@@ -244,6 +244,79 @@ impl ZclFrame {
             payload,
         }
     }
+
+    pub fn summary(&self) -> ZclFrameSummary {
+        ZclFrameSummary::from_frame(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZclFrameSummary {
+    pub frame_type: ZclFrameType,
+    pub direction: ZclDirection,
+    pub manufacturer_specific: bool,
+    pub has_manufacturer_code: bool,
+    pub disables_default_response: bool,
+    pub transaction_sequence_number: u8,
+    pub command_id: u8,
+    pub payload_len: usize,
+}
+
+impl ZclFrameSummary {
+    pub fn from_frame(frame: &ZclFrame) -> Self {
+        Self {
+            frame_type: frame.frame_control.frame_type,
+            direction: frame.frame_control.direction,
+            manufacturer_specific: frame.frame_control.manufacturer_specific,
+            has_manufacturer_code: frame.manufacturer_code.is_some(),
+            disables_default_response: frame.frame_control.disable_default_response,
+            transaction_sequence_number: frame.transaction_sequence_number,
+            command_id: frame.command_id,
+            payload_len: frame.payload.len(),
+        }
+    }
+
+    pub fn is_foundation_frame(&self) -> bool {
+        self.frame_type == ZclFrameType::Foundation
+    }
+
+    pub fn is_cluster_specific_frame(&self) -> bool {
+        self.frame_type == ZclFrameType::ClusterSpecific
+    }
+
+    pub fn is_client_to_server(&self) -> bool {
+        self.direction == ZclDirection::ClientToServer
+    }
+
+    pub fn is_server_to_client(&self) -> bool {
+        self.direction == ZclDirection::ServerToClient
+    }
+
+    pub fn has_payload(&self) -> bool {
+        self.payload_len > 0
+    }
+
+    pub fn has_manufacturer_context(&self) -> bool {
+        self.manufacturer_specific || self.has_manufacturer_code
+    }
+
+    pub fn expects_default_response(&self) -> bool {
+        !self.disables_default_response && self.is_client_to_server()
+    }
+
+    pub fn is_read_attributes(&self) -> bool {
+        self.is_foundation_frame() && self.command_id == ZCL_READ_ATTRIBUTES_COMMAND_ID
+    }
+
+    pub fn is_report_attributes(&self) -> bool {
+        self.is_foundation_frame() && self.command_id == ZCL_REPORT_ATTRIBUTES_COMMAND_ID
+    }
+
+    pub fn is_default_response(&self) -> bool {
+        self.is_foundation_frame()
+            && self.is_server_to_client()
+            && self.command_id == ZCL_DEFAULT_RESPONSE_COMMAND_ID
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -840,6 +913,25 @@ mod tests {
             frame.encode().unwrap(),
             vec![0x10, 0x22, 0x00, 0x04, 0x00, 0x05, 0x00]
         );
+        let summary = frame.summary();
+        assert_eq!(
+            summary,
+            ZclFrameSummary {
+                frame_type: ZclFrameType::Foundation,
+                direction: ZclDirection::ClientToServer,
+                manufacturer_specific: false,
+                has_manufacturer_code: false,
+                disables_default_response: true,
+                transaction_sequence_number: 0x22,
+                command_id: ZCL_READ_ATTRIBUTES_COMMAND_ID,
+                payload_len: 4,
+            }
+        );
+        assert!(summary.is_foundation_frame());
+        assert!(summary.is_client_to_server());
+        assert!(summary.is_read_attributes());
+        assert!(!summary.expects_default_response());
+        assert!(summary.has_payload());
     }
 
     #[test]
@@ -863,6 +955,11 @@ mod tests {
             ZclStatusCode::UnsupportedCommand
         );
         assert_eq!(ZclStatusCode::Unknown(0xfe).encode(), 0xfe);
+        let summary = frame.summary();
+        assert!(summary.is_default_response());
+        assert!(summary.is_server_to_client());
+        assert!(summary.has_payload());
+        assert!(!summary.expects_default_response());
     }
 
     #[test]
@@ -871,6 +968,30 @@ mod tests {
 
         assert_eq!(frame.command_id, 0x01);
         assert_eq!(frame.encode().unwrap(), vec![0x11, 0x33, 0x01]);
+        let summary = frame.summary();
+        assert!(summary.is_cluster_specific_frame());
+        assert!(summary.is_client_to_server());
+        assert!(!summary.has_payload());
+        assert!(!summary.is_report_attributes());
+        assert!(!summary.has_manufacturer_context());
+    }
+
+    #[test]
+    fn frame_summary_reports_manufacturer_and_default_response_context() {
+        let frame = ZclFrame::parse(&[0x04, 0x34, 0x12, 0x51, 0x02, 0xaa]).unwrap();
+        let summary = frame.summary();
+
+        assert_eq!(frame.manufacturer_code, Some(0x1234));
+        assert_eq!(summary.frame_type, ZclFrameType::Foundation);
+        assert_eq!(summary.direction, ZclDirection::ClientToServer);
+        assert_eq!(summary.transaction_sequence_number, 0x51);
+        assert_eq!(summary.command_id, 0x02);
+        assert_eq!(summary.payload_len, 1);
+        assert!(summary.manufacturer_specific);
+        assert!(summary.has_manufacturer_code);
+        assert!(summary.has_manufacturer_context());
+        assert!(summary.expects_default_response());
+        assert!(summary.has_payload());
     }
 
     #[test]

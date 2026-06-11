@@ -7,6 +7,7 @@ coordinator policy. It provides:
 
 - ZCL cluster and attribute identifiers for common smart-home clusters
 - foundation and cluster-specific frame control parsing/encoding
+- payload-free ZCL frame summaries for routing/default-response diagnostics
 - read-attributes, on/off, level, and color-temperature command frame builders
 - Default Response foundation frame builders with typed ZCL status codes
 - typed attribute report parsing
