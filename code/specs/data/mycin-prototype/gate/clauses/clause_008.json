@@ -1,0 +1,7 @@
+{
+ "idx": 8,
+ "key": "bacterial_meningitis::csf_culture(positive)",
+ "lr": 271,
+ "computed": "LR+ = sens/(1-spec) = 0.813/(1-0.997) = 271",
+ "byte_quote": "culture, 81.3% and 99.7%; Gram stain, 98.2% and 98.7%; and real-time PCR, 95.7% and 94.3%, respectively."
+}

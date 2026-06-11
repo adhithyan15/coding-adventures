@@ -1,0 +1,7 @@
+{
+ "idx": 11,
+ "key": "viral_meningitis::csf_lactate(normal)",
+ "lr": 13.7,
+ "computed": "normal-lactate LR for aseptic = spec/(1-sens) of the bacterial elevated-lactate test = 0.96/(1-0.93) = 13.7",
+ "byte_quote": "sensitivity 0.93 (95% CI: 0.89-0.96), specificity 0.96 (95% CI: 0.93-0.98), likelihood ratio positive 22.9"
+}
