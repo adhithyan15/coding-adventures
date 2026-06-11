@@ -1,0 +1,101 @@
+{
+ "summary": {
+  "cas_library": "286c17aaf48ff32d",
+  "answer_time_model_calls_total": 0,
+  "decisions": {
+   "MEN-1": "determinate -> bacterial_meningitis (P=1.0) [gold bacterial_meningitis]",
+   "MEN-2": "determinate -> bacterial_meningitis (P=0.9999) [gold bacterial_meningitis]",
+   "MEN-3": "determinate -> viral_meningitis (P=1.0) [gold viral_meningitis]",
+   "MEN-4": "insufficient_evidence -> viral_meningitis (P=0.963) [gold indeterminate]"
+  },
+  "recovered_discards": {}
+ },
+ "rows": [
+  {
+   "case_id": "MEN-1",
+   "answer_time_model_calls": 0,
+   "decision": {
+    "type": "determinate",
+    "leader": "bacterial_meningitis",
+    "posterior": 0.999999966707283,
+    "margin_posterior": 0.036999966707282894,
+    "margin_logit": 13.958791641631386
+   },
+   "leader": "bacterial_meningitis",
+   "n_evidence_for_leader": 7,
+   "posteriors": {
+    "bacterial_meningitis": 1.0,
+    "viral_meningitis": 0.963
+   },
+   "dropped_leap_findings": [],
+   "recovered_discards": [],
+   "linked_program": "cases/MEN-1.linked.adj",
+   "match": true,
+   "gold": "bacterial_meningitis"
+  },
+  {
+   "case_id": "MEN-2",
+   "answer_time_model_calls": 0,
+   "decision": {
+    "type": "determinate",
+    "leader": "bacterial_meningitis",
+    "posterior": 0.9999227502157347,
+    "margin_posterior": 0.03692275021573466,
+    "margin_logit": 6.209253682950156
+   },
+   "leader": "bacterial_meningitis",
+   "n_evidence_for_leader": 5,
+   "posteriors": {
+    "bacterial_meningitis": 0.9999,
+    "viral_meningitis": 0.963
+   },
+   "dropped_leap_findings": [],
+   "recovered_discards": [],
+   "linked_program": "cases/MEN-2.linked.adj",
+   "match": true,
+   "gold": "bacterial_meningitis"
+  },
+  {
+   "case_id": "MEN-3",
+   "answer_time_model_calls": 0,
+   "decision": {
+    "type": "determinate",
+    "leader": "viral_meningitis",
+    "posterior": 0.999997710620515,
+    "margin_posterior": 0.7361180582711215,
+    "margin_logit": 14.013127939261455
+   },
+   "leader": "viral_meningitis",
+   "n_evidence_for_leader": 4,
+   "posteriors": {
+    "viral_meningitis": 1.0,
+    "bacterial_meningitis": 0.2639
+   },
+   "dropped_leap_findings": [],
+   "recovered_discards": [],
+   "linked_program": "cases/MEN-3.linked.adj",
+   "match": true,
+   "gold": "viral_meningitis"
+  },
+  {
+   "case_id": "MEN-4",
+   "answer_time_model_calls": 0,
+   "decision": {
+    "type": "insufficient_evidence",
+    "leader": "viral_meningitis",
+    "reason": "no observed finding contributed \u2014 decision would rest on the prior alone"
+   },
+   "leader": "viral_meningitis",
+   "n_evidence_for_leader": 0,
+   "posteriors": {
+    "viral_meningitis": 0.963,
+    "bacterial_meningitis": 0.037
+   },
+   "dropped_leap_findings": [],
+   "recovered_discards": [],
+   "linked_program": "cases/MEN-4.linked.adj",
+   "match": true,
+   "gold": "indeterminate"
+  }
+ ]
+}
