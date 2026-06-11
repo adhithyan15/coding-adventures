@@ -22,6 +22,9 @@ export const GAMMA_FUNC = sym("GammaFunc");
 // Re-exported from ``gosper.ts``.  Track H2 — see PR #5366 (H1, Python).
 export { tryGosperSum, MAX_POLY_DEGREE } from "./gosper";
 import { tryGosperSum } from "./gosper";
+// Re-exported from ``seriesClosedForms.ts``.  Track I2 — see PR #5382 (I1, Python).
+export { tryClosedFormSeries, bernoulliRational } from "./seriesClosedForms";
+import { tryClosedFormSeries } from "./seriesClosedForms";
 
 export interface RationalValue {
   readonly numer: bigint;
@@ -205,6 +208,19 @@ function evaluateSumInner(
 
   if (infUpper) {
     const raw = trySpecialInfinite(f, k, lo);
+    if (raw !== undefined) return evalFn(raw);
+  }
+
+  // Track I2 — closed-form transcendental infinite sums.  Recognises the
+  // canonical zeta(2m), eta(2m), eta(1) = log(2), e_series, exp/cos/sin/
+  // cosh/sinh Taylor series.  Mirrors the Python dispatch insertion
+  // point (step 5a): placed after ``trySpecialInfinite`` so its
+  // pre-existing patterns (Basel zeta(2)/zeta(4), Leibniz π/4) keep
+  // their IR shapes and tests; ``tryClosedFormSeries`` only fires on
+  // patterns the legacy handler refuses (e.g. ``Σ 1/k⁶``, the eta
+  // family, sin/cos/sinh/cosh).
+  if (infUpper) {
+    const raw = tryClosedFormSeries(f, k, lo, hi);
     if (raw !== undefined) return evalFn(raw);
   }
 
