@@ -464,9 +464,20 @@ impl KnowledgeBase {
     }
 
     /// Read the observed numeric value of a valued slot, if one was
-    /// observed. A valued fact has the shape `slot(V)` where `V` is a
-    /// `Term::Num` — e.g. `observe gross_income(18000)` stores
+    /// observed. A valued fact has the shape `slot(V)` — for example
+    /// `observe gross_income(18000)` stores
     /// `Compound { functor: "gross_income", args: [Num(Int(18000))] }`.
+    ///
+    /// `V` may be either a bare number **or a typed-value wrapper** that
+    /// carries the magnitude first: `quantity(18000, usd)`,
+    /// `money(18000, usd)`, `percentage(40)`, `duration(365, days)`,
+    /// `count(3)`. The magnitude is the wrapper's leading numeric
+    /// argument — this is the unit-bearing typed value the ADJ language
+    /// expansion (step 2) extracts, and it lets a predicate
+    /// `gross_income >= 14600` fire over `quantity(18000, usd)` while the
+    /// `usd` unit travels with the fact for the faithfulness gate. See
+    /// [`numeric_magnitude`].
+    ///
     /// Only `Certain` facts gate predicates (same scope as
     /// [`observed_evidence`](Self::observed_evidence)). Returns the value
     /// of the most-recently-added matching fact, as `f64`.
@@ -477,11 +488,7 @@ impl KnowledgeBase {
             .filter(|f| f.probability == Probability::Certain)
             .filter_map(|f| match &f.term {
                 Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
-                    match &args[0] {
-                        Term::Num(Number::Int(i)) => Some((f.id, *i as f64)),
-                        Term::Num(Number::Float(x)) => Some((f.id, *x)),
-                        _ => None,
-                    }
+                    numeric_magnitude(&args[0]).map(|v| (f.id, v))
                 }
                 _ => None,
             })
@@ -551,6 +558,41 @@ impl KnowledgeBase {
         } else {
             Some(matched)
         }
+    }
+}
+
+/// Extract the numeric **magnitude** of a typed value term, if it has one.
+///
+/// The ADJ language expansion (step 2) models a fact's value as either a
+/// bare number or a *typed-value wrapper* that carries the magnitude as
+/// its leading argument and the unit/currency afterward:
+///
+/// | surface value           | term shape                              | magnitude |
+/// |-------------------------|-----------------------------------------|-----------|
+/// | `18000`                 | `Num(18000)`                            | `18000.0` |
+/// | `quantity(18000, usd)`  | `Compound{quantity, [Num(18000), usd]}` | `18000.0` |
+/// | `money(18000, usd)`     | `Compound{money, [Num(18000), usd]}`    | `18000.0` |
+/// | `percentage(40)`        | `Compound{percentage, [Num(40)]}`       | `40.0`    |
+/// | `duration(365, days)`   | `Compound{duration, [Num(365), days]}`  | `365.0`   |
+/// | `count(3)`              | `Compound{count, [Num(3)]}`             | `3.0`     |
+///
+/// The rule is uniform — "the leading numeric argument" — so we do not
+/// hard-code a closed set of wrapper functors; any compound that puts a
+/// number first exposes that number as its magnitude. A predicate
+/// (`gross_income >= 14600`) compares against this magnitude while the
+/// unit stays attached to the fact for the faithfulness gate. Returns
+/// `None` for symbolic terms with no leading number.
+pub fn numeric_magnitude(value: &Term) -> Option<f64> {
+    match value {
+        Term::Num(Number::Int(i)) => Some(*i as f64),
+        Term::Num(Number::Float(x)) => Some(*x),
+        // Typed wrapper: the magnitude is the leading numeric argument.
+        Term::Compound { args, .. } => match args.first() {
+            Some(Term::Num(Number::Int(i))) => Some(*i as f64),
+            Some(Term::Num(Number::Float(x))) => Some(*x),
+            _ => None,
+        },
+        _ => None,
     }
 }
 

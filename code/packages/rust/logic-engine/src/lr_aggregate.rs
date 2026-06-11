@@ -1172,6 +1172,54 @@ mod tests {
     }
 
     #[test]
+    fn predicate_fires_over_typed_quantity_wrapper() {
+        // Step 2: a typed value `quantity(18000, usd)` carries its unit;
+        // the predicate compares against the leading magnitude (18000)
+        // while `usd` stays attached to the fact for the audit gate.
+        let mut kb = KnowledgeBase::new();
+        kb.add_prior(PriorClause::from_probability(
+            atom("required_to_file"),
+            0.10,
+        ))
+        .unwrap();
+        kb.add_predicate_contribution(PredicateContributionClause::from_lr(
+            atom("required_to_file"),
+            "gross_income",
+            CmpOp::Ge,
+            14600.0,
+            1e6,
+        ));
+        kb.add_fact(Fact::certain(compound(
+            "gross_income",
+            vec![compound("quantity", vec![int(18000), atom("usd")])],
+        )));
+
+        let result = lr_aggregate(&atom("required_to_file"), &kb);
+        assert!(result.posterior > 0.9999, "got {}", result.posterior);
+    }
+
+    #[test]
+    fn numeric_magnitude_reads_bare_and_wrapped_values() {
+        use crate::numeric_magnitude;
+        assert_eq!(numeric_magnitude(&int(42)), Some(42.0));
+        assert_eq!(numeric_magnitude(&logic_core::float(3.5)), Some(3.5));
+        assert_eq!(
+            numeric_magnitude(&compound("quantity", vec![int(18000), atom("usd")])),
+            Some(18000.0)
+        );
+        assert_eq!(
+            numeric_magnitude(&compound("percentage", vec![int(40)])),
+            Some(40.0)
+        );
+        // No leading number → no magnitude.
+        assert_eq!(numeric_magnitude(&atom("usd")), None);
+        assert_eq!(
+            numeric_magnitude(&compound("pair", vec![atom("a"), int(1)])),
+            None
+        );
+    }
+
+    #[test]
     fn predicate_uses_latest_observation_of_slot() {
         // A later `observe` of the same slot supersedes the earlier value.
         let mut kb = KnowledgeBase::new();
