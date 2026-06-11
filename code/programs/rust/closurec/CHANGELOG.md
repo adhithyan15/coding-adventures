@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.76.0] - 2026-06-11
+
+### Fixed
+- **CLOSES gap-063 (CORRECTNESS)** — same-sign `+`/`-` token
+  adjacency. The WHITESPACE_ONLY re-stitcher joined two adjacent
+  operator tokens that both begin with `+` (or both `-`) into a
+  spurious compound operator, CORRUPTING semantics: `- -a`
+  (double negation) became `--a` (pre-decrement); likewise
+  `+ +a`→`++a`, `a- -b`→`a--b`, `- --a`→`---a`. Discovered by
+  the CLOC14.31 byte-identity harness (`minify_neg_neg`).
+
+### Added — gap-063 same-sign space rule
+
+`needs_separator()` now inserts a single space when the previous
+token's last char and the next token's first char are both `+`,
+or both `-`. Different signs (`a+ -b` → `a+-b`) stay joined —
+`+-` is unambiguous. CRITICAL GUARD: the rule gates on
+`is_punct(a) && is_punct(b)`, so a string/regex/template literal
+whose `.value` ends/starts with a sign char (e.g. `"a-"`, whose
+stored value is `a-`) can never trigger a spurious space — the
+emitted char there is the delimiter, not the sign. Verified
+`"a-"-1` and `"a-"- -b` against the upstream JAR. `minify_neg_neg`
+flips IGNORED → PASS. 6 new gap063_* unit tests.
+
 ## [0.75.0] - 2026-06-10
 
 ### Changed
