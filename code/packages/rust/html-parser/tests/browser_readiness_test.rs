@@ -16,15 +16,16 @@ use coding_adventures_html_parser::{
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
     BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
     BrowserInputPlanningDescriptor, BrowserInteractiveElement,
-    BrowserKeyboardInteractionDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -69,6 +70,8 @@ struct ExpectedBrowserDocument {
     body_event_handlers: Vec<String>,
     #[serde(default)]
     event_handler_descriptors: Vec<ExpectedEventHandlerDescriptor>,
+    #[serde(default)]
+    lifecycle_event_descriptors: Option<Vec<ExpectedLifecycleEventDescriptor>>,
     body_text: String,
     metas: Vec<ExpectedMeta>,
     resources: Vec<ExpectedResource>,
@@ -627,6 +630,45 @@ struct ExpectedEventHandlerDescriptor {
     error_handlers: Vec<String>,
     #[serde(default)]
     text: String,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedLifecycleEventDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    classes: Vec<String>,
+    #[serde(default)]
+    role: Option<String>,
+    source: String,
+    lifecycle_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    event_handlers: Vec<String>,
+    #[serde(default)]
+    lifecycle_handlers: Vec<String>,
+    #[serde(default)]
+    load_handlers: Vec<String>,
+    #[serde(default)]
+    unload_handlers: Vec<String>,
+    #[serde(default)]
+    visibility_handlers: Vec<String>,
+    #[serde(default)]
+    history_handlers: Vec<String>,
+    #[serde(default)]
+    network_handlers: Vec<String>,
+    #[serde(default)]
+    error_handlers: Vec<String>,
+    #[serde(default)]
+    handler_count: usize,
+    #[serde(default)]
+    document_scope: bool,
+    #[serde(default)]
+    body_scope: bool,
+    #[serde(default)]
+    error_recovery: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -5007,6 +5049,26 @@ fn browser_event_handler_descriptors_track_document_and_element_wiring() {
     );
 }
 
+#[test]
+fn browser_lifecycle_event_descriptors_track_load_and_error_recovery_hooks() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "event-handler-page")
+        .expect("event handler fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("event handler fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.lifecycle_event_descriptors,
+        case.expected.into_browser_document().lifecycle_event_descriptors,
+        "lifecycle-event descriptors should preserve document/body load hooks and element error-recovery handlers",
+    );
+}
+
 impl ExpectedBrowserDocument {
     fn into_browser_document(self) -> BrowserDocument {
         let metadata = self.metadata.into_browser_document_metadata();
@@ -5045,6 +5107,15 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedEventHandlerDescriptor::into_browser_event_handler_descriptor)
             .collect();
+        let lifecycle_event_descriptors = self
+            .lifecycle_event_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedLifecycleEventDescriptor::into_browser_lifecycle_event_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_lifecycle_event_descriptors(&event_handler_descriptors));
         let global_state_descriptors: Vec<_> = self
             .global_state_descriptors
             .into_iter()
@@ -5307,6 +5378,7 @@ impl ExpectedBrowserDocument {
             document_event_handlers: self.document_event_handlers,
             body_event_handlers: self.body_event_handlers,
             event_handler_descriptors,
+            lifecycle_event_descriptors,
             body_text: self.body_text,
             metas: self
                 .metas
@@ -5708,6 +5780,32 @@ impl ExpectedEventHandlerDescriptor {
             lifecycle_handlers: self.lifecycle_handlers,
             error_handlers: self.error_handlers,
             text: self.text,
+        }
+    }
+}
+
+impl ExpectedLifecycleEventDescriptor {
+    fn into_browser_lifecycle_event_descriptor(self) -> BrowserLifecycleEventDescriptor {
+        BrowserLifecycleEventDescriptor {
+            element: self.element,
+            id: self.id,
+            classes: self.classes,
+            role: self.role,
+            source: self.source,
+            lifecycle_kind: self.lifecycle_kind,
+            text: self.text,
+            event_handlers: self.event_handlers,
+            lifecycle_handlers: self.lifecycle_handlers,
+            load_handlers: self.load_handlers,
+            unload_handlers: self.unload_handlers,
+            visibility_handlers: self.visibility_handlers,
+            history_handlers: self.history_handlers,
+            network_handlers: self.network_handlers,
+            error_handlers: self.error_handlers,
+            handler_count: self.handler_count,
+            document_scope: self.document_scope,
+            body_scope: self.body_scope,
+            error_recovery: self.error_recovery,
         }
     }
 }
@@ -8704,6 +8802,107 @@ fn expected_event_handlers_by_kind(
         .collect()
 }
 
+fn expected_lifecycle_event_descriptors(
+    event_handler_descriptors: &[BrowserEventHandlerDescriptor],
+) -> Vec<BrowserLifecycleEventDescriptor> {
+    event_handler_descriptors
+        .iter()
+        .filter(|descriptor| expected_event_descriptor_has_lifecycle_state(descriptor))
+        .map(expected_lifecycle_event_descriptor)
+        .collect()
+}
+
+fn expected_event_descriptor_has_lifecycle_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !descriptor.lifecycle_handlers.is_empty() || !descriptor.error_handlers.is_empty()
+}
+
+fn expected_lifecycle_event_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserLifecycleEventDescriptor {
+    let load_handlers =
+        expected_event_handlers_by_kind(&descriptor.event_handlers, expected_load_lifecycle_event);
+    let unload_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_unload_lifecycle_event,
+    );
+    let visibility_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_visibility_lifecycle_event,
+    );
+    let history_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_history_lifecycle_event,
+    );
+    let network_handlers = expected_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        expected_network_lifecycle_event,
+    );
+
+    BrowserLifecycleEventDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        lifecycle_kind: expected_lifecycle_kind(
+            &load_handlers,
+            &unload_handlers,
+            &visibility_handlers,
+            &history_handlers,
+            &network_handlers,
+            &descriptor.error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        lifecycle_handlers: descriptor.lifecycle_handlers.clone(),
+        load_handlers,
+        unload_handlers,
+        visibility_handlers,
+        history_handlers,
+        network_handlers,
+        error_handlers: descriptor.error_handlers.clone(),
+        handler_count: descriptor.lifecycle_handlers.len() + descriptor.error_handlers.len(),
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+        error_recovery: !descriptor.error_handlers.is_empty(),
+    }
+}
+
+fn expected_lifecycle_kind(
+    load_handlers: &[String],
+    unload_handlers: &[String],
+    visibility_handlers: &[String],
+    history_handlers: &[String],
+    network_handlers: &[String],
+    error_handlers: &[String],
+) -> String {
+    if !error_handlers.is_empty()
+        && (!load_handlers.is_empty()
+            || !unload_handlers.is_empty()
+            || !visibility_handlers.is_empty()
+            || !history_handlers.is_empty()
+            || !network_handlers.is_empty())
+    {
+        "lifecycle-error".to_string()
+    } else if !error_handlers.is_empty() {
+        "error-recovery".to_string()
+    } else if !unload_handlers.is_empty() {
+        "unload".to_string()
+    } else if !load_handlers.is_empty() {
+        "load".to_string()
+    } else if !visibility_handlers.is_empty() {
+        "visibility".to_string()
+    } else if !history_handlers.is_empty() {
+        "history".to_string()
+    } else if !network_handlers.is_empty() {
+        "network".to_string()
+    } else {
+        "lifecycle".to_string()
+    }
+}
+
 fn expected_keyboard_event(handler: &str) -> bool {
     matches!(handler, "onkeydown" | "onkeypress" | "onkeyup")
 }
@@ -8719,6 +8918,29 @@ fn expected_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn expected_load_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload" | "onpageshow" | "onreadystatechange" | "ondomcontentloaded"
+    )
+}
+
+fn expected_unload_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onunload" | "onbeforeunload" | "onpagehide")
+}
+
+fn expected_visibility_lifecycle_event(handler: &str) -> bool {
+    handler == "onvisibilitychange"
+}
+
+fn expected_history_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onhashchange" | "onpopstate")
+}
+
+fn expected_network_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "ononline" | "onoffline")
 }
 
 fn expected_pointer_event(handler: &str) -> bool {
