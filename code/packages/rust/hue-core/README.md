@@ -28,7 +28,8 @@ packages a typed surface for:
 - Hue light/device-to-normalized-model projection
 - Hue scene-to-normalized-`Scene` projection
 - Hue motion/button-to-normalized-`Entity` projection
-- Hue scene summaries for recall planning and read-model telemetry
+- Hue scene summaries and scene-set rollups for recall planning and read-model
+  telemetry
 - Hue light, grouped-light, motion, and button state update-to-`StateDelta`
   projection
 - Hue state update summaries for read models and event-stream telemetry

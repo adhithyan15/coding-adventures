@@ -23,6 +23,8 @@ All notable changes to this package will be documented in this file.
 - Hue command summaries and command-plan rollups for payload-free write-surface
   telemetry, including light-surface, surface-breadth, and capability-breadth
   helper predicates.
+- Hue scene-set summaries for payload-free recall/read-model telemetry across
+  scene batches.
 - Grouped-light color-temperature command projection from normalized D23 state
   deltas.
 - Hue command planning from normalized D23 `StateDelta` records for direct and
