@@ -1,0 +1,98 @@
+{
+  "_doc": "MYCIN-2026 standard dictionary — the controlled vocabulary SHARED by the input decomposer (LLM) and the adj-lang rulebook/case programs. This is the linchpin: it guarantees the IR the model emits and the program it is compiled into use the SAME terms, so a finding never silently misses the rulebook because of a naming mismatch. Every canonical term is `functor(value)`. The decomposer is constrained to these terms (prompted with the surface_forms); dict_lint.py rejects any rulebook or case .adj that uses a term not registered here. Because the finding set is CLOSED, the framework can distinguish 'finding absent' (a value in the domain, observed) from 'finding not yet observed' (term legal but no observe line).",
+  "domain": "meningitis_differential",
+  "hypotheses": [
+    {
+      "term": "bacterial_meningitis",
+      "definition": "Acute bacterial meningitis (e.g. S. pneumoniae, N. meningitidis).",
+      "surface_forms": ["bacterial meningitis", "pyogenic meningitis", "acute bacterial meningitis"]
+    },
+    {
+      "term": "viral_meningitis",
+      "definition": "Aseptic / viral meningitis (overwhelmingly enteroviral; also HSV).",
+      "surface_forms": ["viral meningitis", "aseptic meningitis", "enteroviral meningitis"]
+    }
+  ],
+  "findings": [
+    {
+      "functor": "csf_gram_stain",
+      "value_domain": ["positive", "negative"],
+      "definition": "Result of microscopic Gram stain of cerebrospinal fluid.",
+      "surface_forms": ["Gram stain positive", "organisms seen on Gram stain", "gram-positive diplococci on CSF", "CSF Gram stain showed", "no organisms on Gram stain"],
+      "supports": {"positive": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f1 (LR+ 85; WHO/Straus 2006)"
+    },
+    {
+      "functor": "csf_neutrophilic_pleocytosis",
+      "value_domain": ["high", "normal"],
+      "definition": "Elevated CSF white-cell count with neutrophil (PMN) predominance.",
+      "surface_forms": ["neutrophil-predominant pleocytosis", "PMN predominance", "CSF WBC elevated with neutrophils", "CSF 1200 cells 90% polys", "neutrophilic pleocytosis"],
+      "supports": {"high": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f2 (LR+ 15; Straus 2006 JAMA, CSF WBC >=500/uL)"
+    },
+    {
+      "functor": "csf_lymphocytic_pleocytosis",
+      "value_domain": ["high", "normal"],
+      "definition": "Elevated CSF white-cell count with lymphocyte predominance.",
+      "surface_forms": ["lymphocyte-predominant pleocytosis", "lymphocytic pleocytosis", "CSF WBC elevated with lymphocytes", "CSF 200 cells 85% lymphocytes", "mononuclear predominance"],
+      "supports": {"high": "viral_meningitis"},
+      "provenance": "viral arm; ground in rulebook/SOURCES (Negrini 2000 / Straus 2006 aseptic profile)"
+    },
+    {
+      "functor": "csf_glucose",
+      "value_domain": ["low", "normal"],
+      "definition": "CSF glucose, typically as CSF:blood glucose ratio. Low (<=0.4) favours bacterial; normal favours viral.",
+      "surface_forms": ["low CSF glucose", "CSF:serum glucose ratio 0.2", "hypoglycorrhachia", "normal CSF glucose", "CSF glucose ratio 0.6"],
+      "supports": {"low": "bacterial_meningitis", "normal": "viral_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f3 (LR+ 18 for low; Straus 2006)"
+    },
+    {
+      "functor": "csf_protein",
+      "value_domain": ["elevated", "normal"],
+      "definition": "CSF total protein concentration.",
+      "surface_forms": ["elevated CSF protein", "CSF protein 2.1 g/L", "high CSF protein", "normal CSF protein"],
+      "supports": {"elevated": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f4 (LR+ 9.33 for elevated; Viallon via PMC4886299)"
+    },
+    {
+      "functor": "csf_lactate",
+      "value_domain": ["elevated", "normal"],
+      "definition": "CSF lactate concentration (>=3.5 mmol/L = elevated).",
+      "surface_forms": ["elevated CSF lactate", "CSF lactate 6 mmol/L", "high CSF lactate", "normal CSF lactate"],
+      "supports": {"elevated": "bacterial_meningitis", "normal": "viral_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f5 (LR+ 22.9 for elevated; Sakushima 2011)"
+    },
+    {
+      "functor": "serum_procalcitonin",
+      "value_domain": ["elevated", "normal"],
+      "definition": "Serum procalcitonin (PCT) level.",
+      "surface_forms": ["elevated procalcitonin", "PCT 5 ng/mL", "high serum procalcitonin", "normal procalcitonin"],
+      "supports": {"elevated": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f6 (LR+ 27.3 for elevated; Vikse 2015)"
+    },
+    {
+      "functor": "seizure",
+      "value_domain": ["present", "absent"],
+      "definition": "Seizure at or before presentation.",
+      "surface_forms": ["had a seizure", "convulsion on presentation", "seized in the ED", "no seizure"],
+      "supports": {"present": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f7 (LR+ 5.84 for present; Nigrovic 2002)"
+    },
+    {
+      "functor": "csf_culture",
+      "value_domain": ["positive", "negative", "pending"],
+      "definition": "CSF bacterial culture result (the reference standard). 'pending' means not yet resulted.",
+      "surface_forms": ["culture positive", "CSF grew S. pneumoniae", "cultures pending", "culture negative", "awaiting culture"],
+      "supports": {"positive": "bacterial_meningitis"},
+      "provenance": "adj52/corpus/bacterial_meningitis/corpus.json#f8 (LR+ 271 for positive; Wu 2013)"
+    },
+    {
+      "functor": "enteroviral_pcr",
+      "value_domain": ["positive", "negative"],
+      "definition": "CSF enterovirus PCR result. A positive enteroviral PCR strongly favours viral meningitis.",
+      "surface_forms": ["enterovirus PCR positive", "CSF enteroviral PCR detected", "EV PCR positive", "enterovirus PCR negative"],
+      "supports": {"positive": "viral_meningitis"},
+      "provenance": "viral arm; ground in rulebook/SOURCES (enterovirus PCR meta-analysis)"
+    }
+  ]
+}
