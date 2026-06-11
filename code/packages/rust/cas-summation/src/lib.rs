@@ -3,12 +3,14 @@ use std::cmp::Ordering;
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, DIV, EXP, LOG, MUL, NEG, POW, SUB};
 
 pub mod gosper;
+pub mod series_closed_forms;
 
 pub const SUM: &str = "Sum";
 pub const PRODUCT: &str = "Product";
 pub const GAMMA_FUNC: &str = "GammaFunc";
 
 pub use gosper::{try_gosper_sum, MAX_POLY_DEGREE};
+pub use series_closed_forms::{bernoulli_rational, try_closed_form_series};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Rational {
@@ -350,6 +352,20 @@ fn evaluate_sum_inner(
 
     if inf_upper {
         if let Some(raw) = try_special_infinite(&f, &k, &lo) {
+            return eval_fn(raw);
+        }
+    }
+
+    // Track I2 — closed-form transcendental infinite sums.  Recognises the
+    // canonical zeta(2m), eta(2m), eta(1) = log(2), e_series, exp/cos/sin/
+    // cosh/sinh Taylor series.  Mirrors the Python dispatch insertion point
+    // (step 5a): placed after `try_special_infinite` so its pre-existing
+    // patterns (Basel zeta(2)/zeta(4), Leibniz π/4) keep their IR shapes
+    // and tests; `try_closed_form_series` only fires on patterns the
+    // legacy handler refuses (e.g. ``Σ 1/k⁶``, the eta family, sin/cos/
+    // sinh/cosh).
+    if inf_upper {
+        if let Some(raw) = series_closed_forms::try_closed_form_series(&f, &k, &lo, &hi) {
             return eval_fn(raw);
         }
     }

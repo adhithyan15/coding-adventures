@@ -1,5 +1,51 @@
 # Changelog
 
+## 2.28.0 — 2026-05-29
+
+### Added — Track I2 (Closed-form transcendental infinite sums port)
+
+Ports the Python ``cas_summation.series_closed_forms`` module (Track I1,
+PR #5382) to Rust ``cas-summation``.  Pattern-matches the canonical
+convergent infinite series and emits their closed forms when
+``hi = %inf``:
+
+- ``sum(1/k^(2m), k, 1, %inf) → ζ(2m) · π^(2m)`` for ``m = 1..6``
+  (Basel through ``ζ(12) = 691·π¹²/638512875``).
+- ``sum((-1)^(k-1)/k, k, 1, %inf) → log(2)`` (Mercator).
+- ``sum((-1)^(k-1)/k^(2m), k, 1, %inf) → η(2m) · π^(2m)`` for
+  ``m = 1..3`` (Dirichlet eta).
+- ``sum(1/k!, k, 0, %inf) → %e``.
+- ``sum(x^k/k!, k, 0, %inf) → exp(x)`` (symbolic ``x ≠ k``).
+- ``sum((-1)^k · x^(2k)/(2k)!, k, 0, %inf) → cos(x)``.
+- ``sum((-1)^k · x^(2k+1)/(2k+1)!, k, 0, %inf) → sin(x)``.
+- ``sum(x^(2k)/(2k)!, k, 0, %inf) → cosh(x)``.
+- ``sum(x^(2k+1)/(2k+1)!, k, 0, %inf) → sinh(x)``.
+
+The new ``try_closed_form_series`` handler is wired into
+``evaluate_sum`` between the existing ``try_special_infinite`` (legacy
+Basel + Leibniz table) and the small-range numeric path; pre-existing
+tests stay on their original routes because the legacy table fires
+first for the overlapping ``ζ(2)`` / ``ζ(4)`` / ``π/4`` patterns.
+
+One generic ``bernoulli_rational`` helper computes ``B_n`` via the
+textbook recurrence ``B_0 = 1; Σ_{j=0}^{n} C(n+1, j) · B_j = 0``.  Six
+even-zeta exponents and three even-eta exponents share the same code —
+no per-degree tables.  The recurrence depth is bounded by ``n ≤ 12``,
+so the helper is provably terminating, and the cache is initialised
+lazily via ``OnceLock``.
+
+All numeric work is exact: intermediate ``Frac`` values are ``i128``
+to handle the binomial-recurrence products without overflow, then
+down-cast to ``i64`` for the IR literal (every emitted value sits
+comfortably inside i64 — ``638_512_875`` is the largest denominator).
+
+### Notes
+
+Falls through (returns ``None``) for: odd zeta ``ζ(2m+1)``, indices
+past ``m > 6``, wrong lower bound (zeta requires ``lo=1``, Taylor
+requires ``lo=0``), finite upper bound, and any non-table summand
+(``sin(k)``, ``log(k)``, etc.).
+
 ## 2.27.0 — 2026-05-29
 
 ### Added — Track H2 (Gosper hypergeometric summation port)
