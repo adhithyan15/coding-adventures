@@ -145,6 +145,24 @@ pub fn whitespace_only_minify(
     // `type_name` string (set by the grammar's named rules);
     // we accept multiple common spellings since different
     // grammars label them differently.
+    // gap-061 needs to INSERT a `(`/`)` pair into the token
+    // stream (the arg-bearing new-expr wrap can't reuse the
+    // empty-args reorder trick). We clone one real `(` and one
+    // real `)` from the source as synthetic grouping parens —
+    // declared BEFORE `kept` so they outlive it, letting `kept`
+    // (a `Vec<&Token>`) hold references to them. Only `.value`
+    // matters for re-stitching, so the cloned line/column are
+    // irrelevant. If the source has no parens, gap-061 can't
+    // fire anyway, so `None` is fine.
+    let synth_open: Option<lexer::token::Token> = tokens
+        .iter()
+        .find(|t| is_structural_punct(t, "("))
+        .cloned();
+    let synth_close: Option<lexer::token::Token> = tokens
+        .iter()
+        .find(|t| is_structural_punct(t, ")"))
+        .cloned();
+
     let mut kept: Vec<_> = tokens
         .iter()
         .filter(|t| !is_trivia(t))
@@ -691,6 +709,105 @@ pub fn whitespace_only_minify(
         drops.sort_unstable();
         for &drop_idx in drops.iter().rev() {
             kept.remove(drop_idx);
+        }
+    }
+
+    // ---- gap-061: arg-bearing new-expression member wrap -----
+    // `new A(y).b` → `(new A(y)).b`. Like gap-059/060, a
+    // NewExpression that is the object/callee of a following
+    // `.`/`[`/`(` must be wrapped in parens. But here the arg
+    // list is NON-EMPTY (`(y)`), so we can't REORDER the empty
+    // parens — there are none spare. Instead we INSERT a
+    // synthetic `(` before `new` and a synthetic `)` after the
+    // arg-list's `)`.
+    //
+    // Match shape: `new <callee> ( <non-empty args> ) FOLLOWER`
+    //   - callee: identifier + zero-or-more `.IDENT` (same scan
+    //     as gap-060),
+    //   - NON-EMPTY args (at least one token between `(` `)` —
+    //     the empty case is gap-059/060's reorder),
+    //   - FOLLOWER ∈ {`.`,`[`,`(`}.
+    //
+    // Guards: operator `new` only (not `.new`/`?.new`); all
+    // bracket/accessor checks via `is_structural_punct`; the
+    // arg-list close is found by a depth-balanced scan so nested
+    // calls (`new A(f(x)).b`) are handled.
+    if let (Some(so), Some(sc)) = (synth_open.as_ref(), synth_close.as_ref()) {
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            let is_operator_new = kept[i].value == "new"
+                && !is_string_literal(kept[i])
+                && (i == 0
+                    || (!is_structural_punct(&kept[i - 1], ".")
+                        && !is_structural_punct(&kept[i - 1], "?.")));
+            if is_operator_new
+                && is_simple_identifier_token(kept.get(i + 1).copied())
+            {
+                // Scan the callee extent (identifier + `.IDENT`).
+                let mut p = i + 2;
+                while p + 1 < kept.len()
+                    && is_structural_punct(&kept[p], ".")
+                    && is_simple_identifier_token(Some(kept[p + 1]))
+                {
+                    p += 2;
+                }
+                // `kept[p]` must be the arg-list `(` and the
+                // first arg token must NOT be `)` (non-empty).
+                if p + 1 < kept.len()
+                    && is_structural_punct(&kept[p], "(")
+                    && !is_structural_punct(&kept[p + 1], ")")
+                {
+                    // Depth-balanced scan for the matching `)`.
+                    let mut depth: i32 = 1;
+                    let mut close: Option<usize> = None;
+                    let mut j = p + 1;
+                    while j < kept.len() {
+                        let t = &kept[j];
+                        if is_structural_punct(t, "(")
+                            || is_structural_punct(t, "[")
+                            || is_structural_punct(t, "{")
+                        {
+                            depth += 1;
+                        } else if is_structural_punct(t, ")") {
+                            depth -= 1;
+                            if depth == 0 {
+                                close = Some(j);
+                                break;
+                            }
+                        } else if is_structural_punct(t, "]")
+                            || is_structural_punct(t, "}")
+                        {
+                            depth -= 1;
+                        }
+                        j += 1;
+                    }
+                    if let Some(q) = close {
+                        let follower_wraps = matches!(
+                            kept.get(q + 1).map(|t| t.value.as_str()),
+                            Some(".") | Some("[") | Some("(")
+                        ) && kept
+                            .get(q + 1)
+                            .map(|t| is_structural_punct(t, ".")
+                                || is_structural_punct(t, "[")
+                                || is_structural_punct(t, "("))
+                            .unwrap_or(false);
+                        if follower_wraps {
+                            // Insert `)` after the arg-list close
+                            // FIRST (higher index, no shift to
+                            // earlier positions), then `(` before
+                            // `new`.
+                            kept.insert(q + 1, sc);
+                            kept.insert(i, so);
+                            // `( new <callee> ( args ) )` now
+                            // spans i..=q+2; the follower sits at
+                            // q+3. Re-scan from there.
+                            i = q + 3;
+                            continue;
+                        }
+                    }
+                }
+            }
+            i += 1;
         }
     }
 
@@ -3626,12 +3743,47 @@ mod tests {
         assert_eq!(minify("var x=a.new().b;"), "var x=a.new().b;");
     }
 
-    /// gap-059 deferred: arg-bearing `new Foo(y).b` is left
-    /// untouched by the minimal slice (upstream wraps it to
-    /// `(new Foo(y)).b` — a follow-up).
+    /// gap-061: arg-bearing new-expr member — `new Foo(y).b` →
+    /// `(new Foo(y)).b`. Synthetic parens are inserted since the
+    /// arg list is non-empty (no spare parens to reorder). The
+    /// old behavior (left unchanged) was deferred; gap-061 makes
+    /// it byte-identical with upstream.
     #[test]
-    fn gap059_arg_bearing_new_deferred() {
-        assert_eq!(minify("var x=new Foo(y).b;"), "var x=new Foo(y).b;");
+    fn gap061_arg_bearing_new_wraps() {
+        assert_eq!(minify("var x=new Foo(y).b;"), "var x=(new Foo(y)).b;");
+    }
+
+    /// gap-061: member callee + multiple args + member follower
+    /// — `new a.b.C(y,z).d` → `(new a.b.C(y,z)).d`.
+    #[test]
+    fn gap061_member_callee_multi_arg_wraps() {
+        assert_eq!(
+            minify("var x=new a.b.C(y,z).d;"),
+            "var x=(new a.b.C(y,z)).d;"
+        );
+    }
+
+    /// gap-061: nested call in the arg list — the depth-balanced
+    /// scan finds the OUTER arg-list close. `new A(f(x)).b` →
+    /// `(new A(f(x))).b`.
+    #[test]
+    fn gap061_nested_call_args_wraps() {
+        assert_eq!(minify("var x=new A(f(x)).b;"), "var x=(new A(f(x))).b;");
+    }
+
+    /// gap-061 non-regression: arg-bearing new with NO following
+    /// member/call is NOT wrapped (`new A(y)` stays — nothing to
+    /// disambiguate).
+    #[test]
+    fn gap061_standalone_arg_new_unchanged() {
+        assert_eq!(minify("var x=new A(y);"), "var x=new A(y);");
+    }
+
+    /// gap-061 guard: property `new` (`a.new(x).b`) is not the
+    /// operator — must NOT wrap.
+    #[test]
+    fn gap061_property_new_not_wrapped() {
+        assert_eq!(minify("var x=a.new(x).b;"), "var x=a.new(x).b;");
     }
 
     // ---- gap-062: redundant double-paren collapse --------

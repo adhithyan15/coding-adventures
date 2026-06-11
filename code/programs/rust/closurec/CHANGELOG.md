@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.75.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-061** — arg-bearing new-expression member wrap:
+  `new A(y).b` → `(new A(y)).b`. Completes the new-expr-member
+  family (gap-059 single-ident, gap-060 member-callee, gap-061
+  arg-bearing).
+
+### Added — gap-061 synthetic-paren pre-pass
+
+Unlike gap-059/060 (which REORDER the empty arg-list parens),
+the arg-bearing wrap has no spare parens, so this pass INSERTS
+synthetic ones. Two grouping tokens — one `(` and one `)` —
+are cloned from the source's own parens and declared before
+`kept` so they outlive it; the pass inserts `&`-references (a
+`(` before `new`, a `)` after the arg-list's depth-balanced
+close). Reuses the gap-060 callee scan, so member-chain callees
+(`new a.b.C(y,z).d`), multiple args, and nested-call args
+(`new A(f(x)).b`) all wrap correctly. Guards: operator `new`
+only; non-empty args; follower ∈ `.`/`[`/`(`; all checks via
+`is_structural_punct`. 5 new gap061_* unit tests; the former
+gap059_arg_bearing_new_deferred test is updated to assert the
+wrapped form.
+
 ## [0.74.0] - 2026-06-10
 
 ### Changed

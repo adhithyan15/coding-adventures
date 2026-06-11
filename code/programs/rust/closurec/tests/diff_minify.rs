@@ -90,10 +90,6 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-061 (CLOC14.30): arg-bearing new-expr member —
-    // `new A(y).b` → `(new A(y)).b`. gap-059 handled only the
-    // EMPTY arg list; non-empty args need arg-list scanning.
-    ("new_with_args_member", "gap-061: arg-bearing new-expr member `new A(y).b`"),
     // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
     // arms, return/throw/=> prefixes, and member-object parens
     // (`(a).b` → `a.b`) now pass and are no longer ignored.
