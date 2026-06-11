@@ -1424,6 +1424,12 @@
           { "element": "p", "id": "editable", "role": "paragraph", "selection_kind": "select-handler", "text": "Editable copy", "value": "Editable copy", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "selection_handlers": ["onselect"], "select_handlers": ["onselect"], "input_handlers": ["oninput"], "handler_count": 2, "focusable": true },
           { "element": "p", "id": "secret", "role": "paragraph", "selection_kind": "blocked", "text": "Hidden copy", "selection_handlers": ["onselect"], "select_handlers": ["onselect"], "handler_count": 1, "hidden": true, "selection_blocked": true, "selection_block_reasons": ["hidden"] }
         ],
+        "pointer_interaction_descriptors": [
+          { "element": "button", "id": "menu", "role": "control", "pointer_kind": "click-target", "text": "Menu", "accessible_name": "Menu", "control_type": "submit", "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "pointer_handlers": ["onclick"], "click_handlers": ["onclick"], "handler_count": 1, "focusable": true },
+          { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "pointer_kind": "blocked", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "pointer_handlers": ["ondragover", "ondrop"], "drop_handlers": ["ondragover", "ondrop"], "handler_count": 2, "inert": true, "pointer_blocked": true, "pointer_block_reasons": ["inert"] },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "pointer_kind": "drag-source", "text": "Inline action", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "pointer_handlers": ["ondragstart", "ondragend"], "drag_handlers": ["ondragstart", "ondragend"], "handler_count": 2 },
+          { "element": "p", "id": "secret", "role": "paragraph", "pointer_kind": "blocked", "text": "Hidden copy", "draggable": "true", "draggable_state": "true", "hidden": true, "pointer_blocked": true, "pointer_block_reasons": ["hidden"] }
+        ],
         "disclosures": [
           { "element": "dialog", "id": "dialog", "text": "Dialog copy", "open": true, "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true" },
           { "element": "details", "id": "more", "text": "More Extra", "summary_text": "More", "open": true, "accessible_name": "More" }
