@@ -654,6 +654,43 @@ pub struct RequestTrackerSummary {
     pub next_timeout_at_ms: Option<u64>,
 }
 
+impl RequestTrackerSummary {
+    pub fn is_idle(&self) -> bool {
+        self.pending_count == 0
+    }
+
+    pub fn has_pending_callbacks(&self) -> bool {
+        self.callback_pending_count > 0
+    }
+
+    pub fn has_pending_responses(&self) -> bool {
+        self.response_pending_count > 0
+    }
+
+    pub fn has_mixed_pending_waits(&self) -> bool {
+        self.has_pending_callbacks() && self.has_pending_responses()
+    }
+
+    pub fn function_pending_count(&self, function_id: FunctionId) -> usize {
+        self.function_counts.get(&function_id).copied().unwrap_or(0)
+    }
+
+    pub fn is_function_pending(&self, function_id: FunctionId) -> bool {
+        self.function_pending_count(function_id) > 0
+    }
+
+    pub fn most_pending_function(&self) -> Option<(FunctionId, usize)> {
+        let mut best = None;
+        for (&function_id, &count) in &self.function_counts {
+            match best {
+                Some((_, best_count)) if best_count >= count => {}
+                _ => best = Some((function_id, count)),
+            }
+        }
+        best
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct RequestTracker {
     pending: BTreeMap<RequestKey, PendingRequest>,
@@ -1328,6 +1365,10 @@ mod tests {
         assert_eq!(summary.pending_count, 3);
         assert_eq!(summary.response_pending_count, 1);
         assert_eq!(summary.callback_pending_count, 2);
+        assert!(!summary.is_idle());
+        assert!(summary.has_pending_responses());
+        assert!(summary.has_pending_callbacks());
+        assert!(summary.has_mixed_pending_waits());
         assert_eq!(
             summary.function_counts.get(&FunctionId::GET_VERSION),
             Some(&1)
@@ -1340,7 +1381,56 @@ mod tests {
             summary.function_counts.get(&FunctionId::REQUEST_NODE_INFO),
             Some(&1)
         );
+        assert_eq!(summary.function_pending_count(FunctionId::GET_VERSION), 1);
+        assert!(summary.is_function_pending(FunctionId::SEND_DATA));
+        assert!(!summary.is_function_pending(FunctionId::MEMORY_GET_ID));
+        assert_eq!(
+            summary.most_pending_function(),
+            Some((FunctionId::SEND_DATA, 1))
+        );
         assert_eq!(summary.oldest_sent_at_ms, Some(100));
         assert_eq!(summary.next_timeout_at_ms, Some(320));
+
+        let empty = RequestTracker::new().summary();
+        assert!(empty.is_idle());
+        assert!(!empty.has_pending_responses());
+        assert!(!empty.has_pending_callbacks());
+        assert!(!empty.has_mixed_pending_waits());
+        assert_eq!(empty.function_pending_count(FunctionId::SEND_DATA), 0);
+        assert_eq!(empty.most_pending_function(), None);
+    }
+
+    #[test]
+    fn request_tracker_summary_reports_dominant_pending_function() {
+        let version = SerialMessage::request(FunctionId::GET_VERSION, Vec::new());
+        let send_data_44 = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
+        let send_data_45 = SendDataRequest::new(
+            NodeId::Classic(3),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0x00]),
+            TransmitOptions::reliable(),
+            0x45,
+        )
+        .to_message()
+        .unwrap();
+        let mut tracker = RequestTracker::new();
+
+        tracker.track(&version, 100, 500).unwrap();
+        tracker.track(&send_data_44, 120, 200).unwrap();
+        tracker.track(&send_data_45, 130, 300).unwrap();
+
+        let summary = tracker.summary();
+        assert_eq!(summary.pending_count, 3);
+        assert_eq!(summary.function_pending_count(FunctionId::SEND_DATA), 2);
+        assert_eq!(
+            summary.most_pending_function(),
+            Some((FunctionId::SEND_DATA, 2))
+        );
     }
 }

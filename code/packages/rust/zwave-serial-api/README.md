@@ -24,6 +24,8 @@ control-plane layer:
 - request tracker with callback correlation and timeout expiry
 - request tracker summaries for pending callback/response distribution and
   next-timeout diagnostics
+- request tracker summary helpers for idle, callback/response wait mix, and
+  dominant pending-function checks
 
 It does not yet open a serial port, interview nodes, handle inclusion, or decode
 command-class payload semantics.
