@@ -99,12 +99,12 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ☐  | ☐   | ✅        | ◑    | ◑    | ◑   | ◑   |
+| Twig            | ☐  | ☐   | ✅        | ✅   | ◑    | ◑   | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
-| Oct             | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
-| ALGOL 60        | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
+| Oct             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
+| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -130,12 +130,18 @@ slice — the loop trusts running, not this table.)
 
 ### Phase L — LLVM for every language (priority)
 
-- ☐ **LM-L Twig** — full feature battery on real `clang` (beyond scalar).
-- ☐ **LM-L Nib** — Nib on real `clang`.
-- ☐ **LM-L Oct** — Oct (if/while/calls) on real `clang`.
-- ☐ **LM-L Brainfuck** — tape + `putchar`/`getchar` via the LLVM C runtime; assert stdout.
-- ☐ **LM-L BASIC** — `PRINT`/`LET`/`FOR`/`GOTO`/`IF` on `clang`; assert stdout.
-- ☐ **LM-L ALGOL** — ALGOL 60 scalar/boolean on `clang`.
+- ✅ **LM-L Twig / Oct / ALGOL (expression languages on LLVM).** `lang_matrix.rs`
+  refactored into a `Backend`-keyed grid (each `Prog` lists its proven backends); a
+  `clang`-gated LLVM runner (`.ll` → real `clang` → run) added. Verified by RUNNING:
+  Twig→42, Oct→0, ALGOL `17 mod 5`→2. No C runtime needed — these link a bare `.ll`.
+- ☐ **LM-L Nib (on LLVM).** Blocked on a real `iir-to-llvm` bug the probe surfaced:
+  Nib's `u8` operands are mis-widened — `'%x' defined with type 'i8' but expected
+  'i64'` on `add`. This slice fixes the backend's integer-width coercion, then greens
+  Nib's LLVM cell. (Native AOT runs Nib fine, so the IIR is sound; only LLVM mishandles
+  the narrow type.)
+- ☐ **LM-L Brainfuck / BASIC (I/O languages on LLVM).** Need the stdout-capturing LLVM
+  runner (link the C runtime providing `putchar`/`print_i64`) and assert stdout
+  (`A` / `42`).
 
 ### Phase V — VM op-coverage for every language
 

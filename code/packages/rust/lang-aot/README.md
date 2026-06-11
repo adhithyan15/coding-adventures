@@ -122,12 +122,14 @@ proof the platform is complete and uniform.
 
 `tests/lang_matrix.rs` generalizes that idea from McCarthy to **every** language
 (`LANG-PLATFORM-MATRIX`): a per-language program battery run through each non-BEAM
-backend, asserted by running. As of LM0 the **native-AOT** column is uniformly green —
-all six non-Lisp languages (Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60)
-compile to a host executable and produce the right result (exit code for the
-expression languages; stdout for the I/O languages). The LLVM/WASM/JVM/CLR columns
-follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and need
-op-coverage work.
+backend, asserted by running. The **native-AOT** column is uniformly green — all six
+non-Lisp languages (Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60) compile to a
+host executable and produce the right result (exit code for the expression languages;
+stdout for the I/O languages). The **LLVM** column is green for the expression
+languages Twig / Oct / ALGOL 60 (textual `.ll` → real `clang` → run); Nib pends an
+`iir-to-llvm` `u8`-widening fix and Brainfuck/BASIC pend the stdout I/O runner. The
+WASM/JVM/CLR columns follow per the matrix spec; the VM/JIT columns are
+McCarthy-specialized and need op-coverage work.
 
 ## Stack position
 
