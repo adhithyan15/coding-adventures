@@ -1,5 +1,20 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.11.0] — 2026-06-11 — textual `.il` emitter for the real-CoreCLR path (CLR-real C1)
+
+New `il_text` module + `emit_il(module, config) -> String`: emits **textual CIL**
+(`.il`) — the real-runtime counterpart to the binary `lower_iir_to_cil` (which feeds
+the in-repo `clr-simulator`). The `.il` is assembled by real `ilasm` into a loadable
+PE that runs on real `dotnet`, exactly as the LLVM backend emits textual `.ll` for
+real `clang`. Metadata ownership (PE headers + the `#~`/`#Strings`/`#Blob` streams +
+token resolution) is delegated to `ilasm` (no hand-rolled ECMA-335).
+
+C1 covers scalar McCarthy: the entry function's `const`/`mov`/`ret` →
+`ldc.i4`/`ldloc`/`stloc`/`ret`, wrapped in a `MccarthyEntry()` method plus a printing
+`.entrypoint` launcher. Every other op returns `UnsupportedOp`, so later slices grow
+the op match (cons, predicates, COND, symbols, lambda). New unit tests
+`scalar_emits_well_formed_il`, `unsupported_op_is_rejected_not_emitted`.
+
 ## [0.10.0] — 2026-06-10 — McCarthy lambda: accept `call`/`ref<any>` (W8b, F7)
 
 The validator now accepts the `call` op with a `ref<any>` type — a lisp function
