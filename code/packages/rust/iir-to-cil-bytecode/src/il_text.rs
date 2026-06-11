@@ -13,7 +13,7 @@
 //! program to the real toolchain and let it own the metadata (PE headers, the
 //! `#~`/`#Strings`/`#Blob` streams, token resolution). No hand-rolled metadata.
 //!
-//! ## Scope (C1–C4)
+//! ## Scope (C1–C5)
 //!
 //! * **C1 — scalar:** the entry function as a straight line of integer `const` /
 //!   `mov` / `ret`; each register an `int32` local, a generated launcher prints
@@ -25,15 +25,23 @@
 //!   ceq`, `not` → `xor 1`, `equal?` → `unbox.any int32` ×2 + `ceq`; `COND` lowers
 //!   to `label` (`<name>:`) / `jmp` (`br`) / `jmp_if_false` (`brfalse`), and a nil
 //!   fall-through `const … : ref<…>` becomes `ldnull` (never `ldc.i4 0`).
-//!
 //! * **C4 — symbols:** no new ops. `intern_symbols_structural` lowers each `(QUOTE
 //!   S)` to a *tagged integer id* (`A` → `0x20000000`, …), which on the CLR is just
 //!   a boxed `System.Int32` atom — so `EQ`/`ATOM` on symbols reuse the C1–C3
 //!   `const`/`box`/`equal?`/`pair?` path unchanged.
+//! * **C5 — lambda / LABEL / recursion:** the module is now **multi-function**.
+//!   Every IIR function becomes its own static `.method` (the entry → `MccarthyEntry`,
+//!   the rest keep their hoisted names `lambda_<n>`/`label_<n>`); a `call` is a
+//!   by-name `call <ret> <Class>::<m>(<argtys>)` (`ilasm` resolves the token), so
+//!   self-recursive `LABEL` is just a method calling itself. Parameters live in
+//!   `ldarg`/`starg` slots (locals stay in `ldloc`/`stloc`); `is_null` is `ldnull;
+//!   ceq`; and a `field_*` whose array operand is statically `object` (a lambda
+//!   parameter, not a freshly-`alloc`-ed `object[]`) gets a `castclass object[]`
+//!   first — real CoreCLR's `ldelem.ref`/`stelem.ref` require an array on the stack,
+//!   a constraint the lenient simulator never enforced.
 //!
-//! Every other op returns [`IIRClrError::UnsupportedOp`], so the remaining slice
-//! (lambda / LABEL) extends the op match incrementally — `ilasm` already handles
-//! the metadata it will need.
+//! Every other op returns [`IIRClrError::UnsupportedOp`]; `ilasm` already owns the
+//! metadata each emitted construct needs.
 
 use crate::lower::{IIRClrConfig, IIRClrError};
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
@@ -56,22 +64,19 @@ fn var_src<'a>(
     }
 }
 
-/// Validate a branch-target / label name before it is written **verbatim** into
-/// the `.il` text that real `ilasm` assembles.
+/// Validate that `name` is a safe CIL identifier before it is written **verbatim**
+/// into the `.il` text (a `label`/branch target, or a `.method`/`call` name).
 ///
-/// Unlike register operands — which never reach the output as names (they are
-/// resolved to numeric `V_<slot>` indices) — a `label`/`jmp`/`jmp_if_*` target is
-/// an `Operand::Var(String)`, an arbitrary unbounded string, emitted directly as
-/// `<name>:` / `br <name>`. If that string carried whitespace, newlines, `}`, or
-/// CIL directives (`.entrypoint`, `.method`, `//` comments…), a hostile IIR could
-/// inject arbitrary CIL into the assembled program. We therefore fail **closed**:
-/// only a non-empty run of `[A-Za-z0-9_$]` (a safe subset of legal CIL identifier
-/// characters) is accepted; anything else is an `InvalidOperand`. The binary
-/// emitter is immune by construction (it resolves labels to numeric offsets); this
-/// gives the textual emitter the same guarantee. Synthetic COND labels
-/// (`L_cond_next_<n>`) always pass; source-derived names (C4/C5 symbols, LABEL)
-/// are checked here before they can reach `ilasm`.
-fn checked_label<'a>(f: &IIRFunction, name: &'a str) -> Result<&'a str, IIRClrError> {
+/// These names — unlike register operands, which are resolved to numeric
+/// `V_<slot>`/`ldarg <n>` and never reach the text — come from `Operand::Var`
+/// strings, i.e. arbitrary unbounded input. If one carried whitespace, newlines,
+/// `}`, or CIL directives (`.entrypoint`, `.method`, `//` comments…), a hostile IIR
+/// could inject arbitrary CIL into the assembled program. We fail **closed**: only
+/// a non-empty run of `[A-Za-z0-9_$]` (a safe subset of legal CIL identifier
+/// characters) is accepted. The binary emitter is immune by construction (numeric
+/// offsets / tokens); this gives the textual emitter the same guarantee. Synthetic
+/// names (`L_cond_next_<n>`, `lambda_<n>`, `label_<n>`, `main`) always pass.
+fn checked_cil_ident<'a>(ctx: &str, name: &'a str) -> Result<&'a str, IIRClrError> {
     let valid = !name.is_empty()
         && name
             .chars()
@@ -80,10 +85,15 @@ fn checked_label<'a>(f: &IIRFunction, name: &'a str) -> Result<&'a str, IIRClrEr
         Ok(name)
     } else {
         Err(IIRClrError::InvalidOperand {
-            function: f.name.clone(),
-            detail: format!("label/branch target {name:?} is not a valid CIL identifier"),
+            function: ctx.to_string(),
+            detail: format!("CIL identifier {name:?} contains an illegal character"),
         })
     }
+}
+
+/// A `label`/branch target name, validated for the current function's context.
+fn checked_label<'a>(f: &IIRFunction, name: &'a str) -> Result<&'a str, IIRClrError> {
+    checked_cil_ident(&f.name, name)
 }
 
 /// The (int32-range-checked) integer literal at `instr.srcs[idx]`.
@@ -100,21 +110,139 @@ fn int_src(f: &IIRFunction, instr: &IIRInstr, idx: usize, op: &str) -> Result<i3
     }
 }
 
-/// Emit a complete, `ilasm`-assemblable `.il` source for `module`'s entry point.
+/// The CIL local type for an IIR register, from the producing instruction's
+/// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
+/// atom or a loaded field (`ref<any>`) is a `System.Object`; everything else is a
+/// raw machine `int32` (the McCarthy CLR value model boxes ints into the cells).
+fn cil_local_type(type_hint: &str) -> &'static str {
+    if type_hint == "ref<LispyPair>" {
+        "object[]"
+    } else if type_hint.starts_with("ref<") {
+        "object"
+    } else {
+        "int32"
+    }
+}
+
+/// The resolved entry-point function name — the module's `entry_point`, or `"main"`
+/// as the fallback. Resolved **once** here and used everywhere (the early existence
+/// check, the `MccarthyEntry` rename, `is_entry`, and the `call` callee) so the
+/// launcher's hardcoded `call …::MccarthyEntry()` can never dangle on a `None`
+/// `entry_point`.
+fn entry_name(module: &IIRModule) -> &str {
+    module.entry_point.as_deref().unwrap_or("main")
+}
+
+/// The CIL return type for an IIR function. The entry returns `int32` (the printed
+/// program result); a hoisted lambda/label returns its IIR `return_type` mapped by
+/// [`cil_local_type`] (McCarthy lambdas return a lisp value → `object`).
+fn cil_ret_type(module: &IIRModule, f: &IIRFunction) -> &'static str {
+    if f.name == entry_name(module) {
+        "int32"
+    } else {
+        cil_local_type(&f.return_type)
+    }
+}
+
+/// Where an IIR register lives in a CIL method body: a method **argument**
+/// (`ldarg`/`starg`) or a **local** (`ldloc`/`stloc`). Before C5 every register was
+/// a local; McCarthy lambda/LABEL functions take parameters, so a register can now
+/// be an argument too.
+struct RegHome {
+    is_param: bool,
+    slot: usize,
+    ty: &'static str,
+}
+
+/// Per-function register allocation: parameters get argument slots (in declaration
+/// order), every other distinct destination register gets a local slot (first-seen
+/// order), each typed by [`cil_local_type`].
+struct FnRegs {
+    fn_name: String,
+    homes: HashMap<String, RegHome>,
+    local_tys: Vec<&'static str>,
+}
+
+impl FnRegs {
+    fn build(f: &IIRFunction) -> FnRegs {
+        let mut homes: HashMap<String, RegHome> = HashMap::new();
+        for (i, (pname, pty)) in f.params.iter().enumerate() {
+            homes.entry(pname.clone()).or_insert(RegHome {
+                is_param: true,
+                slot: i,
+                ty: cil_local_type(pty),
+            });
+        }
+        let mut local_tys: Vec<&'static str> = Vec::new();
+        for instr in &f.instructions {
+            if let Some(dest) = &instr.dest {
+                if !homes.contains_key(dest) {
+                    let ty = cil_local_type(&instr.type_hint);
+                    homes.insert(
+                        dest.clone(),
+                        RegHome {
+                            is_param: false,
+                            slot: local_tys.len(),
+                            ty,
+                        },
+                    );
+                    local_tys.push(ty);
+                }
+            }
+        }
+        FnRegs {
+            fn_name: f.name.clone(),
+            homes,
+            local_tys,
+        }
+    }
+
+    fn home(&self, name: &str) -> Result<&RegHome, IIRClrError> {
+        self.homes
+            .get(name)
+            .ok_or_else(|| IIRClrError::UndefinedVariable {
+                function: self.fn_name.clone(),
+                name: name.to_string(),
+            })
+    }
+}
+
+/// Emit a load (`ldarg`/`ldloc`) of `name` onto the CIL stack.
+fn load_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
+    let h = regs.home(name)?;
+    if h.is_param {
+        let _ = writeln!(il, "    ldarg {}", h.slot);
+    } else {
+        let _ = writeln!(il, "    ldloc V_{}", h.slot);
+    }
+    Ok(())
+}
+
+/// Emit a store (`starg`/`stloc`) popping the top of the CIL stack into `name`.
+fn store_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrError> {
+    let h = regs.home(name)?;
+    if h.is_param {
+        let _ = writeln!(il, "    starg {}", h.slot);
+    } else {
+        let _ = writeln!(il, "    stloc V_{}", h.slot);
+    }
+    Ok(())
+}
+
+/// Emit a complete, `ilasm`-assemblable `.il` source for `module`.
 ///
-/// The result defines one static class `<asm>Program` with two methods:
-/// `MccarthyEntry()` (the lowered McCarthy program, returning `int32`) and `Run()`
-/// (the `.entrypoint` launcher that prints the entry's result).
+/// The result defines one static class `<asm>Program` whose methods are: every IIR
+/// function (the entry as `MccarthyEntry()` returning `int32`, each hoisted
+/// lambda/label as `<name>(…)`), plus the `Run()` `.entrypoint` launcher that prints
+/// `MccarthyEntry()`'s result so a runner reads it by running.
 pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRClrError> {
-    let entry_name = module.entry_point.as_deref().unwrap_or("main");
-    let entry = module
-        .functions
-        .iter()
-        .find(|f| f.name == entry_name)
-        .ok_or_else(|| IIRClrError::InvalidOperand {
-            function: entry_name.to_string(),
+    let entry = entry_name(module);
+    if !module.functions.iter().any(|f| f.name == entry) {
+        return Err(IIRClrError::InvalidOperand {
+            function: entry.to_string(),
             detail: "module has no entry-point function".to_string(),
-        })?;
+        });
+    }
 
     let asm = &config.assembly_name;
     let mut il = String::new();
@@ -130,7 +258,12 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
          extends [System.Runtime]System.Object {{"
     );
 
-    emit_entry_method(&mut il, entry, asm)?;
+    // Every IIR function becomes a static method. Order is irrelevant — `ilasm`
+    // resolves `call`s by name across the whole class, so forward references and
+    // self-recursion just work.
+    for f in &module.functions {
+        emit_method(&mut il, module, f, asm)?;
+    }
 
     // Launcher: `Console.WriteLine(MccarthyEntry())` so the result is observable by
     // running the assembly (matches how the BEAM/JVM e2e runners read a printout).
@@ -148,48 +281,53 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     Ok(il)
 }
 
-/// The CIL local type for an IIR register, from the producing instruction's
-/// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
-/// atom or a loaded field (`ref<any>`) is a `System.Object`; everything else is a
-/// raw machine `int32` (the McCarthy CLR value model boxes ints into the cells).
-fn cil_local_type(type_hint: &str) -> &'static str {
-    if type_hint == "ref<LispyPair>" {
-        "object[]"
-    } else if type_hint.starts_with("ref<") {
-        "object"
+/// Emit one static `.method` for IIR function `f`.
+fn emit_method(
+    il: &mut String,
+    module: &IIRModule,
+    f: &IIRFunction,
+    asm: &str,
+) -> Result<(), IIRClrError> {
+    let is_entry = f.name == entry_name(module);
+    // The entry's CIL name is the fixed, safe `MccarthyEntry`; a hoisted function's
+    // name is emitted verbatim, so validate it (injection guard).
+    let method_name = if is_entry {
+        "MccarthyEntry".to_string()
     } else {
-        "int32"
-    }
-}
-
-/// Emit `int32 MccarthyEntry()` from the entry function's instructions.
-fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(), IIRClrError> {
-    // One local per distinct destination register, in first-seen order, typed from
-    // the instruction that produces it (int32 / object / object[]).
-    let mut slot_of: HashMap<&str, usize> = HashMap::new();
-    let mut local_tys: Vec<&'static str> = Vec::new();
-    for instr in &f.instructions {
-        if let Some(dest) = &instr.dest {
-            if !slot_of.contains_key(dest.as_str()) {
-                slot_of.insert(dest.as_str(), local_tys.len());
-                local_tys.push(cil_local_type(&instr.type_hint));
-            }
-        }
-    }
-    let slot = |name: &str| -> Result<usize, IIRClrError> {
-        slot_of
-            .get(name)
-            .copied()
-            .ok_or_else(|| IIRClrError::UndefinedVariable {
-                function: f.name.clone(),
-                name: name.to_string(),
-            })
+        checked_cil_ident(&f.name, &f.name)?.to_string()
     };
+    let ret_ty = cil_ret_type(module, f);
+    let regs = FnRegs::build(f);
 
-    let _ = writeln!(il, "  .method public static int32 MccarthyEntry() cil managed {{");
-    let _ = writeln!(il, "    .maxstack 8");
-    if !local_tys.is_empty() {
-        let locals: Vec<String> = local_tys
+    // Method signature: parameters as `<ty> A_<i>` (the name is cosmetic — the body
+    // addresses them by `ldarg <i>`).
+    let sig: Vec<String> = f
+        .params
+        .iter()
+        .enumerate()
+        .map(|(i, (_, pty))| format!("{} A_{i}", cil_local_type(pty)))
+        .collect();
+    let _ = writeln!(
+        il,
+        "  .method public static {ret_ty} {method_name}({}) cil managed {{",
+        sig.join(", ")
+    );
+
+    // A `call` pushes all its arguments before the call instruction, so the stack
+    // can grow to (arg count + a little working space). Keep a floor of 8 (covers
+    // the predicate/cons idioms) and grow for arg-heavy calls.
+    let max_call_args = f
+        .instructions
+        .iter()
+        .filter(|i| i.op == "call")
+        .map(|i| i.srcs.len().saturating_sub(1))
+        .max()
+        .unwrap_or(0);
+    let _ = writeln!(il, "    .maxstack {}", 8usize.max(max_call_args + 2));
+
+    if !regs.local_tys.is_empty() {
+        let locals: Vec<String> = regs
+            .local_tys
             .iter()
             .enumerate()
             .map(|(i, ty)| format!("{ty} V_{i}"))
@@ -199,22 +337,20 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
 
     for instr in &f.instructions {
         match instr.op.as_str() {
-            // const <dest> = Int(n)  →  ldc.i4 n; stloc V_<dest>
+            // const <dest> = Int(n)  →  ldc.i4 n; st<dest>
             //
             // A `const` whose *result type* is a reference (`ref<…>`) is the
             // McCarthy **nil** — an empty list is a null `object[]`. The structural
             // `COND` lowering emits `const <r> = 0 : ref<LispyPair>` for the
             // fall-through when no clause matched. Storing an `int32` into an
             // object-typed local is ill-typed CIL, so emit a genuine `ldnull` (the
-            // canonical nil), never `ldc.i4 0`. (Mirrors the binary emitter's
-            // `ldnull` nil case in `lower.rs`.)
+            // canonical nil), never `ldc.i4 0`. (Mirrors the binary emitter.)
             "const" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "const must have a dest".to_string(),
                 })?;
                 if instr.type_hint.starts_with("ref<") {
-                    // Only nil (0 / absent) is representable as a constant reference.
                     match instr.srcs.first() {
                         Some(Operand::Int(0)) | None => {}
                         other => {
@@ -228,7 +364,7 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                         }
                     }
                     let _ = writeln!(il, "    ldnull");
-                    let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    store_var(il, &regs, dest)?;
                 } else {
                     let n = match instr.srcs.first() {
                         Some(Operand::Int(n)) => *n,
@@ -239,50 +375,32 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                             })
                         }
                     };
-                    // The CLR McCarthy model is `int32`; a scalar literal fits there.
                     let n32 = i32::try_from(n).map_err(|_| IIRClrError::InvalidOperand {
                         function: f.name.clone(),
                         detail: format!("integer literal {n} out of int32 range"),
                     })?;
                     let _ = writeln!(il, "    ldc.i4 {n32}");
-                    let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                    store_var(il, &regs, dest)?;
                 }
             }
-            // mov <dest>, <src>  →  ldloc V_<src>; stloc V_<dest>
+            // mov <dest>, <src>  →  ld<src>; st<dest>
             "mov" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "mov must have a dest".to_string(),
                 })?;
-                let src = match instr.srcs.first() {
-                    Some(Operand::Var(s)) => s.as_str(),
-                    other => {
-                        return Err(IIRClrError::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!("mov source must be a variable, got {other:?}"),
-                        })
-                    }
-                };
-                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                let src = var_src(f, instr, 0, "mov")?;
+                load_var(il, &regs, src)?;
+                store_var(il, &regs, dest)?;
             }
-            // ret <src>  →  ldloc V_<src>; ret   (the entry returns int32)
+            // ret <src>  →  ld<src>; ret
             "ret" => {
-                let src = match instr.srcs.first() {
-                    Some(Operand::Var(s)) => s.as_str(),
-                    other => {
-                        return Err(IIRClrError::InvalidOperand {
-                            function: f.name.clone(),
-                            detail: format!("ret source must be a variable, got {other:?}"),
-                        })
-                    }
-                };
-                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
+                let src = var_src(f, instr, 0, "ret")?;
+                load_var(il, &regs, src)?;
                 let _ = writeln!(il, "    ret");
             }
             // alloc <dest> : ref<LispyPair>  →  a fresh 2-element System.Object[]
-            //   ldc.i4.2; newarr [System.Runtime]System.Object; stloc V_<dest>
-            // A McCarthy cons cell is a 2-slot reference array; the CLR GC owns it.
+            //   ldc.i4.2; newarr [System.Runtime]System.Object; st<dest>
             "alloc" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -290,45 +408,51 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                 })?;
                 let _ = writeln!(il, "    ldc.i4.2");
                 let _ = writeln!(il, "    newarr [System.Runtime]System.Object");
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                store_var(il, &regs, dest)?;
             }
-            // box <dest> = <src> : ref<any>  →  box a raw int32 atom into an object
-            //   ldloc V_<src>; box [System.Runtime]System.Int32; stloc V_<dest>
+            // box <dest> = <src>  →  ld<src>; box [System.Runtime]System.Int32; st<dest>
             "box" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "box must have a dest".to_string(),
                 })?;
                 let src = var_src(f, instr, 0, "box")?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
+                load_var(il, &regs, src)?;
                 let _ = writeln!(il, "    box [System.Runtime]System.Int32");
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                store_var(il, &regs, dest)?;
             }
-            // unbox <dest> = <src> : i32  →  unbox an object back to a raw int32
-            //   ldloc V_<src>; unbox.any [System.Runtime]System.Int32; stloc V_<dest>
+            // unbox <dest> = <src>  →  ld<src>; unbox.any [System.Runtime]System.Int32; st<dest>
             "unbox" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "unbox must have a dest".to_string(),
                 })?;
                 let src = var_src(f, instr, 0, "unbox")?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
+                load_var(il, &regs, src)?;
                 let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                store_var(il, &regs, dest)?;
             }
             // field_store <arr>[<idx>] = <val>  (srcs = arr, Int(idx), val)
-            //   ldloc V_<arr>; ldc.i4 <idx>; ldloc V_<val>; stelem.ref
+            //   ld<arr>; [castclass object[]]; ldc.i4 <idx>; ld<val>; stelem.ref
+            //
+            // If `arr` is statically typed `object` (a lambda parameter, not a
+            // freshly-`alloc`-ed `object[]`), insert a `castclass object[]` so real
+            // CoreCLR's `stelem.ref` sees an array on the stack.
             "field_store" => {
                 let arr = var_src(f, instr, 0, "field_store")?;
                 let idx = int_src(f, instr, 1, "field_store")?;
                 let val = var_src(f, instr, 2, "field_store")?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(arr)?);
+                let needs_cast = regs.home(arr)?.ty != "object[]";
+                load_var(il, &regs, arr)?;
+                if needs_cast {
+                    let _ = writeln!(il, "    castclass object[]");
+                }
                 let _ = writeln!(il, "    ldc.i4 {idx}");
-                let _ = writeln!(il, "    ldloc V_{}", slot(val)?);
+                load_var(il, &regs, val)?;
                 let _ = writeln!(il, "    stelem.ref");
             }
-            // field_load <dest> = <arr>[<idx>] : ref<any>  (srcs = arr, Int(idx))
-            //   ldloc V_<arr>; ldc.i4 <idx>; ldelem.ref; stloc V_<dest>
+            // field_load <dest> = <arr>[<idx>]  (srcs = arr, Int(idx))
+            //   ld<arr>; [castclass object[]]; ldc.i4 <idx>; ldelem.ref; st<dest>
             "field_load" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -336,56 +460,123 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                 })?;
                 let arr = var_src(f, instr, 0, "field_load")?;
                 let idx = int_src(f, instr, 1, "field_load")?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(arr)?);
+                let needs_cast = regs.home(arr)?.ty != "object[]";
+                load_var(il, &regs, arr)?;
+                if needs_cast {
+                    let _ = writeln!(il, "    castclass object[]");
+                }
                 let _ = writeln!(il, "    ldc.i4 {idx}");
                 let _ = writeln!(il, "    ldelem.ref");
-                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                store_var(il, &regs, dest)?;
+            }
+            // is_null <dest> = <src>  →  ld<src>; ldnull; ceq; st<dest>
+            "is_null" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "is_null must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "is_null")?;
+                load_var(il, &regs, src)?;
+                let _ = writeln!(il, "    ldnull");
+                let _ = writeln!(il, "    ceq");
+                store_var(il, &regs, dest)?;
             }
             // ── Control flow (COND lowers to label / jmp / jmp_if_*) ──────────
             //
-            // McCarthy `COND` is lowered by the shared structural pass to a chain
-            // of `jmp_if_false`/`jmp` over `label`s. CIL labels are not opcodes —
-            // they are named positions in the byte stream — so a `label` emits a
-            // `<name>:` anchor and the branches reference it by name. `ilasm`
-            // resolves every name to the right offset.
-            //
-            // label <name>  →  `<name>:`
+            // CIL labels are not opcodes — they are named positions in the byte
+            // stream — so a `label` emits a `<name>:` anchor and the branches
+            // reference it by name. `ilasm` resolves every name to the right offset.
             "label" => {
                 let name = checked_label(f, var_src(f, instr, 0, "label")?)?;
                 let _ = writeln!(il, "  {name}:");
             }
-            // jmp <label>  →  br <label>   (unconditional branch)
+            // jmp <label>  →  br <label>
             "jmp" => {
                 let label = checked_label(f, var_src(f, instr, 0, "jmp")?)?;
                 let _ = writeln!(il, "    br {label}");
             }
-            // jmp_if_false <cond>, <label>  →  ldloc cond; brfalse <label>
+            // jmp_if_false <cond>, <label>  →  ld<cond>; brfalse <label>
             "jmp_if_false" => {
                 let cond = var_src(f, instr, 0, "jmp_if_false")?;
                 let label = checked_label(f, var_src(f, instr, 1, "jmp_if_false")?)?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(cond)?);
+                load_var(il, &regs, cond)?;
                 let _ = writeln!(il, "    brfalse {label}");
             }
-            // jmp_if_true <cond>, <label>  →  ldloc cond; brtrue <label>
+            // jmp_if_true <cond>, <label>  →  ld<cond>; brtrue <label>
             "jmp_if_true" => {
                 let cond = var_src(f, instr, 0, "jmp_if_true")?;
                 let label = checked_label(f, var_src(f, instr, 1, "jmp_if_true")?)?;
-                let _ = writeln!(il, "    ldloc V_{}", slot(cond)?);
+                load_var(il, &regs, cond)?;
                 let _ = writeln!(il, "    brtrue {label}");
+            }
+            // ── call <dest> = <fn>(<args…>)  (srcs = fn_name, arg0, arg1, …) ──
+            //
+            // A same-module call. The callee is found by name; its CIL signature is
+            // derived from its IIR params/return type. We emit a by-name
+            // `call <ret> <Class>::<m>(<argtys>)` and let `ilasm` resolve the token —
+            // self-recursive `LABEL` is just a method calling itself.
+            "call" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "call must have a dest".to_string(),
+                })?;
+                let callee = var_src(f, instr, 0, "call")?;
+                let callee_fn = module
+                    .functions
+                    .iter()
+                    .find(|g| g.name == callee)
+                    .ok_or_else(|| IIRClrError::UndefinedLabel {
+                        function: f.name.clone(),
+                        label: callee.to_string(),
+                    })?;
+                // Push arguments in order.
+                for (k, src) in instr.srcs.iter().enumerate().skip(1) {
+                    match src {
+                        Operand::Var(n) => load_var(il, &regs, n)?,
+                        Operand::Int(n) => {
+                            let n32 = i32::try_from(*n).map_err(|_| IIRClrError::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!("call arg {n} out of int32 range"),
+                            })?;
+                            let _ = writeln!(il, "    ldc.i4 {n32}");
+                        }
+                        Operand::Bool(b) => {
+                            let _ = writeln!(il, "    ldc.i4.{}", if *b { 1 } else { 0 });
+                        }
+                        other => {
+                            return Err(IIRClrError::InvalidOperand {
+                                function: f.name.clone(),
+                                detail: format!("call arg[{k}] unsupported operand {other:?}"),
+                            })
+                        }
+                    }
+                }
+                let callee_ret = cil_ret_type(module, callee_fn);
+                let arg_tys: Vec<&'static str> = callee_fn
+                    .params
+                    .iter()
+                    .map(|(_, t)| cil_local_type(t))
+                    .collect();
+                // Validate the callee's emitted name (the entry's fixed name is safe).
+                let callee_method = if callee == entry_name(module) {
+                    "MccarthyEntry".to_string()
+                } else {
+                    checked_cil_ident(&f.name, callee)?.to_string()
+                };
+                let _ = writeln!(
+                    il,
+                    "    call {callee_ret} {asm}Program::{callee_method}({})",
+                    arg_tys.join(", ")
+                );
+                store_var(il, &regs, dest)?;
             }
             // ── McCarthy predicate primitives (call_builtin) ──────────────────
             //
-            // The structural pass decomposes the source predicates into three
-            // boolean builtins, each a small CIL idiom (the CLR twins of the JVM
-            // `instanceof`/`ixor`/`if_icmpeq` and the wasm `ref.test`/`i32.eqz`/
-            // `i32.eq`). Mirrors the binary emitter's `call_builtin` arm in
-            // `lower.rs`.
-            //
-            // | builtin  | layout                            | CIL |
-            // |----------|-----------------------------------|-----|
-            // | `pair?`  | [Var("pair?"), Var(x)]; dest      | `ldloc x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
-            // | `not`    | [Var("not"), Var(x)]; dest        | `ldloc x; ldc.i4.1; xor` |
-            // | `equal?` | [Var("equal?"), Var(a), Var(b)]   | `ldloc a; unbox.any int32; ldloc b; unbox.any int32; ceq` |
+            // | builtin  | CIL |
+            // |----------|-----|
+            // | `pair?`  | `ld x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
+            // | `not`    | `ld x; ldc.i4.1; xor` |
+            // | `equal?` | `ld a; unbox.any int32; ld b; unbox.any int32; ceq` |
             "call_builtin" => {
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
@@ -393,42 +584,32 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                 })?;
                 let builtin = var_src(f, instr, 0, "call_builtin")?;
                 match builtin {
-                    // Is the (boxed) lisp value a cons cell? A cons is an `object[]`
-                    // (heap ref); an atom is a boxed int; nil is null. `isinst`
-                    // leaves the ref or null; the two `ceq`s turn that into a clean
-                    // 1 (pair) / 0 (not): the first `ceq ldnull` answers "is it null
-                    // (≠ pair)?", the second (`== 0`) flips it back to "was a pair".
                     "pair?" => {
                         let arg = var_src(f, instr, 1, "pair?")?;
-                        let _ = writeln!(il, "    ldloc V_{}", slot(arg)?);
+                        load_var(il, &regs, arg)?;
                         let _ = writeln!(il, "    isinst object[]");
                         let _ = writeln!(il, "    ldnull");
                         let _ = writeln!(il, "    ceq");
                         let _ = writeln!(il, "    ldc.i4.0");
                         let _ = writeln!(il, "    ceq");
-                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                        store_var(il, &regs, dest)?;
                     }
-                    // Logical not of a 0/1 bool: `x ^ 1`. (Distinct from a machine
-                    // bitwise-complement `not`; this is McCarthy's boolean not.)
                     "not" => {
                         let arg = var_src(f, instr, 1, "not")?;
-                        let _ = writeln!(il, "    ldloc V_{}", slot(arg)?);
+                        load_var(il, &regs, arg)?;
                         let _ = writeln!(il, "    ldc.i4.1");
                         let _ = writeln!(il, "    xor");
-                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                        store_var(il, &regs, dest)?;
                     }
-                    // `EQ` on atoms: unbox both and compare. The structural pass
-                    // guarantees both args are boxed atoms (symbols interned to ints,
-                    // integers as ints), so identity reduces to integer equality.
                     "equal?" => {
                         let a = var_src(f, instr, 1, "equal?")?;
                         let b = var_src(f, instr, 2, "equal?")?;
-                        let _ = writeln!(il, "    ldloc V_{}", slot(a)?);
+                        load_var(il, &regs, a)?;
                         let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
-                        let _ = writeln!(il, "    ldloc V_{}", slot(b)?);
+                        load_var(il, &regs, b)?;
                         let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
                         let _ = writeln!(il, "    ceq");
-                        let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+                        store_var(il, &regs, dest)?;
                     }
                     other => {
                         return Err(IIRClrError::UnsupportedOp {
@@ -438,7 +619,6 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                     }
                 }
             }
-            // Later slices extend this match (symbols, lambda).
             other => {
                 return Err(IIRClrError::UnsupportedOp {
                     function: f.name.clone(),
@@ -521,6 +701,8 @@ mod tests {
         // The cons cell local is typed object[], the boxed atoms object, ints int32.
         assert!(il.contains("object[] V_2"), "cons cell local is object[]; got:\n{il}");
         assert!(il.contains("object V_3"), "loaded field local is object");
+        // The cons array is statically object[], so NO castclass is needed.
+        assert!(!il.contains("castclass"), "alloc-ed cons needs no castclass; got:\n{il}");
     }
 
     #[test]
@@ -549,12 +731,9 @@ mod tests {
         m.entry_point = Some("main".into());
 
         let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
-        // pair?: isinst object[]; ldnull; ceq; ldc.i4.0; ceq
         assert!(il.contains("isinst object[]"), "pair? → isinst object[]; got:\n{il}");
         assert!(il.contains("ceq"), "pair? collapses ref/null to a bool with ceq");
-        // not: ldc.i4.1; xor
         assert!(il.contains("ldc.i4.1\n    xor"), "not → xor 1; got:\n{il}");
-        // The bool register is a raw int32 local.
         assert!(il.contains("int32 V_"), "predicate result is an int32 local");
     }
 
@@ -658,11 +837,119 @@ mod tests {
         assert!(il.contains("br L_end"), "jmp → br");
         assert!(il.contains("L_next:"), "label → named anchor");
         assert!(il.contains("L_end:"), "label → named anchor");
-        // The nil const must be ldnull, and its local must be object[] (a list).
         assert!(il.contains("ldnull"), "const-of-ref-type nil → ldnull; got:\n{il}");
         assert!(il.contains("object[] V_"), "nil local is object[]");
-        // It must NOT store an int 0 into the reference local.
         assert!(!il.contains("ldc.i4 0\n    stloc"), "nil must not be ldc.i4 0");
+    }
+
+    #[test]
+    fn lambda_emits_second_method_param_ldarg_and_call() {
+        // `((LAMBDA (X) (CAR X)) (CONS 7 9))`: a second method `lambda_0(object)`
+        // that reads param 0 (ldarg), casts it to object[] (param is statically
+        // object), CARs it; `main` builds the cons and `call`s lambda_0 by name.
+        let lambda = IIRFunction::new(
+            "lambda_0",
+            vec![("X".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![
+                IIRInstr::new(
+                    "field_load",
+                    Some("v0".into()),
+                    vec![Operand::Var("X".into()), Operand::Int(0)],
+                    "ref<any>",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "ref<any>"),
+            ],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("a".into()), vec![Operand::Int(7)], "i32"),
+                IIRInstr::new("alloc", Some("c".into()), vec![], "ref<LispyPair>"),
+                IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+                IIRInstr::new(
+                    "field_store",
+                    None,
+                    vec![Operand::Var("c".into()), Operand::Int(0), Operand::Var("ab".into())],
+                    "void",
+                ),
+                IIRInstr::new(
+                    "call",
+                    Some("r".into()),
+                    vec![Operand::Var("lambda_0".into()), Operand::Var("c".into())],
+                    "ref<any>",
+                ),
+                IIRInstr::new("unbox", Some("ru".into()), vec![Operand::Var("r".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("ru".into())], "i32"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(lambda);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        // A distinct lambda method with one object parameter.
+        assert!(
+            il.contains("object lambda_0(object A_0)"),
+            "lambda emitted as its own method; got:\n{il}"
+        );
+        // The parameter is read with ldarg, not ldloc.
+        assert!(il.contains("ldarg 0"), "param read via ldarg; got:\n{il}");
+        // The object-typed param must be cast to object[] before ldelem.ref.
+        assert!(il.contains("castclass object[]"), "object param cast before CAR; got:\n{il}");
+        // main calls lambda_0 by name with the right signature.
+        assert!(
+            il.contains("call object MainProgram::lambda_0(object)"),
+            "by-name call; got:\n{il}"
+        );
+    }
+
+    #[test]
+    fn recursive_label_calls_itself_by_name() {
+        // A self-recursive LABEL function: `label_0` calls `label_0`. The call is
+        // resolved by name, so recursion needs no special handling.
+        let label = IIRFunction::new(
+            "label_0",
+            vec![("X".into(), "ref<any>".into())],
+            "ref<any>",
+            vec![
+                IIRInstr::new(
+                    "field_load",
+                    Some("h".into()),
+                    vec![Operand::Var("X".into()), Operand::Int(0)],
+                    "ref<any>",
+                ),
+                IIRInstr::new(
+                    "call",
+                    Some("r".into()),
+                    vec![Operand::Var("label_0".into()), Operand::Var("h".into())],
+                    "ref<any>",
+                ),
+                IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "ref<any>"),
+            ],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(label);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call object MainProgram::label_0(object)"),
+            "self-recursive call by name; got:\n{il}"
+        );
     }
 
     #[test]
@@ -702,6 +989,33 @@ mod tests {
     }
 
     #[test]
+    fn malicious_function_name_is_rejected_not_injected() {
+        // A hostile *function* name flows into `.method`/`call` text — it must be
+        // rejected by the same identifier whitelist, never emitted verbatim.
+        let evil = IIRFunction::new(
+            "f\n  .method public static void Hacked() cil managed { ret }\n  .method x",
+            vec![],
+            "ref<any>",
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("X".into())], "ref<any>")],
+        );
+        let main = IIRFunction::new(
+            "main",
+            vec![],
+            "i32",
+            vec![
+                IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+            ],
+        );
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(evil);
+        m.functions.push(main);
+        m.entry_point = Some("main".into());
+        let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
+        assert!(matches!(err, IIRClrError::InvalidOperand { .. }), "got {err:?}");
+    }
+
+    #[test]
     fn const_of_reference_type_rejects_non_nil() {
         // A non-zero constant of reference type is not representable (only nil is a
         // constant ref) — reject rather than emit an ill-typed store.
@@ -714,6 +1028,44 @@ mod tests {
         m.entry_point = Some("main".into());
         let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
         assert!(matches!(err, IIRClrError::InvalidOperand { .. }));
+    }
+
+    #[test]
+    fn none_entry_point_falls_back_to_main_and_names_mccarthy_entry() {
+        // With `entry_point = None`, the emitter resolves the entry to `"main"`
+        // *consistently* — `main` is renamed to `MccarthyEntry` so the launcher's
+        // hardcoded `call …::MccarthyEntry()` resolves (never dangles).
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(42)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = None; // <- the edge case
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("int32 MccarthyEntry()"), "main renamed to MccarthyEntry; got:\n{il}");
+        assert!(il.contains("call int32 MainProgram::MccarthyEntry()"), "launcher resolves");
+    }
+
+    #[test]
+    fn call_to_unknown_function_is_rejected() {
+        // A `call` to a function not in the module must be rejected, not emit a
+        // dangling by-name call that `ilasm` would fail on later.
+        let instrs = vec![
+            IIRInstr::new(
+                "call",
+                Some("r".into()),
+                vec![Operand::Var("nonexistent".into())],
+                "ref<any>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
+        assert!(matches!(err, IIRClrError::UndefinedLabel { .. }), "got {err:?}");
     }
 
     #[test]

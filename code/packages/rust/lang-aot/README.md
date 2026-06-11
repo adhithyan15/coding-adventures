@@ -47,14 +47,15 @@ McCarthy support after WASM and JVM.
 `compile_source_to_cil_text` is the **real-CoreCLR** path (CLR-real C1): the same
 lowered program emitted as textual `.il`, assembled by real `ilasm` into a loadable
 PE, and run on real `dotnet` — the CLR analog of `compile_source_to_llvm` (`.ll` →
-real `clang`). Scalar, **cons/car/cdr**, **predicates + `COND`**, and **symbols**
-run today (`42`→42, `(CAR (CONS 7 9))`→7, `(ATOM 7)`→1, `(EQ 7 7)`→1,
-`(COND ((ATOM 7) 11) …)`→11, `(EQ (QUOTE A) (QUOTE A))`→1 on real CoreCLR;
-`tests/clr_real_scalar.rs` + `clr_real_cons.rs` + `clr_real_predicates.rs` +
-`clr_real_symbols.rs`, gated on `dotnet`+`ilasm` via the shared `tests/clr_support`
-harness); lambda lands per the
-`CLR-REAL-RUNTIME-VERIFICATION` worklist, after which the CLR column of the W16
-conformance matrix is verified on real .NET rather than the in-repo simulator.
+real `clang`). The full McCarthy **F1–F7** set runs today — scalar, **cons/car/cdr**,
+**predicates + `COND`**, **symbols**, and **lambda / LABEL / recursion** (`42`→42,
+`(CAR (CONS 7 9))`→7, `(ATOM 7)`→1, `(EQ 7 7)`→1, `(COND ((ATOM 7) 11) …)`→11,
+`(EQ (QUOTE A) (QUOTE A))`→1, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7, and a recursive
+`LABEL`→7 on real CoreCLR; `tests/clr_real_scalar.rs` + `clr_real_cons.rs` +
+`clr_real_predicates.rs` + `clr_real_symbols.rs` + `clr_real_lambda.rs`, gated on
+`dotnet`+`ilasm` via the shared `tests/clr_support` harness). The remaining worklist
+item (C6) wires this real-CoreCLR path into the W16 conformance matrix, after which
+the CLR column is verified on real .NET rather than the in-repo simulator.
 
 `compile_source_to_beam` targets the **Erlang VM**: scalar McCarthy emits a
 `.beam` that **runs** on a real `erl` (OTP), `42` → 42 (W9a), and **cons** too —
