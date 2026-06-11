@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.11.0] - 2026-06-11 — dimensional types (strict units, ADJ constraints track A1)
+
+### Added
+
+- **`dimension` module** — every value gets a `Dimension`
+  (`Scalar`/`Money(ccy)`/`Unit(tag)`/`Percent`/`Duration(unit)`) so the engine,
+  not the model, decides which operations are category errors. `Dimension::combine(op, l, r)`
+  encodes the strict algebra: **add/sub require matching dimensions** (`usd + eur`
+  and `usd + days` are rejected — `usd + eur` will need a conversion fact in
+  track A2); **`Money/Money → Scalar`** and `Unit(a)/Unit(a) → Scalar` (units
+  cancel — the CSF:serum/debt-to-income ratio is dimensionless); `Money × Scalar
+  → Money`, `× Percent` keeps the dimension; unlike dimensions multiply/divide to
+  a composite tag the faithfulness gate can inspect.
+- **`dimensioned_value(&Term)`** — generalises `numeric_magnitude` (step 2):
+  reads the leading magnitude **and** infers the dimension from the wrapper
+  functor (`money(18000, usd)` → `Money("usd")`, `quantity(40, mg_dl)` →
+  `Unit("mg_dl")`, …). Tags are compared by equality, never interpreted (the
+  engine knows `usd ≠ eur`, not that usd is dollars).
+- `DimOp`, `DimError::Mismatch`, `Dimensioned`. This is the foundation for
+  currency/date arithmetic (A2/A3) and the dimensional faithfulness gate (A4);
+  `compute` stays numeric until A4 wires this in. See
+  `code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
 ## [0.10.0] - 2026-06-11 — derivation tree (provenance-through-math, ADJ expansion step 3a)
 
 ### Added

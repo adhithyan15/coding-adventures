@@ -33,6 +33,7 @@
 //! mode implementations, weighted model counting.
 
 pub mod compute;
+pub mod dimension;
 pub mod differential;
 pub mod enumerate;
 pub mod lr_aggregate;
@@ -45,6 +46,7 @@ use std::collections::HashMap;
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
 pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
+pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
