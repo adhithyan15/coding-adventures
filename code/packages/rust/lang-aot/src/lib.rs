@@ -58,11 +58,14 @@ pub enum Language {
     Twig,
     /// Nib — typed expression language, multi-language implementation.
     Nib,
-    /// Brainfuck — minimalist tape language.
+    /// Brainfuck — minimalist tape language; `brainfuck-iir-compiler` frontend
+    /// lowered for AOT by `lower_brainfuck_for_aot`.
     Brainfuck,
-    /// Dartmouth BASIC — placeholder; no IIR-emitting frontend yet.
+    /// Dartmouth BASIC — integer subset (PRINT/LET/FOR/GOTO/IF) via the
+    /// `dartmouth-basic-iir-compiler` Rust frontend over the shared IIR.
     DartmouthBasic,
-    /// Oct — placeholder; no Rust frontend yet (Python only).
+    /// Oct — integer subset (let/if/while/calls) via the `oct-iir-compiler`
+    /// Rust frontend over the shared IIR; `main` is void (exits 0).
     Oct,
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
