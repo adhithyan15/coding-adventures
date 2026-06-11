@@ -36,19 +36,30 @@ for free. The work here is therefore mostly **(a)** adding cross-language confor
 that proves each `(language, backend)` cell by running it, and **(b)** fixing the
 real lowering / runtime gaps that running surfaces — not writing new code generators.
 
-The two genuine exceptions, where new wiring (not just a test) is required:
+The genuine exceptions, where new wiring (not just a test) is required — and a
+correction the LM0 probe surfaced by **running** each backend:
 
-- **JIT** — the only JIT entrypoint today is `run_mccarthy_on_jit` (McCarthy-only).
-  A generic `run_on_jit(language, source)` must be wired (Phase I).
-- **I/O languages on managed/LLVM backends** — Brainfuck (`putchar`/`getchar`) and
-  Dartmouth BASIC (`PRINT`) produce results via **stdout**, not an exit code, so
-  their conformance harness must capture stdout, and each backend's I/O intrinsics
-  (`io_out`/`putchar`/`print_i64`) must be exercised end-to-end.
+- **VM and JIT are McCarthy-*specialized*, not general IIR interpreters.** Verified
+  in LM0: `mccarthy_lisp_vm::run` rejects ordinary arithmetic/comparison ops with
+  `UnsupportedOp("add" / "mul" / "cmp_eq" / "cmp_lt" / "mod")` and the I/O ops with
+  `UnknownBuiltin("print_i64")` / `UnsupportedOp("alloc_bytes")`. It only ran the
+  *constant* programs (Twig `42`, Nib `return 42`, ALGOL `result := 42`, Oct void→0).
+  So the **VM and JIT columns are real op-coverage work**, not free: each must grow
+  the integer-arithmetic / comparison / (for I/O langs) tape + print ops before it
+  can run the non-McCarthy languages. The JIT additionally needs a generic
+  `run_on_jit(language, source)` (it has only `run_mccarthy_on_jit` today).
+- **The code-generator backends are general.** Native AOT, LLVM, WASM, JVM, and CLR
+  all compile the full IIR (existing tests already run Twig and ALGOL arithmetic on
+  WASM; LM0 runs all six languages on native AOT). So those five columns are mostly
+  **conformance tests + I/O wiring**, not new code generators.
+- **I/O languages produce results via stdout.** Brainfuck (`putchar`/`getchar`) and
+  Dartmouth BASIC (`PRINT`) print rather than return an exit code, so their
+  conformance captures stdout, and each backend's I/O intrinsics (`io_out` /
+  `putchar` / `print_i64`) must be exercised end-to-end.
 
-> **Note:** the `Language` enum doc comments in `lang-aot/src/lib.rs` are **stale**
-> (they call DartmouthBasic / Oct "placeholders / no Rust frontend"); all six
-> frontends are in fact wired into `compile_source_to_iir`. Fixing those comments is
-> part of LM0.
+> **Note (fixed in LM0):** the `Language` enum doc comments in `lang-aot/src/lib.rs`
+> were **stale** (they called DartmouthBasic / Oct "placeholders / no Rust
+> frontend"); all six frontends are in fact wired into `compile_source_to_iir`.
 
 ## Scope
 
@@ -93,7 +104,13 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 | Brainfuck       | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
-| ALGOL 60        | ☐  | ☐   | ☐         | ☐    | ☐    | ☐   | ☐   |
+| ALGOL 60        | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
+
+**native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
+executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
+Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, Brainfuck→stdout `A`, BASIC→stdout `42`).
+The VM/JIT columns are op-coverage work (see above); the code-gen columns
+(LLVM/WASM/JVM/CLR) are conformance + I/O wiring.
 
 (`◑` = partial today: Twig is proven at *scalar* level on LLVM/WASM/JVM/CLR; the
 slice promotes it to a full feature battery. The starting state is re-verified per
@@ -103,12 +120,13 @@ slice — the loop trusts running, not this table.)
 
 ### Phase 0 — matrix harness
 
-- ☐ **LM0 — cross-language conformance harness.** New `lang-aot/tests/lang_matrix.rs`:
-  per-language program batteries + a `(Language, backend-runner)` table generalized
-  from the McCarthy conformance runners (integer-exit and stdout variants). Wire only
-  the **already-green** cells first (native-AOT for the five non-ALGOL languages, plus
-  whatever VM/LLVM/etc. pass out of the box) so the grid exists and is honest. Fix the
-  stale `Language` enum doc comments.
+- ✅ **LM0 — cross-language conformance harness.** New `lang-aot/tests/lang_matrix.rs`:
+  per-language program batteries (`Expect::Exit` for Twig/Nib/Oct/ALGOL, `Expect::Stdout`
+  for Brainfuck/BASIC) + a host-gated **native-AOT** runner. Proven by RUNNING — all
+  six languages run on native AOT (Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2,
+  Brainfuck→`A`, BASIC→`42`). Fixed the stale `Language` enum doc comments. The probe
+  also established the ground truth that the **VM/JIT are McCarthy-specialized**
+  (reframed Phase V below) while the code-gen backends are general.
 
 ### Phase L — LLVM for every language (priority)
 
@@ -119,11 +137,19 @@ slice — the loop trusts running, not this table.)
 - ☐ **LM-L BASIC** — `PRINT`/`LET`/`FOR`/`GOTO`/`IF` on `clang`; assert stdout.
 - ☐ **LM-L ALGOL** — ALGOL 60 scalar/boolean on `clang`.
 
-### Phase V — VM (generic IIR interpreter) for every language
+### Phase V — VM op-coverage for every language
 
-- ☐ **LM-V** — Twig, Nib, Oct, Brainfuck, BASIC, ALGOL on `mccarthy_lisp_vm::run`
-  (the generic IIR interpreter). Likely a single slice; split if a language surfaces
-  an interpreter gap.
+> ⚠ Reclassified by the LM0 probe: `mccarthy_lisp_vm` is **McCarthy-specialized**, not
+> a general interpreter. It must grow the integer-arithmetic (`add`/`sub`/`mul`/
+> `div`/`mod`), comparison (`cmp_*`), and bitwise ops — and, for the I/O languages, a
+> `print_i64` (capturing) + Brainfuck tape (`alloc_bytes`/load/store) — before it can
+> run the non-McCarthy languages. This is real interpreter work, not just a test.
+
+- ☐ **LM-V arithmetic/comparison** — grow the VM to run the expression languages
+  (Twig, Nib, Oct, ALGOL) by adding the integer/comparison/bitwise op coverage; add
+  them to the VM column of `lang_matrix.rs`.
+- ☐ **LM-V I/O** — VM `print_i64` (capture) + Brainfuck tape ops, so Brainfuck/BASIC
+  run on the VM too (or record a justified VM-column exemption for the I/O languages).
 
 ### Phase W — WASM for every language
 
