@@ -1,0 +1,541 @@
+//! # Computation with provenance-through-math (ADJ language expansion, step 3a).
+//!
+//! Adjudication is full of arithmetic: *sum these line items; compute the
+//! CSF:serum ratio; prorate the bonus.* If the **model** does that math, the
+//! answer is un-auditable and wrong-by-arithmetic. The fix is the standing
+//! principle of this framework: **the model only extracts typed values and
+//! writes the formula; the CPU engine computes**, and every derived value
+//! carries a **derivation tree** back to the source facts. A reviewer audits
+//! the tree; the model is never in the arithmetic loop.
+//!
+//! This module is the engine half (no surface syntax yet — that is step 3b in
+//! [`code/specs/data/adj-language-expansion/STEP3-let-arithmetic-PLAN.md`]). It
+//! provides:
+//!
+//! - [`ComputeExpr`] — the formula IR the lowerer will build (`a / b`,
+//!   `sum(line_item)`, …). Deliberately tiny and `Term`-native: we evaluate
+//!   over [`logic_core::Term`] magnitudes via [`crate::numeric_magnitude`], so
+//!   a typed value `quantity(40, mg_dl)` participates directly. (We do **not**
+//!   bridge to symbolic-vm: it offers no derivation-capture channel, so the
+//!   tree would have to be hand-built either way — see the step-3 plan.)
+//! - [`compute`] — the deterministic evaluator. It returns a [`Derived`]: the
+//!   numeric `value` **plus** the [`DerivationNode`] tree recording every
+//!   operation and citing each leaf's [`FactId`].
+//!
+//! A `Derived` is then bound into the [`KnowledgeBase`](crate::KnowledgeBase)
+//! by name; [`observed_value`](crate::KnowledgeBase::observed_value) falls back
+//! to the derived table, so a predicate-gated contribution
+//! (`from csf_ratio <= 0.4 to bacterial`) fires over a **computed** value
+//! exactly as it would over an observed one — one engine, no new verdict logic.
+//!
+//! ## Worked example (what the tree looks like)
+//!
+//! ```text
+//! observe csf_glucose = quantity(40, mg_dl)     % FactId(3)
+//! observe serum_glucose = quantity(100, mg_dl)  % FactId(4)
+//! let csf_ratio = csf_glucose / serum_glucose
+//!
+//!   Derived { name: "csf_ratio", value: 0.4, tree:
+//!     Op { op: Div, result: 0.4, operands: [
+//!       Leaf { slot: "csf_glucose",   value: 40.0,  fact_id: FactId(3) },
+//!       Leaf { slot: "serum_glucose", value: 100.0, fact_id: FactId(4) },
+//!     ] } }
+//! ```
+//!
+//! Every number in the answer (0.4) is reconstructable from the tree without
+//! the model: 40 / 100, each operand cited to the byte-grounded fact that
+//! produced it.
+
+use crate::{FactId, KnowledgeBase};
+
+/// A computation operator. Binary ops (`Add`/`Sub`/`Mul`/`Div`) take two
+/// operands; aggregation ops (`Sum`/`Count`/`Min`/`Max`/`Avg`) reduce a list
+/// of same-slot observations.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ComputeOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
+    Sum,
+    Count,
+    Min,
+    Max,
+    Avg,
+}
+
+impl ComputeOp {
+    /// A short symbol/name for audit rendering.
+    pub fn symbol(&self) -> &'static str {
+        match self {
+            ComputeOp::Add => "+",
+            ComputeOp::Sub => "-",
+            ComputeOp::Mul => "*",
+            ComputeOp::Div => "/",
+            ComputeOp::Sum => "sum",
+            ComputeOp::Count => "count",
+            ComputeOp::Min => "min",
+            ComputeOp::Max => "max",
+            ComputeOp::Avg => "avg",
+        }
+    }
+}
+
+/// The formula IR — what `let <name> = <expr>` lowers to. Tiny on purpose;
+/// step 3b's adapter builds it from the surface grammar.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComputeExpr {
+    /// A reference to a slot — resolves to an observed valued fact `slot(V)`
+    /// (a [`DerivationNode::Leaf`]) or, failing that, to a previously-bound
+    /// derived value (a [`DerivationNode::DerivedRef`]).
+    Ref(String),
+    /// A numeric literal in the formula. The **no-magic-numbers** gate (step
+    /// 3d) will require each of these to be a declared structural constant.
+    Lit(f64),
+    /// A binary operation: `Add`/`Sub`/`Mul`/`Div` only.
+    Bin(ComputeOp, Box<ComputeExpr>, Box<ComputeExpr>),
+    /// An aggregation over **every** observation of a slot:
+    /// `Sum`/`Count`/`Min`/`Max`/`Avg`.
+    Agg(ComputeOp, String),
+}
+
+/// A node in the derivation tree — the provenance-through-math record.
+#[derive(Debug, Clone, PartialEq)]
+pub enum DerivationNode {
+    /// A leaf grounded in an observed fact: the magnitude `value` came from
+    /// the valued fact `slot(...)` identified by `fact_id`. The audit descends
+    /// from here into that fact's [`Provenance`](crate::Provenance) → bytes.
+    Leaf {
+        slot: String,
+        value: f64,
+        fact_id: FactId,
+    },
+    /// A reference to another derived value (a `let` over a `let`). Its own
+    /// tree lives in the KB's derived table, reachable by `name`.
+    DerivedRef { name: String, value: f64 },
+    /// A literal constant written into the formula.
+    Lit { value: f64 },
+    /// An operation applied to its operands, with the computed `result`.
+    Op {
+        op: ComputeOp,
+        operands: Vec<DerivationNode>,
+        result: f64,
+    },
+}
+
+impl DerivationNode {
+    /// The numeric value this node evaluates to.
+    pub fn value(&self) -> f64 {
+        match self {
+            DerivationNode::Leaf { value, .. } => *value,
+            DerivationNode::DerivedRef { value, .. } => *value,
+            DerivationNode::Lit { value } => *value,
+            DerivationNode::Op { result, .. } => *result,
+        }
+    }
+}
+
+/// A computed value bound to a name, with its full derivation tree.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Derived {
+    pub name: String,
+    pub value: f64,
+    pub tree: DerivationNode,
+}
+
+/// Why a computation could not be carried out. These are clean errors — the
+/// engine never panics on a malformed formula; the caller renders the
+/// diagnostic (the CLI as `{"error": ...}`).
+#[derive(Debug, Clone, PartialEq)]
+pub enum ComputeError {
+    /// A `Ref(slot)` matched neither an observed fact nor a derived value.
+    UnknownSlot { slot: String },
+    /// An aggregation (`sum`/`min`/`max`/`avg`) found no observations of the
+    /// slot. (`count` of zero is fine — it returns 0.)
+    EmptyAggregation { slot: String },
+    /// Division by zero.
+    DivisionByZero,
+    /// An aggregation operator was used in a binary position or vice versa.
+    /// Should not occur if [`ComputeExpr`] is built correctly, but guarded so
+    /// a hand-built expression can't panic.
+    MalformedExpr { detail: &'static str },
+    /// The expression nests deeper than [`MAX_EVAL_DEPTH`]. Bounds the
+    /// recursion so a pathologically deep formula returns a clean error
+    /// instead of overflowing the stack (an unrecoverable abort). A real
+    /// adjudication formula is a handful of levels deep; this limit is a
+    /// safety backstop, not a modelling constraint.
+    TooDeep { limit: usize },
+    /// An operation produced a non-finite result (`NaN` or `±∞`) — e.g.
+    /// overflow, or `∞ − ∞`. We reject it rather than let it flow into a
+    /// verdict: a `NaN` compares `false` against every threshold, so it would
+    /// silently make a predicate not fire (a quiet wrong answer). The whole
+    /// point of provenance-through-math is that no number is silently wrong.
+    NonFinite { op: ComputeOp },
+}
+
+/// Maximum nesting depth for a computation expression. A genuine adjudication
+/// formula is only a few levels deep; this is a backstop against an
+/// adversarially deep formula (once step 3b feeds parsed input to [`eval`])
+/// blowing the call stack.
+pub const MAX_EVAL_DEPTH: usize = 256;
+
+/// Evaluate `expr` against `kb`, binding the result to `name`. Pure and
+/// deterministic: the same `(name, expr, kb)` always yields the same
+/// [`Derived`]. Every numeric result is reconstructable from the returned
+/// tree without consulting the model.
+pub fn compute(
+    name: impl Into<String>,
+    expr: &ComputeExpr,
+    kb: &KnowledgeBase,
+) -> Result<Derived, ComputeError> {
+    let tree = eval(expr, kb, 0)?;
+    let value = tree.value();
+    Ok(Derived {
+        name: name.into(),
+        value,
+        tree,
+    })
+}
+
+/// Recursively evaluate a sub-expression into a derivation node. `depth` is the
+/// current nesting level; it bounds the recursion at [`MAX_EVAL_DEPTH`].
+fn eval(expr: &ComputeExpr, kb: &KnowledgeBase, depth: usize) -> Result<DerivationNode, ComputeError> {
+    if depth >= MAX_EVAL_DEPTH {
+        return Err(ComputeError::TooDeep {
+            limit: MAX_EVAL_DEPTH,
+        });
+    }
+    match expr {
+        ComputeExpr::Lit(x) => Ok(DerivationNode::Lit { value: *x }),
+
+        ComputeExpr::Ref(slot) => {
+            // Observed fact first (carries a FactId for byte provenance);
+            // then a previously-bound derived value.
+            if let Some((value, fact_id)) = kb.observed_value_with_fact(slot) {
+                Ok(DerivationNode::Leaf {
+                    slot: slot.clone(),
+                    value,
+                    fact_id,
+                })
+            } else if let Some(d) = kb.derived_for(slot) {
+                Ok(DerivationNode::DerivedRef {
+                    name: slot.clone(),
+                    value: d.value,
+                })
+            } else {
+                Err(ComputeError::UnknownSlot { slot: slot.clone() })
+            }
+        }
+
+        ComputeExpr::Bin(op, a, b) => {
+            let lhs = eval(a, kb, depth + 1)?;
+            let rhs = eval(b, kb, depth + 1)?;
+            let (x, y) = (lhs.value(), rhs.value());
+            let result = match op {
+                ComputeOp::Add => x + y,
+                ComputeOp::Sub => x - y,
+                ComputeOp::Mul => x * y,
+                ComputeOp::Div => {
+                    if y == 0.0 {
+                        return Err(ComputeError::DivisionByZero);
+                    }
+                    x / y
+                }
+                _ => {
+                    return Err(ComputeError::MalformedExpr {
+                        detail: "aggregation operator in binary position",
+                    })
+                }
+            };
+            if !result.is_finite() {
+                return Err(ComputeError::NonFinite { op: *op });
+            }
+            Ok(DerivationNode::Op {
+                op: *op,
+                operands: vec![lhs, rhs],
+                result,
+            })
+        }
+
+        ComputeExpr::Agg(op, slot) => {
+            let observations = kb.observed_values_all(slot);
+            // `count` is defined even when there are no observations (it's 0);
+            // every other aggregation over an empty set is an error, not 0/NaN.
+            if observations.is_empty() && *op != ComputeOp::Count {
+                return Err(ComputeError::EmptyAggregation { slot: slot.clone() });
+            }
+            let operands: Vec<DerivationNode> = observations
+                .iter()
+                .map(|(value, fact_id)| DerivationNode::Leaf {
+                    slot: slot.clone(),
+                    value: *value,
+                    fact_id: *fact_id,
+                })
+                .collect();
+            let values: Vec<f64> = operands.iter().map(|n| n.value()).collect();
+            let result = match op {
+                ComputeOp::Sum => values.iter().sum(),
+                ComputeOp::Count => values.len() as f64,
+                ComputeOp::Min => values.iter().cloned().fold(f64::INFINITY, f64::min),
+                ComputeOp::Max => values.iter().cloned().fold(f64::NEG_INFINITY, f64::max),
+                ComputeOp::Avg => values.iter().sum::<f64>() / (values.len() as f64),
+                _ => {
+                    return Err(ComputeError::MalformedExpr {
+                        detail: "binary operator in aggregation position",
+                    })
+                }
+            };
+            if !result.is_finite() {
+                return Err(ComputeError::NonFinite { op: *op });
+            }
+            Ok(DerivationNode::Op {
+                op: *op,
+                operands,
+                result,
+            })
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{Fact, KnowledgeBase};
+    use logic_core::{atom, compound, int};
+
+    fn kb_with(facts: Vec<crate::Fact>) -> KnowledgeBase {
+        let mut kb = KnowledgeBase::new();
+        for f in facts {
+            kb.add_fact(f);
+        }
+        kb
+    }
+
+    #[test]
+    fn ratio_of_two_observed_facts_builds_a_cited_tree() {
+        let kb = kb_with(vec![
+            Fact::certain(compound("csf_glucose", vec![int(40)])),
+            Fact::certain(compound("serum_glucose", vec![int(100)])),
+        ]);
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(ComputeExpr::Ref("csf_glucose".into())),
+            Box::new(ComputeExpr::Ref("serum_glucose".into())),
+        );
+        let d = compute("csf_ratio", &expr, &kb).unwrap();
+        assert_eq!(d.name, "csf_ratio");
+        assert!((d.value - 0.4).abs() < 1e-12);
+        // The tree cites both leaves with their FactIds.
+        match &d.tree {
+            DerivationNode::Op {
+                op,
+                operands,
+                result,
+            } => {
+                assert_eq!(*op, ComputeOp::Div);
+                assert!((result - 0.4).abs() < 1e-12);
+                assert_eq!(operands.len(), 2);
+                assert!(
+                    matches!(&operands[0], DerivationNode::Leaf { slot, value, .. }
+                    if slot == "csf_glucose" && (*value - 40.0).abs() < 1e-12)
+                );
+                assert!(
+                    matches!(&operands[1], DerivationNode::Leaf { slot, value, .. }
+                    if slot == "serum_glucose" && (*value - 100.0).abs() < 1e-12)
+                );
+            }
+            other => panic!("expected an Op node, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn sum_aggregates_every_observation_of_a_slot() {
+        let kb = kb_with(vec![
+            Fact::certain(compound("line_item", vec![int(12000)])),
+            Fact::certain(compound("line_item", vec![int(6000)])),
+            Fact::certain(compound("line_item", vec![int(2000)])),
+        ]);
+        let d = compute(
+            "total",
+            &ComputeExpr::Agg(ComputeOp::Sum, "line_item".into()),
+            &kb,
+        )
+        .unwrap();
+        assert!((d.value - 20000.0).abs() < 1e-9);
+        match &d.tree {
+            DerivationNode::Op { op, operands, .. } => {
+                assert_eq!(*op, ComputeOp::Sum);
+                assert_eq!(operands.len(), 3, "every line_item should be a cited leaf");
+            }
+            other => panic!("expected Op, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn count_min_max_avg_reduce_correctly() {
+        let kb = kb_with(vec![
+            Fact::certain(compound("score", vec![int(10)])),
+            Fact::certain(compound("score", vec![int(20)])),
+            Fact::certain(compound("score", vec![int(30)])),
+        ]);
+        let c = compute(
+            "n",
+            &ComputeExpr::Agg(ComputeOp::Count, "score".into()),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(c.value, 3.0);
+        let mn = compute("lo", &ComputeExpr::Agg(ComputeOp::Min, "score".into()), &kb).unwrap();
+        assert_eq!(mn.value, 10.0);
+        let mx = compute("hi", &ComputeExpr::Agg(ComputeOp::Max, "score".into()), &kb).unwrap();
+        assert_eq!(mx.value, 30.0);
+        let avg = compute(
+            "mean",
+            &ComputeExpr::Agg(ComputeOp::Avg, "score".into()),
+            &kb,
+        )
+        .unwrap();
+        assert!((avg.value - 20.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn reads_magnitude_of_typed_value_operands() {
+        // quantity(40, mg_dl) — the leading magnitude participates.
+        let kb = kb_with(vec![
+            Fact::certain(compound(
+                "csf_glucose",
+                vec![compound("quantity", vec![int(40), atom("mg_dl")])],
+            )),
+            Fact::certain(compound(
+                "serum_glucose",
+                vec![compound("quantity", vec![int(100), atom("mg_dl")])],
+            )),
+        ]);
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(ComputeExpr::Ref("csf_glucose".into())),
+            Box::new(ComputeExpr::Ref("serum_glucose".into())),
+        );
+        assert!((compute("r", &expr, &kb).unwrap().value - 0.4).abs() < 1e-12);
+    }
+
+    #[test]
+    fn unknown_slot_is_a_clean_error() {
+        let kb = KnowledgeBase::new();
+        let err = compute("x", &ComputeExpr::Ref("nope".into()), &kb).unwrap_err();
+        assert_eq!(
+            err,
+            ComputeError::UnknownSlot {
+                slot: "nope".into()
+            }
+        );
+    }
+
+    #[test]
+    fn division_by_zero_is_a_clean_error() {
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(5)])),
+            Fact::certain(compound("b", vec![int(0)])),
+        ]);
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Div,
+            Box::new(ComputeExpr::Ref("a".into())),
+            Box::new(ComputeExpr::Ref("b".into())),
+        );
+        assert_eq!(
+            compute("x", &expr, &kb).unwrap_err(),
+            ComputeError::DivisionByZero
+        );
+    }
+
+    #[test]
+    fn empty_aggregation_errors_except_count() {
+        let kb = KnowledgeBase::new();
+        assert_eq!(
+            compute("s", &ComputeExpr::Agg(ComputeOp::Sum, "none".into()), &kb).unwrap_err(),
+            ComputeError::EmptyAggregation {
+                slot: "none".into()
+            }
+        );
+        // count of an unobserved slot is a well-defined 0.
+        assert_eq!(
+            compute("n", &ComputeExpr::Agg(ComputeOp::Count, "none".into()), &kb)
+                .unwrap()
+                .value,
+            0.0
+        );
+    }
+
+    #[test]
+    fn deeply_nested_expression_is_a_clean_error_not_a_stack_overflow() {
+        // Build a formula nested far past MAX_EVAL_DEPTH: 1 + (1 + (1 + ...)).
+        let kb = KnowledgeBase::new();
+        let mut e = ComputeExpr::Lit(1.0);
+        for _ in 0..(MAX_EVAL_DEPTH + 50) {
+            e = ComputeExpr::Bin(ComputeOp::Add, Box::new(ComputeExpr::Lit(1.0)), Box::new(e));
+        }
+        assert_eq!(
+            compute("deep", &e, &kb).unwrap_err(),
+            ComputeError::TooDeep { limit: MAX_EVAL_DEPTH }
+        );
+    }
+
+    #[test]
+    fn non_finite_result_is_rejected_not_propagated() {
+        // overflow to +inf via multiplication of two huge magnitudes.
+        let kb = kb_with(vec![
+            Fact::certain(compound("a", vec![logic_core::float(1e308)])),
+            Fact::certain(compound("b", vec![logic_core::float(1e308)])),
+        ]);
+        let expr = ComputeExpr::Bin(
+            ComputeOp::Mul,
+            Box::new(ComputeExpr::Ref("a".into())),
+            Box::new(ComputeExpr::Ref("b".into())),
+        );
+        assert_eq!(
+            compute("x", &expr, &kb).unwrap_err(),
+            ComputeError::NonFinite { op: ComputeOp::Mul }
+        );
+    }
+
+    #[test]
+    fn let_over_let_references_a_bound_derived_value() {
+        let mut kb = kb_with(vec![
+            Fact::certain(compound("a", vec![int(3)])),
+            Fact::certain(compound("b", vec![int(4)])),
+        ]);
+        let sum = compute(
+            "s",
+            &ComputeExpr::Bin(
+                ComputeOp::Add,
+                Box::new(ComputeExpr::Ref("a".into())),
+                Box::new(ComputeExpr::Ref("b".into())),
+            ),
+            &kb,
+        )
+        .unwrap();
+        kb.add_derived(sum);
+        // A later formula can reference the bound derived value by name.
+        let doubled = compute(
+            "d",
+            &ComputeExpr::Bin(
+                ComputeOp::Mul,
+                Box::new(ComputeExpr::Ref("s".into())),
+                Box::new(ComputeExpr::Lit(2.0)),
+            ),
+            &kb,
+        )
+        .unwrap();
+        assert_eq!(doubled.value, 14.0);
+        match &doubled.tree {
+            DerivationNode::Op { operands, .. } => {
+                assert!(
+                    matches!(&operands[0], DerivationNode::DerivedRef { name, value }
+                    if name == "s" && *value == 7.0)
+                );
+                assert!(matches!(&operands[1], DerivationNode::Lit { value } if *value == 2.0));
+            }
+            other => panic!("expected Op, got {other:?}"),
+        }
+    }
+}

@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2026-06-11 — derivation tree (provenance-through-math, ADJ expansion step 3a)
+
+### Added
+
+- **`compute` module — the engine half of "the model never does the math".**
+  A formula IR (`ComputeExpr`: `Ref(slot)` / `Lit(n)` / `Bin(op,a,b)` /
+  `Agg(op,slot)`) is evaluated deterministically on the CPU into a `Derived`
+  value carrying a **derivation tree** (`DerivationNode`): every operation
+  records its operands and result, and every leaf cites the `FactId` of the
+  observed fact it came from. So a derived value (`csf_ratio = csf_glucose /
+  serum_glucose = 0.4`) is fully reconstructable from the tree without the
+  model — provenance-through-math.
+- `ComputeOp` — `Add/Sub/Mul/Div` (binary) and `Sum/Count/Min/Max/Avg`
+  (aggregation over every observation of a slot). Operands read the magnitude
+  of typed values (`quantity(40, mg_dl)`) via `numeric_magnitude`.
+- `ComputeError` — clean, non-panicking errors (`UnknownSlot`,
+  `EmptyAggregation`, `DivisionByZero`, `MalformedExpr`, plus two safety
+  guards: `TooDeep` bounds recursion at `MAX_EVAL_DEPTH` so an adversarially
+  deep formula returns an error instead of overflowing the stack, and
+  `NonFinite` rejects any `NaN`/`±∞` result rather than letting it silently
+  flow into a verdict — a `NaN` compares `false` against every threshold, so
+  an unscreened non-finite would quietly make a predicate not fire).
+- `KnowledgeBase::add_derived` / `derived_for`; `observed_value(slot)` now
+  falls back to the derived table, so a **predicate-gated contribution fires
+  over a computed value exactly as over an observed one** — one engine, no new
+  verdict logic. New helpers `observed_value_with_fact` /
+  `observed_values_all` expose the `FactId`(s) the derivation-tree leaves cite.
+- A derived value can reference a previously-bound derived value (`let` over
+  `let`) via a `DerivationNode::DerivedRef`.
+
+This is engine-only (no surface syntax yet — `let name = expr` is step 3b). See
+`code/specs/data/adj-language-expansion/STEP3-let-arithmetic-PLAN.md`.
+
 ## [0.9.0] - 2026-06-10 — typed-value magnitudes (ADJ language expansion, step 2)
 
 ### Added
