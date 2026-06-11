@@ -463,3 +463,21 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `var x=new A().b;` → **Upstream:** `var x=(new A).b;`
 - **Fix:** Token pre-pass that wraps the `new`-expression in parens when it's the object/callee of a following `.`/`[`/`(`. Implemented WITHOUT synthesising tokens: the empty arg-list `()` already provides a `(` and `)`, so the pass just REORDERS them — moves the `(` to before `new`, leaving the `)` after the identifier (`new A ( ) .` → `( new A ) .`). Guards: operator `new` only (not the property `.new`/`?.new`), single plain-identifier callee, empty arg-list, followed by `.`/`[`/`(`; all bracket checks via `is_structural_punct`. Complements gap-050 (which drops `new A()`→`new A` only when NOT followed by member/call). Verified against JAR for `.b`, `.b.c`, `[i]`, `()`, standalone, and property-`new`.
 - **Deferred (follow-up):** member-callee `new a.b.C().d` → `(new a.b.C).d`, and arg-bearing `new A(y).b` → `(new A(y)).b`. The minimal slice handles single-identifier empty-arg new-expressions (the fixture); these broader shapes need callee-extent + arg-list scanning.
+
+### gap-060 — member-callee new-expression
+
+- **Status:** OPEN — discovered by CLOC14.30. `minify_new_member_callee` ignored.
+- **Input:** `var x=new a.b.C().d;` → **Upstream:** `var x=(new a.b.C).d;`
+- **What it needs:** Extend gap-059's new-expr wrap to a MEMBER-CHAIN callee (`a.b.C`), not just a single identifier. The pre-pass must scan the callee extent (identifiers + `.`/`[...]` member access) between `new` and the `(`, then wrap. Follow-up of gap-059.
+
+### gap-061 — arg-bearing new-expression member
+
+- **Status:** OPEN — discovered by CLOC14.30. `minify_new_with_args_member` ignored.
+- **Input:** `var x=new A(y).b;` → **Upstream:** `var x=(new A(y)).b;`
+- **What it needs:** gap-059 only handles the EMPTY arg list `()` (which it reorders). Non-empty args (`(y)`) can't be reordered the same way — the wrap needs a synthetic open-paren before `new` and a synthetic close-paren after the (non-empty) arg-list `)`. Follow-up of gap-059.
+
+### gap-062 — redundant double-paren collapse
+
+- **Status:** OPEN — discovered by CLOC14.30. `minify_double_paren_arith` ignored.
+- **Input:** `var x=((a+b))*c;` → **Upstream:** `var x=(a+b)*c;`
+- **What it needs:** When a `(` is immediately followed by `(` and the inner group's matching `)` is immediately followed by the outer `)` (i.e. directly-nested grouping parens `(( ... ))`), strip one layer. Must NOT touch call/grouping-distinct shapes — only adjacent redundant grouping parens.

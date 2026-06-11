@@ -90,6 +90,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-060 (CLOC14.30): member-callee new-expr —
+    // `new a.b.C().d` → `(new a.b.C).d`. gap-059 handled only a
+    // single-identifier callee; the member-chain callee needs
+    // callee-extent scanning. Deferred follow-up of gap-059.
+    ("new_member_callee", "gap-060: new-expr member callee `new a.b.C().d`"),
+    // gap-061 (CLOC14.30): arg-bearing new-expr member —
+    // `new A(y).b` → `(new A(y)).b`. gap-059 handled only the
+    // EMPTY arg list; non-empty args need arg-list scanning.
+    ("new_with_args_member", "gap-061: arg-bearing new-expr member `new A(y).b`"),
+    // gap-062 (CLOC14.30): redundant double-paren collapse —
+    // `((a+b))*c` → `(a+b)*c`. Upstream strips one redundant
+    // grouping-paren layer when parens directly nest.
+    ("double_paren_arith", "gap-062: redundant double-paren collapse `((x))`"),
     // gap-055/056/057 all RESOLVED (CLOC12.64/65/66) — ternary
     // arms, return/throw/=> prefixes, and member-object parens
     // (`(a).b` → `a.b`) now pass and are no longer ignored.
