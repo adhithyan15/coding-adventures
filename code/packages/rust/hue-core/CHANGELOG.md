@@ -21,7 +21,8 @@ All notable changes to this package will be documented in this file.
   Hue success and link-button error responses, produce Vault secret payloads,
   and hand off only non-secret completion metadata.
 - Hue command summaries and command-plan rollups for payload-free write-surface
-  telemetry, including light-surface and color-temperature helper predicates.
+  telemetry, including light-surface, surface-breadth, and capability-breadth
+  helper predicates.
 - Grouped-light color-temperature command projection from normalized D23 state
   deltas.
 - Hue command planning from normalized D23 `StateDelta` records for direct and
