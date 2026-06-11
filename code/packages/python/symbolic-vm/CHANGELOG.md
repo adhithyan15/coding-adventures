@@ -1,5 +1,66 @@
 # Changelog
 
+## [0.74.0] — 2026-05-29
+
+**Track G1 — symbolic-coefficient Weierzstrass lift.**
+
+Generalises the Phase-34/35/36/37 Weierzstrass substitution
+``∫ c / (a + b·trig(α·x + β)) dx`` from concrete rational ``a, b`` to
+symbolic ones.  When the numeric pattern returns ``None`` because
+either coefficient is a free IR expression, the new helper consults
+``vm.assumptions`` for the sign of the discriminant ``a² − b²`` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic ``Sqrt(a² − b²)``
+in the result.  When no assumption pins down the sign, the integral
+is left unevaluated.
+
+This depends on the compound-relation extension to
+``cas_simplify.AssumptionContext`` shipped in cas-simplify 0.4.0
+(same PR, Track G1).
+
+### Algorithm
+
+For ``∫ c / (a + b·sin(α·x+β)) dx`` with ``a, b`` non-numeric:
+
+1.  Parse ``a + b·trig(α·x+β)`` (any operand order, ADD or SUB) into
+    ``(a, b, head, α, β)`` keeping ``a, b`` as IR nodes (only ``α, β, c``
+    are required to be rational).
+2.  Fold ``1/α`` into the numerator scaling
+    (``c_scaled = c / α``).
+3.  Build ``arg = α·x + β`` via the shared linear-arg constructor.
+4.  Query ``vm.assumptions`` for the discriminant sign — accepts both
+    the natural surface form ``a² > b²`` and the canonical-against-zero
+    form ``a² − b² > 0``.
+5.  Emit the corresponding closed form:
+    - ``disc > 0`` → ``(2·c/√(a²−b²))·atan((a·tan(arg/2)+b)/√(a²−b²))``
+      (sin branch).  cos branch uses ``(a−b)·tan(arg/2) / √(a²−b²)`` in
+      the arctan argument.
+    - ``disc < 0`` → ``(c/√(b²−a²))·log|N/D|`` (log form).
+    - ``disc = 0`` → rational closed form in ``tan(arg/2)``.
+
+Linear-argument lifting (``α·x + β``) composes unchanged because the
+inner substitution ``u = tan(arg/2)`` depends only on ``α, β`` (which
+remain rational).
+
+### Added
+
+- `integrate._CURRENT_VM` — `ContextVar` that publishes the live VM to
+  Weierzstrass helpers without threading ``vm`` through every signature.
+- `integrate._try_weierstrass_symbolic_coefficients` — symbolic
+  dispatcher.
+- `integrate._parse_a_plus_b_sincos_symbolic` — symbolic sibling of
+  the numeric ``_parse_a_plus_b_sincos`` parser.
+- `integrate._try_weierstrass_{arctan,log,degenerate}_symbolic` — branch
+  closed-form emitters.
+
+### Regression
+
+The numeric Weierzstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both ``a`` and ``b`` are
+numeric, so concrete-coefficient integrals continue to use the
+arithmetic-folded ``Fraction`` closed forms.  All 38 existing
+``test_phase34_weierstrass`` tests still pass.
+
 ## 0.73.0 — 2026-05-28
 
 **Track E1 — generic tabular integration-by-parts fallback.**
