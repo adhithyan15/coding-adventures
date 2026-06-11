@@ -1786,6 +1786,100 @@ impl HueSceneSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueSceneSetSummary {
+    pub total_scenes: usize,
+    pub room_scoped_scenes: usize,
+    pub zone_scoped_scenes: usize,
+    pub home_scoped_scenes: usize,
+    pub bridge_scoped_scenes: usize,
+    pub custom_scoped_scenes: usize,
+    pub scenes_with_actions: usize,
+    pub scenes_projecting_actions: usize,
+    pub action_count: usize,
+    pub stateful_action_count: usize,
+    pub desired_state_field_count: usize,
+}
+
+impl HueSceneSetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_scenes<'a>(scenes: impl IntoIterator<Item = &'a HueSceneResource>) -> Self {
+        let mut summary = Self::empty();
+        for scene in scenes {
+            summary.record_summary(&scene.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a>(summaries: impl IntoIterator<Item = &'a HueSceneSummary>) -> Self {
+        let mut summary = Self::empty();
+        for scene_summary in summaries {
+            summary.record_summary(scene_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &HueSceneSummary) {
+        self.total_scenes += 1;
+        match summary.scope {
+            SceneScope::Room => self.room_scoped_scenes += 1,
+            SceneScope::Zone => self.zone_scoped_scenes += 1,
+            SceneScope::Home => self.home_scoped_scenes += 1,
+            SceneScope::Bridge => self.bridge_scoped_scenes += 1,
+            SceneScope::Custom => self.custom_scoped_scenes += 1,
+        }
+        if summary.has_actions() {
+            self.scenes_with_actions += 1;
+        }
+        if summary.projects_actions() {
+            self.scenes_projecting_actions += 1;
+        }
+        self.action_count += summary.action_count;
+        self.stateful_action_count += summary.stateful_action_count;
+        self.desired_state_field_count += summary.desired_state_field_count;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_scenes == 0
+    }
+
+    pub fn room_or_zone_scoped_count(&self) -> usize {
+        self.room_scoped_scenes + self.zone_scoped_scenes
+    }
+
+    pub fn has_room_or_zone_scoped_scenes(&self) -> bool {
+        self.room_or_zone_scoped_count() > 0
+    }
+
+    pub fn projects_actions(&self) -> bool {
+        self.stateful_action_count > 0
+    }
+
+    pub fn has_unprojected_actions(&self) -> bool {
+        self.action_count > self.stateful_action_count
+    }
+
+    pub fn has_partial_action_projection(&self) -> bool {
+        self.scenes_projecting_actions > 0
+            && self.scenes_projecting_actions < self.scenes_with_actions
+    }
+
+    pub fn scope_family_count(&self) -> usize {
+        usize::from(self.room_scoped_scenes > 0)
+            + usize::from(self.zone_scoped_scenes > 0)
+            + usize::from(self.home_scoped_scenes > 0)
+            + usize::from(self.bridge_scoped_scenes > 0)
+            + usize::from(self.custom_scoped_scenes > 0)
+    }
+
+    pub fn touches_multiple_scope_families(&self) -> bool {
+        self.scope_family_count() > 1
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueMotionResource {
     pub id: HueResourceId,
@@ -3538,6 +3632,134 @@ mod tests {
             core_scene.actions[0].entity_id.as_str(),
             "hue.grouped_light.hue.bridge.001788.grouped-light-1"
         );
+    }
+
+    #[test]
+    fn hue_scene_set_summary_rolls_up_scope_and_action_projection() {
+        let room_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-room"),
+            group: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Dinner".to_string(),
+            actions: vec![HueSceneAction {
+                target: HueResourceRef::new(
+                    HueResourceType::Light,
+                    HueResourceId::trusted("light-1"),
+                ),
+                on: Some(true),
+                brightness: Some(70),
+                color_temperature_mirek: None,
+            }],
+        };
+        let zone_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-zone"),
+            group: HueResourceRef::new(HueResourceType::Zone, HueResourceId::trusted("zone-1")),
+            name: "Evening".to_string(),
+            actions: vec![
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::GroupedLight,
+                        HueResourceId::trusted("grouped-1"),
+                    ),
+                    on: None,
+                    brightness: None,
+                    color_temperature_mirek: None,
+                },
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::Light,
+                        HueResourceId::trusted("light-2"),
+                    ),
+                    on: None,
+                    brightness: Some(25),
+                    color_temperature_mirek: Some(370),
+                },
+            ],
+        };
+        let bridge_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-bridge"),
+            group: HueResourceRef::new(HueResourceType::Bridge, HueResourceId::trusted("bridge-1")),
+            name: "All off".to_string(),
+            actions: Vec::new(),
+        };
+
+        let scenes = vec![room_scene, zone_scene, bridge_scene];
+        let summary = HueSceneSetSummary::from_scenes(&scenes);
+
+        assert_eq!(
+            summary,
+            HueSceneSetSummary {
+                total_scenes: 3,
+                room_scoped_scenes: 1,
+                zone_scoped_scenes: 1,
+                bridge_scoped_scenes: 1,
+                scenes_with_actions: 2,
+                scenes_projecting_actions: 2,
+                action_count: 3,
+                stateful_action_count: 2,
+                desired_state_field_count: 4,
+                ..HueSceneSetSummary::empty()
+            }
+        );
+        assert_eq!(summary.room_or_zone_scoped_count(), 2);
+        assert!(summary.has_room_or_zone_scoped_scenes());
+        assert!(summary.projects_actions());
+        assert!(summary.has_unprojected_actions());
+        assert!(!summary.has_partial_action_projection());
+        assert_eq!(summary.scope_family_count(), 3);
+        assert!(summary.touches_multiple_scope_families());
+    }
+
+    #[test]
+    fn hue_scene_set_summary_handles_precomputed_and_empty_summaries() {
+        let summaries = vec![
+            HueSceneSummary {
+                scene: HueResourceRef::new(
+                    HueResourceType::Scene,
+                    HueResourceId::trusted("home-scene"),
+                ),
+                group: HueResourceRef::new(HueResourceType::Bridge, HueResourceId::trusted("home")),
+                scope: SceneScope::Home,
+                action_count: 2,
+                stateful_action_count: 1,
+                desired_state_field_count: 1,
+            },
+            HueSceneSummary {
+                scene: HueResourceRef::new(
+                    HueResourceType::Scene,
+                    HueResourceId::trusted("custom-scene"),
+                ),
+                group: HueResourceRef::new(
+                    HueResourceType::Device,
+                    HueResourceId::trusted("device-1"),
+                ),
+                scope: SceneScope::Custom,
+                action_count: 1,
+                stateful_action_count: 0,
+                desired_state_field_count: 0,
+            },
+        ];
+
+        let summary = HueSceneSetSummary::from_summaries(&summaries);
+        assert_eq!(summary.total_scenes, 2);
+        assert_eq!(summary.home_scoped_scenes, 1);
+        assert_eq!(summary.custom_scoped_scenes, 1);
+        assert_eq!(summary.scenes_with_actions, 2);
+        assert_eq!(summary.scenes_projecting_actions, 1);
+        assert_eq!(summary.action_count, 3);
+        assert_eq!(summary.stateful_action_count, 1);
+        assert!(summary.has_partial_action_projection());
+        assert!(summary.has_unprojected_actions());
+        assert_eq!(summary.scope_family_count(), 2);
+
+        let empty = HueSceneSetSummary::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.room_or_zone_scoped_count(), 0);
+        assert!(!empty.has_room_or_zone_scoped_scenes());
+        assert!(!empty.projects_actions());
+        assert!(!empty.has_unprojected_actions());
+        assert!(!empty.has_partial_action_projection());
+        assert_eq!(empty.scope_family_count(), 0);
+        assert!(!empty.touches_multiple_scope_families());
     }
 
     #[test]
