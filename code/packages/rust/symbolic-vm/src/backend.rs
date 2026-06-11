@@ -164,7 +164,12 @@ impl BaseBackend {
         env.insert("True".to_string(), IRNode::Symbol("True".to_string()));
         env.insert("False".to_string(), IRNode::Symbol("False".to_string()));
 
-        let held = ["Assign", "Define", "If"]
+        // Track G2: `Assume(rel)` and `Forget(rel)` must NOT pre-evaluate
+        // their relational argument — `Greater(a^2, b^2)` would otherwise
+        // be reduced (or echoed by the symbolic backend) before reaching
+        // the handler, which would then have no symbolic relation to
+        // record.
+        let held = ["Assign", "Define", "If", "Assume", "Forget"]
             .iter()
             .map(|s| s.to_string())
             .collect();

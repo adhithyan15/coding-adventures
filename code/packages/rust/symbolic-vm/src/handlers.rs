@@ -26,6 +26,7 @@ use std::collections::{HashMap, HashSet};
 use cas_factor::{
     factor_integer_polynomial, try_bivariate_hensel, BiPoly as HenselBiPoly, Rat as HenselRat,
 };
+use cas_simplify::AssumptionContext;
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, COTH,
     CSCH, D, DEFINE, DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL,
@@ -1975,6 +1976,398 @@ fn try_weierstrass_one_over_linear_trig(
     Some(apply_node(MUL, vec![coef_ir, apply_node(ATAN, vec![atan_arg])]))
 }
 
+// ---------------------------------------------------------------------------
+// Track G2 — symbolic-coefficient Weierstrass lift (Rust port).
+//
+// The numeric helpers above parse `a, b` as `RatC` and bail out when
+// either is not a rational literal.  Track G2 generalises them: when
+// the numeric path returns `None` because `a` and/or `b` is a free IR
+// symbol (or any non-numeric IR expression), we re-parse the
+// integrand keeping `a, b` as IR nodes (`α, β, c` stay rational), then
+// consult `vm.assumptions` for the sign of the discriminant
+// `a² − b²` to decide which closed form to emit:
+//
+//   disc > 0 → arctan form with Sqrt(a²−b²)
+//   disc < 0 → log form with Sqrt(b²−a²)
+//   disc = 0 → degenerate rational-in-tan(arg/2) form
+//   no fact  → return None (integrator leaves it unevaluated)
+//
+// Linear-argument lifting `α·x + β` composes unchanged because the
+// inner substitution `u = tan(arg/2)` depends only on `α, β` (which
+// stay rational).
+//
+// `integrate` is a pure function with no `&VM` argument, and
+// threading one through ~30 call sites would be invasive.  Instead
+// we publish the live assumption store via a `thread_local!` mirror
+// of Python's `_CURRENT_VM` ContextVar.  `integrate_handler` clones
+// the `AssumptionContext` into the thread-local for the duration of
+// one evaluation; an RAII guard restores the previous value on Drop
+// so nested integrals (and panics) cannot strand it.
+// ---------------------------------------------------------------------------
+
+thread_local! {
+    /// Live assumption store published by `integrate_handler` for the
+    /// duration of one `Integrate(...)` evaluation.
+    static CURRENT_ASSUMPTIONS: std::cell::RefCell<Option<AssumptionContext>> =
+        const { std::cell::RefCell::new(None) };
+}
+
+/// RAII guard that restores the previous current-assumptions value on
+/// Drop.  Mirrors Python's `_CURRENT_VM.reset(_vm_token)` in the
+/// `finally` clause.
+struct AssumptionGuard {
+    previous: Option<AssumptionContext>,
+}
+
+impl AssumptionGuard {
+    fn install(new: AssumptionContext) -> Self {
+        let previous = CURRENT_ASSUMPTIONS.with(|slot| slot.borrow_mut().replace(new));
+        Self { previous }
+    }
+}
+
+impl Drop for AssumptionGuard {
+    fn drop(&mut self) {
+        CURRENT_ASSUMPTIONS.with(|slot| {
+            *slot.borrow_mut() = self.previous.take();
+        });
+    }
+}
+
+/// Match `c·sin(α·x+β)` / `c·cos(α·x+β)` returning `c` as an IR node
+/// (instead of a `RatC`).  Only the outer scalar `c` is allowed to be
+/// symbolic; `α, β` stay rational because that's what makes the
+/// Weierstrass substitution composable in closed form.
+fn weierstrass_parse_const_times_trig_linear_symbolic(
+    node: &IRNode,
+    x: &str,
+) -> Option<(IRNode, &'static str, RatC, RatC)> {
+    if let IRNode::Apply(apply) = node {
+        if apply.args.len() == 1 {
+            let head_str = if apply.head == IRNode::Symbol(SIN.to_string()) {
+                Some(SIN)
+            } else if apply.head == IRNode::Symbol(COS.to_string()) {
+                Some(COS)
+            } else {
+                None
+            };
+            if let Some(head) = head_str {
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&apply.args[0], x) {
+                    return Some((IRNode::Integer(1), head, alpha, beta));
+                }
+            }
+        }
+        if apply.head == IRNode::Symbol(MUL.to_string()) && apply.args.len() == 2 {
+            let (a, b) = (&apply.args[0], &apply.args[1]);
+            for (const_side, trig_side) in [(a, b), (b, a)] {
+                if depends_on(const_side, x) {
+                    continue;
+                }
+                let IRNode::Apply(trig) = trig_side else {
+                    continue;
+                };
+                if trig.args.len() != 1 {
+                    continue;
+                }
+                let head_str = if trig.head == IRNode::Symbol(SIN.to_string()) {
+                    Some(SIN)
+                } else if trig.head == IRNode::Symbol(COS.to_string()) {
+                    Some(COS)
+                } else {
+                    None
+                };
+                let Some(head) = head_str else { continue };
+                if let Some((alpha, beta)) = weierstrass_parse_linear_in_x(&trig.args[0], x) {
+                    return Some((const_side.clone(), head, alpha, beta));
+                }
+            }
+        }
+        if apply.head == IRNode::Symbol(NEG.to_string()) && apply.args.len() == 1 {
+            if let Some((c, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(&apply.args[0], x)
+            {
+                return Some((apply_node(NEG, vec![c]), head, alpha, beta));
+            }
+        }
+    }
+    None
+}
+
+/// Symbolic-coefficient sibling of [`weierstrass_parse_a_plus_b_sincos`].
+/// Parses `a + b·sin(α·x+β)` / `a + b·cos(α·x+β)` (any operand order,
+/// ADD or SUB) into `(a, b, head_str, α, β)` where `a` and `b` are IR
+/// nodes free of `x` and `α, β` are rational with `α ≠ 0`.
+fn weierstrass_parse_a_plus_b_sincos_symbolic(
+    node: &IRNode,
+    x: &str,
+) -> Option<(IRNode, IRNode, &'static str, RatC, RatC)> {
+    if let Some((b, head, alpha, beta)) =
+        weierstrass_parse_const_times_trig_linear_symbolic(node, x)
+    {
+        return Some((IRNode::Integer(0), b, head, alpha, beta));
+    }
+    let IRNode::Apply(apply) = node else {
+        return None;
+    };
+    if apply.args.len() != 2 {
+        return None;
+    }
+    let (left, right) = (&apply.args[0], &apply.args[1]);
+    if apply.head == IRNode::Symbol(ADD.to_string()) {
+        for (const_side, trig_side) in [(left, right), (right, left)] {
+            if depends_on(const_side, x) {
+                continue;
+            }
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(trig_side, x)
+            {
+                return Some((const_side.clone(), b_node, head, alpha, beta));
+            }
+        }
+        return None;
+    }
+    if apply.head == IRNode::Symbol(SUB.to_string()) {
+        // `a − b·trig(...)` → `(a, −b, head, α, β)`.
+        if !depends_on(left, x) {
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(right, x)
+            {
+                return Some((
+                    left.clone(),
+                    apply_node(NEG, vec![b_node]),
+                    head,
+                    alpha,
+                    beta,
+                ));
+            }
+        }
+        // `b·trig(...) − a` → `(−a, b, head, α, β)`.
+        if !depends_on(right, x) {
+            if let Some((b_node, head, alpha, beta)) =
+                weierstrass_parse_const_times_trig_linear_symbolic(left, x)
+            {
+                return Some((
+                    apply_node(NEG, vec![right.clone()]),
+                    b_node,
+                    head,
+                    alpha,
+                    beta,
+                ));
+            }
+        }
+    }
+    None
+}
+
+/// Build `Pow(node, 2)`.
+fn ir_square(node: &IRNode) -> IRNode {
+    apply_node(POW, vec![node.clone(), IRNode::Integer(2)])
+}
+
+/// Symbolic-coefficient arctan branch (a² > b²).
+fn try_weierstrass_arctan_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let disc = apply_node(SUB, vec![ir_square(a), ir_square(b)]);
+    let sqrt_disc = apply_node(SQRT, vec![disc]);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let atan_arg_top = if trig_head == SIN {
+        // (a·tan(arg/2) + b)
+        apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a.clone(), tan_half]), b.clone()],
+        )
+    } else {
+        // (a − b)·tan(arg/2)
+        apply_node(
+            MUL,
+            vec![apply_node(SUB, vec![a.clone(), b.clone()]), tan_half],
+        )
+    };
+    let atan_arg = apply_node(DIV, vec![atan_arg_top, sqrt_disc.clone()]);
+    let coef = apply_node(
+        DIV,
+        vec![apply_node(MUL, vec![IRNode::Integer(2), c_scaled]), sqrt_disc],
+    );
+    apply_node(MUL, vec![coef, apply_node(ATAN, vec![atan_arg])])
+}
+
+/// Symbolic-coefficient log branch (a² < b²).
+fn try_weierstrass_log_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let neg_disc = apply_node(SUB, vec![ir_square(b), ir_square(a)]);
+    let sqrt_neg_disc = apply_node(SQRT, vec![neg_disc]);
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let (numer, denom) = if trig_head == SIN {
+        let a_tan = apply_node(MUL, vec![a.clone(), tan_half]);
+        let a_tan_plus_b = apply_node(ADD, vec![a_tan, b.clone()]);
+        let numer = apply_node(SUB, vec![a_tan_plus_b.clone(), sqrt_neg_disc.clone()]);
+        let denom = apply_node(ADD, vec![a_tan_plus_b, sqrt_neg_disc.clone()]);
+        (numer, denom)
+    } else {
+        let bma = apply_node(SUB, vec![b.clone(), a.clone()]);
+        let bma_tan = apply_node(MUL, vec![bma, tan_half]);
+        let numer = apply_node(ADD, vec![sqrt_neg_disc.clone(), bma_tan.clone()]);
+        let denom = apply_node(SUB, vec![sqrt_neg_disc.clone(), bma_tan]);
+        (numer, denom)
+    };
+    let log_arg = apply_node("Abs", vec![apply_node(DIV, vec![numer, denom])]);
+    let coef = apply_node(DIV, vec![c_scaled, sqrt_neg_disc]);
+    apply_node(MUL, vec![coef, apply_node(LOG, vec![log_arg])])
+}
+
+/// Symbolic-coefficient degenerate branch (a² = b²).
+fn try_weierstrass_degenerate_symbolic(
+    c_scaled: IRNode,
+    a: &IRNode,
+    b: &IRNode,
+    trig_head: &'static str,
+    arg_node: &IRNode,
+) -> IRNode {
+    let tan_half = apply_node(
+        TAN,
+        vec![apply_node(DIV, vec![arg_node.clone(), IRNode::Integer(2)])],
+    );
+    let a_plus_b = apply_node(ADD, vec![a.clone(), b.clone()]);
+    let a_minus_b = apply_node(SUB, vec![a.clone(), b.clone()]);
+    if trig_head == SIN {
+        // −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+        let numer = apply_node(MUL, vec![IRNode::Integer(-2), c_scaled]);
+        let denom = apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a_plus_b, tan_half]), a_minus_b],
+        );
+        apply_node(DIV, vec![numer, denom])
+    } else {
+        // 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+        let tan_sq = apply_node(POW, vec![tan_half.clone(), IRNode::Integer(2)]);
+        let numer = apply_node(
+            MUL,
+            vec![apply_node(MUL, vec![IRNode::Integer(2), c_scaled]), tan_half],
+        );
+        let denom = apply_node(
+            ADD,
+            vec![apply_node(MUL, vec![a_minus_b, tan_sq]), a_plus_b],
+        );
+        apply_node(DIV, vec![numer, denom])
+    }
+}
+
+/// Did the user pin down `a² > b²` (disc > 0)?  Probes both the
+/// natural `a² > b²` and the canonical-against-zero `a² − b² > 0`
+/// surface forms.
+fn assumption_says_disc_positive(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(GREATER, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(GREATER, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+fn assumption_says_disc_negative(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(LESS, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(LESS, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+fn assumption_says_disc_zero(
+    assumptions: &AssumptionContext,
+    a: &IRNode,
+    b: &IRNode,
+) -> bool {
+    let a_sq = ir_square(a);
+    let b_sq = ir_square(b);
+    let disc = apply_node(SUB, vec![a_sq.clone(), b_sq.clone()]);
+    assumptions.is_true_relation(&apply_node(EQUAL, vec![a_sq, b_sq])) == Some(true)
+        || assumptions.is_true_relation(&apply_node(EQUAL, vec![disc, IRNode::Integer(0)]))
+            == Some(true)
+}
+
+/// Track G2 entry point.  Mirrors the numeric
+/// [`try_weierstrass_one_over_linear_trig`] but accepts non-numeric
+/// `a, b`.  Returns `None` when the shape doesn't match, the
+/// numerator depends on `x`, no assumption store is available
+/// (called outside `integrate_handler`), or no assumption pins down
+/// the discriminant sign.
+fn try_weierstrass_symbolic_coefficients(f: &IRNode, x: &str) -> Option<IRNode> {
+    let IRNode::Apply(apply) = f else {
+        return None;
+    };
+    if apply.head != IRNode::Symbol(DIV.to_string()) || apply.args.len() != 2 {
+        return None;
+    }
+    let (num, den) = (&apply.args[0], &apply.args[1]);
+    if depends_on(num, x) {
+        return None;
+    }
+    let (a, b, trig_head, alpha, beta) = weierstrass_parse_a_plus_b_sincos_symbolic(den, x)?;
+    if alpha.0 == 0 {
+        return None;
+    }
+    // Numeric path would already have closed the integral when both
+    // `a` and `b` are rational; bail out so we don't emit a second
+    // (potentially uglier) result.
+    if node_to_rc(&a).is_some() && node_to_rc(&b).is_some() {
+        return None;
+    }
+    // u = α·x + β; numerator scales by 1/α.
+    let one_over_alpha = rc(alpha.1, alpha.0)?;
+    let c_scaled = if rc_is_one(one_over_alpha) {
+        num.clone()
+    } else {
+        apply_node(MUL, vec![rc_to_ir(one_over_alpha)?, num.clone()])
+    };
+    let arg_node = weierstrass_build_linear_arg_ir(alpha, beta, x)?;
+    // Snapshot the current-assumptions thread-local.  We only need a
+    // read-only view, but the slot stores an owned
+    // `AssumptionContext`; we clone — cheap because each `Integrate`
+    // call only does this once.
+    let assumptions = CURRENT_ASSUMPTIONS.with(|slot| slot.borrow().clone())?;
+    if assumption_says_disc_positive(&assumptions, &a, &b) {
+        return Some(try_weierstrass_arctan_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    if assumption_says_disc_negative(&assumptions, &a, &b) {
+        return Some(try_weierstrass_log_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    if assumption_says_disc_zero(&assumptions, &a, &b) {
+        return Some(try_weierstrass_degenerate_symbolic(
+            c_scaled, &a, &b, trig_head, &arg_node,
+        ));
+    }
+    None
+}
+
 fn integrate_handler() -> Handler {
     std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
         if expr.args.len() != 2 && expr.args.len() != 4 {
@@ -1989,6 +2382,13 @@ fn integrate_handler() -> Handler {
             IRNode::Symbol(s) => s.clone(),
             _ => return IRNode::Apply(Box::new(expr)),
         };
+
+        // Track G2: publish a snapshot of the VM's assumption store
+        // for helpers that consult it (currently:
+        // `try_weierstrass_symbolic_coefficients`).  The guard
+        // restores the previous value on Drop so nested calls and
+        // panics can't strand the thread-local.
+        let _assumption_guard = AssumptionGuard::install(vm.assumptions.clone());
 
         if expr.args.len() == 4 {
             if let Some(result) = complete_elliptic_first_kind(&f, &x, &expr.args[2], &expr.args[3]) {
@@ -2070,8 +2470,13 @@ fn integrate(f: &IRNode, x: &str) -> IRNode {
         }
         // Phase 34: Weierstrass substitution for c / (a + b·sin/cos(x))
         // when c, a, b are rational and a² > b² (and a > 0 for the cos case).
+        // Track G2: symbolic-coefficient Weierstrass — fires only when
+        // the numeric path returns None and `vm.assumptions` records a
+        // sign for `a² − b²`.  Mirrors the Python helper at
+        // `symbolic_vm/integrate.py`.
         (DIV, [c, denom]) if !depends_on(c, x) => {
             try_weierstrass_one_over_linear_trig(c, denom, x)
+                .or_else(|| try_weierstrass_symbolic_coefficients(f, x))
                 .unwrap_or_else(|| apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]))
         }
         (POW, [base, exponent]) if base == &IRNode::Symbol(x.to_string()) => {
@@ -6799,8 +7204,44 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
         m.insert(FACTOR.to_string(), handler_fn(factor_handler));
         // Track B1 — Apart simple-roots partial-fraction decomposition.
         m.insert(APART.to_string(), handler_fn(apart_handler));
+        // Track G2 — assumption store mutators.  `Assume(rel)` records a
+        // sign / equality fact on `vm.assumptions`; `Forget(rel)`
+        // removes one; `ForgetAll()` clears the whole table.  The
+        // relation argument is held (see `BaseBackend::new`) so it
+        // reaches the handler intact.  Returning the original expr
+        // mirrors the Python handler and lets MACSYMA chains like
+        // `Assume(x > 0); Sqrt(x^2)` thread the assertion through
+        // without producing extraneous result expressions.
+        m.insert("Assume".to_string(), assume_handler());
+        m.insert("Forget".to_string(), forget_handler());
+        m.insert("ForgetAll".to_string(), forget_all_handler());
     }
     m
+}
+
+fn assume_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() == 1 {
+            vm.assumptions.assume_relation(&expr.args[0]);
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+fn forget_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() == 1 {
+            vm.assumptions.forget_relation(&expr.args[0]);
+        }
+        IRNode::Apply(Box::new(expr))
+    })
+}
+
+fn forget_all_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        vm.assumptions.forget_all();
+        IRNode::Apply(Box::new(expr))
+    })
 }
 
 // ---------------------------------------------------------------------------
