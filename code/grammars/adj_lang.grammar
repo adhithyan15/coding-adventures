@@ -26,6 +26,10 @@ statement   = prior_decl
             | observe_decl
             | query_decl
             | let_decl
+            | symbol_decl
+            | constrain_decl
+            | solve_decl
+            | check_decl
             ;
 
 # ----------------------------------------------------------------
@@ -78,6 +82,24 @@ term_expr = factor { ( STAR | SLASH ) factor } ;
 factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN ;
 
 agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
+
+# ----------------------------------------------------------------
+# Constraint sublanguage (ADJ constraints track B1). The model
+# extracts the policy's unknowns + constraints; the engine SOLVES
+# them (the solver backends are wired in B2). A `constrain`'s
+# operands reuse the `let` arithmetic `expr`, so they may reference
+# observed slots, earlier `let`s, AND declared symbols.
+# ----------------------------------------------------------------
+
+symbol_decl    = "symbol" IDENT COLON term ;
+
+constrain_decl = "constrain" expr relop expr ;
+
+relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
+
+solve_decl     = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE ;
+
+check_decl     = "check" ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the

@@ -39,6 +39,7 @@ LBRACE            = "{"
 RBRACE            = "}"
 COMMA             = ","
 QUESTION          = "?"
+COLON             = ":"
 
 # ----------------------------------------------------------------
 # Comparison operators — for predicate-gated contributions
@@ -56,6 +57,7 @@ QUESTION          = "?"
 GE                = ">="
 LE                = "<="
 EQEQ              = "=="
+NE                = "!="
 GT                = ">"
 LT                = "<"
 
