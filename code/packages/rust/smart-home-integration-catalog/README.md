@@ -62,6 +62,8 @@ runtime and Chief of Staff tools a typed catalog for:
   policy-review, risk, and dependency evidence
 - activation dossier rows that bundle approval decisions with their evidence
   rows and compact evidence rollups for Chief planning
+- activation readout rows that combine priority-wave health, maintenance,
+  dossier, evidence, risk, action, and dependency blocker rollups
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

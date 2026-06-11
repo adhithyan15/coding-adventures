@@ -79,6 +79,8 @@ Current scope:
   behind approval and blocker decisions
 - D18D integration activation-dossier descriptors for read-only bundled
   decision and evidence planning
+- D18D integration activation-readout descriptors for priority-wave health,
+  dossier, evidence, risk, action, and dependency blocker rollups
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
