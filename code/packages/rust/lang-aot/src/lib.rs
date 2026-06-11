@@ -182,6 +182,12 @@ pub enum LangAotError {
     /// unsupported op/type/operand).  The GE-225 (1959) was the
     /// mainframe where Dartmouth BASIC was designed in 1964.
     Ge225BackendError(String),
+    /// The IBM 704 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `ibm704-backend`.
+    /// L4 of the McCarthy Lisp implementation — closes the
+    /// round-trip to the silicon Lisp was born on.
+    Ibm704BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -230,6 +236,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
             LangAotError::Intel4004BackendError(m) => write!(f, "intel4004: {m}"),
             LangAotError::Ge225BackendError(m) => write!(f, "ge225: {m}"),
+            LangAotError::Ibm704BackendError(m) => write!(f, "ibm704: {m}"),
         }
     }
 }
@@ -1222,6 +1229,94 @@ pub fn compile_file_to_ge225_bin(
     // emits a HLT for empty CIR.
     if bytes.is_empty() {
         bytes.extend_from_slice(&ge225_encoder::HALT_WORD);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → IBM 704 machine code (`.bin`) on disk.
+///
+/// L4 of the McCarthy Lisp implementation.  Unlike the native-
+/// executable pipelines, this one does **not** link or run any
+/// toolchain — it just writes a flat `.bin` of 36-bit IBM 704
+/// instruction words, packed 5 bytes per word (low byte first,
+/// high 4 bits of the top byte zeroed).  Downstream consumers:
+///
+/// * A future in-tree `ibm704-simulator` (not yet shipped).
+/// * Any IBM 704 emulator that consumes 5-byte-per-word streams.
+/// * Period scholarship / replica hardware.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Why the IBM 704?
+///
+/// The IBM 704 is the vacuum-tube mainframe John McCarthy and his
+/// MIT students first ran Lisp on, in 1959.  `CAR` and `CDR` —
+/// the two universal Lisp accessors — were literally IBM 704
+/// instruction-word field names (**C**ontents of the
+/// **A**ddress / **D**ecrement part of **R**egister).  Compiling
+/// McCarthy Lisp source through this pipeline round-trips the
+/// language to the silicon it was born on — the symmetric
+/// counterpart of the Dartmouth BASIC → GE-225 round-trip.
+///
+/// # Wire format
+///
+/// One 36-bit word per instruction, packed as 5 bytes per word
+/// (40 bits — 4 wasted padding bits zeroed in the top nibble of
+/// the high byte), low byte first.  Same convention `ge225-encoder`
+/// uses (20-bit words → 3 bytes) extended to 36 bits.  Per-function
+/// byte streams are concatenated directly.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Ibm704BackendError` — the IIR contained an op or type the
+///   IBM 704 backend does not yet handle (the message names the
+///   function and op).  Per the v0.1.0 scope decision, CONS-using
+///   programs are out of scope for every historical-arch backend.
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.lisp --emit=ibm704 -o foo.bin
+/// # Each 5-byte chunk decodes to a 36-bit IBM 704 word.
+/// ```
+pub fn compile_file_to_ibm704_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // L4: route through aot_core::infer + aot_core::specialise +
+    // ibm704_backend::compile per function, same pattern as the
+    // historical-arch migration's Phases 3-7.  ibm704-backend emits
+    // 5-byte-per-word output directly, so concatenation is just
+    // `extend_from_slice`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = ibm704_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Ibm704BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+
+    // Empty-module guard — mirror `ibm704_backend::compile` which
+    // emits HTR 0 for empty CIR.
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&ibm704_encoder::HTR_HALT_BYTES);
     }
 
     std::fs::write(out, &bytes)?;

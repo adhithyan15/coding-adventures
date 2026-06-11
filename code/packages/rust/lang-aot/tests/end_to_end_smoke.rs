@@ -1739,3 +1739,62 @@ fn end_to_end_mccarthy_symbols_via_lang_aot() {
         assert_eq!(out.status.code(), Some(*expected), "{program}");
     }
 }
+
+// ===========================================================================
+// L4 + L5 — source -> IIR -> IBM 704 machine code (.bin) via lang-aot
+// ===========================================================================
+//
+// The closing half of the **CAR/CDR birthplace round-trip** — Lisp on the
+// silicon it was born on.  Mirrors the existing Twig-42-on-X tests
+// (intel8008/armv7/riscv).  Per the v0.1.0 scope decision the IBM 704
+// backend is no-CONS-only, so we pin both Twig `42` and McCarthy `42`
+// (which lower to the same const_i64 + ret_i64 CIR sequence).
+
+#[test]
+fn end_to_end_twig_42_emits_ibm704_bin_via_lang_aot() {
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.twig");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::Twig)
+        .expect("Twig `42` must compile through the ibm704-backend v0.1.0 minimal-viable scope");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    assert_eq!(
+        bytes,
+        vec![
+            0x2A, 0x00, 0x00, 0x00, 0x0A, // CLA 42         word = 0xA_0000_002A
+            0x00, 0x00, 0x00, 0x80, 0x08, // HTR  0 (halt)  word = 0x8_8000_0000
+        ],
+        "Twig 42 -> IBM 704 byte sequence is the migration-pinned regression invariant for L4 \
+         (CAR/CDR were literal 704 instruction-field mnemonics; this is the round-trip to that silicon)"
+    );
+}
+
+#[test]
+fn end_to_end_mccarthy_42_emits_ibm704_bin_via_lang_aot() {
+    // The symbolic capstone — McCarthy 1960 Lisp source `42` compiled
+    // to bytecode for the very machine McCarthy & Russell first ran
+    // Lisp on at MIT in 1959.
+    let dir = tempfile::tempdir().expect("tempdir");
+    let src = dir.path().join("smoke.mcl");
+    let bin = dir.path().join("smoke.bin");
+    std::fs::write(&src, b"42\n").unwrap();
+
+    lang_aot::compile_file_to_ibm704_bin(&src, &bin, lang_aot::Language::McCarthyLisp)
+        .expect("McCarthy `42` must compile through the ibm704-backend v0.1.0 minimal-viable scope");
+
+    let bytes = std::fs::read(&bin).expect("read .bin");
+    // McCarthy `42` and Twig `42` both lower to `const_i64 v=42; ret_i64 v`
+    // by the time aot_core::specialise has run, so the emitted bytes
+    // are identical.  That's the whole point of the IIR layer.
+    assert_eq!(
+        bytes,
+        vec![
+            0x2A, 0x00, 0x00, 0x00, 0x0A, // CLA 42
+            0x00, 0x00, 0x00, 0x80, 0x08, // HTR  0 (halt)
+        ],
+        "McCarthy Lisp `42` -> IBM 704: the CAR/CDR-birthplace round-trip is now closed end-to-end."
+    );
+}
