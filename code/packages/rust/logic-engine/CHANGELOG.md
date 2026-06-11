@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.0] - 2026-06-11 — currency conversions (ADJ constraints track A2)
+
+### Added
+
+- **`conversion` module** — the only thing that licenses a cross-currency
+  operation (which A1 made a `DimError::Mismatch`): an **explicit, provenanced
+  conversion fact**. `Conversion::new("usd", "eur", 0.92)` = "1 usd = 0.92 eur",
+  carrying a `Provenance` citation. `ConversionTable::rate(from, to)` resolves a
+  rate via a direct fact, its inverse (`1/rate`), or the identity; no transitive
+  chaining (a missing path is a clean `None`, never a guess).
+- `convert_value(value, target, table)` converts a `Dimensioned` between
+  currencies/units (money→money, unit→unit), re-tagging the dimension;
+  `Scalar`/`Percent` are not convertible.
+- `add_or_sub(subtract, lhs, rhs, table)` — dimension-aware add/sub that resolves
+  a currency mismatch by converting `rhs` into `lhs`'s dimension via the rate
+  (so `100 usd + 92 eur` = `200 usd` given `1 usd = 0.92 eur`), and still rejects
+  genuinely incompatible kinds (`usd + days`). `ConvError::{NoRate, NotConvertible}`.
+- `Conversion::try_new` validates the rate and returns `ConvError::BadRate`
+  for a non-finite/non-positive value (the entry point a surface-`convert`
+  lowerer should call, mirroring the LR/probability guards); `new` is the
+  panicking trusted/test convenience. `convert_value`/`add_or_sub` screen for a
+  non-finite result (`ConvError::NonFinite`), matching `ComputeError::NonFinite`
+  so a converted value can't silently flow non-finite into a verdict.
+
+Engine-only; the surface `convert money(1,usd) = money(0.92,eur)` statement and
+recording the rate as a derivation-tree `Op` land with the constraint
+sublanguage (B1) and the dimensional faithfulness gate (A4). See
+`code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
 ## [0.11.0] - 2026-06-11 — dimensional types (strict units, ADJ constraints track A1)
 
 ### Added
