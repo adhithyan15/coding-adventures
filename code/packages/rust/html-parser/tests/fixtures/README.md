@@ -50,6 +50,9 @@ as a flat browser-planning inventory.
 Animation-interaction descriptor cases pin CSS animation and transition event
 hooks, timeline phase grouping, document/body scope, and cancellation paths as a
 flat browser-planning inventory.
+Fullscreen-interaction descriptor cases pin embedded fullscreen permission
+hints, `allowfullscreen` state, fullscreen event hooks, and document/body
+fullscreen callbacks as a flat browser-planning inventory.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
