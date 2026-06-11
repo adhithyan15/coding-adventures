@@ -17,4 +17,6 @@ All notable changes to this package will be documented in this file.
   tooling.
 - Unique cluster coverage and profile-family endpoint counts for ZDO interview
   read summaries.
+- Read-summary helper predicates for duplicate cluster references, lighting
+  cluster coverage, and mixed profile-family interviews.
 - Zigbee interview summary projection into `smart-home-core` device records.

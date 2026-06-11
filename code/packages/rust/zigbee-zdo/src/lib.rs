@@ -235,6 +235,24 @@ pub struct SimpleDescriptorSummary {
     pub has_level_control_cluster: bool,
 }
 
+impl SimpleDescriptorSummary {
+    pub fn cluster_reference_count(&self) -> usize {
+        self.input_cluster_count + self.output_cluster_count
+    }
+
+    pub fn has_input_clusters(&self) -> bool {
+        self.input_cluster_count > 0
+    }
+
+    pub fn has_output_clusters(&self) -> bool {
+        self.output_cluster_count > 0
+    }
+
+    pub fn has_lighting_cluster_coverage(&self) -> bool {
+        self.has_on_off_cluster || self.has_level_control_cluster
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NodeDescriptorResponse {
     pub transaction_sequence_number: u8,
@@ -398,6 +416,26 @@ impl ZigbeeInterviewReadSummary {
 
     pub fn has_cluster_coverage(&self) -> bool {
         self.unique_input_cluster_count > 0 || self.unique_output_cluster_count > 0
+    }
+
+    pub fn cluster_reference_count(&self) -> usize {
+        self.input_cluster_count + self.output_cluster_count
+    }
+
+    pub fn has_duplicate_input_cluster_refs(&self) -> bool {
+        self.input_cluster_count > self.unique_input_cluster_count
+    }
+
+    pub fn has_duplicate_output_cluster_refs(&self) -> bool {
+        self.output_cluster_count > self.unique_output_cluster_count
+    }
+
+    pub fn has_lighting_cluster_coverage(&self) -> bool {
+        self.has_on_off_cluster || self.has_level_control_cluster
+    }
+
+    pub fn mixes_home_automation_and_other_profiles(&self) -> bool {
+        self.home_automation_endpoint_count > 0 && self.non_home_automation_endpoint_count > 0
     }
 }
 
@@ -959,9 +997,13 @@ mod tests {
         assert_eq!(simple_summary.profile_id, ProfileId::HOME_AUTOMATION);
         assert_eq!(simple_summary.input_cluster_count, 2);
         assert_eq!(simple_summary.output_cluster_count, 1);
+        assert_eq!(simple_summary.cluster_reference_count(), 3);
+        assert!(simple_summary.has_input_clusters());
+        assert!(simple_summary.has_output_clusters());
         assert!(simple_summary.has_basic_cluster);
         assert!(simple_summary.has_on_off_cluster);
         assert!(!simple_summary.has_level_control_cluster);
+        assert!(simple_summary.has_lighting_cluster_coverage());
     }
 
     #[test]
@@ -1224,6 +1266,7 @@ mod tests {
         assert_eq!(summary.output_cluster_count, 3);
         assert_eq!(summary.unique_input_cluster_count, 3);
         assert_eq!(summary.unique_output_cluster_count, 2);
+        assert_eq!(summary.cluster_reference_count(), 9);
         assert!(summary.has_basic_cluster);
         assert!(summary.has_on_off_cluster);
         assert!(summary.has_level_control_cluster);
@@ -1231,6 +1274,10 @@ mod tests {
         assert!(summary.can_project_device_identity());
         assert!(summary.has_home_automation_profile());
         assert!(summary.has_cluster_coverage());
+        assert!(summary.has_duplicate_input_cluster_refs());
+        assert!(summary.has_duplicate_output_cluster_refs());
+        assert!(summary.has_lighting_cluster_coverage());
+        assert!(summary.mixes_home_automation_and_other_profiles());
     }
 
     #[test]
@@ -1247,10 +1294,15 @@ mod tests {
         assert_eq!(summary.input_cluster_count, 0);
         assert_eq!(summary.unique_input_cluster_count, 0);
         assert_eq!(summary.home_automation_endpoint_count, 0);
+        assert_eq!(summary.cluster_reference_count(), 0);
         assert!(!summary.has_descriptors());
         assert!(!summary.can_project_device_identity());
         assert!(!summary.has_home_automation_profile());
         assert!(!summary.has_cluster_coverage());
+        assert!(!summary.has_duplicate_input_cluster_refs());
+        assert!(!summary.has_duplicate_output_cluster_refs());
+        assert!(!summary.has_lighting_cluster_coverage());
+        assert!(!summary.mixes_home_automation_and_other_profiles());
     }
 
     #[test]
