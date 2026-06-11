@@ -1,5 +1,35 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.15.0] — 2026-06-11 — textual `.il`: lambda / LABEL / recursion (CLR-real C5)
+
+`emit_il` becomes a **multi-function** emitter — the last McCarthy F-feature:
+
+- Every IIR function is now its own static `.method` (the entry → `MccarthyEntry`,
+  each hoisted lambda/label keeps its name `lambda_<n>`/`label_<n>`), with a CIL
+  signature derived from its IIR params/return type (a lambda returns `object`).
+- `call <dest> = <fn>(args…)` → a by-name `call <ret> <Class>::<m>(<argtys>)`;
+  `ilasm` resolves the token, so **self-recursive `LABEL`** is just a method calling
+  itself. A `call` to an unknown function is rejected (`UndefinedLabel`).
+- **Parameters** live in `ldarg`/`starg` slots (locals stay `ldloc`/`stloc`) — a new
+  `FnRegs` register model assigns argument slots to params and local slots to dests.
+- `is_null` → `ldnull; ceq`.
+- **`field_*` on an `object`-typed array operand** (a lambda parameter, vs a
+  freshly-`alloc`-ed `object[]`) now emits a `castclass object[]` before
+  `ldelem.ref`/`stelem.ref` — real CoreCLR's importer requires an array on the
+  stack, a constraint the lenient in-repo simulator never enforced (exactly the
+  class of bug this chapter exists to catch).
+
+**Security:** function names join labels as the IIR-supplied *strings* that reach
+the `.il` text (`.method`/`call`), so they go through the same fail-closed
+`[A-Za-z0-9_$]` identifier whitelist (`checked_cil_ident`, which `checked_label`
+now delegates to). New unit test `malicious_function_name_is_rejected_not_injected`.
+
+Verified by RUNNING on real CoreCLR (`lang-aot/tests/clr_real_lambda.rs`):
+`((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
+`((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, a COND-body lambda→100, and a recursive
+`LABEL` descending CARs→7. New unit tests `lambda_emits_second_method_param_ldarg_and_call`,
+`recursive_label_calls_itself_by_name`, `call_to_unknown_function_is_rejected`.
+
 ## [0.14.0] — 2026-06-11 — textual `.il`: symbols (CLR-real C4)
 
 **No new emit ops** — symbols reuse the existing value model. The shared

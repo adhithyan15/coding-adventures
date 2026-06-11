@@ -76,9 +76,19 @@ other external-tool backends.
   `(EQ (QUOTE A) (QUOTE B))`→0, `(ATOM (QUOTE A))`→1,
   `(EQ (QUOTE FOO) (QUOTE FOO))`→1, `(EQ (QUOTE FOO) (QUOTE BAR))`→0. Unit test
   `symbol_eq_emits_tagged_id_consts_unboxed_and_compared` pins the value model.
-- ☐ **C5 — lambda / LABEL / recursion (F7).** Each hoisted lambda as its own
-  `.method`; application via `call <Method>`; recursion. Verify
-  `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7 and a recursive `LABEL`.
+- ✅ **C5 — lambda / LABEL / recursion (F7).** `emit_il` became a **multi-function**
+  emitter: every IIR function is its own static `.method` (entry → `MccarthyEntry`,
+  hoisted functions keep `lambda_<n>`/`label_<n>`), application is a by-name `call
+  <ret> <Class>::<m>(<argtys>)` (so self-recursive `LABEL` is a method calling
+  itself), parameters live in `ldarg`/`starg` slots (a new `FnRegs` model), `is_null`
+  → `ldnull; ceq`, and a `field_*` on an `object`-typed operand (a lambda param)
+  gets a `castclass object[]` before `ldelem.ref`/`stelem.ref` — real CoreCLR
+  requires an array on the stack, which the lenient simulator never enforced.
+  Function names join labels under the `checked_cil_ident` injection whitelist.
+  Verified by RUNNING on **real CoreCLR** (`tests/clr_real_lambda.rs`):
+  `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
+  `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, a COND-body lambda→100, and a recursive
+  `LABEL` descending CARs→7. **This closes McCarthy F1–F7 on the CLR's real runtime.**
 - ☐ **C6 — wire real-CoreCLR CLR into the conformance suite.** Add a `run_clr_real`
   arm to `lang-aot/tests/conformance.rs` (gated on `dotnet`+`ilasm`) so the W16
   table runs the CLR column on **real .NET**; ensure CI installs `ilasm`
