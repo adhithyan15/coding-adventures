@@ -75,6 +75,8 @@ Current scope:
   dependency blockers
 - D18D integration activation-decision descriptors for read-only approve/block
   queue planning derived from approval packets
+- D18D integration activation-evidence descriptors for read-only evidence rows
+  behind approval and blocker decisions
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

@@ -1044,6 +1044,52 @@ impl IntegrationActivationDecisionStatus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEvidenceKind {
+    ApprovalDecision,
+    PolicyReview,
+    PrimitiveBlocker,
+    CapabilityBlocker,
+    DependencyBlocker,
+    PolicyRisk,
+    DependencyEdge,
+}
+
+impl IntegrationActivationEvidenceKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ApprovalDecision => "approval_decision",
+            Self::PolicyReview => "policy_review",
+            Self::PrimitiveBlocker => "primitive_blocker",
+            Self::CapabilityBlocker => "capability_blocker",
+            Self::DependencyBlocker => "dependency_blocker",
+            Self::PolicyRisk => "policy_risk",
+            Self::DependencyEdge => "dependency_edge",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEvidenceStatus {
+    SupportsApproval,
+    RequiresReview,
+    BlocksApproval,
+}
+
+impl IntegrationActivationEvidenceStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::SupportsApproval => "supports_approval",
+            Self::RequiresReview => "requires_review",
+            Self::BlocksApproval => "blocks_approval",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        !matches!(self, Self::SupportsApproval)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationActionKind {
     ActivateIntegration,
     ReviewPolicy,
@@ -1315,6 +1361,53 @@ pub struct IntegrationActivationDecisionSummary {
     pub high_risk_decisions: usize,
     pub first_approval_priority: Option<u8>,
     pub first_blocked_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceItem {
+    pub kind: IntegrationActivationEvidenceKind,
+    pub status: IntegrationActivationEvidenceStatus,
+    pub decision_status: IntegrationActivationDecisionStatus,
+    pub requested_integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub detail_id: String,
+    pub primitive: Option<PrimitiveFamily>,
+    pub capability_id: Option<CapabilityId>,
+    pub dependency_integration_id: Option<IntegrationId>,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub required_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEvidenceSummary {
+    pub total_evidence: usize,
+    pub approval_decision_evidence: usize,
+    pub policy_review_evidence: usize,
+    pub primitive_blocker_evidence: usize,
+    pub capability_blocker_evidence: usize,
+    pub dependency_blocker_evidence: usize,
+    pub policy_risk_evidence: usize,
+    pub dependency_edge_evidence: usize,
+    pub supporting_evidence: usize,
+    pub review_evidence: usize,
+    pub blocking_evidence: usize,
+    pub unique_integrations: usize,
+    pub ready_to_approve_integrations: usize,
+    pub blocked_integrations: usize,
+    pub local_only_integrations: usize,
+    pub cloud_required_integrations: usize,
+    pub unique_policy_surfaces: usize,
+    pub read_only_evidence: usize,
+    pub low_risk_evidence: usize,
+    pub human_approval_evidence: usize,
+    pub high_risk_evidence: usize,
+    pub first_supporting_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_blocking_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
 }
 
@@ -3028,6 +3121,291 @@ impl IntegrationActivationDecisionSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.total_decisions > 0
+    }
+}
+
+impl IntegrationActivationEvidenceItem {
+    fn from_decision(
+        decision: &IntegrationActivationDecisionItem,
+    ) -> Vec<IntegrationActivationEvidenceItem> {
+        let packet = &decision.packet;
+        let mut evidence = Vec::new();
+        let approval_status =
+            if decision.decision_status == IntegrationActivationDecisionStatus::ReadyToApprove {
+                IntegrationActivationEvidenceStatus::SupportsApproval
+            } else {
+                IntegrationActivationEvidenceStatus::BlocksApproval
+            };
+
+        evidence.push(Self::for_decision(
+            decision,
+            IntegrationActivationEvidenceKind::ApprovalDecision,
+            approval_status,
+            decision.decision_status.as_str().to_string(),
+        ));
+
+        if packet.action_summary.review_policy_actions > 0 || packet.has_policy_surfaces() {
+            if packet.review.policy_surfaces.is_empty() {
+                evidence.push(Self::for_decision(
+                    decision,
+                    IntegrationActivationEvidenceKind::PolicyReview,
+                    IntegrationActivationEvidenceStatus::RequiresReview,
+                    "policy_review".to_string(),
+                ));
+            } else {
+                for surface in &packet.review.policy_surfaces {
+                    let mut row = Self::for_decision(
+                        decision,
+                        IntegrationActivationEvidenceKind::PolicyReview,
+                        IntegrationActivationEvidenceStatus::RequiresReview,
+                        surface.as_str().to_string(),
+                    );
+                    row.policy_surface = Some(*surface);
+                    row.required_tier = row.required_tier.max(surface.required_tier());
+                    evidence.push(row);
+                }
+            }
+        }
+
+        for primitive in &packet.review.missing_primitives {
+            let mut row = Self::for_decision(
+                decision,
+                IntegrationActivationEvidenceKind::PrimitiveBlocker,
+                IntegrationActivationEvidenceStatus::BlocksApproval,
+                primitive.as_str().to_string(),
+            );
+            row.primitive = Some(*primitive);
+            evidence.push(row);
+        }
+
+        for capability_id in &packet.review.missing_capabilities {
+            let mut row = Self::for_decision(
+                decision,
+                IntegrationActivationEvidenceKind::CapabilityBlocker,
+                IntegrationActivationEvidenceStatus::BlocksApproval,
+                capability_id.as_str().to_string(),
+            );
+            row.capability_id = Some(capability_id.clone());
+            evidence.push(row);
+        }
+
+        for dependency_id in &packet.review.missing_dependencies {
+            let mut row = Self::for_decision(
+                decision,
+                IntegrationActivationEvidenceKind::DependencyBlocker,
+                IntegrationActivationEvidenceStatus::BlocksApproval,
+                dependency_id.as_str().to_string(),
+            );
+            row.dependency_integration_id = Some(dependency_id.clone());
+            evidence.push(row);
+        }
+
+        for risk in &packet.risks {
+            let mut row = Self::for_decision(
+                decision,
+                IntegrationActivationEvidenceKind::PolicyRisk,
+                IntegrationActivationEvidenceStatus::RequiresReview,
+                risk.risk_id.clone(),
+            );
+            row.policy_surface = risk.policy_surface;
+            row.required_tier = row.required_tier.max(risk.required_tier);
+            evidence.push(row);
+        }
+
+        for edge in &packet.dependency_graph.edges {
+            let mut row = Self::for_decision(
+                decision,
+                IntegrationActivationEvidenceKind::DependencyEdge,
+                if edge.blocks_activation {
+                    IntegrationActivationEvidenceStatus::BlocksApproval
+                } else {
+                    IntegrationActivationEvidenceStatus::SupportsApproval
+                },
+                format!(
+                    "{}->{}",
+                    edge.dependency_integration_id.as_str(),
+                    edge.dependent_integration_id.as_str()
+                ),
+            );
+            row.dependency_integration_id = Some(edge.dependency_integration_id.clone());
+            evidence.push(row);
+        }
+
+        evidence
+    }
+
+    fn for_decision(
+        decision: &IntegrationActivationDecisionItem,
+        kind: IntegrationActivationEvidenceKind,
+        status: IntegrationActivationEvidenceStatus,
+        detail_id: String,
+    ) -> Self {
+        Self {
+            kind,
+            status,
+            decision_status: decision.decision_status,
+            requested_integration_id: decision.requested_integration_id().clone(),
+            display_name: decision.display_name().to_string(),
+            priority: decision.priority(),
+            detail_id,
+            primitive: None,
+            capability_id: None,
+            dependency_integration_id: None,
+            policy_surface: None,
+            required_tier: decision.required_tier(),
+            local_only: decision.packet.review.local_only,
+            cloud_required: decision.packet.review.cloud_required,
+        }
+    }
+
+    pub fn blocks_approval(&self) -> bool {
+        self.status == IntegrationActivationEvidenceStatus::BlocksApproval
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.status.requires_attention()
+    }
+}
+
+impl IntegrationActivationEvidenceSummary {
+    pub fn from_evidence<'a>(
+        evidence: impl IntoIterator<Item = &'a IntegrationActivationEvidenceItem>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut ready_integration_ids = BTreeSet::new();
+        let mut blocked_integration_ids = BTreeSet::new();
+        let mut local_only_ids = BTreeSet::new();
+        let mut cloud_required_ids = BTreeSet::new();
+        let mut policy_surfaces = BTreeSet::new();
+        let mut summary = Self {
+            total_evidence: 0,
+            approval_decision_evidence: 0,
+            policy_review_evidence: 0,
+            primitive_blocker_evidence: 0,
+            capability_blocker_evidence: 0,
+            dependency_blocker_evidence: 0,
+            policy_risk_evidence: 0,
+            dependency_edge_evidence: 0,
+            supporting_evidence: 0,
+            review_evidence: 0,
+            blocking_evidence: 0,
+            unique_integrations: 0,
+            ready_to_approve_integrations: 0,
+            blocked_integrations: 0,
+            local_only_integrations: 0,
+            cloud_required_integrations: 0,
+            unique_policy_surfaces: 0,
+            read_only_evidence: 0,
+            low_risk_evidence: 0,
+            human_approval_evidence: 0,
+            high_risk_evidence: 0,
+            first_supporting_priority: None,
+            first_review_priority: None,
+            first_blocking_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+        };
+
+        for item in evidence {
+            summary.total_evidence += 1;
+            integration_ids.insert(item.requested_integration_id.clone());
+            match item.decision_status {
+                IntegrationActivationDecisionStatus::ReadyToApprove => {
+                    ready_integration_ids.insert(item.requested_integration_id.clone());
+                }
+                IntegrationActivationDecisionStatus::BlockedOnPrerequisites => {
+                    blocked_integration_ids.insert(item.requested_integration_id.clone());
+                }
+            }
+            if item.local_only {
+                local_only_ids.insert(item.requested_integration_id.clone());
+            }
+            if item.cloud_required {
+                cloud_required_ids.insert(item.requested_integration_id.clone());
+            }
+            if let Some(surface) = item.policy_surface {
+                policy_surfaces.insert(surface);
+            }
+
+            match item.kind {
+                IntegrationActivationEvidenceKind::ApprovalDecision => {
+                    summary.approval_decision_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::PolicyReview => {
+                    summary.policy_review_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::PrimitiveBlocker => {
+                    summary.primitive_blocker_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::CapabilityBlocker => {
+                    summary.capability_blocker_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::DependencyBlocker => {
+                    summary.dependency_blocker_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::PolicyRisk => {
+                    summary.policy_risk_evidence += 1;
+                }
+                IntegrationActivationEvidenceKind::DependencyEdge => {
+                    summary.dependency_edge_evidence += 1;
+                }
+            }
+
+            match item.status {
+                IntegrationActivationEvidenceStatus::SupportsApproval => {
+                    summary.supporting_evidence += 1;
+                    summary.first_supporting_priority = min_optional_priority(
+                        summary.first_supporting_priority,
+                        Some(item.priority),
+                    );
+                }
+                IntegrationActivationEvidenceStatus::RequiresReview => {
+                    summary.review_evidence += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, Some(item.priority));
+                }
+                IntegrationActivationEvidenceStatus::BlocksApproval => {
+                    summary.blocking_evidence += 1;
+                    summary.first_blocking_priority =
+                        min_optional_priority(summary.first_blocking_priority, Some(item.priority));
+                }
+            }
+
+            match item.required_tier {
+                PrivilegeTier::ReadOnly => summary.read_only_evidence += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_evidence += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_evidence += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_evidence += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(item.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.ready_to_approve_integrations = ready_integration_ids.len();
+        summary.blocked_integrations = blocked_integration_ids.len();
+        summary.local_only_integrations = local_only_ids.len();
+        summary.cloud_required_integrations = cloud_required_ids.len();
+        summary.unique_policy_surfaces = policy_surfaces.len();
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_evidence == 0
+    }
+
+    pub fn has_supporting_evidence(&self) -> bool {
+        self.supporting_evidence > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_evidence > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocking_evidence > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_review_work() || self.has_blockers()
     }
 }
 
@@ -5478,6 +5856,44 @@ pub fn activation_decisions_at_or_before_priority(
     activation_decisions_from_candidates(catalog, candidates.iter(), enabled_integrations)
 }
 
+pub fn activation_evidence_from_decisions<'a>(
+    decisions: impl IntoIterator<Item = &'a IntegrationActivationDecisionItem>,
+) -> Vec<IntegrationActivationEvidenceItem> {
+    let mut evidence = decisions
+        .into_iter()
+        .flat_map(IntegrationActivationEvidenceItem::from_decision)
+        .collect::<Vec<_>>();
+
+    evidence.sort_by(compare_activation_evidence);
+    evidence
+}
+
+pub fn activation_evidence_from_candidates<'a>(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: impl IntoIterator<Item = &'a IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceItem> {
+    let decisions = activation_decisions_from_candidates(catalog, candidates, enabled_integrations);
+    activation_evidence_from_decisions(decisions.iter())
+}
+
+pub fn activation_evidence_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEvidenceItem> {
+    let candidates = activation_candidates_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_evidence_from_candidates(catalog, candidates.iter(), enabled_integrations)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -6715,6 +7131,23 @@ fn compare_activation_decisions(
             left.requested_integration_id()
                 .cmp(right.requested_integration_id())
         })
+}
+
+fn compare_activation_evidence(
+    left: &IntegrationActivationEvidenceItem,
+    right: &IntegrationActivationEvidenceItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.status.cmp(&right.status))
+        .then_with(|| left.kind.cmp(&right.kind))
+        .then_with(|| right.required_tier.cmp(&left.required_tier))
+        .then_with(|| left.display_name.cmp(&right.display_name))
+        .then_with(|| {
+            left.requested_integration_id
+                .cmp(&right.requested_integration_id)
+        })
+        .then_with(|| left.detail_id.cmp(&right.detail_id))
 }
 
 fn compare_activation_dependency_nodes(
@@ -8001,6 +8434,130 @@ mod tests {
         assert!(catalog_decisions
             .iter()
             .any(IntegrationActivationDecisionItem::has_policy_surfaces));
+    }
+
+    #[test]
+    fn activation_evidence_explains_decision_support_and_blockers() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+
+        let evidence = activation_evidence_from_candidates(&[], candidates.iter(), &[]);
+
+        assert!(evidence.iter().any(|item| {
+            item.kind == IntegrationActivationEvidenceKind::ApprovalDecision
+                && item.status == IntegrationActivationEvidenceStatus::SupportsApproval
+                && item.requested_integration_id.as_str() == "review_ready_bridge"
+        }));
+        assert!(evidence.iter().any(|item| {
+            item.kind == IntegrationActivationEvidenceKind::ApprovalDecision
+                && item.status == IntegrationActivationEvidenceStatus::BlocksApproval
+                && item.requested_integration_id.as_str() == "blocked_review_camera"
+        }));
+        assert!(evidence.iter().any(|item| {
+            item.kind == IntegrationActivationEvidenceKind::PrimitiveBlocker
+                && item.primitive == Some(PrimitiveFamily::CameraMedia)
+                && item.blocks_approval()
+        }));
+        assert!(evidence.iter().any(|item| {
+            item.kind == IntegrationActivationEvidenceKind::CapabilityBlocker
+                && item.capability_id.as_ref().is_some_and(|capability_id| {
+                    capability_id.as_str() == "smart_home.command.low_risk"
+                })
+                && item.blocks_approval()
+        }));
+        assert!(evidence.iter().any(|item| {
+            item.kind == IntegrationActivationEvidenceKind::DependencyBlocker
+                && item
+                    .dependency_integration_id
+                    .as_ref()
+                    .is_some_and(|integration_id| integration_id.as_str() == "mqtt")
+                && item.blocks_approval()
+        }));
+        assert!(evidence
+            .iter()
+            .any(|item| item.kind == IntegrationActivationEvidenceKind::PolicyRisk));
+
+        let summary = IntegrationActivationEvidenceSummary::from_evidence(evidence.iter());
+        assert_eq!(summary.approval_decision_evidence, 2);
+        assert_eq!(summary.ready_to_approve_integrations, 1);
+        assert_eq!(summary.blocked_integrations, 1);
+        assert!(summary.total_evidence > summary.approval_decision_evidence);
+        assert!(summary.supporting_evidence > 0);
+        assert!(summary.review_evidence > 0);
+        assert!(summary.blocking_evidence > 0);
+        assert!(summary.policy_risk_evidence > 0);
+        assert!(summary.primitive_blocker_evidence > 0);
+        assert!(summary.capability_blocker_evidence > 0);
+        assert!(summary.dependency_blocker_evidence > 0);
+        assert_eq!(summary.first_supporting_priority, Some(1));
+        assert_eq!(summary.first_blocking_priority, Some(2));
+        assert!(summary.has_supporting_evidence());
+        assert!(summary.has_review_work());
+        assert!(summary.has_blockers());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_evidence = activation_evidence_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_evidence
+            .iter()
+            .any(|item| item.policy_surface.is_some()));
     }
 
     #[test]

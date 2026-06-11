@@ -58,6 +58,8 @@ runtime and Chief of Staff tools a typed catalog for:
   for approval preparation
 - activation decision rows that project approval packets into ready-to-approve
   and prerequisite-blocked queues for Chief planning
+- activation evidence rows that explain approval decisions with blocker,
+  policy-review, risk, and dependency evidence
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,
