@@ -765,6 +765,80 @@ impl MleMessage {
     pub fn find_tlv(&self, tlv_type: TlvType) -> Option<&Tlv> {
         self.tlvs.iter().find(|tlv| tlv.tlv_type == tlv_type)
     }
+
+    pub fn summary(&self) -> MleMessageSummary {
+        MleMessageSummary::from_message(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MleMessageSummary {
+    pub command: MleCommand,
+    pub tlv_count: usize,
+    pub has_scan_mask: bool,
+    pub has_mode: bool,
+    pub has_timeout: bool,
+    pub has_leader_data: bool,
+    pub has_network_data: bool,
+    pub has_connectivity: bool,
+    pub has_status: bool,
+    pub has_version: bool,
+}
+
+impl MleMessageSummary {
+    pub fn from_message(message: &MleMessage) -> Self {
+        let mut summary = Self {
+            command: message.command,
+            tlv_count: message.tlvs.len(),
+            has_scan_mask: false,
+            has_mode: false,
+            has_timeout: false,
+            has_leader_data: false,
+            has_network_data: false,
+            has_connectivity: false,
+            has_status: false,
+            has_version: false,
+        };
+
+        for tlv in &message.tlvs {
+            match tlv.tlv_type {
+                TlvType::ScanMask => summary.has_scan_mask = true,
+                TlvType::Mode => summary.has_mode = true,
+                TlvType::Timeout => summary.has_timeout = true,
+                TlvType::LeaderData => summary.has_leader_data = true,
+                TlvType::NetworkData => summary.has_network_data = true,
+                TlvType::Connectivity => summary.has_connectivity = true,
+                TlvType::Status => summary.has_status = true,
+                TlvType::Version => summary.has_version = true,
+                _ => {}
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.tlv_count == 0
+    }
+
+    pub fn has_parent_selection_request_context(&self) -> bool {
+        self.command == MleCommand::ParentRequest && self.has_scan_mask && self.has_version
+    }
+
+    pub fn has_attach_response_context(&self) -> bool {
+        matches!(
+            self.command,
+            MleCommand::ParentResponse | MleCommand::ChildIdResponse
+        ) && self.has_mode
+    }
+
+    pub fn has_diagnostic_context(&self) -> bool {
+        self.has_leader_data || self.has_network_data || self.has_connectivity
+    }
+
+    pub fn has_thread_data_versions(&self) -> bool {
+        self.has_leader_data && self.has_network_data
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1504,6 +1578,88 @@ mod tests {
             MleMessage::parse(&message.encode().unwrap()).unwrap(),
             message
         );
+
+        let summary = message.summary();
+        assert_eq!(
+            summary,
+            MleMessageSummary {
+                command: MleCommand::ParentRequest,
+                tlv_count: 2,
+                has_scan_mask: true,
+                has_mode: false,
+                has_timeout: false,
+                has_leader_data: false,
+                has_network_data: false,
+                has_connectivity: false,
+                has_status: false,
+                has_version: true,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_parent_selection_request_context());
+        assert!(!summary.has_attach_response_context());
+        assert!(!summary.has_diagnostic_context());
+        assert!(!summary.has_thread_data_versions());
+    }
+
+    #[test]
+    fn mle_message_summary_reports_attach_and_diagnostic_context() {
+        let attach = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::Mode,
+                    vec![Mode {
+                        receiver_on_when_idle: true,
+                        secure_data_requests: true,
+                        full_thread_device: true,
+                        full_network_data: true,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Timeout, 30_u32.to_be_bytes().to_vec()).unwrap(),
+            ],
+        };
+
+        let attach_summary = attach.summary();
+        assert!(attach_summary.has_attach_response_context());
+        assert!(!attach_summary.has_parent_selection_request_context());
+        assert!(!attach_summary.has_diagnostic_context());
+        assert!(!attach_summary.has_thread_data_versions());
+
+        let diagnostic = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![
+                LeaderData {
+                    partition_id: 0x0102_0304,
+                    weighting: 64,
+                    data_version: 2,
+                    stable_data_version: 1,
+                    leader_router_id: 7,
+                }
+                .to_tlv(),
+                ThreadNetworkData::new(vec![NetworkDataTlvType::Prefix.as_byte(), 0])
+                    .unwrap()
+                    .to_tlv(),
+                Tlv::new(TlvType::Connectivity, vec![1, 3, 2, 1, 5, 8, 12]).unwrap(),
+            ],
+        };
+
+        let diagnostic_summary = diagnostic.summary();
+        assert_eq!(diagnostic_summary.command, MleCommand::Advertisement);
+        assert_eq!(diagnostic_summary.tlv_count, 3);
+        assert!(diagnostic_summary.has_diagnostic_context());
+        assert!(diagnostic_summary.has_thread_data_versions());
+        assert!(!diagnostic_summary.has_parent_selection_request_context());
+        assert!(!diagnostic_summary.has_attach_response_context());
+
+        let empty = MleMessage {
+            command: MleCommand::LinkRequest,
+            tlvs: Vec::new(),
+        }
+        .summary();
+        assert!(empty.is_empty());
     }
 
     #[test]
