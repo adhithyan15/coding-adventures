@@ -20,11 +20,13 @@ import {
   distortionFromTransient,
   estimatePeriod,
   formatCornerAdaptiveTransientTable,
+  formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
   formatDistortionTable,
   formatFourierTable,
   formatPoleZeroTable,
+  formatPssTable,
   formatTransientTable,
   fourier,
   inductor,
@@ -32,6 +34,7 @@ import {
   jfet,
   mutualInductor,
   pss,
+  pssCorners,
   pssNewtonCandidate,
   pssNewtonIteration,
   pssNewtonSolve,
@@ -389,6 +392,54 @@ describe("transient", () => {
     expect(
       pssResidual(result!.solve.finalCircuit, 32, 1.0e-3)!.residualL2Norm,
     ).toBeCloseTo(result!.solve.finalResidual.residualL2Norm, 12);
+  });
+
+  it("runs PSS per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "0", 1_000.0));
+
+    const nominal = pss(circuit, 4, 1.0e-9, 1.0e-5, 2);
+    const result = pssCorners(circuit, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rload-high",
+        overrides: [{ elementName: "R1", parameter: "resistance", value: 2_000.0 }],
+      },
+    ], 4, 1.0e-9, 1.0e-5, 2);
+
+    expect(nominal).not.toBeUndefined();
+    expect(result).not.toBeUndefined();
+    expect(result!.points.map((point) => point.cornerName)).toEqual(["nominal", "rload-high"]);
+    expect(result!.points.every((point) => point.result.converged)).toBe(true);
+    expectClose(result!.points[0].result.periodSeconds, 1.0e-3);
+    expectClose(result!.points[1].result.steadyState[0].branchCurrent("V1"), -5.0e-4);
+    expect(formatPssTable(nominal!, ["V(in)", "I(V1)"])).toBe(
+      "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n" +
+        "0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n" +
+        "1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n" +
+        "2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n" +
+        "3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n",
+    );
+    expect(formatCornerPssTable(result!, ["V(in)", "I(V1)"])).toBe(
+      "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n" +
+        "nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n" +
+        "nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n" +
+        "nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n" +
+        "nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n" +
+        "rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n" +
+        "rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n" +
+        "rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n" +
+        "rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n",
+    );
   });
 
   it("does not report a PSS residual without a periodic source period", () => {

@@ -15,14 +15,24 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Transient/adaptive transient corner parity in Python and TypeScript.
+1. PSS named-corner parity in Python and TypeScript.
    - Status: in progress.
+   - Rust already exposes `pss_corners`, `CornerPssResult`, and
+     `format_corner_pss_table`, plus `format_pss_table` for base output.
+   - Python and TypeScript need matching base PSS table helpers,
+     named-corner PSS wrappers, named-corner table helpers, changelog entries,
+     and parity tests.
+
+## Completed Slices
+
+1. Transient/adaptive transient corner parity in Python and TypeScript.
+   - Status: completed in PR 5401.
    - Rust already exposes `transient_corners`, `transient_adaptive_corners`,
      `CornerTransientResult`, `CornerAdaptiveTransientResult`,
      `format_corner_transient_table`, and
      `format_corner_adaptive_transient_table`.
-   - Python and TypeScript need matching named-corner wrappers, result shapes,
-     stable tab-separated tables, changelog entries, and parity tests.
+   - Python and TypeScript now expose matching named-corner wrappers, result
+     shapes, stable tab-separated tables, changelog entries, and parity tests.
 
 ## Backlog
 
@@ -83,8 +93,8 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Transient/adaptive transient corner parity in Python and TypeScript.
-2. PSS/Fourier/distortion/pole-zero corner audit and parity closure.
+1. PSS named-corner parity in Python and TypeScript.
+2. Fourier/distortion/pole-zero corner audit and parity closure.
 3. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
 4. `.measure`, `.save`, and `.probe` output selection.
 5. Sparse solver productionization and convergence diagnostics.

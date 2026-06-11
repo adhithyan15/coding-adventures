@@ -1523,6 +1523,15 @@ export interface PssResult {
   readonly converged: boolean;
 }
 
+export interface CornerPssPoint {
+  readonly cornerName: string;
+  readonly result: PssResult;
+}
+
+export interface CornerPssResult {
+  readonly points: readonly CornerPssPoint[];
+}
+
 export class SpiceError extends Error {
   constructor(
     message: string,
@@ -2421,6 +2430,95 @@ export function formatCornerAdaptiveTransientTable(
         String(corner.result.stepsRejected),
         String(corner.result.converged),
         String(index),
+        formatTableNumber(point.time),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatPssTable(
+  result: PssResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultTransientOutputProbes(result.steadyState);
+  const rows = [[
+    "Index",
+    "Period",
+    "TimeStep",
+    "Converged",
+    "Iterations",
+    "ResidualL2",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.steadyState.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatPssTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      formatTableNumber(result.periodSeconds),
+      formatTableNumber(result.timeStepSeconds),
+      String(result.converged),
+      String(result.solve.iterationCount),
+      formatTableNumber(result.solve.finalResidual.residualL2Norm),
+      formatTableNumber(point.time),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerPssTable(
+  result: CornerPssResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.result.steadyState.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.result.steadyState)
+  );
+  const rows = [[
+    "Corner",
+    "Index",
+    "Period",
+    "TimeStep",
+    "Converged",
+    "Iterations",
+    "ResidualL2",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.steadyState.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerPssTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        formatTableNumber(corner.result.periodSeconds),
+        formatTableNumber(corner.result.timeStepSeconds),
+        String(corner.result.converged),
+        String(corner.result.solve.iterationCount),
+        formatTableNumber(corner.result.solve.finalResidual.residualL2Norm),
         formatTableNumber(point.time),
         ...values,
       ].join("\t"));
@@ -4390,6 +4488,31 @@ export function pss(
     timeStepSeconds: solve.finalResidual.timeStepSeconds,
     converged: solve.converged,
   };
+}
+
+export function pssCorners(
+  circuit: Circuit,
+  corners: readonly CornerSpec[],
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+  maxNewtonIterations = 8,
+): CornerPssResult | undefined {
+  const points: CornerPssPoint[] = [];
+  for (const corner of corners) {
+    const result = pss(
+      circuitWithCorner(circuit, corner),
+      stepsPerPeriod,
+      residualTolerance,
+      perturbation,
+      maxNewtonIterations,
+    );
+    if (result === undefined) {
+      return undefined;
+    }
+    points.push({ cornerName: corner.name, result });
+  }
+  return { points };
 }
 
 function validateSweep(
