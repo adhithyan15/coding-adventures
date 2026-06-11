@@ -24,9 +24,17 @@ IIRModule
   → validate_iir_for_clr()      — pre-flight validation
   → lower_iir_to_cil()          — emit CIL body bytes per function
   → CILProgramArtifact          — structured multi-method artifact
-       ↓ (future) CLR packager  — wrap in PE/COFF .dll/.exe
-       ↓ CLR simulator          — run directly
+       ↓ CLR simulator          — run directly (fast, zero-dep)
+  → emit_il()                   — emit TEXTUAL CIL (.il)
+       ↓ real ilasm → PE → real dotnet   — run on REAL CoreCLR
 ```
+
+Two outputs from the same lowered program: binary method bodies for the in-repo
+`clr-simulator` (fast unit checks), and **textual `.il`** (`emit_il`) for the
+**real CoreCLR** path — assembled by real `ilasm`, run on real `dotnet`. This is
+the exact analog of how `iir-to-llvm` emits textual `.ll` for real `clang`; `ilasm`
+owns the PE/metadata so we don't hand-roll ECMA-335. (Scalar today; cons/predicates/
+COND/symbols/lambda land per the `CLR-REAL-RUNTIME-VERIFICATION` worklist.)
 
 ## Quick start
 

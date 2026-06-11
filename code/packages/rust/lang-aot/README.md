@@ -44,6 +44,14 @@ its own method, applied via `call <MethodDef>`, and run on `clr-simulator` 0.4.0
 inter-method call-frame model. The CLR is the third managed backend to reach full
 McCarthy support after WASM and JVM.
 
+`compile_source_to_cil_text` is the **real-CoreCLR** path (CLR-real C1): the same
+lowered program emitted as textual `.il`, assembled by real `ilasm` into a loadable
+PE, and run on real `dotnet` — the CLR analog of `compile_source_to_llvm` (`.ll` →
+real `clang`). Scalar runs today (`42`→42 on real CoreCLR; `tests/clr_real_scalar.rs`,
+gated on `dotnet`+`ilasm`); cons/predicates/COND/symbols/lambda land per the
+`CLR-REAL-RUNTIME-VERIFICATION` worklist, after which the CLR column of the W16
+conformance matrix is verified on real .NET rather than the in-repo simulator.
+
 `compile_source_to_beam` targets the **Erlang VM**: scalar McCarthy emits a
 `.beam` that **runs** on a real `erl` (OTP), `42` → 42 (W9a), and **cons** too —
 `(CAR (CONS 7 9))` → 7, `(CONS 7 9)` → `[7|9]` (W9b). BEAM uses the **native

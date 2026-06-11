@@ -705,6 +705,32 @@ pub fn compile_source_to_cil_artifact(
         .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
 }
 
+/// Compile `source` to **textual CIL** (`.il`) for the **real CoreCLR** path
+/// (CLR-real C1). Where [`compile_source_to_cil_artifact`] yields raw method bodies
+/// for the in-repo `clr-simulator`, this emits `.il` source that real `ilasm`
+/// assembles into a loadable PE assembly which runs on real `dotnet` — the CLR
+/// analog of [`compile_source_to_llvm`] (textual LLVM IR → real `clang`).
+///
+/// C1 covers scalar McCarthy; later slices grow the `iir-to-cil-bytecode::emit_il`
+/// op match (cons, predicates, `COND`, symbols, lambda).
+pub fn compile_source_to_cil_text(
+    language: Language,
+    source: &str,
+    name: &str,
+) -> Result<String, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, name)?;
+    // The same managed value-model pipeline the binary CIL path uses, so the
+    // textual and binary emitters lower an identical program.
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    concretize_scalar_any_for_cil(&mut module);
+
+    let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
+    iir_to_cil_bytecode::emit_il(&module, &config)
+        .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
+}
+
 /// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
 /// BEAM run-foundation (LANG77 / McCarthy W9a). Unlike the WASM/JVM/CLR
 /// simulators (32-bit), the BEAM has **native arbitrary-precision integers**, so
