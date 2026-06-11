@@ -33,7 +33,8 @@ Two outputs from the same lowered program: binary method bodies for the in-repo
 `clr-simulator` (fast unit checks), and **textual `.il`** (`emit_il`) for the
 **real CoreCLR** path — assembled by real `ilasm`, run on real `dotnet`. This is
 the exact analog of how `iir-to-llvm` emits textual `.ll` for real `clang`; `ilasm`
-owns the PE/metadata so we don't hand-roll ECMA-335. (Scalar today; cons/predicates/
+owns the PE/metadata so we don't hand-roll ECMA-335. (Scalar + cons/car/cdr today —
+cons is a 2-element `System.Object[]`, atoms `box`ed `System.Int32`; predicates/
 COND/symbols/lambda land per the `CLR-REAL-RUNTIME-VERIFICATION` worklist.)
 
 ## Quick start

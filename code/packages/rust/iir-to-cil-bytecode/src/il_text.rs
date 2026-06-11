@@ -23,9 +23,39 @@
 //! match incrementally — `ilasm` already handles the metadata each will need.
 
 use crate::lower::{IIRClrConfig, IIRClrError};
-use interpreter_ir::{IIRFunction, IIRModule, Operand};
+use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
 use std::collections::HashMap;
 use std::fmt::Write as _;
+
+/// The variable name at `instr.srcs[idx]`, or an `InvalidOperand` error.
+fn var_src<'a>(
+    f: &IIRFunction,
+    instr: &'a IIRInstr,
+    idx: usize,
+    op: &str,
+) -> Result<&'a str, IIRClrError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Var(s)) => Ok(s.as_str()),
+        other => Err(IIRClrError::InvalidOperand {
+            function: f.name.clone(),
+            detail: format!("{op} src[{idx}] must be a variable, got {other:?}"),
+        }),
+    }
+}
+
+/// The (int32-range-checked) integer literal at `instr.srcs[idx]`.
+fn int_src(f: &IIRFunction, instr: &IIRInstr, idx: usize, op: &str) -> Result<i32, IIRClrError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Int(n)) => i32::try_from(*n).map_err(|_| IIRClrError::InvalidOperand {
+            function: f.name.clone(),
+            detail: format!("{op} index {n} out of int32 range"),
+        }),
+        other => Err(IIRClrError::InvalidOperand {
+            function: f.name.clone(),
+            detail: format!("{op} src[{idx}] must be an integer literal, got {other:?}"),
+        }),
+    }
+}
 
 /// Emit a complete, `ilasm`-assemblable `.il` source for `module`'s entry point.
 ///
@@ -75,14 +105,32 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     Ok(il)
 }
 
+/// The CIL local type for an IIR register, from the producing instruction's
+/// `type_hint`. A cons cell (`ref<LispyPair>`) is a `System.Object[]`; a boxed
+/// atom or a loaded field (`ref<any>`) is a `System.Object`; everything else is a
+/// raw machine `int32` (the McCarthy CLR value model boxes ints into the cells).
+fn cil_local_type(type_hint: &str) -> &'static str {
+    if type_hint == "ref<LispyPair>" {
+        "object[]"
+    } else if type_hint.starts_with("ref<") {
+        "object"
+    } else {
+        "int32"
+    }
+}
+
 /// Emit `int32 MccarthyEntry()` from the entry function's instructions.
 fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(), IIRClrError> {
-    // One `int32` local per distinct destination register, in first-seen order.
+    // One local per distinct destination register, in first-seen order, typed from
+    // the instruction that produces it (int32 / object / object[]).
     let mut slot_of: HashMap<&str, usize> = HashMap::new();
+    let mut local_tys: Vec<&'static str> = Vec::new();
     for instr in &f.instructions {
         if let Some(dest) = &instr.dest {
-            let next = slot_of.len();
-            slot_of.entry(dest.as_str()).or_insert(next);
+            if !slot_of.contains_key(dest.as_str()) {
+                slot_of.insert(dest.as_str(), local_tys.len());
+                local_tys.push(cil_local_type(&instr.type_hint));
+            }
         }
     }
     let slot = |name: &str| -> Result<usize, IIRClrError> {
@@ -97,8 +145,12 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
 
     let _ = writeln!(il, "  .method public static int32 MccarthyEntry() cil managed {{");
     let _ = writeln!(il, "    .maxstack 8");
-    if !slot_of.is_empty() {
-        let locals: Vec<String> = (0..slot_of.len()).map(|i| format!("int32 V_{i}")).collect();
+    if !local_tys.is_empty() {
+        let locals: Vec<String> = local_tys
+            .iter()
+            .enumerate()
+            .map(|(i, ty)| format!("{ty} V_{i}"))
+            .collect();
         let _ = writeln!(il, "    .locals init ({})", locals.join(", "));
     }
 
@@ -159,7 +211,68 @@ fn emit_entry_method(il: &mut String, f: &IIRFunction, _asm: &str) -> Result<(),
                 let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
                 let _ = writeln!(il, "    ret");
             }
-            // Later slices extend this match (cons, predicates, COND, symbols, lambda).
+            // alloc <dest> : ref<LispyPair>  →  a fresh 2-element System.Object[]
+            //   ldc.i4.2; newarr [System.Runtime]System.Object; stloc V_<dest>
+            // A McCarthy cons cell is a 2-slot reference array; the CLR GC owns it.
+            "alloc" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "alloc must have a dest".to_string(),
+                })?;
+                let _ = writeln!(il, "    ldc.i4.2");
+                let _ = writeln!(il, "    newarr [System.Runtime]System.Object");
+                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+            }
+            // box <dest> = <src> : ref<any>  →  box a raw int32 atom into an object
+            //   ldloc V_<src>; box [System.Runtime]System.Int32; stloc V_<dest>
+            "box" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "box must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "box")?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
+                let _ = writeln!(il, "    box [System.Runtime]System.Int32");
+                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+            }
+            // unbox <dest> = <src> : i32  →  unbox an object back to a raw int32
+            //   ldloc V_<src>; unbox.any [System.Runtime]System.Int32; stloc V_<dest>
+            "unbox" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "unbox must have a dest".to_string(),
+                })?;
+                let src = var_src(f, instr, 0, "unbox")?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(src)?);
+                let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
+                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+            }
+            // field_store <arr>[<idx>] = <val>  (srcs = arr, Int(idx), val)
+            //   ldloc V_<arr>; ldc.i4 <idx>; ldloc V_<val>; stelem.ref
+            "field_store" => {
+                let arr = var_src(f, instr, 0, "field_store")?;
+                let idx = int_src(f, instr, 1, "field_store")?;
+                let val = var_src(f, instr, 2, "field_store")?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(arr)?);
+                let _ = writeln!(il, "    ldc.i4 {idx}");
+                let _ = writeln!(il, "    ldloc V_{}", slot(val)?);
+                let _ = writeln!(il, "    stelem.ref");
+            }
+            // field_load <dest> = <arr>[<idx>] : ref<any>  (srcs = arr, Int(idx))
+            //   ldloc V_<arr>; ldc.i4 <idx>; ldelem.ref; stloc V_<dest>
+            "field_load" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "field_load must have a dest".to_string(),
+                })?;
+                let arr = var_src(f, instr, 0, "field_load")?;
+                let idx = int_src(f, instr, 1, "field_load")?;
+                let _ = writeln!(il, "    ldloc V_{}", slot(arr)?);
+                let _ = writeln!(il, "    ldc.i4 {idx}");
+                let _ = writeln!(il, "    ldelem.ref");
+                let _ = writeln!(il, "    stloc V_{}", slot(dest)?);
+            }
+            // Later slices extend this match (predicates, COND, symbols, lambda).
             other => {
                 return Err(IIRClrError::UnsupportedOp {
                     function: f.name.clone(),
@@ -199,8 +312,54 @@ mod tests {
     }
 
     #[test]
+    fn cons_car_emits_object_array_box_and_unbox() {
+        // The lowered shape of `(CAR (CONS 7 9))` (C2): a 2-element object[] cons
+        // cell, boxed int atoms, ldelem.ref for CAR, unbox.any for the int result.
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("const", Some("v1".into()), vec![Operand::Int(9)], "i32"),
+            IIRInstr::new("alloc", Some("v2".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new("box", Some("v0b".into()), vec![Operand::Var("v0".into())], "ref<any>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("v2".into()), Operand::Int(0), Operand::Var("v0b".into())],
+                "void",
+            ),
+            IIRInstr::new("box", Some("v1b".into()), vec![Operand::Var("v1".into())], "ref<any>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![Operand::Var("v2".into()), Operand::Int(1), Operand::Var("v1b".into())],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_load",
+                Some("v3".into()),
+                vec![Operand::Var("v2".into()), Operand::Int(0)],
+                "ref<any>",
+            ),
+            IIRInstr::new("unbox", Some("v3u".into()), vec![Operand::Var("v3".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v3u".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("newarr [System.Runtime]System.Object"), "cons → object[]:\n{il}");
+        assert!(il.contains("box [System.Runtime]System.Int32"), "atoms are boxed");
+        assert!(il.contains("stelem.ref"), "field_store → stelem.ref");
+        assert!(il.contains("ldelem.ref"), "CAR → ldelem.ref");
+        assert!(il.contains("unbox.any [System.Runtime]System.Int32"), "result unboxed");
+        // The cons cell local is typed object[], the boxed atoms object, ints int32.
+        assert!(il.contains("object[] V_2"), "cons cell local is object[]; got:\n{il}");
+        assert!(il.contains("object V_3"), "loaded field local is object");
+    }
+
+    #[test]
     fn unsupported_op_is_rejected_not_emitted() {
-        // A cons (`call_builtin`) is C2 — C1 must reject it explicitly, not emit junk.
+        // A predicate (`call_builtin`) is C3 — C2 must reject it explicitly, not emit junk.
         let mut m = scalar_module(1);
         m.functions[0].instructions.insert(
             0,
