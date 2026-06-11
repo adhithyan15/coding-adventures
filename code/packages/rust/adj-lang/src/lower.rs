@@ -488,6 +488,29 @@ mod tests {
     }
 
     #[test]
+    fn predicate_fires_over_typed_value_literal_end_to_end() {
+        // Step 2: typed value literals. `quantity(18000, usd)` already
+        // parses as a nested compound under the predicate grammar; the
+        // engine reads its leading magnitude (18000) for the predicate
+        // while the `usd` unit travels with the fact. No grammar change.
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+              source "IRS Pub 501 (2024)" trust authoritative
+            observe gross_income(quantity(18000, usd))
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(posterior > 0.9999, "should saturate, got {posterior}");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn predicate_below_threshold_stays_at_prior() {
         let src = r#"
             prior 0.10 for required_to_file

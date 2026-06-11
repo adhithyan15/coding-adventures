@@ -79,12 +79,18 @@ missing dispositive value → insufficient-evidence/kickback). No new verdict lo
 
 ## 5. The build loop (small PRs, each green + babysat)
 
-1. **Predicate-gated contributions** — `contributes <LR> from <slot> <op> <value> to <verdict>` over a
-   valued fact `observe slot(value)`. Tokens `>= <= == > <`, `evidence = predicate | term`, AST
-   `Evidence` enum, adapter, lower, `PredicateContributionClause` in logic-engine, CLI. (One coupled PR
-   — see `../adj-deterministic/PLAN.md`; the grammar-regen tool already landed.)
-2. **Typed value literals** — `quantity(value, unit)`, `money`, `date`, `duration`, `percentage` as
-   first-class observed values; the engine reads the numeric arg for predicates.
+1. **Predicate-gated contributions** ✅ **DONE (PR #5340)** — `contributes <LR> from <slot> <op> <value>
+   to <verdict>` over a valued fact `observe slot(value)`. Tokens `>= <= == > <`,
+   `evidence = predicate | term`, AST `Evidence` enum, adapter, lower, `PredicateContributionClause` in
+   logic-engine, CLI. (One coupled PR — see `../adj-deterministic/PLAN.md`; the grammar-regen tool
+   already landed.)
+2. **Typed value literals** ✅ **DONE (stacked PR)** — `quantity(value, unit)`, `money`, `percentage`,
+   `duration`, `count` as first-class observed values. No grammar change was needed: a typed wrapper
+   already parses as a nested compound (`gross_income(quantity(18000, usd))`) under step 1's grammar.
+   The engine's `numeric_magnitude`/`observed_value` read the **leading numeric argument** as the
+   magnitude (uniform rule, no hard-coded functor set), so predicates fire over typed values while the
+   unit stays attached to the fact for the faithfulness gate. `date(y,m,d)` magnitude is deferred to the
+   date/duration slice (step 5), where it needs day-ordinal semantics rather than a leading scalar.
 3. **`let` + arithmetic** — `let name = <expr>` over slots/literals via the symbolic-vm adjudication
    backend; the **derivation tree** + `FromComputation` proof origin; the **faithfulness** +
    **no-magic-numbers** gates.

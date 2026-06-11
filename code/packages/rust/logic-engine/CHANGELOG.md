@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0] - 2026-06-10 — typed-value magnitudes (ADJ language expansion, step 2)
+
+### Added
+
+- **`numeric_magnitude(&Term) -> Option<f64>`** — extract the numeric
+  magnitude of a typed value. The ADJ language expansion models a fact's
+  value as either a bare number or a *typed-value wrapper* carrying the
+  magnitude as its leading argument and the unit afterward:
+  `quantity(18000, usd)`, `money(18000, usd)`, `percentage(40)`,
+  `duration(365, days)`, `count(3)`. The rule is uniform — "the leading
+  numeric argument" — so no closed set of wrapper functors is hard-coded.
+
+### Changed
+
+- **`observed_value(slot)`** now reads through a typed-value wrapper via
+  `numeric_magnitude`, so a predicate (`gross_income >= 14600`) fires over
+  `observe gross_income(quantity(18000, usd))` while the `usd` unit stays
+  attached to the fact for the (forthcoming) faithfulness gate. Bare
+  `slot(Num)` facts behave exactly as before.
+
 ## [0.8.0] - 2026-06-10 — predicate-gated contributions (deterministic = saturating probabilistic)
 
 ### Added

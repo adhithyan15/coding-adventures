@@ -90,6 +90,25 @@ fn predicate_gated_contribution_emits_cited_comparison_step() {
 }
 
 #[test]
+fn predicate_fires_over_typed_value_literal() {
+    // Step 2: a unit-bearing typed value. The engine reads the leading
+    // magnitude (18000) from `quantity(18000, usd)` for the comparison.
+    let (ok, s) = run(
+        "adjcli_typed.adj",
+        "prior 0.10 for required_to_file\n  source \"IRS Pub 501\" trust authoritative\n\
+         contributes 1000000 from gross_income >= 14600 to required_to_file\n  source \"IRS Pub 501 (2024)\" trust authoritative\n\
+         observe gross_income(quantity(18000, usd))\n? required_to_file\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"kind\":\"predicate\""), "{s}");
+    assert!(s.contains("\"observed\":18000"), "{s}");
+    assert!(
+        s.contains("\"posterior\":0.99") || s.contains("\"posterior\":1"),
+        "{s}"
+    );
+}
+
+#[test]
 fn predicate_below_threshold_does_not_fire() {
     // Income under the threshold: the predicate step never appears, and the
     // posterior stays at the prior.
