@@ -19,6 +19,10 @@ import {
 
 export const GAMMA_FUNC = sym("GammaFunc");
 
+// Re-exported from ``gosper.ts``.  Track H2 — see PR #5366 (H1, Python).
+export { tryGosperSum, MAX_POLY_DEGREE } from "./gosper";
+import { tryGosperSum } from "./gosper";
+
 export interface RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -217,6 +221,23 @@ function evaluateSumInner(
       total = addR(total, r);
     }
     if (ok) return rationalToIr(total);
+  }
+
+  // Track H2 — Gosper hypergeometric closed-form attempt.  Runs after
+  // all narrow recognisers (constant, geometric, Faulhaber, telescoping,
+  // small-range numeric, special infinite series) but before the
+  // Apart-retry telescope chain and the unevaluated fallthrough.
+  //
+  // Mirrors the Python dispatch insertion point in
+  // ``cas_summation.summation`` (step 5b): Gosper only runs for *finite*
+  // upper bounds because the algorithm returns ``T(hi+1) − T(lo)`` which
+  // is only meaningful when ``hi+1`` is a real value.  Infinite upper
+  // bounds belong to the dedicated limit-aware paths above (telescope at
+  // ∞, classic series).  This guard also preserves the Phase 41 fall-
+  // through contract for non-vanishing telescopes.
+  if (!infUpper) {
+    const gosper = tryGosperSum(f, k, lo, hi);
+    if (gosper !== undefined) return evalFn(gosper);
   }
 
   // Track B2 — Apart-retry telescope chain.  Mirrors the Python

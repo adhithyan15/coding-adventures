@@ -1,5 +1,59 @@
 # Changelog
 
+## 2.27.0 — 2026-05-29
+
+### Added — Track H2 (Gosper hypergeometric summation port)
+
+Ports the Python ``cas_summation.gosper`` module (Track H1, PR #5366) to
+Rust ``cas-summation``.  When the summand ``a(k)`` is a hypergeometric
+term — a product of a polynomial in ``k`` with constant-base
+exponentials ``c^(αk+β)`` and ``GammaFunc(k+s)`` factors — and the
+upper bound is finite, ``evaluate_sum`` now attempts Gosper's algorithm
+to find an antidifference ``T(k)`` satisfying ``T(k+1) − T(k) = a(k)``
+and returns the closed form ``T(hi+1) − T(lo)``.
+
+This unlocks closed forms for the classical hypergeometric shapes the
+existing narrow recognisers miss, e.g.:
+
+- ``∑_{k=1}^{N} k·2^k = (N−1)·2^(N+1) + 2``
+- ``∑_{k=0}^{N} k·k! = (N+1)! − 1``
+
+### Changes
+
+- ``src/gosper.rs``: new module — full Gosper pipeline (structural
+  decomposition → ratio computation → Petkovšek shift-coprime
+  normalisation → Gosper degree bound → linear system solve via
+  Gaussian elimination over exact ``i128`` rationals).  Mirrors the
+  Python module 1:1 including the boundary-singularity cancellation
+  step that handles removable factorial denominators at ``k = lo``.
+
+  Coefficients use ``i128`` rationals so the intermediate Petkovšek
+  shift-binomial products for the polynomial degrees Gosper actually
+  sees (typically ≤ 5) stay well inside the 128-bit range — avoiding
+  a runtime dependency on ``num-bigint`` while preserving exact
+  arithmetic on the Python reference test cases.
+
+- ``src/gosper.rs``: defensive ``MAX_POLY_DEGREE = 64`` cap on
+  polynomial exponents during IR-to-poly conversion to prevent
+  adversarial inputs like ``Pow(k, i64::MAX)`` ballooning into a
+  memory-bomb.
+
+- ``src/lib.rs``: wire ``try_gosper_sum`` into the dispatch chain at
+  the same insertion point as Python (step 5b in ``summation.py``) —
+  after all narrow recognisers and before the Apart-retry telescope
+  chain and unevaluated fallthrough.  Guarded by ``if !inf_upper`` to
+  mirror Python: Gosper returns ``T(hi+1) − T(lo)`` which is only
+  meaningful for finite ``hi``; infinite upper bounds belong to the
+  limit-aware paths above.
+
+- ``tests/gosper_tests.rs``: 14 tests — 3 polynomial-helper smoke tests,
+  4 acceptance cases (``k·2^k`` concrete + symbolic, ``k·k!`` symbolic,
+  ``2^k`` regression), 2 fall-through cases (``sin(k)``, ``log(k)``),
+  2 regression cases (Faulhaber, constant), 2 structural pieces, and
+  1 DoS-cap test verifying ``Pow(k, i64::MAX)`` is refused promptly.
+
+- ``Cargo.toml``: minor bump to 2.27.0.
+
 ## 2.26.0 - 2026-06-06
 
 ### Added
