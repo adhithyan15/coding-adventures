@@ -32,6 +32,7 @@
 //! Not in this slice: proof DAG construction, EnumerateAll / AutoDetect
 //! mode implementations, weighted model counting.
 
+pub mod compute;
 pub mod differential;
 pub mod enumerate;
 pub mod lr_aggregate;
@@ -43,6 +44,7 @@ use std::collections::HashMap;
 
 use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
+pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
 pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
@@ -279,6 +281,11 @@ pub struct KnowledgeBase {
     /// probabilistic). Each fires when the observed numeric value of its
     /// slot satisfies a CPU-evaluated comparison.
     predicate_contributions: Vec<PredicateContributionClause>,
+    /// Derived values bound by `let name = expr` (ADJ expansion step 3).
+    /// Each carries its [`compute::Derived`] derivation tree.
+    /// [`observed_value`](Self::observed_value) falls back to this table so a
+    /// predicate fires over a computed value exactly as over an observed one.
+    derived: Vec<crate::compute::Derived>,
     /// LP19e + ADJ47-D: uncertainty markers attached to conclusions.
     /// Each marker carries a domain of candidate evidence terms; if
     /// none of them is observed, the aggregator emits an
@@ -482,6 +489,20 @@ impl KnowledgeBase {
     /// [`observed_evidence`](Self::observed_evidence)). Returns the value
     /// of the most-recently-added matching fact, as `f64`.
     pub fn observed_value(&self, slot: &str) -> Option<f64> {
+        // An observed fact wins; otherwise fall back to a `let`-bound derived
+        // value (ADJ expansion step 3) so a predicate fires over a computed
+        // value exactly as it would over an observed one.
+        self.observed_value_with_fact(slot)
+            .map(|(v, _)| v)
+            .or_else(|| self.derived_for(slot).map(|d| d.value))
+    }
+
+    /// Like [`observed_value`](Self::observed_value) but also returns the
+    /// [`FactId`] of the winning observation — used by
+    /// [`compute`](crate::compute) so a derivation-tree leaf can cite the byte-
+    /// grounded fact it came from. Does **not** consult the derived table
+    /// (a derived value has no `FactId`; the caller records a `DerivedRef`).
+    pub fn observed_value_with_fact(&self, slot: &str) -> Option<(f64, FactId)> {
         self.facts
             .values()
             .flatten()
@@ -495,7 +516,40 @@ impl KnowledgeBase {
             // Largest FactId wins — facts are inserted in program order,
             // so a later `observe` of the same slot supersedes an earlier.
             .max_by_key(|(id, _)| id.0)
-            .map(|(_, v)| v)
+            .map(|(id, v)| (v, id))
+    }
+
+    /// Every observed numeric value of a slot, in fact-insertion order, with
+    /// each value's [`FactId`]. This is what aggregations (`sum`/`count`/…)
+    /// reduce — each observation becomes a cited leaf in the derivation tree.
+    pub fn observed_values_all(&self, slot: &str) -> Vec<(f64, FactId)> {
+        let mut out: Vec<(f64, FactId)> = self
+            .facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_magnitude(&args[0]).map(|v| (v, f.id))
+                }
+                _ => None,
+            })
+            .collect();
+        out.sort_by_key(|(_, id)| id.0);
+        out
+    }
+
+    /// Bind a `let`-computed [`Derived`](crate::compute::Derived) value into the
+    /// KB. A later [`observed_value`](Self::observed_value) of its name returns
+    /// the computed value, and a formula can reference it by name.
+    pub fn add_derived(&mut self, derived: crate::compute::Derived) {
+        self.derived.push(derived);
+    }
+
+    /// Look up a bound derived value by name (most-recently-bound wins, so a
+    /// rebinding supersedes — mirroring the latest-observation rule for facts).
+    pub fn derived_for(&self, name: &str) -> Option<&crate::compute::Derived> {
+        self.derived.iter().rev().find(|d| d.name == name)
     }
 
     /// True iff at least one contribution (single or joint) names
