@@ -828,6 +828,7 @@ pub struct BrowserDocument {
     pub document_event_handlers: Vec<String>,
     pub body_event_handlers: Vec<String>,
     pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
+    pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
@@ -1348,6 +1349,29 @@ pub struct BrowserEventHandlerDescriptor {
     pub lifecycle_handlers: Vec<String>,
     pub error_handlers: Vec<String>,
     pub text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLifecycleEventDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub lifecycle_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub load_handlers: Vec<String>,
+    pub unload_handlers: Vec<String>,
+    pub visibility_handlers: Vec<String>,
+    pub history_handlers: Vec<String>,
+    pub network_handlers: Vec<String>,
+    pub error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+    pub error_recovery: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3195,6 +3219,7 @@ impl BrowserDocument {
             browser_composition_interaction_descriptors(&summary);
         summary.pointer_interaction_descriptors = browser_pointer_interaction_descriptors(&summary);
         summary.scroll_interaction_descriptors = browser_scroll_interaction_descriptors(&summary);
+        summary.lifecycle_event_descriptors = browser_lifecycle_event_descriptors(&summary);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -15284,6 +15309,102 @@ fn browser_scroll_kind(
     }
 }
 
+fn browser_lifecycle_event_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserLifecycleEventDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_lifecycle_state(descriptor))
+        .map(browser_lifecycle_event_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_lifecycle_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !descriptor.lifecycle_handlers.is_empty() || !descriptor.error_handlers.is_empty()
+}
+
+fn browser_lifecycle_event_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserLifecycleEventDescriptor {
+    let load_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_load_lifecycle_event);
+    let unload_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_unload_lifecycle_event);
+    let visibility_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_visibility_lifecycle_event,
+    );
+    let history_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_history_lifecycle_event);
+    let network_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_network_lifecycle_event);
+
+    BrowserLifecycleEventDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        lifecycle_kind: browser_lifecycle_kind(
+            &load_handlers,
+            &unload_handlers,
+            &visibility_handlers,
+            &history_handlers,
+            &network_handlers,
+            &descriptor.error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        lifecycle_handlers: descriptor.lifecycle_handlers.clone(),
+        load_handlers,
+        unload_handlers,
+        visibility_handlers,
+        history_handlers,
+        network_handlers,
+        error_handlers: descriptor.error_handlers.clone(),
+        handler_count: descriptor.lifecycle_handlers.len() + descriptor.error_handlers.len(),
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+        error_recovery: !descriptor.error_handlers.is_empty(),
+    }
+}
+
+fn browser_lifecycle_kind(
+    load_handlers: &[String],
+    unload_handlers: &[String],
+    visibility_handlers: &[String],
+    history_handlers: &[String],
+    network_handlers: &[String],
+    error_handlers: &[String],
+) -> String {
+    if !error_handlers.is_empty()
+        && (!load_handlers.is_empty()
+            || !unload_handlers.is_empty()
+            || !visibility_handlers.is_empty()
+            || !history_handlers.is_empty()
+            || !network_handlers.is_empty())
+    {
+        "lifecycle-error".to_string()
+    } else if !error_handlers.is_empty() {
+        "error-recovery".to_string()
+    } else if !unload_handlers.is_empty() {
+        "unload".to_string()
+    } else if !load_handlers.is_empty() {
+        "load".to_string()
+    } else if !visibility_handlers.is_empty() {
+        "visibility".to_string()
+    } else if !history_handlers.is_empty() {
+        "history".to_string()
+    } else if !network_handlers.is_empty() {
+        "network".to_string()
+    } else {
+        "lifecycle".to_string()
+    }
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -17304,7 +17425,35 @@ fn browser_lifecycle_event(handler: &str) -> bool {
             | "onpagehide"
             | "onreadystatechange"
             | "ondomcontentloaded"
+            | "onvisibilitychange"
+            | "onhashchange"
+            | "onpopstate"
+            | "ononline"
+            | "onoffline"
     )
+}
+
+fn browser_load_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload" | "onpageshow" | "onreadystatechange" | "ondomcontentloaded"
+    )
+}
+
+fn browser_unload_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onunload" | "onbeforeunload" | "onpagehide")
+}
+
+fn browser_visibility_lifecycle_event(handler: &str) -> bool {
+    handler == "onvisibilitychange"
+}
+
+fn browser_history_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onhashchange" | "onpopstate")
+}
+
+fn browser_network_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "ononline" | "onoffline")
 }
 
 fn browser_error_event(handler: &str) -> bool {
@@ -23429,6 +23578,64 @@ mod tests {
         let input = &summary.event_handler_descriptors[6];
         assert_eq!(input.role.as_deref(), Some("control"));
         assert_eq!(input.form_handlers, vec!["oninput", "onchange"]);
+    }
+
+    #[test]
+    fn browser_lifecycle_event_descriptors_track_load_history_visibility_and_errors() {
+        let html = "<html onreadystatechange=ready onvisibilitychange=visible>\
+             <body onload=boot onbeforeunload=confirmExit onpagehide=hide ononline=online>\
+             <main id=app onhashchange=route onpopstate=state>App</main>\
+             <img id=hero src=hero.jpg alt=Hero onerror=fallback onabort=abortLoad>\
+             <dialog id=modal oncancel=cancelDialog>Dialog</dialog></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.lifecycle_event_descriptors.len(), 5);
+
+        let document = &summary.lifecycle_event_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.lifecycle_kind, "load");
+        assert_eq!(
+            document.lifecycle_handlers,
+            vec!["onreadystatechange", "onvisibilitychange"]
+        );
+        assert_eq!(document.load_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.visibility_handlers, vec!["onvisibilitychange"]);
+        assert_eq!(document.handler_count, 2);
+        assert!(document.document_scope);
+
+        let body = &summary.lifecycle_event_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.lifecycle_kind, "unload");
+        assert_eq!(body.unload_handlers, vec!["onbeforeunload", "onpagehide"]);
+        assert_eq!(body.network_handlers, vec!["ononline"]);
+        assert!(body.body_scope);
+
+        let main = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("app"))
+            .expect("main lifecycle descriptor");
+        assert_eq!(main.lifecycle_kind, "history");
+        assert_eq!(main.history_handlers, vec!["onhashchange", "onpopstate"]);
+        assert!(!main.error_recovery);
+
+        let image = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("image lifecycle descriptor");
+        assert_eq!(image.lifecycle_kind, "error-recovery");
+        assert_eq!(image.error_handlers, vec!["onerror", "onabort"]);
+        assert!(image.error_recovery);
+
+        let dialog = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("modal"))
+            .expect("dialog lifecycle descriptor");
+        assert_eq!(dialog.lifecycle_kind, "error-recovery");
+        assert_eq!(dialog.error_handlers, vec!["oncancel"]);
     }
 
     #[test]

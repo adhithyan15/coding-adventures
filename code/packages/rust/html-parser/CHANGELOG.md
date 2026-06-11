@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness lifecycle-event descriptors now expose document/body load
+  and unload hooks, visibility/history/network lifecycle handlers, and
+  element-level error recovery as a flat browser-planning inventory.
 - Browser-readiness composition-interaction descriptors now expose IME
   composition events, beforeinput/input hooks, text controls, editing hosts, and
   blocked composition paths as a flat browser-planning inventory.

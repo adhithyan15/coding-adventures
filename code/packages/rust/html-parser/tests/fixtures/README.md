@@ -44,6 +44,9 @@ language/type hints, download/referrer policy, and area geometry.
 Event-handler descriptor cases pin document, body, and element inline handler
 metadata as a flat inventory categorized by activation, keyboard, form, media,
 lifecycle, and error/event-recovery concerns without evaluating script text.
+Lifecycle-event descriptor cases pin document/body load and unload hooks,
+visibility/history/network lifecycle handlers, and element-level error recovery
+as a flat browser-planning inventory.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
