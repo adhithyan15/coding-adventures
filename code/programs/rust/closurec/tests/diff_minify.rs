@@ -90,6 +90,17 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-067 (CLOC14.34): a labeled SINGLE-statement block
+    // flattens — `label:{break label}` → `label:break label;`.
+    // A multi-statement labeled block keeps its braces (boundary
+    // pinned by minify_label_block_multi).
+    ("label_block_flatten", "gap-067: labeled single-statement block flatten"),
+    // gap-068 (CLOC14.34): redundant parens around a `new`
+    // callee — `new(f)()` → `new f`, `new(a.b)` → `new a.b`.
+    // (Composes with the gap-050 empty-paren drop for the call
+    // form.)
+    ("new_paren_callee", "gap-068: parens around new callee `new(f)()`"),
+    ("new_paren_member", "gap-068: parens around new member callee"),
     // gap-065 RESOLVED in CLOC12.74 — parens around a call /
     // tagged-template callee (`(f)(x)`→`f(x)`, `(a.b)(x)`→
     // `a.b(x)`) are now stripped; those three fixtures are

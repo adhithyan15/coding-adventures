@@ -518,3 +518,15 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 - `new(f)()` → upstream `new f` — parens around a `new` callee plus empty-paren drop (a paren-elision + gap-050 composition). Deferred.
 - `label:{break label}` → upstream `label:break label;` — labeled single-statement block flattening (block-flatten in a labeled-statement context). Deferred.
+
+### gap-067 — labeled single-statement block flatten
+
+- **Status:** OPEN — discovered by CLOC14.34. `minify_label_block_flatten` ignored.
+- **Input:** `label:{break label}` → **Upstream:** `label:break label;`
+- **What it needs:** When a `LabeledStatement`'s body is a `BlockStatement` containing exactly ONE statement, the braces are redundant — flatten `label:{S}` → `label:S`. A multi-statement block keeps its braces (`label:{a();break label}` stays — pinned by `minify_label_block_multi`). Same family as gap-010/032 (block flattening) but in a labeled-statement context.
+
+### gap-068 — redundant parens around a `new` callee
+
+- **Status:** OPEN — discovered by CLOC14.34. `minify_new_paren_callee` + `minify_new_paren_member` ignored.
+- **Input:** `new(f)();` → **Upstream:** `new f;` (also `new(a.b);` → `new a.b;`)
+- **What it needs:** Strip the grouping parens around the CALLEE of a `NewExpression` when the callee is a simple reference (identifier or member chain). For the call form `new(f)()` this composes with the gap-050 empty-paren drop (`new f()` → `new f`). The simple-reference / precedence caveat from gap-065 applies — an operator inner (`new(a+b)`) must keep its parens.
