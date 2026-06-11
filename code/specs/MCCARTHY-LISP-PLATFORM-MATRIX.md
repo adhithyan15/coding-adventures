@@ -292,9 +292,24 @@ F-cell(s) in the matrix above and add a row to the relevant CHANGELOG(s).
 
 ### Phase F — native AOT + JIT completion
 
-- ☐ **W14 — native AOT `LAMBDA`/`LABEL` (F7).** Finish closures/user-calls on the
-  tagged-word native backend (cons/ATOM/EQ/COND/symbols already done in L3b-2).
-  Note the macOS runtime-link gap.
+- ◑ **W14 — native AOT `LAMBDA`/`LABEL` (F7).** *In progress.* Finish closures/
+  user-calls on the tagged-word native backend (cons/ATOM/EQ/COND/symbols already
+  done in L3b-2).
+  - ✅ **W14a — close the macOS Mach-O runtime-link gap.** The native object
+    referenced the runtime helpers by their raw C name (`__twig_lispy_car`), but the
+    `cc`-built archive — Mach-O C ABI — exports them decorated (`___twig_lispy_car`),
+    so `ld` reported "Undefined symbols for architecture arm64" for **every**
+    `__twig_*` call on macOS (lisp **and** `io_out`). `code-packager` now applies the
+    leading-`_` decoration to external symbols (the ELF emitter deliberately does
+    not — that's why the gap was macOS-only and native F2–F6 "passed" on Linux CI).
+    Verified by RUNNING natively on macOS arm64: `(CAR (CONS 7 9))`→7, `(ATOM 7)`→1,
+    `(EQ 7 7)`→1, `(COND …)`→11, `(EQ (QUOTE A) (QUOTE A))`→1
+    (`lang-aot/tests/macos_native_lisp.rs`). **F2–F6 now run natively on macOS too.**
+  - ☐ **W14b — native backend `LAMBDA` (F7).** The native `aarch64-backend` still
+    refuses a lambda program (`untyped or unsupported op`): it needs the lisp
+    tagged-word typing (`any`/`ref<Lispy…>` → `i64`, as the LLVM backend does) and
+    `lispy_to_exit_code` in its `call_builtin` table. The shared IIR machinery
+    (arg boxing, result coercion) and the runtime helper already exist from W13b.
 - ☐ **W15 — JIT McCarthy core (F1–F7).** Drive McCarthy through the JIT path.
 
 ### Phase G — conformance
