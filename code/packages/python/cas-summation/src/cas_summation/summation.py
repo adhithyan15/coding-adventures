@@ -69,6 +69,7 @@ from symbolic_ir import (
 )
 
 from cas_summation.geometric_sum import geometric_sum_ir
+from cas_summation.gosper import try_gosper_sum
 from cas_summation.poly_sum import poly_sum_ir
 from cas_summation.product_eval import evaluate_product_expr
 from cas_summation.special_sums import try_special_infinite
@@ -1628,6 +1629,18 @@ def evaluate_sum(
         result = try_special_infinite(f, k, lo)
         if result is not None:
             return vm.eval(result)
+
+    # ── 5b. Gosper's algorithm for indefinite hypergeometric summation ──────
+    # Track H1.  When ``f`` is a hypergeometric term (polynomial × c^k ×
+    # GammaFunc(linear)) and the upper bound is finite, Gosper finds an
+    # antidifference ``T(k)`` with ``T(k+1) − T(k) = f(k)`` and returns
+    # ``T(hi+1) − T(lo)``.  Returns None for non-hypergeometric shapes
+    # or when no polynomial antidifference exists — both fall through
+    # to the numeric small-range path or the unevaluated SUM fallback.
+    if not inf_upper:
+        gosper_result = try_gosper_sum(f, k, lo, hi)
+        if gosper_result is not None:
+            return vm.eval(gosper_result)
 
     # ── 6. Numeric small range ──────────────────────────────────────────────
     lo_int = _ir_int_val(lo)

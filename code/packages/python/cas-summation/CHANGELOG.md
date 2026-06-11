@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.27.0 - 2026-05-29
+
+### Added
+
+- **Track H1 of `macsyma-truly-finish-plan.md`** — Gosper's algorithm
+  for indefinite hypergeometric summation in the new module
+  `cas_summation/gosper.py`.  Closes the spec's polynomial × `c^k` and
+  polynomial × factorial families in symbolic-parameter form:
+  - `sum(k*2^k, k, 1, N)` → `(N-1)*2^(N+1) + 2`
+  - `sum(k*k!, k, 0, N)`  → `(N+1)! - 1`
+- The new handler is wired into the dispatcher as a fallback *after*
+  the existing constant / geometric / Faulhaber / telescope / classic-
+  infinite paths and *before* the numeric small-range path, so all
+  earlier tests remain on their original code paths.
+- New helpers (all pure rational arithmetic via `fractions.Fraction`):
+  - Univariate polynomial GCD via Euclid's algorithm.
+  - Petkovšek shift-coprime normalisation of the ratio `a(k+1)/a(k)`.
+  - Gosper degree bound for the polynomial `x(k)` in the key
+    equation `A(k)·x(k+1) − B(k−1)·x(k) = C(k)`.
+  - Gaussian elimination over `Fraction` for the linear coefficient
+    system.
+- The transcendental factors (`c^k`, `GammaFunc(k+s)`) are reconstructed
+  symbolically and the polynomial part of the answer is GCD-cancelled
+  against `C(k)` so removable singularities at the boundary (e.g. the
+  `k!` cancellation at `k = 0`) don't surface as `0/0`.
+
+### Notes
+
+- Sums that are *not* hypergeometric (e.g. `sin(k)`, `log(k)`) cleanly
+  fall through to the unevaluated `Sum` IR — no false positives.
+- Coverage of `gosper.py` is 81%; the uncovered lines are
+  defensive branches (e.g. negative-exponent guards in the IR-to-Poly
+  bridge, the inconsistent-system path in the Gaussian solver).
+
 ## 2.26.0 - 2026-06-06
 
 ### Added
