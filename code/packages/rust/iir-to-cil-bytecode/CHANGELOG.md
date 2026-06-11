@@ -24,11 +24,17 @@ the `.il` text (`.method`/`call`), so they go through the same fail-closed
 `[A-Za-z0-9_$]` identifier whitelist (`checked_cil_ident`, which `checked_label`
 now delegates to). New unit test `malicious_function_name_is_rejected_not_injected`.
 
+The resolved entry-point name (`entry_point` or the `"main"` fallback) is computed
+**once** via `entry_name` and used for every entry comparison (the existence check,
+the `MccarthyEntry` rename, `is_entry`, the `call` callee) so the launcher's
+hardcoded `call …::MccarthyEntry()` can never dangle when `entry_point` is `None`.
+
 Verified by RUNNING on real CoreCLR (`lang-aot/tests/clr_real_lambda.rs`):
 `((LAMBDA (X) X) 5)`→5, `((LAMBDA (X) (CAR X)) (CONS 7 9))`→7,
 `((LAMBDA (X Y) (EQ X Y)) 3 3)`→1, a COND-body lambda→100, and a recursive
 `LABEL` descending CARs→7. New unit tests `lambda_emits_second_method_param_ldarg_and_call`,
-`recursive_label_calls_itself_by_name`, `call_to_unknown_function_is_rejected`.
+`recursive_label_calls_itself_by_name`, `call_to_unknown_function_is_rejected`,
+`none_entry_point_falls_back_to_main_and_names_mccarthy_entry`.
 
 ## [0.14.0] — 2026-06-11 — textual `.il`: symbols (CLR-real C4)
 

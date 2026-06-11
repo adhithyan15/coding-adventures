@@ -124,11 +124,20 @@ fn cil_local_type(type_hint: &str) -> &'static str {
     }
 }
 
+/// The resolved entry-point function name — the module's `entry_point`, or `"main"`
+/// as the fallback. Resolved **once** here and used everywhere (the early existence
+/// check, the `MccarthyEntry` rename, `is_entry`, and the `call` callee) so the
+/// launcher's hardcoded `call …::MccarthyEntry()` can never dangle on a `None`
+/// `entry_point`.
+fn entry_name(module: &IIRModule) -> &str {
+    module.entry_point.as_deref().unwrap_or("main")
+}
+
 /// The CIL return type for an IIR function. The entry returns `int32` (the printed
 /// program result); a hoisted lambda/label returns its IIR `return_type` mapped by
 /// [`cil_local_type`] (McCarthy lambdas return a lisp value → `object`).
 fn cil_ret_type(module: &IIRModule, f: &IIRFunction) -> &'static str {
-    if module.entry_point.as_deref() == Some(f.name.as_str()) {
+    if f.name == entry_name(module) {
         "int32"
     } else {
         cil_local_type(&f.return_type)
@@ -227,10 +236,10 @@ fn store_var(il: &mut String, regs: &FnRegs, name: &str) -> Result<(), IIRClrErr
 /// lambda/label as `<name>(…)`), plus the `Run()` `.entrypoint` launcher that prints
 /// `MccarthyEntry()`'s result so a runner reads it by running.
 pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRClrError> {
-    let entry_name = module.entry_point.as_deref().unwrap_or("main");
-    if !module.functions.iter().any(|f| f.name == entry_name) {
+    let entry = entry_name(module);
+    if !module.functions.iter().any(|f| f.name == entry) {
         return Err(IIRClrError::InvalidOperand {
-            function: entry_name.to_string(),
+            function: entry.to_string(),
             detail: "module has no entry-point function".to_string(),
         });
     }
@@ -279,7 +288,7 @@ fn emit_method(
     f: &IIRFunction,
     asm: &str,
 ) -> Result<(), IIRClrError> {
-    let is_entry = module.entry_point.as_deref() == Some(f.name.as_str());
+    let is_entry = f.name == entry_name(module);
     // The entry's CIL name is the fixed, safe `MccarthyEntry`; a hoisted function's
     // name is emitted verbatim, so validate it (injection guard).
     let method_name = if is_entry {
@@ -549,7 +558,7 @@ fn emit_method(
                     .map(|(_, t)| cil_local_type(t))
                     .collect();
                 // Validate the callee's emitted name (the entry's fixed name is safe).
-                let callee_method = if module.entry_point.as_deref() == Some(callee) {
+                let callee_method = if callee == entry_name(module) {
                     "MccarthyEntry".to_string()
                 } else {
                     checked_cil_ident(&f.name, callee)?.to_string()
@@ -1019,6 +1028,24 @@ mod tests {
         m.entry_point = Some("main".into());
         let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
         assert!(matches!(err, IIRClrError::InvalidOperand { .. }));
+    }
+
+    #[test]
+    fn none_entry_point_falls_back_to_main_and_names_mccarthy_entry() {
+        // With `entry_point = None`, the emitter resolves the entry to `"main"`
+        // *consistently* — `main` is renamed to `MccarthyEntry` so the launcher's
+        // hardcoded `call …::MccarthyEntry()` resolves (never dangles).
+        let instrs = vec![
+            IIRInstr::new("const", Some("v0".into()), vec![Operand::Int(42)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "mccarthy-lisp");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = None; // <- the edge case
+
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(il.contains("int32 MccarthyEntry()"), "main renamed to MccarthyEntry; got:\n{il}");
+        assert!(il.contains("call int32 MainProgram::MccarthyEntry()"), "launcher resolves");
     }
 
     #[test]
