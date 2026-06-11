@@ -1,5 +1,1 @@
-async function f() {
-  for await (let x of arr) {
-    use(x);
-  }
-}
+async function f(){for await(x of y){}}

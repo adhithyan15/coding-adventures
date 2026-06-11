@@ -500,3 +500,20 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `var z=new A(")");` → **Upstream:** `var z=new A(")");` → **closurec (was WRONG):** `var z=new A);`
 - **Severity:** **Semantic corruption producing invalid JS.** The gap-050 `new X()` → `new X` empty-paren-drop pass checks `kept[idx+1].value == ")"` at `code/programs/rust/closurec/src/whitespace_only.rs:976` **without** the `is_structural_punct` guard. A string argument whose content is `)` stores `.value == ")"` (the lexer strips delimiters), so the pass mistakes the string for the empty-arg close paren — dropping the `(` and the string, leaving a stray real `)`. Second manifestation: `new A(")").b` → `(new A)).b` (broken). Plain calls (`f(")")`) are unaffected — only the `new`-expr empty-paren path has the unguarded check.
 - **What it needs (CLOC12.73):** Change line 976 from `kept.get(idx + 1).map(|t| t.value.as_str()) == Some(")")` to `kept.get(idx + 1).map(|t| is_structural_punct(t, ")")).unwrap_or(false)`. Audit the sibling `.value == "("/")"` checks in the same region (lines ~218/324/968-971, the arrow-elision `kept[idx+2/3].value` checks at ~991-992) for the same latent bug and gate them on `is_structural_punct` too.
+
+### gap-065 — redundant parens around a call / tagged-template callee
+
+- **Status:** OPEN — discovered by CLOC14.33. `minify_paren_call_callee` + `minify_paren_member_callee` + `minify_paren_tagged_callee` ignored.
+- **Input:** `(f)(x);` → **Upstream:** `f(x);` (also `(a.b)(x)` → `a.b(x)`, `` (f)`t` `` → `` f`t` ``)
+- **What it needs:** Strip redundant parens around the CALLEE of a `CallExpression` / `TaggedTemplateExpression` when the inner expression is a *simple reference* — a bare identifier or a member-access chain (`.`/`[]`/`?.`). **Boundary (must NOT strip):** a sequence-expr callee `(a,b)(x)` keeps its parens (comma binds looser than call); any inner expression of lower precedence than the call/member would change meaning if unwrapped. Token-level: when a `(` is at an expression-callee position, its inner group is a plain reference chain, and the matching `)` is immediately followed by `(`/`` ` `` (call/tag), drop the paren pair. All bracket checks via `is_structural_punct`.
+
+### gap-066 — redundant parens after `extends`
+
+- **Status:** OPEN — discovered by CLOC14.33. `minify_class_extends_paren` ignored.
+- **Input:** `class A extends(B){}` → **Upstream:** `class A extends B{}`
+- **What it needs:** After the `extends` keyword, a parenthesized simple reference (`(B)`) is redundant — strip the parens. Same simple-reference / precedence caveat as gap-065.
+
+### Additional divergences observed by CLOC14.33 (deferred, not yet fixtured)
+
+- `new(f)()` → upstream `new f` — parens around a `new` callee plus empty-paren drop (a paren-elision + gap-050 composition). Deferred.
+- `label:{break label}` → upstream `label:break label;` — labeled single-statement block flattening (block-flatten in a labeled-statement context). Deferred.
