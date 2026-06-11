@@ -21,12 +21,15 @@
 
 use logic_core::{atom as core_atom, compound, float as core_float, Term as CoreTerm};
 use logic_engine::{
-    CmpOp as EngineCmpOp, ContributionClause, Fact, JointContributionClause, KbError,
-    KnowledgeBase, PredicateContributionClause, PriorClause, Provenance, TrustTier,
-    UncertaintyMarker,
+    compute, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
+    JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
+    Provenance, TrustTier, UncertaintyMarker,
 };
 
-use crate::ast::{Annotation, CmpOp, Evidence, Program, Statement, Term as AstTerm, TrustTierName};
+use crate::ast::{
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, Statement, Term as AstTerm,
+    TrustTierName,
+};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum LowerError {
@@ -52,6 +55,13 @@ pub enum LowerError {
     /// rather than panicking in `from_lr`.
     InvalidLikelihoodRatio {
         value: f64,
+    },
+    /// A `let <name> = <expr>` whose formula could not be evaluated (an
+    /// unknown slot, division by zero, an empty aggregation, …). Carries
+    /// the engine's [`logic_engine::ComputeError`] rendered for the audit.
+    ComputationFailed {
+        name: String,
+        detail: String,
     },
 }
 
@@ -145,6 +155,20 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             Statement::Query { conclusion } => {
                 queries.push(lower_term(conclusion));
             }
+            Statement::Let { name, expr } => {
+                // Evaluate the formula against the facts (and any earlier
+                // `let`s) seen so far — statements lower in source order, so a
+                // `let` sees every `observe` above it. The engine builds the
+                // derivation tree; the model never computed anything.
+                let cexpr = lower_expr(expr);
+                let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
+                    LowerError::ComputationFailed {
+                        name: name.clone(),
+                        detail: format!("{e:?}"),
+                    }
+                })?;
+                kb.add_derived(derived);
+            }
             Statement::Uncertain {
                 domain,
                 conclusion,
@@ -182,6 +206,39 @@ fn lower_term(t: &AstTerm) -> CoreTerm {
         AstTerm::Compound { functor, args } => {
             compound(functor, args.iter().map(lower_term).collect())
         }
+    }
+}
+
+/// Lower a surface `let` formula to the engine's [`ComputeExpr`].
+fn lower_expr(expr: &ExprAst) -> ComputeExpr {
+    match expr {
+        ExprAst::Ref(slot) => ComputeExpr::Ref(slot.clone()),
+        ExprAst::Lit(x) => ComputeExpr::Lit(*x),
+        ExprAst::Bin(op, a, b) => ComputeExpr::Bin(
+            lower_arith_op(*op),
+            Box::new(lower_expr(a)),
+            Box::new(lower_expr(b)),
+        ),
+        ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+    }
+}
+
+fn lower_arith_op(op: ArithOp) -> ComputeOp {
+    match op {
+        ArithOp::Add => ComputeOp::Add,
+        ArithOp::Sub => ComputeOp::Sub,
+        ArithOp::Mul => ComputeOp::Mul,
+        ArithOp::Div => ComputeOp::Div,
+    }
+}
+
+fn lower_agg_op(op: AggOp) -> ComputeOp {
+    match op {
+        AggOp::Sum => ComputeOp::Sum,
+        AggOp::Count => ComputeOp::Count,
+        AggOp::Min => ComputeOp::Min,
+        AggOp::Max => ComputeOp::Max,
+        AggOp::Avg => ComputeOp::Avg,
     }
 }
 
@@ -538,5 +595,99 @@ mod tests {
         let lowered = compile(src).unwrap();
         let contribs = lowered.kb.contributions_for(&core_atom("y"));
         assert_eq!(contribs[0].provenance.locator.as_deref(), Some("§3.2"));
+    }
+
+    // ---- `let` + arithmetic (ADJ expansion step 3b) ----
+
+    #[test]
+    fn let_arithmetic_computes_a_ratio_with_a_cited_tree() {
+        let src = r#"
+            observe csf_glucose(quantity(40, mg_dl))
+            observe serum_glucose(quantity(100, mg_dl))
+            let csf_ratio = csf_glucose / serum_glucose
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("csf_ratio")
+            .expect("csf_ratio should be bound");
+        assert!((d.value - 0.4).abs() < 1e-12, "got {}", d.value);
+    }
+
+    #[test]
+    fn let_derived_value_fires_a_predicate_end_to_end() {
+        // The whole point: a predicate fires over a COMPUTED value exactly
+        // as over an observed one. Low CSF:serum ratio ⇒ bacterial.
+        let src = r#"
+            prior 0.30 for bacterial
+            observe csf_glucose(40)
+            observe serum_glucose(100)
+            let csf_ratio = csf_glucose / serum_glucose
+            contributes 1000000 from csf_ratio <= 0.5 to bacterial
+              source "Spanos 1989" trust authoritative
+            ? bacterial
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(
+                    posterior > 0.9999,
+                    "predicate over derived value should fire; got {posterior}"
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn let_sum_aggregates_repeated_observations() {
+        let src = r#"
+            observe line_item(12000)
+            observe line_item(6000)
+            observe line_item(2000)
+            let total = sum(line_item)
+        "#;
+        let lowered = compile(src).unwrap();
+        assert!((lowered.kb.derived_for("total").unwrap().value - 20000.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn let_respects_operator_precedence_and_parens() {
+        // a + b * c  ==  a + (b*c);  (a + b) * c  forces the other grouping.
+        let src = r#"
+            observe a(2)
+            observe b(3)
+            observe c(4)
+            let unparen = a + b * c
+            let paren = (a + b) * c
+        "#;
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.kb.derived_for("unparen").unwrap().value, 14.0); // 2 + 12
+        assert_eq!(lowered.kb.derived_for("paren").unwrap().value, 20.0); //  5 * 4
+    }
+
+    #[test]
+    fn let_can_reference_an_earlier_let() {
+        let src = r#"
+            observe a(3)
+            observe b(4)
+            let s = a + b
+            let d = s * 2
+        "#;
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.kb.derived_for("d").unwrap().value, 14.0);
+    }
+
+    #[test]
+    fn let_over_unknown_slot_is_a_clean_error() {
+        let err = compile("let x = nope / 2").unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::ComputationFailed { .. })
+            ),
+            "got {err:?}"
+        );
     }
 }

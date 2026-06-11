@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.6.0] - 2026-06-11 — `let` + arithmetic (computed values, ADJ expansion step 3b)
+
+### Added
+
+- **`let <name> = <expr>`** — bind a value the engine **computes** on the CPU
+  from a formula the model writes. `<expr>` supports `+ - * /` with standard
+  precedence and parentheses, references to observed slots and earlier `let`s,
+  numeric literals, and aggregations `sum/count/min/max/avg(slot)` over every
+  observation of a slot. The lowerer evaluates the formula via
+  `logic_engine::compute` against the facts seen so far and binds the resulting
+  `Derived` (with its derivation tree) into the KB — so a **predicate fires
+  over a computed value exactly as over an observed one**
+  (`from csf_ratio <= 0.4 to bacterial`). The model never does the arithmetic.
+- New AST: `Statement::Let { name, expr }`, `ExprAst` (`Ref/Lit/Bin/Agg`),
+  `ArithOp`, `AggOp`. New `LowerError::ComputationFailed` (unknown slot,
+  division by zero, empty aggregation, … surfaced cleanly, never a panic).
+
+### Grammar
+
+- `.tokens`: added `PLUS - * / =` (`EQUALS`). Two ordering disciplines:
+  `EQUALS` after `EQEQ` (so `==` wins maximal munch), and the arithmetic
+  operators after `NUMBER` so a negative literal `-5` still lexes as one
+  `NUMBER(-5)` — a binary `-` only matches a `-` not glued to a digit, so a
+  `let` formula must **space its operators** (`a - 5`, `total - discount`).
+- `.grammar`: `let_decl` + the `expr` / `term_expr` / `factor` / `agg`
+  precedence cascade. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
 ## [0.5.0] - 2026-06-10 — predicate evidence + valued facts
 
 ### Added

@@ -25,6 +25,7 @@ statement   = prior_decl
             | uncertain_decl
             | observe_decl
             | query_decl
+            | let_decl
             ;
 
 # ----------------------------------------------------------------
@@ -55,6 +56,28 @@ uncertain_decl   = "uncertain" LBRACE term { COMMA term } RBRACE "for" term { an
 observe_decl     = "observe" term ;
 
 query_decl       = QUESTION term ;
+
+# ----------------------------------------------------------------
+# `let <name> = <expr>` — a COMPUTED value (ADJ expansion step 3).
+# The model writes only the formula; the engine evaluates it on the
+# CPU into a derivation tree (see logic-engine `compute`). A derived
+# value is then usable in any predicate exactly like an observed slot.
+#
+# Standard precedence cascade: `expr` (+, -) is looser than
+# `term_expr` (*, /), which is looser than `factor` (atom / paren /
+# aggregation). Left-associativity falls out of the `{ }` repetition.
+# Aggregations reduce every observation of a slot.
+# ----------------------------------------------------------------
+
+let_decl  = "let" IDENT EQUALS expr ;
+
+expr      = term_expr { ( PLUS | MINUS ) term_expr } ;
+
+term_expr = factor { ( STAR | SLASH ) factor } ;
+
+factor    = agg | NUMBER | IDENT | LPAREN expr RPAREN ;
+
+agg       = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the
