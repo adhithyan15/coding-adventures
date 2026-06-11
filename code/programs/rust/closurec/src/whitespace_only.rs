@@ -973,7 +973,22 @@ pub fn whitespace_only_minify(
             && idx >= 2
             && kept[idx - 2].value == "new"
             && is_simple_identifier_token(Some(kept[idx - 1]))
-            && kept.get(idx + 1).map(|t| t.value.as_str()) == Some(")")
+            // gap-064: the close-paren check MUST go through
+            // `is_structural_punct`, not a bare `.value == ")"`.
+            // A string/regex/template literal stores its CONTENT
+            // in `.value` (delimiters stripped), so a one-char
+            // string `")"` has `.value == ")"`. Without this
+            // guard `new A(")")` (a NON-empty arg list whose sole
+            // arg is the string `")"`) was misread as the empty
+            // arg list `new A()`, dropping the `(` and the string
+            // and leaving a stray real `)` — `new A);` (mangled,
+            // invalid JS). `is_structural_punct` matches only a
+            // genuine `)` punctuator token, so a string argument
+            // can never trigger the empty-paren elision.
+            && kept
+                .get(idx + 1)
+                .map(|t| is_structural_punct(t, ")"))
+                .unwrap_or(false)
             && !next2_blocks_drop
         {
             // Skip both `(` and `)`. State machine
@@ -3788,6 +3803,34 @@ mod tests {
     #[test]
     fn gap060_member_callee_standalone_unchanged() {
         assert_eq!(minify("var x=new a.b.C();"), "var x=new a.b.C();");
+    }
+
+    /// gap-064 (CORRECTNESS): a string argument whose content is
+    /// `)` must NOT be mistaken for the empty-arg close paren.
+    /// `new A(")")` keeps its string arg (was mangled to
+    /// `new A);` before the `is_structural_punct` guard).
+    #[test]
+    fn gap064_string_paren_arg_not_dropped() {
+        assert_eq!(minify("var z=new A(\")\");"), "var z=new A(\")\");");
+    }
+
+    /// gap-064: same string-`)` arg under the arg-bearing member
+    /// wrap — `new A(")").b` → `(new A(")")).b`, not `(new A)).b`.
+    #[test]
+    fn gap064_string_paren_arg_member_wrap() {
+        assert_eq!(
+            minify("var z=new A(\")\").b;"),
+            "var z=(new A(\")\")).b;"
+        );
+    }
+
+    /// gap-064 non-regression: the genuine empty-paren drop still
+    /// fires (`new A()` → `new A`), and a real non-empty arg
+    /// (`new A(x)`) is preserved.
+    #[test]
+    fn gap064_genuine_empty_paren_still_drops() {
+        assert_eq!(minify("var z=new A();"), "var z=new A;");
+        assert_eq!(minify("var z=new A(x);"), "var z=new A(x);");
     }
 
     /// gap-059: `new Foo()[0]` → `(new Foo)[0]` (computed
