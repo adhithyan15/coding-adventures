@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "adj-lang",
     "adj-lang-cli",
+    "adj-constraint-solver",
     "aarch64-backend",
     "aarch64-encoder",
     "x86_64-encoder",
