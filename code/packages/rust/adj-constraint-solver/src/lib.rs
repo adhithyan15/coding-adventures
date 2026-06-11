@@ -20,8 +20,10 @@
 //! infeasibility (UNSAT-core) certificate. A system this slice can't handle
 //! returns [`SolveOutcome::Unsupported`] with a reason, never a wrong answer.
 
+use std::collections::HashSet;
+
 use adj_lang::{ConstraintSystem, RelOp};
-use logic_engine::{ComputeExpr, ComputeOp};
+use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
 /// What solving a [`ConstraintSystem`] produced.
@@ -43,9 +45,15 @@ pub enum SolveOutcome {
     Unsupported { reason: String },
 }
 
-/// Solve a [`ConstraintSystem`]'s linear-equality core. See the module docs for
-/// scope. Pure and deterministic.
-pub fn solve(cs: &ConstraintSystem) -> SolveOutcome {
+/// Solve a [`ConstraintSystem`]'s linear-equality core against the program's
+/// observed facts. See the module docs for scope. Pure and deterministic.
+///
+/// A constraint reference that is **not** one of the unknowns but **is** an
+/// observed fact (`observe base_rate(1200)`) is substituted by its value, so a
+/// mixed program — `symbol p; constrain p = base_rate + 300; solve for {p}` —
+/// solves (`p = 1500`). A reference that is neither an unknown nor observed is
+/// left as a free variable (which typically makes the system singular).
+pub fn solve(cs: &ConstraintSystem, kb: &KnowledgeBase) -> SolveOutcome {
     // The unknowns: the `solve for { … }` targets, or (failing that) every
     // declared `symbol`. Order is the column order of the linear system.
     let variables: Vec<String> = if !cs.solve_for.is_empty() {
@@ -56,6 +64,7 @@ pub fn solve(cs: &ConstraintSystem) -> SolveOutcome {
     if variables.is_empty() {
         return unsupported("no symbols / solve-for targets to solve for");
     }
+    let var_set: HashSet<&str> = variables.iter().map(String::as_str).collect();
 
     // This slice solves pure-equality systems. Any inequality means the
     // problem is feasibility/optimization, not a linear solve — defer it.
@@ -63,12 +72,15 @@ pub fn solve(cs: &ConstraintSystem) -> SolveOutcome {
         return unsupported("inequality constraints — feasibility/LP is track C1/C2");
     }
 
-    // Translate each `lhs = rhs` into a symbolic-ir Equal equation. A
-    // non-linear term (symbol×symbol, division by a symbol, an aggregation)
-    // makes the translation fail → Unsupported.
+    // Translate each `lhs = rhs` into a symbolic-ir Equal equation, first
+    // substituting observed-fact references by their values. A non-linear term
+    // (symbol×symbol, division by a symbol, an aggregation) makes the
+    // translation fail → Unsupported.
     let mut equations = Vec::with_capacity(cs.constraints.len());
     for c in &cs.constraints {
-        let (Some(lhs), Some(rhs)) = (expr_to_ir(&c.lhs), expr_to_ir(&c.rhs)) else {
+        let lhs_s = substitute_observed(&c.lhs, &var_set, kb);
+        let rhs_s = substitute_observed(&c.rhs, &var_set, kb);
+        let (Some(lhs), Some(rhs)) = (expr_to_ir(&lhs_s), expr_to_ir(&rhs_s)) else {
             return unsupported("a constraint is non-linear or uses an unsupported term");
         };
         equations.push(apply(sym(EQUAL), vec![lhs, rhs]));
@@ -102,6 +114,34 @@ pub fn solve(cs: &ConstraintSystem) -> SolveOutcome {
 fn unsupported(reason: &str) -> SolveOutcome {
     SolveOutcome::Unsupported {
         reason: reason.to_string(),
+    }
+}
+
+/// Rewrite a constraint expression, replacing each reference that is **not** an
+/// unknown but **is** an observed fact with its value as a literal. Unknowns
+/// (the solve-for variables) and unobserved references are left as-is.
+fn substitute_observed(
+    e: &ComputeExpr,
+    variables: &HashSet<&str>,
+    kb: &KnowledgeBase,
+) -> ComputeExpr {
+    match e {
+        ComputeExpr::Ref(name) => {
+            if variables.contains(name.as_str()) {
+                e.clone() // an unknown we are solving for — keep it symbolic
+            } else if let Some(v) = kb.observed_value(name) {
+                ComputeExpr::Lit(v) // a known observed fact — substitute its value
+            } else {
+                e.clone() // neither — a free reference (likely makes it singular)
+            }
+        }
+        ComputeExpr::Lit(_) => e.clone(),
+        ComputeExpr::Bin(op, a, b) => ComputeExpr::Bin(
+            *op,
+            Box::new(substitute_observed(a, variables, kb)),
+            Box::new(substitute_observed(b, variables, kb)),
+        ),
+        ComputeExpr::Agg(_, _) => e.clone(),
     }
 }
 
@@ -224,7 +264,8 @@ mod tests {
     use adj_lang::compile;
 
     fn solve_src(src: &str) -> SolveOutcome {
-        solve(&compile(src).unwrap().constraints)
+        let lowered = compile(src).unwrap();
+        solve(&lowered.constraints, &lowered.kb)
     }
 
     #[test]
@@ -274,6 +315,42 @@ mod tests {
         match out {
             SolveOutcome::Solved { assignments, .. } => {
                 assert!((assignments[0].1 - 92.0).abs() < 1e-6, "{assignments:?}");
+            }
+            other => panic!("expected Solved, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn substitutes_observed_facts_into_a_constraint() {
+        // base_rate is observed (1200), not an unknown → substituted as a
+        // constant, so premium = 1200 + 300 = 1500.
+        let out = solve_src(
+            "symbol premium : money(usd)\n\
+             observe base_rate(1200)\n\
+             constrain premium = base_rate + 300\n\
+             solve for { premium }\n",
+        );
+        match out {
+            SolveOutcome::Solved { assignments, .. } => {
+                assert!((assignments[0].1 - 1500.0).abs() < 1e-9, "{assignments:?}");
+            }
+            other => panic!("expected Solved, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn observed_coefficient_keeps_the_system_linear() {
+        // rate observed (3) → cost = p * 3 - ... wait, p * rate is symbol×const
+        // after substitution, still linear. p * 3 = 1500 → p = 500.
+        let out = solve_src(
+            "symbol p : scalar\n\
+             observe rate(3)\n\
+             constrain p * rate = 1500\n\
+             solve for { p }\n",
+        );
+        match out {
+            SolveOutcome::Solved { assignments, .. } => {
+                assert!((assignments[0].1 - 500.0).abs() < 1e-9, "{assignments:?}");
             }
             other => panic!("expected Solved, got {other:?}"),
         }
