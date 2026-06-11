@@ -42,7 +42,8 @@ use smart_home_integration_catalog::{
     activation_maintenance_from_candidates, activation_plan_for_entry,
     activation_plans_at_or_before_priority, activation_readouts_from_candidates,
     activation_reviews_from_candidates, activation_risk_from_candidates,
-    activation_runway_from_candidates, describe_primitive_family, ecosystem_platform_coverage,
+    activation_runway_from_candidates, activation_timeline_milestones_from_dashboard_cards,
+    describe_primitive_family, ecosystem_platform_coverage,
     ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
     find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
     primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
@@ -74,7 +75,8 @@ use smart_home_integration_catalog::{
     IntegrationActivationReviewSummary, IntegrationActivationRiskItem,
     IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
     IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
-    IntegrationActivationTarget, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationActivationTarget, IntegrationActivationTimelineMilestone,
+    IntegrationActivationTimelineSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
     IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
     IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
     IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
@@ -242,6 +244,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_DASHBOARD_TOOL_ID: &str =
     "smart_home.list_integration_activation_dashboard";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_dashboard_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID: &str =
+    "smart_home.list_integration_activation_timeline";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_timeline_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -508,6 +514,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID => {
                     let query = integration_activation_dashboard_query(&arguments)?;
                     Ok(get_integration_activation_dashboard_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID => {
+                    let query = integration_activation_timeline_query(&arguments)?;
+                    Ok(list_integration_activation_timeline_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_timeline_query(&arguments)?;
+                    Ok(get_integration_activation_timeline_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -1740,6 +1756,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation dashboard summary",
             "Return compact D23A activation dashboard counts across priority-wave cards, briefing sections, actions, risk, and blockers.",
             integration_activation_dashboard_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID,
+            "List smart-home integration activation timeline",
+            "List Chief-ready D23A activation timeline milestones ordered from priority-wave dashboard cards.",
+            integration_activation_timeline_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_timeline", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_timeline", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation timeline summary",
+            "Return compact D23A activation timeline counts across ordered milestones, priority waves, blockers, approvals, and activation work.",
+            integration_activation_timeline_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4401,6 +4446,13 @@ struct IntegrationActivationDashboardQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationTimelineQuery {
+    dashboard: IntegrationActivationDashboardQuery,
+    milestone_kind: Option<IntegrationActivationBriefingItemKind>,
+    milestone_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -4677,6 +4729,21 @@ fn integration_activation_dashboard_query(
     Ok(IntegrationActivationDashboardQuery {
         readouts: integration_activation_readout_query(arguments)?,
         card_limit: optional_u64(arguments, "card_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_timeline_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationTimelineQuery, ToolCallError> {
+    let milestone_kind = optional_string(arguments, "milestone_kind")?
+        .or(optional_string(arguments, "timeline_kind")?)
+        .map(|label| parse_activation_briefing_item_kind(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationTimelineQuery {
+        dashboard: integration_activation_dashboard_query(arguments)?,
+        milestone_kind,
+        milestone_limit: optional_u64(arguments, "milestone_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5245,6 +5312,22 @@ fn integration_activation_dashboard_cards_for_query(
     }
 
     (cards, catalog_count)
+}
+
+fn integration_activation_timeline_milestones_for_query(
+    query: &IntegrationActivationTimelineQuery,
+) -> (Vec<IntegrationActivationTimelineMilestone>, usize) {
+    let (cards, catalog_count) = integration_activation_dashboard_cards_for_query(&query.dashboard);
+    let mut milestones = activation_timeline_milestones_from_dashboard_cards(cards);
+
+    if let Some(milestone_kind) = query.milestone_kind {
+        milestones.retain(|milestone| milestone.milestone_kind == Some(milestone_kind));
+    }
+    if let Some(limit) = query.milestone_limit {
+        milestones.truncate(limit);
+    }
+
+    (milestones, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -6644,6 +6727,77 @@ fn get_integration_activation_dashboard_summary_output_handler_output(
             (
                 "cards_with_blockers",
                 integer(summary.cards_with_blockers as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_timeline_output_handler_output(
+    query: IntegrationActivationTimelineQuery,
+) -> ToolHandlerOutput {
+    let (milestones, catalog_count) = integration_activation_timeline_milestones_for_query(&query);
+    let summary = IntegrationActivationTimelineSummary::from_milestones(milestones.iter());
+    let count = milestones.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_timeline",
+            JsonValue::Array(
+                milestones
+                    .iter()
+                    .map(activation_timeline_milestone_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_timeline_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_timeline")),
+            ("activation_timeline_milestones", integer(count as i64)),
+            (
+                "milestones_requiring_attention",
+                integer(summary.milestones_requiring_attention as i64),
+            ),
+            (
+                "milestones_with_blockers",
+                integer(summary.milestones_with_blockers as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_timeline_summary_output_handler_output(
+    query: IntegrationActivationTimelineQuery,
+) -> ToolHandlerOutput {
+    let (milestones, _) = integration_activation_timeline_milestones_for_query(&query);
+    let summary = IntegrationActivationTimelineSummary::from_milestones(milestones.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_timeline_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_timeline_summary"),
+            ),
+            ("total_milestones", integer(summary.total_milestones as i64)),
+            (
+                "milestones_requiring_attention",
+                integer(summary.milestones_requiring_attention as i64),
+            ),
+            (
+                "milestones_with_blockers",
+                integer(summary.milestones_with_blockers as i64),
             ),
         ]),
     )
@@ -12047,6 +12201,265 @@ fn integration_activation_dashboard_summary_json(
     ])
 }
 
+fn activation_timeline_milestone_json(
+    milestone: &IntegrationActivationTimelineMilestone,
+) -> JsonValue {
+    object([
+        ("sequence", integer(milestone.sequence as i64)),
+        ("priority", integer(milestone.priority as i64)),
+        (
+            "milestone_kind",
+            milestone
+                .milestone_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dashboard_card",
+            activation_dashboard_card_json(&milestone.dashboard_card),
+        ),
+        (
+            "integration_count",
+            integer(milestone.integration_count() as i64),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(milestone.has_activation_work()),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(milestone.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(milestone.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(milestone.has_blockers())),
+        ("has_risks", JsonValue::Bool(milestone.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(milestone.has_dependency_blockers()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(milestone.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_timeline_summary_json(
+    summary: &IntegrationActivationTimelineSummary,
+) -> JsonValue {
+    object([
+        ("total_milestones", integer(summary.total_milestones as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        ("ready_milestones", integer(summary.ready_milestones as i64)),
+        (
+            "review_milestones",
+            integer(summary.review_milestones as i64),
+        ),
+        (
+            "blocked_milestones",
+            integer(summary.blocked_milestones as i64),
+        ),
+        ("empty_milestones", integer(summary.empty_milestones as i64)),
+        (
+            "blocker_milestones",
+            integer(summary.blocker_milestones as i64),
+        ),
+        (
+            "review_queue_milestones",
+            integer(summary.review_queue_milestones as i64),
+        ),
+        (
+            "approval_milestones",
+            integer(summary.approval_milestones as i64),
+        ),
+        (
+            "activation_milestones",
+            integer(summary.activation_milestones as i64),
+        ),
+        ("risk_milestones", integer(summary.risk_milestones as i64)),
+        (
+            "dependency_milestones",
+            integer(summary.dependency_milestones as i64),
+        ),
+        (
+            "milestones_requiring_attention",
+            integer(summary.milestones_requiring_attention as i64),
+        ),
+        (
+            "milestones_with_activation_work",
+            integer(summary.milestones_with_activation_work as i64),
+        ),
+        (
+            "milestones_with_approval_work",
+            integer(summary.milestones_with_approval_work as i64),
+        ),
+        (
+            "milestones_with_review_work",
+            integer(summary.milestones_with_review_work as i64),
+        ),
+        (
+            "milestones_with_blockers",
+            integer(summary.milestones_with_blockers as i64),
+        ),
+        (
+            "milestones_with_risks",
+            integer(summary.milestones_with_risks as i64),
+        ),
+        (
+            "milestones_with_dependency_blockers",
+            integer(summary.milestones_with_dependency_blockers as i64),
+        ),
+        (
+            "total_briefing_items",
+            integer(summary.total_briefing_items as i64),
+        ),
+        ("total_actions", integer(summary.total_actions as i64)),
+        ("total_dossiers", integer(summary.total_dossiers as i64)),
+        ("total_evidence", integer(summary.total_evidence as i64)),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "first_activation_sequence",
+            summary
+                .first_activation_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_sequence",
+            summary
+                .first_approval_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_sequence",
+            summary
+                .first_review_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_sequence",
+            summary
+                .first_blocked_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_risk_sequence",
+            summary
+                .first_risk_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_sequence",
+            summary
+                .first_dependency_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_sequence",
+            summary
+                .first_attention_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_priority",
+            summary
+                .first_activation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_priority",
+            summary
+                .first_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_risk_priority",
+            summary
+                .first_risk_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_priority",
+            summary
+                .first_dependency_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        (
+            "has_approval_ready_work",
+            JsonValue::Bool(summary.has_approval_ready_work()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        ("has_risks", JsonValue::Bool(summary.has_risks())),
+        (
+            "has_dependency_blockers",
+            JsonValue::Bool(summary.has_dependency_blockers()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -15660,6 +16073,21 @@ fn integration_activation_dashboard_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_timeline_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_dashboard_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("milestone_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("timeline_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("milestone_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -15804,7 +16232,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 91);
+        assert_eq!(definitions.len(), 93);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -16045,9 +16473,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            83
+            85
         );
         assert_eq!(
             export
@@ -16223,6 +16657,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_DASHBOARD_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -16477,11 +16919,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(91))
+            Some(&integer(93))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(83))
+            Some(&integer(85))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -18671,6 +19113,140 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_timeline_request = request(
+            "call-list-integration-activation-timeline",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_TIMELINE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("requires_attention", JsonValue::Bool(true)),
+                ("milestone_limit", integer(3)),
+            ]),
+            5_025,
+        );
+        let list_activation_timeline_trace =
+            tool_runtime.invoke_with_events(&list_activation_timeline_request);
+        assert!(list_activation_timeline_trace.result.ok);
+        assert_eq!(
+            list_activation_timeline_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_timeline_output = list_activation_timeline_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_timeline_count =
+            integer_value(field(list_activation_timeline_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_timeline_count));
+        let activation_timeline_summary =
+            field(list_activation_timeline_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_timeline_summary, "total_milestones"),
+            Some(&integer(activation_timeline_count))
+        );
+        assert_eq!(
+            field(activation_timeline_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(
+            integer_value(
+                field(
+                    activation_timeline_summary,
+                    "milestones_requiring_attention"
+                )
+                .unwrap(),
+            )
+            .unwrap()
+                >= 1
+        );
+        let activation_timeline_milestone = array_item(
+            field(list_activation_timeline_output, "activation_timeline").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_timeline_milestone, "sequence").is_some());
+        assert!(field(activation_timeline_milestone, "priority").is_some());
+        assert!(field(activation_timeline_milestone, "milestone_kind").is_some());
+        assert!(field(activation_timeline_milestone, "dashboard_card").is_some());
+        assert!(field(activation_timeline_milestone, "integration_count").is_some());
+        assert_eq!(
+            field(activation_timeline_milestone, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_timeline_summary_request = request(
+            "call-integration-activation-timeline-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_TIMELINE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("milestone_kind", string("blocker")),
+            ]),
+            5_026,
+        );
+        let activation_timeline_summary_trace =
+            tool_runtime.invoke_with_events(&activation_timeline_summary_request);
+        assert!(activation_timeline_summary_trace.result.ok);
+        assert_eq!(
+            activation_timeline_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_timeline_summary_output = activation_timeline_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_timeline_rollup =
+            field(activation_timeline_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_timeline_rollup, "blocker_milestones").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_timeline_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_timeline_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -20410,6 +20986,14 @@ mod tests {
             activation_dashboard_summary_request,
             activation_dashboard_summary_trace,
         );
+        journal.record_trace(
+            list_activation_timeline_request,
+            list_activation_timeline_trace,
+        );
+        journal.record_trace(
+            activation_timeline_summary_request,
+            activation_timeline_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -20483,9 +21067,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 91);
-        assert_eq!(journal_summary.completed_count, 91);
-        assert_eq!(journal.audit_records().len(), 91);
+        assert_eq!(journal_summary.invocation_count, 93);
+        assert_eq!(journal_summary.completed_count, 93);
+        assert_eq!(journal.audit_records().len(), 93);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
