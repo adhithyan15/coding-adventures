@@ -413,6 +413,12 @@ struct ExpectedDataAttributeDescriptor {
     #[serde(default)]
     data_attributes: Vec<ExpectedDataAttribute>,
     #[serde(default)]
+    data_attribute_names: Vec<String>,
+    #[serde(default)]
+    data_attribute_count: usize,
+    #[serde(default)]
+    json_data_attribute_names: Vec<String>,
+    #[serde(default)]
     text: String,
 }
 
@@ -451,6 +457,16 @@ struct ExpectedGlobalStateDescriptor {
     spellcheck: Option<String>,
     #[serde(default)]
     translate: Option<String>,
+    #[serde(default)]
+    global_attribute_names: Vec<String>,
+    #[serde(default)]
+    global_attribute_count: usize,
+    #[serde(default)]
+    focus_navigation_hint: bool,
+    #[serde(default)]
+    global_state_blocked: bool,
+    #[serde(default)]
+    global_state_block_reasons: Vec<String>,
     #[serde(default)]
     text: String,
 }
@@ -5672,6 +5688,51 @@ fn browser_global_state_descriptor_metadata_tracks_non_form_global_states() {
 }
 
 #[test]
+fn browser_global_state_descriptors_track_attributes_focus_and_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <section id=panel hidden inert tabindex=-1 accesskey="p ?" autofocus>Panel</section>
+            <div id=editor title="Draft" contenteditable spellcheck=false translate=no draggable=true>Copy</div>
+        </body>"#,
+    )
+    .expect("global state descriptor fixture should parse");
+
+    let panel = actual
+        .global_state_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("panel"))
+        .expect("panel descriptor should be present");
+    assert_eq!(
+        panel.global_attribute_names,
+        vec!["hidden", "inert", "tabindex", "accesskey", "autofocus"]
+    );
+    assert_eq!(panel.global_attribute_count, 5);
+    assert!(panel.focus_navigation_hint);
+    assert!(panel.global_state_blocked);
+    assert_eq!(panel.global_state_block_reasons, vec!["hidden", "inert"]);
+
+    let editor = actual
+        .global_state_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+        .expect("editor descriptor should be present");
+    assert_eq!(
+        editor.global_attribute_names,
+        vec![
+            "title",
+            "contenteditable",
+            "draggable",
+            "spellcheck",
+            "translate",
+        ]
+    );
+    assert_eq!(editor.global_attribute_count, 5);
+    assert!(!editor.focus_navigation_hint);
+    assert!(!editor.global_state_blocked);
+    assert!(editor.global_state_block_reasons.is_empty());
+}
+
+#[test]
 fn browser_accessible_description_metadata_tracks_describedby_text() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5840,6 +5901,41 @@ fn browser_data_attribute_descriptor_metadata_tracks_custom_and_standard_element
             .data_attribute_descriptors,
         "data attribute descriptors should preserve custom element, slot, part, and visible-text context for all data-* carriers",
     );
+}
+
+#[test]
+fn browser_data_attribute_descriptors_track_names_counts_and_json_hints() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=card data-controller=dashboard data-options='{"compact":true}' data-empty>Alpha</div>
+            <x-chart data-series='[1,2]' data-state=ready></x-chart>
+        </body>"#,
+    )
+    .expect("data attribute descriptor fixture should parse");
+
+    let card = actual
+        .data_attribute_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("card"))
+        .expect("card descriptor should be present");
+    assert_eq!(
+        card.data_attribute_names,
+        vec!["data-controller", "data-options", "data-empty"]
+    );
+    assert_eq!(card.data_attribute_count, 3);
+    assert_eq!(card.json_data_attribute_names, vec!["data-options"]);
+
+    let chart = actual
+        .data_attribute_descriptors
+        .iter()
+        .find(|descriptor| descriptor.element == "x-chart")
+        .expect("custom chart descriptor should be present");
+    assert_eq!(
+        chart.data_attribute_names,
+        vec!["data-series", "data-state"]
+    );
+    assert_eq!(chart.data_attribute_count, 2);
+    assert_eq!(chart.json_data_attribute_names, vec!["data-series"]);
 }
 
 #[test]
@@ -6749,6 +6845,9 @@ impl ExpectedDataAttributeDescriptor {
                 .into_iter()
                 .map(ExpectedDataAttribute::into_browser_data_attribute)
                 .collect(),
+            data_attribute_names: self.data_attribute_names,
+            data_attribute_count: self.data_attribute_count,
+            json_data_attribute_names: self.json_data_attribute_names,
             text: self.text,
         }
     }
@@ -6774,6 +6873,11 @@ impl ExpectedGlobalStateDescriptor {
             draggable_state: self.draggable_state,
             spellcheck: self.spellcheck,
             translate: self.translate,
+            global_attribute_names: self.global_attribute_names,
+            global_attribute_count: self.global_attribute_count,
+            focus_navigation_hint: self.focus_navigation_hint,
+            global_state_blocked: self.global_state_blocked,
+            global_state_block_reasons: self.global_state_block_reasons,
             text: self.text,
         }
     }
