@@ -133,19 +133,20 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
-    // On LLVM (LM-L Brainfuck), `lower_brainfuck_for_aot` widens the BF cell/ptr
-    // registers to `i64` (byte width survives only at the tape boundary) and
-    // `iir-to-llvm` (v0.9.0) grew the tape ops: `alloc_bytes`→`@calloc`,
-    // `load_byte`→`getelementptr i8`+`load`+`zext`, `store_byte`→`trunc`+`store`,
-    // and `putchar`/`getchar`→ libc. `run_llvm` runs the program and compares the
-    // captured stdout (`A`) — `putchar` writes straight to libc stdout, so no
-    // print-runtime shim is linked (unlike BASIC's `@__print_i64`).
+    // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
+    // survives only at the tape boundary) for every code-gen backend. On LLVM (LM-L)
+    // `iir-to-llvm` (v0.9.0) lowers the tape ops to `@calloc`/`getelementptr i8`+`zext`/
+    // `trunc`+`store` + libc `putchar`/`getchar`. On WASM (LM-W) `iir-to-wasm` (v0.13.0)
+    // lowers them over linear memory: `alloc_bytes`→base offset 0, `load_byte`→
+    // `i32.load8_u`+`i64.extend_i32_u`, `store_byte`→`i32.wrap_i64`+`i32.store8`, and
+    // `putchar`/`getchar`→ the `env.putchar`/`env.getchar` host imports `run_wasm`'s
+    // `PutcharFunc` resolves (capturing raw bytes → stdout `A`, not the decimal `65`).
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm],
+        backends: &[NativeAot, Llvm, Wasm],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
@@ -349,12 +350,79 @@ impl wasm_execution::HostFunction for PrintFunc {
     }
 }
 
-/// The host interface the matrix runs wasm under: it resolves the single generic
-/// `env.__print_i64` import to a `PrintFunc` writing into the shared buffer, and
-/// resolves nothing else (the expression languages import no host functions, so for
-/// them the host is never consulted and behaviour is identical to `WasmRuntime::new`).
+/// Brainfuck's `.` lowers to `call $putchar`, imported as `env.putchar : (i32) -> ()`
+/// (the wasm sibling of the LLVM column's libc `@putchar`). `PutcharFunc` is the host
+/// implementation: each call appends the low byte of its i32 argument to a shared byte
+/// buffer, so the test reads back the exact bytes the program wrote — Brainfuck's `.`
+/// of cell value 65 produces the byte `A`, giving stdout `"A"` (NOT the decimal `"65"`
+/// that `__print_i64` would). One byte pushed per call — no DoS vector.
+struct PutcharFunc {
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
+}
+
+impl wasm_execution::HostFunction for PutcharFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I32],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let value = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("putchar: missing argument"))?
+            .as_i32()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        self.bytes
+            .lock()
+            .expect("lang-matrix putchar buffer poisoned")
+            .push((value & 0xFF) as u8);
+        Ok(vec![])
+    }
+}
+
+/// Brainfuck's `,` lowers to `call $getchar`, imported as `env.getchar : () -> i32`
+/// (the wasm sibling of libc `@getchar`). This matrix has no stdin, so the host returns
+/// `-1` (EOF) — the conventional Brainfuck "leave 255 on EOF" after the cell store
+/// truncates it. Resolving it keeps the host complete for any BF program that reads
+/// input; the proven cell (`++++++++[>++++++++<-]>+.`) emits no `,`, so it is unused there.
+struct GetcharFunc;
+
+impl wasm_execution::HostFunction for GetcharFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![],
+                results: vec![wasm_types::ValueType::I32],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        _args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        Ok(vec![wasm_execution::WasmValue::I32(-1)])
+    }
+}
+
+/// The host interface the matrix runs wasm under: it resolves the generic
+/// `env.__print_i64` import to a `PrintFunc` (integer capture, for BASIC), and the
+/// Brainfuck I/O imports `env.putchar`/`env.getchar` to a `PutcharFunc` (byte capture)
+/// / `GetcharFunc` (EOF). Everything else resolves to nothing (the expression languages
+/// import no host functions, so the host is never consulted for them and behaviour is
+/// identical to `WasmRuntime::new`).
 struct PrintHost {
     captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+    bytes: std::sync::Arc<std::sync::Mutex<Vec<u8>>>,
 }
 
 impl wasm_execution::HostInterface for PrintHost {
@@ -363,12 +431,15 @@ impl wasm_execution::HostInterface for PrintHost {
         module_name: &str,
         name: &str,
     ) -> Option<Box<dyn wasm_execution::HostFunction>> {
-        if module_name == "env" && name == "__print_i64" {
-            Some(Box::new(PrintFunc {
+        match (module_name, name) {
+            ("env", "__print_i64") => Some(Box::new(PrintFunc {
                 captured: std::sync::Arc::clone(&self.captured),
-            }))
-        } else {
-            None
+            })),
+            ("env", "putchar") => Some(Box::new(PutcharFunc {
+                bytes: std::sync::Arc::clone(&self.bytes),
+            })),
+            ("env", "getchar") => Some(Box::new(GetcharFunc)),
+            _ => None,
         }
     }
 
@@ -401,25 +472,34 @@ impl wasm_execution::HostInterface for PrintHost {
 /// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
 /// whose arguments the host captured into the buffer, joined as the program's stdout.
 fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
-    let bytes = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
+    let wasm = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
     let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let byte_buf = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
     let host = PrintHost {
         captured: std::sync::Arc::clone(&captured),
+        bytes: std::sync::Arc::clone(&byte_buf),
     };
     let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
-    let result = rt.load_and_run(&bytes, "main", &[]).ok()?;
+    let result = rt.load_and_run(&wasm, "main", &[]).ok()?;
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
-    // Whatever the program printed through `env.__print_i64`, one integer per call,
-    // joined by newlines — empty for the expression languages (they never print).
-    let stdout = captured
-        .lock()
-        .expect("lang-matrix print buffer poisoned")
-        .iter()
-        .map(|v| v.to_string())
-        .collect::<Vec<_>>()
-        .join("\n");
+    // stdout has two shapes: Brainfuck writes raw bytes via `env.putchar` (so `.` of 65
+    // is the byte `A`); BASIC writes integers via `env.__print_i64` (one per call, joined
+    // by newlines). A program uses one or the other, so prefer the byte stream when the
+    // program wrote any. Expression languages print nothing → empty stdout.
+    let printed_bytes = byte_buf.lock().expect("lang-matrix putchar buffer poisoned");
+    let stdout = if printed_bytes.is_empty() {
+        captured
+            .lock()
+            .expect("lang-matrix print buffer poisoned")
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        String::from_utf8_lossy(&printed_bytes).to_string()
+    };
     Some((code, stdout))
 }
 
