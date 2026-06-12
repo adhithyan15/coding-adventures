@@ -667,9 +667,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-088 — empty-statement elimination (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.39). `minify_empty_stmt` ignored.
+- **Status:** RESOLVED in CLOC12.94. `minify_empty_stmt` enforced.
 - **Input:** `;;var x=1;;;` → **Upstream:** `var x=1;` (also `;;;` → `` empty, `var a=1;;var b=2;` → `var a=1;var b=2;`, `function f(){;;x();;}` → `function f(){x()}`).
 - **What it needs:** drop EMPTY statements — a `;` token that is not the terminator of a real statement (i.e. a `;` immediately following `{`, another `;`, or the start of input, and likewise a trailing run before `}`/EOF). Upstream removes all stray semicolons at statement position. closurec's re-stitcher currently preserves every `;`. Care: a `;` that is the `for(;;)` header separator or a real statement terminator must be kept — the drop only targets semicolons in *statement-list* position with no statement before them.
+- **CLOC12.94 resolution:** Added a FIRST pre-pass (runs on the freshly-built `kept` token list, before every other pass) that drops a `;` whose immediate predecessor is `{`, `;`, or start-of-input — exactly the statement-list positions with no statement before them. Every other `;` is either a real terminator (predecessor is a value) or a control-flow BODY (`while(a);`, `if(a);`, `for(;;);`, `do;while(a);` — predecessor `)`/`do`, not in the droppable set), so those are kept automatically. The single hazard is the `for( … )` header, whose SECOND separator in `for(;;)` is preceded by the first `;`; a bracket stack marks `for(` parens (detected via the preceding `for` keyword, excluding a `.for(` property call) and refuses to drop a `;` whose innermost enclosing bracket is a for-header. JAR-verified across leading/trailing/between/sole/block-internal empties and every must-keep form (`for(;;)x();`, `for(var i=0;i<3;i++)`, `for(;;);`, `while/if/do` bodies, `a.for(b)`, `for(;;){;}` → `for(;;);`). 3 unit tests (drop / control-flow-body-kept / for-header-kept) + the byte-identity fixture.
 
 ### gap-089 — new member-callee empty-paren drop (WHITESPACE_ONLY)
 

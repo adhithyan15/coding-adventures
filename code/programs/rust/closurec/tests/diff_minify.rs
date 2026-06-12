@@ -128,10 +128,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // needed (the brackets delimit a single-expression context); array-
     // literal element parens (`[(a,b)]` must keep) are the gap-086
     // comma-guarded family. `minify_index_paren` enforced.
-    // gap-088 (CLOC14.39): EMPTY-STATEMENT (`;`) elimination —
-    // `;;var x=1;;;` → `var x=1;`, `;;;` → ``, `function f(){;;x();}` →
-    // `function f(){x()}`. closurec currently keeps stray semicolons.
-    ("empty_stmt", "gap-088: empty-statement elimination"),
+    // gap-088 RESOLVED in CLOC12.94 — EMPTY-STATEMENT (`;`) elimination
+    // (`;;var x=1;;;` → `var x=1;`, `;;;` → ``, `function f(){;;x();}` →
+    // `function f(){x()}`) now drops a `;` whose predecessor is
+    // `{`/`;`/start-of-input, except inside a `for(...)` header.
+    // `minify_empty_stmt` enforced.
     // gap-089 (CLOC14.39): empty `new` call-paren drop when the callee
     // is a MEMBER expression — `new a.b()` → `new a.b`. gap-050 dropped
     // `new A()` → `new A` for a bare identifier callee; the member-

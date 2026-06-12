@@ -184,6 +184,74 @@ pub fn whitespace_only_minify(
         .filter(|t| !is_eof(t))
         .collect();
 
+    // gap-088: EMPTY-STATEMENT elimination. Upstream Closure drops a
+    // `;` that is an EmptyStatement — a `;` in statement-list position
+    // with no statement before it:
+    //   `;;var x=1;`            -> `var x=1;`   (leading)
+    //   `var x=1;;;`            -> `var x=1;`   (trailing — the first
+    //                                          `;` is the real
+    //                                          terminator; the rest are
+    //                                          empty statements)
+    //   `var a=1;;var b=2;`     -> `var a=1;var b=2;`  (between)
+    //   `;;;`                   -> ``           (all empty)
+    //   `function f(){;;x();}`  -> `function f(){x()}`
+    //
+    // A `;` is an empty statement (droppable) exactly when the token
+    // BEFORE it is a `{` (start of a block / program body), another
+    // `;` (a preceding empty statement or terminator), OR nothing (the
+    // `;` is the very first token). In every other position the `;`
+    // either terminates a real statement (`a;` — preceded by a value)
+    // or is the BODY of a control-flow header (`while(a);`, `if(a);`,
+    // `for(;;);`, `do;while(a)` — preceded by `)`/`do`/`else`), and
+    // MUST be kept.
+    //
+    // The ONE hazard is the `for( … )` header, whose `;` SEPARATORS are
+    // not statements: in `for(;;)` the second `;` IS preceded by the
+    // first `;` and would otherwise look droppable. So we track a
+    // bracket stack and refuse to drop a `;` whose innermost enclosing
+    // bracket is a `for(` paren. (`for`'s `(` is detected by the
+    // preceding `for` keyword, excluding a `.for(`/`?.for(` property
+    // call.) Every other `;` inside a `for(...)` header is preceded by
+    // a value and already non-droppable.
+    {
+        // Stack of open brackets; the bool is `true` only for a
+        // `for( … )` header paren.
+        let mut stack: Vec<bool> = Vec::new();
+        let mut drops: Vec<usize> = Vec::new();
+        for i in 0..kept.len() {
+            let t = kept[i];
+            if is_structural_punct(t, ";") {
+                let droppable_pos = i == 0
+                    || is_structural_punct(kept[i - 1], "{")
+                    || is_structural_punct(kept[i - 1], ";");
+                let in_for_header = matches!(stack.last(), Some(true));
+                if droppable_pos && !in_for_header {
+                    drops.push(i);
+                }
+            } else if is_structural_punct(t, "(") {
+                // for-header `(` iff directly preceded by the `for`
+                // keyword (and that `for` is not a `.for` property).
+                let is_for = i > 0
+                    && is_word_like(kept[i - 1])
+                    && kept[i - 1].value == "for"
+                    && !(i >= 2
+                        && (is_structural_punct(kept[i - 2], ".")
+                            || is_structural_punct(kept[i - 2], "?.")));
+                stack.push(is_for);
+            } else if is_structural_punct(t, "[") || is_structural_punct(t, "{") {
+                stack.push(false);
+            } else if is_structural_punct(t, ")")
+                || is_structural_punct(t, "]")
+                || is_structural_punct(t, "}")
+            {
+                stack.pop();
+            }
+        }
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-051: IIFE paren normalisation. Upstream Closure
     // rewrites `(function(){...}())` to `(function(){...})()`
     // — the call's `()` moves OUTSIDE the wrapping parens.
@@ -5597,6 +5665,53 @@ mod tests {
     #[test]
     fn gap081_optional_chain_not_ternary() {
         assert_eq!(minify("var x=(a)?.b;"), "var x=(a)?.b;");
+    }
+
+    // ---- gap-088: empty-statement elimination -----------------
+
+    /// gap-088: a `;` whose predecessor is `{`, `;`, or start-of-input
+    /// is an EmptyStatement and is dropped. Leading, trailing, between,
+    /// sole, and block-internal empties all go; the first `;` after a
+    /// real statement is its terminator and stays.
+    #[test]
+    fn gap088_empty_statements_dropped() {
+        assert_eq!(minify(";;var x=1;"), "var x=1;");
+        assert_eq!(minify("var x=1;;;"), "var x=1;");
+        assert_eq!(minify("var a=1;;var b=2;"), "var a=1;var b=2;");
+        assert_eq!(minify(";;;"), "");
+        assert_eq!(minify(";"), "");
+        assert_eq!(minify(";x();"), "x();");
+        assert_eq!(minify("a;;b;"), "a;b;");
+        assert_eq!(minify("function f(){;;x();}"), "function f(){x()};");
+    }
+
+    /// gap-088 SAFETY — a `;` that is the BODY of a control-flow header
+    /// is NOT an empty statement and must be kept: `while(a);`,
+    /// `if(a);`, `for(;;);`, `do;while(a);`. Each such `;` follows a
+    /// `)`/`do`, never a `{`/`;`/start, so the predecessor test already
+    /// excludes it.
+    #[test]
+    fn gap088_control_flow_body_semicolon_kept() {
+        assert_eq!(minify("while(a);"), "while(a);");
+        assert_eq!(minify("if(a);"), "if(a);");
+        assert_eq!(minify("for(;;);"), "for(;;);");
+        assert_eq!(minify("do;while(a);"), "do;while(a);");
+    }
+
+    /// gap-088 SAFETY — the `for( … )` header separators must survive.
+    /// In `for(;;)` the SECOND `;` is preceded by the first `;`, so the
+    /// predecessor test alone would drop it; the bracket-stack for-guard
+    /// keeps it. A genuine `for` loop is distinguished from a `.for(`
+    /// property call (`a.for(b)` is untouched and never mistaken for a
+    /// for-header).
+    #[test]
+    fn gap088_for_header_separators_kept() {
+        assert_eq!(minify("for(;;)x();"), "for(;;)x();");
+        assert_eq!(
+            minify("for(var i=0;i<3;i++)x();"),
+            "for(var i=0;i<3;i++)x();"
+        );
+        assert_eq!(minify("a.for(b);"), "a.for(b);");
     }
 
     // ---- gap-086: call-argument paren elision -----------------
