@@ -96,6 +96,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation escalation cases that package sentinel alerts, verification
   checkpoints, and audit records into Chief-facing blocker, dependency,
   policy-risk, review, verification, and audit cases
+- activation response items that turn escalation cases into owner-lane next
+  actions for blocker, dependency, policy, review, verification, and audit
+  follow-up work
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

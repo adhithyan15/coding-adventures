@@ -106,6 +106,9 @@ All notable changes to this package will be documented in this file.
   `IntegrationActivationEscalationSummary` for packaging sentinel alerts,
   verification checkpoints, and audit records into Chief-facing escalation
   queues.
+- `IntegrationActivationResponseItem` and
+  `IntegrationActivationResponseSummary` for turning escalation cases into
+  owner-lane next actions for response planning.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
