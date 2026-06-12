@@ -15,6 +15,7 @@ export type Element =
   | VoltageSource
   | CurrentSource
   | BSource
+  | CustomModel
   | Diode
   | Jfet
   | Bjt
@@ -338,6 +339,48 @@ export interface BSource {
   readonly currentExpr?: string;
 }
 
+export interface CustomModelContext {
+  readonly voltage: number;
+  readonly temperatureKelvin: number;
+  readonly parameters: Readonly<Record<string, number>>;
+}
+
+export interface CustomModelEvaluation {
+  readonly currentAmps: number;
+  readonly conductanceSiemens: number;
+}
+
+export type CustomModelEvaluator = (
+  context: CustomModelContext,
+) => CustomModelEvaluation;
+
+export interface CustomModel {
+  readonly kind: "custom-model";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly modelName: string;
+  readonly parameters: Readonly<Record<string, number>>;
+  readonly evaluator?: CustomModelEvaluator;
+  readonly conductanceSiemens?: number;
+  readonly currentOffsetAmps: number;
+}
+
+export interface CustomModelDiagnostic {
+  readonly code: string;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+}
+
+export interface CustomModelSourceAnalysis {
+  readonly accepted: boolean;
+  readonly subset: string;
+  readonly moduleName?: string;
+  readonly terminals: readonly string[];
+  readonly contribution?: readonly [string, string];
+  readonly diagnostics: readonly CustomModelDiagnostic[];
+}
+
 export type SubcircuitElement = Element | XInstance;
 
 export interface SubcircuitDefinition {
@@ -514,7 +557,13 @@ export interface DcOpOptions {
 
 export interface CornerOverride {
   readonly elementName: string;
-  readonly parameter: "resistance" | "capacitance" | "inductance" | "voltage" | "current";
+  readonly parameter:
+    | "resistance"
+    | "capacitance"
+    | "inductance"
+    | "voltage"
+    | "current"
+    | "conductance";
   readonly value: number;
 }
 
@@ -1967,6 +2016,8 @@ function cloneSubcktElement(
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "b-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
+    case "custom-model":
+      return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
     case "jfet":
@@ -2191,6 +2242,127 @@ export function bSourceVoltage(
   voltageExpr: string,
 ): BSource {
   return { kind: "b-source", name, positive, negative, voltageExpr };
+}
+
+export function customLinearConductanceModel(
+  name: string,
+  positive: string,
+  negative: string,
+  conductanceSiemens: number,
+  options: {
+    readonly currentOffsetAmps?: number;
+    readonly modelName?: string;
+    readonly parameters?: Readonly<Record<string, number>>;
+  } = {},
+): CustomModel {
+  return {
+    kind: "custom-model",
+    name,
+    positive,
+    negative,
+    modelName: options.modelName ?? "linear_conductance",
+    parameters: options.parameters ?? {},
+    conductanceSiemens,
+    currentOffsetAmps: options.currentOffsetAmps ?? 0.0,
+  };
+}
+
+const CUSTOM_MODEL_SUBSET = "two-terminal-current-contribution-v0";
+const CUSTOM_MODEL_FORBIDDEN_PATTERNS: readonly (readonly [string, string])[] = [
+  ["ddt", "dynamic charge operators are not accepted in this custom-model subset"],
+  ["idt", "dynamic integration operators are not accepted in this custom-model subset"],
+  ["laplace", "Laplace-domain operators are not accepted in this custom-model subset"],
+  ["cross", "event crossing operators are not accepted in this custom-model subset"],
+  ["timer", "timer events are not accepted in this custom-model subset"],
+  ["@(", "event controls are not accepted in this custom-model subset"],
+  ["$finish", "system tasks are not accepted in this custom-model subset"],
+  ["$stop", "system tasks are not accepted in this custom-model subset"],
+  ["$display", "system tasks are not accepted in this custom-model subset"],
+  ["initial", "procedural initial blocks are not accepted in this custom-model subset"],
+  ["always", "procedural always blocks are not accepted in this custom-model subset"],
+  ["analog function", "analog functions are not accepted in this custom-model subset"],
+  ["discipline", "discipline declarations are not accepted in this custom-model subset"],
+  ["branch ", "named branch declarations are not accepted in this custom-model subset"],
+];
+
+export function analyzeCustomModelSource(source: string): CustomModelSourceAnalysis {
+  const diagnostics: CustomModelDiagnostic[] = [];
+  const trimmed = source.trim();
+  if (trimmed.length === 0) {
+    return {
+      accepted: false,
+      subset: CUSTOM_MODEL_SUBSET,
+      terminals: [],
+      diagnostics: [{
+        code: "CUSTOM_MODEL_EMPTY_SOURCE",
+        message: "custom model source is empty",
+        severity: "error",
+      }],
+    };
+  }
+
+  const lowered = trimmed.toLowerCase();
+  for (const [token, message] of CUSTOM_MODEL_FORBIDDEN_PATTERNS) {
+    if (lowered.includes(token)) {
+      diagnostics.push({
+        code: "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+        message,
+        severity: "error",
+      });
+    }
+  }
+
+  const moduleMatch = /\bmodule\s+([A-Za-z_][A-Za-z0-9_$]*)\s*\(([^)]*)\)\s*;/i.exec(trimmed);
+  const moduleName = moduleMatch?.[1];
+  const terminals = moduleMatch === null
+    ? []
+    : moduleMatch[2]
+        .split(",")
+        .map((port) => port.trim())
+        .filter((port) => port.length > 0);
+  if (moduleMatch === null) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_MISSING_MODULE",
+      message: "custom model source must declare a module with a port list",
+      severity: "error",
+    });
+  } else if (terminals.length < 2) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_PORT_COUNT",
+      message: "custom model module must expose at least two terminals",
+      severity: "error",
+    });
+  }
+
+  const contributionMatch = /\bI\s*\(\s*([A-Za-z_][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_][A-Za-z0-9_$]*)\s*\)\s*<\+/i.exec(trimmed);
+  const contribution = contributionMatch === null
+    ? undefined
+    : [contributionMatch[1], contributionMatch[2]] as const;
+  if (contribution === undefined) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_MISSING_CONTRIBUTION",
+      message: "custom model source must contain a two-terminal I(p,n) <+ contribution",
+      severity: "error",
+    });
+  } else if (
+    terminals.length > 0 &&
+    contribution.some((terminal) => !terminals.includes(terminal))
+  ) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_UNKNOWN_TERMINAL",
+      message: "current contribution terminals must be declared module ports",
+      severity: "error",
+    });
+  }
+
+  return {
+    accepted: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    subset: CUSTOM_MODEL_SUBSET,
+    moduleName,
+    terminals,
+    contribution,
+    diagnostics,
+  };
 }
 
 export function subcircuitDefinition(
@@ -5700,6 +5872,15 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "current",
         nominalValue: element.current,
       };
+    case "custom-model":
+      if (element.conductanceSiemens === undefined) {
+        return undefined;
+      }
+      return {
+        elementName: element.name,
+        parameter: "conductanceSiemens",
+        nominalValue: element.conductanceSiemens,
+      };
     case "diode":
       return {
         elementName: element.name,
@@ -5752,6 +5933,7 @@ function elementParameter(element: Element): ElementParameter | undefined {
     case "inductor":
     case "mutual-inductor":
     case "transmission-line":
+    case "b-source":
       return undefined;
   }
 }
@@ -5784,6 +5966,11 @@ function circuitWithPerturbedElement(
         break;
       case "current-source":
         perturbed.add({ ...element, current: element.current + delta });
+        break;
+      case "custom-model":
+        perturbed.add(element.conductanceSiemens === undefined
+          ? element
+          : { ...element, conductanceSiemens: element.conductanceSiemens + delta });
         break;
       case "diode":
         perturbed.add({
@@ -5828,6 +6015,7 @@ function circuitWithPerturbedElement(
       case "inductor":
       case "mutual-inductor":
       case "transmission-line":
+      case "b-source":
         perturbed.add(element);
         break;
     }
@@ -5912,6 +6100,18 @@ function randomizedElement(
         ...element,
         current: randomizedValue(element.current, tolerance, distribution, rng),
       };
+    case "custom-model":
+      return element.conductanceSiemens === undefined
+        ? element
+        : {
+            ...element,
+            conductanceSiemens: randomizedValue(
+              element.conductanceSiemens,
+              tolerance,
+              distribution,
+              rng,
+            ),
+          };
     case "diode":
       return {
         ...element,
@@ -5975,12 +6175,11 @@ function randomizedElement(
           rng,
         ),
       };
-    case "b-source":
-      return element;
     case "capacitor":
     case "inductor":
     case "mutual-inductor":
     case "transmission-line":
+    case "b-source":
       return element;
   }
 }
@@ -6137,7 +6336,8 @@ function isNonlinearElement(element: Element): boolean {
     element.kind === "jfet" ||
     element.kind === "bjt" ||
     element.kind === "mosfet" ||
-    element.kind === "b-source"
+    element.kind === "b-source" ||
+    element.kind === "custom-model"
   );
 }
 
@@ -6622,6 +6822,11 @@ function applyCornerOverride(element: Element, override: CornerOverride): Elemen
         return { ...element, current: override.value };
       }
       break;
+    case "custom-model":
+      if (override.parameter === "conductance") {
+        return { ...element, conductanceSiemens: override.value };
+      }
+      break;
   }
   throw invalidElement(
     "dcCorners",
@@ -6784,6 +6989,9 @@ function solveLinearCircuitAtOperatingPoint(
           operatingPoint,
         );
         break;
+      case "custom-model":
+        stampCustomModel(element, nodeIndices, matrix, rhs, operatingPoint);
+        break;
       case "diode":
         stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
@@ -6929,6 +7137,14 @@ function buildSmallSignalMatrix(
           throw invalidElement(element.name, "current must be finite");
         }
         break;
+      case "custom-model":
+        stampConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.positive),
+          nodeIndex(nodeIndices, element.negative),
+          customModelConductance(element, nodeIndices, operatingPoint),
+        );
+        break;
       case "diode":
         validateDiode(element);
         const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
@@ -7025,6 +7241,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "inductor":
       case "mutual-inductor":
       case "transmission-line":
+      case "custom-model":
       case "diode":
       case "jfet":
       case "bjt":
@@ -7101,6 +7318,14 @@ function buildAcMatrix(
         if (!Number.isFinite(element.current)) {
           throw invalidElement(element.name, "current must be finite");
         }
+        break;
+      case "custom-model":
+        stampComplexConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.positive),
+          nodeIndex(nodeIndices, element.negative),
+          complex(customModelConductance(element, nodeIndices, operatingPoint), 0.0),
+        );
         break;
       case "diode":
         validateDiode(element);
@@ -7348,6 +7573,10 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
           insertNode(names, node);
         }
         break;
+      case "custom-model":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        break;
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
@@ -7466,6 +7695,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
         element.kind === "ccvs" ||
+        element.kind === "custom-model" ||
         element.kind === "b-source") &&
       element.name === inputSource
     ) {
@@ -7748,6 +7978,103 @@ function stampConductance(
     matrix[n1][n2] -= conductance;
     matrix[n2][n1] -= conductance;
   }
+}
+
+function validateCustomModel(element: CustomModel): void {
+  if (!Number.isFinite(element.currentOffsetAmps)) {
+    throw invalidElement(element.name, "custom-model current offset must be finite");
+  }
+  for (const [name, value] of Object.entries(element.parameters)) {
+    if (!Number.isFinite(value)) {
+      throw invalidElement(element.name, `custom-model parameter ${name} must be finite`);
+    }
+  }
+  if (element.evaluator === undefined) {
+    if (
+      element.conductanceSiemens === undefined ||
+      !Number.isFinite(element.conductanceSiemens)
+    ) {
+      throw invalidElement(
+        element.name,
+        "custom-model conductance must be finite when no evaluator is supplied",
+      );
+    }
+  } else if (
+    element.conductanceSiemens !== undefined &&
+    !Number.isFinite(element.conductanceSiemens)
+  ) {
+    throw invalidElement(element.name, "custom-model conductance must be finite");
+  }
+}
+
+function customModelVoltage(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): number {
+  return (
+    vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.positive)) -
+    vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.negative))
+  );
+}
+
+function evaluateCustomModel(
+  element: CustomModel,
+  voltage: number,
+): CustomModelEvaluation {
+  validateCustomModel(element);
+  const evaluation = element.evaluator === undefined
+    ? {
+        currentAmps:
+          element.conductanceSiemens! * voltage + element.currentOffsetAmps,
+        conductanceSiemens: element.conductanceSiemens!,
+      }
+    : element.evaluator({
+        voltage,
+        temperatureKelvin: 300.15,
+        parameters: element.parameters,
+      });
+  if (!Number.isFinite(evaluation.currentAmps)) {
+    throw invalidElement(element.name, "custom-model current must be finite");
+  }
+  if (!Number.isFinite(evaluation.conductanceSiemens)) {
+    throw invalidElement(element.name, "custom-model conductance must be finite");
+  }
+  return evaluation;
+}
+
+function stampCustomModel(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  const voltage = customModelVoltage(element, nodeIndices, operatingPoint);
+  const evaluation = evaluateCustomModel(element, voltage);
+  const equivalentCurrent =
+    evaluation.currentAmps - evaluation.conductanceSiemens * voltage;
+
+  stampConductance(matrix, positive, negative, evaluation.conductanceSiemens);
+  if (positive !== undefined) {
+    rhs[positive] -= equivalentCurrent;
+  }
+  if (negative !== undefined) {
+    rhs[negative] += equivalentCurrent;
+  }
+}
+
+function customModelConductance(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): number {
+  return evaluateCustomModel(
+    element,
+    customModelVoltage(element, nodeIndices, operatingPoint),
+  ).conductanceSiemens;
 }
 
 function stampDiode(

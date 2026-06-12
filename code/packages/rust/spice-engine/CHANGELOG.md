@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `CustomModel`, `CustomModelKind`, `CustomModelEvaluation`, and
+  `analyze_custom_model_source` for the first Rust-native two-terminal
+  residual/Jacobian custom-model fast path and Verilog-A subset diagnostics
+  shared with Python and TypeScript.
 - Add `format_digital_event_stream_vcd` and
   `format_digital_event_stream_vcd_with_options` for deterministic VCD
   correlation output from SPICE-side mixed-signal digital event streams.

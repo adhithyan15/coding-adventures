@@ -66,3 +66,9 @@ and Level-1 MOSFET models before running an analysis.
 alias surface for diode, BJT, JFET, and Level-1 MOS cards.
 `deviceModelAuditFixtures` returns the canonical cross-language fixture cards
 used to keep the TypeScript, Python, and Rust ports aligned.
+
+`CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`, and
+`analyzeCustomModelSource` provide the first native-web custom-model foothold.
+The accepted source subset is diagnostic-only and limited to a two-terminal
+`I(p,n) <+ ...` module shape; it does not compile or evaluate source strings in
+the browser sandbox.

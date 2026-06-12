@@ -109,6 +109,8 @@ from spice_engine import (
     CornerTfResult,
     CornerTransientResult,
     CurrentSource,
+    CustomModel,
+    CustomModelEvaluation,
     DcSweepPoint,
     DcSweepResult,
     DigitalEvent,
@@ -157,8 +159,10 @@ from spice_engine import (
     __version__,
     ac_sweep,
     ac_sweep_corners,
+    analyze_custom_model_source,
     bjt_from_model_card,
     circuit_at_temperature,
+    custom_linear_conductance_model,
     dc_corners,
     dc_op,
     dc_sweep,
@@ -331,6 +335,60 @@ def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
 def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
     with pytest.raises(ValueError, match="only MOS LEVEL=1"):
         normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})
+
+
+def test_custom_model_evaluator_hook_stamps_dc_current() -> None:
+    def evaluator(context) -> CustomModelEvaluation:
+        conductance = context.parameters["g"]
+        return CustomModelEvaluation(
+            current_amps=conductance * context.voltage,
+            conductance_siemens=conductance,
+        )
+
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(
+        CustomModel(
+            "XG",
+            "in",
+            "0",
+            parameters={"g": 2.0e-3},
+            evaluator=evaluator,
+        )
+    )
+
+    result = dc_op(circuit)
+
+    assert result.node_voltages["in"] == pytest.approx(1.0)
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_linear_conductance_model_fast_path_stamps_dc_current() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(custom_linear_conductance_model("XG", "in", "0", 2.0e-3))
+
+    result = dc_op(circuit)
+
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_model_source_analyzer_accepts_subset_and_rejects_dynamic_constructs() -> None:
+    accepted = analyze_custom_model_source(
+        "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule"
+    )
+    rejected = analyze_custom_model_source(
+        "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule"
+    )
+
+    assert accepted.accepted is True
+    assert accepted.module_name == "rlim"
+    assert accepted.terminals == ("p", "n")
+    assert accepted.contribution == ("p", "n")
+    assert rejected.accepted is False
+    assert "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT" in {
+        diagnostic.code for diagnostic in rejected.diagnostics
+    }
 
 
 def test_waveform_period_reports_periodic_source_forms() -> None:

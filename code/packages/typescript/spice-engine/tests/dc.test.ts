@@ -3,6 +3,7 @@ import {
   Circuit,
   SinWaveform,
   SpiceError,
+  analyzeCustomModelSource,
   bSourceCurrent,
   bSourceVoltage,
   bjt,
@@ -10,6 +11,7 @@ import {
   circuitAtTemperature,
   cccs,
   ccvs,
+  customLinearConductanceModel,
   currentSource,
   dcCorners,
   dcOp,
@@ -109,6 +111,57 @@ describe("dcOp", () => {
   it("rejects non-Level-1 MOS model cards explicitly", () => {
     expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: 2.0 })).toThrowError(
       "only MOS LEVEL=1",
+    );
+  });
+
+  it("stamps a custom-model evaluator hook as a DC current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add({
+      kind: "custom-model",
+      name: "XG",
+      positive: "in",
+      negative: "0",
+      modelName: "hook",
+      parameters: { g: 2.0e-3 },
+      currentOffsetAmps: 0.0,
+      evaluator: (context) => ({
+        currentAmps: context.parameters.g * context.voltage,
+        conductanceSiemens: context.parameters.g,
+      }),
+    });
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("in"), 1.0);
+    expectClose(result.branchCurrent("I(V1)"), -2.0e-3);
+  });
+
+  it("stamps the custom-model linear conductance fast path as a DC current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(customLinearConductanceModel("XG", "in", "0", 2.0e-3));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.branchCurrent("I(V1)"), -2.0e-3);
+  });
+
+  it("accepts the custom-model source subset and rejects dynamic constructs", () => {
+    const accepted = analyzeCustomModelSource(
+      "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule",
+    );
+    const rejected = analyzeCustomModelSource(
+      "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule",
+    );
+
+    expect(accepted.accepted).toBe(true);
+    expect(accepted.moduleName).toBe("rlim");
+    expect(accepted.terminals).toStrictEqual(["p", "n"]);
+    expect(accepted.contribution).toStrictEqual(["p", "n"]);
+    expect(rejected.accepted).toBe(false);
+    expect(rejected.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
+      "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
     );
   });
 

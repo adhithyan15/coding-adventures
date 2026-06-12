@@ -43,6 +43,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `Diode` | D | Shockley diode model |
 | `Mosfet` | M | MOSFET (uses `mosfet_models.MOSFET`) |
 | `BJT` | Q | Bipolar transistor (simplified Ebers-Moll) |
+| `CustomModel` | Verilog-A subset foothold | Two-terminal custom current residual/Jacobian hook |
 | `VCVS` | E | Voltage-Controlled Voltage Source |
 | `VCCS` | G | Voltage-Controlled Current Source |
 | `CCCS` | F | Current-Controlled Current Source |
@@ -84,6 +85,12 @@ first mixed-signal bridge surface: digital event streams can drive finite-edge
 PWL voltage sources, fixed/adaptive transient outputs can be sampled back into
 thresholded event streams, and stable event, bridge-schedule, corner, adaptive,
 and VCD text outputs let hardware-VM traces correlate with SPICE probes.
+
+`CustomModel`, `CustomModelEvaluation`, `custom_linear_conductance_model()`, and
+`analyze_custom_model_source()` provide the first custom-model foothold. The
+accepted source subset is a diagnostic-only two-terminal `I(p,n) <+ ...`
+module shape; it deliberately rejects dynamic/event/system constructs until a
+full Verilog-A compiler is in scope.
 
 ## Controlled source examples
 

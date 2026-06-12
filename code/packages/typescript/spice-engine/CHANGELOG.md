@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`,
+  and `analyzeCustomModelSource` for the first sandbox-friendly two-terminal
+  residual/Jacobian custom-model foothold shared with Python and Rust.
 - Add `DigitalEventStream`, `DigitalLogicLevels`, `DigitalThresholds`, digital
   stream PWL voltage source conversion, fixed/adaptive digital transient bridge
   runners, named-corner bridge wrappers, stable event/schedule tables, and

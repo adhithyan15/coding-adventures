@@ -75,6 +75,9 @@ from spice_engine.elements import (
     BSource,
     Capacitor,
     CurrentSource,
+    CustomModel,
+    CustomModelContext,
+    CustomModelEvaluation,
     Diode,
     Element,
     Inductor,
@@ -115,6 +118,146 @@ class Circuit:
 
     def instantiate(self, instance: XInstance) -> None:
         self.elements.extend(_expand_xinstance(instance, self.subcircuits, ()))
+
+
+@dataclass(frozen=True)
+class CustomModelDiagnostic:
+    """Stable diagnostic emitted by the custom-model source subset analyzer."""
+
+    code: str
+    message: str
+    severity: Literal["error", "warning"] = "error"
+
+
+@dataclass(frozen=True)
+class CustomModelSourceAnalysis:
+    """Result of checking the accepted Verilog-A/custom-model source subset."""
+
+    accepted: bool
+    subset: str
+    module_name: str | None
+    terminals: tuple[str, ...]
+    contribution: tuple[str, str] | None
+    diagnostics: list[CustomModelDiagnostic]
+
+
+CUSTOM_MODEL_SUBSET = "two-terminal-current-contribution-v0"
+_CUSTOM_MODEL_FORBIDDEN_PATTERNS: tuple[tuple[str, str], ...] = (
+    ("ddt", "dynamic charge operators are not accepted in this custom-model subset"),
+    ("idt", "dynamic integration operators are not accepted in this custom-model subset"),
+    ("laplace", "Laplace-domain operators are not accepted in this custom-model subset"),
+    ("cross", "event crossing operators are not accepted in this custom-model subset"),
+    ("timer", "timer events are not accepted in this custom-model subset"),
+    ("@(", "event controls are not accepted in this custom-model subset"),
+    ("$finish", "system tasks are not accepted in this custom-model subset"),
+    ("$stop", "system tasks are not accepted in this custom-model subset"),
+    ("$display", "system tasks are not accepted in this custom-model subset"),
+    ("initial", "procedural initial blocks are not accepted in this custom-model subset"),
+    ("always", "procedural always blocks are not accepted in this custom-model subset"),
+    ("analog function", "analog functions are not accepted in this custom-model subset"),
+    ("discipline", "discipline declarations are not accepted in this custom-model subset"),
+    ("branch ", "named branch declarations are not accepted in this custom-model subset"),
+)
+
+
+def analyze_custom_model_source(source: str) -> CustomModelSourceAnalysis:
+    """Check the first portable Verilog-A/custom-model subset.
+
+    This is a diagnostic foothold, not a compiler.  Accepted sources define a
+    module with at least two ports and one current contribution shaped like
+    ``I(p,n) <+ expression``.  Dynamic/event/system constructs are rejected so
+    TypeScript/web callers can use the same subset without runtime code eval.
+    """
+
+    diagnostics: list[CustomModelDiagnostic] = []
+    stripped = source.strip()
+    if not stripped:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_EMPTY_SOURCE",
+                message="custom model source is empty",
+            )
+        )
+        return CustomModelSourceAnalysis(
+            accepted=False,
+            subset=CUSTOM_MODEL_SUBSET,
+            module_name=None,
+            terminals=(),
+            contribution=None,
+            diagnostics=diagnostics,
+        )
+
+    lowered = stripped.lower()
+    for token, message in _CUSTOM_MODEL_FORBIDDEN_PATTERNS:
+        if token in lowered:
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+                    message=message,
+                )
+            )
+
+    module_match = re.search(
+        r"\bmodule\s+([A-Za-z_][A-Za-z0-9_$]*)\s*\(([^)]*)\)\s*;",
+        stripped,
+        flags=re.IGNORECASE,
+    )
+    module_name: str | None = None
+    terminals: tuple[str, ...] = ()
+    if module_match is None:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_MISSING_MODULE",
+                message="custom model source must declare a module with a port list",
+            )
+        )
+    else:
+        module_name = module_match.group(1)
+        terminals = tuple(
+            port.strip()
+            for port in module_match.group(2).split(",")
+            if port.strip()
+        )
+        if len(terminals) < 2:
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_PORT_COUNT",
+                    message="custom model module must expose at least two terminals",
+                )
+            )
+
+    contribution_match = re.search(
+        r"\bI\s*\(\s*([A-Za-z_][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_][A-Za-z0-9_$]*)\s*\)\s*<\+",
+        stripped,
+        flags=re.IGNORECASE,
+    )
+    contribution: tuple[str, str] | None = None
+    if contribution_match is None:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_MISSING_CONTRIBUTION",
+                message="custom model source must contain a two-terminal I(p,n) <+ contribution",
+            )
+        )
+    else:
+        contribution = (contribution_match.group(1), contribution_match.group(2))
+        terminal_set = set(terminals)
+        if terminals and any(node not in terminal_set for node in contribution):
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_UNKNOWN_TERMINAL",
+                    message="current contribution terminals must be declared module ports",
+                )
+            )
+
+    return CustomModelSourceAnalysis(
+        accepted=not any(diagnostic.severity == "error" for diagnostic in diagnostics),
+        subset=CUSTOM_MODEL_SUBSET,
+        module_name=module_name,
+        terminals=terminals,
+        contribution=contribution,
+        diagnostics=diagnostics,
+    )
 
 
 def diode_at_temperature(
@@ -385,6 +528,17 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
         return CurrentSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.current, element.waveform, element.ac)
     if isinstance(element, BSource):
         return BSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_bsource_expr_nodes(element.voltage_expr, instance_name, node_map), _map_bsource_expr_nodes(element.current_expr, instance_name, node_map))
+    if isinstance(element, CustomModel):
+        return CustomModel(
+            name,
+            _map_subckt_node(element.n_plus, instance_name, node_map),
+            _map_subckt_node(element.n_minus, instance_name, node_map),
+            element.model_name,
+            element.parameters,
+            element.evaluator,
+            element.conductance_siemens,
+            element.current_offset_amps,
+        )
     if isinstance(element, Diode):
         return Diode(
             name,
@@ -3048,6 +3202,8 @@ def _element_nodes(el: Element) -> list[str]:
         if expr is not None:
             nodes.extend(_bsource_expr_nodes(expr))
         return nodes
+    if isinstance(el, CustomModel):
+        return [el.n_plus, el.n_minus]
     if isinstance(el, Diode):
         return [el.anode, el.cathode]
     if isinstance(el, JFET):
@@ -3726,6 +3882,8 @@ def _stamp_dc(
             b[node_to_idx[el.n_minus]] += el.current
     elif isinstance(el, BSource):
         _stamp_bsource(G, b, x, node_to_idx, branch_srcs, el)
+    elif isinstance(el, CustomModel):
+        _stamp_custom_model(G, b, x, node_to_idx, el)
     elif isinstance(el, Diode):
         _stamp_diode(G, b, x, node_to_idx, el)
     elif isinstance(el, JFET):
@@ -3940,6 +4098,62 @@ def _stamp_bsource(
     for node, derivative in derivatives.items():
         G[branch_idx][node_to_idx[node]] -= derivative
     b[branch_idx] += offset
+
+
+def _custom_model_voltage(
+    el: CustomModel,
+    node_to_idx: dict[str, int],
+    x: list[float],
+) -> float:
+    v_plus = 0.0 if _is_ground(el.n_plus) else x[node_to_idx[el.n_plus]]
+    v_minus = 0.0 if _is_ground(el.n_minus) else x[node_to_idx[el.n_minus]]
+    return v_plus - v_minus
+
+
+def _evaluate_custom_model(el: CustomModel, voltage: float) -> CustomModelEvaluation:
+    if el.evaluator is not None:
+        result = el.evaluator(
+            CustomModelContext(voltage=voltage, parameters=el.parameters)
+        )
+    else:
+        if el.conductance_siemens is None:
+            raise ValueError(
+                f"CustomModel '{el.name}' must define an evaluator or conductance_siemens."
+            )
+        result = CustomModelEvaluation(
+            current_amps=el.conductance_siemens * voltage + el.current_offset_amps,
+            conductance_siemens=el.conductance_siemens,
+        )
+    if not math.isfinite(result.current_amps):
+        raise ValueError(f"CustomModel '{el.name}' produced non-finite current")
+    if not math.isfinite(result.conductance_siemens):
+        raise ValueError(f"CustomModel '{el.name}' produced non-finite conductance")
+    return result
+
+
+def _custom_model_conductance(
+    el: CustomModel,
+    node_to_idx: dict[str, int],
+    x: list[float],
+) -> float:
+    return _evaluate_custom_model(el, _custom_model_voltage(el, node_to_idx, x)).conductance_siemens
+
+
+def _stamp_custom_model(
+    G: list[list[float]],
+    b: list[float],
+    x: list[float],
+    node_to_idx: dict[str, int],
+    el: CustomModel,
+) -> None:
+    voltage = _custom_model_voltage(el, node_to_idx, x)
+    evaluation = _evaluate_custom_model(el, voltage)
+    _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, evaluation.conductance_siemens)
+    equivalent_current = evaluation.current_amps - evaluation.conductance_siemens * voltage
+    if not _is_ground(el.n_plus):
+        b[node_to_idx[el.n_plus]] -= equivalent_current
+    if not _is_ground(el.n_minus):
+        b[node_to_idx[el.n_minus]] += equivalent_current
 
 
 # ---------------------------------------------------------------------------
@@ -7032,6 +7246,10 @@ def _stamp_ac(
         if not _is_ground(el.n_minus):
             b[node_to_idx[el.n_minus]] += current
 
+    elif isinstance(el, CustomModel):
+        conductance = _custom_model_conductance(el, node_to_idx, dc_x)
+        _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, conductance + 0j)
+
     elif isinstance(el, VCCS):
         # Frequency-independent transconductance: same stamp as DC.
         _stamp_vccs(G, node_to_idx, el.n_plus, el.n_minus,
@@ -7671,6 +7889,10 @@ def _build_ss_matrix(
         elif isinstance(el, CurrentSource):
             # Independent current source → zero in small-signal analysis.
             pass
+
+        elif isinstance(el, CustomModel):
+            conductance = _custom_model_conductance(el, node_to_idx, dc_x)
+            _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, conductance)
 
         elif isinstance(el, VCCS):
             # Frequency-independent; stamp real transconductance.
