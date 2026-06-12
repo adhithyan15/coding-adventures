@@ -36,45 +36,47 @@ use smart_home_integration_catalog::{
     activation_actions_from_candidates, activation_agenda_from_candidates,
     activation_approval_packets_from_candidates, activation_briefing_items_from_readouts,
     activation_candidates_at_or_before_priority, activation_constraints_from_candidates,
-    activation_dashboard_cards_from_readouts, activation_decisions_from_candidates,
-    activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
-    activation_evidence_from_candidates, activation_forecasts_from_timeline_milestones,
-    activation_health_from_candidates, activation_maintenance_from_candidates,
-    activation_operator_tasks_from_playbook_steps, activation_plan_for_entry,
-    activation_plans_at_or_before_priority, activation_playbook_steps_from_forecasts,
-    activation_readouts_from_candidates, activation_reviews_from_candidates,
-    activation_risk_from_candidates, activation_runway_from_candidates,
-    activation_timeline_milestones_from_dashboard_cards, describe_primitive_family,
-    ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
-    entries_requiring_primitive, find_entry, first_party_catalog,
-    policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
-    primitive_backlog_with_ecosystem_coverage, primitive_family_descriptors, query_integrations,
-    readiness_gap_inventory_from_reports, readiness_report_for_plan,
-    readiness_reports_at_or_before_priority, survey_sources_requiring_primitive, AuthMode,
-    ConnectivityClass, DiscoveryMechanism, EcosystemPlatformCoverageItem,
-    EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform, EcosystemSurveySource,
-    ImplementationStatus, IntegrationActivationAction, IntegrationActivationActionKind,
-    IntegrationActivationActionSummary, IntegrationActivationAgendaStage,
-    IntegrationActivationAgendaSummary, IntegrationActivationApprovalPacket,
-    IntegrationActivationApprovalSummary, IntegrationActivationBriefingItem,
-    IntegrationActivationBriefingItemKind, IntegrationActivationBriefingSummary,
-    IntegrationActivationCandidate, IntegrationActivationCandidateRecommendation,
-    IntegrationActivationCandidateSummary, IntegrationActivationConstraint,
-    IntegrationActivationConstraintKind, IntegrationActivationConstraintSummary,
-    IntegrationActivationDashboardCard, IntegrationActivationDashboardSummary,
-    IntegrationActivationDecisionItem, IntegrationActivationDecisionStatus,
-    IntegrationActivationDecisionSummary, IntegrationActivationDependencyEdge,
-    IntegrationActivationDependencyGraph, IntegrationActivationDependencyNode,
-    IntegrationActivationDependencySummary, IntegrationActivationDossierItem,
-    IntegrationActivationDossierSummary, IntegrationActivationEvidenceItem,
-    IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
-    IntegrationActivationEvidenceSummary, IntegrationActivationForecastAction,
-    IntegrationActivationForecastItem, IntegrationActivationForecastSummary,
-    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
-    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
-    IntegrationActivationMaintenanceWindow, IntegrationActivationOperatorTask,
-    IntegrationActivationOperatorTaskKind, IntegrationActivationOperatorTaskSummary,
-    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
+    activation_control_room_panels_from_operator_tasks, activation_dashboard_cards_from_readouts,
+    activation_decisions_from_candidates, activation_dependency_graph_from_reports,
+    activation_dossiers_from_candidates, activation_evidence_from_candidates,
+    activation_forecasts_from_timeline_milestones, activation_health_from_candidates,
+    activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
+    activation_reviews_from_candidates, activation_risk_from_candidates,
+    activation_runway_from_candidates, activation_timeline_milestones_from_dashboard_cards,
+    describe_primitive_family, ecosystem_platform_coverage,
+    ecosystem_platforms_requiring_primitive, ecosystem_survey_sources, entries_requiring_primitive,
+    find_entry, first_party_catalog, policy_surface_inventory_at_or_before_priority,
+    primitive_backlog_at_or_before_priority, primitive_backlog_with_ecosystem_coverage,
+    primitive_family_descriptors, query_integrations, readiness_gap_inventory_from_reports,
+    readiness_report_for_plan, readiness_reports_at_or_before_priority,
+    survey_sources_requiring_primitive, AuthMode, ConnectivityClass, DiscoveryMechanism,
+    EcosystemPlatformCoverageItem, EcosystemPlatformCoverageSummary, EcosystemSurveyPlatform,
+    EcosystemSurveySource, ImplementationStatus, IntegrationActivationAction,
+    IntegrationActivationActionKind, IntegrationActivationActionSummary,
+    IntegrationActivationAgendaStage, IntegrationActivationAgendaSummary,
+    IntegrationActivationApprovalPacket, IntegrationActivationApprovalSummary,
+    IntegrationActivationBriefingItem, IntegrationActivationBriefingItemKind,
+    IntegrationActivationBriefingSummary, IntegrationActivationCandidate,
+    IntegrationActivationCandidateRecommendation, IntegrationActivationCandidateSummary,
+    IntegrationActivationConstraint, IntegrationActivationConstraintKind,
+    IntegrationActivationConstraintSummary, IntegrationActivationControlRoomPanel,
+    IntegrationActivationControlRoomSummary, IntegrationActivationDashboardCard,
+    IntegrationActivationDashboardSummary, IntegrationActivationDecisionItem,
+    IntegrationActivationDecisionStatus, IntegrationActivationDecisionSummary,
+    IntegrationActivationDependencyEdge, IntegrationActivationDependencyGraph,
+    IntegrationActivationDependencyNode, IntegrationActivationDependencySummary,
+    IntegrationActivationDossierItem, IntegrationActivationDossierSummary,
+    IntegrationActivationEvidenceItem, IntegrationActivationEvidenceKind,
+    IntegrationActivationEvidenceStatus, IntegrationActivationEvidenceSummary,
+    IntegrationActivationForecastAction, IntegrationActivationForecastItem,
+    IntegrationActivationForecastSummary, IntegrationActivationHealthStage,
+    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
+    IntegrationActivationMaintenanceSummary, IntegrationActivationMaintenanceWindow,
+    IntegrationActivationOperatorTask, IntegrationActivationOperatorTaskKind,
+    IntegrationActivationOperatorTaskSummary, IntegrationActivationPlan,
+    IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
     IntegrationActivationReviewItem, IntegrationActivationReviewSummary,
@@ -265,6 +267,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID: &str =
     "smart_home.list_integration_activation_operator_queue";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_operator_queue_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID: &str =
+    "smart_home.list_integration_activation_control_room";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_control_room_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -570,6 +576,18 @@ impl SmartHomeToolBridge {
                     let query = integration_activation_operator_queue_query(&arguments)?;
                     Ok(
                         get_integration_activation_operator_queue_summary_output_handler_output(
+                            query,
+                        ),
+                    )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID => {
+                    let query = integration_activation_control_room_query(&arguments)?;
+                    Ok(list_integration_activation_control_room_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_control_room_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_control_room_summary_output_handler_output(
                             query,
                         ),
                     )
@@ -1926,6 +1944,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation operator queue summary",
             "Return compact D23A activation operator queue counts for actionable work, blockers, review work, activation, and monitor tasks.",
             integration_activation_operator_queue_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID,
+            "List smart-home integration activation control room panels",
+            "List D23A activation control-room panels that group operator queue tasks by recommended planning view, attention state, blockers, review work, and activation readiness.",
+            integration_activation_control_room_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_control_room", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_control_room",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation control room summary",
+            "Return compact D23A activation control-room panel counts for attention, blockers, review work, activation work, and the next recommended view.",
+            integration_activation_control_room_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4622,6 +4674,17 @@ struct IntegrationActivationOperatorQueueQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationControlRoomQuery {
+    operator_queue: IntegrationActivationOperatorQueueQuery,
+    recommended_view: Option<IntegrationActivationPlaybookView>,
+    requires_attention: Option<bool>,
+    has_blockers: Option<bool>,
+    has_review_work: Option<bool>,
+    has_activation_work: Option<bool>,
+    panel_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -4971,6 +5034,29 @@ fn integration_activation_operator_queue_query(
         actionable: optional_bool(arguments, "actionable")?,
         include_monitor: optional_bool(arguments, "include_monitor")?.unwrap_or(false),
         task_limit: optional_u64(arguments, "task_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_control_room_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationControlRoomQuery, ToolCallError> {
+    let recommended_view = optional_string(arguments, "control_room_view")?
+        .or(optional_string(arguments, "panel_view")?)
+        .map(|label| parse_activation_playbook_view(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationControlRoomQuery {
+        operator_queue: integration_activation_operator_queue_query(arguments)?,
+        recommended_view,
+        requires_attention: optional_bool(arguments, "panel_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        has_blockers: optional_bool(arguments, "panel_has_blockers")?
+            .or(optional_bool(arguments, "has_blockers")?),
+        has_review_work: optional_bool(arguments, "panel_has_review_work")?
+            .or(optional_bool(arguments, "has_review_work")?),
+        has_activation_work: optional_bool(arguments, "panel_has_activation_work")?
+            .or(optional_bool(arguments, "has_activation_work")?),
+        panel_limit: optional_u64(arguments, "panel_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5625,6 +5711,35 @@ fn integration_activation_operator_tasks_for_query(
     }
 
     (tasks, catalog_count)
+}
+
+fn integration_activation_control_room_panels_for_query(
+    query: &IntegrationActivationControlRoomQuery,
+) -> (Vec<IntegrationActivationControlRoomPanel>, usize) {
+    let (tasks, catalog_count) =
+        integration_activation_operator_tasks_for_query(&query.operator_queue);
+    let mut panels = activation_control_room_panels_from_operator_tasks(tasks);
+
+    if let Some(view) = query.recommended_view {
+        panels.retain(|panel| panel.recommended_view == view);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        panels.retain(|panel| panel.requires_attention() == requires_attention);
+    }
+    if let Some(has_blockers) = query.has_blockers {
+        panels.retain(|panel| panel.has_blockers() == has_blockers);
+    }
+    if let Some(has_review_work) = query.has_review_work {
+        panels.retain(|panel| panel.has_review_work() == has_review_work);
+    }
+    if let Some(has_activation_work) = query.has_activation_work {
+        panels.retain(|panel| panel.has_activation_work() == has_activation_work);
+    }
+    if let Some(limit) = query.panel_limit {
+        panels.truncate(limit);
+    }
+
+    (panels, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -7329,6 +7444,88 @@ fn get_integration_activation_operator_queue_summary_output_handler_output(
                 summary
                     .next_task_kind
                     .map(|kind| string(kind.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_control_room_output_handler_output(
+    query: IntegrationActivationControlRoomQuery,
+) -> ToolHandlerOutput {
+    let (panels, catalog_count) = integration_activation_control_room_panels_for_query(&query);
+    let summary = IntegrationActivationControlRoomSummary::from_panels(panels.iter());
+    let count = panels.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_control_room",
+            JsonValue::Array(
+                panels
+                    .iter()
+                    .map(activation_control_room_panel_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_control_room_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_control_room"),
+            ),
+            ("panels", integer(count as i64)),
+            (
+                "panels_requiring_attention",
+                integer(summary.panels_requiring_attention as i64),
+            ),
+            ("total_tasks", integer(summary.total_tasks as i64)),
+            (
+                "next_recommended_view",
+                summary
+                    .next_recommended_view
+                    .map(|view| string(view.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_control_room_summary_output_handler_output(
+    query: IntegrationActivationControlRoomQuery,
+) -> ToolHandlerOutput {
+    let (panels, _) = integration_activation_control_room_panels_for_query(&query);
+    let summary = IntegrationActivationControlRoomSummary::from_panels(panels.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_control_room_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_control_room_summary"),
+            ),
+            ("total_panels", integer(summary.total_panels as i64)),
+            (
+                "panels_requiring_attention",
+                integer(summary.panels_requiring_attention as i64),
+            ),
+            ("total_tasks", integer(summary.total_tasks as i64)),
+            (
+                "next_recommended_view",
+                summary
+                    .next_recommended_view
+                    .map(|view| string(view.as_str()))
                     .unwrap_or(JsonValue::Null),
             ),
         ]),
@@ -13802,6 +13999,237 @@ fn integration_activation_operator_queue_summary_json(
     ])
 }
 
+fn activation_control_room_panel_json(panel: &IntegrationActivationControlRoomPanel) -> JsonValue {
+    object([
+        ("sequence", integer(panel.sequence as i64)),
+        ("recommended_view", string(panel.recommended_view.as_str())),
+        ("priority", integer(panel.priority as i64)),
+        (
+            "task_sequences",
+            JsonValue::Array(
+                panel
+                    .task_sequences
+                    .iter()
+                    .map(|sequence| integer(*sequence as i64))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                panel
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(panel.integration_count() as i64),
+        ),
+        ("task_count", integer(panel.task_count as i64)),
+        (
+            "operator_summary",
+            integration_activation_operator_queue_summary_json(&panel.operator_summary),
+        ),
+        (
+            "has_operator_work",
+            JsonValue::Bool(panel.has_operator_work()),
+        ),
+        (
+            "has_actionable_work",
+            JsonValue::Bool(panel.has_actionable_work()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(panel.has_activation_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(panel.has_blockers())),
+        ("has_review_work", JsonValue::Bool(panel.has_review_work())),
+        (
+            "requires_attention",
+            JsonValue::Bool(panel.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_control_room_summary_json(
+    summary: &IntegrationActivationControlRoomSummary,
+) -> JsonValue {
+    object([
+        ("total_panels", integer(summary.total_panels as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "panels_requiring_attention",
+            integer(summary.panels_requiring_attention as i64),
+        ),
+        (
+            "panels_with_operator_work",
+            integer(summary.panels_with_operator_work as i64),
+        ),
+        (
+            "panels_with_actionable_work",
+            integer(summary.panels_with_actionable_work as i64),
+        ),
+        (
+            "panels_with_activation_work",
+            integer(summary.panels_with_activation_work as i64),
+        ),
+        (
+            "panels_with_blockers",
+            integer(summary.panels_with_blockers as i64),
+        ),
+        (
+            "panels_with_review_work",
+            integer(summary.panels_with_review_work as i64),
+        ),
+        (
+            "constraint_panels",
+            integer(summary.constraint_panels as i64),
+        ),
+        (
+            "dependency_panels",
+            integer(summary.dependency_panels as i64),
+        ),
+        ("approval_panels", integer(summary.approval_panels as i64)),
+        ("review_panels", integer(summary.review_panels as i64)),
+        ("risk_panels", integer(summary.risk_panels as i64)),
+        ("action_panels", integer(summary.action_panels as i64)),
+        ("dashboard_panels", integer(summary.dashboard_panels as i64)),
+        ("total_tasks", integer(summary.total_tasks as i64)),
+        (
+            "operator_required_tasks",
+            integer(summary.operator_required_tasks as i64),
+        ),
+        ("actionable_tasks", integer(summary.actionable_tasks as i64)),
+        (
+            "activation_ready_tasks",
+            integer(summary.activation_ready_tasks as i64),
+        ),
+        ("blocked_tasks", integer(summary.blocked_tasks as i64)),
+        (
+            "review_required_tasks",
+            integer(summary.review_required_tasks as i64),
+        ),
+        ("monitor_tasks", integer(summary.monitor_tasks as i64)),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_task_kind",
+            summary
+                .next_task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_panel_sequence",
+            summary
+                .next_panel_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_panel_priority",
+            summary
+                .next_panel_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_panel_sequence",
+            summary
+                .first_blocked_panel_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_panel_sequence",
+            summary
+                .first_review_panel_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_panel_sequence",
+            summary
+                .first_activation_panel_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_actionable_panel_sequence",
+            summary
+                .first_actionable_panel_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_panel_priority",
+            summary
+                .first_blocked_panel_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_panel_priority",
+            summary
+                .first_review_panel_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_activation_panel_priority",
+            summary
+                .first_activation_panel_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_actionable_panel_priority",
+            summary
+                .first_actionable_panel_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_operator_work",
+            JsonValue::Bool(summary.has_operator_work()),
+        ),
+        (
+            "has_actionable_work",
+            JsonValue::Bool(summary.has_actionable_work()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -17579,6 +18007,37 @@ fn integration_activation_operator_queue_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_control_room_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_operator_queue_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("control_room_view", JsonSchema::String));
+        properties.push(SchemaProperty::new("panel_view", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "panel_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "panel_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "panel_has_review_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "panel_has_activation_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("panel_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -17723,7 +18182,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 99);
+        assert_eq!(definitions.len(), 101);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -17988,9 +18447,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            91
+            93
         );
         assert_eq!(
             export
@@ -18182,6 +18647,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -18436,11 +18909,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(99))
+            Some(&integer(101))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(91))
+            Some(&integer(93))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -21178,6 +21651,141 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_control_room_request = request(
+            "call-list-integration-activation-control-room",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_CONTROL_ROOM_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("panel_requires_attention", JsonValue::Bool(true)),
+                ("panel_limit", integer(3)),
+            ]),
+            5_033,
+        );
+        let list_activation_control_room_trace =
+            tool_runtime.invoke_with_events(&list_activation_control_room_request);
+        assert!(list_activation_control_room_trace.result.ok);
+        assert_eq!(
+            list_activation_control_room_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_control_room_output = list_activation_control_room_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_control_room_count =
+            integer_value(field(list_activation_control_room_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_control_room_count));
+        let activation_control_room_summary =
+            field(list_activation_control_room_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_control_room_summary, "total_panels"),
+            Some(&integer(activation_control_room_count))
+        );
+        assert!(
+            integer_value(field(activation_control_room_summary, "total_tasks").unwrap()).unwrap()
+                >= activation_control_room_count
+        );
+        assert_eq!(
+            field(activation_control_room_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_control_room_panel = array_item(
+            field(
+                list_activation_control_room_output,
+                "activation_control_room",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_control_room_panel, "sequence").is_some());
+        assert!(field(activation_control_room_panel, "recommended_view").is_some());
+        assert!(field(activation_control_room_panel, "task_sequences").is_some());
+        assert!(field(activation_control_room_panel, "operator_summary").is_some());
+        assert_eq!(
+            field(activation_control_room_panel, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_control_room_summary_request = request(
+            "call-integration-activation-control-room-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_CONTROL_ROOM_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("control_room_view", string("constraints")),
+                ("panel_has_blockers", JsonValue::Bool(true)),
+            ]),
+            5_034,
+        );
+        let activation_control_room_summary_trace =
+            tool_runtime.invoke_with_events(&activation_control_room_summary_request);
+        assert!(activation_control_room_summary_trace.result.ok);
+        assert_eq!(
+            activation_control_room_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_control_room_summary_output = activation_control_room_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_control_room_rollup =
+            field(activation_control_room_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_control_room_rollup, "constraint_panels").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_control_room_rollup, "next_recommended_view"),
+            Some(&string("constraints"))
+        );
+        assert_eq!(
+            field(activation_control_room_rollup, "next_task_kind"),
+            Some(&string("resolve_constraints"))
+        );
+        assert_eq!(
+            field(activation_control_room_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -22949,6 +23557,14 @@ mod tests {
             activation_operator_queue_summary_request,
             activation_operator_queue_summary_trace,
         );
+        journal.record_trace(
+            list_activation_control_room_request,
+            list_activation_control_room_trace,
+        );
+        journal.record_trace(
+            activation_control_room_summary_request,
+            activation_control_room_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -23022,9 +23638,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 99);
-        assert_eq!(journal_summary.completed_count, 99);
-        assert_eq!(journal.audit_records().len(), 99);
+        assert_eq!(journal_summary.invocation_count, 101);
+        assert_eq!(journal_summary.completed_count, 101);
+        assert_eq!(journal.audit_records().len(), 101);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
