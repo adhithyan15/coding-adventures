@@ -1221,6 +1221,29 @@ impl IntegrationActivationWatchtowerSignalKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationSentinelAlertKind {
+    Blocker,
+    Dependency,
+    PolicyRisk,
+    Review,
+    Ready,
+    Observation,
+}
+
+impl IntegrationActivationSentinelAlertKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocker => "blocker",
+            Self::Dependency => "dependency",
+            Self::PolicyRisk => "policy_risk",
+            Self::Review => "review",
+            Self::Ready => "ready",
+            Self::Observation => "observation",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationDecisionStatus {
     ReadyToApprove,
     BlockedOnPrerequisites,
@@ -2466,6 +2489,49 @@ pub struct IntegrationActivationWatchtowerSummary {
     pub first_review_signal_priority: Option<u8>,
     pub first_ready_signal_priority: Option<u8>,
     pub first_action_signal_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationSentinelAlert {
+    pub sequence: usize,
+    pub alert_kind: IntegrationActivationSentinelAlertKind,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub watchtower_summary: IntegrationActivationWatchtowerSummary,
+    pub risk_summary: IntegrationActivationRiskSummary,
+    pub dependency_summary: IntegrationActivationDependencySummary,
+    pub gap_inventory: IntegrationReadinessGapInventory,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationSentinelSummary {
+    pub total_alerts: usize,
+    pub unique_integrations: usize,
+    pub alerts_requiring_attention: usize,
+    pub blocker_alerts: usize,
+    pub dependency_alerts: usize,
+    pub policy_risk_alerts: usize,
+    pub review_alerts: usize,
+    pub ready_alerts: usize,
+    pub observation_alerts: usize,
+    pub alerts_with_gaps: usize,
+    pub alerts_with_blocking_dependencies: usize,
+    pub alerts_with_policy_risk: usize,
+    pub alerts_with_review_work: usize,
+    pub alerts_with_activation_work: usize,
+    pub total_watchtower_signals: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_unique_gaps: usize,
+    pub first_attention_priority: Option<u8>,
+    pub first_blocker_priority: Option<u8>,
+    pub first_dependency_priority: Option<u8>,
+    pub first_policy_risk_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_ready_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -5726,6 +5792,260 @@ impl IntegrationActivationWatchtowerSummary {
 
     pub fn needs_escalation(&self) -> bool {
         self.escalation_signals > 0 || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationSentinelAlert {
+    fn from_rollups(
+        sequence: usize,
+        alert_kind: IntegrationActivationSentinelAlertKind,
+        priority: u8,
+        mut integration_ids: Vec<IntegrationId>,
+        watchtower_summary: IntegrationActivationWatchtowerSummary,
+        risk_summary: IntegrationActivationRiskSummary,
+        dependency_summary: IntegrationActivationDependencySummary,
+        gap_inventory: IntegrationReadinessGapInventory,
+    ) -> Self {
+        integration_ids.sort();
+        integration_ids.dedup();
+
+        Self {
+            sequence,
+            alert_kind,
+            priority,
+            integration_ids,
+            watchtower_summary,
+            risk_summary,
+            dependency_summary,
+            gap_inventory,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_gaps(&self) -> bool {
+        matches!(
+            self.alert_kind,
+            IntegrationActivationSentinelAlertKind::Blocker
+                | IntegrationActivationSentinelAlertKind::Dependency
+        ) && self.gap_inventory.has_gaps()
+    }
+
+    pub fn has_blocking_dependencies(&self) -> bool {
+        matches!(
+            self.alert_kind,
+            IntegrationActivationSentinelAlertKind::Blocker
+                | IntegrationActivationSentinelAlertKind::Dependency
+        ) && self.dependency_summary.has_blocking_dependencies()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.alert_kind == IntegrationActivationSentinelAlertKind::Blocker
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        matches!(
+            self.alert_kind,
+            IntegrationActivationSentinelAlertKind::Blocker
+                | IntegrationActivationSentinelAlertKind::Dependency
+        ) && (self.dependency_summary.has_dependency_edges()
+            || self.gap_inventory.dependency_gap_count() > 0)
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.alert_kind == IntegrationActivationSentinelAlertKind::PolicyRisk
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.alert_kind == IntegrationActivationSentinelAlertKind::Review
+            || (self.alert_kind == IntegrationActivationSentinelAlertKind::PolicyRisk
+                && self.risk_summary.has_review_work())
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.alert_kind == IntegrationActivationSentinelAlertKind::Ready
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        match self.alert_kind {
+            IntegrationActivationSentinelAlertKind::Blocker => true,
+            IntegrationActivationSentinelAlertKind::Dependency => {
+                self.dependency_summary.has_blocking_dependencies() || self.gap_inventory.has_gaps()
+            }
+            IntegrationActivationSentinelAlertKind::PolicyRisk => {
+                self.risk_summary.requires_attention()
+                    || self.risk_summary.highest_policy_tier >= PrivilegeTier::HumanApproval
+            }
+            IntegrationActivationSentinelAlertKind::Review => true,
+            IntegrationActivationSentinelAlertKind::Ready
+            | IntegrationActivationSentinelAlertKind::Observation => false,
+        }
+    }
+}
+
+impl IntegrationActivationSentinelSummary {
+    pub fn from_alerts<'a>(
+        alerts: impl IntoIterator<Item = &'a IntegrationActivationSentinelAlert>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_alerts: 0,
+            unique_integrations: 0,
+            alerts_requiring_attention: 0,
+            blocker_alerts: 0,
+            dependency_alerts: 0,
+            policy_risk_alerts: 0,
+            review_alerts: 0,
+            ready_alerts: 0,
+            observation_alerts: 0,
+            alerts_with_gaps: 0,
+            alerts_with_blocking_dependencies: 0,
+            alerts_with_policy_risk: 0,
+            alerts_with_review_work: 0,
+            alerts_with_activation_work: 0,
+            total_watchtower_signals: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_unique_gaps: 0,
+            first_attention_priority: None,
+            first_blocker_priority: None,
+            first_dependency_priority: None,
+            first_policy_risk_priority: None,
+            first_review_priority: None,
+            first_ready_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for alert in alerts {
+            summary.total_alerts += 1;
+            for integration_id in &alert.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match alert.alert_kind {
+                IntegrationActivationSentinelAlertKind::Blocker => {
+                    summary.blocker_alerts += 1;
+                    summary.first_blocker_priority =
+                        min_optional_priority(summary.first_blocker_priority, Some(alert.priority));
+                }
+                IntegrationActivationSentinelAlertKind::Dependency => {
+                    summary.dependency_alerts += 1;
+                    summary.first_dependency_priority = min_optional_priority(
+                        summary.first_dependency_priority,
+                        Some(alert.priority),
+                    );
+                }
+                IntegrationActivationSentinelAlertKind::PolicyRisk => {
+                    summary.policy_risk_alerts += 1;
+                    summary.first_policy_risk_priority = min_optional_priority(
+                        summary.first_policy_risk_priority,
+                        Some(alert.priority),
+                    );
+                }
+                IntegrationActivationSentinelAlertKind::Review => {
+                    summary.review_alerts += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, Some(alert.priority));
+                }
+                IntegrationActivationSentinelAlertKind::Ready => {
+                    summary.ready_alerts += 1;
+                    summary.first_ready_priority =
+                        min_optional_priority(summary.first_ready_priority, Some(alert.priority));
+                }
+                IntegrationActivationSentinelAlertKind::Observation => {
+                    summary.observation_alerts += 1;
+                }
+            }
+
+            if alert.requires_attention() {
+                summary.alerts_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(alert.priority));
+            }
+            if alert.has_gaps() {
+                summary.alerts_with_gaps += 1;
+            }
+            if alert.has_blocking_dependencies() {
+                summary.alerts_with_blocking_dependencies += 1;
+            }
+            if alert.has_policy_risk() {
+                summary.alerts_with_policy_risk += 1;
+            }
+            if alert.has_review_work() {
+                summary.alerts_with_review_work += 1;
+            }
+            if alert.has_activation_work() {
+                summary.alerts_with_activation_work += 1;
+            }
+
+            summary.total_watchtower_signals = summary
+                .total_watchtower_signals
+                .max(alert.watchtower_summary.total_signals);
+            summary.total_risks = summary.total_risks.max(alert.risk_summary.total_risks);
+            summary.total_dependency_edges = summary
+                .total_dependency_edges
+                .max(alert.dependency_summary.total_edges);
+            summary.blocking_dependency_edges = summary
+                .blocking_dependency_edges
+                .max(alert.dependency_summary.blocking_edges);
+            summary.total_unique_gaps = summary
+                .total_unique_gaps
+                .max(alert.gap_inventory.total_unique_gaps());
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(alert.watchtower_summary.highest_policy_tier)
+                .max(alert.risk_summary.highest_policy_tier)
+                .max(alert.dependency_summary.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocker_alerts > 0
+            || summary.alerts_with_blocking_dependencies > 0
+            || summary.alerts_with_gaps > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.alerts_requiring_attention > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_alerts > 0 || summary.alerts_with_activation_work > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_alerts == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocker_alerts > 0
+            || self.alerts_with_blocking_dependencies > 0
+            || self.alerts_with_gaps > 0
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_alerts > 0
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk_alerts > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_alerts > 0 || self.alerts_with_review_work > 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.ready_alerts > 0 || self.alerts_with_activation_work > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.alerts_requiring_attention > 0 || self.overall_status.requires_attention()
     }
 }
 
@@ -10202,6 +10522,192 @@ pub fn activation_watchtower_signals_at_or_before_priority(
     )
 }
 
+pub fn activation_sentinel_alerts_from_rollups(
+    signals: &[IntegrationActivationWatchtowerSignal],
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationActivationSentinelAlert> {
+    let watchtower_summary = IntegrationActivationWatchtowerSummary::from_signals(signals.iter());
+    let risk_summary = IntegrationActivationRiskSummary::from_risks(risks.iter());
+    let dependency_summary = graph.summary.clone();
+    let integration_ids =
+        integration_ids_for_activation_sentinel_rollups(signals, risks, graph, gap_inventory);
+
+    if watchtower_summary.is_empty()
+        && risk_summary.is_empty()
+        && graph.is_empty()
+        && gap_inventory.is_empty()
+    {
+        return Vec::new();
+    }
+
+    let mut alerts = Vec::new();
+    if watchtower_summary.has_blockers()
+        || risk_summary.has_blockers()
+        || dependency_summary.has_blocking_dependencies()
+        || gap_inventory.has_gaps()
+    {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::Blocker,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::Blocker,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    if dependency_summary.has_dependency_edges() || gap_inventory.dependency_gap_count() > 0 {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::Dependency,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::Dependency,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    if risk_summary.total_risks > 0 {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::PolicyRisk,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::PolicyRisk,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    if watchtower_summary.has_review_work() || risk_summary.has_review_work() {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::Review,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::Review,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    if watchtower_summary.has_activation_work()
+        || risk_summary.has_ready_work()
+        || gap_inventory.all_ready()
+    {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::Ready,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::Ready,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    if alerts.is_empty() {
+        push_activation_sentinel_alert(
+            &mut alerts,
+            IntegrationActivationSentinelAlertKind::Observation,
+            priority_for_activation_sentinel_alert(
+                IntegrationActivationSentinelAlertKind::Observation,
+                &watchtower_summary,
+                &risk_summary,
+                &dependency_summary,
+                graph,
+                gap_inventory,
+                risks,
+            ),
+            &integration_ids,
+            &watchtower_summary,
+            &risk_summary,
+            &dependency_summary,
+            gap_inventory,
+        );
+    }
+
+    alerts.sort_by(compare_activation_sentinel_alerts);
+    for (index, alert) in alerts.iter_mut().enumerate() {
+        alert.sequence = index + 1;
+    }
+    alerts
+}
+
+pub fn activation_sentinel_alerts_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationSentinelAlert> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let candidates = activation_candidates_from_reports(reports.iter());
+    let risks = activation_risk_from_candidates(catalog, candidates.iter());
+    let signals =
+        activation_watchtower_signals_from_candidates(catalog, candidates, enabled_integrations);
+    let graph =
+        activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations);
+    let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+
+    activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -11645,6 +12151,195 @@ fn compare_activation_watchtower_signals(
         .then_with(|| left.signal_kind.cmp(&right.signal_kind))
         .then_with(|| right.section_count.cmp(&left.section_count))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_sentinel_alerts(
+    left: &IntegrationActivationSentinelAlert,
+    right: &IntegrationActivationSentinelAlert,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| left.alert_kind.cmp(&right.alert_kind))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn push_activation_sentinel_alert(
+    alerts: &mut Vec<IntegrationActivationSentinelAlert>,
+    alert_kind: IntegrationActivationSentinelAlertKind,
+    priority: u8,
+    integration_ids: &[IntegrationId],
+    watchtower_summary: &IntegrationActivationWatchtowerSummary,
+    risk_summary: &IntegrationActivationRiskSummary,
+    dependency_summary: &IntegrationActivationDependencySummary,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) {
+    alerts.push(IntegrationActivationSentinelAlert::from_rollups(
+        0,
+        alert_kind,
+        priority,
+        integration_ids.to_vec(),
+        watchtower_summary.clone(),
+        risk_summary.clone(),
+        dependency_summary.clone(),
+        gap_inventory.clone(),
+    ));
+}
+
+fn integration_ids_for_activation_sentinel_rollups(
+    signals: &[IntegrationActivationWatchtowerSignal],
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationId> {
+    let mut integration_ids = BTreeSet::new();
+    for signal in signals {
+        for integration_id in &signal.integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    for risk in risks {
+        for integration_id in &risk.integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    for node in &graph.nodes {
+        integration_ids.insert(node.integration_id.clone());
+        for integration_id in &node.depends_on_integrations {
+            integration_ids.insert(integration_id.clone());
+        }
+        for integration_id in &node.dependent_integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+        for integration_id in &node.missing_dependencies {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    for edge in &graph.edges {
+        integration_ids.insert(edge.dependency_integration_id.clone());
+        integration_ids.insert(edge.dependent_integration_id.clone());
+    }
+    for gap in &gap_inventory.primitive_gaps {
+        for integration_id in &gap.integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    for gap in &gap_inventory.capability_gaps {
+        for integration_id in &gap.integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    for gap in &gap_inventory.dependency_gaps {
+        integration_ids.insert(gap.integration_id.clone());
+        for integration_id in &gap.requested_integration_ids {
+            integration_ids.insert(integration_id.clone());
+        }
+    }
+    integration_ids.into_iter().collect()
+}
+
+fn priority_for_activation_sentinel_alert(
+    alert_kind: IntegrationActivationSentinelAlertKind,
+    watchtower_summary: &IntegrationActivationWatchtowerSummary,
+    risk_summary: &IntegrationActivationRiskSummary,
+    dependency_summary: &IntegrationActivationDependencySummary,
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+    risks: &[IntegrationActivationRiskItem],
+) -> u8 {
+    let priority = match alert_kind {
+        IntegrationActivationSentinelAlertKind::Blocker => min_optional_priority(
+            min_optional_priority(
+                watchtower_summary.first_escalation_signal_priority,
+                risk_summary.first_blocked_priority,
+            ),
+            min_optional_priority(
+                dependency_summary.first_blocked_priority,
+                first_gap_priority(gap_inventory),
+            ),
+        ),
+        IntegrationActivationSentinelAlertKind::Dependency => min_optional_priority(
+            min_optional_priority(
+                dependency_summary.first_blocked_priority,
+                first_dependency_edge_priority(graph),
+            ),
+            first_dependency_gap_priority(gap_inventory),
+        ),
+        IntegrationActivationSentinelAlertKind::PolicyRisk => {
+            first_risk_priority(risks).or(risk_summary.first_review_priority)
+        }
+        IntegrationActivationSentinelAlertKind::Review => min_optional_priority(
+            watchtower_summary.first_review_signal_priority,
+            risk_summary.first_review_priority,
+        ),
+        IntegrationActivationSentinelAlertKind::Ready => min_optional_priority(
+            watchtower_summary.first_ready_signal_priority,
+            risk_summary.first_ready_priority,
+        ),
+        IntegrationActivationSentinelAlertKind::Observation => min_optional_priority(
+            watchtower_summary.next_signal_priority,
+            min_optional_priority(
+                first_risk_priority(risks),
+                min_optional_priority(
+                    dependency_summary.first_blocked_priority,
+                    first_gap_priority(gap_inventory),
+                ),
+            ),
+        ),
+    };
+
+    priority.unwrap_or(u8::MAX)
+}
+
+fn first_risk_priority(risks: &[IntegrationActivationRiskItem]) -> Option<u8> {
+    risks
+        .iter()
+        .map(|risk| risk.highest_priority)
+        .min()
+        .filter(|priority| *priority < u8::MAX)
+}
+
+fn first_dependency_edge_priority(graph: &IntegrationActivationDependencyGraph) -> Option<u8> {
+    graph.edges.iter().map(|edge| edge.dependent_priority).min()
+}
+
+fn first_gap_priority(gap_inventory: &IntegrationReadinessGapInventory) -> Option<u8> {
+    min_optional_priority(
+        first_primitive_gap_priority(gap_inventory),
+        min_optional_priority(
+            first_capability_gap_priority(gap_inventory),
+            first_dependency_gap_priority(gap_inventory),
+        ),
+    )
+}
+
+fn first_primitive_gap_priority(gap_inventory: &IntegrationReadinessGapInventory) -> Option<u8> {
+    gap_inventory
+        .primitive_gaps
+        .iter()
+        .map(|gap| gap.highest_priority)
+        .min()
+}
+
+fn first_capability_gap_priority(gap_inventory: &IntegrationReadinessGapInventory) -> Option<u8> {
+    gap_inventory
+        .capability_gaps
+        .iter()
+        .map(|gap| gap.highest_priority)
+        .min()
+}
+
+fn first_dependency_gap_priority(gap_inventory: &IntegrationReadinessGapInventory) -> Option<u8> {
+    gap_inventory
+        .dependency_gaps
+        .iter()
+        .map(|gap| gap.highest_priority)
+        .min()
 }
 
 fn compare_activation_dependency_nodes(
@@ -14433,6 +15128,126 @@ mod tests {
         assert!(catalog_signals
             .iter()
             .any(IntegrationActivationWatchtowerSignal::requires_attention));
+    }
+
+    #[test]
+    fn activation_sentinel_alerts_roll_up_activation_attention() {
+        let reports = vec![
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+                display_name: "Review Ready Bridge".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 1,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HumanApproval,
+                local_only: true,
+                cloud_required: false,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+                display_name: "Blocked Review Camera".to_string(),
+                activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                    IntegrationId::trusted("mqtt"),
+                ),
+                priority: 2,
+                missing_primitives: vec![PrimitiveFamily::CameraMedia],
+                missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+                missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HighRisk,
+                local_only: false,
+                cloud_required: true,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("read_only_probe"),
+                display_name: "Read-only Probe".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 3,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: false,
+                highest_policy_tier: PrivilegeTier::ReadOnly,
+                local_only: true,
+                cloud_required: false,
+            },
+        ];
+        let candidates = activation_candidates_from_reports(reports.iter());
+        let risks = activation_risk_from_candidates(&[], candidates.iter());
+        let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
+        let signals = activation_watchtower_signals_from_command_center_sections(sections);
+        let graph = activation_dependency_graph_from_reports(&[], reports.iter(), &[]);
+        let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+        let alerts =
+            activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory);
+
+        assert!(alerts
+            .iter()
+            .any(|alert| alert.alert_kind == IntegrationActivationSentinelAlertKind::Blocker));
+        assert!(alerts
+            .iter()
+            .any(|alert| alert.alert_kind == IntegrationActivationSentinelAlertKind::Dependency));
+        assert!(alerts
+            .iter()
+            .any(|alert| alert.alert_kind == IntegrationActivationSentinelAlertKind::PolicyRisk));
+        assert!(alerts
+            .iter()
+            .any(|alert| alert.alert_kind == IntegrationActivationSentinelAlertKind::Review));
+        assert!(alerts
+            .iter()
+            .any(|alert| alert.alert_kind == IntegrationActivationSentinelAlertKind::Ready));
+        assert!(alerts.iter().all(|alert| alert.sequence > 0));
+        assert!(alerts
+            .iter()
+            .any(IntegrationActivationSentinelAlert::has_gaps));
+        assert!(alerts
+            .iter()
+            .any(IntegrationActivationSentinelAlert::has_policy_risk));
+
+        let summary = IntegrationActivationSentinelSummary::from_alerts(alerts.iter());
+        assert_eq!(summary.total_alerts, alerts.len());
+        assert_eq!(summary.unique_integrations, 4);
+        assert_eq!(summary.blocker_alerts, 1);
+        assert_eq!(summary.dependency_alerts, 1);
+        assert_eq!(summary.policy_risk_alerts, 1);
+        assert_eq!(summary.review_alerts, 1);
+        assert_eq!(summary.ready_alerts, 1);
+        assert_eq!(summary.total_watchtower_signals, signals.len());
+        assert_eq!(summary.total_risks, risks.len());
+        assert_eq!(summary.total_unique_gaps, gap_inventory.total_unique_gaps());
+        assert!(summary.requires_attention());
+        assert!(summary.has_blockers());
+        assert!(summary.has_dependency_work());
+        assert!(summary.has_policy_risk());
+        assert!(summary.has_review_work());
+        assert!(summary.has_activation_work());
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_alerts = activation_sentinel_alerts_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_alerts
+            .iter()
+            .any(IntegrationActivationSentinelAlert::requires_attention));
     }
 
     #[test]

@@ -103,6 +103,11 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_watchtower_summary` tool descriptors
   for read-only escalation, review, ready, action, and observation signal
   rollups derived from activation command-center sections.
+- `smart_home.list_integration_activation_sentinel` and
+  `smart_home.get_integration_activation_sentinel_summary` tool descriptors
+  for read-only blocker, dependency, policy-risk, review, ready, and
+  observation alert rollups derived from activation watchtower, risk,
+  dependency, and readiness-gap rollups.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.

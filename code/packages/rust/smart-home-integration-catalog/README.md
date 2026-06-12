@@ -83,6 +83,9 @@ runtime and Chief of Staff tools a typed catalog for:
   blocker, review, activation, actionable, and monitoring operating lanes
 - activation watchtower signals that roll command-center sections into
   escalation, review, ready, action, and observation signal lanes
+- activation sentinel alerts that combine watchtower, risk, dependency, and
+  readiness-gap rollups into blocker, dependency, policy-risk, review, ready,
+  and observation lanes
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

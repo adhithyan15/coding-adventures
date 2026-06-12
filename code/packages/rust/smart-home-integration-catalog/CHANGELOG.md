@@ -87,6 +87,10 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationWatchtowerSignal` and
   `IntegrationActivationWatchtowerSummary` for rolling command-center sections
   into escalation, review, ready, action, and observation signal lanes.
+- `IntegrationActivationSentinelAlert` and
+  `IntegrationActivationSentinelSummary` for combining watchtower, risk,
+  dependency, and readiness-gap rollups into blocker, dependency, policy-risk,
+  review, ready, and observation alert lanes.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

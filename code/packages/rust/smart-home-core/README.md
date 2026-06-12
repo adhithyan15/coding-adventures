@@ -99,6 +99,8 @@ Current scope:
   operating-lane sections derived from control-room panels
 - D18D integration activation-watchtower descriptors for escalation, review,
   ready, action, and observation signal rollups
+- D18D integration activation-sentinel descriptors for compact blocker,
+  dependency, policy-risk, review, ready, and observation alert rollups
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
