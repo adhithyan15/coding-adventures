@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  type CornerDistortionResult,
   type DistortionResult,
   ExpWaveform,
   type FourierResult,
@@ -18,9 +19,12 @@ import {
   dcOp,
   distortionFromFourier,
   distortionFromTransient,
+  distortionFromTransientCorners,
   estimatePeriod,
   formatCornerAdaptiveTransientTable,
+  formatCornerDistortionTable,
   formatCornerFourierTable,
+  formatCornerPoleZeroTable,
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
@@ -41,6 +45,7 @@ import {
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroCorners,
   poleZeroRlcBandpass,
   poleZeroRlcHighpass,
   poleZeroRlcLowpass,
@@ -932,6 +937,31 @@ describe("transient", () => {
     });
   });
 
+  it("runs selected pole-zero topology for each named corner and formats the table", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const result = poleZeroCorners(circuit, "Vin", "out", "rc-lowpass", [
+      { name: "nominal", overrides: [] },
+      { name: "cap-high", overrides: [{ elementName: "C1", parameter: "capacitance", value: 2.0e-6 }] },
+    ]);
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputNode).toBe("out");
+    expect(result.topology).toBe("rc-lowpass");
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("cap-high");
+    expect(result.points[0].result.entries[0].real).toBeCloseTo(-1.0e3, 9);
+    expect(result.points[1].result.entries[0].real).toBeCloseTo(-5.0e2, 9);
+    expect(formatCornerPoleZeroTable(result)).toBe(
+      "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n" +
+        "nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n" +
+        "cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n",
+    );
+  });
+
   it("computes the zero and pole for a simple RC high-pass fixture", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("Vin", "in", "0", 1.0));
@@ -1245,6 +1275,46 @@ describe("transient", () => {
     expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.1, 3);
   });
 
+  it("projects transient distortion for each named corner", () => {
+    const freq = 1.0e3;
+    const period = 1.0 / freq;
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, freq),
+      ),
+    );
+    circuit.add(resistor("Rtop", "in", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = distortionFromTransientCorners(
+      circuit,
+      period / 64.0,
+      2.0 * period,
+      freq,
+      "Vin",
+      "V(out)",
+      [
+        { name: "nominal", overrides: [] },
+        { name: "rbot-high", overrides: [{ elementName: "Rbot", parameter: "resistance", value: 3_000.0 }] },
+      ],
+      3,
+    );
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputProbe).toBe("V(out)");
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("rbot-high");
+    expect(result.points[0].result.points[0].fundamentalMagnitude).toBeCloseTo(0.5, 3);
+    expect(result.points[1].result.points[0].fundamentalMagnitude).toBeCloseTo(0.75, 3);
+    expect(result.points[0].result.points[0].totalHarmonicDistortion).toBeLessThan(2.0e-3);
+    expect(result.points[1].result.points[0].totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
   it("formats stable text output tables for DC and transient results", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 10.0));
@@ -1381,6 +1451,72 @@ describe("transient", () => {
       "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n",
+    );
+  });
+
+  it("formats stable text output tables for corner distortion results", () => {
+    const result: CornerDistortionResult = {
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          cornerName: "nominal",
+          result: {
+            inputSource: "Vin",
+            outputProbe: "V(out)",
+            points: [
+              {
+                frequencyHz: 1000.0,
+                fundamentalMagnitude: 1.0,
+                harmonics: [
+                  {
+                    harmonic: 1,
+                    frequencyHz: 1000.0,
+                    magnitude: 1.0,
+                    phaseDegrees: 0.0,
+                  },
+                  {
+                    harmonic: 2,
+                    frequencyHz: 2000.0,
+                    magnitude: 0.025,
+                    phaseDegrees: -1.5707963267948966,
+                  },
+                ],
+                totalHarmonicDistortion: 0.025,
+              },
+            ],
+          },
+        },
+        {
+          cornerName: "slow",
+          result: {
+            inputSource: "Vin",
+            outputProbe: "V(out)",
+            points: [
+              {
+                frequencyHz: 1000.0,
+                fundamentalMagnitude: 0.8,
+                harmonics: [
+                  {
+                    harmonic: 2,
+                    frequencyHz: 2000.0,
+                    magnitude: 0.04,
+                    phaseDegrees: 12.5,
+                  },
+                ],
+                totalHarmonicDistortion: 0.05,
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    expect(formatCornerDistortionTable(result)).toBe(
+      "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
+        "nominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
+        "nominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n" +
+        "slow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n",
     );
   });
 

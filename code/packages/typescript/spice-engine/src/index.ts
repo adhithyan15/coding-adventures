@@ -766,6 +766,17 @@ export interface DistortionResult {
   readonly points: readonly DistortionPoint[];
 }
 
+export interface CornerDistortionPoint {
+  readonly cornerName: string;
+  readonly result: DistortionResult;
+}
+
+export interface CornerDistortionResult {
+  readonly inputSource: string;
+  readonly outputProbe: string;
+  readonly points: readonly CornerDistortionPoint[];
+}
+
 export interface PoleZeroEntry {
   readonly kind: "pole" | "zero";
   readonly real: number;
@@ -778,6 +789,26 @@ export interface PoleZeroResult {
   readonly inputSource: string;
   readonly outputNode: string;
   readonly entries: readonly PoleZeroEntry[];
+}
+
+export type PoleZeroTopology =
+  | "rc-lowpass"
+  | "rc-highpass"
+  | "rlc-lowpass"
+  | "rlc-highpass"
+  | "rlc-bandpass"
+  | "rlc-notch";
+
+export interface CornerPoleZeroPoint {
+  readonly cornerName: string;
+  readonly result: PoleZeroResult;
+}
+
+export interface CornerPoleZeroResult {
+  readonly inputSource: string;
+  readonly outputNode: string;
+  readonly topology: PoleZeroTopology;
+  readonly points: readonly CornerPoleZeroPoint[];
 }
 
 export function poleZeroRcLowpass(
@@ -1391,6 +1422,51 @@ export function poleZeroRlcNotch(
   };
 }
 
+export function poleZeroCorners(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+  topology: PoleZeroTopology,
+  corners: readonly CornerSpec[],
+): CornerPoleZeroResult {
+  return {
+    inputSource,
+    outputNode,
+    topology,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: poleZeroForTopology(
+        circuitWithCorner(circuit, corner),
+        inputSource,
+        outputNode,
+        topology,
+      ),
+    })),
+  };
+}
+
+function poleZeroForTopology(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+  topology: PoleZeroTopology,
+): PoleZeroResult {
+  switch (topology) {
+    case "rc-lowpass":
+      return poleZeroRcLowpass(circuit, inputSource, outputNode);
+    case "rc-highpass":
+      return poleZeroRcHighpass(circuit, inputSource, outputNode);
+    case "rlc-lowpass":
+      return poleZeroRlcLowpass(circuit, inputSource, outputNode);
+    case "rlc-highpass":
+      return poleZeroRlcHighpass(circuit, inputSource, outputNode);
+    case "rlc-bandpass":
+      return poleZeroRlcBandpass(circuit, inputSource, outputNode);
+    case "rlc-notch":
+      return poleZeroRlcNotch(circuit, inputSource, outputNode);
+  }
+}
+
 export function distortionFromFourier(
   result: FourierResult,
   inputSource: string,
@@ -1436,6 +1512,35 @@ export function distortionFromTransient(
     inputSource,
     outputProbe,
   );
+}
+
+export function distortionFromTransientCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  fundamentalFrequencyHz: number,
+  inputSource: string,
+  outputProbe: string,
+  corners: readonly CornerSpec[],
+  harmonics = 9,
+  startTime?: number,
+  method: TransientMethod = "euler",
+): CornerDistortionResult {
+  return {
+    inputSource,
+    outputProbe,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: distortionFromTransient(
+        transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+        fundamentalFrequencyHz,
+        inputSource,
+        outputProbe,
+        harmonics,
+        startTime,
+      ),
+    })),
+  };
 }
 
 export interface AdaptiveTransientOptions {
@@ -2886,6 +2991,27 @@ export function formatPoleZeroTable(result: PoleZeroResult): string {
   return rows.join("\n");
 }
 
+export function formatCornerPoleZeroTable(result: CornerPoleZeroResult): string {
+  const rows = [["Corner", "Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.entries.forEach((entry, index) => {
+      rows.push(
+        [
+          corner.cornerName,
+          String(index),
+          entry.kind,
+          formatTableNumber(entry.real),
+          formatTableNumber(entry.imaginary),
+          formatTableNumber(entry.frequencyHz),
+          formatTableNumber(entry.damping),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatDistortionTable(result: DistortionResult): string {
   const rows = [["Frequency", "Input", "Output", "Harmonic", "Magnitude", "Phase", "THD"].join("\t")];
   result.points.forEach((point) => {
@@ -2901,6 +3027,30 @@ export function formatDistortionTable(result: DistortionResult): string {
           formatTableNumber(point.totalHarmonicDistortion),
         ].join("\t"),
       );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDistortionTable(result: CornerDistortionResult): string {
+  const rows = [["Corner", "Frequency", "Input", "Output", "Harmonic", "Magnitude", "Phase", "THD"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point) => {
+      point.harmonics.forEach((harmonic) => {
+        rows.push(
+          [
+            corner.cornerName,
+            formatTableNumber(point.frequencyHz),
+            result.inputSource,
+            result.outputProbe,
+            String(harmonic.harmonic),
+            formatTableNumber(harmonic.magnitude),
+            formatTableNumber(harmonic.phaseDegrees),
+            formatTableNumber(point.totalHarmonicDistortion),
+          ].join("\t"),
+        );
+      });
     });
   });
   rows.push("");

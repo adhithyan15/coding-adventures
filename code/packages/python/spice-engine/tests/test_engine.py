@@ -94,10 +94,13 @@ from spice_engine import (
     CornerAcSweepResult,
     CornerAdaptiveTransientResult,
     CornerDcSweepResult,
+    CornerDistortionPoint,
+    CornerDistortionResult,
     CornerFourierResult,
     CornerMcResult,
     CornerNoiseResult,
     CornerOverride,
+    CornerPoleZeroResult,
     CornerPssResult,
     CornerSensResult,
     CornerSParameterResult,
@@ -157,12 +160,15 @@ from spice_engine import (
     dc_sweep_corners,
     distortion_from_fourier,
     distortion_from_transient,
+    distortion_from_transient_corners,
     estimate_period,
     format_ac_table,
     format_corner_adaptive_transient_table,
+    format_corner_distortion_table,
     format_corner_fourier_table,
     format_corner_mc_table,
     format_corner_noise_table,
+    format_corner_pole_zero_table,
     format_corner_pss_table,
     format_corner_s_parameter_table,
     format_corner_sens_table,
@@ -184,6 +190,7 @@ from spice_engine import (
     mc_dc_corners,
     noise_ac,
     noise_ac_corners,
+    pole_zero_corners,
     pole_zero_rc_highpass,
     pole_zero_rc_lowpass,
     pole_zero_rlc_bandpass,
@@ -5911,6 +5918,39 @@ def test_pole_zero_rc_lowpass_returns_simple_rc_pole() -> None:
     )
 
 
+def test_pole_zero_corners_runs_selected_topology_per_corner_and_formats_table() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 1_000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_corners(
+        circuit,
+        "Vin",
+        "out",
+        "rc-lowpass",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("cap-high", (CornerOverride("C1", "capacitance", 2.0e-6),)),
+        ],
+    )
+
+    assert isinstance(result, CornerPoleZeroResult)
+    assert result.input_source == "Vin"
+    assert result.output_node == "out"
+    assert result.topology == "rc-lowpass"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "cap-high"
+    assert result.points[0].result.entries[0].real == pytest.approx(-1.0e3)
+    assert result.points[1].result.entries[0].real == pytest.approx(-5.0e2)
+    assert format_corner_pole_zero_table(result) == (
+        "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n"
+        "nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n"
+        "cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n"
+    )
+
+
 def test_pole_zero_rc_highpass_returns_origin_zero_and_simple_rc_pole() -> None:
     circuit = Circuit([
         VoltageSource("Vin", "in", "0", 1.0),
@@ -6209,6 +6249,52 @@ def test_distortion_from_transient_extracts_harmonic_content() -> None:
     assert point.total_harmonic_distortion == pytest.approx(0.1, abs=2.0e-3)
 
 
+def test_distortion_from_transient_corners_projects_each_corner() -> None:
+    freq = 1.0e3
+    period = 1.0 / freq
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=freq),
+        ),
+        Resistor("Rtop", "in", "out", 1_000.0),
+        Resistor("Rbot", "out", "0", 1_000.0),
+    ])
+
+    result = distortion_from_transient_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-high", (CornerOverride("Rbot", "resistance", 3_000.0),)),
+        ],
+        t_stop=2.0 * period,
+        t_step=period / 64.0,
+        fundamental_frequency=freq,
+        input_source="Vin",
+        output_probe="V(out)",
+        harmonics=3,
+    )
+
+    assert isinstance(result, CornerDistortionResult)
+    assert result.input_source == "Vin"
+    assert result.output_probe == "V(out)"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "rbot-high"
+    assert result.points[0].result.points[0].fundamental_magnitude == pytest.approx(
+        0.5,
+        abs=2.0e-3,
+    )
+    assert result.points[1].result.points[0].fundamental_magnitude == pytest.approx(
+        0.75,
+        abs=2.0e-3,
+    )
+    assert result.points[0].result.points[0].total_harmonic_distortion < 2.0e-3
+    assert result.points[1].result.points[0].total_harmonic_distortion < 2.0e-3
+
+
 def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
     circuit = Circuit([
         VoltageSource("V1", "vin", "0", 10.0),
@@ -6297,6 +6383,60 @@ def test_distortion_text_output_table_is_stable() -> None:
         "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    )
+
+
+def test_corner_distortion_text_output_table_is_stable() -> None:
+    result = CornerDistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            CornerDistortionPoint(
+                corner_name="nominal",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=1.0,
+                            harmonics=[
+                                DistortionHarmonic(1, 1000.0, 1.0, 0.0),
+                                DistortionHarmonic(
+                                    2,
+                                    2000.0,
+                                    0.025,
+                                    -1.5707963267948966,
+                                ),
+                            ],
+                            total_harmonic_distortion=0.025,
+                        )
+                    ],
+                ),
+            ),
+            CornerDistortionPoint(
+                corner_name="slow",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=0.8,
+                            harmonics=[DistortionHarmonic(2, 2000.0, 0.04, 12.5)],
+                            total_harmonic_distortion=0.05,
+                        )
+                    ],
+                ),
+            ),
+        ],
+    )
+
+    assert format_corner_distortion_table(result) == (
+        "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+        "slow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n"
     )
 
 

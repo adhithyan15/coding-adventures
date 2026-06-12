@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Distortion and pole-zero named-corner wrappers** —
+  `distortion_from_transient_corners()`, `pole_zero_corners()`,
+  `format_corner_distortion_table()`, and `format_corner_pole_zero_table()` now
+  expose Rust-matching named-corner analysis output for these SPICE helpers.
+
 - **Fourier named-corner wrappers** — `fourier_corners()` and
   `format_corner_fourier_table()` now run `.FOUR`-style harmonic analysis across
   named corner specs, matching Rust output columns for cross-language parity.
