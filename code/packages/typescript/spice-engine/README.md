@@ -65,6 +65,9 @@ operating-point snapshots across explicit analysis temperatures, with stable
 nominal and named-corner table helpers for cross-language comparison.
 `formatCornerDcTable` also renders named-corner DC operating-point snapshots
 with the Rust-matching `Corner` / `Index` columns.
+`formatDcSweepTable`, `formatCornerDcSweepTable`, `formatCornerAcTable`, and
+`formatCornerTfTable` provide the matching stable `.DC`, `.AC`, and `.TF`
+sweep/corner text surfaces.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`

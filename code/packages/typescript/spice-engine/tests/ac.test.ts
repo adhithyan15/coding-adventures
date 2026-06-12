@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   formatAcTable,
+  formatCornerAcTable,
   formatCornerSParameterTable,
   formatSParameterTable,
   acSweep,
@@ -169,6 +170,13 @@ describe("acSweep", () => {
     expect(complexAbs(result.points[1].points[0].voltage("out")!)).toBeCloseTo(
       1.0 / Math.sqrt(1.25),
       9,
+    );
+    expect(formatCornerAcTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+      "nominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
+      "nominal\t0\t1.591549e+02\tI(Vin)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n" +
+      "r-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\n" +
+      "r-fast\t0\t1.591549e+02\tI(Vin)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n",
     );
   });
 
