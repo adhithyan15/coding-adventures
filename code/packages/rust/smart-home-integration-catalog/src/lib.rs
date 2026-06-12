@@ -1151,6 +1151,29 @@ impl IntegrationActivationRunbookPhase {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationHandoffStatus {
+    Ready,
+    NeedsReview,
+    Blocked,
+    Monitoring,
+}
+
+impl IntegrationActivationHandoffStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationOperatorTaskKind {
     ResolveConstraints,
     EnableDependencies,
@@ -2402,6 +2425,77 @@ pub struct IntegrationActivationRunbookSummary {
     pub first_blocked_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
     pub first_monitor_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationHandoffPackage {
+    pub sequence: usize,
+    pub runbook_sequence: usize,
+    pub priority: u8,
+    pub handoff_status: IntegrationActivationHandoffStatus,
+    pub phase: IntegrationActivationRunbookPhase,
+    pub playbook_action: IntegrationActivationForecastAction,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub risk_ids: Vec<String>,
+    pub dependency_integration_ids: Vec<IntegrationId>,
+    pub blocking_dependency_integration_ids: Vec<IntegrationId>,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub primitive_gap_count: usize,
+    pub capability_gap_count: usize,
+    pub dependency_gap_count: usize,
+    pub readiness_gap_count: usize,
+    pub audit_record_count: usize,
+    pub attention_audit_record_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub operator_required: bool,
+    pub activation_ready: bool,
+    pub ready_for_handoff: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub monitor_only: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationHandoffSummary {
+    pub total_packages: usize,
+    pub unique_integrations: usize,
+    pub ready_packages: usize,
+    pub review_required_packages: usize,
+    pub blocked_packages: usize,
+    pub monitor_packages: usize,
+    pub operator_required_packages: usize,
+    pub activation_ready_packages: usize,
+    pub packages_requiring_attention: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_primitive_gaps: usize,
+    pub total_capability_gaps: usize,
+    pub total_dependency_gaps: usize,
+    pub total_readiness_gaps: usize,
+    pub total_audit_records: usize,
+    pub attention_audit_records: usize,
+    pub next_handoff_status: Option<IntegrationActivationHandoffStatus>,
+    pub next_phase: Option<IntegrationActivationRunbookPhase>,
+    pub next_playbook_action: Option<IntegrationActivationForecastAction>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_package_sequence: Option<usize>,
+    pub next_package_priority: Option<u8>,
+    pub first_ready_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_ready_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -5261,6 +5355,338 @@ impl IntegrationActivationRunbookSummary {
             || self.has_blockers()
             || self.has_review_work()
             || self.attention_audit_records > 0
+            || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationHandoffPackage {
+    fn from_runbook_entry(
+        entry: &IntegrationActivationRunbookEntry,
+        risks: &[IntegrationActivationRiskItem],
+        graph: &IntegrationActivationDependencyGraph,
+        gap_inventory: &IntegrationReadinessGapInventory,
+    ) -> Self {
+        let mut risk_ids = BTreeSet::new();
+        let mut highest_policy_tier = entry.highest_policy_tier;
+        for risk in risks {
+            if integration_ids_overlap(&risk.integration_ids, &entry.integration_ids) {
+                risk_ids.insert(risk.risk_id.clone());
+                highest_policy_tier = highest_policy_tier.max(risk.required_tier);
+            }
+        }
+
+        let mut dependency_integration_ids = BTreeSet::new();
+        let mut blocking_dependency_integration_ids = BTreeSet::new();
+        let mut dependency_edge_count = 0;
+        let mut blocking_dependency_edge_count = 0;
+        for edge in &graph.edges {
+            let relates_to_entry =
+                integration_id_in_slice(&entry.integration_ids, &edge.dependency_integration_id)
+                    || integration_id_in_slice(
+                        &entry.integration_ids,
+                        &edge.dependent_integration_id,
+                    );
+            if relates_to_entry {
+                dependency_edge_count += 1;
+                dependency_integration_ids.insert(edge.dependency_integration_id.clone());
+                dependency_integration_ids.insert(edge.dependent_integration_id.clone());
+                if edge.blocks_activation {
+                    blocking_dependency_edge_count += 1;
+                    blocking_dependency_integration_ids
+                        .insert(edge.dependency_integration_id.clone());
+                    blocking_dependency_integration_ids
+                        .insert(edge.dependent_integration_id.clone());
+                }
+            }
+        }
+
+        let primitive_gap_count = gap_inventory
+            .primitive_gaps
+            .iter()
+            .filter(|gap| integration_ids_overlap(&gap.integration_ids, &entry.integration_ids))
+            .count();
+        let capability_gap_count = gap_inventory
+            .capability_gaps
+            .iter()
+            .filter(|gap| integration_ids_overlap(&gap.integration_ids, &entry.integration_ids))
+            .count();
+        let dependency_gap_count = gap_inventory
+            .dependency_gaps
+            .iter()
+            .filter(|gap| {
+                integration_id_in_slice(&entry.integration_ids, &gap.integration_id)
+                    || integration_ids_overlap(
+                        &gap.requested_integration_ids,
+                        &entry.integration_ids,
+                    )
+            })
+            .count();
+        let readiness_gap_count = primitive_gap_count + capability_gap_count + dependency_gap_count;
+
+        let handoff_status = if entry.monitor_only() {
+            IntegrationActivationHandoffStatus::Monitoring
+        } else if entry.blocked() || blocking_dependency_edge_count > 0 || readiness_gap_count > 0 {
+            IntegrationActivationHandoffStatus::Blocked
+        } else if entry.review_required()
+            || !risk_ids.is_empty()
+            || entry.attention_audit_record_count > 0
+        {
+            IntegrationActivationHandoffStatus::NeedsReview
+        } else if entry.activation_ready() {
+            IntegrationActivationHandoffStatus::Ready
+        } else {
+            IntegrationActivationHandoffStatus::NeedsReview
+        };
+
+        let blocked = handoff_status == IntegrationActivationHandoffStatus::Blocked;
+        let review_required = handoff_status == IntegrationActivationHandoffStatus::NeedsReview
+            || entry.review_required();
+        let monitor_only = handoff_status == IntegrationActivationHandoffStatus::Monitoring;
+        let ready_for_handoff = handoff_status == IntegrationActivationHandoffStatus::Ready;
+        let requires_attention = handoff_status.requires_attention() || entry.requires_attention();
+        let operator_required =
+            entry.operator_required() || blocked || review_required || requires_attention;
+        let risk_ids = risk_ids.into_iter().collect::<Vec<_>>();
+        let risk_count = risk_ids.len();
+        let dependency_integration_ids = dependency_integration_ids.into_iter().collect();
+        let blocking_dependency_integration_ids =
+            blocking_dependency_integration_ids.into_iter().collect();
+
+        Self {
+            sequence: entry.sequence,
+            runbook_sequence: entry.sequence,
+            priority: entry.priority,
+            handoff_status,
+            phase: entry.phase,
+            playbook_action: entry.playbook_action,
+            recommended_view: entry.recommended_view,
+            integration_ids: entry.integration_ids.clone(),
+            integration_count: entry.integration_count,
+            risk_ids,
+            dependency_integration_ids,
+            blocking_dependency_integration_ids,
+            risk_count,
+            dependency_edge_count,
+            blocking_dependency_edge_count,
+            primitive_gap_count,
+            capability_gap_count,
+            dependency_gap_count,
+            readiness_gap_count,
+            audit_record_count: entry.audit_record_count,
+            attention_audit_record_count: entry.attention_audit_record_count,
+            highest_policy_tier,
+            operator_required,
+            activation_ready: entry.activation_ready(),
+            ready_for_handoff,
+            blocked,
+            review_required,
+            monitor_only,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn ready_for_handoff(&self) -> bool {
+        self.ready_for_handoff
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn monitor_only(&self) -> bool {
+        self.monitor_only
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.activation_ready
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn has_dependency_blockers(&self) -> bool {
+        self.blocking_dependency_edge_count > 0
+            || !self.blocking_dependency_integration_ids.is_empty()
+    }
+
+    pub fn has_readiness_gaps(&self) -> bool {
+        self.readiness_gap_count > 0
+    }
+}
+
+impl IntegrationActivationHandoffSummary {
+    pub fn from_packages<'a>(
+        packages: impl IntoIterator<Item = &'a IntegrationActivationHandoffPackage>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_packages: 0,
+            unique_integrations: 0,
+            ready_packages: 0,
+            review_required_packages: 0,
+            blocked_packages: 0,
+            monitor_packages: 0,
+            operator_required_packages: 0,
+            activation_ready_packages: 0,
+            packages_requiring_attention: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_primitive_gaps: 0,
+            total_capability_gaps: 0,
+            total_dependency_gaps: 0,
+            total_readiness_gaps: 0,
+            total_audit_records: 0,
+            attention_audit_records: 0,
+            next_handoff_status: None,
+            next_phase: None,
+            next_playbook_action: None,
+            next_recommended_view: None,
+            next_package_sequence: None,
+            next_package_priority: None,
+            first_ready_sequence: None,
+            first_blocked_sequence: None,
+            first_review_sequence: None,
+            first_attention_sequence: None,
+            first_ready_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for package in packages {
+            summary.total_packages += 1;
+            for integration_id in &package.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_handoff_status.is_none() && !package.monitor_only() {
+                summary.next_handoff_status = Some(package.handoff_status);
+                summary.next_phase = Some(package.phase);
+                summary.next_playbook_action = Some(package.playbook_action);
+                summary.next_recommended_view = Some(package.recommended_view);
+                summary.next_package_sequence = Some(package.sequence);
+                summary.next_package_priority = Some(package.priority);
+            }
+
+            match package.handoff_status {
+                IntegrationActivationHandoffStatus::Ready => {
+                    summary.ready_packages += 1;
+                    summary.first_ready_sequence =
+                        summary.first_ready_sequence.or(Some(package.sequence));
+                    summary.first_ready_priority =
+                        min_optional_priority(summary.first_ready_priority, Some(package.priority));
+                }
+                IntegrationActivationHandoffStatus::NeedsReview => {
+                    summary.review_required_packages += 1;
+                    summary.first_review_sequence =
+                        summary.first_review_sequence.or(Some(package.sequence));
+                    summary.first_review_priority = min_optional_priority(
+                        summary.first_review_priority,
+                        Some(package.priority),
+                    );
+                }
+                IntegrationActivationHandoffStatus::Blocked => {
+                    summary.blocked_packages += 1;
+                    summary.first_blocked_sequence =
+                        summary.first_blocked_sequence.or(Some(package.sequence));
+                    summary.first_blocked_priority = min_optional_priority(
+                        summary.first_blocked_priority,
+                        Some(package.priority),
+                    );
+                }
+                IntegrationActivationHandoffStatus::Monitoring => {
+                    summary.monitor_packages += 1;
+                }
+            }
+
+            if package.operator_required() {
+                summary.operator_required_packages += 1;
+            }
+            if package.activation_ready() {
+                summary.activation_ready_packages += 1;
+            }
+            if package.requires_attention() {
+                summary.packages_requiring_attention += 1;
+                summary.first_attention_sequence =
+                    summary.first_attention_sequence.or(Some(package.sequence));
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(package.priority));
+            }
+
+            summary.total_risks += package.risk_count;
+            summary.total_dependency_edges += package.dependency_edge_count;
+            summary.blocking_dependency_edges += package.blocking_dependency_edge_count;
+            summary.total_primitive_gaps += package.primitive_gap_count;
+            summary.total_capability_gaps += package.capability_gap_count;
+            summary.total_dependency_gaps += package.dependency_gap_count;
+            summary.total_readiness_gaps += package.readiness_gap_count;
+            summary.total_audit_records += package.audit_record_count;
+            summary.attention_audit_records += package.attention_audit_record_count;
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(package.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_packages > 0
+            || summary.blocking_dependency_edges > 0
+            || summary.total_readiness_gaps > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.review_required_packages > 0
+            || summary.operator_required_packages > 0
+            || summary.packages_requiring_attention > 0
+            || summary.total_risks > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_packages > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packages == 0
+    }
+
+    pub fn ready_for_handoff(&self) -> bool {
+        self.ready_packages > 0 && !self.has_blockers() && !self.has_review_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_packages > 0
+            || self.blocking_dependency_edges > 0
+            || self.total_readiness_gaps > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_packages > 0
+            || self.total_risks > 0
+            || self.attention_audit_records > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.packages_requiring_attention > 0
+            || self.operator_required_packages > 0
+            || self.has_blockers()
+            || self.has_review_work()
             || self.overall_status.requires_attention()
     }
 }
@@ -10998,11 +11424,18 @@ fn activation_audit_record_matches_integration_ids(
     record: &IntegrationActivationAuditRecord,
     integration_ids: &[IntegrationId],
 ) -> bool {
-    record.integration_ids.iter().any(|record_id| {
-        integration_ids
-            .iter()
-            .any(|integration_id| integration_id == record_id)
-    })
+    integration_ids_overlap(&record.integration_ids, integration_ids)
+}
+
+fn integration_ids_overlap(left: &[IntegrationId], right: &[IntegrationId]) -> bool {
+    left.iter()
+        .any(|left_id| right.iter().any(|right_id| left_id == right_id))
+}
+
+fn integration_id_in_slice(integration_ids: &[IntegrationId], needle: &IntegrationId) -> bool {
+    integration_ids
+        .iter()
+        .any(|integration_id| integration_id == needle)
 }
 
 pub fn activation_runbook_entries_from_playbook_steps(
@@ -11051,6 +11484,59 @@ pub fn activation_runbook_entries_at_or_before_priority(
         enabled_integrations,
     );
     activation_runbook_entries_from_playbook_steps(steps, &audit_records)
+}
+
+pub fn activation_handoff_packages_from_runbook_entries<'a>(
+    entries: impl IntoIterator<Item = &'a IntegrationActivationRunbookEntry>,
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationActivationHandoffPackage> {
+    let mut packages = entries
+        .into_iter()
+        .map(|entry| {
+            IntegrationActivationHandoffPackage::from_runbook_entry(
+                entry,
+                risks,
+                graph,
+                gap_inventory,
+            )
+        })
+        .collect::<Vec<_>>();
+    packages.sort_by(compare_activation_handoff_packages);
+    for (index, package) in packages.iter_mut().enumerate() {
+        package.sequence = index + 1;
+    }
+    packages
+}
+
+pub fn activation_handoff_packages_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationHandoffPackage> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let candidates = activation_candidates_from_reports(reports.iter());
+    let risks = activation_risk_from_candidates(catalog, candidates.iter());
+    let graph =
+        activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations);
+    let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+    let entries = activation_runbook_entries_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_handoff_packages_from_runbook_entries(entries.iter(), &risks, &graph, &gap_inventory)
 }
 
 pub fn activation_operator_tasks_from_playbook_steps(
@@ -13134,6 +13620,40 @@ fn compare_activation_runbook_entries(
         .then_with(|| left.playbook_action.cmp(&right.playbook_action))
         .then_with(|| right.audit_record_count.cmp(&left.audit_record_count))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn activation_handoff_status_sort_key(status: IntegrationActivationHandoffStatus) -> u8 {
+    match status {
+        IntegrationActivationHandoffStatus::Blocked => 0,
+        IntegrationActivationHandoffStatus::NeedsReview => 1,
+        IntegrationActivationHandoffStatus::Ready => 2,
+        IntegrationActivationHandoffStatus::Monitoring => 3,
+    }
+}
+
+fn compare_activation_handoff_packages(
+    left: &IntegrationActivationHandoffPackage,
+    right: &IntegrationActivationHandoffPackage,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            activation_handoff_status_sort_key(left.handoff_status)
+                .cmp(&activation_handoff_status_sort_key(right.handoff_status))
+        })
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.review_required().cmp(&left.review_required()))
+        .then_with(|| right.ready_for_handoff().cmp(&left.ready_for_handoff()))
+        .then_with(|| {
+            right
+                .blocking_dependency_edge_count
+                .cmp(&left.blocking_dependency_edge_count)
+        })
+        .then_with(|| right.readiness_gap_count.cmp(&left.readiness_gap_count))
+        .then_with(|| right.risk_count.cmp(&left.risk_count))
+        .then_with(|| left.phase.cmp(&right.phase))
+        .then_with(|| left.runbook_sequence.cmp(&right.runbook_sequence))
 }
 
 fn compare_activation_operator_tasks(
@@ -16533,6 +17053,45 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let handoff = activation_handoff_packages_from_runbook_entries(
+            entries.iter(),
+            &risks,
+            &graph,
+            &gap_inventory,
+        );
+        assert_eq!(handoff.len(), entries.len());
+        assert!(handoff
+            .iter()
+            .any(IntegrationActivationHandoffPackage::requires_attention));
+
+        let blocked_handoff = handoff
+            .iter()
+            .find(|package| {
+                package
+                    .integration_ids
+                    .contains(&IntegrationId::trusted("blocked_review_camera"))
+            })
+            .unwrap();
+        assert_eq!(
+            blocked_handoff.handoff_status,
+            IntegrationActivationHandoffStatus::Blocked
+        );
+        assert!(blocked_handoff.blocked());
+        assert!(blocked_handoff.has_dependency_blockers());
+        assert!(blocked_handoff.has_readiness_gaps());
+        assert!(blocked_handoff.risk_count > 0);
+        assert!(blocked_handoff.readiness_gap_count > 0);
+
+        let handoff_summary = IntegrationActivationHandoffSummary::from_packages(handoff.iter());
+        assert_eq!(handoff_summary.total_packages, handoff.len());
+        assert!(handoff_summary.has_blockers());
+        assert!(handoff_summary.has_review_work());
+        assert!(handoff_summary.requires_attention());
+        assert_eq!(
+            handoff_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -16552,6 +17111,16 @@ mod tests {
         assert!(catalog_entries
             .iter()
             .any(IntegrationActivationRunbookEntry::requires_attention));
+        let catalog_handoff_entries = activation_handoff_packages_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_handoff_entries
+            .iter()
+            .any(IntegrationActivationHandoffPackage::requires_attention));
     }
 
     #[test]
