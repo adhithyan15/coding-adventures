@@ -85,6 +85,22 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
+    // gap-099 (CLOC14.43): paren elision around a COMPUTED-MEMBER object.
+    // `(b)[c]` -> `b[c]`, `(b.c)[d]` -> `b.c[d]` — the `[index]` analog
+    // of gap-057 (which only did `(a).b` -> `a.b` for `.member`). Only a
+    // SAFE operand (identifier / member-reference chain) is unwrapped;
+    // `(a+b)[c]` and `(b||c)[d]` keep their parens.
+    ("computed_member_paren", "gap-099: (b)[c] -> b[c]"),
+    ("computed_member_chain", "gap-099: (b.c)[d] -> b.c[d]"),
+    // gap-100 (CLOC14.43): paren elision around a FUNCTION/CLASS
+    // EXPRESSION that is NOT at statement position. `a=(function(){})()`
+    // -> `a=function(){}()`, `a=(class{})()` -> `a=class{}()`. The
+    // leading `(` is only needed at STATEMENT start (to disambiguate
+    // from a declaration); in expression position (RHS of `=`, after
+    // `,`, etc.) it is droppable. `(function(){})();` at statement
+    // position KEEPS its parens.
+    ("funcexpr_iife_assign", "gap-100: a=(function(){})() -> a=function(){}()"),
+    ("classexpr_call",       "gap-100: a=(class{})() -> a=class{}()"),
     // gap-097 RESOLVED in CLOC12.101 — an async generator method
     // (`async*m(){}`) now gets the separating space between `async` and
     // `*` that upstream emits (`async *m(){}`), in both class and object
