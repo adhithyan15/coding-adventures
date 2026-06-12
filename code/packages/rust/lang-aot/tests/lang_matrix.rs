@@ -17,9 +17,10 @@
 //!   the `.ll`'s `@__print_i64` is satisfied by a generic print runtime). Brainfuck
 //!   deferred (the i64-slot-model mismatch — see the spec's Deferred section).
 //! * **WASM** (Phase W) — source → wasm bytes (`iir-to-wasm`) → the in-process
-//!   `wasm-runtime`. Green for the expression languages Twig / Oct / ALGOL 60 (exit
-//!   code from `main`'s wasm result). Nib pends a const-literal type fix, BASIC the
-//!   stdout import, Brainfuck the tape ops — each its own follow-up.
+//!   `wasm-runtime`. Green for the expression languages Twig / Nib / Oct / ALGOL 60
+//!   (exit code from `main`'s wasm result) and Dartmouth BASIC (stdout — a `PrintHost`
+//!   resolves the `env.__print_i64` import and captures the printed value). Brainfuck
+//!   pends the tape ops — its own follow-up.
 //!
 //! Later slices add the JVM / CLR columns (also general code generators) and the
 //! Deferred items — Brainfuck-on-LLVM/WASM, and the McCarthy-specialized VM and JIT
@@ -114,13 +115,15 @@ const PROGRAMS: &[Prog] = &[
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
-    // and the harness compares stdout (LM-L BASIC).
+    // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
+    // `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`; `run_wasm`'s
+    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm],
+        backends: &[NativeAot, Llvm, Wasm],
     },
 ];
 
@@ -263,20 +266,122 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     Some((out.status.code(), stdout))
 }
 
-/// WASM runner: source → wasm bytes (`iir-to-wasm`) → the in-process `wasm-runtime`.
+/// The generic stdout primitive an I/O language's wasm emits. Dartmouth BASIC's
+/// `PRINT` lowers to `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`
+/// — the wasm sibling of the LLVM column's `@__print_i64` C runtime, the JVM's
+/// `BasicRuntime.println(J)V`, and the CLR's `Console.WriteLine(int64)`. It is *not*
+/// language-specific: any IIR that prints an integer routes through this import.
+///
+/// `PrintFunc` is the host implementation of that import. Each call appends its single
+/// `i64` argument to a shared capture buffer (`Arc<Mutex<Vec<i64>>>`) so the test can
+/// read back exactly what the program printed. The function does no work proportional
+/// to untrusted input — it pushes one integer and returns — so there is no DoS vector.
+struct PrintFunc {
+    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+}
+
+impl wasm_execution::HostFunction for PrintFunc {
+    fn func_type(&self) -> &wasm_types::FuncType {
+        // `(i64) -> ()`: one i64 in, nothing out. A `LazyLock` static gives the
+        // `&FuncType` the trait must hand back a stable lifetime.
+        static FT: std::sync::LazyLock<wasm_types::FuncType> =
+            std::sync::LazyLock::new(|| wasm_types::FuncType {
+                params: vec![wasm_types::ValueType::I64],
+                results: vec![],
+            });
+        &FT
+    }
+
+    fn call(
+        &self,
+        args: &[wasm_execution::WasmValue],
+        _memory: Option<&mut wasm_execution::LinearMemory>,
+    ) -> Result<Vec<wasm_execution::WasmValue>, wasm_execution::TrapError> {
+        let value = args
+            .first()
+            .ok_or_else(|| wasm_execution::TrapError::new("__print_i64: missing argument"))?
+            .as_i64()
+            .map_err(|e| wasm_execution::TrapError::new(e.message))?;
+        self.captured
+            .lock()
+            .expect("lang-matrix print buffer poisoned")
+            .push(value);
+        Ok(vec![])
+    }
+}
+
+/// The host interface the matrix runs wasm under: it resolves the single generic
+/// `env.__print_i64` import to a `PrintFunc` writing into the shared buffer, and
+/// resolves nothing else (the expression languages import no host functions, so for
+/// them the host is never consulted and behaviour is identical to `WasmRuntime::new`).
+struct PrintHost {
+    captured: std::sync::Arc<std::sync::Mutex<Vec<i64>>>,
+}
+
+impl wasm_execution::HostInterface for PrintHost {
+    fn resolve_function(
+        &self,
+        module_name: &str,
+        name: &str,
+    ) -> Option<Box<dyn wasm_execution::HostFunction>> {
+        if module_name == "env" && name == "__print_i64" {
+            Some(Box::new(PrintFunc {
+                captured: std::sync::Arc::clone(&self.captured),
+            }))
+        } else {
+            None
+        }
+    }
+
+    fn resolve_global(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<(wasm_types::GlobalType, wasm_execution::WasmValue)> {
+        None
+    }
+
+    fn resolve_memory(
+        &self,
+        _module_name: &str,
+        _name: &str,
+    ) -> Option<wasm_execution::LinearMemory> {
+        None
+    }
+
+    fn resolve_table(&self, _module_name: &str, _name: &str) -> Option<wasm_execution::Table> {
+        None
+    }
+}
+
+/// WASM runner: source → wasm bytes (`iir-to-wasm`) → the in-process `wasm-runtime`,
+/// run under a `PrintHost` so an I/O language's `env.__print_i64` import resolves.
 /// No external tool — the runtime is in-repo, so this always runs (returns `None`
-/// only when the program fails to emit or the runtime can't load it). The exit-code
-/// programs return their value as `main`'s wasm result; the I/O languages (which
-/// route output through a stdout import) get their stdout-capturing variant in a
-/// later slice, so this runner covers the expression languages only.
+/// only when the program fails to emit or the runtime can't load it). Handles both
+/// result kinds: an expression language returns its value as `main`'s wasm result
+/// (the `code`); an I/O language (Dartmouth BASIC) prints through `env.__print_i64`,
+/// whose arguments the host captured into the buffer, joined as the program's stdout.
 fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
     let bytes = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
-    let rt = wasm_runtime::WasmRuntime::new();
+    let captured = std::sync::Arc::new(std::sync::Mutex::new(Vec::new()));
+    let host = PrintHost {
+        captured: std::sync::Arc::clone(&captured),
+    };
+    let rt = wasm_runtime::WasmRuntime::with_host(Box::new(host));
     let result = rt.load_and_run(&bytes, "main", &[]).ok()?;
     // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
     // convention the native/LLVM columns use for the same programs).
     let code = result.first().copied().map(|v| (v as i32) & 0xFF);
-    Some((code, String::new()))
+    // Whatever the program printed through `env.__print_i64`, one integer per call,
+    // joined by newlines — empty for the expression languages (they never print).
+    let stdout = captured
+        .lock()
+        .expect("lang-matrix print buffer poisoned")
+        .iter()
+        .map(|v| v.to_string())
+        .collect::<Vec<_>>()
+        .join("\n");
+    Some((code, stdout))
 }
 
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
