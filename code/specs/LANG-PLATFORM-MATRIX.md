@@ -102,7 +102,7 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 | Twig            | ☐  | ☐   | ✅        | ✅   | ◑    | ◑   | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
-| Dartmouth BASIC | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
+| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 
@@ -146,9 +146,16 @@ slice — the loop trusts running, not this table.)
   (`u4`/`u8`/`bcd`) to `i64`, so signature and bodies agree. Verified by RUNNING: Nib on
   LLVM → 42, Nib on native still → 42 (no regression), nib-iir-compiler unit tests +
   `iir-to-llvm` (51) all green.
-- ☐ **LM-L Brainfuck / BASIC (I/O languages on LLVM).** Need the stdout-capturing LLVM
-  runner (link the C runtime providing `putchar`/`print_i64`) and assert stdout
-  (`A` / `42`).
+- ✅ **LM-L BASIC (on LLVM).** `run_llvm` grew the stdout path: BASIC's `.ll` emits
+  `call void @__print_i64(i64 42)`, so when the `.ll` references `@__print_i64` the
+  runner compiles in a generic `__print_i64` C runtime and the harness compares
+  **stdout**. Verified by RUNNING: `10 PRINT 42` → stdout `42` on real `clang`.
+- ☐ **LM-L Brainfuck (on LLVM).** A backend codegen slice: `iir-to-llvm` does **not**
+  support the Brainfuck tape ops — emit fails with
+  `UnsupportedOp: "alloc_bytes" / "load_byte" / "store_byte"`. Grow `iir-to-llvm` to
+  lower the tape (`alloc_bytes` → an `i8` array / `alloca`+`memset`, `load_byte`/
+  `store_byte` → `getelementptr`+`load`/`store`) and `putchar`, mirroring how the
+  native backend already runs Brainfuck; then assert stdout `A`.
 
 ### Phase V — VM op-coverage for every language
 
