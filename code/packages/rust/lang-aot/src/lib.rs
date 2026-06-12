@@ -571,6 +571,24 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         if uses_lisp {
             continue; // uniform-Object value model — JVM W3b+.
         }
+        // A function that prints (Dartmouth BASIC's `PRINT`) needs the **wide**
+        // i64 value model: `print_i64` lowers to `lload val; invokestatic
+        // env/BasicRuntime.println(J)V`, i.e. the value is loaded as a `long`. If
+        // we concretized it to `i32` the value would be `istore`d as an `int` but
+        // `lload`ed as a `long`, and a real `java` rejects the mismatch with
+        // `VerifyError: Accessing value from uninitialized register pair`. So,
+        // exactly like the lisp/heap functions above, we leave a printing function
+        // at its native i64 width. (Concretization exists only because the in-repo
+        // `jvm-simulator` is a 32-bit machine; BASIC runs on real `java`, where
+        // `long` is fine and is never exercised on the simulator.)
+        let prints_i64 = func.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(i.srcs.first(),
+                    Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
+        });
+        if prints_i64 {
+            continue; // wide i64 value model — println(J)V needs a `long`.
+        }
         let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();

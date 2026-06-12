@@ -104,7 +104,7 @@ achievable code-gen columns land first).
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ☐   |
-| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
+| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
 
@@ -198,10 +198,21 @@ BASIC); only Brainfuck is deferred.
   concretizes parameter types too. Verified by RUNNING: Twig→42, Nib→42, Oct→0,
   ALGOL `17 mod 5`→2 on real `java` (20 proven matrix cells); jvm_emit + conformance
   suites still green.
-- ☐ **LM-J BASIC (on JVM).** BASIC's `print_i64` lowers to `invokestatic
-  env/BasicRuntime.println(J)V`; running it on real `java` needs that `env.BasicRuntime`
-  host class on the classpath (the JVM analogue of the wasm `PrintHost` / LLVM print
-  runtime). Provide it, then capture/assert `System.out`.
+- ✅ **LM-J BASIC (on JVM).** BASIC's `print_i64` lowers to `invokestatic
+  env/BasicRuntime.println(J)V`. `run_jvm` now compiles that `env.BasicRuntime` host
+  class with `javac` onto the classpath (the JVM analogue of the wasm `PrintHost` /
+  LLVM print runtime) and, for an I/O program, injects a **discard** launcher (run the
+  entry, `pop`/`pop2` its result) instead of the print launcher, then captures
+  `System.out`. Fixed a second backend-glue bug found **by running**: a printing
+  function must keep the **wide i64** value model — `print_i64` does `lload val;
+  println(J)V`, so concretizing the value to `i32` made it `istore`d-as-int but
+  `lload`ed-as-long, which `java` rejects with `VerifyError: Accessing value from
+  uninitialized register pair`. `concretize_scalar_any_for_jvm` now skips any function
+  that calls `print_i64` (the same way it already skips lisp/heap functions), so
+  BASIC's entry stays `()J` and the value round-trips as a `long`. Verified by RUNNING:
+  BASIC `10 PRINT 42` → `System.out` `42` on real `java` (21 proven matrix cells); the
+  expression-language JVM cells + jvm_emit/conformance/wasm_emit suites still green.
+  **JVM column now green for every language except the deferred Brainfuck.**
 - ⏸ **LM-J Brainfuck (on JVM) — DEFERRED.** Same tape-op gap as Brainfuck on LLVM/WASM.
 
 ### Phase C — CLR for every language
