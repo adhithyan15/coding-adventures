@@ -41,6 +41,9 @@ policy tokens, validation bypass state, and submitter overrides.
 Form-submission descriptor cases pin successful controls, submission values,
 form action/method/target defaults, and submitter routing overrides as a flat
 browser-planning inventory.
+Form-reset descriptor cases pin resettable controls, resetter controls, default
+reset values, selection/checked reset state, and form-level `onreset` hooks as a
+flat browser-planning inventory.
 Form-validation descriptor cases pin validation candidates, constraint
 attributes, barred controls, form-level `novalidate`, and submitter-level
 validation bypass hints as a flat browser-planning inventory.
