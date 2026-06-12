@@ -79,6 +79,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation watchtower signals:
   `smart_home.list_integration_activation_watchtower` and
   `smart_home.get_integration_activation_watchtower_summary`.
+- Added D18D handlers for D23A activation sentinel alerts:
+  `smart_home.list_integration_activation_sentinel` and
+  `smart_home.get_integration_activation_sentinel_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.

@@ -46,7 +46,7 @@ use smart_home_integration_catalog::{
     activation_plans_at_or_before_priority, activation_playbook_steps_from_forecasts,
     activation_readouts_from_candidates, activation_reviews_from_candidates,
     activation_risk_from_candidates, activation_runway_from_candidates,
-    activation_timeline_milestones_from_dashboard_cards,
+    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
     entries_requiring_primitive, find_entry, first_party_catalog,
@@ -86,16 +86,17 @@ use smart_home_integration_catalog::{
     IntegrationActivationReviewItem, IntegrationActivationReviewSummary,
     IntegrationActivationRiskItem, IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
     IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
-    IntegrationActivationTarget, IntegrationActivationTimelineMilestone,
-    IntegrationActivationTimelineSummary, IntegrationActivationWatchtowerSignal,
-    IntegrationActivationWatchtowerSignalKind, IntegrationActivationWatchtowerSummary,
-    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
-    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
-    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
-    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
-    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
-    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationActivationSentinelAlert, IntegrationActivationSentinelAlertKind,
+    IntegrationActivationSentinelSummary, IntegrationActivationTarget,
+    IntegrationActivationTimelineMilestone, IntegrationActivationTimelineSummary,
+    IntegrationActivationWatchtowerSignal, IntegrationActivationWatchtowerSignalKind,
+    IntegrationActivationWatchtowerSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -285,6 +286,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID: &str =
     "smart_home.list_integration_activation_watchtower";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_watchtower_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_SENTINEL_TOOL_ID: &str =
+    "smart_home.list_integration_activation_sentinel";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_SENTINEL_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_sentinel_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -625,6 +630,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID => {
                     let query = integration_activation_watchtower_query(&arguments)?;
                     Ok(get_integration_activation_watchtower_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_SENTINEL_TOOL_ID => {
+                    let query = integration_activation_sentinel_query(&arguments)?;
+                    Ok(list_integration_activation_sentinel_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_SENTINEL_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_sentinel_query(&arguments)?;
+                    Ok(get_integration_activation_sentinel_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2075,6 +2090,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation watchtower summary",
             "Return compact D23A activation watchtower counts for escalation, review, ready, action, and observation signals.",
             integration_activation_watchtower_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_SENTINEL_TOOL_ID,
+            "List smart-home integration activation sentinel alerts",
+            "List D23A activation sentinel alerts that combine watchtower, risk, dependency, and readiness-gap rollups into blocker, dependency, policy-risk, review, ready, and observation lanes.",
+            integration_activation_sentinel_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_sentinel", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_sentinel", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_SENTINEL_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation sentinel summary",
+            "Return compact D23A activation sentinel alert counts for blockers, dependencies, policy risk, review work, ready work, and observation lanes.",
+            integration_activation_sentinel_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4805,6 +4849,22 @@ struct IntegrationActivationWatchtowerQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationSentinelQuery {
+    watchtower: IntegrationActivationWatchtowerQuery,
+    risk: IntegrationActivationRiskQuery,
+    dependency: IntegrationActivationDependencyQuery,
+    gaps: IntegrationReadinessGapQuery,
+    alert_kind: Option<IntegrationActivationSentinelAlertKind>,
+    requires_attention: Option<bool>,
+    has_blockers: Option<bool>,
+    has_dependency_work: Option<bool>,
+    has_policy_risk: Option<bool>,
+    has_review_work: Option<bool>,
+    has_activation_work: Option<bool>,
+    alert_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -5224,6 +5284,34 @@ fn integration_activation_watchtower_query(
             .or(optional_bool(arguments, "has_activation_work")?),
         needs_escalation: optional_bool(arguments, "needs_escalation")?,
         signal_limit: optional_u64(arguments, "signal_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_sentinel_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationSentinelQuery, ToolCallError> {
+    let alert_kind = optional_string(arguments, "sentinel_alert")?
+        .or(optional_string(arguments, "alert_kind")?)
+        .map(|label| parse_activation_sentinel_alert_kind(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationSentinelQuery {
+        watchtower: integration_activation_watchtower_query(arguments)?,
+        risk: integration_activation_risk_query(arguments)?,
+        dependency: integration_activation_dependency_query(arguments)?,
+        gaps: integration_readiness_gap_query(arguments)?,
+        alert_kind,
+        requires_attention: optional_bool(arguments, "alert_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        has_blockers: optional_bool(arguments, "alert_has_blockers")?
+            .or(optional_bool(arguments, "has_blockers")?),
+        has_dependency_work: optional_bool(arguments, "has_dependency_work")?,
+        has_policy_risk: optional_bool(arguments, "has_policy_risk")?,
+        has_review_work: optional_bool(arguments, "alert_has_review_work")?
+            .or(optional_bool(arguments, "has_review_work")?),
+        has_activation_work: optional_bool(arguments, "alert_has_activation_work")?
+            .or(optional_bool(arguments, "has_activation_work")?),
+        alert_limit: optional_u64(arguments, "alert_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5968,6 +6056,51 @@ fn integration_activation_watchtower_signals_for_query(
     }
 
     (signals, catalog_count)
+}
+
+fn integration_activation_sentinel_alerts_for_query(
+    query: &IntegrationActivationSentinelQuery,
+) -> (Vec<IntegrationActivationSentinelAlert>, usize) {
+    let (signals, catalog_count) =
+        integration_activation_watchtower_signals_for_query(&query.watchtower);
+    let (risks, _) = integration_activation_risk_for_query(&query.risk);
+    let (graph, _) = integration_activation_dependency_graph_for_query(&query.dependency);
+    let (mut gap_inventory, _) =
+        integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    if let Some(limit) = query.gaps.limit_per_kind {
+        gap_inventory.primitive_gaps.truncate(limit);
+        gap_inventory.capability_gaps.truncate(limit);
+        gap_inventory.dependency_gaps.truncate(limit);
+    }
+    let mut alerts =
+        activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory);
+
+    if let Some(alert_kind) = query.alert_kind {
+        alerts.retain(|alert| alert.alert_kind == alert_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        alerts.retain(|alert| alert.requires_attention() == requires_attention);
+    }
+    if let Some(has_blockers) = query.has_blockers {
+        alerts.retain(|alert| alert.has_blockers() == has_blockers);
+    }
+    if let Some(has_dependency_work) = query.has_dependency_work {
+        alerts.retain(|alert| alert.has_dependency_work() == has_dependency_work);
+    }
+    if let Some(has_policy_risk) = query.has_policy_risk {
+        alerts.retain(|alert| alert.has_policy_risk() == has_policy_risk);
+    }
+    if let Some(has_review_work) = query.has_review_work {
+        alerts.retain(|alert| alert.has_review_work() == has_review_work);
+    }
+    if let Some(has_activation_work) = query.has_activation_work {
+        alerts.retain(|alert| alert.has_activation_work() == has_activation_work);
+    }
+    if let Some(limit) = query.alert_limit {
+        alerts.truncate(limit);
+    }
+
+    (alerts, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -7926,6 +8059,74 @@ fn get_integration_activation_watchtower_summary_output_handler_output(
                     .next_signal_kind
                     .map(|kind| string(kind.as_str()))
                     .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_sentinel_output_handler_output(
+    query: IntegrationActivationSentinelQuery,
+) -> ToolHandlerOutput {
+    let (alerts, catalog_count) = integration_activation_sentinel_alerts_for_query(&query);
+    let summary = IntegrationActivationSentinelSummary::from_alerts(alerts.iter());
+    let count = alerts.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_sentinel",
+            JsonValue::Array(alerts.iter().map(activation_sentinel_alert_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_sentinel_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_sentinel")),
+            ("alerts", integer(count as i64)),
+            (
+                "alerts_requiring_attention",
+                integer(summary.alerts_requiring_attention as i64),
+            ),
+            ("blocker_alerts", integer(summary.blocker_alerts as i64)),
+            (
+                "total_unique_gaps",
+                integer(summary.total_unique_gaps as i64),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_sentinel_summary_output_handler_output(
+    query: IntegrationActivationSentinelQuery,
+) -> ToolHandlerOutput {
+    let (alerts, _) = integration_activation_sentinel_alerts_for_query(&query);
+    let summary = IntegrationActivationSentinelSummary::from_alerts(alerts.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_sentinel_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_sentinel_summary"),
+            ),
+            ("total_alerts", integer(summary.total_alerts as i64)),
+            (
+                "alerts_requiring_attention",
+                integer(summary.alerts_requiring_attention as i64),
+            ),
+            ("blocker_alerts", integer(summary.blocker_alerts as i64)),
+            (
+                "total_unique_gaps",
+                integer(summary.total_unique_gaps as i64),
             ),
         ]),
     )
@@ -15157,6 +15358,198 @@ fn integration_activation_watchtower_summary_json(
     ])
 }
 
+fn activation_sentinel_alert_json(alert: &IntegrationActivationSentinelAlert) -> JsonValue {
+    object([
+        ("sequence", integer(alert.sequence as i64)),
+        ("alert_kind", string(alert.alert_kind.as_str())),
+        ("priority", integer(alert.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                alert
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(alert.integration_count() as i64),
+        ),
+        (
+            "watchtower_summary",
+            integration_activation_watchtower_summary_json(&alert.watchtower_summary),
+        ),
+        (
+            "risk_summary",
+            integration_activation_risk_summary_json(&alert.risk_summary),
+        ),
+        (
+            "dependency_summary",
+            integration_activation_dependency_summary_json(&alert.dependency_summary),
+        ),
+        (
+            "gap_summary",
+            integration_readiness_gap_summary_json(&alert.gap_inventory),
+        ),
+        ("has_gaps", JsonValue::Bool(alert.has_gaps())),
+        (
+            "has_blocking_dependencies",
+            JsonValue::Bool(alert.has_blocking_dependencies()),
+        ),
+        ("has_blockers", JsonValue::Bool(alert.has_blockers())),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(alert.has_dependency_work()),
+        ),
+        ("has_policy_risk", JsonValue::Bool(alert.has_policy_risk())),
+        ("has_review_work", JsonValue::Bool(alert.has_review_work())),
+        (
+            "has_activation_work",
+            JsonValue::Bool(alert.has_activation_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(alert.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_sentinel_summary_json(
+    summary: &IntegrationActivationSentinelSummary,
+) -> JsonValue {
+    object([
+        ("total_alerts", integer(summary.total_alerts as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "alerts_requiring_attention",
+            integer(summary.alerts_requiring_attention as i64),
+        ),
+        ("blocker_alerts", integer(summary.blocker_alerts as i64)),
+        (
+            "dependency_alerts",
+            integer(summary.dependency_alerts as i64),
+        ),
+        (
+            "policy_risk_alerts",
+            integer(summary.policy_risk_alerts as i64),
+        ),
+        ("review_alerts", integer(summary.review_alerts as i64)),
+        ("ready_alerts", integer(summary.ready_alerts as i64)),
+        (
+            "observation_alerts",
+            integer(summary.observation_alerts as i64),
+        ),
+        ("alerts_with_gaps", integer(summary.alerts_with_gaps as i64)),
+        (
+            "alerts_with_blocking_dependencies",
+            integer(summary.alerts_with_blocking_dependencies as i64),
+        ),
+        (
+            "alerts_with_policy_risk",
+            integer(summary.alerts_with_policy_risk as i64),
+        ),
+        (
+            "alerts_with_review_work",
+            integer(summary.alerts_with_review_work as i64),
+        ),
+        (
+            "alerts_with_activation_work",
+            integer(summary.alerts_with_activation_work as i64),
+        ),
+        (
+            "total_watchtower_signals",
+            integer(summary.total_watchtower_signals as i64),
+        ),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "total_unique_gaps",
+            integer(summary.total_unique_gaps as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocker_priority",
+            summary
+                .first_blocker_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_priority",
+            summary
+                .first_dependency_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_policy_risk_priority",
+            summary
+                .first_policy_risk_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_priority",
+            summary
+                .first_ready_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(summary.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(summary.has_policy_risk()),
+        ),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -17871,6 +18264,34 @@ fn parse_activation_watchtower_signal_kind(
     }
 }
 
+fn parse_activation_sentinel_alert_kind(
+    label: &str,
+) -> Result<IntegrationActivationSentinelAlertKind, ToolCallError> {
+    match label {
+        "blocker" | "blockers" | "escalation" | "constraint" | "constraints" => {
+            Ok(IntegrationActivationSentinelAlertKind::Blocker)
+        }
+        "dependency" | "dependencies" | "dependency_work" | "dependency_graph" => {
+            Ok(IntegrationActivationSentinelAlertKind::Dependency)
+        }
+        "policy_risk" | "risk" | "risks" | "policy" | "policy_review" => {
+            Ok(IntegrationActivationSentinelAlertKind::PolicyRisk)
+        }
+        "review" | "reviews" | "approval" | "approvals" | "human_review" => {
+            Ok(IntegrationActivationSentinelAlertKind::Review)
+        }
+        "ready" | "activation" | "activate" | "ready_to_activate" => {
+            Ok(IntegrationActivationSentinelAlertKind::Ready)
+        }
+        "observation" | "observe" | "monitoring" | "monitor" | "status" => {
+            Ok(IntegrationActivationSentinelAlertKind::Observation)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation sentinel alert `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -19081,6 +19502,50 @@ fn integration_activation_watchtower_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_sentinel_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_watchtower_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("sentinel_alert", JsonSchema::String));
+        properties.push(SchemaProperty::new("alert_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "alert_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "alert_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "has_dependency_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("has_policy_risk", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "alert_has_review_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "alert_has_activation_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("risk_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("required_tier", JsonSchema::String));
+        properties.push(SchemaProperty::new("policy_surface", JsonSchema::String));
+        properties.push(SchemaProperty::new("risk_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("blocking_only", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("node_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("edge_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("limit_per_kind", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("alert_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -19225,7 +19690,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 105);
+        assert_eq!(definitions.len(), 107);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -19508,9 +19973,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_SENTINEL_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_SENTINEL_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            97
+            99
         );
         assert_eq!(
             export
@@ -19964,11 +20435,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(105))
+            Some(&integer(107))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(97))
+            Some(&integer(99))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -23119,6 +23590,135 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_sentinel_request = request(
+            "call-list-integration-activation-sentinel",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_SENTINEL_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("alert_requires_attention", JsonValue::Bool(true)),
+                ("alert_limit", integer(3)),
+            ]),
+            5_039,
+        );
+        let list_activation_sentinel_trace =
+            tool_runtime.invoke_with_events(&list_activation_sentinel_request);
+        assert!(list_activation_sentinel_trace.result.ok);
+        assert_eq!(
+            list_activation_sentinel_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_sentinel_output = list_activation_sentinel_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_sentinel_count =
+            integer_value(field(list_activation_sentinel_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_sentinel_count));
+        let activation_sentinel_summary =
+            field(list_activation_sentinel_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_sentinel_summary, "total_alerts"),
+            Some(&integer(activation_sentinel_count))
+        );
+        assert!(
+            integer_value(field(activation_sentinel_summary, "blocker_alerts").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_sentinel_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_sentinel_alert = array_item(
+            field(list_activation_sentinel_output, "activation_sentinel").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_sentinel_alert, "sequence").is_some());
+        assert!(field(activation_sentinel_alert, "alert_kind").is_some());
+        assert!(field(activation_sentinel_alert, "integration_ids").is_some());
+        assert!(field(activation_sentinel_alert, "watchtower_summary").is_some());
+        assert!(field(activation_sentinel_alert, "risk_summary").is_some());
+        assert!(field(activation_sentinel_alert, "dependency_summary").is_some());
+        assert!(field(activation_sentinel_alert, "gap_summary").is_some());
+        assert_eq!(
+            field(activation_sentinel_alert, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_sentinel_summary_request = request(
+            "call-integration-activation-sentinel-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_SENTINEL_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("sentinel_alert", string("blocker")),
+                ("alert_has_blockers", JsonValue::Bool(true)),
+            ]),
+            5_040,
+        );
+        let activation_sentinel_summary_trace =
+            tool_runtime.invoke_with_events(&activation_sentinel_summary_request);
+        assert!(activation_sentinel_summary_trace.result.ok);
+        assert_eq!(
+            activation_sentinel_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_sentinel_summary_output = activation_sentinel_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_sentinel_rollup =
+            field(activation_sentinel_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_sentinel_rollup, "blocker_alerts").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_sentinel_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_sentinel_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -24914,6 +25514,14 @@ mod tests {
             activation_watchtower_summary_request,
             activation_watchtower_summary_trace,
         );
+        journal.record_trace(
+            list_activation_sentinel_request,
+            list_activation_sentinel_trace,
+        );
+        journal.record_trace(
+            activation_sentinel_summary_request,
+            activation_sentinel_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -24987,9 +25595,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 105);
-        assert_eq!(journal_summary.completed_count, 105);
-        assert_eq!(journal.audit_records().len(), 105);
+        assert_eq!(journal_summary.invocation_count, 107);
+        assert_eq!(journal_summary.completed_count, 107);
+        assert_eq!(journal.audit_records().len(), 107);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
