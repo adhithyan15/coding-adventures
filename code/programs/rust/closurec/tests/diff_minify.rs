@@ -101,12 +101,12 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // to `new (new A)` (disambiguates the inner NewExpression as the
     // callee). closurec leaves `new new A` (valid, but not byte-id).
     ("chained_new", "gap-095: chained new -> new (new A)"),
-    // gap-096 (CLOC14.41) — CORRECTNESS: the regex flags `u` and `y`
-    // are not recognised by the lexer's regex token, so `/x/gimsuy`
-    // lexes as the regex `/x/gims` plus a separate `uy` identifier,
-    // emitted as `/x/gims uy` (corrupts the regex). Lexer-level (the
-    // regex flag set in the grammar).
-    ("regex_flags_all", "gap-096: u/y regex flags split off (corruption)"),
+    // gap-096 RESOLVED in CLOC12.99 — the es2024/es2025 REGEX token's
+    // flag character class was `[dgimsvy]`, accidentally omitting the
+    // ES2015 `u` (unicode) flag (a typo when `v` was added for ES2024).
+    // So `/x/gimsuy` stopped at `u`, lexing as `/x/gims` + a stray `uy`
+    // identifier emitted as the corrupt `/x/gims uy`. Fixed in the
+    // source grammars (`[dgimsuvy]`) + regenerated lexer pattern.
     // gap-090 (CLOC14.40) — CORRECTNESS: a string with a backslash
     // escape that closurec does NOT explicitly handle (`\u{…}` code-
     // point, `\xNN` hex, `\0` null, legacy octal) has its backslash
