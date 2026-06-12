@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness form-reset descriptors now expose resettable controls,
+  resetter controls, default reset values, selection/checked reset state, and
+  form-level `onreset` hooks as a flat browser-planning inventory.
 - Browser-readiness form-submission descriptors now expose successful controls,
   submission values, form action/method/target defaults, and submitter routing
   overrides as a flat browser-planning inventory.

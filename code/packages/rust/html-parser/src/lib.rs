@@ -845,6 +845,7 @@ pub struct BrowserDocument {
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
     pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
+    pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
     pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
@@ -1332,6 +1333,36 @@ pub struct BrowserFormSubmissionDescriptor {
     pub submitter_target: Option<String>,
     pub effective_submitter_target: Option<String>,
     pub submitter_novalidate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormResetDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_event_handlers: Vec<String>,
+    pub form_reset_handlers: Vec<String>,
+    pub form_has_reset_handler: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub reset_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub reset_values: Vec<String>,
+    pub reset_value_count: usize,
+    pub selected_options: Vec<String>,
+    pub option_count: usize,
+    pub checked: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub resettable: bool,
+    pub resetter: bool,
+    pub reset_blocked: bool,
+    pub reset_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2842,6 +2873,7 @@ pub struct BrowserForm {
     pub rel_noopener: bool,
     pub rel_noreferrer: bool,
     pub novalidate: bool,
+    pub event_handlers: Vec<String>,
     pub fieldsets: Vec<BrowserFormFieldset>,
     pub labels: Vec<BrowserFormLabel>,
     pub datalists: Vec<BrowserFormDatalist>,
@@ -3377,6 +3409,7 @@ impl BrowserDocument {
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
         summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
+        summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
@@ -19721,6 +19754,7 @@ fn browser_form(
         rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
         rel_tokens,
         novalidate,
+        event_handlers: browser_event_handlers(element),
         fieldsets,
         labels: form_labels,
         datalists,
@@ -19870,6 +19904,164 @@ fn browser_form_submission_element(control: &BrowserFormControl) -> String {
         | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
         other => other.to_string(),
     }
+}
+
+fn browser_form_reset_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormResetDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_reset_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_reset_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormResetDescriptor> {
+    let resettable = browser_form_resettable_control(control);
+    let resetter = browser_form_resetter(control);
+    if !resettable && !resetter {
+        return None;
+    }
+
+    let reset_block_reasons = browser_form_reset_block_reasons(control, resettable, resetter);
+    Some(BrowserFormResetDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_event_handlers: form.event_handlers.clone(),
+        form_reset_handlers: browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        ),
+        form_has_reset_handler: !browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        )
+        .is_empty(),
+        element: browser_form_reset_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        reset_kind: browser_form_reset_kind(control, resettable, resetter, &reset_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        reset_value_count: browser_form_reset_values(control).len(),
+        reset_values: browser_form_reset_values(control),
+        selected_options: control.selected_options.clone(),
+        option_count: control.option_items.len(),
+        checked: control.checked,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        resettable,
+        resetter,
+        reset_blocked: !reset_block_reasons.is_empty(),
+        reset_block_reasons,
+    })
+}
+
+fn browser_form_reset_kind(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+    reset_block_reasons: &[String],
+) -> String {
+    if !reset_block_reasons.is_empty() && resetter {
+        "blocked-resetter".to_string()
+    } else if resetter {
+        "resetter".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "checked-reset-state".to_string()
+    } else if control.control_type == "select" {
+        "selection-reset-state".to_string()
+    } else if control.control_type == "file" {
+        "file-reset-state".to_string()
+    } else if control.control_type == "output" {
+        "output-reset-value".to_string()
+    } else if resettable {
+        "value-reset-state".to_string()
+    } else {
+        "reset-metadata".to_string()
+    }
+}
+
+fn browser_form_resettable_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "checkbox"
+            | "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "file"
+            | "month"
+            | "number"
+            | "password"
+            | "radio"
+            | "range"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+            | "output"
+    )
+}
+
+fn browser_form_resetter(control: &BrowserFormControl) -> bool {
+    control.control_type == "reset"
+}
+
+fn browser_form_reset_block_reasons(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if !resettable && !resetter {
+        reasons.push("not-resettable".to_string());
+    }
+    reasons
+}
+
+fn browser_form_reset_values(control: &BrowserFormControl) -> Vec<String> {
+    if !control.selected_options.is_empty() {
+        return control.selected_options.clone();
+    }
+    if let Some(value) = &control.value {
+        return vec![value.clone()];
+    }
+    if !control.text.is_empty() {
+        return vec![control.text.clone()];
+    }
+    Vec::new()
+}
+
+fn browser_form_reset_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_reset_event(handler: &str) -> bool {
+    handler.eq_ignore_ascii_case("onreset")
 }
 
 fn browser_form_validation_descriptors(
@@ -23874,6 +24066,116 @@ mod tests {
         let external = &descriptors[7];
         assert_eq!(external.form_owner.as_deref(), Some("checkout"));
         assert_eq!(external.submission_values, vec!["extra"]);
+    }
+
+    #[test]
+    fn browser_form_reset_descriptors_track_resetters_controls_and_handlers() {
+        let document = parse_browser_document(
+            "<form id=settings name=settings autocomplete=off onreset=restore()>\
+             <label for=title>Title</label><input id=title name=title value=Draft>\
+             <textarea id=body name=body readonly>Copy</textarea>\
+             <input id=enabled name=enabled type=checkbox value=yes checked>\
+             <input id=mode-a name=mode type=radio value=a>\
+             <input id=mode-b name=mode type=radio value=b checked>\
+             <select id=theme name=theme><option value=light selected>Light</option><option value=dark>Dark</option></select>\
+             <input id=upload name=upload type=file>\
+             <output id=preview name=preview>Preview</output>\
+             <button id=reset name=reset type=reset value=clear>Reset</button>\
+             <input id=disabled-reset type=reset value=disabled disabled>\
+             <input id=hidden name=hidden type=hidden value=keep>\
+             <button id=submit>Submit</button>\
+             </form>\
+             <input id=external form=settings name=outside value=outer>",
+        )
+        .expect("form reset descriptor document should parse");
+
+        let descriptors = &document.form_reset_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec![
+                "title",
+                "body",
+                "enabled",
+                "mode-a",
+                "mode-b",
+                "theme",
+                "upload",
+                "preview",
+                "reset",
+                "disabled-reset",
+                "external"
+            ]
+        );
+
+        let title = &descriptors[0];
+        assert_eq!(title.form_id.as_deref(), Some("settings"));
+        assert_eq!(title.form_name.as_deref(), Some("settings"));
+        assert_eq!(title.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(title.form_event_handlers, vec!["onreset"]);
+        assert_eq!(title.form_reset_handlers, vec!["onreset"]);
+        assert!(title.form_has_reset_handler);
+        assert_eq!(title.element, "input");
+        assert_eq!(title.control_type, "text");
+        assert_eq!(title.reset_kind, "value-reset-state");
+        assert_eq!(title.accessible_name.as_deref(), Some("Title"));
+        assert_eq!(title.reset_values, vec!["Draft"]);
+        assert_eq!(title.reset_value_count, 1);
+        assert!(title.resettable);
+        assert!(!title.resetter);
+        assert!(!title.reset_blocked);
+
+        let body = &descriptors[1];
+        assert_eq!(body.element, "textarea");
+        assert_eq!(body.reset_values, vec!["Copy"]);
+        assert!(body.readonly);
+
+        let enabled = &descriptors[2];
+        assert_eq!(enabled.reset_kind, "checked-reset-state");
+        assert!(enabled.checked);
+        assert_eq!(enabled.reset_values, vec!["yes"]);
+
+        let unchecked_radio = &descriptors[3];
+        assert_eq!(unchecked_radio.reset_kind, "checked-reset-state");
+        assert!(!unchecked_radio.checked);
+        assert_eq!(unchecked_radio.reset_values, vec!["a"]);
+
+        let theme = &descriptors[5];
+        assert_eq!(theme.element, "select");
+        assert_eq!(theme.reset_kind, "selection-reset-state");
+        assert_eq!(theme.selected_options, vec!["light"]);
+        assert_eq!(theme.reset_values, vec!["light"]);
+        assert_eq!(theme.option_count, 2);
+
+        let upload = &descriptors[6];
+        assert_eq!(upload.control_type, "file");
+        assert_eq!(upload.reset_kind, "file-reset-state");
+        assert!(upload.reset_values.is_empty());
+
+        let output = &descriptors[7];
+        assert_eq!(output.element, "output");
+        assert_eq!(output.reset_kind, "output-reset-value");
+        assert_eq!(output.reset_values, vec!["Preview"]);
+
+        let reset = &descriptors[8];
+        assert_eq!(reset.reset_kind, "resetter");
+        assert!(reset.resetter);
+        assert!(!reset.resettable);
+        assert_eq!(reset.value.as_deref(), Some("clear"));
+
+        let disabled_reset = &descriptors[9];
+        assert_eq!(disabled_reset.reset_kind, "blocked-resetter");
+        assert!(disabled_reset.resetter);
+        assert!(disabled_reset.disabled);
+        assert!(disabled_reset.reset_blocked);
+        assert_eq!(disabled_reset.reset_block_reasons, vec!["disabled"]);
+
+        let external = &descriptors[10];
+        assert_eq!(external.form_owner.as_deref(), Some("settings"));
+        assert_eq!(external.reset_values, vec!["outer"]);
     }
 
     #[test]
