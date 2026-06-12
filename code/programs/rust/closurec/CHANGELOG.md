@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.88.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-075** — a SYMBOL `-`/`+`/`!`/`~` operator now drops
+  the redundant grouping parens around a simple-reference operand,
+  matching upstream Closure: `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` →
+  `~a`, and the same-sign `-(-a)` → `- -a`, `+(+a)` → `+ +a` (a
+  separating space, from gap-063, prevents the `--`/`++` glue).
+  `minify_unary_minus_paren` is now enforced.
+
+### Added — gap-075 prefix-unary symbol operand elision
+
+A new pre-pass anchored on `is_structural_punct(kept[i],
+"-"|"+"|"!"|"~")` with `kept[i+1]` a `(`. Prefix-vs-binary is
+irrelevant: stripping a grouping paren around a self-delimiting
+operand is sound whether the operator is a prefix unary (`-(a)`) or
+a binary operator whose RIGHT operand is parenthesised (`a-(b)` →
+`a-b`, which the JAR also does). The operand check is the new
+`is_safe_unary_paren_operand`, which accepts everything
+`is_safe_unary_operand` does PLUS a leading chain of prefix symbol
+unaries applied to such an operand (`-a`, `!a`, `~a.b`) — this is
+what makes `-(-a)`'s operand (itself a UnaryExpression) strippable.
+Operator operands (`-(a+b)`, `a-(b+c)`) keep their parens. `--`/`++`
+are single tokens whose `.value` is `"--"`/`"++"`, so they never
+match the bare-`-`/`+` anchor (`-(--a)` left alone). The matching
+LEFT-operand elision, predecrement operand (`a-(--b)`), and binary
+comparison operands (`a!=(b)`) remain deferred. 3 new gap075_* unit
+tests + the `minify_unary_minus_paren` byte-identity fixture.
+
 ## [0.87.0] - 2026-06-12
 
 ### Changed

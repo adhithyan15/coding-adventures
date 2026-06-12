@@ -428,6 +428,81 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-075: paren elision around a PREFIX SYMBOL unary operator's
+    // operand. `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` → `~a`, and the
+    // same-sign nesting `-(-a)` → `- -a`, `+(+a)` → `+ +a`.
+    //
+    // The mirror of gap-070/071 but anchored on the PUNCTUATION
+    // operators `-`/`+`/`!`/`~` (`is_structural_punct`-gated) rather
+    // than a keyword. Unlike the keyword cases there is NO prefix-vs-
+    // binary distinction to make: stripping a grouping paren around a
+    // self-delimiting operand is sound whether the operator is a
+    // prefix unary (`-(a)`) or a binary operator whose RIGHT operand
+    // is parenthesised (`a-(b)` → `a-b`). The operand check
+    // (`is_safe_unary_paren_operand`) rejects anything containing a
+    // top-level binary operator, so `-(a+b)` / `a-(b+c)` keep their
+    // parens.
+    //
+    // SAME-SIGN SAFETY: when the operand begins with the SAME sign
+    // (`-(-a)` / `+(+a)`), gluing the two operators would form the
+    // spurious `--`/`++` (decrement / increment). The gap-063
+    // `needs_separator` rule inserts a separating space once the
+    // parens are gone, so this pre-pass only drops them. `!`/`~`
+    // are prefix-only and carry no binary ambiguity; `--`/`++`
+    // (single tokens whose `.value` is `"--"`/`"++"`) never match
+    // the bare-`-`/`+` anchor.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            let is_sym_unary = is_structural_punct(kept[i], "-")
+                || is_structural_punct(kept[i], "+")
+                || is_structural_punct(kept[i], "!")
+                || is_structural_punct(kept[i], "~");
+            if is_sym_unary && is_structural_punct(kept[i + 1], "(") {
+                let open = i + 1;
+                // Find the matching close paren (structural scan).
+                let mut depth: i32 = 1;
+                let mut close: Option<usize> = None;
+                let mut j = open + 1;
+                while j < kept.len() {
+                    let t = kept[j];
+                    if is_structural_punct(t, "(")
+                        || is_structural_punct(t, "[")
+                        || is_structural_punct(t, "{")
+                    {
+                        depth += 1;
+                    } else if is_structural_punct(t, ")") {
+                        depth -= 1;
+                        if depth == 0 {
+                            close = Some(j);
+                            break;
+                        }
+                    } else if is_structural_punct(t, "]")
+                        || is_structural_punct(t, "}")
+                    {
+                        depth -= 1;
+                    }
+                    j += 1;
+                }
+                if let Some(close) = close {
+                    let span = &kept[open + 1..close];
+                    if is_safe_unary_paren_operand(span) {
+                        drops.push(open);
+                        drops.push(close);
+                        i = close + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-055: paren elision around a *whole-arm* sub-
     // expression that follows `?` or `:`. Upstream Closure
     // strips redundant grouping parens around:
@@ -2838,6 +2913,42 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
 /// operator, so `OP(span)` ≡ `OP span`. Anything with a top-level
 /// binary operator, comma, or call `(` is rejected — there the
 /// parens change meaning.
+/// gap-075: True iff `span` is a safe operand for a PREFIX SYMBOL
+/// unary operator's grouping parens — i.e. `OP(span)` ≡ `OP span`.
+///
+/// Accepts everything `is_safe_unary_operand` does (a single token
+/// or a member-reference chain), PLUS a leading chain of prefix
+/// SYMBOL unary operators (`-`/`+`/`!`/`~`) applied to such an
+/// operand: `-a`, `!a`, `~a.b`, `- -a`. That extra shape is what
+/// makes `-(-a)` → `- -a` strippable — the inner `-a` is itself a
+/// UnaryExpression, which `is_safe_unary_operand` alone rejects.
+///
+/// All shapes are higher-precedence than (or equal to) a unary
+/// operator and self-delimiting, so the grouping parens are pure
+/// grouping and whatever follows the close paren re-associates the
+/// same way. Anything with a top-level BINARY operator, comma, or
+/// call is rejected (`is_safe_unary_operand` handles that), so
+/// `-(a+b)` correctly keeps its parens. `--`/`++` (decrement /
+/// increment) are single tokens whose `.value` is `"--"`/`"++"`,
+/// never `"-"`/`"+"`, so they never satisfy the leading-operator
+/// test — `-(--a)` is left alone.
+fn is_safe_unary_paren_operand(span: &[&lexer::token::Token]) -> bool {
+    if is_safe_unary_operand(span) {
+        return true;
+    }
+    if let Some((first, rest)) = span.split_first() {
+        if !rest.is_empty()
+            && (is_structural_punct(first, "-")
+                || is_structural_punct(first, "+")
+                || is_structural_punct(first, "!")
+                || is_structural_punct(first, "~"))
+        {
+            return is_safe_unary_paren_operand(rest);
+        }
+    }
+    false
+}
+
 fn is_safe_unary_operand(span: &[&lexer::token::Token]) -> bool {
     if span.is_empty() {
         return false;
@@ -4492,6 +4603,36 @@ mod tests {
         assert_eq!(minify("o.instanceof(x);"), "o.instanceof(x);");
     }
 
+    // ---- gap-075: prefix-unary symbol operand paren elision ----
+
+    /// gap-075: `-`/`+`/`!`/`~` followed by a parenthesised simple
+    /// reference drops the parens.
+    #[test]
+    fn gap075_symbol_unary_operand_elided() {
+        assert_eq!(minify("var x=-(a);"), "var x=-a;");
+        assert_eq!(minify("var x=!(a);"), "var x=!a;");
+        assert_eq!(minify("var x=~(a);"), "var x=~a;");
+        assert_eq!(minify("var x=-(a.b);"), "var x=-a.b;");
+    }
+
+    /// gap-075 same-sign: `-(-a)` / `+(+a)` strip the parens but a
+    /// separating space (gap-063) prevents the `--`/`++` glue.
+    #[test]
+    fn gap075_same_sign_gets_space() {
+        assert_eq!(minify("var x=-(-a);"), "var x=- -a;");
+        assert_eq!(minify("var x=+(+a);"), "var x=+ +a;");
+    }
+
+    /// gap-075 boundary: an operator operand keeps its parens
+    /// (`-(a+b)` ≠ `-a+b`); a binary `-` with a simple right operand
+    /// also strips (`a-(b)` → `a-b`).
+    #[test]
+    fn gap075_operator_operand_kept_binary_simple_stripped() {
+        assert_eq!(minify("var x=-(a+b);"), "var x=-(a+b);");
+        assert_eq!(minify("var x=a-(b);"), "var x=a-b;");
+        assert_eq!(minify("var x=a-(b+c);"), "var x=a-(b+c);");
+    }
+
     // ---- gap-073: get/set computed-key separating space ----
 
     /// gap-073: a `get`/`set` accessor before a COMPUTED key `[k]`
@@ -5083,12 +5224,15 @@ mod tests {
         assert_eq!(minify("f((a,b));"), "f((a,b));");
     }
 
-    /// gap-062 safety: a single call-arg grouping where the
-    /// outer is a call paren is left alone by THIS pass
-    /// (`g((a)+(b))` — outer is g's call). Deferred follow-up.
+    /// gap-062 / gap-075 interaction: in `g((a)+(b))` the gap-075
+    /// symbol-operand pass strips the RIGHT `+` operand's grouping
+    /// parens (`+(b)` → `+b`), giving `g((a)+b)`. The LEFT `(a)`
+    /// grouping is a separate left-operand elision (upstream emits
+    /// `g(a+b)`) and is still deferred. The intermediate output is
+    /// valid and equivalent.
     #[test]
     fn gap062_call_arg_grouping_preserved() {
-        assert_eq!(minify("g((a)+(b));"), "g((a)+(b));");
+        assert_eq!(minify("g((a)+(b));"), "g((a)+b);");
     }
 
     /// gap-062 non-regression: a single grouping layer is NOT
