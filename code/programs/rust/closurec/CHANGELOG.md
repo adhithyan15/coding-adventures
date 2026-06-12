@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.93.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-081** — a grouping paren around a ternary `?:`
+  CONDITION now elides, matching upstream Closure: `(a)?b:c` →
+  `a?b:c`, `(a.b)?c:d` → `a.b?c:d`. The condition-side mirror of
+  gap-055 (ternary ARMS). `minify_ternary_cond_paren` is now enforced.
+
+### Added — gap-081 ternary condition paren elision
+
+The parenthesised condition sits to the LEFT of the `?`, so it is
+exactly the gap-077 LEFT-operand shape (a `(` that STARTS an
+expression whose matching `)` is followed by an operator). Resolved by
+adding a structural `?` to the gap-077 after-set
+(`is_binary_or_cond_after`). All the existing machinery applies
+unchanged:
+
+- the starts-an-expression guard keeps a CALL condition
+  (`f(a)?b:c` stays — dropping would corrupt to `fa?b:c`);
+- the `is_safe_unary_paren_operand` atomic guard keeps a comma
+  condition (`(a,b)?c:d`) and an operator condition (`(a||b)?c:d` —
+  the precedence-aware strip is the deferred gap-083; closurec keeps
+  it, which is valid);
+- `?.` lexes as a single `"?."` token, so `is_structural_punct(t,
+  "?")` matches ONLY the bare ternary and never `(a)?.b`.
+
+3 new `gap081_*` unit tests + the enforced byte-identity fixture; the
+now-stale `gap077_non_binary_after_not_stripped_here` test (which
+asserted `(a)?b:c` unchanged) was replaced.
+
 ## [0.92.0] - 2026-06-12
 
 ### Changed

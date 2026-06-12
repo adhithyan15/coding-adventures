@@ -619,9 +619,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-081 — ternary CONDITION paren elision
 
-- **Status:** OPEN (discovered CLOC14.38). `minify_ternary_cond_paren` ignored.
+- **Status:** RESOLVED in CLOC12.89. `minify_ternary_cond_paren` enforced.
 - **Input:** `var x=(a)?b:c;` → **Upstream:** `var x=a?b:c;` (also `(a.b)?c:d` → `a.b?c:d`, and precedence-aware `(a||b)?c:d` → `a||b?c:d` since `||` binds tighter than `?:`).
-- **What it needs:** The CONDITION-side sibling of gap-055 (which strips the ternary ARMS `?(E):` / `?y:(E)`). When a grouping paren wraps the whole condition of a `?:`, strip it. A `(` that starts an expression whose matching `)` is immediately followed by `?` (structural ternary, NOT `?.`) and whose span is a self-delimiting operand → drop. The atomic-operand guard keeps the simple case; the precedence-aware variant (`(a||b)?`) is the broader gap-083 family.
+- **What it needed:** The CONDITION-side sibling of gap-055 (which strips the ternary ARMS `?(E):` / `?y:(E)`). When a grouping paren wraps the whole condition of a `?:`, strip it.
+- **CLOC12.89 resolution:** The parenthesised condition sits to the LEFT of the `?`, so it is exactly the gap-077 LEFT-operand shape — a `(` that STARTS an expression whose matching `)` is followed by an operator. Resolved by adding a structural `?` to the gap-077 after-set (`is_binary_or_cond_after`). All the existing machinery applies unchanged: the starts-an-expression guard keeps a CALL condition (`f(a)?b:c`), and the `is_safe_unary_paren_operand` atomic guard keeps a comma (`(a,b)?c:d`) and an operator condition (`(a||b)?c:d` — the precedence-aware strip is the deferred gap-083; closurec keeps it, valid). `?.` lexes as a single `"?."` token so `is_structural_punct(t, "?")` matches ONLY the bare ternary and never `(a)?.b`. 3 unit tests (strip / call+comma+operator-kept / optional-chain-not-ternary) + the byte-identity fixture; the stale `gap077_non_binary_after_not_stripped_here` test (which asserted `(a)?b:c` unchanged) was replaced.
 
 ### gap-082 — decimal exponent / float canonicalisation (WHITESPACE_ONLY)
 
