@@ -25,12 +25,12 @@ use coding_adventures_html_parser::{
     BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
     BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
     BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptStorageAccessDescriptor,
-    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
-    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
-    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
-    BrowserTextSemantic, BrowserThemeColor,
+    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
+    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -94,6 +94,8 @@ struct ExpectedBrowserDocument {
     script_storage_access_descriptors: Option<Vec<ExpectedScriptStorageAccessDescriptor>>,
     #[serde(default)]
     script_worker_messaging_descriptors: Option<Vec<ExpectedScriptWorkerMessagingDescriptor>>,
+    #[serde(default)]
+    script_module_graph_descriptors: Option<Vec<ExpectedScriptModuleGraphDescriptor>>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
     #[serde(default)]
@@ -1486,6 +1488,48 @@ struct ExpectedScriptWorkerMessagingDescriptor {
     messaging_blocked: bool,
     #[serde(default)]
     messaging_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedScriptModuleGraphDescriptor {
+    script_kind: String,
+    module_graph_kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    execution_kind: String,
+    #[serde(default)]
+    has_text: bool,
+    #[serde(default)]
+    text_length: usize,
+    #[serde(default)]
+    module_targets: Vec<String>,
+    #[serde(default)]
+    module_target_count: usize,
+    #[serde(default)]
+    external_module_entry: bool,
+    #[serde(default)]
+    inline_module_entry: bool,
+    #[serde(default)]
+    declares_import_map: bool,
+    #[serde(default)]
+    uses_static_imports: bool,
+    #[serde(default)]
+    uses_dynamic_imports: bool,
+    #[serde(default)]
+    has_modulepreload: bool,
+    #[serde(default)]
+    modulepreload_urls: Vec<String>,
+    #[serde(default)]
+    resolved_modulepreload_urls: Vec<String>,
+    #[serde(default)]
+    module_graph_blocked: bool,
+    #[serde(default)]
+    module_graph_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4003,6 +4047,30 @@ fn browser_script_worker_messaging_descriptors_track_flat_worker_and_channel_hin
 }
 
 #[test]
+fn browser_script_module_graph_descriptors_track_flat_import_maps_and_preloads() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "script-module-graph-page")
+        .expect("script module graph fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("script module graph fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.scripts, expected.scripts,
+        "scripts should preserve import maps, module text, and fallback import hints",
+    );
+    assert_eq!(
+        actual.script_module_graph_descriptors, expected.script_module_graph_descriptors,
+        "script module graph descriptors should preserve imports, preloads, and blockers",
+    );
+}
+
+#[test]
 fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5952,6 +6020,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_script_worker_messaging_descriptors(&scripts));
+        let script_module_graph_descriptors = self
+            .script_module_graph_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedScriptModuleGraphDescriptor::into_browser_script_module_graph_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_script_module_graph_descriptors(&scripts, &resources));
         let stylesheet_planning_descriptors = self
             .stylesheet_planning_descriptors
             .map(|descriptors| {
@@ -6247,6 +6326,7 @@ impl ExpectedBrowserDocument {
             script_execution_descriptors,
             script_storage_access_descriptors,
             script_worker_messaging_descriptors,
+            script_module_graph_descriptors,
             stylesheets,
             stylesheet_planning_descriptors,
             document_policy_descriptors: self
@@ -11031,6 +11111,158 @@ fn expected_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec
     reasons
 }
 
+fn expected_script_module_graph_descriptors(
+    scripts: &[BrowserScript],
+    resources: &[BrowserResource],
+) -> Vec<BrowserScriptModuleGraphDescriptor> {
+    let modulepreloads: Vec<_> = resources
+        .iter()
+        .filter(|resource| resource.kind == "modulepreload")
+        .collect();
+    scripts
+        .iter()
+        .filter_map(|script| expected_script_module_graph_descriptor(script, &modulepreloads))
+        .collect()
+}
+
+fn expected_script_module_graph_descriptor(
+    script: &BrowserScript,
+    modulepreloads: &[&BrowserResource],
+) -> Option<BrowserScriptModuleGraphDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let external_module_entry = script.script_kind == "module" && script.src.is_some();
+    let inline_module_entry = script.script_kind == "module" && script.src.is_none();
+    let declares_import_map = script.script_kind == "importmap";
+    let uses_static_imports = expected_script_uses_static_module_imports(&normalized_text);
+    let uses_dynamic_imports = normalized_text.contains("import(");
+    let has_modulepreload = !modulepreloads.is_empty();
+    let module_targets = expected_script_module_graph_targets(
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+    );
+    if module_targets.is_empty() {
+        return None;
+    }
+
+    let modulepreload_urls = modulepreloads
+        .iter()
+        .map(|resource| resource.url.clone())
+        .collect();
+    let resolved_modulepreload_urls = modulepreloads
+        .iter()
+        .filter_map(|resource| resource.resolved_url.clone())
+        .collect();
+    let module_graph_block_reasons = expected_script_module_graph_block_reasons(script);
+    Some(BrowserScriptModuleGraphDescriptor {
+        script_kind: script.script_kind.clone(),
+        module_graph_kind: expected_script_module_graph_kind(
+            external_module_entry,
+            inline_module_entry,
+            declares_import_map,
+            uses_static_imports,
+            uses_dynamic_imports,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        module_target_count: module_targets.len(),
+        module_targets,
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+        modulepreload_urls,
+        resolved_modulepreload_urls,
+        module_graph_blocked: !module_graph_block_reasons.is_empty(),
+        module_graph_block_reasons,
+    })
+}
+
+fn expected_script_uses_static_module_imports(normalized_text: &str) -> bool {
+    normalized_text.contains("import ")
+        || normalized_text.contains("import{")
+        || normalized_text.contains("export ")
+        || normalized_text.contains(" from '")
+        || normalized_text.contains(" from \"")
+}
+
+fn expected_script_module_graph_targets(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+    has_modulepreload: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if external_module_entry {
+        targets.push("external-module-entry".to_string());
+    }
+    if inline_module_entry {
+        targets.push("inline-module-entry".to_string());
+    }
+    if declares_import_map {
+        targets.push("importmap".to_string());
+    }
+    if uses_static_imports {
+        targets.push("static-import".to_string());
+    }
+    if uses_dynamic_imports {
+        targets.push("dynamic-import".to_string());
+    }
+    if has_modulepreload {
+        targets.push("modulepreload".to_string());
+    }
+    targets
+}
+
+fn expected_script_module_graph_kind(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+) -> String {
+    if declares_import_map {
+        "import-map".to_string()
+    } else if uses_static_imports && uses_dynamic_imports {
+        "mixed-module-imports".to_string()
+    } else if uses_static_imports {
+        "static-module-graph".to_string()
+    } else if uses_dynamic_imports {
+        "dynamic-module-import".to_string()
+    } else if external_module_entry || inline_module_entry {
+        "module-entry".to_string()
+    } else {
+        "module-graph-metadata".to_string()
+    }
+}
+
+fn expected_script_module_graph_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
 fn expected_stylesheet_planning_descriptors(
     stylesheets: &[BrowserStylesheet],
 ) -> Vec<BrowserStylesheetPlanningDescriptor> {
@@ -11238,6 +11470,33 @@ impl ExpectedScriptWorkerMessagingDescriptor {
             module_worker_hint: self.module_worker_hint,
             messaging_blocked: self.messaging_blocked,
             messaging_block_reasons: self.messaging_block_reasons,
+        }
+    }
+}
+
+impl ExpectedScriptModuleGraphDescriptor {
+    fn into_browser_script_module_graph_descriptor(self) -> BrowserScriptModuleGraphDescriptor {
+        BrowserScriptModuleGraphDescriptor {
+            script_kind: self.script_kind,
+            module_graph_kind: self.module_graph_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            execution_kind: self.execution_kind,
+            has_text: self.has_text,
+            text_length: self.text_length,
+            module_targets: self.module_targets,
+            module_target_count: self.module_target_count,
+            external_module_entry: self.external_module_entry,
+            inline_module_entry: self.inline_module_entry,
+            declares_import_map: self.declares_import_map,
+            uses_static_imports: self.uses_static_imports,
+            uses_dynamic_imports: self.uses_dynamic_imports,
+            has_modulepreload: self.has_modulepreload,
+            modulepreload_urls: self.modulepreload_urls,
+            resolved_modulepreload_urls: self.resolved_modulepreload_urls,
+            module_graph_blocked: self.module_graph_blocked,
+            module_graph_block_reasons: self.module_graph_block_reasons,
         }
     }
 }

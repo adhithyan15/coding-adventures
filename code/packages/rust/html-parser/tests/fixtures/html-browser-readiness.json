@@ -1103,6 +1103,103 @@
       }
     },
     {
+      "id": "script-module-graph-page",
+      "description": "Browser document summaries expose import maps, module graph entrypoints, preload hints, and fallback blockers.",
+      "input": "<base href=\"https://example.test/app/index.html\"><link rel=modulepreload href=chunks/vendor.mjs integrity=sha384-vendor><script type=importmap>{\"imports\":{\"app\":\"/app.mjs\"}}</script><script type=module src=app.mjs></script><script type=module>import { ready } from './ready.mjs'; export const boot = ready(); import('./lazy.mjs');</script><script nomodule>import('./legacy.js');</script>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/app/index.html",
+        "base_target": null,
+        "metadata": {
+          "resource_hints": [
+            { "kind": "modulepreload", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "rel": "modulepreload", "rel_tokens": ["modulepreload"], "integrity": "sha384-vendor" }
+          ]
+        },
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "modulepreload", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "rel": "modulepreload", "rel_tokens": ["modulepreload"], "integrity": "sha384-vendor", "async_script": false, "defer_script": false },
+          { "kind": "script", "url": "app.mjs", "resolved_url": "https://example.test/app/app.mjs", "rel": null, "type_hint": "module", "async_script": false, "defer_script": false }
+        ],
+        "scripts": [
+          { "script_kind": "importmap", "type_hint": "importmap", "text": "{\"imports\":{\"app\":\"/app.mjs\"}}" },
+          { "script_kind": "module", "src": "app.mjs", "resolved_src": "https://example.test/app/app.mjs", "type_hint": "module" },
+          { "script_kind": "module", "type_hint": "module", "text": "import { ready } from './ready.mjs'; export const boot = ready(); import('./lazy.mjs');" },
+          { "script_kind": "classic", "nomodule": true, "text": "import('./legacy.js');" }
+        ],
+        "script_module_graph_descriptors": [
+          {
+            "script_kind": "importmap",
+            "module_graph_kind": "import-map",
+            "type_hint": "importmap",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 30,
+            "module_targets": ["importmap", "modulepreload"],
+            "module_target_count": 2,
+            "declares_import_map": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "module",
+            "module_graph_kind": "module-entry",
+            "src": "app.mjs",
+            "resolved_src": "https://example.test/app/app.mjs",
+            "type_hint": "module",
+            "execution_kind": "external",
+            "module_targets": ["external-module-entry", "modulepreload"],
+            "module_target_count": 2,
+            "external_module_entry": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "module",
+            "module_graph_kind": "mixed-module-imports",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 87,
+            "module_targets": ["inline-module-entry", "static-import", "dynamic-import", "modulepreload"],
+            "module_target_count": 4,
+            "inline_module_entry": true,
+            "uses_static_imports": true,
+            "uses_dynamic_imports": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "classic",
+            "module_graph_kind": "dynamic-module-import",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 22,
+            "module_targets": ["dynamic-import", "modulepreload"],
+            "module_target_count": 2,
+            "uses_dynamic_imports": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"],
+            "module_graph_blocked": true,
+            "module_graph_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "fetch_policy_descriptors": [
+          { "element": "link", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "integrity": "sha384-vendor" }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "table-layout-metadata-page",
       "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
       "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
