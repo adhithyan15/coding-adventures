@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, resolve_deck_sources,
-    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_parameters,
+    resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -282,6 +282,68 @@ fn resolve_deck_sources_reports_missing_sources_and_cycles() {
             ("<deck>", 2, Some("missing.inc")),
             ("b.inc", 1, Some("a.inc")),
             ("<deck>", 4, Some("vendor.lib:SS")),
+        ]
+    );
+}
+
+#[test]
+fn resolve_deck_parameters_rewrites_braced_and_quoted_expressions() {
+    let summary = resolve_deck_parameters(
+        "
+.param RLOAD=2k SCALE=3 TOTAL=RLOAD*SCALE
+V1 in 0 DC {scale+1}
+R1 in out {total}
+C1 out 0 '2u*scale'
+.op
+.end
+Rafter out 0 {total}
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(7));
+    assert_eq!(
+        summary
+            .parameters
+            .iter()
+            .map(|parameter| (parameter.name.as_str(), parameter.value))
+            .collect::<Vec<_>>(),
+        vec![("RLOAD", 2000.0), ("SCALE", 3.0), ("TOTAL", 6000.0)]
+    );
+    assert_eq!(
+        summary.active_lines,
+        vec!["V1 in 0 DC 4", "R1 in out 6000", "C1 out 0 0.000006", ".op",]
+    );
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn resolve_deck_parameters_reports_unresolved_and_unsupported_func() {
+    let summary = resolve_deck_parameters(
+        "
+.param GOOD=1k BAD=missing+1
+.func gain(x) {x*2}
+R1 in out {bad}
+R2 out 0 {good}
+.end
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(
+        summary.active_lines,
+        vec![".func gain(x) {x*2}", "R1 in out {bad}", "R2 out 0 1000"]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_PARAM_EXPRESSION",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+            "SPICE_DECK_PARAM_UNRESOLVED"
         ]
     );
 }
