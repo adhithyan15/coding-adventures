@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.64.0"
+version = "0.65.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.65.0 (LANG-MATRIX LM-L Brainfuck): `lower_brainfuck_for_aot` now widens the Brainfuck frontend's narrow cell/pointer hints (`u8`/`u32`) to `i64` (byte width survives only at the `load_byte`/`store_byte` tape boundary), so Brainfuck runs on the LLVM backend — verified by RUNNING on real `clang` in `tests/lang_matrix.rs`.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }

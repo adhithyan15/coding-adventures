@@ -238,6 +238,12 @@ const SUPPORTED_OPS: &[&str] = &[
     "label", "jmp", "jmp_if_true", "jmp_if_false",
     // LLVM04 — calls
     "call", "call_builtin",
+    // LLVM05 — byte-tape memory (LANG-MATRIX LM-L Brainfuck). `alloc_bytes`
+    // mallocs a zero-filled tape, `load_byte`/`store_byte` index it at byte
+    // width (zero-extend on load, truncate on store). The same op trio the
+    // x86_64 / native AOT backend already supports (LANG76); we add the LLVM
+    // lowering so Brainfuck — which builds an implicit byte tape — compiles.
+    "alloc_bytes", "load_byte", "store_byte",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -253,7 +259,12 @@ const SUPPORTED_OPS: &[&str] = &[
 /// We pick that name (rather than `@env.__print_i64` etc.) because LLVM
 /// global names commonly use `__` for runtime / launcher symbols, and the
 /// downstream linker resolves the host implementation.
-const SUPPORTED_BUILTINS: &[&str] = &["print_i64"];
+///
+/// LLVM05 (LANG-MATRIX LM-L Brainfuck) adds `putchar` / `getchar` — Brainfuck's
+/// `.` and `,`. These lower directly to the libc `@putchar(i32)` / `@getchar()`
+/// the C standard library already provides, so no host-runtime shim is needed
+/// (unlike `print_i64`); `clang` links libc by default.
+const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar"];
 
 /// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
 /// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
@@ -411,18 +422,31 @@ pub fn lower_iir_to_llvm(
     // Currently the only supported builtin is `print_i64` (LLVM convention
     // chosen for BASIC's PRINT — see `SUPPORTED_BUILTINS` doc above).
     let mut used_print_i64 = false;
+    // LLVM05 — Brainfuck I/O + tape: libc `putchar`/`getchar` and the
+    // allocator behind `alloc_bytes`. Declared once each, when used.
+    let mut used_putchar = false;
+    let mut used_getchar = false;
+    let mut used_alloc_bytes = false;
     // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
     // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
     let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
     for f in &module.functions {
         for i in &f.instructions {
+            if i.op == "alloc_bytes" {
+                used_alloc_bytes = true;
+            }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
-                    if name == "print_i64" {
-                        used_print_i64 = true;
-                    } else if let Some(b) = lispy_builtin(name) {
-                        if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
-                            used_lispy.push(b);
+                    match name.as_str() {
+                        "print_i64" => used_print_i64 = true,
+                        "putchar" => used_putchar = true,
+                        "getchar" => used_getchar = true,
+                        _ => {
+                            if let Some(b) = lispy_builtin(name) {
+                                if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
+                                    used_lispy.push(b);
+                                }
+                            }
                         }
                     }
                 }
@@ -432,6 +456,21 @@ pub fn lower_iir_to_llvm(
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
+    }
+    // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
+    // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
+    // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
+    if used_alloc_bytes || used_putchar || used_getchar {
+        out.push('\n');
+        if used_alloc_bytes {
+            out.push_str("declare ptr @calloc(i64, i64)\n");
+        }
+        if used_putchar {
+            out.push_str("declare i32 @putchar(i32)\n");
+        }
+        if used_getchar {
+            out.push_str("declare i32 @getchar()\n");
+        }
     }
     if !used_lispy.is_empty() {
         out.push('\n');
@@ -505,6 +544,16 @@ impl FnState<'_> {
     fn fresh(&mut self, hint: &str) -> String {
         self.counter += 1;
         format!("%__{}{}", hint, self.counter)
+    }
+
+    /// Like [`fresh`](Self::fresh) but without the leading `%` — a *bare* SSA
+    /// name suitable for use as an `IIRInstr::dest` (the lowering helpers add
+    /// the `%` themselves). Used to give a promoted stack-slot's assignment a
+    /// unique SSA name so a variable written more than once does not emit
+    /// `%v = …` twice (LLVM rejects "multiple definition of local value").
+    fn fresh_bare(&mut self, hint: &str) -> String {
+        self.counter += 1;
+        format!("__{}{}", hint, self.counter)
     }
 }
 
@@ -629,16 +678,37 @@ fn lower_instr_with_slots(
     }
 
     // 2. Lower the instruction.
-    lower_instr(instr, state, out)?;
+    //
+    // If `dest` is a slot, rename it to a *fresh* SSA name first. A
+    // value-producing op (`add`/`zext`/`load_byte`/…) emits `%<dest> = …`
+    // using the dest name verbatim; a slot variable is by definition assigned
+    // 2+ times, so reusing its name would emit `%v = …` twice — which LLVM
+    // rejects ("multiple definition of local value named 'v'"). Lowering a
+    // clone with a unique dest name sidesteps that; the post-store below then
+    // writes the produced value into the *original* variable's slot. (`const`
+    // and `mov` slot-dests emit no `%dest = …` line, so they were always fine —
+    // but routing them through the same rename is harmless and keeps the code
+    // uniform.) This is the LANG-MATRIX LM-L-Brainfuck trigger: BF's `ptr`/`v`
+    // are the first slot variables to be the dest of real arithmetic.
+    let slot_dest = instr
+        .dest
+        .as_ref()
+        .filter(|d| state.slots.contains(*d))
+        .cloned();
+    if let Some(orig) = &slot_dest {
+        let fresh = state.fresh_bare("slot");
+        let mut renamed = instr.clone();
+        renamed.dest = Some(fresh.clone());
+        lower_instr(&renamed, state, out)?;
 
-    // 3. Post-store a slot destination.
-    if let Some(dest) = &instr.dest {
-        if state.slots.contains(dest) {
-            if let Some(val) = state.env.get(dest).cloned() {
-                out.push_str(&format!("  store i64 {val}, ptr %{dest}.slot\n"));
-            }
-            state.env.remove(dest); // future reads go through the slot's load.
+        // 3a. Post-store the produced value into the original slot.
+        if let Some(val) = state.env.get(&fresh).cloned() {
+            out.push_str(&format!("  store i64 {val}, ptr %{orig}.slot\n"));
         }
+        state.env.remove(&fresh); // the fresh temp is not referenced again.
+        state.env.remove(orig); // future reads of `orig` go through its slot load.
+    } else {
+        lower_instr(instr, state, out)?;
     }
 
     // 4. Restore the env bindings we overrode for the pre-loads.
@@ -798,11 +868,111 @@ fn lower_instr(
         // is emitted once at the module top by `lower_iir_to_llvm`.
         "call_builtin" => lower_call_builtin(instr, state, out),
 
+        // ── byte-tape memory (LLVM05 — LANG-MATRIX LM-L Brainfuck) ───────
+        "alloc_bytes" => lower_alloc_bytes(instr, state, out),
+        "load_byte" => lower_load_byte(instr, state, out),
+        "store_byte" => lower_store_byte(instr, state, out),
+
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------------
+// LLVM05 — byte-tape memory ops (Brainfuck's implicit tape)
+// ---------------------------------------------------------------------------
+
+/// Lower `alloc_bytes dest <- size` — allocate a `size`-byte, zero-filled tape.
+///
+/// ```llvm
+/// %dest = call ptr @calloc(i64 <size>, i64 1)
+/// ```
+///
+/// `calloc` zero-initialises (Brainfuck cells start at 0). `dest` (the tape
+/// base) is bound in `env` as an LLVM `ptr`; it is written exactly once by the
+/// `lower_brainfuck_for_aot` preamble, so it is never a promoted stack slot —
+/// later `load_byte`/`store_byte` read it straight from `env`.
+///
+/// The `size` operand is a compile-time constant from `lower_brainfuck_for_aot`
+/// (30000); we emit it verbatim. A hostile hand-built IIR could pass a huge or
+/// negative literal, but that only makes `calloc` return null at runtime (a
+/// crash on first store, not a compile-time or memory-safety defect in this
+/// emitter), so no extra guard is warranted here — exactly the contract the
+/// native `alloc_bytes` lowering already relies on.
+fn lower_alloc_bytes(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "alloc_bytes", state.fn_name)?.to_string();
+    let size = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    out.push_str(&format!("  %{dest} = call ptr @calloc(i64 {size}, i64 1)\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `load_byte dest <- base, idx` — read one tape cell, zero-extended.
+///
+/// ```llvm
+/// %p = getelementptr i8, ptr <base>, i64 <idx>
+/// %b = load i8, ptr %p
+/// %dest = zext i8 %b to i64
+/// ```
+///
+/// The 8-bit cell becomes an `i64` register (the uniform BF value width); the
+/// `zext` is the load half of the "byte width only at the tape boundary"
+/// contract. `dest` may be a promoted slot — the slot wrapper stores the
+/// `i64` value we leave in `env[dest]`.
+fn lower_load_byte(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "load_byte", state.fn_name)?.to_string();
+    let base = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("gep");
+    let b = state.fresh("byte");
+    out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
+    out.push_str(&format!("  {b} = load i8, ptr {p}\n"));
+    out.push_str(&format!("  %{dest} = zext i8 {b} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `store_byte base, idx, val` (no dest) — write the low byte of `val`.
+///
+/// ```llvm
+/// %p = getelementptr i8, ptr <base>, i64 <idx>
+/// %t = trunc i64 <val> to i8
+/// store i8 %t, ptr %p
+/// ```
+///
+/// The `trunc` is the store half of the tape-boundary contract; it is exactly
+/// what makes Brainfuck's 8-bit cell wrap-around (`255 + 1 == 0`) fall out
+/// even though the arithmetic ran at `i64` width.
+fn lower_store_byte(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "store_byte must not have a dest".into(),
+        });
+    }
+    let base = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let val = resolve_operand(instr.srcs.get(2), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("gep");
+    let t = state.fresh("trunc");
+    out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
+    out.push_str(&format!("  {t} = trunc i64 {val} to i8\n"));
+    out.push_str(&format!("  store i8 {t}, ptr {p}\n"));
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -1234,6 +1404,36 @@ fn lower_call_builtin(
                 }),
             };
             out.push_str(&format!("  call void @__print_i64(i64 {val})\n"));
+            Ok(())
+        }
+        // ── putchar(v) — Brainfuck `.` (LLVM05) ─────────────────────────
+        //
+        // BF's value register is i64; libc `putchar` takes an `int` (i32), so
+        // truncate to the low 32 bits (the cell already lives in the low 8).
+        // The returned int is discarded.
+        //
+        //   srcs = [Var("putchar"), Var(v: i64)]  →  call i32 @putchar(i32 %t)
+        "putchar" => {
+            let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+            let t = state.fresh("pc");
+            out.push_str(&format!("  {t} = trunc i64 {val} to i32\n"));
+            out.push_str(&format!("  call i32 @putchar(i32 {t})\n"));
+            Ok(())
+        }
+        // ── getchar() -> v — Brainfuck `,` (LLVM05) ─────────────────────
+        //
+        // libc `getchar` returns an `int` (the byte, or -1 at EOF). We
+        // sign-extend to the i64 cell register; a subsequent `store_byte`
+        // truncates to the 8-bit cell, so EOF (-1) lands as 0xFF — the
+        // conventional Brainfuck "leave 255 on EOF" behaviour.
+        //
+        //   srcs = [Var("getchar")], dest = v  →  %g = call i32 @getchar()
+        "getchar" => {
+            let dest = require_dest(instr, "getchar", state.fn_name)?.to_string();
+            let g = state.fresh("gc");
+            out.push_str(&format!("  {g} = call i32 @getchar()\n"));
+            out.push_str(&format!("  %{dest} = sext i32 {g} to i64\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }
         _ => unreachable!("SUPPORTED_BUILTINS guard above prevents this"),
