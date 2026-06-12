@@ -81,6 +81,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationControlRoomPanel` and
   `IntegrationActivationControlRoomSummary` for grouping operator queue work by
   recommended planning view.
+- `IntegrationActivationCommandCenterSection` and
+  `IntegrationActivationCommandCenterSummary` for grouping control-room panels
+  into blocker, review, activation, actionable, and monitoring operating lanes.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
