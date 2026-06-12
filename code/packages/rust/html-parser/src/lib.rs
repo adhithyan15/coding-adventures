@@ -844,6 +844,7 @@ pub struct BrowserDocument {
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
     pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
     pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
     pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
@@ -1241,6 +1242,39 @@ pub struct BrowserFormPolicySubmitterDescriptor {
     pub effective_target: Option<String>,
     pub novalidate: bool,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAutofillDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_autocomplete_tokens: Vec<String>,
+    pub form_autocomplete_enabled: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub autofill_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocomplete_token_count: usize,
+    pub section_token: Option<String>,
+    pub address_type_token: Option<String>,
+    pub contact_type_token: Option<String>,
+    pub field_token: Option<String>,
+    pub webauthn: bool,
+    pub autofill_enabled: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub hidden: bool,
+    pub required: bool,
+    pub autofill_blocked: bool,
+    pub autofill_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3408,6 +3442,7 @@ impl BrowserDocument {
             browser_fullscreen_interaction_descriptors(&summary);
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
+        summary.form_autofill_descriptors = browser_form_autofill_descriptors(&summary.forms);
         summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
         summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
@@ -19823,6 +19858,278 @@ fn browser_form_policy_submitter_descriptor(
     }
 }
 
+fn browser_form_autofill_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormAutofillDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_autofill_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_autofill_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormAutofillDescriptor> {
+    if !browser_form_autofill_candidate(form, control) {
+        return None;
+    }
+
+    let section_token = browser_autofill_section_token(&control.autocomplete_tokens);
+    let address_type_token = browser_autofill_address_type_token(&control.autocomplete_tokens);
+    let contact_type_token = browser_autofill_contact_type_token(&control.autocomplete_tokens);
+    let field_token = browser_autofill_field_token(&control.autocomplete_tokens);
+    let webauthn = browser_autofill_has_webauthn_token(&control.autocomplete_tokens);
+    let autofill_block_reasons = browser_form_autofill_block_reasons(form, control);
+    Some(BrowserFormAutofillDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_autocomplete_tokens: form.autocomplete_tokens.clone(),
+        form_autocomplete_enabled: !browser_autofill_tokens_are_off(&form.autocomplete_tokens),
+        element: browser_form_autofill_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        autofill_kind: browser_form_autofill_kind(
+            form,
+            control,
+            field_token.as_deref(),
+            webauthn,
+            &autofill_block_reasons,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        autocomplete: control.autocomplete.clone(),
+        autocomplete_token_count: control.autocomplete_tokens.len(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        section_token,
+        address_type_token,
+        contact_type_token,
+        field_token,
+        webauthn,
+        autofill_enabled: autofill_block_reasons.is_empty(),
+        disabled: control.disabled,
+        readonly: control.readonly,
+        hidden: control.control_type == "hidden",
+        required: control.required,
+        autofill_blocked: !autofill_block_reasons.is_empty(),
+        autofill_block_reasons,
+    })
+}
+
+fn browser_form_autofill_candidate(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    !control.autocomplete_tokens.is_empty()
+        || !form.autocomplete_tokens.is_empty()
+        || browser_form_autofill_control_type(control)
+        || browser_form_common_autofill_name(control)
+}
+
+fn browser_form_autofill_control_type(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "hidden"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_common_autofill_name(control: &BrowserFormControl) -> bool {
+    let Some(name) = control.name.as_deref() else {
+        return false;
+    };
+    let name = name.to_ascii_lowercase();
+    [
+        "address",
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "email",
+        "family-name",
+        "given-name",
+        "name",
+        "organization",
+        "postal-code",
+        "state",
+        "street-address",
+        "tel",
+        "username",
+        "zip",
+    ]
+    .iter()
+    .any(|candidate| name == *candidate || name.contains(candidate))
+}
+
+fn browser_form_autofill_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    field_token: Option<&str>,
+    webauthn: bool,
+    autofill_block_reasons: &[String],
+) -> String {
+    if !autofill_block_reasons.is_empty() {
+        "blocked-autofill".to_string()
+    } else if webauthn {
+        "webauthn-field".to_string()
+    } else if field_token.is_some() {
+        "autocomplete-field".to_string()
+    } else if browser_autofill_tokens_are_off(&control.autocomplete_tokens) {
+        "autocomplete-off".to_string()
+    } else if !form.autocomplete_tokens.is_empty() {
+        "form-autocomplete".to_string()
+    } else if browser_form_text_autofill_control(control) {
+        "text-entry-autofill".to_string()
+    } else if control.control_type == "select" {
+        "choice-autofill".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-autofill-metadata".to_string()
+    } else {
+        "autofill-metadata".to_string()
+    }
+}
+
+fn browser_form_text_autofill_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_autofill_block_reasons(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly && browser_form_text_autofill_control(control) {
+        reasons.push("readonly".to_string());
+    }
+    if control.control_type == "hidden" {
+        reasons.push("hidden".to_string());
+    }
+    if browser_form_autofill_effective_off(form, control) {
+        reasons.push("autocomplete-off".to_string());
+    }
+    reasons
+}
+
+fn browser_form_autofill_effective_off(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    if !control.autocomplete_tokens.is_empty() {
+        return browser_autofill_tokens_are_off(&control.autocomplete_tokens);
+    }
+    browser_autofill_tokens_are_off(&form.autocomplete_tokens)
+}
+
+fn browser_autofill_tokens_are_off(tokens: &[String]) -> bool {
+    tokens.len() == 1 && tokens[0].eq_ignore_ascii_case("off")
+}
+
+fn browser_autofill_section_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| token.to_ascii_lowercase().starts_with("section-"))
+        .cloned()
+}
+
+fn browser_autofill_address_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| matches!(token.to_ascii_lowercase().as_str(), "shipping" | "billing"))
+        .cloned()
+}
+
+fn browser_autofill_contact_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| {
+            matches!(
+                token.to_ascii_lowercase().as_str(),
+                "home" | "work" | "mobile" | "fax" | "pager"
+            )
+        })
+        .cloned()
+}
+
+fn browser_autofill_field_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .rev()
+        .find(|token| browser_autofill_token_is_field(token))
+        .cloned()
+}
+
+fn browser_autofill_has_webauthn_token(tokens: &[String]) -> bool {
+    tokens
+        .iter()
+        .any(|token| token.eq_ignore_ascii_case("webauthn"))
+}
+
+fn browser_autofill_token_is_field(token: &str) -> bool {
+    let lower = token.to_ascii_lowercase();
+    if lower.starts_with("section-")
+        || matches!(
+            lower.as_str(),
+            "on" | "off"
+                | "shipping"
+                | "billing"
+                | "home"
+                | "work"
+                | "mobile"
+                | "fax"
+                | "pager"
+                | "webauthn"
+        )
+    {
+        return false;
+    }
+    true
+}
+
+fn browser_form_autofill_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
 fn browser_form_submission_descriptors(
     forms: &[BrowserForm],
 ) -> Vec<BrowserFormSubmissionDescriptor> {
@@ -24066,6 +24373,96 @@ mod tests {
         let external = &descriptors[7];
         assert_eq!(external.form_owner.as_deref(), Some("checkout"));
         assert_eq!(external.submission_values, vec!["extra"]);
+    }
+
+    #[test]
+    fn browser_form_autofill_descriptors_track_autocomplete_tokens_and_blockers() {
+        let document = parse_browser_document(
+            "<form id=profile name=profile autocomplete=off>\
+             <label for=email>Email</label>\
+             <input id=email name=email type=email autocomplete=\"section-contact shipping email webauthn\" required>\
+             <input id=given name=given-name autocomplete=given-name value=Ada>\
+             <input id=street name=street autocomplete=\"billing street-address\" readonly>\
+             <input id=card name=cc type=text autocomplete=cc-number disabled>\
+             <input id=hidden type=hidden name=token autocomplete=one-time-code value=123>\
+             <select id=country name=country autocomplete=country-name><option selected>US</option></select>\
+             <textarea id=notes name=notes autocomplete=off>Memo</textarea>\
+             </form>\
+             <input id=external form=profile name=outside autocomplete=organization>",
+        )
+        .expect("form autofill descriptor document should parse");
+
+        let descriptors = &document.form_autofill_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "given", "street", "card", "hidden", "country", "notes", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("profile"));
+        assert_eq!(email.form_name.as_deref(), Some("profile"));
+        assert_eq!(email.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(email.form_autocomplete_tokens, vec!["off"]);
+        assert!(!email.form_autocomplete_enabled);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.autofill_kind, "webauthn-field");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(
+            email.autocomplete_tokens,
+            vec!["section-contact", "shipping", "email", "webauthn"]
+        );
+        assert_eq!(email.autocomplete_token_count, 4);
+        assert_eq!(email.section_token.as_deref(), Some("section-contact"));
+        assert_eq!(email.address_type_token.as_deref(), Some("shipping"));
+        assert_eq!(email.field_token.as_deref(), Some("email"));
+        assert!(email.webauthn);
+        assert!(email.required);
+        assert!(email.autofill_enabled);
+        assert!(!email.autofill_blocked);
+
+        let given = &descriptors[1];
+        assert_eq!(given.field_token.as_deref(), Some("given-name"));
+        assert_eq!(given.value.as_deref(), Some("Ada"));
+        assert_eq!(given.autofill_kind, "autocomplete-field");
+
+        let street = &descriptors[2];
+        assert_eq!(street.address_type_token.as_deref(), Some("billing"));
+        assert_eq!(street.field_token.as_deref(), Some("street-address"));
+        assert!(street.readonly);
+        assert!(street.autofill_blocked);
+        assert_eq!(street.autofill_block_reasons, vec!["readonly"]);
+
+        let card = &descriptors[3];
+        assert_eq!(card.field_token.as_deref(), Some("cc-number"));
+        assert!(card.disabled);
+        assert_eq!(card.autofill_kind, "blocked-autofill");
+        assert_eq!(card.autofill_block_reasons, vec!["disabled"]);
+
+        let hidden = &descriptors[4];
+        assert_eq!(hidden.field_token.as_deref(), Some("one-time-code"));
+        assert!(hidden.hidden);
+        assert_eq!(hidden.value.as_deref(), Some("123"));
+        assert_eq!(hidden.autofill_block_reasons, vec!["hidden"]);
+
+        let country = &descriptors[5];
+        assert_eq!(country.element, "select");
+        assert_eq!(country.field_token.as_deref(), Some("country-name"));
+        assert_eq!(country.autofill_kind, "autocomplete-field");
+
+        let notes = &descriptors[6];
+        assert_eq!(notes.element, "textarea");
+        assert_eq!(notes.autocomplete.as_deref(), Some("off"));
+        assert_eq!(notes.autofill_block_reasons, vec!["autocomplete-off"]);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("profile"));
+        assert_eq!(external.field_token.as_deref(), Some("organization"));
+        assert!(external.autofill_enabled);
     }
 
     #[test]
