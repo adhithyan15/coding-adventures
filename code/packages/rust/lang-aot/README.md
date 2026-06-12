@@ -125,11 +125,11 @@ proof the platform is complete and uniform.
 backend, asserted by running. The **native-AOT** column is uniformly green — all six
 non-Lisp languages (Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60) compile to a
 host executable and produce the right result (exit code for the expression languages;
-stdout for the I/O languages). The **LLVM** column is green for the expression
-languages Twig / Nib / Oct / ALGOL 60 (textual `.ll` → real `clang` → run);
-Brainfuck/BASIC pend the stdout-capturing LLVM I/O runner. The WASM/JVM/CLR columns
-follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and need
-op-coverage work.
+stdout for the I/O languages). The **LLVM** column is green for Twig / Nib / Oct /
+ALGOL 60 (exit code) and Dartmouth BASIC (stdout, via a generic `__print_i64`
+runtime); only Brainfuck pends — `iir-to-llvm` needs the tape ops. The WASM/JVM/CLR
+columns follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and
+need op-coverage work.
 
 ## Stack position
 

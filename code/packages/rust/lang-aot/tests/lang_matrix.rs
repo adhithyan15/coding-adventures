@@ -13,8 +13,10 @@
 //! * **native-AOT** (LM0) — source → shared IIR → host object → system linker → run.
 //!   Uniformly green: all six languages.
 //! * **LLVM** (Phase L) — source → textual `.ll` (`iir-to-llvm`) → real `clang` → run.
-//!   Green for the expression languages Twig / Nib / Oct / ALGOL 60; Brainfuck/BASIC
-//!   pend the stdout-capturing LLVM I/O runner.
+//!   Green for Twig / Nib / Oct / ALGOL 60 (exit code) and Dartmouth BASIC (stdout —
+//!   the `.ll`'s `@__print_i64` is satisfied by a generic print runtime). Only
+//!   Brainfuck pends: `iir-to-llvm` lacks the tape ops (`alloc_bytes`/`load_byte`/
+//!   `store_byte` + `putchar`), a backend codegen slice.
 //!
 //! Later slices add the WASM / JVM / CLR columns (also general code generators) and
 //! tackle the two McCarthy-specialized backends — VM and JIT — which need
@@ -97,7 +99,8 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
-    // (LLVM column pending: needs the stdout-capturing I/O runner — a later slice.)
+    // (LLVM column pending: `iir-to-llvm` lacks the tape ops `alloc_bytes`/`load_byte`/
+    // `store_byte` + `putchar` — a backend codegen slice of its own.)
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
@@ -105,13 +108,15 @@ const PROGRAMS: &[Prog] = &[
         expect: Expect::Stdout("A"),
         backends: &[NativeAot],
     },
-    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout.
+    // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
+    // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
+    // and the harness compares stdout (LM-L BASIC).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot],
+        backends: &[NativeAot, Llvm],
     },
 ];
 
@@ -201,12 +206,24 @@ fn clang_ok() -> bool {
         .unwrap_or(false)
 }
 
+/// A minimal C runtime providing the generic `__print_i64` primitive that
+/// `iir-to-llvm` emits for a `print_i64` builtin (Dartmouth BASIC's `PRINT` is the
+/// first user — the same convention as wasm's `env.__print_i64` / JVM's
+/// `BasicRuntime.println(J)V` / CLR's `Console.WriteLine(int64)`). It is *not*
+/// language-specific: any IIR that calls `print_i64` links it. Linked only when the
+/// emitted `.ll` actually references `@__print_i64`, so the bare expression-language
+/// programs still link a standalone `.ll`.
+const PRINT_RUNTIME_C: &str =
+    "#include <stdio.h>\n#include <stdint.h>\nvoid __print_i64(int64_t x){printf(\"%lld\\n\",(long long)x);}\n";
+
 /// LLVM runner: source → textual `.ll` (`iir-to-llvm`) → real `clang` → run, the
 /// exact CLR-real/McCarthy strategy of handing symbolic code to the real toolchain.
-/// `None` when `clang` is absent or the build fails (skip). Exit-code programs only
-/// (the expression languages); the I/O languages get their stdout-capturing LLVM
-/// runner — which links the C runtime — in a later slice. The expression languages
-/// need no runtime (verified: Twig/Oct/ALGOL link a bare `.ll` standalone).
+/// `None` when `clang` is absent or the build fails (skip).
+///
+/// Handles both result kinds: the expression languages return an exit code from a
+/// bare `.ll`; an I/O language (Dartmouth BASIC) emits `call void @__print_i64(...)`,
+/// so when the `.ll` references that symbol the generic `PRINT_RUNTIME_C` is compiled
+/// in and the harness compares the program's **stdout**.
 ///
 /// Same temp-file hardening as `run_native`: a fresh `tempfile::tempdir()` whose
 /// guard outlives the run, so the executed `prog` cannot be substituted (CWE-377/367).
@@ -225,14 +242,15 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     let ll_path = dir.path().join("prog.ll");
     std::fs::write(&ll_path, &ll).ok()?;
     let exe = dir.path().join("prog");
-    let built = Command::new("clang")
-        .arg("-x")
-        .arg("ir")
-        .arg(&ll_path)
-        .arg("-o")
-        .arg(&exe)
-        .output()
-        .ok()?;
+    let mut cmd = Command::new("clang");
+    cmd.arg("-x").arg("ir").arg(&ll_path);
+    // Link the generic print runtime iff the program actually prints.
+    if ll.contains("@__print_i64") {
+        let rt_path = dir.path().join("rt.c");
+        std::fs::write(&rt_path, PRINT_RUNTIME_C).ok()?;
+        cmd.arg("-x").arg("c").arg(&rt_path);
+    }
+    let built = cmd.arg("-x").arg("none").arg("-o").arg(&exe).output().ok()?;
     if !built.status.success() {
         return None;
     }
