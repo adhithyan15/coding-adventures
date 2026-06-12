@@ -544,6 +544,22 @@ class FourierResult:
 
 
 @dataclass(frozen=True)
+class CornerFourierPoint:
+    """Fourier result for one named analysis corner."""
+
+    corner_name: str
+    result: FourierResult
+
+
+@dataclass(frozen=True)
+class CornerFourierResult:
+    """Multi-corner Fourier analysis result."""
+
+    fundamental_frequency: float
+    points: list[CornerFourierPoint]
+
+
+@dataclass(frozen=True)
 class DistortionHarmonic:
     harmonic: int
     frequency: float
@@ -1897,6 +1913,32 @@ def format_fourier_table(result: FourierResult) -> str:
     return "\n".join(rows)
 
 
+def format_corner_fourier_table(result: CornerFourierResult) -> str:
+    """Format named-corner Fourier harmonics as a stable text table."""
+    rows = ["Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD"]
+    for corner in result.points:
+        for probe in corner.result.probes:
+            for harmonic in probe.harmonics:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            probe.probe,
+                            str(harmonic.harmonic),
+                            _format_table_number(harmonic.frequency),
+                            _format_table_number(harmonic.cosine),
+                            _format_table_number(harmonic.sine),
+                            _format_table_number(harmonic.magnitude),
+                            _format_table_number(harmonic.phase_degrees),
+                            _format_table_number(probe.dc),
+                            _format_table_number(probe.total_harmonic_distortion),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def _default_output_probes(
     node_voltages: dict[str, float],
     branch_currents: dict[str, float],
@@ -2069,6 +2111,49 @@ def fourier(
         start_time=window_start,
         end_time=end_time,
         probes=results,
+    )
+
+
+def fourier_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    fundamental_frequency: float,
+    probes: list[str],
+    harmonics: int = 9,
+    start_time: float | None = None,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerFourierResult:
+    """Run transient Fourier analysis at each named corner."""
+    points: list[CornerFourierPoint] = []
+    for corner in corners:
+        transient_result = transient(
+            _circuit_with_corner(circuit, corner),
+            t_stop=t_stop,
+            t_step=t_step,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.append(
+            CornerFourierPoint(
+                corner_name=corner.name,
+                result=fourier(
+                    transient_result,
+                    fundamental_frequency,
+                    probes,
+                    harmonics=harmonics,
+                    start_time=start_time,
+                ),
+            )
+        )
+    return CornerFourierResult(
+        fundamental_frequency=fundamental_frequency,
+        points=points,
     )
 
 

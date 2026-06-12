@@ -736,6 +736,16 @@ export interface FourierResult {
   readonly probes: readonly FourierProbeResult[];
 }
 
+export interface CornerFourierPoint {
+  readonly cornerName: string;
+  readonly result: FourierResult;
+}
+
+export interface CornerFourierResult {
+  readonly fundamentalFrequencyHz: number;
+  readonly points: readonly CornerFourierPoint[];
+}
+
 export interface DistortionHarmonic {
   readonly harmonic: number;
   readonly frequencyHz: number;
@@ -2920,6 +2930,32 @@ export function formatFourierTable(result: FourierResult): string {
   return rows.join("\n");
 }
 
+export function formatCornerFourierTable(result: CornerFourierResult): string {
+  const rows = [["Corner", "Probe", "Harmonic", "Frequency", "Cosine", "Sine", "Magnitude", "Phase", "DC", "THD"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.probes.forEach((probe) => {
+      probe.harmonics.forEach((harmonic) => {
+        rows.push(
+          [
+            corner.cornerName,
+            probe.probe,
+            String(harmonic.harmonic),
+            formatTableNumber(harmonic.frequencyHz),
+            formatTableNumber(harmonic.cosine),
+            formatTableNumber(harmonic.sine),
+            formatTableNumber(harmonic.magnitude),
+            formatTableNumber(harmonic.phaseDegrees),
+            formatTableNumber(probe.dc),
+            formatTableNumber(probe.totalHarmonicDistortion),
+          ].join("\t"),
+        );
+      });
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 function defaultOutputProbes(
   nodeVoltages: ReadonlyMap<string, number>,
   branchCurrents: ReadonlyMap<string, number>,
@@ -3776,6 +3812,32 @@ export function fourier(
     probes: probes.map((probe) =>
       fourierProbe(sortedPoints, probe, fundamentalFrequencyHz, harmonics, windowStart, endTime),
     ),
+  };
+}
+
+export function fourierCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  fundamentalFrequencyHz: number,
+  probes: readonly string[],
+  corners: readonly CornerSpec[],
+  harmonics = 9,
+  startTime?: number,
+  method: TransientMethod = "euler",
+): CornerFourierResult {
+  return {
+    fundamentalFrequencyHz,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: fourier(
+        transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+        fundamentalFrequencyHz,
+        probes,
+        harmonics,
+        startTime,
+      ),
+    })),
   };
 }
 

@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Fourier named-corner wrappers** — `fourier_corners()` and
+  `format_corner_fourier_table()` now run `.FOUR`-style harmonic analysis across
+  named corner specs, matching Rust output columns for cross-language parity.
+
 - **PSS text output and named-corner wrappers** — `format_pss_table()`,
   `pss_corners()`, and `format_corner_pss_table()` now expose stable
   periodic-steady-state output and named-corner PSS parity with the Rust engine.

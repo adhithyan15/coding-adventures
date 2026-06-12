@@ -20,6 +20,7 @@ import {
   distortionFromTransient,
   estimatePeriod,
   formatCornerAdaptiveTransientTable,
+  formatCornerFourierTable,
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
@@ -29,6 +30,7 @@ import {
   formatPssTable,
   formatTransientTable,
   fourier,
+  fourierCorners,
   inductor,
   inductorWithInitialCurrent,
   jfet,
@@ -839,6 +841,47 @@ describe("transient", () => {
     expect(fundamental.sine).toBeCloseTo(amp, 2);
     expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
     expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
+  it("runs Fourier analysis for each named corner and formats the table", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(resistor("R2", "out", "0", 1_000.0));
+
+    const result = fourierCorners(
+      circuit,
+      2.5e-4,
+      2.0e-3,
+      1_000.0,
+      ["V(out)"],
+      [
+        { name: "nominal", overrides: [] },
+        { name: "r2-high", overrides: [{ elementName: "R2", parameter: "resistance", value: 2_000.0 }] },
+      ],
+      2,
+    );
+
+    expect(result.fundamentalFrequencyHz).toBeCloseTo(1_000.0, 9);
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("r2-high");
+    expect(result.points[0].result.probes[0].harmonics[0].magnitude).toBeCloseTo(0.5, 9);
+    expect(result.points[1].result.probes[0].harmonics[0].magnitude).toBeCloseTo(2.0 / 3.0, 9);
+    expect(formatCornerFourierTable(result)).toBe(
+      "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n" +
+        "nominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\n" +
+        "nominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\n" +
+        "r2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\n" +
+        "r2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n",
+    );
   });
 
   it("models pole-zero result shapes for a simple RC pole fixture", () => {

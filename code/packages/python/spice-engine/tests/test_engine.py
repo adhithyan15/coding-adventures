@@ -94,6 +94,7 @@ from spice_engine import (
     CornerAcSweepResult,
     CornerAdaptiveTransientResult,
     CornerDcSweepResult,
+    CornerFourierResult,
     CornerMcResult,
     CornerNoiseResult,
     CornerOverride,
@@ -159,6 +160,7 @@ from spice_engine import (
     estimate_period,
     format_ac_table,
     format_corner_adaptive_transient_table,
+    format_corner_fourier_table,
     format_corner_mc_table,
     format_corner_noise_table,
     format_corner_pss_table,
@@ -177,6 +179,7 @@ from spice_engine import (
     format_tf_table,
     format_transient_table,
     fourier,
+    fourier_corners,
     mc_dc,
     mc_dc_corners,
     noise_ac,
@@ -5814,6 +5817,49 @@ def test_fourier_extracts_transient_sinusoid_components() -> None:
     assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
     assert abs(fundamental.cosine) < 2.0e-3
     assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_fourier_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        ),
+        Resistor("R1", "in", "out", 1_000.0),
+        Resistor("R2", "out", "0", 1_000.0),
+    ])
+
+    result = fourier_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2_000.0),)),
+        ],
+        t_stop=2.0e-3,
+        t_step=2.5e-4,
+        fundamental_frequency=1_000.0,
+        probes=["V(out)"],
+        harmonics=2,
+    )
+
+    assert isinstance(result, CornerFourierResult)
+    assert result.fundamental_frequency == pytest.approx(1_000.0)
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "r2-high"
+    assert result.points[0].result.probes[0].harmonics[0].magnitude == pytest.approx(0.5)
+    assert result.points[1].result.probes[0].harmonics[0].magnitude == pytest.approx(
+        2.0 / 3.0
+    )
+    assert format_corner_fourier_table(result) == (
+        "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
+        "nominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\n"
+        "nominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\n"
+        "r2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\n"
+        "r2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n"
+    )
 
 
 def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
