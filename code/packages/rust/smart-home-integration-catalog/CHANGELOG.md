@@ -75,6 +75,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationPlaybookStep` and
   `IntegrationActivationPlaybookSummary` for pairing forecast next actions with
   recommended planning views and operator-readiness flags.
+- `IntegrationActivationRunbookEntry` and
+  `IntegrationActivationRunbookSummary` for joining playbook steps to audit,
+  risk, dependency, and readiness-gap context.
 - `IntegrationActivationOperatorTask` and
   `IntegrationActivationOperatorTaskSummary` for turning playbook steps into
   actionable human/operator queue rows.

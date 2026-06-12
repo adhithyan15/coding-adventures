@@ -57,6 +57,7 @@ Chief of Staff job/session/agent
   -> activation-timeline list and summary reads for ordered wave milestones
   -> activation-forecast list and summary reads for next-action wave planning
   -> activation-playbook list and summary reads for operator-ready planning steps
+  -> activation-runbook list and summary reads for audit-context-rich phases
   -> activation-operator queue list and summary reads for actionable work
   -> activation-control-room list and summary reads for grouped operator panels
   -> activation-command-center list and summary reads for operating-lane rollups
@@ -128,6 +129,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_forecast_summary`
 - `smart_home.list_integration_activation_playbook`
 - `smart_home.get_integration_activation_playbook_summary`
+- `smart_home.list_integration_activation_runbook`
+- `smart_home.get_integration_activation_runbook_summary`
 - `smart_home.list_integration_activation_operator_queue`
 - `smart_home.get_integration_activation_operator_queue_summary`
 - `smart_home.list_integration_activation_control_room`

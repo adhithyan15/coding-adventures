@@ -91,6 +91,8 @@ Current scope:
   classification derived from activation timeline milestones
 - D18D integration activation-playbook descriptors for operator-ready planning
   steps derived from forecast next actions
+- D18D integration activation-runbook descriptors for audit-context-rich
+  operator phases derived from activation playbook steps
 - D18D integration activation-operator queue descriptors for actionable
   human/operator work derived from playbook steps
 - D18D integration activation-control-room descriptors for grouped
