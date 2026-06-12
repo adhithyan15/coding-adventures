@@ -1,5 +1,23 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.17.0] — 2026-06-12 — `print_i64` → `Console.WriteLine` + I/O launcher (LANG-MATRIX LM-C BASIC)
+
+The textual `.il` emitter gains the **`print_i64`** I/O primitive that Dartmouth
+BASIC's `PRINT` lowers to — previously `UnsupportedOp`. It has **no dest** (it's a side
+effect), so it's handled before the dest lookup: the value is loaded and handed to
+`call void [System.Console]System.Console::WriteLine(int32)` (the CLR analogue of the
+wasm `env.__print_i64` import / JVM `env.BasicRuntime.println(J)V`).
+
+The `Run()` launcher is now **I/O-aware**: an expression program still
+`Console.WriteLine`s the entry method's `int` result, but a program that calls
+`print_i64` has already written its own output as a side effect, so the launcher merely
+runs the entry and **discards** its (unused) `int32` return with `pop` — no double-print.
+
+Verified by RUNNING on real `ilasm` + `dotnet` (via `lang-aot`'s `lang_matrix` CLR
+column): BASIC `10 PRINT 42` → `Console` `42` (exactly once). New unit test asserts the
+single `Console.WriteLine` and the launcher `pop`. No change to expression-language
+output (the prior CIL suites + conformance stay green).
+
 ## [0.16.0] — 2026-06-12 — integer arithmetic + comparison opcodes (LANG-MATRIX LM-C)
 
 The textual `.il` emitter (`il_text.rs`) grows two op families it previously rejected

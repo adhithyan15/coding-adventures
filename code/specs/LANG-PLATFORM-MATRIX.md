@@ -103,8 +103,8 @@ achievable code-gen columns land first).
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ☐   |
-| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
+| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ⏸  |
+| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 
@@ -228,9 +228,17 @@ BASIC); only Brainfuck is deferred.
   proven matrix cells); conformance/jvm_emit/wasm_emit/iir-to-cil-bytecode suites green.
   (The `clr-simulator` floor is intentionally *not* used — its `cil_emit.rs` test is
   broken on `main` from an API drift; the real-`dotnet` path is the stronger check.)
-- ☐ **LM-C BASIC (on CLR).** BASIC's `print_i64` needs a `Console`-writing lowering on
-  the CIL backend (the CLR analogue of wasm `env.__print_i64` / JVM `env.BasicRuntime`);
-  then capture/assert `Console` output.
+- ✅ **LM-C BASIC (on CLR).** Grew the CIL backend (`iir-to-cil-bytecode` 0.17.0) with
+  the `print_i64` → `call void [System.Console]System.Console::WriteLine(int32)` lowering
+  (the CLR analogue of wasm `env.__print_i64` / JVM `env.BasicRuntime.println`) and made
+  the `Run()` launcher I/O-aware: a printing program already wrote its output as a side
+  effect, so the launcher **discards** (`pop`) the entry result instead of
+  `Console.WriteLine`-ing it — no double-print. `run_clr` now returns the captured
+  `Console` output alongside the parsed integer. Verified by RUNNING on CoreCLR: BASIC
+  `10 PRINT 42` → `Console` `42` exactly once (26 proven matrix cells); CIL +
+  conformance/jvm_emit/wasm_emit suites green. **CLR column now green for every language
+  except the deferred Brainfuck — so every code-gen backend (native-AOT, LLVM, WASM, JVM,
+  CLR) is green for all five non-Brainfuck languages.**
 - ⏸ **LM-C Brainfuck (on CLR) — DEFERRED.** Same tape-op gap as Brainfuck elsewhere.
 
 ### Phase A — native AOT completeness
