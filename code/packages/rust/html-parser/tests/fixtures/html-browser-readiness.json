@@ -1038,6 +1038,71 @@
       }
     },
     {
+      "id": "script-worker-messaging-page",
+      "description": "Browser document summaries expose inline worker construction, worker messaging channels, and fallback blockers.",
+      "input": "<script>const worker = new Worker('/worker.js', { type: 'module' }); worker.postMessage({ready:true}); window.addEventListener('message', receive); const channel = new MessageChannel();</script><script type=module>navigator.serviceWorker.register('/sw.js'); const updates = new BroadcastChannel('updates');</script><script nomodule>const shared = new SharedWorker('/shared.js'); shared.port.postMessage('legacy');</script>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [],
+        "scripts": [
+          { "script_kind": "classic", "text": "const worker = new Worker('/worker.js', { type: 'module' }); worker.postMessage({ready:true}); window.addEventListener('message', receive); const channel = new MessageChannel();" },
+          { "script_kind": "module", "type_hint": "module", "text": "navigator.serviceWorker.register('/sw.js'); const updates = new BroadcastChannel('updates');" },
+          { "script_kind": "classic", "nomodule": true, "text": "const shared = new SharedWorker('/shared.js'); shared.port.postMessage('legacy');" }
+        ],
+        "script_worker_messaging_descriptors": [
+          {
+            "script_kind": "classic",
+            "messaging_kind": "module-worker",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 177,
+            "messaging_targets": ["Worker", "postMessage", "message-event", "MessageChannel", "module-worker"],
+            "messaging_target_count": 5,
+            "creates_worker": true,
+            "uses_post_message": true,
+            "listens_message_events": true,
+            "uses_message_channel": true,
+            "module_worker_hint": true
+          },
+          {
+            "script_kind": "module",
+            "messaging_kind": "service-worker-registration",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 92,
+            "messaging_targets": ["serviceWorker", "BroadcastChannel"],
+            "messaging_target_count": 2,
+            "registers_service_worker": true,
+            "uses_broadcast_channel": true
+          },
+          {
+            "script_kind": "classic",
+            "messaging_kind": "shared-worker",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 81,
+            "messaging_targets": ["SharedWorker", "postMessage"],
+            "messaging_target_count": 2,
+            "creates_shared_worker": true,
+            "uses_post_message": true,
+            "messaging_blocked": true,
+            "messaging_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "table-layout-metadata-page",
       "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
       "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
