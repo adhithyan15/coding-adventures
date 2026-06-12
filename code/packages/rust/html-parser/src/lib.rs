@@ -865,6 +865,7 @@ pub struct BrowserDocument {
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
     pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
+    pub aria_description_descriptors: Vec<BrowserAriaDescriptionDescriptor>,
     pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
@@ -1740,6 +1741,26 @@ pub struct BrowserAriaNameDescriptor {
     pub unresolved_label_targets: Vec<String>,
     pub name_blocked: bool,
     pub name_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaDescriptionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_description: Option<String>,
+    pub aria_describedby: Vec<String>,
+    pub describedby_text: Vec<String>,
+    pub description_source: String,
+    pub description_attribute_names: Vec<String>,
+    pub description_attribute_count: usize,
+    pub description_target_count: usize,
+    pub unresolved_description_targets: Vec<String>,
+    pub description_blocked: bool,
+    pub description_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -10822,6 +10843,9 @@ fn collect_browser_facts(
         if let Some(aria_name) = browser_aria_name_descriptor(element, id_texts) {
             summary.aria_name_descriptors.push(aria_name);
         }
+        if let Some(aria_description) = browser_aria_description_descriptor(element, id_texts) {
+            summary.aria_description_descriptors.push(aria_description);
+        }
         if let Some(aria_relation) = browser_aria_relation_descriptor(element, id_texts) {
             summary.aria_relation_descriptors.push(aria_relation);
         }
@@ -17844,6 +17868,106 @@ fn browser_aria_name_block_reasons(
     reasons
 }
 
+fn browser_aria_description_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaDescriptionDescriptor> {
+    let aria_description = browser_aria_description(element);
+    let aria_describedby = browser_aria_idrefs(element, "aria-describedby");
+
+    if aria_description.is_none() && aria_describedby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let describedby_text = browser_idref_texts(&aria_describedby, id_texts);
+    let unresolved_description_targets =
+        browser_unresolved_aria_idrefs(&aria_describedby, id_texts);
+    let description_block_reasons = browser_aria_description_block_reasons(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+        &unresolved_description_targets,
+    );
+    let description_attribute_names = browser_aria_description_attribute_names(element);
+    let description_source = browser_aria_description_source(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+    );
+
+    Some(BrowserAriaDescriptionDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_description,
+        aria_describedby,
+        describedby_text,
+        description_source,
+        description_attribute_count: description_attribute_names.len(),
+        description_attribute_names,
+        description_target_count: browser_aria_idrefs(element, "aria-describedby").len(),
+        unresolved_description_targets,
+        description_blocked: !description_block_reasons.is_empty(),
+        description_block_reasons,
+    })
+}
+
+fn browser_aria_description(element: &Element) -> Option<String> {
+    element
+        .attribute("aria-description")
+        .map(collapse_html_whitespace)
+        .filter(|description| !description.is_empty())
+}
+
+fn browser_aria_description_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-description", "aria-describedby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_aria_description_source(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+) -> String {
+    if !aria_describedby.is_empty() && !describedby_text.is_empty() {
+        "aria-describedby".to_string()
+    } else if aria_description.is_some_and(|description| !description.is_empty()) {
+        "aria-description".to_string()
+    } else if !aria_describedby.is_empty() {
+        "unresolved-aria-describedby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_description_block_reasons(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_describedby.is_empty()
+        && describedby_text.is_empty()
+        && aria_description.is_none_or(|description| description.is_empty())
+    {
+        reasons.push("empty-description".to_string());
+    }
+    reasons
+}
+
 fn browser_slot_assignment(element: &Element) -> Option<String> {
     element.attribute("slot").map(ToOwned::to_owned)
 }
@@ -19591,7 +19715,11 @@ fn browser_accessible_description(
 ) -> Option<String> {
     let describedby = browser_aria_idrefs(element, "aria-describedby");
     let parts = browser_idref_texts(&describedby, id_texts);
-    (!parts.is_empty()).then(|| parts.join(" "))
+    if !parts.is_empty() {
+        Some(parts.join(" "))
+    } else {
+        browser_aria_description(element)
+    }
 }
 
 fn browser_idref_texts(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
