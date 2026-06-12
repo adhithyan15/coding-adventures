@@ -1,15 +1,16 @@
 use spice_engine::{
-    bjt_from_model_card, circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op,
-    dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
-    dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
-    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
-    jfet_from_model_card, mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
-    BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
-    CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode, Element,
-    Inductor, Jfet, JfetPolarity, ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
-    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs,
-    Vcvs, VoltageSource, Waveform, XInstance,
+    analyze_custom_model_source, bjt_from_model_card, circuit_at_temperature, dc_corners,
+    dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep, dc_sweep_corners,
+    dc_sweep_corners_parallel, dc_temperature_sweep, dc_temperature_sweep_corners,
+    device_model_audit_fixtures, diode_from_model_card, format_corner_dc_sweep_table,
+    format_corner_dc_table, format_corner_temperature_dc_table, format_dc_sweep_table,
+    format_temperature_dc_table, jfet_from_model_card, mosfet_from_model_card,
+    normalize_model_card, normalize_model_card_type, BSource, Bjt, BjtPolarity, Cccs, Ccvs,
+    Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
+    Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -131,6 +132,45 @@ fn non_level_one_mos_model_cards_are_explicitly_rejected() {
     assert!(error
         .to_string()
         .contains("only MOS LEVEL=1 model cards are supported"));
+}
+
+#[test]
+fn custom_model_linear_conductance_fast_path_stamps_dc_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "in", "0", 1.0,
+    )));
+    circuit.add(Element::CustomModel(CustomModel::linear_conductance(
+        "XG", "in", "0", 2.0e-3,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("in").unwrap(), 1.0);
+    assert_close(result.branch_current("I(V1)").unwrap(), -2.0e-3);
+}
+
+#[test]
+fn custom_model_source_analyzer_accepts_subset_and_rejects_dynamic_constructs() {
+    let accepted = analyze_custom_model_source(
+        "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule",
+    );
+    let rejected = analyze_custom_model_source(
+        "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule",
+    );
+
+    assert!(accepted.accepted);
+    assert_eq!(accepted.module_name.as_deref(), Some("rlim"));
+    assert_eq!(accepted.terminals, vec!["p".to_string(), "n".to_string()]);
+    assert_eq!(
+        accepted.contribution,
+        Some(("p".to_string(), "n".to_string()))
+    );
+    assert!(!rejected.accepted);
+    assert!(rejected
+        .diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code == "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT"));
 }
 
 #[test]

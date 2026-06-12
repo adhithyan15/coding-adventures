@@ -40,6 +40,10 @@ The initial slices implement:
   named event streams and named-corner digital-input bridge runs with event
   stream table output plus bridge breakpoint schedules and deterministic VCD
   correlation output.
+- A Rust-native custom-model foothold with `CustomModel`,
+  `CustomModelKind::LinearConductance`, `CustomModelEvaluation`, and
+  `analyze_custom_model_source` for the first two-terminal residual/Jacobian
+  hook and diagnostic-only Verilog-A subset.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
@@ -106,3 +110,7 @@ BJT, and Level-1 MOSFET models before running an analysis.
 `.model` alias surface for diode, BJT, JFET, and Level-1 MOS cards.
 `device_model_audit_fixtures` returns the canonical cross-language fixture
 cards used to keep the Rust, Python, and TypeScript ports aligned.
+
+`analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
+module shape and rejects dynamic/event/system constructs; it is not a full
+Verilog-A compiler.

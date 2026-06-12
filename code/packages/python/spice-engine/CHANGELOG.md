@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Custom-model foothold** — `CustomModel`, `CustomModelEvaluation`,
+  `custom_linear_conductance_model()`, and
+  `analyze_custom_model_source()` add the first portable two-terminal
+  residual/Jacobian hook and Verilog-A subset diagnostics shared with Rust and
+  TypeScript.
+
 - **Mixed-signal bridge helpers** — `DigitalEvent`, `DigitalEventStream`,
   `DigitalLogicLevels`, `DigitalThresholds`, digital-stream PWL voltage source
   conversion, fixed/adaptive digital transient bridge runners, named-corner

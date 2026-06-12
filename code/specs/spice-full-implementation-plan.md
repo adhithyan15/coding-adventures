@@ -15,13 +15,11 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Verilog-A/custom-model foothold.
+1. Compatibility corpus and release readiness.
    - Status: next.
-   - Specify the accepted custom-model subset and land the first portable
-     residual/Jacobian hook shape across Python, Rust, and TypeScript.
-   - Keep the first slice narrow enough to prove parser diagnostics, sandboxed
-     TypeScript/web execution constraints, and a Rust-native fast-path shape
-     without committing to full Verilog-A compatibility.
+   - Build the first documented oracle-backed deck corpus, golden tolerances,
+     known incompatibility notes, and package release-readiness gates across
+     Python, Rust, and TypeScript.
 
 ## Completed Slices
 
@@ -102,6 +100,18 @@ downstream tools to compare.
      and deterministic VCD text output for SPICE probe / hardware-VM trace
      correlation.
 
+10. Verilog-A/custom-model foothold.
+    - Status: completed in this custom-model foothold slice.
+    - Python, Rust, and TypeScript now expose matching two-terminal
+      custom-model result shapes and source-subset diagnostics.
+    - Python and TypeScript expose evaluator hooks plus linear-conductance
+      helpers; Rust exposes a cloneable, comparable
+      `CustomModelKind::LinearConductance` fast path for native execution.
+    - The accepted source subset is intentionally diagnostic-only:
+      module headers plus `I(p,n) <+ ...` contributions are accepted while
+      dynamic, event, system-task, analog-function, and branch declarations are
+      rejected until full Verilog-A compiler scope is chosen.
+
 ## Backlog
 
 1. Cross-language parity closure.
@@ -164,5 +174,4 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Verilog-A/custom-model foothold.
-2. Compatibility corpus and release readiness.
+1. Compatibility corpus and release readiness.

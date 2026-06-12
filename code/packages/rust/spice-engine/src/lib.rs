@@ -315,6 +315,13 @@ fn clone_subckt_element(
             voltage_expr: map_bsource_expr_nodes(&element.voltage_expr, instance_name, node_map),
             current_expr: map_bsource_expr_nodes(&element.current_expr, instance_name, node_map),
         }),
+        Element::CustomModel(element) => {
+            let mut cloned = element.clone();
+            cloned.name = format!("{instance_name}.{}", element.name);
+            cloned.positive = map_subckt_node(&element.positive, instance_name, node_map);
+            cloned.negative = map_subckt_node(&element.negative, instance_name, node_map);
+            Element::CustomModel(cloned)
+        }
         Element::Diode(element) => Element::Diode(Diode::with_model_and_breakdown(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.anode, instance_name, node_map),
@@ -1571,6 +1578,7 @@ pub enum Element {
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
     BSource(BSource),
+    CustomModel(CustomModel),
     Diode(Diode),
     Jfet(Jfet),
     Bjt(Bjt),
@@ -1936,6 +1944,309 @@ impl BSource {
             current_expr: None,
         }
     }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct CustomModelEvaluation {
+    pub current_amps: f64,
+    pub conductance_siemens: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum CustomModelKind {
+    LinearConductance {
+        conductance_siemens: f64,
+        current_offset_amps: f64,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CustomModel {
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
+    pub model_name: String,
+    pub parameters: BTreeMap<String, f64>,
+    pub kind: CustomModelKind,
+}
+
+impl CustomModel {
+    pub fn linear_conductance(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        conductance_siemens: f64,
+    ) -> Self {
+        Self::linear_conductance_with_offset(name, positive, negative, conductance_siemens, 0.0)
+    }
+
+    pub fn linear_conductance_with_offset(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        conductance_siemens: f64,
+        current_offset_amps: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            model_name: "linear_conductance".to_string(),
+            parameters: BTreeMap::new(),
+            kind: CustomModelKind::LinearConductance {
+                conductance_siemens,
+                current_offset_amps,
+            },
+        }
+    }
+
+    pub fn evaluate(&self, voltage: f64) -> Result<CustomModelEvaluation, SpiceError> {
+        validate_custom_model(self)?;
+        let evaluation = match self.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                current_offset_amps,
+            } => CustomModelEvaluation {
+                current_amps: conductance_siemens * voltage + current_offset_amps,
+                conductance_siemens,
+            },
+        };
+        if !evaluation.current_amps.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: self.name.clone(),
+                reason: "custom-model current must be finite".to_string(),
+            });
+        }
+        if !evaluation.conductance_siemens.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: self.name.clone(),
+                reason: "custom-model conductance must be finite".to_string(),
+            });
+        }
+        Ok(evaluation)
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum CustomModelDiagnosticSeverity {
+    Error,
+    Warning,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CustomModelDiagnostic {
+    pub code: String,
+    pub message: String,
+    pub severity: CustomModelDiagnosticSeverity,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CustomModelSourceAnalysis {
+    pub accepted: bool,
+    pub subset: String,
+    pub module_name: Option<String>,
+    pub terminals: Vec<String>,
+    pub contribution: Option<(String, String)>,
+    pub diagnostics: Vec<CustomModelDiagnostic>,
+}
+
+const CUSTOM_MODEL_SUBSET: &str = "two-terminal-current-contribution-v0";
+
+pub fn analyze_custom_model_source(source: &str) -> CustomModelSourceAnalysis {
+    let mut diagnostics = Vec::new();
+    let trimmed = source.trim();
+    if trimmed.is_empty() {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_EMPTY_SOURCE",
+            "custom model source is empty",
+        ));
+        return CustomModelSourceAnalysis {
+            accepted: false,
+            subset: CUSTOM_MODEL_SUBSET.to_string(),
+            module_name: None,
+            terminals: Vec::new(),
+            contribution: None,
+            diagnostics,
+        };
+    }
+
+    let lowered = trimmed.to_ascii_lowercase();
+    for &(token, message) in CUSTOM_MODEL_FORBIDDEN_PATTERNS {
+        if lowered.contains(token) {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+                message,
+            ));
+        }
+    }
+
+    let (module_name, terminals) = match parse_custom_model_module_header(trimmed) {
+        Some(parsed) => parsed,
+        None => {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_MISSING_MODULE",
+                "custom model source must declare a module with a port list",
+            ));
+            (None, Vec::new())
+        }
+    };
+    if !terminals.is_empty() && terminals.len() < 2 {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_PORT_COUNT",
+            "custom model module must expose at least two terminals",
+        ));
+    }
+
+    let contribution = parse_custom_model_contribution(trimmed);
+    if contribution.is_none() {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_MISSING_CONTRIBUTION",
+            "custom model source must contain a two-terminal I(p,n) <+ contribution",
+        ));
+    } else if let Some((positive, negative)) = &contribution {
+        if !terminals.is_empty() && (!terminals.contains(positive) || !terminals.contains(negative))
+        {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_UNKNOWN_TERMINAL",
+                "current contribution terminals must be declared module ports",
+            ));
+        }
+    }
+
+    CustomModelSourceAnalysis {
+        accepted: !diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.severity == CustomModelDiagnosticSeverity::Error),
+        subset: CUSTOM_MODEL_SUBSET.to_string(),
+        module_name,
+        terminals,
+        contribution,
+        diagnostics,
+    }
+}
+
+const CUSTOM_MODEL_FORBIDDEN_PATTERNS: &[(&str, &str)] = &[
+    (
+        "ddt",
+        "dynamic charge operators are not accepted in this custom-model subset",
+    ),
+    (
+        "idt",
+        "dynamic integration operators are not accepted in this custom-model subset",
+    ),
+    (
+        "laplace",
+        "Laplace-domain operators are not accepted in this custom-model subset",
+    ),
+    (
+        "cross",
+        "event crossing operators are not accepted in this custom-model subset",
+    ),
+    (
+        "timer",
+        "timer events are not accepted in this custom-model subset",
+    ),
+    (
+        "@(",
+        "event controls are not accepted in this custom-model subset",
+    ),
+    (
+        "$finish",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "$stop",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "$display",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "initial",
+        "procedural initial blocks are not accepted in this custom-model subset",
+    ),
+    (
+        "always",
+        "procedural always blocks are not accepted in this custom-model subset",
+    ),
+    (
+        "analog function",
+        "analog functions are not accepted in this custom-model subset",
+    ),
+    (
+        "discipline",
+        "discipline declarations are not accepted in this custom-model subset",
+    ),
+    (
+        "branch ",
+        "named branch declarations are not accepted in this custom-model subset",
+    ),
+];
+
+fn custom_model_error(code: &str, message: &str) -> CustomModelDiagnostic {
+    CustomModelDiagnostic {
+        code: code.to_string(),
+        message: message.to_string(),
+        severity: CustomModelDiagnosticSeverity::Error,
+    }
+}
+
+fn parse_custom_model_module_header(source: &str) -> Option<(Option<String>, Vec<String>)> {
+    let lowered = source.to_ascii_lowercase();
+    let module_index = lowered.find("module")?;
+    let after_module = source[module_index + "module".len()..].trim_start();
+    let name_end = after_module
+        .char_indices()
+        .find_map(|(index, ch)| (!is_identifier_char(ch)).then_some(index))
+        .unwrap_or(after_module.len());
+    let name = after_module[..name_end].trim();
+    if name.is_empty() || !is_identifier_start(name.chars().next()?) {
+        return None;
+    }
+    let after_name = after_module[name_end..].trim_start();
+    let open = after_name.find('(')?;
+    let close = after_name[open + 1..].find(')')? + open + 1;
+    if !after_name[close + 1..].trim_start().starts_with(';') {
+        return None;
+    }
+    let ports = after_name[open + 1..close]
+        .split(',')
+        .map(str::trim)
+        .filter(|port| !port.is_empty())
+        .map(ToString::to_string)
+        .collect();
+    Some((Some(name.to_string()), ports))
+}
+
+fn parse_custom_model_contribution(source: &str) -> Option<(String, String)> {
+    let lowered = source.to_ascii_lowercase();
+    let current_index = lowered.find("i(")?;
+    let after_current = &source[current_index + 2..];
+    let close = after_current.find(')')?;
+    if !after_current[close + 1..].trim_start().starts_with("<+") {
+        return None;
+    }
+    let mut args = after_current[..close].split(',').map(str::trim);
+    let positive = args.next()?.to_string();
+    let negative = args.next()?.to_string();
+    if args.next().is_some()
+        || positive.is_empty()
+        || negative.is_empty()
+        || !positive.chars().next().is_some_and(is_identifier_start)
+        || !negative.chars().next().is_some_and(is_identifier_start)
+    {
+        return None;
+    }
+    Some((positive, negative))
+}
+
+fn is_identifier_start(ch: char) -> bool {
+    ch == '_' || ch.is_ascii_alphabetic()
+}
+
+fn is_identifier_char(ch: char) -> bool {
+    ch == '_' || ch == '$' || ch.is_ascii_alphanumeric()
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -6154,6 +6465,7 @@ fn element_name(element: &Element) -> Option<&str> {
         Element::Inductor(element) => Some(&element.name),
         Element::VoltageSource(element) => Some(&element.name),
         Element::CurrentSource(element) => Some(&element.name),
+        Element::CustomModel(element) => Some(&element.name),
         _ => None,
     }
 }
@@ -6207,6 +6519,15 @@ fn apply_corner_override(
         Element::CurrentSource(mut element) if override_.parameter == "current" => {
             element.current = override_.value;
             Ok(Element::CurrentSource(element))
+        }
+        Element::CustomModel(mut element) if override_.parameter == "conductance" => {
+            match &mut element.kind {
+                CustomModelKind::LinearConductance {
+                    conductance_siemens,
+                    ..
+                } => *conductance_siemens = override_.value,
+            }
+            Ok(Element::CustomModel(element))
         }
         _ => Err(SpiceError::InvalidElement {
             name: "dc_corners".to_string(),
@@ -8463,6 +8784,16 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
         Element::CurrentSource(source) => {
             Some((source.name.clone(), "current".to_string(), source.current))
         }
+        Element::CustomModel(model) => match model.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                ..
+            } => Some((
+                model.name.clone(),
+                "conductance_siemens".to_string(),
+                conductance_siemens,
+            )),
+        },
         Element::Diode(diode) => Some((
             diode.name.clone(),
             "saturation_current".to_string(),
@@ -8504,6 +8835,12 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Resistor(resistor) => resistor.resistance_ohms += delta,
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
+        Element::CustomModel(model) => match &mut model.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                ..
+            } => *conductance_siemens += delta,
+        },
         Element::Diode(diode) => diode.saturation_current += delta,
         Element::Jfet(jfet) => jfet.beta += delta,
         Element::Bjt(bjt) => bjt.saturation_current += delta,
@@ -8595,6 +8932,19 @@ fn randomized_element(
             let mut varied = source.clone();
             varied.current = randomized_value(varied.current, tolerance, distribution, rng);
             Element::CurrentSource(varied)
+        }
+        Element::CustomModel(model) => {
+            let mut varied = model.clone();
+            match &mut varied.kind {
+                CustomModelKind::LinearConductance {
+                    conductance_siemens,
+                    ..
+                } => {
+                    *conductance_siemens =
+                        randomized_value(*conductance_siemens, tolerance, distribution, rng);
+                }
+            }
+            Element::CustomModel(varied)
         }
         Element::Diode(diode) => {
             let mut varied = diode.clone();
@@ -8817,6 +9167,7 @@ fn solve_linear_circuit_with_options(
                 | Element::Bjt(_)
                 | Element::Mosfet(_)
                 | Element::BSource(_)
+                | Element::CustomModel(_)
         )
     });
     let return_singular_as_unconverged = options.return_singular_as_unconverged && has_nonlinear;
@@ -9007,6 +9358,9 @@ fn solve_linear_circuit_at_operating_point(
                 &mut rhs,
                 operating_point,
             )?,
+            Element::CustomModel(model) => {
+                stamp_custom_model(model, node_indices, &mut matrix, &mut rhs, operating_point)?
+            }
             Element::Diode(diode) => {
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -9142,6 +9496,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             | Element::Inductor(_)
             | Element::MutualInductor(_)
             | Element::TransmissionLine(_)
+            | Element::CustomModel(_)
             | Element::Diode(_)
             | Element::Jfet(_)
             | Element::Bjt(_)
@@ -9217,6 +9572,15 @@ fn build_ac_matrix(
                 &mut matrix,
                 operating_point,
             )?,
+            Element::CustomModel(model) => stamp_complex_conductance(
+                &mut matrix,
+                node_index(node_indices, &model.positive),
+                node_index(node_indices, &model.negative),
+                Complex::new(
+                    custom_model_conductance(model, node_indices, operating_point)?,
+                    0.0,
+                ),
+            ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -9326,6 +9690,12 @@ fn build_small_signal_matrix(
                 &mut matrix,
                 operating_point,
             )?,
+            Element::CustomModel(model) => stamp_conductance(
+                &mut matrix,
+                node_index(node_indices, &model.positive),
+                node_index(node_indices, &model.negative),
+                custom_model_conductance(model, node_indices, operating_point)?,
+            ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -9442,6 +9812,10 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 for node in bsource_expr_nodes(expr) {
                     insert_node(&mut names, &node);
                 }
+            }
+            Element::CustomModel(model) => {
+                insert_node(&mut names, &model.positive);
+                insert_node(&mut names, &model.negative);
             }
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
@@ -9567,6 +9941,9 @@ fn find_input_source<'a>(
             }
             Element::BSource(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "B-source"));
+            }
+            Element::CustomModel(model) if model.name == input_source => {
+                return Err(input_source_type_error(input_source, "custom-model"));
             }
             Element::Resistor(resistor) if resistor.name == input_source => {
                 return Err(input_source_type_error(input_source, "resistor"));
@@ -9893,6 +10270,80 @@ fn stamp_conductance(
         matrix[i][j] -= conductance;
         matrix[j][i] -= conductance;
     }
+}
+
+fn validate_custom_model(model: &CustomModel) -> Result<(), SpiceError> {
+    for (name, value) in &model.parameters {
+        if !value.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: model.name.clone(),
+                reason: format!("custom-model parameter {name} must be finite"),
+            });
+        }
+    }
+    match model.kind {
+        CustomModelKind::LinearConductance {
+            conductance_siemens,
+            current_offset_amps,
+        } => {
+            if !conductance_siemens.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: model.name.clone(),
+                    reason: "custom-model conductance must be finite".to_string(),
+                });
+            }
+            if !current_offset_amps.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: model.name.clone(),
+                    reason: "custom-model current offset must be finite".to_string(),
+                });
+            }
+        }
+    }
+    Ok(())
+}
+
+fn custom_model_voltage(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> f64 {
+    let positive = node_index(node_indices, &model.positive);
+    let negative = node_index(node_indices, &model.negative);
+    vector_voltage(operating_point, positive) - vector_voltage(operating_point, negative)
+}
+
+fn custom_model_conductance(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> Result<f64, SpiceError> {
+    Ok(model
+        .evaluate(custom_model_voltage(model, node_indices, operating_point))?
+        .conductance_siemens)
+}
+
+fn stamp_custom_model(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    let positive = node_index(node_indices, &model.positive);
+    let negative = node_index(node_indices, &model.negative);
+    let voltage = custom_model_voltage(model, node_indices, operating_point);
+    let evaluation = model.evaluate(voltage)?;
+    let equivalent_current = evaluation.current_amps - evaluation.conductance_siemens * voltage;
+
+    stamp_conductance(matrix, positive, negative, evaluation.conductance_siemens);
+    if let Some(index) = positive {
+        rhs[index] -= equivalent_current;
+    }
+    if let Some(index) = negative {
+        rhs[index] += equivalent_current;
+    }
+    Ok(())
 }
 
 fn stamp_diode(
