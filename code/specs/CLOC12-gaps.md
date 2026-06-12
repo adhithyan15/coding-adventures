@@ -650,3 +650,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** OPEN (split out of gap-082 by CLOC12.91). No dedicated fixture yet.
 - **Input:** `var x=0.5;` → **Upstream:** `var x=.5;` (also `1e-5` → `1E-5`, `0.0001` → `1E-4`, `1.50` → `1.5`, and over-range `1e100` → `1E100`).
 - **What it needs:** gap-082 closed the **integer-valued** decimal float/scientific subset (any literal whose exact value is a non-negative integer ≤ u128::MAX, recovered by `decimal_float_as_u128`). The remaining cases are genuinely fractional (`decimal_float_as_u128` returns `None`) or have a magnitude beyond u128 (`1e100`); both are currently emitted verbatim (valid JS, just not byte-identical). Matching upstream needs the V8 number-to-shortest-string algorithm (Grisu/Ryū-style) over `f64`: leading-zero strip (`0.5` → `.5`), trailing-zero strip (`1.50` → `1.5`), and the decimal-vs-exponential cut-over with negative exponents (`0.0001` → `1E-4`). Separately, the trailing-bare-dot form `5.`/`50.` is a **lexer** tokenisation issue (the lexer splits `5.` into NUMBER `5` + DOT `.`), not a number-formatter gap, and should be tracked on the lexer side.
+
+### gap-086 — call-argument paren elision (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.39). `minify_call_arg_paren` ignored.
+- **Input:** `f((a));` → **Upstream:** `f(a);` (also `f((a+b))` → `f(a+b)`, `f((a),(b))` → `f(a,b)`, `f((a),b)` → `f(a,b)`).
+- **What it needs:** the mirror of the existing operand-paren-elision pre-passes (gap-075/077/078) but anchored inside a CALL's argument list — a `(` that directly follows the call's `(` or an argument-separating `,`, whose matching `)` is directly followed by `,` or the call's closing `)`. Strip those redundant grouping parens. **Must KEEP** a comma-operator argument: `f((a,b))` stays `f((a,b))` (dropping the parens would turn one argument into two). Reuse the atomic/no-top-level-comma guard from gap-053/077.
+
+### gap-087 — computed-member index paren elision (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.39). `minify_index_paren` ignored.
+- **Input:** `a[(b)];` → **Upstream:** `a[b];` (also `a[(b+c)]` → `a[b+c]`, `a[(b,c)]` → `a[b,c]`, `a[(b=c)]` → `a[b=c]`).
+- **What it needs:** strip a redundant grouping paren that wraps the WHOLE index expression inside a computed member `[ … ]` — a `(` directly after `[` whose matching `)` is directly before the matching `]`. Unlike a call argument (gap-086), the index is a SINGLE-expression context, so even a top-level comma operator strips (`a[(b,c)]` → `a[b,c]` — the comma stays a comma operator, not an argument separator). Anchored on the `[`…`]` pair.
+
+### gap-088 — empty-statement elimination (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.39). `minify_empty_stmt` ignored.
+- **Input:** `;;var x=1;;;` → **Upstream:** `var x=1;` (also `;;;` → `` empty, `var a=1;;var b=2;` → `var a=1;var b=2;`, `function f(){;;x();;}` → `function f(){x()}`).
+- **What it needs:** drop EMPTY statements — a `;` token that is not the terminator of a real statement (i.e. a `;` immediately following `{`, another `;`, or the start of input, and likewise a trailing run before `}`/EOF). Upstream removes all stray semicolons at statement position. closurec's re-stitcher currently preserves every `;`. Care: a `;` that is the `for(;;)` header separator or a real statement terminator must be kept — the drop only targets semicolons in *statement-list* position with no statement before them.
+
+### gap-089 — new member-callee empty-paren drop (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.39). `minify_new_member_empty` ignored.
+- **Input:** `new a.b();` → **Upstream:** `new a.b;` (closurec reaches `new a.b()` — the empty `()` is kept).
+- **What it needs:** gap-050 (CLOC12.57) dropped the empty argument parens of a `new` expression whose callee is a bare IDENTIFIER (`new A()` → `new A`), and gap-068 (CLOC12.76) stripped redundant parens *around* a `new` callee (`new(a.b)` → `new a.b`). The remaining case is a `new` with a MEMBER-expression callee AND empty args (`new a.b()` → `new a.b`): the empty `()` is not yet dropped when the callee is `a.b` rather than a plain name. Extend the gap-050 empty-paren drop to span a member-expression callee (walk the `.ident`/`[…]` chain after `new` before checking for the trailing `()`). Must still KEEP args (`new a.b(1)` stays).

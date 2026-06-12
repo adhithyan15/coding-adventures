@@ -1,4 +1,7 @@
 # minify_chained_assign
 
-Captured from upstream Google Closure Compiler **v20240317** under WHITESPACE_ONLY.
-closurec matches byte-for-byte. **PASS**.
+CLOC14.39 byte-identity fixture (captured from the upstream
+Closure JAR v20240317, WHITESPACE_ONLY).
+
+- **Input:** `var a,b,c;a=b=c=1;`
+- **Note:** guard: right-assoc chained assignment is untouched

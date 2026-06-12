@@ -114,6 +114,26 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
+    // gap-086 (CLOC14.39): redundant parens around a CALL ARGUMENT —
+    // `f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`, `f((a),(b))` →
+    // `f(a,b)`. Must KEEP a comma-operator argument (`f((a,b))` stays,
+    // else it splits into two args). Mirror of the operand-paren
+    // pre-passes, anchored on `(`/`,` inside a call's argument list.
+    ("call_arg_paren", "gap-086: call-argument paren elision"),
+    // gap-087 (CLOC14.39): redundant parens inside a COMPUTED MEMBER
+    // index — `a[(b)]` → `a[b]`, `a[(b+c)]` → `a[b+c]`. Unlike a call
+    // argument, the index is a single-expression context so even a
+    // comma operator strips (`a[(b,c)]` → `a[b,c]`).
+    ("index_paren", "gap-087: computed-member index paren elision"),
+    // gap-088 (CLOC14.39): EMPTY-STATEMENT (`;`) elimination —
+    // `;;var x=1;;;` → `var x=1;`, `;;;` → ``, `function f(){;;x();}` →
+    // `function f(){x()}`. closurec currently keeps stray semicolons.
+    ("empty_stmt", "gap-088: empty-statement elimination"),
+    // gap-089 (CLOC14.39): empty `new` call-paren drop when the callee
+    // is a MEMBER expression — `new a.b()` → `new a.b`. gap-050 dropped
+    // `new A()` → `new A` for a bare identifier callee; the member-
+    // callee case (`new a.b()`) still keeps the `()`.
+    ("new_member_empty", "gap-089: new member-callee empty-paren drop"),
     // gap-084 RESOLVED in CLOC12.90 — a nested double-paren around a
     // var-init RHS (`((a))` → `a`, `(((a)))` → `a`, `((a+b))` →
     // `a+b`) now fully strips: the gap-053 var-init elision runs to a
