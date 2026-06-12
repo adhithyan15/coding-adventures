@@ -96,3 +96,7 @@ provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
 and still-unsupported `.control` blocks.
+`resolveDeckParameters` evaluates scalar whitespace-tokenized `.param`
+assignments, preserves parameter order, rewrites braced and quoted active-line
+expressions, and emits stable diagnostics for unresolved expressions and
+still-unsupported `.func` cards.

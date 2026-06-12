@@ -47,9 +47,10 @@ use smart_home_integration_catalog::{
     activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
     activation_plan_for_entry, activation_plans_at_or_before_priority,
     activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
-    activation_reviews_from_candidates, activation_risk_from_candidates,
-    activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
-    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
+    activation_response_items_from_escalation_cases, activation_reviews_from_candidates,
+    activation_risk_from_candidates, activation_runbook_entries_from_playbook_steps,
+    activation_runway_from_candidates, activation_sentinel_alerts_from_rollups,
+    activation_timeline_milestones_from_dashboard_cards,
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
@@ -93,6 +94,8 @@ use smart_home_integration_catalog::{
     IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
+    IntegrationActivationResponseItem, IntegrationActivationResponseKind,
+    IntegrationActivationResponseOwnerLane, IntegrationActivationResponseSummary,
     IntegrationActivationReviewItem, IntegrationActivationReviewSummary,
     IntegrationActivationRiskItem, IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
     IntegrationActivationRunbookEntry, IntegrationActivationRunbookPhase,
@@ -327,6 +330,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_ESCALATIONS_TOOL_ID: &str =
     "smart_home.list_integration_activation_escalations";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_ESCALATION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_escalation_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID: &str =
+    "smart_home.list_integration_activation_responses";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_response_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -737,6 +744,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_ESCALATION_SUMMARY_TOOL_ID => {
                     let query = integration_activation_escalation_query(&arguments)?;
                     Ok(get_integration_activation_escalation_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID => {
+                    let query = integration_activation_response_query(&arguments)?;
+                    Ok(list_integration_activation_responses_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_response_query(&arguments)?;
+                    Ok(get_integration_activation_response_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2405,6 +2422,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation escalation summary",
             "Return compact D23A activation escalation counts by blocker, dependency, policy risk, review, verification, and audit case.",
             integration_activation_escalation_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID,
+            "List smart-home integration activation responses",
+            "List Chief-facing D23A activation response items derived from escalation cases with owner lanes and next actions.",
+            integration_activation_response_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_responses", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_responses",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation response summary",
+            "Return compact D23A activation response counts by owner lane, next action, blocker, dependency, policy, review, verification, and audit follow-up work.",
+            integration_activation_response_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5235,6 +5286,17 @@ struct IntegrationActivationEscalationQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationResponseQuery {
+    escalation: IntegrationActivationEscalationQuery,
+    response_kind: Option<IntegrationActivationResponseKind>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    ready_to_verify: Option<bool>,
+    response_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -5862,6 +5924,29 @@ fn integration_activation_escalation_query(
         escalation_limit: optional_u64(arguments, "escalation_limit")?
             .or(optional_u64(arguments, "case_limit")?)
             .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_response_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationResponseQuery, ToolCallError> {
+    let response_kind = optional_string(arguments, "response_kind")?
+        .or(optional_string(arguments, "response")?)
+        .map(|label| parse_activation_response_kind(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "owner_lane")?
+        .or(optional_string(arguments, "response_owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationResponseQuery {
+        escalation: integration_activation_escalation_query(arguments)?,
+        response_kind,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "response_requires_attention")?,
+        blocked: optional_bool(arguments, "response_blocked")?,
+        ready_to_verify: optional_bool(arguments, "response_ready_to_verify")?,
+        response_limit: optional_u64(arguments, "response_limit")?.map(|value| value as usize),
     })
 }
 
@@ -6909,6 +6994,35 @@ fn integration_activation_escalation_cases_for_query(
     }
 
     (cases, catalog_count)
+}
+
+fn integration_activation_response_items_for_query(
+    query: &IntegrationActivationResponseQuery,
+) -> (Vec<IntegrationActivationResponseItem>, usize) {
+    let (cases, catalog_count) =
+        integration_activation_escalation_cases_for_query(&query.escalation);
+    let mut responses = activation_response_items_from_escalation_cases(&cases);
+
+    if let Some(response_kind) = query.response_kind {
+        responses.retain(|response| response.response_kind == response_kind);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        responses.retain(|response| response.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        responses.retain(|response| response.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        responses.retain(|response| response.blocked() == blocked);
+    }
+    if let Some(ready_to_verify) = query.ready_to_verify {
+        responses.retain(|response| response.ready_to_verify() == ready_to_verify);
+    }
+    if let Some(limit) = query.response_limit {
+        responses.truncate(limit);
+    }
+
+    (responses, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -9442,6 +9556,92 @@ fn get_integration_activation_escalation_summary_output_handler_output(
             (
                 "cases_ready_to_verify",
                 integer(summary.cases_ready_to_verify as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_responses_output_handler_output(
+    query: IntegrationActivationResponseQuery,
+) -> ToolHandlerOutput {
+    let (responses, catalog_count) = integration_activation_response_items_for_query(&query);
+    let summary = IntegrationActivationResponseSummary::from_responses(responses.iter());
+    let count = responses.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_responses",
+            JsonValue::Array(
+                responses
+                    .iter()
+                    .map(activation_response_item_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_response_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_responses")),
+            ("responses", integer(count as i64)),
+            (
+                "responses_requiring_attention",
+                integer(summary.responses_requiring_attention as i64),
+            ),
+            (
+                "blocked_responses",
+                integer(summary.blocked_responses as i64),
+            ),
+            (
+                "responses_ready_to_verify",
+                integer(summary.responses_ready_to_verify as i64),
+            ),
+            (
+                "next_response_kind",
+                summary
+                    .next_response_kind
+                    .map(|kind| string(kind.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_response_summary_output_handler_output(
+    query: IntegrationActivationResponseQuery,
+) -> ToolHandlerOutput {
+    let (responses, _) = integration_activation_response_items_for_query(&query);
+    let summary = IntegrationActivationResponseSummary::from_responses(responses.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_response_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_response_summary"),
+            ),
+            ("total_responses", integer(summary.total_responses as i64)),
+            (
+                "responses_requiring_attention",
+                integer(summary.responses_requiring_attention as i64),
+            ),
+            (
+                "blocked_responses",
+                integer(summary.blocked_responses as i64),
+            ),
+            (
+                "responses_ready_to_verify",
+                integer(summary.responses_ready_to_verify as i64),
             ),
         ]),
     )
@@ -18581,6 +18781,221 @@ fn integration_activation_escalation_summary_json(
     ])
 }
 
+fn activation_response_item_json(response: &IntegrationActivationResponseItem) -> JsonValue {
+    object([
+        ("sequence", integer(response.sequence as i64)),
+        ("response_kind", string(response.response_kind.as_str())),
+        ("owner_lane", string(response.owner_lane.as_str())),
+        (
+            "source_case_sequence",
+            integer(response.source_case_sequence as i64),
+        ),
+        (
+            "source_case_kind",
+            string(response.source_case_kind.as_str()),
+        ),
+        ("source_id", string(&response.source_id)),
+        ("title", string(&response.title)),
+        ("summary", string(&response.summary)),
+        ("priority", integer(response.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                response
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(response.integration_count() as i64),
+        ),
+        (
+            "recommended_view",
+            string(response.recommended_view.as_str()),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(response.required_tier)),
+        ),
+        (
+            "policy_surface",
+            response
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(response.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(response.has_policy_risk()),
+        ),
+        (
+            "ready_to_verify",
+            JsonValue::Bool(response.ready_to_verify()),
+        ),
+        ("blocked", JsonValue::Bool(response.blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(response.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_response_summary_json(
+    summary: &IntegrationActivationResponseSummary,
+) -> JsonValue {
+    object([
+        ("total_responses", integer(summary.total_responses as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "responses_requiring_attention",
+            integer(summary.responses_requiring_attention as i64),
+        ),
+        (
+            "resolve_blocker_responses",
+            integer(summary.resolve_blocker_responses as i64),
+        ),
+        (
+            "enable_dependency_responses",
+            integer(summary.enable_dependency_responses as i64),
+        ),
+        (
+            "review_policy_responses",
+            integer(summary.review_policy_responses as i64),
+        ),
+        (
+            "queue_review_responses",
+            integer(summary.queue_review_responses as i64),
+        ),
+        (
+            "verify_activation_responses",
+            integer(summary.verify_activation_responses as i64),
+        ),
+        (
+            "audit_follow_up_responses",
+            integer(summary.audit_follow_up_responses as i64),
+        ),
+        (
+            "platform_owner_responses",
+            integer(summary.platform_owner_responses as i64),
+        ),
+        (
+            "integration_owner_responses",
+            integer(summary.integration_owner_responses as i64),
+        ),
+        (
+            "security_owner_responses",
+            integer(summary.security_owner_responses as i64),
+        ),
+        (
+            "reviewer_owner_responses",
+            integer(summary.reviewer_owner_responses as i64),
+        ),
+        (
+            "verification_owner_responses",
+            integer(summary.verification_owner_responses as i64),
+        ),
+        (
+            "audit_owner_responses",
+            integer(summary.audit_owner_responses as i64),
+        ),
+        (
+            "responses_with_dependency_work",
+            integer(summary.responses_with_dependency_work as i64),
+        ),
+        (
+            "responses_with_policy_risk",
+            integer(summary.responses_with_policy_risk as i64),
+        ),
+        (
+            "responses_ready_to_verify",
+            integer(summary.responses_ready_to_verify as i64),
+        ),
+        (
+            "blocked_responses",
+            integer(summary.blocked_responses as i64),
+        ),
+        (
+            "responses_with_policy_surface",
+            integer(summary.responses_with_policy_surface as i64),
+        ),
+        (
+            "next_response_kind",
+            summary
+                .next_response_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_response_sequence",
+            summary
+                .next_response_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_response_priority",
+            summary
+                .next_response_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(summary.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(summary.has_policy_risk()),
+        ),
+        (
+            "ready_to_verify",
+            JsonValue::Bool(summary.ready_to_verify()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -21465,6 +21880,50 @@ fn parse_activation_escalation_case_kind(
     }
 }
 
+fn parse_activation_response_kind(
+    label: &str,
+) -> Result<IntegrationActivationResponseKind, ToolCallError> {
+    match label {
+        "resolve_blocker" | "blocker" | "blockers" => {
+            Ok(IntegrationActivationResponseKind::ResolveBlocker)
+        }
+        "enable_dependency" | "dependency" | "dependencies" => {
+            Ok(IntegrationActivationResponseKind::EnableDependency)
+        }
+        "review_policy" | "policy" | "policy_risk" | "risk" => {
+            Ok(IntegrationActivationResponseKind::ReviewPolicy)
+        }
+        "queue_review" | "review" | "reviewer" => {
+            Ok(IntegrationActivationResponseKind::QueueReview)
+        }
+        "verify_activation" | "verification" | "verify" => {
+            Ok(IntegrationActivationResponseKind::VerifyActivation)
+        }
+        "audit_follow_up" | "audit" | "follow_up" => {
+            Ok(IntegrationActivationResponseKind::AuditFollowUp)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation response kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_response_owner_lane(
+    label: &str,
+) -> Result<IntegrationActivationResponseOwnerLane, ToolCallError> {
+    match label {
+        "platform" => Ok(IntegrationActivationResponseOwnerLane::Platform),
+        "integration" | "integrations" => Ok(IntegrationActivationResponseOwnerLane::Integration),
+        "security" | "policy" => Ok(IntegrationActivationResponseOwnerLane::Security),
+        "reviewer" | "review" => Ok(IntegrationActivationResponseOwnerLane::Reviewer),
+        "verification" | "verify" => Ok(IntegrationActivationResponseOwnerLane::Verification),
+        "audit" => Ok(IntegrationActivationResponseOwnerLane::Audit),
+        _ => Err(validation_error(format!(
+            "unknown activation response owner lane `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -22989,6 +23448,35 @@ fn integration_activation_escalation_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_response_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_escalation_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("response_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("response", JsonSchema::String));
+        properties.push(SchemaProperty::new("owner_lane", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "response_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "response_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("response_blocked", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "response_ready_to_verify",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("response_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -23133,7 +23621,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 119);
+        assert_eq!(definitions.len(), 121);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -23462,9 +23950,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_ESCALATION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            111
+            113
         );
         assert_eq!(
             export
@@ -23489,6 +23983,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_APPROVAL_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
@@ -23942,11 +24444,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(119))
+            Some(&integer(121))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(111))
+            Some(&integer(113))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -28040,6 +28542,157 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_responses_request = request(
+            "call-list-integration-activation-responses",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("response_kind", string("resolve_blocker")),
+                ("response_requires_attention", JsonValue::Bool(true)),
+                ("response_blocked", JsonValue::Bool(true)),
+                ("response_limit", integer(3)),
+            ]),
+            5_045,
+        );
+        let list_activation_responses_trace =
+            tool_runtime.invoke_with_events(&list_activation_responses_request);
+        assert!(list_activation_responses_trace.result.ok);
+        assert_eq!(
+            list_activation_responses_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_responses_output = list_activation_responses_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_response_count =
+            integer_value(field(list_activation_responses_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_response_count));
+        let activation_response_summary =
+            field(list_activation_responses_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_response_summary, "total_responses"),
+            Some(&integer(activation_response_count))
+        );
+        assert_eq!(
+            field(activation_response_summary, "next_response_kind"),
+            Some(&string("resolve_blocker"))
+        );
+        assert_eq!(
+            field(activation_response_summary, "next_owner_lane"),
+            Some(&string("platform"))
+        );
+        assert_eq!(
+            field(activation_response_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_response_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_response = array_item(
+            field(list_activation_responses_output, "activation_responses").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_response, "response_kind"),
+            Some(&string("resolve_blocker"))
+        );
+        assert_eq!(
+            field(activation_response, "owner_lane"),
+            Some(&string("platform"))
+        );
+        assert_eq!(
+            field(activation_response, "blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_response, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_response_summary_request = request(
+            "call-integration-activation-response-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("response_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_046,
+        );
+        let activation_response_summary_trace =
+            tool_runtime.invoke_with_events(&activation_response_summary_request);
+        assert!(activation_response_summary_trace.result.ok);
+        assert_eq!(
+            activation_response_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_response_summary_output = activation_response_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_response_rollup =
+            field(activation_response_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_response_rollup, "total_responses").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_response_rollup, "blocked_responses").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_response_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_response_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -29888,6 +30541,14 @@ mod tests {
             activation_escalation_summary_request,
             activation_escalation_summary_trace,
         );
+        journal.record_trace(
+            list_activation_responses_request,
+            list_activation_responses_trace,
+        );
+        journal.record_trace(
+            activation_response_summary_request,
+            activation_response_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -29961,9 +30622,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 119);
-        assert_eq!(journal_summary.completed_count, 119);
-        assert_eq!(journal.audit_records().len(), 119);
+        assert_eq!(journal_summary.invocation_count, 121);
+        assert_eq!(journal_summary.completed_count, 121);
+        assert_eq!(journal.audit_records().len(), 121);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

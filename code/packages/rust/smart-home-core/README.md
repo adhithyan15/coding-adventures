@@ -115,6 +115,8 @@ Current scope:
 - D18D integration activation-escalation descriptors for Chief-facing
   blocker, dependency, policy-risk, review, verification, and audit cases
   derived from sentinel, verification, and audit rollups
+- D18D integration activation-response descriptors for owner-lane next actions
+  derived from Chief-facing escalation cases
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

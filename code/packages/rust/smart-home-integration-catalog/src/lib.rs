@@ -1393,6 +1393,74 @@ impl IntegrationActivationEscalationCaseKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationResponseKind {
+    ResolveBlocker,
+    EnableDependency,
+    ReviewPolicy,
+    QueueReview,
+    VerifyActivation,
+    AuditFollowUp,
+}
+
+impl IntegrationActivationResponseKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ResolveBlocker => "resolve_blocker",
+            Self::EnableDependency => "enable_dependency",
+            Self::ReviewPolicy => "review_policy",
+            Self::QueueReview => "queue_review",
+            Self::VerifyActivation => "verify_activation",
+            Self::AuditFollowUp => "audit_follow_up",
+        }
+    }
+
+    pub fn from_case_kind(case_kind: IntegrationActivationEscalationCaseKind) -> Self {
+        match case_kind {
+            IntegrationActivationEscalationCaseKind::Blocker => Self::ResolveBlocker,
+            IntegrationActivationEscalationCaseKind::Dependency => Self::EnableDependency,
+            IntegrationActivationEscalationCaseKind::PolicyRisk => Self::ReviewPolicy,
+            IntegrationActivationEscalationCaseKind::Review => Self::QueueReview,
+            IntegrationActivationEscalationCaseKind::Verification => Self::VerifyActivation,
+            IntegrationActivationEscalationCaseKind::Audit => Self::AuditFollowUp,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationResponseOwnerLane {
+    Platform,
+    Integration,
+    Security,
+    Reviewer,
+    Verification,
+    Audit,
+}
+
+impl IntegrationActivationResponseOwnerLane {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Platform => "platform",
+            Self::Integration => "integration",
+            Self::Security => "security",
+            Self::Reviewer => "reviewer",
+            Self::Verification => "verification",
+            Self::Audit => "audit",
+        }
+    }
+
+    pub fn from_response_kind(response_kind: IntegrationActivationResponseKind) -> Self {
+        match response_kind {
+            IntegrationActivationResponseKind::ResolveBlocker => Self::Platform,
+            IntegrationActivationResponseKind::EnableDependency => Self::Integration,
+            IntegrationActivationResponseKind::ReviewPolicy => Self::Security,
+            IntegrationActivationResponseKind::QueueReview => Self::Reviewer,
+            IntegrationActivationResponseKind::VerifyActivation => Self::Verification,
+            IntegrationActivationResponseKind::AuditFollowUp => Self::Audit,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationAuditRecordKind {
     Sentinel,
     Watchtower,
@@ -3111,6 +3179,60 @@ pub struct IntegrationActivationEscalationSummary {
     pub first_policy_risk_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
     pub first_verification_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationResponseItem {
+    pub sequence: usize,
+    pub response_kind: IntegrationActivationResponseKind,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_case_sequence: usize,
+    pub source_case_kind: IntegrationActivationEscalationCaseKind,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_ready: bool,
+    pub blocked: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationResponseSummary {
+    pub total_responses: usize,
+    pub unique_integrations: usize,
+    pub responses_requiring_attention: usize,
+    pub resolve_blocker_responses: usize,
+    pub enable_dependency_responses: usize,
+    pub review_policy_responses: usize,
+    pub queue_review_responses: usize,
+    pub verify_activation_responses: usize,
+    pub audit_follow_up_responses: usize,
+    pub platform_owner_responses: usize,
+    pub integration_owner_responses: usize,
+    pub security_owner_responses: usize,
+    pub reviewer_owner_responses: usize,
+    pub verification_owner_responses: usize,
+    pub audit_owner_responses: usize,
+    pub responses_with_dependency_work: usize,
+    pub responses_with_policy_risk: usize,
+    pub responses_ready_to_verify: usize,
+    pub blocked_responses: usize,
+    pub responses_with_policy_surface: usize,
+    pub next_response_kind: Option<IntegrationActivationResponseKind>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_response_sequence: Option<usize>,
+    pub next_response_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -8586,6 +8708,225 @@ impl IntegrationActivationEscalationSummary {
     }
 }
 
+impl IntegrationActivationResponseItem {
+    fn from_escalation_case(case: &IntegrationActivationEscalationCase) -> Self {
+        let response_kind = IntegrationActivationResponseKind::from_case_kind(case.case_kind);
+        let owner_lane = IntegrationActivationResponseOwnerLane::from_response_kind(response_kind);
+
+        Self {
+            sequence: 0,
+            response_kind,
+            owner_lane,
+            source_case_sequence: case.sequence,
+            source_case_kind: case.case_kind,
+            source_id: case.source_id.clone(),
+            title: format!("{}: {}", response_kind.as_str(), case.title),
+            summary: case.summary.clone(),
+            priority: case.priority,
+            integration_ids: case.integration_ids.clone(),
+            recommended_view: case.recommended_view,
+            required_tier: case.required_tier,
+            policy_surface: case.policy_surface,
+            dependency_work: case.has_dependency_work(),
+            policy_risk: case.has_policy_risk(),
+            verification_ready: case.ready_to_verify(),
+            blocked: case.blocked(),
+            requires_attention: case.requires_attention() || case.ready_to_verify(),
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.verification_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationResponseSummary {
+    pub fn from_responses<'a>(
+        responses: impl IntoIterator<Item = &'a IntegrationActivationResponseItem>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_responses: 0,
+            unique_integrations: 0,
+            responses_requiring_attention: 0,
+            resolve_blocker_responses: 0,
+            enable_dependency_responses: 0,
+            review_policy_responses: 0,
+            queue_review_responses: 0,
+            verify_activation_responses: 0,
+            audit_follow_up_responses: 0,
+            platform_owner_responses: 0,
+            integration_owner_responses: 0,
+            security_owner_responses: 0,
+            reviewer_owner_responses: 0,
+            verification_owner_responses: 0,
+            audit_owner_responses: 0,
+            responses_with_dependency_work: 0,
+            responses_with_policy_risk: 0,
+            responses_ready_to_verify: 0,
+            blocked_responses: 0,
+            responses_with_policy_surface: 0,
+            next_response_kind: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_response_sequence: None,
+            next_response_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for response in responses {
+            summary.total_responses += 1;
+            for integration_id in &response.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_response_kind.is_none()
+                && (response.requires_attention() || response.ready_to_verify())
+            {
+                summary.next_response_kind = Some(response.response_kind);
+                summary.next_owner_lane = Some(response.owner_lane);
+                summary.next_recommended_view = Some(response.recommended_view);
+                summary.next_response_sequence = Some(response.sequence);
+                summary.next_response_priority = Some(response.priority);
+            }
+
+            match response.response_kind {
+                IntegrationActivationResponseKind::ResolveBlocker => {
+                    summary.resolve_blocker_responses += 1;
+                }
+                IntegrationActivationResponseKind::EnableDependency => {
+                    summary.enable_dependency_responses += 1;
+                }
+                IntegrationActivationResponseKind::ReviewPolicy => {
+                    summary.review_policy_responses += 1;
+                }
+                IntegrationActivationResponseKind::QueueReview => {
+                    summary.queue_review_responses += 1;
+                }
+                IntegrationActivationResponseKind::VerifyActivation => {
+                    summary.verify_activation_responses += 1;
+                }
+                IntegrationActivationResponseKind::AuditFollowUp => {
+                    summary.audit_follow_up_responses += 1;
+                }
+            }
+
+            match response.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_responses += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_responses += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_responses += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_responses += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_responses += 1;
+                }
+                IntegrationActivationResponseOwnerLane::Audit => {
+                    summary.audit_owner_responses += 1;
+                }
+            }
+
+            if response.requires_attention() {
+                summary.responses_requiring_attention += 1;
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(response.priority),
+                );
+            }
+            if response.has_dependency_work() {
+                summary.responses_with_dependency_work += 1;
+            }
+            if response.has_policy_risk() {
+                summary.responses_with_policy_risk += 1;
+            }
+            if response.ready_to_verify() {
+                summary.responses_ready_to_verify += 1;
+            }
+            if response.blocked() {
+                summary.blocked_responses += 1;
+            }
+            if response.has_policy_surface() {
+                summary.responses_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(response.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_responses > 0
+            || summary.resolve_blocker_responses > 0
+            || summary.enable_dependency_responses > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.responses_requiring_attention > 0
+            || summary.review_policy_responses > 0
+            || summary.queue_review_responses > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.responses_ready_to_verify > 0 || summary.verify_activation_responses > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_responses == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.resolve_blocker_responses > 0 || self.blocked_responses > 0
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.enable_dependency_responses > 0 || self.responses_with_dependency_work > 0
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.review_policy_responses > 0 || self.responses_with_policy_risk > 0
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.responses_ready_to_verify > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.responses_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -13614,6 +13955,39 @@ pub fn activation_escalation_cases_at_or_before_priority(
     activation_escalation_cases_from_rollups(&alerts, &checkpoints, &audit_records)
 }
 
+pub fn activation_response_items_from_escalation_cases(
+    cases: &[IntegrationActivationEscalationCase],
+) -> Vec<IntegrationActivationResponseItem> {
+    let mut responses: Vec<_> = cases
+        .iter()
+        .filter(|case| case.requires_attention() || case.ready_to_verify())
+        .map(IntegrationActivationResponseItem::from_escalation_case)
+        .collect();
+
+    responses.sort_by(compare_activation_response_items);
+    for (index, response) in responses.iter_mut().enumerate() {
+        response.sequence = index + 1;
+    }
+    responses
+}
+
+pub fn activation_response_items_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationResponseItem> {
+    let cases = activation_escalation_cases_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_response_items_from_escalation_cases(&cases)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -15214,6 +15588,23 @@ fn compare_activation_escalation_cases(
         .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
         .then_with(|| right.ready_to_verify().cmp(&left.ready_to_verify()))
         .then_with(|| left.case_kind.cmp(&right.case_kind))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_response_items(
+    left: &IntegrationActivationResponseItem,
+    right: &IntegrationActivationResponseItem,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| right.ready_to_verify().cmp(&left.ready_to_verify()))
+        .then_with(|| left.response_kind.cmp(&right.response_kind))
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
@@ -18690,6 +19081,42 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let response_items = activation_response_items_from_escalation_cases(&escalation_cases);
+        assert!(!response_items.is_empty());
+        assert!(response_items
+            .iter()
+            .any(|response| response.response_kind
+                == IntegrationActivationResponseKind::ResolveBlocker));
+        assert!(response_items.iter().any(|response| response.response_kind
+            == IntegrationActivationResponseKind::EnableDependency));
+        assert!(response_items.iter().any(|response| response.response_kind
+            == IntegrationActivationResponseKind::VerifyActivation));
+        assert!(response_items
+            .iter()
+            .any(IntegrationActivationResponseItem::requires_attention));
+        assert!(response_items
+            .iter()
+            .any(IntegrationActivationResponseItem::blocked));
+
+        let response_summary =
+            IntegrationActivationResponseSummary::from_responses(response_items.iter());
+        assert_eq!(response_summary.total_responses, response_items.len());
+        assert!(response_summary.has_blockers());
+        assert!(response_summary.has_dependency_work());
+        assert!(response_summary.requires_attention());
+        assert_eq!(
+            response_summary.next_response_kind,
+            Some(IntegrationActivationResponseKind::ResolveBlocker)
+        );
+        assert_eq!(
+            response_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            response_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -18750,6 +19177,16 @@ mod tests {
         assert!(catalog_escalation_cases
             .iter()
             .any(IntegrationActivationEscalationCase::requires_attention));
+        let catalog_response_items = activation_response_items_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_response_items
+            .iter()
+            .any(IntegrationActivationResponseItem::requires_attention));
     }
 
     #[test]

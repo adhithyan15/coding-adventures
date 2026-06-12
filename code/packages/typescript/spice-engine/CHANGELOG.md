@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolveDeckParameters` for scalar whitespace-tokenized `.param`
+  assignment evaluation, braced and quoted active-line expression rewriting,
+  and stable diagnostics for unresolved expressions and still-unsupported
+  `.func` cards, matching Python and Rust.
 - Add `resolveDeckSources` for map-backed `.include` and selected
   `.lib path section` expansion with stable diagnostics for missing sources,
   missing or unterminated library sections, cycles, and still-unsupported

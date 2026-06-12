@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from math import isfinite
+from math import isfinite, pi
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,6 +84,38 @@ class DeckResolutionSummary:
     diagnostics: tuple[DeckResolutionDiagnostic, ...]
     included_paths: tuple[str, ...]
     library_sections: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DeckParameterValue:
+    """A resolved scalar SPICE deck parameter."""
+
+    name: str
+    value: float
+
+
+@dataclass(frozen=True, slots=True)
+class DeckParameterDiagnostic:
+    """A stable diagnostic emitted while resolving deck parameters."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    parameter: str | None = None
+    expression: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckParameterSummary:
+    """Resolved active deck lines plus scalar parameter values."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    parameters: tuple[DeckParameterValue, ...]
+    diagnostics: tuple[DeckParameterDiagnostic, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -228,6 +260,19 @@ _SUPPORTED_ANALYSES = frozenset({"op", "dc", "ac", "tran", "tf"})
 _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
 _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
 _UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
+_UNSUPPORTED_PARAMETER_DIRECTIVES = frozenset({".func"})
+_SPICE_SUFFIX_FACTORS = {
+    "t": 1.0e12,
+    "g": 1.0e9,
+    "meg": 1.0e6,
+    "k": 1.0e3,
+    "m": 1.0e-3,
+    "mil": 25.4e-6,
+    "u": 1.0e-6,
+    "n": 1.0e-9,
+    "p": 1.0e-12,
+    "f": 1.0e-15,
+}
 
 
 def analyze_deck_controls(netlist: str) -> DeckControlSummary:
@@ -289,6 +334,45 @@ def resolve_deck_sources(
         diagnostics=tuple(state.diagnostics),
         included_paths=tuple(state.included_paths),
         library_sections=tuple(state.library_sections),
+    )
+
+
+def resolve_deck_parameters(netlist: str) -> DeckParameterSummary:
+    """Evaluate scalar ``.param`` cards and rewrite braced deck expressions."""
+
+    state = _DeckParameterState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive == ".param":
+            _resolve_param_line(stripped, line_number, state)
+            continue
+        if directive in _UNSUPPORTED_PARAMETER_DIRECTIVES:
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} is not supported by the parameter resolver yet",
+            )
+            active_lines.append(stripped)
+            continue
+        active_lines.append(_rewrite_parameter_expressions(stripped, line_number, state))
+
+    return DeckParameterSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        parameters=tuple(state.parameter_values()),
+        diagnostics=tuple(state.diagnostics),
     )
 
 
@@ -471,6 +555,339 @@ class _DeckResolutionState:
         self.diagnostics = []
         self.included_paths = []
         self.library_sections = []
+
+
+@dataclass(slots=True)
+class _DeckParameterState:
+    diagnostics: list[DeckParameterDiagnostic]
+    parameters: dict[str, DeckParameterValue]
+    order: list[str]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.parameters = {}
+        self.order = []
+
+    def set_parameter(self, name: str, value: float) -> None:
+        key = name.lower()
+        if key not in self.parameters:
+            self.order.append(key)
+        self.parameters[key] = DeckParameterValue(name=name, value=value)
+
+    def parameter_values(self) -> list[DeckParameterValue]:
+        return [self.parameters[key] for key in self.order]
+
+
+def _resolve_param_line(
+    line: str,
+    line_number: int,
+    state: _DeckParameterState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if len(tokens) == 1:
+        _add_parameter_diagnostic(
+            state,
+            code="SPICE_DECK_PARAM_ARGUMENT",
+            directive=".param",
+            line_number=line_number,
+            message=".param requires at least one name=value assignment",
+        )
+        return
+
+    for token in tokens[1:]:
+        if "=" not in token:
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_PARAM_ARGUMENT",
+                directive=".param",
+                line_number=line_number,
+                message=f".param assignment {token!r} must use name=value syntax",
+                parameter=token,
+            )
+            continue
+        name, expression = token.split("=", 1)
+        name = name.strip()
+        expression = _strip_expression_delimiters(expression.strip())
+        if not _is_parameter_name(name):
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_PARAM_NAME",
+                directive=".param",
+                line_number=line_number,
+                message=f".param name {name!r} is not a valid identifier",
+                parameter=name,
+                expression=expression,
+            )
+            continue
+        try:
+            value = _evaluate_parameter_expression(expression, state)
+        except ValueError as error:
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_PARAM_EXPRESSION",
+                directive=".param",
+                line_number=line_number,
+                message=str(error),
+                parameter=name,
+                expression=expression,
+            )
+            continue
+        state.set_parameter(name, value)
+
+
+def _rewrite_parameter_expressions(
+    line: str,
+    line_number: int,
+    state: _DeckParameterState,
+) -> str:
+    line = _replace_delimited_parameter_expressions(line, "{", "}", line_number, state)
+    return _replace_delimited_parameter_expressions(line, "'", "'", line_number, state)
+
+
+def _replace_delimited_parameter_expressions(
+    line: str,
+    open_token: str,
+    close_token: str,
+    line_number: int,
+    state: _DeckParameterState,
+) -> str:
+    result: list[str] = []
+    index = 0
+    while index < len(line):
+        if line[index] != open_token:
+            result.append(line[index])
+            index += 1
+            continue
+        close_index = line.find(close_token, index + 1)
+        if close_index == -1:
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_PARAM_UNTERMINATED",
+                directive=".param",
+                line_number=line_number,
+                message=f"unterminated parameter expression starting at column {index + 1}",
+            )
+            result.append(line[index:])
+            break
+        expression = line[index + 1 : close_index].strip()
+        try:
+            value = _evaluate_parameter_expression(expression, state)
+        except ValueError as error:
+            _add_parameter_diagnostic(
+                state,
+                code="SPICE_DECK_PARAM_UNRESOLVED",
+                directive=".param",
+                line_number=line_number,
+                message=str(error),
+                expression=expression,
+            )
+            result.append(line[index : close_index + 1])
+        else:
+            result.append(_format_parameter_number(value))
+        index = close_index + 1
+    return "".join(result)
+
+
+def _evaluate_parameter_expression(
+    expression: str,
+    state: _DeckParameterState,
+) -> float:
+    parser = _ParameterExpressionParser(expression, state.parameters)
+    value = parser.parse()
+    if not isfinite(value):
+        raise ValueError(f"parameter expression {expression!r} did not evaluate to a finite value")
+    return value
+
+
+class _ParameterExpressionParser:
+    def __init__(
+        self,
+        expression: str,
+        parameters: Mapping[str, DeckParameterValue],
+    ) -> None:
+        self.expression = expression
+        self.parameters = parameters
+        self.index = 0
+
+    def parse(self) -> float:
+        if not self.expression:
+            raise ValueError("parameter expression must not be empty")
+        value = self._parse_expression()
+        self._skip_whitespace()
+        if self.index != len(self.expression):
+            raise ValueError(
+                f"unexpected token {self.expression[self.index]!r} in parameter expression"
+            )
+        return value
+
+    def _parse_expression(self) -> float:
+        value = self._parse_term()
+        while True:
+            self._skip_whitespace()
+            if self._match("+"):
+                value += self._parse_term()
+            elif self._match("-"):
+                value -= self._parse_term()
+            else:
+                return value
+
+    def _parse_term(self) -> float:
+        value = self._parse_power()
+        while True:
+            self._skip_whitespace()
+            if self._match("*"):
+                value *= self._parse_power()
+            elif self._match("/"):
+                denominator = self._parse_power()
+                if denominator == 0.0:
+                    raise ValueError("division by zero in parameter expression")
+                value /= denominator
+            else:
+                return value
+
+    def _parse_power(self) -> float:
+        value = self._parse_unary()
+        self._skip_whitespace()
+        if self._match("^"):
+            value **= self._parse_power()
+        return value
+
+    def _parse_unary(self) -> float:
+        self._skip_whitespace()
+        if self._match("+"):
+            return self._parse_unary()
+        if self._match("-"):
+            return -self._parse_unary()
+        return self._parse_primary()
+
+    def _parse_primary(self) -> float:
+        self._skip_whitespace()
+        if self._match("("):
+            value = self._parse_expression()
+            self._skip_whitespace()
+            if not self._match(")"):
+                raise ValueError("missing ')' in parameter expression")
+            return value
+        if self.index >= len(self.expression):
+            raise ValueError("unexpected end of parameter expression")
+        char = self.expression[self.index]
+        if char.isdigit() or char == ".":
+            return self._parse_number()
+        if char.isalpha() or char == "_":
+            return self._parse_identifier()
+        raise ValueError(f"unexpected token {char!r} in parameter expression")
+
+    def _parse_number(self) -> float:
+        start = self.index
+        saw_digit = False
+        while self.index < len(self.expression) and self.expression[self.index].isdigit():
+            saw_digit = True
+            self.index += 1
+        if self.index < len(self.expression) and self.expression[self.index] == ".":
+            self.index += 1
+            while self.index < len(self.expression) and self.expression[self.index].isdigit():
+                saw_digit = True
+                self.index += 1
+        if not saw_digit:
+            raise ValueError("expected digit in numeric parameter expression")
+        if self.index < len(self.expression) and self.expression[self.index] in {"e", "E"}:
+            exponent_index = self.index
+            self.index += 1
+            if self.index < len(self.expression) and self.expression[self.index] in {"+", "-"}:
+                self.index += 1
+            exponent_start = self.index
+            while self.index < len(self.expression) and self.expression[self.index].isdigit():
+                self.index += 1
+            if exponent_start == self.index:
+                self.index = exponent_index
+        numeric = float(self.expression[start : self.index])
+        suffix_start = self.index
+        while self.index < len(self.expression) and self.expression[self.index].isalpha():
+            self.index += 1
+        suffix = self.expression[suffix_start : self.index].lower()
+        if not suffix:
+            return numeric
+        if suffix not in _SPICE_SUFFIX_FACTORS:
+            raise ValueError(f"unsupported numeric suffix {suffix!r}")
+        return numeric * _SPICE_SUFFIX_FACTORS[suffix]
+
+    def _parse_identifier(self) -> float:
+        start = self.index
+        while self.index < len(self.expression) and (
+            self.expression[self.index].isalnum() or self.expression[self.index] == "_"
+        ):
+            self.index += 1
+        name = self.expression[start : self.index]
+        self._skip_whitespace()
+        if self.index < len(self.expression) and self.expression[self.index] == "(":
+            raise ValueError(f"function calls are not supported in parameter expression {name!r}")
+        if name.lower() == "pi":
+            return pi
+        parameter = self.parameters.get(name.lower())
+        if parameter is None:
+            raise ValueError(f"unknown parameter {name!r}")
+        return parameter.value
+
+    def _skip_whitespace(self) -> None:
+        while self.index < len(self.expression) and self.expression[self.index].isspace():
+            self.index += 1
+
+    def _match(self, token: str) -> bool:
+        if self.expression.startswith(token, self.index):
+            self.index += len(token)
+            return True
+        return False
+
+
+def _add_parameter_diagnostic(
+    state: _DeckParameterState,
+    *,
+    code: str,
+    directive: str,
+    line_number: int,
+    message: str,
+    parameter: str | None = None,
+    expression: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckParameterDiagnostic(
+            code=code,
+            directive=directive,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            parameter=parameter,
+            expression=expression,
+        )
+    )
+
+
+def _is_parameter_name(name: str) -> bool:
+    if not name or not (name[0].isalpha() or name[0] == "_"):
+        return False
+    return all(char.isalnum() or char == "_" for char in name)
+
+
+def _strip_expression_delimiters(expression: str) -> str:
+    if len(expression) >= 2 and (
+        (expression[0] == "{" and expression[-1] == "}")
+        or (expression[0] == "'" and expression[-1] == "'")
+    ):
+        return expression[1:-1].strip()
+    return expression
+
+
+def _format_parameter_number(value: float) -> str:
+    if value == 0.0:
+        return "0"
+    abs_value = abs(value)
+    if 1.0e-12 <= abs_value < 1.0e12:
+        formatted = f"{value:.12f}".rstrip("0").rstrip(".")
+        return "0" if formatted == "-0" else formatted
+    mantissa, exponent = f"{value:.12e}".split("e")
+    mantissa = mantissa.rstrip("0").rstrip(".")
+    exponent_value = int(exponent)
+    return f"{mantissa}e{exponent_value:+d}"
 
 
 def _resolve_deck_lines(

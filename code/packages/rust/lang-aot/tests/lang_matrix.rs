@@ -145,12 +145,17 @@ const PROGRAMS: &[Prog] = &[
     // (`getstatic … __tape : [B` + `baload`/`bastore`) and `.`/`,` to `invokestatic
     // env/BFRuntime.putchar(I)V`/`getchar()I`; `run_jvm` compiles the `env.BFRuntime`
     // host class with `javac` and captures its `System.out.write` bytes (→ `A`).
+    // On CLR (LM-C) `iir-to-cil-bytecode`'s textual `.il` lowers the tape to an
+    // `unsigned int8[]` local (`newarr [System.Runtime]System.Byte`, `ldelem.u1`/
+    // `stelem.i1`) and `.` to `Console::Write(char)` (so `.` of 65 writes `A`); the
+    // `Run()` launcher discards the entry result (the `putchar` side effect is the
+    // output). `run_clr` assembles with real `ilasm` and runs on real `dotnet`.
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime

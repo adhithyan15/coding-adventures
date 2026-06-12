@@ -5,6 +5,18 @@ const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
+const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
+  t: 1.0e12,
+  g: 1.0e9,
+  meg: 1.0e6,
+  k: 1.0e3,
+  m: 1.0e-3,
+  mil: 25.4e-6,
+  u: 1.0e-6,
+  n: 1.0e-9,
+  p: 1.0e-12,
+  f: 1.0e-15,
+});
 
 export type Element =
   | Resistor
@@ -437,6 +449,29 @@ export interface DeckResolutionSummary {
   readonly diagnostics: readonly DeckResolutionDiagnostic[];
   readonly includedPaths: readonly string[];
   readonly librarySections: readonly string[];
+}
+
+export interface DeckParameterValue {
+  readonly name: string;
+  readonly value: number;
+}
+
+export interface DeckParameterDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly parameter?: string;
+  readonly expression?: string;
+}
+
+export interface DeckParameterSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly parameters: readonly DeckParameterValue[];
+  readonly diagnostics: readonly DeckParameterDiagnostic[];
 }
 
 export interface ReleaseReadinessIssue {
@@ -2579,6 +2614,7 @@ const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"
 const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
 const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
 const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
+const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set([".func"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2639,6 +2675,49 @@ export function resolveDeckSources(
     diagnostics: state.diagnostics,
     includedPaths: state.includedPaths,
     librarySections: state.librarySections,
+  };
+}
+
+export function resolveDeckParameters(netlist: string): DeckParameterSummary {
+  const state = new DeckParameterState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".param") {
+      resolveParamLine(stripped, lineNumber, state);
+      continue;
+    }
+    if (directive !== undefined && UNSUPPORTED_PARAMETER_DIRECTIVES.has(directive)) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        lineNumber,
+        message: `${directive} is not supported by the parameter resolver yet`,
+      });
+      activeLines.push(stripped);
+      continue;
+    }
+    activeLines.push(rewriteParameterExpressions(stripped, lineNumber, state));
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    parameters: state.parameterValues(),
+    diagnostics: state.diagnostics,
   };
 }
 
@@ -3029,6 +3108,378 @@ function addResolutionDiagnostic(
     ...diagnostic,
     severity: diagnostic.severity ?? "error",
   });
+}
+
+class DeckParameterState {
+  readonly diagnostics: DeckParameterDiagnostic[] = [];
+  private readonly parametersByName = new Map<string, DeckParameterValue>();
+  private readonly order: string[] = [];
+
+  setParameter(name: string, value: number): void {
+    const key = name.toLowerCase();
+    if (!this.parametersByName.has(key)) {
+      this.order.push(key);
+    }
+    this.parametersByName.set(key, { name, value });
+  }
+
+  getParameter(name: string): DeckParameterValue | undefined {
+    return this.parametersByName.get(name.toLowerCase());
+  }
+
+  parameterValues(): DeckParameterValue[] {
+    return this.order.map((key) => this.parametersByName.get(key)!);
+  }
+}
+
+function resolveParamLine(line: string, lineNumber: number, state: DeckParameterState): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length === 1) {
+    addParameterDiagnostic(state, {
+      code: "SPICE_DECK_PARAM_ARGUMENT",
+      directive: ".param",
+      lineNumber,
+      message: ".param requires at least one name=value assignment",
+    });
+    return;
+  }
+
+  for (const token of tokens.slice(1)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_ARGUMENT",
+        directive: ".param",
+        lineNumber,
+        message: `.param assignment ${JSON.stringify(token)} must use name=value syntax`,
+        parameter: token,
+      });
+      continue;
+    }
+    const name = token.slice(0, equalsIndex).trim();
+    const expression = stripExpressionDelimiters(token.slice(equalsIndex + 1).trim());
+    if (!isParameterName(name)) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_NAME",
+        directive: ".param",
+        lineNumber,
+        message: `.param name ${JSON.stringify(name)} is not a valid identifier`,
+        parameter: name,
+        expression,
+      });
+      continue;
+    }
+    try {
+      const value = evaluateParameterExpression(expression, state);
+      state.setParameter(name, value);
+    } catch (error) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_EXPRESSION",
+        directive: ".param",
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        parameter: name,
+        expression,
+      });
+    }
+  }
+}
+
+function rewriteParameterExpressions(
+  line: string,
+  lineNumber: number,
+  state: DeckParameterState,
+): string {
+  const braced = replaceDelimitedParameterExpressions(line, "{", "}", lineNumber, state);
+  return replaceDelimitedParameterExpressions(braced, "'", "'", lineNumber, state);
+}
+
+function replaceDelimitedParameterExpressions(
+  line: string,
+  openToken: string,
+  closeToken: string,
+  lineNumber: number,
+  state: DeckParameterState,
+): string {
+  let result = "";
+  let index = 0;
+  while (index < line.length) {
+    if (line[index] !== openToken) {
+      result += line[index];
+      index += 1;
+      continue;
+    }
+    const closeIndex = line.indexOf(closeToken, index + 1);
+    if (closeIndex < 0) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_UNTERMINATED",
+        directive: ".param",
+        lineNumber,
+        message: `unterminated parameter expression starting at column ${index + 1}`,
+      });
+      result += line.slice(index);
+      break;
+    }
+    const expression = line.slice(index + 1, closeIndex).trim();
+    try {
+      result += formatParameterNumber(evaluateParameterExpression(expression, state));
+    } catch (error) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_UNRESOLVED",
+        directive: ".param",
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        expression,
+      });
+      result += line.slice(index, closeIndex + 1);
+    }
+    index = closeIndex + 1;
+  }
+  return result;
+}
+
+function evaluateParameterExpression(expression: string, state: DeckParameterState): number {
+  const value = new ParameterExpressionParser(expression, state).parse();
+  if (!Number.isFinite(value)) {
+    throw new Error(`parameter expression ${JSON.stringify(expression)} did not evaluate to a finite value`);
+  }
+  return value;
+}
+
+class ParameterExpressionParser {
+  private index = 0;
+
+  constructor(
+    private readonly expression: string,
+    private readonly state: DeckParameterState,
+  ) {}
+
+  parse(): number {
+    if (this.expression.length === 0) {
+      throw new Error("parameter expression must not be empty");
+    }
+    const value = this.parseExpression();
+    this.skipWhitespace();
+    if (this.index !== this.expression.length) {
+      throw new Error(`unexpected token ${JSON.stringify(this.expression[this.index])} in parameter expression`);
+    }
+    return value;
+  }
+
+  private parseExpression(): number {
+    let value = this.parseTerm();
+    while (true) {
+      this.skipWhitespace();
+      if (this.match("+")) {
+        value += this.parseTerm();
+      } else if (this.match("-")) {
+        value -= this.parseTerm();
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parseTerm(): number {
+    let value = this.parsePower();
+    while (true) {
+      this.skipWhitespace();
+      if (this.match("*")) {
+        value *= this.parsePower();
+      } else if (this.match("/")) {
+        const denominator = this.parsePower();
+        if (denominator === 0.0) {
+          throw new Error("division by zero in parameter expression");
+        }
+        value /= denominator;
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parsePower(): number {
+    let value = this.parseUnary();
+    this.skipWhitespace();
+    if (this.match("^")) {
+      value = value ** this.parsePower();
+    }
+    return value;
+  }
+
+  private parseUnary(): number {
+    this.skipWhitespace();
+    if (this.match("+")) {
+      return this.parseUnary();
+    }
+    if (this.match("-")) {
+      return -this.parseUnary();
+    }
+    return this.parsePrimary();
+  }
+
+  private parsePrimary(): number {
+    this.skipWhitespace();
+    if (this.match("(")) {
+      const value = this.parseExpression();
+      this.skipWhitespace();
+      if (!this.match(")")) {
+        throw new Error("missing ')' in parameter expression");
+      }
+      return value;
+    }
+    if (this.index >= this.expression.length) {
+      throw new Error("unexpected end of parameter expression");
+    }
+    const char = this.expression[this.index];
+    if (isDigit(char) || char === ".") {
+      return this.parseNumber();
+    }
+    if (isAlpha(char) || char === "_") {
+      return this.parseIdentifier();
+    }
+    throw new Error(`unexpected token ${JSON.stringify(char)} in parameter expression`);
+  }
+
+  private parseNumber(): number {
+    const start = this.index;
+    let sawDigit = false;
+    while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+      sawDigit = true;
+      this.index += 1;
+    }
+    if (this.index < this.expression.length && this.expression[this.index] === ".") {
+      this.index += 1;
+      while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+        sawDigit = true;
+        this.index += 1;
+      }
+    }
+    if (!sawDigit) {
+      throw new Error("expected digit in numeric parameter expression");
+    }
+    if (
+      this.index < this.expression.length &&
+      (this.expression[this.index] === "e" || this.expression[this.index] === "E")
+    ) {
+      const exponentIndex = this.index;
+      this.index += 1;
+      if (
+        this.index < this.expression.length &&
+        (this.expression[this.index] === "+" || this.expression[this.index] === "-")
+      ) {
+        this.index += 1;
+      }
+      const exponentStart = this.index;
+      while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+        this.index += 1;
+      }
+      if (exponentStart === this.index) {
+        this.index = exponentIndex;
+      }
+    }
+    const numeric = Number.parseFloat(this.expression.slice(start, this.index));
+    const suffixStart = this.index;
+    while (this.index < this.expression.length && isAlpha(this.expression[this.index])) {
+      this.index += 1;
+    }
+    const suffix = this.expression.slice(suffixStart, this.index).toLowerCase();
+    if (suffix.length === 0) {
+      return numeric;
+    }
+    const factor = SPICE_SUFFIX_FACTORS[suffix];
+    if (factor === undefined) {
+      throw new Error(`unsupported numeric suffix ${JSON.stringify(suffix)}`);
+    }
+    return numeric * factor;
+  }
+
+  private parseIdentifier(): number {
+    const start = this.index;
+    while (
+      this.index < this.expression.length &&
+      (isAlpha(this.expression[this.index]) ||
+        isDigit(this.expression[this.index]) ||
+        this.expression[this.index] === "_")
+    ) {
+      this.index += 1;
+    }
+    const name = this.expression.slice(start, this.index);
+    this.skipWhitespace();
+    if (this.index < this.expression.length && this.expression[this.index] === "(") {
+      throw new Error(`function calls are not supported in parameter expression ${JSON.stringify(name)}`);
+    }
+    if (name.toLowerCase() === "pi") {
+      return Math.PI;
+    }
+    const parameter = this.state.getParameter(name);
+    if (parameter === undefined) {
+      throw new Error(`unknown parameter ${JSON.stringify(name)}`);
+    }
+    return parameter.value;
+  }
+
+  private skipWhitespace(): void {
+    while (this.index < this.expression.length && /\s/.test(this.expression[this.index])) {
+      this.index += 1;
+    }
+  }
+
+  private match(token: string): boolean {
+    if (this.expression.startsWith(token, this.index)) {
+      this.index += token.length;
+      return true;
+    }
+    return false;
+  }
+}
+
+function addParameterDiagnostic(
+  state: DeckParameterState,
+  diagnostic: Omit<DeckParameterDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function isParameterName(name: string): boolean {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
+function stripExpressionDelimiters(expression: string): string {
+  if (
+    expression.length >= 2 &&
+    ((expression[0] === "{" && expression[expression.length - 1] === "}") ||
+      (expression[0] === "'" && expression[expression.length - 1] === "'"))
+  ) {
+    return expression.slice(1, -1).trim();
+  }
+  return expression;
+}
+
+function formatParameterNumber(value: number): string {
+  if (value === 0.0) {
+    return "0";
+  }
+  const absValue = Math.abs(value);
+  if (absValue >= 1.0e-12 && absValue < 1.0e12) {
+    const formatted = value.toFixed(12).replace(/0+$/, "").replace(/\.$/, "");
+    return formatted === "-0" ? "0" : formatted;
+  }
+  const [mantissaRaw, exponentRaw] = value.toExponential(12).split("e");
+  const mantissa = mantissaRaw.replace(/0+$/, "").replace(/\.$/, "");
+  const exponent = Number.parseInt(exponentRaw, 10);
+  return `${mantissa}e${exponent >= 0 ? "+" : ""}${exponent}`;
+}
+
+function isAlpha(char: string): boolean {
+  return /^[A-Za-z]$/.test(char);
+}
+
+function isDigit(char: string): boolean {
+  return /^[0-9]$/.test(char);
 }
 
 function directiveTokens(line: string): string[] {

@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck parameter resolution** — `resolve_deck_parameters()` now evaluates
+  scalar whitespace-tokenized `.param` assignments, rewrites braced and quoted
+  active-line expressions, and reports stable diagnostics for unresolved
+  expressions and still-unsupported `.func` cards, matching Rust and
+  TypeScript.
+
 - **Deck source resolution** — `resolve_deck_sources()` now expands
   map-provided `.include` files and selected `.lib path section` library
   sections with stable diagnostics for missing sources, bad sections, cycles,

@@ -135,6 +135,15 @@ as `call void [System.Console]System.Console::WriteLine(int32)`; for a program t
 prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
 `Console.WriteLine`-ing it, so the program prints exactly once.
 
+As of 0.18.0 it emits the **Brainfuck byte-tape ops** (LANG-MATRIX LM-C Brainfuck — the
+last code-gen cell): `alloc_bytes` → `newarr [System.Runtime]System.Byte` into an
+`unsigned int8[]` local (the tape), `load_byte` → `ldelem.u1` (unsigned cell), `store_byte`
+→ `stelem.i1` (8-bit wrap-around), and `putchar`/`getchar` → `Console::Write(char)` /
+`Console::Read()`. `putchar` joins `print_i64` as a "this program prints" signal, so a
+Brainfuck program's launcher discards the entry result rather than re-printing it. CIL
+`brfalse`/`brtrue` test any integer width against zero, so the loop guard needs no
+special i64 handling (unlike the JVM's `lcmp` / wasm's `i64.eqz`).
+
 ## How CIL synthesis works for derived operations
 
 CIL lacks native opcodes for some logical operations, so we synthesize them
