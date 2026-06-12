@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Mixed-signal bridge helpers** — `DigitalEvent`, `DigitalEventStream`,
+  `DigitalLogicLevels`, `DigitalThresholds`, digital-stream PWL voltage source
+  conversion, fixed/adaptive digital transient bridge runners, named-corner
+  bridge wrappers, stable event/schedule tables, and deterministic VCD output
+  now match the Rust and TypeScript SPICE bridge surface.
+
 - **Model-card alias normalization** — `normalize_model_card()`,
   `diode_from_model_card()`, `bjt_from_model_card()`,
   `jfet_from_model_card()`, `mosfet_from_model_card()`, and

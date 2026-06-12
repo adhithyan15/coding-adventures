@@ -2524,6 +2524,32 @@ fn named_digital_event_stream_text_output_table_is_stable() {
 }
 
 #[test]
+fn digital_event_stream_vcd_output_is_stable() {
+    let streams = [
+        DigitalEventStream::new(
+            "clk",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.0e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.25e-9, DigitalState::Low),
+                DigitalEvent::new(0.75e-9, DigitalState::High),
+            ],
+        ),
+    ];
+
+    assert_eq!(
+        spice_engine::format_digital_event_stream_vcd(&streams).unwrap(),
+        "$version coding-adventures spice-engine mixed-signal bridge $end\n$timescale 1ps $end\n$scope module spice_bridge $end\n$var wire 1 s0 clk $end\n$var wire 1 s1 enable $end\n$upscope $end\n$enddefinitions $end\n$dumpvars\n0s0\n0s1\n$end\n#0\n0s0\n#250\n0s1\n#500\n1s0\n#750\n1s1\n#1000\n0s0\n"
+    );
+}
+
+#[test]
 fn sampled_named_digital_event_stream_text_output_table_is_stable() {
     let events = [
         DigitalEvent::new(0.0, DigitalState::Low),

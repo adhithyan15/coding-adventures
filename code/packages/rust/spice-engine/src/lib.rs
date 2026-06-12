@@ -1188,6 +1188,89 @@ pub fn format_digital_bridge_schedule_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_digital_event_stream_vcd(
+    streams: &[DigitalEventStream],
+) -> Result<String, SpiceError> {
+    format_digital_event_stream_vcd_with_options(streams, "spice_bridge", "1ps")
+}
+
+pub fn format_digital_event_stream_vcd_with_options(
+    streams: &[DigitalEventStream],
+    module_name: &str,
+    timescale: &str,
+) -> Result<String, SpiceError> {
+    let module_name = module_name.trim();
+    if module_name.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "module name must not be empty".to_string(),
+        });
+    }
+    if timescale != "1ps" {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "only 1ps timescale is supported".to_string(),
+        });
+    }
+
+    let mut seen_signal_names = HashSet::new();
+    let mut signal_ids = HashMap::new();
+    for (index, stream) in streams.iter().enumerate() {
+        let signal_name = validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
+        signal_ids.insert(signal_name.to_string(), vcd_identifier(index));
+        let mut previous_time = f64::NEG_INFINITY;
+        for event in &stream.events {
+            validate_digital_event_time(event.time_seconds, previous_time, signal_name)?;
+            previous_time = event.time_seconds;
+        }
+    }
+
+    let mut rows = vec![
+        "$version coding-adventures spice-engine mixed-signal bridge $end".to_string(),
+        format!("$timescale {timescale} $end"),
+        format!("$scope module {module_name} $end"),
+    ];
+    for stream in streams {
+        let signal_name = stream.signal_name.trim();
+        rows.push(format!(
+            "$var wire 1 {} {} $end",
+            signal_ids[signal_name], signal_name
+        ));
+    }
+    rows.push("$upscope $end".to_string());
+    rows.push("$enddefinitions $end".to_string());
+    rows.push("$dumpvars".to_string());
+    for stream in streams {
+        if let Some(event) = stream.events.first() {
+            rows.push(format!(
+                "{}{}",
+                vcd_state_value(event.state),
+                signal_ids[stream.signal_name.trim()]
+            ));
+        }
+    }
+    rows.push("$end".to_string());
+
+    let mut events_by_tick: BTreeMap<i64, Vec<(String, DigitalState)>> = BTreeMap::new();
+    for stream in streams {
+        let signal_id = signal_ids[stream.signal_name.trim()].clone();
+        for event in &stream.events {
+            events_by_tick
+                .entry(vcd_tick(event.time_seconds)?)
+                .or_default()
+                .push((signal_id.clone(), event.state));
+        }
+    }
+    for (tick, events) in events_by_tick {
+        rows.push(format!("#{tick}"));
+        for (signal_id, state) in events {
+            rows.push(format!("{}{}", vcd_state_value(state), signal_id));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 fn validate_digital_event_stream_name<'a>(
     stream: &'a DigitalEventStream,
     seen_signal_names: &mut HashSet<String>,
@@ -1232,6 +1315,27 @@ fn format_digital_state(state: DigitalState) -> &'static str {
     match state {
         DigitalState::Low => "low",
         DigitalState::High => "high",
+    }
+}
+
+fn vcd_identifier(index: usize) -> String {
+    format!("s{index}")
+}
+
+fn vcd_tick(time_seconds: f64) -> Result<i64, SpiceError> {
+    if !time_seconds.is_finite() || time_seconds < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "event times must be finite and non-negative".to_string(),
+        });
+    }
+    Ok((time_seconds / 1.0e-12).round() as i64)
+}
+
+fn vcd_state_value(state: DigitalState) -> &'static str {
+    match state {
+        DigitalState::Low => "0",
+        DigitalState::High => "1",
     }
 }
 

@@ -15,6 +15,9 @@ source waveforms for transient analysis, ground aliases, node voltages,
 voltage source branch currents, Fourier post-processing for transient output,
 transient-to-distortion projection,
 constrained RC and RLC low-pass/high-pass/band-pass/notch pole-zero helpers,
+mixed-signal digital event stream helpers that bridge finite-edge PWL sources
+to thresholded transient probe outputs with stable schedule tables and VCD
+correlation output,
 stable text tables for selected node voltages, branch currents, AC phasors,
 Fourier harmonics, transfer-function results, pole-zero entries, and
 distortion harmonics,

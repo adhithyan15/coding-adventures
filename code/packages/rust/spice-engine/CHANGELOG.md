@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `format_digital_event_stream_vcd` and
+  `format_digital_event_stream_vcd_with_options` for deterministic VCD
+  correlation output from SPICE-side mixed-signal digital event streams.
 - Add `normalize_model_card`, typed model-card builders, and
   `device_model_audit_fixtures` for cross-language diode, BJT, JFET, and
   Level-1 MOS `.model` alias compatibility fixtures.
