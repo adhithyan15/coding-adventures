@@ -837,6 +837,7 @@ pub struct BrowserDocument {
     pub resources: Vec<BrowserResource>,
     pub scripts: Vec<BrowserScript>,
     pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
+    pub script_storage_access_descriptors: Vec<BrowserScriptStorageAccessDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
@@ -1095,6 +1096,30 @@ pub struct BrowserScriptExecutionDescriptor {
     pub render_blocking: bool,
     pub has_text: bool,
     pub text_length: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptStorageAccessDescriptor {
+    pub script_kind: String,
+    pub access_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub storage_targets: Vec<String>,
+    pub storage_target_count: usize,
+    pub uses_local_storage: bool,
+    pub uses_session_storage: bool,
+    pub uses_cookies: bool,
+    pub uses_indexed_db: bool,
+    pub uses_cache_storage: bool,
+    pub uses_service_worker: bool,
+    pub uses_storage_manager: bool,
+    pub listens_storage_events: bool,
+    pub storage_blocked: bool,
+    pub storage_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3435,6 +3460,8 @@ impl BrowserDocument {
         );
         summary.script_execution_descriptors =
             browser_script_execution_descriptors(&summary.scripts);
+        summary.script_storage_access_descriptors =
+            browser_script_storage_access_descriptors(&summary.scripts);
         summary.stylesheet_planning_descriptors =
             browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
@@ -11248,6 +11275,164 @@ fn browser_script_execution_descriptor(script: &BrowserScript) -> BrowserScriptE
         has_text: script.text.is_some(),
         text_length,
     }
+}
+
+fn browser_script_storage_access_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptStorageAccessDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_storage_access_descriptor)
+        .collect()
+}
+
+fn browser_script_storage_access_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptStorageAccessDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let uses_local_storage = normalized_text.contains("localstorage");
+    let uses_session_storage = normalized_text.contains("sessionstorage");
+    let uses_cookies =
+        normalized_text.contains("document.cookie") || normalized_text.contains("cookie=");
+    let uses_indexed_db = normalized_text.contains("indexeddb");
+    let uses_cache_storage = normalized_text.contains("caches.")
+        || normalized_text.contains("caches.open")
+        || normalized_text.contains("cachestorage");
+    let uses_service_worker = normalized_text.contains("serviceworker")
+        || normalized_text.contains("service-worker")
+        || normalized_text.contains("navigator.serviceworker");
+    let uses_storage_manager = normalized_text.contains("navigator.storage")
+        || normalized_text.contains(".persist(")
+        || normalized_text.contains(".estimate(");
+    let listens_storage_events = normalized_text.contains("addeventlistener('storage'")
+        || normalized_text.contains("addeventlistener(\"storage\"")
+        || normalized_text.contains("onstorage");
+    let storage_targets = browser_script_storage_targets(
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+    );
+    if storage_targets.is_empty() {
+        return None;
+    }
+
+    let storage_block_reasons = browser_script_storage_block_reasons(script);
+    let text_length = text.chars().count();
+    Some(BrowserScriptStorageAccessDescriptor {
+        script_kind: script.script_kind.clone(),
+        access_kind: browser_script_storage_access_kind(
+            uses_local_storage,
+            uses_session_storage,
+            uses_cookies,
+            uses_indexed_db,
+            uses_cache_storage,
+            uses_service_worker,
+            uses_storage_manager,
+            listens_storage_events,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length,
+        storage_target_count: storage_targets.len(),
+        storage_targets,
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+        storage_blocked: !storage_block_reasons.is_empty(),
+        storage_block_reasons,
+    })
+}
+
+fn browser_script_storage_targets(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if uses_local_storage {
+        targets.push("localStorage".to_string());
+    }
+    if uses_session_storage {
+        targets.push("sessionStorage".to_string());
+    }
+    if uses_cookies {
+        targets.push("cookies".to_string());
+    }
+    if uses_indexed_db {
+        targets.push("indexedDB".to_string());
+    }
+    if uses_cache_storage {
+        targets.push("CacheStorage".to_string());
+    }
+    if uses_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_storage_manager {
+        targets.push("StorageManager".to_string());
+    }
+    if listens_storage_events {
+        targets.push("storage-event".to_string());
+    }
+    targets
+}
+
+fn browser_script_storage_access_kind(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> String {
+    if uses_service_worker || uses_cache_storage {
+        "worker-cache-storage".to_string()
+    } else if uses_indexed_db {
+        "database-storage".to_string()
+    } else if uses_storage_manager {
+        "storage-manager".to_string()
+    } else if uses_local_storage || uses_session_storage || uses_cookies {
+        "client-key-value-storage".to_string()
+    } else if listens_storage_events {
+        "storage-event-listener".to_string()
+    } else {
+        "storage-metadata".to_string()
+    }
+}
+
+fn browser_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
 }
 
 fn browser_stylesheet_planning_descriptors(
@@ -26143,6 +26328,69 @@ mod tests {
         assert!(legacy.defer_script);
         assert_eq!(legacy.nonce.as_deref(), Some("legacyNonce"));
         assert_eq!(legacy.text_length, "legacy();".chars().count());
+    }
+
+    #[test]
+    fn browser_script_storage_access_descriptors_track_storage_api_hints() {
+        let summary = parse_browser_document(
+            "<script>\
+             localStorage.setItem('theme', 'dark');\
+             sessionStorage.getItem('draft');\
+             document.cookie = 'seen=1';\
+             indexedDB.open('app');\
+             window.addEventListener('storage', syncTabs);\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             caches.open('assets');\
+             navigator.storage.persist();\
+             </script>\
+             <script nomodule>localStorage.getItem('legacy');</script>",
+        )
+        .expect("storage access descriptor document should parse");
+
+        let descriptors = &summary.script_storage_access_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let client = &descriptors[0];
+        assert_eq!(client.script_kind, "classic");
+        assert_eq!(client.execution_kind, "inline");
+        assert_eq!(client.access_kind, "database-storage");
+        assert_eq!(
+            client.storage_targets,
+            vec![
+                "localStorage",
+                "sessionStorage",
+                "cookies",
+                "indexedDB",
+                "storage-event",
+            ]
+        );
+        assert_eq!(client.storage_target_count, 5);
+        assert!(client.uses_local_storage);
+        assert!(client.uses_session_storage);
+        assert!(client.uses_cookies);
+        assert!(client.uses_indexed_db);
+        assert!(client.listens_storage_events);
+        assert!(!client.storage_blocked);
+
+        let worker = &descriptors[1];
+        assert_eq!(worker.script_kind, "module");
+        assert_eq!(worker.access_kind, "worker-cache-storage");
+        assert_eq!(
+            worker.storage_targets,
+            vec!["CacheStorage", "serviceWorker", "StorageManager"]
+        );
+        assert!(worker.uses_cache_storage);
+        assert!(worker.uses_service_worker);
+        assert!(worker.uses_storage_manager);
+        assert_eq!(worker.storage_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.access_kind, "client-key-value-storage");
+        assert!(legacy.uses_local_storage);
+        assert!(legacy.storage_blocked);
+        assert_eq!(legacy.storage_block_reasons, vec!["nomodule-fallback"]);
     }
 
     #[test]

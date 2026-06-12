@@ -107,6 +107,9 @@ Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, flattened script execution and stylesheet planning
 descriptors, and loading-policy hints such as integrity, crossorigin, referrer
 policy, fetch priority, blocking, disabled state, and alternate stylesheets.
+Script storage-access cases pin inline references to Web Storage, cookies,
+IndexedDB, CacheStorage/service workers, StorageManager, storage-event hooks,
+and fallback blockers.
 Responsive image cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
 descriptors, `picture/source` media/type hints, lazy loading, decoding, fetch
 priority, CORS/referrer policy, usemap, and server-side image-map state. Link

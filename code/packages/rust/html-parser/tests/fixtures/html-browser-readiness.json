@@ -973,6 +973,71 @@
       }
     },
     {
+      "id": "script-storage-access-page",
+      "description": "Browser document summaries expose inline script storage API targets, broad storage groups, and fallback blockers.",
+      "input": "<script>localStorage.setItem('theme','dark'); sessionStorage.getItem('draft'); document.cookie='seen=1'; indexedDB.open('app'); window.addEventListener('storage', syncTabs);</script><script type=module>navigator.serviceWorker.register('/sw.js'); caches.open('assets'); navigator.storage.persist();</script><script nomodule>localStorage.getItem('legacy');</script>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [],
+        "scripts": [
+          { "script_kind": "classic", "text": "localStorage.setItem('theme','dark'); sessionStorage.getItem('draft'); document.cookie='seen=1'; indexedDB.open('app'); window.addEventListener('storage', syncTabs);" },
+          { "script_kind": "module", "type_hint": "module", "text": "navigator.serviceWorker.register('/sw.js'); caches.open('assets'); navigator.storage.persist();" },
+          { "script_kind": "classic", "nomodule": true, "text": "localStorage.getItem('legacy');" }
+        ],
+        "script_storage_access_descriptors": [
+          {
+            "script_kind": "classic",
+            "access_kind": "database-storage",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 165,
+            "storage_targets": ["localStorage", "sessionStorage", "cookies", "indexedDB", "storage-event"],
+            "storage_target_count": 5,
+            "uses_local_storage": true,
+            "uses_session_storage": true,
+            "uses_cookies": true,
+            "uses_indexed_db": true,
+            "listens_storage_events": true
+          },
+          {
+            "script_kind": "module",
+            "access_kind": "worker-cache-storage",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 95,
+            "storage_targets": ["CacheStorage", "serviceWorker", "StorageManager"],
+            "storage_target_count": 3,
+            "uses_cache_storage": true,
+            "uses_service_worker": true,
+            "uses_storage_manager": true
+          },
+          {
+            "script_kind": "classic",
+            "access_kind": "client-key-value-storage",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 31,
+            "storage_targets": ["localStorage"],
+            "storage_target_count": 1,
+            "uses_local_storage": true,
+            "storage_blocked": true,
+            "storage_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "table-layout-metadata-page",
       "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
       "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
