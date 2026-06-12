@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.96.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-087** — a paren wrapping the WHOLE index of a
+  computed-member subscript now elides under WHITESPACE_ONLY, matching
+  upstream Closure:
+
+      a[(b)]      -> a[b]
+      a[(b+c)]    -> a[b+c]
+      a[(b,c)]    -> a[b,c]      (comma operator, single index — safe)
+      a[(b=c)]    -> a[b=c]
+      x()[(b)]    -> x()[b]      (value object ending in `)`)
+      a[b[(c)]]   -> a[b[c]]     (nested subscripts)
+
+  `minify_index_paren` is now enforced. A new subscript-anchored
+  pre-pass fires when a `[` is preceded by a value-producing token (so
+  it is a subscript, not an array literal) and immediately followed by
+  `(`, whose structural-depth-matched `)` is immediately followed by
+  the matching `]`. No comma / atomic guard is needed — the `[ … ]`
+  already delimits a single expression.
+
+  Array-literal element parens are NOT affected: `[(a,b)]` keeps its
+  parens (the value-preceded requirement excludes array-literal `[`),
+  since there a top-level comma is an element separator. That
+  element-paren case is the comma-guarded gap-086 family.
+
 ## [0.95.0] - 2026-06-12
 
 ### Changed

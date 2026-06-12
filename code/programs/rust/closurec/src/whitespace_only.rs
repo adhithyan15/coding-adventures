@@ -726,6 +726,103 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-087: paren elision inside a COMPUTED-MEMBER index —
+    // `a[(b)]` → `a[b]`, `a[(b+c)]` → `a[b+c]`, `a[(b,c)]` →
+    // `a[b,c]`, `x()[(b)]` → `x()[b]`, `a[b[(c)]]` → `a[b[c]]`.
+    //
+    // A computed-member `[` (the subscript operator) is preceded by
+    // a VALUE-producing token (a word-like name/literal, a string, or
+    // a `)`/`]`/`}` close) — exactly the tokens that make a following
+    // `(` a CALL paren. That is the mirror of the gap-077
+    // `starts_expr` test: here we REQUIRE the `[` to follow a value
+    // (so it is a subscript, not an ARRAY LITERAL `[`). The
+    // distinction matters because inside an array literal a top-level
+    // comma is an ELEMENT separator (`[(a,b)]` must KEEP its parens,
+    // else it becomes the two-element `[a,b]`), whereas inside a
+    // subscript the brackets already delimit a SINGLE expression, so
+    // even a comma operator is safe to expose (`a[(b,c)]` → `a[b,c]`).
+    // Array-literal element parens are the comma-guarded gap-086
+    // family and are handled separately.
+    //
+    // Eligibility: the `[` is immediately followed by `(`, and that
+    // `(`'s matching `)` is immediately followed by the matching `]`
+    // — i.e. the parens wrap the WHOLE index. A partial paren
+    // (`a[(b)+c]`) is already handled by the gap-077 left-operand
+    // pass; a call/group that is not the whole index (`a[(f)(b)]`)
+    // has its `)` followed by `(`, not `]`, so it is left alone. No
+    // comma / atomic-operand guard is needed: any single expression
+    // is safe once the enclosing `[ … ]` is preserved.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i < kept.len() {
+            // Subscript `[`: preceded by a value-producing token.
+            let is_subscript = i > 0 && {
+                let p = kept[i - 1];
+                is_word_like(p)
+                    || is_string_literal(p)
+                    || is_structural_punct(p, ")")
+                    || is_structural_punct(p, "]")
+                    || is_structural_punct(p, "}")
+            };
+            // Need `[` `(` … directly adjacent.
+            if !(is_subscript
+                && is_structural_punct(kept[i], "[")
+                && i + 1 < kept.len()
+                && is_structural_punct(kept[i + 1], "("))
+            {
+                i += 1;
+                continue;
+            }
+            let open = i + 1; // the `(`
+            // Match the `(` … `)` (structural depth scan, identical to
+            // the gap-077 scan so string/regex bracket content can
+            // never corrupt the depth).
+            let mut depth: i32 = 1;
+            let mut close: Option<usize> = None;
+            let mut j = open + 1;
+            while j < kept.len() {
+                let t = kept[j];
+                if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                    || is_structural_punct(t, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(t, ")") {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(j);
+                        break;
+                    }
+                } else if is_structural_punct(t, "]")
+                    || is_structural_punct(t, "}")
+                {
+                    depth -= 1;
+                }
+                j += 1;
+            }
+            let Some(close) = close else {
+                i += 1;
+                continue;
+            };
+            // The parens wrap the WHOLE index iff the token after `)`
+            // is the matching `]` of this subscript.
+            if close + 1 < kept.len()
+                && is_structural_punct(kept[close + 1], "]")
+            {
+                drops.push(open);
+                drops.push(close);
+                i = close + 2; // past `… ) ]`
+                continue;
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-055: paren elision around a *whole-arm* sub-
     // expression that follows `?` or `:`. Upstream Closure
     // strips redundant grouping parens around:
@@ -5343,6 +5440,50 @@ mod tests {
     #[test]
     fn gap081_optional_chain_not_ternary() {
         assert_eq!(minify("var x=(a)?.b;"), "var x=(a)?.b;");
+    }
+
+    // ---- gap-087: computed-member index paren elision ---------
+
+    /// gap-087: a paren wrapping the WHOLE index of a computed-member
+    /// subscript elides. The brackets already delimit a single
+    /// expression, so no comma / atomic-operand guard is needed — even
+    /// a comma operator (`a[(b,c)]` → `a[b,c]`) or an assignment
+    /// (`a[(b=c)]` → `a[b=c]`) is safe to expose.
+    #[test]
+    fn gap087_index_paren_stripped() {
+        assert_eq!(minify("a[(b)];"), "a[b];");
+        assert_eq!(minify("a[(b+c)];"), "a[b+c];");
+        assert_eq!(minify("a[(b,c)];"), "a[b,c];");
+        assert_eq!(minify("a[(b=c)];"), "a[b=c];");
+    }
+
+    /// gap-087: the subscripted object may itself end in a `)`/`]`
+    /// (`x()[(b)]` → `x()[b]`), and nested subscripts each strip
+    /// independently (`a[b[(c)]]` → `a[b[c]]`).
+    #[test]
+    fn gap087_index_paren_value_object_and_nested() {
+        assert_eq!(minify("x()[(b)];"), "x()[b];");
+        assert_eq!(minify("a[b[(c)]];"), "a[b[c]];");
+    }
+
+    /// gap-087 SAFETY — must NOT mistake an ARRAY-LITERAL `[` for a
+    /// subscript. An array literal `[` is NOT preceded by a value, and
+    /// inside it a top-level comma is an ELEMENT separator: `[(a,b)]`
+    /// keeps its parens (dropping them would split one element into
+    /// two). Only a value-preceded subscript `[` is eligible.
+    #[test]
+    fn gap087_array_literal_comma_element_kept() {
+        assert_eq!(minify("var x=[(a,b)];"), "var x=[(a,b)];");
+    }
+
+    /// gap-087 SAFETY — the parens must wrap the WHOLE index. A partial
+    /// paren (`a[(b)+c]`) is left to the gap-077 left-operand pass
+    /// (which yields `a[b+c]`), and a non-grouping call inside the
+    /// index (`a[f(b)]`) is untouched by this pass.
+    #[test]
+    fn gap087_partial_and_call_index_safe() {
+        assert_eq!(minify("a[(b)+c];"), "a[b+c];");
+        assert_eq!(minify("a[f(b)];"), "a[f(b)];");
     }
 
     // ---- gap-073: get/set computed-key separating space ----

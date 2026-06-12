@@ -659,9 +659,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-087 — computed-member index paren elision (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.39). `minify_index_paren` ignored.
+- **Status:** RESOLVED in CLOC12.92. `minify_index_paren` enforced.
 - **Input:** `a[(b)];` → **Upstream:** `a[b];` (also `a[(b+c)]` → `a[b+c]`, `a[(b,c)]` → `a[b,c]`, `a[(b=c)]` → `a[b=c]`).
 - **What it needs:** strip a redundant grouping paren that wraps the WHOLE index expression inside a computed member `[ … ]` — a `(` directly after `[` whose matching `)` is directly before the matching `]`. Unlike a call argument (gap-086), the index is a SINGLE-expression context, so even a top-level comma operator strips (`a[(b,c)]` → `a[b,c]` — the comma stays a comma operator, not an argument separator). Anchored on the `[`…`]` pair.
+- **CLOC12.92 resolution:** Added a SUBSCRIPT-anchored pre-pass to `whitespace_only.rs` (sibling of the gap-077 left-operand pass). It fires on a `[` that is (a) preceded by a VALUE-producing token (word/literal/string/`)`/`]`/`}` — i.e. a subscript, NOT an array literal) and (b) immediately followed by `(`, when that `(`'s structural-depth-matched `)` is immediately followed by the matching `]`. Both parens are dropped. **No comma / atomic guard** is needed — the enclosing `[ … ]` already delimits a single expression, so any content (comma operator, assignment, …) is safe to expose. The value-preceded requirement is exactly what excludes ARRAY LITERALS, where a top-level comma is an element separator and the parens are load-bearing (`[(a,b)]` kept — that element-paren case belongs to the comma-guarded gap-086 family). Partial parens (`a[(b)+c]`) are left to gap-077 (→ `a[b+c]`); a non-grouping call index (`a[f(b)]`) has no `(` right after `[` and is untouched. 4 unit tests (strip / value-object+nested / array-literal-kept / partial+call-safe) + the byte-identity fixture; JAR-verified across `a[(b)]`, `a[(b+c)]`, `a[(b,c)]`, `a[(b=c)]`, `x()[(b)]`, `a[b[(c)]]`.
 
 ### gap-088 — empty-statement elimination (WHITESPACE_ONLY)
 
