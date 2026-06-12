@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.84.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-073** — a `get`/`set` accessor in an object literal
+  whose key is COMPUTED gains a separating space before the `[`,
+  matching upstream Closure: `var o={get[k](){return 1}}` →
+  `var o={get [k](){return 1}}` (also `set[k](v){}`).
+  `minify_get_computed_space` is now enforced.
+
+### Added — gap-073 `get`/`set` computed-key space
+
+A two-token look-behind + forward-check helper
+`get_set_computed_needs_space(kept, idx)`, consulted at the main
+emit site (NOT in `needs_separator`, which sees only the adjacent
+pair). `get`/`set` are *contextual* keywords — accessors only
+inside an object/class body, plain identifiers elsewhere — and the
+JS lexer types them identically, so distinguishing a real accessor
+from member access (`o.get[k]`) or variable indexing (`get[k](x)`)
+needs context. The helper fires only when (a) `kept[idx]` is a
+structural `[`, (b) `kept[idx-1]` is the word-like `get`/`set`
+keyword, (c) `kept[idx-2]` is an object-literal property-start
+`{`/`,` (excludes member access and statement-level indexing), and
+(d) the token after the matching `]` is a structural `(` (the
+accessor parameter list). Class-body accessors after a previous
+member (`}`-/`static`-preceded) are deferred. 2 new gap073_* unit
+tests + the `minify_get_computed_space` byte-identity fixture.
+
 ## [0.83.0] - 2026-06-12
 
 ### Changed

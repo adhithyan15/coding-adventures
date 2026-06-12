@@ -1748,7 +1748,10 @@ pub fn whitespace_only_minify(
 
         // Emit the token (with separator if needed).
         if let Some(prev) = prev_emitted_tok {
-            if needs_separator(prev, tok) || new_paren_needs_space(&kept, idx) {
+            if needs_separator(prev, tok)
+                || new_paren_needs_space(&kept, idx)
+                || get_set_computed_needs_space(&kept, idx)
+            {
                 out.push(' ');
             }
         }
@@ -2566,6 +2569,82 @@ fn new_paren_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
         }
     }
     true
+}
+
+/// gap-073: decide whether the `[` token at `kept[idx]` needs a
+/// single leading space because it is the COMPUTED KEY of a
+/// `get`/`set` accessor — `{get[k](){…}}` → `{get [k](){…}}`,
+/// matching upstream Closure. Without the space `get[k]` re-reads
+/// as a member access on a variable named `get` rather than a
+/// getter with a computed name.
+///
+/// The hazard mirrors gap-069: `get`/`set` are *contextual*
+/// keywords — accessors only inside an object/class body, plain
+/// identifiers everywhere else. The JS lexer types them
+/// identically, so two tokens of look-behind plus a forward check
+/// are needed to tell a real accessor from member access /
+/// variable indexing:
+///
+///   {get[k](){…}}     → { get [ … ] (   → SPACE    (accessor)
+///   {a:1,set[k](v){}} → , set [ … ] (   → SPACE    (accessor)
+///   o.get[k];         → . get [ … ] ;   → NO SPACE (member access)
+///   get[k](x);        → ^ get [ … ] (   → NO SPACE (var index+call)
+///
+/// GUARDS (all required, fail-closed):
+///   - `kept[idx]` is a structural `[` (not a string `"["`).
+///   - `kept[idx-1]` is a word-like `get` or `set` keyword (so a
+///     string literal `"get"` can never trigger it).
+///   - `kept[idx-2]` is a structural `{` or `,` — an object-literal
+///     property-start position. This is the decisive disambiguator:
+///     it excludes member access (`.`/`?.`) and statement-level
+///     variable indexing (preceded by `;` / start). (Class-body
+///     accessors after a previous member — preceded by `}` /
+///     `static` — are deferred; the object-literal form is the
+///     gap-073 fixture.)
+///   - after the matching `]`, the next token is a structural `(` —
+///     i.e. the accessor's parameter list. This confirms a
+///     method/accessor shape and rejects a bare computed member.
+fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    if idx < 2 {
+        return false; // need property-start + keyword before `[`
+    }
+    let open = kept[idx];
+    if !is_structural_punct(open, "[") {
+        return false;
+    }
+    let kw = kept[idx - 1];
+    if !(is_word_like(kw) && (kw.value == "get" || kw.value == "set")) {
+        return false;
+    }
+    // Property-start context: an object-literal `{` or `,`.
+    let before_kw = kept[idx - 2];
+    if !(is_structural_punct(before_kw, "{") || is_structural_punct(before_kw, ",")) {
+        return false;
+    }
+    // Find the matching `]` (structural depth scan).
+    let mut depth: i32 = 1;
+    let mut close: Option<usize> = None;
+    let mut j = idx + 1;
+    while j < kept.len() {
+        let t = kept[j];
+        if is_structural_punct(t, "[") {
+            depth += 1;
+        } else if is_structural_punct(t, "]") {
+            depth -= 1;
+            if depth == 0 {
+                close = Some(j);
+                break;
+            }
+        }
+        j += 1;
+    }
+    // The accessor's parameter list `(` must immediately follow.
+    match close {
+        Some(c) => kept
+            .get(c + 1)
+            .is_some_and(|t| is_structural_punct(t, "(")),
+        None => false,
+    }
 }
 
 /// gap-054 + gap-070: True iff `span` (the tokens BETWEEN a unary
@@ -4200,6 +4279,32 @@ mod tests {
         assert_eq!(minify("delete(a);"), "delete a;");
         assert_eq!(minify("typeof(x);"), "typeof x;");
         assert_eq!(minify("void(0);"), "void 0;");
+    }
+
+    // ---- gap-073: get/set computed-key separating space ----
+
+    /// gap-073: a `get`/`set` accessor before a COMPUTED key `[k]`
+    /// in an object literal gets a separating space.
+    #[test]
+    fn gap073_accessor_computed_key_spaced() {
+        assert_eq!(
+            minify("var o={get[k](){return 1}};"),
+            "var o={get [k](){return 1}};"
+        );
+        assert_eq!(minify("var o={set[k](v){}};"), "var o={set [k](v){}};");
+        assert_eq!(
+            minify("var o={a:1,get[k](){return 2}};"),
+            "var o={a:1,get [k](){return 2}};"
+        );
+    }
+
+    /// gap-073 SAFETY: a member access `o.get[k]` or a variable
+    /// index+call `get[k](x)` must NOT gain a space — `get`/`set`
+    /// there are plain identifiers, not accessors.
+    #[test]
+    fn gap073_member_access_not_spaced() {
+        assert_eq!(minify("o.get[k];"), "o.get[k];");
+        assert_eq!(minify("get[k](x);"), "get[k](x);");
     }
 
     // ---- gap-067: labeled single-statement block flatten ----
