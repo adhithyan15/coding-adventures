@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `compatibility_corpus`, `release_readiness_gates`,
+  `format_compatibility_corpus_table`, and `format_release_readiness_report`
+  for the first oracle-backed compatibility deck corpus with golden tolerances
+  and known incompatibility notes shared with Python and TypeScript.
 - Add `CustomModel`, `CustomModelKind`, `CustomModelEvaluation`, and
   `analyze_custom_model_source` for the first Rust-native two-terminal
   residual/Jacobian custom-model fast path and Verilog-A subset diagnostics

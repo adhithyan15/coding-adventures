@@ -92,6 +92,13 @@ accepted source subset is a diagnostic-only two-terminal `I(p,n) <+ ...`
 module shape; it deliberately rejects dynamic/event/system constructs until a
 full Verilog-A compiler is in scope.
 
+`compatibility_corpus()` exposes the first release-readiness deck corpus for
+`.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage. Each fixture carries a
+documented oracle, golden values with tolerances, and known incompatibility
+notes. `release_readiness_gates()` validates the corpus metadata, while
+`format_compatibility_corpus_table()` and `format_release_readiness_report()`
+provide stable tab-separated summaries for package checks.
+
 ## Controlled source examples
 
 ### VCVS — unity-gain buffer

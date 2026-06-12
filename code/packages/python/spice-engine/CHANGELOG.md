@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Compatibility corpus release gates** — `compatibility_corpus()`,
+  `release_readiness_gates()`, `format_compatibility_corpus_table()`, and
+  `format_release_readiness_report()` expose the first oracle-backed deck
+  corpus with golden tolerances and known incompatibility notes shared with
+  Rust and TypeScript.
+
 - **Custom-model foothold** — `CustomModel`, `CustomModelEvaluation`,
   `custom_linear_conductance_model()`, and
   `analyze_custom_model_source()` add the first portable two-terminal

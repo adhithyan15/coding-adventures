@@ -15,11 +15,13 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Compatibility corpus and release readiness.
+1. Cross-language parity closure.
    - Status: next.
-   - Build the first documented oracle-backed deck corpus, golden tolerances,
-     known incompatibility notes, and package release-readiness gates across
-     Python, Rust, and TypeScript.
+   - Close remaining Rust-first SPICE surface gaps in Python and TypeScript.
+   - Audit named-corner coverage for temperature DC, digital bridge outputs,
+     advanced analysis tables, and any helper APIs added during hardening.
+   - Keep API names idiomatic per language while preserving matching result
+     semantics and stable table columns.
 
 ## Completed Slices
 
@@ -112,6 +114,16 @@ downstream tools to compare.
       dynamic, event, system-task, analog-function, and branch declarations are
       rejected until full Verilog-A compiler scope is chosen.
 
+11. Compatibility corpus and release readiness.
+    - Status: completed in this compatibility corpus release-readiness slice.
+    - Python, Rust, and TypeScript now expose matching compatibility corpus
+      deck fixtures for `.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage.
+    - Each deck carries documented oracle metadata, golden values with
+      tolerances, and explicit known incompatibility notes.
+    - Matching release-readiness gate reports and stable tab-separated corpus
+      and gate summaries let package checks detect incomplete or malformed
+      compatibility fixtures before release.
+
 ## Backlog
 
 1. Cross-language parity closure.
@@ -166,12 +178,6 @@ downstream tools to compare.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
 
-8. Compatibility corpus and release hardening.
-   - Build a deck corpus compared against ngspice or another documented oracle.
-   - Record golden tolerances and known incompatibilities.
-   - Add examples, API docs, changelogs, package version gates, and CI jobs that
-     prove Python, Rust, and TypeScript stay in parity.
-
 ## Suggested PR Queue
 
-1. Compatibility corpus and release readiness.
+1. Cross-language parity closure.
