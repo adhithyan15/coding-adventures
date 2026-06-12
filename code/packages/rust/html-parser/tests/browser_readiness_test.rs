@@ -1964,6 +1964,12 @@ struct ExpectedAriaCollection {
     #[serde(default)]
     disabled_item_count: usize,
     #[serde(default)]
+    item_roles: Vec<String>,
+    #[serde(default)]
+    selection_mode: String,
+    #[serde(default)]
+    active_descendant_matches_item: bool,
+    #[serde(default)]
     items: Vec<ExpectedAriaCollectionItem>,
 }
 
@@ -2037,6 +2043,18 @@ struct ExpectedAriaRange {
     tabindex: Option<String>,
     #[serde(default)]
     text_value: Option<String>,
+    #[serde(default)]
+    value_attribute_names: Vec<String>,
+    #[serde(default)]
+    value_attribute_count: usize,
+    #[serde(default)]
+    range_value_complete: bool,
+    #[serde(default)]
+    focusable: bool,
+    #[serde(default)]
+    range_blocked: bool,
+    #[serde(default)]
+    range_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -2067,6 +2085,16 @@ struct ExpectedAriaLiveRegion {
     #[serde(default)]
     aria_hidden: bool,
     update_kind: String,
+    #[serde(default)]
+    live_attribute_names: Vec<String>,
+    #[serde(default)]
+    live_attribute_count: usize,
+    #[serde(default)]
+    assertive_update: bool,
+    #[serde(default)]
+    live_region_blocked: bool,
+    #[serde(default)]
+    live_region_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4372,6 +4400,42 @@ fn browser_aria_collection_descriptor_metadata_tracks_grouped_composites() {
 }
 
 #[test]
+fn browser_aria_collection_descriptors_track_selection_model_and_active_descendant() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=menu role=menu aria-activedescendant=item-two>
+              <button id=item-one role=menuitem>One</button>
+              <button id=item-two role=menuitemcheckbox aria-checked=mixed>Two</button>
+            </div>
+            <div id=list role=listbox aria-multiselectable=true>
+              <div id=alpha role=option aria-selected=true>Alpha</div>
+              <div id=beta role=option aria-selected=true aria-disabled=true>Beta</div>
+            </div>
+        </body>"#,
+    )
+    .expect("ARIA collection descriptor fixture should parse");
+
+    let menu = actual
+        .aria_collections
+        .iter()
+        .find(|collection| collection.id.as_deref() == Some("menu"))
+        .expect("menu collection should be present");
+    assert_eq!(menu.item_roles, vec!["menuitem", "menuitemcheckbox"]);
+    assert_eq!(menu.selection_mode, "single");
+    assert!(menu.active_descendant_matches_item);
+
+    let list = actual
+        .aria_collections
+        .iter()
+        .find(|collection| collection.id.as_deref() == Some("list"))
+        .expect("listbox collection should be present");
+    assert_eq!(list.item_roles, vec!["option"]);
+    assert_eq!(list.selection_mode, "multiple");
+    assert!(!list.active_descendant_matches_item);
+    assert_eq!(list.disabled_item_count, 1);
+}
+
+#[test]
 fn browser_aria_range_descriptor_metadata_tracks_value_widgets() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4388,6 +4452,54 @@ fn browser_aria_range_descriptor_metadata_tracks_value_widgets() {
     assert_eq!(
         actual.aria_ranges, expected.aria_ranges,
         "ARIA range descriptors should preserve value bounds, value text, orientation, and value widget states",
+    );
+}
+
+#[test]
+fn browser_aria_range_descriptors_track_value_completeness_focus_and_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=volume role=slider aria-valuemin=0 aria-valuemax=10 aria-valuenow=7 aria-valuetext="7 of 10" tabindex=0></div>
+            <div id=scroll role=scrollbar aria-valuemin=0 aria-valuemax=100 aria-disabled=true aria-readonly=true>Scroll</div>
+        </body>"#,
+    )
+    .expect("ARIA range descriptor fixture should parse");
+
+    let volume = actual
+        .aria_ranges
+        .iter()
+        .find(|range| range.id.as_deref() == Some("volume"))
+        .expect("volume range should be present");
+    assert_eq!(
+        volume.value_attribute_names,
+        vec![
+            "aria-valuemin",
+            "aria-valuemax",
+            "aria-valuenow",
+            "aria-valuetext",
+        ]
+    );
+    assert_eq!(volume.value_attribute_count, 4);
+    assert!(volume.range_value_complete);
+    assert!(volume.focusable);
+    assert!(!volume.range_blocked);
+
+    let scroll = actual
+        .aria_ranges
+        .iter()
+        .find(|range| range.id.as_deref() == Some("scroll"))
+        .expect("scrollbar range should be present");
+    assert_eq!(
+        scroll.value_attribute_names,
+        vec!["aria-valuemin", "aria-valuemax"]
+    );
+    assert_eq!(scroll.value_attribute_count, 2);
+    assert!(!scroll.range_value_complete);
+    assert!(!scroll.focusable);
+    assert!(scroll.range_blocked);
+    assert_eq!(
+        scroll.range_block_reasons,
+        vec!["aria-disabled", "aria-readonly"]
     );
 }
 
@@ -4409,6 +4521,50 @@ fn browser_aria_live_region_descriptor_metadata_tracks_update_semantics() {
         actual.aria_live_regions, expected.aria_live_regions,
         "ARIA live-region descriptors should preserve live politeness, busy/atomic/relevant flags, and implicit update semantics",
     );
+}
+
+#[test]
+fn browser_aria_live_region_descriptors_track_attributes_assertive_and_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=alert role=alert aria-busy=true>Error</div>
+            <div id=clock role=timer aria-live=off>12:00</div>
+            <p id=hidden role=status aria-hidden=true aria-atomic=true>Muted</p>
+        </body>"#,
+    )
+    .expect("ARIA live-region descriptor fixture should parse");
+
+    let alert = actual
+        .aria_live_regions
+        .iter()
+        .find(|region| region.id.as_deref() == Some("alert"))
+        .expect("alert live region should be present");
+    assert_eq!(alert.live_attribute_names, vec!["aria-busy"]);
+    assert_eq!(alert.live_attribute_count, 1);
+    assert!(alert.assertive_update);
+    assert!(!alert.live_region_blocked);
+
+    let clock = actual
+        .aria_live_regions
+        .iter()
+        .find(|region| region.id.as_deref() == Some("clock"))
+        .expect("timer live region should be present");
+    assert_eq!(clock.live_attribute_names, vec!["aria-live"]);
+    assert!(!clock.assertive_update);
+    assert!(clock.live_region_blocked);
+    assert_eq!(clock.live_region_block_reasons, vec!["live-off"]);
+
+    let hidden = actual
+        .aria_live_regions
+        .iter()
+        .find(|region| region.id.as_deref() == Some("hidden"))
+        .expect("hidden live region should be present");
+    assert_eq!(
+        hidden.live_attribute_names,
+        vec!["aria-atomic", "aria-hidden"]
+    );
+    assert!(hidden.live_region_blocked);
+    assert_eq!(hidden.live_region_block_reasons, vec!["aria-hidden"]);
 }
 
 #[test]
@@ -13171,6 +13327,9 @@ impl ExpectedAriaCollection {
             checked_item_count: self.checked_item_count,
             current_item_count: self.current_item_count,
             disabled_item_count: self.disabled_item_count,
+            item_roles: self.item_roles,
+            selection_mode: self.selection_mode,
+            active_descendant_matches_item: self.active_descendant_matches_item,
             items: self
                 .items
                 .into_iter()
@@ -13225,6 +13384,12 @@ impl ExpectedAriaRange {
             aria_required: self.aria_required,
             tabindex: self.tabindex,
             text_value: self.text_value,
+            value_attribute_names: self.value_attribute_names,
+            value_attribute_count: self.value_attribute_count,
+            range_value_complete: self.range_value_complete,
+            focusable: self.focusable,
+            range_blocked: self.range_blocked,
+            range_block_reasons: self.range_block_reasons,
         }
     }
 }
@@ -13263,6 +13428,11 @@ impl ExpectedAriaLiveRegion {
             aria_relevant: self.aria_relevant,
             aria_hidden: self.aria_hidden,
             update_kind: self.update_kind,
+            live_attribute_names: self.live_attribute_names,
+            live_attribute_count: self.live_attribute_count,
+            assertive_update: self.assertive_update,
+            live_region_blocked: self.live_region_blocked,
+            live_region_block_reasons: self.live_region_block_reasons,
         }
     }
 }

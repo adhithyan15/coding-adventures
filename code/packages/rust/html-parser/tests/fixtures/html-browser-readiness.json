@@ -1605,7 +1605,7 @@
           { "element": "div", "id": "action", "role": "block", "text": "Inline action", "popover": "manual" }
         ],
         "aria_live_regions": [
-          { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite" }
+          { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite", "live_attribute_names": ["aria-live", "aria-busy"], "live_attribute_count": 2 }
         ],
         "links": [],
         "images": [],
@@ -1809,6 +1809,9 @@
             "item_count": 2,
             "selected_item_count": 1,
             "disabled_item_count": 1,
+            "item_roles": ["tab"],
+            "selection_mode": "single",
+            "active_descendant_matches_item": true,
             "items": [
               { "element": "button", "id": "tab-home", "role": "tab", "text": "Home", "accessible_name": "Home", "aria_selected": "true", "aria_controls": ["panel-home"] },
               { "element": "button", "id": "tab-settings", "role": "tab", "text": "Settings", "accessible_name": "Settings", "aria_selected": "false", "aria_disabled": "true", "aria_controls": ["panel-settings"] }
@@ -1849,10 +1852,10 @@
           { "level": 2, "text": "Settings" }
         ],
         "aria_ranges": [
-          { "element": "div", "id": "volume", "role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "aria_valuenow": "7", "aria_valuemin": "0", "aria_valuemax": "10", "aria_valuetext": "7 of 10", "aria_orientation": "vertical", "tabindex": "0" },
-          { "element": "div", "id": "stepper", "role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_valuenow": "2", "aria_valuemin": "1", "aria_valuemax": "5", "aria_required": "true", "tabindex": "0" },
-          { "element": "div", "id": "load", "role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress", "aria_valuenow": "40", "aria_valuemin": "0", "aria_valuemax": "100", "text_value": "Loading" },
-          { "element": "div", "id": "scroll", "role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_valuenow": "120", "aria_valuemin": "0", "aria_valuemax": "300", "aria_disabled": "true", "aria_readonly": "true", "text_value": "Scroll" }
+          { "element": "div", "id": "volume", "role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "aria_valuenow": "7", "aria_valuemin": "0", "aria_valuemax": "10", "aria_valuetext": "7 of 10", "aria_orientation": "vertical", "tabindex": "0", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext"], "value_attribute_count": 4, "range_value_complete": true, "focusable": true },
+          { "element": "div", "id": "stepper", "role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_valuenow": "2", "aria_valuemin": "1", "aria_valuemax": "5", "aria_required": "true", "tabindex": "0", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true, "focusable": true },
+          { "element": "div", "id": "load", "role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress", "aria_valuenow": "40", "aria_valuemin": "0", "aria_valuemax": "100", "text_value": "Loading", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true },
+          { "element": "div", "id": "scroll", "role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_valuenow": "120", "aria_valuemin": "0", "aria_valuemax": "300", "aria_disabled": "true", "aria_readonly": "true", "text_value": "Scroll", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true, "range_blocked": true, "range_block_reasons": ["aria-disabled", "aria-readonly"] }
         ],
         "links": [],
         "images": [],
@@ -1892,13 +1895,13 @@
           { "level": 2, "text": "Updates" }
         ],
         "aria_live_regions": [
-          { "element": "div", "id": "toast", "role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"], "aria_atomic": "true", "aria_relevant": ["additions", "text"], "update_kind": "polite" },
-          { "element": "div", "id": "alert", "role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true", "update_kind": "assertive" },
-          { "element": "div", "id": "feed", "role": "log", "text": "First Second", "accessible_name": "First Second", "aria_live": "polite", "aria_relevant": ["additions"], "update_kind": "polite" },
-          { "element": "div", "id": "ticker", "role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker", "update_kind": "off" },
-          { "element": "div", "id": "clock", "role": "timer", "text": "12:00", "accessible_name": "12:00", "aria_live": "off", "update_kind": "off" },
-          { "element": "div", "id": "custom", "role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false", "aria_atomic": "false", "aria_relevant": ["removals", "all"], "update_kind": "assertive" },
-          { "element": "p", "id": "hidden", "role": "status", "text": "Muted", "accessible_name": "Muted", "aria_hidden": true, "update_kind": "polite" }
+          { "element": "div", "id": "toast", "role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"], "aria_atomic": "true", "aria_relevant": ["additions", "text"], "update_kind": "polite", "live_attribute_names": ["aria-atomic", "aria-relevant"], "live_attribute_count": 2 },
+          { "element": "div", "id": "alert", "role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true", "update_kind": "assertive", "live_attribute_names": ["aria-busy"], "live_attribute_count": 1, "assertive_update": true },
+          { "element": "div", "id": "feed", "role": "log", "text": "First Second", "accessible_name": "First Second", "aria_live": "polite", "aria_relevant": ["additions"], "update_kind": "polite", "live_attribute_names": ["aria-live", "aria-relevant"], "live_attribute_count": 2 },
+          { "element": "div", "id": "ticker", "role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker", "update_kind": "off", "live_region_blocked": true, "live_region_block_reasons": ["live-off"] },
+          { "element": "div", "id": "clock", "role": "timer", "text": "12:00", "accessible_name": "12:00", "aria_live": "off", "update_kind": "off", "live_attribute_names": ["aria-live"], "live_attribute_count": 1, "live_region_blocked": true, "live_region_block_reasons": ["live-off"] },
+          { "element": "div", "id": "custom", "role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false", "aria_atomic": "false", "aria_relevant": ["removals", "all"], "update_kind": "assertive", "live_attribute_names": ["aria-live", "aria-busy", "aria-atomic", "aria-relevant"], "live_attribute_count": 4, "assertive_update": true },
+          { "element": "p", "id": "hidden", "role": "status", "text": "Muted", "accessible_name": "Muted", "aria_hidden": true, "update_kind": "polite", "live_attribute_names": ["aria-hidden"], "live_attribute_count": 1, "live_region_blocked": true, "live_region_block_reasons": ["aria-hidden"] }
         ],
         "links": [],
         "images": [],
