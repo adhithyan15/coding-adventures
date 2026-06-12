@@ -96,9 +96,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-081 (CLOC14.38): ternary CONDITION paren elision —
-    // `(a)?b:c` → `a?b:c`. Sibling of gap-055 (ternary ARMS).
-    ("ternary_cond_paren", "gap-081: ternary condition paren elision"),
+    // gap-081 RESOLVED in CLOC12.89 — a ternary CONDITION grouping
+    // paren (`(a)?b:c` → `a?b:c`) now elides via the gap-077
+    // left-operand pre-pass (a structural `?` joined its after-set).
+    // `minify_ternary_cond_paren` enforced.
     // gap-082 (CLOC14.38): decimal exponent / float canonicalisation
     // in WHITESPACE_ONLY — `1e3` → `1E3`, `1.0` → `1`, `1.5e10` →
     // `15E9` (uppercase `E`, drop trailing zeros, shortest mantissa).

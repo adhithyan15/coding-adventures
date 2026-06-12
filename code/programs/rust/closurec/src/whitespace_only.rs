@@ -550,11 +550,16 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // gap-077: paren elision around a binary operator's parenthesised
-    // LEFT operand. `(a)+b` → `a+b`, `(a)*b` → `a*b`, `(a.b)+c` →
-    // `a.b+c`, `(a)||b` → `a||b`. The LEFT-hand mirror of gap-075/078
-    // (which strip the RIGHT operand `a-(b)` → `a-b`, `a==(b)` →
-    // `a==b`).
+    // gap-077 + gap-081: paren elision around a binary operator's
+    // parenthesised LEFT operand, OR a ternary `?:` CONDITION.
+    //   gap-077: `(a)+b` → `a+b`, `(a)*b` → `a*b`, `(a.b)+c` →
+    //     `a.b+c`, `(a)||b` → `a||b` — the LEFT-hand mirror of
+    //     gap-075/078 (which strip the RIGHT operand `a-(b)` → `a-b`,
+    //     `a==(b)` → `a==b`).
+    //   gap-081: `(a)?b:c` → `a?b:c`, `(a.b)?c:d` → `a.b?c:d` — the
+    //     CONDITION-side mirror of gap-055's ternary-ARM elision. The
+    //     parenthesised span sits to the LEFT of the `?`, so the same
+    //     starts-an-expression + atomic-operand machinery applies.
     //
     // A `(` is a GROUPING paren (eligible) only when it STARTS a
     // sub-expression — i.e. the token before it does NOT produce a
@@ -623,10 +628,16 @@ pub fn whitespace_only_minify(
                 i += 1;
                 continue;
             };
-            // The token after `)` must be a BINARY operator — then the
-            // parenthesised span is that operator's LEFT operand.
+            // The token after `)` must be a BINARY operator (then the
+            // parenthesised span is that operator's LEFT operand) OR a
+            // ternary `?` (gap-081: then the span is the `?:`
+            // CONDITION — `(a)?b:c` → `a?b:c`, the condition-side
+            // mirror of gap-055's ternary-ARM elision). The optional-
+            // chain `?.` lexes as a single `"?."` token, so
+            // `is_structural_punct(t, "?")` matches ONLY the bare
+            // ternary `?` and never `(a)?.b`.
             let after = close + 1;
-            let is_binary_after = after < kept.len() && {
+            let is_binary_or_cond_after = after < kept.len() && {
                 let t = kept[after];
                 is_structural_punct(t, "+")
                     || is_structural_punct(t, "-")
@@ -651,8 +662,10 @@ pub fn whitespace_only_minify(
                     || is_structural_punct(t, "<<")
                     || is_structural_punct(t, ">>")
                     || is_structural_punct(t, ">>>")
+                    // gap-081: ternary CONDITION.
+                    || is_structural_punct(t, "?")
             };
-            if is_binary_after {
+            if is_binary_or_cond_after {
                 let span = &kept[open + 1..close];
                 // EXPONENTIATION HAZARD: `**` forbids an
                 // UNPARENTHESISED unary LEFT operand — `-a**b` is a
@@ -5047,15 +5060,38 @@ mod tests {
         assert_eq!(minify("var x=(a)**b;"), "var x=a**b;");
     }
 
-    /// gap-077: a `)` followed by a NON-binary token is not a
-    /// left-operand position, so gap-077 does not fire. A ternary
-    /// CONDITION paren (`(a)?b:c`) is left untouched here — `?` is not
-    /// in the binary set, and condition-paren elision is a separate
-    /// deferred gap (upstream emits `a?b:c`; closurec keeps the
-    /// parens — valid, just not yet byte-identical).
+    // ---- gap-081: ternary CONDITION paren elision -------------
+
+    /// gap-081: a grouping paren around a ternary `?:` CONDITION
+    /// elides — `(a)?b:c` → `a?b:c`, `(a.b)?c:d` → `a.b?c:d`. The
+    /// condition-side mirror of gap-055 (ternary arms).
     #[test]
-    fn gap077_non_binary_after_not_stripped_here() {
-        assert_eq!(minify("var x=(a)?b:c;"), "var x=(a)?b:c;");
+    fn gap081_ternary_condition_paren_stripped() {
+        assert_eq!(minify("var x=(a)?b:c;"), "var x=a?b:c;");
+        assert_eq!(minify("var x=(a.b)?c:d;"), "var x=a.b?c:d;");
+    }
+
+    /// gap-081 SAFETY: a CALL paren is NOT a grouping paren
+    /// (`f(a)?b:c` must stay), and a comma-operator condition keeps
+    /// its parens (`(a,b)?c:d` — the atomic-operand guard rejects the
+    /// top-level comma). The operator-condition `(a||b)?c:d` is the
+    /// deferred precedence-aware gap-083 — closurec keeps it (valid).
+    #[test]
+    fn gap081_call_comma_and_operator_kept() {
+        assert_eq!(minify("var x=f(a)?b:c;"), "var x=f(a)?b:c;");
+        assert_eq!(minify("var x=(a,b)?c:d;"), "var x=(a,b)?c:d;");
+        assert_eq!(minify("var x=(a||b)?c:d;"), "var x=(a||b)?c:d;");
+    }
+
+    /// gap-081: `?.` is a single OPTIONAL_CHAIN token, NOT a bare
+    /// ternary `?`, so gap-081 never mis-fires on `(a)?.b` (the token
+    /// after `)` is `?.`). closurec leaves it as `(a)?.b` — upstream's
+    /// `a?.b` is a separate optional-member paren elision (deferred),
+    /// not a ternary condition. The key property: gap-081 does NOT
+    /// corrupt or wrongly strip the optional-chain form.
+    #[test]
+    fn gap081_optional_chain_not_ternary() {
+        assert_eq!(minify("var x=(a)?.b;"), "var x=(a)?.b;");
     }
 
     // ---- gap-073: get/set computed-key separating space ----
