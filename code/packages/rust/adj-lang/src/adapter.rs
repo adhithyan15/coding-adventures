@@ -117,8 +117,10 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "optimize_decl" => adapt_optimize(child),
         "dictionary_decl" => adapt_dictionary(child),
         "define_decl" => adapt_define(child).map(Statement::Define),
+        "rulebook_decl" => adapt_rulebook(child),
+        "use_decl" => adapt_use(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl",
             actual: other.to_string(),
         }),
     }
@@ -514,6 +516,38 @@ fn adapt_define_kind(node: &GrammarASTNode) -> Result<DefineKind, AdapterError> 
             position: "`hypothesis` or `finding`",
         })
     }
+}
+
+fn adapt_rulebook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE
+    let name = first_name_not(node, "rulebook")
+        .ok_or(AdapterError::MissingChild {
+            rule: "rulebook_decl".into(),
+            position: "rulebook name",
+        })?
+        .to_string();
+    // The body is a sequence of `statement` nodes — adapt each through the
+    // same dispatcher, so a rulebook may hold any clause (and its own `use`).
+    let statements = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(adapt_statement(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Statement::Rulebook { name, statements })
+}
+
+fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // use_decl = "use" IDENT
+    let name = first_name_not(node, "use")
+        .ok_or(AdapterError::MissingChild {
+            rule: "use_decl".into(),
+            position: "dictionary name",
+        })?
+        .to_string();
+    Ok(Statement::Use(name))
 }
 
 /// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the

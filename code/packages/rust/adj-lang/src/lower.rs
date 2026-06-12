@@ -119,6 +119,19 @@ pub enum LowerError {
         value: String,
         domain: Vec<String>,
     },
+    /// A `use <name>` (M2) named a dictionary that the program never declared.
+    UndefinedDictionary {
+        name: String,
+    },
+    /// A `rulebook` nested inside another `rulebook` (MYCIN-2026 M2). A rulebook
+    /// is a *flat* container; nested rulebooks have no defined
+    /// vocabulary-scoping semantics, so they are rejected cleanly rather than
+    /// silently mis-scoped. (Also caps `flatten_clauses` recursion at one level,
+    /// closing an unbounded-recursion DoS on untrusted source.)
+    NestedRulebook {
+        outer: String,
+        inner: String,
+    },
 }
 
 /// The result of lowering — a populated KB, any queries to run, and the
@@ -142,7 +155,15 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut constraints = ConstraintSystem::default();
     let mut dictionary: Vec<Define> = Vec::new();
 
-    for stmt in &program.statements {
+    // Flatten rulebooks (MYCIN-2026 M2): a `rulebook <name> { … }` is a named
+    // container whose clauses lower into the KB exactly as if written at top
+    // level — the name is metadata for import/addressing (M3), not a separate
+    // namespace. The flat list drives KB building; the original nested
+    // structure is used afterward to scope vocabulary enforcement per `use`.
+    let mut flat: Vec<&Statement> = Vec::new();
+    flatten_clauses(&program.statements, &mut flat)?;
+
+    for stmt in flat.iter().copied() {
         match stmt {
             Statement::Prior {
                 probability,
@@ -275,17 +296,70 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             // ---- dictionary (MYCIN-2026) ----
             Statement::Define(def) => dictionary.push(def.clone()),
             Statement::Dictionary { defines, .. } => dictionary.extend(defines.iter().cloned()),
+            // ---- rulebook + use (MYCIN-2026 M2) ----
+            // `use` is purely a vocabulary binding (handled in enforcement
+            // below); it adds nothing to the KB. `Rulebook` never reaches here
+            // — `flatten_clauses` expanded it into its inner clauses already.
+            Statement::Use(_) => {}
+            Statement::Rulebook { .. } => {}
         }
     }
 
-    // Compile-time vocabulary enforcement (MYCIN-2026): only when the program
-    // declares a dictionary (≥1 `define`). A program with no dictionary is
-    // unaffected (backward-compatible). When a dictionary IS present, every
-    // hypothesis / finding term used must be defined, and a finding value must
-    // be in its declared domain — the IR the model emits and the rulebook it
-    // compiles against share one closed vocabulary by construction.
-    if !dictionary.is_empty() {
-        enforce_vocabulary(&program.statements, &dictionary)?;
+    // Compile-time vocabulary enforcement (MYCIN-2026 M1 + M2). Two modes:
+    //
+    //   M2 (a `use` appears anywhere): enforcement is SCOPED by `use`. A
+    //   top-level `use D` checks the top-level clauses against dictionary `D`;
+    //   a rulebook's own `use D'` checks that rulebook against `D'` (falling
+    //   back to a top-level `use`). A scope with no `use` is unchecked, and a
+    //   `use` naming an undeclared dictionary is `UndefinedDictionary`. This is
+    //   how a rulebook "written once" binds the vocabulary it reasons in.
+    //
+    //   M1 (no `use` anywhere): a declared dictionary (≥1 `define`) checks the
+    //   WHOLE program against the union of all defines. Backward-compatible —
+    //   programs with neither `use` nor `define` are entirely unchecked.
+    if program_contains_use(&program.statements) {
+        let named_dicts: std::collections::HashMap<&str, &[Define]> = program
+            .statements
+            .iter()
+            .filter_map(|s| match s {
+                Statement::Dictionary { name, defines } => {
+                    Some((name.as_str(), defines.as_slice()))
+                }
+                _ => None,
+            })
+            .collect();
+        let resolve = |name: &str| -> Result<&[Define], LowerError> {
+            named_dicts
+                .get(name)
+                .copied()
+                .ok_or_else(|| LowerError::UndefinedDictionary {
+                    name: name.to_string(),
+                })
+        };
+
+        let top_use = first_use(&program.statements);
+        // Top-level group: every top-level statement that isn't a rulebook.
+        if let Some(d) = top_use {
+            let defs = resolve(d)?;
+            let top_clauses = program
+                .statements
+                .iter()
+                .filter(|s| !matches!(s, Statement::Rulebook { .. }));
+            enforce_vocabulary(top_clauses, defs)?;
+        }
+        // Each rulebook is its own scope (its `use`, else the top-level `use`).
+        for s in &program.statements {
+            if let Statement::Rulebook { statements, .. } = s {
+                if let Some(d) = first_use(statements).or(top_use) {
+                    let defs = resolve(d)?;
+                    let mut clauses: Vec<&Statement> = Vec::new();
+                    flatten_clauses(statements, &mut clauses)?;
+                    enforce_vocabulary(clauses.into_iter(), defs)?;
+                }
+            }
+        }
+    } else if !dictionary.is_empty() {
+        enforce_vocabulary(flat.iter().copied(), &dictionary)?;
     }
 
     Ok(LoweredProgram {
@@ -296,9 +370,75 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     })
 }
 
-/// Verify every hypothesis/finding term used in the program is `define`d and any
-/// finding value is in its declared domain. See [`lower`] for when this runs.
-fn enforce_vocabulary(statements: &[Statement], dictionary: &[Define]) -> Result<(), LowerError> {
+/// Expand `rulebook` blocks into their constituent clause statements, in source
+/// order. A rulebook is a *flat* named container, not a separate namespace — its
+/// clauses lower into the KB as if written at top level (MYCIN-2026 M2).
+///
+/// Rulebooks may NOT nest: a `rulebook` directly inside another is a
+/// [`LowerError::NestedRulebook`]. This keeps the expansion non-recursive (one
+/// level only), so deeply-nested untrusted source cannot drive unbounded
+/// recursion here, and it avoids ambiguous nested-`use` scoping (a nested
+/// rulebook's own `use` would otherwise be silently dropped). The parser still
+/// *parses* nesting; we reject it semantically at this single, well-defined
+/// point.
+fn flatten_clauses<'a>(
+    statements: &'a [Statement],
+    out: &mut Vec<&'a Statement>,
+) -> Result<(), LowerError> {
+    for s in statements {
+        match s {
+            Statement::Rulebook {
+                name: outer,
+                statements: inner,
+            } => {
+                for c in inner {
+                    if let Statement::Rulebook {
+                        name: inner_name, ..
+                    } = c
+                    {
+                        return Err(LowerError::NestedRulebook {
+                            outer: outer.clone(),
+                            inner: inner_name.clone(),
+                        });
+                    }
+                    out.push(c);
+                }
+            }
+            other => out.push(other),
+        }
+    }
+    Ok(())
+}
+
+/// Does any statement (at top level or inside a rulebook) `use` a dictionary?
+/// Selects M2 scoped enforcement over M1 whole-program enforcement. Rulebooks
+/// are flat (see [`flatten_clauses`]), so one level of descent suffices.
+fn program_contains_use(statements: &[Statement]) -> bool {
+    statements.iter().any(|s| match s {
+        Statement::Use(_) => true,
+        Statement::Rulebook { statements, .. } => {
+            statements.iter().any(|i| matches!(i, Statement::Use(_)))
+        }
+        _ => false,
+    })
+}
+
+/// The first `use <name>` directly in this statement list (does not descend into
+/// rulebooks — a rulebook's own `use` is found by calling this on its body).
+fn first_use(statements: &[Statement]) -> Option<&str> {
+    statements.iter().find_map(|s| match s {
+        Statement::Use(name) => Some(name.as_str()),
+        _ => None,
+    })
+}
+
+/// Verify every hypothesis/finding term used by `statements` is `define`d in
+/// `dictionary` and any finding value is in its declared domain. See [`lower`]
+/// for the M1 (whole-program) vs M2 (per-`use`-scope) call sites.
+fn enforce_vocabulary<'a>(
+    statements: impl IntoIterator<Item = &'a Statement>,
+    dictionary: &[Define],
+) -> Result<(), LowerError> {
     use std::collections::HashMap;
     let dict: HashMap<&str, &DefineKind> = dictionary
         .iter()
@@ -1006,6 +1146,123 @@ mod tests {
             compile("prior 0.10 for anything\n  source \"x\" trust empirical\n? anything\n")
                 .unwrap();
         assert!(lowered.dictionary.is_empty());
+    }
+
+    // ---- rulebook + use (MYCIN-2026 M2) ----
+
+    #[test]
+    fn a_rulebook_lowers_its_clauses_into_the_kb_like_top_level() {
+        // The `rulebook { … }` wrapper is metadata; its clauses populate the KB
+        // exactly as if written at top level, so the query still decides.
+        let src = "rulebook meningitis {\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   }\n\
+                   observe csf(low)\n? bacterial\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.queries.len(), 1);
+        let d = crate::decide(&lowered);
+        // one contribution fired over the prior → posterior above the 0.10 base.
+        assert!(d.ranked[0].posterior > 0.10, "{d:?}");
+    }
+
+    #[test]
+    fn a_rulebook_that_uses_a_dictionary_is_checked_against_it() {
+        // Every term the rulebook names is defined in the `use`d dictionary.
+        let src = "dictionary vocab {\n\
+                   define bacterial : hypothesis\n\
+                   define csf : finding values [low, normal]\n\
+                   }\n\
+                   rulebook meningitis {\n\
+                   use vocab\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   }\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 2);
+    }
+
+    #[test]
+    fn a_rulebook_naming_an_undefined_term_is_rejected() {
+        // `meningococcal` is not in the `use`d dictionary → clean error, scoped
+        // to the rulebook by its `use`.
+        let src = "dictionary vocab {\n\
+                   define bacterial : hypothesis\n\
+                   define csf : finding values [low, normal]\n\
+                   }\n\
+                   rulebook meningitis {\n\
+                   use vocab\n\
+                   contributes 3 from csf(low) to meningococcal\n  source \"y\" trust empirical\n\
+                   }\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "hypothesis" }) if name == "meningococcal"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn use_of_an_undeclared_dictionary_is_a_clean_error() {
+        let src = "rulebook meningitis {\n\
+                   use nonexistent\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   }\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedDictionary { ref name }) if name == "nonexistent"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_rulebook_without_use_is_unchecked_even_when_a_dictionary_exists() {
+        // A `use` elsewhere flips the program to M2 scoped mode; a rulebook that
+        // declines to `use` is then unchecked — it may name terms the dictionary
+        // never declared. (Backward-compatible "opt in to checking" semantics.)
+        let src = "dictionary vocab { define bacterial : hypothesis }\n\
+                   rulebook checked { use vocab\n prior 0.10 for bacterial\n  source \"a\" trust empirical\n }\n\
+                   rulebook freeform {\n contributes 2 from whatever(x) to anything\n  source \"b\" trust empirical\n }\n";
+        // Compiles despite `freeform` naming undefined terms, because it has no `use`.
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn a_nested_rulebook_is_rejected() {
+        // Rulebooks are flat containers — nesting has no defined scoping
+        // semantics and is refused cleanly (also bounds flatten recursion).
+        let src = "rulebook outer {\n\
+                   rulebook inner {\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   }\n\
+                   }\n? bacterial\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::NestedRulebook { ref outer, ref inner }) if outer == "outer" && inner == "inner"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_top_level_use_scopes_the_top_level_clauses() {
+        let src = "dictionary vocab { define bacterial : hypothesis  define csf : finding values [low] }\n\
+                   use vocab\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   observe csf(low)\n? bacterial\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.queries.len(), 1);
+    }
+
+    #[test]
+    fn a_top_level_use_rejects_an_undefined_top_level_term() {
+        let src = "dictionary vocab { define bacterial : hypothesis }\n\
+                   use vocab\n\
+                   observe mystery(x)\n? bacterial\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "finding" }) if name == "mystery"),
+            "{err:?}"
+        );
     }
 
     #[test]
