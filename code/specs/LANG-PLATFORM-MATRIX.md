@@ -103,8 +103,8 @@ achievable code-gen columns land first).
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ◑   | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
-| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ☐    | ☐   | ☐   |
-| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
+| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ☐   | ☐   |
+| Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
 
@@ -171,9 +171,15 @@ BASIC); only Brainfuck is deferred.
   WASM backend requires. Verified by RUNNING: Nib on WASM → 42, and still LLVM → 42,
   native → 42 (no regression); nib-iir-compiler (28) + `iir-to-wasm`/`iir-to-llvm`
   suites all green.
-- ☐ **LM-W BASIC (on WASM).** The in-process `wasm-runtime` reports `no body for
-  function 0` for BASIC — the `PRINT` env import (`__print_i64`-equivalent) isn't
-  provided to the runtime. Wire the print import + capture stdout, then assert `42`.
+- ✅ **LM-W BASIC (on WASM).** BASIC's `PRINT` lowers to a wasm import
+  `env.__print_i64 : (i64) -> ()`; the default `WasmRuntime::new()` couldn't resolve it
+  (`no body for function 0`). `run_wasm` now installs a tiny test-local `PrintHost`
+  (`wasm_execution::HostInterface`) that resolves that single import to a `PrintFunc`
+  capturing each printed `i64` into a shared buffer, joined as the program's stdout. The
+  expression languages import nothing, so the host is never consulted for them (behaviour
+  unchanged). New in-repo dev-deps `wasm-execution` + `wasm-types`. Verified by RUNNING:
+  BASIC `10 PRINT 42` → stdout `42`; Twig/Nib/Oct/ALGOL still green (16 proven cells).
+  **WASM column now complete for every language except the deferred Brainfuck.**
 - ⏸ **LM-W Brainfuck (on WASM) — DEFERRED.** `iir-to-wasm` lacks the tape ops too
   (`UnsupportedOp: alloc_bytes`); same deferred class as Brainfuck-on-LLVM.
 

@@ -1,6 +1,6 @@
 [package]
 name = "lang-aot"
-version = "0.59.0"
+version = "0.60.0"
 edition = "2021"
 description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
 
@@ -51,6 +51,12 @@ tempfile = "3"
 # the computed result (LANG77 / McCarthy L3b-3a-2). Keeps wasm verification
 # zero-external-dep.
 wasm-runtime = { path = "../wasm-runtime" }
+# The host-interface + value types the runtime resolves imports against. The
+# LANG-MATRIX harness implements a tiny `HostInterface` to satisfy the generic
+# `env.__print_i64` stdout import an I/O language (Dartmouth BASIC) emits, so
+# its `PRINT` output can be captured and asserted (LM-W BASIC).
+wasm-execution = { path = "../wasm-execution" }
+wasm-types = { path = "../wasm-types" }
 # In-repo JVM class-file parser + bytecode simulator — used to RUN the emitted
 # JVM class in tests and assert the computed result (LANG77 / McCarthy W3a),
 # mirroring how wasm-runtime verifies the wasm path. Keeps JVM verification
