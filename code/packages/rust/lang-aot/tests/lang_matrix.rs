@@ -23,10 +23,11 @@
 //!   pends the tape ops — its own follow-up.
 //! * **JVM** (Phase J) — source → `JvmClassFile` (`iir-to-jvm-class-file`) → real
 //!   `java`. The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher
-//!   invokes the entry method `main()I` and `System.out.println`s its `int` result,
-//!   which the harness parses. Green for the expression languages Twig / Nib / Oct /
-//!   ALGOL 60. Dartmouth BASIC pends an `env.BasicRuntime` host class (its `print_i64`
-//!   lowers to `invokestatic env/BasicRuntime.println(J)V`); Brainfuck the tape ops.
+//!   invokes the entry method and either `System.out.println`s its result (the
+//!   expression languages Twig / Nib / Oct / ALGOL 60, parsed back) or discards it
+//!   while `env.BasicRuntime` — compiled with `javac` onto the classpath — handles the
+//!   output (Dartmouth BASIC, whose `print_i64` lowers to `env/BasicRuntime.println`).
+//!   Green for all five non-Brainfuck languages; Brainfuck pends the tape ops.
 //!
 //! Later slices add the CLR column (also a general code generator) and the
 //! Deferred items — Brainfuck-on-LLVM/WASM, and the McCarthy-specialized VM and JIT
@@ -127,13 +128,16 @@ const PROGRAMS: &[Prog] = &[
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
     // and the harness compares stdout (LM-L BASIC). On WASM the same `PRINT` lowers to
     // `call $__print_i64`, imported as `env.__print_i64 : (i64) -> ()`; `run_wasm`'s
-    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC).
+    // `PrintHost` resolves that import and captures the printed value (LM-W BASIC). On
+    // JVM `print_i64` lowers to `invokestatic env/BasicRuntime.println(J)V`; `run_jvm`
+    // compiles that host class with `javac`, discards the entry result, and captures
+    // `System.out` (LM-J BASIC).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
     },
 ];
 
@@ -404,30 +408,55 @@ fn java_ok() -> bool {
         .unwrap_or(false)
 }
 
+/// A minimal `env.BasicRuntime` host class providing the `println(long)` primitive
+/// that `iir-to-jvm-class-file` emits for Dartmouth BASIC's `PRINT` (`print_i64` →
+/// `invokestatic env/BasicRuntime.println(J)V`). It is the JVM sibling of the wasm
+/// column's `env.__print_i64` host import / the LLVM column's `@__print_i64` C
+/// runtime, and is *not* language-specific: any IIR that prints an integer links it.
+/// `run_jvm` compiles it with `javac` onto the classpath only when running an I/O
+/// program, so the expression languages still run a standalone `Main.class`.
+const BASIC_RUNTIME_JAVA: &str =
+    "package env; public final class BasicRuntime { public static void println(long x){ System.out.println(x); } }";
+
 /// JVM runner: source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java`, the
-/// W16 wrapper-launcher strategy generalized from McCarthy to any language whose
-/// entry method returns an `int` (the expression languages).
+/// W16 wrapper-launcher strategy generalized from McCarthy to **any** language.
 ///
-/// `compile_source_to_jvm_class` emits a class `Main` whose entry method is
-/// `main()I` — but a class run by `java` needs a `main([Ljava/lang/String;)V`
-/// entry point. So, exactly as the McCarthy W16 conformance runner does, we append
-/// the constant-pool entries for `System.out`, `PrintStream.println(I)V` and a
-/// self-reference to `Main.main()I`, then inject a launcher method:
+/// `compile_source_to_jvm_class` emits a class `Main` whose entry method is `main`
+/// with descriptor `()I` (an expression language's `int` result) or `()J` (an I/O
+/// program left at its native `long` width — see `concretize_scalar_any_for_jvm`),
+/// but a class run by `java` needs a `main([Ljava/lang/String;)V` entry point. So we
+/// read the entry's real return descriptor and inject one of two launcher methods,
+/// keyed on the program's result kind:
 ///
-/// ```text
-///   getstatic  System.out          // : PrintStream
-///   invokestatic Main.main()I      // : int  (the program's result)
-///   invokevirtual println(I)V      // print it
-///   return
-/// ```
+/// * **Expression language** (`Expect::Exit`) — print the entry method's result so
+///   the harness can read it back:
+///   ```text
+///     getstatic  System.out         // : PrintStream
+///     invokestatic Main.main()<R>   // : the program's result
+///     invokevirtual println(<R>)V   // print it  (<R> = I or J)
+///     return
+///   ```
+/// * **I/O language** (`Expect::Stdout`, Dartmouth BASIC) — the program writes its
+///   own output through `env.BasicRuntime.println` as a side effect, so the launcher
+///   merely runs `main` and **discards** its result (`pop` / `pop2`), and the host
+///   class is compiled onto the classpath:
+///   ```text
+///     invokestatic Main.main()<R>   // runs the program (prints as a side effect)
+///     pop / pop2                    // discard the (unused) return value
+///     return
+///   ```
 ///
 /// (Two methods named `main` with different descriptors is legal — the JVM keys
-/// methods on name **and** descriptor.) The harness then parses the printed integer
-/// as the program's result. `None` when `java` is absent or any step fails (skip).
+/// methods on name **and** descriptor.) `None` when `java` (or, for I/O, `javac`) is
+/// absent or any step fails (skip). We deliberately do **not** pass `-Xverify:none`:
+/// the emitted bytecode is well-formed, so full verification is a *stronger* check
+/// and rejects any malformed bytecode cleanly (a `VerifyError` → non-zero exit)
+/// instead of executing it and SIGSEGV-crashing with an `hs_err_pid*.log` dump.
 ///
 /// Security/termination: the program is a fixed literal (no untrusted input); the
-/// emitted class is written into a fresh `tempfile::tempdir()` (random, `0700`,
-/// auto-removed) so the executed `Main.class` cannot be substituted in the
+/// emitted class + host source are written into a fresh `tempfile::tempdir()`
+/// (random, `0700`, auto-removed) whose guard outlives the run, so neither the
+/// executed `Main.class` nor the `javac`-compiled host can be substituted in the
 /// write→run window (CWE-377/367); the class name is the constant `"Main"`, never
 /// interpolated from input; and each program terminates by construction.
 fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
@@ -443,37 +472,51 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
         cp.push(Some(e));
         (cp.len() - 1) as u16
     }
+    let prints = matches!(p.expect, Expect::Stdout(_));
     let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
-    let (out_fieldref, println_ref, entry_ref) = {
+    // The entry method's real return type — `I` (int) for the expression languages,
+    // `J` (long) for a printing program. The launcher must match it exactly.
+    let entry_desc = class.methods.iter().find(|m| m.name == "main")?.descriptor.clone();
+    let ret = entry_desc.rsplit(')').next()?.to_string();
+
+    // Build the constant-pool entries the launcher references. Always a self-ref to
+    // `Main.main<entry_desc>`; for the print path also `System.out` and the matching
+    // `println(<R>)V`.
+    let (entry_ref, print_refs) = {
         let cp = &mut class.constant_pool;
-        let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
-        let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
-        let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
-        let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
-        let out_nat = cp_append(
-            cp,
-            JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
-        );
-        let out_fieldref = cp_append(
-            cp,
-            JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
-        );
-        let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
-        let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
-        let pln_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("println".into()));
-        let pln_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("(I)V".into()));
-        let pln_nat = cp_append(
-            cp,
-            JvmConstantPoolEntry::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc },
-        );
-        let println_ref = cp_append(
-            cp,
-            JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
-        );
+        let print_refs = if prints {
+            None
+        } else {
+            let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
+            let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
+            let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+            let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
+            let out_nat = cp_append(
+                cp,
+                JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
+            );
+            let out_fieldref = cp_append(
+                cp,
+                JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
+            );
+            let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
+            let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
+            let pln_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("println".into()));
+            let pln_desc = cp_append(cp, JvmConstantPoolEntry::Utf8(format!("({ret})V")));
+            let pln_nat = cp_append(
+                cp,
+                JvmConstantPoolEntry::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc },
+            );
+            let println_ref = cp_append(
+                cp,
+                JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
+            );
+            Some((out_fieldref, println_ref))
+        };
         let main_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("Main".into()));
         let main_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: main_utf8 });
         let ent_name = cp_append(cp, JvmConstantPoolEntry::Utf8("main".into()));
-        let ent_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("()I".into()));
+        let ent_desc = cp_append(cp, JvmConstantPoolEntry::Utf8(entry_desc.clone()));
         let ent_nat = cp_append(
             cp,
             JvmConstantPoolEntry::NameAndType { name_index: ent_name, descriptor_index: ent_desc },
@@ -483,17 +526,34 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
             JvmConstantPoolEntry::Methodref { class_index: main_class, name_and_type_index: ent_nat },
         );
         let _ = cp_append(cp, JvmConstantPoolEntry::Utf8("([Ljava/lang/String;)V".into()));
-        (out_fieldref, println_ref, entry_ref)
+        (entry_ref, print_refs)
     };
-    let [out_hi, out_lo] = out_fieldref.to_be_bytes();
     let [ent_hi, ent_lo] = entry_ref.to_be_bytes();
-    let [pln_hi, pln_lo] = println_ref.to_be_bytes();
-    let main_code = vec![
-        0xB2, out_hi, out_lo, // getstatic System.out
-        0xB8, ent_hi, ent_lo, // invokestatic Main.main()I
-        0xB6, pln_hi, pln_lo, // invokevirtual println(I)V
-        0xB1, // return
-    ];
+    let main_code = match print_refs {
+        Some((out_fieldref, println_ref)) => {
+            let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+            let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+            vec![
+                0xB2, out_hi, out_lo, // getstatic System.out
+                0xB8, ent_hi, ent_lo, // invokestatic Main.main()<R>
+                0xB6, pln_hi, pln_lo, // invokevirtual println(<R>)V
+                0xB1, // return
+            ]
+        }
+        None => {
+            // Discard the entry result: `pop2` for a wide (long/double) value, `pop`
+            // for a single-slot value, nothing for a `void` entry.
+            let discard: &[u8] = match ret.as_str() {
+                "J" | "D" => &[0x58], // pop2
+                "V" => &[],
+                _ => &[0x57], // pop
+            };
+            let mut code = vec![0xB8, ent_hi, ent_lo]; // invokestatic Main.main()<R>
+            code.extend_from_slice(discard);
+            code.push(0xB1); // return
+            code
+        }
+    };
     class.methods.push(JvmMethodInfo {
         access_flags: ACC_PUBLIC | ACC_STATIC,
         name: "main".into(),
@@ -509,23 +569,27 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     let bytes = serialize_jvm_class_file(&class);
     let dir = tempfile::tempdir().ok()?;
     std::fs::write(dir.path().join("Main.class"), &bytes).ok()?;
-    // NB: we deliberately do **not** pass `-Xverify:none`. The expression languages'
-    // scalar bytecode is well-formed, so full bytecode verification is a *stronger*
-    // check — and, crucially, verification rejects malformed bytecode cleanly (a
-    // `VerifyError` → non-zero exit, captured below) instead of letting the JVM
-    // execute it and SIGSEGV-crash with an `hs_err_pid*.log` dump. (The McCarthy W16
-    // runner disables verification only because its `Object[]`-cons bytecode is laxer
-    // than the verifier allows; the scalar path here doesn't need that escape hatch.)
-    let out = Command::new("java")
-        .arg("-cp")
-        .arg(dir.path())
-        .arg("Main")
-        .output()
-        .ok()?;
-    // The launcher printed the entry method's `int` result; parse it as the
-    // program's value (matching the exit-code convention of the other columns).
-    let code = String::from_utf8_lossy(&out.stdout).trim().parse::<i32>().ok();
-    Some((code, String::new()))
+    // For an I/O program, compile the `env.BasicRuntime` host class onto the
+    // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
+    // somehow absent the cell skips gracefully (`None`).
+    if prints {
+        let src = dir.path().join("BasicRuntime.java");
+        std::fs::write(&src, BASIC_RUNTIME_JAVA).ok()?;
+        let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&src).output().ok()?;
+        if !built.status.success() {
+            return None;
+        }
+    }
+    let out = Command::new("java").arg("-cp").arg(dir.path()).arg("Main").output().ok()?;
+    let stdout = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    if prints {
+        // The program wrote its result to stdout via `env.BasicRuntime.println`.
+        Some((out.status.code(), stdout))
+    } else {
+        // The launcher printed the entry method's result; parse it as the program's
+        // value (matching the exit-code convention of the other columns).
+        Some((stdout.parse::<i32>().ok(), String::new()))
+    }
 }
 
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
