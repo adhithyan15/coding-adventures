@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.4.0] - 2026-06-11 — feasibility / `check` via linear-integer tactic (ADJ constraints track B2c)
+
+### Added
+
+- **`FeasibilityOutcome` + `check(&ConstraintSystem, &KnowledgeBase)`** — a
+  `check` request now decides whether the whole constraint set is jointly
+  satisfiable, not just whether one variable can be solved for. The linear
+  (in)equalities are translated to `constraint-core` `Predicate`s and handed to
+  `constraint-engine`'s `LiaTactic` (linear integer arithmetic):
+  - `Sat { assignments }` — a witness integer per symbol proving satisfiability
+    (`x >= 3 ; x <= 5` → e.g. `x = 3`).
+  - `Unsat { core }` — the constraint indices whose conjunction is contradictory
+    (`x >= 5 ; x <= 3` → unsat).
+  - `Unknown { reason }` — a constraint outside linear-integer scope (nonlinear,
+    or not integer-valued) the tactic cannot accept.
+- Observed facts are substituted before solving (shares `substitute_observed`
+  with the `solve` path), so a `check` over a mix of symbols and observed
+  values is decided with the observed values pinned.
+- `relop_predicate` / `expr_to_pred` / `int_const` bridge the adj-lang
+  `ComputeExpr` + `RelOp` to the `Predicate` AST. 4 new feasibility tests
+  (sat witness, unsat conflict, observed substitution, nonlinear → unknown).
+
 ## [0.3.0] - 2026-06-11 — nonlinear single-unknown solving (ADJ constraints track C3)
 
 ### Added

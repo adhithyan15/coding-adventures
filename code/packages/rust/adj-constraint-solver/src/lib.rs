@@ -25,6 +25,8 @@ use std::collections::HashSet;
 use adj_lang::{ConstraintSystem, RelOp};
 use cas_solve::frac::Frac;
 use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
+use constraint_core::Predicate;
+use constraint_engine::{lia::LiaTactic, SolverResult, Value};
 use logic_engine::{ComputeExpr, ComputeOp, KnowledgeBase};
 use symbolic_ir::{apply, int, rat, sym, IRNode, ADD, EQUAL, MUL, SUB};
 
@@ -90,8 +92,10 @@ pub fn solve(cs: &ConstraintSystem, kb: &KnowledgeBase) -> SolveOutcome {
         let c = &cs.constraints[0];
         let lhs_s = substitute_observed(&c.lhs, &var_set, kb);
         let rhs_s = substitute_observed(&c.rhs, &var_set, kb);
-        if let (Some(pl), Some(pr)) = (poly_of(&lhs_s, &variables[0]), poly_of(&rhs_s, &variables[0]))
-        {
+        if let (Some(pl), Some(pr)) = (
+            poly_of(&lhs_s, &variables[0]),
+            poly_of(&rhs_s, &variables[0]),
+        ) {
             let p = poly_sub(&pl, &pr);
             if poly_degree(&p) >= 2 {
                 return solve_univariate_poly(&variables[0], &p);
@@ -141,6 +145,129 @@ pub fn solve(cs: &ConstraintSystem, kb: &KnowledgeBase) -> SolveOutcome {
 fn unsupported(reason: &str) -> SolveOutcome {
     SolveOutcome::Unsupported {
         reason: reason.to_string(),
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Feasibility: is a set of (in)equality constraints satisfiable? (track B2c)
+// ---------------------------------------------------------------------------
+
+/// The result of a `check` — whether the accumulated constraints can all hold
+/// at once. Backed by `constraint-engine`'s linear-integer-arithmetic tactic.
+#[derive(Debug, Clone, PartialEq)]
+pub enum FeasibilityOutcome {
+    /// Satisfiable, with a witness assignment (each unknown → an integer value).
+    Sat { assignments: Vec<(String, i128)> },
+    /// Unsatisfiable — no assignment satisfies all constraints at once. `core`
+    /// is a set of conflicting constraint indices (the full set for now;
+    /// minimal-core extraction is future work).
+    Unsat { core: Vec<usize> },
+    /// The engine couldn't decide — a non-integer/non-linear constraint, or a
+    /// theory the LIA tactic doesn't cover.
+    Unknown { reason: String },
+}
+
+/// Decide whether a [`ConstraintSystem`]'s constraints are jointly satisfiable
+/// over the integers, substituting observed facts first. Linear integer
+/// (in)equalities only; a non-integer or non-linear constraint yields
+/// `Unknown` (the richer real/LP tactics are tracks C1/C2).
+pub fn check(cs: &ConstraintSystem, kb: &KnowledgeBase) -> FeasibilityOutcome {
+    if cs.constraints.is_empty() {
+        return FeasibilityOutcome::Sat {
+            assignments: Vec::new(),
+        };
+    }
+    let int_vars: Vec<String> = cs.symbols.iter().map(|(n, _)| n.clone()).collect();
+    let var_set: HashSet<&str> = int_vars.iter().map(String::as_str).collect();
+
+    let mut assertions = Vec::with_capacity(cs.constraints.len());
+    for c in &cs.constraints {
+        let lhs = substitute_observed(&c.lhs, &var_set, kb);
+        let rhs = substitute_observed(&c.rhs, &var_set, kb);
+        let (Some(pl), Some(pr)) = (expr_to_pred(&lhs), expr_to_pred(&rhs)) else {
+            return FeasibilityOutcome::Unknown {
+                reason: "a constraint is non-linear or not integer-valued".to_string(),
+            };
+        };
+        assertions.push(relop_predicate(c.op, pl, pr));
+    }
+
+    match LiaTactic::solve(&assertions, &int_vars, &[]) {
+        SolverResult::Sat(model) => {
+            let assignments = int_vars
+                .iter()
+                .filter_map(|v| match model.get(v) {
+                    Some(Value::Int(n)) => Some((v.clone(), *n)),
+                    Some(Value::Bool(b)) => Some((v.clone(), *b as i128)),
+                    _ => None,
+                })
+                .collect();
+            FeasibilityOutcome::Sat { assignments }
+        }
+        SolverResult::Unsat => FeasibilityOutcome::Unsat {
+            core: (0..cs.constraints.len()).collect(),
+        },
+        SolverResult::Unknown(reason) => FeasibilityOutcome::Unknown { reason },
+    }
+}
+
+/// Build the relational predicate `lhs <op> rhs`.
+fn relop_predicate(op: RelOp, lhs: Predicate, rhs: Predicate) -> Predicate {
+    let (l, r) = (Box::new(lhs), Box::new(rhs));
+    match op {
+        RelOp::Ge => Predicate::Ge(l, r),
+        RelOp::Le => Predicate::Le(l, r),
+        RelOp::Gt => Predicate::Gt(l, r),
+        RelOp::Lt => Predicate::Lt(l, r),
+        RelOp::Eq => Predicate::Eq(l, r),
+        RelOp::Ne => Predicate::NEq(l, r),
+    }
+}
+
+/// Translate a (substituted) [`ComputeExpr`] into a linear-integer
+/// [`Predicate`], or `None` if it isn't linear-integer (a non-integer literal,
+/// symbol×symbol, division — beyond the LIA tactic).
+fn expr_to_pred(e: &ComputeExpr) -> Option<Predicate> {
+    match e {
+        ComputeExpr::Ref(name) => Some(Predicate::Var(name.clone())),
+        // A non-integer literal can't be expressed in LIA → None.
+        ComputeExpr::Lit(_) => int_const(e).map(Predicate::Int),
+        ComputeExpr::Bin(op, a, b) => {
+            let pa = expr_to_pred(a)?;
+            let pb = expr_to_pred(b)?;
+            match op {
+                ComputeOp::Add => Some(Predicate::Add(vec![pa, pb])),
+                ComputeOp::Sub => Some(Predicate::Sub(Box::new(pa), Box::new(pb))),
+                // Linear scaling only: integer-constant × term.
+                ComputeOp::Mul => {
+                    if let Some(c) = int_const(a) {
+                        Some(Predicate::Mul {
+                            coef: c,
+                            term: Box::new(pb),
+                        })
+                    } else if let Some(c) = int_const(b) {
+                        Some(Predicate::Mul {
+                            coef: c,
+                            term: Box::new(pa),
+                        })
+                    } else {
+                        None // var × var is non-linear
+                    }
+                }
+                _ => None, // division / aggregation: out of LIA scope
+            }
+        }
+        ComputeExpr::Agg(_, _) => None,
+    }
+}
+
+/// The integer value of an expression if it is a whole-number literal.
+fn int_const(e: &ComputeExpr) -> Option<i128> {
+    match e {
+        ComputeExpr::Lit(x) if x.fract() == 0.0 && x.is_finite() && x.abs() < i128::MAX as f64 => {
+            Some(*x as i128)
+        }
+        _ => None,
     }
 }
 
@@ -247,9 +374,7 @@ fn poly_mul(a: &Poly, b: &Poly) -> Poly {
 
 /// The degree — the highest power with a non-(near-)zero coefficient.
 fn poly_degree(p: &Poly) -> usize {
-    p.iter()
-        .rposition(|c| c.abs() > 1e-12)
-        .unwrap_or(0)
+    p.iter().rposition(|c| c.abs() > 1e-12).unwrap_or(0)
 }
 
 /// Solve a univariate polynomial equation `p(x) = 0` of degree 2–4 via
@@ -505,7 +630,10 @@ mod tests {
              solve for { x, y }\n",
         );
         match out {
-            SolveOutcome::Solved { assignments, from_constraints } => {
+            SolveOutcome::Solved {
+                assignments,
+                from_constraints,
+            } => {
                 let get = |n: &str| assignments.iter().find(|(k, _)| k == n).unwrap().1;
                 assert!((get("x") - 6.0).abs() < 1e-9, "{assignments:?}");
                 assert!((get("y") - 4.0).abs() < 1e-9, "{assignments:?}");
@@ -535,9 +663,7 @@ mod tests {
     #[test]
     fn handles_decimal_coefficients_exactly_enough() {
         // x = 100 * 0.92  →  92.
-        let out = solve_src(
-            "symbol x : scalar\nconstrain x = 100 * 0.92\nsolve for { x }\n",
-        );
+        let out = solve_src("symbol x : scalar\nconstrain x = 100 * 0.92\nsolve for { x }\n");
         match out {
             SolveOutcome::Solved { assignments, .. } => {
                 assert!((assignments[0].1 - 92.0).abs() < 1e-6, "{assignments:?}");
@@ -591,7 +717,9 @@ mod tests {
 
     #[test]
     fn quadratic_x_squared_equals_four() {
-        let r = roots(&solve_src("symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n"));
+        let r = roots(&solve_src(
+            "symbol x : scalar\nconstrain x * x = 4\nsolve for { x }\n",
+        ));
         assert_eq!(r.len(), 2);
         assert!((r[0] - -2.0).abs() < 1e-6, "{r:?}");
         assert!((r[1] - 2.0).abs() < 1e-6, "{r:?}");
@@ -611,7 +739,9 @@ mod tests {
     #[test]
     fn quadratic_with_irrational_roots_evaluated_numerically() {
         // x^2 = 2  →  ±√2 ≈ ±1.41421356.
-        let r = roots(&solve_src("symbol x : scalar\nconstrain x * x = 2\nsolve for { x }\n"));
+        let r = roots(&solve_src(
+            "symbol x : scalar\nconstrain x * x = 2\nsolve for { x }\n",
+        ));
         assert_eq!(r.len(), 2);
         assert!((r[0] - -2.0_f64.sqrt()).abs() < 1e-6, "{r:?}");
         assert!((r[1] - 2.0_f64.sqrt()).abs() < 1e-6, "{r:?}");
@@ -662,9 +792,7 @@ mod tests {
 
     #[test]
     fn inequalities_are_unsupported_in_this_slice() {
-        let out = solve_src(
-            "symbol x : scalar\nconstrain x <= 10\nsolve for { x }\n",
-        );
+        let out = solve_src("symbol x : scalar\nconstrain x <= 10\nsolve for { x }\n");
         assert!(matches!(out, SolveOutcome::Unsupported { .. }));
     }
 
@@ -682,6 +810,55 @@ mod tests {
             ),
             "{out:?}"
         );
+    }
+
+    // ---- feasibility / check (track B2c) ----
+
+    fn check_src(src: &str) -> FeasibilityOutcome {
+        let lowered = compile(src).unwrap();
+        check(&lowered.constraints, &lowered.kb)
+    }
+
+    #[test]
+    fn a_feasible_constraint_set_is_sat() {
+        // 5 <= x <= 10 is satisfiable.
+        let out = check_src("symbol x : scalar\nconstrain x >= 5\nconstrain x <= 10\ncheck\n");
+        match out {
+            FeasibilityOutcome::Sat { assignments } => {
+                let x = assignments.iter().find(|(n, _)| n == "x").map(|(_, v)| *v);
+                assert!(
+                    matches!(x, Some(v) if (5..=10).contains(&v)),
+                    "{assignments:?}"
+                );
+            }
+            other => panic!("expected Sat, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_contradictory_constraint_set_is_unsat_with_a_core() {
+        // x >= 5 AND x <= 1 cannot both hold.
+        let out = check_src("symbol x : scalar\nconstrain x >= 5\nconstrain x <= 1\ncheck\n");
+        match out {
+            FeasibilityOutcome::Unsat { core } => assert_eq!(core, vec![0, 1]),
+            other => panic!("expected Unsat, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn feasibility_substitutes_observed_facts() {
+        // floor observed 6; months >= floor is feasible (months can be 6).
+        let out = check_src(
+            "symbol months : scalar\nobserve floor(6)\nconstrain months >= floor\ncheck\n",
+        );
+        assert!(matches!(out, FeasibilityOutcome::Sat { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn a_non_integer_constraint_is_unknown() {
+        // a fractional bound is outside the linear-integer tactic.
+        let out = check_src("symbol x : scalar\nconstrain x <= 0.5\ncheck\n");
+        assert!(matches!(out, FeasibilityOutcome::Unknown { .. }), "{out:?}");
     }
 
     #[test]

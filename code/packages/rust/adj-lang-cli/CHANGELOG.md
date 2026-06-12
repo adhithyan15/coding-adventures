@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.3] - 2026-06-11 — emit feasibility verdicts (ADJ constraints track B2c)
+
+### Added
+
+- When a `.adj` program ends with `check`, the CLI calls
+  `adj_constraint_solver::check` and emits a `check` section:
+  `{"outcome":"sat","assignments":[…]}` (with a witness integer per symbol),
+  `{"outcome":"unsat","core":[…]}` (the conflicting constraint indices), or
+  `{"outcome":"unknown","reason":…}`. A solve-only program emits no `check`
+  key. 3 new golden tests (sat witness, unsat conflict, no-check). Tracks
+  `adj-constraint-solver` 0.4.0.
+
 ## [0.3.2] - 2026-06-11 — emit nonlinear roots (ADJ constraints track C3)
 
 ### Added

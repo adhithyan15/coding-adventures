@@ -236,6 +236,53 @@ fn unsupported_constraint_reports_a_reason_not_an_answer() {
     assert!(s.contains("\"reason\""), "{s}");
 }
 
+// ---- feasibility / check in the CLI (ADJ constraints B2c) ----
+
+#[test]
+fn check_reports_sat_with_a_witness_assignment() {
+    // x >= 3 ; x <= 5 is jointly satisfiable → sat, with an integer witness.
+    let (ok, s) = run(
+        "adjcli_check_sat.adj",
+        "symbol x : scalar\n\
+             constrain x >= 3\n\
+             constrain x <= 5\n\
+             check\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"check\":{"), "expected a check section: {s}");
+    assert!(s.contains("\"outcome\":\"sat\""), "{s}");
+    assert!(s.contains("\"name\":\"x\""), "{s}");
+}
+
+#[test]
+fn check_reports_unsat_with_a_conflicting_core() {
+    // x >= 5 ; x <= 3 cannot both hold → unsat, citing the conflicting clauses.
+    let (ok, s) = run(
+        "adjcli_check_unsat.adj",
+        "symbol x : scalar\n\
+             constrain x >= 5\n\
+             constrain x <= 3\n\
+             check\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"unsat\""), "{s}");
+    assert!(s.contains("\"core\":["), "{s}");
+}
+
+#[test]
+fn no_check_keyword_emits_no_check_section() {
+    // A solve-only constraint system requests no feasibility verdict.
+    let (ok, s) = run(
+        "adjcli_nocheck.adj",
+        "symbol x : scalar\nconstrain x + 1 = 4\nsolve for { x }\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        !s.contains("\"check\""),
+        "no check keyword → no check key: {s}"
+    );
+}
+
 #[test]
 fn a_pure_rulebook_emits_no_solve_section() {
     let (ok, s) = run(
