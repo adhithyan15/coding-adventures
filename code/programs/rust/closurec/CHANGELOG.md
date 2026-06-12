@@ -2,6 +2,39 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.89.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-079** — an `if` consequent that is a single
+  un-terminated statement block now flattens, matching upstream
+  Closure: `if(x){y()}` → `if(x)y();`. The `if`-sibling of gap-074
+  (for/while loop-body flatten) and gap-076 (with-body flatten).
+  `minify_if_body_flatten` is now enforced.
+
+### Added — gap-079 if-body single-statement block flatten
+
+`if` joins the gap-074 header-keyword body-flatten pre-pass anchor
+set (`for`/`while`/`with`/`if`). A `{` immediately after an `if(…)`
+header is unambiguously the consequent (never an object literal), so
+the identical single-statement / property-guard / synthetic-`;`
+machinery applies unchanged.
+
+**Dangling-else safety came for free.** Stripping the braces around
+an `if` consequent is unsound exactly when the body contains a nested
+un-`else`-d `if` AND the outer `if` has an `else`:
+`if(a){if(b)c()}else d()` must KEEP its braces — flattening to
+`if(a)if(b)c();else d()` would re-bind the `else` to the inner
+`if(b)` (the JAR keeps the braces too, verified). The existing
+no-control-flow-keyword guard (`has_blocking_keyword`, which lists
+`if`) already prevents the brace-drop for any body containing a
+nested `if`, so the dangling-else case can never reach the drop. A
+single non-control consequent (`{y()}`) has no such hazard.
+
+`else`-arm flatten (`else{z()}` → `else z()`) remains the separate
+open gap-080. 4 new `gap079_*` unit tests (flatten / multi-keep /
+dangling-else-kept / else-if-chain) + the enforced byte-identity
+fixture.
+
 ## [0.88.0] - 2026-06-12
 
 ### Changed

@@ -103,12 +103,15 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // paren elision — `a==(b)` → `a==b`, `a||(b)` → `a||b`. Extends
     // gap-075 (`-`/`+`) to the remaining binary operators.
     ("eq_operand_paren", "gap-078: binary comparison/logical right-operand paren elision"),
-    // gap-079 (CLOC14.37): `if`-body single-statement flatten —
-    // `if(x){y()}` → `if(x)y();`. The `if` sibling of gap-074/076.
-    ("if_body_flatten", "gap-079: if-body single-statement block flatten"),
     // gap-080 (CLOC14.37): `else`-body single-statement flatten —
     // `if(x)a();else{b()}` → `if(x)a();else b()`.
     ("else_body_flatten", "gap-080: else-body single-statement block flatten"),
+    // gap-079 RESOLVED in CLOC12.85 — an `if`-body single-statement
+    // block (`if(x){y()}` → `if(x)y();`) now flattens via the gap-074
+    // pre-pass (`if` added to the anchor keyword set). The
+    // dangling-else hazard is covered for free by the existing
+    // no-control-flow-keyword guard. `minify_if_body_flatten`
+    // enforced.
     // gap-075 RESOLVED in CLOC12.84 — a prefix-unary SYMBOL operator
     // operand's grouping parens (`-(a)` → `-a`, `!(a)` → `!a`,
     // `~(a)` → `~a`, `-(-a)` → `- -a`) now elide;
