@@ -128,6 +128,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_audit_summary` tool descriptors for
   read-only activation audit trails that connect sentinel alerts to
   watchtower, decision, evidence, risk, dependency, and readiness-gap sources.
+- `smart_home.list_integration_activation_escalations` and
+  `smart_home.get_integration_activation_escalation_summary` tool descriptors
+  for read-only Chief-facing activation escalation cases derived from sentinel
+  alerts, verification checkpoints, and audit records.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.

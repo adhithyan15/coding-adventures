@@ -93,6 +93,9 @@ runtime and Chief of Staff tools a typed catalog for:
   and observation lanes
 - activation audit records that connect sentinel alerts to watchtower signals,
   decisions, evidence, policy risk, dependency blockers, and readiness gaps
+- activation escalation cases that package sentinel alerts, verification
+  checkpoints, and audit records into Chief-facing blocker, dependency,
+  policy-risk, review, verification, and audit cases
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

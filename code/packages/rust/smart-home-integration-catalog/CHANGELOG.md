@@ -102,6 +102,10 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationAuditRecord` and `IntegrationActivationAuditSummary`
   for connecting sentinel alerts to watchtower signals, decisions, evidence,
   policy risk, dependency blockers, and readiness gaps in one audit trail.
+- `IntegrationActivationEscalationCase` and
+  `IntegrationActivationEscalationSummary` for packaging sentinel alerts,
+  verification checkpoints, and audit records into Chief-facing escalation
+  queues.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

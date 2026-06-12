@@ -1360,6 +1360,39 @@ impl IntegrationActivationSentinelAlertKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationEscalationCaseKind {
+    Blocker,
+    Dependency,
+    PolicyRisk,
+    Review,
+    Verification,
+    Audit,
+}
+
+impl IntegrationActivationEscalationCaseKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocker => "blocker",
+            Self::Dependency => "dependency",
+            Self::PolicyRisk => "policy_risk",
+            Self::Review => "review",
+            Self::Verification => "verification",
+            Self::Audit => "audit",
+        }
+    }
+
+    pub fn recommended_view(self) -> IntegrationActivationPlaybookView {
+        match self {
+            Self::Blocker => IntegrationActivationPlaybookView::ConstraintQueue,
+            Self::Dependency => IntegrationActivationPlaybookView::DependencyGraph,
+            Self::PolicyRisk => IntegrationActivationPlaybookView::RiskRegister,
+            Self::Review => IntegrationActivationPlaybookView::ReviewQueue,
+            Self::Verification | Self::Audit => IntegrationActivationPlaybookView::StatusDashboard,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationAuditRecordKind {
     Sentinel,
     Watchtower,
@@ -3027,6 +3060,58 @@ pub struct IntegrationActivationAuditSummary {
     pub first_attention_priority: Option<u8>,
     pub first_dependency_priority: Option<u8>,
     pub first_readiness_gap_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEscalationCase {
+    pub sequence: usize,
+    pub case_kind: IntegrationActivationEscalationCaseKind,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub sentinel_alert_kind: Option<IntegrationActivationSentinelAlertKind>,
+    pub verification_status: Option<IntegrationActivationVerificationStatus>,
+    pub audit_record_kind: Option<IntegrationActivationAuditRecordKind>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_ready: bool,
+    pub blocked: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationEscalationSummary {
+    pub total_cases: usize,
+    pub unique_integrations: usize,
+    pub cases_requiring_attention: usize,
+    pub blocker_cases: usize,
+    pub dependency_cases: usize,
+    pub policy_risk_cases: usize,
+    pub review_cases: usize,
+    pub verification_cases: usize,
+    pub audit_cases: usize,
+    pub cases_with_dependency_work: usize,
+    pub cases_with_policy_risk: usize,
+    pub cases_ready_to_verify: usize,
+    pub blocked_cases: usize,
+    pub cases_with_policy_surface: usize,
+    pub next_case_kind: Option<IntegrationActivationEscalationCaseKind>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_case_sequence: Option<usize>,
+    pub next_case_priority: Option<u8>,
+    pub first_blocker_priority: Option<u8>,
+    pub first_dependency_priority: Option<u8>,
+    pub first_policy_risk_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_verification_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -8164,6 +8249,343 @@ impl IntegrationActivationAuditSummary {
     }
 }
 
+impl IntegrationActivationEscalationCase {
+    fn new(
+        case_kind: IntegrationActivationEscalationCaseKind,
+        source_id: String,
+        title: String,
+        summary: String,
+        priority: u8,
+        mut integration_ids: Vec<IntegrationId>,
+        required_tier: PrivilegeTier,
+        policy_surface: Option<IntegrationPolicySurface>,
+        requires_attention: bool,
+    ) -> Self {
+        integration_ids.sort();
+        integration_ids.dedup();
+
+        Self {
+            sequence: 0,
+            case_kind,
+            source_id,
+            title,
+            summary,
+            priority,
+            integration_ids,
+            sentinel_alert_kind: None,
+            verification_status: None,
+            audit_record_kind: None,
+            recommended_view: case_kind.recommended_view(),
+            required_tier,
+            policy_surface,
+            dependency_work: false,
+            policy_risk: false,
+            verification_ready: false,
+            blocked: false,
+            requires_attention,
+        }
+    }
+
+    fn from_sentinel_alert(alert: &IntegrationActivationSentinelAlert) -> Self {
+        let case_kind = match alert.alert_kind {
+            IntegrationActivationSentinelAlertKind::Blocker => {
+                IntegrationActivationEscalationCaseKind::Blocker
+            }
+            IntegrationActivationSentinelAlertKind::Dependency => {
+                IntegrationActivationEscalationCaseKind::Dependency
+            }
+            IntegrationActivationSentinelAlertKind::PolicyRisk => {
+                IntegrationActivationEscalationCaseKind::PolicyRisk
+            }
+            IntegrationActivationSentinelAlertKind::Review => {
+                IntegrationActivationEscalationCaseKind::Review
+            }
+            IntegrationActivationSentinelAlertKind::Ready
+            | IntegrationActivationSentinelAlertKind::Observation => {
+                IntegrationActivationEscalationCaseKind::Audit
+            }
+        };
+        let required_tier = alert
+            .watchtower_summary
+            .highest_policy_tier
+            .max(alert.risk_summary.highest_policy_tier)
+            .max(alert.dependency_summary.highest_policy_tier);
+        let mut case = Self::new(
+            case_kind,
+            format!("sentinel:{}", alert.alert_kind.as_str()),
+            format!("Escalate {} activation alert", alert.alert_kind.as_str()),
+            format!(
+                "{} integrations, {} blocking dependencies, {} readiness gaps",
+                alert.integration_count(),
+                alert.dependency_summary.blocking_edges,
+                alert.gap_inventory.total_unique_gaps()
+            ),
+            alert.priority,
+            alert.integration_ids.clone(),
+            required_tier,
+            None,
+            alert.requires_attention(),
+        );
+        case.sentinel_alert_kind = Some(alert.alert_kind);
+        case.dependency_work = alert.has_dependency_work();
+        case.policy_risk = alert.has_policy_risk();
+        case.blocked =
+            alert.has_blockers() || alert.has_blocking_dependencies() || alert.has_gaps();
+        case
+    }
+
+    fn from_verification_checkpoint(
+        checkpoint: &IntegrationActivationVerificationCheckpoint,
+    ) -> Self {
+        let mut case = Self::new(
+            IntegrationActivationEscalationCaseKind::Verification,
+            format!("verification:{}", checkpoint.sequence),
+            format!(
+                "Verify activation checkpoint {}",
+                checkpoint.verification_status.as_str()
+            ),
+            format!(
+                "{} integrations, {} audit records, {} readiness gaps",
+                checkpoint.integration_count(),
+                checkpoint.audit_record_count,
+                checkpoint.readiness_gap_count
+            ),
+            checkpoint.priority,
+            checkpoint.integration_ids.clone(),
+            checkpoint.highest_policy_tier,
+            None,
+            checkpoint.requires_attention() || checkpoint.can_verify(),
+        );
+        case.verification_status = Some(checkpoint.verification_status);
+        case.recommended_view = checkpoint.recommended_view;
+        case.dependency_work =
+            !checkpoint.dependency_ready() || checkpoint.blocking_dependency_edge_count > 0;
+        case.policy_risk = checkpoint.risk_count > 0;
+        case.verification_ready = checkpoint.verification_ready() || checkpoint.can_verify();
+        case.blocked = checkpoint.blocked() || !checkpoint.dependency_ready();
+        case
+    }
+
+    fn from_audit_record(record: &IntegrationActivationAuditRecord) -> Self {
+        let case_kind = match record.record_kind {
+            IntegrationActivationAuditRecordKind::Risk => {
+                IntegrationActivationEscalationCaseKind::PolicyRisk
+            }
+            IntegrationActivationAuditRecordKind::Dependency
+            | IntegrationActivationAuditRecordKind::ReadinessGap => {
+                IntegrationActivationEscalationCaseKind::Dependency
+            }
+            IntegrationActivationAuditRecordKind::Decision
+            | IntegrationActivationAuditRecordKind::Evidence => {
+                IntegrationActivationEscalationCaseKind::Review
+            }
+            IntegrationActivationAuditRecordKind::Sentinel
+            | IntegrationActivationAuditRecordKind::Watchtower => {
+                IntegrationActivationEscalationCaseKind::Audit
+            }
+        };
+        let mut case = Self::new(
+            case_kind,
+            format!("audit:{}", record.record_id),
+            record.title.clone(),
+            record.summary.clone(),
+            record.priority,
+            record.integration_ids.clone(),
+            record.required_tier,
+            record.policy_surface,
+            record.requires_attention(),
+        );
+        case.audit_record_kind = Some(record.record_kind);
+        case.sentinel_alert_kind = record.sentinel_alert_kind;
+        case.dependency_work = record.has_dependency_link()
+            || record.record_kind == IntegrationActivationAuditRecordKind::Dependency
+            || record.record_kind == IntegrationActivationAuditRecordKind::ReadinessGap;
+        case.policy_risk = record.risk_kind.is_some() || record.policy_surface.is_some();
+        case.blocked = record.record_kind == IntegrationActivationAuditRecordKind::ReadinessGap
+            || (record.record_kind == IntegrationActivationAuditRecordKind::Dependency
+                && record.requires_attention());
+        case
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.verification_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationEscalationSummary {
+    pub fn from_cases<'a>(
+        cases: impl IntoIterator<Item = &'a IntegrationActivationEscalationCase>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_cases: 0,
+            unique_integrations: 0,
+            cases_requiring_attention: 0,
+            blocker_cases: 0,
+            dependency_cases: 0,
+            policy_risk_cases: 0,
+            review_cases: 0,
+            verification_cases: 0,
+            audit_cases: 0,
+            cases_with_dependency_work: 0,
+            cases_with_policy_risk: 0,
+            cases_ready_to_verify: 0,
+            blocked_cases: 0,
+            cases_with_policy_surface: 0,
+            next_case_kind: None,
+            next_recommended_view: None,
+            next_case_sequence: None,
+            next_case_priority: None,
+            first_blocker_priority: None,
+            first_dependency_priority: None,
+            first_policy_risk_priority: None,
+            first_review_priority: None,
+            first_verification_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for case in cases {
+            summary.total_cases += 1;
+            for integration_id in &case.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_case_kind.is_none()
+                && (case.requires_attention() || case.ready_to_verify())
+            {
+                summary.next_case_kind = Some(case.case_kind);
+                summary.next_recommended_view = Some(case.recommended_view);
+                summary.next_case_sequence = Some(case.sequence);
+                summary.next_case_priority = Some(case.priority);
+            }
+
+            match case.case_kind {
+                IntegrationActivationEscalationCaseKind::Blocker => {
+                    summary.blocker_cases += 1;
+                    summary.first_blocker_priority =
+                        min_optional_priority(summary.first_blocker_priority, Some(case.priority));
+                }
+                IntegrationActivationEscalationCaseKind::Dependency => {
+                    summary.dependency_cases += 1;
+                    summary.first_dependency_priority = min_optional_priority(
+                        summary.first_dependency_priority,
+                        Some(case.priority),
+                    );
+                }
+                IntegrationActivationEscalationCaseKind::PolicyRisk => {
+                    summary.policy_risk_cases += 1;
+                    summary.first_policy_risk_priority = min_optional_priority(
+                        summary.first_policy_risk_priority,
+                        Some(case.priority),
+                    );
+                }
+                IntegrationActivationEscalationCaseKind::Review => {
+                    summary.review_cases += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, Some(case.priority));
+                }
+                IntegrationActivationEscalationCaseKind::Verification => {
+                    summary.verification_cases += 1;
+                    summary.first_verification_priority = min_optional_priority(
+                        summary.first_verification_priority,
+                        Some(case.priority),
+                    );
+                }
+                IntegrationActivationEscalationCaseKind::Audit => {
+                    summary.audit_cases += 1;
+                }
+            }
+
+            if case.requires_attention() {
+                summary.cases_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(case.priority));
+            }
+            if case.has_dependency_work() {
+                summary.cases_with_dependency_work += 1;
+            }
+            if case.has_policy_risk() {
+                summary.cases_with_policy_risk += 1;
+            }
+            if case.ready_to_verify() {
+                summary.cases_ready_to_verify += 1;
+            }
+            if case.blocked() {
+                summary.blocked_cases += 1;
+            }
+            if case.has_policy_surface() {
+                summary.cases_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(case.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_cases > 0 || summary.blocker_cases > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.cases_requiring_attention > 0
+            || summary.review_cases > 0
+            || summary.policy_risk_cases > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.cases_ready_to_verify > 0 || summary.verification_cases > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_cases == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocker_cases > 0 || self.blocked_cases > 0
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_cases > 0 || self.cases_with_dependency_work > 0
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk_cases > 0 || self.cases_with_policy_risk > 0
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.cases_ready_to_verify > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.cases_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -13129,6 +13551,69 @@ pub fn activation_audit_records_at_or_before_priority(
     )
 }
 
+pub fn activation_escalation_cases_from_rollups(
+    alerts: &[IntegrationActivationSentinelAlert],
+    checkpoints: &[IntegrationActivationVerificationCheckpoint],
+    audit_records: &[IntegrationActivationAuditRecord],
+) -> Vec<IntegrationActivationEscalationCase> {
+    let mut cases = Vec::new();
+    cases.extend(
+        alerts
+            .iter()
+            .filter(|alert| alert.requires_attention())
+            .map(IntegrationActivationEscalationCase::from_sentinel_alert),
+    );
+    cases.extend(
+        checkpoints
+            .iter()
+            .filter(|checkpoint| checkpoint.requires_attention() || checkpoint.can_verify())
+            .map(IntegrationActivationEscalationCase::from_verification_checkpoint),
+    );
+    cases.extend(
+        audit_records
+            .iter()
+            .filter(|record| record.requires_attention())
+            .map(IntegrationActivationEscalationCase::from_audit_record),
+    );
+
+    cases.sort_by(compare_activation_escalation_cases);
+    for (index, case) in cases.iter_mut().enumerate() {
+        case.sequence = index + 1;
+    }
+    cases
+}
+
+pub fn activation_escalation_cases_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationEscalationCase> {
+    let alerts = activation_sentinel_alerts_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let checkpoints = activation_verification_checkpoints_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let audit_records = activation_audit_records_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_escalation_cases_from_rollups(&alerts, &checkpoints, &audit_records)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -14714,6 +15199,22 @@ fn compare_activation_audit_records(
         .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
         .then_with(|| left.record_kind.cmp(&right.record_kind))
         .then_with(|| left.record_id.cmp(&right.record_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_escalation_cases(
+    left: &IntegrationActivationEscalationCase,
+    right: &IntegrationActivationEscalationCase,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| right.ready_to_verify().cmp(&left.ready_to_verify()))
+        .then_with(|| left.case_kind.cmp(&right.case_kind))
+        .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -18148,6 +18649,47 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let escalation_cases =
+            activation_escalation_cases_from_rollups(&alerts, &verification, &audit_records);
+        assert!(!escalation_cases.is_empty());
+        assert!(escalation_cases
+            .iter()
+            .any(|case| case.case_kind == IntegrationActivationEscalationCaseKind::Blocker));
+        assert!(escalation_cases
+            .iter()
+            .any(|case| case.case_kind == IntegrationActivationEscalationCaseKind::Dependency));
+        assert!(escalation_cases
+            .iter()
+            .any(|case| case.case_kind == IntegrationActivationEscalationCaseKind::Verification));
+        assert!(escalation_cases
+            .iter()
+            .any(IntegrationActivationEscalationCase::requires_attention));
+        assert!(escalation_cases
+            .iter()
+            .any(IntegrationActivationEscalationCase::has_dependency_work));
+        assert!(escalation_cases
+            .iter()
+            .any(IntegrationActivationEscalationCase::blocked));
+
+        let escalation_summary =
+            IntegrationActivationEscalationSummary::from_cases(escalation_cases.iter());
+        assert_eq!(escalation_summary.total_cases, escalation_cases.len());
+        assert!(escalation_summary.has_blockers());
+        assert!(escalation_summary.has_dependency_work());
+        assert!(escalation_summary.requires_attention());
+        assert_eq!(
+            escalation_summary.next_case_kind,
+            Some(IntegrationActivationEscalationCaseKind::Blocker)
+        );
+        assert_eq!(
+            escalation_summary.next_recommended_view,
+            Some(IntegrationActivationPlaybookView::ConstraintQueue)
+        );
+        assert_eq!(
+            escalation_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -18198,6 +18740,16 @@ mod tests {
         assert!(catalog_verification_checkpoints
             .iter()
             .any(IntegrationActivationVerificationCheckpoint::requires_attention));
+        let catalog_escalation_cases = activation_escalation_cases_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_escalation_cases
+            .iter()
+            .any(IntegrationActivationEscalationCase::requires_attention));
     }
 
     #[test]
