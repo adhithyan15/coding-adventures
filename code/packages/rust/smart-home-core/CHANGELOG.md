@@ -136,6 +136,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_response_summary` tool descriptors for
   read-only owner-lane activation response planning derived from escalation
   cases.
+- `smart_home.list_integration_activation_remediation` and
+  `smart_home.get_integration_activation_remediation_summary` tool descriptors
+  for read-only owner-lane activation remediation work orders derived from
+  response items.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.

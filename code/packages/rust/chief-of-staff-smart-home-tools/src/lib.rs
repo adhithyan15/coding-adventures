@@ -47,10 +47,10 @@ use smart_home_integration_catalog::{
     activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
     activation_plan_for_entry, activation_plans_at_or_before_priority,
     activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
-    activation_response_items_from_escalation_cases, activation_reviews_from_candidates,
-    activation_risk_from_candidates, activation_runbook_entries_from_playbook_steps,
-    activation_runway_from_candidates, activation_sentinel_alerts_from_rollups,
-    activation_timeline_milestones_from_dashboard_cards,
+    activation_remediation_items_from_responses, activation_response_items_from_escalation_cases,
+    activation_reviews_from_candidates, activation_risk_from_candidates,
+    activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
+    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
@@ -94,6 +94,8 @@ use smart_home_integration_catalog::{
     IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
+    IntegrationActivationRemediationItem, IntegrationActivationRemediationKind,
+    IntegrationActivationRemediationStatus, IntegrationActivationRemediationSummary,
     IntegrationActivationResponseItem, IntegrationActivationResponseKind,
     IntegrationActivationResponseOwnerLane, IntegrationActivationResponseSummary,
     IntegrationActivationReviewItem, IntegrationActivationReviewSummary,
@@ -334,6 +336,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RESPONSES_TOOL_ID: &str =
     "smart_home.list_integration_activation_responses";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_response_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID: &str =
+    "smart_home.list_integration_activation_remediation";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_remediation_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -754,6 +760,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_response_query(&arguments)?;
                     Ok(get_integration_activation_response_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID => {
+                    let query = integration_activation_remediation_query(&arguments)?;
+                    Ok(list_integration_activation_remediation_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_remediation_query(&arguments)?;
+                    Ok(get_integration_activation_remediation_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2456,6 +2470,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation response summary",
             "Return compact D23A activation response counts by owner lane, next action, blocker, dependency, policy, review, verification, and audit follow-up work.",
             integration_activation_response_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID,
+            "List smart-home integration activation remediation",
+            "List Chief-facing D23A activation remediation work orders derived from response items with owner lanes and execution status.",
+            integration_activation_remediation_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_remediation", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_remediation",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation remediation summary",
+            "Return compact D23A activation remediation counts by owner lane, remediation kind, status, blocker, dependency, policy, review, verification, and audit follow-up work.",
+            integration_activation_remediation_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5297,6 +5345,18 @@ struct IntegrationActivationResponseQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationRemediationQuery {
+    response: IntegrationActivationResponseQuery,
+    remediation_kind: Option<IntegrationActivationRemediationKind>,
+    status: Option<IntegrationActivationRemediationStatus>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    ready_to_execute: Option<bool>,
+    remediation_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -5947,6 +6007,34 @@ fn integration_activation_response_query(
         blocked: optional_bool(arguments, "response_blocked")?,
         ready_to_verify: optional_bool(arguments, "response_ready_to_verify")?,
         response_limit: optional_u64(arguments, "response_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_remediation_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationRemediationQuery, ToolCallError> {
+    let remediation_kind = optional_string(arguments, "remediation_kind")?
+        .or(optional_string(arguments, "remediation")?)
+        .map(|label| parse_activation_remediation_kind(&label))
+        .transpose()?;
+    let status = optional_string(arguments, "remediation_status")?
+        .or(optional_string(arguments, "status")?)
+        .map(|label| parse_activation_remediation_status(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "remediation_owner_lane")?
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationRemediationQuery {
+        response: integration_activation_response_query(arguments)?,
+        remediation_kind,
+        status,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "remediation_requires_attention")?,
+        blocked: optional_bool(arguments, "remediation_blocked")?,
+        ready_to_execute: optional_bool(arguments, "remediation_ready_to_execute")?,
+        remediation_limit: optional_u64(arguments, "remediation_limit")?
+            .map(|value| value as usize),
     })
 }
 
@@ -7023,6 +7111,38 @@ fn integration_activation_response_items_for_query(
     }
 
     (responses, catalog_count)
+}
+
+fn integration_activation_remediation_items_for_query(
+    query: &IntegrationActivationRemediationQuery,
+) -> (Vec<IntegrationActivationRemediationItem>, usize) {
+    let (responses, catalog_count) =
+        integration_activation_response_items_for_query(&query.response);
+    let mut remediations = activation_remediation_items_from_responses(&responses);
+
+    if let Some(remediation_kind) = query.remediation_kind {
+        remediations.retain(|remediation| remediation.remediation_kind == remediation_kind);
+    }
+    if let Some(status) = query.status {
+        remediations.retain(|remediation| remediation.status == status);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        remediations.retain(|remediation| remediation.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        remediations.retain(|remediation| remediation.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        remediations.retain(|remediation| remediation.blocked() == blocked);
+    }
+    if let Some(ready_to_execute) = query.ready_to_execute {
+        remediations.retain(|remediation| remediation.ready_to_execute() == ready_to_execute);
+    }
+    if let Some(limit) = query.remediation_limit {
+        remediations.truncate(limit);
+    }
+
+    (remediations, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -9642,6 +9762,98 @@ fn get_integration_activation_response_summary_output_handler_output(
             (
                 "responses_ready_to_verify",
                 integer(summary.responses_ready_to_verify as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_remediation_output_handler_output(
+    query: IntegrationActivationRemediationQuery,
+) -> ToolHandlerOutput {
+    let (remediations, catalog_count) = integration_activation_remediation_items_for_query(&query);
+    let summary = IntegrationActivationRemediationSummary::from_remediations(remediations.iter());
+    let count = remediations.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_remediation",
+            JsonValue::Array(
+                remediations
+                    .iter()
+                    .map(activation_remediation_item_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_remediation_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_remediation"),
+            ),
+            ("remediations", integer(count as i64)),
+            (
+                "remediations_requiring_attention",
+                integer(summary.remediations_requiring_attention as i64),
+            ),
+            (
+                "blocked_remediations",
+                integer(summary.blocked_remediations as i64),
+            ),
+            (
+                "ready_to_execute_remediations",
+                integer(summary.ready_to_execute_remediations as i64),
+            ),
+            (
+                "next_remediation_kind",
+                summary
+                    .next_remediation_kind
+                    .map(|kind| string(kind.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_remediation_summary_output_handler_output(
+    query: IntegrationActivationRemediationQuery,
+) -> ToolHandlerOutput {
+    let (remediations, _) = integration_activation_remediation_items_for_query(&query);
+    let summary = IntegrationActivationRemediationSummary::from_remediations(remediations.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_remediation_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_remediation_summary"),
+            ),
+            (
+                "total_remediations",
+                integer(summary.total_remediations as i64),
+            ),
+            (
+                "remediations_requiring_attention",
+                integer(summary.remediations_requiring_attention as i64),
+            ),
+            (
+                "blocked_remediations",
+                integer(summary.blocked_remediations as i64),
+            ),
+            (
+                "ready_to_execute_remediations",
+                integer(summary.ready_to_execute_remediations as i64),
             ),
         ]),
     )
@@ -18996,6 +19208,257 @@ fn integration_activation_response_summary_json(
     ])
 }
 
+fn activation_remediation_item_json(
+    remediation: &IntegrationActivationRemediationItem,
+) -> JsonValue {
+    object([
+        ("sequence", integer(remediation.sequence as i64)),
+        (
+            "remediation_kind",
+            string(remediation.remediation_kind.as_str()),
+        ),
+        ("status", string(remediation.status.as_str())),
+        ("owner_lane", string(remediation.owner_lane.as_str())),
+        (
+            "source_response_sequence",
+            integer(remediation.source_response_sequence as i64),
+        ),
+        (
+            "source_response_kind",
+            string(remediation.source_response_kind.as_str()),
+        ),
+        ("source_id", string(&remediation.source_id)),
+        ("title", string(&remediation.title)),
+        ("summary", string(&remediation.summary)),
+        ("priority", integer(remediation.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                remediation
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(remediation.integration_count() as i64),
+        ),
+        (
+            "recommended_view",
+            string(remediation.recommended_view.as_str()),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(remediation.required_tier)),
+        ),
+        (
+            "policy_surface",
+            remediation
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(remediation.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(remediation.has_policy_risk()),
+        ),
+        (
+            "ready_to_verify",
+            JsonValue::Bool(remediation.ready_to_verify()),
+        ),
+        (
+            "ready_to_execute",
+            JsonValue::Bool(remediation.ready_to_execute()),
+        ),
+        ("blocked", JsonValue::Bool(remediation.blocked())),
+        (
+            "requires_attention",
+            JsonValue::Bool(remediation.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_remediation_summary_json(
+    summary: &IntegrationActivationRemediationSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_remediations",
+            integer(summary.total_remediations as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "remediations_requiring_attention",
+            integer(summary.remediations_requiring_attention as i64),
+        ),
+        (
+            "unblock_platform_remediations",
+            integer(summary.unblock_platform_remediations as i64),
+        ),
+        (
+            "enable_dependency_remediations",
+            integer(summary.enable_dependency_remediations as i64),
+        ),
+        (
+            "review_policy_remediations",
+            integer(summary.review_policy_remediations as i64),
+        ),
+        (
+            "complete_review_remediations",
+            integer(summary.complete_review_remediations as i64),
+        ),
+        (
+            "run_verification_remediations",
+            integer(summary.run_verification_remediations as i64),
+        ),
+        (
+            "record_audit_remediations",
+            integer(summary.record_audit_remediations as i64),
+        ),
+        (
+            "platform_owner_remediations",
+            integer(summary.platform_owner_remediations as i64),
+        ),
+        (
+            "integration_owner_remediations",
+            integer(summary.integration_owner_remediations as i64),
+        ),
+        (
+            "security_owner_remediations",
+            integer(summary.security_owner_remediations as i64),
+        ),
+        (
+            "reviewer_owner_remediations",
+            integer(summary.reviewer_owner_remediations as i64),
+        ),
+        (
+            "verification_owner_remediations",
+            integer(summary.verification_owner_remediations as i64),
+        ),
+        (
+            "audit_owner_remediations",
+            integer(summary.audit_owner_remediations as i64),
+        ),
+        (
+            "blocked_remediations",
+            integer(summary.blocked_remediations as i64),
+        ),
+        (
+            "owner_action_remediations",
+            integer(summary.owner_action_remediations as i64),
+        ),
+        (
+            "ready_to_execute_remediations",
+            integer(summary.ready_to_execute_remediations as i64),
+        ),
+        (
+            "tracking_remediations",
+            integer(summary.tracking_remediations as i64),
+        ),
+        (
+            "remediations_with_dependency_work",
+            integer(summary.remediations_with_dependency_work as i64),
+        ),
+        (
+            "remediations_with_policy_risk",
+            integer(summary.remediations_with_policy_risk as i64),
+        ),
+        (
+            "remediations_ready_to_verify",
+            integer(summary.remediations_ready_to_verify as i64),
+        ),
+        (
+            "remediations_with_policy_surface",
+            integer(summary.remediations_with_policy_surface as i64),
+        ),
+        (
+            "next_remediation_kind",
+            summary
+                .next_remediation_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_status",
+            summary
+                .next_remediation_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_sequence",
+            summary
+                .next_remediation_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_remediation_priority",
+            summary
+                .next_remediation_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_dependency_work",
+            JsonValue::Bool(summary.has_dependency_work()),
+        ),
+        (
+            "has_policy_risk",
+            JsonValue::Bool(summary.has_policy_risk()),
+        ),
+        (
+            "has_owner_action",
+            JsonValue::Bool(summary.has_owner_action()),
+        ),
+        (
+            "ready_to_execute",
+            JsonValue::Bool(summary.ready_to_execute()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -21924,6 +22387,54 @@ fn parse_activation_response_owner_lane(
     }
 }
 
+fn parse_activation_remediation_kind(
+    label: &str,
+) -> Result<IntegrationActivationRemediationKind, ToolCallError> {
+    match label {
+        "unblock_platform" | "unblock" | "resolve_blocker" | "blocker" => {
+            Ok(IntegrationActivationRemediationKind::UnblockPlatform)
+        }
+        "enable_dependency" | "dependency" | "dependencies" => {
+            Ok(IntegrationActivationRemediationKind::EnableDependency)
+        }
+        "review_policy" | "policy" | "policy_risk" | "risk" => {
+            Ok(IntegrationActivationRemediationKind::ReviewPolicy)
+        }
+        "complete_review" | "review" | "queue_review" | "reviewer" => {
+            Ok(IntegrationActivationRemediationKind::CompleteReview)
+        }
+        "run_verification" | "verification" | "verify" | "verify_activation" => {
+            Ok(IntegrationActivationRemediationKind::RunVerification)
+        }
+        "record_audit" | "audit" | "audit_follow_up" | "follow_up" => {
+            Ok(IntegrationActivationRemediationKind::RecordAudit)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation remediation kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_remediation_status(
+    label: &str,
+) -> Result<IntegrationActivationRemediationStatus, ToolCallError> {
+    match label {
+        "blocked" | "blocker" => Ok(IntegrationActivationRemediationStatus::Blocked),
+        "needs_owner_action" | "owner_action" | "needs_action" | "action" => {
+            Ok(IntegrationActivationRemediationStatus::NeedsOwnerAction)
+        }
+        "ready_to_execute" | "ready" | "execute" => {
+            Ok(IntegrationActivationRemediationStatus::ReadyToExecute)
+        }
+        "tracking" | "monitor" | "monitoring" => {
+            Ok(IntegrationActivationRemediationStatus::Tracking)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation remediation status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -23477,6 +23988,45 @@ fn integration_activation_response_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_remediation_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_response_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("remediation_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("remediation", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "remediation_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("status", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "remediation_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_blocked",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_ready_to_execute",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "remediation_limit",
+            JsonSchema::Integer,
+        ));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -23621,7 +24171,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 121);
+        assert_eq!(definitions.len(), 123);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -23956,9 +24506,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            113
+            115
         );
         assert_eq!(
             export
@@ -23991,6 +24547,14 @@ mod tests {
         .is_some());
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_RESPONSE_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(SMART_HOME_LIST_DISCOVERY_WORKERS_TOOL_ID).is_some());
@@ -24444,11 +25008,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(121))
+            Some(&integer(123))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(113))
+            Some(&integer(115))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -28693,6 +29257,168 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_remediation_request = request(
+            "call-list-integration-activation-remediation",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_REMEDIATION_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("remediation_kind", string("unblock_platform")),
+                ("remediation_status", string("blocked")),
+                ("remediation_requires_attention", JsonValue::Bool(true)),
+                ("remediation_blocked", JsonValue::Bool(true)),
+                ("remediation_limit", integer(3)),
+            ]),
+            5_047,
+        );
+        let list_activation_remediation_trace =
+            tool_runtime.invoke_with_events(&list_activation_remediation_request);
+        assert!(list_activation_remediation_trace.result.ok);
+        assert_eq!(
+            list_activation_remediation_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_remediation_output = list_activation_remediation_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_remediation_count =
+            integer_value(field(list_activation_remediation_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_remediation_count));
+        let activation_remediation_summary =
+            field(list_activation_remediation_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_remediation_summary, "total_remediations"),
+            Some(&integer(activation_remediation_count))
+        );
+        assert_eq!(
+            field(activation_remediation_summary, "next_remediation_kind"),
+            Some(&string("unblock_platform"))
+        );
+        assert_eq!(
+            field(activation_remediation_summary, "next_remediation_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_remediation_summary, "next_owner_lane"),
+            Some(&string("platform"))
+        );
+        assert_eq!(
+            field(activation_remediation_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_remediation_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_remediation = array_item(
+            field(list_activation_remediation_output, "activation_remediation").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_remediation, "remediation_kind"),
+            Some(&string("unblock_platform"))
+        );
+        assert_eq!(
+            field(activation_remediation, "status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_remediation, "owner_lane"),
+            Some(&string("platform"))
+        );
+        assert_eq!(
+            field(activation_remediation, "blocked"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_remediation, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_remediation_summary_request = request(
+            "call-integration-activation-remediation-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_REMEDIATION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("remediation_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_048,
+        );
+        let activation_remediation_summary_trace =
+            tool_runtime.invoke_with_events(&activation_remediation_summary_request);
+        assert!(activation_remediation_summary_trace.result.ok);
+        assert_eq!(
+            activation_remediation_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_remediation_summary_output = activation_remediation_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_remediation_rollup =
+            field(activation_remediation_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_remediation_rollup, "total_remediations").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_remediation_rollup, "blocked_remediations").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_remediation_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_remediation_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -30549,6 +31275,14 @@ mod tests {
             activation_response_summary_request,
             activation_response_summary_trace,
         );
+        journal.record_trace(
+            list_activation_remediation_request,
+            list_activation_remediation_trace,
+        );
+        journal.record_trace(
+            activation_remediation_summary_request,
+            activation_remediation_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -30622,9 +31356,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 121);
-        assert_eq!(journal_summary.completed_count, 121);
-        assert_eq!(journal.audit_records().len(), 121);
+        assert_eq!(journal_summary.invocation_count, 123);
+        assert_eq!(journal_summary.completed_count, 123);
+        assert_eq!(journal.audit_records().len(), 123);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

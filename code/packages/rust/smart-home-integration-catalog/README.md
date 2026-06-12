@@ -99,6 +99,9 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation response items that turn escalation cases into owner-lane next
   actions for blocker, dependency, policy, review, verification, and audit
   follow-up work
+- activation remediation work orders that assign response items to executable
+  owner-lane queues with blocked, owner-action, ready-to-execute, and tracking
+  status
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

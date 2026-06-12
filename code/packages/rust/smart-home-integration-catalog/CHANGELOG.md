@@ -109,6 +109,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationResponseItem` and
   `IntegrationActivationResponseSummary` for turning escalation cases into
   owner-lane next actions for response planning.
+- `IntegrationActivationRemediationItem` and
+  `IntegrationActivationRemediationSummary` for turning response items into
+  executable owner-lane remediation queues.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
