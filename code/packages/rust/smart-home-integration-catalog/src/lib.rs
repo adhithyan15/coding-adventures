@@ -1114,6 +1114,43 @@ impl IntegrationActivationPlaybookView {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationRunbookPhase {
+    ClearBlockers,
+    ResolveDependencies,
+    PrepareApprovals,
+    CompleteReviews,
+    ReviewRisks,
+    Activate,
+    Monitor,
+}
+
+impl IntegrationActivationRunbookPhase {
+    pub fn from_playbook_action(action: IntegrationActivationForecastAction) -> Self {
+        match action {
+            IntegrationActivationForecastAction::ResolveBlockers => Self::ClearBlockers,
+            IntegrationActivationForecastAction::EnableDependencies => Self::ResolveDependencies,
+            IntegrationActivationForecastAction::PrepareApproval => Self::PrepareApprovals,
+            IntegrationActivationForecastAction::QueueReview => Self::CompleteReviews,
+            IntegrationActivationForecastAction::ReviewRisk => Self::ReviewRisks,
+            IntegrationActivationForecastAction::ActivateWave => Self::Activate,
+            IntegrationActivationForecastAction::MonitorWave => Self::Monitor,
+        }
+    }
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ClearBlockers => "clear_blockers",
+            Self::ResolveDependencies => "resolve_dependencies",
+            Self::PrepareApprovals => "prepare_approvals",
+            Self::CompleteReviews => "complete_reviews",
+            Self::ReviewRisks => "review_risks",
+            Self::Activate => "activate",
+            Self::Monitor => "monitor",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationOperatorTaskKind {
     ResolveConstraints,
     EnableDependencies,
@@ -2286,6 +2323,86 @@ pub struct IntegrationActivationPlaybookSummary {
     pub first_blocked_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
     pub first_monitor_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunbookEntry {
+    pub sequence: usize,
+    pub playbook_sequence: usize,
+    pub priority: u8,
+    pub phase: IntegrationActivationRunbookPhase,
+    pub playbook_action: IntegrationActivationForecastAction,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub milestone_kind: Option<IntegrationActivationBriefingItemKind>,
+    pub health_status: IntegrationActivationHealthStatus,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub action_count: usize,
+    pub dossier_count: usize,
+    pub evidence_count: usize,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub audit_record_count: usize,
+    pub attention_audit_record_count: usize,
+    pub risk_audit_record_count: usize,
+    pub dependency_audit_record_count: usize,
+    pub readiness_gap_record_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub operator_required: bool,
+    pub activation_ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub monitor_only: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationRunbookSummary {
+    pub total_entries: usize,
+    pub unique_integrations: usize,
+    pub operator_required_entries: usize,
+    pub activation_ready_entries: usize,
+    pub blocked_entries: usize,
+    pub review_required_entries: usize,
+    pub monitor_entries: usize,
+    pub clear_blocker_entries: usize,
+    pub dependency_entries: usize,
+    pub approval_entries: usize,
+    pub review_entries: usize,
+    pub risk_entries: usize,
+    pub activation_entries: usize,
+    pub monitor_phase_entries: usize,
+    pub total_actions: usize,
+    pub total_dossiers: usize,
+    pub total_evidence: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_audit_records: usize,
+    pub attention_audit_records: usize,
+    pub risk_audit_records: usize,
+    pub dependency_audit_records: usize,
+    pub readiness_gap_records: usize,
+    pub next_phase: Option<IntegrationActivationRunbookPhase>,
+    pub next_playbook_action: Option<IntegrationActivationForecastAction>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_entry_sequence: Option<usize>,
+    pub next_entry_priority: Option<u8>,
+    pub first_operator_sequence: Option<usize>,
+    pub first_activation_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_monitor_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_operator_priority: Option<u8>,
+    pub first_activation_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_monitor_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -4828,6 +4945,322 @@ impl IntegrationActivationPlaybookSummary {
         self.has_operator_work()
             || self.has_blockers()
             || self.has_review_work()
+            || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationRunbookEntry {
+    fn from_playbook_step(
+        step: IntegrationActivationPlaybookStep,
+        audit_records: &[&IntegrationActivationAuditRecord],
+    ) -> Self {
+        let audit_record_count = audit_records.len();
+        let attention_audit_record_count = audit_records
+            .iter()
+            .filter(|record| record.requires_attention())
+            .count();
+        let risk_audit_record_count = audit_records
+            .iter()
+            .filter(|record| record.record_kind == IntegrationActivationAuditRecordKind::Risk)
+            .count();
+        let dependency_audit_record_count = audit_records
+            .iter()
+            .filter(|record| record.record_kind == IntegrationActivationAuditRecordKind::Dependency)
+            .count();
+        let readiness_gap_record_count = audit_records
+            .iter()
+            .filter(|record| {
+                record.record_kind == IntegrationActivationAuditRecordKind::ReadinessGap
+            })
+            .count();
+        let highest_policy_tier = audit_records
+            .iter()
+            .fold(step.highest_policy_tier, |tier, record| {
+                tier.max(record.required_tier)
+            });
+        let dependency_blocking = audit_records.iter().any(|record| {
+            record.record_kind == IntegrationActivationAuditRecordKind::Dependency
+                && record.requires_attention()
+        });
+        let blocked = step.blocked() || dependency_blocking || readiness_gap_record_count > 0;
+        let review_required = step.review_required()
+            || risk_audit_record_count > 0
+            || audit_records.iter().any(|record| {
+                matches!(
+                    record.record_kind,
+                    IntegrationActivationAuditRecordKind::Decision
+                        | IntegrationActivationAuditRecordKind::Evidence
+                ) && record.requires_attention()
+            });
+        let operator_required = step.operator_required()
+            || blocked
+            || review_required
+            || attention_audit_record_count > 0;
+        let requires_attention =
+            step.requires_attention() || operator_required || attention_audit_record_count > 0;
+        let activation_ready = step.activation_ready();
+        let monitor_only = step.monitor_only();
+
+        Self {
+            sequence: step.sequence,
+            playbook_sequence: step.sequence,
+            priority: step.priority,
+            phase: IntegrationActivationRunbookPhase::from_playbook_action(step.playbook_action),
+            playbook_action: step.playbook_action,
+            recommended_view: step.recommended_view,
+            milestone_kind: step.milestone_kind,
+            health_status: step.health_status,
+            integration_ids: step.integration_ids,
+            integration_count: step.integration_count,
+            action_count: step.action_count,
+            dossier_count: step.dossier_count,
+            evidence_count: step.evidence_count,
+            risk_count: step.risk_count,
+            dependency_edge_count: step.dependency_edge_count,
+            blocking_dependency_edge_count: step.blocking_dependency_edge_count,
+            audit_record_count,
+            attention_audit_record_count,
+            risk_audit_record_count,
+            dependency_audit_record_count,
+            readiness_gap_record_count,
+            highest_policy_tier,
+            operator_required,
+            activation_ready,
+            blocked,
+            review_required,
+            monitor_only,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.activation_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn monitor_only(&self) -> bool {
+        self.monitor_only
+    }
+
+    pub fn has_audit_context(&self) -> bool {
+        self.audit_record_count > 0
+    }
+}
+
+impl IntegrationActivationRunbookSummary {
+    pub fn from_entries<'a>(
+        entries: impl IntoIterator<Item = &'a IntegrationActivationRunbookEntry>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_entries: 0,
+            unique_integrations: 0,
+            operator_required_entries: 0,
+            activation_ready_entries: 0,
+            blocked_entries: 0,
+            review_required_entries: 0,
+            monitor_entries: 0,
+            clear_blocker_entries: 0,
+            dependency_entries: 0,
+            approval_entries: 0,
+            review_entries: 0,
+            risk_entries: 0,
+            activation_entries: 0,
+            monitor_phase_entries: 0,
+            total_actions: 0,
+            total_dossiers: 0,
+            total_evidence: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_audit_records: 0,
+            attention_audit_records: 0,
+            risk_audit_records: 0,
+            dependency_audit_records: 0,
+            readiness_gap_records: 0,
+            next_phase: None,
+            next_playbook_action: None,
+            next_recommended_view: None,
+            next_entry_sequence: None,
+            next_entry_priority: None,
+            first_operator_sequence: None,
+            first_activation_sequence: None,
+            first_blocked_sequence: None,
+            first_review_sequence: None,
+            first_monitor_sequence: None,
+            first_attention_sequence: None,
+            first_operator_priority: None,
+            first_activation_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            first_monitor_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for entry in entries {
+            summary.total_entries += 1;
+            for integration_id in &entry.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match entry.phase {
+                IntegrationActivationRunbookPhase::ClearBlockers => {
+                    summary.clear_blocker_entries += 1
+                }
+                IntegrationActivationRunbookPhase::ResolveDependencies => {
+                    summary.dependency_entries += 1
+                }
+                IntegrationActivationRunbookPhase::PrepareApprovals => {
+                    summary.approval_entries += 1
+                }
+                IntegrationActivationRunbookPhase::CompleteReviews => summary.review_entries += 1,
+                IntegrationActivationRunbookPhase::ReviewRisks => summary.risk_entries += 1,
+                IntegrationActivationRunbookPhase::Activate => summary.activation_entries += 1,
+                IntegrationActivationRunbookPhase::Monitor => summary.monitor_phase_entries += 1,
+            }
+
+            if summary.next_phase.is_none() && !entry.monitor_only() {
+                summary.next_phase = Some(entry.phase);
+                summary.next_playbook_action = Some(entry.playbook_action);
+                summary.next_recommended_view = Some(entry.recommended_view);
+                summary.next_entry_sequence = Some(entry.sequence);
+                summary.next_entry_priority = Some(entry.priority);
+            }
+
+            if entry.operator_required() {
+                summary.operator_required_entries += 1;
+                summary.first_operator_sequence =
+                    summary.first_operator_sequence.or(Some(entry.sequence));
+                summary.first_operator_priority =
+                    min_optional_priority(summary.first_operator_priority, Some(entry.priority));
+            }
+            if entry.activation_ready() {
+                summary.activation_ready_entries += 1;
+                summary.first_activation_sequence =
+                    summary.first_activation_sequence.or(Some(entry.sequence));
+                summary.first_activation_priority =
+                    min_optional_priority(summary.first_activation_priority, Some(entry.priority));
+            }
+            if entry.blocked() {
+                summary.blocked_entries += 1;
+                summary.first_blocked_sequence =
+                    summary.first_blocked_sequence.or(Some(entry.sequence));
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(entry.priority));
+            }
+            if entry.review_required() {
+                summary.review_required_entries += 1;
+                summary.first_review_sequence =
+                    summary.first_review_sequence.or(Some(entry.sequence));
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(entry.priority));
+            }
+            if entry.monitor_only() {
+                summary.monitor_entries += 1;
+                summary.first_monitor_sequence =
+                    summary.first_monitor_sequence.or(Some(entry.sequence));
+                summary.first_monitor_priority =
+                    min_optional_priority(summary.first_monitor_priority, Some(entry.priority));
+            }
+            if entry.requires_attention() {
+                summary.first_attention_sequence =
+                    summary.first_attention_sequence.or(Some(entry.sequence));
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(entry.priority));
+            }
+
+            summary.total_actions += entry.action_count;
+            summary.total_dossiers += entry.dossier_count;
+            summary.total_evidence += entry.evidence_count;
+            summary.total_risks += entry.risk_count;
+            summary.total_dependency_edges += entry.dependency_edge_count;
+            summary.blocking_dependency_edges += entry.blocking_dependency_edge_count;
+            summary.total_audit_records += entry.audit_record_count;
+            summary.attention_audit_records += entry.attention_audit_record_count;
+            summary.risk_audit_records += entry.risk_audit_record_count;
+            summary.dependency_audit_records += entry.dependency_audit_record_count;
+            summary.readiness_gap_records += entry.readiness_gap_record_count;
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(entry.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_entries > 0
+            || summary.readiness_gap_records > 0
+            || summary.blocking_dependency_edges > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.review_required_entries > 0
+            || summary.operator_required_entries > 0
+            || summary.attention_audit_records > 0
+            || summary.risk_audit_records > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.activation_ready_entries > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_entries == 0
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.operator_required_entries > 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.activation_ready_entries > 0 || self.activation_entries > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_entries > 0
+            || self.clear_blocker_entries > 0
+            || self.dependency_entries > 0
+            || self.readiness_gap_records > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_entries > 0
+            || self.approval_entries > 0
+            || self.review_entries > 0
+            || self.risk_entries > 0
+            || self.risk_audit_records > 0
+    }
+
+    pub fn has_audit_context(&self) -> bool {
+        self.total_audit_records > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_operator_work()
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.attention_audit_records > 0
             || self.overall_status.requires_attention()
     }
 }
@@ -10561,6 +10994,65 @@ pub fn activation_playbook_steps_at_or_before_priority(
     ))
 }
 
+fn activation_audit_record_matches_integration_ids(
+    record: &IntegrationActivationAuditRecord,
+    integration_ids: &[IntegrationId],
+) -> bool {
+    record.integration_ids.iter().any(|record_id| {
+        integration_ids
+            .iter()
+            .any(|integration_id| integration_id == record_id)
+    })
+}
+
+pub fn activation_runbook_entries_from_playbook_steps(
+    mut steps: Vec<IntegrationActivationPlaybookStep>,
+    audit_records: &[IntegrationActivationAuditRecord],
+) -> Vec<IntegrationActivationRunbookEntry> {
+    steps.sort_by(compare_activation_playbook_steps);
+    let mut entries = steps
+        .into_iter()
+        .map(|step| {
+            let matching_audit_records = audit_records
+                .iter()
+                .filter(|record| {
+                    activation_audit_record_matches_integration_ids(record, &step.integration_ids)
+                })
+                .collect::<Vec<_>>();
+            IntegrationActivationRunbookEntry::from_playbook_step(step, &matching_audit_records)
+        })
+        .collect::<Vec<_>>();
+    entries.sort_by(compare_activation_runbook_entries);
+    for (index, entry) in entries.iter_mut().enumerate() {
+        entry.sequence = index + 1;
+    }
+    entries
+}
+
+pub fn activation_runbook_entries_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationRunbookEntry> {
+    let steps = activation_playbook_steps_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let audit_records = activation_audit_records_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_runbook_entries_from_playbook_steps(steps, &audit_records)
+}
+
 pub fn activation_operator_tasks_from_playbook_steps(
     mut steps: Vec<IntegrationActivationPlaybookStep>,
 ) -> Vec<IntegrationActivationOperatorTask> {
@@ -12625,6 +13117,22 @@ fn compare_activation_playbook_steps(
         .then_with(|| right.blocked().cmp(&left.blocked()))
         .then_with(|| right.review_required().cmp(&left.review_required()))
         .then_with(|| right.activation_ready().cmp(&left.activation_ready()))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_runbook_entries(
+    left: &IntegrationActivationRunbookEntry,
+    right: &IntegrationActivationRunbookEntry,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.review_required().cmp(&left.review_required()))
+        .then_with(|| right.activation_ready().cmp(&left.activation_ready()))
+        .then_with(|| left.phase.cmp(&right.phase))
+        .then_with(|| left.playbook_action.cmp(&right.playbook_action))
+        .then_with(|| right.audit_record_count.cmp(&left.audit_record_count))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -15919,6 +16427,131 @@ mod tests {
         assert!(catalog_records
             .iter()
             .any(IntegrationActivationAuditRecord::requires_attention));
+    }
+
+    #[test]
+    fn activation_runbook_entries_join_playbook_steps_to_audit_context() {
+        let reports = vec![
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+                display_name: "Review Ready Bridge".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 1,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HumanApproval,
+                local_only: true,
+                cloud_required: false,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+                display_name: "Blocked Review Camera".to_string(),
+                activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                    IntegrationId::trusted("mqtt"),
+                ),
+                priority: 2,
+                missing_primitives: vec![PrimitiveFamily::CameraMedia],
+                missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+                missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HighRisk,
+                local_only: false,
+                cloud_required: true,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("read_only_probe"),
+                display_name: "Read-only Probe".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 3,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: false,
+                highest_policy_tier: PrivilegeTier::ReadOnly,
+                local_only: true,
+                cloud_required: false,
+            },
+        ];
+        let candidates = activation_candidates_from_reports(reports.iter());
+        let steps = activation_playbook_steps_from_candidates(&[], candidates.clone(), &[]);
+        let risks = activation_risk_from_candidates(&[], candidates.iter());
+        let signals = activation_watchtower_signals_from_candidates(&[], candidates.clone(), &[]);
+        let graph = activation_dependency_graph_from_reports(&[], reports.iter(), &[]);
+        let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+        let alerts =
+            activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory);
+        let decisions = activation_decisions_from_candidates(&[], candidates.iter(), &[]);
+        let evidence = activation_evidence_from_decisions(decisions.iter());
+        let audit_records = activation_audit_records_from_rollups(
+            &alerts,
+            &signals,
+            &decisions,
+            &evidence,
+            &risks,
+            &graph,
+            &gap_inventory,
+        );
+
+        let entries = activation_runbook_entries_from_playbook_steps(steps, &audit_records);
+
+        assert!(entries.iter().all(|entry| entry.sequence > 0));
+        assert!(entries
+            .iter()
+            .any(|entry| entry.phase == IntegrationActivationRunbookPhase::ClearBlockers));
+        assert!(entries
+            .iter()
+            .any(IntegrationActivationRunbookEntry::review_required));
+        assert!(entries
+            .iter()
+            .any(IntegrationActivationRunbookEntry::has_audit_context));
+
+        let blocked = entries
+            .iter()
+            .find(|entry| {
+                entry
+                    .integration_ids
+                    .contains(&IntegrationId::trusted("blocked_review_camera"))
+            })
+            .unwrap();
+        assert!(blocked.blocked());
+        assert!(blocked.requires_attention());
+        assert!(blocked.audit_record_count > 0);
+        assert!(blocked.dependency_audit_record_count > 0);
+        assert!(blocked.readiness_gap_record_count > 0);
+
+        let summary = IntegrationActivationRunbookSummary::from_entries(entries.iter());
+        assert_eq!(summary.total_entries, entries.len());
+        assert!(summary.has_audit_context());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+        assert!(summary.total_audit_records >= audit_records.len());
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_entries = activation_runbook_entries_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_entries
+            .iter()
+            .any(IntegrationActivationRunbookEntry::requires_attention));
     }
 
     #[test]

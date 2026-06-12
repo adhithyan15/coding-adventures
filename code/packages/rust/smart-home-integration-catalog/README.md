@@ -75,6 +75,8 @@ runtime and Chief of Staff tools a typed catalog for:
   activation, and monitoring
 - activation playbook steps that pair forecast next actions with recommended
   planning views and operator-readiness flags
+- activation runbook entries that join playbook steps to audit, risk,
+  dependency, and readiness-gap context
 - activation operator tasks that turn playbook steps into actionable
   human/operator queue rows
 - activation control-room panels that group operator tasks by recommended

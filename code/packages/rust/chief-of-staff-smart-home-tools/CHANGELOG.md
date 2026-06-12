@@ -67,6 +67,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation playbook planning:
   `smart_home.list_integration_activation_playbook` and
   `smart_home.get_integration_activation_playbook_summary`.
+- Added D18D handlers for D23A activation runbook planning:
+  `smart_home.list_integration_activation_runbook` and
+  `smart_home.get_integration_activation_runbook_summary`.
 - Added D18D handlers for D23A activation operator queue planning:
   `smart_home.list_integration_activation_operator_queue` and
   `smart_home.get_integration_activation_operator_queue_summary`.
