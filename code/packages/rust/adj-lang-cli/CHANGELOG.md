@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.6] - 2026-06-11 — grant-allocation LP worked example (ADJ constraints track D)
+
+### Added
+
+- `grant_allocation.adj` worked example + golden test: an allocation LP
+  (`maximize 3·outreach + 2·training` under a budget + capacity) solved
+  end-to-end through the CLI at **0 model calls** → optimal 26 at (6, 4),
+  binding constraints [0, 1]. Demonstrates the C2 `optimize` path in the
+  worked-examples suite (now 5 examples). Test-only; no CLI behavior change.
+
 ## [0.3.5] - 2026-06-11 — emit LP optima (ADJ constraints track C2)
 
 ### Added

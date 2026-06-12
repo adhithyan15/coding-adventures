@@ -70,3 +70,18 @@ fn break_even_solves_for_the_unit_price() {
     assert!(s.contains("\"name\":\"p\",\"value\":8"), "{s}");
     assert!(s.contains("\"from_constraints\":[0]"), "{s}");
 }
+
+#[test]
+fn grant_allocation_maximizes_impact_via_lp() {
+    // The allocation LP: max 3·outreach + 2·training s.t. budget ≤ 10,
+    // outreach ≤ 6, both ≥ 0 → optimum 26 at (6, 4), binding the budget and
+    // the outreach cap. The engine solves it end-to-end at 0 model calls.
+    let (ok, s) = run_example("grant_allocation.adj");
+    assert!(ok, "non-zero exit: {s}");
+    assert!(s.contains("\"optimize\":{"), "expected an optimize section: {s}");
+    assert!(s.contains("\"outcome\":\"optimal\""), "{s}");
+    assert!(s.contains("\"value\":26"), "expected optimum 26: {s}");
+    assert!(s.contains("\"name\":\"outreach\",\"value\":6"), "{s}");
+    assert!(s.contains("\"name\":\"training\",\"value\":4"), "{s}");
+    assert!(s.contains("\"binding\":[0,1]"), "budget + cap bind: {s}");
+}
