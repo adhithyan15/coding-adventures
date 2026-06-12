@@ -3154,6 +3154,27 @@ pub struct DeckControlSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckResolutionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub source: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub target: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckResolutionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub diagnostics: Vec<DeckResolutionDiagnostic>,
+    pub included_paths: Vec<String>,
+    pub library_sections: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
     pub field: String,
@@ -3313,6 +3334,24 @@ pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
         terminated: end_line_number.is_some(),
         end_line_number,
         diagnostics,
+    }
+}
+
+pub fn resolve_deck_sources(
+    netlist: &str,
+    sources: &HashMap<String, String>,
+) -> DeckResolutionSummary {
+    let mut state = DeckResolutionState::new();
+    let (active_lines, terminated, end_line_number) =
+        resolve_deck_lines(netlist, "<deck>", sources, &mut state, &[]);
+
+    DeckResolutionSummary {
+        active_lines,
+        terminated,
+        end_line_number,
+        diagnostics: state.diagnostics,
+        included_paths: state.included_paths,
+        library_sections: state.library_sections,
     }
 }
 
@@ -3532,6 +3571,319 @@ fn validate_compatibility_non_empty(
         field: field.to_string(),
         message: "field must be documented and non-empty".to_string(),
     });
+}
+
+struct DeckResolutionState {
+    diagnostics: Vec<DeckResolutionDiagnostic>,
+    included_paths: Vec<String>,
+    library_sections: Vec<String>,
+}
+
+impl DeckResolutionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            included_paths: Vec::new(),
+            library_sections: Vec::new(),
+        }
+    }
+}
+
+fn resolve_deck_lines(
+    netlist: &str,
+    source: &str,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> (Vec<String>, bool, Option<usize>) {
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".include") {
+            active_lines.extend(resolve_include_directive(
+                stripped,
+                source,
+                line_number,
+                sources,
+                state,
+                stack,
+            ));
+            continue;
+        }
+        if directive.as_deref() == Some(".lib") {
+            active_lines.extend(resolve_library_directive(
+                stripped,
+                source,
+                line_number,
+                sources,
+                state,
+                stack,
+            ));
+            continue;
+        }
+        if directive.as_deref() == Some(".control") {
+            state.diagnostics.push(DeckResolutionDiagnostic {
+                code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE".to_string(),
+                directive: ".control".to_string(),
+                source: source.to_string(),
+                line_number,
+                message: ".control is not supported by the deck source resolver yet".to_string(),
+                severity: "error".to_string(),
+                target: None,
+            });
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    (active_lines, end_line_number.is_some(), end_line_number)
+}
+
+fn resolve_include_directive(
+    line: &str,
+    source: &str,
+    line_number: usize,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> Vec<String> {
+    let tokens = directive_tokens(line);
+    let target = tokens.get(1).map(|token| unquote_token(token));
+    let Some(target) = target.filter(|target| !target.is_empty()) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_ARGUMENT",
+            ".include",
+            source,
+            line_number,
+            ".include requires a source path",
+            None,
+        );
+        return Vec::new();
+    };
+    if stack.contains(&target) {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_CYCLE",
+            ".include",
+            source,
+            line_number,
+            &format!(".include cycle detected for {target}"),
+            Some(target),
+        );
+        return Vec::new();
+    }
+    let Some(content) = sources.get(&target) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_NOT_FOUND",
+            ".include",
+            source,
+            line_number,
+            &format!(".include source {target:?} was not provided"),
+            Some(target),
+        );
+        return Vec::new();
+    };
+
+    state.included_paths.push(target.clone());
+    let mut next_stack = stack.to_vec();
+    next_stack.push(target.clone());
+    let (resolved, _, _) = resolve_deck_lines(content, &target, sources, state, &next_stack);
+    resolved
+}
+
+fn resolve_library_directive(
+    line: &str,
+    source: &str,
+    line_number: usize,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> Vec<String> {
+    let tokens = directive_tokens(line);
+    let path = tokens.get(1).map(|token| unquote_token(token));
+    let section = tokens.get(2).map(|token| unquote_token(token));
+    let (Some(path), Some(section)) = (path, section) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_ARGUMENT",
+            ".lib",
+            source,
+            line_number,
+            ".lib requires a source path and section name",
+            None,
+        );
+        return Vec::new();
+    };
+    if path.is_empty() || section.is_empty() {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_ARGUMENT",
+            ".lib",
+            source,
+            line_number,
+            ".lib requires a source path and section name",
+            Some(path),
+        );
+        return Vec::new();
+    }
+
+    let target = format!("{path}:{section}");
+    let Some(content) = sources.get(&path) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_NOT_FOUND",
+            ".lib",
+            source,
+            line_number,
+            &format!(".lib source {path:?} was not provided"),
+            Some(target),
+        );
+        return Vec::new();
+    };
+    if stack.contains(&target) {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_CYCLE",
+            ".lib",
+            source,
+            line_number,
+            &format!(".lib cycle detected for {target}"),
+            Some(target),
+        );
+        return Vec::new();
+    }
+
+    let Some(section_lines) =
+        extract_library_section(content, &path, &section, source, line_number, state)
+    else {
+        return Vec::new();
+    };
+    state.library_sections.push(target.clone());
+    let mut next_stack = stack.to_vec();
+    next_stack.push(target.clone());
+    let (resolved, _, _) = resolve_deck_lines(
+        &section_lines.join("\n"),
+        &target,
+        sources,
+        state,
+        &next_stack,
+    );
+    resolved
+}
+
+fn extract_library_section(
+    content: &str,
+    path: &str,
+    section: &str,
+    call_source: &str,
+    call_line_number: usize,
+    state: &mut DeckResolutionState,
+) -> Option<Vec<String>> {
+    let mut in_section = false;
+    let mut section_start_line = None;
+    let mut section_lines = Vec::new();
+    let wanted = section.to_ascii_lowercase();
+    let target = format!("{path}:{section}");
+
+    for (index, raw_line) in content.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            if in_section {
+                section_lines.push(raw_line.to_string());
+            }
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        let tokens = directive_tokens(stripped);
+        if !in_section {
+            if directive.as_deref() == Some(".lib")
+                && tokens
+                    .get(1)
+                    .map(|token| unquote_token(token).to_ascii_lowercase() == wanted)
+                    .unwrap_or(false)
+            {
+                in_section = true;
+                section_start_line = Some(line_number);
+            }
+            continue;
+        }
+        if matches!(directive.as_deref(), Some(".endl" | ".endlib")) {
+            return Some(section_lines);
+        }
+        section_lines.push(raw_line.to_string());
+    }
+
+    if !in_section {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+            ".lib",
+            call_source,
+            call_line_number,
+            &format!(".lib section {section:?} was not found in {path:?}"),
+            Some(target),
+        );
+        return None;
+    }
+
+    add_resolution_diagnostic(
+        state,
+        "SPICE_DECK_LIB_SECTION_UNTERMINATED",
+        ".lib",
+        path,
+        section_start_line.unwrap_or(1),
+        &format!(".lib section {section:?} in {path:?} is missing .endl"),
+        Some(target),
+    );
+    None
+}
+
+fn add_resolution_diagnostic(
+    state: &mut DeckResolutionState,
+    code: &str,
+    directive: &str,
+    source: &str,
+    line_number: usize,
+    message: &str,
+    target: Option<String>,
+) {
+    state.diagnostics.push(DeckResolutionDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        source: source.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        target,
+    });
+}
+
+fn directive_tokens(line: &str) -> Vec<&str> {
+    line.split_whitespace().collect()
+}
+
+fn unquote_token(token: &str) -> String {
+    if token.len() >= 2 {
+        let first = token.as_bytes()[0] as char;
+        let last = token.as_bytes()[token.len() - 1] as char;
+        if first == last && (first == '"' || first == '\'') {
+            return token[1..token.len() - 1].to_string();
+        }
+    }
+    token.to_string()
 }
 
 fn deck_directive(line: &str) -> Option<String> {

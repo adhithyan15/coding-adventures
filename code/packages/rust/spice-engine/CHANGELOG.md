@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolve_deck_sources` for map-backed `.include` and selected
+  `.lib path section` expansion with stable diagnostics for missing sources,
+  missing or unterminated library sections, cycles, and still-unsupported
+  `.control` blocks, matching Python and TypeScript.
 - Add `analyze_deck_controls` for shared deck-control boundary diagnostics:
   active pre-`.end` lines plus stable unsupported-feature diagnostics for
   `.include`, `.lib`, and `.control`, matching Python and TypeScript.
