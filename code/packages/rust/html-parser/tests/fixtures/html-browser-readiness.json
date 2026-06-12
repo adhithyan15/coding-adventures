@@ -1947,7 +1947,10 @@
             "aria_errormessage": ["error"],
             "errormessage_text": ["Required value"],
             "aria_flowto": ["next"],
-            "flowto_text": ["Next step"]
+            "flowto_text": ["Next step"],
+            "relation_attribute_names": ["aria-details", "aria-errormessage", "aria-flowto"],
+            "relation_attribute_count": 3,
+            "relation_target_count": 4
           }
         ],
         "links": [],

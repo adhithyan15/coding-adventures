@@ -490,6 +490,18 @@ struct ExpectedAriaRelationDescriptor {
     aria_flowto: Vec<String>,
     #[serde(default)]
     flowto_text: Vec<String>,
+    #[serde(default)]
+    relation_attribute_names: Vec<String>,
+    #[serde(default)]
+    relation_attribute_count: usize,
+    #[serde(default)]
+    relation_target_count: usize,
+    #[serde(default)]
+    unresolved_relation_targets: Vec<String>,
+    #[serde(default)]
+    relation_blocked: bool,
+    #[serde(default)]
+    relation_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -5939,6 +5951,61 @@ fn browser_aria_state_relation_metadata_tracks_composite_and_live_states() {
         case.expected.into_browser_document().interactive_elements,
         "interactive summaries should preserve ARIA relationship, popup, modal, validation, disabled, required, and live-region states",
     );
+}
+
+#[test]
+fn browser_aria_relation_descriptors_track_targets_and_resolution_state() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "aria-relation-descriptor-page")
+        .expect("ARIA relation fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA relation fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.aria_relation_descriptors,
+        case.expected.into_browser_document().aria_relation_descriptors,
+        "ARIA relation descriptors should preserve relation attributes, target counts, resolved target text, and unresolved-id diagnostics",
+    );
+}
+
+#[test]
+fn browser_aria_relation_descriptors_track_unresolved_idrefs() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <div id=source aria-details="details missing" aria-errormessage=error aria-flowto="next absent">Source</div>
+            <p id=details>Detailed help</p>
+            <p id=error>Required value</p>
+            <p id=next>Next step</p>
+        </body>"#,
+    )
+    .expect("ARIA relation unresolved-id fixture should parse");
+
+    let relation = actual
+        .aria_relation_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("source"))
+        .expect("source relation descriptor should be present");
+
+    assert_eq!(
+        relation.relation_attribute_names,
+        vec!["aria-details", "aria-errormessage", "aria-flowto"]
+    );
+    assert_eq!(relation.relation_attribute_count, 3);
+    assert_eq!(relation.relation_target_count, 5);
+    assert_eq!(relation.details_text, vec!["Detailed help"]);
+    assert_eq!(relation.errormessage_text, vec!["Required value"]);
+    assert_eq!(relation.flowto_text, vec!["Next step"]);
+    assert_eq!(
+        relation.unresolved_relation_targets,
+        vec!["missing", "absent"]
+    );
+    assert!(relation.relation_blocked);
+    assert_eq!(relation.relation_block_reasons, vec!["unresolved-idref"]);
 }
 
 #[test]
@@ -13406,6 +13473,12 @@ impl ExpectedAriaRelationDescriptor {
             errormessage_text: self.errormessage_text,
             aria_flowto: self.aria_flowto,
             flowto_text: self.flowto_text,
+            relation_attribute_names: self.relation_attribute_names,
+            relation_attribute_count: self.relation_attribute_count,
+            relation_target_count: self.relation_target_count,
+            unresolved_relation_targets: self.unresolved_relation_targets,
+            relation_blocked: self.relation_blocked,
+            relation_block_reasons: self.relation_block_reasons,
         }
     }
 }

@@ -1714,6 +1714,12 @@ pub struct BrowserAriaRelationDescriptor {
     pub errormessage_text: Vec<String>,
     pub aria_flowto: Vec<String>,
     pub flowto_text: Vec<String>,
+    pub relation_attribute_names: Vec<String>,
+    pub relation_attribute_count: usize,
+    pub relation_target_count: usize,
+    pub unresolved_relation_targets: Vec<String>,
+    pub relation_blocked: bool,
+    pub relation_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -17651,6 +17657,16 @@ fn browser_aria_relation_descriptor(
         return None;
     }
 
+    let relation_attribute_names = browser_aria_relation_attribute_names(element);
+    let unresolved_relation_targets = browser_unresolved_aria_relation_targets(
+        &aria_details,
+        &aria_errormessage,
+        &aria_flowto,
+        id_texts,
+    );
+    let relation_block_reasons = browser_aria_relation_block_reasons(&unresolved_relation_targets);
+    let relation_target_count = aria_details.len() + aria_errormessage.len() + aria_flowto.len();
+
     Some(BrowserAriaRelationDescriptor {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -17661,7 +17677,50 @@ fn browser_aria_relation_descriptor(
         aria_errormessage,
         flowto_text: browser_idref_texts(&aria_flowto, id_texts),
         aria_flowto,
+        relation_attribute_count: relation_attribute_names.len(),
+        relation_attribute_names,
+        relation_target_count,
+        relation_blocked: !relation_block_reasons.is_empty(),
+        relation_block_reasons,
+        unresolved_relation_targets,
     })
+}
+
+fn browser_aria_relation_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-details", "aria-errormessage", "aria-flowto"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_relation_targets(
+    aria_details: &[String],
+    aria_errormessage: &[String],
+    aria_flowto: &[String],
+    id_texts: &[(String, String)],
+) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in aria_details
+        .iter()
+        .chain(aria_errormessage.iter())
+        .chain(aria_flowto.iter())
+    {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_relation_block_reasons(unresolved_targets: &[String]) -> Vec<String> {
+    if unresolved_targets.is_empty() {
+        Vec::new()
+    } else {
+        vec!["unresolved-idref".to_string()]
+    }
 }
 
 fn browser_slot_assignment(element: &Element) -> Option<String> {
@@ -26461,6 +26520,15 @@ mod tests {
         assert_eq!(relation.errormessage_text, vec!["Required value"]);
         assert_eq!(relation.aria_flowto, vec!["next"]);
         assert_eq!(relation.flowto_text, vec!["Next step"]);
+        assert_eq!(
+            relation.relation_attribute_names,
+            vec!["aria-details", "aria-errormessage", "aria-flowto"]
+        );
+        assert_eq!(relation.relation_attribute_count, 3);
+        assert_eq!(relation.relation_target_count, 4);
+        assert!(relation.unresolved_relation_targets.is_empty());
+        assert!(!relation.relation_blocked);
+        assert!(relation.relation_block_reasons.is_empty());
     }
 
     #[test]
