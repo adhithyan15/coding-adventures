@@ -155,6 +155,19 @@ pub enum Statement {
     /// `check` — ask whether the accumulated constraint set is satisfiable
     /// (feasibility / contradiction).
     Check,
+    /// `minimize <expr>` / `maximize <expr>` — a linear-programming objective
+    /// over the declared symbols (ADJ constraints track C2). The solver finds
+    /// the optimal value subject to the accumulated `constrain` half-planes.
+    Optimize { dir: OptDir, objective: ExprAst },
+}
+
+/// The direction of an `optimize` (LP) objective.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OptDir {
+    /// `minimize <expr>` — find the smallest feasible objective value.
+    Minimize,
+    /// `maximize <expr>` — find the largest feasible objective value.
+    Maximize,
 }
 
 /// A relational operator in a `constrain` clause.

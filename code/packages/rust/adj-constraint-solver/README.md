@@ -78,10 +78,28 @@ Two guards bound the classic Fourier–Motzkin blow-up (and keep the i64-backed
 rationals clear of overflow): caps on intermediate-inequality count and
 coefficient magnitude; past either, `check` returns `Unknown`.
 
-## Where it fits / what's next
+### Optimization — `minimize` / `maximize` (track C2)
+
+An `objective` declares a linear program. `optimize(&cs, &kb)` maximizes (or
+minimizes) it subject to the `constrain` half-planes, over exact rationals, by
+**Fourier–Motzkin projection** (reusing the feasibility machinery — *not* a
+separate simplex): bound a fresh variable `z` by the objective (`z ≤ obj`),
+project out every decision variable, and read `z`'s least upper bound as the
+optimum.
+
+- `Optimal { value, assignments, binding }` — the optimal value, an achieving
+  point, and the constraint indices **binding** (tight) at the optimum (the
+  provenance of the bound). E.g. `max 3x + 2y` s.t. `x+y≤4, x≤3, x,y≥0` → `11`
+  at `(3, 1)`, binding `[x+y≤4, x≤3]`.
+- `Unbounded` — the objective has no bound in the feasible region.
+- `Infeasible { core }` — the constraints have no feasible point.
+- `Unknown { reason }` — a non-linear/`!=` constraint or objective, or an **open
+  supremum** (a strict inequality prevents the optimum being attained).
+
+## Where it fits
 
 Part of the ADJ constraint-solving arc
 ([design](../../../specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md)).
-Still to come: **linear optimization** (simplex, `minimize`/`maximize`, track
-C2), built on the same half-plane representation. Reuses the same
-`ConstraintSystem` input.
+The dimensional + constraint stack (solve / feasibility / optimization) is now
+complete; remaining work is the nonlinear long tail and worked-example
+integration. Reuses the same `ConstraintSystem` input throughout.

@@ -27,7 +27,7 @@ use logic_engine::{
 };
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, RelOp, Statement,
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, OptDir, Program, RelOp, Statement,
     Term as AstTerm, TrustTierName,
 };
 
@@ -56,6 +56,10 @@ pub struct ConstraintSystem {
     pub solve_for: Vec<String>,
     /// Whether a `check` (feasibility query) was requested.
     pub check: bool,
+    /// An optional `minimize`/`maximize` objective (ADJ constraints track C2):
+    /// `(direction, objective expression)`. The expression is kept unevaluated
+    /// (it mentions the symbols the LP solver will assign).
+    pub objective: Option<(OptDir, ComputeExpr)>,
 }
 
 impl ConstraintSystem {
@@ -66,6 +70,7 @@ impl ConstraintSystem {
             && self.constraints.is_empty()
             && self.solve_for.is_empty()
             && !self.check
+            && self.objective.is_none()
     }
 }
 
@@ -241,6 +246,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             }
             Statement::Check => {
                 constraints.check = true;
+            }
+            Statement::Optimize { dir, objective } => {
+                // Keep the objective unevaluated — it mentions the symbols the
+                // LP solver assigns. A second `minimize`/`maximize` overwrites
+                // the first (a program declares one objective).
+                constraints.objective = Some((*dir, lower_expr(objective)));
             }
         }
     }
@@ -783,7 +794,10 @@ mod tests {
         assert_eq!(cs.constraints.len(), 3);
         assert_eq!(cs.constraints[0].op, crate::ast::RelOp::Le);
         assert_eq!(cs.constraints[1].op, crate::ast::RelOp::Ge);
-        assert_eq!(cs.solve_for, vec!["premium".to_string(), "months".to_string()]);
+        assert_eq!(
+            cs.solve_for,
+            vec!["premium".to_string(), "months".to_string()]
+        );
         assert!(!cs.check);
     }
 
@@ -795,6 +809,30 @@ mod tests {
     }
 
     #[test]
+    fn maximize_sets_an_lp_objective() {
+        // `maximize` lowers to an Optimize objective kept as an unevaluated
+        // ComputeExpr (it mentions the symbols the LP solver assigns).
+        let lowered = compile("symbol x : scalar\nconstrain x <= 5\nmaximize x + 1").unwrap();
+        let cs = &lowered.constraints;
+        assert!(!cs.is_empty());
+        let (dir, obj) = cs.objective.as_ref().expect("an objective");
+        assert_eq!(*dir, crate::ast::OptDir::Maximize);
+        // x + 1 is a Bin(Add, Ref(x), Lit(1)) — unevaluated.
+        assert!(format!("{obj:?}").contains("Add"), "{obj:?}");
+    }
+
+    #[test]
+    fn minimize_sets_the_direction() {
+        let lowered = compile("symbol x : scalar\nconstrain x >= 3\nminimize x").unwrap();
+        let (dir, _) = lowered
+            .constraints
+            .objective
+            .as_ref()
+            .expect("an objective");
+        assert_eq!(*dir, crate::ast::OptDir::Minimize);
+    }
+
+    #[test]
     fn constraint_operands_lower_to_unevaluated_compute_exprs() {
         // `constrain total = a + b * c` — the rhs stays a ComputeExpr tree
         // (not evaluated; it mentions symbols the solver will assign).
@@ -803,7 +841,10 @@ mod tests {
         assert_eq!(c.op, crate::ast::RelOp::Eq);
         assert!(matches!(c.lhs, logic_engine::ComputeExpr::Ref(_)));
         // rhs is a + (b * 2): an Add whose right operand is a Mul.
-        assert!(matches!(c.rhs, logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Add, _, _)));
+        assert!(matches!(
+            c.rhs,
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Add, _, _)
+        ));
     }
 
     #[test]

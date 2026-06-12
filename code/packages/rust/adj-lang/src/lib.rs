@@ -53,8 +53,8 @@ use logic_engine::Differential;
 use parser::grammar_parser::{GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
-pub use ast::{Annotation, Program, RelOp, Statement, Term as AstTerm};
-pub use lower::{lower, ConstraintSystem, LoweredConstraint, LowerError, LoweredProgram};
+pub use ast::{Annotation, OptDir, Program, RelOp, Statement, Term as AstTerm};
+pub use lower::{lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredProgram};
 
 /// Result of compilation. Either the typed program produced by the
 /// adapter, or an error from the lexer, parser, adapter, or

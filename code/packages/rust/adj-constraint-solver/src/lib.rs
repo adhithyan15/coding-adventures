@@ -22,7 +22,7 @@
 
 use std::collections::HashSet;
 
-use adj_lang::{ConstraintSystem, RelOp};
+use adj_lang::{ConstraintSystem, OptDir, RelOp};
 use cas_solve::frac::Frac;
 use cas_solve::{solve_cubic, solve_quadratic, solve_quartic, SolveResult};
 use constraint_core::Predicate;
@@ -662,22 +662,29 @@ fn real_feasibility(subbed: &[(ComputeExpr, RelOp, ComputeExpr)]) -> FmResult {
 
 /// Run Fourier–Motzkin elimination on a set of half-planes. Returns `Sat` with a
 /// rational witness, `Unsat`, or `Unknown` (size/coefficient guard tripped).
-fn fourier_motzkin(planes: Vec<Halfplane>) -> FmResult {
-    // The variables to eliminate, in a deterministic order.
-    let mut vars: Vec<String> = std::collections::BTreeSet::<String>::from_iter(
+/// Collect the variable names appearing in a set of half-planes, sorted.
+fn vars_of(planes: &[Halfplane]) -> Vec<String> {
+    std::collections::BTreeSet::<String>::from_iter(
         planes.iter().flat_map(|h| h.form.coeffs.keys().cloned()),
     )
     .into_iter()
-    .collect();
+    .collect()
+}
 
-    // Keep the original system to verify the reconstructed witness against.
-    let original = planes.clone();
-
-    // Eliminate one variable at a time, recording for each the half-planes that
-    // mentioned it (needed to reconstruct its value during back-substitution).
+/// Eliminate the variables in `to_elim` (in order) from `planes` via
+/// Fourier–Motzkin, returning the residual half-planes over the **remaining**
+/// variables plus the per-variable elimination snapshots (the half-planes that
+/// mentioned each variable — needed to reconstruct a witness). `Err(reason)` on
+/// checked-rational overflow or the inequality-count cap. This is the shared
+/// engine behind both feasibility (`check`, eliminate *all* variables) and
+/// optimization (`optimize`, eliminate all *but* the objective variable).
+fn eliminate(
+    planes: Vec<Halfplane>,
+    to_elim: &[String],
+) -> Result<(Vec<Halfplane>, Vec<(String, Vec<Halfplane>)>), String> {
     let mut elim_steps: Vec<(String, Vec<Halfplane>)> = Vec::new();
     let mut current = planes;
-    for v in &vars {
+    for v in to_elim {
         let mut pos: Vec<&Halfplane> = Vec::new(); // coeff(v) > 0 → upper bounds
         let mut neg: Vec<&Halfplane> = Vec::new(); // coeff(v) < 0 → lower bounds
         let mut zero: Vec<Halfplane> = Vec::new(); // v absent → carried forward
@@ -703,42 +710,54 @@ fn fourier_motzkin(planes: Vec<Halfplane>) -> FmResult {
             for n in &neg {
                 let b = n.form.coeff(v); // < 0
                                          // Scale p by (−b) > 0 and n by a > 0, then add → v cancels.
-                                         // Any overflow in this checked arithmetic ⇒ Unknown.
-                let combined = match b
+                                         // Any overflow in this checked arithmetic ⇒ Err.
+                let combined = b
                     .neg()
                     .and_then(|nb| p.form.scale(nb))
                     .and_then(|sp| sp.add_scaled(&n.form, a))
-                {
-                    Some(c) => c,
-                    None => {
-                        return FmResult::Unknown(
-                            "coefficients grew past the checked-rational cap".to_string(),
-                        )
-                    }
-                };
+                    .ok_or_else(|| "coefficients grew past the checked-rational cap".to_string())?;
                 next.push(Halfplane {
                     form: combined,
                     strict: p.strict || n.strict,
                 });
                 if next.len() > MAX_INEQUALITIES {
-                    return FmResult::Unknown(
-                        "constraint system too large for the Fourier–Motzkin slice".to_string(),
+                    return Err(
+                        "constraint system too large for the Fourier–Motzkin slice".to_string()
                     );
                 }
             }
         }
         current = next;
     }
+    Ok((current, elim_steps))
+}
+
+/// True iff a constant half-plane `k (≤|<) 0` is violated (`k > 0`, or `k ≥ 0`
+/// when strict). Only meaningful once every variable has been eliminated.
+fn constant_violated(hp: &Halfplane) -> bool {
+    let k = hp.form.constant;
+    if hp.strict {
+        k.num >= 0 // need k < 0
+    } else {
+        k.num > 0 // need k ≤ 0
+    }
+}
+
+fn fourier_motzkin(planes: Vec<Halfplane>) -> FmResult {
+    // The variables to eliminate, in a deterministic order.
+    let mut vars: Vec<String> = vars_of(&planes);
+
+    // Keep the original system to verify the reconstructed witness against.
+    let original = planes.clone();
+
+    let (residual, elim_steps) = match eliminate(planes, &vars) {
+        Ok(x) => x,
+        Err(reason) => return FmResult::Unknown(reason),
+    };
 
     // No variables left: every half-plane is a constant `k (≤|<) 0`.
-    for hp in &current {
-        let k = hp.form.constant;
-        let violated = if hp.strict {
-            k.num >= 0 // need k < 0
-        } else {
-            k.num > 0 // need k ≤ 0
-        };
-        if violated {
+    for hp in &residual {
+        if constant_violated(hp) {
             return FmResult::Unsat;
         }
     }
@@ -894,6 +913,295 @@ fn pick_value(lower: Option<(Rat, bool)>, upper: Option<(Rat, bool)>) -> Option<
         }
         (None, None) => Some(Rat::zero()),
     }
+}
+
+// ===========================================================================
+// Linear optimization: `minimize` / `maximize` via Fourier–Motzkin projection
+// (track C2)
+// ===========================================================================
+//
+// A linear program — maximize (or minimize) a linear objective subject to the
+// `constrain` half-planes — is solved by the SAME Fourier–Motzkin machinery as
+// feasibility, with one trick. Introduce a fresh variable `z` bounded by the
+// objective (`z ≤ obj`), then **project out every original variable**. What
+// remains are constraints purely on `z`: the feasible range of `z` is exactly
+// `(−∞, OPT]`, so the **least upper bound on `z` is the optimum**. No upper
+// bound ⇒ the objective is unbounded; a violated *constant* in the projection
+// ⇒ the constraints were infeasible. `minimize obj = −maximize(−obj)`.
+//
+// Worked example — maximize `x` s.t. `x ≤ 5`:
+//   augment:  z − x ≤ 0           (z ≤ x)
+//             x − 5 ≤ 0           (x ≤ 5)
+//   project out x:  (z − x) + (x − 5) = z − 5 ≤ 0  →  z ≤ 5  →  OPT = 5.
+//
+// The achieving assignment is then recovered by pinning `obj = OPT` and running
+// the feasibility witness reconstruction; the **binding** constraints are the
+// originals tight (satisfied with equality) at that point.
+
+/// The internal name of the objective variable `z`. The `@` cannot appear in an
+/// adj-lang identifier (`[a-z_][a-z0-9_]*`), so it never collides with a symbol.
+const OBJ_VAR: &str = "@objective";
+
+/// The outcome of a `minimize`/`maximize` (LP) request.
+#[derive(Debug, Clone, PartialEq)]
+pub enum OptimizeOutcome {
+    /// The objective is bounded and its optimum is **attained**: `value` is the
+    /// optimal objective value, `assignments` an achieving point (rational, as
+    /// `f64`), and `binding` the indices of the original constraints tight
+    /// (satisfied with equality) at the optimum — the provenance of the bound.
+    Optimal {
+        value: f64,
+        assignments: Vec<(String, f64)>,
+        binding: Vec<usize>,
+    },
+    /// The objective can be driven to ±∞ within the feasible region.
+    Unbounded,
+    /// The constraints are infeasible — no point satisfies them. `core` cites
+    /// the conflicting constraint indices (the full set for now).
+    Infeasible { core: Vec<usize> },
+    /// Out of scope: a non-linear / `!=` constraint or objective, an **open
+    /// supremum** (a strict inequality prevents the optimum being attained), or
+    /// a system too large for the bounded slice.
+    Unknown { reason: String },
+}
+
+/// Solve the LP declared by a [`ConstraintSystem`]'s `objective` against its
+/// `constrain` half-planes, substituting observed facts first. Real-valued
+/// (QF_LRA) optimization over exact rationals via Fourier–Motzkin projection.
+pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
+    let Some((dir, obj_expr)) = &cs.objective else {
+        return OptimizeOutcome::Unknown {
+            reason: "no objective to optimize".to_string(),
+        };
+    };
+    let syms: Vec<String> = cs.symbols.iter().map(|(n, _)| n.clone()).collect();
+    let var_set: HashSet<&str> = syms.iter().map(String::as_str).collect();
+
+    // Substitute observed facts into the objective and every constraint.
+    let obj_sub = substitute_observed(obj_expr, &var_set, kb);
+    let Some(obj) = linearize(&obj_sub) else {
+        return OptimizeOutcome::Unknown {
+            reason: "objective is non-linear".to_string(),
+        };
+    };
+    let mut planes: Vec<Halfplane> = Vec::new();
+    for c in &cs.constraints {
+        let lhs = substitute_observed(&c.lhs, &var_set, kb);
+        let rhs = substitute_observed(&c.rhs, &var_set, kb);
+        match constraint_to_halfplanes(&lhs, c.op, &rhs) {
+            Some(hps) => planes.extend(hps),
+            None => {
+                return OptimizeOutcome::Unknown {
+                    reason: "a constraint is non-linear or uses `!=`".to_string(),
+                }
+            }
+        }
+    }
+
+    // We always maximize; for `minimize`, maximize the negated objective and
+    // negate the result back.
+    let max_obj = match dir {
+        OptDir::Maximize => obj,
+        OptDir::Minimize => match Rat::one().neg().and_then(|m| obj.scale(m)) {
+            Some(o) => o,
+            None => {
+                return OptimizeOutcome::Unknown {
+                    reason: "objective coefficients too large".to_string(),
+                }
+            }
+        },
+    };
+    let all_core = || (0..cs.constraints.len()).collect::<Vec<_>>();
+
+    // Original decision variables = those in any constraint or the objective.
+    let mut orig_vars: std::collections::BTreeSet<String> =
+        std::collections::BTreeSet::from_iter(vars_of(&planes));
+    orig_vars.extend(max_obj.coeffs.keys().cloned());
+    let orig_vars: Vec<String> = orig_vars.into_iter().collect();
+
+    // Augment with `z − max_obj ≤ 0`  (z ≤ obj), then project out every
+    // original variable. The residual constraints bound `z`.
+    let z_minus_obj = match LinForm::var(OBJ_VAR).add_scaled(
+        &max_obj,
+        match Rat::one().neg() {
+            Some(m) => m,
+            None => {
+                return OptimizeOutcome::Unknown {
+                    reason: "overflow".to_string(),
+                }
+            }
+        },
+    ) {
+        Some(f) => f,
+        None => {
+            return OptimizeOutcome::Unknown {
+                reason: "objective coefficients too large".to_string(),
+            }
+        }
+    };
+    let mut augmented = planes;
+    augmented.push(Halfplane {
+        form: z_minus_obj,
+        strict: false,
+    });
+    let (residual, _) = match eliminate(augmented, &orig_vars) {
+        Ok(x) => x,
+        Err(reason) => return OptimizeOutcome::Unknown { reason },
+    };
+
+    // Read `z`'s tightest upper bound from the residual; a violated *constant*
+    // (no `z`) means the original constraints were infeasible.
+    let mut best_upper: Option<(Rat, bool)> = None;
+    for hp in &residual {
+        let alpha = hp.form.coeff(OBJ_VAR);
+        if alpha.is_zero() {
+            if constant_violated(hp) {
+                return OptimizeOutcome::Infeasible { core: all_core() };
+            }
+        } else if alpha.num > 0 {
+            // α·z + β ≤ 0  ⇒  z ≤ −β/α.
+            let bound = match hp.form.constant.neg().and_then(|nb| nb.div(alpha)) {
+                Some(b) => b,
+                None => {
+                    return OptimizeOutcome::Unknown {
+                        reason: "coefficients grew past the checked-rational cap".to_string(),
+                    }
+                }
+            };
+            update_upper(&mut best_upper, bound, hp.strict);
+        }
+        // α < 0 is a *lower* bound on z — irrelevant to the maximum.
+    }
+
+    let Some((opt_internal, strict)) = best_upper else {
+        return OptimizeOutcome::Unbounded;
+    };
+    if strict {
+        return OptimizeOutcome::Unknown {
+            reason: "optimum is an open supremum (a strict inequality prevents attainment)"
+                .to_string(),
+        };
+    }
+
+    // Optimal value, un-negated for `minimize`.
+    let value_rat = match dir {
+        OptDir::Maximize => opt_internal,
+        OptDir::Minimize => match opt_internal.neg() {
+            Some(v) => v,
+            None => {
+                return OptimizeOutcome::Unknown {
+                    reason: "optimal value too large".to_string(),
+                }
+            }
+        },
+    };
+
+    // Recover an achieving assignment: pin `max_obj = opt_internal` and run the
+    // feasibility witness reconstruction over the original constraints.
+    let (assignments, binding) = recover_optimum(cs, kb, &var_set, &max_obj, opt_internal);
+
+    OptimizeOutcome::Optimal {
+        value: value_rat.to_f64(),
+        assignments,
+        binding,
+    }
+}
+
+/// Reconstruct an optimal point (and the binding constraints) by solving the
+/// original system with `max_obj == opt` pinned. Returns an empty witness if the
+/// reconstruction overflows — the optimal value is unaffected.
+fn recover_optimum(
+    cs: &ConstraintSystem,
+    kb: &KnowledgeBase,
+    var_set: &HashSet<&str>,
+    max_obj: &LinForm,
+    opt: Rat,
+) -> (Vec<(String, f64)>, Vec<usize>) {
+    // Rebuild the original half-planes (re-substituting observed facts).
+    let mut planes: Vec<Halfplane> = Vec::new();
+    for c in &cs.constraints {
+        let lhs = substitute_observed(&c.lhs, var_set, kb);
+        let rhs = substitute_observed(&c.rhs, var_set, kb);
+        match constraint_to_halfplanes(&lhs, c.op, &rhs) {
+            Some(hps) => planes.extend(hps),
+            None => return (Vec::new(), Vec::new()),
+        }
+    }
+    // Pin the objective: `max_obj − opt ≤ 0` and `opt − max_obj ≤ 0`.
+    let diff = match max_obj.add_scaled(
+        &LinForm::constant(opt),
+        match Rat::one().neg() {
+            Some(m) => m,
+            None => return (Vec::new(), Vec::new()),
+        },
+    ) {
+        Some(f) => f,
+        None => return (Vec::new(), Vec::new()),
+    };
+    let neg = match diff.scale(match Rat::one().neg() {
+        Some(m) => m,
+        None => return (Vec::new(), Vec::new()),
+    }) {
+        Some(f) => f,
+        None => return (Vec::new(), Vec::new()),
+    };
+    planes.push(Halfplane {
+        form: diff,
+        strict: false,
+    });
+    planes.push(Halfplane {
+        form: neg,
+        strict: false,
+    });
+
+    let assignments = match fourier_motzkin(planes) {
+        FmResult::Sat(w) => w,
+        _ => Vec::new(), // optimum is attained, but witness math overflowed
+    };
+
+    // Binding constraints: the originals tight (lhs == rhs) at the witness.
+    let binding = binding_constraints(cs, kb, var_set, &assignments);
+    (assignments, binding)
+}
+
+/// The indices of the original constraints satisfied with **equality** at the
+/// (f64) witness — the constraints binding at the optimum. Equality constraints
+/// are always binding; an inequality is binding iff it is active. Evaluated in
+/// f64 with a small tolerance (this is a provenance annotation, not a gate).
+fn binding_constraints(
+    cs: &ConstraintSystem,
+    kb: &KnowledgeBase,
+    var_set: &HashSet<&str>,
+    witness: &[(String, f64)],
+) -> Vec<usize> {
+    use std::collections::HashMap;
+    let vals: HashMap<&str, f64> = witness.iter().map(|(n, v)| (n.as_str(), *v)).collect();
+    let mut binding = Vec::new();
+    for (i, c) in cs.constraints.iter().enumerate() {
+        let lhs = substitute_observed(&c.lhs, var_set, kb);
+        let rhs = substitute_observed(&c.rhs, var_set, kb);
+        let (Some(l), Some(r)) = (linearize(&lhs), linearize(&rhs)) else {
+            continue;
+        };
+        let diff = match l.add_scaled(
+            &r,
+            match Rat::one().neg() {
+                Some(m) => m,
+                None => continue,
+            },
+        ) {
+            Some(d) => d,
+            None => continue,
+        };
+        let mut total = diff.constant.to_f64();
+        for (name, coef) in &diff.coeffs {
+            total += coef.to_f64() * vals.get(name.as_str()).copied().unwrap_or(0.0);
+        }
+        if total.abs() < 1e-9 {
+            binding.push(i);
+        }
+    }
+    binding
 }
 
 /// Rewrite a constraint expression, replacing each reference that is **not** an
@@ -1645,6 +1953,131 @@ mod tests {
     fn no_symbols_is_unsupported() {
         let out = solve_src("constrain a = 1\n");
         assert!(matches!(out, SolveOutcome::Unsupported { .. }));
+    }
+
+    // ---- linear optimization: minimize / maximize (track C2) ----
+
+    fn optimize_src(src: &str) -> OptimizeOutcome {
+        let lowered = compile(src).unwrap();
+        optimize(&lowered.constraints, &lowered.kb)
+    }
+
+    /// The optimal value + a getter over the witness, or panic if not Optimal.
+    fn expect_optimal(out: &OptimizeOutcome) -> (f64, &Vec<(String, f64)>, &Vec<usize>) {
+        match out {
+            OptimizeOutcome::Optimal {
+                value,
+                assignments,
+                binding,
+            } => (*value, assignments, binding),
+            other => panic!("expected Optimal, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn maximize_a_single_bounded_variable() {
+        // max x s.t. 0 ≤ x ≤ 5  →  x = 5, value 5; the x ≤ 5 bound is binding.
+        let out = optimize_src("symbol x : scalar\nconstrain x >= 0\nconstrain x <= 5\nmaximize x");
+        let (value, assigns, binding) = expect_optimal(&out);
+        assert!((value - 5.0).abs() < 1e-9, "value {value}");
+        let x = assigns
+            .iter()
+            .find(|(n, _)| n == "x")
+            .map(|(_, v)| *v)
+            .unwrap();
+        assert!((x - 5.0).abs() < 1e-9, "x {x}");
+        assert!(
+            binding.contains(&1),
+            "x<=5 (idx 1) should bind: {binding:?}"
+        );
+    }
+
+    #[test]
+    fn minimize_a_single_bounded_variable() {
+        // min x s.t. x ≥ 3  →  x = 3, value 3.
+        let out = optimize_src("symbol x : scalar\nconstrain x >= 3\nminimize x");
+        let (value, assigns, _) = expect_optimal(&out);
+        assert!((value - 3.0).abs() < 1e-9, "value {value}");
+        let x = assigns
+            .iter()
+            .find(|(n, _)| n == "x")
+            .map(|(_, v)| *v)
+            .unwrap();
+        assert!((x - 3.0).abs() < 1e-9, "x {x}");
+    }
+
+    #[test]
+    fn maximize_a_two_variable_objective() {
+        // The classic LP: max 3x + 2y s.t. x + y ≤ 4, x ≤ 3, x,y ≥ 0.
+        // Optimum at the vertex (3, 1) → 3·3 + 2·1 = 11.
+        let out = optimize_src(
+            "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x + y <= 4\nconstrain x <= 3\n\
+             constrain x >= 0\nconstrain y >= 0\n\
+             maximize 3 * x + 2 * y",
+        );
+        let (value, assigns, _) = expect_optimal(&out);
+        assert!((value - 11.0).abs() < 1e-9, "value {value}");
+        let get = |n: &str| {
+            assigns
+                .iter()
+                .find(|(k, _)| k == n)
+                .map(|(_, v)| *v)
+                .unwrap()
+        };
+        // The witness need not be unique, but it must achieve 11 and be feasible.
+        let (x, y) = (get("x"), get("y"));
+        assert!((3.0 * x + 2.0 * y - 11.0).abs() < 1e-9, "x={x} y={y}");
+        assert!(x <= 3.0 + 1e-9 && x + y <= 4.0 + 1e-9 && x >= -1e-9 && y >= -1e-9);
+    }
+
+    #[test]
+    fn an_unbounded_objective_is_reported() {
+        // max x with only a lower bound → unbounded above.
+        let out = optimize_src("symbol x : scalar\nconstrain x >= 0\nmaximize x");
+        assert!(matches!(out, OptimizeOutcome::Unbounded), "{out:?}");
+    }
+
+    #[test]
+    fn an_infeasible_program_is_reported_not_optimized() {
+        // max x over contradictory constraints → Infeasible, never a value.
+        let out = optimize_src("symbol x : scalar\nconstrain x >= 5\nconstrain x <= 1\nmaximize x");
+        assert!(matches!(out, OptimizeOutcome::Infeasible { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn an_open_supremum_is_unknown_not_a_fake_optimum() {
+        // max x s.t. x < 5: the supremum 5 is not attained (strict bound).
+        let out = optimize_src("symbol x : scalar\nconstrain x < 5\nmaximize x");
+        assert!(matches!(out, OptimizeOutcome::Unknown { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn a_nonlinear_objective_is_unknown() {
+        let out = optimize_src("symbol x : scalar\nconstrain x <= 5\nmaximize x * x");
+        assert!(matches!(out, OptimizeOutcome::Unknown { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn optimize_substitutes_observed_facts() {
+        // budget observed 100; maximize spend s.t. spend ≤ budget → 100.
+        let out = optimize_src(
+            "symbol spend : scalar\nobserve budget(100)\n\
+             constrain spend <= budget\nconstrain spend >= 0\nmaximize spend",
+        );
+        let (value, _, _) = expect_optimal(&out);
+        assert!((value - 100.0).abs() < 1e-9, "value {value}");
+    }
+
+    #[test]
+    fn minimize_finds_the_lower_optimum_in_two_vars() {
+        // min x + y s.t. x ≥ 2, y ≥ 3 → 5 at (2, 3).
+        let out = optimize_src(
+            "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x >= 2\nconstrain y >= 3\nminimize x + y",
+        );
+        let (value, _, _) = expect_optimal(&out);
+        assert!((value - 5.0).abs() < 1e-9, "value {value}");
     }
 
     #[test]

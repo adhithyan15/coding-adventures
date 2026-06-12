@@ -29,7 +29,9 @@ use std::process::ExitCode;
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 
-use adj_constraint_solver::{check, solve, FeasibilityOutcome, SolveOutcome};
+use adj_constraint_solver::{
+    check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
+};
 use adj_lang::{compile, decide};
 use logic_core::Term;
 use logic_engine::{
@@ -295,13 +297,26 @@ fn main() -> ExitCode {
         String::new()
     };
 
+    // A `minimize`/`maximize` requests a linear-programming optimum — emit an
+    // `optimize` section with the optimal value, achieving assignment, and
+    // binding constraints.
+    let optimize_section = if lowered.constraints.objective.is_some() {
+        format!(
+            ",\"optimize\":{}",
+            optimize_json(&optimize(&lowered.constraints, &lowered.kb))
+        )
+    } else {
+        String::new()
+    };
+
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
         solve_section,
-        check_section
+        check_section,
+        optimize_section
     );
     ExitCode::SUCCESS
 }
@@ -387,6 +402,43 @@ fn check_json(outcome: &FeasibilityOutcome) -> String {
             format!("{{\"outcome\":\"unsat\",\"core\":[{}]}}", idx.join(","))
         }
         FeasibilityOutcome::Unknown { reason } => {
+            format!("{{\"outcome\":\"unknown\",\"reason\":\"{}\"}}", esc(reason))
+        }
+    }
+}
+
+/// Render an [`OptimizeOutcome`] (a `minimize`/`maximize` LP result) as JSON.
+/// `optimal` carries the optimal `value`, the achieving `assignments`, and the
+/// `binding` constraint indices (the provenance of the bound); `unbounded` /
+/// `infeasible` / `unknown` report the degenerate cases without a fake number.
+fn optimize_json(outcome: &OptimizeOutcome) -> String {
+    match outcome {
+        OptimizeOutcome::Optimal {
+            value,
+            assignments,
+            binding,
+        } => {
+            let vars: Vec<String> = assignments
+                .iter()
+                .map(|(name, v)| format!("{{\"name\":\"{}\",\"value\":{}}}", esc(name), jnum(*v)))
+                .collect();
+            let bind: Vec<String> = binding.iter().map(|i| i.to_string()).collect();
+            format!(
+                "{{\"outcome\":\"optimal\",\"value\":{},\"assignments\":[{}],\"binding\":[{}]}}",
+                jnum(*value),
+                vars.join(","),
+                bind.join(",")
+            )
+        }
+        OptimizeOutcome::Unbounded => "{\"outcome\":\"unbounded\"}".to_string(),
+        OptimizeOutcome::Infeasible { core } => {
+            let idx: Vec<String> = core.iter().map(|i| i.to_string()).collect();
+            format!(
+                "{{\"outcome\":\"infeasible\",\"core\":[{}]}}",
+                idx.join(",")
+            )
+        }
+        OptimizeOutcome::Unknown { reason } => {
             format!("{{\"outcome\":\"unknown\",\"reason\":\"{}\"}}", esc(reason))
         }
     }

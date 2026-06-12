@@ -104,7 +104,7 @@ and routes. Each value/cert is provenance-tagged.
 | linear **integer** eq+ineq feasibility | `constraint-engine::LiaTactic` (Cooper) | **reuse** |
 | boolean / rule-trees | `constraint-engine::SatTactic` (DPLL) | **reuse** |
 | linear **real** eq+ineq feasibility (QF_LRA) | — (engine returns `Unknown` today) | **BUILT (C1): Fourier–Motzkin over ℚ** in `adj-constraint-solver::check` (self-contained checked i128 rational; overflow → `Unknown`) |
-| linear **optimization** | — | **BUILD: simplex** on the LRA layer |
+| linear **optimization** | — | **BUILT (C2): Fourier–Motzkin projection** in `adj-constraint-solver::optimize` (objective-bounded `z`, project out decision vars; *not* simplex) |
 | nonlinear univariate (deg ≤ 4) | `cas-solve::{solve_quadratic,cubic,quartic}` | **reuse** |
 | nonlinear numeric / higher degree | `cas-solve::nsolve_poly` (Durand–Kerner), `cas-mnewton` | **reuse / extend** |
 | algebraic roots ℚ[√d] | `cas-algebraic` | **reference** |
@@ -171,7 +171,11 @@ the **dimensional layer + surface sublanguage + provenance bridge**. Everything 
   witness (`SatReal`). A constraint set is `Unsat` only when *both* the integer and real layers reject
   it. `!=` (disjunctive, non-convex) stays `Unknown`. Caps on intermediate-inequality count and
   coefficient magnitude bound the worst-case blow-up.
-- **C2** Simplex on the LRA layer → `minimize|maximize` optimization + binding constraints.
+- **C2** ✅ `minimize|maximize` optimization + binding constraints. **Divergence:** implemented by
+  **Fourier–Motzkin projection** (bound a fresh `z` by the objective, project out the decision
+  variables, read `z`'s least upper bound as the optimum) reusing the C1 machinery — *not* a separate
+  simplex tableau. Returns `Optimal{value,assignments,binding}` / `Unbounded` / `Infeasible{core}` /
+  `Unknown` (the last covers an open supremum from a strict bound). Exact over the checked `Rat`.
 - **C3** Nonlinear bridge: `cas-solve`/`cas-mnewton` for `constrain` with quadratic+ terms.
 
 **Track D — payoff:**
