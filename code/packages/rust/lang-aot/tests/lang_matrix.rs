@@ -70,6 +70,16 @@ enum Backend {
     /// (Phase C, the CLR-real path). The emitted entry `Console.WriteLine`s its `int`
     /// result, which the harness parses (mirrors the McCarthy CLR-real chapter).
     Clr,
+    /// Source → IIR (`compile_source_to_iir`) → the **generic register VM**
+    /// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
+    /// execution-time analog of the code-gen backends: `VMCore` consumes the same
+    /// `IIRModule` every other backend does — its instruction dispatch already covers
+    /// arithmetic / comparison / bitwise / control-flow / memory / `call_builtin`, so a
+    /// scalar language runs with **zero** VM-specific code, exactly the way a future
+    /// Ruby/JS frontend would. (McCarthy lisp keeps its own `LispyValue` VM — the
+    /// matrix's six languages are all scalar, so they share this one.) In-process, so
+    /// no host gate; the I/O languages' `print_i64`/`putchar` are registered builtins.
+    Vm,
 }
 
 /// The known, backend-independent observable result of a conformance program.
@@ -90,7 +100,7 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Clr, Jvm, Llvm, NativeAot, Wasm};
+use Backend::{Clr, Jvm, Llvm, NativeAot, Vm, Wasm};
 
 /// The real-CoreCLR helpers (`find_ilasm`, the NuGet-cache assembler search) are
 /// shared with the McCarthy CLR-real chapter; `#[path]`-include the module so we
@@ -104,7 +114,7 @@ mod clr_support;
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm] },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
@@ -114,7 +124,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -122,7 +132,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "oct",
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -130,7 +140,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // `lower_brainfuck_for_aot` widens the BF cell/ptr registers to `i64` (byte width
@@ -166,13 +176,14 @@ const PROGRAMS: &[Prog] = &[
     // compiles that host class with `javac`, discards the entry result, and captures
     // `System.out` (LM-J BASIC). On CLR `print_i64` lowers to `Console.WriteLine(int32)`
     // and the launcher discards (rather than re-prints) the entry result; `run_clr`
-    // captures `Console` (LM-C BASIC).
+    // captures `Console` (LM-C BASIC). On the VM, `run_vm` registers a `print_i64`
+    // builtin closure that captures the printed integer into a buffer (Phase V).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr, Vm],
     },
 ];
 
@@ -791,6 +802,82 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     Some((printed.parse::<i32>().ok(), printed))
 }
 
+/// VM runner: source → IIR (`compile_source_to_iir`) → the **generic register VM**
+/// (`vm_core::VMCore`) interpreting the shared IIR directly (Phase V). This is the
+/// in-process, run-anywhere analog of the code-gen columns: the *same* `IIRModule` the
+/// LLVM/WASM/JVM/CLR backends compile is instead **interpreted** by `VMCore`, whose
+/// instruction dispatch already covers the arithmetic / comparison / bitwise /
+/// control-flow / memory / `call_builtin` ops every scalar language emits. There is no
+/// per-language code here — a future Ruby/JS frontend that lowers to IIR would run the
+/// same way. (McCarthy lisp uses its own `LispyValue` VM; the matrix's six languages are
+/// all scalar, so they share this one.)
+///
+/// The I/O languages print through `call_builtin`, which `VMCore` dispatches to a
+/// **registered builtin closure**: `print_i64` (Dartmouth BASIC's `PRINT`) appends its
+/// integer argument to a capture buffer — the VM sibling of the wasm `PrintHost` import /
+/// the LLVM `@__print_i64` C runtime / the JVM `BasicRuntime` / the CLR `Console.WriteLine`.
+/// (`putchar`/`getchar`, for Brainfuck, are registered too but unused until the byte-tape
+/// ops land on `VMCore` — Brainfuck-on-VM is the next slice.)
+///
+/// An expression language's `main` returns an `Int`, used as the exit code (`& 0xFF`, the
+/// other columns' convention); an I/O language's stdout is the captured buffer. `None`
+/// only if the program fails to compile or the VM errors — the VM is in-process, so a
+/// tagged cell always runs (no host gate).
+fn run_vm(p: &Prog) -> Option<(Option<i32>, String)> {
+    use std::sync::{Arc, Mutex};
+    use vm_core::core::VMCore;
+    use vm_core::value::Value;
+
+    let mut module = lang_aot::compile_source_to_iir(p.lang, p.src, "main").ok()?;
+    let entry = module.entry_point.clone().unwrap_or_else(|| "main".to_string());
+
+    let mut vm = VMCore::new();
+
+    // Capture buffer for the I/O languages. `print_i64` (BASIC) appends one integer per
+    // call, joined by newlines; `putchar` (Brainfuck) appends one byte. A program uses at
+    // most one, so a single buffer + a byte buffer suffice; expression languages print
+    // nothing. The closures push a bounded amount per call — no DoS vector.
+    let printed_ints: Arc<Mutex<Vec<i64>>> = Arc::new(Mutex::new(Vec::new()));
+    let printed_bytes: Arc<Mutex<Vec<u8>>> = Arc::new(Mutex::new(Vec::new()));
+
+    let ints = Arc::clone(&printed_ints);
+    vm.builtins_mut().register("print_i64", move |args: &[Value]| {
+        let n = args.first().and_then(|v| v.as_i64()).unwrap_or(0);
+        ints.lock().expect("lang-matrix VM print buffer poisoned").push(n);
+        Ok(Value::Null)
+    });
+    let bytes = Arc::clone(&printed_bytes);
+    vm.builtins_mut().register("putchar", move |args: &[Value]| {
+        let b = (args.first().and_then(|v| v.as_i64()).unwrap_or(0) & 0xFF) as u8;
+        bytes.lock().expect("lang-matrix VM putchar buffer poisoned").push(b);
+        Ok(Value::Null)
+    });
+    vm.builtins_mut().register("getchar", move |_args: &[Value]| {
+        // No stdin in the matrix; EOF → 0 (BF convention).
+        Ok(Value::Int(0))
+    });
+
+    let result = vm.execute(&mut module, &entry, &[]).ok()?;
+
+    // The exit code: an expression language's `main` returns an `Int`.
+    let code = result.and_then(|v| v.as_i64()).map(|n| (n as i32) & 0xFF);
+    // stdout: prefer the byte stream (Brainfuck `putchar`) when present, else the integer
+    // stream (BASIC `print_i64`) joined by newlines; empty for the expression languages.
+    let byte_buf = printed_bytes.lock().expect("lang-matrix VM putchar buffer poisoned");
+    let stdout = if byte_buf.is_empty() {
+        printed_ints
+            .lock()
+            .expect("lang-matrix VM print buffer poisoned")
+            .iter()
+            .map(|v| v.to_string())
+            .collect::<Vec<_>>()
+            .join("\n")
+    } else {
+        String::from_utf8_lossy(&byte_buf).to_string()
+    };
+    Some((code, stdout))
+}
+
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
 fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
@@ -800,6 +887,7 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
         Backend::Wasm => run_wasm(p),
         Backend::Jvm => run_jvm(p),
         Backend::Clr => run_clr(p),
+        Backend::Vm => run_vm(p),
     }
 }
 
@@ -869,6 +957,15 @@ fn proven_columns_do_not_silently_skip() {
         assert!(
             run_wasm(p).is_some(),
             "in-process wasm-runtime failed to run {:?}",
+            p.lang
+        );
+    }
+    // VM: the generic `vm_core::VMCore` is in-process (always present), so every
+    // VM-tagged program must run — no host gate.
+    for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Vm)) {
+        assert!(
+            run_vm(p).is_some(),
+            "in-process vm-core failed to run {:?}",
             p.lang
         );
     }
