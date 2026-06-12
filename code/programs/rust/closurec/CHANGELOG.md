@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.100.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-091** — a BigInt RADIX literal is now canonicalised to
+  its shortest decimal form under WHITESPACE_ONLY, matching upstream
+  Closure (mirrors gap-038 for non-BigInt numbers):
+
+      0xFFn   -> 255n
+      0o17n   -> 15n
+      0b101n  -> 5n
+      0x1_FFn -> 511n   (separator + radix combined)
+
+  The BigInt branch of `normalize_number_value` now, after stripping
+  `_` separators (gap-048), parses a `0x`/`0o`/`0b` body into `u128`
+  (`from_str_radix`) and re-emits `{decimal}n`. A decimal BigInt body
+  (no radix prefix) is already shortest and passes through unchanged
+  (`255n` stays `255n`); a magnitude beyond `u128::MAX` (e.g. a 140-bit
+  `0xFF…FFn`) is left verbatim — real bigint arithmetic is a residual.
+  `minify_bigint_hex` / `minify_bigint_bin` are now enforced.
+
+  Three pre-existing gap-038/048 unit tests that asserted the deferred
+  radix-BigInt behaviour (`0xfn` unchanged, `0x1FFFn` unchanged) were
+  updated to the now-correct decimal forms (`15n`, `8191n`).
+
 ## [0.99.0] - 2026-06-12
 
 ### Changed

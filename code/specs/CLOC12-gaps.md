@@ -687,9 +687,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-091 — BigInt radix literal → decimal (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.40). `minify_bigint_hex` / `minify_bigint_bin` ignored.
+- **Status:** RESOLVED in CLOC12.96. `minify_bigint_hex` / `minify_bigint_bin` enforced.
 - **Input:** `var x=0xFFn;` → **Upstream:** `var x=255n;` (also `0o17n` → `15n`, `0b101n` → `5n`).
 - **What it needs:** the BigInt branch of `normalize_number_value` currently only strips the `_` separator (gap-048). Upstream converts a radix BigInt to its shortest decimal form, exactly as gap-038 does for non-BigInt hex/oct/bin. Extend the BigInt branch to parse the `0x`/`0o`/`0b` body and re-emit `{decimal}n`. Small values fit in u128; very large BigInts would need real bigint arithmetic (residual).
+- **CLOC12.96 resolution:** Extended the BigInt branch of `normalize_number_value`: after stripping `_` separators (gap-048), the body is parsed as a `0x`/`0o`/`0b` radix literal into a `u128` (`from_str_radix`) and re-emitted as `{decimal}n`. A decimal BigInt body has no radix prefix and falls through unchanged (already shortest — `255n` stays `255n`); an over-`u128` magnitude (e.g. a 140-bit `0xFF…FFn`) leaves the literal verbatim (real bigint arithmetic is a residual). JAR-verified across `0xFFn`/`0XFFn`→`255n`, `0o17n`→`15n`, `0b101n`→`5n`, `0x1_FFn`→`511n` (separator+radix), `0n`→`0n`. 2 dedicated unit tests + the two byte-identity fixtures; three pre-existing gap-038/048 tests that asserted the deferred radix-BigInt behavior (`0xfn` unchanged, `0x1FFFn` unchanged) were updated to the now-correct decimal forms.
 
 ### gap-092 — division mis-lexed as regex (WHITESPACE_ONLY)
 

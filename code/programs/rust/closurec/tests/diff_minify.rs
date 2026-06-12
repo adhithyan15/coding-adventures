@@ -96,14 +96,12 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     ("str_codepoint_esc", "gap-090: \\u{...} code-point escape mangled"),
     ("str_hex_esc",       "gap-090: \\xNN hex escape mangled"),
     ("str_null_esc",      "gap-090: \\0 null escape mangled"),
-    // gap-091 (CLOC14.40): a BigInt radix literal is not converted to
-    // decimal — `0xFFn` -> `255n`, `0o17n` -> `15n`, `0b101n` -> `5n`.
-    // gap-038/040 decimalise regular hex/oct/bin; gap-048 strips the
-    // BigInt `_` separator; the radix→decimal BigInt conversion is the
-    // remaining piece (needs bigint arithmetic; u128 covers the common
-    // range).
-    ("bigint_hex", "gap-091: BigInt hex radix -> decimal"),
-    ("bigint_bin", "gap-091: BigInt binary radix -> decimal"),
+    // gap-091 RESOLVED in CLOC12.96 — a BigInt RADIX literal is now
+    // canonicalised to decimal (`0xFFn` -> `255n`, `0o17n` -> `15n`,
+    // `0b101n` -> `5n`) by parsing the radix body to u128 in the BigInt
+    // branch of `normalize_number_value`. Over-u128 magnitudes stay
+    // verbatim (residual). `minify_bigint_hex` / `minify_bigint_bin`
+    // enforced.
     // gap-092 (CLOC14.40): a `/` DIVISION operator in `a/b/c` is mis-
     // lexed as a REGEX literal `/b/`, producing spurious separating
     // spaces (`a /b/ c`). Still valid JS (same grouping) but not byte-

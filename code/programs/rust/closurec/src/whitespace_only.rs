@@ -3196,8 +3196,47 @@ fn normalize_number_value(value: &str) -> String {
     //   `9007199254740993n` → NOT normalized to decimal
     //     shortest-form (would need bigint math, deferred)
     if let Some(body) = value.strip_suffix('n') {
+        // First strip any `_` separators (gap-048) — they are pure
+        // lexical sugar regardless of radix.
+        let cleaned_body = if body.contains('_') {
+            body.replace('_', "")
+        } else {
+            body.to_string()
+        };
+        // gap-091: a RADIX BigInt literal (`0xFFn`, `0o17n`, `0b101n`)
+        // is canonicalised to its shortest DECIMAL form (`255n`,
+        // `15n`, `5n`), exactly as gap-038 does for non-BigInt
+        // hex/oct/bin numbers. We parse the radix body into a `u128`
+        // (which covers the common range); a BigInt whose magnitude
+        // exceeds `u128::MAX` would need real bigint arithmetic and is
+        // left verbatim (a residual). A DECIMAL BigInt body has no
+        // radix prefix, so it falls through unchanged (already
+        // shortest — `255n` stays `255n`).
+        let radix_value: Option<u128> = if let Some(rest) = cleaned_body
+            .strip_prefix("0x")
+            .or_else(|| cleaned_body.strip_prefix("0X"))
+        {
+            u128::from_str_radix(rest, 16).ok()
+        } else if let Some(rest) = cleaned_body
+            .strip_prefix("0o")
+            .or_else(|| cleaned_body.strip_prefix("0O"))
+        {
+            u128::from_str_radix(rest, 8).ok()
+        } else if let Some(rest) = cleaned_body
+            .strip_prefix("0b")
+            .or_else(|| cleaned_body.strip_prefix("0B"))
+        {
+            u128::from_str_radix(rest, 2).ok()
+        } else {
+            None
+        };
+        if let Some(n) = radix_value {
+            return format!("{}n", n);
+        }
+        // No radix prefix (decimal BigInt) or out-of-u128 magnitude:
+        // emit the separator-stripped body unchanged.
         if body.contains('_') {
-            return format!("{}n", body.replace('_', ""));
+            return format!("{}n", cleaned_body);
         }
         return value.to_string();
     }
@@ -4940,9 +4979,11 @@ mod tests {
     /// that requires bigint arithmetic — left for a
     /// follow-up gap. Leaving verbatim is safer than
     /// truncating.
+    /// gap-091 (was gap-038's deferred BigInt future): a hex BigInt is
+    /// now decimalised — `0xfn` → `15n`.
     #[test]
     fn gap038_bigint_left_verbatim() {
-        assert_eq!(minify("var x=0xfn;"), "var x=0xfn;");
+        assert_eq!(minify("var x=0xfn;"), "var x=15n;");
     }
 
     /// gap-048: BigInt literal with ES2021 `_` numeric
@@ -4956,14 +4997,14 @@ mod tests {
         );
     }
 
-    /// gap-048: separator stripping also works for hex
-    /// BigInt — the `0x` prefix and digits-pattern are
-    /// preserved; only `_` is removed.
+    /// gap-048 + gap-091: a hex BigInt with a `_` separator is both
+    /// separator-stripped AND decimalised — `0x1_FFFn` → `8191n`
+    /// (0x1FFF = 8191).
     #[test]
     fn gap048_bigint_hex_separator_stripped() {
         assert_eq!(
             minify("var a=0x1_FFFn;"),
-            "var a=0x1FFFn;"
+            "var a=8191n;"
         );
     }
 
@@ -4978,14 +5019,40 @@ mod tests {
         );
     }
 
-    /// **Non-regression**: hex BigInt without separators
-    /// is unchanged (the radix-and-shortest-form
-    /// canonicalization that regular `0xff` → `255`
-    /// gets is still deferred for BigInt — that's
-    /// gap-038's bigint future).
+    /// gap-091: a hex BigInt without separators is decimalised, just
+    /// like regular `0xff` → `255` (gap-038): `0xfn` → `15n`. (Was
+    /// deferred under gap-048; closed by CLOC12.96.)
     #[test]
     fn gap048_bigint_hex_no_separator_unchanged() {
-        assert_eq!(minify("var x=0xfn;"), "var x=0xfn;");
+        assert_eq!(minify("var x=0xfn;"), "var x=15n;");
+    }
+
+    /// gap-091: BigInt radix literals canonicalise to decimal across
+    /// all three radices (hex/oct/bin), case-insensitive prefix.
+    #[test]
+    fn gap091_bigint_radix_to_decimal() {
+        assert_eq!(minify("var x=0xFFn;"), "var x=255n;");
+        assert_eq!(minify("var x=0XFFn;"), "var x=255n;");
+        assert_eq!(minify("var x=0o17n;"), "var x=15n;");
+        assert_eq!(minify("var x=0b101n;"), "var x=5n;");
+        assert_eq!(minify("var x=0n;"), "var x=0n;");
+    }
+
+    /// gap-091 non-regression: a DECIMAL BigInt (no radix prefix) is
+    /// left as-is — it is already shortest. A magnitude beyond u128
+    /// stays verbatim (real bigint arithmetic is a residual).
+    #[test]
+    fn gap091_decimal_and_overflow_bigint_kept() {
+        assert_eq!(minify("var x=255n;"), "var x=255n;");
+        assert_eq!(
+            minify("var x=9007199254740993n;"),
+            "var x=9007199254740993n;"
+        );
+        // 35 hex digits = 140 bits > u128 — left verbatim.
+        assert_eq!(
+            minify("var x=0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn;"),
+            "var x=0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFn;"
+        );
     }
 
     /// **Non-regression**: separator in regular number
