@@ -1236,6 +1236,8 @@ pub struct BrowserDocumentPolicyDescriptor {
     pub color_scheme: Option<String>,
     pub content_security_policy: Option<String>,
     pub permissions_policy: Option<String>,
+    pub permissions_policy_features: Vec<String>,
+    pub permissions_policy_feature_count: usize,
     pub origin_trials: Vec<String>,
     pub accept_ch: Option<String>,
     pub accept_ch_tokens: Vec<String>,
@@ -2550,7 +2552,10 @@ pub struct BrowserEmbeddedPolicyDescriptor {
     pub sandbox: Vec<String>,
     pub sandbox_token_count: usize,
     pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allow_token_count: usize,
     pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
     pub referrerpolicy: Option<String>,
     pub srcdoc: Option<String>,
     pub has_srcdoc: bool,
@@ -11253,6 +11258,10 @@ fn browser_embedded_policy_descriptors(
 fn browser_embedded_policy_descriptor(
     context: &BrowserEmbeddedContext,
 ) -> BrowserEmbeddedPolicyDescriptor {
+    let allow_tokens = browser_allow_policy_features(context.allow.as_deref());
+    let fullscreen_allowed =
+        context.allowfullscreen || allow_tokens.iter().any(|token| token == "fullscreen");
+
     BrowserEmbeddedPolicyDescriptor {
         element: context.element.clone(),
         resource_kind: browser_embedded_resource_kind(&context.element).to_string(),
@@ -11269,7 +11278,10 @@ fn browser_embedded_policy_descriptor(
         sandbox: context.sandbox.clone(),
         sandbox_token_count: context.sandbox.len(),
         allow: context.allow.clone(),
+        allow_token_count: allow_tokens.len(),
+        allow_tokens,
         allowfullscreen: context.allowfullscreen,
+        fullscreen_allowed,
         referrerpolicy: context.referrerpolicy.clone(),
         srcdoc: context.srcdoc.clone(),
         has_srcdoc: context.srcdoc.is_some(),
@@ -11927,6 +11939,8 @@ fn browser_document_policy_descriptor(
     let content_security_policy =
         browser_http_equiv_hint_content(metadata, "content-security-policy");
     let permissions_policy = browser_http_equiv_hint_content(metadata, "permissions-policy");
+    let permissions_policy_features =
+        browser_permissions_policy_features(permissions_policy.as_deref());
     let origin_trials = browser_http_equiv_hint_contents(metadata, "origin-trial");
     let accept_ch = browser_http_equiv_hint_content(metadata, "accept-ch");
     let accept_ch_tokens = accept_ch
@@ -11964,6 +11978,8 @@ fn browser_document_policy_descriptor(
         color_scheme: metadata.color_scheme.clone(),
         content_security_policy,
         permissions_policy,
+        permissions_policy_feature_count: permissions_policy_features.len(),
+        permissions_policy_features,
         origin_trials,
         accept_ch,
         accept_ch_tokens,
@@ -12104,6 +12120,32 @@ fn browser_metadata_list(content: &str) -> Vec<String> {
         .map(trim_browser_metadata_token)
         .filter(|part| !part.is_empty())
         .collect()
+}
+
+fn browser_permissions_policy_features(policy: Option<&str>) -> Vec<String> {
+    policy
+        .into_iter()
+        .flat_map(|policy| policy.split(','))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_allow_policy_features(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .trim()
+        .split(|ch: char| ch == '=' || ch.is_whitespace())
+        .next()
+        .map(str::trim)
+        .filter(|feature| !feature.is_empty())
+        .map(str::to_ascii_lowercase)
 }
 
 fn split_browser_comma_tokens(value: &str) -> Vec<String> {
