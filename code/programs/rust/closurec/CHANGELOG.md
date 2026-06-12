@@ -2,6 +2,29 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.101.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-094 (CORRECTNESS)** — the array trailing-comma drop
+  (gap-046) no longer corrupts arrays with a trailing HOLE. `[1,,]` is
+  `[1, <hole>]` (length 2); the old rule dropped the comma before `]`
+  to `[1,]` (length 1), silently shrinking the array. The drop is now
+  guarded so it only fires when the comma follows a REAL element —
+  the token before it must be neither a structural `,` (a preceding
+  hole) nor a structural `[` (a leading hole):
+
+      [1,,]    -> [1,,]    (kept — length 2)
+      [,]      -> [,]      (kept)
+      [,,]     -> [,,]     (kept)
+      [1,2,,]  -> [1,2,,]  (kept)
+      [1,2,]   -> [1,2]    (still drops — real element)
+      [[1],]   -> [[1]]    (still drops)
+      [f(),]   -> [f()]    (still drops)
+
+  `minify_array_hole_trail` enforced. A stale gap-046 test that
+  asserted the buggy `[1,,]` -> `[1,]` (and noted the rule was
+  "technically WRONG") was corrected; +1 dedicated test.
+
 ## [0.100.0] - 2026-06-12
 
 ### Changed

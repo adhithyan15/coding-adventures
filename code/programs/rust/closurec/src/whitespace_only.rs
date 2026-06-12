@@ -2461,8 +2461,24 @@ pub fn whitespace_only_minify(
         // appears IMMEDIATELY before `]` — i.e. as the
         // trailing-comma-after-last-element form. Inner
         // elisions have a non-`]` token next.
+        //
+        // gap-094 (CORRECTNESS): a trailing comma is droppable
+        // ONLY when it follows a REAL element. When it follows a
+        // HOLE — a preceding `,` (`[1,,]`) or the opening `[`
+        // (`[,]`) — the comma is load-bearing: `[1,,]` has length
+        // 2 (element + one trailing hole), and dropping the last
+        // comma yields `[1,]` (length 1), silently changing the
+        // array. So we additionally require the token BEFORE the
+        // comma to be a value-producing element, i.e. NOT a `,`
+        // and NOT a `[`. (Both checks route through
+        // `is_structural_punct` so a string/regex literal whose
+        // CONTENT is `,`/`[` is treated as a real element, not a
+        // hole marker.)
         if val == ","
             && kept.get(idx + 1).map(|t| t.value.as_str()) == Some("]")
+            && idx > 0
+            && !is_structural_punct(kept[idx - 1], ",")
+            && !is_structural_punct(kept[idx - 1], "[")
         {
             idx += 1;
             continue;
@@ -6252,19 +6268,28 @@ mod tests {
         assert_eq!(minify("var a=[1,2,3];"), "var a=[1,2,3];");
     }
 
-    /// **Elision-with-trailing** ambiguity: `[1,,]` —
-    /// elision `[1,,]` is `[1, undefined]` (length 2).
-    /// Hmm — actually the second `,` IS trailing. After
-    /// our rule drops it: `[1,]`. But `[1,]` is length 1,
-    /// not 2. So our rule is technically WRONG for this
-    /// case. However: upstream Closure under
-    /// WHITESPACE_ONLY produces `[1,]` for the source
-    /// `[1,,]` too (verified via JAR probe — they accept
-    /// this lossy normalisation for whitespace_only).
-    /// Confirmed via probe `[1,,];` → `[1,];`.
+    /// gap-094 (CORRECTNESS, was a wrong gap-046 assertion): `[1,,]`
+    /// is `[1, <hole>]` (length 2). The comma before `]` follows a
+    /// HOLE (the preceding `,`), so it is load-bearing and must be
+    /// KEPT — dropping it to `[1,]` (length 1) silently changes the
+    /// array. A fresh JAR probe confirms upstream keeps `[1,,]`
+    /// verbatim. (The original test asserted the buggy `[1,]` and even
+    /// noted the rule was "technically WRONG" — gap-094 fixes it.)
     #[test]
     fn gap046_elision_with_trailing_normalised() {
-        assert_eq!(minify("var a=[1,,];"), "var a=[1,];");
+        assert_eq!(minify("var a=[1,,];"), "var a=[1,,];");
+    }
+
+    /// gap-094: a trailing comma after a REAL element still drops
+    /// (`[1,2,]` → `[1,2]`, `[[1],]` → `[[1]]`, `[f(),]` → `[f()]`),
+    /// while every hole form is preserved (`[,]`, `[,,]`, `[1,2,,]`).
+    #[test]
+    fn gap094_hole_vs_real_trailing_comma() {
+        assert_eq!(minify("var x=[,];"), "var x=[,];");
+        assert_eq!(minify("var x=[,,];"), "var x=[,,];");
+        assert_eq!(minify("var x=[1,2,,];"), "var x=[1,2,,];");
+        assert_eq!(minify("var x=[[1],];"), "var x=[[1]];");
+        assert_eq!(minify("var x=[f(),];"), "var x=[f()];");
     }
 
     /// **Non-regression**: function-call trailing comma

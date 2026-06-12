@@ -95,12 +95,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     ("num_member_method", "gap-093: number literal .member paren-wrap"),
     ("num_member_prop",   "gap-093: number .prop (closurec emits invalid 1.x)"),
     ("num_float_method",  "gap-093: float literal .member paren-wrap"),
-    // gap-094 (CLOC14.41) — CORRECTNESS: a trailing ELISION comma in an
-    // array literal is load-bearing — `[1,,]` has length 2 (element +
-    // one hole). closurec drops it to `[1,]` (length 1), changing the
-    // array. The trailing-comma-drop pass (gap-046) must NOT fire when
-    // the comma follows a hole.
-    ("array_hole_trail", "gap-094: array trailing-hole comma dropped (length change)"),
+    // gap-094 RESOLVED in CLOC12.97 — the gap-046 array trailing-comma
+    // drop is now guarded so it only fires when the comma follows a
+    // REAL element (not a hole: a preceding `,` or `[`). `[1,,]`
+    // (length 2) is preserved; `[1,2,]` -> `[1,2]` still drops.
+    // `minify_array_hole_trail` enforced.
     // gap-095 (CLOC14.41): a chained `new new A` is wrapped by upstream
     // to `new (new A)` (disambiguates the inner NewExpression as the
     // callee). closurec leaves `new new A` (valid, but not byte-id).

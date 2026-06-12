@@ -706,9 +706,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-094 — array trailing-hole comma dropped (CORRECTNESS, WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.41). `minify_array_hole_trail` ignored. **CORRECTNESS — changes the array's length.**
-- **Input:** `var x=[1,,];` → **Upstream:** `var x=[1,,];` (closurec emits `[1,]`).
+- **Status:** RESOLVED in CLOC12.97. `minify_array_hole_trail` enforced.
+- **Input:** `var x=[1,,];` → **Upstream:** `var x=[1,,];` (closurec emitted `[1,]`).
 - **What it needs:** the array trailing-comma-drop pass (gap-046) treats the final comma in `[1,,]` as a redundant trailing comma and drops it, yielding `[1,]`. But `[1,,]` is an array of length 2 (one element + one hole) whereas `[1,]` is length 1 — the comma after a HOLE (an empty elision slot) is load-bearing. The gap-046 drop must be guarded: only drop a trailing comma when it follows a real element, never when it follows another comma (a hole).
+- **CLOC12.97 resolution:** Guarded the gap-046 drop with two extra conditions on the token BEFORE the comma — it must be neither a structural `,` (a preceding hole, as in `[1,,]`) nor a structural `[` (a leading hole, as in `[,]`). Both checks route through `is_structural_punct`, so a string/regex literal whose CONTENT is `,`/`[` is treated as a real element. Real-element trailing commas still drop (`[1,2,]` → `[1,2]`, `[[1],]` → `[[1]]`, `[f(),]` → `[f()]`), while every hole form is preserved (`[1,,]`, `[,]`, `[,,]`, `[1,2,,]`). JAR-verified across all forms. A stale gap-046 unit test that asserted the buggy `[1,,]` → `[1,]` (and even noted the rule was "technically WRONG") was corrected to the kept form; +1 dedicated `gap094_hole_vs_real_trailing_comma` test.
 
 ### gap-095 — chained new paren-wrap (WHITESPACE_ONLY)
 
