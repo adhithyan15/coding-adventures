@@ -91,6 +91,18 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_runbook_summary` tool descriptors for
   read-only audit-context-rich operator phases derived from activation
   playbook steps.
+- `smart_home.list_integration_activation_handoff` and
+  `smart_home.get_integration_activation_handoff_summary` tool descriptors for
+  read-only execution-transfer handoff packages derived from activation
+  runbooks, risk, dependencies, audit records, and readiness gaps.
+- `smart_home.list_integration_activation_execution` and
+  `smart_home.get_integration_activation_execution_summary` tool descriptors
+  for read-only executable, approval, operator, dependency, and blocker state
+  derived from activation handoff packages.
+- `smart_home.list_integration_activation_verification` and
+  `smart_home.get_integration_activation_verification_summary` tool
+  descriptors for read-only post-execution verification checkpoints derived
+  from activation execution packets.
 - `smart_home.list_integration_activation_operator_queue` and
   `smart_home.get_integration_activation_operator_queue_summary` tool
   descriptors for read-only actionable human/operator work derived from

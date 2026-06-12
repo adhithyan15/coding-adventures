@@ -49,6 +49,7 @@ use smart_home_integration_catalog::{
     activation_reviews_from_candidates, activation_risk_from_candidates,
     activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
     activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
+    activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
     entries_requiring_primitive, find_entry, first_party_catalog,
@@ -96,15 +97,16 @@ use smart_home_integration_catalog::{
     IntegrationActivationRunwaySummary, IntegrationActivationSentinelAlert,
     IntegrationActivationSentinelAlertKind, IntegrationActivationSentinelSummary,
     IntegrationActivationTarget, IntegrationActivationTimelineMilestone,
-    IntegrationActivationTimelineSummary, IntegrationActivationWatchtowerSignal,
-    IntegrationActivationWatchtowerSignalKind, IntegrationActivationWatchtowerSummary,
-    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
-    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
-    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
-    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
-    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
-    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
-    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationActivationTimelineSummary, IntegrationActivationVerificationCheckpoint,
+    IntegrationActivationVerificationStatus, IntegrationActivationVerificationSummary,
+    IntegrationActivationWatchtowerSignal, IntegrationActivationWatchtowerSignalKind,
+    IntegrationActivationWatchtowerSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
+    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
+    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
+    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
+    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
+    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
+    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -290,6 +292,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID: &str =
     "smart_home.list_integration_activation_execution";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_execution_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_VERIFICATION_TOOL_ID: &str =
+    "smart_home.list_integration_activation_verification";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_VERIFICATION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_verification_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID: &str =
     "smart_home.list_integration_activation_operator_queue";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_SUMMARY_TOOL_ID: &str =
@@ -640,6 +646,18 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID => {
                     let query = integration_activation_execution_query(&arguments)?;
                     Ok(get_integration_activation_execution_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_VERIFICATION_TOOL_ID => {
+                    let query = integration_activation_verification_query(&arguments)?;
+                    Ok(list_integration_activation_verification_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_VERIFICATION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_verification_query(&arguments)?;
+                    Ok(
+                        get_integration_activation_verification_summary_output_handler_output(
+                            query,
+                        ),
+                    )
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID => {
                     let query = integration_activation_operator_queue_query(&arguments)?;
@@ -2115,6 +2133,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation execution summary",
             "Return compact D23A activation execution counts for executable packets, approvals, operator work, dependency blockers, and attention state.",
             integration_activation_execution_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_VERIFICATION_TOOL_ID,
+            "List smart-home integration activation verification checkpoints",
+            "List read-only D23A activation verification checkpoints derived from execution packets, audit attention, dependency readiness, and readiness gaps.",
+            integration_activation_verification_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_verification", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_verification",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_VERIFICATION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation verification summary",
+            "Return compact D23A activation verification counts for ready checkpoints, pending operator or approval work, blockers, evidence review, and attention state.",
+            integration_activation_verification_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5034,6 +5086,22 @@ struct IntegrationActivationExecutionQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationVerificationQuery {
+    execution: IntegrationActivationExecutionQuery,
+    verification_status: Option<IntegrationActivationVerificationStatus>,
+    can_verify: Option<bool>,
+    verification_ready: Option<bool>,
+    operator_pending: Option<bool>,
+    approval_pending: Option<bool>,
+    dependency_ready: Option<bool>,
+    blocked: Option<bool>,
+    evidence_review_required: Option<bool>,
+    requires_attention: Option<bool>,
+    include_monitor: bool,
+    verification_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationOperatorQueueQuery {
     playbook: IntegrationActivationPlaybookQuery,
     task_kind: Option<IntegrationActivationOperatorTaskKind>,
@@ -5526,6 +5594,46 @@ fn integration_activation_execution_query(
             .or(optional_bool(arguments, "requires_attention")?),
         include_monitor,
         execution_limit: optional_u64(arguments, "execution_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_verification_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationVerificationQuery, ToolCallError> {
+    let include_monitor = optional_bool(arguments, "include_monitor")?.unwrap_or(false);
+    let mut execution = integration_activation_execution_query(arguments)?;
+    execution.include_monitor = include_monitor;
+    execution.handoff.include_monitor = include_monitor;
+    execution.handoff.runbook.include_monitor = include_monitor;
+    let verification_status = optional_string(arguments, "verification_status")?
+        .or(optional_string(arguments, "verification_state")?)
+        .or(optional_string(arguments, "status")?)
+        .map(|label| parse_activation_verification_status(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationVerificationQuery {
+        execution,
+        verification_status,
+        can_verify: optional_bool(arguments, "can_verify")?
+            .or(optional_bool(arguments, "ready_to_verify")?),
+        verification_ready: optional_bool(arguments, "verification_ready")?
+            .or(optional_bool(arguments, "closure_ready")?),
+        operator_pending: optional_bool(arguments, "operator_pending")?
+            .or(optional_bool(arguments, "verification_operator_pending")?),
+        approval_pending: optional_bool(arguments, "approval_pending")?
+            .or(optional_bool(arguments, "verification_approval_pending")?),
+        dependency_ready: optional_bool(arguments, "verification_dependency_ready")?
+            .or(optional_bool(arguments, "dependency_ready")?),
+        blocked: optional_bool(arguments, "verification_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        evidence_review_required: optional_bool(arguments, "evidence_review_required")?.or(
+            optional_bool(arguments, "verification_evidence_review_required")?,
+        ),
+        requires_attention: optional_bool(arguments, "verification_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        include_monitor,
+        verification_limit: optional_u64(arguments, "verification_limit")?
+            .map(|value| value as usize),
     })
 }
 
@@ -6412,6 +6520,51 @@ fn integration_activation_execution_packets_for_query(
     }
 
     (packets, catalog_count)
+}
+
+fn integration_activation_verification_checkpoints_for_query(
+    query: &IntegrationActivationVerificationQuery,
+) -> (Vec<IntegrationActivationVerificationCheckpoint>, usize) {
+    let (packets, catalog_count) =
+        integration_activation_execution_packets_for_query(&query.execution);
+    let mut checkpoints = activation_verification_checkpoints_from_execution_packets(packets);
+
+    if !query.include_monitor {
+        checkpoints.retain(|checkpoint| !checkpoint.monitor_only());
+    }
+    if let Some(status) = query.verification_status {
+        checkpoints.retain(|checkpoint| checkpoint.verification_status == status);
+    }
+    if let Some(can_verify) = query.can_verify {
+        checkpoints.retain(|checkpoint| checkpoint.can_verify() == can_verify);
+    }
+    if let Some(verification_ready) = query.verification_ready {
+        checkpoints.retain(|checkpoint| checkpoint.verification_ready() == verification_ready);
+    }
+    if let Some(operator_pending) = query.operator_pending {
+        checkpoints.retain(|checkpoint| checkpoint.operator_pending() == operator_pending);
+    }
+    if let Some(approval_pending) = query.approval_pending {
+        checkpoints.retain(|checkpoint| checkpoint.approval_pending() == approval_pending);
+    }
+    if let Some(dependency_ready) = query.dependency_ready {
+        checkpoints.retain(|checkpoint| checkpoint.dependency_ready() == dependency_ready);
+    }
+    if let Some(blocked) = query.blocked {
+        checkpoints.retain(|checkpoint| checkpoint.blocked() == blocked);
+    }
+    if let Some(evidence_review_required) = query.evidence_review_required {
+        checkpoints
+            .retain(|checkpoint| checkpoint.evidence_review_required() == evidence_review_required);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        checkpoints.retain(|checkpoint| checkpoint.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.verification_limit {
+        checkpoints.truncate(limit);
+    }
+
+    (checkpoints, catalog_count)
 }
 
 fn integration_activation_operator_tasks_for_query(
@@ -8513,6 +8666,106 @@ fn get_integration_activation_execution_summary_output_handler_output(
                 "next_execution_status",
                 summary
                     .next_execution_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_verification_output_handler_output(
+    query: IntegrationActivationVerificationQuery,
+) -> ToolHandlerOutput {
+    let (checkpoints, catalog_count) =
+        integration_activation_verification_checkpoints_for_query(&query);
+    let summary = IntegrationActivationVerificationSummary::from_checkpoints(checkpoints.iter());
+    let count = checkpoints.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_verification",
+            JsonValue::Array(
+                checkpoints
+                    .iter()
+                    .map(activation_verification_checkpoint_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_verification_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_verification"),
+            ),
+            ("verification_checkpoints", integer(count as i64)),
+            (
+                "ready_to_verify_checkpoints",
+                integer(summary.ready_to_verify_checkpoints as i64),
+            ),
+            (
+                "pending_approval_checkpoints",
+                integer(summary.pending_approval_checkpoints as i64),
+            ),
+            (
+                "blocked_checkpoints",
+                integer(summary.blocked_checkpoints as i64),
+            ),
+            (
+                "next_verification_status",
+                summary
+                    .next_verification_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_verification_summary_output_handler_output(
+    query: IntegrationActivationVerificationQuery,
+) -> ToolHandlerOutput {
+    let (checkpoints, _) = integration_activation_verification_checkpoints_for_query(&query);
+    let summary = IntegrationActivationVerificationSummary::from_checkpoints(checkpoints.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_verification_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_verification_summary"),
+            ),
+            (
+                "total_checkpoints",
+                integer(summary.total_checkpoints as i64),
+            ),
+            (
+                "ready_to_verify_checkpoints",
+                integer(summary.ready_to_verify_checkpoints as i64),
+            ),
+            (
+                "pending_approval_checkpoints",
+                integer(summary.pending_approval_checkpoints as i64),
+            ),
+            (
+                "blocked_checkpoints",
+                integer(summary.blocked_checkpoints as i64),
+            ),
+            (
+                "next_verification_status",
+                summary
+                    .next_verification_status
                     .map(|status| string(status.as_str()))
                     .unwrap_or(JsonValue::Null),
             ),
@@ -16155,6 +16408,376 @@ fn integration_activation_execution_summary_json(
     ])
 }
 
+fn activation_verification_checkpoint_json(
+    checkpoint: &IntegrationActivationVerificationCheckpoint,
+) -> JsonValue {
+    object([
+        ("sequence", integer(checkpoint.sequence as i64)),
+        (
+            "execution_sequence",
+            integer(checkpoint.execution_sequence as i64),
+        ),
+        (
+            "handoff_sequence",
+            integer(checkpoint.handoff_sequence as i64),
+        ),
+        (
+            "runbook_sequence",
+            integer(checkpoint.runbook_sequence as i64),
+        ),
+        (
+            "operator_task_sequence",
+            checkpoint
+                .operator_task_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("priority", integer(checkpoint.priority as i64)),
+        (
+            "verification_status",
+            string(checkpoint.verification_status.as_str()),
+        ),
+        (
+            "execution_status",
+            string(checkpoint.execution_status.as_str()),
+        ),
+        ("handoff_status", string(checkpoint.handoff_status.as_str())),
+        ("phase", string(checkpoint.phase.as_str())),
+        (
+            "task_kind",
+            checkpoint
+                .task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "playbook_action",
+            string(checkpoint.playbook_action.as_str()),
+        ),
+        (
+            "recommended_view",
+            string(checkpoint.recommended_view.as_str()),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                checkpoint
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(checkpoint.integration_count() as i64),
+        ),
+        (
+            "risk_ids",
+            JsonValue::Array(
+                checkpoint
+                    .risk_ids
+                    .iter()
+                    .map(|risk_id| string(risk_id))
+                    .collect(),
+            ),
+        ),
+        ("risk_count", integer(checkpoint.risk_count as i64)),
+        (
+            "dependency_integration_ids",
+            JsonValue::Array(
+                checkpoint
+                    .dependency_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "blocking_dependency_integration_ids",
+            JsonValue::Array(
+                checkpoint
+                    .blocking_dependency_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "dependency_edge_count",
+            integer(checkpoint.dependency_edge_count as i64),
+        ),
+        (
+            "blocking_dependency_edge_count",
+            integer(checkpoint.blocking_dependency_edge_count as i64),
+        ),
+        (
+            "readiness_gap_count",
+            integer(checkpoint.readiness_gap_count as i64),
+        ),
+        (
+            "audit_record_count",
+            integer(checkpoint.audit_record_count as i64),
+        ),
+        (
+            "attention_audit_record_count",
+            integer(checkpoint.attention_audit_record_count as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(checkpoint.highest_policy_tier)),
+        ),
+        (
+            "operator_pending",
+            JsonValue::Bool(checkpoint.operator_pending()),
+        ),
+        (
+            "approval_pending",
+            JsonValue::Bool(checkpoint.approval_pending()),
+        ),
+        (
+            "dependency_ready",
+            JsonValue::Bool(checkpoint.dependency_ready()),
+        ),
+        ("can_verify", JsonValue::Bool(checkpoint.can_verify())),
+        (
+            "verification_ready",
+            JsonValue::Bool(checkpoint.verification_ready()),
+        ),
+        ("blocked", JsonValue::Bool(checkpoint.blocked())),
+        ("monitor_only", JsonValue::Bool(checkpoint.monitor_only())),
+        (
+            "evidence_review_required",
+            JsonValue::Bool(checkpoint.evidence_review_required()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(checkpoint.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_verification_summary_json(
+    summary: &IntegrationActivationVerificationSummary,
+) -> JsonValue {
+    object([
+        (
+            "total_checkpoints",
+            integer(summary.total_checkpoints as i64),
+        ),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "ready_to_verify_checkpoints",
+            integer(summary.ready_to_verify_checkpoints as i64),
+        ),
+        (
+            "verification_ready_checkpoints",
+            integer(summary.verification_ready_checkpoints as i64),
+        ),
+        (
+            "pending_operator_checkpoints",
+            integer(summary.pending_operator_checkpoints as i64),
+        ),
+        (
+            "pending_approval_checkpoints",
+            integer(summary.pending_approval_checkpoints as i64),
+        ),
+        (
+            "blocked_checkpoints",
+            integer(summary.blocked_checkpoints as i64),
+        ),
+        (
+            "dependency_ready_checkpoints",
+            integer(summary.dependency_ready_checkpoints as i64),
+        ),
+        (
+            "dependency_blocked_checkpoints",
+            integer(summary.dependency_blocked_checkpoints as i64),
+        ),
+        (
+            "monitor_checkpoints",
+            integer(summary.monitor_checkpoints as i64),
+        ),
+        (
+            "evidence_review_checkpoints",
+            integer(summary.evidence_review_checkpoints as i64),
+        ),
+        (
+            "checkpoints_requiring_attention",
+            integer(summary.checkpoints_requiring_attention as i64),
+        ),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "total_readiness_gaps",
+            integer(summary.total_readiness_gaps as i64),
+        ),
+        (
+            "total_audit_records",
+            integer(summary.total_audit_records as i64),
+        ),
+        (
+            "attention_audit_records",
+            integer(summary.attention_audit_records as i64),
+        ),
+        (
+            "next_verification_status",
+            summary
+                .next_verification_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_execution_status",
+            summary
+                .next_execution_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_task_kind",
+            summary
+                .next_task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_phase",
+            summary
+                .next_phase
+                .map(|phase| string(phase.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_playbook_action",
+            summary
+                .next_playbook_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_checkpoint_sequence",
+            summary
+                .next_checkpoint_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_checkpoint_priority",
+            summary
+                .next_checkpoint_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_to_verify_sequence",
+            summary
+                .first_ready_to_verify_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_pending_operator_sequence",
+            summary
+                .first_pending_operator_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_pending_approval_sequence",
+            summary
+                .first_pending_approval_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_sequence",
+            summary
+                .first_blocked_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_sequence",
+            summary
+                .first_attention_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_to_verify_priority",
+            summary
+                .first_ready_to_verify_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_pending_operator_priority",
+            summary
+                .first_pending_operator_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_pending_approval_priority",
+            summary
+                .first_pending_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "ready_to_verify",
+            JsonValue::Bool(summary.ready_to_verify()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_pending_work",
+            JsonValue::Bool(summary.has_pending_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_operator_task_json(task: &IntegrationActivationOperatorTask) -> JsonValue {
     object([
         ("sequence", integer(task.sequence as i64)),
@@ -20264,6 +20887,27 @@ fn parse_activation_execution_status(
     }
 }
 
+fn parse_activation_verification_status(
+    label: &str,
+) -> Result<IntegrationActivationVerificationStatus, ToolCallError> {
+    match label {
+        "ready_to_verify" | "ready" | "verification_ready" | "can_verify" => {
+            Ok(IntegrationActivationVerificationStatus::ReadyToVerify)
+        }
+        "pending_operator" | "operator_pending" | "operator" | "human_action"
+        | "human_required" => Ok(IntegrationActivationVerificationStatus::PendingOperator),
+        "pending_approval" | "needs_approval" | "approval" | "approval_required"
+        | "requires_approval" => Ok(IntegrationActivationVerificationStatus::PendingApproval),
+        "blocked" | "blocker" | "blockers" => Ok(IntegrationActivationVerificationStatus::Blocked),
+        "monitoring" | "monitor" | "monitor_only" | "watching" => {
+            Ok(IntegrationActivationVerificationStatus::Monitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation verification status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_operator_task_kind(
     label: &str,
 ) -> Result<IntegrationActivationOperatorTaskKind, ToolCallError> {
@@ -21614,6 +22258,54 @@ fn integration_activation_execution_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_verification_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_execution_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new(
+            "verification_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "verification_state",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("can_verify", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("ready_to_verify", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "verification_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("operator_pending", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("approval_pending", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "verification_dependency_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "verification_blocked",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "evidence_review_required",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "verification_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "verification_limit",
+            JsonSchema::Integer,
+        ));
+    }
+    schema
+}
+
 fn integration_activation_operator_queue_query_schema() -> JsonSchema {
     let mut schema = integration_activation_playbook_query_schema();
     if let JsonSchema::Object {
@@ -21951,7 +22643,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 115);
+        assert_eq!(definitions.len(), 117);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -22234,6 +22926,12 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_VERIFICATION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_VERIFICATION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -22270,7 +22968,7 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            107
+            109
         );
         assert_eq!(
             export
@@ -22748,11 +23446,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(115))
+            Some(&integer(117))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(107))
+            Some(&integer(109))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -25746,6 +26444,144 @@ mod tests {
             Some(&JsonValue::Bool(false))
         );
 
+        let list_activation_verification_request = request(
+            "call-list-integration-activation-verification",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_VERIFICATION_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("verification_status", string("blocked")),
+                ("verification_limit", integer(3)),
+            ]),
+            5_535,
+        );
+        let list_activation_verification_trace =
+            tool_runtime.invoke_with_events(&list_activation_verification_request);
+        assert!(list_activation_verification_trace.result.ok);
+        assert_eq!(
+            list_activation_verification_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_verification_output = list_activation_verification_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_verification_count =
+            integer_value(field(list_activation_verification_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_verification_count));
+        let activation_verification_summary =
+            field(list_activation_verification_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_verification_summary, "total_checkpoints"),
+            Some(&integer(activation_verification_count))
+        );
+        assert_eq!(
+            field(activation_verification_summary, "next_verification_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_verification_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_verification_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_verification_checkpoint = array_item(
+            field(
+                list_activation_verification_output,
+                "activation_verification",
+            )
+            .unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_verification_checkpoint, "verification_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_verification_checkpoint, "can_verify"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(activation_verification_checkpoint, "dependency_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let activation_verification_summary_request = request(
+            "call-integration-activation-verification-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_VERIFICATION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("verification_status", string("blocked")),
+            ]),
+            5_536,
+        );
+        let activation_verification_summary_trace =
+            tool_runtime.invoke_with_events(&activation_verification_summary_request);
+        assert!(activation_verification_summary_trace.result.ok);
+        assert_eq!(
+            activation_verification_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_verification_summary_output = activation_verification_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_verification_rollup =
+            field(activation_verification_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_verification_rollup, "blocked_checkpoints").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_verification_rollup, "next_verification_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_verification_rollup, "ready_to_verify"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let list_activation_operator_queue_request = request(
             "call-list-integration-activation-operator-queue",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID,
@@ -28345,6 +29181,14 @@ mod tests {
             activation_execution_summary_trace,
         );
         journal.record_trace(
+            list_activation_verification_request,
+            list_activation_verification_trace,
+        );
+        journal.record_trace(
+            activation_verification_summary_request,
+            activation_verification_summary_trace,
+        );
+        journal.record_trace(
             list_activation_operator_queue_request,
             list_activation_operator_queue_trace,
         );
@@ -28462,9 +29306,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 115);
-        assert_eq!(journal_summary.completed_count, 115);
-        assert_eq!(journal.audit_records().len(), 115);
+        assert_eq!(journal_summary.invocation_count, 117);
+        assert_eq!(journal_summary.completed_count, 117);
+        assert_eq!(journal.audit_records().len(), 117);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

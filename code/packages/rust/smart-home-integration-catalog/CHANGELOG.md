@@ -78,6 +78,11 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationRunbookEntry` and
   `IntegrationActivationRunbookSummary` for joining playbook steps to audit,
   risk, dependency, and readiness-gap context.
+- `IntegrationActivationHandoffPackage`,
+  `IntegrationActivationExecutionPacket`, and
+  `IntegrationActivationVerificationCheckpoint` rollups for turning activation
+  runbooks into execution-transfer, execution-readiness, and post-execution
+  verification views.
 - `IntegrationActivationOperatorTask` and
   `IntegrationActivationOperatorTaskSummary` for turning playbook steps into
   actionable human/operator queue rows.
