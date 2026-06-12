@@ -1,8 +1,8 @@
 [package]
 name = "iir-to-wasm"
-version = "0.12.0"
+version = "0.13.0"
 edition = "2021"
-description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.7.0 (G1): accept cmp_*-prefixed comparison opcodes.  v0.8.0 (G2): whitelist call_builtin print_i64 and route it to the env.__print_i64 host import that io_out uses, so BASIC's PRINT reaches real wasm bytecode."
+description = "IIR → WASM backend — lowers IIRModule to WasmModule.  v0.13.0 (LANG-MATRIX LM-W Brainfuck): adds the byte-tape ops alloc_bytes/load_byte/store_byte over linear memory (with i32.wrap_i64 / i64.extend_i32_u at the byte boundary), i64-aware putchar/getchar, and width-correct i64 branch conditions (i64.eqz) + i64-widened comparison results — so the i64-widened Brainfuck runs on wasm.  v0.7.0 (G1): accept cmp_*-prefixed comparison opcodes.  v0.8.0 (G2): whitelist call_builtin print_i64 and route it to the env.__print_i64 host import that io_out uses, so BASIC's PRINT reaches real wasm bytecode."
 
 [lib]
 name = "iir_to_wasm"

@@ -4,12 +4,15 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-MATRIX LM-L Brainfuck (v0.65.0):** Brainfuck now also runs on the
-> **LLVM** backend. `lower_brainfuck_for_aot` widens the frontend's narrow cell
-> (`u8`) and pointer (`u32`) hints to `i64` — byte width survives only at the
-> `load_byte`/`store_byte` tape boundary — so `iir-to-llvm`'s i64-only stack-slot
-> model accepts the BF tape. Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A`
-> on real `clang` (`tests/lang_matrix.rs`). The frontend itself is unchanged, so
+> **LANG-MATRIX LM-L/LM-W Brainfuck (v0.65.0 / v0.66.0):** Brainfuck now also runs
+> on the **LLVM** and **WASM** backends. `lower_brainfuck_for_aot` widens the
+> frontend's narrow cell (`u8`) and pointer (`u32`) hints to `i64` — byte width
+> survives only at the `load_byte`/`store_byte` tape boundary — and each backend grew
+> the matching byte-tape ops: `iir-to-llvm` 0.9.0 (`@calloc`/`getelementptr i8`/libc
+> `putchar`) and `iir-to-wasm` 0.13.0 (linear-memory `i32.load8_u`/`i32.store8` with
+> `i32.wrap_i64`/`i64.extend_i32_u`, `env.putchar`/`env.getchar` host imports).
+> Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A` on real `clang` and the in-repo
+> `wasm-runtime` (`tests/lang_matrix.rs`). The frontend itself is unchanged, so
 > the `vm-core`/`jit-core` Brainfuck paths (which key CIR widths off `u8`/`u32`)
 > keep working.  (McCarthy Lisp is wired as of L3a — scalar programs run
 end-to-end natively; symbol/cons backend support is L3b.)  As of L3b-3a-3c,

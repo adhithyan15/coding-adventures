@@ -3,6 +3,55 @@
 All notable changes to this crate are documented here.  The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] — 2026-06-12 (LANG-MATRIX LM-W Brainfuck — byte-tape ops on wasm)
+
+Adds the lowering Brainfuck needs to run on the WASM backend — the last code-gen
+gap in Brainfuck's row after LLVM (LM-L). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on the in-repo `wasm-runtime` in
+`lang-aot/tests/lang_matrix.rs`: it prints `A`.
+
+`lower_brainfuck_for_aot` rewrites Brainfuck's tape into `alloc_bytes` /
+`load_byte` / `store_byte` and widens every cell/pointer register to `i64`. The
+wasm module already has linear memory, `putchar`/`getchar` host imports, and a
+dispatch-loop control flow — what was missing was the byte-tape ops and the
+i64↔i32 conversions the widened value model requires.
+
+### Added
+
+- **`alloc_bytes dest <- size`** → `i64.const 0` (the wasm linear memory *is* the
+  tape and starts at offset 0; `size` only triggers the fixed 1-page memory). The
+  base is bound in the register `dest`.
+- **`load_byte dest <- base, idx`** → `i32.wrap_i64` (narrow the i64 base+idx to
+  the i32 address), `i32.add`, `i32.load8_u`, then `i64.extend_i32_u` to widen the
+  loaded byte back to the i64 cell register. The wasm twin of LLVM's
+  `getelementptr i8 + load + zext`.
+- **`store_byte base, idx, val`** → `i32.wrap_i64` on base+idx (address) and on
+  `val` (the low byte), then `i32.store8`. The `i32.store8`'s implicit `& 0xFF` is
+  what gives Brainfuck's 8-bit cell wrap-around (`255 + 1 == 0`) for free even
+  though the arithmetic ran at i64 width. `store_byte` with a `dest` is rejected.
+- `collect_module_features` now flags `uses_memory` for these ops (so the linear
+  memory is emitted), alongside the existing `load_mem`/`store_mem`.
+- `codegen`: `I64_EQZ` (0x50) constant; `lower` gains `i32.add` / `i32.wrap_i64` /
+  `i64.extend_i32_u` encoders.
+
+### Fixed (the i64-widening ripple)
+
+- **`putchar`/`getchar`**: the `env.putchar`/`env.getchar` imports are `(i32)->()` /
+  `()->i32`, but the Brainfuck cell register is now `i64`. `putchar` now narrows its
+  arg with `i32.wrap_i64`; `getchar` widens its i32 result with `i64.extend_i32_u`.
+- **i64 branch conditions**: `jmp_if_true`/`jmp_if_false` assumed an `i32` condition
+  (`if` / `i32.eqz`). The widened Brainfuck loop guard is an `i64` cell value, so an
+  i64 condition now branches via `i64.eqz` (false-test) / `i64.eqz; i32.eqz`
+  (true-test). Width is chosen per the register's declared type.
+- **i64-declared comparison results**: a wasm comparison always yields `i32`, but
+  `concretize_scalar_any_for_wasm` may declare the result local `i64`. The i32
+  boolean is now widened with `i64.extend_i32_u` when the dest is i64, so the module
+  is well-typed (previously an i32 sat in an i64 local — tolerated only because every
+  consumer happened to use i32 ops; the new `i64.eqz` guard would have tripped on it).
+
+Three new tests in `tests/test_backend.rs` cover the tape ops + memory injection,
+the `store_byte`-with-dest rejection, and the i64-guard / widened-cmp conversions.
+
 ## [0.12.0] — 2026-06-08 (LANG77 / McCarthy L3b-3a-4c — `EQ` / `equal?`)
 
 ### Added
