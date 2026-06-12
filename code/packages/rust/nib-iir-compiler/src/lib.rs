@@ -885,10 +885,21 @@ fn type_str_from_node(node: &GrammarASTNode) -> String {
 
 /// Map a raw Nib type name to the closest CIR-allowed type string.
 fn widen_nib_type(t: &str) -> &str {
+    // Nib's integer types all **materialise as `i64`** in the IIR — the same
+    // machine-word convention the instruction bodies already use (`compile_binary_chain`
+    // and the `ret` default both emit `"i64"`), and the model the native AOT backend
+    // runs in. Before, the *function signature* (`extract_params` / `extract_return_type`)
+    // and `let` types went through here as the narrow `"u8"` while the bodies were `i64`,
+    // leaving the IIR type-inconsistent. A strict backend then rejected it: `iir-to-llvm`
+    // faithfully emitted `define i8 @double(i8 %x)` but `add i64 %x, %x`
+    // (`'%x' defined with type 'i8' but expected 'i64'`). Materialising integers to `i64`
+    // here makes the whole function uniform (params/lets/arith/ret all `i64`), so the
+    // backend — which correctly emits *consistent* narrow types when given them
+    // (see `iir-to-llvm/tests/test_backend.rs`) — produces valid LLVM. The narrow
+    // semantic width (u4/u8 wraparound) is a backend-masking concern, deferred.
     match t {
-        "u4"  => "u8",  // Nib's nibble widens to u8 for CIR
-        "bcd" => "u8",  // BCD is byte-encoded
-        other => other, // u8, bool, void all pass through unchanged
+        "u4" | "u8" | "bcd" => "i64",
+        other => other, // bool, void, and any already-`i64` pass through unchanged
     }
 }
 
