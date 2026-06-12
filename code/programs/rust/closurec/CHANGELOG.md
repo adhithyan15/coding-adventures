@@ -2,6 +2,43 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.92.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-077** — a binary operator's parenthesised ATOMIC LEFT
+  operand now elides, matching upstream Closure: `(a)+b` → `a+b`,
+  `(a)*b` → `a*b`, `(a.b)+c` → `a.b+c`. The LEFT-hand mirror of
+  gap-075/078 (RIGHT operand). `minify_left_operand_paren` is now
+  enforced. With this, all four CLOC14.37 binary-operand /
+  block-flatten gaps (077–080) are closed.
+
+### Added — gap-077 binary LEFT-operand paren elision
+
+A new pre-pass that fires on a structural `(` which (1) STARTS an
+expression (the preceding token does NOT produce a value — a
+call/member paren `f(a)+b` is preceded by a value-producing
+word-like / string / `)`/`]`/`}` and is never stripped, else
+`f(a)+b` would corrupt to `fa+b`), (2) has a matching `)` immediately
+followed by a BINARY operator (so the span is that operator's LEFT
+operand — `)` followed by `.`/`?.`/`(`/`[` is a member/call, left to
+gap-057 / the callee passes), and (3) the span passes
+`is_safe_unary_paren_operand`. An operand with a top-level binary
+operator (`(a+b)*c`) or comma (`(a,b)+c`) is rejected → parens kept
+(precedence / comma-operator safety).
+
+**Exponentiation hazard (correctness).** `**` forbids an
+*unparenthesised* unary LEFT operand — `-a**b` is a `SyntaxError`
+(ECMAScript: the left side of `**` must be an `UpdateExpression`, not
+a `UnaryExpression`). So `(-a)**b`, `(!a)**b`, `(typeof a)**b`, …
+KEEP their parens; the pre-pass detects a unary-starting span before
+a `**` and skips it. The byte-identity fixture `minify_exp_of_unary`
+(`(-a)**b`) caught this and now guards it.
+
+5 new `gap077_*` unit tests (strip / precedence-kept / call+comma-kept
+/ `**`-unary-hazard / ternary-condition-untouched) + the enforced
+fixture. `gap062_call_arg_grouping_preserved` updated to
+`g((a)+(b))` → `g(a+b)` (both grouping layers now elide).
+
 ## [0.91.0] - 2026-06-12
 
 ### Changed
