@@ -603,9 +603,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-079 — `if`-body single-statement block flatten
 
-- **Status:** OPEN (discovered CLOC14.37). `minify_if_body_flatten` ignored.
+- **Status:** RESOLVED in CLOC12.85. `minify_if_body_flatten` enforced.
 - **Input:** `if(x){y()}` → **Upstream:** `if(x)y();`
-- **What it needs:** The `if`-statement sibling of gap-074/076 (for/while/with loop-body flatten). When an `if` consequent is a single un-terminated statement block, flatten `if(…){S}` → `if(…)S;`. The anchor differs from gap-074: an `if` may be followed by an `else`, so the flatten must NOT strip braces when doing so would attach a trailing `else` to the wrong `if` (the dangling-else hazard) — guard accordingly, or restrict to the no-`else` form first.
+- **What it needed:** The `if`-statement sibling of gap-074/076 (for/while/with loop-body flatten). When an `if` consequent is a single un-terminated statement block, flatten `if(…){S}` → `if(…)S;`. The anchor differs from gap-074: an `if` may be followed by an `else`, so the flatten must NOT strip braces when doing so would attach a trailing `else` to the wrong `if` (the dangling-else hazard).
+- **CLOC12.85 resolution:** Added `if` to the gap-074 pre-pass anchor keyword set (`for`/`while`/`with`/`if`). A `{` immediately after an `if(…)` header is unambiguously the consequent (never an object literal), so the identical single-statement / property-guard / synthetic-`;` machinery applies. **DANGLING-ELSE SAFETY came for free:** the brace-drop is unsound exactly when the body holds a nested un-`else`-d `if` AND the outer `if` has an `else` (`if(a){if(b)c()}else d()` must keep its braces — flattening would re-bind the `else` to the inner `if(b)`; the JAR keeps the braces too, verified). But ANY body containing a control-flow keyword (including `if`) already sets `has_blocking_keyword` and is therefore never flattened, so the dangling-else case can never reach the drop. A single non-control consequent (`{y()}`) has no such hazard. `else`-arm flatten (`else{z()}` → `else z()`) is the separate gap-080. 4 unit tests (flatten / multi-keep / dangling-else-kept / else-if-chain) + the byte-identity fixture.
 
 ### gap-080 — `else`-body single-statement block flatten
 

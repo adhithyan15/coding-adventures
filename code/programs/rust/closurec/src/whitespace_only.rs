@@ -1315,9 +1315,9 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // ---- gap-074 + gap-076: header-keyword body flatten ----------
-    // `for(...){S}` / `while(...){S}` / `with(...){S}` whose body
-    // `{S}` is a SINGLE statement with NO trailing `;` →
+    // ---- gap-074 + gap-076 + gap-079: header-keyword body flatten -
+    // `for(...){S}` / `while(...){S}` / `with(...){S}` / `if(...){S}`
+    // whose body `{S}` is a SINGLE statement with NO trailing `;` →
     // `for(...)S;`. Sibling of gap-067 (which flattens a *labeled*
     // block).
     //
@@ -1326,22 +1326,37 @@ pub fn whitespace_only_minify(
     //   while(x){g()}          →  while(x)g();           (gap-074)
     //   for(a in o){h(a)}      →  for(a in o)h(a);       (gap-074)
     //   with(o){a()}           →  with(o)a();            (gap-076)
+    //   if(x){y()}             →  if(x)y();              (gap-079)
     //
     // The `{` immediately following a `for(...)`/`while(...)`/
-    // `with(...)` header is UNAMBIGUOUSLY the statement body — never
-    // an object literal — so (unlike gap-067) no completion-keyword
-    // guard is needed. The body is dropped braces + a synthetic `;`
-    // terminator.
+    // `with(...)`/`if(...)` header is UNAMBIGUOUSLY the statement
+    // body — never an object literal — so (unlike gap-067) no
+    // completion-keyword guard is needed. The body is dropped braces
+    // + a synthetic `;` terminator.
     //
-    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`
-    // and `minify_with_body_flatten`):
-    //   - anchor on a `for`/`while`/`with` STATEMENT keyword
+    // gap-079 (the `if` arm) — DANGLING-ELSE SAFETY. Stripping the
+    // braces around an `if` consequent is unsound exactly when the
+    // body contains a nested un-`else`-d `if` AND the outer `if` has
+    // an `else`:  `if(a){if(b)c()}else d()` must KEEP its braces —
+    // flattening to `if(a)if(b)c();else d()` would re-bind the `else`
+    // to the INNER `if(b)` (the JAR keeps the braces too, verified).
+    // We get this for free: any body containing a nested `if` (or any
+    // other control-flow keyword) sets `has_blocking_keyword` and is
+    // therefore NOT flattened — so the dangling-else case can never
+    // reach the brace-drop. A consequent that is a single non-control
+    // statement (`{y()}`) has no such hazard. `else`-arm flatten
+    // (`else{z()}` → `else z()`) is the separate gap-080.
+    //
+    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`,
+    // `minify_with_body_flatten`, and `minify_if_body_flatten`):
+    //   - anchor on a `for`/`while`/`with`/`if` STATEMENT keyword
     //     (word-like, and NOT a property — `o.while(x){…}` is a
     //     method call, so a `.`/`?.` look-behind disqualifies it);
     //   - the keyword's `(`…`)` header is matched by a structural
     //     depth scan, and the token AFTER `)` must be a `{`;
     //   - the body has NO nested `{` and NO control-flow keyword at
-    //     depth 1, and EXACTLY ZERO top-level `;` (i.e. a single,
+    //     depth 1 (this is also the dangling-else guard for `if`),
+    //     and EXACTLY ZERO top-level `;` (i.e. a single,
     //     un-terminated statement). Bodies that already end in `;`
     //     are left to the gap-032 emit-time flatten; multi-statement
     //     bodies (`{a();b()}`) and empty bodies (`{}`) are untouched.
@@ -1359,7 +1374,7 @@ pub fn whitespace_only_minify(
             // single-statement flatten applies (`with(o){a()}` →
             // `with(o)a();`).
             let is_loop_kw = is_word_like(&kept[i])
-                && matches!(kept[i].value.as_str(), "for" | "while" | "with");
+                && matches!(kept[i].value.as_str(), "for" | "while" | "with" | "if");
             let is_property = i >= 1
                 && (is_structural_punct(&kept[i - 1], ".")
                     || is_structural_punct(&kept[i - 1], "?."));
@@ -4749,6 +4764,49 @@ mod tests {
     fn gap076_with_body_guards() {
         assert_eq!(minify("with(o){a();b()}"), "with(o){a();b()};");
         assert_eq!(minify("o.with(x){f()}"), "o.with(x){f()};");
+    }
+
+    // ---- gap-079: if-body single-statement block flatten ------
+
+    /// gap-079: an `if` consequent that is a single un-terminated
+    /// statement drops its braces (`if`-sibling of gap-074/076).
+    #[test]
+    fn gap079_if_body_flattens() {
+        assert_eq!(minify("if(x){y()}"), "if(x)y();");
+    }
+
+    /// gap-079 boundary: a MULTI-statement `if` body keeps braces;
+    /// an empty body is untouched.
+    #[test]
+    fn gap079_if_body_guards() {
+        assert_eq!(minify("if(x){a();b()}"), "if(x){a();b()};");
+    }
+
+    /// gap-079 DANGLING-ELSE SAFETY: an `if` whose body contains a
+    /// nested un-`else`-d `if` and is followed by an `else` must KEEP
+    /// its braces — flattening `if(a){if(b)c()}else d()` to
+    /// `if(a)if(b)c();else d()` would re-bind the `else` to the inner
+    /// `if(b)`. The existing no-control-flow-keyword guard prevents
+    /// the brace-drop (the body contains `if`). The decisive property
+    /// is that the braces survive (verified against the JAR, which
+    /// keeps them too — the only diff is an unrelated EOF trailing
+    /// `;` after the bare `else` arm).
+    #[test]
+    fn gap079_dangling_else_kept() {
+        assert_eq!(
+            minify("if(a){if(b)c()}else d()"),
+            "if(a){if(b)c()}else d()"
+        );
+    }
+
+    /// gap-079: an `else if(...)` chain flattens the inner body
+    /// (`else if(c){d()}` → `else if(c)d();`).
+    #[test]
+    fn gap079_else_if_chain_inner_flattens() {
+        assert_eq!(
+            minify("if(a)b();else if(c){d()}"),
+            "if(a)b();else if(c)d();"
+        );
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
