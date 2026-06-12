@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  analyzeDeckControls,
   type CompatibilityDeck,
   compatibilityCorpus,
   formatCompatibilityCorpusTable,
@@ -81,5 +82,51 @@ describe("compatibility corpus", () => {
         "analysisCoverage",
       ]),
     );
+  });
+
+  it("treats .end as the executable deck boundary", () => {
+    const summary = analyzeDeckControls(`
+* ignored title
+V1 in 0 DC 1
+.op
+.end
+.include after-end.lib
+.dc V1 0 1 1
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(5);
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1", ".op"]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports unsupported deck-control directives before .end", () => {
+    const summary = analyzeDeckControls(`
+.include models.inc
+.LIB vendor.lib TT
+.control
+run
+.endc
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.activeLines.slice(0, 3)).toStrictEqual([
+      ".include models.inc",
+      ".LIB vendor.lib TT",
+      ".control",
+    ]);
+    expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
+      directive,
+      lineNumber,
+      severity,
+    ])).toStrictEqual([
+      [".include", 2, "error"],
+      [".lib", 3, "error"],
+      [".control", 4, "error"],
+    ]);
+    expect(summary.diagnostics.every((diagnostic) =>
+      diagnostic.code === "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+    )).toBe(true);
   });
 });

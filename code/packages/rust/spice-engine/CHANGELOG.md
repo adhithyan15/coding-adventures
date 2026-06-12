@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `analyze_deck_controls` for shared deck-control boundary diagnostics:
+  active pre-`.end` lines plus stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control`, matching Python and TypeScript.
 - Add `compatibility_corpus`, `release_readiness_gates`,
   `format_compatibility_corpus_table`, and `format_release_readiness_report`
   for the first oracle-backed compatibility deck corpus with golden tolerances

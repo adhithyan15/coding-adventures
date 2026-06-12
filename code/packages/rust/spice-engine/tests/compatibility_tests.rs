@@ -1,6 +1,7 @@
 use spice_engine::{
-    compatibility_corpus, format_compatibility_corpus_table, format_release_readiness_report,
-    release_readiness_gates, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
+    format_release_readiness_report, release_readiness_gates, CompatibilityDeck,
+    CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -94,4 +95,70 @@ fn release_readiness_gates_report_malformed_decks() {
     ] {
         assert!(fields.contains(field), "missing field {field}");
     }
+}
+
+#[test]
+fn analyze_deck_controls_stops_at_end() {
+    let summary = analyze_deck_controls(
+        "
+* ignored title
+V1 in 0 DC 1
+.op
+.end
+.include after-end.lib
+.dc V1 0 1 1
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(5));
+    assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1", ".op"]);
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn analyze_deck_controls_reports_unsupported_directives() {
+    let summary = analyze_deck_controls(
+        "
+.include models.inc
+.LIB vendor.lib TT
+.control
+run
+.endc
+.end
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(
+        &summary.active_lines[..3],
+        &[
+            ".include models.inc".to_string(),
+            ".LIB vendor.lib TT".to_string(),
+            ".control".to_string()
+        ]
+    );
+    let diagnostics = summary
+        .diagnostics
+        .iter()
+        .map(|diagnostic| {
+            (
+                diagnostic.directive.as_str(),
+                diagnostic.line_number,
+                diagnostic.severity.as_str(),
+            )
+        })
+        .collect::<Vec<_>>();
+    assert_eq!(
+        diagnostics,
+        vec![
+            (".include", 2, "error"),
+            (".lib", 3, "error"),
+            (".control", 4, "error")
+        ]
+    );
+    assert!(summary
+        .diagnostics
+        .iter()
+        .all(|diagnostic| diagnostic.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE"));
 }

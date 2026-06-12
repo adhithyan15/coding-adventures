@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `analyzeDeckControls` for shared deck-control boundary diagnostics:
+  active pre-`.end` lines plus stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control`, matching Python and Rust.
 - Add `formatDcSweepTable`, `formatCornerDcSweepTable`,
   `formatCornerAcTable`, and `formatCornerTfTable` to close the remaining
   Rust-first `.DC`, `.AC`, and `.TF` named-corner table helper gaps in the

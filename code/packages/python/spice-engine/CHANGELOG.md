@@ -4,6 +4,10 @@
 
 ### Added
 
+- **Deck boundary diagnostics** — `analyze_deck_controls()` now reports the
+  active pre-`.end` deck lines and stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control` directives, matching Rust and TypeScript.
+
 - **Remaining stable table parity** — `format_dc_sweep_table()`,
   `format_corner_dc_sweep_table()`, `format_corner_ac_table()`, and
   `format_corner_tf_table()` now close the remaining Rust-first `.DC`, `.AC`,

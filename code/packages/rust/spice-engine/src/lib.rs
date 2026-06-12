@@ -3137,6 +3137,23 @@ pub struct CompatibilityDeck {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckControlDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckControlSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub diagnostics: Vec<DeckControlDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
     pub field: String,
@@ -3257,6 +3274,46 @@ pub fn compatibility_corpus() -> Vec<CompatibilityDeck> {
             known_incompatibilities: common,
         },
     ]
+}
+
+pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
+    let mut active_lines = Vec::new();
+    let mut diagnostics = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if let Some(directive) = directive {
+            if is_unsupported_deck_control_directive(&directive) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE".to_string(),
+                    directive: directive.clone(),
+                    line_number,
+                    message: format!(
+                        "{directive} is not supported by the deck execution foothold yet"
+                    ),
+                    severity: "error".to_string(),
+                });
+            }
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckControlSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        diagnostics,
+    }
 }
 
 pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
@@ -3475,6 +3532,22 @@ fn validate_compatibility_non_empty(
         field: field.to_string(),
         message: "field must be documented and non-empty".to_string(),
     });
+}
+
+fn deck_directive(line: &str) -> Option<String> {
+    if !line.starts_with('.') {
+        return None;
+    }
+    Some(
+        line.split_whitespace()
+            .next()
+            .unwrap_or(line)
+            .to_ascii_lowercase(),
+    )
+}
+
+fn is_unsupported_deck_control_directive(directive: &str) -> bool {
+    matches!(directive, ".include" | ".lib" | ".control")
 }
 
 #[derive(Debug, Clone, PartialEq)]

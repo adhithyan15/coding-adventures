@@ -19,8 +19,9 @@ downstream tools to compare.
    - Status: next.
    - Convert parsed netlists into runnable analysis plans beyond the initial
      `.op`, `.dc`, `.ac`, and `.tran` subset.
-   - Support `.include`, `.lib`, `.end`, `.param`, `.func`, expressions, `.ic`,
-     and `.nodeset`.
+   - Support `.include` and `.lib` resolution, `.param`, `.func`, expressions,
+     `.ic`, and `.nodeset`; `.end` boundary detection now has a shared
+     diagnostic foothold.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -146,17 +147,28 @@ downstream tools to compare.
     - Package README, changelog, and tests document and lock the final
       cross-language table columns for this backlog item.
 
+14. Deck-control boundary diagnostics.
+    - Status: completed in this deck-boundary diagnostics slice.
+    - Python, Rust, and TypeScript now expose matching helpers that return the
+      active deck lines before `.end`.
+    - The helpers emit stable unsupported-feature diagnostics for `.include`,
+      `.lib`, and `.control` directives that appear before `.end`, while
+      ignoring lines after the deck boundary.
+    - Package README, changelog, and tests document and lock this shared
+      parser/planner foothold before include/library resolution and control
+      block execution are implemented.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Support `.include`, `.lib`, `.end`, `.param`, `.func`, expressions, `.ic`,
-     and `.nodeset`.
+   - Support `.include` and `.lib` resolution, `.param`, `.func`, expressions,
+     `.ic`, and `.nodeset`.
    - Expand the initial `.measure`, `.save`, and `.probe` support toward full
      SPICE compatibility, including additional measure modes and richer output
      formats.
-   - Define a deliberate `.control` subset or emit explicit unsupported-feature
-     diagnostics.
+   - Define a deliberate `.control` subset; explicit unsupported-feature
+     diagnostics are now present for the current non-executed state.
 
 2. Production solver core.
    - Finish sparse real and complex matrix paths.

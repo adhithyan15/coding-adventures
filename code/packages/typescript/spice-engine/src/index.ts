@@ -405,6 +405,21 @@ export interface CompatibilityDeck {
   readonly knownIncompatibilities: readonly string[];
 }
 
+export interface DeckControlDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+}
+
+export interface DeckControlSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly diagnostics: readonly DeckControlDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2543,9 +2558,47 @@ R2 out 0 10000
 
 const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"]);
 const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
+const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
+}
+
+export function analyzeDeckControls(netlist: string): DeckControlSummary {
+  const activeLines: string[] = [];
+  const diagnostics: DeckControlDiagnostic[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive !== undefined && UNSUPPORTED_DECK_CONTROL_DIRECTIVES.has(directive)) {
+      diagnostics.push({
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        lineNumber,
+        message: `${directive} is not supported by the deck execution foothold yet`,
+        severity: "error",
+      });
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    diagnostics,
+  };
 }
 
 export function releaseReadinessGates(
@@ -2703,6 +2756,13 @@ function validateCompatibilityNonEmpty(
     field,
     message: "field must be documented and non-empty",
   });
+}
+
+function deckDirective(line: string): string | undefined {
+  if (!line.startsWith(".")) {
+    return undefined;
+  }
+  return line.split(/\s+/, 1)[0].toLowerCase();
 }
 
 export function subcircuitDefinition(

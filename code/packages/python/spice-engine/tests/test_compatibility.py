@@ -2,6 +2,7 @@ from spice_engine import (
     CompatibilityDeck,
     CompatibilityGoldenValue,
     CompatibilityOracle,
+    analyze_deck_controls,
     compatibility_corpus,
     format_compatibility_corpus_table,
     format_release_readiness_report,
@@ -72,3 +73,47 @@ def test_release_readiness_gates_report_malformed_decks() -> None:
         "known_incompatibilities",
         "analysis_coverage",
     }.issubset(fields)
+
+
+def test_analyze_deck_controls_stops_at_end() -> None:
+    summary = analyze_deck_controls(
+        """
+* ignored title
+V1 in 0 DC 1
+.op
+.end
+.include after-end.lib
+.dc V1 0 1 1
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 5
+    assert summary.active_lines == ("V1 in 0 DC 1", ".op")
+    assert summary.diagnostics == ()
+
+
+def test_analyze_deck_controls_reports_unsupported_directives() -> None:
+    summary = analyze_deck_controls(
+        """
+.include models.inc
+.LIB vendor.lib TT
+.control
+run
+.endc
+.end
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.active_lines[:3] == (
+        ".include models.inc",
+        ".LIB vendor.lib TT",
+        ".control",
+    )
+    assert [(diag.directive, diag.line_number, diag.severity) for diag in summary.diagnostics] == [
+        (".include", 2, "error"),
+        (".lib", 3, "error"),
+        (".control", 4, "error"),
+    ]
+    assert all(diag.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE" for diag in summary.diagnostics)
