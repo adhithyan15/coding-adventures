@@ -29,7 +29,7 @@ use std::process::ExitCode;
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_str, Parser};
 
-use adj_constraint_solver::{solve, SolveOutcome};
+use adj_constraint_solver::{check, solve, FeasibilityOutcome, SolveOutcome};
 use adj_lang::{compile, decide};
 use logic_core::Term;
 use logic_engine::{
@@ -284,12 +284,24 @@ fn main() -> ExitCode {
         )
     };
 
+    // A `check` requests a feasibility decision (is the constraint set jointly
+    // satisfiable?) — emit a `check` section with the SAT/UNSAT/unknown verdict.
+    let check_section = if lowered.constraints.check {
+        format!(
+            ",\"check\":{}",
+            check_json(&check(&lowered.constraints, &lowered.kb))
+        )
+    } else {
+        String::new()
+    };
+
     println!(
-        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}}}",
+        "{{\"queries\":[{}],\"ranked\":[{}],\"decision\":{}{}{}}}",
         queries.join(","),
         ranked.join(","),
         decision,
-        solve_section
+        solve_section,
+        check_section
     );
     ExitCode::SUCCESS
 }
@@ -336,6 +348,33 @@ fn solve_json(outcome: &SolveOutcome) -> String {
                 "{{\"outcome\":\"unsupported\",\"reason\":\"{}\"}}",
                 esc(reason)
             )
+        }
+    }
+}
+
+/// Render a [`FeasibilityOutcome`] as JSON. `sat` carries a witness assignment
+/// (one integer per symbol) proving the system is jointly satisfiable; `unsat`
+/// carries the indices of the constraints whose conjunction is contradictory;
+/// `unknown` reports why feasibility could not be decided (e.g. a nonlinear or
+/// non-integer constraint that the linear-integer tactic cannot accept).
+fn check_json(outcome: &FeasibilityOutcome) -> String {
+    match outcome {
+        FeasibilityOutcome::Sat { assignments } => {
+            let vars: Vec<String> = assignments
+                .iter()
+                .map(|(name, value)| format!("{{\"name\":\"{}\",\"value\":{}}}", esc(name), value))
+                .collect();
+            format!(
+                "{{\"outcome\":\"sat\",\"assignments\":[{}]}}",
+                vars.join(",")
+            )
+        }
+        FeasibilityOutcome::Unsat { core } => {
+            let idx: Vec<String> = core.iter().map(|i| i.to_string()).collect();
+            format!("{{\"outcome\":\"unsat\",\"core\":[{}]}}", idx.join(","))
+        }
+        FeasibilityOutcome::Unknown { reason } => {
+            format!("{{\"outcome\":\"unknown\",\"reason\":\"{}\"}}", esc(reason))
         }
     }
 }
