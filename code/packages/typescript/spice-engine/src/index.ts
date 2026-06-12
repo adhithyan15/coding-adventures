@@ -381,6 +381,43 @@ export interface CustomModelSourceAnalysis {
   readonly diagnostics: readonly CustomModelDiagnostic[];
 }
 
+export interface CompatibilityOracle {
+  readonly reference: string;
+  readonly version: string;
+  readonly source: string;
+}
+
+export interface CompatibilityGoldenValue {
+  readonly name: string;
+  readonly value: number;
+  readonly unit: string;
+  readonly absoluteTolerance: number;
+  readonly relativeTolerance: number;
+}
+
+export interface CompatibilityDeck {
+  readonly id: string;
+  readonly title: string;
+  readonly analysis: string;
+  readonly netlist: string;
+  readonly oracle: CompatibilityOracle;
+  readonly goldenValues: readonly CompatibilityGoldenValue[];
+  readonly knownIncompatibilities: readonly string[];
+}
+
+export interface ReleaseReadinessIssue {
+  readonly deckId: string;
+  readonly field: string;
+  readonly message: string;
+}
+
+export interface ReleaseReadinessReport {
+  readonly passed: boolean;
+  readonly deckCount: number;
+  readonly analyses: readonly string[];
+  readonly issues: readonly ReleaseReadinessIssue[];
+}
+
 export type SubcircuitElement = Element | XInstance;
 
 export interface SubcircuitDefinition {
@@ -2363,6 +2400,291 @@ export function analyzeCustomModelSource(source: string): CustomModelSourceAnaly
     contribution,
     diagnostics,
   };
+}
+
+const COMMON_KNOWN_INCOMPATIBILITIES = Object.freeze([
+  "binary rawfile output is not part of this release gate",
+  ".control blocks and vendor-specific directives are intentionally excluded",
+  "golden values cover named probes, not byte-for-byte waveform dumps",
+]);
+
+const COMPATIBILITY_CORPUS: readonly CompatibilityDeck[] = Object.freeze([
+  {
+    id: "dc-op-resistive-divider",
+    title: "DC operating point resistive divider",
+    analysis: "op",
+    netlist: `* dc-op-resistive-divider
+V1 in 0 DC 10
+R1 in out 10000
+R2 out 0 10000
+.op
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-v1",
+      source: "V(out)=V1*R2/(R1+R2); I(V1)=-V1/(R1+R2)",
+    },
+    goldenValues: [
+      { name: "V(out)", value: 5.0, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "I(V1)", value: -5.0e-4, unit: "A", absoluteTolerance: 1.0e-12, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "dc-sweep-resistive-divider",
+    title: "DC source sweep resistive divider",
+    analysis: "dc",
+    netlist: `* dc-sweep-resistive-divider
+V1 in 0 DC 0
+R1 in out 10000
+R2 out 0 10000
+.dc V1 0 10 5
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-sweep-v1",
+      source: "V(out)=V1*0.5 at each sweep point",
+    },
+    goldenValues: [
+      { name: "points", value: 3.0, unit: "count", absoluteTolerance: 0.0, relativeTolerance: 0.0 },
+      { name: "V(out)@V1=10", value: 5.0, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "ac-rc-lowpass",
+    title: "AC RC low-pass cutoff",
+    analysis: "ac",
+    netlist: `* ac-rc-lowpass
+V1 in 0 DC 0 AC 1
+R1 in out 1000
+C1 out 0 1u
+.ac dec 1 1 1k
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "rc-lowpass-v1",
+      source: "|V(out)|=1/sqrt(1+(2*pi*f*R*C)^2)",
+    },
+    goldenValues: [
+      { name: "f_c", value: 159.15494309189535, unit: "Hz", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "|V(out)|@f_c", value: 0.7071067811865475, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "tran-rc-step",
+    title: "Transient RC step response",
+    analysis: "tran",
+    netlist: `* tran-rc-step
+V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
+R1 in out 1000
+C1 out 0 1u
+.tran 0.0001 0.001
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "rc-step-v1",
+      source: "V(out,t)=1-exp(-t/(R*C)) after an ideal 1 V step",
+    },
+    goldenValues: [
+      { name: "V(out)@1ms", value: 0.6321205588285577, unit: "V", absoluteTolerance: 1.0e-6, relativeTolerance: 1.0e-6 },
+    ],
+    knownIncompatibilities: [
+      ...COMMON_KNOWN_INCOMPATIBILITIES,
+      "finite-edge pulse decks compare at the idealized step oracle point",
+    ],
+  },
+  {
+    id: "tf-resistive-divider",
+    title: "Transfer-function resistive divider",
+    analysis: "tf",
+    netlist: `* tf-resistive-divider
+V1 in 0 DC 10
+R1 in out 10000
+R2 out 0 10000
+.tf V(out) V1
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-tf-v1",
+      source: "gain=R2/(R1+R2); input resistance=R1+R2",
+    },
+    goldenValues: [
+      { name: "gain", value: 0.5, unit: "V/V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "input_resistance", value: 20000.0, unit: "ohm", absoluteTolerance: 1.0e-6, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+]);
+
+const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"]);
+const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
+
+export function compatibilityCorpus(): readonly CompatibilityDeck[] {
+  return COMPATIBILITY_CORPUS;
+}
+
+export function releaseReadinessGates(
+  corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
+): ReleaseReadinessReport {
+  const issues: ReleaseReadinessIssue[] = [];
+  const seenIds = new Set<string>();
+  const analyses: string[] = [];
+
+  if (corpus.length === 0) {
+    issues.push({
+      deckId: "corpus",
+      field: "deck_count",
+      message: "compatibility corpus must contain at least one deck",
+    });
+  }
+
+  for (const deck of corpus) {
+    const deckId = deck.id || "<missing>";
+    validateCompatibilityNonEmpty(deckId, "id", deck.id, issues);
+    validateCompatibilityNonEmpty(deckId, "title", deck.title, issues);
+    validateCompatibilityNonEmpty(deckId, "netlist", deck.netlist, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.reference", deck.oracle.reference, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.version", deck.oracle.version, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.source", deck.oracle.source, issues);
+    if (seenIds.has(deck.id)) {
+      issues.push({ deckId, field: "id", message: "deck ids must be unique" });
+    }
+    seenIds.add(deck.id);
+    if (!SUPPORTED_COMPATIBILITY_ANALYSES.has(deck.analysis)) {
+      issues.push({
+        deckId,
+        field: "analysis",
+        message: `unsupported analysis ${JSON.stringify(deck.analysis)}`,
+      });
+    } else if (!analyses.includes(deck.analysis)) {
+      analyses.push(deck.analysis);
+    }
+    if (!deck.netlist.toLowerCase().includes(".end")) {
+      issues.push({ deckId, field: "netlist", message: "deck must include .end" });
+    }
+    if (deck.goldenValues.length === 0) {
+      issues.push({
+        deckId,
+        field: "goldenValues",
+        message: "deck must include at least one golden value",
+      });
+    }
+    deck.goldenValues.forEach((golden, index) => {
+      const fieldPrefix = `goldenValues[${index}]`;
+      validateCompatibilityNonEmpty(deckId, `${fieldPrefix}.name`, golden.name, issues);
+      validateCompatibilityNonEmpty(deckId, `${fieldPrefix}.unit`, golden.unit, issues);
+      if (!Number.isFinite(golden.value)) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.value`,
+          message: "golden value must be finite",
+        });
+      }
+      if (
+        !Number.isFinite(golden.absoluteTolerance) ||
+        !Number.isFinite(golden.relativeTolerance) ||
+        golden.absoluteTolerance < 0.0 ||
+        golden.relativeTolerance < 0.0
+      ) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.tolerance`,
+          message: "tolerances must be finite and non-negative",
+        });
+      }
+      if (
+        golden.absoluteTolerance === 0.0 &&
+        golden.relativeTolerance === 0.0 &&
+        golden.unit !== "count"
+      ) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.tolerance`,
+          message: "non-count golden values need an absolute or relative tolerance",
+        });
+      }
+    });
+    if (deck.knownIncompatibilities.length === 0) {
+      issues.push({
+        deckId,
+        field: "knownIncompatibilities",
+        message: "deck must document known incompatibility boundaries",
+      });
+    }
+  }
+
+  for (const analysis of REQUIRED_COMPATIBILITY_ANALYSES) {
+    if (!analyses.includes(analysis)) {
+      issues.push({
+        deckId: "corpus",
+        field: "analysisCoverage",
+        message: `missing required ${JSON.stringify(analysis)} compatibility deck`,
+      });
+    }
+  }
+
+  return {
+    passed: issues.length === 0,
+    deckCount: corpus.length,
+    analyses,
+    issues,
+  };
+}
+
+export function formatCompatibilityCorpusTable(
+  corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
+): string {
+  const lines = ["id\tanalysis\toracle\tgolden_values\tknown_incompatibilities"];
+  for (const deck of corpus) {
+    const goldenValues = deck.goldenValues
+      .map((entry) => `${entry.name}=${formatTableNumber(entry.value)}${entry.unit}`)
+      .join(",");
+    lines.push([
+      deck.id,
+      deck.analysis,
+      `${deck.oracle.reference}@${deck.oracle.version}`,
+      goldenValues,
+      deck.knownIncompatibilities.length.toString(),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function formatReleaseReadinessReport(report: ReleaseReadinessReport): string {
+  const lines = [
+    "passed\tdeck_count\tanalyses\tissue_count",
+    `${String(report.passed)}\t${report.deckCount}\t${report.analyses.join(",")}\t${report.issues.length}`,
+  ];
+  if (report.issues.length > 0) {
+    lines.push("deck_id\tfield\tmessage");
+    for (const issue of report.issues) {
+      lines.push(`${issue.deckId}\t${issue.field}\t${issue.message}`);
+    }
+  }
+  return lines.join("\n");
+}
+
+function validateCompatibilityNonEmpty(
+  deckId: string,
+  field: string,
+  value: string,
+  issues: ReleaseReadinessIssue[],
+): void {
+  if (value.trim().length > 0) {
+    return;
+  }
+  issues.push({
+    deckId,
+    field,
+    message: "field must be documented and non-empty",
+  });
 }
 
 export function subcircuitDefinition(

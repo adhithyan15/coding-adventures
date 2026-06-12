@@ -72,3 +72,10 @@ used to keep the TypeScript, Python, and Rust ports aligned.
 The accepted source subset is diagnostic-only and limited to a two-terminal
 `I(p,n) <+ ...` module shape; it does not compile or evaluate source strings in
 the browser sandbox.
+
+`compatibilityCorpus` exposes the first release-readiness deck corpus for
+`.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage. Each fixture carries a
+documented oracle, golden values with tolerances, and known incompatibility
+notes. `releaseReadinessGates` validates the corpus metadata, while
+`formatCompatibilityCorpusTable` and `formatReleaseReadinessReport` provide
+stable tab-separated summaries for package checks.

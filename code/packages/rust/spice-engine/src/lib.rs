@@ -3077,6 +3077,406 @@ pub fn device_model_audit_fixtures() -> Result<Vec<NormalizedModelCard>, SpiceEr
     ])
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CompatibilityOracle {
+    pub reference: String,
+    pub version: String,
+    pub source: String,
+}
+
+impl CompatibilityOracle {
+    pub fn new(
+        reference: impl Into<String>,
+        version: impl Into<String>,
+        source: impl Into<String>,
+    ) -> Self {
+        Self {
+            reference: reference.into(),
+            version: version.into(),
+            source: source.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CompatibilityGoldenValue {
+    pub name: String,
+    pub value: f64,
+    pub unit: String,
+    pub absolute_tolerance: f64,
+    pub relative_tolerance: f64,
+}
+
+impl CompatibilityGoldenValue {
+    pub fn new(
+        name: impl Into<String>,
+        value: f64,
+        unit: impl Into<String>,
+        absolute_tolerance: f64,
+        relative_tolerance: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            value,
+            unit: unit.into(),
+            absolute_tolerance,
+            relative_tolerance,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CompatibilityDeck {
+    pub id: String,
+    pub title: String,
+    pub analysis: String,
+    pub netlist: String,
+    pub oracle: CompatibilityOracle,
+    pub golden_values: Vec<CompatibilityGoldenValue>,
+    pub known_incompatibilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReleaseReadinessIssue {
+    pub deck_id: String,
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReleaseReadinessReport {
+    pub passed: bool,
+    pub deck_count: usize,
+    pub analyses: Vec<String>,
+    pub issues: Vec<ReleaseReadinessIssue>,
+}
+
+pub fn compatibility_corpus() -> Vec<CompatibilityDeck> {
+    let common = common_known_incompatibilities();
+    vec![
+        CompatibilityDeck {
+            id: "dc-op-resistive-divider".to_string(),
+            title: "DC operating point resistive divider".to_string(),
+            analysis: "op".to_string(),
+            netlist: "* dc-op-resistive-divider\nV1 in 0 DC 10\nR1 in out 10000\nR2 out 0 10000\n.op\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-v1",
+                "V(out)=V1*R2/(R1+R2); I(V1)=-V1/(R1+R2)",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("V(out)", 5.0, "V", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new("I(V1)", -5.0e-4, "A", 1.0e-12, 1.0e-9),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "dc-sweep-resistive-divider".to_string(),
+            title: "DC source sweep resistive divider".to_string(),
+            analysis: "dc".to_string(),
+            netlist: "* dc-sweep-resistive-divider\nV1 in 0 DC 0\nR1 in out 10000\nR2 out 0 10000\n.dc V1 0 10 5\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-sweep-v1",
+                "V(out)=V1*0.5 at each sweep point",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("points", 3.0, "count", 0.0, 0.0),
+                CompatibilityGoldenValue::new("V(out)@V1=10", 5.0, "V", 1.0e-9, 1.0e-9),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "ac-rc-lowpass".to_string(),
+            title: "AC RC low-pass cutoff".to_string(),
+            analysis: "ac".to_string(),
+            netlist: "* ac-rc-lowpass\nV1 in 0 DC 0 AC 1\nR1 in out 1000\nC1 out 0 1u\n.ac dec 1 1 1k\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "rc-lowpass-v1",
+                "|V(out)|=1/sqrt(1+(2*pi*f*R*C)^2)",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("f_c", 159.15494309189535, "Hz", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new(
+                    "|V(out)|@f_c",
+                    0.7071067811865475,
+                    "V",
+                    1.0e-9,
+                    1.0e-9,
+                ),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "tran-rc-step".to_string(),
+            title: "Transient RC step response".to_string(),
+            analysis: "tran".to_string(),
+            netlist: "* tran-rc-step\nV1 in 0 PULSE(0 1 0 1n 1n 1m 2m)\nR1 in out 1000\nC1 out 0 1u\n.tran 0.0001 0.001\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "rc-step-v1",
+                "V(out,t)=1-exp(-t/(R*C)) after an ideal 1 V step",
+            ),
+            golden_values: vec![CompatibilityGoldenValue::new(
+                "V(out)@1ms",
+                0.6321205588285577,
+                "V",
+                1.0e-6,
+                1.0e-6,
+            )],
+            known_incompatibilities: common
+                .iter()
+                .cloned()
+                .chain(std::iter::once(
+                    "finite-edge pulse decks compare at the idealized step oracle point"
+                        .to_string(),
+                ))
+                .collect(),
+        },
+        CompatibilityDeck {
+            id: "tf-resistive-divider".to_string(),
+            title: "Transfer-function resistive divider".to_string(),
+            analysis: "tf".to_string(),
+            netlist: "* tf-resistive-divider\nV1 in 0 DC 10\nR1 in out 10000\nR2 out 0 10000\n.tf V(out) V1\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-tf-v1",
+                "gain=R2/(R1+R2); input resistance=R1+R2",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("gain", 0.5, "V/V", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new(
+                    "input_resistance",
+                    20000.0,
+                    "ohm",
+                    1.0e-6,
+                    1.0e-9,
+                ),
+            ],
+            known_incompatibilities: common,
+        },
+    ]
+}
+
+pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
+    let mut issues = Vec::new();
+    let mut seen_ids = HashSet::new();
+    let mut analyses = Vec::new();
+
+    if corpus.is_empty() {
+        issues.push(ReleaseReadinessIssue {
+            deck_id: "corpus".to_string(),
+            field: "deck_count".to_string(),
+            message: "compatibility corpus must contain at least one deck".to_string(),
+        });
+    }
+
+    for deck in corpus {
+        let deck_id = if deck.id.is_empty() {
+            "<missing>".to_string()
+        } else {
+            deck.id.clone()
+        };
+        validate_compatibility_non_empty(&deck_id, "id", &deck.id, &mut issues);
+        validate_compatibility_non_empty(&deck_id, "title", &deck.title, &mut issues);
+        validate_compatibility_non_empty(&deck_id, "netlist", &deck.netlist, &mut issues);
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.reference",
+            &deck.oracle.reference,
+            &mut issues,
+        );
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.version",
+            &deck.oracle.version,
+            &mut issues,
+        );
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.source",
+            &deck.oracle.source,
+            &mut issues,
+        );
+        if !seen_ids.insert(deck.id.clone()) {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "id".to_string(),
+                message: "deck ids must be unique".to_string(),
+            });
+        }
+        if !matches!(deck.analysis.as_str(), "op" | "dc" | "ac" | "tran" | "tf") {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "analysis".to_string(),
+                message: format!("unsupported analysis {:?}", deck.analysis),
+            });
+        } else if !analyses.contains(&deck.analysis) {
+            analyses.push(deck.analysis.clone());
+        }
+        if !deck.netlist.to_ascii_lowercase().contains(".end") {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "netlist".to_string(),
+                message: "deck must include .end".to_string(),
+            });
+        }
+        if deck.golden_values.is_empty() {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "golden_values".to_string(),
+                message: "deck must include at least one golden value".to_string(),
+            });
+        }
+        for (index, golden) in deck.golden_values.iter().enumerate() {
+            let field_prefix = format!("golden_values[{index}]");
+            validate_compatibility_non_empty(
+                &deck_id,
+                &format!("{field_prefix}.name"),
+                &golden.name,
+                &mut issues,
+            );
+            validate_compatibility_non_empty(
+                &deck_id,
+                &format!("{field_prefix}.unit"),
+                &golden.unit,
+                &mut issues,
+            );
+            if !golden.value.is_finite() {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.value"),
+                    message: "golden value must be finite".to_string(),
+                });
+            }
+            if !golden.absolute_tolerance.is_finite()
+                || !golden.relative_tolerance.is_finite()
+                || golden.absolute_tolerance < 0.0
+                || golden.relative_tolerance < 0.0
+            {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.tolerance"),
+                    message: "tolerances must be finite and non-negative".to_string(),
+                });
+            }
+            if golden.absolute_tolerance == 0.0
+                && golden.relative_tolerance == 0.0
+                && golden.unit != "count"
+            {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.tolerance"),
+                    message: "non-count golden values need an absolute or relative tolerance"
+                        .to_string(),
+                });
+            }
+        }
+        if deck.known_incompatibilities.is_empty() {
+            issues.push(ReleaseReadinessIssue {
+                deck_id,
+                field: "known_incompatibilities".to_string(),
+                message: "deck must document known incompatibility boundaries".to_string(),
+            });
+        }
+    }
+
+    for analysis in ["op", "dc", "ac", "tran"] {
+        if !analyses.iter().any(|seen| seen == analysis) {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: "corpus".to_string(),
+                field: "analysis_coverage".to_string(),
+                message: format!("missing required {analysis:?} compatibility deck"),
+            });
+        }
+    }
+
+    ReleaseReadinessReport {
+        passed: issues.is_empty(),
+        deck_count: corpus.len(),
+        analyses,
+        issues,
+    }
+}
+
+pub fn format_compatibility_corpus_table(corpus: &[CompatibilityDeck]) -> String {
+    let mut lines =
+        vec!["id\tanalysis\toracle\tgolden_values\tknown_incompatibilities".to_string()];
+    for deck in corpus {
+        let golden_values = deck
+            .golden_values
+            .iter()
+            .map(|entry| {
+                format!(
+                    "{}={}{}",
+                    entry.name,
+                    format_table_number(entry.value),
+                    entry.unit
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        lines.push(format!(
+            "{}\t{}\t{}@{}\t{}\t{}",
+            deck.id,
+            deck.analysis,
+            deck.oracle.reference,
+            deck.oracle.version,
+            golden_values,
+            deck.known_incompatibilities.len()
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn format_release_readiness_report(report: &ReleaseReadinessReport) -> String {
+    let mut lines = vec![
+        "passed\tdeck_count\tanalyses\tissue_count".to_string(),
+        format!(
+            "{}\t{}\t{}\t{}",
+            report.passed,
+            report.deck_count,
+            report.analyses.join(","),
+            report.issues.len()
+        ),
+    ];
+    if !report.issues.is_empty() {
+        lines.push("deck_id\tfield\tmessage".to_string());
+        lines.extend(
+            report
+                .issues
+                .iter()
+                .map(|issue| format!("{}\t{}\t{}", issue.deck_id, issue.field, issue.message)),
+        );
+    }
+    lines.join("\n")
+}
+
+fn common_known_incompatibilities() -> Vec<String> {
+    vec![
+        "binary rawfile output is not part of this release gate".to_string(),
+        ".control blocks and vendor-specific directives are intentionally excluded".to_string(),
+        "golden values cover named probes, not byte-for-byte waveform dumps".to_string(),
+    ]
+}
+
+fn validate_compatibility_non_empty(
+    deck_id: &str,
+    field: &str,
+    value: &str,
+    issues: &mut Vec<ReleaseReadinessIssue>,
+) {
+    if !value.trim().is_empty() {
+        return;
+    }
+    issues.push(ReleaseReadinessIssue {
+        deck_id: deck_id.to_string(),
+        field: field.to_string(),
+        message: "field must be documented and non-empty".to_string(),
+    });
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Vccs {
     pub name: String,

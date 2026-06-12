@@ -114,3 +114,10 @@ cards used to keep the Rust, Python, and TypeScript ports aligned.
 `analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
 module shape and rejects dynamic/event/system constructs; it is not a full
 Verilog-A compiler.
+
+`compatibility_corpus` exposes the first release-readiness deck corpus for
+`.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage. Each fixture carries a
+documented oracle, golden values with tolerances, and known incompatibility
+notes. `release_readiness_gates` validates the corpus metadata, while
+`format_compatibility_corpus_table` and `format_release_readiness_report`
+provide stable tab-separated summaries for package checks.

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `compatibilityCorpus`, `releaseReadinessGates`,
+  `formatCompatibilityCorpusTable`, and `formatReleaseReadinessReport` for the
+  first oracle-backed compatibility deck corpus with golden tolerances and
+  known incompatibility notes shared with Python and Rust.
 - Add `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`,
   and `analyzeCustomModelSource` for the first sandbox-friendly two-terminal
   residual/Jacobian custom-model foothold shared with Python and Rust.
