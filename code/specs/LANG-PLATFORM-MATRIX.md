@@ -103,7 +103,7 @@ achievable code-gen columns land first).
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ⏸  | ⏸  |
+| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ⏸  |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
@@ -233,7 +233,20 @@ BASIC / Brainfuck). The LLVM column is **complete**.
   BASIC `10 PRINT 42` → `System.out` `42` on real `java` (21 proven matrix cells); the
   expression-language JVM cells + jvm_emit/conformance/wasm_emit suites still green.
   **JVM column now green for every language except the deferred Brainfuck.**
-- ⏸ **LM-J Brainfuck (on JVM) — DEFERRED.** Same tape-op gap as Brainfuck on LLVM/WASM.
+- ✅ **LM-J Brainfuck (on JVM).** The LLVM/WASM byte-tape pattern ported to the JVM.
+  The backend already had the *raw* BF tape ops (`load_mem`/`store_mem` →
+  `baload`/`bastore` over a static `env/BFRuntime.__tape : [B`) + `putchar`/`getchar`,
+  but `lower_brainfuck_for_aot` produces the *lowered* `alloc_bytes`/`load_byte`/
+  `store_byte` form. `iir-to-jvm-class-file` 0.11.0 added those: `alloc_bytes` is a
+  no-op (the tape is the pre-allocated static field), `load_byte`/`store_byte` reuse
+  the `baload`/`bastore`+mask access with `l2i`/`i2l` conversions for the (possibly
+  widened) i64 value model, and `jmp_if_*` now reduce an `i64` guard via
+  `lload; lconst_0; lcmp` before `ifeq`/`ifne` (an `iload` would read one slot of the
+  two-slot long — a verify error). `run_jvm` compiles a new `env.BFRuntime` host class
+  (static `byte[] __tape`, `putchar` writing a raw byte, `getchar`) with `javac` and
+  captures its `System.out.write` bytes. Verified by RUNNING `++++++++[>++++++++<-]>+.`
+  → `A` on real `java`; the existing JVM cells + jvm backend suites still green.
+  **JVM column now complete for every language.**
 
 ### Phase C — CLR for every language
 
@@ -284,12 +297,15 @@ backends, so they are tackled deliberately rather than as a routine conformance 
   byte-tape ops over linear memory; the i64-widening rippled into wasm control flow
   (i64 loop guard → `i64.eqz`, i64-declared cmp results widened, `putchar`/`getchar`
   wrap/extend) — all width fixes, no frontend or slot-model change.
-- ⏸ **LM-J / LM-C Brainfuck (JVM / CLR).** Still unblocked in principle: the i64-widening
-  in `lower_brainfuck_for_aot` is backend-agnostic, so the remaining Brainfuck cells
-  reduce to giving `iir-to-jvm-class-file` / `iir-to-cil-bytecode` the same byte-tape ops
-  (`alloc_bytes`/`load_byte`/`store_byte`) and `putchar`/`getchar` lowerings that
-  `iir-to-llvm` / `iir-to-wasm` / the native backend already have — plus the same
-  i64-condition / i64-cmp width handling wasm needed. One backend-codegen slice each.
+- ✅ **LM-J Brainfuck (on JVM).** **Done** (see Phase J). `iir-to-jvm-class-file` 0.11.0
+  grew the lowered byte-tape ops over the static `byte[] __tape` (`alloc_bytes` no-op,
+  `load_byte`/`store_byte` with `l2i`/`i2l` conversions) + the `lcmp`-based i64 branch
+  conditions — all width fixes over the backend's existing `baload`/`bastore` tape access.
+- ⏸ **LM-C Brainfuck (CLR).** The last Brainfuck cell. Still unblocked in principle: give
+  `iir-to-cil-bytecode` the same byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`)
+  and `putchar`/`getchar` lowerings that `iir-to-llvm`/`iir-to-wasm`/`iir-to-jvm-class-file`/
+  the native backend already have — plus the same i64-condition width handling wasm/JVM
+  needed. One backend-codegen slice.
 - ⏸ **Phase V — VM op-coverage.** `mccarthy_lisp_vm` is **McCarthy-specialized**, not a
   general interpreter (the LM0 probe: it rejects `add`/`mul`/`cmp_*`/`mod` and the I/O
   ops). Running the other languages on the VM means growing the interpreter with
@@ -308,10 +324,11 @@ BEAM column for the imperative languages). The capstone is a single
 known result — the cross-language analog of McCarthy's W16.
 
 The campaign reaches that end state in two waves: first the **code-generator columns**
-(native ✅, **LLVM ✅ — all 6**, **WASM ✅ — all 6**, JVM/CLR ✅ for the 5 non-Brainfuck
-languages) — these are general over the shared IIR, so each cell is mostly a conformance
-test plus the occasional I/O/type fix; then the **second-wave** items — Brainfuck on
-JVM/CLR (the same byte-tape ops + i64 width handling `iir-to-llvm`/`iir-to-wasm` gained,
-ported to each managed backend) and the McCarthy-specialized VM and JIT — each a real
-backend/interpreter change tackled deliberately. The LLVM and WASM columns are now
-**complete**.
+(native ✅, **LLVM ✅ — all 6**, **WASM ✅ — all 6**, **JVM ✅ — all 6**, CLR ✅ for the 5
+non-Brainfuck languages) — these are general over the shared IIR, so each cell is mostly
+a conformance test plus the occasional I/O/type fix; then the **second-wave** items —
+Brainfuck on CLR (the last code-gen cell: the same byte-tape ops + i64 width handling
+`iir-to-llvm`/`iir-to-wasm`/`iir-to-jvm-class-file` gained, ported to `iir-to-cil-bytecode`)
+and the McCarthy-specialized VM and JIT — each a real backend/interpreter change tackled
+deliberately. The LLVM, WASM, and JVM columns are now **complete**; only Brainfuck-on-CLR
+remains in the code-gen wave.

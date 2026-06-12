@@ -3,6 +3,46 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] — 2026-06-12 (LANG-MATRIX LM-J Brainfuck — byte-tape ops on the JVM)
+
+Adds the lowering Brainfuck needs to run on the JVM backend — the last code-gen
+gap in Brainfuck's row after LLVM (LM-L) and WASM (LM-W). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on real `java` in `lang-aot/tests/lang_matrix.rs`: it
+prints `A`.
+
+The backend already had the *raw* BF-frontend tape ops (`load_mem`/`store_mem` →
+`baload`/`bastore` over a static `env/BFRuntime.__tape : [B`) and the
+`putchar`/`getchar` host calls, but `lower_brainfuck_for_aot` rewrites the tape
+into the *lowered* `alloc_bytes`/`load_byte`/`store_byte` form (the same ops the
+LLVM/WASM/native backends consume) and widens the value model — which the JVM
+backend didn't yet handle.
+
+### Added
+
+- **`alloc_bytes dest <- size`** → no bytecode. The JVM tape is the host class's
+  pre-allocated static `byte[] __tape`, so there is nothing to allocate at
+  runtime; `dest` (the BF tape base) is never materialised because the byte ops
+  `getstatic` the tape directly.
+- **`load_byte dest <- base, idx`** → `getstatic __tape`, load the index
+  (`l2i`-narrowed if it is an `i64`), `baload`, `& 0xFF` (mask the sign-extended
+  byte back to an unsigned cell), then `i2l`-widen if `dest` is `i64`. The base
+  operand is the static tape, so it is ignored.
+- **`store_byte base, idx, val`** → `getstatic __tape`, load index + value
+  (`l2i`-narrowed if `i64`), `bastore` (stores `val & 0xFF`, giving BF's 8-bit
+  cell wrap-around for free). Rejected if it carries a `dest`.
+
+### Fixed (i64-widening ripple)
+
+- **i64 branch conditions**: `jmp_if_true`/`jmp_if_false` hardcoded `iload` +
+  `ifne`/`ifeq`, which assume a 32-bit condition. An `i64` guard (the widened
+  Brainfuck loop guard — when the value model is *not* concretised back to i32)
+  now reduces to an int with `lload; lconst_0; lcmp` before the branch; `iload`ing
+  a long would read only one of its two local slots — a verify error. The width is
+  taken from the condition register's declared `JvmType`.
+
+Four new tests in `tests/test_backend.rs` cover the i32 + i64 tape lowerings, the
+`store_byte`-with-dest rejection, and the i64-guard `lcmp` path.
+
 ## [0.10.0] — 2026-06-09 — large-`int` constants via the constant pool (McCarthy W5a / F6)
 
 ### Fixed
