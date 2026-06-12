@@ -93,7 +93,9 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 
 ## Status legend
 
-`✅` proven by a running test · `◑` in progress · `☐` not started.
+`✅` proven by a running test · `◑` in progress · `☐` not started · `⏸` deferred
+(a known gap that needs a deeper backend/frontend change — grouped at the end so the
+achievable code-gen columns land first).
 
 ## The matrix (target — every non-BEAM cell ✅)
 
@@ -101,7 +103,7 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ◑    | ◑   | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
-| Brainfuck       | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
+| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
@@ -150,31 +152,18 @@ slice — the loop trusts running, not this table.)
   `call void @__print_i64(i64 42)`, so when the `.ll` references `@__print_i64` the
   runner compiles in a generic `__print_i64` C runtime and the harness compares
   **stdout**. Verified by RUNNING: `10 PRINT 42` → stdout `42` on real `clang`.
-- ☐ **LM-L Brainfuck (on LLVM).** A backend codegen slice: `iir-to-llvm` does **not**
-  support the Brainfuck tape ops — emit fails with
-  `UnsupportedOp: "alloc_bytes" / "load_byte" / "store_byte"`. Grow `iir-to-llvm` to
-  lower the tape (`alloc_bytes` → an `i8` array / `alloca`+`memset`, `load_byte`/
-  `store_byte` → `getelementptr`+`load`/`store`) and `putchar`, mirroring how the
-  native backend already runs Brainfuck; then assert stdout `A`.
+- ⏸ **LM-L Brainfuck (on LLVM) — DEFERRED.** See the *Deferred* section below; it
+  needs a deeper `iir-to-llvm` change, so the loop advances past it to the WASM column.
 
-### Phase V — VM op-coverage for every language
+The LLVM column is therefore green for **5 / 6** languages (Twig / Nib / Oct / ALGOL /
+BASIC); only Brainfuck is deferred.
 
-> ⚠ Reclassified by the LM0 probe: `mccarthy_lisp_vm` is **McCarthy-specialized**, not
-> a general interpreter. It must grow the integer-arithmetic (`add`/`sub`/`mul`/
-> `div`/`mod`), comparison (`cmp_*`), and bitwise ops — and, for the I/O languages, a
-> `print_i64` (capturing) + Brainfuck tape (`alloc_bytes`/load/store) — before it can
-> run the non-McCarthy languages. This is real interpreter work, not just a test.
-
-- ☐ **LM-V arithmetic/comparison** — grow the VM to run the expression languages
-  (Twig, Nib, Oct, ALGOL) by adding the integer/comparison/bitwise op coverage; add
-  them to the VM column of `lang_matrix.rs`.
-- ☐ **LM-V I/O** — VM `print_i64` (capture) + Brainfuck tape ops, so Brainfuck/BASIC
-  run on the VM too (or record a justified VM-column exemption for the I/O languages).
-
-### Phase W — WASM for every language
+### Phase W — WASM for every language  ← NEXT
 
 - ☐ **LM-W** — each language on `iir-to-wasm` + `wasm-runtime` (Twig promote to full;
   Nib/Oct/BF/BASIC/ALGOL new). I/O languages: thread stdout through the wasm runtime.
+  WASM is a general code generator (existing tests already run Twig and ALGOL
+  arithmetic on it), so expect mostly conformance + I/O wiring, like the LLVM column.
 
 ### Phase J — JVM for every language
 
@@ -188,15 +177,34 @@ slice — the loop trusts running, not this table.)
 
 ### Phase A — native AOT completeness
 
-- ☐ **LM-A** — confirm/extend native-AOT to any language not yet proven there
-  (ALGOL 60 especially), so the AOT column is uniformly ✅.
+- ✅ **LM-A — native AOT uniformly green.** All six languages already run on native
+  AOT as of LM0 (the AOT column is ✅ across the board), so nothing further is needed.
 
-### Phase I — JIT (needs generic wiring)
+## Deferred — deeper backend/frontend work (after the code-gen columns)
 
-- ☐ **LM-I0 — generic `run_on_jit(language, source)`.** Replace the McCarthy-only
-  `run_mccarthy_on_jit` with a language-agnostic JIT entrypoint over the shared IIR
-  (register the builtins each language needs, mirroring `jit_lisp.rs`).
-- ☐ **LM-I** — each of the six languages on the JIT, verified by running.
+These three are **not** "add a conformance test" — each needs a real change to a
+backend/interpreter with risk to currently-green backends, so they are grouped here
+to be tackled deliberately once the achievable code-gen columns (WASM/JVM/CLR) land.
+
+- ⏸ **LM-L Brainfuck (on LLVM).** Two layers: (1) `iir-to-llvm` lacks the tape ops
+  (`alloc_bytes`/`load_byte`/`store_byte` + `putchar`) — straightforward to add
+  (`calloc`/`getelementptr i8`/`load`/`store`/libc `putchar`); but (2) the real wall
+  is that `iir-to-llvm`'s SSA model promotes any 2+-assigned variable to an **`alloca
+  i64` slot**, while Brainfuck's reassigned `v`/`ptr` are narrow (`u8`/`u32`). A
+  slot-loaded `i64` then feeds a `u8` `add` → `'%__ld' defined with type 'i64' but
+  expected 'i8'`. Resolving it needs either **width-aware slots** in `iir-to-llvm`
+  (touches the McCarthy-critical slot model) or making the **Brainfuck frontend**
+  materialise cell/ptr arithmetic as `i64` (byte width only at the tape boundary;
+  touches native + WASM + the simulator). Both are cross-cutting; do as a focused,
+  fully-reverified effort, not a routine slice.
+- ⏸ **Phase V — VM op-coverage.** `mccarthy_lisp_vm` is **McCarthy-specialized**, not a
+  general interpreter (the LM0 probe: it rejects `add`/`mul`/`cmp_*`/`mod` and the I/O
+  ops). Running the other languages on the VM means growing the interpreter with
+  integer-arithmetic / comparison / bitwise ops, plus `print_i64` (capturing) +
+  Brainfuck tape ops for the I/O languages — real interpreter work.
+- ⏸ **Phase I — JIT.** Two parts: replace the McCarthy-only `run_mccarthy_on_jit` with
+  a generic `run_on_jit(language, source)`, then give the JIT the same op-coverage the
+  VM needs (it shares `jit-core`'s McCarthy-shaped lowering today). Tackle after the VM.
 
 ## End state
 
@@ -205,3 +213,10 @@ running**, and the platform matrix is uniformly green (minus the deliberately-em
 BEAM column for the imperative languages). The capstone is a single
 `lang_matrix.rs` suite asserting every `(language, backend)` cell agrees with the
 known result — the cross-language analog of McCarthy's W16.
+
+The campaign reaches that end state in two waves: first the **code-generator columns**
+(native ✅, LLVM 5/6, then WASM → JVM → CLR) — these are general over the shared IIR,
+so each cell is mostly a conformance test plus the occasional I/O/type fix; then the
+**Deferred** items (Brainfuck-on-LLVM's slot-model mismatch, the McCarthy-specialized
+VM and JIT) — each a real backend/interpreter change tackled deliberately once the
+straightforward columns are complete.
