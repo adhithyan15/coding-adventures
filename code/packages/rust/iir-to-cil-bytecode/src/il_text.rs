@@ -619,6 +619,95 @@ fn emit_method(
                     }
                 }
             }
+            // ── Binary integer arithmetic ─────────────────────────────────────
+            //
+            // `dest = <op>(a, b)` with both operands scalar `int32` — the scalar
+            // concretization pass has already lowered every scalar value to i32, so
+            // we load both and emit the single CIL arithmetic opcode.
+            //
+            // | IIR op | CIL  | note                          |
+            // |--------|------|-------------------------------|
+            // | add    | add  | integer addition              |
+            // | sub    | sub  | integer subtraction           |
+            // | mul    | mul  | integer multiplication        |
+            // | div    | div  | signed integer division       |
+            // | mod    | rem  | signed remainder (CIL `rem`)  |
+            //
+            // (CoreCLR's `div`/`rem` raise on divide-by-zero, matching the other
+            // backends' trap-on-zero behaviour — no guard needed here.)
+            "add" | "sub" | "mul" | "div" | "mod" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let a = var_src(f, instr, 0, instr.op.as_str())?;
+                let b = var_src(f, instr, 1, instr.op.as_str())?;
+                load_var(il, &regs, a)?;
+                load_var(il, &regs, b)?;
+                let cil = match instr.op.as_str() {
+                    "add" => "add",
+                    "sub" => "sub",
+                    "mul" => "mul",
+                    "div" => "div",
+                    "mod" => "rem",
+                    _ => unreachable!(),
+                };
+                let _ = writeln!(il, "    {cil}");
+                store_var(il, &regs, dest)?;
+            }
+            // ── Integer comparisons → a 0/1 `int32` result ────────────────────
+            //
+            // CIL only has `ceq` / `clt` / `cgt`; the other three relations are the
+            // logical negation of one of those — negate a boolean by `ldc.i4.0; ceq`
+            // (i.e. "== 0"). The 0/1 result feeds either a `st<dest>` or directly a
+            // `brfalse`/`brtrue` (Oct's `if x == 1` does exactly this).
+            //
+            // | IIR op | CIL                | meaning              |
+            // |--------|--------------------|----------------------|
+            // | cmp_eq | ceq                | a == b               |
+            // | cmp_ne | ceq; ldc.i4.0; ceq | !(a == b)            |
+            // | cmp_lt | clt                | a <  b               |
+            // | cmp_gt | cgt                | a >  b               |
+            // | cmp_le | cgt; ldc.i4.0; ceq | !(a >  b)  ⇔  a ≤ b  |
+            // | cmp_ge | clt; ldc.i4.0; ceq | !(a <  b)  ⇔  a ≥ b  |
+            "cmp_eq" | "cmp_ne" | "cmp_lt" | "cmp_le" | "cmp_gt" | "cmp_ge" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: format!("{} must have a dest", instr.op),
+                })?;
+                let a = var_src(f, instr, 0, instr.op.as_str())?;
+                let b = var_src(f, instr, 1, instr.op.as_str())?;
+                load_var(il, &regs, a)?;
+                load_var(il, &regs, b)?;
+                match instr.op.as_str() {
+                    "cmp_eq" => {
+                        let _ = writeln!(il, "    ceq");
+                    }
+                    "cmp_lt" => {
+                        let _ = writeln!(il, "    clt");
+                    }
+                    "cmp_gt" => {
+                        let _ = writeln!(il, "    cgt");
+                    }
+                    "cmp_ne" => {
+                        let _ = writeln!(il, "    ceq");
+                        let _ = writeln!(il, "    ldc.i4.0");
+                        let _ = writeln!(il, "    ceq");
+                    }
+                    "cmp_le" => {
+                        let _ = writeln!(il, "    cgt");
+                        let _ = writeln!(il, "    ldc.i4.0");
+                        let _ = writeln!(il, "    ceq");
+                    }
+                    "cmp_ge" => {
+                        let _ = writeln!(il, "    clt");
+                        let _ = writeln!(il, "    ldc.i4.0");
+                        let _ = writeln!(il, "    ceq");
+                    }
+                    _ => unreachable!(),
+                }
+                store_var(il, &regs, dest)?;
+            }
             other => {
                 return Err(IIRClrError::UnsupportedOp {
                     function: f.name.clone(),
@@ -655,6 +744,60 @@ mod tests {
         assert!(il.contains("int32 MccarthyEntry()"), "entry method returns int32");
         assert!(il.contains("ldc.i4 42"), "loads the literal 42; got:\n{il}");
         assert!(il.contains("System.Console]System.Console::WriteLine(int32)"));
+    }
+
+    /// Build a one-function module `c = <op>(a, b); ret c` over two `i32` constants.
+    fn binop_module(op: &str) -> IIRModule {
+        let instrs = vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(17)], "i32"),
+            IIRInstr::new("const", Some("b".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new(
+                op,
+                Some("c".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        m
+    }
+
+    #[test]
+    fn binary_arithmetic_emits_cil_opcodes() {
+        // Each IIR arithmetic op lowers to a single CIL opcode (note `mod` → `rem`).
+        for (op, cil) in
+            [("add", "add"), ("sub", "sub"), ("mul", "mul"), ("div", "div"), ("mod", "rem")]
+        {
+            let il = emit_il(&binop_module(op), &IIRClrConfig::new("Main")).unwrap();
+            assert!(
+                il.lines().any(|l| l.trim() == cil),
+                "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
+            );
+        }
+    }
+
+    #[test]
+    fn comparisons_emit_cil_opcodes() {
+        // The three primitive relations are single opcodes.
+        for (op, cil) in [("cmp_eq", "ceq"), ("cmp_lt", "clt"), ("cmp_gt", "cgt")] {
+            let il = emit_il(&binop_module(op), &IIRClrConfig::new("Main")).unwrap();
+            assert!(
+                il.lines().any(|l| l.trim() == cil),
+                "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
+            );
+        }
+        // The negated relations build on a primitive then `ldc.i4.0; ceq` (i.e. "== 0").
+        for (op, base) in [("cmp_ne", "ceq"), ("cmp_le", "cgt"), ("cmp_ge", "clt")] {
+            let il = emit_il(&binop_module(op), &IIRClrConfig::new("Main")).unwrap();
+            assert!(il.lines().any(|l| l.trim() == base), "op {op:?} builds on `{base}`; got:\n{il}");
+            assert!(
+                il.contains("ldc.i4.0"),
+                "negated relation {op:?} pushes 0 to invert; got:\n{il}"
+            );
+        }
     }
 
     #[test]

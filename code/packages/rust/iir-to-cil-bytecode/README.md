@@ -124,6 +124,12 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
 
+As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
+covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)
+and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
+rows above — previously only the binary codegen path emitted them, which is why running
+the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
+
 ## How CIL synthesis works for derived operations
 
 CIL lacks native opcodes for some logical operations, so we synthesize them

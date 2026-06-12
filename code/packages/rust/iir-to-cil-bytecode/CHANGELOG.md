@@ -1,5 +1,26 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.16.0] — 2026-06-12 — integer arithmetic + comparison opcodes (LANG-MATRIX LM-C)
+
+The textual `.il` emitter (`il_text.rs`) grows two op families it previously rejected
+with `UnsupportedOp` — McCarthy only ever emitted a constant return, so arithmetic and
+comparison had never been needed until the LANG-MATRIX campaign ran the expression
+languages (Nib, Oct, ALGOL 60) on the real CLR:
+
+* **Binary integer arithmetic** `add` / `sub` / `mul` / `div` / `mod` → the CIL opcodes
+  `add` / `sub` / `mul` / `div` / `rem` (note `mod` → `rem`, signed remainder). Both
+  operands are loaded and the single opcode emitted; CoreCLR's `div`/`rem` raise on
+  divide-by-zero, matching the other backends' trap behaviour.
+* **Integer comparisons** `cmp_eq` / `cmp_ne` / `cmp_lt` / `cmp_le` / `cmp_gt` / `cmp_ge`
+  → a `0`/`1` `int32`. CIL has only `ceq` / `clt` / `cgt`; the other three relations are
+  the logical negation of one (`<primitive>; ldc.i4.0; ceq`). The result feeds either a
+  `st<dest>` or directly a `brfalse`/`brtrue`.
+
+Verified by RUNNING on real `ilasm` + `dotnet` (via `lang-aot`'s `lang_matrix` CLR
+column): Nib `double(21)`→42, Oct `if x == 1`→0, ALGOL `17 mod 5`→2. New unit tests
+assert the emitted opcodes for every arithmetic + comparison op. No change to existing
+behaviour (49 + 86 prior tests still green).
+
 ## [0.15.0] — 2026-06-11 — textual `.il`: lambda / LABEL / recursion (CLR-real C5)
 
 `emit_il` becomes a **multi-function** emitter — the last McCarthy F-feature:

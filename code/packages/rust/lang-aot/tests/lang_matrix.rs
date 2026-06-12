@@ -28,10 +28,16 @@
 //!   while `env.BasicRuntime` — compiled with `javac` onto the classpath — handles the
 //!   output (Dartmouth BASIC, whose `print_i64` lowers to `env/BasicRuntime.println`).
 //!   Green for all five non-Brainfuck languages; Brainfuck pends the tape ops.
+//! * **CLR** (Phase C) — source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm`
+//!   → real `dotnet`, the CLR-real path. The entry `Console.WriteLine`s its `int`
+//!   result, which the harness parses. Green for the expression languages Twig / Nib /
+//!   Oct / ALGOL 60 (this needed the CIL backend to grow integer arithmetic + the
+//!   comparison opcodes — McCarthy only ever emitted a constant). Dartmouth BASIC pends
+//!   a `Console`-writing `print_i64`; Brainfuck the tape ops.
 //!
-//! Later slices add the CLR column (also a general code generator) and the
-//! Deferred items — Brainfuck-on-LLVM/WASM, and the McCarthy-specialized VM and JIT
-//! (op-coverage work). See `code/specs/LANG-PLATFORM-MATRIX.md`.
+//! The remaining work is the Deferred items — Brainfuck-on-LLVM/WASM/JVM/CLR, and the
+//! McCarthy-specialized VM and JIT (op-coverage work). See
+//! `code/specs/LANG-PLATFORM-MATRIX.md`.
 //!
 //! ## Two result kinds
 //!
@@ -59,6 +65,10 @@ enum Backend {
     /// The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher is
     /// injected to invoke the entry method and `System.out.println` its `int` result.
     Jvm,
+    /// Source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm` → real `dotnet`
+    /// (Phase C, the CLR-real path). The emitted entry `Console.WriteLine`s its `int`
+    /// result, which the harness parses (mirrors the McCarthy CLR-real chapter).
+    Clr,
 }
 
 /// The known, backend-independent observable result of a conformance program.
@@ -79,14 +89,21 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Jvm, Llvm, NativeAot, Wasm};
+use Backend::{Clr, Jvm, Llvm, NativeAot, Wasm};
+
+/// The real-CoreCLR helpers (`find_ilasm`, the NuGet-cache assembler search) are
+/// shared with the McCarthy CLR-real chapter; `#[path]`-include the module so we
+/// reuse `find_ilasm` rather than duplicating the cache walk. Only `find_ilasm` is
+/// called from here (the module's own runner is McCarthy-specific dead code).
+#[path = "clr_support/mod.rs"]
+mod clr_support;
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm, Clr] },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
@@ -96,7 +113,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -104,7 +121,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "oct",
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -112,7 +129,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // (LLVM column pending: `iir-to-llvm` lacks the tape ops `alloc_bytes`/`load_byte`/
@@ -592,6 +609,67 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     }
 }
 
+/// Is `dotnet` present? Together with `find_ilasm` this gates the CLR column.
+fn dotnet_ok() -> bool {
+    Command::new("dotnet")
+        .arg("--version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// CLR runner: source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm` → real
+/// `dotnet` — the CLR-real path of the McCarthy CLR chapter, generalized to any
+/// language. `compile_source_to_cil_text` emits a `Main` whose entry computes the
+/// program's value and `Console.WriteLine`s it, so (like the McCarthy runner) we
+/// assemble the `.il` to a real PE with `ilasm -exe`, run it on `dotnet`, and parse
+/// the printed integer. Gated on `dotnet` **and** a locatable `ilasm` (the assembler
+/// ships only in a NuGet runtime pack — `clr_support::find_ilasm` walks the cache);
+/// skips gracefully when either is absent.
+///
+/// Security/termination: the program is a fixed literal (no untrusted input); the
+/// `.il`, the assembled `Main.dll` and its `runtimeconfig.json` are written into a
+/// fresh `tempfile::tempdir()` (random, `0700`, auto-removed) whose guard outlives
+/// the run, so the executed assembly cannot be substituted in the assemble→run
+/// window (CWE-377/367); the class name is the constant `"Main"`, never from input;
+/// and each program terminates by construction.
+fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
+    if !dotnet_ok() {
+        return None;
+    }
+    let ilasm = clr_support::find_ilasm()?;
+    let il = lang_aot::compile_source_to_cil_text(p.lang, p.src, "Main").ok()?;
+    let dir = tempfile::tempdir().ok()?;
+    let il_path = dir.path().join("Main.il");
+    std::fs::write(&il_path, &il).ok()?;
+    let dll = dir.path().join("Main.dll");
+    let asm = Command::new(&ilasm)
+        .arg("-dll=false")
+        .arg("-exe")
+        .arg(format!("-output={}", dll.display()))
+        .arg(&il_path)
+        .output()
+        .ok()?;
+    if !asm.status.success() || !dll.exists() {
+        return None;
+    }
+    // A `.runtimeconfig.json` is required to launch a framework-dependent assembly
+    // on `dotnet`; pin it to the same net9.0 runtime the McCarthy CLR-real tests use.
+    std::fs::write(
+        dir.path().join("Main.runtimeconfig.json"),
+        r#"{ "runtimeOptions": { "tfm": "net9.0", "framework": { "name": "Microsoft.NETCore.App", "version": "9.0.0" } } }"#,
+    )
+    .ok()?;
+    let out = Command::new("dotnet").arg(&dll).output().ok()?;
+    if !out.status.success() {
+        return None;
+    }
+    // The entry `Console.WriteLine`d its `int` result; parse it as the program's
+    // value (matching the exit-code convention of the other columns).
+    let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
+    Some((printed.parse::<i32>().ok(), String::new()))
+}
+
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
 fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
@@ -600,6 +678,7 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
         Backend::Llvm => run_llvm(p),
         Backend::Wasm => run_wasm(p),
         Backend::Jvm => run_jvm(p),
+        Backend::Clr => run_clr(p),
     }
 }
 
@@ -678,6 +757,16 @@ fn proven_columns_do_not_silently_skip() {
             assert!(
                 run_jvm(p).is_some(),
                 "java present but JVM failed to run {:?}",
+                p.lang
+            );
+        }
+    }
+    // CLR: when `dotnet` + `ilasm` are present every CLR-tagged program must run.
+    if dotnet_ok() && clr_support::find_ilasm().is_some() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Clr)) {
+            assert!(
+                run_clr(p).is_some(),
+                "dotnet+ilasm present but CLR failed to run {:?}",
                 p.lang
             );
         }
