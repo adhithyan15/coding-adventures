@@ -120,11 +120,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // else it splits into two args). Mirror of the operand-paren
     // pre-passes, anchored on `(`/`,` inside a call's argument list.
     ("call_arg_paren", "gap-086: call-argument paren elision"),
-    // gap-087 (CLOC14.39): redundant parens inside a COMPUTED MEMBER
-    // index — `a[(b)]` → `a[b]`, `a[(b+c)]` → `a[b+c]`. Unlike a call
-    // argument, the index is a single-expression context so even a
-    // comma operator strips (`a[(b,c)]` → `a[b,c]`).
-    ("index_paren", "gap-087: computed-member index paren elision"),
+    // gap-087 RESOLVED in CLOC12.92 — a paren wrapping the WHOLE index
+    // of a computed-member subscript (`a[(b)]` → `a[b]`, `a[(b+c)]` →
+    // `a[b+c]`, `a[(b,c)]` → `a[b,c]`, `a[b[(c)]]` → `a[b[c]]`) now
+    // elides via a subscript-anchored pre-pass. No comma guard is
+    // needed (the brackets delimit a single-expression context); array-
+    // literal element parens (`[(a,b)]` must keep) are the gap-086
+    // comma-guarded family. `minify_index_paren` enforced.
     // gap-088 (CLOC14.39): EMPTY-STATEMENT (`;`) elimination —
     // `;;var x=1;;;` → `var x=1;`, `;;;` → ``, `function f(){;;x();}` →
     // `function f(){x()}`. closurec currently keeps stray semicolons.
