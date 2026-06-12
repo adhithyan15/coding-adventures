@@ -133,11 +133,12 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `function f(){x()}`) now drops a `;` whose predecessor is
     // `{`/`;`/start-of-input, except inside a `for(...)` header.
     // `minify_empty_stmt` enforced.
-    // gap-089 (CLOC14.39): empty `new` call-paren drop when the callee
-    // is a MEMBER expression — `new a.b()` → `new a.b`. gap-050 dropped
-    // `new A()` → `new A` for a bare identifier callee; the member-
-    // callee case (`new a.b()`) still keeps the `()`.
-    ("new_member_empty", "gap-089: new member-callee empty-paren drop"),
+    // gap-089 RESOLVED in CLOC12.95 — empty `new` call-paren drop for a
+    // MEMBER-expression callee (`new a.b()` → `new a.b`, `new a.b.c()`
+    // → `new a.b.c`, `new a[x]()` → `new a[x]`) via a forward pre-pass
+    // that extends gap-050 beyond bare-identifier callees. Blocked
+    // followers (`.`/`[`/`(`/backtick) are left to the new-expr
+    // member-wrap pass. `minify_new_member_empty` enforced.
     // gap-084 RESOLVED in CLOC12.90 — a nested double-paren around a
     // var-init RHS (`((a))` → `a`, `(((a)))` → `a`, `((a+b))` →
     // `a+b`) now fully strips: the gap-053 var-init elision runs to a
