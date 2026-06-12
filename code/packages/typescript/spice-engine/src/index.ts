@@ -474,6 +474,31 @@ export interface DeckParameterSummary {
   readonly diagnostics: readonly DeckParameterDiagnostic[];
 }
 
+export interface DeckNodeCondition {
+  readonly directive: ".ic" | ".nodeset";
+  readonly node: string;
+  readonly value: number;
+  readonly lineNumber: number;
+}
+
+export interface DeckInitialConditionDiagnostic {
+  readonly code: string;
+  readonly directive: ".ic" | ".nodeset";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckInitialConditionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly initialConditions: readonly DeckNodeCondition[];
+  readonly nodesets: readonly DeckNodeCondition[];
+  readonly diagnostics: readonly DeckInitialConditionDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2721,6 +2746,40 @@ export function resolveDeckParameters(netlist: string): DeckParameterSummary {
   };
 }
 
+export function resolveDeckInitialConditions(netlist: string): DeckInitialConditionSummary {
+  const state = new DeckInitialConditionState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".ic" || directive === ".nodeset") {
+      resolveNodeConditionLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    initialConditions: state.initialConditions,
+    nodesets: state.nodesets,
+    diagnostics: state.diagnostics,
+  };
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3132,6 +3191,79 @@ class DeckParameterState {
   }
 }
 
+class DeckInitialConditionState {
+  readonly diagnostics: DeckInitialConditionDiagnostic[] = [];
+  readonly initialConditions: DeckNodeCondition[] = [];
+  readonly nodesets: DeckNodeCondition[] = [];
+}
+
+function resolveNodeConditionLine(
+  line: string,
+  lineNumber: number,
+  directive: ".ic" | ".nodeset",
+  state: DeckInitialConditionState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length === 1) {
+    addInitialConditionDiagnostic(state, {
+      code: "SPICE_DECK_CONDITION_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires at least one V(node)=value assignment`,
+    });
+    return;
+  }
+
+  const emptyParameterState = new DeckParameterState();
+  for (const token of tokens.slice(1)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `${directive} assignment ${JSON.stringify(token)} must use V(node)=value syntax`,
+        token,
+      });
+      continue;
+    }
+    const target = token.slice(0, equalsIndex).trim();
+    const expression = stripExpressionDelimiters(token.slice(equalsIndex + 1).trim());
+    const node = parseNodeConditionTarget(target);
+    if (node === undefined) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_TARGET",
+        directive,
+        lineNumber,
+        message: `${directive} target ${JSON.stringify(target)} must use V(node) syntax`,
+        token,
+      });
+      continue;
+    }
+    try {
+      const condition = {
+        directive,
+        node,
+        value: evaluateParameterExpression(expression, emptyParameterState),
+        lineNumber,
+      };
+      if (directive === ".ic") {
+        state.initialConditions.push(condition);
+      } else {
+        state.nodesets.push(condition);
+      }
+    } catch (error) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+    }
+  }
+}
+
 function resolveParamLine(line: string, lineNumber: number, state: DeckParameterState): void {
   const tokens = directiveTokens(line);
   if (tokens.length === 1) {
@@ -3442,6 +3574,24 @@ function addParameterDiagnostic(
     ...diagnostic,
     severity: diagnostic.severity ?? "error",
   });
+}
+
+function addInitialConditionDiagnostic(
+  state: DeckInitialConditionState,
+  diagnostic: Omit<DeckInitialConditionDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function parseNodeConditionTarget(target: string): string | undefined {
+  if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
+    return undefined;
+  }
+  const node = target.slice(2, -1).trim();
+  return node.length > 0 ? node : undefined;
 }
 
 function isParameterName(name: string): boolean {

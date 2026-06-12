@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckInitialConditions,
   resolveDeckParameters,
   resolveDeckSources,
 } from "../src/index.js";
@@ -254,5 +255,71 @@ R2 out 0 {good}
     ]);
     expect(summary.diagnostics[0].parameter).toBe("BAD");
     expect(summary.diagnostics[2].expression).toBe("bad");
+  });
+
+  it("extracts .ic and .nodeset node-voltage hints", () => {
+    const summary = resolveDeckInitialConditions(`
+V1 in 0 DC 1
+.ic V(out)=1.2 V(mid)='2.5'
+.nodeset V(bias)={700m}
+.op
+.end
+.ic V(after)=9
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1", ".op"]);
+    expect(summary.initialConditions.map(({ directive, node, value, lineNumber }) => [
+      directive,
+      node,
+      value,
+      lineNumber,
+    ])).toStrictEqual([
+      [".ic", "out", 1.2, 3],
+      [".ic", "mid", 2.5, 3],
+    ]);
+    expect(summary.nodesets).toHaveLength(1);
+    expect(summary.nodesets[0]).toMatchObject({
+      directive: ".nodeset",
+      node: "bias",
+      lineNumber: 4,
+    });
+    expect(summary.nodesets[0].value).toBeCloseTo(0.7);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports malformed .ic and .nodeset assignments", () => {
+    const summary = resolveDeckInitialConditions(`
+.ic out=1 V()=2 V(ok)=bad V(good)=1k
+.nodeset
+.nodeset I(L1)=2
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(5);
+    expect(summary.activeLines).toStrictEqual([]);
+    expect(summary.initialConditions.map(({ directive, node, value, lineNumber }) => [
+      directive,
+      node,
+      value,
+      lineNumber,
+    ])).toStrictEqual([[".ic", "good", 1000, 2]]);
+    expect(summary.nodesets).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_CONDITION_TARGET",
+      "SPICE_DECK_CONDITION_TARGET",
+      "SPICE_DECK_CONDITION_EXPRESSION",
+      "SPICE_DECK_CONDITION_ARGUMENT",
+      "SPICE_DECK_CONDITION_TARGET",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.directive)).toStrictEqual([
+      ".ic",
+      ".ic",
+      ".ic",
+      ".nodeset",
+      ".nodeset",
+    ]);
   });
 });

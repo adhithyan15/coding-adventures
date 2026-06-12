@@ -100,3 +100,7 @@ and still-unsupported `.control` blocks.
 assignments, preserves parameter order, rewrites braced and quoted active-line
 expressions, and emits stable diagnostics for unresolved expressions and
 still-unsupported `.func` cards.
+`resolveDeckInitialConditions` extracts scalar `.ic` and `.nodeset`
+`V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
+numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for
+malformed targets or unresolved values.

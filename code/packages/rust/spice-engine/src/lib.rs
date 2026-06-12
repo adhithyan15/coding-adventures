@@ -3200,6 +3200,34 @@ pub struct DeckParameterSummary {
     pub diagnostics: Vec<DeckParameterDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckNodeCondition {
+    pub directive: String,
+    pub node: String,
+    pub value: f64,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckInitialConditionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckInitialConditionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub initial_conditions: Vec<DeckNodeCondition>,
+    pub nodesets: Vec<DeckNodeCondition>,
+    pub diagnostics: Vec<DeckInitialConditionDiagnostic>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -3428,6 +3456,41 @@ pub fn resolve_deck_parameters(netlist: &str) -> DeckParameterSummary {
         terminated: end_line_number.is_some(),
         end_line_number,
         parameters: state.parameter_values(),
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_initial_conditions(netlist: &str) -> DeckInitialConditionSummary {
+    let mut state = DeckInitialConditionState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if let Some(directive) = directive.as_deref() {
+            if matches!(directive, ".ic" | ".nodeset") {
+                resolve_node_condition_line(stripped, line_number, directive, &mut state);
+                continue;
+            }
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckInitialConditionSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        initial_conditions: state.initial_conditions,
+        nodesets: state.nodesets,
         diagnostics: state.diagnostics,
     }
 }
@@ -3704,6 +3767,22 @@ impl DeckParameterState {
             .iter()
             .filter_map(|key| self.parameters.get(key).cloned())
             .collect()
+    }
+}
+
+struct DeckInitialConditionState {
+    diagnostics: Vec<DeckInitialConditionDiagnostic>,
+    initial_conditions: Vec<DeckNodeCondition>,
+    nodesets: Vec<DeckNodeCondition>,
+}
+
+impl DeckInitialConditionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            initial_conditions: Vec::new(),
+            nodesets: Vec::new(),
+        }
     }
 }
 
@@ -3987,6 +4066,77 @@ fn add_resolution_diagnostic(
         severity: "error".to_string(),
         target,
     });
+}
+
+fn resolve_node_condition_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckInitialConditionState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() == 1 {
+        add_initial_condition_diagnostic(
+            state,
+            "SPICE_DECK_CONDITION_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one V(node)=value assignment"),
+            None,
+        );
+        return;
+    }
+
+    let empty_parameter_state = DeckParameterState::new();
+    for token in tokens.iter().skip(1) {
+        let Some((target, expression)) = token.split_once('=') else {
+            add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_ARGUMENT",
+                directive,
+                line_number,
+                &format!("{directive} assignment {token:?} must use V(node)=value syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let target = target.trim();
+        let Some(node) = parse_node_condition_target(target) else {
+            add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_TARGET",
+                directive,
+                line_number,
+                &format!("{directive} target {target:?} must use V(node) syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let expression = strip_expression_delimiters(expression.trim());
+        match evaluate_parameter_expression(&expression, &empty_parameter_state) {
+            Ok(value) => {
+                let condition = DeckNodeCondition {
+                    directive: directive.to_string(),
+                    node,
+                    value,
+                    line_number,
+                };
+                if directive == ".ic" {
+                    state.initial_conditions.push(condition);
+                } else {
+                    state.nodesets.push(condition);
+                }
+            }
+            Err(message) => add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_EXPRESSION",
+                directive,
+                line_number,
+                &message,
+                Some((*token).to_string()),
+            ),
+        }
+    }
 }
 
 fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterState) {
@@ -4357,6 +4507,37 @@ fn add_parameter_diagnostic(
         parameter,
         expression,
     });
+}
+
+fn add_initial_condition_diagnostic(
+    state: &mut DeckInitialConditionState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckInitialConditionDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
+fn parse_node_condition_target(target: &str) -> Option<String> {
+    if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
+    {
+        return None;
+    }
+    let node = target[2..target.len() - 1].trim();
+    if node.is_empty() {
+        None
+    } else {
+        Some(node.to_string())
+    }
 }
 
 fn is_unsupported_parameter_directive(directive: &str) -> bool {

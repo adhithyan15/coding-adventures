@@ -7,6 +7,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_initial_conditions,
     resolve_deck_parameters,
     resolve_deck_sources,
 )
@@ -247,3 +248,66 @@ R2 out 0 {good}
     ]
     assert summary.diagnostics[0].parameter == "BAD"
     assert summary.diagnostics[2].expression == "bad"
+
+
+def test_resolve_deck_initial_conditions_extracts_ic_and_nodeset_hints() -> None:
+    summary = resolve_deck_initial_conditions(
+        """
+V1 in 0 DC 1
+.ic V(out)=1.2 V(mid)='2.5'
+.nodeset V(bias)={700m}
+.op
+.end
+.ic V(after)=9
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 6
+    assert summary.active_lines == ("V1 in 0 DC 1", ".op")
+    assert [
+        (condition.directive, condition.node, round(condition.value, 12), condition.line_number)
+        for condition in summary.initial_conditions
+    ] == [
+        (".ic", "out", 1.2, 3),
+        (".ic", "mid", 2.5, 3),
+    ]
+    assert [
+        (condition.directive, condition.node, round(condition.value, 12), condition.line_number)
+        for condition in summary.nodesets
+    ] == [(".nodeset", "bias", 0.7, 4)]
+    assert summary.diagnostics == ()
+
+
+def test_resolve_deck_initial_conditions_reports_bad_assignments() -> None:
+    summary = resolve_deck_initial_conditions(
+        """
+.ic out=1 V()=2 V(ok)=bad V(good)=1k
+.nodeset
+.nodeset I(L1)=2
+.end
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 5
+    assert summary.active_lines == ()
+    assert [
+        (condition.directive, condition.node, condition.value, condition.line_number)
+        for condition in summary.initial_conditions
+    ] == [(".ic", "good", 1000.0, 2)]
+    assert summary.nodesets == ()
+    assert [diagnostic.code for diagnostic in summary.diagnostics] == [
+        "SPICE_DECK_CONDITION_TARGET",
+        "SPICE_DECK_CONDITION_TARGET",
+        "SPICE_DECK_CONDITION_EXPRESSION",
+        "SPICE_DECK_CONDITION_ARGUMENT",
+        "SPICE_DECK_CONDITION_TARGET",
+    ]
+    assert [diagnostic.directive for diagnostic in summary.diagnostics] == [
+        ".ic",
+        ".ic",
+        ".ic",
+        ".nodeset",
+        ".nodeset",
+    ]
