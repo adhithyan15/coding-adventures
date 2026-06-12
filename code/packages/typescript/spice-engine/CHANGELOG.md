@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `distortionFromTransientCorners`, `poleZeroCorners`,
+  `formatCornerDistortionTable`, and `formatCornerPoleZeroTable` for
+  named-corner distortion and pole-zero parity in the native web package.
 - Add `fourierCorners` and `formatCornerFourierTable` for named-corner
   `.FOUR`-style harmonic analysis parity in the native web package.
 - Add `formatPssTable`, `pssCorners`, and `formatCornerPssTable` for stable

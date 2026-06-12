@@ -583,6 +583,23 @@ class DistortionResult:
 
 
 @dataclass(frozen=True)
+class CornerDistortionPoint:
+    """Distortion result for one named analysis corner."""
+
+    corner_name: str
+    result: DistortionResult
+
+
+@dataclass(frozen=True)
+class CornerDistortionResult:
+    """Multi-corner distortion analysis result."""
+
+    input_source: str
+    output_probe: str
+    points: list[CornerDistortionPoint]
+
+
+@dataclass(frozen=True)
 class PoleZeroEntry:
     kind: str
     real: float
@@ -596,6 +613,54 @@ class PoleZeroResult:
     input_source: str
     output_node: str
     entries: list[PoleZeroEntry]
+
+
+@dataclass(frozen=True)
+class CornerPoleZeroPoint:
+    """Pole-zero result for one named analysis corner."""
+
+    corner_name: str
+    result: PoleZeroResult
+
+
+@dataclass(frozen=True)
+class CornerPoleZeroResult:
+    """Multi-corner pole-zero analysis result."""
+
+    input_source: str
+    output_node: str
+    topology: str
+    points: list[CornerPoleZeroPoint]
+
+
+_POLE_ZERO_TOPOLOGIES: dict[str, Callable[[Circuit, str, str], PoleZeroResult]] = {}
+
+
+def _normalize_pole_zero_topology(topology: str) -> str:
+    text = topology.replace("_", "-").strip().lower()
+    aliases = {
+        "rc-lowpass": "rc-lowpass",
+        "rclowpass": "rc-lowpass",
+        "rclow-pass": "rc-lowpass",
+        "rc-highpass": "rc-highpass",
+        "rchighpass": "rc-highpass",
+        "rchigh-pass": "rc-highpass",
+        "rlc-lowpass": "rlc-lowpass",
+        "rlclowpass": "rlc-lowpass",
+        "rlclow-pass": "rlc-lowpass",
+        "rlc-highpass": "rlc-highpass",
+        "rlchighpass": "rlc-highpass",
+        "rlchigh-pass": "rlc-highpass",
+        "rlc-bandpass": "rlc-bandpass",
+        "rlcbandpass": "rlc-bandpass",
+        "rlcband-pass": "rlc-bandpass",
+        "rlc-notch": "rlc-notch",
+        "rlcnotch": "rlc-notch",
+    }
+    if text not in aliases:
+        supported = ", ".join(sorted(_POLE_ZERO_TOPOLOGIES))
+        raise ValueError(f"pole_zero_corners: unsupported topology {topology!r}; expected {supported}")
+    return aliases[text]
 
 
 def pole_zero_rc_lowpass(
@@ -1219,6 +1284,40 @@ def pole_zero_rlc_notch(
     )
 
 
+_POLE_ZERO_TOPOLOGIES = {
+    "rc-lowpass": pole_zero_rc_lowpass,
+    "rc-highpass": pole_zero_rc_highpass,
+    "rlc-lowpass": pole_zero_rlc_lowpass,
+    "rlc-highpass": pole_zero_rlc_highpass,
+    "rlc-bandpass": pole_zero_rlc_bandpass,
+    "rlc-notch": pole_zero_rlc_notch,
+}
+
+
+def pole_zero_corners(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+    topology: str,
+    corners: list[CornerSpec],
+) -> CornerPoleZeroResult:
+    """Run a selected pole-zero fixture helper at each named corner."""
+    normalized_topology = _normalize_pole_zero_topology(topology)
+    helper = _POLE_ZERO_TOPOLOGIES[normalized_topology]
+    return CornerPoleZeroResult(
+        input_source=input_source,
+        output_node=output_node,
+        topology=normalized_topology,
+        points=[
+            CornerPoleZeroPoint(
+                corner_name=corner.name,
+                result=helper(_circuit_with_corner(circuit, corner), input_source, output_node),
+            )
+            for corner in corners
+        ],
+    )
+
+
 def distortion_from_fourier(
     result: FourierResult,
     input_source: str,
@@ -1278,6 +1377,52 @@ def distortion_from_transient(
         ),
         input_source=input_source,
         output_probe=output_probe,
+    )
+
+
+def distortion_from_transient_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    fundamental_frequency: float,
+    input_source: str,
+    output_probe: str,
+    harmonics: int = 9,
+    start_time: float | None = None,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerDistortionResult:
+    """Run transient distortion projection at each named corner."""
+    points: list[CornerDistortionPoint] = []
+    for corner in corners:
+        transient_result = transient(
+            _circuit_with_corner(circuit, corner),
+            t_stop=t_stop,
+            t_step=t_step,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.append(
+            CornerDistortionPoint(
+                corner_name=corner.name,
+                result=distortion_from_transient(
+                    transient_result,
+                    fundamental_frequency,
+                    input_source,
+                    output_probe,
+                    harmonics=harmonics,
+                    start_time=start_time,
+                ),
+            )
+        )
+    return CornerDistortionResult(
+        input_source=input_source,
+        output_probe=output_probe,
+        points=points,
     )
 
 
@@ -1867,6 +2012,28 @@ def format_pole_zero_table(result: PoleZeroResult) -> str:
     return "\n".join(rows)
 
 
+def format_corner_pole_zero_table(result: CornerPoleZeroResult) -> str:
+    """Format named-corner pole-zero entries as a stable text table."""
+    rows = ["Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping"]
+    for corner in result.points:
+        for index, entry in enumerate(corner.result.entries):
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        entry.kind,
+                        _format_table_number(entry.real),
+                        _format_table_number(entry.imaginary),
+                        _format_table_number(entry.frequency),
+                        _format_table_number(entry.damping),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_distortion_table(result: DistortionResult) -> str:
     """Format distortion harmonics as a stable SPICE-style text table."""
     rows = ["Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD"]
@@ -1885,6 +2052,30 @@ def format_distortion_table(result: DistortionResult) -> str:
                     ]
                 )
             )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_distortion_table(result: CornerDistortionResult) -> str:
+    """Format named-corner distortion harmonics as a stable text table."""
+    rows = ["Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD"]
+    for corner in result.points:
+        for point in corner.result.points:
+            for harmonic in point.harmonics:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            _format_table_number(point.frequency),
+                            result.input_source,
+                            result.output_probe,
+                            str(harmonic.harmonic),
+                            _format_table_number(harmonic.magnitude),
+                            _format_table_number(harmonic.phase_degrees),
+                            _format_table_number(point.total_harmonic_distortion),
+                        ]
+                    )
+                )
     rows.append("")
     return "\n".join(rows)
 
