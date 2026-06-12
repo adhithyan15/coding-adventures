@@ -1668,11 +1668,11 @@
           { "element": "details", "id": "more", "disclosure_kind": "details", "text": "More Extra", "text_length": 10, "summary_text": "More", "has_summary": true, "open": true, "accessible_name": "More" }
         ],
         "global_state_descriptors": [
-          { "element": "section", "id": "panel", "inert": true, "text": "Settings Choose options Inline action Editable copy" },
-          { "element": "div", "id": "action", "tabindex": "-1", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "text": "Inline action" },
-          { "element": "p", "id": "editable", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes", "text": "Editable copy" },
-          { "element": "dialog", "id": "dialog", "accesskey": ["d", "x"], "text": "Dialog copy" },
-          { "element": "p", "id": "secret", "hidden": true, "draggable": "true", "draggable_state": "true", "text": "Hidden copy" }
+          { "element": "section", "id": "panel", "inert": true, "global_attribute_names": ["inert"], "global_attribute_count": 1, "global_state_blocked": true, "global_state_block_reasons": ["inert"], "text": "Settings Choose options Inline action Editable copy" },
+          { "element": "div", "id": "action", "tabindex": "-1", "focus_navigation_hint": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "global_attribute_names": ["tabindex", "contenteditable", "draggable", "spellcheck", "translate"], "global_attribute_count": 5, "text": "Inline action" },
+          { "element": "p", "id": "editable", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes", "global_attribute_names": ["contenteditable", "spellcheck", "translate"], "global_attribute_count": 3, "text": "Editable copy" },
+          { "element": "dialog", "id": "dialog", "accesskey": ["d", "x"], "global_attribute_names": ["accesskey"], "global_attribute_count": 1, "focus_navigation_hint": true, "text": "Dialog copy" },
+          { "element": "p", "id": "secret", "hidden": true, "draggable": "true", "draggable_state": "true", "global_attribute_names": ["hidden", "draggable"], "global_attribute_count": 2, "global_state_blocked": true, "global_state_block_reasons": ["hidden"], "text": "Hidden copy" }
         ],
         "forms": [],
         "tables": []
@@ -1701,8 +1701,8 @@
         "links": [],
         "images": [],
         "global_state_descriptors": [
-          { "element": "html", "lang": "en", "dir": "ltr", "hidden": true, "accesskey": ["h", "?"], "spellcheck": "false", "translate": "no", "text": "Ready" },
-          { "element": "body", "id": "app-shell", "classes": ["app", "hydrated"], "title": "App shell", "inert": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "true", "draggable_state": "true", "spellcheck": "true", "translate": "yes", "text": "Ready" }
+          { "element": "html", "lang": "en", "dir": "ltr", "hidden": true, "accesskey": ["h", "?"], "focus_navigation_hint": true, "spellcheck": "false", "translate": "no", "global_attribute_names": ["lang", "dir", "hidden", "accesskey", "spellcheck", "translate"], "global_attribute_count": 6, "global_state_blocked": true, "global_state_block_reasons": ["hidden"], "text": "Ready" },
+          { "element": "body", "id": "app-shell", "classes": ["app", "hydrated"], "title": "App shell", "inert": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "true", "draggable_state": "true", "spellcheck": "true", "translate": "yes", "global_attribute_names": ["title", "inert", "contenteditable", "draggable", "spellcheck", "translate"], "global_attribute_count": 6, "global_state_blocked": true, "global_state_block_reasons": ["inert"], "text": "Ready" }
         ],
         "forms": [],
         "tables": []
@@ -2197,11 +2197,11 @@
           { "element": "slot", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
         ],
         "data_attribute_descriptors": [
-          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
-          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "text": "Widget Chart fallback Save Fallback footer" },
-          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "text": "Widget" },
-          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "text": "Chart fallback" },
-          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" }
+          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "data_attribute_names": ["data-template"], "data_attribute_count": 1, "text": "Untitled Body" },
+          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "data_attribute_names": ["data-controller", "data-state"], "data_attribute_count": 2, "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "data_attribute_names": ["data-field"], "data_attribute_count": 1, "text": "Widget" },
+          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "data_attribute_names": ["data-renderer"], "data_attribute_count": 1, "text": "Chart fallback" },
+          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "data_attribute_names": ["data-action"], "data_attribute_count": 1, "text": "Save" }
         ],
         "forms": [],
         "tables": []

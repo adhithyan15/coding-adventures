@@ -1547,6 +1547,9 @@ pub struct BrowserDataAttributeDescriptor {
     pub slot_name: Option<String>,
     pub part: Vec<String>,
     pub data_attributes: Vec<BrowserDataAttribute>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub json_data_attribute_names: Vec<String>,
     pub text: String,
 }
 
@@ -1569,6 +1572,11 @@ pub struct BrowserGlobalStateDescriptor {
     pub draggable_state: Option<String>,
     pub spellcheck: Option<String>,
     pub translate: Option<String>,
+    pub global_attribute_names: Vec<String>,
+    pub global_attribute_count: usize,
+    pub focus_navigation_hint: bool,
+    pub global_state_blocked: bool,
+    pub global_state_block_reasons: Vec<String>,
     pub text: String,
 }
 
@@ -17354,6 +17362,8 @@ fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAtt
         return None;
     }
 
+    let data_attribute_names = browser_data_attribute_names(&data_attributes);
+    let json_data_attribute_names = browser_json_data_attribute_names(&data_attributes);
     let custom_element_name = browser_custom_element_name(element);
     let custom_element_is = browser_custom_element_is(element);
     let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
@@ -17371,7 +17381,10 @@ fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAtt
         slot: browser_slot_assignment(element),
         slot_name: browser_slot_name(element),
         part: browser_part_tokens(element),
+        data_attribute_count: data_attributes.len(),
         data_attributes,
+        data_attribute_names,
+        json_data_attribute_names,
         text: visible_text_for_nodes(&element.children),
     })
 }
@@ -17396,10 +17409,15 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
     }
 
     let accesskey = browser_accesskey(element);
-    let has_global_state = browser_hidden(element)
-        || browser_inert(element)
+    let hidden = browser_hidden(element);
+    let inert = browser_inert(element);
+    let autofocus = browser_autofocus(element);
+    let global_attribute_names = browser_global_attribute_names(element);
+    let global_state_block_reasons = browser_global_state_block_reasons(hidden, inert);
+    let has_global_state = hidden
+        || inert
         || !accesskey.is_empty()
-        || browser_autofocus(element)
+        || autofocus
         || element.attribute("contenteditable").is_some()
         || element.attribute("draggable").is_some()
         || element.attribute("spellcheck").is_some()
@@ -17419,17 +17437,24 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
         title: element.attribute("title").map(ToOwned::to_owned),
         lang: element.attribute("lang").map(ToOwned::to_owned),
         dir: element.attribute("dir").map(ToOwned::to_owned),
-        hidden: browser_hidden(element),
-        inert: browser_inert(element),
+        hidden,
+        inert,
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        focus_navigation_hint: element.attribute("tabindex").is_some()
+            || !accesskey.is_empty()
+            || autofocus,
         accesskey,
-        autofocus: browser_autofocus(element),
+        autofocus,
         contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
         editing_mode: browser_editing_mode(element),
         draggable: element.attribute("draggable").map(ToOwned::to_owned),
         draggable_state: browser_draggable_state(element),
         spellcheck: browser_spellcheck_state(element),
         translate: browser_translate_state(element),
+        global_attribute_count: global_attribute_names.len(),
+        global_attribute_names,
+        global_state_blocked: !global_state_block_reasons.is_empty(),
+        global_state_block_reasons,
         text: visible_text_for_nodes(&element.children),
     })
 }
@@ -17546,6 +17571,61 @@ fn browser_data_attributes(element: &Element) -> Vec<BrowserDataAttribute> {
             value: Some(attribute.value.clone()),
         })
         .collect()
+}
+
+fn browser_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_json_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .filter(|attribute| {
+            attribute.value.as_deref().is_some_and(|value| {
+                let value = value.trim();
+                (value.starts_with('{') && value.ends_with('}'))
+                    || (value.starts_with('[') && value.ends_with(']'))
+            })
+        })
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_global_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "title",
+        "lang",
+        "dir",
+        "hidden",
+        "inert",
+        "tabindex",
+        "accesskey",
+        "autofocus",
+        "contenteditable",
+        "draggable",
+        "spellcheck",
+        "translate",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_global_state_block_reasons(hidden: bool, inert: bool) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if hidden {
+        reasons.push("hidden".to_string());
+    }
+    if inert {
+        reasons.push("inert".to_string());
+    }
+    reasons
 }
 
 fn is_browser_custom_element_name(name: &str) -> bool {
