@@ -123,10 +123,16 @@ the **dimensional layer + surface sublanguage + provenance bridge**. Everything 
   catches golden-rulebook bugs ([[project_mycin_prototype]]).
 - **Optimal value** → the objective value + the achieving assignment + the binding constraints (the
   ones tight at the optimum), all cited.
-- **Feed-a-verdict** → `check{…}` result (SAT/UNSAT) becomes a saturating contribution in the
-  differential: feasible ⇒ verdict A, infeasible ⇒ verdict B. One engine; no new verdict logic.
-- A new `DerivationOrigin::FromSolve { … }` lets the proof DAG descend into the solver certificate, so
-  `adj-lang-cli` renders the solution/IIS under the verdict step — auditable without the model.
+- **Feed-a-verdict** ✅ (E2) → the constraint result feeds the differential: feasible ⇒ verdict A,
+  infeasible ⇒ verdict B. One engine; no new verdict logic. **Implemented without a grammar change**:
+  `adj-lang-cli` runs the constraint engine first, maps each outcome to a STATUS atom (`feasible` /
+  `infeasible` / `solved` / `optimal` / `unbounded`; `Unknown`/`Unsupported` → nothing), injects it as
+  an observed fact into the KB *before* `decide`, and an existing
+  `contributes <lr> from <status> to <verdict>` clause fires through the ordinary contribution + proof
+  machinery.
+- **E3 (next):** a new `DerivationOrigin::FromSolve { … }` lets the proof DAG descend into the solver
+  certificate, so `adj-lang-cli` renders the solution/IIS *under* the verdict step — auditable without
+  the model.
 
 ## 6. Reuse map (grounded — verified by source read)
 

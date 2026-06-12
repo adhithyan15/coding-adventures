@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.4.0] - 2026-06-12 — feed-a-verdict: constraint outcome drives the differential (ADJ constraints E2)
+
+### Added
+
+- **The constraint engine now feeds the differential — one engine, not two.**
+  The CLI runs `solve`/`check`/`optimize` *first*, maps each outcome to a STATUS
+  atom, and injects it as an observed fact into the KB *before* `decide` runs:
+  - `check` Sat/SatReal → `feasible`; Unsat → `infeasible`
+  - `solve` Solved/SolvedRoots → `solved`
+  - `optimize` Optimal → `optimal`; Infeasible → `infeasible`; Unbounded → `unbounded`
+  - Unknown / Unsupported / NoUniqueSolution → **nothing** (the engine never
+    launders an undecided constraint into a verdict).
+- An existing `contributes <lr> from <status> to <verdict>` clause then fires in
+  the differential — composing solver result → verdict through the ordinary
+  contribution + proof machinery, with **no new engine logic and no grammar
+  change**. E.g. an infeasible schedule drives `schedule_broken`; loosening one
+  deadline makes it feasible and the same program drives `schedule_ok` instead.
+- 4 golden tests (infeasible `check` → verdict, feasible → the other verdict,
+  infeasible LP → verdict, inert when no status clause references it).
+
 ## [0.3.7] - 2026-06-11 — decompose→solve golden tests (ADJ constraints track D2)
 
 ### Added

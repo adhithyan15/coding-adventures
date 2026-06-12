@@ -33,9 +33,10 @@ use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
 use adj_lang::{compile, decide};
-use logic_core::Term;
+use logic_core::{atom, Term};
 use logic_engine::{
-    DerivationOrigin, DifferentialDecision, KnowledgeBase, LRAggregateResult, Provenance, TrustTier,
+    DerivationOrigin, DifferentialDecision, Fact, KnowledgeBase, LRAggregateResult, Provenance,
+    TrustTier,
 };
 
 const SPEC: &str = r#"{
@@ -190,6 +191,47 @@ fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> Str
     format!("[{}]", steps.join(","))
 }
 
+/// Map the constraint-engine outcomes to the STATUS atoms that feed the
+/// differential (ADJ constraints E2 — feed-a-verdict). Each atom, injected as an
+/// observed fact, fires an existing `contributes <lr> from <status> to <verdict>`
+/// clause. Deduplicated and order-stable. An `Unknown` / `Unsupported` /
+/// `NoUniqueSolution` outcome contributes NO status — the engine stays silent
+/// rather than assert a verdict it cannot back (the one-engine invariant: never
+/// launder an undecided constraint into a verdict).
+fn status_facts(
+    solve: &Option<SolveOutcome>,
+    check: &Option<FeasibilityOutcome>,
+    optimize: &Option<OptimizeOutcome>,
+) -> Vec<&'static str> {
+    let mut out: Vec<&'static str> = Vec::new();
+    let mut add = |out: &mut Vec<&'static str>, s: &'static str| {
+        if !out.contains(&s) {
+            out.push(s);
+        }
+    };
+    if let Some(o) = check {
+        match o {
+            FeasibilityOutcome::Sat { .. } | FeasibilityOutcome::SatReal { .. } => {
+                add(&mut out, "feasible")
+            }
+            FeasibilityOutcome::Unsat { .. } => add(&mut out, "infeasible"),
+            FeasibilityOutcome::Unknown { .. } => {}
+        }
+    }
+    if let Some(SolveOutcome::Solved { .. } | SolveOutcome::SolvedRoots { .. }) = solve {
+        add(&mut out, "solved");
+    }
+    if let Some(o) = optimize {
+        match o {
+            OptimizeOutcome::Optimal { .. } => add(&mut out, "optimal"),
+            OptimizeOutcome::Infeasible { .. } => add(&mut out, "infeasible"),
+            OptimizeOutcome::Unbounded => add(&mut out, "unbounded"),
+            OptimizeOutcome::Unknown { .. } => {}
+        }
+    }
+    out
+}
+
 fn main() -> ExitCode {
     let spec = load_spec_from_str(SPEC).expect("internal: invalid CLI spec");
     let parser = Parser::new(spec);
@@ -223,13 +265,38 @@ fn main() -> ExitCode {
         }
     };
 
-    let lowered = match compile(&src) {
+    let mut lowered = match compile(&src) {
         Ok(l) => l,
         Err(e) => {
             println!("{{\"error\":\"{}\"}}", esc(&format!("{:?}", e)));
             return ExitCode::from(1);
         }
     };
+
+    // ---- Constraint engine FIRST, so its verdict can feed the differential
+    // (ADJ constraints E2 — feed-a-verdict). The constraint outcomes are
+    // computed up front; each maps to a STATUS atom (`feasible` / `infeasible`
+    // / `solved` / `optimal` / `unbounded`) that we inject as an observed fact
+    // into the KB *before* `decide` runs. An existing
+    // `contributes <lr> from <status> to <verdict>` clause then fires in the
+    // differential — composing solver result → verdict through the ordinary
+    // contribution machinery, no new engine logic.
+    let solve_outcome =
+        (!lowered.constraints.is_empty()).then(|| solve(&lowered.constraints, &lowered.kb));
+    let check_outcome = lowered
+        .constraints
+        .check
+        .then(|| check(&lowered.constraints, &lowered.kb));
+    let optimize_outcome = lowered
+        .constraints
+        .objective
+        .is_some()
+        .then(|| optimize(&lowered.constraints, &lowered.kb));
+
+    for status in status_facts(&solve_outcome, &check_outcome, &optimize_outcome) {
+        lowered.kb.add_fact(Fact::certain(atom(status)));
+    }
+
     let diff = decide(&lowered);
 
     let mut ranked: Vec<String> = Vec::new();
@@ -274,39 +341,20 @@ fn main() -> ExitCode {
         .map(|q| format!("\"{}\"", esc(&format!("{}", q))))
         .collect();
 
-    // The constraint sublanguage (ADJ constraints): if the program declared a
-    // constraint system, solve it on the CPU and emit the outcome. Absent a
-    // constraint system, the `solve` key is omitted entirely.
-    let solve_section = if lowered.constraints.is_empty() {
-        String::new()
-    } else {
-        format!(
-            ",\"solve\":{}",
-            solve_json(&solve(&lowered.constraints, &lowered.kb))
-        )
+    // Render the constraint sections from the outcomes computed above (the
+    // solvers are not re-run). Absent a constraint system / `check` / objective,
+    // the respective key is omitted entirely.
+    let solve_section = match &solve_outcome {
+        Some(o) => format!(",\"solve\":{}", solve_json(o)),
+        None => String::new(),
     };
-
-    // A `check` requests a feasibility decision (is the constraint set jointly
-    // satisfiable?) — emit a `check` section with the SAT/UNSAT/unknown verdict.
-    let check_section = if lowered.constraints.check {
-        format!(
-            ",\"check\":{}",
-            check_json(&check(&lowered.constraints, &lowered.kb))
-        )
-    } else {
-        String::new()
+    let check_section = match &check_outcome {
+        Some(o) => format!(",\"check\":{}", check_json(o)),
+        None => String::new(),
     };
-
-    // A `minimize`/`maximize` requests a linear-programming optimum — emit an
-    // `optimize` section with the optimal value, achieving assignment, and
-    // binding constraints.
-    let optimize_section = if lowered.constraints.objective.is_some() {
-        format!(
-            ",\"optimize\":{}",
-            optimize_json(&optimize(&lowered.constraints, &lowered.kb))
-        )
-    } else {
-        String::new()
+    let optimize_section = match &optimize_outcome {
+        Some(o) => format!(",\"optimize\":{}", optimize_json(o)),
+        None => String::new(),
     };
 
     println!(
