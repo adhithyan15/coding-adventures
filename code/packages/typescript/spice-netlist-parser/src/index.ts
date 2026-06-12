@@ -12,7 +12,9 @@ import {
   currentSourceWithAc,
   currentSourceWithWaveform,
   diode,
+  acSweep,
   dcOp,
+  dcSweep,
   inductorWithInitialCurrent,
   jfet,
   mosfet,
@@ -24,11 +26,16 @@ import {
   voltageSource,
   voltageSourceWithAc,
   voltageSourceWithWaveform,
+  transient,
   type AdaptiveTransientOptions,
+  type AcPoint,
   type DcOpOptions,
+  type DcResult,
+  type DcSweepPoint,
   type Element,
   type JfetPolarity,
   type MosfetLevel1Params,
+  type TransientPoint,
   type TransientMethod,
   type Waveform,
 } from "@coding-adventures/spice-engine";
@@ -164,6 +171,27 @@ export type Analysis =
   | PoleZeroAnalysis
   | OptionsAnalysis;
 
+export type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis;
+export type AnalysisKind = RunnableAnalysis["kind"];
+export type AnalysisResult =
+  | DcResult
+  | readonly DcSweepPoint[]
+  | readonly AcPoint[]
+  | readonly TransientPoint[];
+
+export interface AnalysisPlanStep {
+  readonly index: number;
+  readonly kind: AnalysisKind;
+  readonly analysis: RunnableAnalysis;
+}
+
+export interface AnalysisExecutionResult {
+  readonly index: number;
+  readonly kind: AnalysisKind;
+  readonly analysis: RunnableAnalysis;
+  readonly result: AnalysisResult;
+}
+
 export interface ModelCard {
   readonly name: string;
   readonly kind: string;
@@ -240,6 +268,14 @@ export class ParsedNetlist {
 
   poleZeroCards(): PoleZeroAnalysis[] {
     return this.analyses.filter((analysis): analysis is PoleZeroAnalysis => analysis.kind === "pz");
+  }
+
+  analysisPlan(): AnalysisPlanStep[] {
+    return buildAnalysisPlan(this);
+  }
+
+  runAnalysisPlan(plan?: readonly AnalysisPlanStep[]): AnalysisExecutionResult[] {
+    return runAnalysisPlan(this, plan);
   }
 
   transientMethod(tran?: TranAnalysis): TransientMethod | undefined {
@@ -527,6 +563,29 @@ export function parseNetlist(text: string): ParsedNetlist {
 
 export const parse = parseNetlist;
 
+export function buildAnalysisPlan(parsed: ParsedNetlist): AnalysisPlanStep[] {
+  return parsed.analyses.flatMap((analysis, index): AnalysisPlanStep[] => {
+    const step = analysisPlanStep(index, analysis);
+    return step === undefined ? [] : [step];
+  });
+}
+
+export function runAnalysisPlan(
+  parsed: ParsedNetlist,
+  plan: readonly AnalysisPlanStep[] = buildAnalysisPlan(parsed),
+): AnalysisExecutionResult[] {
+  return plan.map((step) => ({
+    index: step.index,
+    kind: step.kind,
+    analysis: step.analysis,
+    result: executeAnalysisStep(parsed, step),
+  }));
+}
+
+export function runNetlist(text: string): AnalysisExecutionResult[] {
+  return runAnalysisPlan(parseNetlist(text));
+}
+
 export function parseValue(token: string): number {
   const match = VALUE_RE.exec(token);
   if (match === null) {
@@ -538,6 +597,60 @@ export function parseValue(token: string): number {
     throw new NetlistParseError(`unsupported numeric suffix ${JSON.stringify(match[2])}`);
   }
   return Number.parseFloat(match[1]) * multiplier;
+}
+
+function analysisPlanStep(index: number, analysis: Analysis): AnalysisPlanStep | undefined {
+  if (
+    analysis.kind === "op" ||
+    analysis.kind === "tran" ||
+    analysis.kind === "dc" ||
+    analysis.kind === "ac"
+  ) {
+    return { index, kind: analysis.kind, analysis };
+  }
+  return undefined;
+}
+
+function executeAnalysisStep(parsed: ParsedNetlist, step: AnalysisPlanStep): AnalysisResult {
+  const analysis = step.analysis;
+  if (analysis.kind === "op") {
+    return dcOp(parsed.circuit, parsed.dcOpOptions());
+  }
+  if (analysis.kind === "dc") {
+    return dcSweep(
+      parsed.circuit,
+      analysis.sourceName,
+      analysis.start,
+      analysis.stop,
+      analysis.step,
+    );
+  }
+  if (analysis.kind === "ac") {
+    return acSweep(
+      parsed.circuit,
+      analysis.startHz,
+      analysis.stopHz,
+      executableAcPointsPerDecade(analysis),
+    );
+  }
+  if (analysis.kind === "tran") {
+    return transient(
+      parsed.circuit,
+      analysis.timeStep,
+      analysis.stopTime,
+      parsed.transientMethod(analysis) ?? "euler",
+    );
+  }
+  throw new NetlistParseError(`analysis card at index ${step.index} is not executable`);
+}
+
+function executableAcPointsPerDecade(analysis: AcAnalysis): number {
+  if (analysis.mode === "dec" || analysis.mode === "log") {
+    return analysis.points;
+  }
+  throw new NetlistParseError(
+    `.ac mode ${JSON.stringify(analysis.mode)} is not executable; supported modes are "dec" and "log"`,
+  );
 }
 
 function parseModelCard(fields: readonly string[]): ModelCard {

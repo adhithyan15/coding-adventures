@@ -35,6 +35,9 @@ Transient cards can carry `method=euler|trap|gear2`; when omitted,
 present.
 Selected `.options` keys can also be turned into engine-call options with
 `parsed.dc_op_options()?` and `parsed.adaptive_transient_options(None)?`.
+Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
+and executed directly with `parsed.analysis_plan()`, `parsed.run_analysis_plan()`,
+or `run_netlist(deck)`.
 Deck-level `.temp` cards can be resolved into Kelvin with
 `parsed.operating_temperature_kelvin(0, 300.0)?`, and
 `parsed.noise_temperature_kelvin(Some(noise_card), 0, 300.0)?` applies the

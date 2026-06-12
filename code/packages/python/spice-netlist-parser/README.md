@@ -33,6 +33,22 @@ cards can carry `method=euler|trap|gear2`; when omitted,
 `netlist.transient_method()` falls back to `.options method=<...>` if present.
 Selected `.options` keys can also be turned into engine-call arguments with
 `netlist.dc_op_kwargs()` and `netlist.transient_kwargs()`.
+Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
+and executed directly:
+
+```python
+from spice_netlist_parser import run_netlist
+
+results = run_netlist("""
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.op
+.ac dec 1 1k 1k
+.end
+""")
+```
+
 Deck-level `.temp` cards can be resolved into Kelvin with
 `netlist.operating_temperature_kelvin()`, and
 `netlist.noise_temperature_kelvin(noise_card)` applies the SPICE precedence

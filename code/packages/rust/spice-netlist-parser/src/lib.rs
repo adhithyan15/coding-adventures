@@ -1,10 +1,12 @@
 use std::{collections::HashMap, fmt};
 
 use spice_engine::{
+    ac_sweep, dc_op_with_options, dc_sweep, transient_with_method, AcPoint,
     AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
-    DcOpOptions, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, TransientMethod, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity,
+    Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
+    SinWaveform, SpiceError, TransientMethod, TransientPoint, TransmissionLine, Vccs, Vcvs,
+    VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -164,6 +166,85 @@ pub enum Analysis {
     Distortion(DistortionAnalysis),
     PoleZero(PoleZeroAnalysis),
     Options(OptionsAnalysis),
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum AnalysisKind {
+    Op,
+    Tran,
+    Dc,
+    Ac,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RunnableAnalysis {
+    Op(OpAnalysis),
+    Tran(TranAnalysis),
+    Dc(DcAnalysis),
+    Ac(AcAnalysis),
+}
+
+impl RunnableAnalysis {
+    pub fn kind(&self) -> AnalysisKind {
+        match self {
+            Self::Op(_) => AnalysisKind::Op,
+            Self::Tran(_) => AnalysisKind::Tran,
+            Self::Dc(_) => AnalysisKind::Dc,
+            Self::Ac(_) => AnalysisKind::Ac,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AnalysisPlanStep {
+    pub index: usize,
+    pub kind: AnalysisKind,
+    pub analysis: RunnableAnalysis,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AnalysisResult {
+    Op(DcResult),
+    Tran(Vec<TransientPoint>),
+    Dc(Vec<DcSweepPoint>),
+    Ac(Vec<AcPoint>),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AnalysisExecutionResult {
+    pub index: usize,
+    pub kind: AnalysisKind,
+    pub analysis: RunnableAnalysis,
+    pub result: AnalysisResult,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AnalysisExecutionError {
+    Netlist(NetlistParseError),
+    Spice(SpiceError),
+}
+
+impl fmt::Display for AnalysisExecutionError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Netlist(error) => write!(f, "{error}"),
+            Self::Spice(error) => write!(f, "{error}"),
+        }
+    }
+}
+
+impl std::error::Error for AnalysisExecutionError {}
+
+impl From<NetlistParseError> for AnalysisExecutionError {
+    fn from(error: NetlistParseError) -> Self {
+        Self::Netlist(error)
+    }
+}
+
+impl From<SpiceError> for AnalysisExecutionError {
+    fn from(error: SpiceError) -> Self {
+        Self::Spice(error)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -428,6 +509,16 @@ impl ParsedNetlist {
         self.operating_temperature_kelvin(temperature_index, default_temperature_kelvin)
     }
 
+    pub fn analysis_plan(&self) -> Vec<AnalysisPlanStep> {
+        build_analysis_plan(self)
+    }
+
+    pub fn run_analysis_plan(
+        &self,
+    ) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+        run_analysis_plan(self)
+    }
+
     fn merged_options(&self) -> HashMap<String, OptionValue> {
         let mut values = HashMap::new();
         for options in self.options_cards() {
@@ -614,6 +705,98 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         models,
         title,
     })
+}
+
+pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
+    parsed
+        .analyses
+        .iter()
+        .enumerate()
+        .filter_map(|(index, analysis)| analysis_plan_step(index, analysis))
+        .collect()
+}
+
+pub fn run_analysis_plan(
+    parsed: &ParsedNetlist,
+) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+    build_analysis_plan(parsed)
+        .into_iter()
+        .map(|step| {
+            let result = execute_analysis_step(parsed, &step)?;
+            Ok(AnalysisExecutionResult {
+                index: step.index,
+                kind: step.kind,
+                analysis: step.analysis,
+                result,
+            })
+        })
+        .collect()
+}
+
+pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+    let parsed = parse_netlist(text)?;
+    run_analysis_plan(&parsed)
+}
+
+fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanStep> {
+    let analysis = match analysis {
+        Analysis::Op(card) => RunnableAnalysis::Op(*card),
+        Analysis::Tran(card) => RunnableAnalysis::Tran(*card),
+        Analysis::Dc(card) => RunnableAnalysis::Dc(card.clone()),
+        Analysis::Ac(card) => RunnableAnalysis::Ac(card.clone()),
+        _ => return None,
+    };
+    Some(AnalysisPlanStep {
+        index,
+        kind: analysis.kind(),
+        analysis,
+    })
+}
+
+fn execute_analysis_step(
+    parsed: &ParsedNetlist,
+    step: &AnalysisPlanStep,
+) -> Result<AnalysisResult, AnalysisExecutionError> {
+    match &step.analysis {
+        RunnableAnalysis::Op(_) => Ok(AnalysisResult::Op(dc_op_with_options(
+            &parsed.circuit,
+            parsed.dc_op_options()?,
+        )?)),
+        RunnableAnalysis::Tran(card) => {
+            let method = parsed
+                .transient_method(Some(card))?
+                .unwrap_or(TransientMethod::Euler);
+            Ok(AnalysisResult::Tran(transient_with_method(
+                &parsed.circuit,
+                card.time_step,
+                card.stop_time,
+                method,
+            )?))
+        }
+        RunnableAnalysis::Dc(card) => Ok(AnalysisResult::Dc(dc_sweep(
+            &parsed.circuit,
+            &card.source_name,
+            card.start,
+            card.stop,
+            card.step,
+        )?)),
+        RunnableAnalysis::Ac(card) => Ok(AnalysisResult::Ac(ac_sweep(
+            &parsed.circuit,
+            card.start_hz,
+            card.stop_hz,
+            executable_ac_points_per_decade(card)?,
+        )?)),
+    }
+}
+
+fn executable_ac_points_per_decade(card: &AcAnalysis) -> Result<usize, NetlistParseError> {
+    if card.mode == "dec" || card.mode == "log" {
+        return Ok(card.points);
+    }
+    Err(NetlistParseError::new(format!(
+        ".ac mode {:?} is not executable; supported modes are \"dec\" and \"log\"",
+        card.mode
+    )))
 }
 
 fn validate_mutual_inductors(circuit: &Circuit) -> Result<(), NetlistParseError> {
