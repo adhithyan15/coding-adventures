@@ -127,9 +127,11 @@ non-Lisp languages (Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, ALGOL 60) compil
 host executable and produce the right result (exit code for the expression languages;
 stdout for the I/O languages). The **LLVM** column is green for Twig / Nib / Oct /
 ALGOL 60 (exit code) and Dartmouth BASIC (stdout, via a generic `__print_i64`
-runtime); only Brainfuck pends — `iir-to-llvm` needs the tape ops. The WASM/JVM/CLR
-columns follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and
-need op-coverage work.
+runtime); Brainfuck is deferred. The **WASM** column (in-process `wasm-runtime`) is
+green for the expression languages Twig / Oct / ALGOL 60; Nib (const-literal type),
+BASIC (print import), and Brainfuck (tape ops) are follow-ups. The JVM/CLR columns
+follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and need
+op-coverage work.
 
 ## Stack position
 
