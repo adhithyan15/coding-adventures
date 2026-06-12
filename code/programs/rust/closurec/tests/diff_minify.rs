@@ -85,16 +85,13 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-093 (CLOC14.41): an integer NUMBER literal followed by a
-    // `.member` access must be paren-wrapped — `1..toString()` ->
-    // `(1).toString()`, `1 .x` -> `(1).x` (closurec emits the INVALID
-    // `1.x`), `1.5.toString()` -> `(1.5).toString()`. Upstream wraps
-    // the number so the `.` is unambiguously member access, not a
-    // decimal point. (The `1 .x` case is a CORRECTNESS bug — `1.x`
-    // does not parse.)
-    ("num_member_method", "gap-093: number literal .member paren-wrap"),
-    ("num_member_prop",   "gap-093: number .prop (closurec emits invalid 1.x)"),
-    ("num_float_method",  "gap-093: float literal .member paren-wrap"),
+    // gap-093 RESOLVED in CLOC12.98 — an integer/float NUMBER literal
+    // that is the object of a `.member` access is now paren-wrapped:
+    // `1..toString()` -> `(1).toString()`, `1 .x` -> `(1).x`,
+    // `1.5.toString()` -> `(1.5).toString()`. A pre-pass in
+    // `whitespace_only.rs` wraps the number so the `.` reads as member
+    // access, not the number's decimal point. (The `1 .x` -> `1.x`
+    // case was a CORRECTNESS bug — `1.x` does not parse.)
     // gap-094 RESOLVED in CLOC12.97 — the gap-046 array trailing-comma
     // drop is now guarded so it only fires when the comma follows a
     // REAL element (not a hole: a preceding `,` or `[`). `[1,,]`
