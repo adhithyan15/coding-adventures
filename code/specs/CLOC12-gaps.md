@@ -556,9 +556,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-073 — `get`/`set` before a computed key needs a space
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_get_computed_space` ignored.
-- **Input:** `var o={get[k](){return 1}};` → **Upstream:** `var o={get [k](){return 1}};`
-- **What it needs:** When a `get`/`set` accessor keyword is directly followed by a COMPUTED key `[`, the re-stitcher must insert a space — `get [k]` — otherwise `get[k]` re-lexes as a member access on `get` rather than a getter with a computed name. An emit-adjacency (`needs_separator`) rule.
+- **Status:** RESOLVED in CLOC12.80. `minify_get_computed_space` enforced.
+- **Input:** `var o={get[k](){return 1}};` → **Upstream:** `var o={get [k](){return 1}};` (also `set[k](v){}`).
+- **What it needed:** When a `get`/`set` ACCESSOR keyword is directly followed by a COMPUTED key `[`, insert a space — `get [k]` — otherwise `get[k]` re-reads as a member access on a variable named `get` rather than a getter with a computed name.
+- **CLOC12.80 resolution:** A two-token-look-behind + forward-check helper `get_set_computed_needs_space(kept, idx)`, consulted at the main emit site (NOT in `needs_separator`, which sees only the adjacent pair). `get`/`set` are *contextual* keywords (accessors only inside an object/class body, plain identifiers elsewhere) and the JS lexer types them identically, so disambiguating a real accessor from member access (`o.get[k]`) or variable indexing (`get[k](x)`) needs more context. The helper fires only when (a) `kept[idx]` is a structural `[`, (b) `kept[idx-1]` is the word-like `get`/`set` keyword, (c) `kept[idx-2]` is an object-literal property-start `{`/`,` (the decisive guard — excludes `.`/`?.` member access and statement-level indexing), and (d) the token after the matching `]` is a structural `(` (the accessor's parameter list). Verified against the JAR. Class-body accessors after a previous member (`}`-/`static`-preceded) are deferred. 2 unit tests + the byte-identity fixture.
 
 ### gap-074 — loop-body single-statement block flatten
 

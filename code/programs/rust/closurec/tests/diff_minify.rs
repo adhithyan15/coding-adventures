@@ -96,10 +96,6 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // in CLOC12.79) do this; `instanceof`, `await` do not yet.
     ("instanceof_paren",   "gap-071: instanceof operand paren elision"),
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-073 (CLOC14.35): a `get`/`set` accessor before a
-    // COMPUTED key `[k]` needs a separating space — `get[k]` →
-    // `get [k]` (else it re-lexes as a member access).
-    ("get_computed_space", "gap-073: `get[`/`set[` needs a space → `get [`"),
     // gap-074 (CLOC14.35): a loop body that is a single-statement
     // block flattens — `for(;;){continue l}` → `for(;;)continue
     // l;`. Sibling of gap-067 (labeled-block) in a loop-body
