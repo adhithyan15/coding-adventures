@@ -85,12 +85,12 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-097 (CLOC14.42): an async generator method (`async*m(){}`)
-    // needs a separating space between `async` and `*` — upstream emits
-    // `async *m(){}`. closurec's re-stitcher leaves `async*m` (valid,
-    // but not byte-identical). Holds in both class and object bodies.
-    ("async_gen_method_class", "gap-097: async*m -> async *m (class)"),
-    ("async_gen_method_obj",   "gap-097: async*m -> async *m (object)"),
+    // gap-097 RESOLVED in CLOC12.101 — an async generator method
+    // (`async*m(){}`) now gets the separating space between `async` and
+    // `*` that upstream emits (`async *m(){}`), in both class and object
+    // bodies. A `needs_separator`-style helper recognises the full
+    // method signature `async * NAME ( … ) {` so the arithmetic form
+    // `a=async*b` (and `async*f()`) is left untouched.
     // gap-098 RESOLVED in CLOC12.100 — a trailing bare decimal point on
     // an integer (`5.` -> `5`, `5.+1` -> `5+1`) is now dropped by the
     // gap-093 pre-pass's complementary branch: when a NUMBER is followed

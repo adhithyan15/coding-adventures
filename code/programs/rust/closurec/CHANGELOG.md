@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.105.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-097** — an async generator method now gets the
+  separating space between `async` and `*` that upstream emits:
+
+      o={async*m(){}}      -> o={async *m(){}}
+      class A{async*m(){}} -> class A{async *m(){}}
+      class A{static async*m(){}} -> class A{static async *m(){}}
+
+  `async` is only a *contextual* keyword, so `async*x` is equally
+  valid as MULTIPLICATION (`a=async*b` means `async * b`). Upstream
+  adds the space only for the method form, and the trap is that
+  `a=async*f()` (multiply) and `o={async*m(){}}` (method) share the
+  prefix `async * NAME (`. The new `async_gen_method_needs_space`
+  helper (a `needs_separator`-style lookahead in the emit loop)
+  distinguishes them by the FULL method signature: `async * NAME (
+  <params> ) {` — a named method (identifier name, not `[computed]`)
+  with a parameter list AND a body `{`. It mirrors
+  `get_set_computed_needs_space`'s structural depth-scan to find the
+  param list's matching `)`, then requires a `{` body to follow — the
+  exact thing the arithmetic forms lack. Multiplication (`a=async*b`,
+  `a=async*f()`, `a=b,async*c`), computed methods (`async*[x](){}` —
+  `*[` can't merge), and `async function*f(){}` are all left
+  untouched. +6 `gap097_*` unit tests; JAR-verified across 15 forms.
+  The `async_gen_method_class` / `async_gen_method_obj` fixtures leave
+  the ignore list.
+
 ## [0.104.0] - 2026-06-12
 
 ### Fixed
