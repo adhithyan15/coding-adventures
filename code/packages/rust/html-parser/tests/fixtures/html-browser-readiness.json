@@ -2029,6 +2029,79 @@
       }
     },
     {
+      "id": "aria-description-descriptor-page",
+      "description": "Browser document summaries expose ARIA description sources, resolved describedby text, and unresolved describedby blockers.",
+      "input": "<body><h2 id=dialog-title>Preferences</h2><p id=hint>Choose defaults</p><p id=extra>Extra guidance</p><span id=open aria-label=\"Open preferences\" aria-description=\"Opens the settings panel\">Open</span><div id=panel aria-labelledby=dialog-title aria-describedby=\"hint extra\" aria-description=\"Fallback panel help\">Panel</div><div id=missing-desc aria-label=\"Hidden help\" aria-describedby=\"missing\">Hidden</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Preferences Choose defaults Extra guidance Open Panel Hidden",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "dialog-title", "name": null, "text": "Preferences" },
+          { "id": "hint", "name": null, "text": "Choose defaults" },
+          { "id": "extra", "name": null, "text": "Extra guidance" },
+          { "id": "open", "name": null, "text": "Open" },
+          { "id": "panel", "name": null, "text": "Panel" },
+          { "id": "missing-desc", "name": null, "text": "Hidden" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Preferences" }
+        ],
+        "aria_description_descriptors": [
+          {
+            "element": "span",
+            "id": "open",
+            "role": "inline",
+            "text": "Open",
+            "accessible_name": "Open preferences",
+            "accessible_description": "Opens the settings panel",
+            "aria_description": "Opens the settings panel",
+            "description_source": "aria-description",
+            "description_attribute_names": ["aria-description"],
+            "description_attribute_count": 1
+          },
+          {
+            "element": "div",
+            "id": "panel",
+            "role": "block",
+            "text": "Panel",
+            "accessible_name": "Preferences",
+            "accessible_description": "Choose defaults Extra guidance",
+            "aria_description": "Fallback panel help",
+            "aria_describedby": ["hint", "extra"],
+            "describedby_text": ["Choose defaults", "Extra guidance"],
+            "description_source": "aria-describedby",
+            "description_attribute_names": ["aria-description", "aria-describedby"],
+            "description_attribute_count": 2,
+            "description_target_count": 2
+          },
+          {
+            "element": "div",
+            "id": "missing-desc",
+            "role": "block",
+            "text": "Hidden",
+            "accessible_name": "Hidden help",
+            "aria_describedby": ["missing"],
+            "description_source": "unresolved-aria-describedby",
+            "description_attribute_names": ["aria-describedby"],
+            "description_attribute_count": 1,
+            "description_target_count": 1,
+            "unresolved_description_targets": ["missing"],
+            "description_blocked": true,
+            "description_block_reasons": ["unresolved-idref", "empty-description"]
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "loading-hint-descriptor-page",
       "description": "Browser document summaries expose image, frame, and media loading hints as a flat scheduling descriptor inventory.",
       "input": "<base href=\"https://example.test/assets/\"><body><img id=hero src=hero.jpg alt=Hero loading=lazy decoding=async fetchpriority=high><iframe id=frame src=frame.html loading=eager fetchpriority=low title=Frame></iframe><video id=movie src=movie.mp4 preload=metadata></video><audio id=sound src=sound.ogg preload=none></audio></body>",
