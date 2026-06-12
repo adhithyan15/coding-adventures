@@ -8,13 +8,14 @@ use coding_adventures_html_parser::{
     BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
     BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
     BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormButton, BrowserFormChoiceControl,
-    BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
-    BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
-    BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor, BrowserFormSelect,
-    BrowserFormSubmissionDescriptor, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserFormTextEntry, BrowserFormValidationControl, BrowserFormValidationDescriptor,
+    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormAutofillDescriptor,
+    BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist,
+    BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl,
+    BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam,
+    BrowserFormOutput, BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor,
+    BrowserFormResetDescriptor, BrowserFormSelect, BrowserFormSubmissionDescriptor,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserFormValidationDescriptor,
     BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
     BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
     BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
@@ -101,6 +102,8 @@ struct ExpectedBrowserDocument {
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
+    #[serde(default)]
+    form_autofill_descriptors: Option<Vec<ExpectedFormAutofillDescriptor>>,
     #[serde(default)]
     form_submission_descriptors: Option<Vec<ExpectedFormSubmissionDescriptor>>,
     #[serde(default)]
@@ -893,6 +896,65 @@ struct ExpectedFormPolicySubmitterDescriptor {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormAutofillDescriptor {
+    #[serde(default)]
+    form_id: Option<String>,
+    #[serde(default)]
+    form_name: Option<String>,
+    #[serde(default)]
+    form_autocomplete: Option<String>,
+    #[serde(default)]
+    form_autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    form_autocomplete_enabled: bool,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    autofill_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    autocomplete: Option<String>,
+    #[serde(default)]
+    autocomplete_tokens: Vec<String>,
+    #[serde(default)]
+    autocomplete_token_count: usize,
+    #[serde(default)]
+    section_token: Option<String>,
+    #[serde(default)]
+    address_type_token: Option<String>,
+    #[serde(default)]
+    contact_type_token: Option<String>,
+    #[serde(default)]
+    field_token: Option<String>,
+    #[serde(default)]
+    webauthn: bool,
+    #[serde(default)]
+    autofill_enabled: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    readonly: bool,
+    #[serde(default)]
+    hidden: bool,
+    #[serde(default)]
+    required: bool,
+    #[serde(default)]
+    autofill_blocked: bool,
+    #[serde(default)]
+    autofill_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4406,6 +4468,26 @@ fn browser_form_submission_descriptors_track_flat_successful_controls_and_submit
 }
 
 #[test]
+fn browser_form_autofill_descriptors_track_flat_autocomplete_hints_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual =
+        parse_browser_document(&case.input).expect("form autofill descriptor fixture should parse");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.form_autofill_descriptors, expected.form_autofill_descriptors,
+        "form autofill descriptors should flatten autocomplete hints and blockers",
+    );
+}
+
+#[test]
 fn browser_form_reset_descriptors_track_flat_resetters_and_controls() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5689,6 +5771,15 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let form_autofill_descriptors = self
+            .form_autofill_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedFormAutofillDescriptor::into_browser_form_autofill_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_form_autofill_descriptors(&forms));
         let form_submission_descriptors = self
             .form_submission_descriptors
             .map(|descriptors| {
@@ -5935,6 +6026,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
                 .collect(),
+            form_autofill_descriptors,
             form_submission_descriptors,
             form_reset_descriptors,
             form_validation_descriptors,
@@ -10741,6 +10833,314 @@ impl ExpectedFormPolicySubmitterDescriptor {
             novalidate: self.novalidate,
             value: self.value,
         }
+    }
+}
+
+impl ExpectedFormAutofillDescriptor {
+    fn into_browser_form_autofill_descriptor(self) -> BrowserFormAutofillDescriptor {
+        BrowserFormAutofillDescriptor {
+            form_id: self.form_id,
+            form_name: self.form_name,
+            form_autocomplete: self.form_autocomplete,
+            form_autocomplete_tokens: self.form_autocomplete_tokens,
+            form_autocomplete_enabled: self.form_autocomplete_enabled,
+            element: self.element,
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            autofill_kind: self.autofill_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            value: self.value,
+            autocomplete: self.autocomplete,
+            autocomplete_tokens: self.autocomplete_tokens,
+            autocomplete_token_count: self.autocomplete_token_count,
+            section_token: self.section_token,
+            address_type_token: self.address_type_token,
+            contact_type_token: self.contact_type_token,
+            field_token: self.field_token,
+            webauthn: self.webauthn,
+            autofill_enabled: self.autofill_enabled,
+            disabled: self.disabled,
+            readonly: self.readonly,
+            hidden: self.hidden,
+            required: self.required,
+            autofill_blocked: self.autofill_blocked,
+            autofill_block_reasons: self.autofill_block_reasons,
+        }
+    }
+}
+
+fn expected_form_autofill_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormAutofillDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| expected_form_autofill_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn expected_form_autofill_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormAutofillDescriptor> {
+    if !expected_form_autofill_candidate(form, control) {
+        return None;
+    }
+
+    let section_token = expected_autofill_section_token(&control.autocomplete_tokens);
+    let address_type_token = expected_autofill_address_type_token(&control.autocomplete_tokens);
+    let contact_type_token = expected_autofill_contact_type_token(&control.autocomplete_tokens);
+    let field_token = expected_autofill_field_token(&control.autocomplete_tokens);
+    let webauthn = expected_autofill_has_webauthn_token(&control.autocomplete_tokens);
+    let autofill_block_reasons = expected_form_autofill_block_reasons(form, control);
+    Some(BrowserFormAutofillDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_autocomplete_tokens: form.autocomplete_tokens.clone(),
+        form_autocomplete_enabled: !expected_autofill_tokens_are_off(&form.autocomplete_tokens),
+        element: expected_form_autofill_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        autofill_kind: expected_form_autofill_kind(
+            form,
+            control,
+            field_token.as_deref(),
+            webauthn,
+            &autofill_block_reasons,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        autocomplete: control.autocomplete.clone(),
+        autocomplete_token_count: control.autocomplete_tokens.len(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        section_token,
+        address_type_token,
+        contact_type_token,
+        field_token,
+        webauthn,
+        autofill_enabled: autofill_block_reasons.is_empty(),
+        disabled: control.disabled,
+        readonly: control.readonly,
+        hidden: control.control_type == "hidden",
+        required: control.required,
+        autofill_blocked: !autofill_block_reasons.is_empty(),
+        autofill_block_reasons,
+    })
+}
+
+fn expected_form_autofill_candidate(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    !control.autocomplete_tokens.is_empty()
+        || !form.autocomplete_tokens.is_empty()
+        || expected_form_autofill_control_type(control)
+        || expected_form_common_autofill_name(control)
+}
+
+fn expected_form_autofill_control_type(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "hidden"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn expected_form_common_autofill_name(control: &BrowserFormControl) -> bool {
+    let Some(name) = control.name.as_deref() else {
+        return false;
+    };
+    let name = name.to_ascii_lowercase();
+    [
+        "address",
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "email",
+        "family-name",
+        "given-name",
+        "name",
+        "organization",
+        "postal-code",
+        "state",
+        "street-address",
+        "tel",
+        "username",
+        "zip",
+    ]
+    .iter()
+    .any(|candidate| name == *candidate || name.contains(candidate))
+}
+
+fn expected_form_autofill_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    field_token: Option<&str>,
+    webauthn: bool,
+    autofill_block_reasons: &[String],
+) -> String {
+    if !autofill_block_reasons.is_empty() {
+        "blocked-autofill".to_string()
+    } else if webauthn {
+        "webauthn-field".to_string()
+    } else if field_token.is_some() {
+        "autocomplete-field".to_string()
+    } else if expected_autofill_tokens_are_off(&control.autocomplete_tokens) {
+        "autocomplete-off".to_string()
+    } else if !form.autocomplete_tokens.is_empty() {
+        "form-autocomplete".to_string()
+    } else if expected_form_text_autofill_control(control) {
+        "text-entry-autofill".to_string()
+    } else if control.control_type == "select" {
+        "choice-autofill".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-autofill-metadata".to_string()
+    } else {
+        "autofill-metadata".to_string()
+    }
+}
+
+fn expected_form_text_autofill_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn expected_form_autofill_block_reasons(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly && expected_form_text_autofill_control(control) {
+        reasons.push("readonly".to_string());
+    }
+    if control.control_type == "hidden" {
+        reasons.push("hidden".to_string());
+    }
+    if expected_form_autofill_effective_off(form, control) {
+        reasons.push("autocomplete-off".to_string());
+    }
+    reasons
+}
+
+fn expected_form_autofill_effective_off(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    if !control.autocomplete_tokens.is_empty() {
+        return expected_autofill_tokens_are_off(&control.autocomplete_tokens);
+    }
+    expected_autofill_tokens_are_off(&form.autocomplete_tokens)
+}
+
+fn expected_autofill_tokens_are_off(tokens: &[String]) -> bool {
+    tokens.len() == 1 && tokens[0].eq_ignore_ascii_case("off")
+}
+
+fn expected_autofill_section_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| token.to_ascii_lowercase().starts_with("section-"))
+        .cloned()
+}
+
+fn expected_autofill_address_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| matches!(token.to_ascii_lowercase().as_str(), "shipping" | "billing"))
+        .cloned()
+}
+
+fn expected_autofill_contact_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| {
+            matches!(
+                token.to_ascii_lowercase().as_str(),
+                "home" | "work" | "mobile" | "fax" | "pager"
+            )
+        })
+        .cloned()
+}
+
+fn expected_autofill_field_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .rev()
+        .find(|token| expected_autofill_token_is_field(token))
+        .cloned()
+}
+
+fn expected_autofill_has_webauthn_token(tokens: &[String]) -> bool {
+    tokens
+        .iter()
+        .any(|token| token.eq_ignore_ascii_case("webauthn"))
+}
+
+fn expected_autofill_token_is_field(token: &str) -> bool {
+    let lower = token.to_ascii_lowercase();
+    if lower.starts_with("section-")
+        || matches!(
+            lower.as_str(),
+            "on" | "off"
+                | "shipping"
+                | "billing"
+                | "home"
+                | "work"
+                | "mobile"
+                | "fax"
+                | "pager"
+                | "webauthn"
+        )
+    {
+        return false;
+    }
+    true
+}
+
+fn expected_form_autofill_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
     }
 }
 
