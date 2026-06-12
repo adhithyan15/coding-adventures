@@ -1,5 +1,23 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.7.0 — 2026-06-11 — materialise integer types to i64 uniformly (LANG-MATRIX LM-L Nib)
+
+Fixes a type-**inconsistency** in the emitted IIR that a strict backend (`iir-to-llvm`)
+rejected. The frontend's instruction bodies already use `i64` for integers
+(`compile_binary_chain` and the `ret` default both emit `"i64"`; the long-standing
+intent is "Nib's u4/u8/bool all materialise as i64 at the IIR level"), but
+`extract_params` / `extract_return_type` (and `let` types) left the **function
+signature** as the narrow `u8`. So a function compiled to `define i8 @double(i8 %x)`
+with an `add i64 %x, %x` body — `'%x' defined with type 'i8' but expected 'i64'`.
+
+`widen_nib_type` now maps the integer types (`u4`/`u8`/`bcd`) to `i64`, completing the
+frontend's own convention so signature and bodies agree (`bool`/`void` unchanged). The
+IIR is now uniformly `i64` for integers — matching the instruction convention, the
+native-AOT machine-word model, and McCarthy's lowering. Verified by RUNNING: Nib on
+LLVM → 42 (previously a clang type error), Nib on native still → 42 (no regression);
+all nib-iir-compiler unit tests and the `iir-to-llvm` backend tests stay green. The
+narrow semantic width (u4/u8 wraparound) remains a backend-masking concern, deferred.
+
 ## 0.6.0 — 2026-05-30 (NIB06 — source-location threading for debugger)
 
 ### Added — Real source positions in `IIRFunction.source_map`

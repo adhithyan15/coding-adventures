@@ -100,7 +100,7 @@ asserts the result** — never on "the frontend lowers to IIR so it *should* wor
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ◑    | ◑   | ◑   |
-| Nib             | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
+| Nib             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ☐    | ☐    | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
@@ -134,11 +134,18 @@ slice — the loop trusts running, not this table.)
   refactored into a `Backend`-keyed grid (each `Prog` lists its proven backends); a
   `clang`-gated LLVM runner (`.ll` → real `clang` → run) added. Verified by RUNNING:
   Twig→42, Oct→0, ALGOL `17 mod 5`→2. No C runtime needed — these link a bare `.ll`.
-- ☐ **LM-L Nib (on LLVM).** Blocked on a real `iir-to-llvm` bug the probe surfaced:
-  Nib's `u8` operands are mis-widened — `'%x' defined with type 'i8' but expected
-  'i64'` on `add`. This slice fixes the backend's integer-width coercion, then greens
-  Nib's LLVM cell. (Native AOT runs Nib fine, so the IIR is sound; only LLVM mishandles
-  the narrow type.)
+- ✅ **LM-L Nib (on LLVM).** Root cause (found by reading + running): the **Nib
+  frontend** emitted type-*inconsistent* IIR — its instruction bodies use `i64`
+  (`compile_binary_chain` and the `ret` default both emit `"i64"`; the frontend's own
+  comment says "Nib's u4/u8/bool all materialise as i64 at the IIR level") while
+  `extract_params`/`extract_return_type` left the **function signature** as the narrow
+  `u8`. `iir-to-llvm` faithfully emitted `define i8 @double(i8 %x)` but `add i64 %x, %x`
+  → `'%x' defined with type 'i8' but expected 'i64'`. (The backend is correct: its
+  `test_backend.rs` proves it emits *consistent* narrow types fine.) Fix: complete the
+  frontend's own convention — `widen_nib_type` now materialises the integer types
+  (`u4`/`u8`/`bcd`) to `i64`, so signature and bodies agree. Verified by RUNNING: Nib on
+  LLVM → 42, Nib on native still → 42 (no regression), nib-iir-compiler unit tests +
+  `iir-to-llvm` (51) all green.
 - ☐ **LM-L Brainfuck / BASIC (I/O languages on LLVM).** Need the stdout-capturing LLVM
   runner (link the C runtime providing `putchar`/`print_i64`) and assert stdout
   (`A` / `42`).

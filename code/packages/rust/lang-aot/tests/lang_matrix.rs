@@ -13,8 +13,8 @@
 //! * **native-AOT** (LM0) — source → shared IIR → host object → system linker → run.
 //!   Uniformly green: all six languages.
 //! * **LLVM** (Phase L) — source → textual `.ll` (`iir-to-llvm`) → real `clang` → run.
-//!   Green for the expression languages Twig / Oct / ALGOL 60 today; Nib pends an
-//!   `iir-to-llvm` `u8`-widening fix and Brainfuck/BASIC pend the stdout I/O runner.
+//!   Green for the expression languages Twig / Nib / Oct / ALGOL 60; Brainfuck/BASIC
+//!   pend the stdout-capturing LLVM I/O runner.
 //!
 //! Later slices add the WASM / JVM / CLR columns (also general code generators) and
 //! tackle the two McCarthy-specialized backends — VM and JIT — which need
@@ -69,14 +69,16 @@ const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
     Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm] },
     // Nib — typed functions: define `double`, call it, return the result.
-    // (LLVM column pending: `iir-to-llvm` mis-widens Nib's `u8` operands to `i64`
-    // — `'%x' defined with type 'i8' but expected 'i64'`; fixed in the LM-L Nib slice.)
+    // (LLVM cell greened in LM-L Nib: the Nib frontend now materialises its integer
+    // types to `i64` uniformly — completing its own stated convention — so a
+    // function's signature and its instruction bodies agree and `iir-to-llvm` emits
+    // valid, consistent LLVM.)
     Prog {
         lang: Language::Nib,
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot],
+        backends: &[NativeAot, Llvm],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
