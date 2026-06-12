@@ -1186,6 +1186,41 @@ impl IntegrationActivationCommandCenterSectionKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationWatchtowerSignalKind {
+    Escalation,
+    Review,
+    Ready,
+    Action,
+    Observation,
+}
+
+impl IntegrationActivationWatchtowerSignalKind {
+    pub fn from_section(section: &IntegrationActivationCommandCenterSection) -> Self {
+        if section.has_blockers() {
+            Self::Escalation
+        } else if section.has_activation_work() {
+            Self::Ready
+        } else if section.has_review_work() {
+            Self::Review
+        } else if section.has_actionable_work() {
+            Self::Action
+        } else {
+            Self::Observation
+        }
+    }
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Escalation => "escalation",
+            Self::Review => "review",
+            Self::Ready => "ready",
+            Self::Action => "action",
+            Self::Observation => "observation",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationDecisionStatus {
     ReadyToApprove,
     BlockedOnPrerequisites,
@@ -2376,6 +2411,61 @@ pub struct IntegrationActivationCommandCenterSummary {
     pub first_review_section_priority: Option<u8>,
     pub first_activation_section_priority: Option<u8>,
     pub first_actionable_section_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationWatchtowerSignal {
+    pub sequence: usize,
+    pub signal_kind: IntegrationActivationWatchtowerSignalKind,
+    pub priority: u8,
+    pub section_sequences: Vec<usize>,
+    pub section_kinds: Vec<IntegrationActivationCommandCenterSectionKind>,
+    pub recommended_views: Vec<IntegrationActivationPlaybookView>,
+    pub integration_ids: Vec<IntegrationId>,
+    pub section_count: usize,
+    pub command_center_summary: IntegrationActivationCommandCenterSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationWatchtowerSummary {
+    pub total_signals: usize,
+    pub unique_integrations: usize,
+    pub signals_requiring_attention: usize,
+    pub signals_with_operator_work: usize,
+    pub signals_with_actionable_work: usize,
+    pub signals_with_activation_work: usize,
+    pub signals_with_blockers: usize,
+    pub signals_with_review_work: usize,
+    pub escalation_signals: usize,
+    pub review_signals: usize,
+    pub ready_signals: usize,
+    pub action_signals: usize,
+    pub observation_signals: usize,
+    pub total_sections: usize,
+    pub total_panels: usize,
+    pub total_tasks: usize,
+    pub operator_required_tasks: usize,
+    pub actionable_tasks: usize,
+    pub activation_ready_tasks: usize,
+    pub blocked_tasks: usize,
+    pub review_required_tasks: usize,
+    pub monitor_tasks: usize,
+    pub next_signal_kind: Option<IntegrationActivationWatchtowerSignalKind>,
+    pub next_section_kind: Option<IntegrationActivationCommandCenterSectionKind>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub next_signal_sequence: Option<usize>,
+    pub next_signal_priority: Option<u8>,
+    pub first_escalation_signal_sequence: Option<usize>,
+    pub first_review_signal_sequence: Option<usize>,
+    pub first_ready_signal_sequence: Option<usize>,
+    pub first_action_signal_sequence: Option<usize>,
+    pub first_escalation_signal_priority: Option<u8>,
+    pub first_review_signal_priority: Option<u8>,
+    pub first_ready_signal_priority: Option<u8>,
+    pub first_action_signal_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -5354,6 +5444,288 @@ impl IntegrationActivationCommandCenterSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.sections_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationWatchtowerSignal {
+    fn from_sections(
+        sequence: usize,
+        signal_kind: IntegrationActivationWatchtowerSignalKind,
+        sections: Vec<IntegrationActivationCommandCenterSection>,
+    ) -> Self {
+        let command_center_summary =
+            IntegrationActivationCommandCenterSummary::from_sections(sections.iter());
+        let mut section_sequences = sections
+            .iter()
+            .map(|section| section.sequence)
+            .collect::<Vec<_>>();
+        section_sequences.sort_unstable();
+
+        let mut section_kinds = sections
+            .iter()
+            .map(|section| section.section_kind)
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        section_kinds.sort();
+
+        let mut recommended_views = sections
+            .iter()
+            .flat_map(|section| section.recommended_views.iter().copied())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        recommended_views.sort();
+
+        let mut integration_ids = sections
+            .iter()
+            .flat_map(|section| section.integration_ids.iter().cloned())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        integration_ids.sort();
+
+        let priority = sections
+            .iter()
+            .map(|section| section.priority)
+            .min()
+            .unwrap_or(u8::MAX);
+
+        Self {
+            sequence,
+            signal_kind,
+            priority,
+            section_sequences,
+            section_kinds,
+            recommended_views,
+            integration_ids,
+            section_count: command_center_summary.total_sections,
+            command_center_summary,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.command_center_summary.has_operator_work()
+    }
+
+    pub fn has_actionable_work(&self) -> bool {
+        self.command_center_summary.has_actionable_work()
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.command_center_summary.has_activation_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.command_center_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.command_center_summary.has_review_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.command_center_summary.requires_attention()
+    }
+
+    pub fn needs_escalation(&self) -> bool {
+        self.signal_kind == IntegrationActivationWatchtowerSignalKind::Escalation
+            || self.has_blockers()
+    }
+}
+
+impl IntegrationActivationWatchtowerSummary {
+    pub fn from_signals<'a>(
+        signals: impl IntoIterator<Item = &'a IntegrationActivationWatchtowerSignal>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_signals: 0,
+            unique_integrations: 0,
+            signals_requiring_attention: 0,
+            signals_with_operator_work: 0,
+            signals_with_actionable_work: 0,
+            signals_with_activation_work: 0,
+            signals_with_blockers: 0,
+            signals_with_review_work: 0,
+            escalation_signals: 0,
+            review_signals: 0,
+            ready_signals: 0,
+            action_signals: 0,
+            observation_signals: 0,
+            total_sections: 0,
+            total_panels: 0,
+            total_tasks: 0,
+            operator_required_tasks: 0,
+            actionable_tasks: 0,
+            activation_ready_tasks: 0,
+            blocked_tasks: 0,
+            review_required_tasks: 0,
+            monitor_tasks: 0,
+            next_signal_kind: None,
+            next_section_kind: None,
+            next_recommended_view: None,
+            next_task_kind: None,
+            next_signal_sequence: None,
+            next_signal_priority: None,
+            first_escalation_signal_sequence: None,
+            first_review_signal_sequence: None,
+            first_ready_signal_sequence: None,
+            first_action_signal_sequence: None,
+            first_escalation_signal_priority: None,
+            first_review_signal_priority: None,
+            first_ready_signal_priority: None,
+            first_action_signal_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for signal in signals {
+            summary.total_signals += 1;
+            for integration_id in &signal.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match signal.signal_kind {
+                IntegrationActivationWatchtowerSignalKind::Escalation => {
+                    summary.escalation_signals += 1;
+                    summary.first_escalation_signal_sequence = summary
+                        .first_escalation_signal_sequence
+                        .or(Some(signal.sequence));
+                    summary.first_escalation_signal_priority = min_optional_priority(
+                        summary.first_escalation_signal_priority,
+                        Some(signal.priority),
+                    );
+                }
+                IntegrationActivationWatchtowerSignalKind::Review => {
+                    summary.review_signals += 1;
+                    summary.first_review_signal_sequence = summary
+                        .first_review_signal_sequence
+                        .or(Some(signal.sequence));
+                    summary.first_review_signal_priority = min_optional_priority(
+                        summary.first_review_signal_priority,
+                        Some(signal.priority),
+                    );
+                }
+                IntegrationActivationWatchtowerSignalKind::Ready => {
+                    summary.ready_signals += 1;
+                    summary.first_ready_signal_sequence = summary
+                        .first_ready_signal_sequence
+                        .or(Some(signal.sequence));
+                    summary.first_ready_signal_priority = min_optional_priority(
+                        summary.first_ready_signal_priority,
+                        Some(signal.priority),
+                    );
+                }
+                IntegrationActivationWatchtowerSignalKind::Action => {
+                    summary.action_signals += 1;
+                    summary.first_action_signal_sequence = summary
+                        .first_action_signal_sequence
+                        .or(Some(signal.sequence));
+                    summary.first_action_signal_priority = min_optional_priority(
+                        summary.first_action_signal_priority,
+                        Some(signal.priority),
+                    );
+                }
+                IntegrationActivationWatchtowerSignalKind::Observation => {
+                    summary.observation_signals += 1;
+                }
+            }
+
+            if summary.next_signal_kind.is_none()
+                && signal.command_center_summary.next_task_kind.is_some()
+            {
+                summary.next_signal_kind = Some(signal.signal_kind);
+                summary.next_section_kind = signal.command_center_summary.next_section_kind;
+                summary.next_recommended_view = signal.command_center_summary.next_recommended_view;
+                summary.next_task_kind = signal.command_center_summary.next_task_kind;
+                summary.next_signal_sequence = Some(signal.sequence);
+                summary.next_signal_priority = Some(signal.priority);
+            }
+
+            if signal.requires_attention() {
+                summary.signals_requiring_attention += 1;
+            }
+            if signal.has_operator_work() {
+                summary.signals_with_operator_work += 1;
+            }
+            if signal.has_actionable_work() {
+                summary.signals_with_actionable_work += 1;
+            }
+            if signal.has_activation_work() {
+                summary.signals_with_activation_work += 1;
+            }
+            if signal.has_blockers() {
+                summary.signals_with_blockers += 1;
+            }
+            if signal.has_review_work() {
+                summary.signals_with_review_work += 1;
+            }
+
+            summary.total_sections += signal.command_center_summary.total_sections;
+            summary.total_panels += signal.command_center_summary.total_panels;
+            summary.total_tasks += signal.command_center_summary.total_tasks;
+            summary.operator_required_tasks +=
+                signal.command_center_summary.operator_required_tasks;
+            summary.actionable_tasks += signal.command_center_summary.actionable_tasks;
+            summary.activation_ready_tasks += signal.command_center_summary.activation_ready_tasks;
+            summary.blocked_tasks += signal.command_center_summary.blocked_tasks;
+            summary.review_required_tasks += signal.command_center_summary.review_required_tasks;
+            summary.monitor_tasks += signal.command_center_summary.monitor_tasks;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(signal.command_center_summary.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.signals_with_blockers > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.signals_with_review_work > 0 || summary.signals_with_operator_work > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.signals_with_activation_work > 0
+            || summary.signals_with_actionable_work > 0
+        {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_signals == 0
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.signals_with_operator_work > 0
+    }
+
+    pub fn has_actionable_work(&self) -> bool {
+        self.signals_with_actionable_work > 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.signals_with_activation_work > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.signals_with_blockers > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.signals_with_review_work > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.signals_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+
+    pub fn needs_escalation(&self) -> bool {
+        self.escalation_signals > 0 || self.has_blockers()
     }
 }
 
@@ -9712,6 +10084,124 @@ pub fn activation_command_center_sections_at_or_before_priority(
     )
 }
 
+pub fn activation_watchtower_signals_from_command_center_sections(
+    mut sections: Vec<IntegrationActivationCommandCenterSection>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    sections.sort_by(compare_activation_command_center_sections);
+    let mut sections_by_signal: BTreeMap<
+        IntegrationActivationWatchtowerSignalKind,
+        Vec<IntegrationActivationCommandCenterSection>,
+    > = BTreeMap::new();
+    for section in sections {
+        sections_by_signal
+            .entry(IntegrationActivationWatchtowerSignalKind::from_section(
+                &section,
+            ))
+            .or_default()
+            .push(section);
+    }
+
+    let mut signals = sections_by_signal
+        .into_iter()
+        .map(|(signal_kind, sections)| {
+            IntegrationActivationWatchtowerSignal::from_sections(0, signal_kind, sections)
+        })
+        .collect::<Vec<_>>();
+    signals.sort_by(compare_activation_watchtower_signals);
+    for (index, signal) in signals.iter_mut().enumerate() {
+        signal.sequence = index + 1;
+    }
+    signals
+}
+
+pub fn activation_watchtower_signals_from_control_room_panels(
+    panels: Vec<IntegrationActivationControlRoomPanel>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_control_room_panels(panels),
+    )
+}
+
+pub fn activation_watchtower_signals_from_operator_tasks(
+    tasks: Vec<IntegrationActivationOperatorTask>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_operator_tasks(tasks),
+    )
+}
+
+pub fn activation_watchtower_signals_from_playbook_steps(
+    steps: Vec<IntegrationActivationPlaybookStep>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_playbook_steps(steps),
+    )
+}
+
+pub fn activation_watchtower_signals_from_forecasts(
+    forecasts: Vec<IntegrationActivationForecastItem>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_forecasts(forecasts),
+    )
+}
+
+pub fn activation_watchtower_signals_from_timeline_milestones(
+    milestones: Vec<IntegrationActivationTimelineMilestone>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_timeline_milestones(milestones),
+    )
+}
+
+pub fn activation_watchtower_signals_from_dashboard_cards(
+    cards: Vec<IntegrationActivationDashboardCard>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_dashboard_cards(cards),
+    )
+}
+
+pub fn activation_watchtower_signals_from_readouts<'a>(
+    readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_readouts(readouts),
+    )
+}
+
+pub fn activation_watchtower_signals_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_from_candidates(
+            catalog,
+            candidates,
+            enabled_integrations,
+        ),
+    )
+}
+
+pub fn activation_watchtower_signals_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationWatchtowerSignal> {
+    activation_watchtower_signals_from_command_center_sections(
+        activation_command_center_sections_at_or_before_priority(
+            catalog,
+            priority,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        ),
+    )
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -11138,6 +11628,22 @@ fn compare_activation_command_center_sections(
         .then_with(|| right.has_actionable_work().cmp(&left.has_actionable_work()))
         .then_with(|| left.section_kind.cmp(&right.section_kind))
         .then_with(|| right.panel_count.cmp(&left.panel_count))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_watchtower_signals(
+    left: &IntegrationActivationWatchtowerSignal,
+    right: &IntegrationActivationWatchtowerSignal,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| right.has_actionable_work().cmp(&left.has_actionable_work()))
+        .then_with(|| left.signal_kind.cmp(&right.signal_kind))
+        .then_with(|| right.section_count.cmp(&left.section_count))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -13800,6 +14306,133 @@ mod tests {
         assert!(catalog_sections
             .iter()
             .any(IntegrationActivationCommandCenterSection::requires_attention));
+    }
+
+    #[test]
+    fn activation_watchtower_signals_roll_up_command_center_attention() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+        let sections = activation_command_center_sections_from_candidates(&[], candidates, &[]);
+        let signals = activation_watchtower_signals_from_command_center_sections(sections);
+
+        assert_eq!(signals.len(), 2);
+        assert_eq!(signals[0].sequence, 1);
+        assert_eq!(
+            signals[0].signal_kind,
+            IntegrationActivationWatchtowerSignalKind::Escalation
+        );
+        assert!(signals[0].has_blockers());
+        assert!(signals[0].requires_attention());
+        assert!(signals[0].needs_escalation());
+        assert!(signals[0]
+            .section_kinds
+            .contains(&IntegrationActivationCommandCenterSectionKind::Blockers));
+        assert!(!signals[0].section_sequences.is_empty());
+        assert!(!signals[0].recommended_views.is_empty());
+        assert!(signals.iter().any(|signal| {
+            signal.signal_kind == IntegrationActivationWatchtowerSignalKind::Ready
+                && signal.has_activation_work()
+        }));
+
+        let summary = IntegrationActivationWatchtowerSummary::from_signals(signals.iter());
+        assert_eq!(summary.total_signals, 2);
+        assert_eq!(summary.unique_integrations, 3);
+        assert_eq!(summary.total_sections, 2);
+        assert_eq!(summary.total_panels, 3);
+        assert_eq!(summary.escalation_signals, 1);
+        assert_eq!(summary.ready_signals, 1);
+        assert_eq!(summary.signals_with_blockers, 1);
+        assert_eq!(summary.signals_with_activation_work, 1);
+        assert_eq!(
+            summary.next_signal_kind,
+            Some(IntegrationActivationWatchtowerSignalKind::Escalation)
+        );
+        assert_eq!(
+            summary.next_section_kind,
+            Some(IntegrationActivationCommandCenterSectionKind::Blockers)
+        );
+        assert_eq!(
+            summary.next_task_kind,
+            Some(IntegrationActivationOperatorTaskKind::ResolveConstraints)
+        );
+        assert_eq!(summary.next_signal_sequence, Some(1));
+        assert_eq!(summary.first_escalation_signal_sequence, Some(1));
+        assert_eq!(summary.first_ready_signal_sequence, Some(2));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_operator_work());
+        assert!(summary.has_actionable_work());
+        assert!(summary.has_activation_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+        assert!(summary.needs_escalation());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_signals = activation_watchtower_signals_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_signals
+            .iter()
+            .any(IntegrationActivationWatchtowerSignal::requires_attention));
     }
 
     #[test]

@@ -60,6 +60,7 @@ Chief of Staff job/session/agent
   -> activation-operator queue list and summary reads for actionable work
   -> activation-control-room list and summary reads for grouped operator panels
   -> activation-command-center list and summary reads for operating-lane rollups
+  -> activation-watchtower list and summary reads for escalation signal rollups
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -131,6 +132,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_control_room_summary`
 - `smart_home.list_integration_activation_command_center`
 - `smart_home.get_integration_activation_command_center_summary`
+- `smart_home.list_integration_activation_watchtower`
+- `smart_home.get_integration_activation_watchtower_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`

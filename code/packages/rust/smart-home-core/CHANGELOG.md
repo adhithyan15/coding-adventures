@@ -99,6 +99,10 @@ All notable changes to this package will be documented in this file.
   `smart_home.get_integration_activation_command_center_summary` tool
   descriptors for read-only grouped operating-lane planning derived from
   activation control-room panels.
+- `smart_home.list_integration_activation_watchtower` and
+  `smart_home.get_integration_activation_watchtower_summary` tool descriptors
+  for read-only escalation, review, ready, action, and observation signal
+  rollups derived from activation command-center sections.
 - `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary` tool descriptors for
   read-only policy-tier and policy-surface activation risk planning.

@@ -46,7 +46,8 @@ use smart_home_integration_catalog::{
     activation_plans_at_or_before_priority, activation_playbook_steps_from_forecasts,
     activation_readouts_from_candidates, activation_reviews_from_candidates,
     activation_risk_from_candidates, activation_runway_from_candidates,
-    activation_timeline_milestones_from_dashboard_cards, describe_primitive_family,
+    activation_timeline_milestones_from_dashboard_cards,
+    activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
     entries_requiring_primitive, find_entry, first_party_catalog,
     policy_surface_inventory_at_or_before_priority, primitive_backlog_at_or_before_priority,
@@ -86,13 +87,15 @@ use smart_home_integration_catalog::{
     IntegrationActivationRiskItem, IntegrationActivationRiskKind, IntegrationActivationRiskSummary,
     IntegrationActivationRunwayStage, IntegrationActivationRunwaySummary,
     IntegrationActivationTarget, IntegrationActivationTimelineMilestone,
-    IntegrationActivationTimelineSummary, IntegrationCatalogEntry, IntegrationCatalogQuery,
-    IntegrationCatalogSort, IntegrationCategory, IntegrationPolicySurface,
-    IntegrationPolicySurfaceInventoryItem, IntegrationPolicySurfaceSummary,
-    IntegrationReadinessCapabilityGap, IntegrationReadinessDependencyGap,
-    IntegrationReadinessGapInventory, IntegrationReadinessPrimitiveGap, IntegrationReadinessReport,
-    IntegrationReadinessSummary, PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary,
-    PrimitiveBacklogItem, PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
+    IntegrationActivationTimelineSummary, IntegrationActivationWatchtowerSignal,
+    IntegrationActivationWatchtowerSignalKind, IntegrationActivationWatchtowerSummary,
+    IntegrationCatalogEntry, IntegrationCatalogQuery, IntegrationCatalogSort, IntegrationCategory,
+    IntegrationPolicySurface, IntegrationPolicySurfaceInventoryItem,
+    IntegrationPolicySurfaceSummary, IntegrationReadinessCapabilityGap,
+    IntegrationReadinessDependencyGap, IntegrationReadinessGapInventory,
+    IntegrationReadinessPrimitiveGap, IntegrationReadinessReport, IntegrationReadinessSummary,
+    PrimitiveBacklogCoverageItem, PrimitiveBacklogCoverageSummary, PrimitiveBacklogItem,
+    PrimitiveFamily, PrimitiveFamilyDescriptor, SourceReference,
 };
 use smart_home_registry::RegistryTopologySummary;
 use smart_home_registry::StateRefreshReason;
@@ -278,6 +281,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMMAND_CENTER_TOOL_ID: &str =
     "smart_home.list_integration_activation_command_center";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_COMMAND_CENTER_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_command_center_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID: &str =
+    "smart_home.list_integration_activation_watchtower";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_watchtower_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -610,6 +617,14 @@ impl SmartHomeToolBridge {
                             query,
                         ),
                     )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID => {
+                    let query = integration_activation_watchtower_query(&arguments)?;
+                    Ok(list_integration_activation_watchtower_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_watchtower_query(&arguments)?;
+                    Ok(get_integration_activation_watchtower_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2031,6 +2046,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation command center summary",
             "Return compact D23A activation command-center section counts for blocker, review, activation, actionable, and monitoring operating lanes.",
             integration_activation_command_center_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID,
+            "List smart-home integration activation watchtower signals",
+            "List D23A activation watchtower signals that roll command-center sections into escalation, review, ready, action, and observation lanes.",
+            integration_activation_watchtower_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_watchtower", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_watchtower", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation watchtower summary",
+            "Return compact D23A activation watchtower counts for escalation, review, ready, action, and observation signals.",
+            integration_activation_watchtower_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4749,6 +4793,18 @@ struct IntegrationActivationCommandCenterQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationWatchtowerQuery {
+    command_center: IntegrationActivationCommandCenterQuery,
+    signal_kind: Option<IntegrationActivationWatchtowerSignalKind>,
+    requires_attention: Option<bool>,
+    has_blockers: Option<bool>,
+    has_review_work: Option<bool>,
+    has_activation_work: Option<bool>,
+    needs_escalation: Option<bool>,
+    signal_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -5144,6 +5200,30 @@ fn integration_activation_command_center_query(
         has_activation_work: optional_bool(arguments, "section_has_activation_work")?
             .or(optional_bool(arguments, "has_activation_work")?),
         section_limit: optional_u64(arguments, "section_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_watchtower_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationWatchtowerQuery, ToolCallError> {
+    let signal_kind = optional_string(arguments, "watchtower_signal")?
+        .or(optional_string(arguments, "signal_kind")?)
+        .map(|label| parse_activation_watchtower_signal_kind(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationWatchtowerQuery {
+        command_center: integration_activation_command_center_query(arguments)?,
+        signal_kind,
+        requires_attention: optional_bool(arguments, "signal_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        has_blockers: optional_bool(arguments, "signal_has_blockers")?
+            .or(optional_bool(arguments, "has_blockers")?),
+        has_review_work: optional_bool(arguments, "signal_has_review_work")?
+            .or(optional_bool(arguments, "has_review_work")?),
+        has_activation_work: optional_bool(arguments, "signal_has_activation_work")?
+            .or(optional_bool(arguments, "has_activation_work")?),
+        needs_escalation: optional_bool(arguments, "needs_escalation")?,
+        signal_limit: optional_u64(arguments, "signal_limit")?.map(|value| value as usize),
     })
 }
 
@@ -5856,6 +5936,38 @@ fn integration_activation_command_center_sections_for_query(
     }
 
     (sections, catalog_count)
+}
+
+fn integration_activation_watchtower_signals_for_query(
+    query: &IntegrationActivationWatchtowerQuery,
+) -> (Vec<IntegrationActivationWatchtowerSignal>, usize) {
+    let (sections, catalog_count) =
+        integration_activation_command_center_sections_for_query(&query.command_center);
+    let mut signals = activation_watchtower_signals_from_command_center_sections(sections);
+
+    if let Some(signal_kind) = query.signal_kind {
+        signals.retain(|signal| signal.signal_kind == signal_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        signals.retain(|signal| signal.requires_attention() == requires_attention);
+    }
+    if let Some(has_blockers) = query.has_blockers {
+        signals.retain(|signal| signal.has_blockers() == has_blockers);
+    }
+    if let Some(has_review_work) = query.has_review_work {
+        signals.retain(|signal| signal.has_review_work() == has_review_work);
+    }
+    if let Some(has_activation_work) = query.has_activation_work {
+        signals.retain(|signal| signal.has_activation_work() == has_activation_work);
+    }
+    if let Some(needs_escalation) = query.needs_escalation {
+        signals.retain(|signal| signal.needs_escalation() == needs_escalation);
+    }
+    if let Some(limit) = query.signal_limit {
+        signals.truncate(limit);
+    }
+
+    (signals, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -7726,6 +7838,92 @@ fn get_integration_activation_command_center_summary_output_handler_output(
                 "next_section_kind",
                 summary
                     .next_section_kind
+                    .map(|kind| string(kind.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_watchtower_output_handler_output(
+    query: IntegrationActivationWatchtowerQuery,
+) -> ToolHandlerOutput {
+    let (signals, catalog_count) = integration_activation_watchtower_signals_for_query(&query);
+    let summary = IntegrationActivationWatchtowerSummary::from_signals(signals.iter());
+    let count = signals.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_watchtower",
+            JsonValue::Array(
+                signals
+                    .iter()
+                    .map(activation_watchtower_signal_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_watchtower_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_watchtower"),
+            ),
+            ("signals", integer(count as i64)),
+            (
+                "signals_requiring_attention",
+                integer(summary.signals_requiring_attention as i64),
+            ),
+            ("total_sections", integer(summary.total_sections as i64)),
+            ("total_panels", integer(summary.total_panels as i64)),
+            (
+                "next_signal_kind",
+                summary
+                    .next_signal_kind
+                    .map(|kind| string(kind.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_watchtower_summary_output_handler_output(
+    query: IntegrationActivationWatchtowerQuery,
+) -> ToolHandlerOutput {
+    let (signals, _) = integration_activation_watchtower_signals_for_query(&query);
+    let summary = IntegrationActivationWatchtowerSummary::from_signals(signals.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_watchtower_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_watchtower_summary"),
+            ),
+            ("total_signals", integer(summary.total_signals as i64)),
+            (
+                "signals_requiring_attention",
+                integer(summary.signals_requiring_attention as i64),
+            ),
+            (
+                "escalation_signals",
+                integer(summary.escalation_signals as i64),
+            ),
+            (
+                "next_signal_kind",
+                summary
+                    .next_signal_kind
                     .map(|kind| string(kind.as_str()))
                     .unwrap_or(JsonValue::Null),
             ),
@@ -14686,6 +14884,279 @@ fn integration_activation_command_center_summary_json(
     ])
 }
 
+fn activation_watchtower_signal_json(signal: &IntegrationActivationWatchtowerSignal) -> JsonValue {
+    object([
+        ("sequence", integer(signal.sequence as i64)),
+        ("signal_kind", string(signal.signal_kind.as_str())),
+        ("priority", integer(signal.priority as i64)),
+        (
+            "section_sequences",
+            JsonValue::Array(
+                signal
+                    .section_sequences
+                    .iter()
+                    .map(|sequence| integer(*sequence as i64))
+                    .collect(),
+            ),
+        ),
+        (
+            "section_kinds",
+            JsonValue::Array(
+                signal
+                    .section_kinds
+                    .iter()
+                    .map(|kind| string(kind.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "recommended_views",
+            JsonValue::Array(
+                signal
+                    .recommended_views
+                    .iter()
+                    .map(|view| string(view.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                signal
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(signal.integration_count() as i64),
+        ),
+        ("section_count", integer(signal.section_count as i64)),
+        (
+            "command_center_summary",
+            integration_activation_command_center_summary_json(&signal.command_center_summary),
+        ),
+        (
+            "has_operator_work",
+            JsonValue::Bool(signal.has_operator_work()),
+        ),
+        (
+            "has_actionable_work",
+            JsonValue::Bool(signal.has_actionable_work()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(signal.has_activation_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(signal.has_blockers())),
+        ("has_review_work", JsonValue::Bool(signal.has_review_work())),
+        (
+            "requires_attention",
+            JsonValue::Bool(signal.requires_attention()),
+        ),
+        (
+            "needs_escalation",
+            JsonValue::Bool(signal.needs_escalation()),
+        ),
+    ])
+}
+
+fn integration_activation_watchtower_summary_json(
+    summary: &IntegrationActivationWatchtowerSummary,
+) -> JsonValue {
+    object([
+        ("total_signals", integer(summary.total_signals as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "signals_requiring_attention",
+            integer(summary.signals_requiring_attention as i64),
+        ),
+        (
+            "signals_with_operator_work",
+            integer(summary.signals_with_operator_work as i64),
+        ),
+        (
+            "signals_with_actionable_work",
+            integer(summary.signals_with_actionable_work as i64),
+        ),
+        (
+            "signals_with_activation_work",
+            integer(summary.signals_with_activation_work as i64),
+        ),
+        (
+            "signals_with_blockers",
+            integer(summary.signals_with_blockers as i64),
+        ),
+        (
+            "signals_with_review_work",
+            integer(summary.signals_with_review_work as i64),
+        ),
+        (
+            "escalation_signals",
+            integer(summary.escalation_signals as i64),
+        ),
+        ("review_signals", integer(summary.review_signals as i64)),
+        ("ready_signals", integer(summary.ready_signals as i64)),
+        ("action_signals", integer(summary.action_signals as i64)),
+        (
+            "observation_signals",
+            integer(summary.observation_signals as i64),
+        ),
+        ("total_sections", integer(summary.total_sections as i64)),
+        ("total_panels", integer(summary.total_panels as i64)),
+        ("total_tasks", integer(summary.total_tasks as i64)),
+        (
+            "operator_required_tasks",
+            integer(summary.operator_required_tasks as i64),
+        ),
+        ("actionable_tasks", integer(summary.actionable_tasks as i64)),
+        (
+            "activation_ready_tasks",
+            integer(summary.activation_ready_tasks as i64),
+        ),
+        ("blocked_tasks", integer(summary.blocked_tasks as i64)),
+        (
+            "review_required_tasks",
+            integer(summary.review_required_tasks as i64),
+        ),
+        ("monitor_tasks", integer(summary.monitor_tasks as i64)),
+        (
+            "next_signal_kind",
+            summary
+                .next_signal_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_section_kind",
+            summary
+                .next_section_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_task_kind",
+            summary
+                .next_task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_signal_sequence",
+            summary
+                .next_signal_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_signal_priority",
+            summary
+                .next_signal_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_escalation_signal_sequence",
+            summary
+                .first_escalation_signal_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_signal_sequence",
+            summary
+                .first_review_signal_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_signal_sequence",
+            summary
+                .first_ready_signal_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_signal_sequence",
+            summary
+                .first_action_signal_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_escalation_signal_priority",
+            summary
+                .first_escalation_signal_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_signal_priority",
+            summary
+                .first_review_signal_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_ready_signal_priority",
+            summary
+                .first_ready_signal_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_action_signal_priority",
+            summary
+                .first_action_signal_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "has_operator_work",
+            JsonValue::Bool(summary.has_operator_work()),
+        ),
+        (
+            "has_actionable_work",
+            JsonValue::Bool(summary.has_actionable_work()),
+        ),
+        (
+            "has_activation_work",
+            JsonValue::Bool(summary.has_activation_work()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_review_work",
+            JsonValue::Bool(summary.has_review_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+        (
+            "needs_escalation",
+            JsonValue::Bool(summary.needs_escalation()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -17375,6 +17846,31 @@ fn parse_activation_command_center_section_kind(
     }
 }
 
+fn parse_activation_watchtower_signal_kind(
+    label: &str,
+) -> Result<IntegrationActivationWatchtowerSignalKind, ToolCallError> {
+    match label {
+        "escalation" | "escalate" | "blocker" | "blockers" | "constraint" | "constraints" => {
+            Ok(IntegrationActivationWatchtowerSignalKind::Escalation)
+        }
+        "review" | "reviews" | "approval" | "approvals" | "human_review" => {
+            Ok(IntegrationActivationWatchtowerSignalKind::Review)
+        }
+        "ready" | "activation" | "activate" | "ready_to_activate" => {
+            Ok(IntegrationActivationWatchtowerSignalKind::Ready)
+        }
+        "action" | "actionable" | "actions" | "operator_action" => {
+            Ok(IntegrationActivationWatchtowerSignalKind::Action)
+        }
+        "observation" | "observe" | "monitoring" | "monitor" | "status" => {
+            Ok(IntegrationActivationWatchtowerSignalKind::Observation)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation watchtower signal `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -18553,6 +19049,38 @@ fn integration_activation_command_center_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_watchtower_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_command_center_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("watchtower_signal", JsonSchema::String));
+        properties.push(SchemaProperty::new("signal_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "signal_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "signal_has_blockers",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "signal_has_review_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "signal_has_activation_work",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("needs_escalation", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("signal_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -18697,7 +19225,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 103);
+        assert_eq!(definitions.len(), 105);
         assert!(export.ok());
         assert!(export
             .tool_ids()
@@ -18974,9 +19502,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_COMMAND_CENTER_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            95
+            97
         );
         assert_eq!(
             export
@@ -19430,11 +19964,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(103))
+            Some(&integer(105))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(95))
+            Some(&integer(97))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -22448,6 +22982,143 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_watchtower_request = request(
+            "call-list-integration-activation-watchtower",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_WATCHTOWER_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("signal_requires_attention", JsonValue::Bool(true)),
+                ("signal_limit", integer(3)),
+            ]),
+            5_037,
+        );
+        let list_activation_watchtower_trace =
+            tool_runtime.invoke_with_events(&list_activation_watchtower_request);
+        assert!(list_activation_watchtower_trace.result.ok);
+        assert_eq!(
+            list_activation_watchtower_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_watchtower_output = list_activation_watchtower_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_watchtower_count =
+            integer_value(field(list_activation_watchtower_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_watchtower_count));
+        let activation_watchtower_summary =
+            field(list_activation_watchtower_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_watchtower_summary, "total_signals"),
+            Some(&integer(activation_watchtower_count))
+        );
+        assert!(
+            integer_value(field(activation_watchtower_summary, "total_sections").unwrap()).unwrap()
+                >= activation_watchtower_count
+        );
+        assert_eq!(
+            field(activation_watchtower_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_watchtower_signal = array_item(
+            field(list_activation_watchtower_output, "activation_watchtower").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert!(field(activation_watchtower_signal, "sequence").is_some());
+        assert!(field(activation_watchtower_signal, "signal_kind").is_some());
+        assert!(field(activation_watchtower_signal, "section_sequences").is_some());
+        assert!(field(activation_watchtower_signal, "recommended_views").is_some());
+        assert!(field(activation_watchtower_signal, "command_center_summary").is_some());
+        assert_eq!(
+            field(activation_watchtower_signal, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_watchtower_summary_request = request(
+            "call-integration-activation-watchtower-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_WATCHTOWER_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("watchtower_signal", string("escalation")),
+                ("signal_has_blockers", JsonValue::Bool(true)),
+                ("needs_escalation", JsonValue::Bool(true)),
+            ]),
+            5_038,
+        );
+        let activation_watchtower_summary_trace =
+            tool_runtime.invoke_with_events(&activation_watchtower_summary_request);
+        assert!(activation_watchtower_summary_trace.result.ok);
+        assert_eq!(
+            activation_watchtower_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_watchtower_summary_output = activation_watchtower_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_watchtower_rollup =
+            field(activation_watchtower_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_watchtower_rollup, "escalation_signals").unwrap(),)
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_watchtower_rollup, "next_signal_kind"),
+            Some(&string("escalation"))
+        );
+        assert_eq!(
+            field(activation_watchtower_rollup, "next_section_kind"),
+            Some(&string("blockers"))
+        );
+        assert_eq!(
+            field(activation_watchtower_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_watchtower_rollup, "needs_escalation"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -24235,6 +24906,14 @@ mod tests {
             activation_command_center_summary_request,
             activation_command_center_summary_trace,
         );
+        journal.record_trace(
+            list_activation_watchtower_request,
+            list_activation_watchtower_trace,
+        );
+        journal.record_trace(
+            activation_watchtower_summary_request,
+            activation_watchtower_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -24308,9 +24987,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 103);
-        assert_eq!(journal_summary.completed_count, 103);
-        assert_eq!(journal.audit_records().len(), 103);
+        assert_eq!(journal_summary.invocation_count, 105);
+        assert_eq!(journal_summary.completed_count, 105);
+        assert_eq!(journal.audit_records().len(), 105);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
