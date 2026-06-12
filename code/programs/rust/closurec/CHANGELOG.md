@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.94.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-084** — a nested double- (or deeper) paren around a
+  var-init RHS now fully strips, matching upstream Closure: `((a))` →
+  `a`, `(((a)))` → `a`, `((a+b))` → `a+b`.
+  `minify_double_paren_varinit` is now enforced.
+
+### Changed — gap-053 var-init paren elision now runs to a fixpoint
+
+The gap-053 elision strips only the OUTERMOST `=(…)` layer per pass
+and then advances past it, so `((a))` peeled to `(a)` and stopped —
+one layer short of upstream. Wrapping the whole pass in a **fixpoint
+loop** (repeat until an iteration drops nothing) peels every redundant
+layer while the existing top-level-comma guard still halts at the
+load-bearing layer:
+
+  ((a))   -> (a)   -> a
+  (((a))) -> ((a)) -> (a) -> a
+  ((a+b)) -> (a+b) -> a+b          (each layer is the whole RHS)
+  ((a,b)) -> (a,b)                 (inner comma operator — kept)
+
+Termination is guaranteed: each iteration removes ≥2 tokens or makes
+no change and breaks. **Deferred (valid, not byte-identical):**
+`((a))+b` → upstream `a+b` (gap-053 never fires when the RHS is not
+*just* the parens) and `if((a))b();` → `if(a)b();` (different anchor).
+2 new `gap084_*` unit tests + the enforced byte-identity fixture.
+
 ## [0.93.0] - 2026-06-12
 
 ### Changed

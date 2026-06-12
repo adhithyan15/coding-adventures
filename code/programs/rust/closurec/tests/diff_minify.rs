@@ -109,11 +109,12 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
-    // gap-084 (CLOC14.38): nested double-paren around a var-init RHS
-    // fully strips — `((a))` → `a` (gap-062 collapses `((a))`→`(a)`
-    // but the exposed `(a)` is not re-elided by gap-053). Composition
-    // / re-run gap.
-    ("double_paren_varinit", "gap-084: nested double-paren full strip"),
+    // gap-084 RESOLVED in CLOC12.90 — a nested double-paren around a
+    // var-init RHS (`((a))` → `a`, `(((a)))` → `a`, `((a+b))` →
+    // `a+b`) now fully strips: the gap-053 var-init elision runs to a
+    // FIXPOINT, peeling every redundant layer while the
+    // top-level-comma guard still halts at `((a,b))` → `(a,b)`.
+    // `minify_double_paren_varinit` enforced.
     // gap-077 RESOLVED in CLOC12.88 — a binary operator's
     // parenthesised ATOMIC LEFT operand (`(a)+b` → `a+b`, `(a)*b` →
     // `a*b`) now elides via a new left-operand pre-pass — the mirror

@@ -256,14 +256,30 @@ pub fn whitespace_only_minify(
             }
         }
     }
-    // gap-053: paren elision around var-init RHS.
+    // gap-053 + gap-084: paren elision around var-init RHS, to a
+    // FIXPOINT.
     // Pattern: `= ( ... ) ;` or `= ( ... ) ,` where the
     // contents inside `(...)` have no top-level `,` (would
     // be a comma operator that would change to multiple
     // declarators if parens dropped) and don't start with
     // `function` (could be IIFE — keeping conservative).
     // Drop both the `(` and the matching `)`.
-    {
+    //
+    // gap-084 (the FIXPOINT): one pass only strips the OUTERMOST
+    // layer of a `=(…)` RHS — `var x=((a));` becomes `var x=(a);`
+    // and the exposed `(a)` is never revisited (the inner loop
+    // already advanced past `close_idx`). Upstream fully strips
+    // `((a))` → `a`. Running this elision repeatedly until a whole
+    // pass drops nothing peels every redundant layer:
+    //   ((a))   -> (a)   -> a
+    //   (((a))) -> ((a)) -> (a) -> a
+    //   ((a+b)) -> (a+b) -> a+b   (each layer is the whole RHS)
+    // while the top-level-comma guard still halts at the meaningful
+    // layer:  ((a,b)) -> (a,b)  (the inner `(a,b)` is a comma
+    // operator — its single paren layer is load-bearing and stays).
+    // Each iteration removes ≥2 tokens or makes no change and
+    // breaks, so the loop always terminates.
+    loop {
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 2 < kept.len() {
@@ -310,6 +326,9 @@ pub fn whitespace_only_minify(
                 }
             }
             i += 1;
+        }
+        if drops.is_empty() {
+            break;
         }
         drops.sort_unstable();
         for &drop_idx in drops.iter().rev() {
@@ -5783,6 +5802,29 @@ mod tests {
     #[test]
     fn gap062_single_paren_unchanged() {
         assert_eq!(minify("var x=(a+b)*c;"), "var x=(a+b)*c;");
+    }
+
+    // ---- gap-084: nested double-paren var-init full strip -----
+
+    /// gap-084: the gap-053 var-init elision runs to a FIXPOINT, so a
+    /// nested double (or deeper) paren around a whole RHS strips every
+    /// redundant layer — `((a))` → `a`, `(((a)))` → `a`, `((a+b))` →
+    /// `a+b` (each layer is the whole RHS).
+    #[test]
+    fn gap084_nested_double_paren_varinit_fully_strips() {
+        assert_eq!(minify("var x=((a));"), "var x=a;");
+        assert_eq!(minify("var x=(((a)));"), "var x=a;");
+        assert_eq!(minify("var x=((a+b));"), "var x=a+b;");
+        assert_eq!(minify("x=((a));"), "x=a;");
+    }
+
+    /// gap-084 SAFETY: the top-level-comma guard still halts the
+    /// fixpoint at the load-bearing layer — `((a,b))` keeps ONE paren
+    /// (`(a,b)` is a comma operator; a bare `a,b` RHS would become two
+    /// declarators). Matches the JAR.
+    #[test]
+    fn gap084_comma_operator_keeps_one_layer() {
+        assert_eq!(minify("var x=((a,b));"), "var x=(a,b);");
     }
 
     /// **Non-regression**: `new Foo() + 1` — `+` binds
