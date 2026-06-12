@@ -75,6 +75,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationPlaybookStep` and
   `IntegrationActivationPlaybookSummary` for pairing forecast next actions with
   recommended planning views and operator-readiness flags.
+- `IntegrationActivationOperatorTask` and
+  `IntegrationActivationOperatorTaskSummary` for turning playbook steps into
+  actionable human/operator queue rows.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
