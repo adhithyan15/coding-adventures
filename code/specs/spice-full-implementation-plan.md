@@ -15,14 +15,13 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Distortion and pole-zero named-corner parity in Python and TypeScript.
+1. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
    - Status: in progress.
-   - Rust already exposes `distortion_from_transient_corners`,
-     `CornerDistortionResult`, `format_corner_distortion_table`,
-     `pole_zero_corners`, `CornerPoleZeroResult`, `PoleZeroTopology`, and
-     `format_corner_pole_zero_table`.
-   - Python and TypeScript need matching result shapes, named-corner wrappers,
-     named-corner table helpers, changelog entries, and parity tests.
+   - Python, Rust, and TypeScript should expose matching plan builders and
+     execution helpers that run parsed `.op`, `.dc`, `.ac dec` / `.ac log`, and
+     `.tran` cards against the parsed circuit in deck order.
+   - The slice deliberately leaves `.measure`, `.save`, `.probe`, `.control`,
+     and non-log AC sweep execution to later backlog items.
 
 ## Completed Slices
 
@@ -50,6 +49,15 @@ downstream tools to compare.
    - Python and TypeScript now expose matching result shapes, named-corner
      Fourier wrappers, named-corner table helpers, changelog entries, and parity
      tests.
+
+4. Distortion and pole-zero named-corner parity in Python and TypeScript.
+   - Status: completed in PR 5417.
+   - Rust already exposes `distortion_from_transient_corners`,
+     `CornerDistortionResult`, `format_corner_distortion_table`,
+     `pole_zero_corners`, `CornerPoleZeroResult`, `PoleZeroTopology`, and
+     `format_corner_pole_zero_table`.
+   - Python and TypeScript now expose matching result shapes, named-corner
+     wrappers, named-corner table helpers, changelog entries, and parity tests.
 
 ## Backlog
 
@@ -110,11 +118,10 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Distortion/pole-zero corner audit and parity closure.
-2. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
-3. `.measure`, `.save`, and `.probe` output selection.
-4. Sparse solver productionization and convergence diagnostics.
-5. Device model audit fixtures and model-card alias compatibility.
-6. Mixed-signal hardware VM bridge.
-7. Verilog-A/custom-model foothold.
-8. Compatibility corpus and release readiness.
+1. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
+2. `.measure`, `.save`, and `.probe` output selection.
+3. Sparse solver productionization and convergence diagnostics.
+4. Device model audit fixtures and model-card alias compatibility.
+5. Mixed-signal hardware VM bridge.
+6. Verilog-A/custom-model foothold.
+7. Compatibility corpus and release readiness.

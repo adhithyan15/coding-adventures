@@ -48,7 +48,9 @@ from spice_netlist_parser import (
     TfAnalysis,
     TranAnalysis,
     __version__,
+    build_analysis_plan,
     parse_netlist,
+    run_netlist,
 )
 from spice_netlist_parser.parser import parse_value
 
@@ -80,6 +82,43 @@ R2 mid 0 1k
     result = dc_op(parsed.circuit)
     assert result.converged
     assert isclose(result.node_voltages["mid"], 5.0, abs_tol=1e-9)
+
+
+def test_builds_and_runs_core_analysis_plan() -> None:
+    deck = """
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.options method=trap
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"""
+    parsed = parse_netlist(deck)
+
+    plan = parsed.analysis_plan()
+    assert plan == build_analysis_plan(parsed)
+    assert [(step.index, step.kind) for step in plan] == [
+        (1, "op"),
+        (2, "dc"),
+        (3, "ac"),
+        (4, "tran"),
+    ]
+
+    results = parsed.run_analysis_plan()
+    assert [result.kind for result in results] == ["op", "dc", "ac", "tran"]
+    assert isclose(results[0].result.node_voltages["out"], 0.5, abs_tol=1e-9)
+    assert len(results[1].result.points) == 3
+    assert isclose(results[1].result.points[-1].node_voltages["out"], 0.5, abs_tol=1e-9)
+    assert len(results[2].result.points) == 1
+    assert abs(results[2].result.points[0].node_voltages["out"]) > 0.0
+    assert results[3].result.method == "trap"
+    assert results[3].result.points[-1].node_voltages["out"] > 0.0
+
+    assert len(run_netlist(deck)) == 4
 
 
 def test_parse_reactive_elements_and_analysis_cards() -> None:

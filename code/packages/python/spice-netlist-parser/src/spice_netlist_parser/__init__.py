@@ -2,6 +2,10 @@
 
 from spice_netlist_parser.parser import (
     AcAnalysis,
+    AnalysisExecutionResult,
+    AnalysisKind,
+    AnalysisPlanStep,
+    AnalysisResult,
     DcAnalysis,
     DistortionAnalysis,
     FourAnalysis,
@@ -22,7 +26,10 @@ from spice_netlist_parser.parser import (
     TfAnalysis,
     TranAnalysis,
     TransientMethod,
+    build_analysis_plan,
     parse_netlist,
+    run_analysis_plan,
+    run_netlist,
 )
 
 parse = parse_netlist
@@ -30,6 +37,10 @@ __version__ = "0.3.0"
 
 __all__ = [
     "AcAnalysis",
+    "AnalysisExecutionResult",
+    "AnalysisKind",
+    "AnalysisPlanStep",
+    "AnalysisResult",
     "DcAnalysis",
     "DistortionAnalysis",
     "FourAnalysis",
@@ -51,6 +62,9 @@ __all__ = [
     "TranAnalysis",
     "TransientMethod",
     "__version__",
+    "build_analysis_plan",
     "parse",
     "parse_netlist",
+    "run_analysis_plan",
+    "run_netlist",
 ]

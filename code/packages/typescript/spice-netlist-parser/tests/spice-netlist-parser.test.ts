@@ -10,8 +10,10 @@ import {
 import { describe, expect, it } from "vitest";
 import {
   NetlistParseError,
+  buildAnalysisPlan,
   parseNetlist,
   parseValue,
+  runNetlist,
 } from "../src/index.js";
 
 describe("parseNetlist", () => {
@@ -35,6 +37,53 @@ R2 mid 0 1k
 
     const result = dcOp(parsed.circuit);
     expect(result.voltage("mid")).toBeCloseTo(5.0, 9);
+  });
+
+  it("builds and runs core analysis plans", () => {
+    const deck = `
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.options method=trap
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+`;
+    const parsed = parseNetlist(deck);
+
+    const plan = parsed.analysisPlan();
+    expect(plan).toEqual(buildAnalysisPlan(parsed));
+    expect(plan.map((step) => [step.index, step.kind])).toEqual([
+      [1, "op"],
+      [2, "dc"],
+      [3, "ac"],
+      [4, "tran"],
+    ]);
+
+    const results = parsed.runAnalysisPlan();
+    expect(results.map((result) => result.kind)).toEqual(["op", "dc", "ac", "tran"]);
+    expect((results[0].result as { voltage(node: string): number | undefined }).voltage("out"))
+      .toBeCloseTo(0.5, 9);
+    const dcPoints = results[1].result as readonly {
+      result: { voltage(node: string): number | undefined };
+    }[];
+    expect(dcPoints).toHaveLength(3);
+    expect(dcPoints.at(-1)?.result.voltage("out")).toBeCloseTo(0.5, 9);
+    const acPoints = results[2].result as readonly {
+      voltage(node: string): { real: number; imag: number } | undefined;
+    }[];
+    expect(acPoints).toHaveLength(1);
+    expect(acPoints[0].voltage("out")?.real ?? 0.0).toBeGreaterThan(0.0);
+    const transientPoints = results[3].result as readonly {
+      voltage(node: string): number | undefined;
+    }[];
+    expect(transientPoints).toHaveLength(1);
+    expect(transientPoints[0].voltage("out")).toBeGreaterThan(0.0);
+
+    expect(runNetlist(deck)).toHaveLength(4);
   });
 
   it("parses reactive elements, VCCS, source waveforms, and analysis cards", () => {

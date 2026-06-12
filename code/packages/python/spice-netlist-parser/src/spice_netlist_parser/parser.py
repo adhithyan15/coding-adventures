@@ -10,28 +10,36 @@ from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
-    AcSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcResult,
+    AcSource,
     Capacitor,
     Circuit,
     CurrentSource,
+    DcResult,
+    DcSweepResult,
     Diode,
     ExpWaveform,
     Inductor,
-    JFET,
     Mosfet,
     MutualInductor,
     PulseWaveform,
     PwlWaveform,
     Resistor,
     SinWaveform,
+    TransientResult,
     TransmissionLine,
     VoltageSource,
     Waveform,
+    ac_sweep,
+    dc_op,
+    dc_sweep,
+    transient,
 )
 
 
@@ -197,6 +205,28 @@ type Analysis = (
     | PoleZeroAnalysis
     | OptionsAnalysis
 )
+type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
+type AnalysisKind = Literal["op", "tran", "dc", "ac"]
+type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisPlanStep:
+    """One executable `.op`, `.dc`, `.ac`, or `.tran` card in deck order."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisExecutionResult:
+    """Result from executing one analysis-plan step."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+    result: AnalysisResult
 
 
 @dataclass(frozen=True, slots=True)
@@ -396,6 +426,19 @@ class ParsedNetlist:
             default=default,
         )
 
+    def analysis_plan(self) -> list[AnalysisPlanStep]:
+        """Return runnable `.op`, `.dc`, `.ac`, and `.tran` cards in deck order."""
+
+        return build_analysis_plan(self)
+
+    def run_analysis_plan(
+        self,
+        plan: list[AnalysisPlanStep] | None = None,
+    ) -> list[AnalysisExecutionResult]:
+        """Execute runnable analysis cards against this parsed circuit."""
+
+        return run_analysis_plan(self, plan)
+
 
 _VALUE_RE = re.compile(
     r"^\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)([a-zA-Zµ]*)\s*$"
@@ -527,6 +570,40 @@ def parse_netlist(text: str) -> ParsedNetlist:
     return parsed
 
 
+def build_analysis_plan(parsed: ParsedNetlist) -> list[AnalysisPlanStep]:
+    """Build the executable `.op`, `.dc`, `.ac`, and `.tran` plan for a deck."""
+
+    plan: list[AnalysisPlanStep] = []
+    for index, analysis in enumerate(parsed.analyses):
+        step = _analysis_plan_step(index, analysis)
+        if step is not None:
+            plan.append(step)
+    return plan
+
+
+def run_analysis_plan(
+    parsed: ParsedNetlist,
+    plan: list[AnalysisPlanStep] | None = None,
+) -> list[AnalysisExecutionResult]:
+    """Execute the runnable plan for a parsed netlist."""
+
+    return [
+        AnalysisExecutionResult(
+            index=step.index,
+            kind=step.kind,
+            analysis=step.analysis,
+            result=_execute_analysis_step(parsed, step),
+        )
+        for step in (build_analysis_plan(parsed) if plan is None else plan)
+    ]
+
+
+def run_netlist(text: str) -> list[AnalysisExecutionResult]:
+    """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, and `.tran` cards."""
+
+    return run_analysis_plan(parse_netlist(text))
+
+
 def parse_value(token: str) -> float:
     """Parse a SPICE numeric token with an engineering suffix."""
 
@@ -537,6 +614,63 @@ def parse_value(token: str) -> float:
     if suffix not in _SUFFIXES:
         raise NetlistParseError(f"unsupported numeric suffix {match.group(2)!r}")
     return float(match.group(1)) * _SUFFIXES[suffix]
+
+
+def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | None:
+    if isinstance(analysis, OpAnalysis):
+        return AnalysisPlanStep(index=index, kind="op", analysis=analysis)
+    if isinstance(analysis, TranAnalysis):
+        return AnalysisPlanStep(index=index, kind="tran", analysis=analysis)
+    if isinstance(analysis, DcAnalysis):
+        return AnalysisPlanStep(index=index, kind="dc", analysis=analysis)
+    if isinstance(analysis, AcAnalysis):
+        return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
+    return None
+
+
+def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> AnalysisResult:
+    analysis = step.analysis
+    if isinstance(analysis, OpAnalysis):
+        return dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+    if isinstance(analysis, DcAnalysis):
+        dc_kwargs = parsed.dc_op_kwargs()
+        sweep_kwargs = {
+            key: dc_kwargs[key] for key in ("max_iterations", "tol") if key in dc_kwargs
+        }
+        return dc_sweep(
+            parsed.circuit,
+            analysis.source_name,
+            analysis.start,
+            analysis.stop,
+            analysis.step,
+            **sweep_kwargs,
+        )
+    if isinstance(analysis, AcAnalysis):
+        return ac_sweep(
+            parsed.circuit,
+            f_start=analysis.start_hz,
+            f_stop=analysis.stop_hz,
+            n_points=analysis.points,
+            sweep=_ac_sweep_mode(analysis),
+        )
+    if isinstance(analysis, TranAnalysis):
+        transient_kwargs = parsed.transient_kwargs(analysis)
+        transient_kwargs.setdefault("method", "euler")
+        return transient(
+            parsed.circuit,
+            t_step=analysis.t_step,
+            t_stop=analysis.t_stop,
+            **transient_kwargs,
+        )
+    raise NetlistParseError(f"analysis card at index {step.index} is not executable")
+
+
+def _ac_sweep_mode(analysis: AcAnalysis) -> Literal["log", "lin"]:
+    if analysis.mode in ("dec", "log"):
+        return "log"
+    raise NetlistParseError(
+        f".ac mode {analysis.mode!r} is not executable; supported modes are 'dec' and 'log'"
+    )
 
 
 def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
