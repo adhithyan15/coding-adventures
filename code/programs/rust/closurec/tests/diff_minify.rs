@@ -114,12 +114,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
-    // gap-086 (CLOC14.39): redundant parens around a CALL ARGUMENT —
-    // `f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`, `f((a),(b))` →
-    // `f(a,b)`. Must KEEP a comma-operator argument (`f((a,b))` stays,
-    // else it splits into two args). Mirror of the operand-paren
-    // pre-passes, anchored on `(`/`,` inside a call's argument list.
-    ("call_arg_paren", "gap-086: call-argument paren elision"),
+    // gap-086 RESOLVED in CLOC12.93 — redundant parens around a whole
+    // CALL ARGUMENT (`f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`,
+    // `f((a),(b))` → `f(a,b)`) now elide via a call-open-anchored
+    // arg-list walk. The one load-bearing case `f((a,b))` (a single
+    // comma-operator argument) is preserved by a top-level-comma guard.
+    // `minify_call_arg_paren` enforced; `minify_call_arg_comma_keep`
+    // guards the comma exception.
     // gap-087 RESOLVED in CLOC12.92 — a paren wrapping the WHOLE index
     // of a computed-member subscript (`a[(b)]` → `a[b]`, `a[(b+c)]` →
     // `a[b+c]`, `a[(b,c)]` → `a[b,c]`, `a[b[(c)]]` → `a[b[c]]`) now
