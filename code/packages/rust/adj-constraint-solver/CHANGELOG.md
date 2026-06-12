@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.7.0] - 2026-06-12 — minimal infeasibility certificate (IIS) (ADJ constraints track E1)
+
+### Changed
+
+- **`Unsat { core }` / `Infeasible { core }` now carry a MINIMAL infeasible
+  subset (an IIS)** — the irreducible set of constraints in conflict, such that
+  removing any one makes the rest feasible — instead of the full constraint set.
+  This is the machine-checked "*these* clauses contradict", the certificate that
+  localizes a golden-rulebook bug to the exact conflicting constraints.
+- Computed by a **deletion filter** (`minimal_unsat_core`): walk the constraints;
+  if dropping one leaves a still-infeasible set, it is redundant and removed
+  permanently — O(n) feasibility checks, each reusing the existing two-layer
+  decider (`subset_is_unsat`: exact integer LIA, then real Fourier–Motzkin).
+  Conservative on `Unknown` subsets (keeps the constraint), so the core is always
+  a valid infeasible set; for the linear systems here it is exactly minimal.
+- `check` and `optimize` both emit the minimal core. +5 tests (irrelevant
+  constraints excluded, an all-needed 3-way conflict, a lone self-contradiction,
+  an infeasible LP core).
+
 ## [0.6.0] - 2026-06-11 — linear optimization (`minimize`/`maximize`) via FM projection (ADJ constraints track C2)
 
 ### Added
