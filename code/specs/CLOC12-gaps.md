@@ -563,6 +563,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-074 — loop-body single-statement block flatten
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_loop_body_flatten` ignored.
-- **Input:** `l:for(;;){continue l}` → **Upstream:** `l:for(;;)continue l;`
-- **What it needs:** When a loop body (`for`/`while`/`for-in`/`for-of`) is a single-statement block, flatten `for(…){S}` → `for(…)S`. Sibling of gap-067 (labeled-block flatten) but in a loop-body context — same single-statement + declaration-guard + synthetic-`;` machinery applies.
+- **Status:** RESOLVED in CLOC12.81. `minify_loop_body_flatten` enforced.
+- **Input:** `l:for(;;){continue l}` → **Upstream:** `l:for(;;)continue l;` (also `for(;;){break}`, `while(x){g()}`, `for(a in o){h(a)}`, `for(a of o){h(a)}`).
+- **What it needed:** When a loop body (`for`/`while`/`for-in`/`for-of`) is a single-statement block, flatten `for(…){S}` → `for(…)S;`. Loop-body sibling of gap-067 (labeled-block flatten).
+- **CLOC12.81 resolution:** A pre-pass anchored on a `for`/`while` STATEMENT keyword (word-like, NOT a property — a `.`/`?.` look-behind disqualifies `o.while(x){…}` method calls). The header `(…)` is matched by a structural depth scan; the token after `)` must be a `{`. A `{` immediately following a loop header is UNAMBIGUOUSLY a loop body — never an object literal — so (unlike gap-067) no completion-keyword guard is needed. The body is dropped-braces + a synthetic `;` (reusing gap-067's `synth_semi`). Scoped to the provably-safe slice: the body has NO nested `{`, NO control-flow keyword at depth 1, and EXACTLY ZERO top-level `;` (a single un-terminated statement). Bodies that already end in `;` are left to the gap-032 emit-time flatten; multi-statement (`{a();b()}`), empty (`{}`), and nested-control-flow (`for(;;){if(x)a()}`) bodies keep their braces (deferred). Also deferred: `if`-body and `do…while`-body flatten (different anchors). 5 unit tests + the byte-identity fixture.

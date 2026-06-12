@@ -1228,6 +1228,159 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-074: loop-body single-statement block flatten ------
+    // `for(...){S}` / `while(...){S}` whose body `{S}` is a SINGLE
+    // statement with NO trailing `;` → `for(...)S;`. Loop-body
+    // sibling of gap-067 (which flattens a *labeled* block).
+    //
+    //   l:for(;;){continue l}  →  l:for(;;)continue l;
+    //   for(;;){break}         →  for(;;)break;
+    //   while(x){g()}          →  while(x)g();
+    //   for(a in o){h(a)}      →  for(a in o)h(a);
+    //
+    // The `{` immediately following a `for(...)`/`while(...)` header
+    // is UNAMBIGUOUSLY a loop body — never an object literal — so
+    // (unlike gap-067) no completion-keyword guard is needed. The
+    // body is dropped braces + a synthetic `;` terminator.
+    //
+    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`):
+    //   - anchor on a `for`/`while` STATEMENT keyword (word-like,
+    //     and NOT a property — `o.while(x){…}` is a method call, so
+    //     a `.`/`?.` look-behind disqualifies it);
+    //   - the keyword's `(`…`)` header is matched by a structural
+    //     depth scan, and the token AFTER `)` must be a `{`;
+    //   - the body has NO nested `{` and NO control-flow keyword at
+    //     depth 1, and EXACTLY ZERO top-level `;` (i.e. a single,
+    //     un-terminated statement). Bodies that already end in `;`
+    //     are left to the gap-032 emit-time flatten; multi-statement
+    //     bodies (`{a();b()}`) and empty bodies (`{}`) are untouched.
+    //
+    // All bracket checks route through `is_structural_punct`, so a
+    // literal `"{"`/`")"` can never be mistaken for a delimiter.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            let is_loop_kw = is_word_like(&kept[i])
+                && matches!(kept[i].value.as_str(), "for" | "while");
+            let is_property = i >= 1
+                && (is_structural_punct(&kept[i - 1], ".")
+                    || is_structural_punct(&kept[i - 1], "?."));
+            if !(is_loop_kw
+                && !is_property
+                && is_structural_punct(&kept[i + 1], "("))
+            {
+                i += 1;
+                continue;
+            }
+            // Match the header `(` … `)`.
+            let mut depth: i32 = 1;
+            let mut header_close: Option<usize> = None;
+            let mut j = i + 2;
+            while j < kept.len() {
+                let t = &kept[j];
+                if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                    || is_structural_punct(t, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(t, ")") {
+                    depth -= 1;
+                    if depth == 0 {
+                        header_close = Some(j);
+                        break;
+                    }
+                } else if is_structural_punct(t, "]")
+                    || is_structural_punct(t, "}")
+                {
+                    depth -= 1;
+                }
+                j += 1;
+            }
+            let Some(hc) = header_close else {
+                i += 1;
+                continue;
+            };
+            // The body must be a `{` immediately after the header.
+            let body_open = hc + 1;
+            if body_open >= kept.len()
+                || !is_structural_punct(&kept[body_open], "{")
+            {
+                i += 1;
+                continue;
+            }
+            // Scan the body to its matching `}`, gathering
+            // eligibility info (no nested brace, no blocking
+            // keyword, zero top-level `;`).
+            let mut bdepth: i32 = 1;
+            let mut body_close: Option<usize> = None;
+            let mut has_nested_brace = false;
+            let mut has_blocking_keyword = false;
+            let mut top_semis: u32 = 0;
+            let mut k = body_open + 1;
+            while k < kept.len() {
+                let t = &kept[k];
+                if is_structural_punct(t, "{") {
+                    has_nested_brace = true;
+                    bdepth += 1;
+                } else if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                {
+                    bdepth += 1;
+                } else if is_structural_punct(t, "}") {
+                    bdepth -= 1;
+                    if bdepth == 0 {
+                        body_close = Some(k);
+                        break;
+                    }
+                } else if is_structural_punct(t, ")")
+                    || is_structural_punct(t, "]")
+                {
+                    bdepth -= 1;
+                } else if bdepth == 1 {
+                    if is_structural_punct(t, ";") {
+                        top_semis += 1;
+                    } else if is_word_like(t)
+                        && matches!(
+                            t.value.as_str(),
+                            "function"
+                                | "try"
+                                | "if"
+                                | "while"
+                                | "for"
+                                | "do"
+                                | "switch"
+                                | "class"
+                        )
+                    {
+                        has_blocking_keyword = true;
+                    }
+                }
+                k += 1;
+            }
+            if let Some(bc) = body_close {
+                let non_empty = bc > body_open + 1;
+                if non_empty
+                    && !has_nested_brace
+                    && !has_blocking_keyword
+                    && top_semis == 0
+                {
+                    if let Some(semi) = synth_semi.as_ref() {
+                        drops.push(body_open); // loop-body `{`
+                        kept[bc] = semi; // `}` → synthetic `;`
+                        i = bc + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -4346,6 +4499,40 @@ mod tests {
     #[test]
     fn gap067_ternary_not_flattened() {
         assert_eq!(minify("a?b:{c};"), "a?b:{c};");
+    }
+
+    // ---- gap-074: loop-body single-statement block flatten ----
+
+    /// gap-074: a `for`/`while` body that is a single un-terminated
+    /// statement drops its braces; a synthetic `;` terminates it.
+    #[test]
+    fn gap074_loop_body_flattens() {
+        assert_eq!(minify("l:for(;;){continue l}"), "l:for(;;)continue l;");
+        assert_eq!(minify("for(;;){break}"), "for(;;)break;");
+        assert_eq!(minify("while(x){g()}"), "while(x)g();");
+        assert_eq!(minify("for(a in o){h(a)}"), "for(a in o)h(a);");
+        assert_eq!(minify("for(a of o){h(a)}"), "for(a of o)h(a);");
+    }
+
+    /// gap-074 boundary: a MULTI-statement loop body keeps braces.
+    #[test]
+    fn gap074_multi_statement_keeps_braces() {
+        assert_eq!(minify("for(;;){a();b()}"), "for(;;){a();b()};");
+    }
+
+    /// gap-074 SAFETY: a PROPERTY method named `while`/`for`
+    /// (`o.while(x){…}`) is a method call, NOT a loop — its block
+    /// must not be flattened.
+    #[test]
+    fn gap074_property_method_not_flattened() {
+        assert_eq!(minify("o.while(x){f()}"), "o.while(x){f()};");
+    }
+
+    /// gap-074 conservative deferral: a body containing a nested
+    /// control-flow keyword keeps its braces (left for follow-up).
+    #[test]
+    fn gap074_nested_control_flow_kept() {
+        assert_eq!(minify("for(;;){if(x)a()}"), "for(;;){if(x)a()};");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
