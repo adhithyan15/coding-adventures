@@ -96,6 +96,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-077 (CLOC14.37): LEFT-operand grouping paren elision —
+    // `(a)+b` → `a+b`. The mirror of gap-075's right-operand pass.
+    ("left_operand_paren", "gap-077: binary left-operand paren elision"),
+    // gap-078 (CLOC14.37): binary comparison/logical RIGHT-operand
+    // paren elision — `a==(b)` → `a==b`, `a||(b)` → `a||b`. Extends
+    // gap-075 (`-`/`+`) to the remaining binary operators.
+    ("eq_operand_paren", "gap-078: binary comparison/logical right-operand paren elision"),
+    // gap-079 (CLOC14.37): `if`-body single-statement flatten —
+    // `if(x){y()}` → `if(x)y();`. The `if` sibling of gap-074/076.
+    ("if_body_flatten", "gap-079: if-body single-statement block flatten"),
+    // gap-080 (CLOC14.37): `else`-body single-statement flatten —
+    // `if(x)a();else{b()}` → `if(x)a();else b()`.
+    ("else_body_flatten", "gap-080: else-body single-statement block flatten"),
     // gap-075 RESOLVED in CLOC12.84 — a prefix-unary SYMBOL operator
     // operand's grouping parens (`-(a)` → `-a`, `!(a)` → `!a`,
     // `~(a)` → `~a`, `-(-a)` → `- -a`) now elide;

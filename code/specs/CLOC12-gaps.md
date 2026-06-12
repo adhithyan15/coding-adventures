@@ -588,3 +588,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `with(o){a()}` → **Upstream:** `with(o)a();`
 - **What it needed:** When a `with` statement's body is a single un-terminated statement, flatten `with(o){S}` → `with(o)S;`. The `with`-body sibling of gap-074 (for/while loop-body flatten) — `with` has the same `keyword (…) {body}` shape, and a `{` immediately after the `with(…)` header is unambiguously the body.
 - **CLOC12.83 resolution:** Added `with` to the gap-074 pre-pass anchor keyword set (`for`/`while`/`with`). The identical single-statement / property-guard (`o.with(x){…}` is left alone) / synthetic-`;` machinery applies unchanged; multi-statement bodies (`with(o){a();b()}`) keep their braces. Verified against the JAR. (`with` is sloppy-mode-only, but valid input the WHITESPACE_ONLY pipeline must round-trip.) **Residual:** a `with` body that ALREADY ends in `;` (`with(o){a();}`) is not yet flattened — the gap-032 emit-time flatten sets `body_position_next` after `for`/`while` headers but not after `with(…)`; deferred (the gap-076 fixture is the no-trailing-`;` form). 2 unit tests + the byte-identity fixture.
+
+### gap-077 — binary LEFT-operand grouping paren elision
+
+- **Status:** OPEN (discovered CLOC14.37). `minify_left_operand_paren` ignored.
+- **Input:** `var x=(a)+b;` → **Upstream:** `var x=a+b;` (also `(a)*b` → `a*b`).
+- **What it needs:** The LEFT-hand mirror of gap-075. gap-075 strips a redundant grouping paren around the RIGHT operand of a binary operator (`a-(b)` → `a-b`); upstream also strips it around the LEFT operand when that operand is a simple reference (`(a)+b` → `a+b`). closurec currently leaves the left `(a)` in place. Needs a pre-pass that, on seeing a structural `(` whose matching `)` is immediately followed by a binary operator, checks the parenthesised span with `is_safe_unary_paren_operand` and drops both parens. Hazard to respect: precedence — `(a+b)*c` must NOT lose its parens; only a *self-delimiting* operand (single ref / member chain / leading prefix-unary chain) is safe.
+
+### gap-078 — binary comparison/logical RIGHT-operand paren elision
+
+- **Status:** OPEN (discovered CLOC14.37). `minify_eq_operand_paren` ignored.
+- **Input:** `var x=a==(b);` → **Upstream:** `var x=a==b;` (also `a!=(b)` → `a!=b`, `a<(b)` → `a<b`, `a||(b)` → `a||b`, `a&&(b)` → `a&&b`).
+- **What it needs:** gap-075's right-operand pre-pass is anchored only on the SYMBOL set `-`/`+`/`!`/`~`. Upstream applies the same right-operand grouping-paren elision to the remaining binary operators — comparison (`==`/`!=`/`===`/`!==`/`<`/`>`/`<=`/`>=`), logical (`&&`/`||`/`??`), and arithmetic (`*`/`/`/`%`). Extend the anchor set (or generalise to "any binary operator token") while keeping the `is_safe_unary_paren_operand` operand guard so operator operands (`a==(b+c)`) stay parenthesised.
+
+### gap-079 — `if`-body single-statement block flatten
+
+- **Status:** OPEN (discovered CLOC14.37). `minify_if_body_flatten` ignored.
+- **Input:** `if(x){y()}` → **Upstream:** `if(x)y();`
+- **What it needs:** The `if`-statement sibling of gap-074/076 (for/while/with loop-body flatten). When an `if` consequent is a single un-terminated statement block, flatten `if(…){S}` → `if(…)S;`. The anchor differs from gap-074: an `if` may be followed by an `else`, so the flatten must NOT strip braces when doing so would attach a trailing `else` to the wrong `if` (the dangling-else hazard) — guard accordingly, or restrict to the no-`else` form first.
+
+### gap-080 — `else`-body single-statement block flatten
+
+- **Status:** OPEN (discovered CLOC14.37). `minify_else_body_flatten` ignored.
+- **Input:** `if(x)a();else{b()}` → **Upstream:** `if(x)a();else b()` (note: no trailing `;` — `else b()` then EOF).
+- **What it needs:** The `else`-arm counterpart of gap-079. When an `else` body is a single-statement block, flatten `else{S}` → `else S`. Anchor on the `else` keyword followed by `{`; an `else`-body `{` is unambiguously the alternate (never an object literal). The trailing-`;` behaviour matches the surrounding statement context (here EOF → no synthetic `;`).
