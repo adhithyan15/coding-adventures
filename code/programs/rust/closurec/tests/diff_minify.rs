@@ -90,6 +90,26 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
+    // gap-069 (CLOC14.35): `new` directly followed by a `(`
+    // grouping paren needs a separating space — `new(a+b)` →
+    // `new (a+b)` (emit-adjacency, both keep the parens).
+    ("new_paren_space", "gap-069: `new(` needs a space → `new (`"),
+    // gap-070/071/072 (CLOC14.35): prefix-operator OPERAND paren
+    // elision — strip redundant parens around a simple-reference
+    // operand. `typeof`/`void` already do this; `delete`,
+    // `instanceof`, `await` do not yet.
+    ("delete_paren_elide", "gap-070: delete operand paren elision"),
+    ("instanceof_paren",   "gap-071: instanceof operand paren elision"),
+    ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-073 (CLOC14.35): a `get`/`set` accessor before a
+    // COMPUTED key `[k]` needs a separating space — `get[k]` →
+    // `get [k]` (else it re-lexes as a member access).
+    ("get_computed_space", "gap-073: `get[`/`set[` needs a space → `get [`"),
+    // gap-074 (CLOC14.35): a loop body that is a single-statement
+    // block flattens — `for(;;){continue l}` → `for(;;)continue
+    // l;`. Sibling of gap-067 (labeled-block) in a loop-body
+    // context.
+    ("loop_body_flatten", "gap-074: loop-body single-statement block flatten"),
     // gap-067 RESOLVED in CLOC12.77 — a labeled single-statement
     // block (`label:{break label}` → `label:break label;`) now
     // flattens; `minify_label_block_flatten` enforced.
