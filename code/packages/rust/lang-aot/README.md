@@ -135,10 +135,11 @@ Brainfuck (tape ops) is the only WASM follow-up. The **JVM** column runs on **re
 (exit code) and Dartmouth BASIC (stdout — `run_jvm` compiles an `env.BasicRuntime` host
 class with `javac` and discards the entry result); Brainfuck (tape ops) is the only JVM
 follow-up. The **CLR** column runs on the **real CoreCLR** (textual `.il` → `ilasm` →
-`dotnet`, the CLR-real path) and is green for the expression languages Twig / Nib / Oct /
-ALGOL 60 (this needed `iir-to-cil-bytecode` to grow integer arithmetic + comparison
-opcodes); BASIC (a `Console`-writing `print_i64`) and Brainfuck (tape ops) are its
-follow-ups. The VM/JIT columns are McCarthy-specialized and need op-coverage work.
+`dotnet`, the CLR-real path) and is green for Twig / Nib / Oct / ALGOL 60 (exit code —
+this needed `iir-to-cil-bytecode` to grow integer arithmetic + comparison opcodes) and
+Dartmouth BASIC (stdout — `print_i64` → `Console.WriteLine(int32)` with an I/O-aware
+launcher that discards the entry result); Brainfuck (tape ops) is the only CLR follow-up.
+The VM/JIT columns are McCarthy-specialized and need op-coverage work.
 
 ## Stack position
 

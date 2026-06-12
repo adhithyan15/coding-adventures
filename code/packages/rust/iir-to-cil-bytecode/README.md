@@ -130,6 +130,11 @@ and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with
 rows above — previously only the binary codegen path emitted them, which is why running
 the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
 
+As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
+as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that
+prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
+`Console.WriteLine`-ing it, so the program prints exactly once.
+
 ## How CIL synthesis works for derived operations
 
 CIL lacks native opcodes for some logical operations, so we synthesize them

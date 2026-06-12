@@ -265,16 +265,32 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
         emit_method(&mut il, module, f, asm)?;
     }
 
-    // Launcher: `Console.WriteLine(MccarthyEntry())` so the result is observable by
-    // running the assembly (matches how the BEAM/JVM e2e runners read a printout).
+    // Launcher. For an **expression** program the result is the program — so we
+    // `Console.WriteLine(MccarthyEntry())` to make it observable by running the
+    // assembly (matches how the BEAM/JVM e2e runners read a printout). For an **I/O**
+    // program (one that calls `print_i64` — Dartmouth BASIC's `PRINT`) the program has
+    // already written its own output as a side effect inside `MccarthyEntry`, so the
+    // launcher merely runs it and **discards** the (unused) `int32` return with `pop`,
+    // rather than printing it a second time. (The entry's CIL return type is always
+    // `int32`, so the `call`/`pop` are well-typed either way.)
+    let prints = module.functions.iter().any(|f| {
+        f.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "print_i64")
+        })
+    });
     let _ = writeln!(il, "  .method public static void Run() cil managed {{");
     let _ = writeln!(il, "    .entrypoint");
     let _ = writeln!(il, "    .maxstack 1");
     let _ = writeln!(il, "    call int32 {asm}Program::MccarthyEntry()");
-    let _ = writeln!(
-        il,
-        "    call void [System.Console]System.Console::WriteLine(int32)"
-    );
+    if prints {
+        let _ = writeln!(il, "    pop");
+    } else {
+        let _ = writeln!(
+            il,
+            "    call void [System.Console]System.Console::WriteLine(int32)"
+        );
+    }
     let _ = writeln!(il, "    ret");
     let _ = writeln!(il, "  }}");
     let _ = writeln!(il, "}}");
@@ -572,17 +588,34 @@ fn emit_method(
             }
             // ── McCarthy predicate primitives (call_builtin) ──────────────────
             //
-            // | builtin  | CIL |
-            // |----------|-----|
-            // | `pair?`  | `ld x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
-            // | `not`    | `ld x; ldc.i4.1; xor` |
-            // | `equal?` | `ld a; unbox.any int32; ld b; unbox.any int32; ceq` |
+            // | builtin     | CIL |
+            // |-------------|-----|
+            // | `pair?`     | `ld x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
+            // | `not`       | `ld x; ldc.i4.1; xor` |
+            // | `equal?`    | `ld a; unbox.any int32; ld b; unbox.any int32; ceq` |
+            // | `print_i64` | `ld val; call void Console::WriteLine(int32)`  (no dest) |
             "call_builtin" => {
+                let builtin = var_src(f, instr, 0, "call_builtin")?;
+                // `print_i64` is the I/O primitive Dartmouth BASIC's `PRINT` lowers to.
+                // Unlike the predicate builtins it has **no dest** (it's a side effect),
+                // so handle it before the dest lookup. The value is loaded and handed to
+                // `System.Console.WriteLine(int32)` — the CLR analogue of the wasm
+                // `env.__print_i64` host import / JVM `env.BasicRuntime.println(J)V`.
+                // (Scalar concretization has lowered the value to `int32`, and
+                // `Console.WriteLine` has an `int32` overload, so no `conv.i8` is needed.)
+                if builtin == "print_i64" {
+                    let val = var_src(f, instr, 1, "print_i64")?;
+                    load_var(il, &regs, val)?;
+                    let _ = writeln!(
+                        il,
+                        "    call void [System.Console]System.Console::WriteLine(int32)"
+                    );
+                    continue;
+                }
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "call_builtin must have a dest".to_string(),
                 })?;
-                let builtin = var_src(f, instr, 0, "call_builtin")?;
                 match builtin {
                     "pair?" => {
                         let arg = var_src(f, instr, 1, "pair?")?;
@@ -777,6 +810,40 @@ mod tests {
                 "op {op:?} must emit a bare `{cil}` instruction; got:\n{il}"
             );
         }
+    }
+
+    #[test]
+    fn print_i64_emits_console_writeline_and_discards_result() {
+        // A printing program: `print_i64(7); ret 0` — BASIC's `PRINT 7` shape.
+        let instrs = vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("print_i64".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        // The value is written via Console.WriteLine(int32) inside the entry method…
+        assert!(
+            il.contains("call void [System.Console]System.Console::WriteLine(int32)"),
+            "print_i64 must call Console.WriteLine(int32); got:\n{il}"
+        );
+        // …and the launcher must DISCARD (pop) the entry's result, not re-print it:
+        // for a printing program there is exactly one WriteLine and a `pop`.
+        assert_eq!(
+            il.matches("System.Console::WriteLine(int32)").count(),
+            1,
+            "a printing program prints exactly once (no double-print); got:\n{il}"
+        );
+        let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
+        assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
     }
 
     #[test]

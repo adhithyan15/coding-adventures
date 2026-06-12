@@ -29,11 +29,12 @@
 //!   output (Dartmouth BASIC, whose `print_i64` lowers to `env/BasicRuntime.println`).
 //!   Green for all five non-Brainfuck languages; Brainfuck pends the tape ops.
 //! * **CLR** (Phase C) — source → textual `.il` (`iir-to-cil-bytecode`) → real `ilasm`
-//!   → real `dotnet`, the CLR-real path. The entry `Console.WriteLine`s its `int`
-//!   result, which the harness parses. Green for the expression languages Twig / Nib /
-//!   Oct / ALGOL 60 (this needed the CIL backend to grow integer arithmetic + the
-//!   comparison opcodes — McCarthy only ever emitted a constant). Dartmouth BASIC pends
-//!   a `Console`-writing `print_i64`; Brainfuck the tape ops.
+//!   → real `dotnet`, the CLR-real path. An expression program's entry
+//!   `Console.WriteLine`s its `int` result (parsed); Dartmouth BASIC's `PRINT` lowers
+//!   to `Console.WriteLine(int32)` and the launcher discards (not re-prints) the entry
+//!   result, so the harness captures `Console`. Green for Twig / Nib / Oct / ALGOL 60
+//!   (this needed the CIL backend to grow integer arithmetic + the comparison opcodes)
+//!   and Dartmouth BASIC; Brainfuck pends the tape ops.
 //!
 //! The remaining work is the Deferred items — Brainfuck-on-LLVM/WASM/JVM/CLR, and the
 //! McCarthy-specialized VM and JIT (op-coverage work). See
@@ -148,13 +149,15 @@ const PROGRAMS: &[Prog] = &[
     // `PrintHost` resolves that import and captures the printed value (LM-W BASIC). On
     // JVM `print_i64` lowers to `invokestatic env/BasicRuntime.println(J)V`; `run_jvm`
     // compiles that host class with `javac`, discards the entry result, and captures
-    // `System.out` (LM-J BASIC).
+    // `System.out` (LM-J BASIC). On CLR `print_i64` lowers to `Console.WriteLine(int32)`
+    // and the launcher discards (rather than re-prints) the entry result; `run_clr`
+    // captures `Console` (LM-C BASIC).
     Prog {
         lang: Language::DartmouthBasic,
         ext: "bas",
         src: "10 PRINT 42\n20 END\n",
         expect: Expect::Stdout("42"),
-        backends: &[NativeAot, Llvm, Wasm, Jvm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
 ];
 
@@ -664,10 +667,13 @@ fn run_clr(p: &Prog) -> Option<(Option<i32>, String)> {
     if !out.status.success() {
         return None;
     }
-    // The entry `Console.WriteLine`d its `int` result; parse it as the program's
-    // value (matching the exit-code convention of the other columns).
+    // Whatever the program wrote to `Console`: for an expression language that's the
+    // launcher's `Console.WriteLine` of the entry's `int` result (parsed as the value,
+    // matching the exit-code convention); for an I/O language (Dartmouth BASIC) it's
+    // the `PRINT` output captured directly. Return both — `assert_cell` picks the one
+    // the program's `Expect` cares about.
     let printed = String::from_utf8_lossy(&out.stdout).trim().to_string();
-    Some((printed.parse::<i32>().ok(), String::new()))
+    Some((printed.parse::<i32>().ok(), printed))
 }
 
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
