@@ -75,17 +75,16 @@ use Backend::{Llvm, NativeAot, Wasm};
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
     Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm] },
-    // Nib — typed functions: define `double`, call it, return the result.
-    // (LLVM cell greened in LM-L Nib: the Nib frontend now materialises its integer
-    // types to `i64` uniformly. WASM pends a follow-up: the *const literal* `21` still
-    // emits `i32` while the now-i64 param wants i64 — `iir-to-wasm` is stricter than
-    // LLVM about it, which calls through the param type and tolerates the mismatch.)
+    // Nib — typed functions: define `double`, call it, return the result. Greened on
+    // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
+    // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
+    // `21` matches the `i64` parameter the strict WASM backend expects.
     Prog {
         lang: Language::Nib,
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm],
+        backends: &[NativeAot, Llvm, Wasm],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {

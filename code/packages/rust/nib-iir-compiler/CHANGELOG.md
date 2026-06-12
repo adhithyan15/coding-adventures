@@ -1,5 +1,24 @@
 # Changelog — `nib-iir-compiler`
 
+## 0.8.0 — 2026-06-11 — finish the i64 materialization (const literals + call results) (LANG-MATRIX LM-W Nib)
+
+Completes the integer-type materialization started in 0.7.0. That release fixed
+`widen_nib_type` (function signatures / `let` types) but left **`nib_ty_str`** — which
+types const literals, `ret` values, and call results — emitting the narrow `"u8"`, and
+the const-emit path's *fallback* (for an integer literal the type-checker didn't
+annotate) was hard-coded `"u8"`. So a bare literal argument like `double(21)` emitted a
+`u8` (→ `i32`) const into an `i64` parameter. The LLVM backend tolerated this (its call
+site uses the callee's parameter type), but the **strict WASM backend trapped**:
+`type mismatch: expected i64, got I32(21)`.
+
+Both `nib_ty_str` (`u4`/`u8`/`bcd` → `i64`) and the un-annotated-literal fallback
+(`"u8"` → `"i64"`) now materialise integers as `i64`, so the whole Nib IIR is uniformly
+`i64` for integers — const literals, `let`s, arithmetic, `ret`, calls, and signatures
+all agree. Verified by RUNNING: Nib `double(21)` → 42 on WASM (previously a trap), still
+→ 42 on LLVM and native AOT (no regression); all nib-iir-compiler (28),
+`iir-to-wasm` (46), and `iir-to-llvm` (102) tests green. Narrow semantic width remains a
+deferred backend-masking concern.
+
 ## 0.7.0 — 2026-06-11 — materialise integer types to i64 uniformly (LANG-MATRIX LM-L Nib)
 
 Fixes a type-**inconsistency** in the emitted IIR that a strict backend (`iir-to-llvm`)
