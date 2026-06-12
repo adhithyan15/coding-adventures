@@ -34,6 +34,7 @@ from spice_netlist_parser import (
     DistortionAnalysis,
     FourAnalysis,
     McAnalysis,
+    MeasureAnalysis,
     ModelCard,
     NetlistParseError,
     NoiseAnalysis,
@@ -43,6 +44,8 @@ from spice_netlist_parser import (
     PlotAnalysis,
     PoleZeroAnalysis,
     PrintAnalysis,
+    ProbeAnalysis,
+    SaveAnalysis,
     SensAnalysis,
     TempAnalysis,
     TfAnalysis,
@@ -335,11 +338,86 @@ def test_parse_print_and_plot_output_cards() -> None:
     assert parsed.plot_cards() == [parsed.analyses[1]]
 
 
+def test_parse_save_probe_and_measure_cards() -> None:
+    parsed = parse_netlist(
+        """
+.save V(out) I(Vin)
+.probe tran V(out)
+.measure tran peak MAX V(out) FROM=0 TO=1m
+"""
+    )
+
+    assert parsed.analyses == [
+        SaveAnalysis(
+            (
+                OutputProbe("voltage", "out"),
+                OutputProbe("current", "Vin"),
+            )
+        ),
+        ProbeAnalysis("tran", (OutputProbe("voltage", "out"),)),
+        MeasureAnalysis(
+            "tran",
+            "peak",
+            "max",
+            OutputProbe("voltage", "out"),
+            start=0.0,
+            stop=1.0e-3,
+        ),
+    ]
+    assert parsed.save_cards() == [parsed.analyses[0]]
+    assert parsed.probe_cards() == [parsed.analyses[1]]
+    assert parsed.measure_cards() == [parsed.analyses[2]]
+
+
 def test_output_cards_reject_missing_or_unknown_probes() -> None:
     with pytest.raises(NetlistParseError, match=r"\.print expects at least 3 fields"):
         parse_netlist(".print tran")
     with pytest.raises(NetlistParseError, match=r"\.plot probe must be V\(node\) or I\(source\)"):
         parse_netlist(".plot tran P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.save probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".save P(out)")
+    with pytest.raises(NetlistParseError, match=r"\.probe probe must be V\(node\) or I\(source\)"):
+        parse_netlist(".probe tran")
+    with pytest.raises(NetlistParseError, match=r"\.measure FIND requires AT=<value>"):
+        parse_netlist(".measure tran final FIND V(out)")
+    with pytest.raises(NetlistParseError, match=r"\.measure operation must be FIND"):
+        parse_netlist(".measure tran peak PEAK V(out) AT=1m")
+
+
+def test_select_outputs_and_measure_results_from_analysis_plan() -> None:
+    deck = """
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.save V(out)
+.print dc V(in)
+.probe tran I(V1)
+.measure dc half FIND V(out) AT=1
+.measure tran final FIND V(out) AT=1m
+.measure tran average AVG V(out)
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"""
+    parsed = parse_netlist(deck)
+    results = parsed.run_analysis_plan()
+
+    outputs = parsed.select_outputs(results)
+    assert [output.kind for output in outputs] == ["op", "dc", "ac", "tran"]
+    assert isclose(outputs[0].rows[0].values["V(out)"], 0.5, abs_tol=1e-9)
+    assert list(outputs[1].rows[-1].values) == ["V(out)", "V(in)"]
+    assert isclose(outputs[1].rows[-1].values["V(in)"], 1.0, abs_tol=1e-9)
+    assert isinstance(outputs[2].rows[0].values["V(out)"], complex)
+    assert "I(V1)" in outputs[3].rows[-1].values
+
+    measures = parsed.measure_results(results)
+    assert [measure.name for measure in measures] == ["half", "final", "average"]
+    assert isclose(measures[0].value, 0.5, abs_tol=1e-9)
+    assert isclose(measures[1].value, outputs[3].rows[-1].values["V(out)"], abs_tol=1e-9)
+    assert 0.0 < measures[2].value <= outputs[3].rows[-1].values["V(out)"]
 
 
 def test_parse_four_analysis_card() -> None:

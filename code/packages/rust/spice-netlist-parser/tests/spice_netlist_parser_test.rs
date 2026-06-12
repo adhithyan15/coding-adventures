@@ -5,9 +5,9 @@ use spice_engine::{
 use spice_netlist_parser::{
     build_analysis_plan, parse_netlist, parse_value, run_netlist, AcAnalysis, Analysis,
     AnalysisKind, AnalysisResult, DcAnalysis, DistortionAnalysis, FourAnalysis, McAnalysis,
-    NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue, OutputProbe, PlotAnalysis,
-    PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, SensAnalysis, TempAnalysis, TfAnalysis,
-    TranAnalysis,
+    MeasureAnalysis, MeasureOperation, NetlistParseError, NoiseAnalysis, OpAnalysis, OptionValue,
+    OutputProbe, PlotAnalysis, PoleZeroAnalysis, PoleZeroKind, PrintAnalysis, ProbeAnalysis,
+    SaveAnalysis, SelectedOutputValue, SensAnalysis, TempAnalysis, TfAnalysis, TranAnalysis,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -15,6 +15,13 @@ fn assert_close(actual: f64, expected: f64) {
         (actual - expected).abs() < 1.0e-9,
         "expected {expected}, got {actual}"
     );
+}
+
+fn selected_real(value: &SelectedOutputValue) -> f64 {
+    match value {
+        SelectedOutputValue::Real(value) => *value,
+        SelectedOutputValue::Complex(_) => panic!("expected real selected output value"),
+    }
 }
 
 #[test]
@@ -427,6 +434,54 @@ fn parses_print_and_plot_output_cards() {
 }
 
 #[test]
+fn parses_save_probe_and_measure_cards() {
+    let parsed = parse_netlist(
+        r#"
+.save V(out) I(Vin)
+.probe tran V(out)
+.measure tran peak MAX V(out) FROM=0 TO=1m
+"#,
+    )
+    .unwrap();
+
+    assert_eq!(
+        parsed.analyses,
+        vec![
+            Analysis::Save(SaveAnalysis {
+                probes: vec![
+                    OutputProbe::Voltage {
+                        node: "out".to_string()
+                    },
+                    OutputProbe::Current {
+                        source_name: "Vin".to_string()
+                    },
+                ],
+            }),
+            Analysis::Probe(ProbeAnalysis {
+                analysis: Some("tran".to_string()),
+                probes: vec![OutputProbe::Voltage {
+                    node: "out".to_string()
+                }],
+            }),
+            Analysis::Measure(MeasureAnalysis {
+                analysis: "tran".to_string(),
+                name: "peak".to_string(),
+                operation: MeasureOperation::Max,
+                probe: OutputProbe::Voltage {
+                    node: "out".to_string()
+                },
+                at: None,
+                start: Some(0.0),
+                stop: Some(1.0e-3),
+            }),
+        ]
+    );
+    assert!(matches!(parsed.save_cards().as_slice(), [_]));
+    assert!(matches!(parsed.probe_cards().as_slice(), [_]));
+    assert!(matches!(parsed.measure_cards().as_slice(), [_]));
+}
+
+#[test]
 fn rejects_output_cards_with_missing_or_unknown_probes() {
     let missing_error = parse_netlist(".print tran").unwrap_err();
     assert!(missing_error
@@ -437,6 +492,96 @@ fn rejects_output_cards_with_missing_or_unknown_probes() {
     assert!(probe_error
         .to_string()
         .contains(".plot probe must be V(node) or I(source)"));
+
+    let save_error = parse_netlist(".save P(out)").unwrap_err();
+    assert!(save_error
+        .to_string()
+        .contains(".save probe must be V(node) or I(source)"));
+
+    let probe_error = parse_netlist(".probe tran").unwrap_err();
+    assert!(probe_error
+        .to_string()
+        .contains(".probe probe must be V(node) or I(source)"));
+
+    let measure_at_error = parse_netlist(".measure tran final FIND V(out)").unwrap_err();
+    assert!(measure_at_error
+        .to_string()
+        .contains(".measure FIND requires AT=<value>"));
+
+    let measure_operation_error =
+        parse_netlist(".measure tran peak PEAK V(out) AT=1m").unwrap_err();
+    assert!(measure_operation_error
+        .to_string()
+        .contains(".measure operation must be FIND"));
+}
+
+#[test]
+fn selects_outputs_and_evaluates_measure_results_from_analysis_plan() {
+    let deck = r#"
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+C1 out 0 1u IC=0
+.save V(out)
+.print dc V(in)
+.probe tran I(V1)
+.measure dc half FIND V(out) AT=1
+.measure tran final FIND V(out) AT=1m
+.measure tran average AVG V(out)
+.op
+.dc V1 0 1 0.5
+.ac dec 1 1k 1k
+.tran 1m 1m
+.end
+"#;
+    let parsed = parse_netlist(deck).unwrap();
+    let results = parsed.run_analysis_plan().unwrap();
+
+    let outputs = parsed.select_outputs(&results).unwrap();
+    assert_eq!(
+        outputs.iter().map(|output| output.kind).collect::<Vec<_>>(),
+        vec![
+            AnalysisKind::Op,
+            AnalysisKind::Dc,
+            AnalysisKind::Ac,
+            AnalysisKind::Tran,
+        ]
+    );
+    assert_close(
+        selected_real(outputs[0].rows[0].values.get("V(out)").unwrap()),
+        0.5,
+    );
+    assert_close(
+        selected_real(outputs[1].rows.last().unwrap().values.get("V(in)").unwrap()),
+        1.0,
+    );
+    assert!(matches!(
+        outputs[2].rows[0].values.get("V(out)").unwrap(),
+        SelectedOutputValue::Complex(_)
+    ));
+    assert!(outputs[3].rows.last().unwrap().values.contains_key("I(V1)"));
+
+    let measures = parsed.measure_results(&results).unwrap();
+    assert_eq!(
+        measures
+            .iter()
+            .map(|measure| measure.name.as_str())
+            .collect::<Vec<_>>(),
+        vec!["half", "final", "average"]
+    );
+    assert_close(measures[0].value, 0.5);
+    let final_voltage = selected_real(
+        outputs[3]
+            .rows
+            .last()
+            .unwrap()
+            .values
+            .get("V(out)")
+            .unwrap(),
+    );
+    assert_close(measures[1].value, final_voltage);
+    assert!(measures[2].value > 0.0);
+    assert!(measures[2].value <= final_voltage);
 }
 
 #[test]
