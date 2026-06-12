@@ -1,36 +1,37 @@
 use coding_adventures_html_parser::{
     parse_browser_document, BrowserActivationDescriptor, BrowserAnchor,
     BrowserAnimationInteractionDescriptor, BrowserAriaCollection, BrowserAriaCollectionItem,
-    BrowserAriaLiveRegion, BrowserAriaRange, BrowserAriaRelationDescriptor,
-    BrowserClipboardInteractionDescriptor, BrowserCommandElement, BrowserComponentHydrationTarget,
-    BrowserCompositionInteractionDescriptor, BrowserContextMenuInteractionDescriptor,
-    BrowserDataAttribute, BrowserDataAttributeDescriptor, BrowserDatalistOption, BrowserDisclosure,
-    BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
-    BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
-    BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormAssociationDescriptor,
-    BrowserFormAutofillDescriptor, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
-    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
-    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
-    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor, BrowserFormSelect,
-    BrowserFormSubmissionDescriptor, BrowserFormSubmitter, BrowserFormSuccessfulControl,
-    BrowserFormTextEntry, BrowserFormValidationControl, BrowserFormValidationDescriptor,
-    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
-    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
-    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
-    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
-    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
-    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
-    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
-    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
-    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
-    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserAriaLiveRegion, BrowserAriaNameDescriptor, BrowserAriaRange,
+    BrowserAriaRelationDescriptor, BrowserClipboardInteractionDescriptor, BrowserCommandElement,
+    BrowserComponentHydrationTarget, BrowserCompositionInteractionDescriptor,
+    BrowserContextMenuInteractionDescriptor, BrowserDataAttribute, BrowserDataAttributeDescriptor,
+    BrowserDatalistOption, BrowserDisclosure, BrowserDisclosureStateDescriptor, BrowserDocument,
+    BrowserDocumentMetadata, BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor,
+    BrowserEmbeddedContext, BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor,
+    BrowserFetchPolicyDescriptor, BrowserFocusNavigationDescriptor, BrowserForm,
+    BrowserFormAssociationDescriptor, BrowserFormAutofillDescriptor, BrowserFormButton,
+    BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset,
+    BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel,
+    BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput,
+    BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor,
+    BrowserFormSelect, BrowserFormSubmissionDescriptor, BrowserFormSubmitter,
+    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
+    BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
+    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
+    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
+    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
+    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
+    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
+    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
+    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
+    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -142,6 +143,8 @@ struct ExpectedBrowserDocument {
     aria_ranges: Vec<ExpectedAriaRange>,
     #[serde(default)]
     aria_live_regions: Vec<ExpectedAriaLiveRegion>,
+    #[serde(default)]
+    aria_name_descriptors: Option<Vec<ExpectedAriaNameDescriptor>>,
     #[serde(default)]
     aria_relation_descriptors: Vec<ExpectedAriaRelationDescriptor>,
     links: Vec<ExpectedLink>,
@@ -502,6 +505,39 @@ struct ExpectedAriaRelationDescriptor {
     relation_blocked: bool,
     #[serde(default)]
     relation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedAriaNameDescriptor {
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    role: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    labelledby_text: Vec<String>,
+    #[serde(default)]
+    name_source: String,
+    #[serde(default)]
+    name_attribute_names: Vec<String>,
+    #[serde(default)]
+    name_attribute_count: usize,
+    #[serde(default)]
+    label_target_count: usize,
+    #[serde(default)]
+    unresolved_label_targets: Vec<String>,
+    #[serde(default)]
+    name_blocked: bool,
+    #[serde(default)]
+    name_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4002,10 +4038,14 @@ fn browser_readiness_cases_extract_browser_document_facts() {
     for case in suite.cases {
         let actual = parse_browser_document(&case.input)
             .unwrap_or_else(|error| panic!("{} should parse: {error}", case.id));
+        let tracks_aria_name_descriptors = case.expected.aria_name_descriptors.is_some();
+        let mut expected = case.expected.into_browser_document();
+        if !tracks_aria_name_descriptors {
+            expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
+        }
 
         assert_eq!(
-            actual,
-            case.expected.into_browser_document(),
+            actual, expected,
             "{} extracted browser facts should match",
             case.id
         );
@@ -6009,6 +6049,55 @@ fn browser_aria_relation_descriptors_track_unresolved_idrefs() {
 }
 
 #[test]
+fn browser_aria_name_descriptors_track_label_sources_and_resolution() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "aria-name-descriptor-page")
+        .expect("ARIA name fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("ARIA name fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.aria_name_descriptors,
+        case.expected.into_browser_document().aria_name_descriptors,
+        "ARIA name descriptors should preserve name sources, resolved label text, and unresolved label diagnostics",
+    );
+}
+
+#[test]
+fn browser_aria_name_descriptors_track_unresolved_labelledby_targets() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <button id=save aria-labelledby="save-label missing">Save</button>
+            <span id=save-label>Save changes</span>
+        </body>"#,
+    )
+    .expect("ARIA name unresolved-id fixture should parse");
+
+    let name = actual
+        .aria_name_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("save"))
+        .expect("save button name descriptor should be present");
+
+    assert_eq!(name.role, "control");
+    assert_eq!(name.accessible_name.as_deref(), Some("Save changes"));
+    assert_eq!(name.aria_labelledby, vec!["save-label", "missing"]);
+    assert_eq!(name.labelledby_text, vec!["Save changes"]);
+    assert_eq!(name.name_source, "aria-labelledby");
+    assert_eq!(name.name_attribute_names, vec!["aria-labelledby"]);
+    assert_eq!(name.name_attribute_count, 1);
+    assert_eq!(name.label_target_count, 2);
+    assert_eq!(name.unresolved_label_targets, vec!["missing"]);
+    assert!(name.name_blocked);
+    assert_eq!(name.name_block_reasons, vec!["unresolved-idref"]);
+}
+
+#[test]
 fn browser_disclosure_descriptor_metadata_tracks_details_and_dialogs() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -6790,6 +6879,12 @@ impl ExpectedBrowserDocument {
                 .aria_live_regions
                 .into_iter()
                 .map(ExpectedAriaLiveRegion::into_browser_aria_live_region)
+                .collect(),
+            aria_name_descriptors: self
+                .aria_name_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedAriaNameDescriptor::into_browser_aria_name_descriptor)
                 .collect(),
             aria_relation_descriptors: self
                 .aria_relation_descriptors
@@ -13479,6 +13574,28 @@ impl ExpectedAriaRelationDescriptor {
             unresolved_relation_targets: self.unresolved_relation_targets,
             relation_blocked: self.relation_blocked,
             relation_block_reasons: self.relation_block_reasons,
+        }
+    }
+}
+
+impl ExpectedAriaNameDescriptor {
+    fn into_browser_aria_name_descriptor(self) -> BrowserAriaNameDescriptor {
+        BrowserAriaNameDescriptor {
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            labelledby_text: self.labelledby_text,
+            name_source: self.name_source,
+            name_attribute_names: self.name_attribute_names,
+            name_attribute_count: self.name_attribute_count,
+            label_target_count: self.label_target_count,
+            unresolved_label_targets: self.unresolved_label_targets,
+            name_blocked: self.name_blocked,
+            name_block_reasons: self.name_block_reasons,
         }
     }
 }
