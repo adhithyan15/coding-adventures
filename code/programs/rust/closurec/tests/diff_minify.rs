@@ -90,11 +90,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-071/072 (CLOC14.35): prefix/binary-operator OPERAND
-    // paren elision — strip redundant parens around a simple-
-    // reference operand. `typeof`/`void`/`delete` (gap-070, closed
-    // in CLOC12.79) do this; `instanceof`, `await` do not yet.
-    ("instanceof_paren",   "gap-071: instanceof operand paren elision"),
+    // gap-072 (CLOC14.35): `await` OPERAND paren elision — strip
+    // redundant parens around a simple-reference operand.
+    // `typeof`/`void`/`delete` (gap-070, CLOC12.79) and
+    // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
+    // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
     // gap-074 RESOLVED in CLOC12.81 — a loop body that is a
     // single-statement block (`for(;;){continue l}` →

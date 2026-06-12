@@ -358,10 +358,22 @@ pub fn whitespace_only_minify(
         while i + 1 < kept.len() {
             // The keyword must be a real word-like token (never a
             // string literal `"delete"` whose `.value` matches).
+            //
+            // gap-071: `instanceof` joins the set. It is a BINARY
+            // operator (`a instanceof(B)`), but the right-operand
+            // paren elision is mechanically identical to the prefix
+            // unary cases — the left operand sits at `kept[i-1]` and
+            // is irrelevant to whether the RIGHT operand's grouping
+            // parens are redundant. `instanceof` binds looser than
+            // member access, so `a instanceof(B.c)` ≡ `a instanceof
+            // B.c` and whatever follows the close paren re-associates
+            // identically (same as the unary cases). The property
+            // guard below also covers `o.instanceof(x)` — a property
+            // access whose call parens must be preserved.
             let is_unary_kw = is_word_like(kept[i])
                 && matches!(
                     kept[i].value.as_str(),
-                    "void" | "typeof" | "delete"
+                    "void" | "typeof" | "delete" | "instanceof"
                 );
             // Property guard: skip `o.delete(`, `o?.typeof(`, …
             let is_property = i >= 1
@@ -4432,6 +4444,42 @@ mod tests {
         assert_eq!(minify("delete(a);"), "delete a;");
         assert_eq!(minify("typeof(x);"), "typeof x;");
         assert_eq!(minify("void(0);"), "void 0;");
+    }
+
+    // ---- gap-071: instanceof right-operand paren elision ----
+
+    /// gap-071: `instanceof` followed by a parenthesised simple
+    /// reference (single token or member chain) drops the parens.
+    #[test]
+    fn gap071_instanceof_operand_elided() {
+        assert_eq!(minify("var x=a instanceof(B);"), "var x=a instanceof B;");
+        assert_eq!(
+            minify("var x=a instanceof(b.c);"),
+            "var x=a instanceof b.c;"
+        );
+        assert_eq!(
+            minify("var x=a instanceof(b[c]);"),
+            "var x=a instanceof b[c];"
+        );
+    }
+
+    /// gap-071 boundary: an operand containing a top-level binary
+    /// operator keeps its parens — `a instanceof(B||C)` ≠
+    /// `a instanceof B||C`.
+    #[test]
+    fn gap071_operator_operand_kept() {
+        assert_eq!(
+            minify("var x=a instanceof(B||C);"),
+            "var x=a instanceof(B||C);"
+        );
+    }
+
+    /// gap-071 SAFETY: a PROPERTY named `instanceof`
+    /// (`o.instanceof(x)`) is a method call, NOT the operator — its
+    /// call parens must be preserved.
+    #[test]
+    fn gap071_property_instanceof_not_elided() {
+        assert_eq!(minify("o.instanceof(x);"), "o.instanceof(x);");
     }
 
     // ---- gap-073: get/set computed-key separating space ----

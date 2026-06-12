@@ -548,11 +548,18 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **CLOC12.79 resolution:** The existing gap-054 pre-pass (which handled `void`/`typeof`/`delete` for a single safe token) was generalised. The operand check now accepts a **member-reference chain** — an identifier base followed by any run of `.name` / `?.name` / `[…]` accessors with no top-level operator, call, or comma — via the new `is_safe_unary_operand` helper. Both shapes are higher-precedence than the unary operator and self-delimiting, so the parens are pure grouping (`OP(REF)` ≡ `OP REF`). The matching close paren is found by a structural depth scan rather than the old fixed `i+3` offset.
 - **Correctness fix bundled in:** the pre-pass previously lacked a PROPERTY GUARD, so `o.delete(a)` (a Map/Set `.delete()` method call) mis-emitted as the **invalid** `o.delete a`. A `.`/`?.` look-behind now skips property-named keywords (`o.delete(`, `o.typeof(`, …). The same generalisation also closes `typeof(a.b)` / `void(a.b)` against the JAR. 4 unit tests + the byte-identity fixture.
 
-### gap-071 / gap-072 — instanceof / await operand paren elision
+### gap-071 — instanceof right-operand paren elision
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_instanceof_paren` / `minify_await_paren_elide` ignored.
-- **Inputs:** `a instanceof(B)` → `a instanceof B`; `await(x)` → `await x`.
-- **What it needs:** Same simple-reference operand paren elision as gap-070, but for the binary-RHS `instanceof` operator and the `await` unary operator. Deferred to follow-up PRs (different anchor positions — `instanceof` has a left operand; `await` is async-context-only).
+- **Status:** RESOLVED in CLOC12.82. `minify_instanceof_paren` enforced.
+- **Input:** `a instanceof(B)` → `a instanceof B` (also `a instanceof(b.c)`, `a instanceof(b[c])`).
+- **What it needed:** Strip the redundant grouping parens around the RIGHT operand of the binary `instanceof` operator when the operand is a simple reference (single token or member chain).
+- **CLOC12.82 resolution:** `instanceof` was added to the gap-054/070 unary-keyword paren-elision pre-pass keyword set (`void`/`typeof`/`delete`/`instanceof`). Although `instanceof` is a *binary* operator, the right-operand elision is mechanically identical to the prefix-unary cases — the left operand sits at `kept[i-1]` and is irrelevant to whether the right operand's grouping parens are redundant. `instanceof` binds looser than member access, so `a instanceof(B.c)` ≡ `a instanceof B.c` and whatever follows the close paren re-associates identically. The existing `is_safe_unary_operand` check (single token or member-reference chain) and property guard apply unchanged: operator operands (`a instanceof(B||C)`) keep their parens, and `o.instanceof(x)` (a property method call — `instanceof` reserved word as a property name) is skipped. 3 unit tests + the byte-identity fixture.
+
+### gap-072 — await operand paren elision
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_await_paren_elide` ignored.
+- **Input:** `await(x)` → `await x`.
+- **What it needs:** Same simple-reference operand paren elision as gap-070/071, but for the `await` unary operator. Deferred: `await` is async-context-only, so a naive keyword-anchored elision could mis-handle a non-async `await` used as a plain identifier (`await` is only reserved inside async functions/modules). Needs an async-context guard before it can be added to the keyword set safely.
 
 ### gap-073 — `get`/`set` before a computed key needs a space
 
