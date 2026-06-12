@@ -101,12 +101,12 @@ achievable code-gen columns land first).
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ☐  | ☐   | ✅        | ✅   | ◑    | ◑   | ◑   |
+| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ◑   | ◑   |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
-| Oct             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
-| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
+| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
+| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -158,12 +158,22 @@ slice — the loop trusts running, not this table.)
 The LLVM column is therefore green for **5 / 6** languages (Twig / Nib / Oct / ALGOL /
 BASIC); only Brainfuck is deferred.
 
-### Phase W — WASM for every language  ← NEXT
+### Phase W — WASM for every language
 
-- ☐ **LM-W** — each language on `iir-to-wasm` + `wasm-runtime` (Twig promote to full;
-  Nib/Oct/BF/BASIC/ALGOL new). I/O languages: thread stdout through the wasm runtime.
-  WASM is a general code generator (existing tests already run Twig and ALGOL
-  arithmetic on it), so expect mostly conformance + I/O wiring, like the LLVM column.
+- ✅ **LM-W expression languages (Twig / Oct / ALGOL on WASM).** Added a `Backend::Wasm`
+  runner to `lang_matrix.rs` (source → `iir-to-wasm` → the in-process `wasm-runtime`;
+  `main`'s wasm result is the exit value). Verified by RUNNING: Twig→42, Oct→0,
+  ALGOL `17 mod 5`→2. In-process, so no host gate.
+- ☐ **LM-W Nib (on WASM).** Same root family as the LLVM Nib fix but one layer
+  deeper: after `widen_nib_type`→i64 fixed signatures, the **const literal** `21` still
+  emits `i32` while the now-i64 param expects i64. `iir-to-wasm` traps
+  (`type mismatch: expected i64, got I32(21)`) where LLVM tolerated it (its call site
+  uses the param type). Fix: materialise Nib const-literal integer types to i64 too.
+- ☐ **LM-W BASIC (on WASM).** The in-process `wasm-runtime` reports `no body for
+  function 0` for BASIC — the `PRINT` env import (`__print_i64`-equivalent) isn't
+  provided to the runtime. Wire the print import + capture stdout, then assert `42`.
+- ⏸ **LM-W Brainfuck (on WASM) — DEFERRED.** `iir-to-wasm` lacks the tape ops too
+  (`UnsupportedOp: alloc_bytes`); same deferred class as Brainfuck-on-LLVM.
 
 ### Phase J — JVM for every language
 

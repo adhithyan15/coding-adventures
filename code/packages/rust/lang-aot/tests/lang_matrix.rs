@@ -14,13 +14,16 @@
 //!   Uniformly green: all six languages.
 //! * **LLVM** (Phase L) — source → textual `.ll` (`iir-to-llvm`) → real `clang` → run.
 //!   Green for Twig / Nib / Oct / ALGOL 60 (exit code) and Dartmouth BASIC (stdout —
-//!   the `.ll`'s `@__print_i64` is satisfied by a generic print runtime). Only
-//!   Brainfuck pends: `iir-to-llvm` lacks the tape ops (`alloc_bytes`/`load_byte`/
-//!   `store_byte` + `putchar`), a backend codegen slice.
+//!   the `.ll`'s `@__print_i64` is satisfied by a generic print runtime). Brainfuck
+//!   deferred (the i64-slot-model mismatch — see the spec's Deferred section).
+//! * **WASM** (Phase W) — source → wasm bytes (`iir-to-wasm`) → the in-process
+//!   `wasm-runtime`. Green for the expression languages Twig / Oct / ALGOL 60 (exit
+//!   code from `main`'s wasm result). Nib pends a const-literal type fix, BASIC the
+//!   stdout import, Brainfuck the tape ops — each its own follow-up.
 //!
-//! Later slices add the WASM / JVM / CLR columns (also general code generators) and
-//! tackle the two McCarthy-specialized backends — VM and JIT — which need
-//! arithmetic/comparison op-coverage (see `code/specs/LANG-PLATFORM-MATRIX.md`).
+//! Later slices add the JVM / CLR columns (also general code generators) and the
+//! Deferred items — Brainfuck-on-LLVM/WASM, and the McCarthy-specialized VM and JIT
+//! (op-coverage work). See `code/specs/LANG-PLATFORM-MATRIX.md`.
 //!
 //! ## Two result kinds
 //!
@@ -42,6 +45,8 @@ enum Backend {
     NativeAot,
     /// Source → textual `.ll` (`iir-to-llvm`) → real `clang` → run (Phase L).
     Llvm,
+    /// Source → wasm bytes (`iir-to-wasm`) → in-process `wasm-runtime` (Phase W).
+    Wasm,
 }
 
 /// The known, backend-independent observable result of a conformance program.
@@ -62,19 +67,19 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Llvm, NativeAot};
+use Backend::{Llvm, NativeAot, Wasm};
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm] },
     // Nib — typed functions: define `double`, call it, return the result.
     // (LLVM cell greened in LM-L Nib: the Nib frontend now materialises its integer
-    // types to `i64` uniformly — completing its own stated convention — so a
-    // function's signature and its instruction bodies agree and `iir-to-llvm` emits
-    // valid, consistent LLVM.)
+    // types to `i64` uniformly. WASM pends a follow-up: the *const literal* `21` still
+    // emits `i32` while the now-i64 param wants i64 — `iir-to-wasm` is stricter than
+    // LLVM about it, which calls through the param type and tolerates the mismatch.)
     Prog {
         lang: Language::Nib,
         ext: "nib",
@@ -88,7 +93,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "oct",
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm],
+        backends: &[NativeAot, Llvm, Wasm],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -96,7 +101,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
-        backends: &[NativeAot, Llvm],
+        backends: &[NativeAot, Llvm, Wasm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // (LLVM column pending: `iir-to-llvm` lacks the tape ops `alloc_bytes`/`load_byte`/
@@ -259,12 +264,29 @@ fn run_llvm(p: &Prog) -> Option<(Option<i32>, String)> {
     Some((out.status.code(), stdout))
 }
 
+/// WASM runner: source → wasm bytes (`iir-to-wasm`) → the in-process `wasm-runtime`.
+/// No external tool — the runtime is in-repo, so this always runs (returns `None`
+/// only when the program fails to emit or the runtime can't load it). The exit-code
+/// programs return their value as `main`'s wasm result; the I/O languages (which
+/// route output through a stdout import) get their stdout-capturing variant in a
+/// later slice, so this runner covers the expression languages only.
+fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
+    let bytes = lang_aot::compile_source_to_wasm(p.lang, p.src, "main").ok()?;
+    let rt = wasm_runtime::WasmRuntime::new();
+    let result = rt.load_and_run(&bytes, "main", &[]).ok()?;
+    // `main`'s single i64 result is the program's value (`& 0xFF` matches the exit
+    // convention the native/LLVM columns use for the same programs).
+    let code = result.first().copied().map(|v| (v as i32) & 0xFF);
+    Some((code, String::new()))
+}
+
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
 fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
     match backend {
         Backend::NativeAot => run_native(p),
         Backend::Llvm => run_llvm(p),
+        Backend::Wasm => run_wasm(p),
     }
 }
 
@@ -327,5 +349,14 @@ fn proven_columns_do_not_silently_skip() {
                 p.lang
             );
         }
+    }
+    // WASM: the runtime is in-process (always present), so every WASM-tagged program
+    // must run — no host gate.
+    for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Wasm)) {
+        assert!(
+            run_wasm(p).is_some(),
+            "in-process wasm-runtime failed to run {:?}",
+            p.lang
+        );
     }
 }
