@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.97.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-086** — a paren wrapping a whole CALL ARGUMENT now
+  elides under WHITESPACE_ONLY, matching upstream Closure:
+
+      f((a))      -> f(a)
+      f((a+b))    -> f(a+b)      (any expression — no precedence guard)
+      f((a||b))   -> f(a||b)
+      f((a),(b))  -> f(a,b)      (each argument independently)
+      f((a),b)    -> f(a,b)
+      f(g((a)))   -> f(g(a))     (nested calls)
+      a.b((c))    -> a.b(c)      (member / computed / new calls)
+      new C((a))  -> new C(a)
+
+  A new pre-pass anchors on the CALL-open paren (a `(` preceded by a
+  value-producing token), walks the argument list, and via
+  `maybe_strip_arg_paren` drops a wrapping `(`/`)` when the argument is
+  entirely parenthesised and the inner span has no top-level comma.
+  `minify_call_arg_paren` is now enforced.
+
+  **The one load-bearing case is preserved:** a single comma-operator
+  argument `f((a,b))` keeps its parens (dropping them would resplit one
+  argument into two), guarded by `minify_call_arg_comma_keep`. A
+  parenthesised arrow param list (`f((a,b)=>a)`) is also left alone (its
+  `)` is followed by `=>`, not an argument boundary). Anchoring on the
+  call open keeps array literals out of scope entirely.
+
 ## [0.96.0] - 2026-06-12
 
 ### Changed

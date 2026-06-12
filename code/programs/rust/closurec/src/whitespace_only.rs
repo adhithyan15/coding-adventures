@@ -823,6 +823,91 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-086: paren elision around a whole CALL ARGUMENT —
+    // `f((a))` → `f(a)`, `f((a+b))` → `f(a+b)`, `f((a),(b))` →
+    // `f(a,b)`, `f((a),b)` → `f(a,b)`, `f(g((a)))` → `f(g(a))`.
+    //
+    // We anchor on the CALL-OPEN paren — a `(` immediately preceded by
+    // a VALUE-producing token (a word-like name/literal, a string, or a
+    // `)`/`]`/`}` close). That is exactly the paren that opens an
+    // ARGUMENT LIST (`f(`, `a.b(`, `x[i](`, `g)(`), as opposed to a
+    // GROUPING paren (handled by gap-077 etc.). Anchoring on the call
+    // open — rather than on a bare `,`/`(` before a candidate group —
+    // keeps ARRAY LITERALS out of scope entirely: `[(a,b)]` is never
+    // reached, so its load-bearing element-paren is preserved.
+    //
+    // Walking the arg list at relative depth 1, each ARGUMENT is the
+    // token span between two boundaries (the call `(`, each depth-1
+    // `,`, the closing `)`). An argument that is ENTIRELY `( … )`
+    // (its first token is `(` whose structural match is the token just
+    // before the boundary) has that wrapping paren stripped — UNLESS
+    // the inner span contains a TOP-LEVEL COMMA. That is the one
+    // load-bearing case: `f((a,b))` is a SINGLE argument whose value is
+    // the comma-operator `a,b`; dropping the parens would resplit it
+    // into the TWO arguments `a,b`. (Precedence is irrelevant here —
+    // an argument position accepts any AssignmentExpression, so unlike
+    // the operand passes we do NOT need the atomic-operand guard;
+    // `f((a+b))` → `f(a+b)` is safe.) An arrow whose param list is
+    // parenthesised (`f((a)=>a)`) is skipped automatically: the `)` of
+    // `(a)` is followed by `=>`, not a `,`/`)` boundary.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i < kept.len() {
+            // Locate a call-open paren.
+            let is_call_open = is_structural_punct(kept[i], "(") && i > 0 && {
+                let p = kept[i - 1];
+                is_word_like(p)
+                    || is_string_literal(p)
+                    || is_structural_punct(p, ")")
+                    || is_structural_punct(p, "]")
+                    || is_structural_punct(p, "}")
+            };
+            if !is_call_open {
+                i += 1;
+                continue;
+            }
+            // Walk the argument list at relative depth 1. `arg_start`
+            // is the index of the first token of the current argument.
+            let mut depth: i32 = 1;
+            let mut arg_start = i + 1;
+            let mut j = i + 1;
+            while j < kept.len() {
+                let t = kept[j];
+                if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                    || is_structural_punct(t, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(t, ")")
+                    || is_structural_punct(t, "]")
+                    || is_structural_punct(t, "}")
+                {
+                    depth -= 1;
+                    if depth == 0 {
+                        // Call close: the final argument is
+                        // `kept[arg_start..j]`.
+                        maybe_strip_arg_paren(&kept, arg_start, j, &mut drops);
+                        break;
+                    }
+                } else if is_structural_punct(t, ",") && depth == 1 {
+                    // Argument boundary: `kept[arg_start..j]`.
+                    maybe_strip_arg_paren(&kept, arg_start, j, &mut drops);
+                    arg_start = j + 1;
+                }
+                j += 1;
+            }
+            // Continue the OUTER scan from the next token; nested calls
+            // are reached as their own call-open anchors.
+            i += 1;
+        }
+        drops.sort_unstable();
+        drops.dedup();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-055: paren elision around a *whole-arm* sub-
     // expression that follows `?` or `:`. Upstream Closure
     // strips redundant grouping parens around:
@@ -3487,6 +3572,78 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
 /// increment) are single tokens whose `.value` is `"--"`/`"++"`,
 /// never `"-"`/`"+"`, so they never satisfy the leading-operator
 /// test — `-(--a)` is left alone.
+/// gap-086 helper. An argument occupies `kept[arg_start..boundary]`
+/// (the `boundary` index is the argument's terminating `,` or the
+/// call's closing `)`). If that argument is ENTIRELY parenthesised —
+/// its first token is `(` whose structural match is exactly the token
+/// just before `boundary` — and the parenthesised span carries NO
+/// TOP-LEVEL COMMA, the wrapping `(`/`)` indices are pushed onto
+/// `drops`. The top-level-comma guard preserves the one load-bearing
+/// case `f((a,b))` (a single comma-operator argument that would
+/// otherwise resplit into two arguments).
+fn maybe_strip_arg_paren(
+    kept: &[&lexer::token::Token],
+    arg_start: usize,
+    boundary: usize,
+    drops: &mut Vec<usize>,
+) {
+    // Need at least `( )` before the boundary.
+    if boundary < 2 || arg_start + 1 >= boundary {
+        return;
+    }
+    if !is_structural_punct(kept[arg_start], "(") {
+        return;
+    }
+    // Structural match of the opening `(` at `arg_start`.
+    let mut depth: i32 = 1;
+    let mut k = arg_start + 1;
+    let mut close: Option<usize> = None;
+    while k < boundary {
+        let t = kept[k];
+        if is_structural_punct(t, "(")
+            || is_structural_punct(t, "[")
+            || is_structural_punct(t, "{")
+        {
+            depth += 1;
+        } else if is_structural_punct(t, ")") {
+            depth -= 1;
+            if depth == 0 {
+                close = Some(k);
+                break;
+            }
+        } else if is_structural_punct(t, "]") || is_structural_punct(t, "}") {
+            depth -= 1;
+        }
+        k += 1;
+    }
+    let Some(close) = close else { return };
+    // The parens must wrap the WHOLE argument: the matching `)` is the
+    // token immediately before the boundary.
+    if close != boundary - 1 {
+        return;
+    }
+    // Reject a top-level comma inside the span (the `f((a,b))` case).
+    let inner = &kept[arg_start + 1..close];
+    let mut d: i32 = 0;
+    for t in inner {
+        if is_structural_punct(t, "(")
+            || is_structural_punct(t, "[")
+            || is_structural_punct(t, "{")
+        {
+            d += 1;
+        } else if is_structural_punct(t, ")")
+            || is_structural_punct(t, "]")
+            || is_structural_punct(t, "}")
+        {
+            d -= 1;
+        } else if is_structural_punct(t, ",") && d == 0 {
+            return; // top-level comma — keep the parens
+        }
+    }
+    drops.push(arg_start);
+    drops.push(close);
+}
+
 fn is_safe_unary_paren_operand(span: &[&lexer::token::Token]) -> bool {
     if is_safe_unary_operand(span) {
         return true;
@@ -5440,6 +5597,57 @@ mod tests {
     #[test]
     fn gap081_optional_chain_not_ternary() {
         assert_eq!(minify("var x=(a)?.b;"), "var x=(a)?.b;");
+    }
+
+    // ---- gap-086: call-argument paren elision -----------------
+
+    /// gap-086: a paren wrapping a WHOLE call argument elides. Argument
+    /// position accepts any AssignmentExpression, so — unlike the
+    /// operand passes — there is NO atomic / precedence guard: a binary
+    /// (`f((a+b))` → `f(a+b)`), logical (`f((a||b))` → `f(a||b)`), or
+    /// string (`f(("s"))` → `f("s")`) argument all strip. Multiple and
+    /// nested arguments each strip independently.
+    #[test]
+    fn gap086_call_arg_paren_stripped() {
+        assert_eq!(minify("f((a));"), "f(a);");
+        assert_eq!(minify("f((a+b));"), "f(a+b);");
+        assert_eq!(minify("f((a||b));"), "f(a||b);");
+        assert_eq!(minify("f((a),(b));"), "f(a,b);");
+        assert_eq!(minify("f((a),b);"), "f(a,b);");
+        assert_eq!(minify("f(a,(b));"), "f(a,b);");
+        assert_eq!(minify("f(g((a)));"), "f(g(a));");
+    }
+
+    /// gap-086 SAFETY — the ONE load-bearing case. A single
+    /// comma-operator argument `f((a,b))` must KEEP its parens: dropping
+    /// them resplits the one argument into the two arguments `a,b`. The
+    /// top-level-comma guard preserves it, including when mixed with
+    /// other args (`f((a,b),c)` keeps the first arg's parens).
+    #[test]
+    fn gap086_comma_operator_argument_kept() {
+        assert_eq!(minify("f((a,b));"), "f((a,b));");
+        assert_eq!(minify("f((a,b),c);"), "f((a,b),c);");
+    }
+
+    /// gap-086 SAFETY — a parenthesised ARROW PARAMETER list is not a
+    /// grouping paren and must be left alone: `f((a,b)=>a)` keeps its
+    /// `(a,b)` (the `)` is followed by `=>`, not an arg boundary).
+    /// (A single-param `(a)=>a` is reduced to `a=>a` by gap-045, which
+    /// is orthogonal.)
+    #[test]
+    fn gap086_arrow_param_list_kept() {
+        assert_eq!(minify("f((a,b)=>a);"), "f((a,b)=>a);");
+    }
+
+    /// gap-086: the anchor is the CALL-open paren (preceded by a value),
+    /// so member calls (`a.b((c))` → `a.b(c)`), computed-member calls
+    /// (`x[i]((a))` → `x[i](a)`), and `new` calls (`new C((a))` →
+    /// `new C(a)`) are all covered.
+    #[test]
+    fn gap086_member_and_new_call_args() {
+        assert_eq!(minify("a.b((c));"), "a.b(c);");
+        assert_eq!(minify("x[i]((a));"), "x[i](a);");
+        assert_eq!(minify("new C((a));"), "new C(a);");
     }
 
     // ---- gap-087: computed-member index paren elision ---------
