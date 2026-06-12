@@ -130,9 +130,11 @@ ALGOL 60 (exit code) and Dartmouth BASIC (stdout, via a generic `__print_i64`
 runtime); Brainfuck is deferred. The **WASM** column (in-process `wasm-runtime`) is
 green for Twig / Nib / Oct / ALGOL 60 (exit code) and Dartmouth BASIC (stdout — a tiny
 `PrintHost` resolves the `env.__print_i64` import and captures the printed value);
-Brainfuck (tape ops) is the only WASM follow-up. The JVM/CLR columns
-follow per the matrix spec; the VM/JIT columns are McCarthy-specialized and need
-op-coverage work.
+Brainfuck (tape ops) is the only WASM follow-up. The **JVM** column runs on **real
+`java`** (the W16 wrapper-launcher pattern) and is green for the expression languages
+Twig / Nib / Oct / ALGOL 60; BASIC pends an `env.BasicRuntime` host class and Brainfuck
+the tape ops. The CLR column follows per the matrix spec; the VM/JIT columns are
+McCarthy-specialized and need op-coverage work.
 
 ## Stack position
 
