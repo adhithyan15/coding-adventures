@@ -2859,6 +2859,7 @@ pub fn whitespace_only_minify(
             if needs_separator(prev, tok)
                 || new_paren_needs_space(&kept, idx)
                 || get_set_computed_needs_space(&kept, idx)
+                || async_gen_method_needs_space(&kept, idx)
             {
                 out.push(' ');
             }
@@ -3894,6 +3895,81 @@ fn get_set_computed_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
         Some(c) => kept
             .get(c + 1)
             .is_some_and(|t| is_structural_punct(t, "(")),
+        None => false,
+    }
+}
+
+/// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
+/// METHOD (`async *m(){}`), so a separating space is needed between the
+/// preceding `async` and this `*`.
+///
+/// The trap is that `async*x` is ALSO valid as a multiplication — `async`
+/// is only a contextual keyword, so `a=async*b` means `async * b`. Upstream
+/// adds the space ONLY for the method form and leaves the arithmetic form
+/// alone:
+///
+///   o={async*m(){}}      ->  o={async *m(){}}     (method   — space)
+///   class A{async*m(){}} ->  class A{async *m(){}}(method   — space)
+///   a=async*b            ->  a=async*b            (multiply — no space)
+///   a=async*f()          ->  a=async*f()          (multiply — no space)
+///   a=b,async*c          ->  a=b,async*c          (multiply — no space)
+///   o={async*[x](){}}    ->  o={async*[x](){}}    (computed — no space:
+///                                                  `*[` can't merge)
+///
+/// The reliable discriminator is the full method SIGNATURE: an async
+/// generator method is `async * NAME ( <params> ) {` — a *named* method
+/// (identifier name, not `[computed]`) with a parameter list AND a body
+/// `{`. The multiplication forms above all lack the trailing `){` body
+/// (`async*f()` is followed by `;`/operator, never `{`), so checking for
+/// it cleanly separates the two. We mirror `get_set_computed_needs_space`'s
+/// structural depth-scan to find the param-list's matching `)`.
+fn async_gen_method_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    // This `*` must sit between `async` and an identifier method name.
+    if idx == 0 {
+        return false;
+    }
+    if !is_structural_punct(kept[idx], "*") {
+        return false;
+    }
+    let prev = kept[idx - 1];
+    if !(is_word_like(prev) && prev.value == "async") {
+        return false;
+    }
+    // The method NAME: a word-like identifier (not `[computed]`, not a
+    // string — those forms don't merge with `*` so upstream omits the
+    // space).
+    let name = match kept.get(idx + 1) {
+        Some(t) if is_simple_identifier_token(Some(t)) => t,
+        _ => return false,
+    };
+    let _ = name;
+    // The parameter list `(` follows the name.
+    if !kept.get(idx + 2).is_some_and(|t| is_structural_punct(t, "(")) {
+        return false;
+    }
+    // Scan for the matching `)` (structural paren depth).
+    let mut depth: i32 = 1;
+    let mut close: Option<usize> = None;
+    let mut j = idx + 3;
+    while j < kept.len() {
+        let t = kept[j];
+        if is_structural_punct(t, "(") {
+            depth += 1;
+        } else if is_structural_punct(t, ")") {
+            depth -= 1;
+            if depth == 0 {
+                close = Some(j);
+                break;
+            }
+        }
+        j += 1;
+    }
+    // A method BODY `{` must immediately follow the `)`. This is what an
+    // arithmetic `async*f()` lacks, so it is the deciding signal.
+    match close {
+        Some(c) => kept
+            .get(c + 1)
+            .is_some_and(|t| is_structural_punct(t, "{")),
         None => false,
     }
 }
@@ -6556,6 +6632,68 @@ mod tests {
         assert_eq!(minify("a=1 .x;"), "a=(1).x;");
         assert_eq!(minify("a=1..toString();"), "a=(1).toString();");
         assert_eq!(minify("a=1[0];"), "a=1[0];");
+    }
+
+    // ---- gap-097: async generator method `async`/`*` separator ----
+
+    /// Target case: an async generator method needs a space between
+    /// `async` and `*`, in both object literals and class bodies.
+    #[test]
+    fn gap097_async_gen_method_gets_space() {
+        assert_eq!(minify("o={async*m(){}};"), "o={async *m(){}};");
+        assert_eq!(minify("class A{async*m(){}}"), "class A{async *m(){}};");
+    }
+
+    /// `static async*m(){}` and a method followed by another method
+    /// both keep the space.
+    #[test]
+    fn gap097_async_gen_static_and_chained() {
+        assert_eq!(
+            minify("class A{static async*m(){}}"),
+            "class A{static async *m(){}};"
+        );
+        assert_eq!(
+            minify("class A{async*m(){}b(){}}"),
+            "class A{async *m(){}b(){}};"
+        );
+    }
+
+    /// Params (incl. destructuring with defaults) don't fool the
+    /// matching-`)` scan: the body `{` is still found.
+    #[test]
+    fn gap097_async_gen_method_with_params() {
+        assert_eq!(minify("o={async*m(a,b){}};"), "o={async *m(a,b){}};");
+        assert_eq!(
+            minify("o={async*m({a}={}){}};"),
+            "o={async *m({a}={}){}};"
+        );
+    }
+
+    /// **CRITICAL non-regression**: `async*x` is also valid as
+    /// MULTIPLICATION (`async` is only a contextual keyword). The
+    /// arithmetic forms must NOT gain a space — they lack the `){`
+    /// method body that the helper requires.
+    #[test]
+    fn gap097_multiplication_not_spaced() {
+        assert_eq!(minify("a=async*b;"), "a=async*b;");
+        assert_eq!(minify("a=async*b*c;"), "a=async*b*c;");
+        assert_eq!(minify("a=async*f();"), "a=async*f();");
+        assert_eq!(minify("a=async*f()*g;"), "a=async*f()*g;");
+        assert_eq!(minify("a=b,async*c;"), "a=b,async*c;");
+    }
+
+    /// **Non-regression**: a COMPUTED method name (`async*[x](){}`)
+    /// gets no space — `*[` can't merge, so upstream omits it.
+    #[test]
+    fn gap097_computed_method_name_not_spaced() {
+        assert_eq!(minify("o={async*[x](){}};"), "o={async*[x](){}};");
+    }
+
+    /// **Non-regression**: `async function*f(){}` already has the
+    /// `function` keyword between `async` and `*`, so no extra space.
+    #[test]
+    fn gap097_async_generator_function_unchanged() {
+        assert_eq!(minify("async function*f(){}"), "async function*f(){};");
     }
 
     /// **Non-regression**: function-call trailing comma
