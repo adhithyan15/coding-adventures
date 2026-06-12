@@ -420,6 +420,25 @@ export interface DeckControlSummary {
   readonly diagnostics: readonly DeckControlDiagnostic[];
 }
 
+export interface DeckResolutionDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly source: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly target?: string;
+}
+
+export interface DeckResolutionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly diagnostics: readonly DeckResolutionDiagnostic[];
+  readonly includedPaths: readonly string[];
+  readonly librarySections: readonly string[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2559,6 +2578,7 @@ R2 out 0 10000
 const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"]);
 const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
 const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
+const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
 
 export function compatibilityCorpus(): readonly CompatibilityDeck[] {
   return COMPATIBILITY_CORPUS;
@@ -2598,6 +2618,27 @@ export function analyzeDeckControls(netlist: string): DeckControlSummary {
     terminated: endLineNumber !== undefined,
     endLineNumber,
     diagnostics,
+  };
+}
+
+export function resolveDeckSources(
+  netlist: string,
+  sources: Readonly<Record<string, string>>,
+): DeckResolutionSummary {
+  const state: DeckResolutionState = {
+    diagnostics: [],
+    includedPaths: [],
+    librarySections: [],
+  };
+  const resolved = resolveDeckLines(netlist, "<deck>", sources, state, []);
+
+  return {
+    activeLines: resolved.activeLines,
+    terminated: resolved.terminated,
+    endLineNumber: resolved.endLineNumber,
+    diagnostics: state.diagnostics,
+    includedPaths: state.includedPaths,
+    librarySections: state.librarySections,
   };
 }
 
@@ -2740,6 +2781,269 @@ export function formatReleaseReadinessReport(report: ReleaseReadinessReport): st
     }
   }
   return lines.join("\n");
+}
+
+interface DeckResolutionState {
+  readonly diagnostics: DeckResolutionDiagnostic[];
+  readonly includedPaths: string[];
+  readonly librarySections: string[];
+}
+
+interface ResolvedDeckLines {
+  readonly activeLines: string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+}
+
+function resolveDeckLines(
+  netlist: string,
+  source: string,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): ResolvedDeckLines {
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".include") {
+      activeLines.push(
+        ...resolveIncludeDirective(stripped, source, lineNumber, sources, state, stack),
+      );
+      continue;
+    }
+    if (directive === ".lib") {
+      activeLines.push(
+        ...resolveLibraryDirective(stripped, source, lineNumber, sources, state, stack),
+      );
+      continue;
+    }
+    if (directive !== undefined && UNSUPPORTED_RESOLVED_DIRECTIVES.has(directive)) {
+      state.diagnostics.push({
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        source,
+        lineNumber,
+        message: `${directive} is not supported by the deck source resolver yet`,
+        severity: "error",
+      });
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+  };
+}
+
+function resolveIncludeDirective(
+  line: string,
+  source: string,
+  lineNumber: number,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): string[] {
+  const tokens = directiveTokens(line);
+  const target = tokens.length >= 2 ? unquoteToken(tokens[1]) : undefined;
+  if (target === undefined || target.length === 0) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_ARGUMENT",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: ".include requires a source path",
+    });
+    return [];
+  }
+  if (stack.includes(target)) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_CYCLE",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: `.include cycle detected for ${target}`,
+      target,
+    });
+    return [];
+  }
+  const content = sources[target];
+  if (content === undefined) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_NOT_FOUND",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: `.include source ${JSON.stringify(target)} was not provided`,
+      target,
+    });
+    return [];
+  }
+
+  state.includedPaths.push(target);
+  return resolveDeckLines(content, target, sources, state, [...stack, target]).activeLines;
+}
+
+function resolveLibraryDirective(
+  line: string,
+  source: string,
+  lineNumber: number,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): string[] {
+  const tokens = directiveTokens(line);
+  const path = tokens.length >= 2 ? unquoteToken(tokens[1]) : undefined;
+  const section = tokens.length >= 3 ? unquoteToken(tokens[2]) : undefined;
+  if (path === undefined || path.length === 0 || section === undefined || section.length === 0) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_ARGUMENT",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: ".lib requires a source path and section name",
+      target: path,
+    });
+    return [];
+  }
+
+  const target = `${path}:${section}`;
+  const content = sources[path];
+  if (content === undefined) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_NOT_FOUND",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: `.lib source ${JSON.stringify(path)} was not provided`,
+      target,
+    });
+    return [];
+  }
+  if (stack.includes(target)) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_CYCLE",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: `.lib cycle detected for ${target}`,
+      target,
+    });
+    return [];
+  }
+
+  const sectionLines = extractLibrarySection(content, path, section, source, lineNumber, state);
+  if (sectionLines === undefined) {
+    return [];
+  }
+
+  state.librarySections.push(target);
+  return resolveDeckLines(sectionLines.join("\n"), target, sources, state, [...stack, target]).activeLines;
+}
+
+function extractLibrarySection(
+  content: string,
+  path: string,
+  section: string,
+  callSource: string,
+  callLineNumber: number,
+  state: DeckResolutionState,
+): string[] | undefined {
+  let inSection = false;
+  let sectionStartLine: number | undefined;
+  const sectionLines: string[] = [];
+  const wanted = section.toLowerCase();
+  const target = `${path}:${section}`;
+  const lines = content.split(/\r?\n/);
+
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const rawLine = lines[index];
+    const stripped = rawLine.trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      if (inSection) {
+        sectionLines.push(rawLine);
+      }
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    const tokens = directiveTokens(stripped);
+    if (!inSection) {
+      if (
+        directive === ".lib" &&
+        tokens.length >= 2 &&
+        unquoteToken(tokens[1]).toLowerCase() === wanted
+      ) {
+        inSection = true;
+        sectionStartLine = lineNumber;
+      }
+      continue;
+    }
+    if (directive === ".endl" || directive === ".endlib") {
+      return sectionLines;
+    }
+    sectionLines.push(rawLine);
+  }
+
+  if (!inSection) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+      directive: ".lib",
+      source: callSource,
+      lineNumber: callLineNumber,
+      message: `.lib section ${JSON.stringify(section)} was not found in ${JSON.stringify(path)}`,
+      target,
+    });
+    return undefined;
+  }
+
+  addResolutionDiagnostic(state, {
+    code: "SPICE_DECK_LIB_SECTION_UNTERMINATED",
+    directive: ".lib",
+    source: path,
+    lineNumber: sectionStartLine ?? 1,
+    message: `.lib section ${JSON.stringify(section)} in ${JSON.stringify(path)} is missing .endl`,
+    target,
+  });
+  return undefined;
+}
+
+function addResolutionDiagnostic(
+  state: DeckResolutionState,
+  diagnostic: Omit<DeckResolutionDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function directiveTokens(line: string): string[] {
+  return line.split(/\s+/);
+}
+
+function unquoteToken(token: string): string {
+  if (
+    token.length >= 2 &&
+    token[0] === token[token.length - 1] &&
+    (token[0] === "'" || token[0] === '"')
+  ) {
+    return token.slice(1, -1);
+  }
+  return token;
 }
 
 function validateCompatibilityNonEmpty(

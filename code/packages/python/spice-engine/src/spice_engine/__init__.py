@@ -6,6 +6,8 @@ from spice_engine.compatibility import (
     CompatibilityOracle,
     DeckControlDiagnostic,
     DeckControlSummary,
+    DeckResolutionDiagnostic,
+    DeckResolutionSummary,
     ReleaseReadinessIssue,
     ReleaseReadinessReport,
     analyze_deck_controls,
@@ -13,6 +15,7 @@ from spice_engine.compatibility import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_sources,
 )
 from spice_engine.elements import (
     BJT,
@@ -300,6 +303,8 @@ __all__ = [
     "CurrentSource",
     "DeckControlDiagnostic",
     "DeckControlSummary",
+    "DeckResolutionDiagnostic",
+    "DeckResolutionSummary",
     "DcResult",
     "DcSolverDiagnostics",
     "DcSweepPoint",
@@ -451,6 +456,7 @@ __all__ = [
     "pss_residual_jacobian",
     "pss_residual",
     "release_readiness_gates",
+    "resolve_deck_sources",
     "sens_dc",
     "s_parameters",
     "s_parameters_corners",
