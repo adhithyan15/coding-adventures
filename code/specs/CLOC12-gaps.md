@@ -616,3 +616,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `if(x)a();else{b()}` → **Upstream:** `if(x)a();else b();`.
 - **What it needed:** The `else`-arm counterpart of gap-079. When an `else` body is a single-statement block, flatten `else{S}` → `else S;`. Anchor on the `else` keyword followed by `{`; an `else`-body `{` is unambiguously the alternate (never an object literal).
 - **CLOC12.86 resolution:** A parallel `else`-anchored pre-pass, added right after the gap-074/079 header-keyword pass. Unlike gap-074/079, `else` has NO `(…)` header — its body `{` follows immediately, so the anchor is simply `is_word_like(kept[i]) && kept[i].value == "else" && is_structural_punct(kept[i+1], "{")`. `else` is a reserved word, so `else{…}` can never be an object literal or labelled block, and `else if(…)` is NOT matched (the token after `else` is `if`, not `{`) — its inner consequent flattens via the gap-079 `if` arm instead. The same provably-safe body scan (no nested `{`, no control-flow keyword at depth 1, exactly zero top-level `;`) gates the brace-drop, reusing gap-067's `synth_semi`. The JAR golden is `if(x)a();else b();` — the trailing `;` is the synthetic terminator. **Deferred:** a nested-control `else` body (`else{if(y)b()}` → upstream `else if(y)b();`) keeps its braces for now (output stays valid); multi-statement / empty `else` bodies keep their braces. 4 unit tests (flatten / multi-keep / nested-control-kept / property-key-untouched) + the byte-identity fixture.
+
+### gap-081 — ternary CONDITION paren elision
+
+- **Status:** OPEN (discovered CLOC14.38). `minify_ternary_cond_paren` ignored.
+- **Input:** `var x=(a)?b:c;` → **Upstream:** `var x=a?b:c;` (also `(a.b)?c:d` → `a.b?c:d`, and precedence-aware `(a||b)?c:d` → `a||b?c:d` since `||` binds tighter than `?:`).
+- **What it needs:** The CONDITION-side sibling of gap-055 (which strips the ternary ARMS `?(E):` / `?y:(E)`). When a grouping paren wraps the whole condition of a `?:`, strip it. A `(` that starts an expression whose matching `)` is immediately followed by `?` (structural ternary, NOT `?.`) and whose span is a self-delimiting operand → drop. The atomic-operand guard keeps the simple case; the precedence-aware variant (`(a||b)?`) is the broader gap-083 family.
+
+### gap-082 — decimal exponent / float canonicalisation (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.38). `minify_num_exp_case` ignored.
+- **Input:** `var x=1e3;` → **Upstream:** `var x=1E3;` (also `1.0` → `1`, `1.5e10` → `15E9`, `1e-5` → `1E-5`).
+- **What it needs:** Upstream Closure canonicalises decimal numeric literals even in WHITESPACE_ONLY: lowercase `e` → uppercase `E`, drop redundant trailing `.0` / fractional zeros, and normalise the mantissa+exponent to the shortest equivalent form (`1.5e10` → `15E9`). closurec currently passes decimal floats through verbatim (hex/oct/bin → decimal already works via gap-038, and integer numeric-separator/scientific shortest-form via gap-040, but plain decimal `1e3`/`1.0` are untouched in the token re-stitcher). This is a number-formatting normaliser over the NUMBER token's value — reuse/extend the gap-025/gap-040 shortest-form logic at the WHITESPACE_ONLY emit site.
+
+### gap-083 — precedence-aware operand paren elision
+
+- **Status:** OPEN (discovered CLOC14.38). `minify_precedence_operand` ignored.
+- **Input:** `var x=a==(b+c);` → **Upstream:** `var x=a==b+c;` (also `a||(b&&c)` → `a||b&&c`, `(a*b)+c` → `a*b+c`).
+- **What it needs:** The fuller version of gap-077/078, which only strip an ATOMIC (self-delimiting) operand. Upstream also strips when the parenthesised operand's lowest-precedence operator binds *at least as tightly* as the outer operator (so removing the parens does not change grouping): `+` binds tighter than `==`, `&&` tighter than `||`, `*` tighter than `+`. Needs an operator-precedence table and an "outer op" lookup on both the left (`(a*b)+c`) and right (`a==(b+c)`) operand sides. Must still KEEP `a*(b+c)`, `a-(b-c)` (associativity/precedence would change).
+
+### gap-084 — nested double-paren full strip around var-init RHS
+
+- **Status:** OPEN (discovered CLOC14.38). `minify_double_paren_varinit` ignored.
+- **Input:** `var x=((a));` → **Upstream:** `var x=a;` (closurec reaches `var x=(a);` — one layer short). Also `if((a))b();` → `if(a)b();`.
+- **What it needs:** gap-062 collapses `((a))` → `(a)`, and gap-053 strips a single `(a)` around a var-init RHS — but the `(a)` *exposed* by gap-062's collapse is not re-examined by gap-053 (pass-ordering: gap-053 ran on the original `((a))`, whose content `(a)` is non-atomic, so it skipped). Either re-run the RHS-paren elision after the double-paren collapse, or generalise gap-053/gap-062 to a fixpoint. The same exposed-paren issue applies to the `if(...)` condition (`if((a))` → `if(a)`).

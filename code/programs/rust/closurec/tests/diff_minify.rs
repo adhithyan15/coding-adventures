@@ -96,6 +96,23 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-081 (CLOC14.38): ternary CONDITION paren elision —
+    // `(a)?b:c` → `a?b:c`. Sibling of gap-055 (ternary ARMS).
+    ("ternary_cond_paren", "gap-081: ternary condition paren elision"),
+    // gap-082 (CLOC14.38): decimal exponent / float canonicalisation
+    // in WHITESPACE_ONLY — `1e3` → `1E3`, `1.0` → `1`, `1.5e10` →
+    // `15E9` (uppercase `E`, drop trailing zeros, shortest mantissa).
+    ("num_exp_case", "gap-082: decimal exponent/float canonicalisation"),
+    // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
+    // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
+    // outer). Extends gap-077/078 beyond the atomic-operand guard;
+    // needs an operator-precedence table.
+    ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
+    // gap-084 (CLOC14.38): nested double-paren around a var-init RHS
+    // fully strips — `((a))` → `a` (gap-062 collapses `((a))`→`(a)`
+    // but the exposed `(a)` is not re-elided by gap-053). Composition
+    // / re-run gap.
+    ("double_paren_varinit", "gap-084: nested double-paren full strip"),
     // gap-077 RESOLVED in CLOC12.88 — a binary operator's
     // parenthesised ATOMIC LEFT operand (`(a)+b` → `a+b`, `(a)*b` →
     // `a*b`) now elides via a new left-operand pre-pass — the mirror
