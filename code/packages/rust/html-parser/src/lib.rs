@@ -2273,6 +2273,9 @@ pub struct BrowserAriaCollection {
     pub checked_item_count: usize,
     pub current_item_count: usize,
     pub disabled_item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
     pub items: Vec<BrowserAriaCollectionItem>,
 }
 
@@ -2317,6 +2320,12 @@ pub struct BrowserAriaRange {
     pub aria_required: Option<String>,
     pub tabindex: Option<String>,
     pub text_value: Option<String>,
+    pub value_attribute_names: Vec<String>,
+    pub value_attribute_count: usize,
+    pub range_value_complete: bool,
+    pub focusable: bool,
+    pub range_blocked: bool,
+    pub range_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2336,6 +2345,11 @@ pub struct BrowserAriaLiveRegion {
     pub aria_relevant: Vec<String>,
     pub aria_hidden: bool,
     pub update_kind: String,
+    pub live_attribute_names: Vec<String>,
+    pub live_attribute_count: usize,
+    pub assertive_update: bool,
+    pub live_region_blocked: bool,
+    pub live_region_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -17012,6 +17026,18 @@ fn browser_aria_collection_element(
         .iter()
         .filter(|item| item.aria_disabled.as_deref() == Some("true"))
         .count();
+    let aria_multiselectable = browser_aria_state(element, "aria-multiselectable");
+    let aria_activedescendant = browser_aria_idref(element, "aria-activedescendant");
+    let item_roles = browser_aria_collection_item_roles(&items);
+    let selection_mode = browser_aria_collection_selection_mode(
+        aria_multiselectable.as_deref(),
+        selected_item_count,
+        checked_item_count,
+        current_item_count,
+    );
+    let active_descendant_matches_item = aria_activedescendant
+        .as_deref()
+        .is_some_and(|id| items.iter().any(|item| item.id.as_deref() == Some(id)));
 
     Some(BrowserAriaCollection {
         element: element.name.clone(),
@@ -17023,17 +17049,49 @@ fn browser_aria_collection_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_orientation: browser_aria_state(element, "aria-orientation"),
-        aria_multiselectable: browser_aria_state(element, "aria-multiselectable"),
-        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
+        aria_multiselectable,
+        aria_activedescendant,
         aria_owns: browser_aria_idrefs(element, "aria-owns"),
         item_count: items.len(),
         selected_item_count,
         checked_item_count,
         current_item_count,
         disabled_item_count,
+        item_roles,
+        selection_mode,
+        active_descendant_matches_item,
         role,
         items,
     })
+}
+
+fn browser_aria_collection_item_roles(items: &[BrowserAriaCollectionItem]) -> Vec<String> {
+    let mut roles = Vec::new();
+    for item in items {
+        if !roles.contains(&item.role) {
+            roles.push(item.role.clone());
+        }
+    }
+    roles
+}
+
+fn browser_aria_collection_selection_mode(
+    aria_multiselectable: Option<&str>,
+    selected_item_count: usize,
+    checked_item_count: usize,
+    current_item_count: usize,
+) -> String {
+    if aria_multiselectable.is_some_and(|value| value.eq_ignore_ascii_case("true"))
+        || selected_item_count > 1
+        || checked_item_count > 1
+    {
+        "multiple"
+    } else if selected_item_count + checked_item_count + current_item_count > 0 {
+        "single"
+    } else {
+        "none"
+    }
+    .to_string()
 }
 
 fn browser_authored_collection_role(element: &Element) -> Option<String> {
@@ -17124,6 +17182,16 @@ fn browser_aria_range_element(
 ) -> Option<BrowserAriaRange> {
     let role = browser_authored_range_role(element)?;
     let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_valuenow = browser_aria_state(element, "aria-valuenow");
+    let aria_valuemin = browser_aria_state(element, "aria-valuemin");
+    let aria_valuemax = browser_aria_state(element, "aria-valuemax");
+    let aria_valuetext = browser_aria_state(element, "aria-valuetext");
+    let aria_disabled = browser_aria_state(element, "aria-disabled");
+    let aria_readonly = browser_aria_state(element, "aria-readonly");
+    let value_attribute_names =
+        browser_aria_range_value_attribute_names(element, aria_valuetext.is_some());
+    let range_block_reasons =
+        browser_aria_range_block_reasons(aria_disabled.as_deref(), aria_readonly.as_deref());
     Some(BrowserAriaRange {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -17133,19 +17201,57 @@ fn browser_aria_range_element(
         aria_label: browser_aria_label(element),
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
-        aria_valuenow: browser_aria_state(element, "aria-valuenow"),
-        aria_valuemin: browser_aria_state(element, "aria-valuemin"),
-        aria_valuemax: browser_aria_state(element, "aria-valuemax"),
-        aria_valuetext: browser_aria_state(element, "aria-valuetext"),
+        aria_valuenow: aria_valuenow.clone(),
+        aria_valuemin: aria_valuemin.clone(),
+        aria_valuemax: aria_valuemax.clone(),
+        aria_valuetext,
         aria_orientation: browser_aria_state(element, "aria-orientation"),
-        aria_disabled: browser_aria_state(element, "aria-disabled"),
-        aria_readonly: browser_aria_state(element, "aria-readonly"),
+        aria_disabled,
+        aria_readonly,
         aria_required: browser_aria_state(element, "aria-required"),
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
         text_value: (!text.is_empty()).then(|| text.clone()),
+        value_attribute_count: value_attribute_names.len(),
+        value_attribute_names,
+        range_value_complete: aria_valuenow.is_some()
+            && aria_valuemin.is_some()
+            && aria_valuemax.is_some(),
+        focusable: element.attribute("tabindex").is_some(),
+        range_blocked: !range_block_reasons.is_empty(),
+        range_block_reasons,
         role,
         text,
     })
+}
+
+fn browser_aria_range_value_attribute_names(
+    element: &Element,
+    has_aria_valuetext: bool,
+) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-valuemin", "aria-valuemax", "aria-valuenow"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if has_aria_valuetext {
+        attributes.push("aria-valuetext".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_range_block_reasons(
+    aria_disabled: Option<&str>,
+    aria_readonly: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_disabled.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-disabled".to_string());
+    }
+    if aria_readonly.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-readonly".to_string());
+    }
+    reasons
 }
 
 fn browser_authored_range_role(element: &Element) -> Option<String> {
@@ -17164,6 +17270,14 @@ fn browser_aria_live_region_element(
     let role = browser_aria_live_region_role(element)?;
     let aria_live = browser_aria_state(element, "aria-live");
     let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_busy = browser_aria_state(element, "aria-busy");
+    let aria_atomic = browser_aria_state(element, "aria-atomic");
+    let aria_relevant = browser_aria_tokens(element, "aria-relevant");
+    let aria_hidden = browser_aria_hidden(element);
+    let update_kind = browser_aria_live_update_kind(&role, aria_live.as_deref());
+    let live_attribute_names = browser_aria_live_attribute_names(element, aria_hidden);
+    let live_region_block_reasons =
+        browser_aria_live_region_block_reasons(aria_hidden, &update_kind);
     Some(BrowserAriaLiveRegion {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -17174,14 +17288,43 @@ fn browser_aria_live_region_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_live: aria_live.clone(),
-        aria_busy: browser_aria_state(element, "aria-busy"),
-        aria_atomic: browser_aria_state(element, "aria-atomic"),
-        aria_relevant: browser_aria_tokens(element, "aria-relevant"),
-        aria_hidden: browser_aria_hidden(element),
-        update_kind: browser_aria_live_update_kind(&role, aria_live.as_deref()),
+        aria_busy,
+        aria_atomic,
+        aria_relevant,
+        aria_hidden,
+        assertive_update: update_kind == "assertive",
+        live_attribute_count: live_attribute_names.len(),
+        live_attribute_names,
+        live_region_blocked: !live_region_block_reasons.is_empty(),
+        live_region_block_reasons,
+        update_kind,
         role,
         text,
     })
+}
+
+fn browser_aria_live_attribute_names(element: &Element, aria_hidden: bool) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-live", "aria-busy", "aria-atomic", "aria-relevant"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if aria_hidden {
+        attributes.push("aria-hidden".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_live_region_block_reasons(aria_hidden: bool, update_kind: &str) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if update_kind == "off" {
+        reasons.push("live-off".to_string());
+    }
+    reasons
 }
 
 fn browser_aria_live_region_role(element: &Element) -> Option<String> {
