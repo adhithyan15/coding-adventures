@@ -183,8 +183,10 @@ from spice_engine import (
     estimate_period,
     format_ac_table,
     format_adaptive_digital_event_stream_table,
+    format_corner_ac_table,
     format_corner_adaptive_digital_event_stream_table,
     format_corner_adaptive_transient_table,
+    format_corner_dc_sweep_table,
     format_corner_dc_table,
     format_corner_digital_event_stream_table,
     format_corner_distortion_table,
@@ -196,7 +198,9 @@ from spice_engine import (
     format_corner_s_parameter_table,
     format_corner_sens_table,
     format_corner_temperature_dc_table,
+    format_corner_tf_table,
     format_corner_transient_table,
+    format_dc_sweep_table,
     format_dc_table,
     format_digital_bridge_schedule_table,
     format_digital_event_stream_table,
@@ -3344,6 +3348,15 @@ def test_dc_sweep_voltage_divider_exact() -> None:
         assert pt.converged
         expected_vout = pt.source_value / 2.0
         assert isclose(pt.node_voltages["out"], expected_vout, abs_tol=1e-9)
+    assert format_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Index\tSource\tValue\tV(out)\tI(Vin)\n"
+        "0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tVin\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+        "2\tVin\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n"
+        "3\tVin\t3.000000e+00\t1.500000e+00\t-1.500000e-03\n"
+        "4\tVin\t4.000000e+00\t2.000000e+00\t-2.000000e-03\n"
+        "5\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+    )
 
 
 def test_dc_sweep_source_value_sequence() -> None:
@@ -7320,6 +7333,15 @@ def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
     assert [point.source_value for point in result.points[0].result.points] == pytest.approx([0.0, 5.0, 10.0])
     assert [point.node_voltages["out"] for point in result.points[0].result.points] == pytest.approx([0.0, 2.5, 5.0])
     assert [point.node_voltages["out"] for point in result.points[1].result.points] == pytest.approx([0.0, 5.0 / 3.0, 10.0 / 3.0])
+    assert format_corner_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\n"
+        "nominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+        "nominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\n"
+        "rbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n"
+    )
 
 
 def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
@@ -7350,6 +7372,13 @@ def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
     fast_out = result.points[1].result.points[0].node_voltages["out"]
     assert abs(nominal_out) == pytest.approx(1.0 / math.sqrt(2.0))
     assert abs(fast_out) == pytest.approx(1.0 / math.sqrt(1.25))
+    assert format_corner_ac_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "nominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "nominal\t0\t1.591549e+02\tI(Vin)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+        "r-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\n"
+        "r-fast\t0\t1.591549e+02\tI(Vin)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n"
+    )
 
 
 def test_tf_corners_runs_transfer_function_per_corner() -> None:
@@ -7376,6 +7405,12 @@ def test_tf_corners_runs_transfer_function_per_corner() -> None:
     assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
     assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
     assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])
+    assert format_corner_tf_table(result) == (
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\n"
+        "nominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+        "rbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\n"
+        "rbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n"
+    )
 
 
 def test_transient_corners_runs_waveforms_per_corner_and_formats_tables() -> None:

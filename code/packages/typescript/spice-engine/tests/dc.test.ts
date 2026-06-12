@@ -22,8 +22,10 @@ import {
   deviceModelAuditFixtures,
   diode,
   diodeFromModelCard,
+  formatCornerDcSweepTable,
   formatCornerDcTable,
   formatCornerTemperatureDcTable,
+  formatDcSweepTable,
   formatTemperatureDcTable,
   inductor,
   jfet,
@@ -730,6 +732,12 @@ describe("dcOp", () => {
     expectClose(points[1].result.voltage("mid"), 0.5);
     expectClose(points[2].value, 2.0);
     expectClose(points[2].result.voltage("mid"), 1.0);
+    expect(formatDcSweepTable("V1", points, ["V(mid)", "I(V1)"])).toBe(
+      "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
+      "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n" +
+      "2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n",
+    );
   });
 
   it("sweeps current sources and collects operating points", () => {
@@ -865,5 +873,14 @@ describe("dcSweepCorners", () => {
     expect(result.points[1].points[0].result.voltage("out")).toBeCloseTo(0.0, 9);
     expect(result.points[1].points[1].result.voltage("out")).toBeCloseTo(5.0 / 3.0, 9);
     expect(result.points[1].points[2].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
+    expect(formatCornerDcSweepTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\n" +
+      "nominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "nominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n" +
+      "nominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+      "rbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "rbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\n" +
+      "rbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n",
+    );
   });
 });

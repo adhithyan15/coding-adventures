@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Remaining stable table parity** — `format_dc_sweep_table()`,
+  `format_corner_dc_sweep_table()`, `format_corner_ac_table()`, and
+  `format_corner_tf_table()` now close the remaining Rust-first `.DC`, `.AC`,
+  and `.TF` named-corner table helper gaps in the Python package.
+
 - **DC corner and temperature parity** — `format_corner_dc_table()`,
   `dc_temperature_sweep()`, `dc_temperature_sweep_corners()`,
   `format_temperature_dc_table()`, and `format_corner_temperature_dc_table()`

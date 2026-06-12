@@ -1884,6 +1884,93 @@ def format_corner_temperature_dc_table(
     return "\n".join(rows)
 
 
+def format_dc_sweep_table(
+    result: DcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format a DC source sweep as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.node_voltages,
+                point.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Index", "Source", "Value", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_dc_sweep_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    result.source_name,
+                    _format_table_number(point.source_value),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_dc_sweep_table(
+    result: CornerDcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC source sweeps as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.node_voltages,
+                point.branch_currents,
+            )
+            for corner in result.points
+            for point in corner.result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "Source", "Value", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_dc_sweep_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        result.source_name,
+                        _format_table_number(point.source_value),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_transient_table(
     transient_result: TransientResult | list[TransientPoint],
     probes: list[str] | None = None,
@@ -2152,6 +2239,47 @@ def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None =
     return "\n".join(rows)
 
 
+def format_corner_ac_table(
+    result: CornerAcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner AC phasors as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_ac_output_probes(corner.result.points)
+            for corner in result.points
+            if corner.result.points
+        ),
+        [],
+    )
+    rows = ["Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase"]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            for probe in selected_probes:
+                value = _table_complex_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_corner_ac_table",
+                )
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            str(index),
+                            _format_table_number(point.freq),
+                            probe,
+                            _format_table_number(value.real),
+                            _format_table_number(value.imag),
+                            _format_table_number(abs(value)),
+                            _format_table_number(math.degrees(cmath.phase(value))),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_tf_table(result: TfResult) -> str:
     """Format a transfer-function result as a stable SPICE-style text table."""
     return "\n".join(
@@ -2167,6 +2295,24 @@ def format_tf_table(result: TfResult) -> str:
             "",
         ]
     )
+
+
+def format_corner_tf_table(result: CornerTfResult) -> str:
+    """Format named-corner transfer-function results as a stable text table."""
+    rows = ["Corner\tTransferRatio\tInputImpedance\tOutputImpedance"]
+    for point in result.points:
+        rows.append(
+            "\t".join(
+                [
+                    point.corner_name,
+                    _format_table_number(point.result.transfer_ratio),
+                    _format_table_number(point.result.input_impedance),
+                    _format_table_number(point.result.output_impedance),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
 
 
 def format_mc_table(result: McResult) -> str:

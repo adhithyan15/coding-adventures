@@ -72,6 +72,9 @@ diode, BJT, and Level-1 MOSFET models before running an analysis.
 temperatures, with stable nominal and named-corner table helpers for
 cross-language comparison. `format_corner_dc_table()` also renders named-corner
 DC operating-point snapshots with the Rust-matching `Corner` / `Index` columns.
+`format_dc_sweep_table()`, `format_corner_dc_sweep_table()`,
+`format_corner_ac_table()`, and `format_corner_tf_table()` provide the matching
+stable `.DC`, `.AC`, and `.TF` sweep/corner text surfaces.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton

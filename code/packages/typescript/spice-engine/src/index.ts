@@ -3436,6 +3436,77 @@ export function formatCornerTemperatureDcTable(
   return rows.join("\n");
 }
 
+export function formatDcSweepTable(
+  sourceName: string,
+  points: readonly DcSweepPoint[],
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    points.length === 0 ? [] : defaultOutputProbes(
+      points[0].result.nodeVoltages,
+      points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Index", "Source", "Value", ...selectedProbes].join("\t")];
+  points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatDcSweepTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      sourceName,
+      formatTableNumber(point.value),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDcSweepTable(
+  result: CornerDcSweepResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((corner) => corner.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultOutputProbes(
+      firstNonEmpty.points[0].result.nodeVoltages,
+      firstNonEmpty.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", "Source", "Value", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.result.nodeVoltages,
+            point.result.branchCurrents,
+            probe,
+            "formatCornerDcSweepTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        result.sourceName,
+        formatTableNumber(point.value),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatTransientTable(
   points: readonly TransientPoint[],
   probes?: readonly string[],
@@ -3651,6 +3722,41 @@ export function formatAcTable(
   return rows.join("\n");
 }
 
+export function formatCornerAcTable(
+  result: CornerAcSweepResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultAcOutputProbes(firstNonEmpty.points)
+  ) : probes;
+  const rows = [["Corner", "Index", "Frequency", "Probe", "Real", "Imaginary", "Magnitude", "Phase"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      selectedProbes.forEach((probe) => {
+        const value = tableComplexProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatCornerAcTable",
+        );
+        rows.push([
+          corner.cornerName,
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          probe,
+          formatTableNumber(value.real),
+          formatTableNumber(value.imag),
+          formatTableNumber(complexAbs(value)),
+          formatTableNumber(complexPhase(value) * 180.0 / Math.PI),
+        ].join("\t"));
+      });
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatTfTable(result: TfResult): string {
   return [
     ["TransferRatio", "InputImpedance", "OutputImpedance"].join("\t"),
@@ -3661,6 +3767,20 @@ export function formatTfTable(result: TfResult): string {
     ].join("\t"),
     "",
   ].join("\n");
+}
+
+export function formatCornerTfTable(result: CornerTfResult): string {
+  const rows = [["Corner", "TransferRatio", "InputImpedance", "OutputImpedance"].join("\t")];
+  result.points.forEach((point) => {
+    rows.push([
+      point.cornerName,
+      formatTableNumber(point.result.transferRatio),
+      formatTableNumber(point.result.inputImpedanceOhms),
+      formatTableNumber(point.result.outputImpedanceOhms),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
 }
 
 export function formatMcTable(result: McResult): string {

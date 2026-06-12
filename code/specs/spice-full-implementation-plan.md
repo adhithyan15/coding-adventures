@@ -15,14 +15,14 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Remaining cross-language table parity closure.
+1. Deck execution layer.
    - Status: next.
-   - Close remaining Rust-first stable table helper gaps in Python and
-     TypeScript, including cornered DC sweep, AC, and transfer-function tables.
-   - Decide whether Rust-only order-preserving parallel named-corner wrappers
-     should stay native-only or gain Python and TypeScript API aliases.
-   - Keep API names idiomatic per language while preserving matching result
-     semantics and stable table columns.
+   - Convert parsed netlists into runnable analysis plans beyond the initial
+     `.op`, `.dc`, `.ac`, and `.tran` subset.
+   - Support `.include`, `.lib`, `.end`, `.param`, `.func`, expressions, `.ic`,
+     and `.nodeset`.
+   - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
+     compatibility while keeping unsupported control-flow diagnostics explicit.
 
 ## Completed Slices
 
@@ -135,17 +135,20 @@ downstream tools to compare.
     - Package README, changelog, and tests document and lock the new
       cross-language API surface.
 
+13. Remaining cross-language table parity closure.
+    - Status: completed in this stable table parity slice.
+    - Python and TypeScript now expose Rust-matching stable table helpers for
+      `.DC` source sweeps, named-corner `.DC` source sweeps, named-corner `.AC`
+      phasors, and named-corner `.TF` gain / impedance rows.
+    - Rust-only order-preserving parallel named-corner wrappers remain native
+      acceleration surfaces; Python and TypeScript keep sequential API aliases
+      until worker policy and browser constraints are specified.
+    - Package README, changelog, and tests document and lock the final
+      cross-language table columns for this backlog item.
+
 ## Backlog
 
-1. Remaining cross-language table parity closure.
-   - Close remaining Rust-first stable table helper gaps in Python and
-     TypeScript, including cornered DC sweep, AC, and transfer-function tables.
-   - Decide whether Rust-only order-preserving parallel named-corner wrappers
-     should stay native-only or gain Python and TypeScript API aliases.
-   - Keep API names idiomatic per language while preserving matching result
-     semantics and table columns.
-
-2. Deck execution layer.
+1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
    - Support `.include`, `.lib`, `.end`, `.param`, `.func`, expressions, `.ic`,
      and `.nodeset`.
@@ -155,7 +158,7 @@ downstream tools to compare.
    - Define a deliberate `.control` subset or emit explicit unsupported-feature
      diagnostics.
 
-3. Production solver core.
+2. Production solver core.
    - Finish sparse real and complex matrix paths.
    - Use a Rust production sparse path suitable for large decks, a Python
      SciPy-backed path with a structured fallback, and a TypeScript native sparse
@@ -163,14 +166,14 @@ downstream tools to compare.
    - Harden Newton damping, device limiting, convergence aids, tolerances, and
      diagnostics.
 
-4. Device model depth.
+3. Device model depth.
    - Audit diode, BJT, JFET, and MOS Level 1 behavior against reference decks.
    - Decide whether Level 2/3 MOS is in scope before BSIM; if BSIM lands, make
      Rust the first fast path and port stable semantics outward.
    - Expand temperature behavior, capacitance, noise, charge conservation, model
      card aliases, and error messages.
 
-5. Analysis completion.
+4. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
    - Integrate `.FOUR` and `.MEASURE` with transient outputs.
@@ -178,18 +181,18 @@ downstream tools to compare.
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.
 
-6. Mixed-signal integration.
+5. Mixed-signal integration.
    - Connect SPICE transient stepping to the hardware VM scheduler.
    - Support bidirectional analog/digital thresholds, event scheduling,
      breakpoint coordination, and VCD correlation.
    - Keep mixed-signal coupling deterministic across Python, Rust, and
      TypeScript.
 
-7. Verilog-A and custom models.
+6. Verilog-A and custom models.
    - Specify the accepted model subset and residual/Jacobian hooks.
    - Add parser or compiler support with sandboxing for TypeScript/web usage.
    - Provide a Rust-native fast path for compiled models.
 
 ## Suggested PR Queue
 
-1. Remaining cross-language table parity closure.
+1. Deck execution layer.

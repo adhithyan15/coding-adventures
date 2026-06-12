@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `formatDcSweepTable`, `formatCornerDcSweepTable`,
+  `formatCornerAcTable`, and `formatCornerTfTable` to close the remaining
+  Rust-first `.DC`, `.AC`, and `.TF` named-corner table helper gaps in the
+  native web package.
 - Add `formatCornerDcTable`, `dcTemperatureSweep`,
   `dcTemperatureSweepCorners`, `formatTemperatureDcTable`, and
   `formatCornerTemperatureDcTable` for Rust-matching named-corner and
