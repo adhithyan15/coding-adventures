@@ -8,14 +8,14 @@ use coding_adventures_html_parser::{
     BrowserDisclosureStateDescriptor, BrowserDocument, BrowserDocumentMetadata,
     BrowserDocumentPolicyDescriptor, BrowserDragDropDescriptor, BrowserEmbeddedContext,
     BrowserEmbeddedPolicyDescriptor, BrowserEventHandlerDescriptor, BrowserFetchPolicyDescriptor,
-    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormAutofillDescriptor,
-    BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl, BrowserFormDatalist,
-    BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl, BrowserFormImageControl,
-    BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject, BrowserFormObjectParam,
-    BrowserFormOutput, BrowserFormPolicyDescriptor, BrowserFormPolicySubmitterDescriptor,
-    BrowserFormResetDescriptor, BrowserFormSelect, BrowserFormSubmissionDescriptor,
-    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
-    BrowserFormValidationControl, BrowserFormValidationDescriptor,
+    BrowserFocusNavigationDescriptor, BrowserForm, BrowserFormAssociationDescriptor,
+    BrowserFormAutofillDescriptor, BrowserFormButton, BrowserFormChoiceControl, BrowserFormControl,
+    BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl, BrowserFormHiddenControl,
+    BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement, BrowserFormObject,
+    BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormResetDescriptor, BrowserFormSelect,
+    BrowserFormSubmissionDescriptor, BrowserFormSubmitter, BrowserFormSuccessfulControl,
+    BrowserFormTextEntry, BrowserFormValidationControl, BrowserFormValidationDescriptor,
     BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
     BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
     BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
@@ -102,6 +102,8 @@ struct ExpectedBrowserDocument {
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
+    #[serde(default)]
+    form_association_descriptors: Option<Vec<ExpectedFormAssociationDescriptor>>,
     #[serde(default)]
     form_autofill_descriptors: Option<Vec<ExpectedFormAutofillDescriptor>>,
     #[serde(default)]
@@ -896,6 +898,53 @@ struct ExpectedFormPolicySubmitterDescriptor {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormAssociationDescriptor {
+    #[serde(default)]
+    form_id: Option<String>,
+    #[serde(default)]
+    form_name: Option<String>,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    association_kind: String,
+    #[serde(default)]
+    explicit_form_owner: bool,
+    #[serde(default)]
+    labels: Vec<String>,
+    #[serde(default)]
+    label_count: usize,
+    #[serde(default)]
+    fieldset_ids: Vec<String>,
+    #[serde(default)]
+    fieldset_legends: Vec<String>,
+    #[serde(default)]
+    datalist_id: Option<String>,
+    #[serde(default)]
+    datalist_option_count: usize,
+    #[serde(default)]
+    output_for_tokens: Vec<String>,
+    #[serde(default)]
+    output_target_ids: Vec<String>,
+    #[serde(default)]
+    output_target_names: Vec<String>,
+    #[serde(default)]
+    output_target_types: Vec<String>,
+    #[serde(default)]
+    referenced_by_output_ids: Vec<String>,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    will_validate: bool,
+    #[serde(default)]
+    disabled: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4468,6 +4517,26 @@ fn browser_form_submission_descriptors_track_flat_successful_controls_and_submit
 }
 
 #[test]
+fn browser_form_association_descriptors_track_flat_owner_and_label_links() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form association descriptor fixture should parse");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.form_association_descriptors, expected.form_association_descriptors,
+        "form association descriptors should flatten owners, labels, fieldsets, datalists, and outputs",
+    );
+}
+
+#[test]
 fn browser_form_autofill_descriptors_track_flat_autocomplete_hints_and_blockers() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5771,6 +5840,17 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let form_association_descriptors = self
+            .form_association_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedFormAssociationDescriptor::into_browser_form_association_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_form_association_descriptors(&forms));
         let form_autofill_descriptors = self
             .form_autofill_descriptors
             .map(|descriptors| {
@@ -6026,6 +6106,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
                 .collect(),
+            form_association_descriptors,
             form_autofill_descriptors,
             form_submission_descriptors,
             form_reset_descriptors,
@@ -10833,6 +10914,234 @@ impl ExpectedFormPolicySubmitterDescriptor {
             novalidate: self.novalidate,
             value: self.value,
         }
+    }
+}
+
+impl ExpectedFormAssociationDescriptor {
+    fn into_browser_form_association_descriptor(self) -> BrowserFormAssociationDescriptor {
+        BrowserFormAssociationDescriptor {
+            form_id: self.form_id,
+            form_name: self.form_name,
+            element: self.element,
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            association_kind: self.association_kind,
+            explicit_form_owner: self.explicit_form_owner,
+            labels: self.labels,
+            label_count: self.label_count,
+            fieldset_ids: self.fieldset_ids,
+            fieldset_legends: self.fieldset_legends,
+            datalist_id: self.datalist_id,
+            datalist_option_count: self.datalist_option_count,
+            output_for_tokens: self.output_for_tokens,
+            output_target_ids: self.output_target_ids,
+            output_target_names: self.output_target_names,
+            output_target_types: self.output_target_types,
+            referenced_by_output_ids: self.referenced_by_output_ids,
+            successful: self.successful,
+            will_validate: self.will_validate,
+            disabled: self.disabled,
+        }
+    }
+}
+
+fn expected_form_association_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormAssociationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| expected_form_association_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn expected_form_association_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormAssociationDescriptor {
+    let fieldset_ids = expected_form_association_fieldset_ids(form, control);
+    let fieldset_legends = expected_form_association_fieldset_legends(form, control);
+    let datalist_option_count = expected_form_association_datalist_option_count(form, control);
+    let output_targets = expected_output_for_controls(&form.controls, control);
+    let output_target_ids = output_targets
+        .iter()
+        .filter_map(|target| target.id.clone())
+        .collect();
+    let output_target_names = output_targets
+        .iter()
+        .filter_map(|target| target.name.clone())
+        .collect();
+    let output_target_types = output_targets
+        .iter()
+        .map(|target| target.control_type.clone())
+        .collect();
+    let referenced_by_output_ids =
+        expected_form_association_referenced_by_output_ids(form, control);
+
+    BrowserFormAssociationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: expected_form_association_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        association_kind: expected_form_association_kind(
+            form,
+            control,
+            &fieldset_ids,
+            datalist_option_count,
+            &referenced_by_output_ids,
+        ),
+        explicit_form_owner: expected_form_association_explicit_owner(form, control),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        datalist_id: control.list.clone(),
+        datalist_option_count,
+        output_for_tokens: control.output_for.clone(),
+        output_target_ids,
+        output_target_names,
+        output_target_types,
+        referenced_by_output_ids,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        disabled: control.disabled,
+    }
+}
+
+fn expected_form_association_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    fieldset_ids: &[String],
+    datalist_option_count: usize,
+    referenced_by_output_ids: &[String],
+) -> String {
+    if expected_form_association_explicit_owner(form, control) {
+        "explicit-form-owner".to_string()
+    } else if !control.output_for.is_empty() {
+        "output-calculation".to_string()
+    } else if !referenced_by_output_ids.is_empty() {
+        "output-source".to_string()
+    } else if datalist_option_count > 0 {
+        "datalist-backed-control".to_string()
+    } else if !control.labels.is_empty() {
+        "labelled-control".to_string()
+    } else if !fieldset_ids.is_empty() {
+        "fieldset-member".to_string()
+    } else {
+        "form-associated-control".to_string()
+    }
+}
+
+fn expected_form_association_explicit_owner(
+    _form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> bool {
+    control.form_owner.is_some()
+}
+
+fn expected_form_association_fieldset_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| expected_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.id.clone())
+        .collect()
+}
+
+fn expected_form_association_fieldset_legends(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| expected_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.legend.clone())
+        .collect()
+}
+
+fn expected_fieldset_contains_control(
+    fieldset: &BrowserFormFieldset,
+    control: &BrowserFormControl,
+) -> bool {
+    control.id.as_deref().is_some_and(|id| {
+        fieldset
+            .control_ids
+            .iter()
+            .any(|control_id| control_id == id)
+    }) || control.name.as_deref().is_some_and(|name| {
+        fieldset
+            .control_names
+            .iter()
+            .any(|control_name| control_name == name)
+    })
+}
+
+fn expected_form_association_datalist_option_count(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> usize {
+    control
+        .list
+        .as_deref()
+        .and_then(|list| {
+            form.datalists
+                .iter()
+                .find(|datalist| datalist.id.as_deref() == Some(list))
+        })
+        .map(|datalist| datalist.options.len())
+        .unwrap_or_default()
+}
+
+fn expected_form_association_referenced_by_output_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.outputs
+        .iter()
+        .filter(|output| {
+            control
+                .id
+                .as_deref()
+                .is_some_and(|id| output.for_control_ids.iter().any(|target| target == id))
+                || control.name.as_deref().is_some_and(|name| {
+                    output.for_control_names.iter().any(|target| target == name)
+                })
+        })
+        .filter_map(|output| output.id.clone())
+        .collect()
+}
+
+fn expected_output_for_controls<'a>(
+    controls: &'a [BrowserFormControl],
+    output: &BrowserFormControl,
+) -> Vec<&'a BrowserFormControl> {
+    output
+        .output_for
+        .iter()
+        .filter_map(|token| {
+            controls
+                .iter()
+                .find(|control| control.id.as_deref() == Some(token.as_str()))
+        })
+        .collect()
+}
+
+fn expected_form_association_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
     }
 }
 

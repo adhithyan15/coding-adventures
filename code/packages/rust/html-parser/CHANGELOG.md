@@ -6,6 +6,9 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness form-association descriptors now expose form owners, labels,
+  fieldset membership, datalist links, and output calculation relationships as a
+  flat browser-planning inventory.
 - Browser-readiness form-reset descriptors now expose resettable controls,
   resetter controls, default reset values, selection/checked reset state, and
   form-level `onreset` hooks as a flat browser-planning inventory.
