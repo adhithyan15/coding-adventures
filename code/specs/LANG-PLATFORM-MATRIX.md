@@ -102,7 +102,7 @@ achievable code-gen columns land first).
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ◑   | ◑   |
-| Nib             | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
+| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
 | Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ☐    | ☐   | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ☐    | ☐   | ☐   |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
@@ -164,11 +164,13 @@ BASIC); only Brainfuck is deferred.
   runner to `lang_matrix.rs` (source → `iir-to-wasm` → the in-process `wasm-runtime`;
   `main`'s wasm result is the exit value). Verified by RUNNING: Twig→42, Oct→0,
   ALGOL `17 mod 5`→2. In-process, so no host gate.
-- ☐ **LM-W Nib (on WASM).** Same root family as the LLVM Nib fix but one layer
-  deeper: after `widen_nib_type`→i64 fixed signatures, the **const literal** `21` still
-  emits `i32` while the now-i64 param expects i64. `iir-to-wasm` traps
-  (`type mismatch: expected i64, got I32(21)`) where LLVM tolerated it (its call site
-  uses the param type). Fix: materialise Nib const-literal integer types to i64 too.
+- ✅ **LM-W Nib (on WASM).** Completed the i64 materialization the LLVM Nib fix
+  started: `nib_ty_str` (const literals / `ret` / call results) **and** the
+  un-annotated-literal fallback now emit `i64`, not the narrow `u8`. So the bare
+  literal argument in `double(21)` is `i64`, matching the `i64` parameter the strict
+  WASM backend requires. Verified by RUNNING: Nib on WASM → 42, and still LLVM → 42,
+  native → 42 (no regression); nib-iir-compiler (28) + `iir-to-wasm`/`iir-to-llvm`
+  suites all green.
 - ☐ **LM-W BASIC (on WASM).** The in-process `wasm-runtime` reports `no body for
   function 0` for BASIC — the `PRINT` env import (`__print_i64`-equivalent) isn't
   provided to the runtime. Wire the print import + capture stdout, then assert `42`.

@@ -550,7 +550,13 @@ impl Compiler {
         // primary is one of: INT_LIT | HEX_LIT | NAME | call_expr | "(" expr ")" | …
         if let Some(value) = parse_literal(node) {
             let v = self.fresh_var();
-            let ty = lookup_node_type(node, types).map(nib_ty_str).unwrap_or("u8");
+            // An integer literal materialises as `i64` (the machine-word convention
+            // used everywhere else in the Nib IIR). When the type-checker annotated
+            // the node, `nib_ty_str` already returns `i64`; the **fallback** for an
+            // un-annotated literal must also be `i64`, not the narrow `"u8"` — else a
+            // bare literal argument (e.g. `double(21)`) is emitted as `i32` and traps
+            // the strict WASM backend when the callee's parameter is `i64`.
+            let ty = lookup_node_type(node, types).map(nib_ty_str).unwrap_or("i64");
             self.emit_to(out, IIRInstr::new(
                 "const",
                 Some(v.clone()),
@@ -930,10 +936,17 @@ fn lookup_node_type<'a>(node: &'a GrammarASTNode, types: &'a HashMap<usize, NibT
 }
 
 fn nib_ty_str(t: &NibType) -> &'static str {
+    // Nib's integer types materialise as `i64` in the IIR — the same machine-word
+    // convention `widen_nib_type` (function signatures / `let`s) uses and the bodies
+    // already use. This function types **const literals, `ret` values, and call
+    // results**; before, those were emitted as the narrow `"u8"` while signatures
+    // were `i64`, so a `const 21 : u8` passed to an `i64` parameter trapped on the
+    // strict WASM backend (`type mismatch: expected i64, got I32(21)`) — LLVM had
+    // tolerated it because its call site uses the param type. Materialising integers
+    // to `i64` here keeps the whole module uniform (consts/lets/arith/ret/calls all
+    // `i64`). Narrow semantic width is a backend-masking concern, deferred.
     match t {
-        NibType::U4   => "u8",   // u4 has no native CIR mnemonic; widen to u8
-        NibType::U8   => "u8",
-        NibType::Bcd  => "u8",   // BCD is byte-encoded
+        NibType::U4 | NibType::U8 | NibType::Bcd => "i64",
         NibType::Bool => "bool",
         NibType::Void => "void",
     }
