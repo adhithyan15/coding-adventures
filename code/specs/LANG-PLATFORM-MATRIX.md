@@ -101,12 +101,12 @@ achievable code-gen columns land first).
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ◑   |
-| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
+| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
-| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
-| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
+| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
+| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -114,9 +114,7 @@ Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, Brainfuck→stdout `A`, BASI
 The VM/JIT columns are op-coverage work (see above); the code-gen columns
 (LLVM/WASM/JVM/CLR) are conformance + I/O wiring.
 
-(`◑` = partial today: Twig is proven at *scalar* level on CLR; the slice promotes it
-to a full feature battery. The starting state is re-verified per slice — the loop
-trusts running, not this table.)
+(The starting state is re-verified per slice — the loop trusts running, not this table.)
 
 ## Worklist (one PR per item; slice further if large)
 
@@ -217,8 +215,23 @@ BASIC); only Brainfuck is deferred.
 
 ### Phase C — CLR for every language
 
-- ☐ **LM-C** — each language on `iir-to-cil-bytecode` (textual `.il` → real `ilasm` →
-  real `dotnet`, the CLR-real path) + the `clr-simulator` floor. I/O via `Console`.
+- ✅ **LM-C expression languages (Twig / Nib / Oct / ALGOL on real CoreCLR).** Added a
+  `Backend::Clr` runner to `lang_matrix.rs`: source → textual `.il`
+  (`compile_source_to_cil_text`) → real `ilasm -exe` → real `dotnet` → parse the integer
+  the entry `Console.WriteLine`s (the CLR-real path generalized from McCarthy; reuses
+  `clr_support::find_ilasm`). Gated on `dotnet` + `ilasm`. Two gaps fixed **by running**:
+  (1) `iir-to-cil-bytecode` (0.16.0) grew the integer **arithmetic** (`add`/`sub`/`mul`/
+  `div`/`mod`→`rem`) and **comparison** (`cmp_*`→`ceq`/`clt`/`cgt`) opcodes it had
+  `UnsupportedOp`'d — McCarthy only emitted a constant; (2) `concretize_scalar_any_for_cil`
+  now concretizes **parameter** types too (the CLR twin of the JVM `int32(int64)` verifier
+  fix). Verified by RUNNING on CoreCLR: Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2 (25
+  proven matrix cells); conformance/jvm_emit/wasm_emit/iir-to-cil-bytecode suites green.
+  (The `clr-simulator` floor is intentionally *not* used — its `cil_emit.rs` test is
+  broken on `main` from an API drift; the real-`dotnet` path is the stronger check.)
+- ☐ **LM-C BASIC (on CLR).** BASIC's `print_i64` needs a `Console`-writing lowering on
+  the CIL backend (the CLR analogue of wasm `env.__print_i64` / JVM `env.BasicRuntime`);
+  then capture/assert `Console` output.
+- ⏸ **LM-C Brainfuck (on CLR) — DEFERRED.** Same tape-op gap as Brainfuck elsewhere.
 
 ### Phase A — native AOT completeness
 

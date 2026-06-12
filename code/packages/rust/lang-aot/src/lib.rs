@@ -697,6 +697,19 @@ fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();
         }
+        // Concretize the **parameters** too — the same fix the JVM path needed.
+        // A scalar helper such as Nib's `double(x: u8)` widens its parameter to
+        // `i64`; if the body is retyped to `i32` but the parameter is left `i64`,
+        // the emitted CIL method signature is the inconsistent `int32(int64)` and
+        // its body does `int32` arithmetic on an `int64` argument — CoreCLR's
+        // verifier rejects the mismatch. The lisp/`any`-param functions were
+        // already skipped by the `uses_lisp` guard, so every parameter reaching
+        // here is a concrete scalar — safe to bring down to `i32`.
+        for (_, ty) in &mut func.params {
+            if to_i32(ty) {
+                *ty = "i32".to_string();
+            }
+        }
         for instr in &mut func.instructions {
             if to_i32(&instr.type_hint) {
                 instr.type_hint = "i32".to_string();
