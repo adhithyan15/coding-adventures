@@ -15,11 +15,12 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Cross-language parity closure.
+1. Remaining cross-language table parity closure.
    - Status: next.
-   - Close remaining Rust-first SPICE surface gaps in Python and TypeScript.
-   - Audit named-corner coverage for temperature DC, digital bridge outputs,
-     advanced analysis tables, and any helper APIs added during hardening.
+   - Close remaining Rust-first stable table helper gaps in Python and
+     TypeScript, including cornered DC sweep, AC, and transfer-function tables.
+   - Decide whether Rust-only order-preserving parallel named-corner wrappers
+     should stay native-only or gain Python and TypeScript API aliases.
    - Keep API names idiomatic per language while preserving matching result
      semantics and stable table columns.
 
@@ -124,12 +125,23 @@ downstream tools to compare.
       and gate summaries let package checks detect incomplete or malformed
       compatibility fixtures before release.
 
+12. DC corner and temperature parity closure.
+    - Status: completed in this DC corner/temperature parity slice.
+    - Python and TypeScript now expose Rust-matching named-corner DC table
+      helpers with stable `Corner` / `Index` columns.
+    - Python and TypeScript now expose nominal and named-corner DC temperature
+      sweep result shapes, `.temp`-style helpers, and stable tab-separated
+      table helpers.
+    - Package README, changelog, and tests document and lock the new
+      cross-language API surface.
+
 ## Backlog
 
-1. Cross-language parity closure.
-   - Close remaining Rust-first SPICE surface gaps in Python and TypeScript.
-   - Audit named-corner coverage for transient, adaptive transient, PSS,
-     Fourier, distortion, pole-zero, temperature DC, and digital-bridge outputs.
+1. Remaining cross-language table parity closure.
+   - Close remaining Rust-first stable table helper gaps in Python and
+     TypeScript, including cornered DC sweep, AC, and transfer-function tables.
+   - Decide whether Rust-only order-preserving parallel named-corner wrappers
+     should stay native-only or gain Python and TypeScript API aliases.
    - Keep API names idiomatic per language while preserving matching result
      semantics and table columns.
 
@@ -180,4 +192,4 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Cross-language parity closure.
+1. Remaining cross-language table parity closure.

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add `formatCornerDcTable`, `dcTemperatureSweep`,
+  `dcTemperatureSweepCorners`, `formatTemperatureDcTable`, and
+  `formatCornerTemperatureDcTable` for Rust-matching named-corner and
+  `.temp`-style DC operating-point snapshots with stable table columns in the
+  native web package.
 - Add `compatibilityCorpus`, `releaseReadinessGates`,
   `formatCompatibilityCorpusTable`, and `formatReleaseReadinessReport` for the
   first oracle-backed compatibility deck corpus with golden tolerances and

@@ -106,6 +106,7 @@ from spice_engine import (
     CornerSParameterResult,
     CornerSpec,
     CornerSweepResult,
+    CornerTemperatureDcResult,
     CornerTfResult,
     CornerTransientResult,
     CurrentSource,
@@ -151,6 +152,7 @@ from spice_engine import (
     SParameterPoint,
     SParameterResult,
     SubcircuitDefinition,
+    TemperatureDcResult,
     TfResult,
     TransientPoint,
     TransmissionLine,
@@ -167,6 +169,8 @@ from spice_engine import (
     dc_op,
     dc_sweep,
     dc_sweep_corners,
+    dc_temperature_sweep,
+    dc_temperature_sweep_corners,
     device_model_audit_fixtures,
     digital_event_streams_to_bridge_schedule,
     digital_event_streams_to_voltage_sources,
@@ -181,6 +185,7 @@ from spice_engine import (
     format_adaptive_digital_event_stream_table,
     format_corner_adaptive_digital_event_stream_table,
     format_corner_adaptive_transient_table,
+    format_corner_dc_table,
     format_corner_digital_event_stream_table,
     format_corner_distortion_table,
     format_corner_fourier_table,
@@ -190,6 +195,7 @@ from spice_engine import (
     format_corner_pss_table,
     format_corner_s_parameter_table,
     format_corner_sens_table,
+    format_corner_temperature_dc_table,
     format_corner_transient_table,
     format_dc_table,
     format_digital_bridge_schedule_table,
@@ -204,6 +210,7 @@ from spice_engine import (
     format_pss_table,
     format_s_parameter_table,
     format_sens_table,
+    format_temperature_dc_table,
     format_tf_table,
     format_transient_table,
     fourier,
@@ -1046,6 +1053,52 @@ def test_diode_temperature_scaling_reduces_fixed_current_forward_drop():
     assert hot_result.converged
     assert cold_result.node_voltages["a"] > nominal_result.node_voltages["a"]
     assert hot_result.node_voltages["a"] < nominal_result.node_voltages["a"]
+
+
+def test_dc_temperature_sweep_runs_operating_points_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep(c, [275.0, 300.15, 350.0])
+
+    assert isinstance(result, TemperatureDcResult)
+    assert result.points[0].result.node_voltages["a"] > result.points[1].result.node_voltages["a"]
+    assert result.points[2].result.node_voltages["a"] < result.points[1].result.node_voltages["a"]
+    assert format_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Index\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "1\t3.001500e+02\t7.188350e-01\t-9.956198e-04\n"
+        "2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+    )
+
+
+def test_dc_temperature_sweep_corners_runs_named_corners_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep_corners(
+        c,
+        [275.0, 350.0],
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbias-high", (CornerOverride("Rbias", "resistance", 8600.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerTemperatureDcResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rbias-high"]
+    assert result.points[0].points[0].result.node_voltages["a"] > result.points[0].points[1].result.node_voltages["a"]
+    assert format_corner_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "nominal\t0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "nominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+        "rbias-high\t0\t2.750000e+02\t7.877634e-01\t-4.897950e-04\n"
+        "rbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n"
+    )
 
 
 def test_bjt_temperature_scaling_reduces_emitter_follower_forward_drop():
@@ -7233,6 +7286,13 @@ def test_dc_corners_runs_named_parameter_overrides() -> None:
     assert isinstance(result, CornerSweepResult)
     voltages = [point.result.node_voltages["out"] for point in result.points]
     assert voltages == pytest.approx([5.0, 10.0 / 3.0, 6.0, -5.0])
+    assert format_corner_dc_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tV(out)\tI(Vin)\n"
+        "nominal\t0\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t1\t3.333333e+00\t-6.666667e-03\n"
+        "vin-high\t2\t6.000000e+00\t-6.000000e-03\n"
+        "vin-inverted\t3\t-5.000000e+00\t5.000000e-03\n"
+    )
 
 
 def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
