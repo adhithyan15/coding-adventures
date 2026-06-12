@@ -2,6 +2,23 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.103.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-096 (CORRECTNESS)** — regexes carrying the `u` (unicode)
+  flag are no longer corrupted under the default ES2025 mode. The bug
+  lived in the shared `javascript-lexer`: the ES2024/ES2025 `REGEX`
+  token's flag character class read `[dgimsvy]`, accidentally dropping
+  the ES2015 `u` flag (a typo when `v`/unicodeSets was added for
+  ES2024). So `/x/gimsuy` lexed as the truncated regex `/x/gims` plus a
+  stray identifier `uy`, emitted as the invalid `/x/gims uy`. Fixed the
+  flag class to the full ES2024 set `[dgimsuvy]` in `es2024.tokens` and
+  `es2025.tokens` and regenerated the compiled lexer pattern; closurec
+  picks up the fix through its `javascript-lexer` dependency (bumped to
+  0.5.1). The `minify_regex_flags_all` byte-identity fixture leaves the
+  ignore list. (Lexer-level fix — no closurec source change beyond the
+  version bump; regression tests live in `javascript-lexer`.)
+
 ## [0.102.0] - 2026-06-12
 
 ### Fixed

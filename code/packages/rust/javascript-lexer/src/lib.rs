@@ -202,6 +202,45 @@ mod tests {
         let _lexer = create_javascript_lexer_typed("var x = 1;", EsVersion::Es5);
     }
 
+    // gap-096 (CLOC12.99) regression: the ES2024/ES2025 REGEX token's
+    // flag character class once read `[dgimsvy]`, accidentally dropping
+    // the ES2015 `u` (unicode) flag when `v` (unicodeSets) was added.
+    // A regex carrying every modern flag must lex as ONE token, not a
+    // truncated regex followed by a stray identifier of the leftover
+    // flags. We assert the whole `/x/dgimsuy` literal survives intact.
+    #[test]
+    fn es2025_regex_accepts_all_modern_flags_as_one_token() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/dgimsuy;", EsVersion::Es2025).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(
+            regex.value, "/x/dgimsuy",
+            "all of d,g,i,m,s,u,y must be consumed as part of the regex; \
+             a split here means a flag is missing from the grammar's class"
+        );
+        // And crucially there is NO stray identifier `uy` left behind.
+        assert!(
+            tokens.iter().all(|t| t.value != "uy" && t.value != "u"),
+            "regex flags must not split off into a separate identifier"
+        );
+    }
+
+    // The same flag set under ES2024 (the other grammar that carried the
+    // typo) must likewise lex as one token.
+    #[test]
+    fn es2024_regex_accepts_u_flag() {
+        let tokens =
+            tokenize_javascript_typed("var r=/x/gimsuy;", EsVersion::Es2024).unwrap();
+        let regex = tokens
+            .iter()
+            .find(|t| t.value.starts_with("/x/"))
+            .expect("expected a single regex token beginning with /x/");
+        assert_eq!(regex.value, "/x/gimsuy");
+    }
+
     // ----- CV-plumbed tokenization (CLOC03 Stage 1) -----
 
     #[test]
