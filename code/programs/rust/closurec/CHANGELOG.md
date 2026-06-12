@@ -2,6 +2,33 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.85.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-074** — a `for`/`while` loop body that is a SINGLE
+  un-terminated statement drops its braces, matching upstream
+  Closure: `l:for(;;){continue l}` → `l:for(;;)continue l;` (also
+  `for(;;){break}`, `while(x){g()}`, `for(a in o){h(a)}`,
+  `for(a of o){h(a)}`). `minify_loop_body_flatten` is now enforced.
+
+### Added — gap-074 loop-body single-statement block flatten
+
+A pre-pass (loop-body sibling of gap-067's labeled-block flatten)
+anchored on a `for`/`while` STATEMENT keyword — word-like and NOT a
+property (a `.`/`?.` look-behind disqualifies `o.while(x){…}`
+method calls). The header `(…)` is matched by a structural depth
+scan; the token after `)` must be a `{`. A `{` immediately
+following a loop header is UNAMBIGUOUSLY a loop body (never an
+object literal), so no completion-keyword guard is needed. The body
+braces are dropped and a synthetic `;` (reusing gap-067's
+`synth_semi`) terminates the flattened statement. Scoped to the
+provably-safe slice: the body has no nested `{`, no control-flow
+keyword at depth 1, and exactly zero top-level `;`. Bodies ending
+in `;` are left to the gap-032 emit-time flatten; multi-statement,
+empty, and nested-control-flow bodies keep their braces. `if`-body
+and `do…while`-body flatten are deferred. 5 new gap074_* unit tests
++ the `minify_loop_body_flatten` byte-identity fixture.
+
 ## [0.84.0] - 2026-06-12
 
 ### Changed

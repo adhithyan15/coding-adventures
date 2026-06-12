@@ -96,11 +96,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // in CLOC12.79) do this; `instanceof`, `await` do not yet.
     ("instanceof_paren",   "gap-071: instanceof operand paren elision"),
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-074 (CLOC14.35): a loop body that is a single-statement
-    // block flattens — `for(;;){continue l}` → `for(;;)continue
-    // l;`. Sibling of gap-067 (labeled-block) in a loop-body
-    // context.
-    ("loop_body_flatten", "gap-074: loop-body single-statement block flatten"),
+    // gap-074 RESOLVED in CLOC12.81 — a loop body that is a
+    // single-statement block (`for(;;){continue l}` →
+    // `for(;;)continue l;`) now flattens; `minify_loop_body_flatten`
+    // enforced.
     // gap-067 RESOLVED in CLOC12.77 — a labeled single-statement
     // block (`label:{break label}` → `label:break label;`) now
     // flattens; `minify_label_block_flatten` enforced.
