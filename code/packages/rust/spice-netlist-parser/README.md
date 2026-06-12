@@ -29,7 +29,8 @@ suffixes, capacitor `IC=<voltage>` and inductor `IC=<current>` initial
 conditions, independent-source `AC <magnitude> [phase]` forms,
 PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance
 expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
-`.temp`, `.print`, `.plot`, `.four`, and `.options` analysis cards.
+`.temp`, `.print`, `.plot`, `.save`, `.probe`, `.measure`, `.four`, and
+`.options` analysis cards.
 Transient cards can carry `method=euler|trap|gear2`; when omitted,
 `parsed.transient_method(None)?` falls back to `.options method=<...>` if
 present.
@@ -38,6 +39,11 @@ Selected `.options` keys can also be turned into engine-call options with
 Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
 and executed directly with `parsed.analysis_plan()`, `parsed.run_analysis_plan()`,
 or `run_netlist(deck)`.
+`.save`, `.probe`, `.print`, and `.plot` cards can be applied to executed
+analysis results with `parsed.select_outputs(&results)?`. Supported `.measure`
+cards can be evaluated with `parsed.measure_results(&results)?`; the first
+execution subset supports `FIND ... AT=<value>` plus `MAX`, `MIN`, `AVG`, and
+`RMS` over optional `FROM=<value>` / `TO=<value>` ranges.
 Deck-level `.temp` cards can be resolved into Kelvin with
 `parsed.operating_temperature_kelvin(0, 300.0)?`, and
 `parsed.noise_temperature_kelvin(Some(noise_card), 0, 300.0)?` applies the

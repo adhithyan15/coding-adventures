@@ -28,8 +28,9 @@ MOSFET parameters (`NMOS`/`PMOS`, `VT0`/`VTO`, `KP`, `LAMBDA`, `GAMMA`, `PHI`,
 and inductor `IC=<current>` initial conditions, SPICE engineering suffixes,
 PWL/PULSE/SIN/EXP source forms, comments, `.end`, `.subckt` / `X` instance
 expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`, `.sens`, `.mc`, `.noise`,
-`.temp`, `.print`, `.plot`, `.four`, and `.options` analysis cards. Transient
-cards can carry `method=euler|trap|gear2`; when omitted,
+`.temp`, `.print`, `.plot`, `.save`, `.probe`, `.measure`, `.four`, and
+`.options` analysis cards. Transient cards can carry `method=euler|trap|gear2`;
+when omitted,
 `netlist.transient_method()` falls back to `.options method=<...>` if present.
 Selected `.options` keys can also be turned into engine-call arguments with
 `netlist.dc_op_kwargs()` and `netlist.transient_kwargs()`.
@@ -48,6 +49,12 @@ R2 out 0 1k
 .end
 """)
 ```
+
+`.save`, `.probe`, `.print`, and `.plot` cards can be applied to executed
+analysis results with `netlist.select_outputs(results)`. Supported `.measure`
+cards can be evaluated with `netlist.measure_results(results)`; the first
+execution subset supports `FIND ... AT=<value>` plus `MAX`, `MIN`, `AVG`, and
+`RMS` over optional `FROM=<value>` / `TO=<value>` ranges.
 
 Deck-level `.temp` cards can be resolved into Kelvin with
 `netlist.operating_temperature_kelvin()`, and

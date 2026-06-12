@@ -15,13 +15,14 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
-   - Status: in progress.
-   - Python, Rust, and TypeScript should expose matching plan builders and
-     execution helpers that run parsed `.op`, `.dc`, `.ac dec` / `.ac log`, and
-     `.tran` cards against the parsed circuit in deck order.
-   - The slice deliberately leaves `.measure`, `.save`, `.probe`, `.control`,
-     and non-log AC sweep execution to later backlog items.
+1. Sparse solver productionization and convergence diagnostics.
+   - Status: next.
+   - Replace or route the dense solve paths through production sparse real and
+     complex matrix implementations where the package already has a suitable
+     backend.
+   - Preserve the current Python, Rust, and TypeScript public result shapes
+     while adding stable convergence diagnostics that downstream tools can
+     compare.
 
 ## Completed Slices
 
@@ -59,6 +60,21 @@ downstream tools to compare.
    - Python and TypeScript now expose matching result shapes, named-corner
      wrappers, named-corner table helpers, changelog entries, and parity tests.
 
+5. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
+   - Status: completed in PR 5421.
+   - Python, Rust, and TypeScript expose matching plan builders and execution
+     helpers that run parsed `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran`
+     cards against the parsed circuit in deck order.
+
+6. Initial `.measure`, `.save`, and `.probe` output selection.
+   - Status: completed in this output-selection slice.
+   - Python, Rust, and TypeScript parse `.save`, scoped or global `.probe`,
+     and `.measure` / `.meas` cards.
+   - The first `.measure` execution subset supports `FIND ... AT=<value>` and
+     `MAX`, `MIN`, `AVG`, and `RMS` over optional `FROM=<value>` /
+     `TO=<value>` ranges for `.op`, `.dc`, `.ac`, and `.tran` analysis-plan
+     results.
+
 ## Backlog
 
 1. Cross-language parity closure.
@@ -71,7 +87,10 @@ downstream tools to compare.
 2. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
    - Support `.include`, `.lib`, `.end`, `.param`, `.func`, expressions, `.ic`,
-     `.nodeset`, `.measure`, `.save`, and `.probe`.
+     and `.nodeset`.
+   - Expand the initial `.measure`, `.save`, and `.probe` support toward full
+     SPICE compatibility, including additional measure modes and richer output
+     formats.
    - Define a deliberate `.control` subset or emit explicit unsupported-feature
      diagnostics.
 
@@ -118,10 +137,8 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Netlist-to-analysis-plan execution for `.op`, `.dc`, `.ac`, and `.tran`.
-2. `.measure`, `.save`, and `.probe` output selection.
-3. Sparse solver productionization and convergence diagnostics.
-4. Device model audit fixtures and model-card alias compatibility.
-5. Mixed-signal hardware VM bridge.
-6. Verilog-A/custom-model foothold.
-7. Compatibility corpus and release readiness.
+1. Sparse solver productionization and convergence diagnostics.
+2. Device model audit fixtures and model-card alias compatibility.
+3. Mixed-signal hardware VM bridge.
+4. Verilog-A/custom-model foothold.
+5. Compatibility corpus and release readiness.
