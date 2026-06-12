@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckFunctions,
   resolveDeckInitialConditions,
   resolveDeckParameters,
   resolveDeckSources,
@@ -320,6 +321,61 @@ V1 in 0 DC 1
       ".ic",
       ".nodeset",
       ".nodeset",
+    ]);
+  });
+
+  it("extracts .func definitions", () => {
+    const summary = resolveDeckFunctions(`
+R1 in out {gain(vin)}
+.func gain(x) {x*2}
+.func blend(a,b,weight) 'a*(1-weight)+b*weight'
+.op
+.end
+.func after(x) {x}
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual(["R1 in out {gain(vin)}", ".op"]);
+    expect(summary.functions.map(({ name, arguments: args, expression, lineNumber }) => [
+      name,
+      args,
+      expression,
+      lineNumber,
+    ])).toStrictEqual([
+      ["gain", ["x"], "x*2", 3],
+      ["blend", ["a", "b", "weight"], "a*(1-weight)+b*weight", 4],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports malformed .func definitions", () => {
+    const summary = resolveDeckFunctions(`
+.func
+.func 1bad(x) {x}
+.func noexpr(x)
+.func badarg(1x,x) {x}
+.func dup(x,x) {x}
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.activeLines).toStrictEqual([]);
+    expect(summary.functions).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_FUNC_ARGUMENT",
+      "SPICE_DECK_FUNC_SIGNATURE",
+      "SPICE_DECK_FUNC_EXPRESSION",
+      "SPICE_DECK_FUNC_ARGUMENT",
+      "SPICE_DECK_FUNC_ARGUMENT",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.functionName)).toStrictEqual([
+      undefined,
+      "1bad",
+      "noexpr",
+      "badarg",
+      "dup",
     ]);
   });
 });

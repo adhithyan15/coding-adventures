@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, resolve_deck_initial_conditions,
-    resolve_deck_parameters, resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue,
-    CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_functions,
+    resolve_deck_initial_conditions, resolve_deck_parameters, resolve_deck_sources,
+    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -435,5 +435,96 @@ fn resolve_deck_initial_conditions_reports_bad_assignments() {
             .map(|diagnostic| diagnostic.directive.as_str())
             .collect::<Vec<_>>(),
         vec![".ic", ".ic", ".ic", ".nodeset", ".nodeset"]
+    );
+}
+
+#[test]
+fn resolve_deck_functions_extracts_function_definitions() {
+    let summary = resolve_deck_functions(
+        "
+R1 in out {gain(vin)}
+.func gain(x) {x*2}
+.func blend(a,b,weight) 'a*(1-weight)+b*weight'
+.op
+.end
+.func after(x) {x}
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(6));
+    assert_eq!(summary.active_lines, vec!["R1 in out {gain(vin)}", ".op"]);
+    assert_eq!(
+        summary
+            .functions
+            .iter()
+            .map(|function| (
+                function.name.as_str(),
+                function
+                    .arguments
+                    .iter()
+                    .map(String::as_str)
+                    .collect::<Vec<_>>(),
+                function.expression.as_str(),
+                function.line_number,
+            ))
+            .collect::<Vec<_>>(),
+        vec![
+            ("gain", vec!["x"], "x*2", 3),
+            (
+                "blend",
+                vec!["a", "b", "weight"],
+                "a*(1-weight)+b*weight",
+                4
+            )
+        ]
+    );
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn resolve_deck_functions_reports_bad_definitions() {
+    let summary = resolve_deck_functions(
+        "
+.func
+.func 1bad(x) {x}
+.func noexpr(x)
+.func badarg(1x,x) {x}
+.func dup(x,x) {x}
+.end
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(7));
+    assert!(summary.active_lines.is_empty());
+    assert!(summary.functions.is_empty());
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_FUNC_ARGUMENT",
+            "SPICE_DECK_FUNC_SIGNATURE",
+            "SPICE_DECK_FUNC_EXPRESSION",
+            "SPICE_DECK_FUNC_ARGUMENT",
+            "SPICE_DECK_FUNC_ARGUMENT",
+        ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.function_name.as_deref())
+            .collect::<Vec<_>>(),
+        vec![
+            None,
+            Some("1bad"),
+            Some("noexpr"),
+            Some("badarg"),
+            Some("dup")
+        ]
     );
 }

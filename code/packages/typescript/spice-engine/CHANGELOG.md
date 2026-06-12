@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolveDeckFunctions` for scalar `.func name(args) expression`
+  definition extraction before `.end`, braced or quoted expression delimiter
+  stripping, and stable diagnostics for malformed signatures, arguments,
+  duplicate arguments, and empty expressions, matching Python and Rust.
 - Add `resolveDeckInitialConditions` for scalar `.ic` and `.nodeset`
   `V(node)=value` hint extraction before `.end`, numeric SPICE
   suffix/arithmetic expression evaluation, and stable diagnostics for malformed

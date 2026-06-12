@@ -499,6 +499,31 @@ export interface DeckInitialConditionSummary {
   readonly diagnostics: readonly DeckInitialConditionDiagnostic[];
 }
 
+export interface DeckFunctionDefinition {
+  readonly name: string;
+  readonly arguments: readonly string[];
+  readonly expression: string;
+  readonly lineNumber: number;
+}
+
+export interface DeckFunctionDiagnostic {
+  readonly code: string;
+  readonly directive: ".func";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly functionName?: string;
+  readonly expression?: string;
+}
+
+export interface DeckFunctionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly functions: readonly DeckFunctionDefinition[];
+  readonly diagnostics: readonly DeckFunctionDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -2780,6 +2805,39 @@ export function resolveDeckInitialConditions(netlist: string): DeckInitialCondit
   };
 }
 
+export function resolveDeckFunctions(netlist: string): DeckFunctionSummary {
+  const state = new DeckFunctionState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".func") {
+      resolveFunctionLine(stripped, lineNumber, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    functions: state.functions,
+    diagnostics: state.diagnostics,
+  };
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3197,6 +3255,11 @@ class DeckInitialConditionState {
   readonly nodesets: DeckNodeCondition[] = [];
 }
 
+class DeckFunctionState {
+  readonly diagnostics: DeckFunctionDiagnostic[] = [];
+  readonly functions: DeckFunctionDefinition[] = [];
+}
+
 function resolveNodeConditionLine(
   line: string,
   lineNumber: number,
@@ -3262,6 +3325,74 @@ function resolveNodeConditionLine(
       });
     }
   }
+}
+
+function resolveFunctionLine(line: string, lineNumber: number, state: DeckFunctionState): void {
+  const directiveMatch = /^\S+\s+(.+)$/.exec(line);
+  const rest = directiveMatch?.[1].trim() ?? "";
+  if (rest.length === 0) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: ".func requires a name(args) expression definition",
+    });
+    return;
+  }
+
+  const parsed = parseFunctionSignature(rest);
+  if (parsed === undefined) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_SIGNATURE",
+      lineNumber,
+      message: ".func definition must use name(args) expression syntax",
+    });
+    return;
+  }
+  const { name, argumentList, expression: rawExpression } = parsed;
+  if (!isParameterName(name)) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_SIGNATURE",
+      lineNumber,
+      message: `.func name ${JSON.stringify(name)} is not a valid identifier`,
+      functionName: name,
+    });
+    return;
+  }
+  const invalidArgument = argumentList.find((argument) => !isParameterName(argument));
+  if (invalidArgument !== undefined) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: `.func argument ${JSON.stringify(invalidArgument)} is not a valid identifier`,
+      functionName: name,
+    });
+    return;
+  }
+  if (new Set(argumentList.map((argument) => argument.toLowerCase())).size !== argumentList.length) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: `.func ${JSON.stringify(name)} has duplicate argument names`,
+      functionName: name,
+    });
+    return;
+  }
+  const expression = stripExpressionDelimiters(rawExpression.trim());
+  if (expression.length === 0) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_EXPRESSION",
+      lineNumber,
+      message: `.func ${JSON.stringify(name)} requires a non-empty expression`,
+      functionName: name,
+    });
+    return;
+  }
+  state.functions.push({
+    name,
+    arguments: argumentList,
+    expression,
+    lineNumber,
+  });
 }
 
 function resolveParamLine(line: string, lineNumber: number, state: DeckParameterState): void {
@@ -3586,12 +3717,43 @@ function addInitialConditionDiagnostic(
   });
 }
 
+function addFunctionDiagnostic(
+  state: DeckFunctionState,
+  diagnostic: Omit<DeckFunctionDiagnostic, "directive" | "severity"> & {
+    readonly severity?: "error" | "warning";
+  },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    directive: ".func",
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
 function parseNodeConditionTarget(target: string): string | undefined {
   if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
     return undefined;
   }
   const node = target.slice(2, -1).trim();
   return node.length > 0 ? node : undefined;
+}
+
+function parseFunctionSignature(
+  rest: string,
+): { readonly name: string; readonly argumentList: readonly string[]; readonly expression: string } | undefined {
+  const openIndex = rest.indexOf("(");
+  if (openIndex < 0) {
+    return undefined;
+  }
+  const closeIndex = rest.indexOf(")", openIndex + 1);
+  if (closeIndex < 0) {
+    return undefined;
+  }
+  const name = rest.slice(0, openIndex).trim();
+  const argumentsRaw = rest.slice(openIndex + 1, closeIndex).trim();
+  const expression = rest.slice(closeIndex + 1).trim();
+  const argumentList = argumentsRaw.length === 0 ? [] : argumentsRaw.split(",").map((argument) => argument.trim());
+  return { name, argumentList, expression };
 }
 
 function isParameterName(name: string): boolean {

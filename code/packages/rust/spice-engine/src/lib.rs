@@ -3229,6 +3229,34 @@ pub struct DeckInitialConditionSummary {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionDefinition {
+    pub name: String,
+    pub arguments: Vec<String>,
+    pub expression: String,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub function_name: Option<String>,
+    pub expression: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub functions: Vec<DeckFunctionDefinition>,
+    pub diagnostics: Vec<DeckFunctionDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
     pub field: String,
@@ -3491,6 +3519,38 @@ pub fn resolve_deck_initial_conditions(netlist: &str) -> DeckInitialConditionSum
         end_line_number,
         initial_conditions: state.initial_conditions,
         nodesets: state.nodesets,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_functions(netlist: &str) -> DeckFunctionSummary {
+    let mut state = DeckFunctionState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".func") {
+            resolve_function_line(stripped, line_number, &mut state);
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckFunctionSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        functions: state.functions,
         diagnostics: state.diagnostics,
     }
 }
@@ -3782,6 +3842,20 @@ impl DeckInitialConditionState {
             diagnostics: Vec::new(),
             initial_conditions: Vec::new(),
             nodesets: Vec::new(),
+        }
+    }
+}
+
+struct DeckFunctionState {
+    diagnostics: Vec<DeckFunctionDiagnostic>,
+    functions: Vec<DeckFunctionDefinition>,
+}
+
+impl DeckFunctionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            functions: Vec::new(),
         }
     }
 }
@@ -4137,6 +4211,102 @@ fn resolve_node_condition_line(
             ),
         }
     }
+}
+
+fn resolve_function_line(line: &str, line_number: usize, state: &mut DeckFunctionState) {
+    let Some((_, rest)) = line.split_once(char::is_whitespace) else {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            ".func requires a name(args) expression definition",
+            None,
+            None,
+        );
+        return;
+    };
+    let rest = rest.trim();
+    if rest.is_empty() {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            ".func requires a name(args) expression definition",
+            None,
+            None,
+        );
+        return;
+    }
+
+    let Some((name, arguments, expression)) = parse_function_signature(rest) else {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_SIGNATURE",
+            line_number,
+            ".func definition must use name(args) expression syntax",
+            None,
+            None,
+        );
+        return;
+    };
+    if !is_parameter_name(&name) {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_SIGNATURE",
+            line_number,
+            &format!(".func name {name:?} is not a valid identifier"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    if let Some(invalid_argument) = arguments
+        .iter()
+        .find(|argument| !is_parameter_name(argument))
+    {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            &format!(".func argument {invalid_argument:?} is not a valid identifier"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    let mut seen = HashSet::new();
+    if arguments
+        .iter()
+        .any(|argument| !seen.insert(argument.to_ascii_lowercase()))
+    {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            &format!(".func {name:?} has duplicate argument names"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    let expression = strip_expression_delimiters(expression.trim());
+    if expression.is_empty() {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_EXPRESSION",
+            line_number,
+            &format!(".func {name:?} requires a non-empty expression"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    state.functions.push(DeckFunctionDefinition {
+        name,
+        arguments,
+        expression,
+        line_number,
+    });
 }
 
 fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterState) {
@@ -4527,6 +4697,25 @@ fn add_initial_condition_diagnostic(
     });
 }
 
+fn add_function_diagnostic(
+    state: &mut DeckFunctionState,
+    code: &str,
+    line_number: usize,
+    message: &str,
+    function_name: Option<String>,
+    expression: Option<String>,
+) {
+    state.diagnostics.push(DeckFunctionDiagnostic {
+        code: code.to_string(),
+        directive: ".func".to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        function_name,
+        expression,
+    });
+}
+
 fn parse_node_condition_target(target: &str) -> Option<String> {
     if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
     {
@@ -4538,6 +4727,23 @@ fn parse_node_condition_target(target: &str) -> Option<String> {
     } else {
         Some(node.to_string())
     }
+}
+
+fn parse_function_signature(rest: &str) -> Option<(String, Vec<String>, String)> {
+    let open_index = rest.find('(')?;
+    let close_index = rest[open_index + 1..].find(')')? + open_index + 1;
+    let name = rest[..open_index].trim().to_string();
+    let arguments_raw = rest[open_index + 1..close_index].trim();
+    let expression = rest[close_index + 1..].trim().to_string();
+    let arguments = if arguments_raw.is_empty() {
+        Vec::new()
+    } else {
+        arguments_raw
+            .split(',')
+            .map(|argument| argument.trim().to_string())
+            .collect()
+    };
+    Some((name, arguments, expression))
 }
 
 fn is_unsupported_parameter_directive(directive: &str) -> bool {

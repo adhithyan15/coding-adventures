@@ -153,6 +153,40 @@ class DeckInitialConditionSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckFunctionDefinition:
+    """A parsed scalar SPICE `.func` definition."""
+
+    name: str
+    arguments: tuple[str, ...]
+    expression: str
+    line_number: int
+
+
+@dataclass(frozen=True, slots=True)
+class DeckFunctionDiagnostic:
+    """A stable diagnostic emitted while resolving deck functions."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    function_name: str | None = None
+    expression: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckFunctionSummary:
+    """Resolved active deck lines plus `.func` definitions."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    functions: tuple[DeckFunctionDefinition, ...]
+    diagnostics: tuple[DeckFunctionDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -440,6 +474,35 @@ def resolve_deck_initial_conditions(netlist: str) -> DeckInitialConditionSummary
     )
 
 
+def resolve_deck_functions(netlist: str) -> DeckFunctionSummary:
+    """Extract scalar ``.func`` definitions without executing them."""
+
+    state = _DeckFunctionState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive == ".func":
+            _resolve_function_line(stripped, line_number, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckFunctionSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        functions=tuple(state.functions),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -654,6 +717,16 @@ class _DeckInitialConditionState:
         self.nodesets = []
 
 
+@dataclass(slots=True)
+class _DeckFunctionState:
+    diagnostics: list[DeckFunctionDiagnostic]
+    functions: list[DeckFunctionDefinition]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.functions = []
+
+
 def _resolve_node_condition_line(
     line: str,
     line_number: int,
@@ -718,6 +791,75 @@ def _resolve_node_condition_line(
             state.initial_conditions.append(condition)
         else:
             state.nodesets.append(condition)
+
+
+def _resolve_function_line(line: str, line_number: int, state: _DeckFunctionState) -> None:
+    parts = line.split(None, 1)
+    if len(parts) == 1 or not parts[1].strip():
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_ARGUMENT",
+            line_number=line_number,
+            message=".func requires a name(args) expression definition",
+        )
+        return
+
+    parsed = _parse_function_signature(parts[1].strip())
+    if parsed is None:
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_SIGNATURE",
+            line_number=line_number,
+            message=".func definition must use name(args) expression syntax",
+        )
+        return
+    name, arguments, expression = parsed
+    if not _is_parameter_name(name):
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_SIGNATURE",
+            line_number=line_number,
+            message=f".func name {name!r} is not a valid identifier",
+            function_name=name,
+        )
+        return
+    invalid_argument = next((argument for argument in arguments if not _is_parameter_name(argument)), None)
+    if invalid_argument is not None:
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_ARGUMENT",
+            line_number=line_number,
+            message=f".func argument {invalid_argument!r} is not a valid identifier",
+            function_name=name,
+        )
+        return
+    if len({argument.lower() for argument in arguments}) != len(arguments):
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_ARGUMENT",
+            line_number=line_number,
+            message=f".func {name!r} has duplicate argument names",
+            function_name=name,
+        )
+        return
+    expression = _strip_expression_delimiters(expression.strip())
+    if not expression:
+        _add_function_diagnostic(
+            state,
+            code="SPICE_DECK_FUNC_EXPRESSION",
+            line_number=line_number,
+            message=f".func {name!r} requires a non-empty expression",
+            function_name=name,
+        )
+        return
+    state.functions.append(
+        DeckFunctionDefinition(
+            name=name,
+            arguments=tuple(arguments),
+            expression=expression,
+            line_number=line_number,
+        )
+    )
 
 
 def _resolve_param_line(
@@ -1025,11 +1167,47 @@ def _add_initial_condition_diagnostic(
     )
 
 
+def _add_function_diagnostic(
+    state: _DeckFunctionState,
+    *,
+    code: str,
+    line_number: int,
+    message: str,
+    function_name: str | None = None,
+    expression: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckFunctionDiagnostic(
+            code=code,
+            directive=".func",
+            line_number=line_number,
+            message=message,
+            severity="error",
+            function_name=function_name,
+            expression=expression,
+        )
+    )
+
+
 def _parse_node_condition_target(target: str) -> str | None:
     if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
         return None
     node = target[2:-1].strip()
     return node or None
+
+
+def _parse_function_signature(rest: str) -> tuple[str, list[str], str] | None:
+    open_index = rest.find("(")
+    if open_index < 0:
+        return None
+    close_index = rest.find(")", open_index + 1)
+    if close_index < 0:
+        return None
+    name = rest[:open_index].strip()
+    arguments_raw = rest[open_index + 1 : close_index].strip()
+    expression = rest[close_index + 1 :].strip()
+    arguments = [] if not arguments_raw else [item.strip() for item in arguments_raw.split(",")]
+    return name, arguments, expression
 
 
 def _is_parameter_name(name: str) -> bool:
