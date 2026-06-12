@@ -583,6 +583,7 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-076 — with-body single-statement block flatten
 
-- **Status:** OPEN — discovered by CLOC14.36. `minify_with_body_flatten` ignored.
+- **Status:** RESOLVED in CLOC12.83. `minify_with_body_flatten` enforced.
 - **Input:** `with(o){a()}` → **Upstream:** `with(o)a();`
-- **What it needs:** When a `with` statement's body is a single statement, flatten `with(o){S}` → `with(o)S;`. This is the `with`-body sibling of gap-074 (for/while loop-body flatten) — `with` has the same `keyword (…) {body}` shape, and a `{` immediately after the `with(…)` header is unambiguously the body. Adding `with` to the gap-074 pre-pass anchor set (currently `for`/`while`) should close it, with the same single-statement / synthetic-`;` / property-guard machinery. (`with` is sloppy-mode-only, but valid input the WHITESPACE_ONLY pipeline must round-trip.)
+- **What it needed:** When a `with` statement's body is a single un-terminated statement, flatten `with(o){S}` → `with(o)S;`. The `with`-body sibling of gap-074 (for/while loop-body flatten) — `with` has the same `keyword (…) {body}` shape, and a `{` immediately after the `with(…)` header is unambiguously the body.
+- **CLOC12.83 resolution:** Added `with` to the gap-074 pre-pass anchor keyword set (`for`/`while`/`with`). The identical single-statement / property-guard (`o.with(x){…}` is left alone) / synthetic-`;` machinery applies unchanged; multi-statement bodies (`with(o){a();b()}`) keep their braces. Verified against the JAR. (`with` is sloppy-mode-only, but valid input the WHITESPACE_ONLY pipeline must round-trip.) **Residual:** a `with` body that ALREADY ends in `;` (`with(o){a();}`) is not yet flattened — the gap-032 emit-time flatten sets `body_position_next` after `for`/`while` headers but not after `with(…)`; deferred (the gap-076 fixture is the no-trailing-`;` form). 2 unit tests + the byte-identity fixture.
