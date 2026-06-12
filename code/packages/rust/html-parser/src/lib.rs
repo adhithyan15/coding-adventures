@@ -844,6 +844,7 @@ pub struct BrowserDocument {
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
     pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
@@ -1297,6 +1298,40 @@ pub struct BrowserComponentHydrationTarget {
 pub struct BrowserDataAttribute {
     pub name: String,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSubmissionDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: String,
+    pub form_enctype: Option<String>,
+    pub form_target: Option<String>,
+    pub effective_form_target: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub submission_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub submission_values: Vec<String>,
+    pub submission_value_count: usize,
+    pub successful: bool,
+    pub checked: bool,
+    pub disabled: bool,
+    pub submitter: bool,
+    pub submitter_action: Option<String>,
+    pub resolved_submitter_action: Option<String>,
+    pub submitter_method: Option<String>,
+    pub submitter_enctype: Option<String>,
+    pub submitter_target: Option<String>,
+    pub effective_submitter_target: Option<String>,
+    pub submitter_novalidate: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3341,6 +3376,7 @@ impl BrowserDocument {
             browser_fullscreen_interaction_descriptors(&summary);
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
+        summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
@@ -19753,6 +19789,89 @@ fn browser_form_policy_submitter_descriptor(
     }
 }
 
+fn browser_form_submission_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormSubmissionDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_submission_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_submission_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormSubmissionDescriptor> {
+    if !control.successful && !is_browser_form_submitter(control) {
+        return None;
+    }
+
+    Some(BrowserFormSubmissionDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_action: form.action.clone(),
+        resolved_form_action: form.resolved_action.clone(),
+        form_method: form.method.clone(),
+        form_enctype: form.enctype.clone(),
+        form_target: form.target.clone(),
+        effective_form_target: form.effective_target.clone(),
+        element: browser_form_submission_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        submission_kind: browser_form_submission_kind(control),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        successful: control.successful,
+        checked: control.checked,
+        disabled: control.disabled,
+        submitter: is_browser_form_submitter(control),
+        submitter_action: control.form_action.clone(),
+        resolved_submitter_action: control.resolved_form_action.clone(),
+        submitter_method: control.form_method.clone(),
+        submitter_enctype: control.form_enctype.clone(),
+        submitter_target: control.form_target.clone(),
+        effective_submitter_target: control
+            .form_target
+            .clone()
+            .or_else(|| form.target.clone())
+            .or_else(|| form.effective_target.clone()),
+        submitter_novalidate: form.novalidate || control.form_novalidate,
+    })
+}
+
+fn browser_form_submission_kind(control: &BrowserFormControl) -> String {
+    if is_browser_form_submitter(control) && control.successful {
+        "successful-submitter".to_string()
+    } else if is_browser_form_submitter(control) {
+        "submitter".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "submission-metadata".to_string()
+    }
+}
+
+fn browser_form_submission_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
 fn browser_form_validation_descriptors(
     forms: &[BrowserForm],
 ) -> Vec<BrowserFormValidationDescriptor> {
@@ -23670,6 +23789,91 @@ mod tests {
         assert_eq!(summary_control.target_kind, "disclosure");
         assert_eq!(summary_control.text, "More");
         assert!(summary_control.focusable);
+    }
+
+    #[test]
+    fn browser_form_submission_descriptors_track_successful_controls_and_submitters() {
+        let document = parse_browser_document(
+            "<base href=https://example.test/app/>\
+             <form id=checkout name=checkout action=pay method=post target=receipt>\
+             <input id=item name=item value=book>\
+             <input id=gift name=gift type=checkbox value=yes checked>\
+             <input id=off name=off type=checkbox value=no>\
+             <select id=ship name=ship><option value=ground selected>Ground</option><option value=air>Air</option></select>\
+             <textarea id=note name=note>Leave at door</textarea>\
+             <input id=upload name=upload type=file>\
+             <button id=pay name=pay value=now formaction=pay-now formtarget=fast formnovalidate>Pay</button>\
+             <input id=imagePay type=image name=spot src=pay.png alt=Pay image>\
+             <input id=disabled name=disabled value=no disabled>\
+             </form>\
+             <input id=external form=checkout name=outside value=extra>",
+        )
+        .expect("form submission descriptor document should parse");
+
+        let descriptors = &document.form_submission_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["item", "gift", "ship", "note", "upload", "pay", "imagePay", "external"]
+        );
+
+        let item = &descriptors[0];
+        assert_eq!(item.form_id.as_deref(), Some("checkout"));
+        assert_eq!(item.form_name.as_deref(), Some("checkout"));
+        assert_eq!(item.form_action.as_deref(), Some("pay"));
+        assert_eq!(
+            item.resolved_form_action.as_deref(),
+            Some("https://example.test/app/pay")
+        );
+        assert_eq!(item.form_method, "post");
+        assert_eq!(item.effective_form_target.as_deref(), Some("receipt"));
+        assert_eq!(item.element, "input");
+        assert_eq!(item.control_type, "text");
+        assert_eq!(item.submission_kind, "successful-control");
+        assert_eq!(item.value.as_deref(), Some("book"));
+        assert_eq!(item.submission_values, vec!["book"]);
+        assert_eq!(item.submission_value_count, 1);
+        assert!(item.successful);
+        assert!(!item.submitter);
+
+        let gift = &descriptors[1];
+        assert_eq!(gift.control_type, "checkbox");
+        assert!(gift.checked);
+        assert_eq!(gift.submission_values, vec!["yes"]);
+
+        let ship = &descriptors[2];
+        assert_eq!(ship.element, "select");
+        assert_eq!(ship.submission_values, vec!["ground"]);
+
+        let upload = &descriptors[4];
+        assert_eq!(upload.control_type, "file");
+        assert!(upload.submission_values.is_empty());
+        assert_eq!(upload.submission_value_count, 0);
+
+        let pay = &descriptors[5];
+        assert_eq!(pay.submission_kind, "submitter");
+        assert!(pay.submitter);
+        assert_eq!(pay.submitter_action.as_deref(), Some("pay-now"));
+        assert_eq!(
+            pay.resolved_submitter_action.as_deref(),
+            Some("https://example.test/app/pay-now")
+        );
+        assert_eq!(pay.submitter_target.as_deref(), Some("fast"));
+        assert_eq!(pay.effective_submitter_target.as_deref(), Some("fast"));
+        assert!(pay.submitter_novalidate);
+
+        let image = &descriptors[6];
+        assert_eq!(image.control_type, "image");
+        assert_eq!(image.accessible_name.as_deref(), Some("Pay"));
+        assert_eq!(image.submission_kind, "submitter");
+        assert!(image.submitter);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("checkout"));
+        assert_eq!(external.submission_values, vec!["extra"]);
     }
 
     #[test]

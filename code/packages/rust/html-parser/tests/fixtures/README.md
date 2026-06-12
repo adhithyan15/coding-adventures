@@ -38,6 +38,9 @@ Resource-endpoint descriptor cases pin refresh redirects plus resolved document
 resources as a flat endpoint inventory for fetch/navigation planning.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
 policy tokens, validation bypass state, and submitter overrides.
+Form-submission descriptor cases pin successful controls, submission values,
+form action/method/target defaults, and submitter routing overrides as a flat
+browser-planning inventory.
 Form-validation descriptor cases pin validation candidates, constraint
 attributes, barred controls, form-level `novalidate`, and submitter-level
 validation bypass hints as a flat browser-planning inventory.

@@ -12,22 +12,22 @@ use coding_adventures_html_parser::{
     BrowserFormControl, BrowserFormDatalist, BrowserFormFieldset, BrowserFormFileControl,
     BrowserFormHiddenControl, BrowserFormImageControl, BrowserFormLabel, BrowserFormMeasurement,
     BrowserFormObject, BrowserFormObjectParam, BrowserFormOutput, BrowserFormPolicyDescriptor,
-    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmitter,
-    BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
-    BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
-    BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
-    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
-    BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
-    BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserFormPolicySubmitterDescriptor, BrowserFormSelect, BrowserFormSubmissionDescriptor,
+    BrowserFormSubmitter, BrowserFormSuccessfulControl, BrowserFormTextEntry,
+    BrowserFormValidationControl, BrowserFormValidationDescriptor,
+    BrowserFullscreenInteractionDescriptor, BrowserGlobalStateDescriptor, BrowserHeading,
+    BrowserHttpEquivHint, BrowserImage, BrowserImageCandidateDescriptor, BrowserImageMap,
+    BrowserImageMapArea, BrowserImageSource, BrowserInputPlanningDescriptor,
+    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
+    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLoadingHintDescriptor, BrowserMedia,
+    BrowserMediaPlaybackDescriptor, BrowserMediaSource, BrowserMediaTrack, BrowserMeta,
+    BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -101,6 +101,8 @@ struct ExpectedBrowserDocument {
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
+    #[serde(default)]
+    form_submission_descriptors: Option<Vec<ExpectedFormSubmissionDescriptor>>,
     #[serde(default)]
     form_validation_descriptors: Option<Vec<ExpectedFormValidationDescriptor>>,
     anchors: Vec<ExpectedAnchor>,
@@ -889,6 +891,66 @@ struct ExpectedFormPolicySubmitterDescriptor {
     novalidate: bool,
     #[serde(default)]
     value: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedFormSubmissionDescriptor {
+    #[serde(default)]
+    form_id: Option<String>,
+    #[serde(default)]
+    form_name: Option<String>,
+    #[serde(default)]
+    form_action: Option<String>,
+    #[serde(default)]
+    resolved_form_action: Option<String>,
+    form_method: String,
+    #[serde(default)]
+    form_enctype: Option<String>,
+    #[serde(default)]
+    form_target: Option<String>,
+    #[serde(default)]
+    effective_form_target: Option<String>,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    control_type: String,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    form_owner: Option<String>,
+    submission_kind: String,
+    #[serde(default)]
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    value: Option<String>,
+    #[serde(default)]
+    submission_values: Vec<String>,
+    #[serde(default)]
+    submission_value_count: usize,
+    #[serde(default)]
+    successful: bool,
+    #[serde(default)]
+    checked: bool,
+    #[serde(default)]
+    disabled: bool,
+    #[serde(default)]
+    submitter: bool,
+    #[serde(default)]
+    submitter_action: Option<String>,
+    #[serde(default)]
+    resolved_submitter_action: Option<String>,
+    #[serde(default)]
+    submitter_method: Option<String>,
+    #[serde(default)]
+    submitter_enctype: Option<String>,
+    #[serde(default)]
+    submitter_target: Option<String>,
+    #[serde(default)]
+    effective_submitter_target: Option<String>,
+    #[serde(default)]
+    submitter_novalidate: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4267,6 +4329,26 @@ fn browser_form_successful_control_descriptor_metadata_tracks_submission_entries
 }
 
 #[test]
+fn browser_form_submission_descriptors_track_flat_successful_controls_and_submitters() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "form-accessibility-document-page")
+        .expect("form accessibility fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("form submission descriptor fixture should parse");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.form_submission_descriptors, expected.form_submission_descriptors,
+        "form submission descriptors should flatten successful controls and submitter routing",
+    );
+}
+
+#[test]
 fn browser_form_hidden_descriptor_metadata_tracks_hidden_entries_and_form_owners() {
     let document = parse_browser_document(
         "<form id=session>\
@@ -5530,6 +5612,15 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedForm::into_browser_form)
             .collect();
+        let form_submission_descriptors = self
+            .form_submission_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(ExpectedFormSubmissionDescriptor::into_browser_form_submission_descriptor)
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_form_submission_descriptors(&forms));
         let form_validation_descriptors = self
             .form_validation_descriptors
             .map(|descriptors| {
@@ -5758,6 +5849,7 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedFormPolicyDescriptor::into_browser_form_policy_descriptor)
                 .collect(),
+            form_submission_descriptors,
             form_validation_descriptors,
             anchors: self
                 .anchors
@@ -10562,6 +10654,133 @@ impl ExpectedFormPolicySubmitterDescriptor {
             novalidate: self.novalidate,
             value: self.value,
         }
+    }
+}
+
+impl ExpectedFormSubmissionDescriptor {
+    fn into_browser_form_submission_descriptor(self) -> BrowserFormSubmissionDescriptor {
+        BrowserFormSubmissionDescriptor {
+            form_id: self.form_id,
+            form_name: self.form_name,
+            form_action: self.form_action,
+            resolved_form_action: self.resolved_form_action,
+            form_method: self.form_method,
+            form_enctype: self.form_enctype,
+            form_target: self.form_target,
+            effective_form_target: self.effective_form_target,
+            element: self.element,
+            id: self.id,
+            control_type: self.control_type,
+            name: self.name,
+            form_owner: self.form_owner,
+            submission_kind: self.submission_kind,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            value: self.value,
+            submission_values: self.submission_values,
+            submission_value_count: self.submission_value_count,
+            successful: self.successful,
+            checked: self.checked,
+            disabled: self.disabled,
+            submitter: self.submitter,
+            submitter_action: self.submitter_action,
+            resolved_submitter_action: self.resolved_submitter_action,
+            submitter_method: self.submitter_method,
+            submitter_enctype: self.submitter_enctype,
+            submitter_target: self.submitter_target,
+            effective_submitter_target: self.effective_submitter_target,
+            submitter_novalidate: self.submitter_novalidate,
+        }
+    }
+}
+
+fn expected_form_submission_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormSubmissionDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| expected_form_submission_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn expected_form_submission_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormSubmissionDescriptor> {
+    if !control.successful && !expected_form_submitter(control) {
+        return None;
+    }
+
+    Some(BrowserFormSubmissionDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_action: form.action.clone(),
+        resolved_form_action: form.resolved_action.clone(),
+        form_method: form.method.clone(),
+        form_enctype: form.enctype.clone(),
+        form_target: form.target.clone(),
+        effective_form_target: form.effective_target.clone(),
+        element: expected_form_submission_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        submission_kind: expected_form_submission_kind(control),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        successful: control.successful,
+        checked: control.checked,
+        disabled: control.disabled,
+        submitter: expected_form_submitter(control),
+        submitter_action: control.form_action.clone(),
+        resolved_submitter_action: control.resolved_form_action.clone(),
+        submitter_method: control.form_method.clone(),
+        submitter_enctype: control.form_enctype.clone(),
+        submitter_target: control.form_target.clone(),
+        effective_submitter_target: control
+            .form_target
+            .clone()
+            .or_else(|| form.target.clone())
+            .or_else(|| form.effective_target.clone()),
+        submitter_novalidate: form.novalidate || control.form_novalidate,
+    })
+}
+
+fn expected_form_submission_kind(control: &BrowserFormControl) -> String {
+    if expected_form_submitter(control) && control.successful {
+        "successful-submitter".to_string()
+    } else if expected_form_submitter(control) {
+        "submitter".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "submission-metadata".to_string()
+    }
+}
+
+fn expected_form_submitter(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "submit" | "image" | "button" | "reset"
+    )
+}
+
+fn expected_form_submission_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
     }
 }
 
