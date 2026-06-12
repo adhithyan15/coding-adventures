@@ -1174,6 +1174,34 @@ impl IntegrationActivationHandoffStatus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationExecutionStatus {
+    Executable,
+    OperatorRequired,
+    NeedsApproval,
+    Blocked,
+    Monitoring,
+}
+
+impl IntegrationActivationExecutionStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Executable => "executable",
+            Self::OperatorRequired => "operator_required",
+            Self::NeedsApproval => "needs_approval",
+            Self::Blocked => "blocked",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::OperatorRequired | Self::NeedsApproval | Self::Blocked
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationOperatorTaskKind {
     ResolveConstraints,
     EnableDependencies,
@@ -2496,6 +2524,85 @@ pub struct IntegrationActivationHandoffSummary {
     pub first_ready_priority: Option<u8>,
     pub first_blocked_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationExecutionPacket {
+    pub sequence: usize,
+    pub handoff_sequence: usize,
+    pub runbook_sequence: usize,
+    pub operator_task_sequence: Option<usize>,
+    pub priority: u8,
+    pub execution_status: IntegrationActivationExecutionStatus,
+    pub handoff_status: IntegrationActivationHandoffStatus,
+    pub phase: IntegrationActivationRunbookPhase,
+    pub task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub playbook_action: IntegrationActivationForecastAction,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub risk_ids: Vec<String>,
+    pub dependency_integration_ids: Vec<IntegrationId>,
+    pub blocking_dependency_integration_ids: Vec<IntegrationId>,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub readiness_gap_count: usize,
+    pub audit_record_count: usize,
+    pub attention_audit_record_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub operator_required: bool,
+    pub activation_ready: bool,
+    pub ready_for_handoff: bool,
+    pub approval_required: bool,
+    pub dependency_ready: bool,
+    pub executable: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub monitor_only: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationExecutionSummary {
+    pub total_packets: usize,
+    pub unique_integrations: usize,
+    pub executable_packets: usize,
+    pub operator_required_packets: usize,
+    pub approval_required_packets: usize,
+    pub blocked_packets: usize,
+    pub dependency_ready_packets: usize,
+    pub dependency_blocked_packets: usize,
+    pub monitor_packets: usize,
+    pub activation_ready_packets: usize,
+    pub packets_requiring_attention: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_readiness_gaps: usize,
+    pub total_audit_records: usize,
+    pub attention_audit_records: usize,
+    pub next_execution_status: Option<IntegrationActivationExecutionStatus>,
+    pub next_task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub next_phase: Option<IntegrationActivationRunbookPhase>,
+    pub next_playbook_action: Option<IntegrationActivationForecastAction>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_packet_sequence: Option<usize>,
+    pub next_packet_priority: Option<u8>,
+    pub first_executable_sequence: Option<usize>,
+    pub first_operator_sequence: Option<usize>,
+    pub first_approval_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_dependency_blocked_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_executable_priority: Option<u8>,
+    pub first_operator_priority: Option<u8>,
+    pub first_approval_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_dependency_blocked_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -5687,6 +5794,315 @@ impl IntegrationActivationHandoffSummary {
             || self.operator_required_packages > 0
             || self.has_blockers()
             || self.has_review_work()
+            || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationExecutionPacket {
+    fn from_handoff_package(
+        package: IntegrationActivationHandoffPackage,
+        task: Option<&IntegrationActivationOperatorTask>,
+    ) -> Self {
+        let task_blocked = task
+            .map(IntegrationActivationOperatorTask::blocked)
+            .unwrap_or(false);
+        let task_review_required = task
+            .map(IntegrationActivationOperatorTask::review_required)
+            .unwrap_or(false);
+        let task_operator_required = task
+            .map(IntegrationActivationOperatorTask::operator_required)
+            .unwrap_or(false);
+        let task_activation_ready = task
+            .map(IntegrationActivationOperatorTask::activation_ready)
+            .unwrap_or(true);
+        let task_monitor_only = task
+            .map(IntegrationActivationOperatorTask::monitor_only)
+            .unwrap_or(false);
+
+        let dependency_ready = !package.has_dependency_blockers() && !package.has_readiness_gaps();
+        let highest_policy_tier = task
+            .map(|task| package.highest_policy_tier.max(task.highest_policy_tier))
+            .unwrap_or(package.highest_policy_tier);
+        let activation_ready = package.activation_ready() && task_activation_ready;
+        let ready_for_handoff = package.ready_for_handoff();
+        let review_required = package.review_required() || task_review_required;
+        let approval_required =
+            review_required || highest_policy_tier >= PrivilegeTier::HumanApproval;
+        let blocked = package.blocked() || task_blocked || !dependency_ready;
+        let monitor_only = package.monitor_only() || task_monitor_only;
+        let operator_required = package.operator_required()
+            || task_operator_required
+            || (review_required && !monitor_only)
+            || (blocked && !monitor_only);
+        let executable = ready_for_handoff
+            && activation_ready
+            && dependency_ready
+            && !approval_required
+            && !blocked
+            && !monitor_only;
+        let execution_status = if monitor_only {
+            IntegrationActivationExecutionStatus::Monitoring
+        } else if blocked {
+            IntegrationActivationExecutionStatus::Blocked
+        } else if approval_required {
+            IntegrationActivationExecutionStatus::NeedsApproval
+        } else if operator_required && !executable {
+            IntegrationActivationExecutionStatus::OperatorRequired
+        } else {
+            IntegrationActivationExecutionStatus::Executable
+        };
+        let requires_attention = execution_status.requires_attention()
+            || package.requires_attention()
+            || task
+                .map(IntegrationActivationOperatorTask::requires_attention)
+                .unwrap_or(false);
+
+        Self {
+            sequence: package.sequence,
+            handoff_sequence: package.sequence,
+            runbook_sequence: package.runbook_sequence,
+            operator_task_sequence: task.map(|task| task.sequence),
+            priority: package.priority,
+            execution_status,
+            handoff_status: package.handoff_status,
+            phase: package.phase,
+            task_kind: task.map(|task| task.task_kind),
+            playbook_action: package.playbook_action,
+            recommended_view: package.recommended_view,
+            integration_ids: package.integration_ids,
+            integration_count: package.integration_count,
+            risk_ids: package.risk_ids,
+            dependency_integration_ids: package.dependency_integration_ids,
+            blocking_dependency_integration_ids: package.blocking_dependency_integration_ids,
+            risk_count: package.risk_count,
+            dependency_edge_count: package.dependency_edge_count,
+            blocking_dependency_edge_count: package.blocking_dependency_edge_count,
+            readiness_gap_count: package.readiness_gap_count,
+            audit_record_count: package.audit_record_count,
+            attention_audit_record_count: package.attention_audit_record_count,
+            highest_policy_tier,
+            operator_required,
+            activation_ready,
+            ready_for_handoff,
+            approval_required,
+            dependency_ready,
+            executable,
+            blocked,
+            review_required,
+            monitor_only,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn executable(&self) -> bool {
+        self.executable
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn approval_required(&self) -> bool {
+        self.approval_required
+    }
+
+    pub fn dependency_ready(&self) -> bool {
+        self.dependency_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn monitor_only(&self) -> bool {
+        self.monitor_only
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationExecutionSummary {
+    pub fn from_packets<'a>(
+        packets: impl IntoIterator<Item = &'a IntegrationActivationExecutionPacket>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_packets: 0,
+            unique_integrations: 0,
+            executable_packets: 0,
+            operator_required_packets: 0,
+            approval_required_packets: 0,
+            blocked_packets: 0,
+            dependency_ready_packets: 0,
+            dependency_blocked_packets: 0,
+            monitor_packets: 0,
+            activation_ready_packets: 0,
+            packets_requiring_attention: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_readiness_gaps: 0,
+            total_audit_records: 0,
+            attention_audit_records: 0,
+            next_execution_status: None,
+            next_task_kind: None,
+            next_phase: None,
+            next_playbook_action: None,
+            next_recommended_view: None,
+            next_packet_sequence: None,
+            next_packet_priority: None,
+            first_executable_sequence: None,
+            first_operator_sequence: None,
+            first_approval_sequence: None,
+            first_blocked_sequence: None,
+            first_dependency_blocked_sequence: None,
+            first_attention_sequence: None,
+            first_executable_priority: None,
+            first_operator_priority: None,
+            first_approval_priority: None,
+            first_blocked_priority: None,
+            first_dependency_blocked_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for packet in packets {
+            summary.total_packets += 1;
+            for integration_id in &packet.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_execution_status.is_none() && !packet.monitor_only() {
+                summary.next_execution_status = Some(packet.execution_status);
+                summary.next_task_kind = packet.task_kind;
+                summary.next_phase = Some(packet.phase);
+                summary.next_playbook_action = Some(packet.playbook_action);
+                summary.next_recommended_view = Some(packet.recommended_view);
+                summary.next_packet_sequence = Some(packet.sequence);
+                summary.next_packet_priority = Some(packet.priority);
+            }
+
+            if packet.executable() {
+                summary.executable_packets += 1;
+                summary.first_executable_sequence =
+                    summary.first_executable_sequence.or(Some(packet.sequence));
+                summary.first_executable_priority =
+                    min_optional_priority(summary.first_executable_priority, Some(packet.priority));
+            }
+            if packet.operator_required() {
+                summary.operator_required_packets += 1;
+                summary.first_operator_sequence =
+                    summary.first_operator_sequence.or(Some(packet.sequence));
+                summary.first_operator_priority =
+                    min_optional_priority(summary.first_operator_priority, Some(packet.priority));
+            }
+            if packet.approval_required() {
+                summary.approval_required_packets += 1;
+                summary.first_approval_sequence =
+                    summary.first_approval_sequence.or(Some(packet.sequence));
+                summary.first_approval_priority =
+                    min_optional_priority(summary.first_approval_priority, Some(packet.priority));
+            }
+            if packet.blocked() {
+                summary.blocked_packets += 1;
+                summary.first_blocked_sequence =
+                    summary.first_blocked_sequence.or(Some(packet.sequence));
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(packet.priority));
+            }
+            if packet.dependency_ready() {
+                summary.dependency_ready_packets += 1;
+            } else {
+                summary.dependency_blocked_packets += 1;
+                summary.first_dependency_blocked_sequence = summary
+                    .first_dependency_blocked_sequence
+                    .or(Some(packet.sequence));
+                summary.first_dependency_blocked_priority = min_optional_priority(
+                    summary.first_dependency_blocked_priority,
+                    Some(packet.priority),
+                );
+            }
+            if packet.monitor_only() {
+                summary.monitor_packets += 1;
+            }
+            if packet.activation_ready {
+                summary.activation_ready_packets += 1;
+            }
+            if packet.requires_attention() {
+                summary.packets_requiring_attention += 1;
+                summary.first_attention_sequence =
+                    summary.first_attention_sequence.or(Some(packet.sequence));
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(packet.priority));
+            }
+
+            summary.total_risks += packet.risk_count;
+            summary.total_dependency_edges += packet.dependency_edge_count;
+            summary.blocking_dependency_edges += packet.blocking_dependency_edge_count;
+            summary.total_readiness_gaps += packet.readiness_gap_count;
+            summary.total_audit_records += packet.audit_record_count;
+            summary.attention_audit_records += packet.attention_audit_record_count;
+            summary.highest_policy_tier =
+                summary.highest_policy_tier.max(packet.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_packets > 0
+            || summary.dependency_blocked_packets > 0
+            || summary.blocking_dependency_edges > 0
+            || summary.total_readiness_gaps > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.approval_required_packets > 0
+            || summary.operator_required_packets > 0
+            || summary.packets_requiring_attention > 0
+            || summary.total_risks > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.executable_packets > 0 || summary.activation_ready_packets > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_packets == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_packets > 0
+            || self.dependency_blocked_packets > 0
+            || self.blocking_dependency_edges > 0
+            || self.total_readiness_gaps > 0
+    }
+
+    pub fn has_approval_work(&self) -> bool {
+        self.approval_required_packets > 0
+            || self.operator_required_packets > 0
+            || self.attention_audit_records > 0
+    }
+
+    pub fn ready_to_execute(&self) -> bool {
+        self.executable_packets > 0 && !self.has_blockers() && !self.has_approval_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.packets_requiring_attention > 0
+            || self.has_blockers()
+            || self.has_approval_work()
             || self.overall_status.requires_attention()
     }
 }
@@ -11612,6 +12028,54 @@ pub fn activation_operator_tasks_at_or_before_priority(
     ))
 }
 
+pub fn activation_execution_packets_from_handoff_packages(
+    packages: Vec<IntegrationActivationHandoffPackage>,
+    tasks: Vec<IntegrationActivationOperatorTask>,
+) -> Vec<IntegrationActivationExecutionPacket> {
+    let tasks_by_playbook_sequence = tasks
+        .iter()
+        .map(|task| (task.playbook_sequence, task))
+        .collect::<BTreeMap<_, _>>();
+    let mut packets = packages
+        .into_iter()
+        .map(|package| {
+            let task = tasks_by_playbook_sequence
+                .get(&package.runbook_sequence)
+                .copied();
+            IntegrationActivationExecutionPacket::from_handoff_package(package, task)
+        })
+        .collect::<Vec<_>>();
+    packets.sort_by(compare_activation_execution_packets);
+    for (index, packet) in packets.iter_mut().enumerate() {
+        packet.sequence = index + 1;
+    }
+    packets
+}
+
+pub fn activation_execution_packets_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationExecutionPacket> {
+    let packages = activation_handoff_packages_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let tasks = activation_operator_tasks_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_execution_packets_from_handoff_packages(packages, tasks)
+}
+
 pub fn activation_control_room_panels_from_operator_tasks(
     mut tasks: Vec<IntegrationActivationOperatorTask>,
 ) -> Vec<IntegrationActivationControlRoomPanel> {
@@ -13631,6 +14095,16 @@ fn activation_handoff_status_sort_key(status: IntegrationActivationHandoffStatus
     }
 }
 
+fn activation_execution_status_sort_key(status: IntegrationActivationExecutionStatus) -> u8 {
+    match status {
+        IntegrationActivationExecutionStatus::Blocked => 0,
+        IntegrationActivationExecutionStatus::NeedsApproval => 1,
+        IntegrationActivationExecutionStatus::OperatorRequired => 2,
+        IntegrationActivationExecutionStatus::Executable => 3,
+        IntegrationActivationExecutionStatus::Monitoring => 4,
+    }
+}
+
 fn compare_activation_handoff_packages(
     left: &IntegrationActivationHandoffPackage,
     right: &IntegrationActivationHandoffPackage,
@@ -13651,6 +14125,28 @@ fn compare_activation_handoff_packages(
                 .cmp(&left.blocking_dependency_edge_count)
         })
         .then_with(|| right.readiness_gap_count.cmp(&left.readiness_gap_count))
+        .then_with(|| right.risk_count.cmp(&left.risk_count))
+        .then_with(|| left.phase.cmp(&right.phase))
+        .then_with(|| left.runbook_sequence.cmp(&right.runbook_sequence))
+}
+
+fn compare_activation_execution_packets(
+    left: &IntegrationActivationExecutionPacket,
+    right: &IntegrationActivationExecutionPacket,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            activation_execution_status_sort_key(left.execution_status).cmp(
+                &activation_execution_status_sort_key(right.execution_status),
+            )
+        })
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.approval_required().cmp(&left.approval_required()))
+        .then_with(|| right.operator_required().cmp(&left.operator_required()))
+        .then_with(|| right.executable().cmp(&left.executable()))
+        .then_with(|| right.dependency_ready().cmp(&left.dependency_ready()))
         .then_with(|| right.risk_count.cmp(&left.risk_count))
         .then_with(|| left.phase.cmp(&right.phase))
         .then_with(|| left.runbook_sequence.cmp(&right.runbook_sequence))
@@ -17014,6 +17510,7 @@ mod tests {
             &gap_inventory,
         );
 
+        let tasks = activation_operator_tasks_from_playbook_steps(steps.clone());
         let entries = activation_runbook_entries_from_playbook_steps(steps, &audit_records);
 
         assert!(entries.iter().all(|entry| entry.sequence > 0));
@@ -17092,6 +17589,50 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let execution =
+            activation_execution_packets_from_handoff_packages(handoff.clone(), tasks.clone());
+        assert_eq!(execution.len(), handoff.len());
+        assert!(execution
+            .iter()
+            .any(IntegrationActivationExecutionPacket::requires_attention));
+        assert!(
+            execution
+                .iter()
+                .any(|packet| packet.execution_status
+                    == IntegrationActivationExecutionStatus::Blocked)
+        );
+        assert!(execution
+            .iter()
+            .any(|packet| packet.execution_status
+                == IntegrationActivationExecutionStatus::NeedsApproval));
+
+        let blocked_execution = execution
+            .iter()
+            .find(|packet| {
+                packet
+                    .integration_ids
+                    .contains(&IntegrationId::trusted("blocked_review_camera"))
+            })
+            .unwrap();
+        assert_eq!(
+            blocked_execution.execution_status,
+            IntegrationActivationExecutionStatus::Blocked
+        );
+        assert!(blocked_execution.blocked());
+        assert!(!blocked_execution.dependency_ready());
+        assert!(!blocked_execution.executable());
+
+        let execution_summary =
+            IntegrationActivationExecutionSummary::from_packets(execution.iter());
+        assert_eq!(execution_summary.total_packets, execution.len());
+        assert!(execution_summary.has_blockers());
+        assert!(execution_summary.has_approval_work());
+        assert!(execution_summary.requires_attention());
+        assert_eq!(
+            execution_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -17121,6 +17662,16 @@ mod tests {
         assert!(catalog_handoff_entries
             .iter()
             .any(IntegrationActivationHandoffPackage::requires_attention));
+        let catalog_execution_packets = activation_execution_packets_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_execution_packets
+            .iter()
+            .any(IntegrationActivationExecutionPacket::requires_attention));
     }
 
     #[test]
