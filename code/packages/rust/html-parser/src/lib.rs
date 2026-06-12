@@ -839,6 +839,7 @@ pub struct BrowserDocument {
     pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
     pub script_storage_access_descriptors: Vec<BrowserScriptStorageAccessDescriptor>,
     pub script_worker_messaging_descriptors: Vec<BrowserScriptWorkerMessagingDescriptor>,
+    pub script_module_graph_descriptors: Vec<BrowserScriptModuleGraphDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
@@ -1146,6 +1147,30 @@ pub struct BrowserScriptWorkerMessagingDescriptor {
     pub module_worker_hint: bool,
     pub messaging_blocked: bool,
     pub messaging_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptModuleGraphDescriptor {
+    pub script_kind: String,
+    pub module_graph_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub module_targets: Vec<String>,
+    pub module_target_count: usize,
+    pub external_module_entry: bool,
+    pub inline_module_entry: bool,
+    pub declares_import_map: bool,
+    pub uses_static_imports: bool,
+    pub uses_dynamic_imports: bool,
+    pub has_modulepreload: bool,
+    pub modulepreload_urls: Vec<String>,
+    pub resolved_modulepreload_urls: Vec<String>,
+    pub module_graph_blocked: bool,
+    pub module_graph_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3490,6 +3515,8 @@ impl BrowserDocument {
             browser_script_storage_access_descriptors(&summary.scripts);
         summary.script_worker_messaging_descriptors =
             browser_script_worker_messaging_descriptors(&summary.scripts);
+        summary.script_module_graph_descriptors =
+            browser_script_module_graph_descriptors(&summary.scripts, &summary.resources);
         summary.stylesheet_planning_descriptors =
             browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
@@ -11621,6 +11648,158 @@ fn browser_script_worker_messaging_kind(
 }
 
 fn browser_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_module_graph_descriptors(
+    scripts: &[BrowserScript],
+    resources: &[BrowserResource],
+) -> Vec<BrowserScriptModuleGraphDescriptor> {
+    let modulepreloads: Vec<_> = resources
+        .iter()
+        .filter(|resource| resource.kind == "modulepreload")
+        .collect();
+    scripts
+        .iter()
+        .filter_map(|script| browser_script_module_graph_descriptor(script, &modulepreloads))
+        .collect()
+}
+
+fn browser_script_module_graph_descriptor(
+    script: &BrowserScript,
+    modulepreloads: &[&BrowserResource],
+) -> Option<BrowserScriptModuleGraphDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let external_module_entry = script.script_kind == "module" && script.src.is_some();
+    let inline_module_entry = script.script_kind == "module" && script.src.is_none();
+    let declares_import_map = script.script_kind == "importmap";
+    let uses_static_imports = browser_script_uses_static_module_imports(&normalized_text);
+    let uses_dynamic_imports = normalized_text.contains("import(");
+    let has_modulepreload = !modulepreloads.is_empty();
+    let module_targets = browser_script_module_graph_targets(
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+    );
+    if module_targets.is_empty() {
+        return None;
+    }
+
+    let modulepreload_urls = modulepreloads
+        .iter()
+        .map(|resource| resource.url.clone())
+        .collect();
+    let resolved_modulepreload_urls = modulepreloads
+        .iter()
+        .filter_map(|resource| resource.resolved_url.clone())
+        .collect();
+    let module_graph_block_reasons = browser_script_module_graph_block_reasons(script);
+    Some(BrowserScriptModuleGraphDescriptor {
+        script_kind: script.script_kind.clone(),
+        module_graph_kind: browser_script_module_graph_kind(
+            external_module_entry,
+            inline_module_entry,
+            declares_import_map,
+            uses_static_imports,
+            uses_dynamic_imports,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        module_target_count: module_targets.len(),
+        module_targets,
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+        modulepreload_urls,
+        resolved_modulepreload_urls,
+        module_graph_blocked: !module_graph_block_reasons.is_empty(),
+        module_graph_block_reasons,
+    })
+}
+
+fn browser_script_uses_static_module_imports(normalized_text: &str) -> bool {
+    normalized_text.contains("import ")
+        || normalized_text.contains("import{")
+        || normalized_text.contains("export ")
+        || normalized_text.contains(" from '")
+        || normalized_text.contains(" from \"")
+}
+
+fn browser_script_module_graph_targets(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+    has_modulepreload: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if external_module_entry {
+        targets.push("external-module-entry".to_string());
+    }
+    if inline_module_entry {
+        targets.push("inline-module-entry".to_string());
+    }
+    if declares_import_map {
+        targets.push("importmap".to_string());
+    }
+    if uses_static_imports {
+        targets.push("static-import".to_string());
+    }
+    if uses_dynamic_imports {
+        targets.push("dynamic-import".to_string());
+    }
+    if has_modulepreload {
+        targets.push("modulepreload".to_string());
+    }
+    targets
+}
+
+fn browser_script_module_graph_kind(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+) -> String {
+    if declares_import_map {
+        "import-map".to_string()
+    } else if uses_static_imports && uses_dynamic_imports {
+        "mixed-module-imports".to_string()
+    } else if uses_static_imports {
+        "static-module-graph".to_string()
+    } else if uses_dynamic_imports {
+        "dynamic-module-import".to_string()
+    } else if external_module_entry || inline_module_entry {
+        "module-entry".to_string()
+    } else {
+        "module-graph-metadata".to_string()
+    }
+}
+
+fn browser_script_module_graph_block_reasons(script: &BrowserScript) -> Vec<String> {
     let mut reasons = Vec::new();
     if script.script_kind == "data" {
         reasons.push("non-executable-script-type".to_string());
@@ -26655,6 +26834,71 @@ mod tests {
         assert!(legacy.creates_shared_worker);
         assert!(legacy.messaging_blocked);
         assert_eq!(legacy.messaging_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_module_graph_descriptors_track_imports_and_preloads() {
+        let summary = parse_browser_document(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=modulepreload href=chunks/vendor.mjs integrity=sha384-vendor>\
+             <script type=importmap>{\"imports\":{\"app\":\"/app.mjs\"}}</script>\
+             <script type=module src=app.mjs></script>\
+             <script type=module>\
+             import { ready } from './ready.mjs';\
+             export const boot = ready();\
+             import('./lazy.mjs');\
+             </script>\
+             <script nomodule>import('./legacy.js');</script>",
+        )
+        .expect("script module graph descriptor document should parse");
+
+        let descriptors = &summary.script_module_graph_descriptors;
+        assert_eq!(descriptors.len(), 4);
+
+        let importmap = &descriptors[0];
+        assert_eq!(importmap.script_kind, "importmap");
+        assert_eq!(importmap.module_graph_kind, "import-map");
+        assert!(importmap.declares_import_map);
+        assert!(importmap.has_modulepreload);
+        assert_eq!(
+            importmap.modulepreload_urls,
+            vec!["chunks/vendor.mjs".to_string()]
+        );
+        assert_eq!(
+            importmap.resolved_modulepreload_urls,
+            vec!["https://example.test/app/chunks/vendor.mjs".to_string()]
+        );
+
+        let external = &descriptors[1];
+        assert_eq!(external.module_graph_kind, "module-entry");
+        assert!(external.external_module_entry);
+        assert_eq!(external.src.as_deref(), Some("app.mjs"));
+        assert_eq!(
+            external.resolved_src.as_deref(),
+            Some("https://example.test/app/app.mjs")
+        );
+
+        let inline = &descriptors[2];
+        assert_eq!(inline.module_graph_kind, "mixed-module-imports");
+        assert!(inline.inline_module_entry);
+        assert!(inline.uses_static_imports);
+        assert!(inline.uses_dynamic_imports);
+        assert_eq!(
+            inline.module_targets,
+            vec![
+                "inline-module-entry",
+                "static-import",
+                "dynamic-import",
+                "modulepreload"
+            ]
+        );
+
+        let legacy = &descriptors[3];
+        assert_eq!(legacy.script_kind, "classic");
+        assert_eq!(legacy.module_graph_kind, "dynamic-module-import");
+        assert!(legacy.uses_dynamic_imports);
+        assert!(legacy.module_graph_blocked);
+        assert_eq!(legacy.module_graph_block_reasons, vec!["nomodule-fallback"]);
     }
 
     #[test]

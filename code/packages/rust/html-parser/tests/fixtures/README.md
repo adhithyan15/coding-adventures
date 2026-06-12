@@ -39,7 +39,7 @@ resources as a flat endpoint inventory for fetch/navigation planning.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
 policy tokens, validation bypass state, and submitter overrides.
 Script descriptor cases pin execution, storage access, worker construction,
-worker messaging channels, and fallback blockers.
+worker messaging channels, module graph hints, and fallback blockers.
 Form-association descriptor cases pin form owners, labels, fieldset membership,
 datalist links, and output calculation relationships as a flat browser-planning
 inventory.
@@ -112,6 +112,8 @@ policy, fetch priority, blocking, disabled state, and alternate stylesheets.
 Script storage-access cases pin inline references to Web Storage, cookies,
 IndexedDB, CacheStorage/service workers, StorageManager, storage-event hooks,
 and fallback blockers.
+Script module-graph cases pin import maps, module entrypoints, static/dynamic
+imports, modulepreload hints, and fallback blockers.
 Responsive image cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
 descriptors, `picture/source` media/type hints, lazy loading, decoding, fetch
 priority, CORS/referrer policy, usemap, and server-side image-map state. Link
