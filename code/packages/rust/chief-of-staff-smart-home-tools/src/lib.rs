@@ -40,7 +40,8 @@ use smart_home_integration_catalog::{
     activation_constraints_from_candidates, activation_control_room_panels_from_operator_tasks,
     activation_dashboard_cards_from_readouts, activation_decisions_from_candidates,
     activation_dependency_graph_from_reports, activation_dossiers_from_candidates,
-    activation_evidence_from_candidates, activation_forecasts_from_timeline_milestones,
+    activation_evidence_from_candidates, activation_execution_packets_from_handoff_packages,
+    activation_forecasts_from_timeline_milestones,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
     activation_maintenance_from_candidates, activation_operator_tasks_from_playbook_steps,
     activation_plan_for_entry, activation_plans_at_or_before_priority,
@@ -76,15 +77,16 @@ use smart_home_integration_catalog::{
     IntegrationActivationDependencySummary, IntegrationActivationDossierItem,
     IntegrationActivationDossierSummary, IntegrationActivationEvidenceItem,
     IntegrationActivationEvidenceKind, IntegrationActivationEvidenceStatus,
-    IntegrationActivationEvidenceSummary, IntegrationActivationForecastAction,
-    IntegrationActivationForecastItem, IntegrationActivationForecastSummary,
-    IntegrationActivationHandoffPackage, IntegrationActivationHandoffStatus,
-    IntegrationActivationHandoffSummary, IntegrationActivationHealthStage,
-    IntegrationActivationHealthStatus, IntegrationActivationHealthSummary,
-    IntegrationActivationMaintenanceSummary, IntegrationActivationMaintenanceWindow,
-    IntegrationActivationOperatorTask, IntegrationActivationOperatorTaskKind,
-    IntegrationActivationOperatorTaskSummary, IntegrationActivationPlan,
-    IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
+    IntegrationActivationEvidenceSummary, IntegrationActivationExecutionPacket,
+    IntegrationActivationExecutionStatus, IntegrationActivationExecutionSummary,
+    IntegrationActivationForecastAction, IntegrationActivationForecastItem,
+    IntegrationActivationForecastSummary, IntegrationActivationHandoffPackage,
+    IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
+    IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
+    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
+    IntegrationActivationMaintenanceWindow, IntegrationActivationOperatorTask,
+    IntegrationActivationOperatorTaskKind, IntegrationActivationOperatorTaskSummary,
+    IntegrationActivationPlan, IntegrationActivationPlanSummary, IntegrationActivationPlaybookStep,
     IntegrationActivationPlaybookSummary, IntegrationActivationPlaybookView,
     IntegrationActivationReadoutStage, IntegrationActivationReadoutSummary,
     IntegrationActivationReviewItem, IntegrationActivationReviewSummary,
@@ -284,6 +286,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_HANDOFF_TOOL_ID: &str =
     "smart_home.list_integration_activation_handoff";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_HANDOFF_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_handoff_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID: &str =
+    "smart_home.list_integration_activation_execution";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_execution_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID: &str =
     "smart_home.list_integration_activation_operator_queue";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_SUMMARY_TOOL_ID: &str =
@@ -624,6 +630,16 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_HANDOFF_SUMMARY_TOOL_ID => {
                     let query = integration_activation_handoff_query(&arguments)?;
                     Ok(get_integration_activation_handoff_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID => {
+                    let query = integration_activation_execution_query(&arguments)?;
+                    Ok(list_integration_activation_execution_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_execution_query(&arguments)?;
+                    Ok(get_integration_activation_execution_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID => {
                     let query = integration_activation_operator_queue_query(&arguments)?;
@@ -2065,6 +2081,40 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation handoff summary",
             "Return compact D23A activation handoff counts for ready packages, blockers, review work, dependency gaps, audit attention, and the next execution-transfer step.",
             integration_activation_handoff_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID,
+            "List smart-home integration activation execution packets",
+            "List read-only D23A activation execution packets that join handoff packages to operator queue tasks, including executable, approval, dependency, and blocker state.",
+            integration_activation_execution_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_execution", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec![
+                    "activation_execution",
+                    "summary",
+                    "count",
+                    "catalog_count",
+                ],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation execution summary",
+            "Return compact D23A activation execution counts for executable packets, approvals, operator work, dependency blockers, and attention state.",
+            integration_activation_execution_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -4968,6 +5018,22 @@ struct IntegrationActivationHandoffQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationExecutionQuery {
+    handoff: IntegrationActivationHandoffQuery,
+    task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    execution_status: Option<IntegrationActivationExecutionStatus>,
+    executable: Option<bool>,
+    operator_required: Option<bool>,
+    approval_required: Option<bool>,
+    dependency_ready: Option<bool>,
+    blocked: Option<bool>,
+    review_required: Option<bool>,
+    requires_attention: Option<bool>,
+    include_monitor: bool,
+    execution_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationOperatorQueueQuery {
     playbook: IntegrationActivationPlaybookQuery,
     task_kind: Option<IntegrationActivationOperatorTaskKind>,
@@ -5422,6 +5488,44 @@ fn integration_activation_handoff_query(
             .or(optional_bool(arguments, "requires_attention")?),
         include_monitor,
         handoff_limit: optional_u64(arguments, "handoff_limit")?.map(|value| value as usize),
+    })
+}
+
+fn integration_activation_execution_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationExecutionQuery, ToolCallError> {
+    let include_monitor = optional_bool(arguments, "include_monitor")?.unwrap_or(false);
+    let mut handoff = integration_activation_handoff_query(arguments)?;
+    handoff.include_monitor = include_monitor;
+    handoff.runbook.include_monitor = include_monitor;
+    let task_kind = optional_string(arguments, "execution_task_kind")?
+        .or(optional_string(arguments, "operator_task_kind")?)
+        .or(optional_string(arguments, "task_kind")?)
+        .map(|label| parse_activation_operator_task_kind(&label))
+        .transpose()?;
+    let execution_status = optional_string(arguments, "execution_status")?
+        .or(optional_string(arguments, "execution_state")?)
+        .map(|label| parse_activation_execution_status(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationExecutionQuery {
+        handoff,
+        task_kind,
+        execution_status,
+        executable: optional_bool(arguments, "executable")?
+            .or(optional_bool(arguments, "can_execute")?),
+        operator_required: optional_bool(arguments, "execution_operator_required")?
+            .or(optional_bool(arguments, "operator_required")?),
+        approval_required: optional_bool(arguments, "approval_required")?,
+        dependency_ready: optional_bool(arguments, "dependency_ready")?,
+        blocked: optional_bool(arguments, "execution_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        review_required: optional_bool(arguments, "execution_review_required")?
+            .or(optional_bool(arguments, "review_required")?),
+        requires_attention: optional_bool(arguments, "execution_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        include_monitor,
+        execution_limit: optional_u64(arguments, "execution_limit")?.map(|value| value as usize),
     })
 }
 
@@ -6261,6 +6365,53 @@ fn integration_activation_handoff_packages_for_query(
     }
 
     (packages, catalog_count)
+}
+
+fn integration_activation_execution_packets_for_query(
+    query: &IntegrationActivationExecutionQuery,
+) -> (Vec<IntegrationActivationExecutionPacket>, usize) {
+    let (packages, catalog_count) =
+        integration_activation_handoff_packages_for_query(&query.handoff);
+    let (steps, _) =
+        integration_activation_playbook_steps_for_query(&query.handoff.runbook.playbook);
+    let tasks = activation_operator_tasks_from_playbook_steps(steps);
+    let mut packets = activation_execution_packets_from_handoff_packages(packages, tasks);
+
+    if !query.include_monitor {
+        packets.retain(|packet| !packet.monitor_only());
+    }
+    if let Some(kind) = query.task_kind {
+        packets.retain(|packet| packet.task_kind == Some(kind));
+    }
+    if let Some(execution_status) = query.execution_status {
+        packets.retain(|packet| packet.execution_status == execution_status);
+    }
+    if let Some(executable) = query.executable {
+        packets.retain(|packet| packet.executable() == executable);
+    }
+    if let Some(operator_required) = query.operator_required {
+        packets.retain(|packet| packet.operator_required() == operator_required);
+    }
+    if let Some(approval_required) = query.approval_required {
+        packets.retain(|packet| packet.approval_required() == approval_required);
+    }
+    if let Some(dependency_ready) = query.dependency_ready {
+        packets.retain(|packet| packet.dependency_ready() == dependency_ready);
+    }
+    if let Some(blocked) = query.blocked {
+        packets.retain(|packet| packet.blocked() == blocked);
+    }
+    if let Some(review_required) = query.review_required {
+        packets.retain(|packet| packet.review_required() == review_required);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        packets.retain(|packet| packet.requires_attention() == requires_attention);
+    }
+    if let Some(limit) = query.execution_limit {
+        packets.truncate(limit);
+    }
+
+    (packets, catalog_count)
 }
 
 fn integration_activation_operator_tasks_for_query(
@@ -8275,6 +8426,93 @@ fn get_integration_activation_handoff_summary_output_handler_output(
                 "next_handoff_status",
                 summary
                     .next_handoff_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_execution_output_handler_output(
+    query: IntegrationActivationExecutionQuery,
+) -> ToolHandlerOutput {
+    let (packets, catalog_count) = integration_activation_execution_packets_for_query(&query);
+    let summary = IntegrationActivationExecutionSummary::from_packets(packets.iter());
+    let count = packets.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_execution",
+            JsonValue::Array(
+                packets
+                    .iter()
+                    .map(activation_execution_packet_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_execution_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_execution")),
+            ("execution_packets", integer(count as i64)),
+            (
+                "executable_packets",
+                integer(summary.executable_packets as i64),
+            ),
+            (
+                "approval_required_packets",
+                integer(summary.approval_required_packets as i64),
+            ),
+            ("blocked_packets", integer(summary.blocked_packets as i64)),
+            (
+                "next_execution_status",
+                summary
+                    .next_execution_status
+                    .map(|status| string(status.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_execution_summary_output_handler_output(
+    query: IntegrationActivationExecutionQuery,
+) -> ToolHandlerOutput {
+    let (packets, _) = integration_activation_execution_packets_for_query(&query);
+    let summary = IntegrationActivationExecutionSummary::from_packets(packets.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_execution_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_execution_summary"),
+            ),
+            ("total_packets", integer(summary.total_packets as i64)),
+            (
+                "executable_packets",
+                integer(summary.executable_packets as i64),
+            ),
+            (
+                "approval_required_packets",
+                integer(summary.approval_required_packets as i64),
+            ),
+            ("blocked_packets", integer(summary.blocked_packets as i64)),
+            (
+                "next_execution_status",
+                summary
+                    .next_execution_status
                     .map(|status| string(status.as_str()))
                     .unwrap_or(JsonValue::Null),
             ),
@@ -15580,6 +15818,343 @@ fn integration_activation_handoff_summary_json(
     ])
 }
 
+fn activation_execution_packet_json(packet: &IntegrationActivationExecutionPacket) -> JsonValue {
+    object([
+        ("sequence", integer(packet.sequence as i64)),
+        ("handoff_sequence", integer(packet.handoff_sequence as i64)),
+        ("runbook_sequence", integer(packet.runbook_sequence as i64)),
+        (
+            "operator_task_sequence",
+            packet
+                .operator_task_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("priority", integer(packet.priority as i64)),
+        ("execution_status", string(packet.execution_status.as_str())),
+        ("handoff_status", string(packet.handoff_status.as_str())),
+        ("phase", string(packet.phase.as_str())),
+        (
+            "task_kind",
+            packet
+                .task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        ("playbook_action", string(packet.playbook_action.as_str())),
+        ("recommended_view", string(packet.recommended_view.as_str())),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                packet
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(packet.integration_count() as i64),
+        ),
+        (
+            "risk_ids",
+            JsonValue::Array(
+                packet
+                    .risk_ids
+                    .iter()
+                    .map(|risk_id| string(risk_id))
+                    .collect(),
+            ),
+        ),
+        ("risk_count", integer(packet.risk_count as i64)),
+        (
+            "dependency_integration_ids",
+            JsonValue::Array(
+                packet
+                    .dependency_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "blocking_dependency_integration_ids",
+            JsonValue::Array(
+                packet
+                    .blocking_dependency_integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "dependency_edge_count",
+            integer(packet.dependency_edge_count as i64),
+        ),
+        (
+            "blocking_dependency_edge_count",
+            integer(packet.blocking_dependency_edge_count as i64),
+        ),
+        (
+            "readiness_gap_count",
+            integer(packet.readiness_gap_count as i64),
+        ),
+        (
+            "audit_record_count",
+            integer(packet.audit_record_count as i64),
+        ),
+        (
+            "attention_audit_record_count",
+            integer(packet.attention_audit_record_count as i64),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(packet.highest_policy_tier)),
+        ),
+        (
+            "operator_required",
+            JsonValue::Bool(packet.operator_required()),
+        ),
+        ("activation_ready", JsonValue::Bool(packet.activation_ready)),
+        (
+            "ready_for_handoff",
+            JsonValue::Bool(packet.ready_for_handoff),
+        ),
+        (
+            "approval_required",
+            JsonValue::Bool(packet.approval_required()),
+        ),
+        (
+            "dependency_ready",
+            JsonValue::Bool(packet.dependency_ready()),
+        ),
+        ("executable", JsonValue::Bool(packet.executable())),
+        ("blocked", JsonValue::Bool(packet.blocked())),
+        ("review_required", JsonValue::Bool(packet.review_required())),
+        ("monitor_only", JsonValue::Bool(packet.monitor_only())),
+        (
+            "requires_attention",
+            JsonValue::Bool(packet.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_execution_summary_json(
+    summary: &IntegrationActivationExecutionSummary,
+) -> JsonValue {
+    object([
+        ("total_packets", integer(summary.total_packets as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "executable_packets",
+            integer(summary.executable_packets as i64),
+        ),
+        (
+            "operator_required_packets",
+            integer(summary.operator_required_packets as i64),
+        ),
+        (
+            "approval_required_packets",
+            integer(summary.approval_required_packets as i64),
+        ),
+        ("blocked_packets", integer(summary.blocked_packets as i64)),
+        (
+            "dependency_ready_packets",
+            integer(summary.dependency_ready_packets as i64),
+        ),
+        (
+            "dependency_blocked_packets",
+            integer(summary.dependency_blocked_packets as i64),
+        ),
+        ("monitor_packets", integer(summary.monitor_packets as i64)),
+        (
+            "activation_ready_packets",
+            integer(summary.activation_ready_packets as i64),
+        ),
+        (
+            "packets_requiring_attention",
+            integer(summary.packets_requiring_attention as i64),
+        ),
+        ("total_risks", integer(summary.total_risks as i64)),
+        (
+            "total_dependency_edges",
+            integer(summary.total_dependency_edges as i64),
+        ),
+        (
+            "blocking_dependency_edges",
+            integer(summary.blocking_dependency_edges as i64),
+        ),
+        (
+            "total_readiness_gaps",
+            integer(summary.total_readiness_gaps as i64),
+        ),
+        (
+            "total_audit_records",
+            integer(summary.total_audit_records as i64),
+        ),
+        (
+            "attention_audit_records",
+            integer(summary.attention_audit_records as i64),
+        ),
+        (
+            "next_execution_status",
+            summary
+                .next_execution_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_task_kind",
+            summary
+                .next_task_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_phase",
+            summary
+                .next_phase
+                .map(|phase| string(phase.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_playbook_action",
+            summary
+                .next_playbook_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_packet_sequence",
+            summary
+                .next_packet_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_packet_priority",
+            summary
+                .next_packet_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_executable_sequence",
+            summary
+                .first_executable_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_sequence",
+            summary
+                .first_operator_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_sequence",
+            summary
+                .first_approval_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_sequence",
+            summary
+                .first_blocked_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_blocked_sequence",
+            summary
+                .first_dependency_blocked_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_sequence",
+            summary
+                .first_attention_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_executable_priority",
+            summary
+                .first_executable_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_operator_priority",
+            summary
+                .first_operator_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_approval_priority",
+            summary
+                .first_approval_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_dependency_blocked_priority",
+            summary
+                .first_dependency_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        (
+            "ready_to_execute",
+            JsonValue::Bool(summary.ready_to_execute()),
+        ),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_approval_work",
+            JsonValue::Bool(summary.has_approval_work()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_operator_task_json(task: &IntegrationActivationOperatorTask) -> JsonValue {
     object([
         ("sequence", integer(task.sequence as i64)),
@@ -19666,6 +20241,29 @@ fn parse_activation_handoff_status(
     }
 }
 
+fn parse_activation_execution_status(
+    label: &str,
+) -> Result<IntegrationActivationExecutionStatus, ToolCallError> {
+    match label {
+        "executable" | "ready" | "ready_to_execute" | "can_execute" => {
+            Ok(IntegrationActivationExecutionStatus::Executable)
+        }
+        "operator_required" | "operator" | "human_action" | "human_required" => {
+            Ok(IntegrationActivationExecutionStatus::OperatorRequired)
+        }
+        "needs_approval" | "approval" | "approval_required" | "requires_approval" => {
+            Ok(IntegrationActivationExecutionStatus::NeedsApproval)
+        }
+        "blocked" | "blocker" | "blockers" => Ok(IntegrationActivationExecutionStatus::Blocked),
+        "monitoring" | "monitor" | "monitor_only" | "watching" => {
+            Ok(IntegrationActivationExecutionStatus::Monitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation execution status `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_operator_task_kind(
     label: &str,
 ) -> Result<IntegrationActivationOperatorTaskKind, ToolCallError> {
@@ -20969,6 +21567,53 @@ fn integration_activation_handoff_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_execution_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_handoff_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new(
+            "execution_task_kind",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "operator_task_kind",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new("task_kind", JsonSchema::String));
+        properties.push(SchemaProperty::new("execution_status", JsonSchema::String));
+        properties.push(SchemaProperty::new("execution_state", JsonSchema::String));
+        properties.push(SchemaProperty::new("executable", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new("can_execute", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "execution_operator_required",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "approval_required",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("dependency_ready", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "execution_blocked",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "execution_review_required",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "execution_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("execution_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_operator_queue_query_schema() -> JsonSchema {
     let mut schema = integration_activation_playbook_query_schema();
     if let JsonSchema::Object {
@@ -21306,7 +21951,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 113);
+        assert_eq!(definitions.len(), 115);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -21583,6 +22228,12 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_HANDOFF_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID));
         assert!(export
             .tool_ids()
@@ -21619,7 +22270,7 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_AUDIT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            105
+            107
         );
         assert_eq!(
             export
@@ -21819,6 +22470,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_HANDOFF_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(smart_home_tool_definition(
@@ -22089,11 +22748,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(113))
+            Some(&integer(115))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(105))
+            Some(&integer(107))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -24954,6 +25613,139 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_execution_request = request(
+            "call-list-integration-activation-execution",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_EXECUTION_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("execution_status", string("blocked")),
+                ("execution_limit", integer(3)),
+            ]),
+            5_533,
+        );
+        let list_activation_execution_trace =
+            tool_runtime.invoke_with_events(&list_activation_execution_request);
+        assert!(list_activation_execution_trace.result.ok);
+        assert_eq!(
+            list_activation_execution_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_execution_output = list_activation_execution_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_execution_count =
+            integer_value(field(list_activation_execution_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_execution_count));
+        let activation_execution_summary =
+            field(list_activation_execution_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_execution_summary, "total_packets"),
+            Some(&integer(activation_execution_count))
+        );
+        assert_eq!(
+            field(activation_execution_summary, "next_execution_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_execution_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_execution_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_execution_packet = array_item(
+            field(list_activation_execution_output, "activation_execution").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_execution_packet, "execution_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_execution_packet, "executable"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            field(activation_execution_packet, "dependency_ready"),
+            Some(&JsonValue::Bool(false))
+        );
+
+        let activation_execution_summary_request = request(
+            "call-integration-activation-execution-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_EXECUTION_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                ("execution_status", string("blocked")),
+            ]),
+            5_534,
+        );
+        let activation_execution_summary_trace =
+            tool_runtime.invoke_with_events(&activation_execution_summary_request);
+        assert!(activation_execution_summary_trace.result.ok);
+        assert_eq!(
+            activation_execution_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_execution_summary_output = activation_execution_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_execution_rollup =
+            field(activation_execution_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_execution_rollup, "blocked_packets").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_execution_rollup, "next_execution_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_execution_rollup, "ready_to_execute"),
+            Some(&JsonValue::Bool(false))
+        );
+
         let list_activation_operator_queue_request = request(
             "call-list-integration-activation-operator-queue",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_OPERATOR_QUEUE_TOOL_ID,
@@ -27545,6 +28337,14 @@ mod tests {
             activation_handoff_summary_trace,
         );
         journal.record_trace(
+            list_activation_execution_request,
+            list_activation_execution_trace,
+        );
+        journal.record_trace(
+            activation_execution_summary_request,
+            activation_execution_summary_trace,
+        );
+        journal.record_trace(
             list_activation_operator_queue_request,
             list_activation_operator_queue_trace,
         );
@@ -27662,9 +28462,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 113);
-        assert_eq!(journal_summary.completed_count, 113);
-        assert_eq!(journal.audit_records().len(), 113);
+        assert_eq!(journal_summary.invocation_count, 115);
+        assert_eq!(journal_summary.completed_count, 115);
+        assert_eq!(journal.audit_records().len(), 115);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
