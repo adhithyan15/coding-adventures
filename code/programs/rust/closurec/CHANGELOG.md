@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.99.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-089** — the empty `()` of a `new` with a
+  MEMBER-expression callee now drops under WHITESPACE_ONLY, matching
+  upstream Closure:
+
+      new a.b()    -> new a.b
+      new a.b.c()  -> new a.b.c
+      new a[x]()   -> new a[x]
+
+  A new forward pre-pass anchors on each `new` keyword, parses the
+  member callee (base identifier + `.IDENT` / balanced `[ … ]`
+  accessors), and drops a trailing empty `( )`. It EXTENDS gap-050
+  (which only handled bare-identifier callees, `new A()` -> `new A`) to
+  member-expression callees. `minify_new_member_empty` is now enforced.
+
+  Gated by the same follower test as gap-050: a following `(`, `.`,
+  `[`, or template `` ` `` re-binds the result (`new a.b().c` ≠
+  `new a.b.c`), so those blocked cases are left to the new-expr
+  member-wrap pass (`new a.b().c` -> `(new a.b).c`). The callee must
+  contain at least one accessor, so a bare `new IDENT()` stays gap-050's
+  job — the two passes never both fire on the same `()`. Non-empty args
+  are kept (`new a.b(1)`); a benign operator follower strips
+  (`new a.b()+1` -> `new a.b+1`).
+
 ## [0.98.0] - 2026-06-12
 
 ### Changed

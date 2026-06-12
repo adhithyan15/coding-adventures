@@ -252,6 +252,122 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-089: empty `new` call-paren drop for a MEMBER-expression
+    // callee — `new a.b()` → `new a.b`, `new a.b.c()` → `new a.b.c`,
+    // `new a[x]()` → `new a[x]`. gap-050 (in the emit loop) already
+    // drops the empty `()` of a `new` with a BARE-IDENTIFIER callee
+    // (`new A()` → `new A`); this pre-pass extends that to a callee
+    // that is a member expression (a `.IDENT` / `[ … ]` chain rooted
+    // at the identifier after `new`).
+    //
+    // We scan FORWARD: locate a `new` keyword, parse its MemberCallee
+    // (the base identifier followed by zero-or-more `.IDENT` or
+    // balanced `[ … ]` accessors), and if the callee is *immediately*
+    // followed by an empty `( )`, drop that pair — UNLESS the token
+    // after `)` would syntactically re-bind the result (the SAME
+    // safety gate as gap-050): a following `(`, `.`, `[`, or a
+    // template `` ` `` makes `new a.b()` ≠ `new a.b` (call / member /
+    // index / tagged-template all bind tighter than the
+    // NewExpression). Those blocked-follower cases are left untouched
+    // and are handled by the existing new-expr member-wrap pass
+    // (`new a.b().c` → `(new a.b).c`). Every other follower (`;`, `,`,
+    // `}`, EOF, an infix operator, …) binds looser and is safe.
+    //
+    // The callee MUST contain at least one accessor (a `.`/`[`) — a
+    // bare `new IDENT()` is left to gap-050, so the two passes never
+    // both fire on the same `()`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i < kept.len() {
+            // Anchor on a `new` keyword token.
+            if !(is_word_like(kept[i]) && kept[i].value == "new") {
+                i += 1;
+                continue;
+            }
+            // Parse the callee: base identifier ...
+            let base = i + 1;
+            if !is_simple_identifier_token(kept.get(base).copied()) {
+                i += 1;
+                continue;
+            }
+            // ... then a chain of `.IDENT` or balanced `[ … ]`.
+            let mut j = base + 1;
+            let mut saw_accessor = false;
+            loop {
+                if j < kept.len() && is_structural_punct(kept[j], ".") {
+                    // `.IDENT`
+                    if is_simple_identifier_token(kept.get(j + 1).copied()) {
+                        saw_accessor = true;
+                        j += 2;
+                        continue;
+                    }
+                    break;
+                } else if j < kept.len() && is_structural_punct(kept[j], "[") {
+                    // Balanced `[ … ]` (structural depth scan).
+                    let mut depth: i32 = 1;
+                    let mut k = j + 1;
+                    let mut close = None;
+                    while k < kept.len() {
+                        let t = kept[k];
+                        if is_structural_punct(t, "[")
+                            || is_structural_punct(t, "(")
+                            || is_structural_punct(t, "{")
+                        {
+                            depth += 1;
+                        } else if is_structural_punct(t, "]") {
+                            depth -= 1;
+                            if depth == 0 {
+                                close = Some(k);
+                                break;
+                            }
+                        } else if is_structural_punct(t, ")")
+                            || is_structural_punct(t, "}")
+                        {
+                            depth -= 1;
+                        }
+                        k += 1;
+                    }
+                    match close {
+                        Some(c) => {
+                            saw_accessor = true;
+                            j = c + 1;
+                        }
+                        None => break, // unbalanced — give up
+                    }
+                } else {
+                    break;
+                }
+            }
+            // Require at least one accessor (bare `new IDENT()` is
+            // gap-050's job) and an immediately-following empty `( )`.
+            let empty_call = saw_accessor
+                && j + 1 < kept.len()
+                && is_structural_punct(kept[j], "(")
+                && is_structural_punct(kept[j + 1], ")");
+            if empty_call {
+                // Follower gate (identical to gap-050).
+                let blocks = kept.get(j + 2).is_some_and(|t| {
+                    is_structural_punct(t, "(")
+                        || is_structural_punct(t, ".")
+                        || is_structural_punct(t, "[")
+                        || t.value.starts_with('`')
+                });
+                if !blocks {
+                    drops.push(j);
+                    drops.push(j + 1);
+                    i = j + 2;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-051: IIFE paren normalisation. Upstream Closure
     // rewrites `(function(){...}())` to `(function(){...})()`
     // — the call's `()` moves OUTSIDE the wrapping parens.
@@ -6354,13 +6470,15 @@ mod tests {
         assert_eq!(minify("var x=new a.b().c;"), "var x=(new a.b).c;");
     }
 
-    /// gap-060 non-regression: a member-callee new with NO
-    /// following member/call is left to gap-050's domain (and
-    /// gap-050 only handles single-identifier callees, so this
-    /// stays as-is — a separate deferred gap, not gap-060).
+    /// gap-089 (was a gap-060 "deferred" non-regression): a
+    /// member-callee `new` with NO following member/call and empty
+    /// args now drops the `()` — `new a.b.C()` → `new a.b.C`. gap-050
+    /// only handled single-identifier callees; gap-089's forward
+    /// pre-pass extends the empty-paren drop to member-expression
+    /// callees.
     #[test]
     fn gap060_member_callee_standalone_unchanged() {
-        assert_eq!(minify("var x=new a.b.C();"), "var x=new a.b.C();");
+        assert_eq!(minify("var x=new a.b.C();"), "var x=new a.b.C;");
     }
 
     /// gap-064 (CORRECTNESS): a string argument whose content is
@@ -6370,6 +6488,45 @@ mod tests {
     #[test]
     fn gap064_string_paren_arg_not_dropped() {
         assert_eq!(minify("var z=new A(\")\");"), "var z=new A(\")\");");
+    }
+
+    // ---- gap-089: new member-callee empty-paren drop ----------
+
+    /// gap-089: the empty `()` of a `new` with a MEMBER-expression
+    /// callee is dropped — dotted (`new a.b()` → `new a.b`,
+    /// `new a.b.c()` → `new a.b.c`) and computed (`new a[x]()` →
+    /// `new a[x]`). Extends gap-050 (bare-identifier callees) to a
+    /// `.IDENT` / `[ … ]` member chain rooted at `new`.
+    #[test]
+    fn gap089_new_member_empty_paren_dropped() {
+        assert_eq!(minify("new a.b();"), "new a.b;");
+        assert_eq!(minify("new a.b.c();"), "new a.b.c;");
+        assert_eq!(minify("x=new a.b();"), "x=new a.b;");
+        assert_eq!(minify("new a[x]();"), "new a[x];");
+    }
+
+    /// gap-089 SAFETY — a follower that re-binds the result blocks the
+    /// drop (the same gate as gap-050). `new a.b().c`, `new a.b()()`,
+    /// `new a.b()[0]` are handled by the new-expr member-wrap pass
+    /// (`(new a.b).c` etc.), NOT by dropping the `()`. A benign
+    /// operator follower is safe (`new a.b()+1` → `new a.b+1`).
+    #[test]
+    fn gap089_blocked_followers_not_dropped() {
+        assert_eq!(minify("new a.b().c;"), "(new a.b).c;");
+        assert_eq!(minify("new a.b()();"), "(new a.b)();");
+        assert_eq!(minify("new a.b()[0];"), "(new a.b)[0];");
+        assert_eq!(minify("new a.b()+1;"), "new a.b+1;");
+    }
+
+    /// gap-089 boundary: a bare-identifier callee stays gap-050's job
+    /// (`new A()` → `new A`), a non-`new` member call is untouched
+    /// (`a.b()` stays), and a non-empty arg list is kept
+    /// (`new a.b(1)` stays).
+    #[test]
+    fn gap089_boundaries() {
+        assert_eq!(minify("new A();"), "new A;");
+        assert_eq!(minify("a.b();"), "a.b();");
+        assert_eq!(minify("new a.b(1);"), "new a.b(1);");
     }
 
     /// gap-064: same string-`)` arg under the arg-bearing member
