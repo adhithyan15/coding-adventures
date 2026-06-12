@@ -101,12 +101,12 @@ achievable code-gen columns land first).
 
 | Language        | VM | JIT | native-AOT | LLVM | WASM | JVM | CLR |
 |-----------------|----|-----|-----------|------|------|-----|-----|
-| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ◑   | ◑   |
-| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
-| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ☐   | ☐   |
+| Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ◑   |
+| Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
+| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ☐   |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
-| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
-| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ☐   | ☐   |
+| Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
+| ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ☐   |
 
 **native-AOT is uniformly ✅ as of LM0** — all six languages compile to a host
 executable and run with the expected result (`lang-aot/tests/lang_matrix.rs`:
@@ -114,9 +114,9 @@ Twig→42, Nib→42, Oct→0, ALGOL `17 mod 5`→2, Brainfuck→stdout `A`, BASI
 The VM/JIT columns are op-coverage work (see above); the code-gen columns
 (LLVM/WASM/JVM/CLR) are conformance + I/O wiring.
 
-(`◑` = partial today: Twig is proven at *scalar* level on LLVM/WASM/JVM/CLR; the
-slice promotes it to a full feature battery. The starting state is re-verified per
-slice — the loop trusts running, not this table.)
+(`◑` = partial today: Twig is proven at *scalar* level on CLR; the slice promotes it
+to a full feature battery. The starting state is re-verified per slice — the loop
+trusts running, not this table.)
 
 ## Worklist (one PR per item; slice further if large)
 
@@ -185,8 +185,24 @@ BASIC); only Brainfuck is deferred.
 
 ### Phase J — JVM for every language
 
-- ☐ **LM-J** — each language on `iir-to-jvm-class-file` + real `java` (the W16
-  wrapper-launcher pattern). I/O via `System.out`.
+- ✅ **LM-J expression languages (Twig / Nib / Oct / ALGOL on real `java`).** Added a
+  `Backend::Jvm` runner to `lang_matrix.rs`: source → `compile_source_to_jvm_class` →
+  the W16 wrapper-launcher (inject a `main([Ljava/lang/String;)V` that invokes the
+  entry `main()I` and `System.out.println`s its `int`) → real `java` → parse the
+  printed integer. Gated on `java`, skips gracefully when absent (like the LLVM
+  column on `clang`). Fixed a real backend-glue bug found **by running on real
+  `java`**: `concretize_scalar_any_for_jvm` retyped a scalar function's return + body
+  to `i32` but left its **parameters** `i64`, so Nib's `double(x)` emitted the
+  inconsistent `(J)I` and `java` rejected it with `VerifyError: Expecting to find
+  integer on stack` (the laxer in-repo `jvm-simulator` didn't catch it). Now the pass
+  concretizes parameter types too. Verified by RUNNING: Twig→42, Nib→42, Oct→0,
+  ALGOL `17 mod 5`→2 on real `java` (20 proven matrix cells); jvm_emit + conformance
+  suites still green.
+- ☐ **LM-J BASIC (on JVM).** BASIC's `print_i64` lowers to `invokestatic
+  env/BasicRuntime.println(J)V`; running it on real `java` needs that `env.BasicRuntime`
+  host class on the classpath (the JVM analogue of the wasm `PrintHost` / LLVM print
+  runtime). Provide it, then capture/assert `System.out`.
+- ⏸ **LM-J Brainfuck (on JVM) — DEFERRED.** Same tape-op gap as Brainfuck on LLVM/WASM.
 
 ### Phase C — CLR for every language
 

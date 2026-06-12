@@ -21,8 +21,14 @@
 //!   (exit code from `main`'s wasm result) and Dartmouth BASIC (stdout — a `PrintHost`
 //!   resolves the `env.__print_i64` import and captures the printed value). Brainfuck
 //!   pends the tape ops — its own follow-up.
+//! * **JVM** (Phase J) — source → `JvmClassFile` (`iir-to-jvm-class-file`) → real
+//!   `java`. The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher
+//!   invokes the entry method `main()I` and `System.out.println`s its `int` result,
+//!   which the harness parses. Green for the expression languages Twig / Nib / Oct /
+//!   ALGOL 60. Dartmouth BASIC pends an `env.BasicRuntime` host class (its `print_i64`
+//!   lowers to `invokestatic env/BasicRuntime.println(J)V`); Brainfuck the tape ops.
 //!
-//! Later slices add the JVM / CLR columns (also general code generators) and the
+//! Later slices add the CLR column (also a general code generator) and the
 //! Deferred items — Brainfuck-on-LLVM/WASM, and the McCarthy-specialized VM and JIT
 //! (op-coverage work). See `code/specs/LANG-PLATFORM-MATRIX.md`.
 //!
@@ -48,6 +54,10 @@ enum Backend {
     Llvm,
     /// Source → wasm bytes (`iir-to-wasm`) → in-process `wasm-runtime` (Phase W).
     Wasm,
+    /// Source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java` (Phase J).
+    /// The W16 wrapper-launcher pattern: a `main([Ljava/lang/String;)V` launcher is
+    /// injected to invoke the entry method and `System.out.println` its `int` result.
+    Jvm,
 }
 
 /// The known, backend-independent observable result of a conformance program.
@@ -68,14 +78,14 @@ struct Prog {
     backends: &'static [Backend],
 }
 
-use Backend::{Llvm, NativeAot, Wasm};
+use Backend::{Jvm, Llvm, NativeAot, Wasm};
 
 /// The cross-language battery. Each program is deliberately tiny but exercises real
 /// computation (arithmetic, calls, comparisons, loops, I/O) — not just constants —
 /// so a backend that merely emits a literal would not pass.
 const PROGRAMS: &[Prog] = &[
     // Twig — the original AOT language; a bare expression is the whole program.
-    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm] },
+    Prog { lang: Language::Twig, ext: "twig", src: "42", expect: Expect::Exit(42), backends: &[NativeAot, Llvm, Wasm, Jvm] },
     // Nib — typed functions: define `double`, call it, return the result. Greened on
     // WASM in LM-W Nib by completing the i64 materialization: `nib_ty_str` and the
     // un-annotated-literal fallback now emit `i64` (not `u8`), so the const argument
@@ -85,7 +95,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "nib",
         src: "fn double(x: u8) -> u8 { return x + x; } fn main() -> u8 { return double(21); }",
         expect: Expect::Exit(42),
-        backends: &[NativeAot, Llvm, Wasm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
     },
     // Oct — `let` + `if` + comparison; `main` is void so the process exits 0.
     Prog {
@@ -93,7 +103,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "oct",
         src: "fn main() { let x: u8 = 1; if x == 1 { let y: u8 = 2; } else { let z: u8 = 3; } }",
         expect: Expect::Exit(0),
-        backends: &[NativeAot, Llvm, Wasm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
     },
     // ALGOL 60 — a begin/end block with real integer arithmetic (`17 mod 5` = 2).
     Prog {
@@ -101,7 +111,7 @@ const PROGRAMS: &[Prog] = &[
         ext: "alg",
         src: "begin integer result; result := 17 mod 5 end",
         expect: Expect::Exit(2),
-        backends: &[NativeAot, Llvm, Wasm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
     // (LLVM column pending: `iir-to-llvm` lacks the tape ops `alloc_bytes`/`load_byte`/
@@ -384,6 +394,140 @@ fn run_wasm(p: &Prog) -> Option<(Option<i32>, String)> {
     Some((code, stdout))
 }
 
+/// Is a usable `java` present? Gates the JVM column (skip when absent), exactly as
+/// `clang_ok` gates LLVM and the W16 suite gates its external backends.
+fn java_ok() -> bool {
+    Command::new("java")
+        .arg("-version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// JVM runner: source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java`, the
+/// W16 wrapper-launcher strategy generalized from McCarthy to any language whose
+/// entry method returns an `int` (the expression languages).
+///
+/// `compile_source_to_jvm_class` emits a class `Main` whose entry method is
+/// `main()I` — but a class run by `java` needs a `main([Ljava/lang/String;)V`
+/// entry point. So, exactly as the McCarthy W16 conformance runner does, we append
+/// the constant-pool entries for `System.out`, `PrintStream.println(I)V` and a
+/// self-reference to `Main.main()I`, then inject a launcher method:
+///
+/// ```text
+///   getstatic  System.out          // : PrintStream
+///   invokestatic Main.main()I      // : int  (the program's result)
+///   invokevirtual println(I)V      // print it
+///   return
+/// ```
+///
+/// (Two methods named `main` with different descriptors is legal — the JVM keys
+/// methods on name **and** descriptor.) The harness then parses the printed integer
+/// as the program's result. `None` when `java` is absent or any step fails (skip).
+///
+/// Security/termination: the program is a fixed literal (no untrusted input); the
+/// emitted class is written into a fresh `tempfile::tempdir()` (random, `0700`,
+/// auto-removed) so the executed `Main.class` cannot be substituted in the
+/// write→run window (CWE-377/367); the class name is the constant `"Main"`, never
+/// interpolated from input; and each program terminates by construction.
+fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
+    use iir_to_jvm_class_file::serialize_jvm_class_file;
+    use jvm_class_file::{
+        JvmCodeAttribute, JvmConstantPoolEntry, JvmMethodAttribute, JvmMethodInfo, ACC_PUBLIC,
+        ACC_STATIC,
+    };
+    if !java_ok() {
+        return None;
+    }
+    fn cp_append(cp: &mut Vec<Option<JvmConstantPoolEntry>>, e: JvmConstantPoolEntry) -> u16 {
+        cp.push(Some(e));
+        (cp.len() - 1) as u16
+    }
+    let mut class = lang_aot::compile_source_to_jvm_class(p.lang, p.src, "Main").ok()?;
+    let (out_fieldref, println_ref, entry_ref) = {
+        let cp = &mut class.constant_pool;
+        let sys_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/lang/System".into()));
+        let sys_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: sys_utf8 });
+        let out_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("out".into()));
+        let ps_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("Ljava/io/PrintStream;".into()));
+        let out_nat = cp_append(
+            cp,
+            JvmConstantPoolEntry::NameAndType { name_index: out_utf8, descriptor_index: ps_desc },
+        );
+        let out_fieldref = cp_append(
+            cp,
+            JvmConstantPoolEntry::Fieldref { class_index: sys_class, name_and_type_index: out_nat },
+        );
+        let ps_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("java/io/PrintStream".into()));
+        let ps_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: ps_utf8 });
+        let pln_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("println".into()));
+        let pln_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("(I)V".into()));
+        let pln_nat = cp_append(
+            cp,
+            JvmConstantPoolEntry::NameAndType { name_index: pln_utf8, descriptor_index: pln_desc },
+        );
+        let println_ref = cp_append(
+            cp,
+            JvmConstantPoolEntry::Methodref { class_index: ps_class, name_and_type_index: pln_nat },
+        );
+        let main_utf8 = cp_append(cp, JvmConstantPoolEntry::Utf8("Main".into()));
+        let main_class = cp_append(cp, JvmConstantPoolEntry::Class { name_index: main_utf8 });
+        let ent_name = cp_append(cp, JvmConstantPoolEntry::Utf8("main".into()));
+        let ent_desc = cp_append(cp, JvmConstantPoolEntry::Utf8("()I".into()));
+        let ent_nat = cp_append(
+            cp,
+            JvmConstantPoolEntry::NameAndType { name_index: ent_name, descriptor_index: ent_desc },
+        );
+        let entry_ref = cp_append(
+            cp,
+            JvmConstantPoolEntry::Methodref { class_index: main_class, name_and_type_index: ent_nat },
+        );
+        let _ = cp_append(cp, JvmConstantPoolEntry::Utf8("([Ljava/lang/String;)V".into()));
+        (out_fieldref, println_ref, entry_ref)
+    };
+    let [out_hi, out_lo] = out_fieldref.to_be_bytes();
+    let [ent_hi, ent_lo] = entry_ref.to_be_bytes();
+    let [pln_hi, pln_lo] = println_ref.to_be_bytes();
+    let main_code = vec![
+        0xB2, out_hi, out_lo, // getstatic System.out
+        0xB8, ent_hi, ent_lo, // invokestatic Main.main()I
+        0xB6, pln_hi, pln_lo, // invokevirtual println(I)V
+        0xB1, // return
+    ];
+    class.methods.push(JvmMethodInfo {
+        access_flags: ACC_PUBLIC | ACC_STATIC,
+        name: "main".into(),
+        descriptor: "([Ljava/lang/String;)V".into(),
+        attributes: vec![JvmMethodAttribute::Code(JvmCodeAttribute {
+            name: "Code".into(),
+            max_stack: 2,
+            max_locals: 1,
+            code: main_code,
+            nested_attributes: vec![],
+        })],
+    });
+    let bytes = serialize_jvm_class_file(&class);
+    let dir = tempfile::tempdir().ok()?;
+    std::fs::write(dir.path().join("Main.class"), &bytes).ok()?;
+    // NB: we deliberately do **not** pass `-Xverify:none`. The expression languages'
+    // scalar bytecode is well-formed, so full bytecode verification is a *stronger*
+    // check — and, crucially, verification rejects malformed bytecode cleanly (a
+    // `VerifyError` → non-zero exit, captured below) instead of letting the JVM
+    // execute it and SIGSEGV-crash with an `hs_err_pid*.log` dump. (The McCarthy W16
+    // runner disables verification only because its `Object[]`-cons bytecode is laxer
+    // than the verifier allows; the scalar path here doesn't need that escape hatch.)
+    let out = Command::new("java")
+        .arg("-cp")
+        .arg(dir.path())
+        .arg("Main")
+        .output()
+        .ok()?;
+    // The launcher printed the entry method's `int` result; parse it as the
+    // program's value (matching the exit-code convention of the other columns).
+    let code = String::from_utf8_lossy(&out.stdout).trim().parse::<i32>().ok();
+    Some((code, String::new()))
+}
+
 /// Dispatch a program to a backend runner. `None` = the backend's toolchain is
 /// unavailable on this host (skip, like the W16 external-tool backends).
 fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
@@ -391,6 +535,7 @@ fn run(backend: Backend, p: &Prog) -> Option<(Option<i32>, String)> {
         Backend::NativeAot => run_native(p),
         Backend::Llvm => run_llvm(p),
         Backend::Wasm => run_wasm(p),
+        Backend::Jvm => run_jvm(p),
     }
 }
 
@@ -462,5 +607,15 @@ fn proven_columns_do_not_silently_skip() {
             "in-process wasm-runtime failed to run {:?}",
             p.lang
         );
+    }
+    // JVM: when `java` is present every JVM-tagged program must run.
+    if java_ok() {
+        for p in PROGRAMS.iter().filter(|p| p.backends.contains(&Jvm)) {
+            assert!(
+                run_jvm(p).is_some(),
+                "java present but JVM failed to run {:?}",
+                p.lang
+            );
+        }
     }
 }

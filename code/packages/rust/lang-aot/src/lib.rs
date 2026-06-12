@@ -575,6 +575,22 @@ fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
         if to_i32(&func.return_type) {
             func.return_type = "i32".to_string();
         }
+        // Concretize the **parameters** too, not just the return type and the
+        // instruction hints. A scalar helper such as Nib's `double(x: u8)` widens
+        // its parameter to `i64`; if we retype the body to `i32` but leave the
+        // parameter `i64`, the emitted method's signature is the inconsistent
+        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter — which
+        // a real `java` rejects with `VerifyError: Expecting to find integer on
+        // stack`. (The in-repo `jvm-simulator` is laxer and didn't catch it, so
+        // this only surfaced once a parameterized scalar program ran on real
+        // `java` in the LANG-MATRIX JVM column.) The lisp/`any`-param functions
+        // were already skipped by the `uses_lisp` guard above, so every parameter
+        // reaching here is a concrete scalar — safe to bring down to `i32`.
+        for (_, ty) in &mut func.params {
+            if to_i32(ty) {
+                *ty = "i32".to_string();
+            }
+        }
         for instr in &mut func.instructions {
             if to_i32(&instr.type_hint) {
                 instr.type_hint = "i32".to_string();
