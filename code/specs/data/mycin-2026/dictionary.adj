@@ -5,47 +5,51 @@
 % (so the IR the model emits and the rulebook it compiles against can never drift
 % apart). Domain: bacterial vs viral meningitis differential.
 %
-% NOTE: `define`/`import` are the M1/M2 adj-lang features this rebuild adds; until
-% they land this file is the DESIGN ARTIFACT for the new syntax (see SPEC.md §2).
-% A finding is `functor : finding values [closed domain]`; a hypothesis is
-% `functor : hypothesis`. `surface` lists the decomposer's surface forms.
+% A `dictionary` is a first-class, named grammar construct (a rulebook `use`s it).
+% NOTE: `dictionary`/`define`/`use`/`import` are the M1–M3 adj-lang features this
+% rebuild adds; until they land this file is the DESIGN ARTIFACT for the new
+% syntax (see SPEC.md §2). A finding is `functor : finding values [closed domain]`;
+% a hypothesis is `functor : hypothesis`. `surface` lists the decomposer's forms.
 
-% ============================ Hypotheses ============================
+dictionary meningitis_vocab {
 
-define bacterial_meningitis : hypothesis
-    surface "bacterial meningitis", "pyogenic meningitis", "acute bacterial meningitis"
+    % ======================== Hypotheses ========================
 
-define viral_meningitis : hypothesis
-    surface "viral meningitis", "aseptic meningitis", "enteroviral meningitis"
+    define bacterial_meningitis : hypothesis
+        surface "bacterial meningitis", "pyogenic meningitis", "acute bacterial meningitis"
 
-% ============================ Findings ============================
-% Each finding has a CLOSED value domain, so "observed normal/negative" is
-% distinguishable from "not yet observed".
+    define viral_meningitis : hypothesis
+        surface "viral meningitis", "aseptic meningitis", "enteroviral meningitis"
 
-define csf_gram_stain : finding values [positive, negative]
-    surface "Gram stain positive", "organisms seen on Gram stain",
-            "gram-positive diplococci on CSF", "no organisms on Gram stain"
+    % ======================== Findings ==========================
+    % Each finding has a CLOSED value domain, so "observed normal/negative" is
+    % distinguishable from "not yet observed".
 
-define csf_neutrophilic_pleocytosis : finding values [high, normal]
-    surface "neutrophil-predominant pleocytosis", "PMN predominance",
-            "CSF WBC elevated with neutrophils", "neutrophilic pleocytosis"
+    define csf_gram_stain : finding values [positive, negative]
+        surface "Gram stain positive", "organisms seen on Gram stain",
+                "gram-positive diplococci on CSF", "no organisms on Gram stain"
 
-define csf_lymphocytic_pleocytosis : finding values [high, normal]
-    surface "lymphocyte-predominant pleocytosis", "lymphocytic pleocytosis",
-            "mononuclear predominance", "CSF WBC elevated with lymphocytes"
+    define csf_neutrophilic_pleocytosis : finding values [high, normal]
+        surface "neutrophil-predominant pleocytosis", "PMN predominance",
+                "CSF WBC elevated with neutrophils", "neutrophilic pleocytosis"
 
-define csf_glucose : finding values [low, normal]
-    surface "low CSF glucose", "hypoglycorrhachia", "CSF glucose reduced",
-            "normal CSF glucose"
+    define csf_lymphocytic_pleocytosis : finding values [high, normal]
+        surface "lymphocyte-predominant pleocytosis", "lymphocytic pleocytosis",
+                "mononuclear predominance", "CSF WBC elevated with lymphocytes"
 
-define csf_protein : finding values [high, normal]
-    surface "elevated CSF protein", "high CSF protein", "normal CSF protein"
+    define csf_glucose : finding values [low, normal]
+        surface "low CSF glucose", "hypoglycorrhachia", "CSF glucose reduced",
+                "normal CSF glucose"
 
-define csf_lactate : finding values [high, normal]
-    surface "elevated CSF lactate", "high CSF lactate", "normal CSF lactate"
+    define csf_protein : finding values [high, normal]
+        surface "elevated CSF protein", "high CSF protein", "normal CSF protein"
 
-define fever : finding values [present, absent]
-    surface "fever", "febrile", "afebrile", "no fever"
+    define csf_lactate : finding values [high, normal]
+        surface "elevated CSF lactate", "high CSF lactate", "normal CSF lactate"
 
-define meningismus : finding values [present, absent]
-    surface "neck stiffness", "nuchal rigidity", "meningismus", "no neck stiffness"
+    define fever : finding values [present, absent]
+        surface "fever", "febrile", "afebrile", "no fever"
+
+    define meningismus : finding values [present, absent]
+        surface "neck stiffness", "nuchal rigidity", "meningismus", "no neck stiffness"
+}

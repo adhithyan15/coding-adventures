@@ -37,34 +37,42 @@ machinery) and adds three things the user asked for:
    contradictory rulebook points at the irreducible conflicting set.
 5. **Inference is CPU-bound** — the model decomposes; the engine reasons.
 
-## 2. The new language feature — `define` / `import` (the linchpin)
+## 2. The new language constructs — `rulebook`, `dictionary`, `define`, `use`, `import`
 
-The dictionary stops being JSON-on-the-side and becomes adj-lang. Two new
-clauses, fully grammar-driven (`.tokens`/`.grammar` → `GrammarLexer/Parser`, per
-the repo's no-handwritten-lexers rule):
+A **rulebook** is the unit of adjudicatable knowledge, so it is a *first-class,
+named grammar construct* — not a file convention or a tooling concept. A
+**dictionary** (the controlled vocabulary) is likewise a named construct. Both
+are grammar-driven (`.tokens`/`.grammar` → `GrammarLexer/Parser`, per the repo's
+no-handwritten-lexers rule). Five additions:
 
 ```adj
-% dictionary.adj — the controlled vocabulary, written once, checked in as code
-define bacterial_meningitis : hypothesis
-    surface "bacterial meningitis", "pyogenic meningitis"
-define csf_gram_stain : finding values [positive, negative]
-    surface "Gram stain positive", "organisms on Gram stain", "no organisms seen"
-define csf_neutrophilic_pleocytosis : finding values [high, normal]
-    surface "neutrophil-predominant pleocytosis", "PMN predominance"
+% clinical.adj — a named dictionary, written once, checked in as code
+dictionary meningitis_vocab {
+    define bacterial_meningitis : hypothesis
+        surface "bacterial meningitis", "pyogenic meningitis"
+    define csf_gram_stain : finding values [positive, negative]
+        surface "Gram stain positive", "organisms on Gram stain", "no organisms seen"
+    define csf_neutrophilic_pleocytosis : finding values [high, normal]
+        surface "neutrophil-predominant pleocytosis", "PMN predominance"
+}
 ```
 
 ```adj
-% rulebooks/meningitis.adj — the grounded rulebook, checked in as code
-import "../dictionary.adj"
-prior 0.037 for bacterial_meningitis
-    source "Nigrovic 2007 JAMA (PMID 17200475)" trust authoritative
-contributes 85 from csf_gram_stain(positive) to bacterial_meningitis
-    source "WHO 2025 NBK614844; sens 85% spec 99%" trust consensus
+% rulebooks/meningitis.adj — a named rulebook, the grounded knowledge, checked in
+import "../clinical.adj"
+rulebook meningitis {
+    use meningitis_vocab
+    prior 0.037 for bacterial_meningitis
+        source "Nigrovic 2007 JAMA (PMID 17200475)" trust authoritative
+    contributes 85 from csf_gram_stain(positive) to bacterial_meningitis
+        source "WHO 2025 NBK614844; sens 85% spec 99%" trust consensus
+}
 ```
 
 ```adj
-% a case — just import the rulebook and observe; ask the questions
+% a case — import the rulebook, observe, ask. The model writes only the observes.
 import "rulebooks/meningitis.adj"
+use meningitis
 observe csf_gram_stain(positive)
 observe csf_neutrophilic_pleocytosis(high)
 ? bacterial_meningitis
@@ -72,30 +80,42 @@ observe csf_neutrophilic_pleocytosis(high)
 ```
 
 ### Semantics
-- **`define <term> : hypothesis [surface …]`** registers a hypothesis term.
-  **`define <term> : finding values [v1, v2, …] [surface …]`** registers a
-  finding functor with a closed value domain. `surface "...", "..."` lists the
-  decomposer's surface forms (used to constrain the model; not engine-semantic).
-- **`import "<relative path>"`** parses the target `.adj` and merges its clauses
-  (definitions, priors, contributions, interactions) into the current program.
-  Imports are resolved relative to the importing file, are **idempotent** (a
-  file imported twice is included once — by canonical path), and **acyclic** (a
-  cycle is a compile error). Depth and fan-out are bounded.
-- **Compile-time dictionary enforcement (replaces `dict_lint.py`)**: every
-  finding functor / value / hypothesis used in a `prior`/`contributes`/
-  `interacts`/`observe`/`?` must be `define`d (after imports resolve), and a
-  finding value must be in its declared `values [...]` domain. A violation is a
-  `LowerError::UndefinedTerm { … }` / `ValueNotInDomain { … }` — the IR the model
-  emits and the rulebook it compiles against are guaranteed to share one closed
-  vocabulary. "Finding absent" (a value observed) vs "finding not yet observed"
-  (term legal, no `observe`) stays distinguishable because the domain is closed.
+- **`rulebook <name> { … }`** — a named unit grouping `prior`/`contributes`/
+  `interacts`/`uncertain` clauses (and a `use` of its dictionary). The unit of
+  knowledge: derived once, gated, checked in, cited as a whole.
+- **`dictionary <name> { define … }`** — a named controlled vocabulary.
+- **`define <term> : hypothesis [surface …]`** registers a hypothesis term;
+  **`define <term> : finding values [v1, …] [surface …]`** registers a finding
+  functor with a *closed* value domain. `surface "...", "..."` are the
+  decomposer's surface forms (constrain the model; not engine-semantic).
+- **`use <name>`** brings a named dictionary (or rulebook) into the current
+  scope — a rulebook `use`s its dictionary; a case `use`s its rulebook. Clauses
+  may still appear bare at top level (backward-compatible); `use`/blocks add the
+  named, composable layer.
+- **`import "<relative path>"`** parses the target `.adj` and makes its named
+  `rulebook`/`dictionary` blocks (and any bare clauses) available to `use`.
+  Resolved relative to the importing file; **idempotent** (a file imported twice
+  is included once, by canonical path); **acyclic** (a cycle is a compile
+  error); depth/fan-out bounded.
+- **Compile-time vocabulary enforcement (replaces the prototype's
+  `dict_lint.py`)**: every finding / value / hypothesis used in a
+  `prior`/`contributes`/`interacts`/`observe`/`?` must be `define`d in a
+  dictionary that is in scope (`use`d, after imports resolve), and a finding
+  value must be in its declared domain. Violations are
+  `LowerError::UndefinedTerm` / `ValueNotInDomain`. The IR the model emits and
+  the rulebook it compiles against share one closed vocabulary by construction.
+  "Finding absent" (a value observed) vs "finding not yet observed" (term legal,
+  no `observe`) stays distinguishable because the domain is closed.
 
-### Why in the language (not tooling)
-"Written once, checked in as code, imported and used" is exactly module
-semantics. Putting it in adj-lang means: one parser, one provenance/CV vector,
-the dictionary enforced by the compiler (not a separate Python linter that can
-drift), and `adj-lang-cli` works on a single composed program — the same path
-the differential + constraint engine + proof DAG already take.
+### Why first-class in the grammar (not tooling)
+A rulebook is what knowledge work adjudicates *over* — the thing you author,
+version, gate, cite, and reuse. Making it a named language construct means: one
+parser, one provenance/CV vector, the dictionary enforced by the *compiler*
+(not a side-car linter that drifts), composition (`use`/`import`) with cycle +
+scope checks, and `adj-lang-cli` operating on a single composed program — the
+same path the differential + constraint engine + proof DAG already take. A
+rulebook can then be `check`ed for self-consistency (the IIS localizes
+contradictions) like any other constraint system.
 
 ## 3. Architecture
 
@@ -167,27 +187,33 @@ store only on N-adversary agreement × byte-stability × blind-judge pass.
 
 ## 7. Phased PR roadmap (specs-first, each green + security-reviewed + babysat)
 
-- **M0 — this SPEC** + the dictionary (`dictionary.adj`) authored in the new
-  syntax (design only; grammar lands in M1).
-- **M1 — language: `define`** in adj-lang. tokens/grammar (regen via
-  `regen_grammars`), AST, adapter, lower → register finding/hypothesis terms;
-  compile-time dictionary enforcement (undefined term / value-not-in-domain).
-  Tests. (No `import` yet — single-file.)
-- **M2 — language: `import`** in adj-lang. Path resolution relative to the
-  importing file, idempotent + acyclic (cycle → error), depth/fan-out bounds;
-  merge imported clauses. `adj-lang-cli` resolves imports before compile. Tests
-  incl. a 3-file dictionary→rulebook→case chain.
-- **M3 — rulebook (cold) + dictionary.adj** for bacterial-vs-viral meningitis,
-  derived from the adj52 corpus byte_quotes; the naïve correlated-CSF over-count
-  left in deliberately (for the cost-to-correct proof).
-- **M4 — adversarial CAS-write gate**: cold per-clause adversarial entailment ×
+**Language foundation (M0–M3) — the `rulebook` concept in the grammar:**
+- **M0 — this SPEC** + `dictionary.adj` authored in the new `dictionary { define … }`
+  syntax (design artifact; grammar lands M1–M3).
+- **M1 — `dictionary` + `define`** in adj-lang. tokens/grammar (regen via
+  `regen_grammars`, never `cargo fmt` the generated files), AST, adapter, lower →
+  register finding/hypothesis terms with closed value domains; **compile-time
+  vocabulary enforcement** (undefined term / value-not-in-domain). Single-file.
+- **M2 — `rulebook` + `use`** in adj-lang. Named `rulebook <name> { … }` block;
+  `use <name>` brings a named dictionary/rulebook into scope; scope checks
+  (`use` of an undefined name → error). Bare-clause programs stay valid.
+- **M3 — `import`** in adj-lang. Path resolution relative to the importing file,
+  idempotent + acyclic (cycle → error), depth/fan-out bounds; `adj-lang-cli`
+  resolves imports before compile. Test: a 3-file dictionary→rulebook→case chain.
+
+**MYCIN content (M4–M8) — after the language foundation; PAUSE for user before M4
+(model/workflow + research claims):**
+- **M4 — rulebook (cold) + dictionary** for bacterial-vs-viral meningitis,
+  derived from the adj52 corpus byte_quotes, authored in the new constructs; the
+  naïve correlated-CSF over-count left in deliberately (cost-to-correct proof).
+- **M5 — adversarial CAS-write gate**: cold per-clause adversarial entailment ×
   byte-stability × blind judge × completeness; accept→CAS, kickback→report.
-- **M5 — warm pipeline**: decompose.workflow.js (dictionary-constrained,
+- **M6 — warm pipeline**: decompose.workflow.js (dictionary-constrained,
   decompose-only) → case.adj; adversarial inference+discard read; decide via
   `adj-lang-cli` at 0 answer-time calls.
-- **M6 — constraint consistency + VOI**: rulebook `check`/IIS contradiction
+- **M7 — constraint consistency + VOI**: rulebook `check`/IIS contradiction
   detection; `uncertain{…}` VOI "order-next" output wired into the case run.
-- **M7 — the five proofs + FINDINGS**: golden-rulebook (derive once → all cases,
+- **M8 — the five proofs + FINDINGS**: golden-rulebook (derive once → all cases,
   0 calls), cost-to-correct (naïve over-saturation → IIS/DAG localizes → one CAS
   `interacts` fix → recalibrates → propagates), error-localization, audit-trail
   render, CPU-bound. Honest limits documented.
