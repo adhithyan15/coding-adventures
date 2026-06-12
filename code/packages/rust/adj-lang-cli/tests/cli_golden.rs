@@ -269,6 +269,37 @@ fn check_reports_unsat_with_a_conflicting_core() {
     assert!(s.contains("\"core\":["), "{s}");
 }
 
+// ---- QF_LRA real feasibility in the CLI (ADJ constraints C1) ----
+
+#[test]
+fn check_reports_sat_real_for_a_fractional_system() {
+    // 0.25 <= x <= 0.75 has no integer point but is real-feasible → the CLI
+    // emits a `sat_real` verdict with a rational witness.
+    let (ok, s) = run(
+        "adjcli_check_satreal.adj",
+        "symbol x : scalar\n\
+             constrain x >= 0.25\n\
+             constrain x <= 0.75\n\
+             check\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"check\":{"), "expected a check section: {s}");
+    assert!(s.contains("\"outcome\":\"sat_real\""), "{s}");
+    assert!(s.contains("\"name\":\"x\""), "{s}");
+}
+
+#[test]
+fn check_reports_sat_real_when_integer_infeasible() {
+    // 2x = 1 is integer-infeasible but real-feasible at x = 0.5 → sat_real.
+    let (ok, s) = run(
+        "adjcli_check_2x1.adj",
+        "symbol x : scalar\nconstrain 2 * x = 1\ncheck\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"sat_real\""), "{s}");
+    assert!(s.contains("\"value\":0.5"), "expected x = 0.5 witness: {s}");
+}
+
 #[test]
 fn no_check_keyword_emits_no_check_section() {
     // A solve-only constraint system requests no feasibility verdict.
