@@ -60,6 +60,11 @@ paths when the matrix size reaches the package threshold.
 `diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
 `circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
 and Level-1 MOSFET models before running an analysis.
+`dcTemperatureSweep` and `dcTemperatureSweepCorners` run `.temp`-style DC
+operating-point snapshots across explicit analysis temperatures, with stable
+nominal and named-corner table helpers for cross-language comparison.
+`formatCornerDcTable` also renders named-corner DC operating-point snapshots
+with the Rust-matching `Corner` / `Index` columns.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`

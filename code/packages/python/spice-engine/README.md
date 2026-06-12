@@ -67,6 +67,11 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
 and `circuit_at_temperature()` provide operating-temperature footholds for
 diode, BJT, and Level-1 MOSFET models before running an analysis.
+`dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
+`.temp`-style DC operating-point snapshots across explicit analysis
+temperatures, with stable nominal and named-corner table helpers for
+cross-language comparison. `format_corner_dc_table()` also renders named-corner
+DC operating-point snapshots with the Rust-matching `Corner` / `Index` columns.
 
 `DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
 size, selected real solver path, tolerance, convergence aid, and final Newton

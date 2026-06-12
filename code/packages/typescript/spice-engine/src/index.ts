@@ -618,6 +618,24 @@ export interface CornerSweepResult {
   readonly points: readonly CornerPoint[];
 }
 
+export interface TemperatureDcPoint {
+  readonly temperatureKelvin: number;
+  readonly result: DcResult;
+}
+
+export interface TemperatureDcResult {
+  readonly points: readonly TemperatureDcPoint[];
+}
+
+export interface CornerTemperatureDcPoint {
+  readonly cornerName: string;
+  readonly points: readonly TemperatureDcPoint[];
+}
+
+export interface CornerTemperatureDcResult {
+  readonly points: readonly CornerTemperatureDcPoint[];
+}
+
 export interface DcSweepPoint {
   readonly value: number;
   readonly result: DcResult;
@@ -3322,6 +3340,102 @@ export function formatDcTable(
   ].join("\n");
 }
 
+export function formatCornerDcTable(
+  result: CornerSweepResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    result.points.length === 0 ? [] : defaultOutputProbes(
+      result.points[0].result.nodeVoltages,
+      result.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", ...selectedProbes].join("\t")];
+  result.points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatCornerDcTable",
+        ),
+      ),
+    );
+    rows.push([point.cornerName, String(index), ...values].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatTemperatureDcTable(
+  result: TemperatureDcResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    result.points.length === 0 ? [] : defaultOutputProbes(
+      result.points[0].result.nodeVoltages,
+      result.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Index", "TemperatureKelvin", ...selectedProbes].join("\t")];
+  result.points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatTemperatureDcTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      formatTableNumber(point.temperatureKelvin),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerTemperatureDcTable(
+  result: CornerTemperatureDcResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((corner) => corner.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultOutputProbes(
+      firstNonEmpty.points[0].result.nodeVoltages,
+      firstNonEmpty.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", "TemperatureKelvin", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.result.nodeVoltages,
+            point.result.branchCurrents,
+            probe,
+            "formatCornerTemperatureDcTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        formatTableNumber(point.temperatureKelvin),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatTransientTable(
   points: readonly TransientPoint[],
   probes?: readonly string[],
@@ -4207,6 +4321,51 @@ export function dcCorners(
     points: corners.map((corner) => ({
       cornerName: corner.name,
       result: dcOp(circuitWithCorner(circuit, corner), options),
+    })),
+  };
+}
+
+export function dcTemperatureSweep(
+  circuit: Circuit,
+  temperaturesKelvin: readonly number[],
+  options: DcOpOptions = {},
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): TemperatureDcResult {
+  return {
+    points: temperaturesKelvin.map((temperatureKelvin) => ({
+      temperatureKelvin,
+      result: dcOp(
+        circuitAtTemperature(
+          circuit,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
+          energyGapElectronVolts,
+        ),
+        options,
+      ),
+    })),
+  };
+}
+
+export function dcTemperatureSweepCorners(
+  circuit: Circuit,
+  temperaturesKelvin: readonly number[],
+  corners: readonly CornerSpec[],
+  options: DcOpOptions = {},
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): CornerTemperatureDcResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      points: dcTemperatureSweep(
+        circuitWithCorner(circuit, corner),
+        temperaturesKelvin,
+        options,
+        nominalTemperatureKelvin,
+        energyGapElectronVolts,
+      ).points,
     })),
   };
 }

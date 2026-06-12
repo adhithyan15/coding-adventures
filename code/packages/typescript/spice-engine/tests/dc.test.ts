@@ -17,9 +17,14 @@ import {
   dcOp,
   dcSweep,
   dcSweepCorners,
+  dcTemperatureSweep,
+  dcTemperatureSweepCorners,
   deviceModelAuditFixtures,
   diode,
   diodeFromModelCard,
+  formatCornerDcTable,
+  formatCornerTemperatureDcTable,
+  formatTemperatureDcTable,
   inductor,
   jfet,
   jfetFromModelCard,
@@ -424,6 +429,62 @@ describe("dcOp", () => {
     expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
   });
 
+  it("runs DC temperature sweeps and formats stable table output", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vcc", "0", 5.0));
+    circuit.add(resistor("Rbias", "vcc", "a", 4_300.0));
+    circuit.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const result = dcTemperatureSweep(circuit, [275.0, 300.15, 350.0]);
+
+    expect(result.points[0].result.voltage("a")).toBeGreaterThan(
+      result.points[1].result.voltage("a")!,
+    );
+    expect(result.points[2].result.voltage("a")).toBeLessThan(
+      result.points[1].result.voltage("a")!,
+    );
+    expect(formatTemperatureDcTable(result, ["V(a)", "I(V1)"])).toBe(
+      "Index\tTemperatureKelvin\tV(a)\tI(V1)\n" +
+      "0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\n" +
+      "1\t3.001500e+02\t3.613836e+00\t-3.223638e-04\n" +
+      "2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n",
+    );
+  });
+
+  it("runs named-corner DC temperature sweeps and formats stable table output", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vcc", "0", 5.0));
+    circuit.add(resistor("Rbias", "vcc", "a", 4_300.0));
+    circuit.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const result = dcTemperatureSweepCorners(
+      circuit,
+      [275.0, 350.0],
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "rbias-high",
+          overrides: [{ elementName: "Rbias", parameter: "resistance", value: 8_600.0 }],
+        },
+      ],
+    );
+
+    expect(result.points.map((point) => point.cornerName)).toStrictEqual([
+      "nominal",
+      "rbias-high",
+    ]);
+    expect(result.points[0].points[0].result.voltage("a")).toBeGreaterThan(
+      result.points[0].points[1].result.voltage("a")!,
+    );
+    expect(formatCornerTemperatureDcTable(result, ["V(a)", "I(V1)"])).toBe(
+      "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\n" +
+      "nominal\t0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\n" +
+      "nominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n" +
+      "rbias-high\t0\t2.750000e+02\t4.218594e+00\t-9.086118e-05\n" +
+      "rbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n",
+    );
+  });
+
   it("uses BJT temperature scaling in fixed-base emitter voltage", () => {
     const nominal = new Circuit();
     nominal.add(voltageSource("Vcc", "vcc", "0", 5.0));
@@ -768,6 +829,13 @@ describe("dcCorners", () => {
     expect(result.points[1].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
     expect(result.points[2].result.voltage("out")).toBeCloseTo(6.0, 9);
     expect(result.points[3].result.voltage("out")).toBeCloseTo(-5.0, 9);
+    expect(formatCornerDcTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tV(out)\tI(Vin)\n" +
+      "nominal\t0\t5.000000e+00\t-5.000000e-03\n" +
+      "rbot-fast\t1\t3.333333e+00\t-6.666667e-03\n" +
+      "vin-high\t2\t6.000000e+00\t-6.000000e-03\n" +
+      "vin-inverted\t3\t-5.000000e+00\t5.000000e-03\n",
+    );
   });
 });
 

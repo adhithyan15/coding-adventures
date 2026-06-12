@@ -4,6 +4,12 @@
 
 ### Added
 
+- **DC corner and temperature parity** — `format_corner_dc_table()`,
+  `dc_temperature_sweep()`, `dc_temperature_sweep_corners()`,
+  `format_temperature_dc_table()`, and `format_corner_temperature_dc_table()`
+  now expose Rust-matching named-corner and `.temp`-style DC operating-point
+  snapshots with stable table columns.
+
 - **Compatibility corpus release gates** — `compatibility_corpus()`,
   `release_readiness_gates()`, `format_compatibility_corpus_table()`, and
   `format_release_readiness_report()` expose the first oracle-backed deck

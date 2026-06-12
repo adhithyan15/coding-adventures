@@ -632,6 +632,36 @@ class CornerSweepResult:
     points: list[CornerPoint]
 
 
+@dataclass(frozen=True)
+class TemperatureDcPoint:
+    """DC operating-point result for one analysis temperature."""
+
+    temperature_kelvin: float
+    result: DcResult
+
+
+@dataclass(frozen=True)
+class TemperatureDcResult:
+    """DC operating-point sweep across explicit analysis temperatures."""
+
+    points: list[TemperatureDcPoint]
+
+
+@dataclass(frozen=True)
+class CornerTemperatureDcPoint:
+    """Temperature DC sweep result for one named corner."""
+
+    corner_name: str
+    points: list[TemperatureDcPoint]
+
+
+@dataclass(frozen=True)
+class CornerTemperatureDcResult:
+    """Named-corner DC temperature sweep result."""
+
+    points: list[CornerTemperatureDcPoint]
+
+
 @dataclass
 class TransientPoint:
     time: float
@@ -1734,6 +1764,124 @@ def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
             "",
         ]
     )
+
+
+def format_corner_dc_table(
+    result: CornerSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC operating points as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.result.node_voltages,
+                    point.result.branch_currents,
+                    probe,
+                    "format_corner_dc_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append("\t".join([point.corner_name, str(index), *values]))
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_temperature_dc_table(
+    result: TemperatureDcResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format a DC temperature sweep as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Index", "TemperatureKelvin", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.result.node_voltages,
+                    point.result.branch_currents,
+                    probe,
+                    "format_temperature_dc_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(point.temperature_kelvin),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_temperature_dc_table(
+    result: CornerTemperatureDcResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC temperature sweeps as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for corner in result.points
+            for point in corner.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "TemperatureKelvin", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.result.node_voltages,
+                        point.result.branch_currents,
+                        probe,
+                        "format_corner_temperature_dc_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(point.temperature_kelvin),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
 
 
 def format_transient_table(
@@ -3858,6 +4006,69 @@ def dc_corners(
         for corner in corners
     ]
     return CornerSweepResult(points=points)
+
+
+def dc_temperature_sweep(
+    circuit: Circuit,
+    temperatures_kelvin: list[float],
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> TemperatureDcResult:
+    """Run DC operating points at explicit semiconductor analysis temperatures."""
+    return TemperatureDcResult(
+        points=[
+            TemperatureDcPoint(
+                temperature_kelvin=temperature_kelvin,
+                result=dc_op(
+                    circuit_at_temperature(
+                        circuit,
+                        temperature_kelvin,
+                        nominal_temperature_kelvin=nominal_temperature_kelvin,
+                        energy_gap_ev=energy_gap_ev,
+                    ),
+                    max_iterations=max_iterations,
+                    tol=tol,
+                    convergence_aids=convergence_aids,
+                ),
+            )
+            for temperature_kelvin in temperatures_kelvin
+        ]
+    )
+
+
+def dc_temperature_sweep_corners(
+    circuit: Circuit,
+    temperatures_kelvin: list[float],
+    corners: list[CornerSpec],
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> CornerTemperatureDcResult:
+    """Run DC temperature sweeps at each named corner."""
+    return CornerTemperatureDcResult(
+        points=[
+            CornerTemperatureDcPoint(
+                corner_name=corner.name,
+                points=dc_temperature_sweep(
+                    _circuit_with_corner(circuit, corner),
+                    temperatures_kelvin,
+                    nominal_temperature_kelvin=nominal_temperature_kelvin,
+                    energy_gap_ev=energy_gap_ev,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                    convergence_aids=convergence_aids,
+                ).points,
+            )
+            for corner in corners
+        ]
+    )
 
 
 def _stamp_dc(
