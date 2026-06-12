@@ -55,6 +55,21 @@ describe("acSweep", () => {
     }
   });
 
+  it("solves a large resistor ladder through the sparse complex solver path", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("V1", "n0", "0", 0.0, 1.0, 0.0));
+    for (let index = 0; index < 34; index++) {
+      circuit.add(resistor(`R${index}`, `n${index}`, `n${index + 1}`, 1_000.0));
+    }
+    circuit.add(resistor("R34", "n34", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 1);
+
+    expect(points).toHaveLength(1);
+    expectClose(points[0].voltage("n34")!.real, 1.0 / 35.0);
+    expectClose(points[0].voltage("n34")!.imag, 0.0);
+  });
+
   it("formats stable text output tables for AC results", () => {
     const circuit = new Circuit();
     circuit.add(voltageSourceWithAc("V1", "in", "0", 0.0, 1.0, 0.0));

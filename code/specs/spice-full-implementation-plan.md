@@ -15,14 +15,12 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Sparse solver productionization and convergence diagnostics.
+1. Device model audit fixtures and model-card alias compatibility.
    - Status: next.
-   - Replace or route the dense solve paths through production sparse real and
-     complex matrix implementations where the package already has a suitable
-     backend.
-   - Preserve the current Python, Rust, and TypeScript public result shapes
-     while adding stable convergence diagnostics that downstream tools can
-     compare.
+   - Build diode, BJT, JFET, and MOS Level 1 reference fixtures that can be
+     compared across Python, Rust, TypeScript, and a documented oracle.
+   - Close parser/model-card alias gaps needed by those fixtures without
+     expanding into full BSIM or vendor-specific compatibility.
 
 ## Completed Slices
 
@@ -74,6 +72,15 @@ downstream tools to compare.
      `MAX`, `MIN`, `AVG`, and `RMS` over optional `FROM=<value>` /
      `TO=<value>` ranges for `.op`, `.dc`, `.ac`, and `.tran` analysis-plan
      results.
+
+7. Sparse solver productionization and convergence diagnostics.
+   - Status: completed in this sparse-solver diagnostics slice.
+   - Python, Rust, and TypeScript now expose stable DC solver diagnostics with
+     matrix size, selected real solver path, tolerance, convergence aid, and
+     final Newton delta metadata.
+   - Large real DC and complex AC matrix solves now route through sparse-row
+     solver implementations in all three packages when the shared threshold is
+     reached.
 
 ## Backlog
 

@@ -476,11 +476,22 @@ export interface DcResult {
   readonly iterations: number;
   readonly converged: boolean;
   readonly convergenceAid: DcConvergenceAid;
+  readonly diagnostics: DcSolverDiagnostics;
   voltage(node: string): number | undefined;
   branchCurrent(sourceName: string): number | undefined;
 }
 
 export type DcConvergenceAid = "newton" | "gmin" | "source" | "pseudo_transient" | "none";
+
+export type LinearSolverKind = "none" | "dense_real" | "sparse_real" | "dense_complex" | "sparse_complex";
+
+export interface DcSolverDiagnostics {
+  readonly matrixSize: number;
+  readonly solver: LinearSolverKind;
+  readonly tolerance: number;
+  readonly maxDelta: number;
+  readonly convergenceAid: DcConvergenceAid;
+}
 
 export interface DcOpOptions {
   readonly maxIterations?: number;
@@ -3253,6 +3264,35 @@ function tableVoltage(
   return value;
 }
 
+function realSolverKind(matrixSize: number): LinearSolverKind {
+  if (matrixSize === 0) {
+    return "none";
+  }
+  return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_real" : "dense_real";
+}
+
+function complexSolverKind(matrixSize: number): LinearSolverKind {
+  if (matrixSize === 0) {
+    return "none";
+  }
+  return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_complex" : "dense_complex";
+}
+
+function dcDiagnosticsFromLinearSolution(
+  solution: LinearSolution,
+  convergenceAid: DcConvergenceAid,
+  tolerance: number,
+): DcSolverDiagnostics {
+  const matrixSize = solution.vector.length;
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    tolerance,
+    maxDelta: solution.maxDelta,
+    convergenceAid,
+  };
+}
+
 export function dcOp(
   circuit: Circuit,
   options: DcOpOptions = {},
@@ -3266,6 +3306,7 @@ export function dcOp(
       solution.iterations,
       solution.converged,
       "newton",
+      dcDiagnosticsFromLinearSolution(solution, "newton", solveOptions.tolerance),
     );
   }
   if (!solveOptions.convergenceAids) {
@@ -3275,6 +3316,7 @@ export function dcOp(
       solution.iterations,
       false,
       "none",
+      dcDiagnosticsFromLinearSolution(solution, "none", solveOptions.tolerance),
     );
   }
 
@@ -3300,6 +3342,7 @@ export function dcOp(
     finalSolution.iterations,
     finalSolution.converged,
     convergenceAid,
+    dcDiagnosticsFromLinearSolution(finalSolution, convergenceAid, solveOptions.tolerance),
   );
 }
 
@@ -5155,6 +5198,7 @@ interface LinearSolution {
   readonly vector: readonly number[];
   readonly iterations: number;
   readonly converged: boolean;
+  readonly maxDelta: number;
 }
 
 interface LinearSolveOptions {
@@ -5277,6 +5321,7 @@ function solveLinearCircuitWithOptions(
       vector: [],
       iterations: 0,
       converged: true,
+      maxDelta: 0.0,
     };
   }
 
@@ -5306,12 +5351,12 @@ function solveLinearCircuitWithOptions(
   let iterations = 1;
   while (iterations < options.maxIterations) {
     if (!solution.converged) {
-      return { ...solution, iterations, converged: false };
+      return { ...solution, iterations, converged: false, maxDelta: Number.POSITIVE_INFINITY };
     }
     const delta = maxVectorDelta(solution.vector, operatingPoint);
     operatingPoint = [...solution.vector];
     if (delta < options.tolerance) {
-      return { ...solution, iterations, converged: true };
+      return { ...solution, iterations, converged: true, maxDelta: delta };
     }
     solution = solveLinearCircuitAtOperatingPointOrFailure(
       circuit,
@@ -5329,7 +5374,7 @@ function solveLinearCircuitWithOptions(
   }
 
   const delta = maxVectorDelta(solution.vector, operatingPoint);
-  return { ...solution, iterations, converged: delta < options.tolerance };
+  return { ...solution, iterations, converged: delta < options.tolerance, maxDelta: delta };
 }
 
 function solveLinearCircuitAtOperatingPointOrFailure(
@@ -5356,7 +5401,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
       matrixSize,
       operatingPoint,
     );
-    return { ...solution, iterations: 1, converged: true };
+    return { ...solution, iterations: 1, converged: true, maxDelta: 0.0 };
   } catch (error) {
     if (
       returnSingularAsUnconverged &&
@@ -5371,6 +5416,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
         nodeCount,
         operatingPoint,
         false,
+        Number.POSITIVE_INFINITY,
       );
     }
     throw error;
@@ -5850,6 +5896,7 @@ function solveLinearCircuitAtOperatingPoint(
     nodeCount,
     solution,
     true,
+    0.0,
   );
 }
 
@@ -5861,6 +5908,7 @@ function linearSolutionFromVector(
   nodeCount: number,
   solution: readonly number[],
   converged: boolean,
+  maxDelta: number,
 ): LinearSolution {
   const nodeVoltages = new Map<string, number>();
   const nodesByIndex = Array.from(nodeIndices.entries()).sort(
@@ -5887,6 +5935,7 @@ function linearSolutionFromVector(
     vector: [...solution],
     iterations: 1,
     converged,
+    maxDelta,
   };
 }
 
@@ -6175,6 +6224,13 @@ function makeDcResult(
   iterations = 1,
   converged = true,
   convergenceAid: DcConvergenceAid = converged ? "newton" : "none",
+  diagnostics: DcSolverDiagnostics = {
+    matrixSize: 0,
+    solver: "none",
+    tolerance: 0.0,
+    maxDelta: 0.0,
+    convergenceAid,
+  },
 ): DcResult {
   return {
     nodeVoltages,
@@ -6182,6 +6238,7 @@ function makeDcResult(
     iterations,
     converged,
     convergenceAid,
+    diagnostics,
     voltage(node: string): number | undefined {
       return isGround(node) ? 0.0 : nodeVoltages.get(node);
     },
@@ -9049,6 +9106,13 @@ function transposeComplexMatrix(matrix: readonly (readonly Complex[])[]): Comple
 }
 
 function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
+  if (complexSolverKind(rhs.length) === "sparse_complex") {
+    return solveSparseComplexLinearSystem(matrix, rhs);
+  }
+  return solveDenseComplexLinearSystem(matrix, rhs);
+}
+
+function solveDenseComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
   const n = rhs.length;
   for (let pivotCol = 0; pivotCol < n; pivotCol++) {
     let pivotRow = pivotCol;
@@ -9103,6 +9167,86 @@ function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[
         "circuit matrix is singular",
         "SINGULAR_MATRIX",
       );
+    }
+  }
+  return solution;
+}
+
+function solveSparseComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
+  const n = rhs.length;
+  const rows = matrix.map((row) => {
+    const entries = new Map<number, Complex>();
+    row.forEach((value, col) => {
+      if (value.real !== 0.0 || value.imag !== 0.0) {
+        entries.set(col, value);
+      }
+    });
+    return entries;
+  });
+  const sparseRhs = [...rhs];
+
+  for (let pivotCol = 0; pivotCol < n; pivotCol++) {
+    let pivotRow = pivotCol;
+    let pivotAbs = complexAbs(rows[pivotCol].get(pivotCol) ?? complex(0.0, 0.0));
+    for (let row = pivotCol + 1; row < n; row++) {
+      const candidateAbs = complexAbs(rows[row].get(pivotCol) ?? complex(0.0, 0.0));
+      if (candidateAbs > pivotAbs) {
+        pivotAbs = candidateAbs;
+        pivotRow = row;
+      }
+    }
+
+    if (pivotAbs < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+
+    [rows[pivotCol], rows[pivotRow]] = [rows[pivotRow], rows[pivotCol]];
+    [sparseRhs[pivotCol], sparseRhs[pivotRow]] = [
+      sparseRhs[pivotRow],
+      sparseRhs[pivotCol],
+    ];
+
+    const pivot = rows[pivotCol].get(pivotCol)!;
+    const pivotEntries = [...rows[pivotCol].entries()].filter(
+      ([col]) => col > pivotCol,
+    );
+    for (let row = pivotCol + 1; row < n; row++) {
+      const value = rows[row].get(pivotCol) ?? complex(0.0, 0.0);
+      if (value.real === 0.0 && value.imag === 0.0) {
+        continue;
+      }
+      const factor = complexDiv(value, pivot);
+      rows[row].delete(pivotCol);
+      for (const [col, pivotValue] of pivotEntries) {
+        const nextValue = complexSub(
+          rows[row].get(col) ?? complex(0.0, 0.0),
+          complexMul(factor, pivotValue),
+        );
+        if (complexAbs(nextValue) < PIVOT_EPSILON) {
+          rows[row].delete(col);
+        } else {
+          rows[row].set(col, nextValue);
+        }
+      }
+      sparseRhs[row] = complexSub(sparseRhs[row], complexMul(factor, sparseRhs[pivotCol]));
+    }
+  }
+
+  const solution = Array.from({ length: n }, () => complex(0.0, 0.0));
+  for (let row = n - 1; row >= 0; row--) {
+    const diagonal = rows[row].get(row) ?? complex(0.0, 0.0);
+    if (complexAbs(diagonal) < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+    let value = sparseRhs[row];
+    for (const [col, entry] of rows[row].entries()) {
+      if (col > row) {
+        value = complexSub(value, complexMul(entry, solution[col]));
+      }
+    }
+    solution[row] = complexDiv(value, diagonal);
+    if (!Number.isFinite(solution[row].real) || !Number.isFinite(solution[row].imag)) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
     }
   }
   return solution;

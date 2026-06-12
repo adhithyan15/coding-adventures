@@ -37,6 +37,30 @@ fn ac_resistive_divider_is_frequency_independent() {
 }
 
 #[test]
+fn ac_large_resistor_ladder_uses_sparse_complex_solver_path() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::with_ac(
+        "V1", "n0", "0", 0.0, 1.0, 0.0,
+    )));
+    for index in 0..34 {
+        circuit.add(Element::Resistor(Resistor::new(
+            format!("R{index}"),
+            format!("n{index}"),
+            format!("n{}", index + 1),
+            1_000.0,
+        )));
+    }
+    circuit.add(Element::Resistor(Resistor::new("R34", "n34", "0", 1_000.0)));
+
+    let points = ac_sweep(&circuit, 1_000.0, 1_000.0, 1).unwrap();
+
+    assert_eq!(points.len(), 1);
+    let output = points[0].voltage("n34").unwrap();
+    assert_close(output.real, 1.0 / 35.0);
+    assert_close(output.imag, 0.0);
+}
+
+#[test]
 fn ac_text_output_table_is_stable() {
     let resistance = 1_000.0;
     let capacitance = 1.0e-6;

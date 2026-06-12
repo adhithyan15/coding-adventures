@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add `DcResult::diagnostics` with stable matrix size, solver kind, tolerance,
+  convergence aid, and final Newton delta metadata; large AC complex systems
+  now route through the sparse-row complex solver path.
+
 ## 0.14.0 — 2026-06-05
 
 - Add `s_parameters_corners_parallel` for order-preserving parallel Rust

@@ -10,6 +10,26 @@ const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 
+fn real_solver_kind(matrix_size: usize) -> &'static str {
+    if matrix_size == 0 {
+        "none"
+    } else if matrix_size >= SPARSE_SOLVER_THRESHOLD {
+        "sparse_real"
+    } else {
+        "dense_real"
+    }
+}
+
+fn complex_solver_kind(matrix_size: usize) -> &'static str {
+    if matrix_size == 0 {
+        "none"
+    } else if matrix_size >= SPARSE_SOLVER_THRESHOLD {
+        "sparse_complex"
+    } else {
+        "dense_complex"
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
     elements: Vec<Element>,
@@ -2412,12 +2432,22 @@ pub enum DcConvergenceAid {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DcSolverDiagnostics {
+    pub matrix_size: usize,
+    pub solver: String,
+    pub tolerance: f64,
+    pub max_delta: f64,
+    pub convergence_aid: DcConvergenceAid,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DcResult {
     pub node_voltages: BTreeMap<String, f64>,
     pub branch_currents: BTreeMap<String, f64>,
     pub iterations: usize,
     pub converged: bool,
     pub convergence_aid: DcConvergenceAid,
+    pub diagnostics: DcSolverDiagnostics,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -5496,12 +5526,14 @@ pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcR
         return Ok(dc_result_from_linear_solution(
             solution,
             DcConvergenceAid::Newton,
+            options.tolerance,
         ));
     }
     if !options.convergence_aids {
         return Ok(dc_result_from_linear_solution(
             solution,
             DcConvergenceAid::None,
+            options.tolerance,
         ));
     }
 
@@ -5518,6 +5550,7 @@ pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcR
     Ok(dc_result_from_linear_solution(
         final_solution,
         convergence_aid,
+        options.tolerance,
     ))
 }
 
@@ -5730,13 +5763,22 @@ fn apply_corner_override(
 fn dc_result_from_linear_solution(
     solution: LinearSolution,
     convergence_aid: DcConvergenceAid,
+    tolerance: f64,
 ) -> DcResult {
+    let matrix_size = solution.vector.len();
     DcResult {
         node_voltages: solution.node_voltages,
         branch_currents: solution.branch_currents,
         iterations: solution.iterations,
         converged: solution.converged,
         convergence_aid,
+        diagnostics: DcSolverDiagnostics {
+            matrix_size,
+            solver: real_solver_kind(matrix_size).to_string(),
+            tolerance,
+            max_delta: solution.max_delta,
+            convergence_aid,
+        },
     }
 }
 
@@ -8214,6 +8256,7 @@ struct LinearSolution {
     vector: Vec<f64>,
     iterations: usize,
     converged: bool,
+    max_delta: f64,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -8304,6 +8347,7 @@ fn solve_linear_circuit_with_options(
             vector: Vec::new(),
             iterations: 0,
             converged: true,
+            max_delta: 0.0,
         });
     }
 
@@ -8348,6 +8392,7 @@ fn solve_linear_circuit_with_options(
             return Ok(LinearSolution {
                 iterations,
                 converged: false,
+                max_delta: f64::INFINITY,
                 ..solution
             });
         }
@@ -8357,6 +8402,7 @@ fn solve_linear_circuit_with_options(
             return Ok(LinearSolution {
                 iterations,
                 converged: true,
+                max_delta: delta,
                 ..solution
             });
         }
@@ -8379,6 +8425,7 @@ fn solve_linear_circuit_with_options(
     Ok(LinearSolution {
         iterations,
         converged: delta < options.tolerance,
+        max_delta: delta,
         ..solution
     })
 }
@@ -8409,6 +8456,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
         Ok(solution) => Ok(LinearSolution {
             iterations: 1,
             converged: true,
+            max_delta: 0.0,
             ..solution
         }),
         Err(SpiceError::SingularMatrix) if return_singular_as_unconverged => {
@@ -8420,6 +8468,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
                 node_count,
                 operating_point,
                 false,
+                f64::INFINITY,
             ))
         }
         Err(error) => Err(error),
@@ -8542,6 +8591,7 @@ fn solve_linear_circuit_at_operating_point(
         node_count,
         &solution,
         true,
+        0.0,
     ))
 }
 
@@ -8553,6 +8603,7 @@ fn linear_solution_from_vector(
     node_count: usize,
     solution: &[f64],
     converged: bool,
+    max_delta: f64,
 ) -> LinearSolution {
     let node_voltages = node_voltages_from_solution(node_indices, solution);
     let mut branch_currents = BTreeMap::new();
@@ -8575,6 +8626,7 @@ fn linear_solution_from_vector(
         vector: solution.to_vec(),
         iterations: 1,
         converged,
+        max_delta,
     }
 }
 
@@ -12129,6 +12181,16 @@ fn solve_sparse_linear_system(
 }
 
 fn solve_complex_linear_system(
+    matrix: Vec<Vec<Complex>>,
+    rhs: Vec<Complex>,
+) -> Result<Vec<Complex>, SpiceError> {
+    if complex_solver_kind(rhs.len()) == "sparse_complex" {
+        return solve_sparse_complex_linear_system(matrix, rhs);
+    }
+    solve_dense_complex_linear_system(matrix, rhs)
+}
+
+fn solve_dense_complex_linear_system(
     mut matrix: Vec<Vec<Complex>>,
     mut rhs: Vec<Complex>,
 ) -> Result<Vec<Complex>, SpiceError> {
@@ -12170,6 +12232,102 @@ fn solve_complex_linear_system(
             .map(|col| matrix[row][col] * solution[col])
             .fold(Complex::zero(), |acc, value| acc + value);
         solution[row] = (rhs[row] - tail_sum) / matrix[row][row];
+        if !solution[row].is_finite() {
+            return Err(SpiceError::SingularMatrix);
+        }
+    }
+    Ok(solution)
+}
+
+fn solve_sparse_complex_linear_system(
+    matrix: Vec<Vec<Complex>>,
+    rhs: Vec<Complex>,
+) -> Result<Vec<Complex>, SpiceError> {
+    let n = rhs.len();
+    let mut rows: Vec<HashMap<usize, Complex>> = matrix
+        .into_iter()
+        .map(|row| {
+            row.into_iter()
+                .enumerate()
+                .filter_map(|(col, value)| (value != Complex::zero()).then_some((col, value)))
+                .collect()
+        })
+        .collect();
+    let mut rhs = rhs;
+
+    for pivot_col in 0..n {
+        let pivot_row = (pivot_col..n)
+            .max_by(|&a, &b| {
+                rows[a]
+                    .get(&pivot_col)
+                    .copied()
+                    .unwrap_or_else(Complex::zero)
+                    .abs()
+                    .partial_cmp(
+                        &rows[b]
+                            .get(&pivot_col)
+                            .copied()
+                            .unwrap_or_else(Complex::zero)
+                            .abs(),
+                    )
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .ok_or(SpiceError::SingularMatrix)?;
+
+        if rows[pivot_row]
+            .get(&pivot_col)
+            .copied()
+            .unwrap_or_else(Complex::zero)
+            .abs()
+            < PIVOT_EPSILON
+        {
+            return Err(SpiceError::SingularMatrix);
+        }
+
+        rows.swap(pivot_col, pivot_row);
+        rhs.swap(pivot_col, pivot_row);
+
+        let pivot = rows[pivot_col][&pivot_col];
+        let pivot_entries: Vec<(usize, Complex)> = rows[pivot_col]
+            .iter()
+            .filter_map(|(&col, &value)| (col > pivot_col).then_some((col, value)))
+            .collect();
+        for row in (pivot_col + 1)..n {
+            let value = rows[row]
+                .get(&pivot_col)
+                .copied()
+                .unwrap_or_else(Complex::zero);
+            if value == Complex::zero() {
+                continue;
+            }
+            let factor = value / pivot;
+            rows[row].remove(&pivot_col);
+            for (col, pivot_value) in &pivot_entries {
+                let next_value = rows[row].get(col).copied().unwrap_or_else(Complex::zero)
+                    - factor * *pivot_value;
+                if next_value.abs() < PIVOT_EPSILON {
+                    rows[row].remove(col);
+                } else {
+                    rows[row].insert(*col, next_value);
+                }
+            }
+            rhs[row] = rhs[row] - factor * rhs[pivot_col];
+        }
+    }
+
+    let mut solution = vec![Complex::zero(); n];
+    for row in (0..n).rev() {
+        let diagonal = rows[row].get(&row).copied().unwrap_or_else(Complex::zero);
+        if diagonal.abs() < PIVOT_EPSILON {
+            return Err(SpiceError::SingularMatrix);
+        }
+        let mut value = rhs[row];
+        for (&col, &entry) in &rows[row] {
+            if col > row {
+                value = value - entry * solution[col];
+            }
+        }
+        solution[row] = value / diagonal;
         if !solution[row].is_finite() {
             return Err(SpiceError::SingularMatrix);
         }

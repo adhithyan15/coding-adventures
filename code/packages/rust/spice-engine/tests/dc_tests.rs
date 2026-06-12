@@ -58,6 +58,11 @@ fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
 
     assert!(result.converged);
     assert_close(result.voltage("n34").unwrap(), 10.0 / 35.0);
+    assert_eq!(result.diagnostics.matrix_size, 36);
+    assert_eq!(result.diagnostics.solver, "sparse_real");
+    assert_eq!(result.diagnostics.convergence_aid, DcConvergenceAid::Newton);
+    assert_close(result.diagnostics.tolerance, 1.0e-9);
+    assert!(result.diagnostics.max_delta.is_finite());
 }
 
 #[test]

@@ -61,6 +61,11 @@ describe("dcOp", () => {
 
     expect(result.converged).toBe(true);
     expectClose(result.voltage("n34"), 10.0 / 35.0);
+    expect(result.diagnostics.matrixSize).toBe(36);
+    expect(result.diagnostics.solver).toBe("sparse_real");
+    expect(result.diagnostics.convergenceAid).toBe("newton");
+    expectClose(result.diagnostics.tolerance, 1.0e-9);
+    expect(Number.isFinite(result.diagnostics.maxDelta)).toBe(true);
   });
 
   it("expands subcircuit instances into namespaced primitive elements", () => {

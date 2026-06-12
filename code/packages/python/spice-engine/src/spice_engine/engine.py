@@ -414,6 +414,17 @@ def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[s
 
 
 @dataclass
+class DcSolverDiagnostics:
+    """Stable DC solve metadata for downstream comparison."""
+
+    matrix_size: int
+    solver: str
+    tolerance: float
+    max_delta: float
+    convergence_aid: str
+
+
+@dataclass
 class DcResult:
     """Operating-point voltages by node + extra branch currents."""
 
@@ -422,6 +433,15 @@ class DcResult:
     iterations: int
     converged: bool
     convergence_aid: str = "newton"
+    diagnostics: DcSolverDiagnostics = field(
+        default_factory=lambda: DcSolverDiagnostics(
+            matrix_size=0,
+            solver="none",
+            tolerance=0.0,
+            max_delta=0.0,
+            convergence_aid="newton",
+        )
+    )
 
 
 @dataclass(frozen=True)
@@ -2983,6 +3003,38 @@ def _is_ground(name: str) -> bool:
     return name in ("0", "gnd", "GND")
 
 
+def _real_solver_kind(matrix_size: int) -> str:
+    if matrix_size == 0:
+        return "none"
+    if matrix_size >= _SPARSE_SOLVER_THRESHOLD:
+        return "sparse_real"
+    return "dense_real"
+
+
+def _complex_solver_kind(matrix_size: int) -> str:
+    if matrix_size == 0:
+        return "none"
+    if matrix_size >= _SPARSE_SOLVER_THRESHOLD:
+        return "sparse_complex"
+    return "dense_complex"
+
+
+def _dc_diagnostics(
+    matrix_size: int,
+    *,
+    tol: float,
+    max_delta: float,
+    convergence_aid: str,
+) -> DcSolverDiagnostics:
+    return DcSolverDiagnostics(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        tolerance=tol,
+        max_delta=max_delta,
+        convergence_aid=convergence_aid,
+    )
+
+
 # ---------------------------------------------------------------------------
 # DC analysis
 # ---------------------------------------------------------------------------
@@ -3032,7 +3084,18 @@ def _dc_newton(
             x_new = _solve(G, b)
         except ZeroDivisionError:
             node_v = {nd: x[i] for nd, i in node_to_idx.items()}
-            return DcResult(node_v, {}, iterations=it, converged=False)
+            return DcResult(
+                node_v,
+                {},
+                iterations=it,
+                converged=False,
+                diagnostics=_dc_diagnostics(
+                    size,
+                    tol=tol,
+                    max_delta=float("inf"),
+                    convergence_aid="newton",
+                ),
+            )
 
         max_delta = max(abs(a - bv) for a, bv in zip(x, x_new, strict=False)) if x else 0.0
         x = x_new
@@ -3041,7 +3104,18 @@ def _dc_newton(
 
     node_v = {nd: x[i] for nd, i in node_to_idx.items()}
     branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
-    return DcResult(node_v, branch_i, iterations=it + 1, converged=max_delta < tol)
+    return DcResult(
+        node_v,
+        branch_i,
+        iterations=it + 1,
+        converged=max_delta < tol,
+        diagnostics=_dc_diagnostics(
+            size,
+            tol=tol,
+            max_delta=max_delta,
+            convergence_aid="newton",
+        ),
+    )
 
 
 def _x_from_result(
@@ -3384,19 +3458,35 @@ def dc_op(
     # Attempt 1: plain Newton-Raphson.
     result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
     if result.converged:
-        return replace(result, convergence_aid="newton")
+        return replace(
+            result,
+            convergence_aid="newton",
+            diagnostics=replace(result.diagnostics, convergence_aid="newton"),
+        )
     if not convergence_aids:
-        return replace(result, convergence_aid="none")
+        return replace(
+            result,
+            convergence_aid="none",
+            diagnostics=replace(result.diagnostics, convergence_aid="none"),
+        )
 
     # Attempt 2: Gmin stepping.
     gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
     if gmin_result is not None and gmin_result.converged:
-        return replace(gmin_result, convergence_aid="gmin")
+        return replace(
+            gmin_result,
+            convergence_aid="gmin",
+            diagnostics=replace(gmin_result.diagnostics, convergence_aid="gmin"),
+        )
 
     # Attempt 3: source stepping.
     src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
     if src_result is not None and src_result.converged:
-        return replace(src_result, convergence_aid="source")
+        return replace(
+            src_result,
+            convergence_aid="source",
+            diagnostics=replace(src_result.diagnostics, convergence_aid="source"),
+        )
 
     # Attempt 4: artificial pseudo-transient continuation.
     pseudo_result = _dc_pseudo_transient(
@@ -3411,10 +3501,21 @@ def dc_op(
         shunt_conductance=pseudo_transient_shunt_conductance,
     )
     if pseudo_result is not None and pseudo_result.converged:
-        return replace(pseudo_result, convergence_aid="pseudo_transient")
+        return replace(
+            pseudo_result,
+            convergence_aid="pseudo_transient",
+            diagnostics=replace(
+                pseudo_result.diagnostics,
+                convergence_aid="pseudo_transient",
+            ),
+        )
 
     # All methods exhausted — return the plain-Newton result (converged=False).
-    return replace(result, convergence_aid="none")
+    return replace(
+        result,
+        convergence_aid="none",
+        diagnostics=replace(result.diagnostics, convergence_aid="none"),
+    )
 
 
 def _apply_corner_override(element: Element, override: CornerOverride) -> Element:
@@ -5796,6 +5897,12 @@ def pss_corners(
 
 
 def _solve_complex(A: list[list[complex]], b: list[complex]) -> list[complex]:
+    if len(A) >= _SPARSE_SOLVER_THRESHOLD:
+        return _solve_complex_sparse(A, b)
+    return _solve_complex_dense(A, b)
+
+
+def _solve_complex_dense(A: list[list[complex]], b: list[complex]) -> list[complex]:
     """Gaussian elimination with partial pivoting for complex matrices.
 
     Identical algorithm to :func:`_solve` but operates on complex-valued
@@ -5843,6 +5950,63 @@ def _solve_complex(A: list[list[complex]], b: list[complex]) -> list[complex]:
         for c in range(i + 1, n):
             s -= aug[i][c] * x[c]
         x[i] = s / aug[i][i]
+    return x
+
+
+def _solve_complex_sparse(A: list[list[complex]], b: list[complex]) -> list[complex]:
+    """Sparse-row complex Gaussian elimination with partial pivoting."""
+
+    n = len(A)
+    if n == 0:
+        return []
+    rows = [
+        {col: value for col, value in enumerate(row) if value != 0j}
+        for row in A
+    ]
+    rhs = list(b)
+
+    for pivot_col in range(n):
+        pivot_row = max(
+            range(pivot_col, n),
+            key=lambda row: abs(rows[row].get(pivot_col, 0j)),
+        )
+        pivot_abs = abs(rows[pivot_row].get(pivot_col, 0j))
+        if pivot_abs < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {pivot_col}")
+
+        rows[pivot_col], rows[pivot_row] = rows[pivot_row], rows[pivot_col]
+        rhs[pivot_col], rhs[pivot_row] = rhs[pivot_row], rhs[pivot_col]
+
+        pivot_value = rows[pivot_col][pivot_col]
+        pivot_entries = [
+            (col, value)
+            for col, value in rows[pivot_col].items()
+            if col > pivot_col
+        ]
+        for row_index in range(pivot_col + 1, n):
+            value = rows[row_index].get(pivot_col, 0j)
+            if value == 0j:
+                continue
+            factor = value / pivot_value
+            rows[row_index].pop(pivot_col, None)
+            for col, pivot_entry in pivot_entries:
+                next_value = rows[row_index].get(col, 0j) - factor * pivot_entry
+                if abs(next_value) < 1e-15:
+                    rows[row_index].pop(col, None)
+                else:
+                    rows[row_index][col] = next_value
+            rhs[row_index] -= factor * rhs[pivot_col]
+
+    x: list[complex] = [0j] * n
+    for row_index in range(n - 1, -1, -1):
+        diag = rows[row_index].get(row_index, 0j)
+        if abs(diag) < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {row_index}")
+        total = rhs[row_index]
+        for col, value in rows[row_index].items():
+            if col > row_index:
+                total -= value * x[col]
+        x[row_index] = total / diag
     return x
 
 
