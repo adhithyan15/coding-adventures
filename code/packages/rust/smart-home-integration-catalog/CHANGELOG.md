@@ -72,6 +72,9 @@ All notable changes to this package will be documented in this file.
   `IntegrationActivationForecastSummary` for classifying activation timeline
   milestones into Chief-ready next actions across blockers, dependencies,
   approvals, reviews, risks, activation, and monitoring.
+- `IntegrationActivationPlaybookStep` and
+  `IntegrationActivationPlaybookSummary` for pairing forecast next actions with
+  recommended planning views and operator-readiness flags.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

@@ -56,6 +56,7 @@ Chief of Staff job/session/agent
   -> activation-dashboard list and summary reads for priority-wave status cards
   -> activation-timeline list and summary reads for ordered wave milestones
   -> activation-forecast list and summary reads for next-action wave planning
+  -> activation-playbook list and summary reads for operator-ready planning steps
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -119,6 +120,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_timeline_summary`
 - `smart_home.list_integration_activation_forecasts`
 - `smart_home.get_integration_activation_forecast_summary`
+- `smart_home.list_integration_activation_playbook`
+- `smart_home.get_integration_activation_playbook_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`
