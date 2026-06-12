@@ -99,10 +99,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-077 (CLOC14.37): LEFT-operand grouping paren elision —
     // `(a)+b` → `a+b`. The mirror of gap-075's right-operand pass.
     ("left_operand_paren", "gap-077: binary left-operand paren elision"),
-    // gap-078 (CLOC14.37): binary comparison/logical RIGHT-operand
-    // paren elision — `a==(b)` → `a==b`, `a||(b)` → `a||b`. Extends
-    // gap-075 (`-`/`+`) to the remaining binary operators.
-    ("eq_operand_paren", "gap-078: binary comparison/logical right-operand paren elision"),
+    // gap-078 RESOLVED in CLOC12.87 — the right-operand paren-elision
+    // pre-pass (gap-075) now also anchors on the binary comparison /
+    // logical / arithmetic / bitwise symbol operators (`a==(b)` →
+    // `a==b`, `a||(b)` → `a||b`, …), keeping the conservative atomic-
+    // operand guard. `minify_eq_operand_paren` enforced.
     // gap-080 RESOLVED in CLOC12.86 — an `else`-body single-statement
     // block (`if(x)a();else{b()}` → `if(x)a();else b();`) now flattens
     // via a parallel `else`-anchored pre-pass (the `else` keyword

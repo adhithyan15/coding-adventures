@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.91.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-078** — the right-operand paren-elision pre-pass
+  (gap-075) now also anchors on the binary comparison / logical /
+  arithmetic / bitwise symbol operators, matching upstream Closure:
+  `a==(b)` → `a==b`, `a||(b)` → `a||b`, `a*(b)` → `a*b`, `a<<(b)` →
+  `a<<b`, … `minify_eq_operand_paren` is now enforced.
+
+### Added — gap-078 binary symbol-operator right-operand elision
+
+Extended the gap-075 pre-pass anchor (`is_sym_unary`, the prefix
+symbols `-`/`+`/`!`/`~`) with an `is_binary_sym` clause covering the
+full binary symbol-operator set — comparison (`==` `!=` `===` `!==`
+`<` `>` `<=` `>=`), logical (`&&` `||` `??`), arithmetic (`*` `/` `%`
+`**`), and bitwise (`&` `|` `^` `<<` `>>` `>>>`) — each
+`is_structural_punct`-gated so a string/regex literal whose CONTENT is
+an operator (e.g. `"=="`) never matches.
+
+The existing `is_safe_unary_paren_operand` operand guard is unchanged
+and remains the single safety gate: it accepts ONLY a self-delimiting
+operand (a single safe token, a member-reference chain, or a leading
+prefix-symbol-unary chain). An atomic operand has no precedence
+interaction with the outer operator, so the strip is sound for *every*
+binary operator.
+
+**Deferred (precedence-aware refinement):** the JAR also strips when
+the parenthesised operand's lowest-precedence operator binds at least
+as tightly as the outer operator (`a==(b+c)` → `a==b+c`, since `+`
+binds tighter than `==`, while `a*(b+c)` KEEPS its parens). That needs
+an operator-precedence table; here `a==(b+c)` conservatively keeps its
+parens (valid, just not yet byte-identical). 4 new `gap078_*` unit
+tests (binary set / member-chain operand / operator-operand-kept /
+literal+call safety) + the enforced byte-identity fixture.
+
 ## [0.90.0] - 2026-06-12
 
 ### Changed

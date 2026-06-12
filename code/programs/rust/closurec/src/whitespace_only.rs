@@ -428,20 +428,40 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // gap-075: paren elision around a PREFIX SYMBOL unary operator's
-    // operand. `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` → `~a`, and the
-    // same-sign nesting `-(-a)` → `- -a`, `+(+a)` → `+ +a`.
+    // gap-075 + gap-078: paren elision around a SYMBOL operator's
+    // parenthesised RIGHT operand.
     //
-    // The mirror of gap-070/071 but anchored on the PUNCTUATION
-    // operators `-`/`+`/`!`/`~` (`is_structural_punct`-gated) rather
-    // than a keyword. Unlike the keyword cases there is NO prefix-vs-
-    // binary distinction to make: stripping a grouping paren around a
-    // self-delimiting operand is sound whether the operator is a
-    // prefix unary (`-(a)`) or a binary operator whose RIGHT operand
-    // is parenthesised (`a-(b)` → `a-b`). The operand check
-    // (`is_safe_unary_paren_operand`) rejects anything containing a
-    // top-level binary operator, so `-(a+b)` / `a-(b+c)` keep their
-    // parens.
+    // gap-075 (the prefix-unary symbols `-`/`+`/`!`/`~`):
+    //   `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` → `~a`, and the
+    //   same-sign nesting `-(-a)` → `- -a`, `+(+a)` → `+ +a`.
+    //
+    // gap-078 (the remaining BINARY symbol operators — comparison,
+    // logical, arithmetic, bitwise):
+    //   `a==(b)` → `a==b`, `a||(b)` → `a||b`, `a*(b)` → `a*b`,
+    //   `a<<(b)` → `a<<b`, … (verified against the JAR for the full
+    //   set `== != === !== < > <= >= && || ?? * / % ** & | ^ << >>
+    //   >>>`).
+    //
+    // All are anchored on the PUNCTUATION operator
+    // (`is_structural_punct`-gated, so a string/regex literal whose
+    // CONTENT is e.g. `"=="` never matches) followed by `(`. There is
+    // NO prefix-vs-binary distinction to make: stripping a grouping
+    // paren around a SELF-DELIMITING operand is sound whether the
+    // operator is a prefix unary (`-(a)`) or a binary operator whose
+    // RIGHT operand is parenthesised (`a-(b)` → `a-b`, `a==(b)` →
+    // `a==b`).
+    //
+    // The operand check (`is_safe_unary_paren_operand`) is the single
+    // safety gate: it accepts ONLY a self-delimiting operand (a single
+    // safe token, a member-reference chain, or a leading prefix-symbol
+    // unary chain) and rejects anything containing a top-level binary
+    // operator. An atomic operand has NO precedence interaction with
+    // the outer operator, so the strip is always sound. The fuller,
+    // precedence-aware elision the JAR also does (`a==(b+c)` →
+    // `a==b+c`, since `+` binds tighter than `==`, while `a*(b+c)`
+    // KEEPS its parens) is DEFERRED — it needs an operator-precedence
+    // table; here `a==(b+c)` conservatively keeps its parens (valid,
+    // just not yet byte-identical).
     //
     // SAME-SIGN SAFETY: when the operand begins with the SAME sign
     // (`-(-a)` / `+(+a)`), gluing the two operators would form the
@@ -455,11 +475,38 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 1 < kept.len() {
+            // gap-075 prefix-unary symbol anchors.
             let is_sym_unary = is_structural_punct(kept[i], "-")
                 || is_structural_punct(kept[i], "+")
                 || is_structural_punct(kept[i], "!")
                 || is_structural_punct(kept[i], "~");
-            if is_sym_unary && is_structural_punct(kept[i + 1], "(") {
+            // gap-078 binary symbol-operator anchors (comparison /
+            // logical / arithmetic / bitwise). `-`/`+` are already
+            // covered above (they double as additive binary ops).
+            let is_binary_sym = is_structural_punct(kept[i], "==")
+                || is_structural_punct(kept[i], "!=")
+                || is_structural_punct(kept[i], "===")
+                || is_structural_punct(kept[i], "!==")
+                || is_structural_punct(kept[i], "<")
+                || is_structural_punct(kept[i], ">")
+                || is_structural_punct(kept[i], "<=")
+                || is_structural_punct(kept[i], ">=")
+                || is_structural_punct(kept[i], "&&")
+                || is_structural_punct(kept[i], "||")
+                || is_structural_punct(kept[i], "??")
+                || is_structural_punct(kept[i], "*")
+                || is_structural_punct(kept[i], "/")
+                || is_structural_punct(kept[i], "%")
+                || is_structural_punct(kept[i], "**")
+                || is_structural_punct(kept[i], "&")
+                || is_structural_punct(kept[i], "|")
+                || is_structural_punct(kept[i], "^")
+                || is_structural_punct(kept[i], "<<")
+                || is_structural_punct(kept[i], ">>")
+                || is_structural_punct(kept[i], ">>>");
+            if (is_sym_unary || is_binary_sym)
+                && is_structural_punct(kept[i + 1], "(")
+            {
                 let open = i + 1;
                 // Find the matching close paren (structural scan).
                 let mut depth: i32 = 1;
@@ -4762,6 +4809,56 @@ mod tests {
         assert_eq!(minify("var x=-(a+b);"), "var x=-(a+b);");
         assert_eq!(minify("var x=a-(b);"), "var x=a-b;");
         assert_eq!(minify("var x=a-(b+c);"), "var x=a-(b+c);");
+    }
+
+    // ---- gap-078: binary symbol-operator right-operand elision --
+
+    /// gap-078: a binary comparison / logical / arithmetic / bitwise
+    /// symbol operator with a parenthesised ATOMIC right operand
+    /// drops the parens (`a==(b)` → `a==b`, …).
+    #[test]
+    fn gap078_binary_operand_paren_stripped() {
+        assert_eq!(minify("var x=a==(b);"), "var x=a==b;");
+        assert_eq!(minify("var x=a!=(b);"), "var x=a!=b;");
+        assert_eq!(minify("var x=a===(b);"), "var x=a===b;");
+        assert_eq!(minify("var x=a<(b);"), "var x=a<b;");
+        assert_eq!(minify("var x=a||(b);"), "var x=a||b;");
+        assert_eq!(minify("var x=a&&(b);"), "var x=a&&b;");
+        assert_eq!(minify("var x=a??(b);"), "var x=a??b;");
+        assert_eq!(minify("var x=a*(b);"), "var x=a*b;");
+        assert_eq!(minify("var x=a%(b);"), "var x=a%b;");
+        assert_eq!(minify("var x=a<<(b);"), "var x=a<<b;");
+        assert_eq!(minify("var x=a>>>(b);"), "var x=a>>>b;");
+        assert_eq!(minify("var x=a&(b);"), "var x=a&b;");
+    }
+
+    /// gap-078: a member-chain right operand also strips
+    /// (`a==(b.c)` → `a==b.c`).
+    #[test]
+    fn gap078_member_chain_operand_stripped() {
+        assert_eq!(minify("var x=a==(b.c);"), "var x=a==b.c;");
+    }
+
+    /// gap-078 boundary (DEFERRED precedence-aware case): an operand
+    /// containing a top-level binary operator KEEPS its parens — the
+    /// conservative atomic-operand guard does not yet do the full
+    /// precedence analysis the JAR does (`a==(b+c)` → upstream
+    /// `a==b+c`). Output stays valid; just not byte-identical.
+    #[test]
+    fn gap078_operator_operand_kept() {
+        assert_eq!(minify("var x=a==(b+c);"), "var x=a==(b+c);");
+        assert_eq!(minify("var x=a*(b+c);"), "var x=a*(b+c);");
+    }
+
+    /// gap-078 SAFETY: a string/regex literal whose CONTENT is an
+    /// operator must never be treated as the operator token — and a
+    /// CALL paren (`f(a)`) is not a grouping paren.
+    #[test]
+    fn gap078_literal_and_call_safe() {
+        // `"=="` is a string literal, not the `==` operator.
+        assert_eq!(minify("var x=\"==\"+(b);"), "var x=\"==\"+b;");
+        // `f(a)` is a call, never stripped.
+        assert_eq!(minify("var x=a==f(b);"), "var x=a==f(b);");
     }
 
     // ---- gap-073: get/set computed-key separating space ----
