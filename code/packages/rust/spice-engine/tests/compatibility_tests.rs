@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, resolve_deck_parameters,
-    resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_initial_conditions,
+    resolve_deck_parameters, resolve_deck_sources, CompatibilityDeck, CompatibilityGoldenValue,
+    CompatibilityOracle,
 };
 
 #[test]
@@ -345,5 +346,94 @@ R2 out 0 {good}
             "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
             "SPICE_DECK_PARAM_UNRESOLVED"
         ]
+    );
+}
+
+#[test]
+fn resolve_deck_initial_conditions_extracts_ic_and_nodeset_hints() {
+    let summary = resolve_deck_initial_conditions(
+        "
+V1 in 0 DC 1
+.ic V(out)=1.2 V(mid)='2.5'
+.nodeset V(bias)={700m}
+.op
+.end
+.ic V(after)=9
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(6));
+    assert_eq!(summary.active_lines, vec!["V1 in 0 DC 1", ".op"]);
+    assert_eq!(
+        summary
+            .initial_conditions
+            .iter()
+            .map(|condition| (
+                condition.directive.as_str(),
+                condition.node.as_str(),
+                condition.value,
+                condition.line_number,
+            ))
+            .collect::<Vec<_>>(),
+        vec![(".ic", "out", 1.2, 3), (".ic", "mid", 2.5, 3)]
+    );
+    assert_eq!(summary.nodesets.len(), 1);
+    assert_eq!(summary.nodesets[0].directive, ".nodeset");
+    assert_eq!(summary.nodesets[0].node, "bias");
+    assert_eq!(summary.nodesets[0].line_number, 4);
+    assert!((summary.nodesets[0].value - 0.7).abs() < 1.0e-12);
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn resolve_deck_initial_conditions_reports_bad_assignments() {
+    let summary = resolve_deck_initial_conditions(
+        "
+.ic out=1 V()=2 V(ok)=bad V(good)=1k
+.nodeset
+.nodeset I(L1)=2
+.end
+",
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(5));
+    assert!(summary.active_lines.is_empty());
+    assert_eq!(
+        summary
+            .initial_conditions
+            .iter()
+            .map(|condition| (
+                condition.directive.as_str(),
+                condition.node.as_str(),
+                condition.value,
+                condition.line_number,
+            ))
+            .collect::<Vec<_>>(),
+        vec![(".ic", "good", 1000.0, 2)]
+    );
+    assert!(summary.nodesets.is_empty());
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_CONDITION_TARGET",
+            "SPICE_DECK_CONDITION_TARGET",
+            "SPICE_DECK_CONDITION_EXPRESSION",
+            "SPICE_DECK_CONDITION_ARGUMENT",
+            "SPICE_DECK_CONDITION_TARGET",
+        ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.directive.as_str())
+            .collect::<Vec<_>>(),
+        vec![".ic", ".ic", ".ic", ".nodeset", ".nodeset"]
     );
 }

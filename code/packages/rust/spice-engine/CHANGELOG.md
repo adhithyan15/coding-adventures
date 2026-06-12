@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolve_deck_initial_conditions` for scalar `.ic` and `.nodeset`
+  `V(node)=value` hint extraction before `.end`, numeric SPICE
+  suffix/arithmetic expression evaluation, and stable diagnostics for malformed
+  targets and unresolved values, matching Python and TypeScript.
 - Add `resolve_deck_parameters` for scalar whitespace-tokenized `.param`
   assignment evaluation, braced and quoted active-line expression rewriting,
   and stable diagnostics for unresolved expressions and still-unsupported

@@ -119,6 +119,40 @@ class DeckParameterSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckNodeCondition:
+    """A resolved node-voltage initial-condition or nodeset hint."""
+
+    directive: str
+    node: str
+    value: float
+    line_number: int
+
+
+@dataclass(frozen=True, slots=True)
+class DeckInitialConditionDiagnostic:
+    """A stable diagnostic emitted while resolving deck node conditions."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    token: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckInitialConditionSummary:
+    """Resolved active deck lines plus `.ic` and `.nodeset` hints."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    initial_conditions: tuple[DeckNodeCondition, ...]
+    nodesets: tuple[DeckNodeCondition, ...]
+    diagnostics: tuple[DeckInitialConditionDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -376,6 +410,36 @@ def resolve_deck_parameters(netlist: str) -> DeckParameterSummary:
     )
 
 
+def resolve_deck_initial_conditions(netlist: str) -> DeckInitialConditionSummary:
+    """Extract scalar ``.ic`` and ``.nodeset`` node-voltage hints."""
+
+    state = _DeckInitialConditionState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive in {".ic", ".nodeset"}:
+            _resolve_node_condition_line(stripped, line_number, directive, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckInitialConditionSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        initial_conditions=tuple(state.initial_conditions),
+        nodesets=tuple(state.nodesets),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -576,6 +640,84 @@ class _DeckParameterState:
 
     def parameter_values(self) -> list[DeckParameterValue]:
         return [self.parameters[key] for key in self.order]
+
+
+@dataclass(slots=True)
+class _DeckInitialConditionState:
+    diagnostics: list[DeckInitialConditionDiagnostic]
+    initial_conditions: list[DeckNodeCondition]
+    nodesets: list[DeckNodeCondition]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.initial_conditions = []
+        self.nodesets = []
+
+
+def _resolve_node_condition_line(
+    line: str,
+    line_number: int,
+    directive: str,
+    state: _DeckInitialConditionState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if len(tokens) == 1:
+        _add_initial_condition_diagnostic(
+            state,
+            code="SPICE_DECK_CONDITION_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{directive} requires at least one V(node)=value assignment",
+        )
+        return
+
+    empty_parameter_state = _DeckParameterState()
+    for token in tokens[1:]:
+        if "=" not in token:
+            _add_initial_condition_diagnostic(
+                state,
+                code="SPICE_DECK_CONDITION_ARGUMENT",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} assignment {token!r} must use V(node)=value syntax",
+                token=token,
+            )
+            continue
+        target, expression = token.split("=", 1)
+        node = _parse_node_condition_target(target.strip())
+        if node is None:
+            _add_initial_condition_diagnostic(
+                state,
+                code="SPICE_DECK_CONDITION_TARGET",
+                directive=directive,
+                line_number=line_number,
+                message=f"{directive} target {target!r} must use V(node) syntax",
+                token=token,
+            )
+            continue
+        expression = _strip_expression_delimiters(expression.strip())
+        try:
+            value = _evaluate_parameter_expression(expression, empty_parameter_state)
+        except ValueError as error:
+            _add_initial_condition_diagnostic(
+                state,
+                code="SPICE_DECK_CONDITION_EXPRESSION",
+                directive=directive,
+                line_number=line_number,
+                message=str(error),
+                token=token,
+            )
+            continue
+        condition = DeckNodeCondition(
+            directive=directive,
+            node=node,
+            value=value,
+            line_number=line_number,
+        )
+        if directive == ".ic":
+            state.initial_conditions.append(condition)
+        else:
+            state.nodesets.append(condition)
 
 
 def _resolve_param_line(
@@ -860,6 +1002,34 @@ def _add_parameter_diagnostic(
             expression=expression,
         )
     )
+
+
+def _add_initial_condition_diagnostic(
+    state: _DeckInitialConditionState,
+    *,
+    code: str,
+    directive: str,
+    line_number: int,
+    message: str,
+    token: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckInitialConditionDiagnostic(
+            code=code,
+            directive=directive,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            token=token,
+        )
+    )
+
+
+def _parse_node_condition_target(target: str) -> str | None:
+    if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
+        return None
+    node = target[2:-1].strip()
+    return node or None
 
 
 def _is_parameter_name(name: str) -> bool:

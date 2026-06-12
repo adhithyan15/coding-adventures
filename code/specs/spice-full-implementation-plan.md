@@ -19,10 +19,11 @@ downstream tools to compare.
    - Status: next.
    - Convert parsed netlists into runnable analysis plans beyond the initial
      `.op`, `.dc`, `.ac`, and `.tran` subset.
-   - Support `.func`, `.ic`, and `.nodeset`; `.end` boundary detection,
+   - Support `.func`, richer expression/function surfaces, and execution
+     wiring for parsed `.ic` / `.nodeset` hints; `.end` boundary detection,
      map-backed `.include` / `.lib` source resolution, scalar `.param`
-     evaluation, and active-line expression rewriting now have shared
-     diagnostic footholds.
+     evaluation, active-line expression rewriting, and initial-condition /
+     nodeset extraction now have shared diagnostic footholds.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -171,9 +172,9 @@ downstream tools to compare.
       still-unsupported `.control` directives.
 
 16. Parameter/expression resolution foothold.
-    - Status: completed in this parameter/expression resolution slice.
-    - Python, Rust, and TypeScript now expose matching deck parameter resolvers
-      that evaluate scalar whitespace-tokenized `.param` assignments before
+   - Status: completed in this parameter/expression resolution slice.
+   - Python, Rust, and TypeScript now expose matching deck parameter resolvers
+     that evaluate scalar whitespace-tokenized `.param` assignments before
       `.end`.
     - Active deck lines rewrite braced `{expr}` and quoted `'expr'`
       expressions using resolved scalar parameters, arithmetic, parentheses,
@@ -182,12 +183,23 @@ downstream tools to compare.
       names, failed expressions, unresolved active-line expressions,
       unterminated expression delimiters, and still-unsupported `.func` cards.
 
+17. Initial condition/nodeset directive foothold.
+    - Status: completed in this initial-condition/nodeset directive slice.
+    - Python, Rust, and TypeScript now expose matching deck initial-condition
+      resolvers that extract scalar `.ic` and `.nodeset` `V(node)=value` hints
+      before `.end` while preserving non-condition active lines.
+    - Numeric condition values reuse the shared scalar SPICE suffix/arithmetic
+      expression behavior without parameter-aware execution wiring yet.
+    - Stable diagnostics cover missing assignments, malformed targets,
+      non-voltage hints, invalid expressions, and unresolved values.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Support `.func`, `.ic`, `.nodeset`, and richer expression/function
-     surfaces beyond the scalar `.param` foothold.
+   - Support `.func`, richer expression/function surfaces beyond the scalar
+     `.param` foothold, and execution wiring for parsed `.ic` / `.nodeset`
+     hints.
    - Expand the initial `.measure`, `.save`, and `.probe` support toward full
      SPICE compatibility, including additional measure modes and richer output
      formats.

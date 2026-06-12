@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Deck initial-condition resolution** — `resolve_deck_initial_conditions()`
+  now extracts scalar `.ic` and `.nodeset` `V(node)=value` hints before `.end`,
+  evaluates numeric SPICE suffix/arithmetic expressions, and reports stable
+  diagnostics for malformed targets and unresolved values, matching Rust and
+  TypeScript.
+
 - **Deck parameter resolution** — `resolve_deck_parameters()` now evaluates
   scalar whitespace-tokenized `.param` assignments, rewrites braced and quoted
   active-line expressions, and reports stable diagnostics for unresolved
