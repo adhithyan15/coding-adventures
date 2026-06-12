@@ -81,6 +81,8 @@ runtime and Chief of Staff tools a typed catalog for:
   planning view for compact attention, blocker, review, and activation rollups
 - activation command-center sections that group control-room panels into
   blocker, review, activation, actionable, and monitoring operating lanes
+- activation watchtower signals that roll command-center sections into
+  escalation, review, ready, action, and observation signal lanes
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

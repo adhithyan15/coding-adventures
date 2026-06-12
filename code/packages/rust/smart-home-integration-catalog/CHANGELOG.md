@@ -84,6 +84,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationCommandCenterSection` and
   `IntegrationActivationCommandCenterSummary` for grouping control-room panels
   into blocker, review, activation, actionable, and monitoring operating lanes.
+- `IntegrationActivationWatchtowerSignal` and
+  `IntegrationActivationWatchtowerSummary` for rolling command-center sections
+  into escalation, review, ready, action, and observation signal lanes.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

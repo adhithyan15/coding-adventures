@@ -97,6 +97,8 @@ Current scope:
   operator-view panels derived from the activation operator queue
 - D18D integration activation-command-center descriptors for grouped
   operating-lane sections derived from control-room panels
+- D18D integration activation-watchtower descriptors for escalation, review,
+  ready, action, and observation signal rollups
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
