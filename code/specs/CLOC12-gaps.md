@@ -697,3 +697,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Status:** OPEN (discovered CLOC14.40). `minify_regex_div` ignored.
 - **Input:** `var x=a/b/c;` → **Upstream:** `var x=a/b/c;` (closurec emits `a /b/ c`).
 - **What it needs:** the JavaScript lexer treats the `/b/` in `a/b/c` as a REGEX literal rather than two DIVISION operators, and the re-stitcher then adds separating spaces around the "regex". Regex-vs-division disambiguation requires knowing whether the preceding token ends an expression (then `/` is division) or not (then `/` may start a regex) — a lexer-level concern. The output stays valid JS (same grouping), so this is byte-identity only, not a correctness bug.
+
+### gap-093 — number-literal member access paren-wrap (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.41). `minify_num_member_method` / `minify_num_member_prop` / `minify_num_float_method` ignored. The `1 .x` case is a CORRECTNESS bug.
+- **Input:** `1 .x;` → **Upstream:** `(1).x;` (also `1..toString()` → `(1).toString()`, `1.5.toString()` → `(1.5).toString()`).
+- **What it needs:** when a NUMBER literal is immediately followed by a `.member` access, upstream paren-wraps the number — `(1).x` — so the `.` is unambiguously member access rather than a decimal point. closurec emits the *invalid* `1.x` for `1 .x` (the `1.` lexes as the float `1.0`, leaving a dangling `.x`), and the double-dot `1..toString()` for the integer-method case. The emitter (or a token re-stitcher pass) must wrap an integer/float number literal in `( … )` when the next token is `.` (member), but NOT when it is `[` (index — `1[0]` is fine) or an operator. `(1).x` is byte-identical to upstream and always valid.
+
+### gap-094 — array trailing-hole comma dropped (CORRECTNESS, WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.41). `minify_array_hole_trail` ignored. **CORRECTNESS — changes the array's length.**
+- **Input:** `var x=[1,,];` → **Upstream:** `var x=[1,,];` (closurec emits `[1,]`).
+- **What it needs:** the array trailing-comma-drop pass (gap-046) treats the final comma in `[1,,]` as a redundant trailing comma and drops it, yielding `[1,]`. But `[1,,]` is an array of length 2 (one element + one hole) whereas `[1,]` is length 1 — the comma after a HOLE (an empty elision slot) is load-bearing. The gap-046 drop must be guarded: only drop a trailing comma when it follows a real element, never when it follows another comma (a hole).
+
+### gap-095 — chained new paren-wrap (WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.41). `minify_chained_new` ignored.
+- **Input:** `new new A;` → **Upstream:** `new (new A);` (closurec leaves `new new A`).
+- **What it needs:** upstream wraps the inner `new` of a chained `new new A` to `new (new A)`, disambiguating the inner NewExpression as the outer `new`'s callee. closurec's output `new new A` is valid and equivalent, just not byte-identical — a low-priority normalisation.
+
+### gap-096 — regex u/y flags split off (CORRECTNESS, WHITESPACE_ONLY)
+
+- **Status:** OPEN (discovered CLOC14.41). `minify_regex_flags_all` ignored. **CORRECTNESS — corrupts the regex.**
+- **Input:** `var r=/x/gimsuy;` → **Upstream:** `var r=/x/gimsuy;` (closurec emits `/x/gims uy`).
+- **What it needs:** the JavaScript lexer's REGEX token recognises only the older flag set (`g`/`i`/`m`/`s`/`x`?) and stops at `u`, so `/x/gimsuy` lexes as the regex `/x/gims` followed by a separate `uy` identifier — emitted with a separating space as `/x/gims uy`, which is invalid/corrupt. The regex flag character class in the grammar lexer must include the ES2015+ `u` (unicode) and `y` (sticky) flags (and `d` for indices). Lexer/grammar-level — related to gap-092's regex handling.

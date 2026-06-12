@@ -85,6 +85,32 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
+    // gap-093 (CLOC14.41): an integer NUMBER literal followed by a
+    // `.member` access must be paren-wrapped — `1..toString()` ->
+    // `(1).toString()`, `1 .x` -> `(1).x` (closurec emits the INVALID
+    // `1.x`), `1.5.toString()` -> `(1.5).toString()`. Upstream wraps
+    // the number so the `.` is unambiguously member access, not a
+    // decimal point. (The `1 .x` case is a CORRECTNESS bug — `1.x`
+    // does not parse.)
+    ("num_member_method", "gap-093: number literal .member paren-wrap"),
+    ("num_member_prop",   "gap-093: number .prop (closurec emits invalid 1.x)"),
+    ("num_float_method",  "gap-093: float literal .member paren-wrap"),
+    // gap-094 (CLOC14.41) — CORRECTNESS: a trailing ELISION comma in an
+    // array literal is load-bearing — `[1,,]` has length 2 (element +
+    // one hole). closurec drops it to `[1,]` (length 1), changing the
+    // array. The trailing-comma-drop pass (gap-046) must NOT fire when
+    // the comma follows a hole.
+    ("array_hole_trail", "gap-094: array trailing-hole comma dropped (length change)"),
+    // gap-095 (CLOC14.41): a chained `new new A` is wrapped by upstream
+    // to `new (new A)` (disambiguates the inner NewExpression as the
+    // callee). closurec leaves `new new A` (valid, but not byte-id).
+    ("chained_new", "gap-095: chained new -> new (new A)"),
+    // gap-096 (CLOC14.41) — CORRECTNESS: the regex flags `u` and `y`
+    // are not recognised by the lexer's regex token, so `/x/gimsuy`
+    // lexes as the regex `/x/gims` plus a separate `uy` identifier,
+    // emitted as `/x/gims uy` (corrupts the regex). Lexer-level (the
+    // regex flag set in the grammar).
+    ("regex_flags_all", "gap-096: u/y regex flags split off (corruption)"),
     // gap-090 (CLOC14.40) — CORRECTNESS: a string with a backslash
     // escape that closurec does NOT explicitly handle (`\u{…}` code-
     // point, `\xNN` hex, `\0` null, legacy octal) has its backslash
