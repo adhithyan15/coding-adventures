@@ -166,9 +166,11 @@ pub enum FeasibilityOutcome {
     /// **decision** is exact; the witness `f64`s are a representative point.
     SatReal { assignments: Vec<(String, f64)> },
     /// Unsatisfiable — no assignment satisfies all constraints at once, over
-    /// either the integers *or* the reals. `core` is a set of conflicting
-    /// constraint indices (the full set for now; minimal-core extraction is
-    /// future work).
+    /// either the integers *or* the reals. `core` is a **minimal** infeasible
+    /// subset (IIS): removing any one of its constraints makes the rest
+    /// feasible. This is the machine-checked "*these* constraints contradict",
+    /// the certificate that localizes a golden-rulebook bug to the exact clauses
+    /// in conflict.
     Unsat { core: Vec<usize> },
     /// The engine couldn't decide — a non-linear constraint, a `!=`
     /// (disjunctive, non-convex), or a system too large for the bounded
@@ -210,7 +212,6 @@ pub fn check(cs: &ConstraintSystem, kb: &KnowledgeBase) -> FeasibilityOutcome {
             )
         })
         .collect();
-    let all_core = || (0..cs.constraints.len()).collect::<Vec<_>>();
 
     // ---- Layer 1: exact linear-integer tactic (only if every constraint is
     // integer-linear). ----
@@ -234,7 +235,9 @@ pub fn check(cs: &ConstraintSystem, kb: &KnowledgeBase) -> FeasibilityOutcome {
             SolverResult::Unsat => match real_feasibility(&subbed) {
                 FmResult::Sat(w) => return FeasibilityOutcome::SatReal { assignments: w },
                 FmResult::Unsat | FmResult::Unknown(_) => {
-                    return FeasibilityOutcome::Unsat { core: all_core() }
+                    return FeasibilityOutcome::Unsat {
+                        core: minimal_unsat_core(&subbed, &int_vars),
+                    }
                 }
             },
             // Integer tactic punted — let the real layer try.
@@ -245,9 +248,61 @@ pub fn check(cs: &ConstraintSystem, kb: &KnowledgeBase) -> FeasibilityOutcome {
     // ---- Layer 2: QF_LRA real feasibility via Fourier–Motzkin over ℚ. ----
     match real_feasibility(&subbed) {
         FmResult::Sat(w) => FeasibilityOutcome::SatReal { assignments: w },
-        FmResult::Unsat => FeasibilityOutcome::Unsat { core: all_core() },
+        FmResult::Unsat => FeasibilityOutcome::Unsat {
+            core: minimal_unsat_core(&subbed, &int_vars),
+        },
         FmResult::Unknown(reason) => FeasibilityOutcome::Unknown { reason },
     }
+}
+
+/// Does the given **subset** of (substituted) constraints have no joint
+/// solution? Mirrors [`check`]'s two-layer logic — exact integer LIA first, then
+/// real Fourier–Motzkin — returning `true` only when a contradiction is
+/// *proven* (both layers reject, or the decisive layer rejects). `Sat`/`Unknown`
+/// → `false`, so we never claim a subset is the conflict unless it provably is.
+fn subset_is_unsat(
+    subbed: &[(ComputeExpr, RelOp, ComputeExpr)],
+    int_vars: &[String],
+    indices: &[usize],
+) -> bool {
+    let sub: Vec<(ComputeExpr, RelOp, ComputeExpr)> =
+        indices.iter().map(|&i| subbed[i].clone()).collect();
+    if let Some(assertions) = integer_assertions(&sub) {
+        match LiaTactic::solve(&assertions, int_vars, &[]) {
+            SolverResult::Sat(_) => return false,
+            // Integer-infeasible only counts if it's real-infeasible too.
+            SolverResult::Unsat => return matches!(real_feasibility(&sub), FmResult::Unsat),
+            SolverResult::Unknown(_) => {}
+        }
+    }
+    matches!(real_feasibility(&sub), FmResult::Unsat)
+}
+
+/// Shrink an infeasible constraint set to a **minimal** infeasible subset (an
+/// IIS): the indices such that removing any one makes the rest feasible. A
+/// deletion filter — walk the constraints; if dropping one leaves a still-
+/// infeasible set, that one is redundant for the conflict and is removed
+/// permanently. O(n) feasibility checks, each reusing [`subset_is_unsat`]. The
+/// caller only reaches this on a decided `Unsat`, so the full set is infeasible.
+/// (Conservative on `Unknown` subsets — it keeps the constraint, so the result
+/// is always a valid infeasible core; for the linear systems here it is exactly
+/// minimal.)
+fn minimal_unsat_core(
+    subbed: &[(ComputeExpr, RelOp, ComputeExpr)],
+    int_vars: &[String],
+) -> Vec<usize> {
+    let mut core: Vec<usize> = (0..subbed.len()).collect();
+    let mut i = 0;
+    while i < core.len() {
+        let candidate = core[i];
+        let trial: Vec<usize> = core.iter().copied().filter(|&x| x != candidate).collect();
+        if !trial.is_empty() && subset_is_unsat(subbed, int_vars, &trial) {
+            core = trial; // `candidate` is not needed for the contradiction
+        } else {
+            i += 1; // `candidate` is essential — keep it
+        }
+    }
+    core
 }
 
 /// Translate every (substituted) constraint into a linear-**integer**
@@ -956,8 +1011,9 @@ pub enum OptimizeOutcome {
     },
     /// The objective can be driven to ±∞ within the feasible region.
     Unbounded,
-    /// The constraints are infeasible — no point satisfies them. `core` cites
-    /// the conflicting constraint indices (the full set for now).
+    /// The constraints are infeasible — no point satisfies them. `core` is a
+    /// **minimal** infeasible subset (IIS): the irreducible set of constraints
+    /// in conflict (removing any one makes the rest feasible).
     Infeasible { core: Vec<usize> },
     /// Out of scope: a non-linear / `!=` constraint or objective, an **open
     /// supremum** (a strict inequality prevents the optimum being attained), or
@@ -985,6 +1041,10 @@ pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
         };
     };
     let mut planes: Vec<Halfplane> = Vec::new();
+    // Keep the substituted constraint tuples so an infeasible LP can report a
+    // minimal IIS (the same certificate `check` gives).
+    let mut subbed: Vec<(ComputeExpr, RelOp, ComputeExpr)> =
+        Vec::with_capacity(cs.constraints.len());
     for c in &cs.constraints {
         let lhs = substitute_observed(&c.lhs, &var_set, kb);
         let rhs = substitute_observed(&c.rhs, &var_set, kb);
@@ -996,6 +1056,7 @@ pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
                 }
             }
         }
+        subbed.push((lhs, c.op, rhs));
     }
 
     // We always maximize; for `minimize`, maximize the negated objective and
@@ -1011,8 +1072,6 @@ pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
             }
         },
     };
-    let all_core = || (0..cs.constraints.len()).collect::<Vec<_>>();
-
     // Original decision variables = those in any constraint or the objective.
     let mut orig_vars: std::collections::BTreeSet<String> =
         std::collections::BTreeSet::from_iter(vars_of(&planes));
@@ -1056,7 +1115,9 @@ pub fn optimize(cs: &ConstraintSystem, kb: &KnowledgeBase) -> OptimizeOutcome {
         let alpha = hp.form.coeff(OBJ_VAR);
         if alpha.is_zero() {
             if constant_violated(hp) {
-                return OptimizeOutcome::Infeasible { core: all_core() };
+                return OptimizeOutcome::Infeasible {
+                    core: minimal_unsat_core(&subbed, &syms),
+                };
             }
         } else if alpha.num > 0 {
             // α·z + β ≤ 0  ⇒  z ≤ −β/α.
@@ -1779,6 +1840,50 @@ mod tests {
     }
 
     #[test]
+    fn the_unsat_core_is_minimal_excluding_irrelevant_constraints() {
+        // The contradiction is x >= 5 (idx 0) and x <= 1 (idx 1). The other two
+        // constraints are satisfiable and irrelevant; a MINIMAL core (IIS) names
+        // only [0, 1], not the full set.
+        let out = check_src(
+            "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x >= 5\nconstrain x <= 1\n\
+             constrain y >= 0\nconstrain y <= 100\ncheck\n",
+        );
+        match out {
+            FeasibilityOutcome::Unsat { core } => {
+                assert_eq!(core, vec![0, 1], "IIS must drop y-bounds")
+            }
+            other => panic!("expected Unsat, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_three_way_real_contradiction_yields_its_minimal_core() {
+        // x + y <= 1 ; x >= 1 ; y >= 1 are jointly infeasible (1+1 > 1), and ALL
+        // three are needed — dropping any one is feasible. The IIS is all three;
+        // a fourth, slack constraint is excluded.
+        let out = check_src(
+            "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x + y <= 1\nconstrain x >= 1\nconstrain y >= 1\n\
+             constrain x <= 1000\ncheck\n",
+        );
+        match out {
+            FeasibilityOutcome::Unsat { core } => assert_eq!(core, vec![0, 1, 2]),
+            other => panic!("expected Unsat, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn a_single_self_contradictory_constraint_is_its_own_core() {
+        // `0 >= 1` (after the symbol is irrelevant) — a lone contradiction.
+        let out = check_src("symbol x : scalar\nconstrain 2 <= 1\nconstrain x >= 0\ncheck\n");
+        match out {
+            FeasibilityOutcome::Unsat { core } => assert_eq!(core, vec![0]),
+            other => panic!("expected Unsat, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn feasibility_substitutes_observed_facts() {
         // floor observed 6; months >= floor is feasible (months can be 6).
         let out = check_src(
@@ -2043,6 +2148,20 @@ mod tests {
         // max x over contradictory constraints → Infeasible, never a value.
         let out = optimize_src("symbol x : scalar\nconstrain x >= 5\nconstrain x <= 1\nmaximize x");
         assert!(matches!(out, OptimizeOutcome::Infeasible { .. }), "{out:?}");
+    }
+
+    #[test]
+    fn an_infeasible_lp_reports_a_minimal_core() {
+        // The conflict is x >= 5 (0) and x <= 1 (1); the y-bound (2) is slack.
+        // The infeasibility certificate names only the irreducible [0, 1].
+        let out = optimize_src(
+            "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x >= 5\nconstrain x <= 1\nconstrain y <= 9\nmaximize x + y",
+        );
+        match out {
+            OptimizeOutcome::Infeasible { core } => assert_eq!(core, vec![0, 1]),
+            other => panic!("expected Infeasible, got {other:?}"),
+        }
     }
 
     #[test]

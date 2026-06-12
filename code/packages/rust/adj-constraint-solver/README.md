@@ -53,8 +53,10 @@ satisfiable*? `check(&cs, &kb)` translates the linear (in)equalities to
 
 - `Sat { assignments }` — an **integer** witness per symbol (`x >= 3 ; x <= 5`
   → e.g. `x = 3`).
-- `Unsat { core }` — the constraint indices whose conjunction is contradictory
-  (`x >= 5 ; x <= 3` → unsat).
+- `Unsat { core }` — a **minimal** infeasible subset (IIS): the irreducible set
+  of constraints in conflict (removing any one makes the rest feasible). The
+  machine-checked "*these* clauses contradict" — `x >= 5 ; x <= 3` → core
+  `[0, 1]`, and an irrelevant third constraint is excluded.
 - `Unknown { reason }` — a `!=` (disjunctive) or a non-linear constraint.
   **Never a false verdict.**
 
@@ -92,7 +94,8 @@ optimum.
   provenance of the bound). E.g. `max 3x + 2y` s.t. `x+y≤4, x≤3, x,y≥0` → `11`
   at `(3, 1)`, binding `[x+y≤4, x≤3]`.
 - `Unbounded` — the objective has no bound in the feasible region.
-- `Infeasible { core }` — the constraints have no feasible point.
+- `Infeasible { core }` — the constraints have no feasible point; `core` is the
+  minimal infeasible subset (IIS).
 - `Unknown { reason }` — a non-linear/`!=` constraint or objective, or an **open
   supremum** (a strict inequality prevents the optimum being attained).
 
