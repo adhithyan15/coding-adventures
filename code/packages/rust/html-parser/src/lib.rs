@@ -844,6 +844,7 @@ pub struct BrowserDocument {
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
     pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
     pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
     pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
@@ -1242,6 +1243,33 @@ pub struct BrowserFormPolicySubmitterDescriptor {
     pub effective_target: Option<String>,
     pub novalidate: bool,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAssociationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub association_kind: String,
+    pub explicit_form_owner: bool,
+    pub labels: Vec<String>,
+    pub label_count: usize,
+    pub fieldset_ids: Vec<String>,
+    pub fieldset_legends: Vec<String>,
+    pub datalist_id: Option<String>,
+    pub datalist_option_count: usize,
+    pub output_for_tokens: Vec<String>,
+    pub output_target_ids: Vec<String>,
+    pub output_target_names: Vec<String>,
+    pub output_target_types: Vec<String>,
+    pub referenced_by_output_ids: Vec<String>,
+    pub successful: bool,
+    pub will_validate: bool,
+    pub disabled: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3442,6 +3470,7 @@ impl BrowserDocument {
             browser_fullscreen_interaction_descriptors(&summary);
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
+        summary.form_association_descriptors = browser_form_association_descriptors(&summary.forms);
         summary.form_autofill_descriptors = browser_form_autofill_descriptors(&summary.forms);
         summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
         summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
@@ -19858,6 +19887,188 @@ fn browser_form_policy_submitter_descriptor(
     }
 }
 
+fn browser_form_association_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormAssociationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| browser_form_association_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_association_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormAssociationDescriptor {
+    let fieldset_ids = browser_form_association_fieldset_ids(form, control);
+    let fieldset_legends = browser_form_association_fieldset_legends(form, control);
+    let datalist_option_count = browser_form_association_datalist_option_count(form, control);
+    let output_targets = browser_output_for_controls(&form.controls, control);
+    let output_target_ids = output_targets
+        .iter()
+        .filter_map(|target| target.id.clone())
+        .collect();
+    let output_target_names = output_targets
+        .iter()
+        .filter_map(|target| target.name.clone())
+        .collect();
+    let output_target_types = output_targets
+        .iter()
+        .map(|target| target.control_type.clone())
+        .collect();
+    let referenced_by_output_ids = browser_form_association_referenced_by_output_ids(form, control);
+
+    BrowserFormAssociationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: browser_form_association_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        association_kind: browser_form_association_kind(
+            form,
+            control,
+            &fieldset_ids,
+            datalist_option_count,
+            &referenced_by_output_ids,
+        ),
+        explicit_form_owner: browser_form_association_explicit_owner(form, control),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        datalist_id: control.list.clone(),
+        datalist_option_count,
+        output_for_tokens: control.output_for.clone(),
+        output_target_ids,
+        output_target_names,
+        output_target_types,
+        referenced_by_output_ids,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        disabled: control.disabled,
+    }
+}
+
+fn browser_form_association_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    fieldset_ids: &[String],
+    datalist_option_count: usize,
+    referenced_by_output_ids: &[String],
+) -> String {
+    if browser_form_association_explicit_owner(form, control) {
+        "explicit-form-owner".to_string()
+    } else if !control.output_for.is_empty() {
+        "output-calculation".to_string()
+    } else if !referenced_by_output_ids.is_empty() {
+        "output-source".to_string()
+    } else if datalist_option_count > 0 {
+        "datalist-backed-control".to_string()
+    } else if !control.labels.is_empty() {
+        "labelled-control".to_string()
+    } else if !fieldset_ids.is_empty() {
+        "fieldset-member".to_string()
+    } else {
+        "form-associated-control".to_string()
+    }
+}
+
+fn browser_form_association_explicit_owner(
+    _form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> bool {
+    control.form_owner.is_some()
+}
+
+fn browser_form_association_fieldset_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.id.clone())
+        .collect()
+}
+
+fn browser_form_association_fieldset_legends(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.legend.clone())
+        .collect()
+}
+
+fn browser_fieldset_contains_control(
+    fieldset: &BrowserFormFieldset,
+    control: &BrowserFormControl,
+) -> bool {
+    control.id.as_deref().is_some_and(|id| {
+        fieldset
+            .control_ids
+            .iter()
+            .any(|control_id| control_id == id)
+    }) || control.name.as_deref().is_some_and(|name| {
+        fieldset
+            .control_names
+            .iter()
+            .any(|control_name| control_name == name)
+    })
+}
+
+fn browser_form_association_datalist_option_count(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> usize {
+    control
+        .list
+        .as_deref()
+        .and_then(|list| {
+            form.datalists
+                .iter()
+                .find(|datalist| datalist.id.as_deref() == Some(list))
+        })
+        .map(|datalist| datalist.options.len())
+        .unwrap_or_default()
+}
+
+fn browser_form_association_referenced_by_output_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.outputs
+        .iter()
+        .filter(|output| {
+            control
+                .id
+                .as_deref()
+                .is_some_and(|id| output.for_control_ids.iter().any(|target| target == id))
+                || control.name.as_deref().is_some_and(|name| {
+                    output.for_control_names.iter().any(|target| target == name)
+                })
+        })
+        .filter_map(|output| output.id.clone())
+        .collect()
+}
+
+fn browser_form_association_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
 fn browser_form_autofill_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormAutofillDescriptor> {
     forms
         .iter()
@@ -24373,6 +24584,65 @@ mod tests {
         let external = &descriptors[7];
         assert_eq!(external.form_owner.as_deref(), Some("checkout"));
         assert_eq!(external.submission_values, vec!["extra"]);
+    }
+
+    #[test]
+    fn browser_form_association_descriptors_track_owners_labels_fieldsets_and_outputs() {
+        let document = parse_browser_document(
+            "<form id=calc name=calculator>\
+             <fieldset id=inputs><legend>Inputs</legend>\
+             <label for=a>First</label><input id=a name=a list=numbers value=4>\
+             <label>Second <input id=b name=b value=6></label>\
+             <output id=sum name=sum for=\"a b\">10</output>\
+             </fieldset></form>\
+             <datalist id=numbers><option value=4><option value=8></datalist>\
+             <input id=external name=token form=calc value=xyz>",
+        )
+        .expect("form association descriptor document should parse");
+
+        let descriptors = &document.form_association_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(ids, vec!["a", "b", "sum", "external"]);
+
+        let first = &descriptors[0];
+        assert_eq!(first.form_id.as_deref(), Some("calc"));
+        assert_eq!(first.form_name.as_deref(), Some("calculator"));
+        assert_eq!(first.element, "input");
+        assert_eq!(first.control_type, "text");
+        assert_eq!(first.association_kind, "output-source");
+        assert_eq!(first.labels, vec!["First"]);
+        assert_eq!(first.label_count, 1);
+        assert_eq!(first.fieldset_ids, vec!["inputs"]);
+        assert_eq!(first.fieldset_legends, vec!["Inputs"]);
+        assert_eq!(first.datalist_id.as_deref(), Some("numbers"));
+        assert_eq!(first.datalist_option_count, 2);
+        assert_eq!(first.referenced_by_output_ids, vec!["sum"]);
+        assert!(first.successful);
+        assert!(first.will_validate);
+
+        let second = &descriptors[1];
+        assert_eq!(second.labels, vec!["Second"]);
+        assert_eq!(second.association_kind, "output-source");
+        assert_eq!(second.referenced_by_output_ids, vec!["sum"]);
+
+        let sum = &descriptors[2];
+        assert_eq!(sum.element, "output");
+        assert_eq!(sum.association_kind, "output-calculation");
+        assert_eq!(sum.output_for_tokens, vec!["a", "b"]);
+        assert_eq!(sum.output_target_ids, vec!["a", "b"]);
+        assert_eq!(sum.output_target_names, vec!["a", "b"]);
+        assert_eq!(sum.output_target_types, vec!["text", "text"]);
+        assert_eq!(sum.fieldset_ids, vec!["inputs"]);
+        assert_eq!(sum.fieldset_legends, vec!["Inputs"]);
+
+        let external = &descriptors[3];
+        assert_eq!(external.form_owner.as_deref(), Some("calc"));
+        assert_eq!(external.association_kind, "explicit-form-owner");
+        assert!(external.explicit_form_owner);
+        assert!(external.successful);
     }
 
     #[test]

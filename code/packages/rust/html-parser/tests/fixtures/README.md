@@ -38,6 +38,9 @@ Resource-endpoint descriptor cases pin refresh redirects plus resolved document
 resources as a flat endpoint inventory for fetch/navigation planning.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
 policy tokens, validation bypass state, and submitter overrides.
+Form-association descriptor cases pin form owners, labels, fieldset membership,
+datalist links, and output calculation relationships as a flat browser-planning
+inventory.
 Form-autofill descriptor cases pin autocomplete tokens, section/address/contact
 field hints, webauthn markers, and disabled/readonly/hidden/off blockers as a
 flat browser-planning inventory.
