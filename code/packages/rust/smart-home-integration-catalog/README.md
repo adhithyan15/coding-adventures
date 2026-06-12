@@ -77,6 +77,8 @@ runtime and Chief of Staff tools a typed catalog for:
   planning views and operator-readiness flags
 - activation operator tasks that turn playbook steps into actionable
   human/operator queue rows
+- activation control-room panels that group operator tasks by recommended
+  planning view for compact attention, blocker, review, and activation rollups
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

@@ -78,6 +78,9 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationOperatorTask` and
   `IntegrationActivationOperatorTaskSummary` for turning playbook steps into
   actionable human/operator queue rows.
+- `IntegrationActivationControlRoomPanel` and
+  `IntegrationActivationControlRoomSummary` for grouping operator queue work by
+  recommended planning view.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.

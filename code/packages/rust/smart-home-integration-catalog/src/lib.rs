@@ -2242,6 +2242,57 @@ pub struct IntegrationActivationOperatorTaskSummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationControlRoomPanel {
+    pub sequence: usize,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub priority: u8,
+    pub task_sequences: Vec<usize>,
+    pub integration_ids: Vec<IntegrationId>,
+    pub task_count: usize,
+    pub operator_summary: IntegrationActivationOperatorTaskSummary,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationControlRoomSummary {
+    pub total_panels: usize,
+    pub unique_integrations: usize,
+    pub panels_requiring_attention: usize,
+    pub panels_with_operator_work: usize,
+    pub panels_with_actionable_work: usize,
+    pub panels_with_activation_work: usize,
+    pub panels_with_blockers: usize,
+    pub panels_with_review_work: usize,
+    pub constraint_panels: usize,
+    pub dependency_panels: usize,
+    pub approval_panels: usize,
+    pub review_panels: usize,
+    pub risk_panels: usize,
+    pub action_panels: usize,
+    pub dashboard_panels: usize,
+    pub total_tasks: usize,
+    pub operator_required_tasks: usize,
+    pub actionable_tasks: usize,
+    pub activation_ready_tasks: usize,
+    pub blocked_tasks: usize,
+    pub review_required_tasks: usize,
+    pub monitor_tasks: usize,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub next_panel_sequence: Option<usize>,
+    pub next_panel_priority: Option<u8>,
+    pub first_blocked_panel_sequence: Option<usize>,
+    pub first_review_panel_sequence: Option<usize>,
+    pub first_activation_panel_sequence: Option<usize>,
+    pub first_actionable_panel_sequence: Option<usize>,
+    pub first_blocked_panel_priority: Option<u8>,
+    pub first_review_panel_priority: Option<u8>,
+    pub first_activation_panel_priority: Option<u8>,
+    pub first_actionable_panel_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -4719,6 +4770,244 @@ impl IntegrationActivationOperatorTaskSummary {
             || self.has_blockers()
             || self.has_review_work()
             || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationControlRoomPanel {
+    fn from_tasks(
+        sequence: usize,
+        recommended_view: IntegrationActivationPlaybookView,
+        tasks: Vec<IntegrationActivationOperatorTask>,
+    ) -> Self {
+        let operator_summary = IntegrationActivationOperatorTaskSummary::from_tasks(tasks.iter());
+        let mut task_sequences = tasks.iter().map(|task| task.sequence).collect::<Vec<_>>();
+        task_sequences.sort_unstable();
+
+        let mut integration_ids = tasks
+            .iter()
+            .flat_map(|task| task.integration_ids.iter().cloned())
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect::<Vec<_>>();
+        integration_ids.sort();
+
+        let priority = tasks
+            .iter()
+            .map(|task| task.priority)
+            .min()
+            .unwrap_or(u8::MAX);
+
+        Self {
+            sequence,
+            recommended_view,
+            priority,
+            task_sequences,
+            integration_ids,
+            task_count: operator_summary.total_tasks,
+            operator_summary,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.operator_summary.has_operator_work()
+    }
+
+    pub fn has_actionable_work(&self) -> bool {
+        self.operator_summary.has_actionable_work()
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.operator_summary.has_activation_work()
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.operator_summary.has_blockers()
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.operator_summary.has_review_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.operator_summary.requires_attention()
+    }
+}
+
+impl IntegrationActivationControlRoomSummary {
+    pub fn from_panels<'a>(
+        panels: impl IntoIterator<Item = &'a IntegrationActivationControlRoomPanel>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_panels: 0,
+            unique_integrations: 0,
+            panels_requiring_attention: 0,
+            panels_with_operator_work: 0,
+            panels_with_actionable_work: 0,
+            panels_with_activation_work: 0,
+            panels_with_blockers: 0,
+            panels_with_review_work: 0,
+            constraint_panels: 0,
+            dependency_panels: 0,
+            approval_panels: 0,
+            review_panels: 0,
+            risk_panels: 0,
+            action_panels: 0,
+            dashboard_panels: 0,
+            total_tasks: 0,
+            operator_required_tasks: 0,
+            actionable_tasks: 0,
+            activation_ready_tasks: 0,
+            blocked_tasks: 0,
+            review_required_tasks: 0,
+            monitor_tasks: 0,
+            next_recommended_view: None,
+            next_task_kind: None,
+            next_panel_sequence: None,
+            next_panel_priority: None,
+            first_blocked_panel_sequence: None,
+            first_review_panel_sequence: None,
+            first_activation_panel_sequence: None,
+            first_actionable_panel_sequence: None,
+            first_blocked_panel_priority: None,
+            first_review_panel_priority: None,
+            first_activation_panel_priority: None,
+            first_actionable_panel_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for panel in panels {
+            summary.total_panels += 1;
+            for integration_id in &panel.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match panel.recommended_view {
+                IntegrationActivationPlaybookView::ConstraintQueue => {
+                    summary.constraint_panels += 1
+                }
+                IntegrationActivationPlaybookView::DependencyGraph => {
+                    summary.dependency_panels += 1
+                }
+                IntegrationActivationPlaybookView::ApprovalPackets => summary.approval_panels += 1,
+                IntegrationActivationPlaybookView::ReviewQueue => summary.review_panels += 1,
+                IntegrationActivationPlaybookView::RiskRegister => summary.risk_panels += 1,
+                IntegrationActivationPlaybookView::ActivationActions => summary.action_panels += 1,
+                IntegrationActivationPlaybookView::StatusDashboard => summary.dashboard_panels += 1,
+            }
+
+            if summary.next_recommended_view.is_none()
+                && panel.operator_summary.next_task_kind.is_some()
+            {
+                summary.next_recommended_view = Some(panel.recommended_view);
+                summary.next_task_kind = panel.operator_summary.next_task_kind;
+                summary.next_panel_sequence = Some(panel.sequence);
+                summary.next_panel_priority = Some(panel.priority);
+            }
+
+            if panel.requires_attention() {
+                summary.panels_requiring_attention += 1;
+            }
+            if panel.has_operator_work() {
+                summary.panels_with_operator_work += 1;
+            }
+            if panel.has_actionable_work() {
+                summary.panels_with_actionable_work += 1;
+                summary.first_actionable_panel_sequence = summary
+                    .first_actionable_panel_sequence
+                    .or(Some(panel.sequence));
+                summary.first_actionable_panel_priority = min_optional_priority(
+                    summary.first_actionable_panel_priority,
+                    Some(panel.priority),
+                );
+            }
+            if panel.has_activation_work() {
+                summary.panels_with_activation_work += 1;
+                summary.first_activation_panel_sequence = summary
+                    .first_activation_panel_sequence
+                    .or(Some(panel.sequence));
+                summary.first_activation_panel_priority = min_optional_priority(
+                    summary.first_activation_panel_priority,
+                    Some(panel.priority),
+                );
+            }
+            if panel.has_blockers() {
+                summary.panels_with_blockers += 1;
+                summary.first_blocked_panel_sequence = summary
+                    .first_blocked_panel_sequence
+                    .or(Some(panel.sequence));
+                summary.first_blocked_panel_priority = min_optional_priority(
+                    summary.first_blocked_panel_priority,
+                    Some(panel.priority),
+                );
+            }
+            if panel.has_review_work() {
+                summary.panels_with_review_work += 1;
+                summary.first_review_panel_sequence =
+                    summary.first_review_panel_sequence.or(Some(panel.sequence));
+                summary.first_review_panel_priority = min_optional_priority(
+                    summary.first_review_panel_priority,
+                    Some(panel.priority),
+                );
+            }
+
+            summary.total_tasks += panel.operator_summary.total_tasks;
+            summary.operator_required_tasks += panel.operator_summary.operator_required_tasks;
+            summary.actionable_tasks += panel.operator_summary.actionable_tasks;
+            summary.activation_ready_tasks += panel.operator_summary.activation_ready_tasks;
+            summary.blocked_tasks += panel.operator_summary.blocked_tasks;
+            summary.review_required_tasks += panel.operator_summary.review_required_tasks;
+            summary.monitor_tasks += panel.operator_summary.monitor_tasks;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(panel.operator_summary.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.panels_with_blockers > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.panels_with_review_work > 0 || summary.panels_with_operator_work > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.panels_with_activation_work > 0 || summary.panels_with_actionable_work > 0
+        {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_panels == 0
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.panels_with_operator_work > 0
+    }
+
+    pub fn has_actionable_work(&self) -> bool {
+        self.panels_with_actionable_work > 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.panels_with_activation_work > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.panels_with_blockers > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.panels_with_review_work > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.panels_requiring_attention > 0 || self.overall_status.requires_attention()
     }
 }
 
@@ -8875,6 +9164,102 @@ pub fn activation_operator_tasks_at_or_before_priority(
     ))
 }
 
+pub fn activation_control_room_panels_from_operator_tasks(
+    mut tasks: Vec<IntegrationActivationOperatorTask>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    tasks.sort_by(compare_activation_operator_tasks);
+    let mut tasks_by_view: BTreeMap<
+        IntegrationActivationPlaybookView,
+        Vec<IntegrationActivationOperatorTask>,
+    > = BTreeMap::new();
+    for task in tasks {
+        tasks_by_view
+            .entry(task.recommended_view)
+            .or_default()
+            .push(task);
+    }
+
+    let mut panels = tasks_by_view
+        .into_iter()
+        .map(|(view, tasks)| IntegrationActivationControlRoomPanel::from_tasks(0, view, tasks))
+        .collect::<Vec<_>>();
+    panels.sort_by(compare_activation_control_room_panels);
+    for (index, panel) in panels.iter_mut().enumerate() {
+        panel.sequence = index + 1;
+    }
+    panels
+}
+
+pub fn activation_control_room_panels_from_playbook_steps(
+    steps: Vec<IntegrationActivationPlaybookStep>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(
+        activation_operator_tasks_from_playbook_steps(steps),
+    )
+}
+
+pub fn activation_control_room_panels_from_forecasts(
+    forecasts: Vec<IntegrationActivationForecastItem>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(activation_operator_tasks_from_forecasts(
+        forecasts,
+    ))
+}
+
+pub fn activation_control_room_panels_from_timeline_milestones(
+    milestones: Vec<IntegrationActivationTimelineMilestone>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(
+        activation_operator_tasks_from_timeline_milestones(milestones),
+    )
+}
+
+pub fn activation_control_room_panels_from_dashboard_cards(
+    cards: Vec<IntegrationActivationDashboardCard>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(
+        activation_operator_tasks_from_dashboard_cards(cards),
+    )
+}
+
+pub fn activation_control_room_panels_from_readouts<'a>(
+    readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(activation_operator_tasks_from_readouts(
+        readouts,
+    ))
+}
+
+pub fn activation_control_room_panels_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(activation_operator_tasks_from_candidates(
+        catalog,
+        candidates,
+        enabled_integrations,
+    ))
+}
+
+pub fn activation_control_room_panels_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationControlRoomPanel> {
+    activation_control_room_panels_from_operator_tasks(
+        activation_operator_tasks_at_or_before_priority(
+            catalog,
+            priority,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        ),
+    )
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -10269,6 +10654,22 @@ fn compare_activation_operator_tasks(
         .then_with(|| right.activation_ready().cmp(&left.activation_ready()))
         .then_with(|| left.task_kind.cmp(&right.task_kind))
         .then_with(|| left.recommended_view.cmp(&right.recommended_view))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_control_room_panels(
+    left: &IntegrationActivationControlRoomPanel,
+    right: &IntegrationActivationControlRoomPanel,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.has_blockers().cmp(&left.has_blockers()))
+        .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
+        .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| right.has_actionable_work().cmp(&left.has_actionable_work()))
+        .then_with(|| left.recommended_view.cmp(&right.recommended_view))
+        .then_with(|| right.task_count.cmp(&left.task_count))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -12677,6 +13078,132 @@ mod tests {
         assert!(catalog_tasks
             .iter()
             .any(IntegrationActivationOperatorTask::requires_attention));
+    }
+
+    #[test]
+    fn activation_control_room_panels_group_operator_work_by_view() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+        let panels = activation_control_room_panels_from_candidates(&[], candidates, &[]);
+
+        assert_eq!(panels.len(), 3);
+        assert_eq!(panels[0].sequence, 1);
+        assert_eq!(
+            panels[0].recommended_view,
+            IntegrationActivationPlaybookView::ConstraintQueue
+        );
+        assert_eq!(panels[0].priority, 1);
+        assert_eq!(panels[0].task_count, 1);
+        assert_eq!(panels[0].operator_summary.blocked_tasks, 1);
+        assert!(panels[0].has_blockers());
+        assert!(panels[0].requires_attention());
+        assert_eq!(
+            panels[0].operator_summary.next_task_kind,
+            Some(IntegrationActivationOperatorTaskKind::ResolveConstraints)
+        );
+        assert!(panels.iter().any(|panel| {
+            panel.recommended_view == IntegrationActivationPlaybookView::DependencyGraph
+                && panel.has_blockers()
+        }));
+        assert!(panels.iter().any(|panel| {
+            panel.recommended_view == IntegrationActivationPlaybookView::ActivationActions
+                && panel.has_activation_work()
+        }));
+
+        let summary = IntegrationActivationControlRoomSummary::from_panels(panels.iter());
+        assert_eq!(summary.total_panels, 3);
+        assert_eq!(summary.unique_integrations, 3);
+        assert_eq!(summary.total_tasks, 3);
+        assert_eq!(summary.constraint_panels, 1);
+        assert_eq!(summary.dependency_panels, 1);
+        assert_eq!(summary.action_panels, 1);
+        assert!(summary.panels_requiring_attention >= 2);
+        assert!(summary.panels_with_blockers >= 2);
+        assert_eq!(summary.panels_with_activation_work, 1);
+        assert_eq!(
+            summary.next_recommended_view,
+            Some(IntegrationActivationPlaybookView::ConstraintQueue)
+        );
+        assert_eq!(
+            summary.next_task_kind,
+            Some(IntegrationActivationOperatorTaskKind::ResolveConstraints)
+        );
+        assert_eq!(summary.next_panel_sequence, Some(1));
+        assert_eq!(summary.first_actionable_panel_sequence, Some(1));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_operator_work());
+        assert!(summary.has_actionable_work());
+        assert!(summary.has_activation_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_panels = activation_control_room_panels_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_panels
+            .iter()
+            .any(IntegrationActivationControlRoomPanel::requires_attention));
     }
 
     #[test]
