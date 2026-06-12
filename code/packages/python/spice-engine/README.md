@@ -72,6 +72,13 @@ size, selected real solver path, tolerance, convergence aid, and final Newton
 delta.  Large real DC and complex AC matrix solves use sparse-row solver paths
 when the matrix size reaches the package threshold.
 
+`normalize_model_card()`, `diode_from_model_card()`,
+`bjt_from_model_card()`, `jfet_from_model_card()`, and
+`mosfet_from_model_card()` provide the shared `.model` alias surface for diode,
+BJT, JFET, and Level-1 MOS cards. `device_model_audit_fixtures()` returns the
+canonical cross-language fixture cards used to keep the Python, Rust, and
+TypeScript ports aligned.
+
 ## Controlled source examples
 
 ### VCVS — unity-gain buffer

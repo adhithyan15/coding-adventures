@@ -6,6 +6,7 @@ import {
   bSourceCurrent,
   bSourceVoltage,
   bjt,
+  bjtFromModelCard,
   circuitAtTemperature,
   cccs,
   ccvs,
@@ -14,10 +15,16 @@ import {
   dcOp,
   dcSweep,
   dcSweepCorners,
+  deviceModelAuditFixtures,
   diode,
+  diodeFromModelCard,
   inductor,
   jfet,
+  jfetFromModelCard,
   mosfet,
+  mosfetFromModelCard,
+  normalizeModelCard,
+  normalizeModelCardType,
   resistor,
   subcircuitDefinition,
   vccs,
@@ -33,6 +40,78 @@ function expectClose(actual: number | undefined, expected: number): void {
 }
 
 describe("dcOp", () => {
+  it("normalizes model-card type aliases", () => {
+    expect(normalizeModelCardType("diode")).toBe("D");
+    expect(normalizeModelCardType("n-jfet")).toBe("NJF");
+    expect(normalizeModelCardType("pch")).toBe("PMOS");
+  });
+
+  it("normalizes model-card aliases into device instances", () => {
+    const diodeCard = normalizeModelCard("Dfast", "diode", {
+      JS: 2.0e-14,
+      CJ: 1.5e-12,
+      TT: 4.0e-9,
+      RS: 10.0,
+    });
+    const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
+    expect(diodeCard.parameters).toStrictEqual({ IS: 2.0e-14, CJO: 1.5e-12, TT: 4.0e-9 });
+    expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
+    expectClose(diodeModel.saturationCurrent, 2.0e-14);
+    expectClose(diodeModel.junctionCapacitance, 1.5e-12);
+    expectClose(diodeModel.transitTime, 4.0e-9);
+
+    const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
+    const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
+    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, CJE: 2.0e-12 });
+    expect(bjtModel.polarity).toBe("NPN");
+    expectClose(bjtModel.forwardBeta, 125.0);
+    expectClose(bjtModel.baseEmitterCapacitance, 2.0e-12);
+
+    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 });
+    const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
+    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02 });
+    expect(jfetModel.polarity).toBe("NJF");
+    expectClose(jfetModel.beta, 9.0e-4);
+    expectClose(jfetModel.thresholdVoltage, -1.8);
+    expectClose(jfetModel.channelLengthModulation, 0.02);
+
+    const mosCard = normalizeModelCard("Mn", "nmos", {
+      LEVEL: 1.0,
+      VTO: 0.55,
+      LAM: 0.04,
+      NSUB: 1.6,
+      CJD: 3.0e-13,
+    });
+    const mosModel = mosfetFromModelCard("M1", "d", "g", "s", "b", mosCard);
+    expect(mosCard.parameters).toStrictEqual({
+      LEVEL: 1.0,
+      VT0: 0.55,
+      LAMBDA: 0.04,
+      N_SUB: 1.6,
+      CBD: 3.0e-13,
+    });
+    expect(mosModel.type).toBe("NMOS");
+    expectClose(mosModel.params.VT0, 0.55);
+    expectClose(mosModel.params.LAMBDA, 0.04);
+    expectClose(mosModel.params.N_SUB, 1.6);
+    expectClose(mosModel.params.CBD, 3.0e-13);
+  });
+
+  it("provides cross-language device model audit fixtures", () => {
+    const fixtures = deviceModelAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.kind)).toStrictEqual(["D", "NPN", "NJF", "NMOS"]);
+    expectClose(fixtures[0]!.parameters.IS, 2.0e-14);
+    expectClose(fixtures[1]!.parameters.BF, 125.0);
+    expectClose(fixtures[2]!.parameters.VTO, -1.8);
+    expectClose(fixtures[3]!.parameters.VT0, 0.55);
+  });
+
+  it("rejects non-Level-1 MOS model cards explicitly", () => {
+    expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: 2.0 })).toThrowError(
+      "only MOS LEVEL=1",
+    );
+  });
+
   it("solves a resistor divider midpoint voltage", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 10.0));

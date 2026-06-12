@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Model-card alias normalization** — `normalize_model_card()`,
+  `diode_from_model_card()`, `bjt_from_model_card()`,
+  `jfet_from_model_card()`, `mosfet_from_model_card()`, and
+  `device_model_audit_fixtures()` provide cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias fixtures for future deck parsing.
+
 - **Solver diagnostics and sparse complex solves** — `DcResult.diagnostics`
   now reports stable matrix size, solver kind, tolerance, convergence aid, and
   final Newton delta metadata; large AC complex systems now route through the

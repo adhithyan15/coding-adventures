@@ -153,11 +153,14 @@ from spice_engine import (
     __version__,
     ac_sweep,
     ac_sweep_corners,
+    bjt_from_model_card,
     circuit_at_temperature,
     dc_corners,
     dc_op,
     dc_sweep,
     dc_sweep_corners,
+    device_model_audit_fixtures,
+    diode_from_model_card,
     distortion_from_fourier,
     distortion_from_transient,
     distortion_from_transient_corners,
@@ -186,10 +189,14 @@ from spice_engine import (
     format_transient_table,
     fourier,
     fourier_corners,
+    jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
+    normalize_model_card,
+    normalize_model_card_type,
     pole_zero_corners,
     pole_zero_rc_highpass,
     pole_zero_rc_lowpass,
@@ -233,6 +240,76 @@ from spice_engine.engine import (
 
 def test_package_version_matches_pyproject_release() -> None:
     assert __version__ == "0.14.0"
+
+
+def test_model_card_type_aliases_are_normalized() -> None:
+    assert normalize_model_card_type("diode") == "D"
+    assert normalize_model_card_type("n-jfet") == "NJF"
+    assert normalize_model_card_type("pch") == "PMOS"
+
+
+def test_model_card_aliases_build_device_instances() -> None:
+    diode_card = normalize_model_card(
+        "Dfast",
+        "diode",
+        {"JS": 2.0e-14, "CJ": 1.5e-12, "TT": 4.0e-9, "RS": 10.0},
+    )
+    diode_model = diode_from_model_card("D1", "a", "k", diode_card)
+    assert diode_card.parameters == {"IS": 2.0e-14, "CJO": 1.5e-12, "TT": 4.0e-9}
+    assert diode_card.unsupported_parameters == ("RS",)
+    assert diode_model.Is == pytest.approx(2.0e-14)
+    assert diode_model.Cjo == pytest.approx(1.5e-12)
+    assert diode_model.Tt == pytest.approx(4.0e-9)
+
+    bjt_card = normalize_model_card("Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12})
+    bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12}
+    assert bjt_model.polarity == "NPN"
+    assert bjt_model.beta_f == pytest.approx(125.0)
+    assert bjt_model.Cje == pytest.approx(2.0e-12)
+
+    jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
+    jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
+    assert jfet_card.parameters == {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02}
+    assert jfet_model.polarity == "NJF"
+    assert jfet_model.beta == pytest.approx(9.0e-4)
+    assert jfet_model.vto == pytest.approx(-1.8)
+    assert jfet_model.lambda_ == pytest.approx(0.02)
+
+    mos_card = normalize_model_card(
+        "Mn",
+        "nmos",
+        {"LEVEL": 1.0, "VTO": 0.55, "LAM": 0.04, "NSUB": 1.6, "CJD": 3.0e-13},
+    )
+    mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
+    assert mos_card.parameters == {
+        "LEVEL": 1.0,
+        "VT0": 0.55,
+        "LAMBDA": 0.04,
+        "N_SUB": 1.6,
+        "CBD": 3.0e-13,
+    }
+    assert isinstance(mos_model.model, MOSFET)
+    assert mos_model.model.type == MosfetType.NMOS
+    assert isinstance(mos_model.model.model, Level1Model)
+    assert pytest.approx(0.55) == mos_model.model.model.params.VT0
+    assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
+    assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
+    assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
+
+
+def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
+    fixtures = device_model_audit_fixtures()
+    assert [fixture.kind for fixture in fixtures] == ["D", "NPN", "NJF", "NMOS"]
+    assert fixtures[0].parameters["IS"] == pytest.approx(2.0e-14)
+    assert fixtures[1].parameters["BF"] == pytest.approx(125.0)
+    assert fixtures[2].parameters["VTO"] == pytest.approx(-1.8)
+    assert fixtures[3].parameters["VT0"] == pytest.approx(0.55)
+
+
+def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
+    with pytest.raises(ValueError, match="only MOS LEVEL=1"):
+        normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})
 
 
 def test_waveform_period_reports_periodic_source_forms() -> None:
