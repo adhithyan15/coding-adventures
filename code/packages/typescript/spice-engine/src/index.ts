@@ -3328,8 +3328,14 @@ function resolveNodeConditionLine(
 }
 
 function resolveFunctionLine(line: string, lineNumber: number, state: DeckFunctionState): void {
-  const directiveMatch = /^\S+\s+(.+)$/.exec(line);
-  const rest = directiveMatch?.[1].trim() ?? "";
+  let restStart = 0;
+  while (restStart < line.length && !isDirectiveWhitespace(line[restStart])) {
+    restStart += 1;
+  }
+  while (restStart < line.length && isDirectiveWhitespace(line[restStart])) {
+    restStart += 1;
+  }
+  const rest = line.slice(restStart).trim();
   if (rest.length === 0) {
     addFunctionDiagnostic(state, {
       code: "SPICE_DECK_FUNC_ARGUMENT",
@@ -3736,6 +3742,10 @@ function parseNodeConditionTarget(target: string): string | undefined {
   }
   const node = target.slice(2, -1).trim();
   return node.length > 0 ? node : undefined;
+}
+
+function isDirectiveWhitespace(char: string): boolean {
+  return char === " " || char === "\t" || char === "\r" || char === "\n" || char === "\f";
 }
 
 function parseFunctionSignature(
