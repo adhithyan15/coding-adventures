@@ -23,8 +23,12 @@ the decision **plus a byte-cited proof DAG** as JSON — with **zero model calls
 adj-lang-cli PROGRAM.adj
 ```
 
-`PROGRAM.adj` is typically the CAS rulebook clauses concatenated with a case's
-`observe`/`?` lines. Output (pretty-printed here):
+`PROGRAM.adj` is typically a case file that `import`s its rulebook (which in turn
+`import`s its dictionary) — or, equivalently, the rulebook clauses concatenated
+with the case's `observe`/`?` lines. Any `import "…"` is resolved before
+compiling; imports are relative to the importing file and sandboxed to the
+program file's directory (a `../` escape, an absolute path, or an import cycle is
+refused as a `{"error": …}`). Output (pretty-printed here):
 
 ```json
 {

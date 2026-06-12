@@ -162,6 +162,40 @@ observe csf_glucose(low)
   `use` of an undeclared dictionary is `LowerError::UndefinedDictionary`. With no
   `use` anywhere, the M1 whole-program rule above is unchanged.
 
+### Import — `import "path"` (v0.11, MYCIN-2026)
+
+`import "<relative path>"` composes a program across files, so a dictionary, the
+rulebook that `use`s it, and a case can each be their own checked-in `.adj`:
+
+```adj
+% dictionary.adj
+dictionary meningitis_vocab { define bacterial : hypothesis  define csf_glucose : finding values [low, normal] }
+
+% rulebook.adj
+import "dictionary.adj"
+rulebook meningitis { use meningitis_vocab
+  prior 0.30 for bacterial   source "Tunkel IDSA 2004" trust authoritative
+  contributes 5 from csf_glucose(low) to bacterial  source "…" trust empirical }
+
+% case.adj
+import "rulebook.adj"
+observe csf_glucose(low)
+? bacterial
+```
+
+The import graph is resolved into one program *before* lowering, with four
+guarantees: **relative** to the importing file, **idempotent** (a file imported
+twice — e.g. a diamond — is merged once, by canonical id), **acyclic** (a cycle
+is `ImportError::Cycle`, never a hang), and **bounded** depth + fan-out
+(`ImportLimits`, default 32 / 256 → `DepthExceeded` / `TooManyFiles`).
+
+The library does **no filesystem I/O**: `resolve_imports` drives an injected
+[`ImportProvider`], so the graph policy is unit-testable without a disk and the
+filesystem trust boundary (canonicalization, relative-only, sandbox-root
+containment) lives in the caller — `adj-lang-cli`'s `FsProvider`. Use
+`compile_with_imports(root_id, provider, limits)` for the resolve-then-lower
+path; plain `compile` rejects a stray `import` as `LowerError::UnresolvedImport`.
+
 ### Differential over the `?` queries (v0.4)
 
 A program's `? h` lines are read as the set of **competing hypotheses**.

@@ -35,6 +35,7 @@ statement   = prior_decl
             | define_decl
             | rulebook_decl
             | use_decl
+            | import_decl
             ;
 
 # ----------------------------------------------------------------
@@ -151,6 +152,22 @@ surface_clause = "surface" STRING { COMMA STRING } ;
 rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE ;
 
 use_decl      = "use" IDENT ;
+
+# ----------------------------------------------------------------
+# Import (MYCIN-2026 M3 — composition across files). `import "<path>"`
+# parses a sibling `.adj` file and splices its `dictionary` / `define` /
+# `rulebook` declarations (and any bare clauses) into the importing program,
+# so a dictionary and a rulebook can live in separate checked-in files and a
+# case file imports both. Resolution is RELATIVE to the importing file,
+# IDEMPOTENT (a file imported twice is included once, by canonical path),
+# ACYCLIC (a cycle is a clean compile error), and depth/fan-out bounded. The
+# `adj-lang` library stays filesystem-free: the import GRAPH logic lives in
+# `resolve.rs` driven by an injected `ImportProvider`; the CLI supplies the
+# real, sandbox-checked filesystem provider. `import` is an IDENT-matched
+# literal; the path is a STRING.
+# ----------------------------------------------------------------
+
+import_decl   = "import" STRING ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the

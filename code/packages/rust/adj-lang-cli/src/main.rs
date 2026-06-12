@@ -24,6 +24,7 @@
 //! Argument parsing is declarative via `cli-builder`.
 
 use std::fs;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use cli_builder::types::ParserOutput;
@@ -32,7 +33,7 @@ use cli_builder::{load_spec_from_str, Parser};
 use adj_constraint_solver::{
     check, optimize, solve, FeasibilityOutcome, OptimizeOutcome, SolveOutcome,
 };
-use adj_lang::{compile, decide};
+use adj_lang::{compile_with_imports, decide, ImportLimits, ImportProvider};
 use logic_core::{atom, Term};
 use logic_engine::{
     DerivationOrigin, DifferentialDecision, Fact, KnowledgeBase, LRAggregateResult, Provenance,
@@ -255,6 +256,60 @@ fn status_certificates(
     out
 }
 
+/// The filesystem-backed [`ImportProvider`] — the **trust boundary** for
+/// `import`. The `adj-lang` library does no I/O; this is the only thing that
+/// touches the disk, so every path-safety check lives here:
+///
+/// - Canonical ids are absolute, symlink-resolved real paths
+///   (`fs::canonicalize`), so two spellings of the same file dedupe and a
+///   symlink cannot smuggle in a second identity.
+/// - Import literals must be **relative** — an absolute literal is refused.
+/// - The resolved real path must stay within `root` (the directory of the
+///   top-level program). A `../…` escape or a symlink pointing outside `root`
+///   is refused — `import` cannot read arbitrary files on the host.
+struct FsProvider {
+    /// The sandbox root: canonicalized directory of the top-level program. No
+    /// import may resolve outside this subtree.
+    root: PathBuf,
+}
+
+impl FsProvider {
+    /// Canonicalize `p` and confirm it lies within the sandbox `root`.
+    fn checked_canonical(&self, p: &Path) -> Result<String, String> {
+        let abs = fs::canonicalize(p).map_err(|e| format!("{}: {e}", p.display()))?;
+        if !abs.starts_with(&self.root) {
+            return Err(format!(
+                "{} escapes the import root {}",
+                abs.display(),
+                self.root.display()
+            ));
+        }
+        Ok(abs.to_string_lossy().into_owned())
+    }
+}
+
+impl ImportProvider for FsProvider {
+    fn resolve(&self, importer: &str, literal: &str) -> Result<String, String> {
+        if Path::new(literal).is_absolute() {
+            return Err(format!("import path must be relative, got {literal:?}"));
+        }
+        // Reject NUL and other obviously hostile bytes before touching the FS.
+        if literal.contains('\0') {
+            return Err("import path contains a NUL byte".to_string());
+        }
+        let importer_dir = Path::new(importer)
+            .parent()
+            .ok_or_else(|| format!("importer {importer:?} has no parent directory"))?;
+        self.checked_canonical(&importer_dir.join(literal))
+    }
+
+    fn load(&self, canonical: &str) -> Result<String, String> {
+        // `canonical` came from `resolve`/the root, already inside `root`; read
+        // it. (Re-checking would re-canonicalize an already-canonical path.)
+        fs::read_to_string(canonical).map_err(|e| format!("{canonical}: {e}"))
+    }
+}
+
 fn main() -> ExitCode {
     let spec = load_spec_from_str(SPEC).expect("internal: invalid CLI spec");
     let parser = Parser::new(spec);
@@ -280,15 +335,30 @@ fn main() -> ExitCode {
         .get("program")
         .and_then(|v| v.as_str())
         .unwrap_or("");
-    let src = match fs::read_to_string(path) {
-        Ok(s) => s,
+
+    // Resolve the program (and any `import`s) through the filesystem provider.
+    // The sandbox root is the directory of the program file; no `import` may
+    // read outside it. The canonical id of the root file seeds the resolver.
+    let root_id = match fs::canonicalize(path) {
+        Ok(p) => p,
         Err(e) => {
             eprintln!("adj-lang-cli: cannot read {}: {}", path, e);
             return ExitCode::from(2);
         }
     };
-
-    let mut lowered = match compile(&src) {
+    let root_dir = match root_id.parent() {
+        Some(d) => d.to_path_buf(),
+        None => {
+            eprintln!("adj-lang-cli: {} has no parent directory", path);
+            return ExitCode::from(2);
+        }
+    };
+    let provider = FsProvider { root: root_dir };
+    let mut lowered = match compile_with_imports(
+        &root_id.to_string_lossy(),
+        &provider,
+        ImportLimits::default(),
+    ) {
         Ok(l) => l,
         Err(e) => {
             println!("{{\"error\":\"{}\"}}", esc(&format!("{:?}", e)));
