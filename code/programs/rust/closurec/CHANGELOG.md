@@ -2,6 +2,32 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.98.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-088** — EMPTY-STATEMENT (`;`) elimination under
+  WHITESPACE_ONLY, matching upstream Closure:
+
+      ;;var x=1;          -> var x=1;
+      var x=1;;;          -> var x=1;
+      var a=1;;var b=2;   -> var a=1;var b=2;
+      ;;;                 -> (empty)
+      ;x();               -> x();
+      function f(){;;x();} -> function f(){x()};
+
+  A new FIRST pre-pass drops a `;` whose immediate predecessor is `{`,
+  `;`, or start-of-input — exactly the statement-list positions with no
+  statement before them. `minify_empty_stmt` is now enforced.
+
+  Every other `;` is preserved automatically: a real terminator (`a;` —
+  predecessor is a value) or a control-flow BODY (`while(a);`,
+  `if(a);`, `for(;;);`, `do;while(a);` — predecessor `)`/`do`, not in
+  the droppable set). The one hazard — the second separator in a
+  `for(;;)` header (preceded by the first `;`) — is handled by a
+  bracket stack that marks `for(` parens (detected via the preceding
+  `for` keyword, excluding a `.for(` property call) and refuses to drop
+  a `;` inside a for-header.
+
 ## [0.97.0] - 2026-06-12
 
 ### Changed
