@@ -133,14 +133,19 @@ const PROGRAMS: &[Prog] = &[
         backends: &[NativeAot, Llvm, Wasm, Jvm, Clr],
     },
     // Brainfuck — build 65 on the tape and `putchar` it: prints `A`.
-    // (LLVM column pending: `iir-to-llvm` lacks the tape ops `alloc_bytes`/`load_byte`/
-    // `store_byte` + `putchar` — a backend codegen slice of its own.)
+    // On LLVM (LM-L Brainfuck), `lower_brainfuck_for_aot` widens the BF cell/ptr
+    // registers to `i64` (byte width survives only at the tape boundary) and
+    // `iir-to-llvm` (v0.9.0) grew the tape ops: `alloc_bytes`→`@calloc`,
+    // `load_byte`→`getelementptr i8`+`load`+`zext`, `store_byte`→`trunc`+`store`,
+    // and `putchar`/`getchar`→ libc. `run_llvm` runs the program and compares the
+    // captured stdout (`A`) — `putchar` writes straight to libc stdout, so no
+    // print-runtime shim is linked (unlike BASIC's `@__print_i64`).
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot],
+        backends: &[NativeAot, Llvm],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime

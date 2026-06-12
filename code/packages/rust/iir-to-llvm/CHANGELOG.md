@@ -3,6 +3,47 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] — 2026-06-12 (LLVM05 — byte-tape ops + Brainfuck I/O; LANG-MATRIX LM-L Brainfuck)
+
+Adds the byte-tape memory ops and character I/O that Brainfuck needs, so the
+LLVM column now covers Brainfuck — the last code-gen gap in that language's row.
+Verified by RUNNING the Brainfuck cell `++++++++[>++++++++<-]>+.` on real `clang`
+in `lang-aot/tests/lang_matrix.rs`: it prints `A`.
+
+**New IIR opcodes** (added to `SUPPORTED_OPS` and `lower_instr`):
+
+- `alloc_bytes dest <- size` → `%dest = call ptr @calloc(i64 size, i64 1)` — a
+  zero-filled tape (Brainfuck cells start at 0). Declared once as
+  `declare ptr @calloc(i64, i64)`. The tape base is a single-assignment value,
+  so it is never a promoted stack slot.
+- `load_byte dest <- base, idx` → `getelementptr i8` + `load i8` + `zext i8…i64`.
+  The 8-bit cell becomes the uniform `i64` register width.
+- `store_byte base, idx, val` (no dest) → `getelementptr i8` + `trunc i64…i8` +
+  `store i8`. The `trunc` is what makes Brainfuck's 8-bit cell wrap-around fall
+  out even though the surrounding arithmetic runs at `i64` width — "byte width
+  only at the tape boundary."
+
+**New `call_builtin`s** (added to `SUPPORTED_BUILTINS`):
+
+- `putchar` (Brainfuck `.`) → `trunc i64…i32` + `call i32 @putchar(i32)`. Maps
+  to libc directly (no host-runtime shim like `print_i64`'s `@__print_i64`).
+- `getchar` (Brainfuck `,`) → `call i32 @getchar()` + `sext i32…i64`. EOF (`-1`)
+  lands as `0xFF` after a subsequent `store_byte` truncation — the conventional
+  Brainfuck behaviour. Declared as `declare i32 @putchar(i32)` / `@getchar()`.
+
+**Bug fix — slot-dest SSA rename.** A variable assigned in 2+ instructions is
+promoted to an `alloca i64` stack slot. Previously a value-producing op wrote
+`%<var> = …` using the variable's name verbatim, so a slot variable that is the
+dest of a real op (rather than only `const`/`mov`) emitted `%v = …` twice — which
+LLVM rejects (*"multiple definition of local value named 'v'"*). Brainfuck's
+`ptr`/`v` (incremented every command) are the first such case. `lower_instr_with_slots`
+now lowers a clone of the instruction with a fresh SSA dest name and stores the
+result into the original variable's slot. `const`/`mov` slot-dests (which emit no
+`%dest =` line) are unaffected.
+
+Six new tests in `tests/test_backend.rs` cover each emit case and the rename
+regression.
+
 ## [0.8.0] — 2026-06-10 (McCarthy W13b — lisp lambda (F7) — LLVM COMPLETE)
 
 Registers the universal exit-coercion runtime helper so the LLVM backend can

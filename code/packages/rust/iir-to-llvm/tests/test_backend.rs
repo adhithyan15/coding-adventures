@@ -1022,3 +1022,184 @@ fn symbol_typed_const_validates_and_lowers() {
     let ll = lower(&module_with(f));
     assert!(ll.contains("ret i64 2"), "symbol immediate flows as i64; got:\n{ll}");
 }
+
+// ===========================================================================
+// 8. LLVM05 — byte-tape memory + Brainfuck I/O (LANG-MATRIX LM-L Brainfuck)
+// ===========================================================================
+
+/// `alloc_bytes dest <- size` lowers to a zero-filling `@calloc` and declares it.
+#[test]
+fn alloc_bytes_emits_calloc_and_declare() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(30_000)], "i64"),
+            IIRInstr::new("alloc_bytes", Some("t".into()), vec![Operand::Var("n".into())], "i64"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("declare ptr @calloc(i64, i64)"), "calloc declared once; got:\n{ll}");
+    assert!(
+        ll.contains("%t = call ptr @calloc(i64 30000, i64 1)"),
+        "alloc_bytes → zero-filled calloc; got:\n{ll}"
+    );
+}
+
+/// `load_byte`/`store_byte` index the tape at byte width: zero-extend on load,
+/// truncate on store — the "byte width only at the tape boundary" contract.
+#[test]
+fn load_and_store_byte_zext_and_trunc_at_boundary() {
+    // A single-assignment `base` + `idx` keep the snippet slot-free so the
+    // gep/zext/trunc shapes are easy to eyeball.
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(8)], "i64"),
+            IIRInstr::new("alloc_bytes", Some("base".into()), vec![Operand::Var("n".into())], "i64"),
+            IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i64"),
+            IIRInstr::new(
+                "store_byte",
+                None,
+                vec![Operand::Var("base".into()), Operand::Var("idx".into()), Operand::Var("val".into())],
+                "i64",
+            ),
+            IIRInstr::new(
+                "load_byte",
+                Some("got".into()),
+                vec![Operand::Var("base".into()), Operand::Var("idx".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("getelementptr i8, ptr %base, i64 0"), "byte-indexed gep; got:\n{ll}");
+    assert!(ll.contains("trunc i64 65 to i8"), "store truncates to the cell; got:\n{ll}");
+    assert!(ll.contains("store i8"), "store writes one byte; got:\n{ll}");
+    assert!(ll.contains("load i8, ptr"), "load reads one byte; got:\n{ll}");
+    assert!(ll.contains("zext i8"), "load zero-extends to i64; got:\n{ll}");
+}
+
+/// `store_byte` with a `dest` is rejected — it produces no value.
+#[test]
+fn store_byte_with_dest_is_rejected() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("n".into()), vec![Operand::Int(8)], "i64"),
+            IIRInstr::new("alloc_bytes", Some("base".into()), vec![Operand::Var("n".into())], "i64"),
+            IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("const", Some("val".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "store_byte",
+                Some("oops".into()),
+                vec![Operand::Var("base".into()), Operand::Var("idx".into()), Operand::Var("val".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let err = lower_iir_to_llvm(&module_with(f), &IIRLlvmConfig::default());
+    assert!(err.is_err(), "store_byte must not carry a dest");
+}
+
+/// Brainfuck `.` → libc `putchar`: the i64 cell is truncated to the `int` arg.
+#[test]
+fn putchar_truncs_to_i32_and_declares_libc() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(65)], "i64"),
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("putchar".into()), Operand::Var("v".into())],
+                "void",
+            ),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i64"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("declare i32 @putchar(i32)"), "putchar declared; got:\n{ll}");
+    assert!(ll.contains("trunc i64 65 to i32"), "cell truncated to int; got:\n{ll}");
+    assert!(ll.contains("call i32 @putchar(i32"), "calls libc putchar; got:\n{ll}");
+}
+
+/// Brainfuck `,` → libc `getchar`: the returned `int` is sign-extended to the
+/// i64 cell register (EOF -1 → 0xFF after a later store_byte truncation).
+#[test]
+fn getchar_calls_libc_and_sexts_to_i64() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("v".into()),
+                vec![Operand::Var("getchar".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    assert!(ll.contains("declare i32 @getchar()"), "getchar declared; got:\n{ll}");
+    assert!(ll.contains("call i32 @getchar()"), "calls libc getchar; got:\n{ll}");
+    assert!(ll.contains("sext i32"), "result sign-extended to i64; got:\n{ll}");
+}
+
+/// Regression: a stack-slot variable written by a real op 2+ times must NOT
+/// emit `%v = …` twice (LLVM rejects "multiple definition of local value").
+/// The slot wrapper renames each assignment to a fresh SSA name and stores it
+/// into the slot. Before LM-L-Brainfuck this round-tripped only for `const`/
+/// `mov` slot-dests (which emit no `%v =` line); Brainfuck's `add`-into-slot
+/// was the first real trigger.
+#[test]
+fn slot_var_assigned_twice_by_arith_has_unique_ssa_names() {
+    // `v` is the dest of two `add`s → a 2-assignment slot var.
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i64",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new("const", Some("k".into()), vec![Operand::Int(1)], "i64"),
+            IIRInstr::new(
+                "add",
+                Some("v".into()),
+                vec![Operand::Var("v".into()), Operand::Var("k".into())],
+                "i64",
+            ),
+            IIRInstr::new(
+                "add",
+                Some("v".into()),
+                vec![Operand::Var("v".into()), Operand::Var("k".into())],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i64"),
+        ],
+    );
+    let ll = lower(&module_with(f));
+    // `v` is promoted to a slot…
+    assert!(ll.contains("%v.slot = alloca i64"), "v promoted to a slot; got:\n{ll}");
+    // …and the bare `%v = ` SSA name is never (re)defined.
+    assert!(
+        !ll.contains("%v = "),
+        "slot dest must use fresh SSA names, not a reused %v; got:\n{ll}"
+    );
+    // Each add result is stored back to the slot.
+    assert!(ll.matches("store i64").count() >= 3, "each assignment stores to the slot; got:\n{ll}");
+}

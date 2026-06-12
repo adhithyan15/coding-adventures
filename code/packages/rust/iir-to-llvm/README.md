@@ -87,7 +87,26 @@ you actually intend to run `llc` for a non-default architecture.
 | v0.6.0  | `COND` via stack-slot (`alloca`) SSA-merge + `jmp_if` void-cond + empty-block `br` (McCarthy W12b-3). |
 | v0.7.0  | Lisp symbols — `symbol` type → `i64` tagged immediate (McCarthy W13a). |
 | v0.8.0  | Lisp lambda (F7) — declare `lispy_to_exit_code` runtime switch; **LLVM McCarthy-complete F1–F7** (McCarthy W13b). |
+| v0.9.0  | Byte-tape ops `alloc_bytes`→`@calloc`, `load_byte`/`store_byte` (zext/trunc at the byte boundary), `putchar`/`getchar` libc builtins, + slot-dest SSA rename. **Brainfuck runs on LLVM** (LANG-MATRIX LM-L Brainfuck). |
 | (later) | GC, debug info via `!dbg`. |
+
+### Byte-tape memory (v0.9.0)
+
+Brainfuck builds an implicit byte tape; `lower_brainfuck_for_aot` (in `lang-aot`)
+rewrites it into the same `alloc_bytes` / `load_byte` / `store_byte` ops the
+native x86_64 backend already uses (LANG76). This crate's lowering:
+
+| IIR op | LLVM emitted | Notes |
+|--------|--------------|-------|
+| `alloc_bytes d <- n` | `%d = call ptr @calloc(i64 n, i64 1)` | zero-filled tape |
+| `load_byte d <- base, i` | `getelementptr i8` + `load i8` + `zext i8…i64` | cell → word |
+| `store_byte base, i, v` | `getelementptr i8` + `trunc i64…i8` + `store i8` | word → cell (8-bit wrap) |
+| `call_builtin putchar v` | `trunc i64…i32` + `call i32 @putchar(i32)` | libc; Brainfuck `.` |
+| `call_builtin getchar -> d` | `call i32 @getchar()` + `sext i32…i64` | libc; Brainfuck `,` |
+
+Byte width lives **only at the tape boundary** (the `zext`/`trunc`); every register
+in between is a uniform `i64`, which is what lets the i64-only stack-slot model
+consume Brainfuck's reassigned `ptr`/`v` without a width mismatch.
 
 See [`code/specs/iir-to-llvm.md`](../../../specs/iir-to-llvm.md) for the
 full spec and [`code/specs/MULTILANG-BACKEND-PLAN.md`](../../../specs/MULTILANG-BACKEND-PLAN.md)

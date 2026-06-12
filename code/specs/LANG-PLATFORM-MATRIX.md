@@ -103,7 +103,7 @@ achievable code-gen columns land first).
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Brainfuck       | ☐  | ☐   | ✅        | ⏸   | ⏸    | ⏸  | ⏸  |
+| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ⏸    | ⏸  | ⏸  |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
@@ -150,11 +150,23 @@ The VM/JIT columns are op-coverage work (see above); the code-gen columns
   `call void @__print_i64(i64 42)`, so when the `.ll` references `@__print_i64` the
   runner compiles in a generic `__print_i64` C runtime and the harness compares
   **stdout**. Verified by RUNNING: `10 PRINT 42` → stdout `42` on real `clang`.
-- ⏸ **LM-L Brainfuck (on LLVM) — DEFERRED.** See the *Deferred* section below; it
-  needs a deeper `iir-to-llvm` change, so the loop advances past it to the WASM column.
+- ✅ **LM-L Brainfuck (on LLVM).** The first deferred item, tackled via the
+  **frontend-i64** approach (chosen over width-aware slots to avoid touching the
+  McCarthy-critical `iir-to-llvm` slot allocator). The i64 materialisation lives in
+  `lower_brainfuck_for_aot` Step 5 — **not** the BF frontend — because the frontend's
+  `u8`/`u32` hints feed `vm-core`/`jit-core`'s `specialise`, which keys CIR opcode
+  widths (`add_u8`/`add_u32`) off them; widening the frontend would break the BF JIT.
+  So the pass that *already* builds the tape boundary widens every narrow hint to
+  `i64`, and `iir-to-llvm` 0.9.0 grew the tape ops: `alloc_bytes`→`@calloc`,
+  `load_byte` (`getelementptr i8`+`load`+`zext`), `store_byte` (`trunc`+`store`),
+  `putchar`/`getchar`→libc — plus a slot-dest SSA rename (a slot var assigned 2+ times
+  by a real op no longer emits a duplicate `%name`; BF's `ptr`/`v` are the first such
+  case, which is why this only surfaced now). Verified by RUNNING
+  `++++++++[>++++++++<-]>+.` → stdout `A` on real `clang` (`lang_matrix.rs`); the BF
+  `vm-core`/`jit-core` suites stay green (frontend untouched).
 
-The LLVM column is therefore green for **5 / 6** languages (Twig / Nib / Oct / ALGOL /
-BASIC); only Brainfuck is deferred.
+The LLVM column is therefore green for **all 6** languages (Twig / Nib / Oct / ALGOL /
+BASIC / Brainfuck). The LLVM column is **complete**.
 
 ### Phase W — WASM for every language
 
@@ -248,21 +260,22 @@ BASIC); only Brainfuck is deferred.
 
 ## Deferred — deeper backend/frontend work (after the code-gen columns)
 
-These three are **not** "add a conformance test" — each needs a real change to a
-backend/interpreter with risk to currently-green backends, so they are grouped here
-to be tackled deliberately once the achievable code-gen columns (WASM/JVM/CLR) land.
+Each needs a real change to a backend/interpreter with risk to currently-green
+backends, so they are tackled deliberately rather than as a routine conformance slice.
 
-- ⏸ **LM-L Brainfuck (on LLVM).** Two layers: (1) `iir-to-llvm` lacks the tape ops
-  (`alloc_bytes`/`load_byte`/`store_byte` + `putchar`) — straightforward to add
-  (`calloc`/`getelementptr i8`/`load`/`store`/libc `putchar`); but (2) the real wall
-  is that `iir-to-llvm`'s SSA model promotes any 2+-assigned variable to an **`alloca
-  i64` slot**, while Brainfuck's reassigned `v`/`ptr` are narrow (`u8`/`u32`). A
-  slot-loaded `i64` then feeds a `u8` `add` → `'%__ld' defined with type 'i64' but
-  expected 'i8'`. Resolving it needs either **width-aware slots** in `iir-to-llvm`
-  (touches the McCarthy-critical slot model) or making the **Brainfuck frontend**
-  materialise cell/ptr arithmetic as `i64` (byte width only at the tape boundary;
-  touches native + WASM + the simulator). Both are cross-cutting; do as a focused,
-  fully-reverified effort, not a routine slice.
+- ✅ **LM-L Brainfuck (on LLVM).** **Done** (see Phase L). The "real wall" — `iir-to-llvm`
+  promotes any 2+-assigned variable to an `alloca i64` slot, while BF's `v`/`ptr` were
+  narrow (`u8`/`u32`), so a slot-loaded `i64` feeding a `u8` `add` was a type error — was
+  resolved by the **frontend-i64** route, but materialised in `lower_brainfuck_for_aot`
+  (Step 5) rather than the literal frontend, so `vm-core`/`jit-core`'s width-keyed
+  `specialise` stays correct. `iir-to-llvm` 0.9.0 added the tape ops + a slot-dest SSA
+  rename (the duplicate-`%name` bug that the "straightforward" tape ops would have hit).
+- ⏸ **LM-W / LM-J / LM-C Brainfuck (WASM / JVM / CLR).** Now unblocked in principle:
+  the i64-widening in `lower_brainfuck_for_aot` is backend-agnostic, so the remaining
+  Brainfuck cells reduce to giving `iir-to-wasm` / `iir-to-jvm-class-file` /
+  `iir-to-cil-bytecode` the same byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`)
+  and `putchar`/`getchar` lowerings that `iir-to-llvm` and the native backend already
+  have. One backend-codegen slice each — no frontend or slot-model risk.
 - ⏸ **Phase V — VM op-coverage.** `mccarthy_lisp_vm` is **McCarthy-specialized**, not a
   general interpreter (the LM0 probe: it rejects `add`/`mul`/`cmp_*`/`mod` and the I/O
   ops). Running the other languages on the VM means growing the interpreter with
@@ -281,8 +294,9 @@ BEAM column for the imperative languages). The capstone is a single
 known result — the cross-language analog of McCarthy's W16.
 
 The campaign reaches that end state in two waves: first the **code-generator columns**
-(native ✅, LLVM 5/6, then WASM → JVM → CLR) — these are general over the shared IIR,
-so each cell is mostly a conformance test plus the occasional I/O/type fix; then the
-**Deferred** items (Brainfuck-on-LLVM's slot-model mismatch, the McCarthy-specialized
-VM and JIT) — each a real backend/interpreter change tackled deliberately once the
-straightforward columns are complete.
+(native ✅, **LLVM ✅ — all 6**, WASM/JVM/CLR ✅ for the 5 non-Brainfuck languages) —
+these are general over the shared IIR, so each cell is mostly a conformance test plus
+the occasional I/O/type fix; then the **second-wave** items — Brainfuck on WASM/JVM/CLR
+(now unblocked: the same byte-tape ops `iir-to-llvm` just gained, ported to each managed
+backend) and the McCarthy-specialized VM and JIT — each a real backend/interpreter
+change tackled deliberately. The LLVM column (the priority) is now **complete**.

@@ -1465,6 +1465,23 @@ pub fn compile_file_to_macos_executable(
 //    exit code so we always return 0 from main, which the LANG VM AOT
 //    chain requires (the entry-point's return value is the process
 //    exit code).
+// 5. Widen every narrow-integer `type_hint` (`u8`/`u32` — the BF frontend's
+//    cell and pointer widths) to `i64`, so the AOT/LLVM value model is a
+//    uniform machine word. Byte width survives **only at the tape boundary**:
+//    `load_byte` zero-extends the 8-bit cell to `i64` and `store_byte`
+//    truncates back, so cell wrap-around (`255 + 1 == 0`) is still correct.
+//    This is the LANG-MATRIX LM-L-Brainfuck fix: `iir-to-llvm` promotes any
+//    reassigned variable (BF's `ptr`/`v`/`c`/`k`) to an `alloca i64` stack
+//    slot, so a narrow `add i32`/`add i8` reading an `i64` slot-load would be
+//    a type error (`'%__ld' defined with type 'i64' but expected 'i8'`).
+//    Widening here makes every register `i64`, matching the slot model
+//    without touching `iir-to-llvm`'s (McCarthy-critical) slot allocator.
+//    We do it in this BF-specific pass rather than the frontend so the
+//    frontend's `u8`/`u32` hints still reach `vm-core`/`jit-core`, whose
+//    `specialise` step keys CIR opcode widths (`add_u8`/`add_u32`) off them.
+//    Native AOT is unaffected: its byte ops already ignore the hint (they
+//    zero-extend / truncate at the asm level) and its arithmetic runs in
+//    64-bit registers regardless.
 
 fn lower_brainfuck_for_aot(module: &mut IIRModule) {
     use interpreter_ir::instr::{IIRInstr, Operand};
@@ -1546,11 +1563,29 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 _ => new_instrs.push(instr),
             }
         }
+        // Step 5 — widen narrow-integer hints to i64 (see the function-level
+        // comment). `void`/`i64`/`u64`/`bool`/floats/lisp refs are left as-is;
+        // only the BF cell/pointer widths (`u8`/`u32`, plus their signed and
+        // 16-bit cousins for completeness) become `i64`.
+        for instr in &mut new_instrs {
+            if is_narrow_int_hint(&instr.type_hint) {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+
         func.instructions = new_instrs;
         // Reflect the step-4 return-type change so downstream type
         // propagation in twig-aot sees i64 instead of void.
         func.return_type = "i64".to_string();
     }
+}
+
+/// True when `hint` is a narrow (< 64-bit) machine integer type that the
+/// Brainfuck-for-AOT pass widens to `i64`. Used by [`lower_brainfuck_for_aot`]
+/// Step 5. We deliberately do **not** widen `u64`/`i64` (already a word),
+/// `void`, `bool`, floats, `any`, `symbol`, or any `ref<…>` lisp type.
+fn is_narrow_int_hint(hint: &str) -> bool {
+    matches!(hint, "i8" | "u8" | "i16" | "u16" | "i32" | "u32")
 }
 
 // ===========================================================================
@@ -1697,6 +1732,55 @@ mod tests {
         let last_two = &ops[ops.len()-2..];
         assert_eq!(last_two, &["const", "ret"],
                    "epilogue must be `const; ret`; got {last_two:?}");
+    }
+
+    /// Step 5: every narrow-integer `type_hint` the BF frontend emits (`u8` for
+    /// cells, `u32` for the pointer) must be widened to `i64` after lowering, so
+    /// the AOT/LLVM value model is a uniform machine word. Byte width survives
+    /// only inside `load_byte`/`store_byte` (the backend zero-extends/truncates).
+    /// `void` stays `void`. This is the LANG-MATRIX LM-L-Brainfuck fix that makes
+    /// `iir-to-llvm`'s i64-only slot model accept Brainfuck.
+    #[test]
+    fn brainfuck_lowering_widens_narrow_hints_to_i64() {
+        // A program that exercises cells (`+`/`-`), the pointer (`>`/`<`),
+        // a loop guard, and output (`.`).
+        let iir = compile_source_to_iir(
+            Language::Brainfuck, "+>+<[->+<].", "bf"
+        ).expect("brainfuck must compile");
+        let main = iir.functions.iter().find(|f| f.name == "main")
+            .expect("BF main must exist");
+
+        for instr in &main.instructions {
+            // No narrow integer hint may survive.
+            assert!(
+                !matches!(instr.type_hint.as_str(),
+                          "u8" | "u32" | "u16" | "i8" | "i16" | "i32"),
+                "instr {:?} kept a narrow hint {:?} — must be widened to i64",
+                instr.op, instr.type_hint,
+            );
+            // Every hint is now either i64 (registers + tape ops) or void
+            // (control flow / store_byte / putchar).
+            assert!(
+                instr.type_hint == "i64" || instr.type_hint == "void",
+                "instr {:?} has unexpected hint {:?}; expected i64 or void",
+                instr.op, instr.type_hint,
+            );
+        }
+        // The tape ops carry the widened i64 hint specifically.
+        let load_byte = main.instructions.iter().find(|i| i.op == "load_byte").unwrap();
+        assert_eq!(load_byte.type_hint, "i64", "load_byte hint widened to i64");
+    }
+
+    /// `is_narrow_int_hint` widens only sub-64-bit machine integers; it leaves
+    /// `i64`/`u64`, `void`, `bool`, floats, and lisp/`any` types alone.
+    #[test]
+    fn is_narrow_int_hint_classifies_widths() {
+        for narrow in ["i8", "u8", "i16", "u16", "i32", "u32"] {
+            assert!(is_narrow_int_hint(narrow), "{narrow} should widen");
+        }
+        for wide in ["i64", "u64", "void", "bool", "f32", "f64", "any", "symbol", "ref<LispyPair>"] {
+            assert!(!is_narrow_int_hint(wide), "{wide} must NOT widen");
+        }
     }
 
     #[test]
