@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.3.0] - 2026-06-11 — nonlinear single-unknown solving (ADJ constraints track C3)
+
+### Added
+
+- **`SolveOutcome::SolvedRoots { var, roots, from_constraints }`** — a single
+  unknown satisfying a **nonlinear** (degree 2–4) equality is now solved for its
+  real roots: `constrain x * x = 4` → `{-2, 2}`, `x² − 5x + 6 = 0` → `{2, 3}`,
+  `x² = 2` → `{±√2}` (numerically), cubic `{1, 2, 3}`.
+- The constraint's `lhs − rhs` is built into a univariate polynomial
+  (`poly_of`/`poly_add`/`poly_mul`), its degree-2/3/4 coefficients converted to
+  exact `Frac`, and solved via `cas_solve::{solve_quadratic,solve_cubic,
+  solve_quartic}`. Roots are evaluated to f64 (`eval_ir_root` handles rational
+  and `Sqrt` irrational forms); **complex roots are dropped** (real roots only),
+  and an all-complex equation (`x² + 1 = 0`) → `Unsupported`.
+- Scope: **one** unknown, degree ≤ 4. Multi-unknown nonlinear (`x*y`) and
+  degree > 4 stay `Unsupported`/`NoUniqueSolution` — never a wrong answer.
+  Degree ≤ 1 still goes through the exact linear path.
+
 ## [0.2.0] - 2026-06-11 — observed-value substitution (ADJ constraints track B3)
 
 ### Changed
