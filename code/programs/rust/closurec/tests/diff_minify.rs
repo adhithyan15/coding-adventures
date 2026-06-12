@@ -96,6 +96,17 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
+    // gap-075 (CLOC14.36): prefix-unary SYMBOL operator operand
+    // paren elision — `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` → `~a`,
+    // and the same-sign case `-(-a)` → `- -a` (a separating space
+    // prevents the `--` decrement glue). Same simple-reference
+    // operand machinery as gap-070/071 but anchored on the
+    // PUNCTUATION operators `-`/`+`/`!`/`~` rather than a keyword.
+    ("unary_minus_paren", "gap-075: prefix-unary symbol operand paren elision"),
+    // gap-076 (CLOC14.36): `with`-body single-statement block
+    // flatten — `with(o){a()}` → `with(o)a();`. The `with`-body
+    // sibling of gap-074 (for/while loop-body flatten).
+    ("with_body_flatten", "gap-076: with-body single-statement block flatten"),
     // gap-074 RESOLVED in CLOC12.81 — a loop body that is a
     // single-statement block (`for(;;){continue l}` →
     // `for(;;)continue l;`) now flattens; `minify_loop_body_flatten`
