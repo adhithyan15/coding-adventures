@@ -85,6 +85,31 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
+    // gap-090 (CLOC14.40) — CORRECTNESS: a string with a backslash
+    // escape that closurec does NOT explicitly handle (`\u{…}` code-
+    // point, `\xNN` hex, `\0` null, legacy octal) has its backslash
+    // DROPPED, mangling the string value (`"\x41"` -> `"x41"` instead
+    // of `"A"`; `"\u{1F600}"` -> `"u{1F600}"`). Upstream decodes and
+    // re-escapes (`\x41` -> `A`, `\u{1F600}` -> `😀`,
+    // `\0` -> `\x00`). Lexer/emitter string-escape handling. HIGH
+    // PRIORITY — corrupts output, not just byte-identity.
+    ("str_codepoint_esc", "gap-090: \\u{...} code-point escape mangled"),
+    ("str_hex_esc",       "gap-090: \\xNN hex escape mangled"),
+    ("str_null_esc",      "gap-090: \\0 null escape mangled"),
+    // gap-091 (CLOC14.40): a BigInt radix literal is not converted to
+    // decimal — `0xFFn` -> `255n`, `0o17n` -> `15n`, `0b101n` -> `5n`.
+    // gap-038/040 decimalise regular hex/oct/bin; gap-048 strips the
+    // BigInt `_` separator; the radix→decimal BigInt conversion is the
+    // remaining piece (needs bigint arithmetic; u128 covers the common
+    // range).
+    ("bigint_hex", "gap-091: BigInt hex radix -> decimal"),
+    ("bigint_bin", "gap-091: BigInt binary radix -> decimal"),
+    // gap-092 (CLOC14.40): a `/` DIVISION operator in `a/b/c` is mis-
+    // lexed as a REGEX literal `/b/`, producing spurious separating
+    // spaces (`a /b/ c`). Still valid JS (same grouping) but not byte-
+    // identical. Regex-vs-division disambiguation is a lexer-level
+    // gap (needs parser context to know `/` after a value is division).
+    ("regex_div", "gap-092: division mis-lexed as regex (spacing)"),
     // gap-044: JavaScript lexer does not yet support
     // template literal SUBSTITUTIONS (`${expr}` inside
     // a backtick-delimited string). Lexer-level gap.
