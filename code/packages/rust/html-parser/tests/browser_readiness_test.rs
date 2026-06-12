@@ -26,10 +26,11 @@ use coding_adventures_html_parser::{
     BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
     BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
     BrowserScriptExecutionDescriptor, BrowserScriptStorageAccessDescriptor,
-    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
-    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
-    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
-    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
+    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
+    BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
+    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -91,6 +92,8 @@ struct ExpectedBrowserDocument {
     script_execution_descriptors: Option<Vec<ExpectedScriptExecutionDescriptor>>,
     #[serde(default)]
     script_storage_access_descriptors: Option<Vec<ExpectedScriptStorageAccessDescriptor>>,
+    #[serde(default)]
+    script_worker_messaging_descriptors: Option<Vec<ExpectedScriptWorkerMessagingDescriptor>>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
     #[serde(default)]
@@ -1439,6 +1442,50 @@ struct ExpectedScriptStorageAccessDescriptor {
     storage_blocked: bool,
     #[serde(default)]
     storage_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedScriptWorkerMessagingDescriptor {
+    script_kind: String,
+    messaging_kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    execution_kind: String,
+    #[serde(default)]
+    has_text: bool,
+    #[serde(default)]
+    text_length: usize,
+    #[serde(default)]
+    messaging_targets: Vec<String>,
+    #[serde(default)]
+    messaging_target_count: usize,
+    #[serde(default)]
+    creates_worker: bool,
+    #[serde(default)]
+    creates_shared_worker: bool,
+    #[serde(default)]
+    registers_service_worker: bool,
+    #[serde(default)]
+    uses_post_message: bool,
+    #[serde(default)]
+    listens_message_events: bool,
+    #[serde(default)]
+    uses_message_channel: bool,
+    #[serde(default)]
+    uses_broadcast_channel: bool,
+    #[serde(default)]
+    uses_import_scripts: bool,
+    #[serde(default)]
+    module_worker_hint: bool,
+    #[serde(default)]
+    messaging_blocked: bool,
+    #[serde(default)]
+    messaging_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3932,6 +3979,30 @@ fn browser_script_storage_access_descriptors_track_flat_storage_api_hints() {
 }
 
 #[test]
+fn browser_script_worker_messaging_descriptors_track_flat_worker_and_channel_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "script-worker-messaging-page")
+        .expect("script worker messaging fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("script worker messaging fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.scripts, expected.scripts,
+        "scripts should preserve worker-relevant inline text and module state",
+    );
+    assert_eq!(
+        actual.script_worker_messaging_descriptors, expected.script_worker_messaging_descriptors,
+        "script worker messaging descriptors should preserve worker targets, channels, and blockers",
+    );
+}
+
+#[test]
 fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5870,6 +5941,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_script_storage_access_descriptors(&scripts));
+        let script_worker_messaging_descriptors = self
+            .script_worker_messaging_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedScriptWorkerMessagingDescriptor::into_browser_script_worker_messaging_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_script_worker_messaging_descriptors(&scripts));
         let stylesheet_planning_descriptors = self
             .stylesheet_planning_descriptors
             .map(|descriptors| {
@@ -6164,6 +6246,7 @@ impl ExpectedBrowserDocument {
             scripts,
             script_execution_descriptors,
             script_storage_access_descriptors,
+            script_worker_messaging_descriptors,
             stylesheets,
             stylesheet_planning_descriptors,
             document_policy_descriptors: self
@@ -10780,6 +10863,174 @@ fn expected_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> 
     reasons
 }
 
+fn expected_script_worker_messaging_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptWorkerMessagingDescriptor> {
+    scripts
+        .iter()
+        .filter_map(expected_script_worker_messaging_descriptor)
+        .collect()
+}
+
+fn expected_script_worker_messaging_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptWorkerMessagingDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let creates_shared_worker = normalized_text.contains("new sharedworker");
+    let creates_worker =
+        normalized_text.contains("new worker") && !normalized_text.contains("new sharedworker");
+    let registers_service_worker = normalized_text.contains("serviceworker.register")
+        || normalized_text.contains("service-worker.register")
+        || normalized_text.contains("navigator.serviceworker.register");
+    let uses_post_message =
+        normalized_text.contains("postmessage(") || normalized_text.contains(".postmessage(");
+    let listens_message_events = normalized_text.contains("addeventlistener('message'")
+        || normalized_text.contains("addeventlistener(\"message\"")
+        || normalized_text.contains("onmessage");
+    let uses_message_channel = normalized_text.contains("messagechannel");
+    let uses_broadcast_channel = normalized_text.contains("broadcastchannel");
+    let uses_import_scripts = normalized_text.contains("importscripts(");
+    let module_worker_hint = normalized_text.contains("type:'module'")
+        || normalized_text.contains("type: 'module'")
+        || normalized_text.contains("type:\"module\"")
+        || normalized_text.contains("type: \"module\"");
+    let messaging_targets = expected_script_worker_messaging_targets(
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+    );
+    if messaging_targets.is_empty() {
+        return None;
+    }
+
+    let messaging_block_reasons = expected_script_worker_messaging_block_reasons(script);
+    Some(BrowserScriptWorkerMessagingDescriptor {
+        script_kind: script.script_kind.clone(),
+        messaging_kind: expected_script_worker_messaging_kind(
+            creates_worker,
+            creates_shared_worker,
+            registers_service_worker,
+            uses_post_message,
+            listens_message_events,
+            uses_message_channel,
+            uses_broadcast_channel,
+            uses_import_scripts,
+            module_worker_hint,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        messaging_target_count: messaging_targets.len(),
+        messaging_targets,
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+        messaging_blocked: !messaging_block_reasons.is_empty(),
+        messaging_block_reasons,
+    })
+}
+
+fn expected_script_worker_messaging_targets(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if creates_worker {
+        targets.push("Worker".to_string());
+    }
+    if creates_shared_worker {
+        targets.push("SharedWorker".to_string());
+    }
+    if registers_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_post_message {
+        targets.push("postMessage".to_string());
+    }
+    if listens_message_events {
+        targets.push("message-event".to_string());
+    }
+    if uses_message_channel {
+        targets.push("MessageChannel".to_string());
+    }
+    if uses_broadcast_channel {
+        targets.push("BroadcastChannel".to_string());
+    }
+    if uses_import_scripts {
+        targets.push("importScripts".to_string());
+    }
+    if module_worker_hint {
+        targets.push("module-worker".to_string());
+    }
+    targets
+}
+
+fn expected_script_worker_messaging_kind(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> String {
+    if registers_service_worker {
+        "service-worker-registration".to_string()
+    } else if creates_shared_worker {
+        "shared-worker".to_string()
+    } else if creates_worker && module_worker_hint {
+        "module-worker".to_string()
+    } else if creates_worker || uses_import_scripts {
+        "dedicated-worker".to_string()
+    } else if uses_message_channel || uses_broadcast_channel {
+        "channel-messaging".to_string()
+    } else if uses_post_message || listens_message_events {
+        "post-message".to_string()
+    } else {
+        "worker-messaging-metadata".to_string()
+    }
+}
+
+fn expected_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
 fn expected_stylesheet_planning_descriptors(
     stylesheets: &[BrowserStylesheet],
 ) -> Vec<BrowserStylesheetPlanningDescriptor> {
@@ -10957,6 +11208,36 @@ impl ExpectedScriptStorageAccessDescriptor {
             listens_storage_events: self.listens_storage_events,
             storage_blocked: self.storage_blocked,
             storage_block_reasons: self.storage_block_reasons,
+        }
+    }
+}
+
+impl ExpectedScriptWorkerMessagingDescriptor {
+    fn into_browser_script_worker_messaging_descriptor(
+        self,
+    ) -> BrowserScriptWorkerMessagingDescriptor {
+        BrowserScriptWorkerMessagingDescriptor {
+            script_kind: self.script_kind,
+            messaging_kind: self.messaging_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            execution_kind: self.execution_kind,
+            has_text: self.has_text,
+            text_length: self.text_length,
+            messaging_targets: self.messaging_targets,
+            messaging_target_count: self.messaging_target_count,
+            creates_worker: self.creates_worker,
+            creates_shared_worker: self.creates_shared_worker,
+            registers_service_worker: self.registers_service_worker,
+            uses_post_message: self.uses_post_message,
+            listens_message_events: self.listens_message_events,
+            uses_message_channel: self.uses_message_channel,
+            uses_broadcast_channel: self.uses_broadcast_channel,
+            uses_import_scripts: self.uses_import_scripts,
+            module_worker_hint: self.module_worker_hint,
+            messaging_blocked: self.messaging_blocked,
+            messaging_block_reasons: self.messaging_block_reasons,
         }
     }
 }

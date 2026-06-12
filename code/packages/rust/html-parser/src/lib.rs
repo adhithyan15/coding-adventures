@@ -838,6 +838,7 @@ pub struct BrowserDocument {
     pub scripts: Vec<BrowserScript>,
     pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
     pub script_storage_access_descriptors: Vec<BrowserScriptStorageAccessDescriptor>,
+    pub script_worker_messaging_descriptors: Vec<BrowserScriptWorkerMessagingDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
@@ -1120,6 +1121,31 @@ pub struct BrowserScriptStorageAccessDescriptor {
     pub listens_storage_events: bool,
     pub storage_blocked: bool,
     pub storage_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptWorkerMessagingDescriptor {
+    pub script_kind: String,
+    pub messaging_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub messaging_targets: Vec<String>,
+    pub messaging_target_count: usize,
+    pub creates_worker: bool,
+    pub creates_shared_worker: bool,
+    pub registers_service_worker: bool,
+    pub uses_post_message: bool,
+    pub listens_message_events: bool,
+    pub uses_message_channel: bool,
+    pub uses_broadcast_channel: bool,
+    pub uses_import_scripts: bool,
+    pub module_worker_hint: bool,
+    pub messaging_blocked: bool,
+    pub messaging_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3462,6 +3488,8 @@ impl BrowserDocument {
             browser_script_execution_descriptors(&summary.scripts);
         summary.script_storage_access_descriptors =
             browser_script_storage_access_descriptors(&summary.scripts);
+        summary.script_worker_messaging_descriptors =
+            browser_script_worker_messaging_descriptors(&summary.scripts);
         summary.stylesheet_planning_descriptors =
             browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
@@ -11425,6 +11453,174 @@ fn browser_script_storage_access_kind(
 }
 
 fn browser_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_worker_messaging_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptWorkerMessagingDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_worker_messaging_descriptor)
+        .collect()
+}
+
+fn browser_script_worker_messaging_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptWorkerMessagingDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let creates_shared_worker = normalized_text.contains("new sharedworker");
+    let creates_worker =
+        normalized_text.contains("new worker") && !normalized_text.contains("new sharedworker");
+    let registers_service_worker = normalized_text.contains("serviceworker.register")
+        || normalized_text.contains("service-worker.register")
+        || normalized_text.contains("navigator.serviceworker.register");
+    let uses_post_message =
+        normalized_text.contains("postmessage(") || normalized_text.contains(".postmessage(");
+    let listens_message_events = normalized_text.contains("addeventlistener('message'")
+        || normalized_text.contains("addeventlistener(\"message\"")
+        || normalized_text.contains("onmessage");
+    let uses_message_channel = normalized_text.contains("messagechannel");
+    let uses_broadcast_channel = normalized_text.contains("broadcastchannel");
+    let uses_import_scripts = normalized_text.contains("importscripts(");
+    let module_worker_hint = normalized_text.contains("type:'module'")
+        || normalized_text.contains("type: 'module'")
+        || normalized_text.contains("type:\"module\"")
+        || normalized_text.contains("type: \"module\"");
+    let messaging_targets = browser_script_worker_messaging_targets(
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+    );
+    if messaging_targets.is_empty() {
+        return None;
+    }
+
+    let messaging_block_reasons = browser_script_worker_messaging_block_reasons(script);
+    Some(BrowserScriptWorkerMessagingDescriptor {
+        script_kind: script.script_kind.clone(),
+        messaging_kind: browser_script_worker_messaging_kind(
+            creates_worker,
+            creates_shared_worker,
+            registers_service_worker,
+            uses_post_message,
+            listens_message_events,
+            uses_message_channel,
+            uses_broadcast_channel,
+            uses_import_scripts,
+            module_worker_hint,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        messaging_target_count: messaging_targets.len(),
+        messaging_targets,
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+        messaging_blocked: !messaging_block_reasons.is_empty(),
+        messaging_block_reasons,
+    })
+}
+
+fn browser_script_worker_messaging_targets(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if creates_worker {
+        targets.push("Worker".to_string());
+    }
+    if creates_shared_worker {
+        targets.push("SharedWorker".to_string());
+    }
+    if registers_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_post_message {
+        targets.push("postMessage".to_string());
+    }
+    if listens_message_events {
+        targets.push("message-event".to_string());
+    }
+    if uses_message_channel {
+        targets.push("MessageChannel".to_string());
+    }
+    if uses_broadcast_channel {
+        targets.push("BroadcastChannel".to_string());
+    }
+    if uses_import_scripts {
+        targets.push("importScripts".to_string());
+    }
+    if module_worker_hint {
+        targets.push("module-worker".to_string());
+    }
+    targets
+}
+
+fn browser_script_worker_messaging_kind(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> String {
+    if registers_service_worker {
+        "service-worker-registration".to_string()
+    } else if creates_shared_worker {
+        "shared-worker".to_string()
+    } else if creates_worker && module_worker_hint {
+        "module-worker".to_string()
+    } else if creates_worker || uses_import_scripts {
+        "dedicated-worker".to_string()
+    } else if uses_message_channel || uses_broadcast_channel {
+        "channel-messaging".to_string()
+    } else if uses_post_message || listens_message_events {
+        "post-message".to_string()
+    } else {
+        "worker-messaging-metadata".to_string()
+    }
+}
+
+fn browser_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec<String> {
     let mut reasons = Vec::new();
     if script.script_kind == "data" {
         reasons.push("non-executable-script-type".to_string());
@@ -26391,6 +26587,74 @@ mod tests {
         assert!(legacy.uses_local_storage);
         assert!(legacy.storage_blocked);
         assert_eq!(legacy.storage_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_worker_messaging_descriptors_track_workers_and_channels() {
+        let summary = parse_browser_document(
+            "<script>\
+             const worker = new Worker('/worker.js', { type: 'module' });\
+             worker.postMessage({ready:true});\
+             window.addEventListener('message', receive);\
+             const channel = new MessageChannel();\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             const updates = new BroadcastChannel('updates');\
+             </script>\
+             <script nomodule>\
+             const shared = new SharedWorker('/shared.js');\
+             shared.port.postMessage('legacy');\
+             </script>",
+        )
+        .expect("worker messaging descriptor document should parse");
+
+        let descriptors = &summary.script_worker_messaging_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let worker = &descriptors[0];
+        assert_eq!(worker.script_kind, "classic");
+        assert_eq!(worker.execution_kind, "inline");
+        assert_eq!(worker.messaging_kind, "module-worker");
+        assert_eq!(
+            worker.messaging_targets,
+            vec![
+                "Worker",
+                "postMessage",
+                "message-event",
+                "MessageChannel",
+                "module-worker"
+            ]
+        );
+        assert_eq!(worker.messaging_target_count, 5);
+        assert!(worker.creates_worker);
+        assert!(worker.uses_post_message);
+        assert!(worker.listens_message_events);
+        assert!(worker.uses_message_channel);
+        assert!(worker.module_worker_hint);
+        assert!(!worker.messaging_blocked);
+
+        let service = &descriptors[1];
+        assert_eq!(service.script_kind, "module");
+        assert_eq!(service.type_hint.as_deref(), Some("module"));
+        assert_eq!(service.messaging_kind, "service-worker-registration");
+        assert_eq!(
+            service.messaging_targets,
+            vec!["serviceWorker", "BroadcastChannel"]
+        );
+        assert!(service.registers_service_worker);
+        assert!(service.uses_broadcast_channel);
+        assert_eq!(service.messaging_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.messaging_kind, "shared-worker");
+        assert_eq!(
+            legacy.messaging_targets,
+            vec!["SharedWorker", "postMessage"]
+        );
+        assert!(legacy.creates_shared_worker);
+        assert!(legacy.messaging_blocked);
+        assert_eq!(legacy.messaging_block_reasons, vec!["nomodule-fallback"]);
     }
 
     #[test]
