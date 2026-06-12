@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `DigitalEventStream`, `DigitalLogicLevels`, `DigitalThresholds`, digital
+  stream PWL voltage source conversion, fixed/adaptive digital transient bridge
+  runners, named-corner bridge wrappers, stable event/schedule tables, and
+  deterministic VCD output for native web mixed-signal SPICE/VM fixtures.
 - Add `normalizeModelCard`, typed model-card builders, and
   `deviceModelAuditFixtures` for cross-language diode, BJT, JFET, and Level-1
   MOS `.model` alias compatibility fixtures.

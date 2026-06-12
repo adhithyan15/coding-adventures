@@ -60,6 +60,7 @@ import re
 import statistics
 from collections.abc import Callable
 from dataclasses import dataclass, field, replace
+from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
@@ -79,6 +80,7 @@ from spice_engine.elements import (
     Inductor,
     Mosfet,
     MutualInductor,
+    PwlWaveform,
     Resistor,
     SubcircuitDefinition,
     TransmissionLine,
@@ -535,6 +537,114 @@ class CornerAdaptiveTransientResult:
     """Multi-corner adaptive transient waveform result."""
 
     points: list[CornerAdaptiveTransientPoint]
+
+
+DigitalState = Literal["low", "high"]
+
+
+@dataclass(frozen=True)
+class DigitalEvent:
+    """One hardware-VM-facing digital value change."""
+
+    time_seconds: float
+    state: DigitalState
+
+
+@dataclass(frozen=True)
+class DigitalEventStream:
+    """Named digital event stream used at the SPICE/VM boundary."""
+
+    signal_name: str
+    events: list[DigitalEvent]
+
+
+@dataclass(frozen=True)
+class DigitalTransientBridgeResult:
+    """Transient result plus thresholded output streams."""
+
+    points: list[TransientPoint]
+    output_streams: list[DigitalEventStream]
+
+
+@dataclass(frozen=True)
+class CornerDigitalTransientBridgePoint:
+    """Digital bridge result for one named corner."""
+
+    corner_name: str
+    result: DigitalTransientBridgeResult
+
+
+@dataclass(frozen=True)
+class CornerDigitalTransientBridgeResult:
+    """Multi-corner digital bridge result."""
+
+    points: list[CornerDigitalTransientBridgePoint]
+
+
+@dataclass(frozen=True)
+class AdaptiveDigitalTransientBridgeResult:
+    """Adaptive transient result plus thresholded output streams."""
+
+    result: TransientResult
+    output_streams: list[DigitalEventStream]
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveDigitalTransientBridgePoint:
+    """Adaptive digital bridge result for one named corner."""
+
+    corner_name: str
+    result: AdaptiveDigitalTransientBridgeResult
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveDigitalTransientBridgeResult:
+    """Multi-corner adaptive digital bridge result."""
+
+    points: list[CornerAdaptiveDigitalTransientBridgePoint]
+
+
+@dataclass(frozen=True)
+class DigitalBridgeSchedule:
+    """Hardware VM breakpoint schedule derived from digital event streams."""
+
+    stop_time: float
+    breakpoints: list[float]
+
+
+@dataclass(frozen=True)
+class DigitalLogicLevels:
+    """Analog voltages used when driving digital events into SPICE."""
+
+    low_voltage: float
+    high_voltage: float
+    transition_seconds: float
+
+    @classmethod
+    def cmos_1v8(cls, transition_seconds: float) -> DigitalLogicLevels:
+        return cls(0.0, 1.8, transition_seconds)
+
+    def voltage_for(self, state: DigitalState) -> float:
+        return self.low_voltage if _normalize_digital_state(state) == "low" else self.high_voltage
+
+
+@dataclass(frozen=True)
+class DigitalThresholds:
+    """Analog thresholds used when sampling SPICE probes back to logic."""
+
+    low_max_voltage: float
+    high_min_voltage: float
+
+    @classmethod
+    def cmos_1v8(cls) -> DigitalThresholds:
+        return cls(0.6, 1.2)
+
+    def classify(self, voltage: float) -> DigitalState | None:
+        if voltage <= self.low_max_voltage:
+            return "low"
+        if voltage >= self.high_min_voltage:
+            return "high"
+        return None
 
 
 @dataclass(frozen=True)
@@ -5329,6 +5439,629 @@ def transient_adaptive_corners(
             for corner in corners
         ]
     )
+
+
+_DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18
+
+
+def digital_events_to_pwl_waveform(
+    events: list[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> PwlWaveform:
+    """Convert hardware-VM digital events into a SPICE PWL waveform."""
+    _validate_digital_logic_levels(levels, "digital_events")
+    if not events:
+        raise ValueError("digital_events: at least one digital event is required")
+
+    previous_time = -math.inf
+    for event in events:
+        _validate_digital_event_time(event.time_seconds, previous_time, "digital_events")
+        _normalize_digital_state(event.state)
+        previous_time = event.time_seconds
+
+    points: list[tuple[float, float]] = []
+    current_state = _normalize_digital_state(events[0].state)
+    points.append((events[0].time_seconds, levels.voltage_for(current_state)))
+
+    for event in events[1:]:
+        event_state = _normalize_digital_state(event.state)
+        if event_state == current_state:
+            continue
+        start_time = event.time_seconds
+        end_time = start_time + levels.transition_seconds
+        last_time = points[-1][0]
+        if start_time <= last_time:
+            raise ValueError("digital_events: digital transition overlaps the previous transition")
+        points.append((start_time, levels.voltage_for(current_state)))
+        points.append((end_time, levels.voltage_for(event_state)))
+        current_state = event_state
+
+    if len(points) == 1:
+        points.append((points[0][0] + levels.transition_seconds, levels.voltage_for(current_state)))
+
+    return PwlWaveform(tuple(points))
+
+
+def digital_events_to_voltage_source(
+    name: str,
+    positive: str,
+    negative: str,
+    events: list[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> VoltageSource:
+    """Create a voltage source that drives a digital event stream into SPICE."""
+    if not events:
+        raise ValueError("digital_events: at least one digital event is required")
+    initial_voltage = levels.voltage_for(events[0].state)
+    return VoltageSource(
+        name,
+        positive,
+        negative,
+        initial_voltage,
+        digital_events_to_pwl_waveform(events, levels),
+    )
+
+
+def digital_event_streams_to_voltage_sources(
+    streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+) -> list[VoltageSource]:
+    """Convert named digital event streams into SPICE voltage sources."""
+    negative_node = negative.strip()
+    if not negative_node:
+        raise ValueError("digital_event_streams: digital event stream negative node must not be empty")
+    seen_signal_names: set[str] = set()
+    sources: list[VoltageSource] = []
+    for stream in streams:
+        signal_name = _validate_digital_event_stream_name(stream, seen_signal_names)
+        sources.append(
+            digital_events_to_voltage_source(
+                f"V{signal_name}",
+                signal_name,
+                negative_node,
+                stream.events,
+                levels,
+            )
+        )
+    return sources
+
+
+def digital_event_streams_to_bridge_schedule(
+    streams: list[DigitalEventStream],
+    levels: DigitalLogicLevels,
+) -> DigitalBridgeSchedule:
+    """Derive deterministic VM breakpoints from digital input streams."""
+    _validate_digital_logic_levels(levels, "digital_bridge_schedule")
+    seen_signal_names: set[str] = set()
+    breakpoints: list[float] = []
+    stop_time = 0.0
+    for stream in streams:
+        _validate_digital_event_stream_name(stream, seen_signal_names)
+        digital_events_to_pwl_waveform(stream.events, levels)
+        current_state = _normalize_digital_state(stream.events[0].state)
+        for index, event in enumerate(stream.events):
+            event_state = _normalize_digital_state(event.state)
+            breakpoints.append(event.time_seconds)
+            stop_time = max(stop_time, event.time_seconds)
+            if index > 0 and event_state != current_state:
+                transition_end = event.time_seconds + levels.transition_seconds
+                breakpoints.append(transition_end)
+                stop_time = max(stop_time, transition_end)
+                current_state = event_state
+
+    breakpoints.sort()
+    deduped: list[float] = []
+    for breakpoint in breakpoints:
+        if not deduped or abs(breakpoint - deduped[-1]) > _DIGITAL_BRIDGE_TIME_EPSILON:
+            deduped.append(breakpoint)
+    return DigitalBridgeSchedule(stop_time=stop_time, breakpoints=deduped)
+
+
+def transient_with_digital_event_streams(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> DigitalTransientBridgeResult:
+    """Run transient analysis with digital VM streams driving analog sources."""
+    bridged = _circuit_with_extra_voltage_sources(
+        circuit,
+        digital_event_streams_to_voltage_sources(input_streams, negative, levels),
+    )
+    result = transient(
+        bridged,
+        t_stop=t_stop,
+        t_step=t_step,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    return DigitalTransientBridgeResult(
+        points=result.points,
+        output_streams=sample_transient_probes_as_digital_event_streams(
+            result.points,
+            output_probes,
+            thresholds,
+        ),
+    )
+
+
+def transient_with_digital_event_streams_corners(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerDigitalTransientBridgeResult:
+    """Run the digital bridge across named transient corners."""
+    return CornerDigitalTransientBridgeResult(
+        points=[
+            CornerDigitalTransientBridgePoint(
+                corner_name=corner.name,
+                result=transient_with_digital_event_streams(
+                    _circuit_with_corner(circuit, corner),
+                    input_streams,
+                    negative,
+                    levels,
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    output_probes=output_probes,
+                    thresholds=thresholds,
+                    method=method,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
+
+
+def transient_adaptive_with_digital_event_streams(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> AdaptiveDigitalTransientBridgeResult:
+    """Run adaptive transient analysis with digital VM streams driving SPICE."""
+    bridged = _circuit_with_extra_voltage_sources(
+        circuit,
+        digital_event_streams_to_voltage_sources(input_streams, negative, levels),
+    )
+    result = transient(
+        bridged,
+        t_stop=t_stop,
+        t_step=t_step,
+        method=method,
+        adaptive=True,
+        tol_lte=tol_lte,
+        min_step=min_step,
+        max_step=max_step,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    return AdaptiveDigitalTransientBridgeResult(
+        result=result,
+        output_streams=sample_transient_probes_as_digital_event_streams(
+            result.points,
+            output_probes,
+            thresholds,
+        ),
+    )
+
+
+def transient_adaptive_with_digital_event_streams_corners(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerAdaptiveDigitalTransientBridgeResult:
+    """Run the adaptive digital bridge across named transient corners."""
+    return CornerAdaptiveDigitalTransientBridgeResult(
+        points=[
+            CornerAdaptiveDigitalTransientBridgePoint(
+                corner_name=corner.name,
+                result=transient_adaptive_with_digital_event_streams(
+                    _circuit_with_corner(circuit, corner),
+                    input_streams,
+                    negative,
+                    levels,
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    output_probes=output_probes,
+                    thresholds=thresholds,
+                    method=method,
+                    tol_lte=tol_lte,
+                    min_step=min_step,
+                    max_step=max_step,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
+
+
+def sample_transient_probe_as_digital_events(
+    points: list[TransientPoint],
+    probe: str,
+    thresholds: DigitalThresholds,
+) -> list[DigitalEvent]:
+    """Threshold a transient probe into a stable digital event stream."""
+    _validate_digital_thresholds(thresholds)
+    events: list[DigitalEvent] = []
+    current_state: DigitalState | None = None
+    for point in points:
+        if point.time <= _DIGITAL_BRIDGE_TIME_EPSILON:
+            continue
+        voltage = _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            "sample_transient_probe_as_digital_events",
+        )
+        state = thresholds.classify(voltage)
+        if state is None:
+            continue
+        if current_state != state:
+            events.append(DigitalEvent(point.time, state))
+            current_state = state
+    return events
+
+
+def sample_transient_probes_as_digital_event_streams(
+    points: list[TransientPoint],
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+) -> list[DigitalEventStream]:
+    """Threshold multiple transient probes into named digital streams."""
+    seen_signal_names: set[str] = set()
+    streams: list[DigitalEventStream] = []
+    for signal_name, probe in output_probes:
+        trimmed = signal_name.strip()
+        if not trimmed:
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        if trimmed in seen_signal_names:
+            raise ValueError(f"{trimmed}: digital event stream signal names must be unique")
+        seen_signal_names.add(trimmed)
+        streams.append(
+            DigitalEventStream(
+                trimmed,
+                sample_transient_probe_as_digital_events(points, probe, thresholds),
+            )
+        )
+    return streams
+
+
+def format_digital_event_table(events: list[DigitalEvent]) -> str:
+    """Format digital events as stable tab-separated text."""
+    rows = ["Index\tTime\tState"]
+    previous_time = -math.inf
+    for index, event in enumerate(events):
+        _validate_digital_event_time(event.time_seconds, previous_time, "digital_event")
+        previous_time = event.time_seconds
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(event.time_seconds),
+                    _normalize_digital_state(event.state),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_event_stream_table(streams: list[DigitalEventStream]) -> str:
+    """Format named digital streams as stable tab-separated text."""
+    rows = ["Signal\tIndex\tTime\tState"]
+    for stream in streams:
+        if not stream.signal_name.strip():
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        previous_time = -math.inf
+        for index, event in enumerate(stream.events):
+            _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+            previous_time = event.time_seconds
+            rows.append(
+                "\t".join(
+                    [
+                        stream.signal_name,
+                        str(index),
+                        _format_table_number(event.time_seconds),
+                        _normalize_digital_state(event.state),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_digital_event_stream_table(
+    result: CornerDigitalTransientBridgeResult,
+) -> str:
+    """Format named-corner digital bridge streams as stable text."""
+    rows = ["Corner\tSignal\tIndex\tTime\tState"]
+    for corner in result.points:
+        for stream in corner.result.output_streams:
+            if not stream.signal_name.strip():
+                raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+            previous_time = -math.inf
+            for index, event in enumerate(stream.events):
+                _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+                previous_time = event.time_seconds
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            stream.signal_name,
+                            str(index),
+                            _format_table_number(event.time_seconds),
+                            _normalize_digital_state(event.state),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_adaptive_digital_event_stream_table(
+    result: AdaptiveDigitalTransientBridgeResult,
+) -> str:
+    """Format adaptive digital bridge streams as stable text."""
+    rows = ["Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState"]
+    for stream in result.output_streams:
+        if not stream.signal_name.strip():
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        previous_time = -math.inf
+        for index, event in enumerate(stream.events):
+            _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+            previous_time = event.time_seconds
+            rows.append(
+                "\t".join(
+                    [
+                        result.result.method,
+                        str(result.result.steps_rejected),
+                        str(result.result.converged).lower(),
+                        stream.signal_name,
+                        str(index),
+                        _format_table_number(event.time_seconds),
+                        _normalize_digital_state(event.state),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_adaptive_digital_event_stream_table(
+    result: CornerAdaptiveDigitalTransientBridgeResult,
+) -> str:
+    """Format named-corner adaptive digital bridge streams as stable text."""
+    rows = ["Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState"]
+    for corner in result.points:
+        for stream in corner.result.output_streams:
+            if not stream.signal_name.strip():
+                raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+            previous_time = -math.inf
+            for index, event in enumerate(stream.events):
+                _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+                previous_time = event.time_seconds
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            corner.result.result.method,
+                            str(corner.result.result.steps_rejected),
+                            str(corner.result.result.converged).lower(),
+                            stream.signal_name,
+                            str(index),
+                            _format_table_number(event.time_seconds),
+                            _normalize_digital_state(event.state),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_bridge_schedule_table(schedule: DigitalBridgeSchedule) -> str:
+    """Format a hardware-VM bridge schedule as stable text."""
+    if not math.isfinite(schedule.stop_time) or schedule.stop_time < 0.0:
+        raise ValueError("digital_bridge_schedule: digital bridge stop time must be finite and non-negative")
+    rows = ["Index\tTime\tStopTime"]
+    previous_time = -math.inf
+    for index, time_seconds in enumerate(schedule.breakpoints):
+        _validate_digital_event_time(time_seconds, previous_time, "digital_bridge_schedule")
+        if time_seconds > schedule.stop_time:
+            raise ValueError("digital_bridge_schedule: digital bridge breakpoint must not exceed stop time")
+        previous_time = time_seconds
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(time_seconds),
+                    _format_table_number(schedule.stop_time),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_event_stream_vcd(
+    streams: list[DigitalEventStream],
+    *,
+    module_name: str = "spice_bridge",
+    timescale: str = "1ps",
+) -> str:
+    """Format digital streams as deterministic VCD for VM/probe correlation."""
+    if timescale != "1ps":
+        raise ValueError("digital_event_stream_vcd: only 1ps timescale is supported")
+    if not module_name.strip():
+        raise ValueError("digital_event_stream_vcd: module name must not be empty")
+
+    seen_signal_names: set[str] = set()
+    signal_ids: dict[str, str] = {}
+    for index, stream in enumerate(streams):
+        signal_name = _validate_digital_event_stream_name(stream, seen_signal_names)
+        signal_ids[signal_name] = _vcd_identifier(index)
+        previous_time = -math.inf
+        for event in stream.events:
+            _validate_digital_event_time(event.time_seconds, previous_time, signal_name)
+            _normalize_digital_state(event.state)
+            previous_time = event.time_seconds
+
+    rows = [
+        "$version coding-adventures spice-engine mixed-signal bridge $end",
+        f"$timescale {timescale} $end",
+        f"$scope module {module_name.strip()} $end",
+    ]
+    for stream in streams:
+        signal_name = stream.signal_name.strip()
+        rows.append(f"$var wire 1 {signal_ids[signal_name]} {signal_name} $end")
+    rows.extend(["$upscope $end", "$enddefinitions $end", "$dumpvars"])
+    for stream in streams:
+        if stream.events:
+            rows.append(f"{_vcd_state_value(stream.events[0].state)}{signal_ids[stream.signal_name.strip()]}")
+    rows.append("$end")
+
+    events_by_tick: dict[int, list[tuple[str, DigitalState]]] = {}
+    for stream in streams:
+        signal_name = stream.signal_name.strip()
+        for event in stream.events:
+            tick = _vcd_tick(event.time_seconds)
+            events_by_tick.setdefault(tick, []).append((signal_ids[signal_name], event.state))
+    for tick in sorted(events_by_tick):
+        rows.append(f"#{tick}")
+        for signal_id, state in events_by_tick[tick]:
+            rows.append(f"{_vcd_state_value(state)}{signal_id}")
+    rows.append("")
+    return "\n".join(rows)
+
+
+def _circuit_with_extra_voltage_sources(
+    circuit: Circuit,
+    sources: list[VoltageSource],
+) -> Circuit:
+    bridged = Circuit(
+        elements=[*circuit.elements],
+        subcircuits=dict(circuit.subcircuits),
+    )
+    for source in sources:
+        bridged.add(source)
+    return bridged
+
+
+def _normalize_digital_state(state: DigitalState | str) -> DigitalState:
+    text = str(state).strip().lower()
+    if text == "low":
+        return "low"
+    if text == "high":
+        return "high"
+    raise ValueError(f"digital_event: unsupported digital state {state!r}")
+
+
+def _validate_digital_logic_levels(levels: DigitalLogicLevels, context: str) -> None:
+    if not (
+        math.isfinite(levels.low_voltage)
+        and math.isfinite(levels.high_voltage)
+        and math.isfinite(levels.transition_seconds)
+    ):
+        raise ValueError(f"{context}: digital logic levels must be finite")
+    if levels.high_voltage <= levels.low_voltage:
+        raise ValueError(f"{context}: digital high voltage must be greater than low voltage")
+    if levels.transition_seconds <= 0.0:
+        raise ValueError(f"{context}: digital transition time must be finite and positive")
+
+
+def _validate_digital_thresholds(thresholds: DigitalThresholds) -> None:
+    if not (
+        math.isfinite(thresholds.low_max_voltage)
+        and math.isfinite(thresholds.high_min_voltage)
+    ):
+        raise ValueError("digital_thresholds: digital thresholds must be finite")
+    if thresholds.high_min_voltage <= thresholds.low_max_voltage:
+        raise ValueError("digital_thresholds: digital high threshold must be greater than low threshold")
+
+
+def _validate_digital_event_stream_name(
+    stream: DigitalEventStream,
+    seen_signal_names: set[str],
+) -> str:
+    signal_name = stream.signal_name.strip()
+    if not signal_name:
+        raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+    if signal_name in seen_signal_names:
+        raise ValueError(f"{signal_name}: digital event stream signal names must be unique")
+    seen_signal_names.add(signal_name)
+    return signal_name
+
+
+def _validate_digital_event_time(
+    time_seconds: float,
+    previous_time: float,
+    context: str,
+) -> None:
+    if not math.isfinite(time_seconds) or time_seconds < 0.0:
+        raise ValueError(f"{context}: digital event times must be finite and non-negative")
+    if time_seconds <= previous_time:
+        raise ValueError(f"{context}: digital event times must be strictly increasing")
+
+
+def _vcd_identifier(index: int) -> str:
+    return f"s{index}"
+
+
+def _vcd_tick(time_seconds: float) -> int:
+    if not math.isfinite(time_seconds) or time_seconds < 0.0:
+        raise ValueError("digital_event_stream_vcd: event times must be finite and non-negative")
+    return int(round(time_seconds / 1.0e-12))
+
+
+def _vcd_state_value(state: DigitalState) -> str:
+    return "0" if _normalize_digital_state(state) == "low" else "1"
 
 
 def pss_residual(

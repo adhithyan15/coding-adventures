@@ -111,6 +111,10 @@ from spice_engine import (
     CurrentSource,
     DcSweepPoint,
     DcSweepResult,
+    DigitalEvent,
+    DigitalEventStream,
+    DigitalLogicLevels,
+    DigitalThresholds,
     Diode,
     DistortionHarmonic,
     DistortionPoint,
@@ -160,13 +164,20 @@ from spice_engine import (
     dc_sweep,
     dc_sweep_corners,
     device_model_audit_fixtures,
+    digital_event_streams_to_bridge_schedule,
+    digital_event_streams_to_voltage_sources,
+    digital_events_to_pwl_waveform,
+    digital_events_to_voltage_source,
     diode_from_model_card,
     distortion_from_fourier,
     distortion_from_transient,
     distortion_from_transient_corners,
     estimate_period,
     format_ac_table,
+    format_adaptive_digital_event_stream_table,
+    format_corner_adaptive_digital_event_stream_table,
     format_corner_adaptive_transient_table,
+    format_corner_digital_event_stream_table,
     format_corner_distortion_table,
     format_corner_fourier_table,
     format_corner_mc_table,
@@ -177,6 +188,10 @@ from spice_engine import (
     format_corner_sens_table,
     format_corner_transient_table,
     format_dc_table,
+    format_digital_bridge_schedule_table,
+    format_digital_event_stream_table,
+    format_digital_event_stream_vcd,
+    format_digital_event_table,
     format_distortion_table,
     format_fourier_table,
     format_mc_table,
@@ -214,13 +229,19 @@ from spice_engine import (
     pss_residual_jacobian,
     s_parameters,
     s_parameters_corners,
+    sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams,
     sens_dc,
     sens_dc_corners,
     tf,
     tf_corners,
     transient,
     transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
+    transient_adaptive_with_digital_event_streams_corners,
     transient_corners,
+    transient_with_digital_event_streams,
+    transient_with_digital_event_streams_corners,
     waveform_period,
 )
 from spice_engine.engine import (
@@ -7482,4 +7503,222 @@ def test_s_parameters_corners_runs_two_port_extraction_and_formats_tables() -> N
         "5.000000e-01\t0.000000e+00\n"
         "series-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t"
         "5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_digital_bridge_builds_sources_schedule_and_vcd_output() -> None:
+    streams = [
+        DigitalEventStream(
+            "clk",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.0e-9, "low"),
+            ],
+        ),
+        DigitalEventStream(
+            "enable",
+            [
+                DigitalEvent(0.25e-9, "low"),
+                DigitalEvent(0.75e-9, "high"),
+            ],
+        ),
+    ]
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+
+    waveform = digital_events_to_pwl_waveform(streams[0].events, levels)
+    source = digital_events_to_voltage_source("Vclk", "clk", "0", streams[0].events, levels)
+    sources = digital_event_streams_to_voltage_sources(streams, "0", levels)
+    schedule = digital_event_streams_to_bridge_schedule(streams, levels)
+
+    expected_points = (
+        (0.0, 0.0),
+        (0.5e-9, 0.0),
+        (0.75e-9, 1.8),
+        (1.0e-9, 1.8),
+        (1.25e-9, 0.0),
+    )
+    assert len(waveform.points) == len(expected_points)
+    for point, expected in zip(waveform.points, expected_points, strict=True):
+        assert point == pytest.approx(expected)
+    assert source.name == "Vclk"
+    assert [source.name for source in sources] == ["Vclk", "Venable"]
+    assert format_digital_bridge_schedule_table(schedule) == (
+        "Index\tTime\tStopTime\n"
+        "0\t0.000000e+00\t1.250000e-09\n"
+        "1\t2.500000e-10\t1.250000e-09\n"
+        "2\t5.000000e-10\t1.250000e-09\n"
+        "3\t7.500000e-10\t1.250000e-09\n"
+        "4\t1.000000e-09\t1.250000e-09\n"
+        "5\t1.250000e-09\t1.250000e-09\n"
+    )
+    assert format_digital_event_stream_vcd(streams) == (
+        "$version coding-adventures spice-engine mixed-signal bridge $end\n"
+        "$timescale 1ps $end\n"
+        "$scope module spice_bridge $end\n"
+        "$var wire 1 s0 clk $end\n"
+        "$var wire 1 s1 enable $end\n"
+        "$upscope $end\n"
+        "$enddefinitions $end\n"
+        "$dumpvars\n"
+        "0s0\n"
+        "0s1\n"
+        "$end\n"
+        "#0\n"
+        "0s0\n"
+        "#250\n"
+        "0s1\n"
+        "#500\n"
+        "1s0\n"
+        "#750\n"
+        "1s1\n"
+        "#1000\n"
+        "0s0\n"
+    )
+
+
+def test_transient_probe_samples_back_to_digital_streams() -> None:
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+    events = [
+        DigitalEvent(0.0, "low"),
+        DigitalEvent(0.5e-9, "high"),
+        DigitalEvent(1.25e-9, "low"),
+    ]
+    c = Circuit([
+        digital_events_to_voltage_source("Vdin", "din", "0", events, levels),
+        Resistor("Rload", "din", "0", 1000.0),
+    ])
+
+    points = transient(c, t_step=0.25e-9, t_stop=1.5e-9).points
+    sampled = sample_transient_probe_as_digital_events(
+        points,
+        "V(din)",
+        DigitalThresholds.cmos_1v8(),
+    )
+    streams = sample_transient_probes_as_digital_event_streams(
+        points,
+        [("din", "V(din)")],
+        DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_table(sampled) == (
+        "Index\tTime\tState\n"
+        "0\t2.500000e-10\tlow\n"
+        "1\t7.500000e-10\thigh\n"
+        "2\t1.500000e-09\tlow\n"
+    )
+    assert format_digital_event_stream_table(streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "din\t0\t2.500000e-10\tlow\n"
+        "din\t1\t7.500000e-10\thigh\n"
+        "din\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_transient_bridge_runs_digital_input_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+    corner_result = transient_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal"), CornerSpec("load-high", (CornerOverride("Rload", "resistance", 2000.0),))],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_stream_table(result.output_streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "dout\t0\t2.500000e-10\tlow\n"
+        "dout\t1\t7.500000e-10\thigh\n"
+        "dout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_digital_event_stream_table(corner_result) == (
+        "Corner\tSignal\tIndex\tTime\tState\n"
+        "nominal\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\tdout\t2\t1.500000e-09\tlow\n"
+        "load-high\tdout\t0\t2.500000e-10\tlow\n"
+        "load-high\tdout\t1\t7.500000e-10\thigh\n"
+        "load-high\tdout\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_adaptive_transient_bridge_formats_metadata_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_adaptive_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+    corner_result = transient_adaptive_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal")],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+
+    assert format_adaptive_digital_event_stream_table(result) == (
+        "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "trap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "trap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "trap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_adaptive_digital_event_stream_table(corner_result) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "nominal\ttrap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\ttrap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\ttrap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
     )

@@ -3,6 +3,8 @@ import {
   Circuit,
   type CornerDistortionResult,
   type DistortionResult,
+  DigitalLogicLevels,
+  DigitalThresholds,
   ExpWaveform,
   type FourierResult,
   type PoleZeroResult,
@@ -17,10 +19,17 @@ import {
   currentSource,
   currentSourceWithWaveform,
   dcOp,
+  digitalEventStreamsToBridgeSchedule,
+  digitalEventStreamsToVoltageSources,
+  digitalEventsToPwlWaveform,
+  digitalEventsToVoltageSource,
   distortionFromFourier,
   distortionFromTransient,
   distortionFromTransientCorners,
   estimatePeriod,
+  formatAdaptiveDigitalEventStreamTable,
+  formatCornerAdaptiveDigitalEventStreamTable,
+  formatCornerDigitalEventStreamTable,
   formatCornerAdaptiveTransientTable,
   formatCornerDistortionTable,
   formatCornerFourierTable,
@@ -28,6 +37,10 @@ import {
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
+  formatDigitalBridgeScheduleTable,
+  formatDigitalEventStreamTable,
+  formatDigitalEventStreamVcd,
+  formatDigitalEventTable,
   formatDistortionTable,
   formatFourierTable,
   formatPoleZeroTable,
@@ -55,10 +68,16 @@ import {
   pssResidualJacobian,
   pssResidual,
   resistor,
+  sampleTransientProbeAsDigitalEvents,
+  sampleTransientProbesAsDigitalEventStreams,
   transient,
   transientAdaptive,
+  transientAdaptiveWithDigitalEventStreams,
+  transientAdaptiveWithDigitalEventStreamsCorners,
   transientAdaptiveCorners,
   transientCorners,
+  transientWithDigitalEventStreams,
+  transientWithDigitalEventStreamsCorners,
   transmissionLine,
   voltageSource,
   voltageSourceWithWaveform,
@@ -1388,6 +1407,212 @@ describe("transient", () => {
         "nominal\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t7.777778e-01\t-2.222222e-04\n" +
         "r1-high\ttrap\t0\ttrue\t0\t1.000000e-03\t1.000000e+00\t2.000000e-01\t-4.000000e-04\n" +
         "r1-high\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t5.200000e-01\t-2.400000e-04\n",
+    );
+  });
+
+  it("builds digital bridge sources schedules and VCD output", () => {
+    const streams = [
+      {
+        signalName: "clk",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.0e-9, state: "low" as const },
+        ],
+      },
+      {
+        signalName: "enable",
+        events: [
+          { timeSeconds: 0.25e-9, state: "low" as const },
+          { timeSeconds: 0.75e-9, state: "high" as const },
+        ],
+      },
+    ];
+    const levels = DigitalLogicLevels.cmos1v8(0.25e-9);
+
+    const waveform = digitalEventsToPwlWaveform(streams[0].events, levels);
+    const source = digitalEventsToVoltageSource("Vclk", "clk", "0", streams[0].events, levels);
+    const sources = digitalEventStreamsToVoltageSources(streams, "0", levels);
+    const schedule = digitalEventStreamsToBridgeSchedule(streams, levels);
+
+    expect(waveform.points.length).toBe(5);
+    expect(waveform.points[2][0]).toBeCloseTo(0.75e-9, 18);
+    expect(waveform.points[2][1]).toBeCloseTo(1.8, 9);
+    expect(source.name).toBe("Vclk");
+    expect(sources.map((candidate) => candidate.name)).toEqual(["Vclk", "Venable"]);
+    expect(formatDigitalBridgeScheduleTable(schedule)).toBe(
+      "Index\tTime\tStopTime\n" +
+        "0\t0.000000e+00\t1.250000e-09\n" +
+        "1\t2.500000e-10\t1.250000e-09\n" +
+        "2\t5.000000e-10\t1.250000e-09\n" +
+        "3\t7.500000e-10\t1.250000e-09\n" +
+        "4\t1.000000e-09\t1.250000e-09\n" +
+        "5\t1.250000e-09\t1.250000e-09\n",
+    );
+    expect(formatDigitalEventStreamVcd(streams)).toBe(
+      "$version coding-adventures spice-engine mixed-signal bridge $end\n" +
+        "$timescale 1ps $end\n" +
+        "$scope module spice_bridge $end\n" +
+        "$var wire 1 s0 clk $end\n" +
+        "$var wire 1 s1 enable $end\n" +
+        "$upscope $end\n" +
+        "$enddefinitions $end\n" +
+        "$dumpvars\n" +
+        "0s0\n" +
+        "0s1\n" +
+        "$end\n" +
+        "#0\n" +
+        "0s0\n" +
+        "#250\n" +
+        "0s1\n" +
+        "#500\n" +
+        "1s0\n" +
+        "#750\n" +
+        "1s1\n" +
+        "#1000\n" +
+        "0s0\n",
+    );
+  });
+
+  it("samples transient probes back to digital streams", () => {
+    const levels = DigitalLogicLevels.cmos1v8(0.25e-9);
+    const events = [
+      { timeSeconds: 0.0, state: "low" as const },
+      { timeSeconds: 0.5e-9, state: "high" as const },
+      { timeSeconds: 1.25e-9, state: "low" as const },
+    ];
+    const circuit = new Circuit();
+    circuit.add(digitalEventsToVoltageSource("Vdin", "din", "0", events, levels));
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+
+    const points = transient(circuit, 0.25e-9, 1.5e-9);
+    const sampled = sampleTransientProbeAsDigitalEvents(points, "V(din)", DigitalThresholds.cmos1v8());
+    const streams = sampleTransientProbesAsDigitalEventStreams(
+      points,
+      [["din", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+
+    expect(formatDigitalEventTable(sampled)).toBe(
+      "Index\tTime\tState\n" +
+        "0\t2.500000e-10\tlow\n" +
+        "1\t7.500000e-10\thigh\n" +
+        "2\t1.500000e-09\tlow\n",
+    );
+    expect(formatDigitalEventStreamTable(streams)).toBe(
+      "Signal\tIndex\tTime\tState\n" +
+        "din\t0\t2.500000e-10\tlow\n" +
+        "din\t1\t7.500000e-10\thigh\n" +
+        "din\t2\t1.500000e-09\tlow\n",
+    );
+  });
+
+  it("runs digital bridge inputs through transient and corner outputs", () => {
+    const inputStreams = [
+      {
+        signalName: "din",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.25e-9, state: "low" as const },
+        ],
+      },
+    ];
+    const circuit = new Circuit();
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+
+    const result = transientWithDigitalEventStreams(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+    const cornerResult = transientWithDigitalEventStreamsCorners(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+      [
+        { name: "nominal", overrides: [] },
+        { name: "load-high", overrides: [{ elementName: "Rload", parameter: "resistance", value: 2_000.0 }] },
+      ],
+    );
+
+    expect(formatDigitalEventStreamTable(result.outputStreams)).toBe(
+      "Signal\tIndex\tTime\tState\n" +
+        "dout\t0\t2.500000e-10\tlow\n" +
+        "dout\t1\t7.500000e-10\thigh\n" +
+        "dout\t2\t1.500000e-09\tlow\n",
+    );
+    expect(formatCornerDigitalEventStreamTable(cornerResult)).toBe(
+      "Corner\tSignal\tIndex\tTime\tState\n" +
+        "nominal\tdout\t0\t2.500000e-10\tlow\n" +
+        "nominal\tdout\t1\t7.500000e-10\thigh\n" +
+        "nominal\tdout\t2\t1.500000e-09\tlow\n" +
+        "load-high\tdout\t0\t2.500000e-10\tlow\n" +
+        "load-high\tdout\t1\t7.500000e-10\thigh\n" +
+        "load-high\tdout\t2\t1.500000e-09\tlow\n",
+    );
+  });
+
+  it("runs adaptive digital bridge outputs with metadata and corners", () => {
+    const inputStreams = [
+      {
+        signalName: "din",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.25e-9, state: "low" as const },
+        ],
+      },
+    ];
+    const circuit = new Circuit();
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+    const options = { method: "trap" as const, tolerance: 1.0, minStep: 0.25e-9, maxStep: 0.25e-9 };
+
+    const result = transientAdaptiveWithDigitalEventStreams(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      options,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+    const cornerResult = transientAdaptiveWithDigitalEventStreamsCorners(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      options,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+      [{ name: "nominal", overrides: [] }],
+    );
+
+    expect(formatAdaptiveDigitalEventStreamTable(result)).toBe(
+      "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n" +
+        "trap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n" +
+        "trap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n" +
+        "trap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n",
+    );
+    expect(formatCornerAdaptiveDigitalEventStreamTable(cornerResult)).toBe(
+      "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n",
     );
   });
 

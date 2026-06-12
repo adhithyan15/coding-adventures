@@ -15,13 +15,13 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Mixed-signal hardware VM bridge.
+1. Verilog-A/custom-model foothold.
    - Status: next.
-   - Connect SPICE transient stepping to the hardware VM scheduler through a
-     small deterministic analog/digital boundary fixture.
-   - Keep the first bridge narrow enough to prove bidirectional thresholds,
-     event timing, breakpoint scheduling, and VCD/probe correlation without
-     pulling in a full cosimulation runtime.
+   - Specify the accepted custom-model subset and land the first portable
+     residual/Jacobian hook shape across Python, Rust, and TypeScript.
+   - Keep the first slice narrow enough to prove parser diagnostics, sandboxed
+     TypeScript/web execution constraints, and a Rust-native fast-path shape
+     without committing to full Verilog-A compatibility.
 
 ## Completed Slices
 
@@ -93,6 +93,15 @@ downstream tools to compare.
      keys, and MOS cards deliberately reject non-Level-1 models until the
      Level 2/3 or BSIM scope is chosen.
 
+9. Mixed-signal hardware VM bridge.
+   - Status: completed in this mixed-signal VM bridge slice.
+   - Python, Rust, and TypeScript now expose matching digital event stream
+     fixtures, finite-edge PWL voltage-source conversion, bridge breakpoint
+     schedules, fixed/adaptive digital transient bridge runners, named-corner
+     bridge wrappers, thresholded probe sampling, stable event/schedule tables,
+     and deterministic VCD text output for SPICE probe / hardware-VM trace
+     correlation.
+
 ## Backlog
 
 1. Cross-language parity closure.
@@ -155,6 +164,5 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Mixed-signal hardware VM bridge.
-2. Verilog-A/custom-model foothold.
-3. Compatibility corpus and release readiness.
+1. Verilog-A/custom-model foothold.
+2. Compatibility corpus and release readiness.

@@ -79,6 +79,12 @@ BJT, JFET, and Level-1 MOS cards. `device_model_audit_fixtures()` returns the
 canonical cross-language fixture cards used to keep the Python, Rust, and
 TypeScript ports aligned.
 
+`DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
+first mixed-signal bridge surface: digital event streams can drive finite-edge
+PWL voltage sources, fixed/adaptive transient outputs can be sampled back into
+thresholded event streams, and stable event, bridge-schedule, corner, adaptive,
+and VCD text outputs let hardware-VM traces correlate with SPICE probes.
+
 ## Controlled source examples
 
 ### VCVS — unity-gain buffer

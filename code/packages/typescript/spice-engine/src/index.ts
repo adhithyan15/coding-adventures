@@ -4,6 +4,7 @@ const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
+const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
 
 export type Element =
   | Resistor
@@ -731,6 +732,88 @@ export interface CornerAdaptiveTransientPoint {
 
 export interface CornerAdaptiveTransientResult {
   readonly points: readonly CornerAdaptiveTransientPoint[];
+}
+
+export type DigitalState = "low" | "high";
+
+export interface DigitalEvent {
+  readonly timeSeconds: number;
+  readonly state: DigitalState;
+}
+
+export interface DigitalEventStream {
+  readonly signalName: string;
+  readonly events: readonly DigitalEvent[];
+}
+
+export interface DigitalTransientBridgeResult {
+  readonly points: readonly TransientPoint[];
+  readonly outputStreams: readonly DigitalEventStream[];
+}
+
+export interface CornerDigitalTransientBridgePoint {
+  readonly cornerName: string;
+  readonly result: DigitalTransientBridgeResult;
+}
+
+export interface CornerDigitalTransientBridgeResult {
+  readonly points: readonly CornerDigitalTransientBridgePoint[];
+}
+
+export interface AdaptiveDigitalTransientBridgeResult {
+  readonly result: AdaptiveTransientResult;
+  readonly outputStreams: readonly DigitalEventStream[];
+}
+
+export interface CornerAdaptiveDigitalTransientBridgePoint {
+  readonly cornerName: string;
+  readonly result: AdaptiveDigitalTransientBridgeResult;
+}
+
+export interface CornerAdaptiveDigitalTransientBridgeResult {
+  readonly points: readonly CornerAdaptiveDigitalTransientBridgePoint[];
+}
+
+export interface DigitalBridgeSchedule {
+  readonly stopTime: number;
+  readonly breakpoints: readonly number[];
+}
+
+export class DigitalLogicLevels {
+  constructor(
+    readonly lowVoltage: number,
+    readonly highVoltage: number,
+    readonly transitionSeconds: number,
+  ) {}
+
+  static cmos1v8(transitionSeconds: number): DigitalLogicLevels {
+    return new DigitalLogicLevels(0.0, 1.8, transitionSeconds);
+  }
+
+  voltageFor(state: DigitalState): number {
+    return normalizeDigitalState(state) === "low" ? this.lowVoltage : this.highVoltage;
+  }
+}
+
+export class DigitalThresholds {
+  constructor(
+    readonly lowMaxVoltage: number,
+    readonly highMinVoltage: number,
+  ) {}
+
+  static cmos1v8(): DigitalThresholds {
+    return new DigitalThresholds(0.6, 1.2);
+  }
+
+  classify(voltage: number): DigitalState | undefined {
+    if (voltage <= this.lowMaxVoltage) {
+      return "low";
+    }
+    if (voltage >= this.highMinVoltage) {
+      return "high";
+    }
+    return undefined;
+  }
 }
 
 export interface FourierHarmonic {
@@ -4557,6 +4640,488 @@ export function transientAdaptiveCorners(
   };
 }
 
+export function digitalEventsToPwlWaveform(
+  events: readonly DigitalEvent[],
+  levels: DigitalLogicLevels,
+): PwlWaveform {
+  validateDigitalLogicLevels(levels, "digitalEvents");
+  if (events.length === 0) {
+    throw invalidElement("digitalEvents", "at least one digital event is required");
+  }
+
+  let previousTime = Number.NEGATIVE_INFINITY;
+  for (const event of events) {
+    validateDigitalEventTime(event.timeSeconds, previousTime, "digitalEvents");
+    normalizeDigitalState(event.state);
+    previousTime = event.timeSeconds;
+  }
+
+  const points: [number, number][] = [];
+  let currentState = normalizeDigitalState(events[0].state);
+  points.push([events[0].timeSeconds, levels.voltageFor(currentState)]);
+
+  for (const event of events.slice(1)) {
+    const eventState = normalizeDigitalState(event.state);
+    if (eventState === currentState) {
+      continue;
+    }
+    const startTime = event.timeSeconds;
+    const endTime = startTime + levels.transitionSeconds;
+    const lastTime = points[points.length - 1][0];
+    if (startTime <= lastTime) {
+      throw invalidElement("digitalEvents", "digital transition overlaps the previous transition");
+    }
+    points.push([startTime, levels.voltageFor(currentState)]);
+    points.push([endTime, levels.voltageFor(eventState)]);
+    currentState = eventState;
+  }
+
+  if (points.length === 1) {
+    points.push([points[0][0] + levels.transitionSeconds, levels.voltageFor(currentState)]);
+  }
+
+  return new PwlWaveform(points);
+}
+
+export function digitalEventsToVoltageSource(
+  name: string,
+  positive: string,
+  negative: string,
+  events: readonly DigitalEvent[],
+  levels: DigitalLogicLevels,
+): VoltageSource {
+  if (events.length === 0) {
+    throw invalidElement("digitalEvents", "at least one digital event is required");
+  }
+  return voltageSourceWithWaveform(
+    name,
+    positive,
+    negative,
+    levels.voltageFor(events[0].state),
+    digitalEventsToPwlWaveform(events, levels),
+  );
+}
+
+export function digitalEventStreamsToVoltageSources(
+  streams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+): VoltageSource[] {
+  const negativeNode = negative.trim();
+  if (negativeNode.length === 0) {
+    throw invalidElement("digitalEventStreams", "digital event stream negative node must not be empty");
+  }
+  const seenSignalNames = new Set<string>();
+  return streams.map((stream) => {
+    const signalName = validateDigitalEventStreamName(stream, seenSignalNames);
+    return digitalEventsToVoltageSource(
+      `V${signalName}`,
+      signalName,
+      negativeNode,
+      stream.events,
+      levels,
+    );
+  });
+}
+
+export function digitalEventStreamsToBridgeSchedule(
+  streams: readonly DigitalEventStream[],
+  levels: DigitalLogicLevels,
+): DigitalBridgeSchedule {
+  validateDigitalLogicLevels(levels, "digitalBridgeSchedule");
+  const seenSignalNames = new Set<string>();
+  const breakpoints: number[] = [];
+  let stopTime = 0.0;
+  for (const stream of streams) {
+    validateDigitalEventStreamName(stream, seenSignalNames);
+    digitalEventsToPwlWaveform(stream.events, levels);
+    let currentState = normalizeDigitalState(stream.events[0].state);
+    stream.events.forEach((event, index) => {
+      const eventState = normalizeDigitalState(event.state);
+      breakpoints.push(event.timeSeconds);
+      stopTime = Math.max(stopTime, event.timeSeconds);
+      if (index > 0 && eventState !== currentState) {
+        const transitionEnd = event.timeSeconds + levels.transitionSeconds;
+        breakpoints.push(transitionEnd);
+        stopTime = Math.max(stopTime, transitionEnd);
+        currentState = eventState;
+      }
+    });
+  }
+
+  breakpoints.sort((left, right) => left - right);
+  const deduped: number[] = [];
+  for (const breakpoint of breakpoints) {
+    if (deduped.length === 0 || Math.abs(breakpoint - deduped[deduped.length - 1]) > DIGITAL_BRIDGE_TIME_EPSILON) {
+      deduped.push(breakpoint);
+    }
+  }
+  return { stopTime, breakpoints: deduped };
+}
+
+export function transientWithDigitalEventStreams(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  method: TransientMethod = "euler",
+): DigitalTransientBridgeResult {
+  const bridged = circuitWithExtraVoltageSources(
+    circuit,
+    digitalEventStreamsToVoltageSources(inputStreams, negative, levels),
+  );
+  const points = transient(bridged, timeStep, stopTime, method);
+  return {
+    points,
+    outputStreams: sampleTransientProbesAsDigitalEventStreams(points, outputProbes, thresholds),
+  };
+}
+
+export function transientWithDigitalEventStreamsCorners(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  corners: readonly CornerSpec[],
+  method: TransientMethod = "euler",
+): CornerDigitalTransientBridgeResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientWithDigitalEventStreams(
+        circuitWithCorner(circuit, corner),
+        inputStreams,
+        negative,
+        levels,
+        timeStep,
+        stopTime,
+        outputProbes,
+        thresholds,
+        method,
+      ),
+    })),
+  };
+}
+
+export function transientAdaptiveWithDigitalEventStreams(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  options: AdaptiveTransientOptions,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+): AdaptiveDigitalTransientBridgeResult {
+  const bridged = circuitWithExtraVoltageSources(
+    circuit,
+    digitalEventStreamsToVoltageSources(inputStreams, negative, levels),
+  );
+  const result = transientAdaptive(bridged, timeStep, stopTime, options);
+  return {
+    result,
+    outputStreams: sampleTransientProbesAsDigitalEventStreams(result.points, outputProbes, thresholds),
+  };
+}
+
+export function transientAdaptiveWithDigitalEventStreamsCorners(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  options: AdaptiveTransientOptions,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  corners: readonly CornerSpec[],
+): CornerAdaptiveDigitalTransientBridgeResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientAdaptiveWithDigitalEventStreams(
+        circuitWithCorner(circuit, corner),
+        inputStreams,
+        negative,
+        levels,
+        timeStep,
+        stopTime,
+        options,
+        outputProbes,
+        thresholds,
+      ),
+    })),
+  };
+}
+
+export function sampleTransientProbeAsDigitalEvents(
+  points: readonly TransientPoint[],
+  probe: string,
+  thresholds: DigitalThresholds,
+): DigitalEvent[] {
+  validateDigitalThresholds(thresholds);
+  const events: DigitalEvent[] = [];
+  let currentState: DigitalState | undefined;
+  for (const point of points) {
+    if (point.time <= DIGITAL_BRIDGE_TIME_EPSILON) {
+      continue;
+    }
+    const voltage = tableProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      "sampleTransientProbeAsDigitalEvents",
+    );
+    const state = thresholds.classify(voltage);
+    if (state === undefined) {
+      continue;
+    }
+    if (currentState !== state) {
+      events.push({ timeSeconds: point.time, state });
+      currentState = state;
+    }
+  }
+  return events;
+}
+
+export function sampleTransientProbesAsDigitalEventStreams(
+  points: readonly TransientPoint[],
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+): DigitalEventStream[] {
+  const seenSignalNames = new Set<string>();
+  return outputProbes.map(([signalName, probe]) => {
+    const streamName = signalName.trim();
+    if (streamName.length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    if (seenSignalNames.has(streamName)) {
+      throw invalidElement(streamName, "digital event stream signal names must be unique");
+    }
+    seenSignalNames.add(streamName);
+    return {
+      signalName: streamName,
+      events: sampleTransientProbeAsDigitalEvents(points, probe, thresholds),
+    };
+  });
+}
+
+export function formatDigitalEventTable(events: readonly DigitalEvent[]): string {
+  const rows = [["Index", "Time", "State"].join("\t")];
+  let previousTime = Number.NEGATIVE_INFINITY;
+  events.forEach((event, index) => {
+    validateDigitalEventTime(event.timeSeconds, previousTime, "digitalEvent");
+    previousTime = event.timeSeconds;
+    rows.push([
+      String(index),
+      formatTableNumber(event.timeSeconds),
+      normalizeDigitalState(event.state),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalEventStreamTable(streams: readonly DigitalEventStream[]): string {
+  const rows = [["Signal", "Index", "Time", "State"].join("\t")];
+  for (const stream of streams) {
+    if (stream.signalName.trim().length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    let previousTime = Number.NEGATIVE_INFINITY;
+    stream.events.forEach((event, index) => {
+      validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+      previousTime = event.timeSeconds;
+      rows.push([
+        stream.signalName,
+        String(index),
+        formatTableNumber(event.timeSeconds),
+        normalizeDigitalState(event.state),
+      ].join("\t"));
+    });
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDigitalEventStreamTable(
+  result: CornerDigitalTransientBridgeResult,
+): string {
+  const rows = [["Corner", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const corner of result.points) {
+    for (const stream of corner.result.outputStreams) {
+      if (stream.signalName.trim().length === 0) {
+        throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+      }
+      let previousTime = Number.NEGATIVE_INFINITY;
+      stream.events.forEach((event, index) => {
+        validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+        previousTime = event.timeSeconds;
+        rows.push([
+          corner.cornerName,
+          stream.signalName,
+          String(index),
+          formatTableNumber(event.timeSeconds),
+          normalizeDigitalState(event.state),
+        ].join("\t"));
+      });
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatAdaptiveDigitalEventStreamTable(
+  result: AdaptiveDigitalTransientBridgeResult,
+): string {
+  const rows = [["Method", "StepsRejected", "Converged", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const stream of result.outputStreams) {
+    if (stream.signalName.trim().length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    let previousTime = Number.NEGATIVE_INFINITY;
+    stream.events.forEach((event, index) => {
+      validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+      previousTime = event.timeSeconds;
+      rows.push([
+        result.result.method,
+        String(result.result.stepsRejected),
+        String(result.result.converged),
+        stream.signalName,
+        String(index),
+        formatTableNumber(event.timeSeconds),
+        normalizeDigitalState(event.state),
+      ].join("\t"));
+    });
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerAdaptiveDigitalEventStreamTable(
+  result: CornerAdaptiveDigitalTransientBridgeResult,
+): string {
+  const rows = [["Corner", "Method", "StepsRejected", "Converged", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const corner of result.points) {
+    for (const stream of corner.result.outputStreams) {
+      if (stream.signalName.trim().length === 0) {
+        throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+      }
+      let previousTime = Number.NEGATIVE_INFINITY;
+      stream.events.forEach((event, index) => {
+        validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+        previousTime = event.timeSeconds;
+        rows.push([
+          corner.cornerName,
+          corner.result.result.method,
+          String(corner.result.result.stepsRejected),
+          String(corner.result.result.converged),
+          stream.signalName,
+          String(index),
+          formatTableNumber(event.timeSeconds),
+          normalizeDigitalState(event.state),
+        ].join("\t"));
+      });
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalBridgeScheduleTable(schedule: DigitalBridgeSchedule): string {
+  if (!Number.isFinite(schedule.stopTime) || schedule.stopTime < 0.0) {
+    throw invalidElement("digitalBridgeSchedule", "digital bridge stop time must be finite and non-negative");
+  }
+  const rows = [["Index", "Time", "StopTime"].join("\t")];
+  let previousTime = Number.NEGATIVE_INFINITY;
+  schedule.breakpoints.forEach((timeSeconds, index) => {
+    validateDigitalEventTime(timeSeconds, previousTime, "digitalBridgeSchedule");
+    if (timeSeconds > schedule.stopTime) {
+      throw invalidElement("digitalBridgeSchedule", "digital bridge breakpoint must not exceed stop time");
+    }
+    previousTime = timeSeconds;
+    rows.push([
+      String(index),
+      formatTableNumber(timeSeconds),
+      formatTableNumber(schedule.stopTime),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalEventStreamVcd(
+  streams: readonly DigitalEventStream[],
+  options: { readonly moduleName?: string; readonly timescale?: string } = {},
+): string {
+  const moduleName = (options.moduleName ?? "spice_bridge").trim();
+  const timescale = options.timescale ?? "1ps";
+  if (timescale !== "1ps") {
+    throw invalidElement("digitalEventStreamVcd", "only 1ps timescale is supported");
+  }
+  if (moduleName.length === 0) {
+    throw invalidElement("digitalEventStreamVcd", "module name must not be empty");
+  }
+
+  const seenSignalNames = new Set<string>();
+  const signalIds = new Map<string, string>();
+  streams.forEach((stream, index) => {
+    const signalName = validateDigitalEventStreamName(stream, seenSignalNames);
+    signalIds.set(signalName, vcdIdentifier(index));
+    let previousTime = Number.NEGATIVE_INFINITY;
+    for (const event of stream.events) {
+      validateDigitalEventTime(event.timeSeconds, previousTime, signalName);
+      normalizeDigitalState(event.state);
+      previousTime = event.timeSeconds;
+    }
+  });
+
+  const rows = [
+    "$version coding-adventures spice-engine mixed-signal bridge $end",
+    `$timescale ${timescale} $end`,
+    `$scope module ${moduleName} $end`,
+  ];
+  for (const stream of streams) {
+    const signalName = stream.signalName.trim();
+    rows.push(`$var wire 1 ${signalIds.get(signalName)!} ${signalName} $end`);
+  }
+  rows.push("$upscope $end", "$enddefinitions $end", "$dumpvars");
+  for (const stream of streams) {
+    if (stream.events.length > 0) {
+      rows.push(`${vcdStateValue(stream.events[0].state)}${signalIds.get(stream.signalName.trim())!}`);
+    }
+  }
+  rows.push("$end");
+
+  const eventsByTick = new Map<number, [string, DigitalState][]>();
+  for (const stream of streams) {
+    const signalId = signalIds.get(stream.signalName.trim())!;
+    for (const event of stream.events) {
+      const tick = vcdTick(event.timeSeconds);
+      const existing = eventsByTick.get(tick) ?? [];
+      existing.push([signalId, event.state]);
+      eventsByTick.set(tick, existing);
+    }
+  }
+  for (const tick of Array.from(eventsByTick.keys()).sort((left, right) => left - right)) {
+    rows.push(`#${tick}`);
+    for (const [signalId, state] of eventsByTick.get(tick)!) {
+      rows.push(`${vcdStateValue(state)}${signalId}`);
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function pssResidual(
   circuit: Circuit,
   stepsPerPeriod = 64,
@@ -5887,6 +6452,20 @@ function circuitWithScaledIndependentSources(
   return scaled;
 }
 
+function circuitWithExtraVoltageSources(
+  circuit: Circuit,
+  sources: readonly VoltageSource[],
+): Circuit {
+  const bridged = new Circuit();
+  for (const element of circuit.elements()) {
+    bridged.add(element);
+  }
+  for (const source of sources) {
+    bridged.add(source);
+  }
+  return bridged;
+}
+
 function circuitFromElements(elements: readonly Element[]): Circuit {
   const circuit = new Circuit();
   for (const element of elements) {
@@ -5920,6 +6499,88 @@ function circuitWithCorner(circuit: Circuit, corner: CornerSpec): Circuit {
   }
 
   return circuitFromElements(elements);
+}
+
+function normalizeDigitalState(state: DigitalState | string): DigitalState {
+  const text = state.trim().toLowerCase();
+  if (text === "low") {
+    return "low";
+  }
+  if (text === "high") {
+    return "high";
+  }
+  throw invalidElement("digitalEvent", `unsupported digital state ${state}`);
+}
+
+function validateDigitalLogicLevels(levels: DigitalLogicLevels, context: string): void {
+  if (
+    !Number.isFinite(levels.lowVoltage) ||
+    !Number.isFinite(levels.highVoltage) ||
+    !Number.isFinite(levels.transitionSeconds)
+  ) {
+    throw invalidElement(context, "digital logic levels must be finite");
+  }
+  if (levels.highVoltage <= levels.lowVoltage) {
+    throw invalidElement(context, "digital high voltage must be greater than low voltage");
+  }
+  if (levels.transitionSeconds <= 0.0) {
+    throw invalidElement(context, "digital transition time must be finite and positive");
+  }
+}
+
+function validateDigitalThresholds(thresholds: DigitalThresholds): void {
+  if (
+    !Number.isFinite(thresholds.lowMaxVoltage) ||
+    !Number.isFinite(thresholds.highMinVoltage)
+  ) {
+    throw invalidElement("digitalThresholds", "digital thresholds must be finite");
+  }
+  if (thresholds.highMinVoltage <= thresholds.lowMaxVoltage) {
+    throw invalidElement("digitalThresholds", "digital high threshold must be greater than low threshold");
+  }
+}
+
+function validateDigitalEventStreamName(
+  stream: DigitalEventStream,
+  seenSignalNames: Set<string>,
+): string {
+  const signalName = stream.signalName.trim();
+  if (signalName.length === 0) {
+    throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+  }
+  if (seenSignalNames.has(signalName)) {
+    throw invalidElement(signalName, "digital event stream signal names must be unique");
+  }
+  seenSignalNames.add(signalName);
+  return signalName;
+}
+
+function validateDigitalEventTime(
+  timeSeconds: number,
+  previousTime: number,
+  context: string,
+): void {
+  if (!Number.isFinite(timeSeconds) || timeSeconds < 0.0) {
+    throw invalidElement(context, "digital event times must be finite and non-negative");
+  }
+  if (timeSeconds <= previousTime) {
+    throw invalidElement(context, "digital event times must be strictly increasing");
+  }
+}
+
+function vcdIdentifier(index: number): string {
+  return `s${index}`;
+}
+
+function vcdTick(timeSeconds: number): number {
+  if (!Number.isFinite(timeSeconds) || timeSeconds < 0.0) {
+    throw invalidElement("digitalEventStreamVcd", "event times must be finite and non-negative");
+  }
+  return Math.round(timeSeconds / 1.0e-12);
+}
+
+function vcdStateValue(state: DigitalState): string {
+  return normalizeDigitalState(state) === "low" ? "0" : "1";
 }
 
 function applyCornerOverride(element: Element, override: CornerOverride): Element {
