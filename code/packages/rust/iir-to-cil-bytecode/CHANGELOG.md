@@ -1,5 +1,48 @@
 # Changelog — iir-to-cil-bytecode
 
+## [0.18.0] — 2026-06-12 — byte-tape ops on real CoreCLR (LANG-MATRIX LM-C Brainfuck)
+
+Adds the lowering Brainfuck needs to run on the CLR backend's **textual `.il` path**
+(`emit_il`, assembled by real `ilasm` and run on real `dotnet`) — the **last code-gen
+cell** of the LANG-PLATFORM-MATRIX (after native/LLVM/WASM/JVM). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on real CoreCLR in `lang-aot/tests/lang_matrix.rs`: it
+prints `A`.
+
+`lower_brainfuck_for_aot` rewrites Brainfuck's tape into `alloc_bytes`/`load_byte`/
+`store_byte` and `concretize_scalar_any_for_cil` retypes the value model to `int32`
+(Brainfuck doesn't call `print_i64`, so it isn't kept at i64 — which is exactly what we
+want: the tape ops and `brfalse` conditions are all `int32`).
+
+### Added (in `il_text.rs::emit_il`)
+
+- **`alloc_bytes dest <- size`** → `ld<size>; newarr [System.Runtime]System.Byte;
+  st<dest>` — a zero-filled `unsigned int8[]` tape. `FnRegs::build` types an
+  `alloc_bytes` dest as `unsigned int8[]` (not the scalar `int32` its concretised hint
+  would give), so the `.locals` declaration matches the array access.
+- **`load_byte dest <- base, idx`** → `ld<base>; ld<idx>; ldelem.u1; st<dest>`.
+  `ldelem.u1` loads an *unsigned* byte (a cell value 200 reads as 200, not −56),
+  zero-extended to `int32`.
+- **`store_byte base, idx, val`** → `ld<base>; ld<idx>; ld<val>; stelem.i1`. `stelem.i1`
+  truncates to a byte — Brainfuck's 8-bit cell wrap-around for free. Rejects a `dest`.
+- **`call_builtin putchar`** → `ld<v>; ldc.i4 0xFF; and; conv.u2; call void
+  [System.Console]System.Console::Write(char)` — writes the cell as a *character* (so
+  `.` of 65 emits `A`, not `65`). Dest-less, handled before the dest lookup like
+  `print_i64`.
+- **`call_builtin getchar`** → `call int32 [System.Console]System.Console::Read()` →
+  dest (EOF `-1` truncates to `0xFF` at a later `store_byte`).
+
+### Changed
+
+- The `Run()` launcher's `prints` detection now also matches `putchar` (not just
+  `print_i64`), so a Brainfuck program **discards** `MccarthyEntry`'s `int32` result
+  (`pop`) instead of `Console.WriteLine`-ing it — otherwise the program would print both
+  its own output and its meaningless exit value (a double-print).
+
+CIL `brfalse`/`brtrue` test any integer width against zero, so the (int32) loop guard
+needs no special handling — unlike the JVM (`lcmp`) and wasm (`i64.eqz`) which had an
+i64 branch-condition ripple. Three new tests in `il_text.rs` cover the tape ops +
+putchar (with the launcher discard), `getchar`, and the `store_byte`-with-dest rejection.
+
 ## [0.17.0] — 2026-06-12 — `print_i64` → `Console.WriteLine` + I/O launcher (LANG-MATRIX LM-C BASIC)
 
 The textual `.il` emitter gains the **`print_i64`** I/O primitive that Dartmouth

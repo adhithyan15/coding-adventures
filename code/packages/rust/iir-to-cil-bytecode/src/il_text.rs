@@ -173,11 +173,25 @@ impl FnRegs {
                 ty: cil_local_type(pty),
             });
         }
+        // A register that is the dest of `alloc_bytes` is a Brainfuck byte tape, an
+        // `unsigned int8[]` — not the scalar `int32` its (concretised) `type_hint`
+        // would suggest. Type it so the `.locals` declaration matches the `newarr
+        // [System.Runtime]System.Byte` + `ldelem.u1`/`stelem.i1` access (LM-C Brainfuck).
+        let tape_vars: std::collections::HashSet<&str> = f
+            .instructions
+            .iter()
+            .filter(|i| i.op == "alloc_bytes")
+            .filter_map(|i| i.dest.as_deref())
+            .collect();
         let mut local_tys: Vec<&'static str> = Vec::new();
         for instr in &f.instructions {
             if let Some(dest) = &instr.dest {
                 if !homes.contains_key(dest) {
-                    let ty = cil_local_type(&instr.type_hint);
+                    let ty = if tape_vars.contains(dest.as_str()) {
+                        "unsigned int8[]"
+                    } else {
+                        cil_local_type(&instr.type_hint)
+                    };
                     homes.insert(
                         dest.clone(),
                         RegHome {
@@ -273,10 +287,16 @@ pub fn emit_il(module: &IIRModule, config: &IIRClrConfig) -> Result<String, IIRC
     // launcher merely runs it and **discards** the (unused) `int32` return with `pop`,
     // rather than printing it a second time. (The entry's CIL return type is always
     // `int32`, so the `call`/`pop` are well-typed either way.)
+    // A program "prints" (writes its own stdout as a side effect) if it calls
+    // `print_i64` (Dartmouth BASIC's `PRINT`) **or** `putchar` (Brainfuck's `.`).
+    // For such a program the launcher discards `MccarthyEntry`'s result instead of
+    // `Console.WriteLine`-ing it — otherwise a Brainfuck program would print both its
+    // own output and its (meaningless) `int32` exit value (a double-print).
     let prints = module.functions.iter().any(|f| {
         f.instructions.iter().any(|i| {
             i.op == "call_builtin"
-                && matches!(i.srcs.first(), Some(Operand::Var(n)) if n == "print_i64")
+                && matches!(i.srcs.first(),
+                    Some(Operand::Var(n)) if n == "print_i64" || n == "putchar")
         })
     });
     let _ = writeln!(il, "  .method public static void Run() cil managed {{");
@@ -425,6 +445,61 @@ fn emit_method(
                 let _ = writeln!(il, "    ldc.i4.2");
                 let _ = writeln!(il, "    newarr [System.Runtime]System.Object");
                 store_var(il, &regs, dest)?;
+            }
+            // ── alloc_bytes <dest> <- <size>  (LM-C Brainfuck) ───────────────
+            //
+            // The Brainfuck tape: an `unsigned int8[]` of `size` bytes, zero-filled
+            // by `newarr`. `dest` (the tape base) is an array-typed local (see
+            // `FnRegs::build`); `load_byte`/`store_byte` index it directly.
+            //   ld<size>; newarr [System.Runtime]System.Byte; st<dest>
+            "alloc_bytes" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "alloc_bytes must have a dest".to_string(),
+                })?;
+                let size = var_src(f, instr, 0, "alloc_bytes")?;
+                load_var(il, &regs, size)?;
+                let _ = writeln!(il, "    newarr [System.Runtime]System.Byte");
+                store_var(il, &regs, dest)?;
+            }
+            // ── load_byte <dest> <- <base>, <idx>  (LM-C Brainfuck) ──────────
+            //
+            // Read one tape cell, zero-extended to `int32`. `ldelem.u1` loads an
+            // unsigned byte (so a cell value 200 reads as 200, not -56). The
+            // (concretised) `int32` index addresses the array directly.
+            //   ld<base>; ld<idx>; ldelem.u1; st<dest>
+            "load_byte" => {
+                let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
+                    function: f.name.clone(),
+                    detail: "load_byte must have a dest".to_string(),
+                })?;
+                let base = var_src(f, instr, 0, "load_byte")?;
+                let idx = var_src(f, instr, 1, "load_byte")?;
+                load_var(il, &regs, base)?;
+                load_var(il, &regs, idx)?;
+                let _ = writeln!(il, "    ldelem.u1");
+                store_var(il, &regs, dest)?;
+            }
+            // ── store_byte <base>, <idx>, <val>  (no dest; LM-C Brainfuck) ───
+            //
+            // Write the low byte of `val` into `tape[idx]`. `stelem.i1` truncates
+            // the `int32` value to a byte, which is exactly Brainfuck's 8-bit cell
+            // wrap-around (`255 + 1 == 0`).
+            //   ld<base>; ld<idx>; ld<val>; stelem.i1
+            "store_byte" => {
+                if instr.dest.is_some() {
+                    return Err(IIRClrError::InvalidOperand {
+                        function: f.name.clone(),
+                        detail: "store_byte must not have a dest".to_string(),
+                    });
+                }
+                let base = var_src(f, instr, 0, "store_byte")?;
+                let idx = var_src(f, instr, 1, "store_byte")?;
+                let val = var_src(f, instr, 2, "store_byte")?;
+                load_var(il, &regs, base)?;
+                load_var(il, &regs, idx)?;
+                load_var(il, &regs, val)?;
+                let _ = writeln!(il, "    stelem.i1");
             }
             // box <dest> = <src>  →  ld<src>; box [System.Runtime]System.Int32; st<dest>
             "box" => {
@@ -612,6 +687,23 @@ fn emit_method(
                     );
                     continue;
                 }
+                // `putchar` — Brainfuck's `.`. Also a dest-less side effect, so handle
+                // it before the dest lookup. Write the cell's low byte as a *character*
+                // (not its decimal value): mask to 8 bits, widen to the 16-bit `char`,
+                // and call `Console.Write(char)` — so `.` of 65 emits `A`, not `65`.
+                // The CLR analogue of LLVM's libc `putchar` / wasm's `env.putchar`.
+                if builtin == "putchar" {
+                    let val = var_src(f, instr, 1, "putchar")?;
+                    load_var(il, &regs, val)?;
+                    let _ = writeln!(il, "    ldc.i4 0xFF");
+                    let _ = writeln!(il, "    and");
+                    let _ = writeln!(il, "    conv.u2");
+                    let _ = writeln!(
+                        il,
+                        "    call void [System.Console]System.Console::Write(char)"
+                    );
+                    continue;
+                }
                 let dest = instr.dest.as_deref().ok_or_else(|| IIRClrError::InvalidOperand {
                     function: f.name.clone(),
                     detail: "call_builtin must have a dest".to_string(),
@@ -642,6 +734,18 @@ fn emit_method(
                         load_var(il, &regs, b)?;
                         let _ = writeln!(il, "    unbox.any [System.Runtime]System.Int32");
                         let _ = writeln!(il, "    ceq");
+                        store_var(il, &regs, dest)?;
+                    }
+                    // `getchar` — Brainfuck's `,`. Read one character from stdin.
+                    // `Console.Read()` returns the next char as an `int32`, or `-1` at
+                    // EOF; the result is stored raw (a later `store_byte` truncates it
+                    // to the 8-bit cell — EOF lands as `0xFF`, the conventional BF
+                    // behaviour). The CLR analogue of libc `getchar` / wasm `env.getchar`.
+                    "getchar" => {
+                        let _ = writeln!(
+                            il,
+                            "    call int32 [System.Console]System.Console::Read()"
+                        );
                         store_var(il, &regs, dest)?;
                     }
                     other => {
@@ -1295,5 +1399,89 @@ mod tests {
         );
         let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
         assert!(matches!(err, IIRClrError::UnsupportedOp { .. }));
+    }
+
+    // ── Byte-tape ops + putchar (LANG-MATRIX LM-C Brainfuck) ─────────────────
+
+    /// A Brainfuck-shaped program: allocate a tape, store a byte, load it, print it
+    /// with `putchar`. The `.il` declares an `unsigned int8[]` tape local and uses
+    /// `newarr Byte` / `ldelem.u1` / `stelem.i1` to access it; `.` becomes
+    /// `Console::Write(char)`; the launcher discards the entry result (no double-print).
+    #[test]
+    fn brainfuck_byte_tape_and_putchar_lower_to_cil() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("size".into()), vec![Operand::Int(30_000)], "i32"),
+            IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i32"),
+            IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i32"),
+            IIRInstr::new("store_byte", None, vec![
+                Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+            ], "i32"),
+            IIRInstr::new("load_byte", Some("got".into()), vec![
+                Operand::Var("tape".into()), Operand::Var("idx".into()),
+            ], "i32"),
+            IIRInstr::new("call_builtin", None, vec![
+                Operand::Var("putchar".into()), Operand::Var("got".into()),
+            ], "void"),
+            IIRInstr::new("const", Some("z".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("z".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+
+        assert!(il.contains("unsigned int8[] V_"), "the tape is an unsigned int8[] local; got:\n{il}");
+        assert!(il.contains("newarr [System.Runtime]System.Byte"), "alloc_bytes → newarr Byte; got:\n{il}");
+        assert!(il.contains("ldelem.u1"), "load_byte → ldelem.u1 (unsigned); got:\n{il}");
+        assert!(il.contains("stelem.i1"), "store_byte → stelem.i1; got:\n{il}");
+        assert!(
+            il.contains("call void [System.Console]System.Console::Write(char)"),
+            "putchar writes a char (so `.` of 65 is `A`, not `65`); got:\n{il}"
+        );
+        // A putchar program "prints" → the launcher discards the entry result.
+        let launcher = il.split(".entrypoint").nth(1).expect("a launcher");
+        assert!(launcher.contains("pop"), "launcher discards the entry result; got:\n{il}");
+        assert!(
+            !launcher.contains("WriteLine"),
+            "a printing (putchar) program must not re-print the exit value; got:\n{il}"
+        );
+    }
+
+    /// `getchar` reads a character via `Console::Read()`.
+    #[test]
+    fn getchar_reads_via_console_read() {
+        let instrs = vec![
+            IIRInstr::new("call_builtin", Some("c".into()), vec![Operand::Var("getchar".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let il = emit_il(&m, &IIRClrConfig::new("Main")).unwrap();
+        assert!(
+            il.contains("call int32 [System.Console]System.Console::Read()"),
+            "getchar → Console.Read(); got:\n{il}"
+        );
+    }
+
+    /// `store_byte` with a dest is rejected — it produces no value.
+    #[test]
+    fn store_byte_with_dest_is_rejected() {
+        let instrs = vec![
+            IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i32"),
+            IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i32"),
+            IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i32"),
+            IIRInstr::new("const", Some("val".into()), vec![Operand::Int(1)], "i32"),
+            IIRInstr::new("store_byte", Some("oops".into()), vec![
+                Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+            ], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("idx".into())], "i32"),
+        ];
+        let mut m = IIRModule::new("Main", "test");
+        m.functions.push(IIRFunction::new("main", vec![], "i32", instrs));
+        m.entry_point = Some("main".into());
+        let err = emit_il(&m, &IIRClrConfig::new("Main")).unwrap_err();
+        assert!(matches!(err, IIRClrError::InvalidOperand { .. }), "store_byte must not have a dest");
     }
 }
