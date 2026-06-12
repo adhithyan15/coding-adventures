@@ -2868,18 +2868,36 @@ fn normalize_number_value(value: &str) -> String {
         // Bare decimal integer.
         cleaned.parse::<u128>().ok()
     } else {
-        // Has a `.` or `e`/`E` or other non-integer
-        // character. We do NOT attempt full shortest-form
-        // normalization here (e.g. `0.5` → `.5`, `1000e3` →
-        // `1E6`) — that's a separate deferred gap. BUT the
-        // ES2021 `_` numeric separator is PURELY LEXICAL
-        // sugar, so it must still be stripped even for
-        // floats and scientific forms (gap-058):
-        //   `1_000.5` → `1000.5`   (separator removed)
-        //   `1_0e3`   → `10e3`     (separator removed)
-        // `cleaned` is `value` with every `_` already
-        // removed, so returning it strips separators while
-        // leaving the float/sci shape otherwise untouched.
+        // Has a `.` or `e`/`E` or other non-integer character.
+        //
+        // gap-082: a decimal float / scientific literal that
+        // denotes a non-negative INTEGER value fitting in u128
+        // (`1e3` = 1000, `1.5e10` = 15000000000, `1.0` = 1,
+        // `100.00` = 100, `1.23e2` = 123) is routed through the
+        // same shortest-form integer logic as a bare integer —
+        // decimal vs scientific, uppercase `E`, tie → decimal
+        // (`1e3` → `1E3`, `1.5e10` → `15E9`, `1.5e3` → `1500`).
+        // `decimal_float_as_u128` returns the exact integer or
+        // `None` when the literal is FRACTIONAL (`0.5`, `1e-5`)
+        // or its magnitude overflows u128 (`1e100`); those are
+        // left as the separator-stripped source (deferred — the
+        // full V8 fractional shortest-form needs Grisu/Ryu and
+        // is a separate gap).
+        //
+        // The ES2021 `_` numeric separator is PURELY LEXICAL
+        // sugar, so it is stripped regardless (gap-058):
+        //   `1_000.5` → `1000.5`,  `1_0e3` → `10E3` (now also
+        //   integer-normalised since `1_0e3` = 10000).
+        if let Some(n) = decimal_float_as_u128(&cleaned) {
+            let decimal = n.to_string();
+            let scientific = scientific_form_of(n);
+            let slen = scientific.as_ref().map(|s| s.len()).unwrap_or(usize::MAX);
+            return if decimal.len() <= slen {
+                decimal
+            } else {
+                scientific.unwrap()
+            };
+        }
         return cleaned;
     };
 
@@ -2930,6 +2948,92 @@ fn scientific_form_of(n: u128) -> Option<String> {
         return None;
     }
     Some(format!("{}E{}", m, e))
+}
+
+/// gap-082: interpret a separator-free decimal float / scientific
+/// literal as a non-negative INTEGER, when it denotes one exactly
+/// and fits in `u128`. Returns `None` for fractional values or
+/// magnitudes outside `u128`'s range (callers leave those forms
+/// untouched).
+///
+/// The argument `s` is the literal with every ES2021 `_` separator
+/// already removed and NO radix prefix (`0x`/`0o`/`0b`) and NO
+/// trailing BigInt `n` — those are handled by earlier branches.
+/// There is no sign: a leading `-`/`+` is a *separate* token in the
+/// stream, never part of a NUMBER literal.
+///
+/// ## How an integer value is recovered
+///
+/// A decimal literal has the shape `INT[.FRAC][(e|E)EXP]`. Writing
+/// `digits = INT ++ FRAC` (the significant digits as one integer)
+/// and `eff_exp = EXP − len(FRAC)`, the value is exactly
+///
+/// ```text
+///   value = digits × 10^eff_exp
+/// ```
+///
+/// because moving the decimal point right past `len(FRAC)` digits
+/// multiplies by `10^len(FRAC)`, which we subtract back out of the
+/// explicit exponent. Worked examples:
+///
+/// | literal   | digits | EXP | FRAC | eff_exp | value        |
+/// |-----------|--------|-----|------|---------|--------------|
+/// | `1e3`     | `1`    | 3   | ``   | 3       | 1000         |
+/// | `1.5e10`  | `15`   | 10  | `5`  | 9       | 15000000000  |
+/// | `1.23e2`  | `123`  | 2   | `23` | 0       | 123          |
+/// | `100.00`  | `10000`| 0   | `00` | −2      | 100          |
+/// | `0.5`     | `5`    | 0   | `5`  | −1      | 0.5 (None)   |
+///
+/// When `eff_exp ≥ 0` the value is `digits × 10^eff_exp` (an
+/// integer, checked for overflow). When `eff_exp < 0` the value is
+/// an integer **iff** `digits` is divisible by `10^(−eff_exp)`
+/// (`100.00` → 10000 / 100 = 100); otherwise it is genuinely
+/// fractional (`0.5`, `1.23`) and we return `None`.
+fn decimal_float_as_u128(s: &str) -> Option<u128> {
+    // Split off the exponent, if any. `EXP` may carry a sign
+    // (`1e-5`), so it is parsed as a *signed* integer.
+    let (mantissa, exp): (&str, i32) = match s.split_once(['e', 'E']) {
+        Some((m, e)) => (m, e.parse::<i32>().ok()?),
+        None => (s, 0),
+    };
+    // Split the mantissa into integer and fractional digits.
+    let (int_part, frac_part) = match mantissa.split_once('.') {
+        Some((i, f)) => (i, f),
+        None => (mantissa, ""),
+    };
+    // Both halves must be pure ASCII digits — anything else means
+    // this isn't a plain decimal literal we can reason about.
+    if !int_part.bytes().all(|b| b.is_ascii_digit())
+        || !frac_part.bytes().all(|b| b.is_ascii_digit())
+    {
+        return None;
+    }
+    if int_part.is_empty() && frac_part.is_empty() {
+        return None;
+    }
+    // The significant digits as one integer. Leading zeros parse
+    // fine (`007` → 7); an empty string would not, so guard it.
+    let digits_str = format!("{}{}", int_part, frac_part);
+    let digits: u128 = digits_str.parse().ok()?;
+    let eff_exp = exp.checked_sub(frac_part.len() as i32)?;
+    if eff_exp >= 0 {
+        let pow = 10u128.checked_pow(eff_exp as u32)?;
+        digits.checked_mul(pow)
+    } else {
+        // `eff_exp` is negative; take its magnitude as u32.
+        // `i32::unsigned_abs` is used (NOT `(-eff_exp) as u32`)
+        // so that `eff_exp == i32::MIN` — reachable from a crafted
+        // literal like `1e-2147483648` — does not overflow-panic
+        // (`-(i32::MIN)` is undefined in i32). The huge magnitude
+        // then makes `checked_pow` return None, so the literal is
+        // left verbatim rather than crashing the compiler.
+        let pow = 10u128.checked_pow(eff_exp.unsigned_abs())?;
+        if digits % pow == 0 {
+            Some(digits / pow)
+        } else {
+            None
+        }
+    }
 }
 
 /// True iff this token came from a string-literal rule. The
@@ -4549,13 +4653,17 @@ mod tests {
         assert_eq!(minify("var x=1_000.5;"), "var x=1000.5;");
     }
 
-    /// gap-058: separator in the mantissa of a scientific
-    /// literal is likewise stripped (`1_0e3` → `10e3`). The
-    /// `e`-exponent shape is otherwise left untouched (sci
-    /// shortest-form is a separate deferred gap).
+    /// gap-058 + gap-082: separator in the mantissa of a
+    /// scientific literal is stripped, and since `1_0e3` =
+    /// `10e3` = 10000 is an INTEGER value it is now further
+    /// canonicalised to shortest scientific form (`1E4`) by
+    /// gap-082. JAR-verified: `1_0e3` → `1E4`. (Before gap-082
+    /// the float branch only stripped the separator and left
+    /// `10e3`, which was never checked against the JAR and was
+    /// in fact wrong — the JAR always emits `1E4`.)
     #[test]
     fn gap058_scientific_mantissa_separator_stripped() {
-        assert_eq!(minify("var x=1_0e3;"), "var x=10e3;");
+        assert_eq!(minify("var x=1_0e3;"), "var x=1E4;");
     }
 
     /// gap-058 non-regression: a float with NO separator is
@@ -4563,6 +4671,130 @@ mod tests {
     #[test]
     fn gap058_plain_float_unchanged() {
         assert_eq!(minify("var x=3.14;"), "var x=3.14;");
+    }
+
+    // ---- gap-082: integer-valued float/scientific canon ----
+    //
+    // A decimal float / scientific literal that denotes a
+    // non-negative INTEGER fitting in u128 is routed through the
+    // shortest-form integer logic (decimal vs uppercase-`E`
+    // scientific, tie → decimal). Every assertion below is
+    // JAR-verified (`--compilation_level WHITESPACE_ONLY`).
+    // Fractional values and >u128 magnitudes stay deferred.
+
+    /// THE fixture: `1e3` = 1000 → sci `1E3` (3) beats decimal
+    /// `1000` (4). Lowercase `e` is normalised to uppercase.
+    #[test]
+    fn gap082_exp_to_uppercase_scientific() {
+        assert_eq!(minify("var x=1e3;"), "var x=1E3;");
+    }
+
+    /// `1.0` = 1 → `1` (trailing `.0` dropped; sci helper
+    /// returns None for e==0 so decimal wins).
+    #[test]
+    fn gap082_trailing_dot_zero_dropped() {
+        assert_eq!(minify("var x=1.0;"), "var x=1;");
+    }
+
+    /// `1.5e10` = 15000000000 → sci `15E9` (4) beats the
+    /// 11-digit decimal. Mantissa fractional digit folds into
+    /// the exponent: `15 × 10^9`.
+    #[test]
+    fn gap082_fractional_mantissa_scientific() {
+        assert_eq!(minify("var x=1.5e10;"), "var x=15E9;");
+    }
+
+    /// `1.23e2` = 123 → plain decimal `123` (sci `123E0` would
+    /// be longer; helper returns None for e==0).
+    #[test]
+    fn gap082_scientific_resolves_to_small_int() {
+        assert_eq!(minify("var x=1.23e2;"), "var x=123;");
+    }
+
+    /// `100.00` = 100 → `100`. eff_exp is NEGATIVE (−2) but the
+    /// digits `10000` are divisible by `10^2`, so the value is
+    /// an exact integer.
+    #[test]
+    fn gap082_trailing_zeros_after_point() {
+        assert_eq!(minify("var x=100.00;"), "var x=100;");
+    }
+
+    /// `1.5e3` = 1500 → decimal `1500` (4) ties sci `15E2` (4);
+    /// tie breaks to decimal.
+    #[test]
+    fn gap082_tie_breaks_to_decimal() {
+        assert_eq!(minify("var x=1.5e3;"), "var x=1500;");
+    }
+
+    /// `1e21` = 10^21 fits in u128 (< 3.4e38) → `1E21`.
+    #[test]
+    fn gap082_large_but_in_range() {
+        assert_eq!(minify("var x=1e21;"), "var x=1E21;");
+    }
+
+    /// **Deferred (residual gap-085)**: a FRACTIONAL value is
+    /// left as the separator-stripped source. `0.5` is not an
+    /// integer (5 not divisible by 10), so `decimal_float_as_u128`
+    /// returns None and the literal is unchanged. (The JAR emits
+    /// `.5`; matching it needs the V8 fractional formatter.)
+    #[test]
+    fn gap082_fractional_left_verbatim() {
+        assert_eq!(minify("var x=0.5;"), "var x=0.5;");
+    }
+
+    /// **Deferred (residual gap-085)**: a negative-exponent
+    /// (sub-1) value stays verbatim. `1e-5` = 0.00001 is not an
+    /// integer.
+    #[test]
+    fn gap082_negative_exponent_left_verbatim() {
+        assert_eq!(minify("var x=1e-5;"), "var x=1e-5;");
+    }
+
+    /// **Deferred**: a magnitude beyond u128 overflows the
+    /// `checked_pow`/`checked_mul` and is left verbatim. `1e100`
+    /// = 10^100 ≫ u128::MAX.
+    #[test]
+    fn gap082_overflow_left_verbatim() {
+        assert_eq!(minify("var x=1e100;"), "var x=1e100;");
+    }
+
+    /// `decimal_float_as_u128` unit checks — exercise the helper
+    /// directly across the boundary cases, including the ones
+    /// the lexer never feeds it as a single NUMBER token (`5.`).
+    #[test]
+    fn gap082_helper_recovers_integers() {
+        assert_eq!(decimal_float_as_u128("1e3"), Some(1000));
+        assert_eq!(decimal_float_as_u128("1.5e10"), Some(15_000_000_000));
+        assert_eq!(decimal_float_as_u128("1.0"), Some(1));
+        assert_eq!(decimal_float_as_u128("100.00"), Some(100));
+        assert_eq!(decimal_float_as_u128("5."), Some(5));
+        assert_eq!(decimal_float_as_u128("1.23e2"), Some(123));
+    }
+
+    /// `decimal_float_as_u128` returns None for fractional and
+    /// out-of-range inputs.
+    #[test]
+    fn gap082_helper_rejects_non_integers() {
+        assert_eq!(decimal_float_as_u128("0.5"), None);
+        assert_eq!(decimal_float_as_u128("1e-5"), None);
+        assert_eq!(decimal_float_as_u128("1.23"), None);
+        assert_eq!(decimal_float_as_u128("1e100"), None);
+    }
+
+    /// **Security regression**: pathological exponents must not
+    /// panic (DoS-by-crash on crafted JS input). `1e-2147483648`
+    /// parses to `exp == i32::MIN`; the old `(-eff_exp) as u32`
+    /// overflow-panicked on it. `1e2147483647` / `1e99999999999`
+    /// exercise the positive over-range and the i32-overflowing
+    /// exponent parse. All must return None (left verbatim), not
+    /// crash, and `minify` must round-trip the source unchanged.
+    #[test]
+    fn gap082_pathological_exponents_do_not_panic() {
+        assert_eq!(decimal_float_as_u128("1e-2147483648"), None);
+        assert_eq!(decimal_float_as_u128("1e2147483647"), None);
+        assert_eq!(decimal_float_as_u128("1e99999999999"), None);
+        assert_eq!(minify("var x=1e-2147483648;"), "var x=1e-2147483648;");
+        assert_eq!(minify("var x=1e99999999999;"), "var x=1e99999999999;");
     }
 
     /// **Non-regression**: decimal source without trailing

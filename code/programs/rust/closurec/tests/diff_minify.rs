@@ -100,10 +100,15 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // paren (`(a)?b:c` → `a?b:c`) now elides via the gap-077
     // left-operand pre-pass (a structural `?` joined its after-set).
     // `minify_ternary_cond_paren` enforced.
-    // gap-082 (CLOC14.38): decimal exponent / float canonicalisation
-    // in WHITESPACE_ONLY — `1e3` → `1E3`, `1.0` → `1`, `1.5e10` →
-    // `15E9` (uppercase `E`, drop trailing zeros, shortest mantissa).
-    ("num_exp_case", "gap-082: decimal exponent/float canonicalisation"),
+    // gap-082 RESOLVED in CLOC12.91 — a decimal float / scientific
+    // literal that denotes an INTEGER value fitting in u128 (`1e3` =
+    // 1000 → `1E3`, `1.5e10` → `15E9`, `1.0` → `1`, `100.00` → `100`)
+    // is now routed through the shortest-form integer logic by
+    // `decimal_float_as_u128`. `minify_num_exp_case` enforced.
+    // Residual (still deferred): the V8 fractional shortest-form
+    // (`0.5` → `.5`, `1e-5` → `1E-5`, `0.0001` → `1E-4`) and
+    // out-of-u128 magnitudes (`1e100` → `1E100`) need a Grisu/Ryu
+    // float formatter — tracked as gap-085.
     // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
     // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
     // outer). Extends gap-077/078 beyond the atomic-operand guard;

@@ -2,6 +2,41 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.95.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-082 (integer-valued subset)** — a decimal float /
+  scientific NUMBER literal that denotes a non-negative INTEGER fitting
+  in `u128` is now canonicalised to the same shortest form as a bare
+  integer in WHITESPACE_ONLY, matching upstream Closure:
+
+      1e3     -> 1E3      (lowercase e -> uppercase E; sci beats 1000)
+      1.0     -> 1        (trailing .0 dropped)
+      1.5e10  -> 15E9     (mantissa digit folds into the exponent)
+      1.23e2  -> 123
+      100.00  -> 100      (trailing fractional zeros)
+      1.5e3   -> 1500     (decimal vs 15E2 tie -> decimal)
+      12e3    -> 12E3
+      1e21    -> 1E21     (10^21 < u128::MAX)
+
+  `minify_num_exp_case` is now enforced. New helper
+  `decimal_float_as_u128` parses `INT[.FRAC][eEXP]` to its exact value
+  `digits × 10^(EXP − len(FRAC))` and returns the integer only when it
+  is non-negative and fits in `u128` (all arithmetic via
+  `checked_pow`/`checked_mul`/`parse::<u128>()`, so out-of-range inputs
+  fall through to verbatim rather than panicking). Recovered integers
+  reuse the existing decimal-vs-`scientific_form_of` shortest-form pick.
+
+### Deferred → gap-085
+- The V8 **fractional** shortest-form (`0.5` -> `.5`, `1e-5` -> `1E-5`,
+  `0.0001` -> `1E-4`, `1.50` -> `1.5`) and over-`u128` magnitudes
+  (`1e100` -> `1E100`) are left verbatim (valid, not byte-identical) —
+  they need a Grisu/Ryū-style `f64` formatter, tracked as gap-085.
+- The stale `gap058_scientific_mantissa_separator_stripped` unit test
+  was corrected: `1_0e3` (= 10000) now canonicalises to `1E4`
+  (JAR-verified). Its previous `10e3` assertion only stripped the
+  separator and was never checked against the JAR — it was wrong.
+
 ## [0.94.0] - 2026-06-12
 
 ### Changed
