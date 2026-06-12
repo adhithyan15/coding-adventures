@@ -384,3 +384,75 @@ fn no_objective_emits_no_optimize_section() {
         "no objective → no optimize key: {s}"
     );
 }
+
+// ---- feed-a-verdict: constraint outcome drives the differential (E2) ----
+
+#[test]
+fn an_infeasible_check_feeds_a_verdict_into_the_differential() {
+    // The schedule is contradictory (design ≥ 28 forces build ≥ 48 > 45). The
+    // `check` returns unsat; the engine injects `infeasible`, which fires
+    // `contributes from infeasible to schedule_broken` in the SAME differential.
+    let (ok, s) = run(
+        "adjcli_feedv_unsat.adj",
+        "prior 0.10 for schedule_ok\n  source \"x\" trust empirical\n\
+         prior 0.10 for schedule_broken\n  source \"x\" trust empirical\n\
+         contributes 1000000 from infeasible to schedule_broken\n  source \"sched\" trust authoritative\n\
+         symbol d : scalar\nsymbol b : scalar\n\
+         constrain d >= 28\nconstrain b >= d + 20\nconstrain b <= 45\ncheck\n\
+         ? schedule_ok\n? schedule_broken\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"unsat\""), "{s}");
+    // The constraint verdict drove the differential to schedule_broken.
+    assert!(s.contains("\"leader\":\"schedule_broken\""), "{s}");
+}
+
+#[test]
+fn a_feasible_check_drives_the_other_verdict() {
+    // Same clauses, looser deadline (design ≥ 25) → feasible → `feasible` fires
+    // `contributes from feasible to schedule_ok`, so schedule_ok leads instead.
+    let (ok, s) = run(
+        "adjcli_feedv_sat.adj",
+        "prior 0.10 for schedule_ok\n  source \"x\" trust empirical\n\
+         prior 0.10 for schedule_broken\n  source \"x\" trust empirical\n\
+         contributes 1000000 from feasible to schedule_ok\n  source \"sched\" trust authoritative\n\
+         contributes 1000000 from infeasible to schedule_broken\n  source \"sched\" trust authoritative\n\
+         symbol d : scalar\nsymbol b : scalar\n\
+         constrain d >= 25\nconstrain b >= d + 20\nconstrain b <= 45\ncheck\n\
+         ? schedule_ok\n? schedule_broken\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"sat\""), "{s}");
+    assert!(s.contains("\"leader\":\"schedule_ok\""), "{s}");
+}
+
+#[test]
+fn an_infeasible_lp_feeds_a_verdict() {
+    // An infeasible `maximize` injects `infeasible` just like `check`.
+    let (ok, s) = run(
+        "adjcli_feedv_lp.adj",
+        "prior 0.10 for plan_ok\n  source \"x\" trust empirical\n\
+         prior 0.10 for plan_overcommitted\n  source \"x\" trust empirical\n\
+         contributes 1000000 from infeasible to plan_overcommitted\n  source \"p\" trust authoritative\n\
+         symbol x : scalar\nconstrain x >= 5\nconstrain x <= 1\nmaximize x\n\
+         ? plan_ok\n? plan_overcommitted\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"infeasible\""), "{s}");
+    assert!(s.contains("\"leader\":\"plan_overcommitted\""), "{s}");
+}
+
+#[test]
+fn no_status_clause_means_constraints_dont_disturb_the_differential() {
+    // A program with constraints but NO `contributes from <status>` clause: the
+    // injected status fact is inert (nothing references it), so the differential
+    // is unchanged — the prior leads.
+    let (ok, s) = run(
+        "adjcli_feedv_inert.adj",
+        "prior 0.30 for acs\n  source \"x\" trust empirical\n\
+         symbol x : scalar\nconstrain x >= 5\nconstrain x <= 1\ncheck\n? acs\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"unsat\""), "{s}");
+    assert!(s.contains("\"posterior\":0.3"), "prior unchanged: {s}");
+}
