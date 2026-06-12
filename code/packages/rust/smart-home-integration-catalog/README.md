@@ -73,6 +73,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - activation forecast rows that classify timeline milestones into Chief-ready
   next actions for blockers, dependencies, approvals, reviews, risks,
   activation, and monitoring
+- activation playbook steps that pair forecast next actions with recommended
+  planning views and operator-readiness flags
 - activation risk rows that group rollout candidates by policy tier and policy
   surface after applying host-specific readiness context
 - activation dependency graphs that expose prerequisite nodes, satisfied edges,

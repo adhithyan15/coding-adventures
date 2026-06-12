@@ -89,6 +89,8 @@ Current scope:
   derived from dashboard cards
 - D18D integration activation-forecast descriptors for Chief-ready next-action
   classification derived from activation timeline milestones
+- D18D integration activation-playbook descriptors for operator-ready planning
+  steps derived from forecast next actions
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and

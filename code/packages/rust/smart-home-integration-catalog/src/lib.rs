@@ -1077,6 +1077,43 @@ impl IntegrationActivationForecastAction {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationPlaybookView {
+    ConstraintQueue,
+    DependencyGraph,
+    ApprovalPackets,
+    ReviewQueue,
+    RiskRegister,
+    ActivationActions,
+    StatusDashboard,
+}
+
+impl IntegrationActivationPlaybookView {
+    pub fn from_forecast_action(action: IntegrationActivationForecastAction) -> Self {
+        match action {
+            IntegrationActivationForecastAction::ResolveBlockers => Self::ConstraintQueue,
+            IntegrationActivationForecastAction::EnableDependencies => Self::DependencyGraph,
+            IntegrationActivationForecastAction::PrepareApproval => Self::ApprovalPackets,
+            IntegrationActivationForecastAction::QueueReview => Self::ReviewQueue,
+            IntegrationActivationForecastAction::ReviewRisk => Self::RiskRegister,
+            IntegrationActivationForecastAction::ActivateWave => Self::ActivationActions,
+            IntegrationActivationForecastAction::MonitorWave => Self::StatusDashboard,
+        }
+    }
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ConstraintQueue => "constraints",
+            Self::DependencyGraph => "dependencies",
+            Self::ApprovalPackets => "approvals",
+            Self::ReviewQueue => "reviews",
+            Self::RiskRegister => "risk",
+            Self::ActivationActions => "actions",
+            Self::StatusDashboard => "dashboard",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationDecisionStatus {
     ReadyToApprove,
     BlockedOnPrerequisites,
@@ -2029,6 +2066,71 @@ pub struct IntegrationActivationForecastSummary {
     pub first_risk_priority: Option<u8>,
     pub first_dependency_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPlaybookStep {
+    pub sequence: usize,
+    pub priority: u8,
+    pub playbook_action: IntegrationActivationForecastAction,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub milestone_kind: Option<IntegrationActivationBriefingItemKind>,
+    pub health_status: IntegrationActivationHealthStatus,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub action_count: usize,
+    pub dossier_count: usize,
+    pub evidence_count: usize,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub operator_required: bool,
+    pub activation_ready: bool,
+    pub blocked: bool,
+    pub review_required: bool,
+    pub monitor_only: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPlaybookSummary {
+    pub total_steps: usize,
+    pub unique_integrations: usize,
+    pub operator_required_steps: usize,
+    pub activation_ready_steps: usize,
+    pub blocked_steps: usize,
+    pub review_required_steps: usize,
+    pub monitor_steps: usize,
+    pub constraint_view_steps: usize,
+    pub dependency_view_steps: usize,
+    pub approval_view_steps: usize,
+    pub review_view_steps: usize,
+    pub risk_view_steps: usize,
+    pub action_view_steps: usize,
+    pub dashboard_view_steps: usize,
+    pub total_actions: usize,
+    pub total_dossiers: usize,
+    pub total_evidence: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub next_playbook_action: Option<IntegrationActivationForecastAction>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_step_sequence: Option<usize>,
+    pub next_step_priority: Option<u8>,
+    pub first_operator_sequence: Option<usize>,
+    pub first_activation_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_review_sequence: Option<usize>,
+    pub first_monitor_sequence: Option<usize>,
+    pub first_operator_priority: Option<u8>,
+    pub first_activation_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
+    pub first_monitor_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -4009,6 +4111,254 @@ impl IntegrationActivationForecastSummary {
             || self.has_blockers()
             || self.has_risks()
             || self.has_dependency_blockers()
+    }
+}
+
+impl IntegrationActivationPlaybookStep {
+    fn from_forecast(forecast: IntegrationActivationForecastItem) -> Self {
+        let recommended_view =
+            IntegrationActivationPlaybookView::from_forecast_action(forecast.forecast_action);
+        let activation_ready =
+            forecast.forecast_action == IntegrationActivationForecastAction::ActivateWave;
+        let monitor_only =
+            forecast.forecast_action == IntegrationActivationForecastAction::MonitorWave;
+        let blocked = matches!(
+            forecast.forecast_action,
+            IntegrationActivationForecastAction::ResolveBlockers
+                | IntegrationActivationForecastAction::EnableDependencies
+        ) || forecast.has_blockers()
+            || forecast.has_dependency_blockers();
+        let review_required = matches!(
+            forecast.forecast_action,
+            IntegrationActivationForecastAction::PrepareApproval
+                | IntegrationActivationForecastAction::QueueReview
+                | IntegrationActivationForecastAction::ReviewRisk
+        ) || forecast.has_approval_ready_work()
+            || forecast.has_review_work()
+            || forecast.has_risks();
+        let operator_required = forecast.forecast_action.requires_attention()
+            || blocked
+            || review_required
+            || forecast.requires_attention();
+        let requires_attention = operator_required || forecast.requires_attention();
+
+        Self {
+            sequence: forecast.sequence,
+            priority: forecast.priority,
+            playbook_action: forecast.forecast_action,
+            recommended_view,
+            milestone_kind: forecast.milestone_kind,
+            health_status: forecast.health_status,
+            integration_ids: forecast.integration_ids,
+            integration_count: forecast.integration_count,
+            action_count: forecast.action_count,
+            dossier_count: forecast.dossier_count,
+            evidence_count: forecast.evidence_count,
+            risk_count: forecast.risk_count,
+            dependency_edge_count: forecast.dependency_edge_count,
+            blocking_dependency_edge_count: forecast.blocking_dependency_edge_count,
+            highest_policy_tier: forecast.highest_policy_tier,
+            operator_required,
+            activation_ready,
+            blocked,
+            review_required,
+            monitor_only,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn operator_required(&self) -> bool {
+        self.operator_required
+    }
+
+    pub fn activation_ready(&self) -> bool {
+        self.activation_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn review_required(&self) -> bool {
+        self.review_required
+    }
+
+    pub fn monitor_only(&self) -> bool {
+        self.monitor_only
+    }
+}
+
+impl IntegrationActivationPlaybookSummary {
+    pub fn from_steps<'a>(
+        steps: impl IntoIterator<Item = &'a IntegrationActivationPlaybookStep>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_steps: 0,
+            unique_integrations: 0,
+            operator_required_steps: 0,
+            activation_ready_steps: 0,
+            blocked_steps: 0,
+            review_required_steps: 0,
+            monitor_steps: 0,
+            constraint_view_steps: 0,
+            dependency_view_steps: 0,
+            approval_view_steps: 0,
+            review_view_steps: 0,
+            risk_view_steps: 0,
+            action_view_steps: 0,
+            dashboard_view_steps: 0,
+            total_actions: 0,
+            total_dossiers: 0,
+            total_evidence: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            next_playbook_action: None,
+            next_recommended_view: None,
+            next_step_sequence: None,
+            next_step_priority: None,
+            first_operator_sequence: None,
+            first_activation_sequence: None,
+            first_blocked_sequence: None,
+            first_review_sequence: None,
+            first_monitor_sequence: None,
+            first_operator_priority: None,
+            first_activation_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            first_monitor_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for step in steps {
+            summary.total_steps += 1;
+            for integration_id in &step.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            match step.recommended_view {
+                IntegrationActivationPlaybookView::ConstraintQueue => {
+                    summary.constraint_view_steps += 1
+                }
+                IntegrationActivationPlaybookView::DependencyGraph => {
+                    summary.dependency_view_steps += 1
+                }
+                IntegrationActivationPlaybookView::ApprovalPackets => {
+                    summary.approval_view_steps += 1
+                }
+                IntegrationActivationPlaybookView::ReviewQueue => summary.review_view_steps += 1,
+                IntegrationActivationPlaybookView::RiskRegister => summary.risk_view_steps += 1,
+                IntegrationActivationPlaybookView::ActivationActions => {
+                    summary.action_view_steps += 1
+                }
+                IntegrationActivationPlaybookView::StatusDashboard => {
+                    summary.dashboard_view_steps += 1
+                }
+            }
+
+            if summary.next_playbook_action.is_none() && !step.monitor_only() {
+                summary.next_playbook_action = Some(step.playbook_action);
+                summary.next_recommended_view = Some(step.recommended_view);
+                summary.next_step_sequence = Some(step.sequence);
+                summary.next_step_priority = Some(step.priority);
+            }
+
+            if step.operator_required() {
+                summary.operator_required_steps += 1;
+                summary.first_operator_sequence =
+                    summary.first_operator_sequence.or(Some(step.sequence));
+                summary.first_operator_priority =
+                    min_optional_priority(summary.first_operator_priority, Some(step.priority));
+            }
+            if step.activation_ready() {
+                summary.activation_ready_steps += 1;
+                summary.first_activation_sequence =
+                    summary.first_activation_sequence.or(Some(step.sequence));
+                summary.first_activation_priority =
+                    min_optional_priority(summary.first_activation_priority, Some(step.priority));
+            }
+            if step.blocked() {
+                summary.blocked_steps += 1;
+                summary.first_blocked_sequence =
+                    summary.first_blocked_sequence.or(Some(step.sequence));
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, Some(step.priority));
+            }
+            if step.review_required() {
+                summary.review_required_steps += 1;
+                summary.first_review_sequence =
+                    summary.first_review_sequence.or(Some(step.sequence));
+                summary.first_review_priority =
+                    min_optional_priority(summary.first_review_priority, Some(step.priority));
+            }
+            if step.monitor_only() {
+                summary.monitor_steps += 1;
+                summary.first_monitor_sequence =
+                    summary.first_monitor_sequence.or(Some(step.sequence));
+                summary.first_monitor_priority =
+                    min_optional_priority(summary.first_monitor_priority, Some(step.priority));
+            }
+
+            summary.total_actions += step.action_count;
+            summary.total_dossiers += step.dossier_count;
+            summary.total_evidence += step.evidence_count;
+            summary.total_risks += step.risk_count;
+            summary.total_dependency_edges += step.dependency_edge_count;
+            summary.blocking_dependency_edges += step.blocking_dependency_edge_count;
+            summary.highest_policy_tier = summary.highest_policy_tier.max(step.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_steps > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.review_required_steps > 0 || summary.operator_required_steps > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.activation_ready_steps > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_steps == 0
+    }
+
+    pub fn has_operator_work(&self) -> bool {
+        self.operator_required_steps > 0
+    }
+
+    pub fn has_activation_work(&self) -> bool {
+        self.activation_ready_steps > 0 || self.action_view_steps > 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_steps > 0 || self.constraint_view_steps > 0 || self.dependency_view_steps > 0
+    }
+
+    pub fn has_review_work(&self) -> bool {
+        self.review_required_steps > 0
+            || self.approval_view_steps > 0
+            || self.review_view_steps > 0
+            || self.risk_view_steps > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.has_operator_work()
+            || self.has_blockers()
+            || self.has_review_work()
+            || self.overall_status.requires_attention()
     }
 }
 
@@ -8027,6 +8377,71 @@ pub fn activation_forecasts_at_or_before_priority(
     ))
 }
 
+pub fn activation_playbook_steps_from_forecasts(
+    mut forecasts: Vec<IntegrationActivationForecastItem>,
+) -> Vec<IntegrationActivationPlaybookStep> {
+    forecasts.sort_by(compare_activation_forecasts);
+    let mut steps = forecasts
+        .into_iter()
+        .map(IntegrationActivationPlaybookStep::from_forecast)
+        .collect::<Vec<_>>();
+    steps.sort_by(compare_activation_playbook_steps);
+    for (index, step) in steps.iter_mut().enumerate() {
+        step.sequence = index + 1;
+    }
+    steps
+}
+
+pub fn activation_playbook_steps_from_timeline_milestones(
+    milestones: Vec<IntegrationActivationTimelineMilestone>,
+) -> Vec<IntegrationActivationPlaybookStep> {
+    activation_playbook_steps_from_forecasts(activation_forecasts_from_timeline_milestones(
+        milestones,
+    ))
+}
+
+pub fn activation_playbook_steps_from_dashboard_cards(
+    cards: Vec<IntegrationActivationDashboardCard>,
+) -> Vec<IntegrationActivationPlaybookStep> {
+    activation_playbook_steps_from_forecasts(activation_forecasts_from_dashboard_cards(cards))
+}
+
+pub fn activation_playbook_steps_from_readouts<'a>(
+    readouts: impl IntoIterator<Item = &'a IntegrationActivationReadoutStage>,
+) -> Vec<IntegrationActivationPlaybookStep> {
+    activation_playbook_steps_from_dashboard_cards(activation_dashboard_cards_from_readouts(
+        readouts,
+    ))
+}
+
+pub fn activation_playbook_steps_from_candidates(
+    catalog: &[IntegrationCatalogEntry],
+    candidates: Vec<IntegrationActivationCandidate>,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationPlaybookStep> {
+    activation_playbook_steps_from_forecasts(activation_forecasts_from_candidates(
+        catalog,
+        candidates,
+        enabled_integrations,
+    ))
+}
+
+pub fn activation_playbook_steps_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationPlaybookStep> {
+    activation_playbook_steps_from_forecasts(activation_forecasts_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    ))
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -9390,6 +9805,21 @@ fn compare_activation_forecasts(
                 .cmp(&left.has_approval_ready_work())
         })
         .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_playbook_steps(
+    left: &IntegrationActivationPlaybookStep,
+    right: &IntegrationActivationPlaybookStep,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.operator_required().cmp(&left.operator_required()))
+        .then_with(|| left.playbook_action.cmp(&right.playbook_action))
+        .then_with(|| left.recommended_view.cmp(&right.recommended_view))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.review_required().cmp(&left.review_required()))
+        .then_with(|| right.activation_ready().cmp(&left.activation_ready()))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -11532,6 +11962,137 @@ mod tests {
         assert!(catalog_forecasts
             .iter()
             .any(IntegrationActivationForecastItem::requires_attention));
+    }
+
+    #[test]
+    fn activation_playbook_steps_recommend_next_planning_views() {
+        let review_ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+            display_name: "Review Ready Bridge".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 1,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HumanApproval,
+            local_only: true,
+            cloud_required: false,
+        };
+        let blocked_review_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+            display_name: "Blocked Review Camera".to_string(),
+            activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                IntegrationId::trusted("mqtt"),
+            ),
+            priority: 2,
+            missing_primitives: vec![PrimitiveFamily::CameraMedia],
+            missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+            missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+            requires_human_review: true,
+            highest_policy_tier: PrivilegeTier::HighRisk,
+            local_only: false,
+            cloud_required: true,
+        };
+        let ready_report = IntegrationReadinessReport {
+            requested_integration_id: IntegrationId::trusted("read_only_probe"),
+            display_name: "Read-only Probe".to_string(),
+            activation_target: IntegrationActivationTarget::Direct,
+            priority: 3,
+            missing_primitives: Vec::new(),
+            missing_capabilities: Vec::new(),
+            missing_dependencies: Vec::new(),
+            requires_human_review: false,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            local_only: true,
+            cloud_required: false,
+        };
+        let candidates = activation_candidates_from_reports(
+            [review_ready_report, blocked_review_report, ready_report].iter(),
+        );
+        let steps = activation_playbook_steps_from_candidates(&[], candidates, &[]);
+
+        assert_eq!(steps.len(), 3);
+        assert_eq!(steps[0].sequence, 1);
+        assert_eq!(steps[0].priority, 1);
+        assert_eq!(
+            steps[0].playbook_action,
+            IntegrationActivationForecastAction::ResolveBlockers
+        );
+        assert_eq!(
+            steps[0].recommended_view,
+            IntegrationActivationPlaybookView::ConstraintQueue
+        );
+        assert!(steps[0].operator_required());
+        assert!(steps[0].blocked());
+        assert!(steps[1].blocked());
+        assert_eq!(
+            steps[1].recommended_view,
+            IntegrationActivationPlaybookView::DependencyGraph
+        );
+        assert!(steps[2].activation_ready());
+        assert_eq!(
+            steps[2].recommended_view,
+            IntegrationActivationPlaybookView::ActivationActions
+        );
+
+        let summary = IntegrationActivationPlaybookSummary::from_steps(steps.iter());
+        assert_eq!(summary.total_steps, 3);
+        assert_eq!(summary.unique_integrations, 3);
+        assert!(summary.operator_required_steps >= 2);
+        assert_eq!(summary.activation_ready_steps, 1);
+        assert!(summary.blocked_steps >= 1);
+        assert!(summary.review_required_steps >= 1);
+        assert!(summary.constraint_view_steps >= 1);
+        assert!(summary.dependency_view_steps >= 1);
+        assert!(summary.action_view_steps >= 1);
+        assert!(summary.total_actions > 0);
+        assert!(summary.total_dossiers > 0);
+        assert!(summary.total_evidence > 0);
+        assert!(summary.blocking_dependency_edges > 0);
+        assert_eq!(
+            summary.next_playbook_action,
+            Some(IntegrationActivationForecastAction::ResolveBlockers)
+        );
+        assert_eq!(
+            summary.next_recommended_view,
+            Some(IntegrationActivationPlaybookView::ConstraintQueue)
+        );
+        assert_eq!(summary.next_step_sequence, Some(1));
+        assert_eq!(summary.next_step_priority, Some(1));
+        assert_eq!(summary.first_operator_sequence, Some(1));
+        assert_eq!(summary.first_activation_sequence, Some(3));
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+        assert!(summary.has_operator_work());
+        assert!(summary.has_activation_work());
+        assert!(summary.has_blockers());
+        assert!(summary.has_review_work());
+        assert!(summary.requires_attention());
+        assert!(!summary.is_empty());
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_steps = activation_playbook_steps_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_steps
+            .iter()
+            .any(IntegrationActivationPlaybookStep::requires_attention));
     }
 
     #[test]
