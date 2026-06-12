@@ -77,6 +77,9 @@ runtime and Chief of Staff tools a typed catalog for:
   planning views and operator-readiness flags
 - activation runbook entries that join playbook steps to audit, risk,
   dependency, and readiness-gap context
+- activation handoff packages, execution packets, and verification checkpoints
+  that carry runbook context through execution-transfer and post-execution
+  readiness checks
 - activation operator tasks that turn playbook steps into actionable
   human/operator queue rows
 - activation control-room panels that group operator tasks by recommended

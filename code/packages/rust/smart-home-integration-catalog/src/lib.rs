@@ -1202,6 +1202,34 @@ impl IntegrationActivationExecutionStatus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationVerificationStatus {
+    ReadyToVerify,
+    PendingOperator,
+    PendingApproval,
+    Blocked,
+    Monitoring,
+}
+
+impl IntegrationActivationVerificationStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::ReadyToVerify => "ready_to_verify",
+            Self::PendingOperator => "pending_operator",
+            Self::PendingApproval => "pending_approval",
+            Self::Blocked => "blocked",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::PendingOperator | Self::PendingApproval | Self::Blocked
+        )
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationOperatorTaskKind {
     ResolveConstraints,
     EnableDependencies,
@@ -2603,6 +2631,86 @@ pub struct IntegrationActivationExecutionSummary {
     pub first_approval_priority: Option<u8>,
     pub first_blocked_priority: Option<u8>,
     pub first_dependency_blocked_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationVerificationCheckpoint {
+    pub sequence: usize,
+    pub execution_sequence: usize,
+    pub handoff_sequence: usize,
+    pub runbook_sequence: usize,
+    pub operator_task_sequence: Option<usize>,
+    pub priority: u8,
+    pub verification_status: IntegrationActivationVerificationStatus,
+    pub execution_status: IntegrationActivationExecutionStatus,
+    pub handoff_status: IntegrationActivationHandoffStatus,
+    pub phase: IntegrationActivationRunbookPhase,
+    pub task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub playbook_action: IntegrationActivationForecastAction,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub integration_ids: Vec<IntegrationId>,
+    pub integration_count: usize,
+    pub risk_ids: Vec<String>,
+    pub dependency_integration_ids: Vec<IntegrationId>,
+    pub blocking_dependency_integration_ids: Vec<IntegrationId>,
+    pub risk_count: usize,
+    pub dependency_edge_count: usize,
+    pub blocking_dependency_edge_count: usize,
+    pub readiness_gap_count: usize,
+    pub audit_record_count: usize,
+    pub attention_audit_record_count: usize,
+    pub highest_policy_tier: PrivilegeTier,
+    pub operator_pending: bool,
+    pub approval_pending: bool,
+    pub dependency_ready: bool,
+    pub can_verify: bool,
+    pub verification_ready: bool,
+    pub blocked: bool,
+    pub monitor_only: bool,
+    pub evidence_review_required: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationVerificationSummary {
+    pub total_checkpoints: usize,
+    pub unique_integrations: usize,
+    pub ready_to_verify_checkpoints: usize,
+    pub verification_ready_checkpoints: usize,
+    pub pending_operator_checkpoints: usize,
+    pub pending_approval_checkpoints: usize,
+    pub blocked_checkpoints: usize,
+    pub dependency_ready_checkpoints: usize,
+    pub dependency_blocked_checkpoints: usize,
+    pub monitor_checkpoints: usize,
+    pub evidence_review_checkpoints: usize,
+    pub checkpoints_requiring_attention: usize,
+    pub total_risks: usize,
+    pub total_dependency_edges: usize,
+    pub blocking_dependency_edges: usize,
+    pub total_readiness_gaps: usize,
+    pub total_audit_records: usize,
+    pub attention_audit_records: usize,
+    pub next_verification_status: Option<IntegrationActivationVerificationStatus>,
+    pub next_execution_status: Option<IntegrationActivationExecutionStatus>,
+    pub next_task_kind: Option<IntegrationActivationOperatorTaskKind>,
+    pub next_phase: Option<IntegrationActivationRunbookPhase>,
+    pub next_playbook_action: Option<IntegrationActivationForecastAction>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_checkpoint_sequence: Option<usize>,
+    pub next_checkpoint_priority: Option<u8>,
+    pub first_ready_to_verify_sequence: Option<usize>,
+    pub first_pending_operator_sequence: Option<usize>,
+    pub first_pending_approval_sequence: Option<usize>,
+    pub first_blocked_sequence: Option<usize>,
+    pub first_attention_sequence: Option<usize>,
+    pub first_ready_to_verify_priority: Option<u8>,
+    pub first_pending_operator_priority: Option<u8>,
+    pub first_pending_approval_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
@@ -6103,6 +6211,306 @@ impl IntegrationActivationExecutionSummary {
         self.packets_requiring_attention > 0
             || self.has_blockers()
             || self.has_approval_work()
+            || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationVerificationCheckpoint {
+    fn from_execution_packet(packet: IntegrationActivationExecutionPacket) -> Self {
+        let verification_status = if packet.monitor_only() {
+            IntegrationActivationVerificationStatus::Monitoring
+        } else if packet.blocked() || !packet.dependency_ready() {
+            IntegrationActivationVerificationStatus::Blocked
+        } else if packet.approval_required() {
+            IntegrationActivationVerificationStatus::PendingApproval
+        } else if packet.operator_required() && !packet.executable() {
+            IntegrationActivationVerificationStatus::PendingOperator
+        } else {
+            IntegrationActivationVerificationStatus::ReadyToVerify
+        };
+        let evidence_review_required =
+            packet.review_required() || packet.attention_audit_record_count > 0;
+        let can_verify =
+            packet.executable() && packet.dependency_ready() && !evidence_review_required;
+        let verification_ready = can_verify && packet.audit_record_count > 0;
+        let requires_attention = verification_status.requires_attention()
+            || evidence_review_required
+            || packet.requires_attention();
+        let operator_pending = packet.operator_required() && !packet.executable();
+        let approval_pending = packet.approval_required();
+        let dependency_ready = packet.dependency_ready();
+        let blocked = packet.blocked();
+        let monitor_only = packet.monitor_only();
+
+        Self {
+            sequence: packet.sequence,
+            execution_sequence: packet.sequence,
+            handoff_sequence: packet.handoff_sequence,
+            runbook_sequence: packet.runbook_sequence,
+            operator_task_sequence: packet.operator_task_sequence,
+            priority: packet.priority,
+            verification_status,
+            execution_status: packet.execution_status,
+            handoff_status: packet.handoff_status,
+            phase: packet.phase,
+            task_kind: packet.task_kind,
+            playbook_action: packet.playbook_action,
+            recommended_view: packet.recommended_view,
+            integration_ids: packet.integration_ids,
+            integration_count: packet.integration_count,
+            risk_ids: packet.risk_ids,
+            dependency_integration_ids: packet.dependency_integration_ids,
+            blocking_dependency_integration_ids: packet.blocking_dependency_integration_ids,
+            risk_count: packet.risk_count,
+            dependency_edge_count: packet.dependency_edge_count,
+            blocking_dependency_edge_count: packet.blocking_dependency_edge_count,
+            readiness_gap_count: packet.readiness_gap_count,
+            audit_record_count: packet.audit_record_count,
+            attention_audit_record_count: packet.attention_audit_record_count,
+            highest_policy_tier: packet.highest_policy_tier,
+            operator_pending,
+            approval_pending,
+            dependency_ready,
+            can_verify,
+            verification_ready,
+            blocked,
+            monitor_only,
+            evidence_review_required,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_count
+    }
+
+    pub fn can_verify(&self) -> bool {
+        self.can_verify
+    }
+
+    pub fn verification_ready(&self) -> bool {
+        self.verification_ready
+    }
+
+    pub fn operator_pending(&self) -> bool {
+        self.operator_pending
+    }
+
+    pub fn approval_pending(&self) -> bool {
+        self.approval_pending
+    }
+
+    pub fn dependency_ready(&self) -> bool {
+        self.dependency_ready
+    }
+
+    pub fn blocked(&self) -> bool {
+        self.blocked
+    }
+
+    pub fn monitor_only(&self) -> bool {
+        self.monitor_only
+    }
+
+    pub fn evidence_review_required(&self) -> bool {
+        self.evidence_review_required
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationVerificationSummary {
+    pub fn from_checkpoints<'a>(
+        checkpoints: impl IntoIterator<Item = &'a IntegrationActivationVerificationCheckpoint>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_checkpoints: 0,
+            unique_integrations: 0,
+            ready_to_verify_checkpoints: 0,
+            verification_ready_checkpoints: 0,
+            pending_operator_checkpoints: 0,
+            pending_approval_checkpoints: 0,
+            blocked_checkpoints: 0,
+            dependency_ready_checkpoints: 0,
+            dependency_blocked_checkpoints: 0,
+            monitor_checkpoints: 0,
+            evidence_review_checkpoints: 0,
+            checkpoints_requiring_attention: 0,
+            total_risks: 0,
+            total_dependency_edges: 0,
+            blocking_dependency_edges: 0,
+            total_readiness_gaps: 0,
+            total_audit_records: 0,
+            attention_audit_records: 0,
+            next_verification_status: None,
+            next_execution_status: None,
+            next_task_kind: None,
+            next_phase: None,
+            next_playbook_action: None,
+            next_recommended_view: None,
+            next_checkpoint_sequence: None,
+            next_checkpoint_priority: None,
+            first_ready_to_verify_sequence: None,
+            first_pending_operator_sequence: None,
+            first_pending_approval_sequence: None,
+            first_blocked_sequence: None,
+            first_attention_sequence: None,
+            first_ready_to_verify_priority: None,
+            first_pending_operator_priority: None,
+            first_pending_approval_priority: None,
+            first_blocked_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for checkpoint in checkpoints {
+            summary.total_checkpoints += 1;
+            for integration_id in &checkpoint.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_verification_status.is_none() && !checkpoint.monitor_only() {
+                summary.next_verification_status = Some(checkpoint.verification_status);
+                summary.next_execution_status = Some(checkpoint.execution_status);
+                summary.next_task_kind = checkpoint.task_kind;
+                summary.next_phase = Some(checkpoint.phase);
+                summary.next_playbook_action = Some(checkpoint.playbook_action);
+                summary.next_recommended_view = Some(checkpoint.recommended_view);
+                summary.next_checkpoint_sequence = Some(checkpoint.sequence);
+                summary.next_checkpoint_priority = Some(checkpoint.priority);
+            }
+
+            match checkpoint.verification_status {
+                IntegrationActivationVerificationStatus::ReadyToVerify => {
+                    summary.ready_to_verify_checkpoints += 1;
+                    summary.first_ready_to_verify_sequence = summary
+                        .first_ready_to_verify_sequence
+                        .or(Some(checkpoint.sequence));
+                    summary.first_ready_to_verify_priority = min_optional_priority(
+                        summary.first_ready_to_verify_priority,
+                        Some(checkpoint.priority),
+                    );
+                }
+                IntegrationActivationVerificationStatus::PendingOperator => {
+                    summary.pending_operator_checkpoints += 1;
+                    summary.first_pending_operator_sequence = summary
+                        .first_pending_operator_sequence
+                        .or(Some(checkpoint.sequence));
+                    summary.first_pending_operator_priority = min_optional_priority(
+                        summary.first_pending_operator_priority,
+                        Some(checkpoint.priority),
+                    );
+                }
+                IntegrationActivationVerificationStatus::PendingApproval => {
+                    summary.pending_approval_checkpoints += 1;
+                    summary.first_pending_approval_sequence = summary
+                        .first_pending_approval_sequence
+                        .or(Some(checkpoint.sequence));
+                    summary.first_pending_approval_priority = min_optional_priority(
+                        summary.first_pending_approval_priority,
+                        Some(checkpoint.priority),
+                    );
+                }
+                IntegrationActivationVerificationStatus::Blocked => {
+                    summary.blocked_checkpoints += 1;
+                    summary.first_blocked_sequence =
+                        summary.first_blocked_sequence.or(Some(checkpoint.sequence));
+                    summary.first_blocked_priority = min_optional_priority(
+                        summary.first_blocked_priority,
+                        Some(checkpoint.priority),
+                    );
+                }
+                IntegrationActivationVerificationStatus::Monitoring => {
+                    summary.monitor_checkpoints += 1;
+                }
+            }
+
+            if checkpoint.verification_ready() {
+                summary.verification_ready_checkpoints += 1;
+            }
+            if checkpoint.dependency_ready() {
+                summary.dependency_ready_checkpoints += 1;
+            } else {
+                summary.dependency_blocked_checkpoints += 1;
+            }
+            if checkpoint.evidence_review_required() {
+                summary.evidence_review_checkpoints += 1;
+            }
+            if checkpoint.requires_attention() {
+                summary.checkpoints_requiring_attention += 1;
+                summary.first_attention_sequence = summary
+                    .first_attention_sequence
+                    .or(Some(checkpoint.sequence));
+                summary.first_attention_priority = min_optional_priority(
+                    summary.first_attention_priority,
+                    Some(checkpoint.priority),
+                );
+            }
+
+            summary.total_risks += checkpoint.risk_count;
+            summary.total_dependency_edges += checkpoint.dependency_edge_count;
+            summary.blocking_dependency_edges += checkpoint.blocking_dependency_edge_count;
+            summary.total_readiness_gaps += checkpoint.readiness_gap_count;
+            summary.total_audit_records += checkpoint.audit_record_count;
+            summary.attention_audit_records += checkpoint.attention_audit_record_count;
+            summary.highest_policy_tier = summary
+                .highest_policy_tier
+                .max(checkpoint.highest_policy_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_checkpoints > 0
+            || summary.dependency_blocked_checkpoints > 0
+            || summary.blocking_dependency_edges > 0
+            || summary.total_readiness_gaps > 0
+        {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.pending_approval_checkpoints > 0
+            || summary.pending_operator_checkpoints > 0
+            || summary.evidence_review_checkpoints > 0
+            || summary.checkpoints_requiring_attention > 0
+            || summary.total_risks > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_to_verify_checkpoints > 0
+            || summary.verification_ready_checkpoints > 0
+        {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_checkpoints == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checkpoints > 0
+            || self.dependency_blocked_checkpoints > 0
+            || self.blocking_dependency_edges > 0
+            || self.total_readiness_gaps > 0
+    }
+
+    pub fn has_pending_work(&self) -> bool {
+        self.pending_operator_checkpoints > 0
+            || self.pending_approval_checkpoints > 0
+            || self.evidence_review_checkpoints > 0
+    }
+
+    pub fn ready_to_verify(&self) -> bool {
+        self.ready_to_verify_checkpoints > 0 && !self.has_blockers() && !self.has_pending_work()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checkpoints_requiring_attention > 0
+            || self.has_blockers()
+            || self.has_pending_work()
             || self.overall_status.requires_attention()
     }
 }
@@ -12076,6 +12484,38 @@ pub fn activation_execution_packets_at_or_before_priority(
     activation_execution_packets_from_handoff_packages(packages, tasks)
 }
 
+pub fn activation_verification_checkpoints_from_execution_packets(
+    packets: Vec<IntegrationActivationExecutionPacket>,
+) -> Vec<IntegrationActivationVerificationCheckpoint> {
+    let mut checkpoints = packets
+        .into_iter()
+        .map(IntegrationActivationVerificationCheckpoint::from_execution_packet)
+        .collect::<Vec<_>>();
+    checkpoints.sort_by(compare_activation_verification_checkpoints);
+    for (index, checkpoint) in checkpoints.iter_mut().enumerate() {
+        checkpoint.sequence = index + 1;
+    }
+    checkpoints
+}
+
+pub fn activation_verification_checkpoints_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationVerificationCheckpoint> {
+    activation_verification_checkpoints_from_execution_packets(
+        activation_execution_packets_at_or_before_priority(
+            catalog,
+            priority,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        ),
+    )
+}
+
 pub fn activation_control_room_panels_from_operator_tasks(
     mut tasks: Vec<IntegrationActivationOperatorTask>,
 ) -> Vec<IntegrationActivationControlRoomPanel> {
@@ -14105,6 +14545,16 @@ fn activation_execution_status_sort_key(status: IntegrationActivationExecutionSt
     }
 }
 
+fn activation_verification_status_sort_key(status: IntegrationActivationVerificationStatus) -> u8 {
+    match status {
+        IntegrationActivationVerificationStatus::Blocked => 0,
+        IntegrationActivationVerificationStatus::PendingApproval => 1,
+        IntegrationActivationVerificationStatus::PendingOperator => 2,
+        IntegrationActivationVerificationStatus::ReadyToVerify => 3,
+        IntegrationActivationVerificationStatus::Monitoring => 4,
+    }
+}
+
 fn compare_activation_handoff_packages(
     left: &IntegrationActivationHandoffPackage,
     right: &IntegrationActivationHandoffPackage,
@@ -14146,6 +14596,29 @@ fn compare_activation_execution_packets(
         .then_with(|| right.approval_required().cmp(&left.approval_required()))
         .then_with(|| right.operator_required().cmp(&left.operator_required()))
         .then_with(|| right.executable().cmp(&left.executable()))
+        .then_with(|| right.dependency_ready().cmp(&left.dependency_ready()))
+        .then_with(|| right.risk_count.cmp(&left.risk_count))
+        .then_with(|| left.phase.cmp(&right.phase))
+        .then_with(|| left.runbook_sequence.cmp(&right.runbook_sequence))
+}
+
+fn compare_activation_verification_checkpoints(
+    left: &IntegrationActivationVerificationCheckpoint,
+    right: &IntegrationActivationVerificationCheckpoint,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            activation_verification_status_sort_key(left.verification_status).cmp(
+                &activation_verification_status_sort_key(right.verification_status),
+            )
+        })
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocked().cmp(&left.blocked()))
+        .then_with(|| right.approval_pending().cmp(&left.approval_pending()))
+        .then_with(|| right.operator_pending().cmp(&left.operator_pending()))
+        .then_with(|| right.can_verify().cmp(&left.can_verify()))
+        .then_with(|| right.verification_ready().cmp(&left.verification_ready()))
         .then_with(|| right.dependency_ready().cmp(&left.dependency_ready()))
         .then_with(|| right.risk_count.cmp(&left.risk_count))
         .then_with(|| left.phase.cmp(&right.phase))
@@ -17633,6 +18106,48 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let verification =
+            activation_verification_checkpoints_from_execution_packets(execution.clone());
+        assert_eq!(verification.len(), execution.len());
+        assert!(verification
+            .iter()
+            .any(IntegrationActivationVerificationCheckpoint::requires_attention));
+        assert!(verification
+            .iter()
+            .any(|checkpoint| checkpoint.verification_status
+                == IntegrationActivationVerificationStatus::Blocked));
+        assert!(verification
+            .iter()
+            .any(|checkpoint| checkpoint.verification_status
+                == IntegrationActivationVerificationStatus::PendingApproval));
+
+        let blocked_verification = verification
+            .iter()
+            .find(|checkpoint| {
+                checkpoint
+                    .integration_ids
+                    .contains(&IntegrationId::trusted("blocked_review_camera"))
+            })
+            .unwrap();
+        assert_eq!(
+            blocked_verification.verification_status,
+            IntegrationActivationVerificationStatus::Blocked
+        );
+        assert!(blocked_verification.blocked());
+        assert!(!blocked_verification.dependency_ready());
+        assert!(!blocked_verification.can_verify());
+
+        let verification_summary =
+            IntegrationActivationVerificationSummary::from_checkpoints(verification.iter());
+        assert_eq!(verification_summary.total_checkpoints, verification.len());
+        assert!(verification_summary.has_blockers());
+        assert!(verification_summary.has_pending_work());
+        assert!(verification_summary.requires_attention());
+        assert_eq!(
+            verification_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -17672,6 +18187,17 @@ mod tests {
         assert!(catalog_execution_packets
             .iter()
             .any(IntegrationActivationExecutionPacket::requires_attention));
+        let catalog_verification_checkpoints =
+            activation_verification_checkpoints_at_or_before_priority(
+                &catalog,
+                2,
+                &available_primitives,
+                &allowed_capabilities,
+                &[],
+            );
+        assert!(catalog_verification_checkpoints
+            .iter()
+            .any(IntegrationActivationVerificationCheckpoint::requires_attention));
     }
 
     #[test]
