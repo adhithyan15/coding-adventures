@@ -57,3 +57,9 @@ paths when the matrix size reaches the package threshold.
 `diodeAtTemperature`, `bjtAtTemperature`, `mosfetAtTemperature`, and
 `circuitAtTemperature` provide operating-temperature footholds for diode, BJT,
 and Level-1 MOSFET models before running an analysis.
+
+`normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
+`jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
+alias surface for diode, BJT, JFET, and Level-1 MOS cards.
+`deviceModelAuditFixtures` returns the canonical cross-language fixture cards
+used to keep the TypeScript, Python, and Rust ports aligned.

@@ -1,13 +1,15 @@
 use spice_engine::{
-    circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep,
-    dc_sweep_corners, dc_sweep_corners_parallel, dc_temperature_sweep,
-    dc_temperature_sweep_corners, format_corner_dc_sweep_table, format_corner_dc_table,
+    bjt_from_model_card, circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op,
+    dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
+    dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
     format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
+    jfet_from_model_card, mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
     BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
     CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode, Element,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
-    SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs,
-    VoltageSource, Waveform, XInstance,
+    Inductor, Jfet, JfetPolarity, ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor,
+    SinWaveform, SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs,
+    Vcvs, VoltageSource, Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -15,6 +17,120 @@ fn assert_close(actual: f64, expected: f64) {
         (actual - expected).abs() < 1.0e-9,
         "expected {expected}, got {actual}"
     );
+}
+
+#[test]
+fn model_card_type_aliases_are_normalized() {
+    assert_eq!(
+        normalize_model_card_type("diode").unwrap(),
+        ModelCardKind::Diode
+    );
+    assert_eq!(
+        normalize_model_card_type("n-jfet").unwrap(),
+        ModelCardKind::Njf
+    );
+    assert_eq!(
+        normalize_model_card_type("pch").unwrap(),
+        ModelCardKind::Pmos
+    );
+}
+
+#[test]
+fn model_card_aliases_build_device_instances() {
+    let diode_card = normalize_model_card(
+        "Dfast",
+        "diode",
+        &[
+            ("JS", 2.0e-14),
+            ("CJ", 1.5e-12),
+            ("TT", 4.0e-9),
+            ("RS", 10.0),
+        ],
+    )
+    .unwrap();
+    let diode_model = diode_from_model_card("D1", "a", "k", &diode_card).unwrap();
+    assert_close(*diode_card.parameters.get("IS").unwrap(), 2.0e-14);
+    assert_close(*diode_card.parameters.get("CJO").unwrap(), 1.5e-12);
+    assert_eq!(diode_card.unsupported_parameters, vec!["RS".to_string()]);
+    assert_close(diode_model.saturation_current, 2.0e-14);
+    assert_close(diode_model.junction_capacitance, 1.5e-12);
+    assert_close(diode_model.transit_time, 4.0e-9);
+
+    let bjt_card =
+        normalize_model_card("Qsmall", "npn", &[("BETA", 125.0), ("CBE", 2.0e-12)]).unwrap();
+    let bjt_model = bjt_from_model_card("Q1", "c", "b", "e", &bjt_card).unwrap();
+    assert_close(*bjt_card.parameters.get("BF").unwrap(), 125.0);
+    assert_close(*bjt_card.parameters.get("CJE").unwrap(), 2.0e-12);
+    assert_eq!(bjt_model.polarity, BjtPolarity::Npn);
+    assert_close(bjt_model.forward_beta, 125.0);
+    assert_close(bjt_model.base_emitter_capacitance, 2.0e-12);
+
+    let jfet_card = normalize_model_card(
+        "Jn",
+        "njfet",
+        &[("BET", 9.0e-4), ("VT0", -1.8), ("LAM", 0.02)],
+    )
+    .unwrap();
+    let jfet_model = jfet_from_model_card("J1", "d", "g", "s", &jfet_card).unwrap();
+    assert_close(*jfet_card.parameters.get("BETA").unwrap(), 9.0e-4);
+    assert_close(*jfet_card.parameters.get("VTO").unwrap(), -1.8);
+    assert_close(*jfet_card.parameters.get("LAMBDA").unwrap(), 0.02);
+    assert_eq!(jfet_model.polarity, JfetPolarity::Njf);
+    assert_close(jfet_model.beta, 9.0e-4);
+    assert_close(jfet_model.threshold_voltage, -1.8);
+    assert_close(jfet_model.channel_length_modulation, 0.02);
+
+    let mos_card = normalize_model_card(
+        "Mn",
+        "nmos",
+        &[
+            ("LEVEL", 1.0),
+            ("VTO", 0.55),
+            ("LAM", 0.04),
+            ("NSUB", 1.6),
+            ("CJD", 3.0e-13),
+        ],
+    )
+    .unwrap();
+    let mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", &mos_card).unwrap();
+    assert_close(*mos_card.parameters.get("VT0").unwrap(), 0.55);
+    assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
+    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
+    assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
+    assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
+    assert_close(mos_model.params.vt0, 0.55);
+    assert_close(mos_model.params.lambda, 0.04);
+    assert_close(mos_model.params.n_sub, 1.6);
+    assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
+}
+
+#[test]
+fn model_card_audit_fixtures_cover_supported_device_families() {
+    let fixtures = device_model_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.kind)
+            .collect::<Vec<_>>(),
+        vec![
+            ModelCardKind::Diode,
+            ModelCardKind::Npn,
+            ModelCardKind::Njf,
+            ModelCardKind::Nmos
+        ]
+    );
+    assert_close(*fixtures[0].parameters.get("IS").unwrap(), 2.0e-14);
+    assert_close(*fixtures[1].parameters.get("BF").unwrap(), 125.0);
+    assert_close(*fixtures[2].parameters.get("VTO").unwrap(), -1.8);
+    assert_close(*fixtures[3].parameters.get("VT0").unwrap(), 0.55);
+}
+
+#[test]
+fn non_level_one_mos_model_cards_are_explicitly_rejected() {
+    let error = normalize_model_card("Mbad", "nmos", &[("LEVEL", 2.0)]).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("only MOS LEVEL=1 model cards are supported"));
 }
 
 #[test]

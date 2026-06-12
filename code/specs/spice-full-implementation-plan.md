@@ -15,12 +15,13 @@ downstream tools to compare.
 
 ## Current PR Slice
 
-1. Device model audit fixtures and model-card alias compatibility.
+1. Mixed-signal hardware VM bridge.
    - Status: next.
-   - Build diode, BJT, JFET, and MOS Level 1 reference fixtures that can be
-     compared across Python, Rust, TypeScript, and a documented oracle.
-   - Close parser/model-card alias gaps needed by those fixtures without
-     expanding into full BSIM or vendor-specific compatibility.
+   - Connect SPICE transient stepping to the hardware VM scheduler through a
+     small deterministic analog/digital boundary fixture.
+   - Keep the first bridge narrow enough to prove bidirectional thresholds,
+     event timing, breakpoint scheduling, and VCD/probe correlation without
+     pulling in a full cosimulation runtime.
 
 ## Completed Slices
 
@@ -81,6 +82,16 @@ downstream tools to compare.
    - Large real DC and complex AC matrix solves now route through sparse-row
      solver implementations in all three packages when the shared threshold is
      reached.
+
+8. Device model audit fixtures and model-card alias compatibility.
+   - Status: completed in this device-model alias fixture slice.
+   - Python, Rust, and TypeScript now expose matching model-card type
+     normalization, supported-parameter alias normalization, typed device
+     builders, and canonical audit fixtures for diode, BJT, JFET, and Level-1
+     MOS `.model` cards.
+   - Unsupported model-card parameters are surfaced as explicit unsupported
+     keys, and MOS cards deliberately reject non-Level-1 models until the
+     Level 2/3 or BSIM scope is chosen.
 
 ## Backlog
 
@@ -144,8 +155,6 @@ downstream tools to compare.
 
 ## Suggested PR Queue
 
-1. Sparse solver productionization and convergence diagnostics.
-2. Device model audit fixtures and model-card alias compatibility.
-3. Mixed-signal hardware VM bridge.
-4. Verilog-A/custom-model foothold.
-5. Compatibility corpus and release readiness.
+1. Mixed-signal hardware VM bridge.
+2. Verilog-A/custom-model foothold.
+3. Compatibility corpus and release readiness.

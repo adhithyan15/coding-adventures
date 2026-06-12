@@ -432,6 +432,15 @@ export interface Mosfet {
   readonly params: MosfetLevel1Params;
 }
 
+export type ModelCardKind = "D" | "NPN" | "PNP" | "NJF" | "PJF" | "NMOS" | "PMOS";
+
+export interface NormalizedModelCard {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly parameters: Readonly<Record<string, number>>;
+  readonly unsupportedParameters: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -2363,6 +2372,272 @@ export function mosfet(
     model: "level1",
     params: { ...defaultMosfetLevel1Params(), ...params },
   };
+}
+
+const MODEL_TYPE_ALIASES: Readonly<Record<string, ModelCardKind>> = {
+  D: "D",
+  DIODE: "D",
+  NPN: "NPN",
+  PNP: "PNP",
+  NJF: "NJF",
+  NJFET: "NJF",
+  NJ: "NJF",
+  PJF: "PJF",
+  PJFET: "PJF",
+  PJ: "PJF",
+  NMOS: "NMOS",
+  NCH: "NMOS",
+  PMOS: "PMOS",
+  PCH: "PMOS",
+};
+
+const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  IS: "IS",
+  JS: "IS",
+  VT: "VT",
+  V_T: "VT",
+  N: "N",
+  BV: "BV",
+  IBV: "IBV",
+  CJO: "CJO",
+  CJ: "CJO",
+  CJ0: "CJO",
+  TT: "TT",
+};
+
+const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  IS: "IS",
+  BF: "BF",
+  BETA: "BF",
+  BETA_F: "BF",
+  HFE: "BF",
+  VT: "VT",
+  V_T: "VT",
+  CJE: "CJE",
+  CJE0: "CJE",
+  CBE: "CJE",
+  CJC: "CJC",
+  CJC0: "CJC",
+  CBC: "CJC",
+  TF: "TF",
+  TR: "TR",
+};
+
+const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  BETA: "BETA",
+  BET: "BETA",
+  VTO: "VTO",
+  VT0: "VTO",
+  VTH: "VTO",
+  LAMBDA: "LAMBDA",
+  LAM: "LAMBDA",
+};
+
+const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  LEVEL: "LEVEL",
+  VT0: "VT0",
+  VTO: "VT0",
+  VTH: "VT0",
+  KP: "KP",
+  LAMBDA: "LAMBDA",
+  LAM: "LAMBDA",
+  GAMMA: "GAMMA",
+  PHI: "PHI",
+  W: "W",
+  L: "L",
+  IS: "IS",
+  NSUB: "N_SUB",
+  N_SUB: "N_SUB",
+  TNOM: "T_NOM",
+  T_NOM: "T_NOM",
+  CGSO: "CGSO",
+  CGDO: "CGDO",
+  CGBO: "CGBO",
+  CBS: "CBS",
+  CJS: "CBS",
+  CBD: "CBD",
+  CJD: "CBD",
+};
+
+function modelTypeKey(text: string): string {
+  return text.trim().toUpperCase().replace(/[-_]/g, "");
+}
+
+function parameterKey(text: string): string {
+  return text.trim().toUpperCase().replace(/-/g, "_");
+}
+
+export function normalizeModelCardType(modelType: string): ModelCardKind {
+  const kind = MODEL_TYPE_ALIASES[modelTypeKey(modelType)];
+  if (kind === undefined) {
+    throw invalidElement(modelType, "unsupported SPICE model type");
+  }
+  return kind;
+}
+
+function parameterAliases(kind: ModelCardKind): Readonly<Record<string, string>> {
+  if (kind === "D") {
+    return DIODE_PARAMETER_ALIASES;
+  }
+  if (kind === "NPN" || kind === "PNP") {
+    return BJT_PARAMETER_ALIASES;
+  }
+  if (kind === "NJF" || kind === "PJF") {
+    return JFET_PARAMETER_ALIASES;
+  }
+  return MOS_LEVEL1_PARAMETER_ALIASES;
+}
+
+export function normalizeModelCard(
+  name: string,
+  modelType: string,
+  parameters: Readonly<Record<string, number>> = {},
+): NormalizedModelCard {
+  const kind = normalizeModelCardType(modelType);
+  const aliases = parameterAliases(kind);
+  const normalized: Record<string, number> = {};
+  const unsupported: string[] = [];
+  for (const [rawName, rawValue] of Object.entries(parameters)) {
+    const key = parameterKey(rawName);
+    const canonical = aliases[key];
+    if (canonical === undefined) {
+      if (!unsupported.includes(key)) {
+        unsupported.push(key);
+      }
+      continue;
+    }
+    const value = Number(rawValue);
+    if (canonical === "LEVEL") {
+      if (Math.abs(value - 1.0) > 1.0e-12) {
+        throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
+      }
+      normalized[canonical] = 1.0;
+    } else {
+      normalized[canonical] = value;
+    }
+  }
+  return { name, kind, parameters: normalized, unsupportedParameters: unsupported };
+}
+
+export function diodeFromModelCard(
+  name: string,
+  anode: string,
+  cathode: string,
+  model: NormalizedModelCard,
+): Diode {
+  if (model.kind !== "D") {
+    throw invalidElement(name, `expected diode model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return diode(
+    name,
+    anode,
+    cathode,
+    p.IS ?? 1.0e-15,
+    p.VT ?? 0.02585,
+    p.N ?? 1.0,
+    p.BV,
+    p.IBV ?? 1.0e-3,
+    p.CJO ?? 0.0,
+    p.TT ?? 0.0,
+  );
+}
+
+export function bjtFromModelCard(
+  name: string,
+  collector: string,
+  base: string,
+  emitter: string,
+  model: NormalizedModelCard,
+): Bjt {
+  if (model.kind !== "NPN" && model.kind !== "PNP") {
+    throw invalidElement(name, `expected BJT model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return bjt(
+    name,
+    collector,
+    base,
+    emitter,
+    model.kind,
+    p.IS ?? 1.0e-14,
+    p.BF ?? 100.0,
+    p.VT ?? 0.02585,
+    p.CJE ?? 0.0,
+    p.CJC ?? 0.0,
+    p.TF ?? 0.0,
+    p.TR ?? 0.0,
+  );
+}
+
+export function jfetFromModelCard(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  model: NormalizedModelCard,
+): Jfet {
+  if (model.kind !== "NJF" && model.kind !== "PJF") {
+    throw invalidElement(name, `expected JFET model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return jfet(
+    name,
+    drain,
+    gate,
+    source,
+    model.kind,
+    p.BETA ?? 1.0e-4,
+    p.VTO ?? (model.kind === "NJF" ? -2.0 : 2.0),
+    p.LAMBDA ?? 0.0,
+  );
+}
+
+export function mosfetFromModelCard(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  body: string,
+  model: NormalizedModelCard,
+): Mosfet {
+  if (model.kind !== "NMOS" && model.kind !== "PMOS") {
+    throw invalidElement(name, `expected MOSFET model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  const params: Partial<MosfetLevel1Params> = {
+    ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
+    ...(p.KP !== undefined ? { KP: p.KP } : {}),
+    ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
+    ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
+    ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
+    ...(p.W !== undefined ? { W: p.W } : {}),
+    ...(p.L !== undefined ? { L: p.L } : {}),
+    ...(p.IS !== undefined ? { IS: p.IS } : {}),
+    ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
+    ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
+    ...(p.CGSO !== undefined ? { CGSO: p.CGSO } : {}),
+    ...(p.CGDO !== undefined ? { CGDO: p.CGDO } : {}),
+    ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
+    ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
+    ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+  };
+  return mosfet(name, drain, gate, source, body, model.kind, params);
+}
+
+export function deviceModelAuditFixtures(): readonly NormalizedModelCard[] {
+  return [
+    normalizeModelCard("Dfast", "diode", { JS: 2.0e-14, CJ: 1.5e-12, TT: 4.0e-9 }),
+    normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12, TF: 1.0e-10 }),
+    normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 }),
+    normalizeModelCard("Mn", "nmos", {
+      LEVEL: 1.0,
+      VTO: 0.55,
+      LAM: 0.04,
+      NSUB: 1.6,
+      CJD: 3.0e-13,
+    }),
+  ];
 }
 
 export function vccs(

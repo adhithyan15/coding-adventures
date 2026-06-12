@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `normalize_model_card`, typed model-card builders, and
+  `device_model_audit_fixtures` for cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias compatibility fixtures.
 - Add `DcResult::diagnostics` with stable matrix size, solver kind, tolerance,
   convergence aid, and final Newton delta metadata; large AC complex systems
   now route through the sparse-row complex solver path.

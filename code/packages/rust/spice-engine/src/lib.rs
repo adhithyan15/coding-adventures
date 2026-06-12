@@ -2308,6 +2308,360 @@ impl Mosfet {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum ModelCardKind {
+    Diode,
+    Npn,
+    Pnp,
+    Njf,
+    Pjf,
+    Nmos,
+    Pmos,
+}
+
+impl ModelCardKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Diode => "D",
+            Self::Npn => "NPN",
+            Self::Pnp => "PNP",
+            Self::Njf => "NJF",
+            Self::Pjf => "PJF",
+            Self::Nmos => "NMOS",
+            Self::Pmos => "PMOS",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NormalizedModelCard {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub parameters: BTreeMap<String, f64>,
+    pub unsupported_parameters: Vec<String>,
+}
+
+fn model_type_key(text: &str) -> String {
+    text.trim()
+        .chars()
+        .filter(|character| *character != '-' && *character != '_')
+        .flat_map(char::to_uppercase)
+        .collect()
+}
+
+fn parameter_key(text: &str) -> String {
+    text.trim()
+        .chars()
+        .map(|character| {
+            if character == '-' {
+                '_'
+            } else {
+                character.to_ascii_uppercase()
+            }
+        })
+        .collect()
+}
+
+pub fn normalize_model_card_type(model_type: &str) -> Result<ModelCardKind, SpiceError> {
+    match model_type_key(model_type).as_str() {
+        "D" | "DIODE" => Ok(ModelCardKind::Diode),
+        "NPN" => Ok(ModelCardKind::Npn),
+        "PNP" => Ok(ModelCardKind::Pnp),
+        "NJF" | "NJFET" | "NJ" => Ok(ModelCardKind::Njf),
+        "PJF" | "PJFET" | "PJ" => Ok(ModelCardKind::Pjf),
+        "NMOS" | "NCH" => Ok(ModelCardKind::Nmos),
+        "PMOS" | "PCH" => Ok(ModelCardKind::Pmos),
+        _ => Err(SpiceError::InvalidElement {
+            name: model_type.to_string(),
+            reason: "unsupported SPICE model type".to_string(),
+        }),
+    }
+}
+
+fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static str> {
+    match kind {
+        ModelCardKind::Diode => match key {
+            "IS" | "JS" => Some("IS"),
+            "VT" | "V_T" => Some("VT"),
+            "N" => Some("N"),
+            "BV" => Some("BV"),
+            "IBV" => Some("IBV"),
+            "CJO" | "CJ" | "CJ0" => Some("CJO"),
+            "TT" => Some("TT"),
+            _ => None,
+        },
+        ModelCardKind::Npn | ModelCardKind::Pnp => match key {
+            "IS" => Some("IS"),
+            "BF" | "BETA" | "BETA_F" | "HFE" => Some("BF"),
+            "VT" | "V_T" => Some("VT"),
+            "CJE" | "CJE0" | "CBE" => Some("CJE"),
+            "CJC" | "CJC0" | "CBC" => Some("CJC"),
+            "TF" => Some("TF"),
+            "TR" => Some("TR"),
+            _ => None,
+        },
+        ModelCardKind::Njf | ModelCardKind::Pjf => match key {
+            "BETA" | "BET" => Some("BETA"),
+            "VTO" | "VT0" | "VTH" => Some("VTO"),
+            "LAMBDA" | "LAM" => Some("LAMBDA"),
+            _ => None,
+        },
+        ModelCardKind::Nmos | ModelCardKind::Pmos => match key {
+            "LEVEL" => Some("LEVEL"),
+            "VT0" | "VTO" | "VTH" => Some("VT0"),
+            "KP" => Some("KP"),
+            "LAMBDA" | "LAM" => Some("LAMBDA"),
+            "GAMMA" => Some("GAMMA"),
+            "PHI" => Some("PHI"),
+            "W" => Some("W"),
+            "L" => Some("L"),
+            "IS" => Some("IS"),
+            "NSUB" | "N_SUB" => Some("N_SUB"),
+            "TNOM" | "T_NOM" => Some("T_NOM"),
+            "CGSO" => Some("CGSO"),
+            "CGDO" => Some("CGDO"),
+            "CGBO" => Some("CGBO"),
+            "CBS" | "CJS" => Some("CBS"),
+            "CBD" | "CJD" => Some("CBD"),
+            _ => None,
+        },
+    }
+}
+
+pub fn normalize_model_card(
+    name: impl Into<String>,
+    model_type: &str,
+    parameters: &[(&str, f64)],
+) -> Result<NormalizedModelCard, SpiceError> {
+    let name = name.into();
+    let kind = normalize_model_card_type(model_type)?;
+    let mut normalized = BTreeMap::new();
+    let mut unsupported = Vec::new();
+    for (raw_name, raw_value) in parameters {
+        let key = parameter_key(raw_name);
+        if let Some(canonical) = model_card_parameter_alias(kind, &key) {
+            if canonical == "LEVEL" {
+                if (raw_value - 1.0).abs() > 1.0e-12 {
+                    return Err(SpiceError::InvalidElement {
+                        name: name.clone(),
+                        reason: "only MOS LEVEL=1 model cards are supported".to_string(),
+                    });
+                }
+                normalized.insert(canonical.to_string(), 1.0);
+            } else {
+                normalized.insert(canonical.to_string(), *raw_value);
+            }
+        } else if !unsupported.contains(&key) {
+            unsupported.push(key);
+        }
+    }
+    Ok(NormalizedModelCard {
+        name,
+        kind,
+        parameters: normalized,
+        unsupported_parameters: unsupported,
+    })
+}
+
+fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {
+    model.parameters.get(key).copied().unwrap_or(fallback)
+}
+
+fn model_card_kind_error(instance_name: &str, expected: &str, actual: ModelCardKind) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: instance_name.to_string(),
+        reason: format!("expected {expected} model card, got {}", actual.as_str()),
+    }
+}
+
+pub fn diode_from_model_card(
+    name: impl Into<String>,
+    anode: impl Into<String>,
+    cathode: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Diode, SpiceError> {
+    let name = name.into();
+    if model.kind != ModelCardKind::Diode {
+        return Err(model_card_kind_error(&name, "diode", model.kind));
+    }
+    Ok(Diode::with_model_and_breakdown(
+        name,
+        anode,
+        cathode,
+        model_card_value(model, "IS", 1.0e-15),
+        model_card_value(model, "VT", 0.02585),
+        model_card_value(model, "N", 1.0),
+        model.parameters.get("BV").copied(),
+        model_card_value(model, "IBV", 1.0e-3),
+        model_card_value(model, "CJO", 0.0),
+        model_card_value(model, "TT", 0.0),
+    ))
+}
+
+pub fn bjt_from_model_card(
+    name: impl Into<String>,
+    collector: impl Into<String>,
+    base: impl Into<String>,
+    emitter: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Bjt, SpiceError> {
+    let name = name.into();
+    let polarity = match model.kind {
+        ModelCardKind::Npn => BjtPolarity::Npn,
+        ModelCardKind::Pnp => BjtPolarity::Pnp,
+        _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
+    };
+    Ok(Bjt::with_model(
+        name,
+        collector,
+        base,
+        emitter,
+        polarity,
+        model_card_value(model, "IS", 1.0e-14),
+        model_card_value(model, "BF", 100.0),
+        model_card_value(model, "VT", 0.02585),
+        model_card_value(model, "CJE", 0.0),
+        model_card_value(model, "CJC", 0.0),
+        model_card_value(model, "TF", 0.0),
+        model_card_value(model, "TR", 0.0),
+    ))
+}
+
+pub fn jfet_from_model_card(
+    name: impl Into<String>,
+    drain: impl Into<String>,
+    gate: impl Into<String>,
+    source: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Jfet, SpiceError> {
+    let name = name.into();
+    let polarity = match model.kind {
+        ModelCardKind::Njf => JfetPolarity::Njf,
+        ModelCardKind::Pjf => JfetPolarity::Pjf,
+        _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
+    };
+    Ok(Jfet::with_model(
+        name,
+        drain,
+        gate,
+        source,
+        polarity,
+        model_card_value(model, "BETA", 1.0e-4),
+        model_card_value(
+            model,
+            "VTO",
+            if model.kind == ModelCardKind::Njf {
+                -2.0
+            } else {
+                2.0
+            },
+        ),
+        model_card_value(model, "LAMBDA", 0.0),
+    ))
+}
+
+pub fn mosfet_from_model_card(
+    name: impl Into<String>,
+    drain: impl Into<String>,
+    gate: impl Into<String>,
+    source: impl Into<String>,
+    body: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Mosfet, SpiceError> {
+    let name = name.into();
+    let mosfet_type = match model.kind {
+        ModelCardKind::Nmos => MosfetType::Nmos,
+        ModelCardKind::Pmos => MosfetType::Pmos,
+        _ => return Err(model_card_kind_error(&name, "MOSFET", model.kind)),
+    };
+    let mut params = MosfetLevel1Params::default();
+    if let Some(value) = model.parameters.get("VT0") {
+        params.vt0 = *value;
+    }
+    if let Some(value) = model.parameters.get("KP") {
+        params.kp = *value;
+    }
+    if let Some(value) = model.parameters.get("LAMBDA") {
+        params.lambda = *value;
+    }
+    if let Some(value) = model.parameters.get("GAMMA") {
+        params.gamma = *value;
+    }
+    if let Some(value) = model.parameters.get("PHI") {
+        params.phi = *value;
+    }
+    if let Some(value) = model.parameters.get("W") {
+        params.w = *value;
+    }
+    if let Some(value) = model.parameters.get("L") {
+        params.l = *value;
+    }
+    if let Some(value) = model.parameters.get("IS") {
+        params.saturation_current = *value;
+    }
+    if let Some(value) = model.parameters.get("N_SUB") {
+        params.n_sub = *value;
+    }
+    if let Some(value) = model.parameters.get("T_NOM") {
+        params.t_nom = *value;
+    }
+    if let Some(value) = model.parameters.get("CGSO") {
+        params.gate_source_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CGDO") {
+        params.gate_drain_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CGBO") {
+        params.gate_bulk_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CBS") {
+        params.source_bulk_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CBD") {
+        params.drain_bulk_capacitance = *value;
+    }
+    Ok(Mosfet::with_model(
+        name,
+        drain,
+        gate,
+        source,
+        body,
+        mosfet_type,
+        params,
+    ))
+}
+
+pub fn device_model_audit_fixtures() -> Result<Vec<NormalizedModelCard>, SpiceError> {
+    Ok(vec![
+        normalize_model_card(
+            "Dfast",
+            "diode",
+            &[("JS", 2.0e-14), ("CJ", 1.5e-12), ("TT", 4.0e-9)],
+        )?,
+        normalize_model_card(
+            "Qsmall",
+            "npn",
+            &[("BETA", 125.0), ("CBE", 2.0e-12), ("TF", 1.0e-10)],
+        )?,
+        normalize_model_card(
+            "Jn",
+            "njfet",
+            &[("BET", 9.0e-4), ("VT0", -1.8), ("LAM", 0.02)],
+        )?,
+        normalize_model_card(
+            "Mn",
+            "nmos",
+            &[
+                ("LEVEL", 1.0),
+                ("VTO", 0.55),
+                ("LAM", 0.04),
+                ("NSUB", 1.6),
+                ("CJD", 3.0e-13),
+            ],
+        )?,
+    ])
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Vccs {
     pub name: String,

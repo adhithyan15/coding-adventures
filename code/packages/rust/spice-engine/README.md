@@ -98,3 +98,9 @@ let result = transient_adaptive(
 `diode_at_temperature`, `bjt_at_temperature`, `mosfet_at_temperature`, and
 `circuit_at_temperature` provide operating-temperature footholds for diode,
 BJT, and Level-1 MOSFET models before running an analysis.
+
+`normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
+`jfet_from_model_card`, and `mosfet_from_model_card` provide the shared
+`.model` alias surface for diode, BJT, JFET, and Level-1 MOS cards.
+`device_model_audit_fixtures` returns the canonical cross-language fixture
+cards used to keep the Rust, Python, and TypeScript ports aligned.
