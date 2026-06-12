@@ -91,16 +91,11 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // but not byte-identical). Holds in both class and object bodies.
     ("async_gen_method_class", "gap-097: async*m -> async *m (class)"),
     ("async_gen_method_obj",   "gap-097: async*m -> async *m (object)"),
-    // gap-098 (CLOC14.42): a trailing bare decimal point on an integer
-    // (`5.`) is dropped by upstream (`5.` -> `5`, `5.+1` -> `5+1`) — the
-    // dot is a redundant decimal point. The lexer splits `5.` into
-    // NUMBER `5` + DOT `.`; when that DOT is NOT a member access (the
-    // follower is `;`/operator/EOF, not a property name) the re-stitcher
-    // should drop it. The inverse of gap-093, which only fires when the
-    // dot IS a member access. (Noted under gap-085 as a lexer sub-issue;
-    // actually tractable in the WHITESPACE_ONLY pre-pass.)
-    ("num_trailing_dot",       "gap-098: trailing bare dot `5.` -> `5`"),
-    ("num_trailing_dot_arith", "gap-098: `5.+1` -> `5+1`"),
+    // gap-098 RESOLVED in CLOC12.100 — a trailing bare decimal point on
+    // an integer (`5.` -> `5`, `5.+1` -> `5+1`) is now dropped by the
+    // gap-093 pre-pass's complementary branch: when a NUMBER is followed
+    // by a DOT whose follower is NOT a property name (the dot can't be a
+    // member access), the redundant decimal-point dot is removed.
     // gap-093 RESOLVED in CLOC12.98 — an integer/float NUMBER literal
     // that is the object of a `.member` access is now paren-wrapped:
     // `1..toString()` -> `(1).toString()`, `1 .x` -> `(1).x`,

@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.104.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-098** — a trailing bare decimal point on an integer
+  literal is now dropped, matching upstream:
+
+      a=5.;    -> a=5;       a=5.+1;  -> a=5+1;
+      a=50.;   -> a=50;      a=b=5.;  -> a=b=5;
+      f(5.);   -> f(5);      a=[5.];  -> a=[5];
+
+  The lexer splits `5.` (the float `5.0`) into NUMBER `5` + DOT `.`, so
+  the redundant decimal point survived into the output as `5.`. This is
+  the exact complement of gap-093: that pre-pass fires when a NUMBER is
+  followed by a `.member` access (post-dot token is a property name)
+  and parenthesises the number; gap-098 reuses the same pre-pass and
+  fires on the *other* branch — when the dot's follower is NOT a
+  property name (`;`, an operator, `)`, `,`, `]`, EOF), the dot cannot
+  be member access, so it is a pure decimal-point remnant and is
+  removed. A genuine float like `5.5` is a single NUMBER token (no
+  separate DOT) and is never touched; `5.[0]` collapses to the bare
+  index `5[0]`. +6 `gap098_*` unit tests; JAR-verified. The
+  `num_trailing_dot` / `num_trailing_dot_arith` fixtures leave the
+  ignore list.
+
+  Known limitation surfaced while testing: `5.e3` (scientific notation
+  = 5000) is mis-lexed into NUMBER `5` + DOT + NAME `e3`, which gap-093
+  wraps to the invalid `(5).e3`. That is a separate, pre-existing
+  lexer/NUMBER-pattern issue (the spacing that would disambiguate
+  `5.e3` from `5 .e3` is lost at lex time) tracked separately — out of
+  scope here.
+
 ## [0.103.0] - 2026-06-12
 
 ### Fixed

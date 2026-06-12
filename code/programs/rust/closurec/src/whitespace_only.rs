@@ -209,13 +209,24 @@ pub fn whitespace_only_minify(
         .filter(|t| !is_eof(t))
         .collect();
 
-    // gap-093: NUMERIC-LITERAL MEMBER-ACCESS paren wrap. When a
-    // number is the object of a `.member` access, upstream Closure
-    // wraps it in parentheses so the dot can't be misread as the
-    // number's decimal point:
+    // gap-093 + gap-098: NUMBER-followed-by-DOT normalisation. The
+    // lexer splits a number's trailing dot off into its own DOT token
+    // (`1 .x` and `5.` both become NUMBER + DOT + …), so the dot's
+    // meaning has to be recovered from what FOLLOWS it:
+    //
+    // gap-093 — the dot IS a member access (a property name follows).
+    // Upstream parenthesises the number so the dot can't be misread as
+    // the number's decimal point:
     //   `1 .x`           -> `(1).x`
     //   `1.5.toString()` -> `(1.5).toString()`
     //   `1..toString()`  -> `(1).toString()`   (NB: ONE dot survives)
+    //
+    // gap-098 — the dot is NOT a member access (the follower is `;`, an
+    // operator, `)`, `,`, EOF — anything that can't be a property name).
+    // Then the dot is a redundant trailing decimal point and is dropped:
+    //   `5.`             -> `5`
+    //   `5.+1`           -> `5+1`
+    //
     // but an INDEX access or anything else is left alone:
     //   `1[0]`           -> `1[0]`   (next token is `[`, not `.`)
     //   `(1).x`          -> `(1).x`  (already parenthesised; the
@@ -258,7 +269,7 @@ pub fn whitespace_only_minify(
                 let name_idx = if double_dot { i + 3 } else { i + 2 };
                 let is_member = kept.get(name_idx).is_some_and(|t| is_word_like(t));
                 if is_member {
-                    // Emit `( <number> )`, then resume so the
+                    // gap-093: emit `( <number> )`, then resume so the
                     // member dot is re-emitted by the normal path.
                     wrapped.push(np_open);
                     wrapped.push(tok);
@@ -267,6 +278,25 @@ pub fn whitespace_only_minify(
                     // skip the redundant decimal-point dot so only
                     // the member dot survives.
                     i += if double_dot { 2 } else { 1 };
+                    continue;
+                } else if !double_dot {
+                    // gap-098: TRAILING BARE DECIMAL POINT. A single `.`
+                    // after a NUMBER whose own follower is NOT a property
+                    // name (it's `;`, an operator, `)`, `,`, EOF, …) is a
+                    // redundant trailing decimal point — the lexer split
+                    // `5.` into NUMBER `5` + DOT `.`. Upstream drops it:
+                    //   `5.`    -> `5`      `5.+1`  -> `5+1`
+                    //   `50.`   -> `50`     `b=5.`  -> `b=5`
+                    // This is the exact complement of gap-093's member
+                    // case above: there the dot IS member access (post-dot
+                    // token word-like) and the number gets parenthesised;
+                    // here the dot canNOT be member access (a member needs
+                    // a name after it), so it is pure decimal-point cruft
+                    // and is simply removed. A genuine float like `5.5` is
+                    // a single NUMBER token (no separate DOT) and never
+                    // reaches here. Emit the number, skip the dot.
+                    wrapped.push(tok);
+                    i += 2; // past the number and the redundant dot
                     continue;
                 }
             }
@@ -6466,6 +6496,66 @@ mod tests {
     fn gap093_identifier_member_unaffected() {
         assert_eq!(minify("a=(foo).x;"), "a=foo.x;");
         assert_eq!(minify("a=b.c.d;"), "a=b.c.d;");
+    }
+
+    // ---- gap-098: trailing bare decimal point drop ----
+
+    /// Target case: a trailing bare `.` on an integer (the float `5.0`)
+    /// is a redundant decimal point — drop it. The lexer splits `5.`
+    /// into NUMBER `5` + DOT `.`; the dot's follower here is `;` (not a
+    /// property name), so the dot cannot be member access.
+    #[test]
+    fn gap098_trailing_dot_before_semicolon_dropped() {
+        assert_eq!(minify("a=5.;"), "a=5;");
+        assert_eq!(minify("a=50.;"), "a=50;");
+    }
+
+    /// The dot also drops before an operator (`5.+1` -> `5+1`,
+    /// `5.*2` -> `5*2`) — the follower is a punctuator, never a name.
+    #[test]
+    fn gap098_trailing_dot_before_operator_dropped() {
+        assert_eq!(minify("a=5.+1;"), "a=5+1;");
+        assert_eq!(minify("a=5.*2;"), "a=5*2;");
+        assert_eq!(minify("a=5.===5;"), "a=5===5;");
+    }
+
+    /// Drops at end-of-expression contexts too: assignment chain,
+    /// comma, call argument, array element.
+    #[test]
+    fn gap098_trailing_dot_various_contexts() {
+        assert_eq!(minify("a=b=5.;"), "a=b=5;");
+        assert_eq!(minify("a=5.,b=6;"), "a=5,b=6;");
+        assert_eq!(minify("f(5.);"), "f(5);");
+        assert_eq!(minify("a=[5.];"), "a=[5];");
+    }
+
+    /// `5.[0]` — the dot is followed by `[` (an index access, not a
+    /// property name), so gap-098 drops the redundant decimal point,
+    /// leaving the bare index `5[0]`.
+    #[test]
+    fn gap098_trailing_dot_before_index() {
+        assert_eq!(minify("a=5.[0];"), "a=5[0];");
+    }
+
+    /// **Non-regression**: a genuine float `5.5` is a SINGLE NUMBER
+    /// token (the lexer keeps the fraction), so there is no separate
+    /// DOT and gap-098 never fires.
+    #[test]
+    fn gap098_genuine_float_untouched() {
+        assert_eq!(minify("a=5.5;"), "a=5.5;");
+        assert_eq!(minify("a=.5;"), "a=.5;");
+    }
+
+    /// **Non-regression**: gap-098 is the complement of gap-093, not a
+    /// replacement — a number followed by a `.member` access still
+    /// parenthesises (`1 .x` -> `(1).x`, `1..toString()` ->
+    /// `(1).toString()`), and an index on a plain integer (`1[0]`) is
+    /// untouched.
+    #[test]
+    fn gap098_does_not_disturb_gap093() {
+        assert_eq!(minify("a=1 .x;"), "a=(1).x;");
+        assert_eq!(minify("a=1..toString();"), "a=(1).toString();");
+        assert_eq!(minify("a=1[0];"), "a=1[0];");
     }
 
     /// **Non-regression**: function-call trailing comma
