@@ -4,18 +4,20 @@ Multi-language AOT driver — compile **Twig, Nib, Brainfuck, Dartmouth
 BASIC, Oct, and McCarthy Lisp** to native executables through the shared
 LANG VM chain.
 
-> **LANG-MATRIX LM-L/LM-W/LM-J Brainfuck (v0.65.0 / v0.66.0 / v0.67.0):** Brainfuck now
-> also runs on the **LLVM**, **WASM**, and **JVM** backends. `lower_brainfuck_for_aot`
-> widens the frontend's narrow cell (`u8`) and pointer (`u32`) hints to `i64` — byte
-> width survives only at the `load_byte`/`store_byte` tape boundary — and each backend
-> grew the matching byte-tape ops: `iir-to-llvm` 0.9.0 (`@calloc`/`getelementptr i8`/libc
-> `putchar`), `iir-to-wasm` 0.13.0 (linear-memory `i32.load8_u`/`i32.store8`,
-> `env.putchar`/`env.getchar` imports), and `iir-to-jvm-class-file` 0.11.0 (static
-> `byte[] __tape` via `baload`/`bastore`, `env.BFRuntime.putchar`/`getchar`).
-> Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A` on real `clang`, the in-repo
-> `wasm-runtime`, and real `java` (`tests/lang_matrix.rs`). The frontend itself is
-> unchanged, so the `vm-core`/`jit-core` Brainfuck paths (which key CIR widths off
-> `u8`/`u32`) keep working.  (McCarthy Lisp is wired as of L3a — scalar programs run
+> **LANG-MATRIX Brainfuck — CODE-GEN MATRIX COMPLETE (v0.65.0–v0.68.0):** Brainfuck now
+> runs on **every code-gen backend** — LLVM, WASM, JVM, **and CLR** (plus native).
+> `lower_brainfuck_for_aot` widens the frontend's narrow cell (`u8`) and pointer (`u32`)
+> hints to `i64` — byte width survives only at the `load_byte`/`store_byte` tape boundary
+> — and each backend grew the matching byte-tape ops: `iir-to-llvm` 0.9.0
+> (`@calloc`/`getelementptr i8`/libc `putchar`), `iir-to-wasm` 0.13.0 (linear-memory
+> `i32.load8_u`/`i32.store8`, `env.putchar`/`env.getchar` imports), `iir-to-jvm-class-file`
+> 0.11.0 (static `byte[] __tape` via `baload`/`bastore`, `env.BFRuntime`), and
+> `iir-to-cil-bytecode` 0.18.0 (`unsigned int8[]` via `newarr Byte`/`ldelem.u1`/`stelem.i1`,
+> `Console::Write(char)`). Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A` on real
+> `clang`, the in-repo `wasm-runtime`, real `java`, and real `dotnet` (`tests/lang_matrix.rs`).
+> The frontend itself is unchanged, so the `vm-core`/`jit-core` Brainfuck paths (which key
+> CIR widths off `u8`/`u32`) keep working. Only the deferred VM/JIT columns remain.
+> (McCarthy Lisp is wired as of L3a — scalar programs run
 end-to-end natively; symbol/cons backend support is L3b.)  As of L3b-3a-3c,
 `compile_source_to_wasm` also compiles McCarthy **cons** programs to a runnable
 WasmGC module — `(CAR (CONS 7 9))` → `7` on the in-repo `wasm-runtime` (integer

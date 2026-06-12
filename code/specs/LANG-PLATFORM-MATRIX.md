@@ -103,7 +103,7 @@ achievable code-gen columns land first).
 |-----------------|----|-----|-----------|------|------|-----|-----|
 | Twig            | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Nib             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
-| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ⏸  |
+| Brainfuck       | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Dartmouth BASIC | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | Oct             | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
 | ALGOL 60        | ☐  | ☐   | ✅        | ✅   | ✅   | ✅  | ✅  |
@@ -274,7 +274,19 @@ BASIC / Brainfuck). The LLVM column is **complete**.
   conformance/jvm_emit/wasm_emit suites green. **CLR column now green for every language
   except the deferred Brainfuck — so every code-gen backend (native-AOT, LLVM, WASM, JVM,
   CLR) is green for all five non-Brainfuck languages.**
-- ⏸ **LM-C Brainfuck (on CLR) — DEFERRED.** Same tape-op gap as Brainfuck elsewhere.
+- ✅ **LM-C Brainfuck (on CLR).** The **last code-gen cell.** The textual `.il` emitter
+  (`iir-to-cil-bytecode` 0.18.0) grew the byte-tape ops: `alloc_bytes` → `newarr
+  [System.Runtime]System.Byte` into an `unsigned int8[]` local (`FnRegs::build` types an
+  `alloc_bytes` dest as the array, not the scalar its concretised hint gives), `load_byte`
+  → `ldelem.u1` (unsigned), `store_byte` → `stelem.i1` (8-bit wrap); `putchar` →
+  `Console::Write(char)` (so `.` of 65 writes `A`), `getchar` → `Console::Read()`. The
+  `Run()` launcher's "prints" test now also matches `putchar`, so a Brainfuck program
+  discards the entry result (no double-print). `concretize_scalar_any_for_cil` retypes
+  Brainfuck back to `int32` (it doesn't call `print_i64`), and CIL `brfalse` tests any
+  width against zero — so, unlike the JVM (`lcmp`) and wasm (`i64.eqz`), the loop guard
+  needed **no** i64 branch fix. Verified by RUNNING `++++++++[>++++++++<-]>+.` → `A` on
+  real `ilasm`+`dotnet`; the existing CLR cells + CIL suites still green.
+  **CLR column now complete for every language — the entire code-gen matrix is done.**
 
 ### Phase A — native AOT completeness
 
@@ -301,11 +313,10 @@ backends, so they are tackled deliberately rather than as a routine conformance 
   grew the lowered byte-tape ops over the static `byte[] __tape` (`alloc_bytes` no-op,
   `load_byte`/`store_byte` with `l2i`/`i2l` conversions) + the `lcmp`-based i64 branch
   conditions — all width fixes over the backend's existing `baload`/`bastore` tape access.
-- ⏸ **LM-C Brainfuck (CLR).** The last Brainfuck cell. Still unblocked in principle: give
-  `iir-to-cil-bytecode` the same byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`)
-  and `putchar`/`getchar` lowerings that `iir-to-llvm`/`iir-to-wasm`/`iir-to-jvm-class-file`/
-  the native backend already have — plus the same i64-condition width handling wasm/JVM
-  needed. One backend-codegen slice.
+- ✅ **LM-C Brainfuck (on CLR).** **Done** (see Phase C) — the last code-gen cell.
+  `iir-to-cil-bytecode` 0.18.0's textual `.il` emitter grew the byte-tape ops over an
+  `unsigned int8[]` local (`newarr Byte`/`ldelem.u1`/`stelem.i1`) + `Console::Write(char)`
+  putchar; CIL `brfalse` needed no i64 fix. **The entire code-gen wave is complete.**
 - ⏸ **Phase V — VM op-coverage.** `mccarthy_lisp_vm` is **McCarthy-specialized**, not a
   general interpreter (the LM0 probe: it rejects `add`/`mul`/`cmp_*`/`mod` and the I/O
   ops). Running the other languages on the VM means growing the interpreter with
@@ -323,12 +334,11 @@ BEAM column for the imperative languages). The capstone is a single
 `lang_matrix.rs` suite asserting every `(language, backend)` cell agrees with the
 known result — the cross-language analog of McCarthy's W16.
 
-The campaign reaches that end state in two waves: first the **code-generator columns**
-(native ✅, **LLVM ✅ — all 6**, **WASM ✅ — all 6**, **JVM ✅ — all 6**, CLR ✅ for the 5
-non-Brainfuck languages) — these are general over the shared IIR, so each cell is mostly
-a conformance test plus the occasional I/O/type fix; then the **second-wave** items —
-Brainfuck on CLR (the last code-gen cell: the same byte-tape ops + i64 width handling
-`iir-to-llvm`/`iir-to-wasm`/`iir-to-jvm-class-file` gained, ported to `iir-to-cil-bytecode`)
-and the McCarthy-specialized VM and JIT — each a real backend/interpreter change tackled
-deliberately. The LLVM, WASM, and JVM columns are now **complete**; only Brainfuck-on-CLR
-remains in the code-gen wave.
+The campaign reached that end state in two waves: first the **code-generator columns**
+(native ✅, **LLVM ✅**, **WASM ✅**, **JVM ✅**, **CLR ✅ — all six languages on all five**)
+— general over the shared IIR, so each cell was mostly a conformance test plus the
+occasional I/O/type fix; **the entire code-gen wave is now complete.** What remains is the
+**second wave** — the deliberately-deferred **VM** (`mccarthy_lisp_vm` is McCarthy-specialized
+and needs general op-coverage) and **JIT** (a generic `run_on_jit` + the same op-coverage)
+— each a real interpreter change, not a conformance slice. Those are the only two ☐ columns
+left in the matrix.
