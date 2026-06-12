@@ -27,8 +27,8 @@ use logic_engine::{
 };
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, OptDir, Program, RelOp, Statement,
-    Term as AstTerm, TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
+    RelOp, Statement, Term as AstTerm, TrustTierName,
 };
 
 /// One lowered constraint: `lhs <op> rhs`, with both sides kept as
@@ -106,6 +106,19 @@ pub enum LowerError {
         name: String,
         detail: String,
     },
+    /// A finding / hypothesis term used in a clause is not `define`d in the
+    /// program's dictionary (MYCIN-2026 closed-vocabulary enforcement).
+    /// `expected` is the role the term was used in (`"finding"`/`"hypothesis"`).
+    UndefinedTerm {
+        name: String,
+        expected: &'static str,
+    },
+    /// A finding term used a value outside its declared `values [...]` domain.
+    ValueNotInDomain {
+        functor: String,
+        value: String,
+        domain: Vec<String>,
+    },
 }
 
 /// The result of lowering — a populated KB, any queries to run, and the
@@ -115,6 +128,11 @@ pub struct LoweredProgram {
     pub kb: KnowledgeBase,
     pub queries: Vec<CoreTerm>,
     pub constraints: ConstraintSystem,
+    /// The controlled vocabulary the program declared (MYCIN-2026): the
+    /// `define`d findings + hypotheses, with their surface forms. Empty for a
+    /// program with no dictionary. Used by the decomposer (surface forms) and
+    /// enforced at compile time.
+    pub dictionary: Vec<Define>,
 }
 
 /// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
@@ -122,6 +140,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut kb = KnowledgeBase::new();
     let mut queries = Vec::new();
     let mut constraints = ConstraintSystem::default();
+    let mut dictionary: Vec<Define> = Vec::new();
 
     for stmt in &program.statements {
         match stmt {
@@ -253,14 +272,127 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 // the first (a program declares one objective).
                 constraints.objective = Some((*dir, lower_expr(objective)));
             }
+            // ---- dictionary (MYCIN-2026) ----
+            Statement::Define(def) => dictionary.push(def.clone()),
+            Statement::Dictionary { defines, .. } => dictionary.extend(defines.iter().cloned()),
         }
+    }
+
+    // Compile-time vocabulary enforcement (MYCIN-2026): only when the program
+    // declares a dictionary (≥1 `define`). A program with no dictionary is
+    // unaffected (backward-compatible). When a dictionary IS present, every
+    // hypothesis / finding term used must be defined, and a finding value must
+    // be in its declared domain — the IR the model emits and the rulebook it
+    // compiles against share one closed vocabulary by construction.
+    if !dictionary.is_empty() {
+        enforce_vocabulary(&program.statements, &dictionary)?;
     }
 
     Ok(LoweredProgram {
         kb,
         queries,
         constraints,
+        dictionary,
     })
+}
+
+/// Verify every hypothesis/finding term used in the program is `define`d and any
+/// finding value is in its declared domain. See [`lower`] for when this runs.
+fn enforce_vocabulary(statements: &[Statement], dictionary: &[Define]) -> Result<(), LowerError> {
+    use std::collections::HashMap;
+    let dict: HashMap<&str, &DefineKind> = dictionary
+        .iter()
+        .map(|d| (d.name.as_str(), &d.kind))
+        .collect();
+
+    let check_hypothesis = |t: &AstTerm| -> Result<(), LowerError> {
+        let (functor, _) = term_functor_value(t);
+        match dict.get(functor) {
+            Some(DefineKind::Hypothesis) => Ok(()),
+            _ => Err(LowerError::UndefinedTerm {
+                name: functor.to_string(),
+                expected: "hypothesis",
+            }),
+        }
+    };
+    let check_finding = |t: &AstTerm| -> Result<(), LowerError> {
+        let (functor, value) = term_functor_value(t);
+        match dict.get(functor) {
+            Some(DefineKind::Finding { values }) => {
+                if let Some(v) = value {
+                    if !values.iter().any(|d| d == v) {
+                        return Err(LowerError::ValueNotInDomain {
+                            functor: functor.to_string(),
+                            value: v.to_string(),
+                            domain: values.clone(),
+                        });
+                    }
+                }
+                Ok(())
+            }
+            _ => Err(LowerError::UndefinedTerm {
+                name: functor.to_string(),
+                expected: "finding",
+            }),
+        }
+    };
+
+    for stmt in statements {
+        match stmt {
+            Statement::Prior { conclusion, .. } => check_hypothesis(conclusion)?,
+            Statement::Query { conclusion } => check_hypothesis(conclusion)?,
+            Statement::Contributes {
+                evidence,
+                conclusion,
+                ..
+            } => {
+                check_hypothesis(conclusion)?;
+                // Only term-evidence is a dictionary finding; a numeric
+                // predicate references a valued slot, not a finding.
+                if let Evidence::Term(t) = evidence {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Interacts {
+                evidence_set,
+                conclusion,
+                ..
+            } => {
+                check_hypothesis(conclusion)?;
+                for t in evidence_set {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Uncertain {
+                domain, conclusion, ..
+            } => {
+                check_hypothesis(conclusion)?;
+                for t in domain {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Observe { term } => check_finding(term)?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+/// The functor name and (if present) the single atom-argument value of a term:
+/// `csf_glucose(low)` → (`csf_glucose`, Some(`low`)); `bacterial` → (`bacterial`,
+/// None). A non-atom argument (number / nested) yields no value.
+fn term_functor_value(t: &AstTerm) -> (&str, Option<&str>) {
+    match t {
+        AstTerm::Atom(s) => (s.as_str(), None),
+        AstTerm::Compound { functor, args } => {
+            let value = match args.first() {
+                Some(AstTerm::Atom(v)) => Some(v.as_str()),
+                _ => None,
+            };
+            (functor.as_str(), value)
+        }
+        AstTerm::Num(_) => ("", None),
+    }
 }
 
 /// Reject a likelihood ratio that the engine's `from_lr` constructors
@@ -806,6 +938,74 @@ mod tests {
         let lowered = compile("constrain x >= 1\ncheck").unwrap();
         assert!(lowered.constraints.check);
         assert_eq!(lowered.constraints.constraints.len(), 1);
+    }
+
+    // ---- dictionary + define (MYCIN-2026 M1) ----
+
+    #[test]
+    fn a_dictionary_compiles_and_defined_terms_are_accepted() {
+        let src = "dictionary v {\n\
+                   define dx : hypothesis surface \"the diagnosis\"\n\
+                   define f : finding values [a, b] surface \"finding f\"\n\
+                   }\n\
+                   prior 0.10 for dx\n  source \"x\" trust empirical\n\
+                   contributes 2 from f(a) to dx\n  source \"y\" trust empirical\n\
+                   observe f(a)\n? dx\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 2);
+        // surface forms are captured
+        let f = lowered.dictionary.iter().find(|d| d.name == "f").unwrap();
+        assert_eq!(f.surfaces, vec!["finding f".to_string()]);
+        assert!(
+            matches!(&f.kind, crate::ast::DefineKind::Finding { values } if values == &["a", "b"])
+        );
+    }
+
+    #[test]
+    fn a_bare_define_outside_a_block_also_registers() {
+        let lowered = compile("define dx : hypothesis\n? dx\n").unwrap();
+        assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn an_undefined_hypothesis_is_a_clean_error() {
+        let err =
+            compile("define f : finding values [a]\nobserve f(a)\n? undefined_dx\n").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "hypothesis" }) if name == "undefined_dx"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn an_undefined_finding_is_a_clean_error() {
+        let err = compile("define dx : hypothesis\nobserve mystery(x)\n? dx\n").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "finding" }) if name == "mystery"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_value_outside_the_domain_is_rejected() {
+        let err = compile(
+            "dictionary v { define dx : hypothesis  define f : finding values [a, b] }\n\
+             observe f(c)\n? dx\n",
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::ValueNotInDomain { ref functor, ref value, .. }) if functor == "f" && value == "c"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn no_dictionary_means_no_enforcement() {
+        // Backward-compatible: a program with no `define` is unchecked.
+        let lowered =
+            compile("prior 0.10 for anything\n  source \"x\" trust empirical\n? anything\n")
+                .unwrap();
+        assert!(lowered.dictionary.is_empty());
     }
 
     #[test]

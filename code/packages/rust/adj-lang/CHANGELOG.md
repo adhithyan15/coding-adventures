@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.9.0] - 2026-06-12 — `dictionary` + `define` (MYCIN-2026 M1)
+
+### Added
+
+- **`dictionary <name> { … }` and `define`** — the controlled vocabulary as a
+  first-class, named grammar construct (MYCIN-2026). `define <name> : hypothesis`
+  registers a hypothesis; `define <name> : finding values [v…]` registers a
+  finding functor with a *closed* value domain; `surface "…", "…"` lists the
+  decomposer's surface forms. A `define` is valid bare or inside a `dictionary`
+  block. New `LBRACK`/`RBRACK` tokens; grammar regenerated.
+- AST: `Statement::Define(Define)` + `Statement::Dictionary { name, defines }`;
+  `Define { name, kind: DefineKind::{Hypothesis | Finding{values}}, surfaces }`
+  (exported). `LoweredProgram` gains `dictionary: Vec<Define>`.
+- **Compile-time vocabulary enforcement** (replaces the prototype's side-car
+  `dict_lint.py`): when a program declares a dictionary (≥1 `define`), every
+  finding / hypothesis used in `prior`/`contributes`/`interacts`/`observe`/`?`
+  must be defined, and a finding value must be in its declared domain — else
+  `LowerError::UndefinedTerm` / `ValueNotInDomain`. The IR a decomposer emits and
+  the rulebook it compiles against share one closed vocabulary by construction.
+  A program with **no** dictionary is unchecked (backward-compatible). 6 tests.
+- Next (MYCIN-2026): M2 `rulebook` + `use`, M3 `import`.
+
 ## [0.8.0] - 2026-06-11 — `minimize`/`maximize` LP objective (ADJ constraints track C2)
 
 ### Added

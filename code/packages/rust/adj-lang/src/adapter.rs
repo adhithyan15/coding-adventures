@@ -31,8 +31,8 @@ use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, OptDir, Program, RelOp, Statement, Term,
-    TrustTierName,
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
+    RelOp, Statement, Term, TrustTierName,
 };
 
 /// Errors raised while adapting a generic AST to the typed AST.
@@ -115,8 +115,10 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "solve_decl" => adapt_solve(child),
         "check_decl" => Ok(Statement::Check),
         "optimize_decl" => adapt_optimize(child),
+        "dictionary_decl" => adapt_dictionary(child),
+        "define_decl" => adapt_define(child).map(Statement::Define),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl",
             actual: other.to_string(),
         }),
     }
@@ -414,6 +416,104 @@ fn adapt_optimize(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     })?;
     let objective = adapt_expr(expr_node)?;
     Ok(Statement::Optimize { dir, objective })
+}
+
+/// The first `TokenType::Name` token whose value isn't `keyword`. Used to pull a
+/// declaration's name out from beside its leading keyword.
+fn first_name_not<'a>(node: &'a GrammarASTNode, keyword: &str) -> Option<&'a str> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != keyword => {
+            Some(t.value.as_str())
+        }
+        _ => None,
+    })
+}
+
+fn adapt_dictionary(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // dictionary_decl = "dictionary" IDENT LBRACE { define_decl } RBRACE
+    let name = first_name_not(node, "dictionary")
+        .ok_or(AdapterError::MissingChild {
+            rule: "dictionary_decl".into(),
+            position: "dictionary name",
+        })?
+        .to_string();
+    let defines = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "define_decl" => Some(adapt_define(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Statement::Dictionary { name, defines })
+}
+
+fn adapt_define(node: &GrammarASTNode) -> Result<Define, AdapterError> {
+    // define_decl = "define" IDENT COLON define_kind { surface_clause }
+    let name = first_name_not(node, "define")
+        .ok_or(AdapterError::MissingChild {
+            rule: "define_decl".into(),
+            position: "term name",
+        })?
+        .to_string();
+    let kind_node = first_named_child(node, "define_kind").ok_or(AdapterError::MissingChild {
+        rule: "define_decl".into(),
+        position: "define_kind",
+    })?;
+    let kind = adapt_define_kind(kind_node)?;
+    let mut surfaces = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "surface_clause" {
+                for sc in &n.children {
+                    if let ASTNodeOrToken::Token(t) = sc {
+                        if t.type_ == TokenType::String {
+                            surfaces.push(unquote_string(&t.value));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(Define {
+        name,
+        kind,
+        surfaces,
+    })
+}
+
+fn adapt_define_kind(node: &GrammarASTNode) -> Result<DefineKind, AdapterError> {
+    // define_kind = "hypothesis" | "finding" [ "values" LBRACK IDENT {COMMA IDENT} RBRACK ]
+    // hypothesis/finding/values are IDENT-matched literals; the value names are
+    // the remaining Name tokens (brackets/commas are their own token kinds).
+    let mut is_hypothesis = false;
+    let mut is_finding = false;
+    let mut values = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Name {
+                match t.value.as_str() {
+                    "hypothesis" => is_hypothesis = true,
+                    "finding" => is_finding = true,
+                    // `values` and the brackets/comma are structural; the lexer
+                    // types unknown punctuation (`[`/`]`) as a Name fallback, so
+                    // exclude them by value. The remainder are the value names.
+                    "values" | "[" | "]" | "," => {}
+                    v => values.push(v.to_string()),
+                }
+            }
+        }
+    }
+    if is_hypothesis {
+        Ok(DefineKind::Hypothesis)
+    } else if is_finding {
+        Ok(DefineKind::Finding { values })
+    } else {
+        Err(AdapterError::MissingChild {
+            rule: "define_kind".into(),
+            position: "`hypothesis` or `finding`",
+        })
+    }
 }
 
 /// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the
