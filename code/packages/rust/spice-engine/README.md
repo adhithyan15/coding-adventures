@@ -121,3 +121,7 @@ documented oracle, golden values with tolerances, and known incompatibility
 notes. `release_readiness_gates` validates the corpus metadata, while
 `format_compatibility_corpus_table` and `format_release_readiness_report`
 provide stable tab-separated summaries for package checks.
+`analyze_deck_controls` provides the shared deck-control boundary foothold: it
+returns active lines before `.end` and stable diagnostics for unsupported
+`.include`, `.lib`, and `.control` directives before future include/library
+resolution and control-block execution are in scope.

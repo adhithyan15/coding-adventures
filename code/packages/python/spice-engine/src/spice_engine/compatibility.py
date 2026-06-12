@@ -41,6 +41,27 @@ class CompatibilityDeck:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckControlDiagnostic:
+    """A stable deck-control diagnostic emitted before analysis execution."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+
+
+@dataclass(frozen=True, slots=True)
+class DeckControlSummary:
+    """Normalized active deck lines plus deck-control diagnostics."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    diagnostics: tuple[DeckControlDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -180,6 +201,45 @@ R2 out 0 10000
 
 _SUPPORTED_ANALYSES = frozenset({"op", "dc", "ac", "tran", "tf"})
 _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
+_UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
+
+
+def analyze_deck_controls(netlist: str) -> DeckControlSummary:
+    """Return active pre-``.end`` lines and unsupported deck-control diagnostics."""
+
+    active_lines: list[str] = []
+    diagnostics: list[DeckControlDiagnostic] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive in _UNSUPPORTED_DECK_CONTROL_DIRECTIVES:
+            diagnostics.append(
+                DeckControlDiagnostic(
+                    code="SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+                    directive=directive,
+                    line_number=line_number,
+                    message=(
+                        f"{directive} is not supported by the deck execution "
+                        "foothold yet"
+                    ),
+                    severity="error",
+                )
+            )
+        active_lines.append(stripped)
+
+    return DeckControlSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        diagnostics=tuple(diagnostics),
+    )
 
 
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
@@ -349,3 +409,9 @@ def _validate_non_empty(
     issues.append(
         ReleaseReadinessIssue(deck_id, field, "field must be documented and non-empty")
     )
+
+
+def _deck_directive(line: str) -> str | None:
+    if not line.startswith("."):
+        return None
+    return line.split(None, 1)[0].lower()
