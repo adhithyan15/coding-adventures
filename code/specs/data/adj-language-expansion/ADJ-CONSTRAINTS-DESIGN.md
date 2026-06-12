@@ -103,7 +103,7 @@ and routes. Each value/cert is provenance-tagged.
 | linear **equations**, exact | `cas-solve::solve_linear_system` (Gaussian over ℚ) | **reuse** |
 | linear **integer** eq+ineq feasibility | `constraint-engine::LiaTactic` (Cooper) | **reuse** |
 | boolean / rule-trees | `constraint-engine::SatTactic` (DPLL) | **reuse** |
-| linear **real** eq+ineq feasibility (QF_LRA) | — (engine returns `Unknown` today) | **BUILD: LRA tactic** (Fourier–Motzkin / simplex feasibility) |
+| linear **real** eq+ineq feasibility (QF_LRA) | — (engine returns `Unknown` today) | **BUILT (C1): Fourier–Motzkin over ℚ** in `adj-constraint-solver::check` (self-contained checked i128 rational; overflow → `Unknown`) |
 | linear **optimization** | — | **BUILD: simplex** on the LRA layer |
 | nonlinear univariate (deg ≤ 4) | `cas-solve::{solve_quadratic,cubic,quartic}` | **reuse** |
 | nonlinear numeric / higher degree | `cas-solve::nsolve_poly` (Durand–Kerner), `cas-mnewton` | **reuse / extend** |
@@ -160,8 +160,17 @@ the **dimensional layer + surface sublanguage + provenance bridge**. Everything 
   `LiaTactic`. `Solution` / UNSAT-core provenance + `FromSolve` proof origin + CLI render.
 
 **Track C — the build gaps (depends on B1):**
-- **C1** QF_LRA tactic (Fourier–Motzkin feasibility over ℚ) in `constraint-engine` — real-valued
-  feasibility/contradiction. (Also fills the documented `QF_LRA → Unknown` hole for the whole repo.)
+- **C1** ✅ QF_LRA feasibility (Fourier–Motzkin over ℚ) — real-valued feasibility/contradiction.
+  **Divergence from the original plan:** built in `adj-constraint-solver::check` (the dispatcher that
+  already owns `check` semantics and C3's nonlinear bridge), over a self-contained **checked i128
+  rational** (`Rat`, overflow → `Unknown` — never a silent wrap) — *not* as a new `constraint-engine`
+  tactic. `check` now layers two procedures:
+  the exact linear-**integer** tactic (`LiaTactic`, B2c) runs first; when it punts (`Unknown`) or when a
+  constraint is non-integer, **or when it reports integer-`Unsat` (which over ℝ may still be feasible —
+  e.g. `2x = 1`)**, the Fourier–Motzkin layer decides **real** feasibility and returns a rational
+  witness (`SatReal`). A constraint set is `Unsat` only when *both* the integer and real layers reject
+  it. `!=` (disjunctive, non-convex) stays `Unknown`. Caps on intermediate-inequality count and
+  coefficient magnitude bound the worst-case blow-up.
 - **C2** Simplex on the LRA layer → `minimize|maximize` optimization + binding constraints.
 - **C3** Nonlinear bridge: `cas-solve`/`cas-mnewton` for `constrain` with quadratic+ terms.
 

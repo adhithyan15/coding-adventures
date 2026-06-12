@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.5.0] - 2026-06-11 — QF_LRA real feasibility via Fourier–Motzkin (ADJ constraints track C1)
+
+### Added
+
+- **`FeasibilityOutcome::SatReal { assignments: Vec<(String, f64)> }`** — `check`
+  now decides **real** (QF_LRA) feasibility, not just integer. A
+  **Fourier–Motzkin elimination** over ℚ decides whether a conjunction of linear
+  (in)equalities is satisfiable over the reals and reconstructs a rational
+  witness (rendered as `f64`). The arithmetic uses a self-contained **checked
+  i128 rational** (`Rat`) — every operation returns `None` on overflow instead
+  of silently wrapping, so an overflow becomes `Unknown`, never a wrong verdict.
+- `check` now **layers two procedures**: the exact linear-integer tactic
+  (`LiaTactic`, B2c) runs first; the Fourier–Motzkin layer takes over when the
+  integer tactic punts (`Unknown`), when a constraint is non-integer, **or when
+  the integer tactic reports `Unsat`** — because an integer-infeasible system may
+  still be real-feasible (`2x = 1` → `x = 0.5`). A system is `Unsat` only when
+  *both* layers reject it.
+- New internal machinery: `LinForm` (affine form over ℚ), `linearize`,
+  `constraint_to_halfplanes` (equality → two `≤`, strict `<`/`>` tracked), the
+  `fourier_motzkin` driver, and witness back-substitution with a defensive
+  re-check (`witness_satisfies`) that downgrades to a witness-free `SatReal`
+  rather than ever emit a wrong point.
+- 9 new tests (fractional feasible/infeasible, integer-infeasible-but-real,
+  two-variable sat/unsat, strict inequalities, `!=`/nonlinear → `Unknown`).
+
+### Changed
+
+- **BREAKING (enum):** the prior B2c behavior where a non-integer constraint
+  (e.g. `x <= 0.5`) returned `Unknown` is superseded — it is now decided as
+  real-feasible (`SatReal`). Callers matching on `FeasibilityOutcome` must add a
+  `SatReal` arm.
+
+### Safety
+
+- The rational arithmetic is **checked end-to-end**: `Rat`'s ops return `None`
+  on i128 overflow (or past a `RAT_CAP` magnitude ceiling that also keeps the
+  ordering cross-products within i128), and every Fourier–Motzkin step —
+  elimination, witness back-substitution, and the witness re-check — propagates
+  that to `Unknown` (or drops the witness) rather than emit a wrapped, possibly
+  sign-flipped value. A `MAX_INEQUALITIES` cap bounds the classic FM blow-up.
+  (Hardens the overflow path flagged in security review: a fixed-width rational
+  would wrap silently and could flip a feasibility verdict.)
+
 ## [0.4.0] - 2026-06-11 — feasibility / `check` via linear-integer tactic (ADJ constraints track B2c)
 
 ### Added

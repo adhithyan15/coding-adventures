@@ -352,11 +352,12 @@ fn solve_json(outcome: &SolveOutcome) -> String {
     }
 }
 
-/// Render a [`FeasibilityOutcome`] as JSON. `sat` carries a witness assignment
-/// (one integer per symbol) proving the system is jointly satisfiable; `unsat`
-/// carries the indices of the constraints whose conjunction is contradictory;
-/// `unknown` reports why feasibility could not be decided (e.g. a nonlinear or
-/// non-integer constraint that the linear-integer tactic cannot accept).
+/// Render a [`FeasibilityOutcome`] as JSON. `sat` carries an **integer** witness
+/// (from the linear-integer tactic); `sat_real` carries a **rational** witness
+/// rendered as numbers (from the Fourier–Motzkin / QF_LRA layer, track C1);
+/// `unsat` carries the indices of the constraints whose conjunction is
+/// contradictory; `unknown` reports why feasibility could not be decided (a
+/// `!=`, a nonlinear term, or a system too large for the bounded slice).
 fn check_json(outcome: &FeasibilityOutcome) -> String {
     match outcome {
         FeasibilityOutcome::Sat { assignments } => {
@@ -366,6 +367,18 @@ fn check_json(outcome: &FeasibilityOutcome) -> String {
                 .collect();
             format!(
                 "{{\"outcome\":\"sat\",\"assignments\":[{}]}}",
+                vars.join(",")
+            )
+        }
+        FeasibilityOutcome::SatReal { assignments } => {
+            let vars: Vec<String> = assignments
+                .iter()
+                .map(|(name, value)| {
+                    format!("{{\"name\":\"{}\",\"value\":{}}}", esc(name), jnum(*value))
+                })
+                .collect();
+            format!(
+                "{{\"outcome\":\"sat_real\",\"assignments\":[{}]}}",
                 vars.join(",")
             )
         }

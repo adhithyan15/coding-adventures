@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.4] - 2026-06-11 — emit real-feasibility verdicts (ADJ constraints track C1)
+
+### Added
+
+- Render the new `FeasibilityOutcome::SatReal` as
+  `{"outcome":"sat_real","assignments":[{"name","value"}]}`, where `value` is a
+  rational witness rendered as a JSON number. A `check` over a fractional or
+  integer-infeasible-but-real system (`2 * x = 1` → `x = 0.5`) now emits
+  `sat_real` instead of `unknown`. 2 new golden tests. Tracks
+  `adj-constraint-solver` 0.5.0.
+
 ## [0.3.3] - 2026-06-11 — emit feasibility verdicts (ADJ constraints track B2c)
 
 ### Added

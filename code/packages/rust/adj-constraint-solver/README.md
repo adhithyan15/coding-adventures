@@ -51,20 +51,37 @@ satisfiable*? `check(&cs, &kb)` translates the linear (in)equalities to
 `constraint-core` `Predicate`s and runs `constraint-engine`'s `LiaTactic`
 (linear integer arithmetic), returning a [`FeasibilityOutcome`]:
 
-- `Sat { assignments }` — a witness integer per symbol proving satisfiability
-  (`x >= 3 ; x <= 5` → e.g. `x = 3`).
+- `Sat { assignments }` — an **integer** witness per symbol (`x >= 3 ; x <= 5`
+  → e.g. `x = 3`).
 - `Unsat { core }` — the constraint indices whose conjunction is contradictory
   (`x >= 5 ; x <= 3` → unsat).
-- `Unknown { reason }` — a constraint outside linear-integer scope (nonlinear,
-  or not integer-valued). **Never a false verdict.**
+- `Unknown { reason }` — a `!=` (disjunctive) or a non-linear constraint.
+  **Never a false verdict.**
 
 Observed facts are substituted first (shared with the `solve` path), so a
 mixed symbol/observed system is decided with the observed values pinned.
+
+### Real feasibility — QF_LRA via Fourier–Motzkin (track C1)
+
+`check` decides **real** feasibility, not just integer. The linear-integer
+tactic above runs first; a **Fourier–Motzkin elimination over ℚ** takes over
+when that tactic punts, when a constraint is non-integer, **or when it reports
+`Unsat`** — because an integer-infeasible system may still be real-feasible:
+
+- `SatReal { assignments }` — a **rational** witness (rendered as `f64`) proving
+  real satisfiability (`2x = 1` → `x = 0.5`; `0.25 <= x <= 0.75` → an interior
+  point). The feasibility *decision* is exact; the witness is a representative
+  point, re-checked before it is returned.
+- A system is `Unsat` only when *both* the integer and real layers reject it.
+
+Two guards bound the classic Fourier–Motzkin blow-up (and keep the i64-backed
+rationals clear of overflow): caps on intermediate-inequality count and
+coefficient magnitude; past either, `check` returns `Unknown`.
 
 ## Where it fits / what's next
 
 Part of the ADJ constraint-solving arc
 ([design](../../../specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md)).
-Still to come: **inequality / linear-real feasibility** (QF_LRA over ℚ, track
-C1) and **linear optimization** (simplex, `minimize`/`maximize`, C2). Those
-reuse the same `ConstraintSystem` input.
+Still to come: **linear optimization** (simplex, `minimize`/`maximize`, track
+C2), built on the same half-plane representation. Reuses the same
+`ConstraintSystem` input.
