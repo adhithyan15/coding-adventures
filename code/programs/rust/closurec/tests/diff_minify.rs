@@ -90,10 +90,6 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-069 (CLOC14.35): `new` directly followed by a `(`
-    // grouping paren needs a separating space — `new(a+b)` →
-    // `new (a+b)` (emit-adjacency, both keep the parens).
-    ("new_paren_space", "gap-069: `new(` needs a space → `new (`"),
     // gap-070/071/072 (CLOC14.35): prefix-operator OPERAND paren
     // elision — strip redundant parens around a simple-reference
     // operand. `typeof`/`void` already do this; `delete`,

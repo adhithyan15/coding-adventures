@@ -1692,7 +1692,7 @@ pub fn whitespace_only_minify(
 
         // Emit the token (with separator if needed).
         if let Some(prev) = prev_emitted_tok {
-            if needs_separator(prev, tok) {
+            if needs_separator(prev, tok) || new_paren_needs_space(&kept, idx) {
                 out.push(' ');
             }
         }
@@ -2456,6 +2456,60 @@ fn needs_separator(a: &lexer::token::Token, b: &lexer::token::Token) -> bool {
         }
     }
     false
+}
+
+/// gap-069: decide whether the token at `kept[idx]` — known to be
+/// the one about to be emitted — needs a single leading space
+/// because it is a `(` GROUPING paren immediately following the
+/// `new` KEYWORD. Upstream Closure emits `new (a+b)` (with a
+/// space), not `new(a+b)`.
+///
+/// Why this lives HERE (a two-token look-behind) and not in
+/// `needs_separator` (which sees only the adjacent pair):
+/// distinguishing the genuine NewExpression keyword `new` from a
+/// PROPERTY named `new` requires the token *before* `new`. The
+/// JavaScript lexer is context-free, so it types `new` identically
+/// in `new X` and `o.new(f)` — only the preceding `.`/`?.` member
+/// accessor tells them apart:
+///
+///   `new(a+b)`   → kept[..] = … new ( …      → SPACE  (NewExpr)
+///   `o.new(f)`   → kept[..] = … . new ( …     → NO SPACE (method call)
+///   `a.b(x)`     → kept[..] = … b ( …         → rule doesn't fire
+///
+/// The companion case `new(f)()` (simple-reference callee) never
+/// reaches here: gap-068's pre-pass has already ELIDED the parens
+/// (`new f`) before the emit loop runs, so no `new (` survives.
+///
+/// GUARDS (all required, fail-closed):
+///   - `kept[idx]` is a *structural* `(` (not a one-char string
+///     `"("` whose `.value` merely equals `(`).
+///   - `kept[idx-1]` is word-like AND its value is exactly `new`
+///     (so a string literal `"new"` can never trigger it; `new`
+///     is reserved, so no identifier can collide either).
+///   - `kept[idx-2]`, if present, is NOT a `.`/`?.` member
+///     accessor — i.e. `new` is a real unary keyword, not a
+///     property. When `new` is the very first token (idx < 2)
+///     there is no accessor, so it is unambiguously a NewExpression.
+fn new_paren_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    if idx == 0 {
+        return false; // need a `new` token before the `(`
+    }
+    let open = kept[idx];
+    let prev = kept[idx - 1];
+    if !is_structural_punct(open, "(") {
+        return false;
+    }
+    if !(is_word_like(prev) && prev.value == "new") {
+        return false;
+    }
+    // Property guard: reject `o.new(` / `o?.new(` (method call).
+    if idx >= 2 {
+        let before_new = kept[idx - 2];
+        if is_structural_punct(before_new, ".") || is_structural_punct(before_new, "?.") {
+            return false;
+        }
+    }
+    true
 }
 
 /// True iff a token is "word-like" — its value would merge with
@@ -3925,6 +3979,36 @@ mod tests {
         assert_eq!(minify("o.new(f);"), "o.new(f);");
     }
 
+    // ---- gap-069: `new (` emit-adjacency separating space ----
+
+    /// gap-069: a `new` keyword followed by a KEPT grouping paren
+    /// (compound callee) gets a separating space — `new(a+b)` →
+    /// `new (a+b)`, matching upstream Closure.
+    #[test]
+    fn gap069_new_paren_gets_space() {
+        assert_eq!(minify("new(a+b);"), "new (a+b);");
+        assert_eq!(minify("new(a,b);"), "new (a,b);");
+    }
+
+    /// gap-069 SAFETY: a PROPERTY named `new` (`o.new(f)`) is a
+    /// method call, NOT a NewExpression — the preceding `.`
+    /// accessor must suppress the space. (Also covered by
+    /// gap068_new_property_not_stripped; this asserts the space
+    /// specifically does not creep in for a compound argument.)
+    #[test]
+    fn gap069_property_new_no_space() {
+        assert_eq!(minify("o.new(a+b);"), "o.new(a+b);");
+        assert_eq!(minify("o?.new(a+b);"), "o?.new(a+b);");
+    }
+
+    /// gap-069 boundary: `new X()` (simple identifier callee) does
+    /// NOT trigger the space — `new` is followed by the IDENT `X`,
+    /// not a `(` — and gap-050 still drops the empty `()`.
+    #[test]
+    fn gap069_new_ident_unaffected() {
+        assert_eq!(minify("new X();"), "new X;");
+    }
+
     // ---- gap-067: labeled single-statement block flatten ----
 
     /// gap-067: `label:{break label}` → `label:break label;` —
@@ -4465,19 +4549,22 @@ mod tests {
         );
     }
 
-    /// **Non-regression**: `new` keyword followed by a
-    /// non-identifier (e.g. `new (expr)`) is NOT
-    /// targeted by this peephole — kept[idx-1] isn't a
-    /// simple identifier.
+    /// **Non-regression (gap-050) + gap-069**: `new` keyword
+    /// followed by a non-identifier (e.g. `new (expr)`) is NOT
+    /// targeted by the gap-050 empty-paren peephole — kept[idx-1]
+    /// isn't a simple identifier, so the trailing constructor
+    /// `()` survives. Since CLOC12.78, the `new (` adjacency also
+    /// carries the gap-069 separating space.
     #[test]
     fn gap050_new_with_paren_expr_unchanged() {
         // `new (Foo||Bar)()` — paren expression for
         // constructor selection. The empty `()` after the
-        // paren-close is NOT what we target (idx-1 is `)`,
-        // not an identifier).
+        // paren-close is NOT what gap-050 targets (idx-1 is `)`,
+        // not an identifier), so it is preserved. gap-069 keeps
+        // the `new (` space (the grouping parens are kept).
         assert_eq!(
             minify("var x=new (Foo||Bar)();"),
-            "var x=new(Foo||Bar)();"
+            "var x=new (Foo||Bar)();"
         );
     }
 

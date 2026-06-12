@@ -535,9 +535,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-069 — `new(` emit-adjacency space
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_new_paren_space` ignored.
+- **Status:** RESOLVED in CLOC12.78. `minify_new_paren_space` enforced.
 - **Input:** `new(a+b);` → **Upstream:** `new (a+b);` (also `new(a,b)` → `new (a,b)`)
-- **What it needs:** When the `new` keyword is directly followed by a `(` GROUPING paren (a parenthesized callee expression that gap-068 keeps), the re-stitcher must insert a single space: `new (…)`. Both forms keep the parens; this is purely an emit-adjacency rule (`needs_separator`-style) for `new` + `(`. (Noted as the gap-069 candidate during CLOC12.76.)
+- **What it needed:** When the `new` keyword is directly followed by a `(` GROUPING paren (a parenthesized callee expression that gap-068 keeps), the re-stitcher inserts a single space: `new (…)`. Both forms keep the parens; this is an emit-adjacency rule for `new` + `(`. (Noted as the gap-069 candidate during CLOC12.76.)
+- **CLOC12.78 resolution:** A two-token look-behind, `new_paren_needs_space(kept, idx)`, consulted at the main emit site (NOT in `needs_separator`, which sees only the adjacent pair). Distinguishing the genuine NewExpression keyword `new` from a PROPERTY named `new` (`o.new(f)` — a method call) requires the token *before* `new`: the JS lexer is context-free and types `new` identically in both, so only a preceding `.`/`?.` member accessor tells them apart. The helper fires only when (a) `kept[idx]` is a structural `(`, (b) `kept[idx-1]` is the word-like `new` keyword, and (c) `kept[idx-2]` (if any) is not a `.`/`?.` accessor. The companion `new(f)()` simple-reference form never reaches here — gap-068's pre-pass has already elided those parens to `new f`. 3 unit tests + the byte-identity fixture.
 
 ### gap-070 / gap-071 / gap-072 — prefix-operator operand paren elision
 

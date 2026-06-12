@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.82.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-069** — a `new` keyword followed by a KEPT grouping
+  paren (compound callee) now gets a separating space, matching
+  upstream Closure: `new(a+b)` → `new (a+b)`, `new(a,b)` →
+  `new (a,b)`. `minify_new_paren_space` is now enforced.
+
+### Added — gap-069 `new (` emit-adjacency space
+
+A two-token look-behind helper, `new_paren_needs_space(kept, idx)`,
+consulted at the main emit site (NOT in `needs_separator`, which
+sees only the adjacent pair). Distinguishing the genuine
+NewExpression keyword `new` from a PROPERTY named `new` (`o.new(f)`
+— a method call) requires the token *before* `new`: the JavaScript
+lexer is context-free and types `new` identically in both, so only
+a preceding `.`/`?.` member accessor tells them apart. The helper
+fires only when (a) `kept[idx]` is a structural `(`, (b)
+`kept[idx-1]` is the word-like `new` keyword, and (c) `kept[idx-2]`
+(if any) is not a `.`/`?.` accessor. The companion `new(f)()`
+simple-reference form never reaches here — gap-068's pre-pass has
+already elided those parens to `new f`. 3 new gap069_* unit tests
++ the `minify_new_paren_space` byte-identity fixture.
+
 ## [0.81.0] - 2026-06-11
 
 ### Changed
