@@ -456,3 +456,82 @@ fn no_status_clause_means_constraints_dont_disturb_the_differential() {
     assert!(s.contains("\"outcome\":\"unsat\""), "{s}");
     assert!(s.contains("\"posterior\":0.3"), "prior unchanged: {s}");
 }
+
+// ---- FromSolve: the solver certificate renders under the verdict step (E3) ----
+
+#[test]
+fn the_verdict_proof_step_carries_the_iis_core() {
+    // The contribution that fired from `infeasible` now embeds the minimal
+    // infeasibility certificate (IIS core) right under the verdict's proof step,
+    // so the whole adjudication is one auditable tree.
+    let (ok, s) = run(
+        "adjcli_fromsolve_iis.adj",
+        "prior 0.10 for schedule_broken\n  source \"x\" trust empirical\n\
+         contributes 1000000 from infeasible to schedule_broken\n  source \"sched\" trust authoritative\n\
+         symbol d : scalar\nsymbol b : scalar\n\
+         constrain d >= 28\nconstrain b >= d + 20\nconstrain b <= 45\ncheck\n\
+         ? schedule_broken\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    // the proof step embeds the solver cert with the IIS core
+    assert!(
+        s.contains("\"solver\":{"),
+        "expected a solver field on the step: {s}"
+    );
+    assert!(s.contains("\"outcome\":\"unsat\""), "{s}");
+    assert!(
+        s.contains("\"core\":[0,1,2]"),
+        "expected the IIS core under the step: {s}"
+    );
+}
+
+#[test]
+fn the_verdict_proof_step_carries_the_solved_assignment() {
+    // A `solve` that fires a verdict via `solved` embeds the assignment cert.
+    let (ok, s) = run(
+        "adjcli_fromsolve_solved.adj",
+        "prior 0.10 for priced\n  source \"x\" trust empirical\n\
+         contributes 1000000 from solved to priced\n  source \"calc\" trust authoritative\n\
+         symbol p : scalar\nconstrain p * 1000 = 8000\nsolve for { p }\n? priced\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"solver\":{"), "{s}");
+    assert!(
+        s.contains("\"name\":\"p\",\"value\":8"),
+        "expected solved p=8 under the step: {s}"
+    );
+}
+
+#[test]
+fn the_verdict_proof_step_carries_the_optimum() {
+    // An `optimize` that fires a verdict via `optimal` embeds the value + binding.
+    let (ok, s) = run(
+        "adjcli_fromsolve_opt.adj",
+        "prior 0.10 for allocated\n  source \"x\" trust empirical\n\
+         contributes 1000000 from optimal to allocated\n  source \"lp\" trust authoritative\n\
+         symbol x : scalar\nconstrain x <= 5\nconstrain x >= 0\nmaximize x\n? allocated\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"solver\":{"), "{s}");
+    assert!(s.contains("\"outcome\":\"optimal\""), "{s}");
+    assert!(
+        s.contains("\"value\":5"),
+        "expected optimum 5 under the step: {s}"
+    );
+}
+
+#[test]
+fn a_non_status_contribution_has_no_solver_field() {
+    // An ordinary contribution (not from a constraint status) carries no solver.
+    let (ok, s) = run(
+        "adjcli_fromsolve_none.adj",
+        "prior 0.10 for acs\n  source \"x\" trust empirical\n\
+         contributes 2.5 from symptom(chest_pain) to acs\n  source \"y\" trust empirical\n\
+         observe symptom(chest_pain)\n? acs\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        !s.contains("\"solver\":"),
+        "no constraint status → no solver field: {s}"
+    );
+}

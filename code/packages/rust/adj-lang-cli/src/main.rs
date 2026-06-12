@@ -102,7 +102,16 @@ fn prov(p: &Provenance) -> String {
 
 /// Serialize the proof DAG for one hypothesis: walk each step and join its
 /// `clause_id` back to the firing clause's evidence term + cited provenance.
-fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> String {
+/// `certs` maps a constraint STATUS atom to its solver certificate JSON (E3); a
+/// contribution step whose evidence *is* such a status gets the certificate
+/// attached under it as `"solver": …`, so the verdict's proof descends into the
+/// solver's result (the IIS, the assignment, the optimum).
+fn proof_json(
+    hyp: &Term,
+    kb: &KnowledgeBase,
+    result: &LRAggregateResult,
+    certs: &[(&'static str, String)],
+) -> String {
     let prior = kb.prior_for(hyp);
     let contribs = kb.contributions_for(hyp);
     let joints = kb.joint_contributions_for(hyp);
@@ -127,11 +136,20 @@ fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> Str
                     ..
                 } => {
                     if let Some(c) = contribs.iter().find(|c| c.id == *clause_id) {
+                        let ev = format!("{}", c.evidence_term);
+                        // E3: if this contribution fired from a constraint STATUS
+                        // atom, descend into the solver certificate beneath it.
+                        let solver = certs
+                            .iter()
+                            .find(|(k, _)| *k == ev.as_str())
+                            .map(|(_, cert)| format!(",\"solver\":{}", cert))
+                            .unwrap_or_default();
                         steps.push(format!(
-                            "{{\"kind\":\"contribution\",\"evidence\":\"{}\",\"logit\":{},{}}}",
-                            esc(&format!("{}", c.evidence_term)),
+                            "{{\"kind\":\"contribution\",\"evidence\":\"{}\",\"logit\":{},{}{}}}",
+                            esc(&ev),
                             jnum(*logit_delta),
-                            prov(&c.provenance)
+                            prov(&c.provenance),
+                            solver
                         ));
                     }
                 }
@@ -191,41 +209,46 @@ fn proof_json(hyp: &Term, kb: &KnowledgeBase, result: &LRAggregateResult) -> Str
     format!("[{}]", steps.join(","))
 }
 
-/// Map the constraint-engine outcomes to the STATUS atoms that feed the
-/// differential (ADJ constraints E2 — feed-a-verdict). Each atom, injected as an
-/// observed fact, fires an existing `contributes <lr> from <status> to <verdict>`
-/// clause. Deduplicated and order-stable. An `Unknown` / `Unsupported` /
-/// `NoUniqueSolution` outcome contributes NO status — the engine stays silent
-/// rather than assert a verdict it cannot back (the one-engine invariant: never
-/// launder an undecided constraint into a verdict).
-fn status_facts(
+/// Map the constraint-engine outcomes to `(status atom, certificate JSON)` pairs
+/// (ADJ constraints E2 + E3). The status atom, injected as an observed fact,
+/// feeds the differential — it fires an existing
+/// `contributes <lr> from <status> to <verdict>` clause (E2, feed-a-verdict).
+/// The certificate JSON is the solver's full result for that status (the IIS
+/// `core` for `infeasible`, the assignments for `solved`, the value + binding
+/// constraints for `optimal`, …); E3 attaches it *under* the proof step that
+/// fired, so the whole adjudication is one auditable tree.
+///
+/// Deduplicated and order-stable. An `Unknown` / `Unsupported` /
+/// `NoUniqueSolution` outcome yields NOTHING — the engine never launders an
+/// undecided constraint into a verdict (the one-engine invariant).
+fn status_certificates(
     solve: &Option<SolveOutcome>,
     check: &Option<FeasibilityOutcome>,
     optimize: &Option<OptimizeOutcome>,
-) -> Vec<&'static str> {
-    let mut out: Vec<&'static str> = Vec::new();
-    let mut add = |out: &mut Vec<&'static str>, s: &'static str| {
-        if !out.contains(&s) {
-            out.push(s);
+) -> Vec<(&'static str, String)> {
+    let mut out: Vec<(&'static str, String)> = Vec::new();
+    let mut add = |out: &mut Vec<(&'static str, String)>, s: &'static str, cert: String| {
+        if !out.iter().any(|(k, _)| *k == s) {
+            out.push((s, cert));
         }
     };
     if let Some(o) = check {
         match o {
             FeasibilityOutcome::Sat { .. } | FeasibilityOutcome::SatReal { .. } => {
-                add(&mut out, "feasible")
+                add(&mut out, "feasible", check_json(o))
             }
-            FeasibilityOutcome::Unsat { .. } => add(&mut out, "infeasible"),
+            FeasibilityOutcome::Unsat { .. } => add(&mut out, "infeasible", check_json(o)),
             FeasibilityOutcome::Unknown { .. } => {}
         }
     }
-    if let Some(SolveOutcome::Solved { .. } | SolveOutcome::SolvedRoots { .. }) = solve {
-        add(&mut out, "solved");
+    if let Some(o @ (SolveOutcome::Solved { .. } | SolveOutcome::SolvedRoots { .. })) = solve {
+        add(&mut out, "solved", solve_json(o));
     }
     if let Some(o) = optimize {
         match o {
-            OptimizeOutcome::Optimal { .. } => add(&mut out, "optimal"),
-            OptimizeOutcome::Infeasible { .. } => add(&mut out, "infeasible"),
-            OptimizeOutcome::Unbounded => add(&mut out, "unbounded"),
+            OptimizeOutcome::Optimal { .. } => add(&mut out, "optimal", optimize_json(o)),
+            OptimizeOutcome::Infeasible { .. } => add(&mut out, "infeasible", optimize_json(o)),
+            OptimizeOutcome::Unbounded => add(&mut out, "unbounded", optimize_json(o)),
             OptimizeOutcome::Unknown { .. } => {}
         }
     }
@@ -293,15 +316,16 @@ fn main() -> ExitCode {
         .is_some()
         .then(|| optimize(&lowered.constraints, &lowered.kb));
 
-    for status in status_facts(&solve_outcome, &check_outcome, &optimize_outcome) {
-        lowered.kb.add_fact(Fact::certain(atom(status)));
+    let certs = status_certificates(&solve_outcome, &check_outcome, &optimize_outcome);
+    for (status, _) in &certs {
+        lowered.kb.add_fact(Fact::certain(atom(*status)));
     }
 
     let diff = decide(&lowered);
 
     let mut ranked: Vec<String> = Vec::new();
     for r in &diff.ranked {
-        let proof = proof_json(&r.hypothesis, &lowered.kb, &r.result);
+        let proof = proof_json(&r.hypothesis, &lowered.kb, &r.result, &certs);
         ranked.push(format!(
             "{{\"hypothesis\":\"{}\",\"posterior\":{},\"posterior_logit\":{},\"normalized_share\":{},\"proof\":{}}}",
             esc(&format!("{}", r.hypothesis)),

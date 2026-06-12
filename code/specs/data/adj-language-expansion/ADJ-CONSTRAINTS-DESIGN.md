@@ -130,9 +130,13 @@ the **dimensional layer + surface sublanguage + provenance bridge**. Everything 
   an observed fact into the KB *before* `decide`, and an existing
   `contributes <lr> from <status> to <verdict>` clause fires through the ordinary contribution + proof
   machinery.
-- **E3 (next):** a new `DerivationOrigin::FromSolve { … }` lets the proof DAG descend into the solver
-  certificate, so `adj-lang-cli` renders the solution/IIS *under* the verdict step — auditable without
-  the model.
+- **FromSolve / proof descent** ✅ (E3) → the verdict's proof descends into the solver certificate.
+  **Divergence from the original plan:** implemented *without* a new `logic-engine`
+  `DerivationOrigin::FromSolve` — it lives entirely in the `adj-lang-cli` renderer. A contribution step
+  whose evidence is a constraint STATUS atom gets a `"solver": …` field carrying that constraint's full
+  result (the IIS `core`, the assignment, the optimum) via the existing `*_json` renderers. So a
+  verdict's proof step reads `…,"solver":{"outcome":"unsat","core":[0,1,2]}` — the verdict *and* the
+  exact conflicting constraints, in one auditable tree, no engine change.
 
 ## 6. Reuse map (grounded — verified by source read)
 

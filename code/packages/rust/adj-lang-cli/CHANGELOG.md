@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.4.1] - 2026-06-12 — `FromSolve` proof: the solver certificate renders under the verdict step (ADJ constraints E3)
+
+### Added
+
+- **The verdict's proof now descends into the solver certificate.** When a
+  contribution fired from a constraint STATUS atom (E2 — `feasible` /
+  `infeasible` / `solved` / `optimal` / `unbounded`), its proof step now carries
+  a `"solver": …` field with that constraint's full result — the **IIS `core`**
+  for `infeasible`, the assignment for `solved`, the value + binding constraints
+  for `optimal`, etc. So `schedule_broken`'s proof step reads
+  `…,"solver":{"outcome":"unsat","core":[0,1,2]}` — the verdict, *and* the exact
+  conflicting constraints that forced it, in one auditable tree.
+- Implemented entirely in the CLI renderer (no `logic-engine` change): a single
+  `status_certificates` helper produces the `(status atom, certificate JSON)`
+  pairs that both feed the differential (E2) and annotate the proof (E3); the
+  certificate JSON reuses the existing `check_json`/`solve_json`/`optimize_json`
+  renderers. 4 golden tests (IIS core / solved assignment / optimum under the
+  step; no `solver` field on an ordinary contribution).
+
 ## [0.4.0] - 2026-06-12 — feed-a-verdict: constraint outcome drives the differential (ADJ constraints E2)
 
 ### Added
