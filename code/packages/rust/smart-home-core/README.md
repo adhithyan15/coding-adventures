@@ -95,6 +95,8 @@ Current scope:
   human/operator work derived from playbook steps
 - D18D integration activation-control-room descriptors for grouped
   operator-view panels derived from the activation operator queue
+- D18D integration activation-command-center descriptors for grouped
+  operating-lane sections derived from control-room panels
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
