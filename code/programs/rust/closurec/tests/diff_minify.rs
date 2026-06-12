@@ -96,13 +96,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-075 (CLOC14.36): prefix-unary SYMBOL operator operand
-    // paren elision — `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` → `~a`,
-    // and the same-sign case `-(-a)` → `- -a` (a separating space
-    // prevents the `--` decrement glue). Same simple-reference
-    // operand machinery as gap-070/071 but anchored on the
-    // PUNCTUATION operators `-`/`+`/`!`/`~` rather than a keyword.
-    ("unary_minus_paren", "gap-075: prefix-unary symbol operand paren elision"),
+    // gap-075 RESOLVED in CLOC12.84 — a prefix-unary SYMBOL operator
+    // operand's grouping parens (`-(a)` → `-a`, `!(a)` → `!a`,
+    // `~(a)` → `~a`, `-(-a)` → `- -a`) now elide;
+    // `minify_unary_minus_paren` enforced.
     // gap-076 RESOLVED in CLOC12.83 — a `with`-body single-statement
     // block (`with(o){a()}` → `with(o)a();`) now flattens via the
     // gap-074 pre-pass (`with` added to the anchor keyword set);
