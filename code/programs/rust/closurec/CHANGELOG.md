@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.83.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-070** — `delete`/`typeof`/`void` followed by a
+  parenthesised MEMBER-REFERENCE CHAIN now drops the redundant
+  grouping parens: `delete(a.b)` → `delete a.b`, `delete(a[b])` →
+  `delete a[b]`, `typeof(a.b)` → `typeof a.b`. `minify_delete_paren_elide`
+  is now enforced.
+
+### Fixed
+- **Correctness (property guard)** — `o.delete(a)` (a Map/Set
+  `.delete()` method call) previously mis-emitted as the INVALID
+  `o.delete a` because the unary-operand paren-elision pass lacked
+  a property guard. The keyword is now skipped when preceded by a
+  `.`/`?.` member accessor, so `o.delete(a)`, `o.typeof(x)`, and
+  `o?.delete(a)` keep their call parens.
+
+### Added — gap-070 member-chain operand elision
+
+The gap-054 unary-keyword paren-elision pre-pass (previously
+single-token only) was generalised. The operand validator
+`is_safe_unary_operand` now accepts either a single safe token
+(identifier / number / string — the original gap-054 case) OR a
+member-reference chain: an identifier base followed by any run of
+`.name` / `?.name` / `[…]` accessors with no top-level operator,
+call, or comma. Both shapes bind tighter than a prefix unary
+operator and are self-delimiting, so `OP(REF)` ≡ `OP REF`.
+Operands with a top-level binary operator (`delete(a+b)`) are
+left alone. The matching close paren is located by a structural
+depth scan instead of the old fixed `i+3` offset. 4 new gap070_*
+unit tests + the `minify_delete_paren_elide` byte-identity fixture.
+
 ## [0.82.0] - 2026-06-12
 
 ### Changed
