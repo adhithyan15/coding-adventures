@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.7] - 2026-06-11 — decompose→solve golden tests (ADJ constraints track D2)
+
+### Added
+
+- `tests/decompose_run.rs` — deterministic golden tests over the **committed**
+  decompositions from the live decompose→solve demonstration
+  (`code/specs/data/adj-constraints-decompose-run/`). A local model
+  (`llama3.1:8b`) turned 4 messy-prose word problems into adj-lang; the engine
+  solved 3/4 to gold (44, 980, unsat) at **0 answer-time model calls**, and
+  reported the 4th (a model mis-transcription) as `unsupported` rather than
+  fabricating a value. The tests re-solve every committed `.adj` with no model in
+  the loop — proving the engine is a pure function of the decomposition. Test +
+  spec-data only; no CLI behavior change.
+
 ## [0.3.6] - 2026-06-11 — grant-allocation LP worked example (ADJ constraints track D)
 
 ### Added
