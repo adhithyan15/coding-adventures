@@ -1244,6 +1244,31 @@ impl IntegrationActivationSentinelAlertKind {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationAuditRecordKind {
+    Sentinel,
+    Watchtower,
+    Decision,
+    Evidence,
+    Risk,
+    Dependency,
+    ReadinessGap,
+}
+
+impl IntegrationActivationAuditRecordKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Sentinel => "sentinel",
+            Self::Watchtower => "watchtower",
+            Self::Decision => "decision",
+            Self::Evidence => "evidence",
+            Self::Risk => "risk",
+            Self::Dependency => "dependency",
+            Self::ReadinessGap => "readiness_gap",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationActivationDecisionStatus {
     ReadyToApprove,
     BlockedOnPrerequisites,
@@ -2532,6 +2557,50 @@ pub struct IntegrationActivationSentinelSummary {
     pub first_policy_risk_priority: Option<u8>,
     pub first_review_priority: Option<u8>,
     pub first_ready_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationAuditRecord {
+    pub sequence: usize,
+    pub record_kind: IntegrationActivationAuditRecordKind,
+    pub record_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub sentinel_alert_kind: Option<IntegrationActivationSentinelAlertKind>,
+    pub watchtower_signal_kind: Option<IntegrationActivationWatchtowerSignalKind>,
+    pub decision_status: Option<IntegrationActivationDecisionStatus>,
+    pub evidence_kind: Option<IntegrationActivationEvidenceKind>,
+    pub evidence_status: Option<IntegrationActivationEvidenceStatus>,
+    pub risk_kind: Option<IntegrationActivationRiskKind>,
+    pub dependency_integration_id: Option<IntegrationId>,
+    pub dependent_integration_id: Option<IntegrationId>,
+    pub readiness_gap_kind: Option<String>,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationAuditSummary {
+    pub total_records: usize,
+    pub unique_integrations: usize,
+    pub records_requiring_attention: usize,
+    pub sentinel_records: usize,
+    pub watchtower_records: usize,
+    pub decision_records: usize,
+    pub evidence_records: usize,
+    pub risk_records: usize,
+    pub dependency_records: usize,
+    pub readiness_gap_records: usize,
+    pub records_with_policy_surface: usize,
+    pub records_with_dependency_link: usize,
+    pub first_attention_priority: Option<u8>,
+    pub first_dependency_priority: Option<u8>,
+    pub first_readiness_gap_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -6046,6 +6115,369 @@ impl IntegrationActivationSentinelSummary {
 
     pub fn requires_attention(&self) -> bool {
         self.alerts_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
+impl IntegrationActivationAuditRecord {
+    fn new(
+        record_kind: IntegrationActivationAuditRecordKind,
+        record_id: String,
+        title: String,
+        summary: String,
+        priority: u8,
+        mut integration_ids: Vec<IntegrationId>,
+        required_tier: PrivilegeTier,
+        policy_surface: Option<IntegrationPolicySurface>,
+        requires_attention: bool,
+    ) -> Self {
+        integration_ids.sort();
+        integration_ids.dedup();
+
+        Self {
+            sequence: 0,
+            record_kind,
+            record_id,
+            title,
+            summary,
+            priority,
+            integration_ids,
+            sentinel_alert_kind: None,
+            watchtower_signal_kind: None,
+            decision_status: None,
+            evidence_kind: None,
+            evidence_status: None,
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: None,
+            required_tier,
+            policy_surface,
+            requires_attention,
+        }
+    }
+
+    fn from_sentinel_alert(alert: &IntegrationActivationSentinelAlert) -> Self {
+        let required_tier = alert
+            .watchtower_summary
+            .highest_policy_tier
+            .max(alert.risk_summary.highest_policy_tier)
+            .max(alert.dependency_summary.highest_policy_tier);
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Sentinel,
+            format!("sentinel:{}", alert.alert_kind.as_str()),
+            format!("Activation sentinel {} alert", alert.alert_kind.as_str()),
+            format!(
+                "{} integrations, {} dependency edges, {} readiness gaps",
+                alert.integration_count(),
+                alert.dependency_summary.total_edges,
+                alert.gap_inventory.total_unique_gaps()
+            ),
+            alert.priority,
+            alert.integration_ids.clone(),
+            required_tier,
+            None,
+            alert.requires_attention(),
+        );
+        record.sentinel_alert_kind = Some(alert.alert_kind);
+        record
+    }
+
+    fn from_watchtower_signal(signal: &IntegrationActivationWatchtowerSignal) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Watchtower,
+            format!("watchtower:{}", signal.signal_kind.as_str()),
+            format!(
+                "Activation watchtower {} signal",
+                signal.signal_kind.as_str()
+            ),
+            format!(
+                "{} command-center sections across {} integrations",
+                signal.section_count,
+                signal.integration_count()
+            ),
+            signal.priority,
+            signal.integration_ids.clone(),
+            signal.command_center_summary.highest_policy_tier,
+            None,
+            signal.requires_attention(),
+        );
+        record.watchtower_signal_kind = Some(signal.signal_kind);
+        record
+    }
+
+    fn from_decision(decision: &IntegrationActivationDecisionItem) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Decision,
+            format!("decision:{}", decision.requested_integration_id().as_str()),
+            format!("Activation decision for {}", decision.display_name()),
+            format!(
+                "{} with {} actions and {} constraints",
+                decision.decision_status.as_str(),
+                decision.packet.action_summary.total_actions,
+                decision.packet.constraint_summary.total_constraints
+            ),
+            decision.priority(),
+            vec![decision.requested_integration_id().clone()],
+            decision.required_tier(),
+            decision.packet.review.policy_surfaces.first().copied(),
+            decision.requires_attention(),
+        );
+        record.decision_status = Some(decision.decision_status);
+        record
+    }
+
+    fn from_evidence(evidence: &IntegrationActivationEvidenceItem) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Evidence,
+            format!(
+                "evidence:{}:{}",
+                evidence.requested_integration_id.as_str(),
+                evidence.detail_id
+            ),
+            format!("Activation evidence for {}", evidence.display_name),
+            format!(
+                "{} evidence {}",
+                evidence.kind.as_str(),
+                evidence.status.as_str()
+            ),
+            evidence.priority,
+            vec![evidence.requested_integration_id.clone()],
+            evidence.required_tier,
+            evidence.policy_surface,
+            evidence.requires_attention(),
+        );
+        record.decision_status = Some(evidence.decision_status);
+        record.evidence_kind = Some(evidence.kind);
+        record.evidence_status = Some(evidence.status);
+        record.dependency_integration_id = evidence.dependency_integration_id.clone();
+        record
+    }
+
+    fn from_risk(risk: &IntegrationActivationRiskItem) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Risk,
+            format!("risk:{}", risk.risk_id),
+            risk.display_name.clone(),
+            format!(
+                "{} integrations require {} review",
+                risk.integration_count(),
+                privilege_tier_label_for_catalog(risk.required_tier)
+            ),
+            risk.highest_priority,
+            risk.integration_ids.clone(),
+            risk.required_tier,
+            risk.policy_surface,
+            risk.requires_attention(),
+        );
+        record.risk_kind = Some(risk.kind);
+        record
+    }
+
+    fn from_dependency_edge(edge: &IntegrationActivationDependencyEdge) -> Self {
+        let dependency_name = edge
+            .dependency_display_name
+            .as_deref()
+            .unwrap_or(edge.dependency_integration_id.as_str());
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::Dependency,
+            format!(
+                "dependency:{}:{}",
+                edge.dependency_integration_id.as_str(),
+                edge.dependent_integration_id.as_str()
+            ),
+            format!("Activation dependency for {}", edge.dependent_display_name),
+            format!(
+                "{} depends on {} ({})",
+                edge.dependent_display_name,
+                dependency_name,
+                if edge.satisfied {
+                    "satisfied"
+                } else {
+                    "blocked"
+                }
+            ),
+            edge.dependent_priority,
+            vec![
+                edge.dependency_integration_id.clone(),
+                edge.dependent_integration_id.clone(),
+            ],
+            PrivilegeTier::ReadOnly,
+            None,
+            edge.blocks_activation,
+        );
+        record.dependency_integration_id = Some(edge.dependency_integration_id.clone());
+        record.dependent_integration_id = Some(edge.dependent_integration_id.clone());
+        record
+    }
+
+    fn from_primitive_gap(gap: &IntegrationReadinessPrimitiveGap) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::ReadinessGap,
+            format!("readiness_gap:primitive:{}", gap.primitive.as_str()),
+            format!("Missing {} primitive", gap.primitive.as_str()),
+            format!(
+                "{} integrations are blocked by this primitive gap",
+                gap.blocked_report_count
+            ),
+            gap.highest_priority,
+            gap.integration_ids.clone(),
+            PrivilegeTier::ReadOnly,
+            None,
+            true,
+        );
+        record.readiness_gap_kind = Some("primitive".to_string());
+        record
+    }
+
+    fn from_capability_gap(gap: &IntegrationReadinessCapabilityGap) -> Self {
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::ReadinessGap,
+            format!("readiness_gap:capability:{}", gap.capability_id.as_str()),
+            format!("Missing {} capability", gap.capability_id.as_str()),
+            format!(
+                "{} integrations are blocked by this capability gap",
+                gap.blocked_report_count
+            ),
+            gap.highest_priority,
+            gap.integration_ids.clone(),
+            PrivilegeTier::ReadOnly,
+            None,
+            true,
+        );
+        record.readiness_gap_kind = Some("capability".to_string());
+        record
+    }
+
+    fn from_dependency_gap(gap: &IntegrationReadinessDependencyGap) -> Self {
+        let mut integration_ids = gap.requested_integration_ids.clone();
+        integration_ids.push(gap.integration_id.clone());
+        let mut record = Self::new(
+            IntegrationActivationAuditRecordKind::ReadinessGap,
+            format!("readiness_gap:dependency:{}", gap.integration_id.as_str()),
+            format!("Missing {} dependency", gap.integration_id.as_str()),
+            format!(
+                "{} integrations are blocked by this dependency gap",
+                gap.blocked_report_count
+            ),
+            gap.highest_priority,
+            integration_ids,
+            PrivilegeTier::ReadOnly,
+            None,
+            true,
+        );
+        record.dependency_integration_id = Some(gap.integration_id.clone());
+        record.readiness_gap_kind = Some("dependency".to_string());
+        record
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_link(&self) -> bool {
+        self.dependency_integration_id.is_some() || self.dependent_integration_id.is_some()
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+}
+
+impl IntegrationActivationAuditSummary {
+    pub fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationAuditRecord>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            sentinel_records: 0,
+            watchtower_records: 0,
+            decision_records: 0,
+            evidence_records: 0,
+            risk_records: 0,
+            dependency_records: 0,
+            readiness_gap_records: 0,
+            records_with_policy_surface: 0,
+            records_with_dependency_link: 0,
+            first_attention_priority: None,
+            first_dependency_priority: None,
+            first_readiness_gap_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for record in records {
+            summary.total_records += 1;
+            for integration_id in &record.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            match record.record_kind {
+                IntegrationActivationAuditRecordKind::Sentinel => summary.sentinel_records += 1,
+                IntegrationActivationAuditRecordKind::Watchtower => summary.watchtower_records += 1,
+                IntegrationActivationAuditRecordKind::Decision => summary.decision_records += 1,
+                IntegrationActivationAuditRecordKind::Evidence => summary.evidence_records += 1,
+                IntegrationActivationAuditRecordKind::Risk => summary.risk_records += 1,
+                IntegrationActivationAuditRecordKind::Dependency => {
+                    summary.dependency_records += 1;
+                    if record.requires_attention() {
+                        summary.first_dependency_priority = min_optional_priority(
+                            summary.first_dependency_priority,
+                            Some(record.priority),
+                        );
+                    }
+                }
+                IntegrationActivationAuditRecordKind::ReadinessGap => {
+                    summary.readiness_gap_records += 1;
+                    summary.first_readiness_gap_priority = min_optional_priority(
+                        summary.first_readiness_gap_priority,
+                        Some(record.priority),
+                    );
+                }
+            }
+            if record.requires_attention() {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(record.priority));
+            }
+            if record.has_policy_surface() {
+                summary.records_with_policy_surface += 1;
+            }
+            if record.has_dependency_link() {
+                summary.records_with_dependency_link += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(record.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status =
+            if summary.readiness_gap_records > 0 || summary.first_dependency_priority.is_some() {
+                IntegrationActivationHealthStatus::Blocked
+            } else if summary.records_requiring_attention > 0 {
+                IntegrationActivationHealthStatus::NeedsReview
+            } else if summary.total_records > 0 {
+                IntegrationActivationHealthStatus::Ready
+            } else {
+                IntegrationActivationHealthStatus::Empty
+            };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_records > 0 || self.readiness_gap_records > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0 || self.overall_status.requires_attention()
     }
 }
 
@@ -10708,6 +11140,113 @@ pub fn activation_sentinel_alerts_at_or_before_priority(
     activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory)
 }
 
+pub fn activation_audit_records_from_rollups(
+    alerts: &[IntegrationActivationSentinelAlert],
+    signals: &[IntegrationActivationWatchtowerSignal],
+    decisions: &[IntegrationActivationDecisionItem],
+    evidence: &[IntegrationActivationEvidenceItem],
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationActivationAuditRecord> {
+    let mut records = Vec::new();
+    records.extend(
+        alerts
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_sentinel_alert),
+    );
+    records.extend(
+        signals
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_watchtower_signal),
+    );
+    records.extend(
+        decisions
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_decision),
+    );
+    records.extend(
+        evidence
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_evidence),
+    );
+    records.extend(
+        risks
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_risk),
+    );
+    records.extend(
+        graph
+            .edges
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_dependency_edge),
+    );
+    records.extend(
+        gap_inventory
+            .primitive_gaps
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_primitive_gap),
+    );
+    records.extend(
+        gap_inventory
+            .capability_gaps
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_capability_gap),
+    );
+    records.extend(
+        gap_inventory
+            .dependency_gaps
+            .iter()
+            .map(IntegrationActivationAuditRecord::from_dependency_gap),
+    );
+
+    records.sort_by(compare_activation_audit_records);
+    for (index, record) in records.iter_mut().enumerate() {
+        record.sequence = index + 1;
+    }
+    records
+}
+
+pub fn activation_audit_records_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationAuditRecord> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let candidates = activation_candidates_from_reports(reports.iter());
+    let risks = activation_risk_from_candidates(catalog, candidates.iter());
+    let signals = activation_watchtower_signals_from_candidates(
+        catalog,
+        candidates.clone(),
+        enabled_integrations,
+    );
+    let graph =
+        activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations);
+    let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+    let alerts = activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory);
+    let decisions =
+        activation_decisions_from_candidates(catalog, candidates.iter(), enabled_integrations);
+    let evidence = activation_evidence_from_decisions(decisions.iter());
+
+    activation_audit_records_from_rollups(
+        &alerts,
+        &signals,
+        &decisions,
+        &evidence,
+        &risks,
+        &graph,
+        &gap_inventory,
+    )
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -12166,6 +12705,18 @@ fn compare_activation_sentinel_alerts(
         .then_with(|| right.has_review_work().cmp(&left.has_review_work()))
         .then_with(|| right.has_activation_work().cmp(&left.has_activation_work()))
         .then_with(|| left.alert_kind.cmp(&right.alert_kind))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_audit_records(
+    left: &IntegrationActivationAuditRecord,
+    right: &IntegrationActivationAuditRecord,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| left.record_kind.cmp(&right.record_kind))
+        .then_with(|| left.record_id.cmp(&right.record_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
 }
 
@@ -15248,6 +15799,126 @@ mod tests {
         assert!(catalog_alerts
             .iter()
             .any(IntegrationActivationSentinelAlert::requires_attention));
+    }
+
+    #[test]
+    fn activation_audit_records_join_sentinel_attention_to_evidence() {
+        let reports = vec![
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("review_ready_bridge"),
+                display_name: "Review Ready Bridge".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 1,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HumanApproval,
+                local_only: true,
+                cloud_required: false,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("blocked_review_camera"),
+                display_name: "Blocked Review Camera".to_string(),
+                activation_target: IntegrationActivationTarget::DelegatedIntegration(
+                    IntegrationId::trusted("mqtt"),
+                ),
+                priority: 2,
+                missing_primitives: vec![PrimitiveFamily::CameraMedia],
+                missing_capabilities: vec![CapabilityId::trusted("smart_home.command.low_risk")],
+                missing_dependencies: vec![IntegrationId::trusted("mqtt")],
+                requires_human_review: true,
+                highest_policy_tier: PrivilegeTier::HighRisk,
+                local_only: false,
+                cloud_required: true,
+            },
+            IntegrationReadinessReport {
+                requested_integration_id: IntegrationId::trusted("read_only_probe"),
+                display_name: "Read-only Probe".to_string(),
+                activation_target: IntegrationActivationTarget::Direct,
+                priority: 3,
+                missing_primitives: Vec::new(),
+                missing_capabilities: Vec::new(),
+                missing_dependencies: Vec::new(),
+                requires_human_review: false,
+                highest_policy_tier: PrivilegeTier::ReadOnly,
+                local_only: true,
+                cloud_required: false,
+            },
+        ];
+        let candidates = activation_candidates_from_reports(reports.iter());
+        let risks = activation_risk_from_candidates(&[], candidates.iter());
+        let sections =
+            activation_command_center_sections_from_candidates(&[], candidates.clone(), &[]);
+        let signals = activation_watchtower_signals_from_command_center_sections(sections);
+        let graph = activation_dependency_graph_from_reports(&[], reports.iter(), &[]);
+        let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+        let alerts =
+            activation_sentinel_alerts_from_rollups(&signals, &risks, &graph, &gap_inventory);
+        let decisions = activation_decisions_from_candidates(&[], candidates.iter(), &[]);
+        let evidence = activation_evidence_from_decisions(decisions.iter());
+        let records = activation_audit_records_from_rollups(
+            &alerts,
+            &signals,
+            &decisions,
+            &evidence,
+            &risks,
+            &graph,
+            &gap_inventory,
+        );
+
+        assert!(records.iter().all(|record| record.sequence > 0));
+        assert!(records
+            .iter()
+            .any(|record| record.record_kind == IntegrationActivationAuditRecordKind::Sentinel));
+        assert!(records
+            .iter()
+            .any(|record| record.record_kind == IntegrationActivationAuditRecordKind::Evidence));
+        assert!(records
+            .iter()
+            .any(|record| record.record_kind == IntegrationActivationAuditRecordKind::Risk));
+        assert!(records
+            .iter()
+            .any(|record| record.record_kind == IntegrationActivationAuditRecordKind::Dependency));
+        assert!(records.iter().any(|record| {
+            record.record_kind == IntegrationActivationAuditRecordKind::ReadinessGap
+                && record.readiness_gap_kind.as_deref() == Some("primitive")
+        }));
+        assert!(records
+            .iter()
+            .any(IntegrationActivationAuditRecord::requires_attention));
+
+        let summary = IntegrationActivationAuditSummary::from_records(records.iter());
+        assert_eq!(summary.total_records, records.len());
+        assert!(summary.sentinel_records >= alerts.len());
+        assert!(summary.evidence_records >= evidence.len());
+        assert!(summary.records_requiring_attention > 0);
+        assert!(summary.has_dependency_work());
+        assert!(summary.requires_attention());
+        assert_eq!(
+            summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let catalog_records = activation_audit_records_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_records
+            .iter()
+            .any(IntegrationActivationAuditRecord::requires_attention));
     }
 
     #[test]

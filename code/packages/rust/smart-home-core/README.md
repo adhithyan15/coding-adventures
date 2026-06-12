@@ -101,6 +101,9 @@ Current scope:
   ready, action, and observation signal rollups
 - D18D integration activation-sentinel descriptors for compact blocker,
   dependency, policy-risk, review, ready, and observation alert rollups
+- D18D integration activation-audit descriptors for read-only audit trails
+  connecting sentinel alerts to watchtower, decision, evidence, risk,
+  dependency, and readiness-gap sources
 - D18D integration activation-risk descriptors for policy-tier and
   policy-surface rollout risk summaries
 - D18D integration activation-dependency descriptors for prerequisite node and
