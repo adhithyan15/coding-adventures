@@ -326,3 +326,61 @@ fn a_pure_rulebook_emits_no_solve_section() {
         "no constraint system → no solve key: {s}"
     );
 }
+
+// ---- linear optimization in the CLI (ADJ constraints C2) ----
+
+#[test]
+fn maximize_emits_an_optimal_value_and_witness() {
+    // The classic LP: max 3x + 2y s.t. x+y<=4, x<=3, x,y>=0 → 11 at (3,1).
+    let (ok, s) = run(
+        "adjcli_lp.adj",
+        "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x + y <= 4\nconstrain x <= 3\n\
+             constrain x >= 0\nconstrain y >= 0\n\
+             maximize 3 * x + 2 * y\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        s.contains("\"optimize\":{"),
+        "expected an optimize section: {s}"
+    );
+    assert!(s.contains("\"outcome\":\"optimal\""), "{s}");
+    assert!(s.contains("\"value\":11"), "expected optimum 11: {s}");
+    assert!(s.contains("\"binding\":["), "{s}");
+}
+
+#[test]
+fn minimize_emits_its_optimum() {
+    // min x + y s.t. x>=2, y>=3 → 5.
+    let (ok, s) = run(
+        "adjcli_min.adj",
+        "symbol x : scalar\nsymbol y : scalar\n\
+             constrain x >= 2\nconstrain y >= 3\nminimize x + y\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"optimal\""), "{s}");
+    assert!(s.contains("\"value\":5"), "expected optimum 5: {s}");
+}
+
+#[test]
+fn an_unbounded_objective_is_reported_in_the_cli() {
+    let (ok, s) = run(
+        "adjcli_unbounded.adj",
+        "symbol x : scalar\nconstrain x >= 0\nmaximize x\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(s.contains("\"outcome\":\"unbounded\""), "{s}");
+}
+
+#[test]
+fn no_objective_emits_no_optimize_section() {
+    let (ok, s) = run(
+        "adjcli_noopt.adj",
+        "symbol x : scalar\nconstrain x >= 1\ncheck\n",
+    );
+    assert!(ok, "CLI exited non-zero: {s}");
+    assert!(
+        !s.contains("\"optimize\""),
+        "no objective → no optimize key: {s}"
+    );
+}

@@ -30,6 +30,7 @@ statement   = prior_decl
             | constrain_decl
             | solve_decl
             | check_decl
+            | optimize_decl
             ;
 
 # ----------------------------------------------------------------
@@ -100,6 +101,13 @@ relop          = GE | LE | GT | LT | EQEQ | EQUALS | NE ;
 solve_decl     = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE ;
 
 check_decl     = "check" ;
+
+# `minimize <expr>` / `maximize <expr>` — a linear-programming objective over
+# the declared symbols (ADJ constraints track C2). The solver finds the optimal
+# value of the objective subject to the accumulated `constrain` half-planes,
+# the achieving assignment, and the binding constraints. Like `solve`/`check`,
+# `minimize`/`maximize` are IDENT-matched keyword literals (not lexer keywords).
+optimize_decl  = ( "minimize" | "maximize" ) expr ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the

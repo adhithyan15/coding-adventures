@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.0] - 2026-06-11 — linear optimization (`minimize`/`maximize`) via FM projection (ADJ constraints track C2)
+
+### Added
+
+- **`OptimizeOutcome` + `optimize(&ConstraintSystem, &KnowledgeBase)`** — solves
+  the LP declared by an `objective` against the `constrain` half-planes, over
+  exact rationals. Outcomes: `Optimal { value, assignments, binding }`,
+  `Unbounded`, `Infeasible { core }`, `Unknown { reason }`.
+- **Method:** Fourier–Motzkin **projection**, reusing the C1 machinery — not a
+  new simplex. Introduce a variable `z` bounded by the objective (`z ≤ obj`),
+  project out every original variable, and read `z`'s least upper bound as the
+  optimum. No upper bound ⇒ `Unbounded`; a violated *constant* in the projection
+  ⇒ `Infeasible`. `minimize obj = −maximize(−obj)`. The achieving assignment is
+  recovered by pinning `obj = OPT` and running the C1 witness reconstruction; the
+  `binding` constraints are the originals tight at the optimum.
+- A **strict** tightest bound (open supremum, not attained) is reported as
+  `Unknown` rather than a fake optimum. Observed facts are substituted first.
+- Refactored the FM elimination loop into a shared `eliminate(planes, to_elim)`
+  helper (feasibility eliminates *all* variables; optimization eliminates all
+  *but* `z`). All overflow still routes to `Unknown` via the checked `Rat`.
+- 9 new tests (single-var max/min, the 3x+2y=11 vertex LP, unbounded, infeasible,
+  open supremum, nonlinear objective, observed substitution, two-var min).
+
 ## [0.5.0] - 2026-06-11 — QF_LRA real feasibility via Fourier–Motzkin (ADJ constraints track C1)
 
 ### Added

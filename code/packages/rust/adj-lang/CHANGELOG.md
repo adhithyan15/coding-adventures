@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.0] - 2026-06-11 — `minimize`/`maximize` LP objective (ADJ constraints track C2)
+
+### Added
+
+- **`minimize <expr>` / `maximize <expr>`** surface syntax — a linear-programming
+  objective over the declared symbols. New grammar rule `optimize_decl` (like
+  `solve`/`check`, the keywords are IDENT-matched literals, not lexer keywords),
+  regenerated `_parser_grammar.rs`.
+- AST: `Statement::Optimize { dir, objective }` + `OptDir { Minimize, Maximize }`
+  (exported). Adapter `adapt_optimize`. The objective is kept as an unevaluated
+  `ComputeExpr` (it mentions the symbols the LP solver assigns).
+- `ConstraintSystem` gains `objective: Option<(OptDir, ComputeExpr)>`; `is_empty`
+  accounts for it. The solver (`adj-constraint-solver` 0.6.0) reads it. 2 tests.
+
 ## [0.7.0] - 2026-06-11 — constraint sublanguage (symbols + constrain/solve/check, ADJ constraints B1)
 
 ### Added

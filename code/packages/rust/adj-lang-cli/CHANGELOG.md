@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.3.5] - 2026-06-11 — emit LP optima (ADJ constraints track C2)
+
+### Added
+
+- When a `.adj` program declares a `minimize`/`maximize` objective, the CLI calls
+  `adj_constraint_solver::optimize` and emits an `optimize` section:
+  `{"outcome":"optimal","value":…,"assignments":[…],"binding":[…]}`, or
+  `unbounded` / `infeasible` / `unknown`. A program with no objective emits no
+  `optimize` key. 4 new golden tests. Tracks `adj-constraint-solver` 0.6.0.
+
 ## [0.3.4] - 2026-06-11 — emit real-feasibility verdicts (ADJ constraints track C1)
 
 ### Added

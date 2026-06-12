@@ -31,7 +31,7 @@ use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
 use crate::ast::{
-    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, Program, RelOp, Statement, Term,
+    AggOp, Annotation, ArithOp, CmpOp, Evidence, ExprAst, OptDir, Program, RelOp, Statement, Term,
     TrustTierName,
 };
 
@@ -114,8 +114,9 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "constrain_decl" => adapt_constrain(child),
         "solve_decl" => adapt_solve(child),
         "check_decl" => Ok(Statement::Check),
+        "optimize_decl" => adapt_optimize(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl",
             actual: other.to_string(),
         }),
     }
@@ -385,6 +386,34 @@ fn adapt_solve(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         });
     }
     Ok(Statement::SolveFor { names })
+}
+
+fn adapt_optimize(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // optimize_decl = ( "minimize" | "maximize" ) expr
+    // The direction is the leading Name token ("minimize"/"maximize", both
+    // IDENT-matched literals); the objective is the `expr` child.
+    let dir = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value == "minimize" => {
+                Some(OptDir::Minimize)
+            }
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value == "maximize" => {
+                Some(OptDir::Maximize)
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "optimize_decl".into(),
+            position: "minimize / maximize keyword",
+        })?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "optimize_decl".into(),
+        position: "objective expr",
+    })?;
+    let objective = adapt_expr(expr_node)?;
+    Ok(Statement::Optimize { dir, objective })
 }
 
 /// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the
