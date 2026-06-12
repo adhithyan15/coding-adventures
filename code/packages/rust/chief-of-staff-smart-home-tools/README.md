@@ -67,6 +67,7 @@ Chief of Staff job/session/agent
   -> activation-watchtower list and summary reads for escalation signal rollups
   -> activation-sentinel list and summary reads for compact alert rollups
   -> activation-audit list and summary reads for source-linked audit trails
+  -> activation-escalation list and summary reads for Chief-facing cases
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -152,6 +153,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_sentinel_summary`
 - `smart_home.list_integration_activation_audit`
 - `smart_home.get_integration_activation_audit_summary`
+- `smart_home.list_integration_activation_escalations`
+- `smart_home.get_integration_activation_escalation_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`

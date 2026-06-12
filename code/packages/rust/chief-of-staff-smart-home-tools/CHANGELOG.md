@@ -97,6 +97,9 @@ All notable changes to this package will be documented in this file.
 - Added D18D handlers for D23A activation audit trails:
   `smart_home.list_integration_activation_audit` and
   `smart_home.get_integration_activation_audit_summary`.
+- Added D18D handlers for D23A activation escalation cases:
+  `smart_home.list_integration_activation_escalations` and
+  `smart_home.get_integration_activation_escalation_summary`.
 - Added D18D handlers for D23A activation risk planning:
   `smart_home.list_integration_activation_risk` and
   `smart_home.get_integration_activation_risk_summary`.
