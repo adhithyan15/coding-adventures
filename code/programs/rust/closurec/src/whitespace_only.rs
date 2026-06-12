@@ -1493,6 +1493,122 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-080: else-body single-statement block flatten ------
+    // `else{S}` whose body is a SINGLE un-terminated statement →
+    // `else S;`. The `else`-arm sibling of gap-079 (if-body flatten).
+    //
+    //   if(x)a();else{b()}  →  if(x)a();else b();
+    //
+    // Unlike gap-074/079 the `else` keyword has NO `(…)` header — its
+    // body `{` follows IMMEDIATELY. An `else` directly followed by `{`
+    // is UNAMBIGUOUSLY the alternate block: `else` is a reserved word
+    // (so `else{…}` can never be an object literal or a labelled
+    // block), and the only grammar that admits `else { … }` is the
+    // alternate of an `if`. `else if(…)` is NOT matched here (the
+    // token after `else` is `if`, not `{`) — its inner consequent is
+    // flattened by the gap-079 `if` arm instead.
+    //
+    // Same provably-safe minimal slice as gap-074/079 (matches
+    // `minify_else_body_flatten`): the body has NO nested `{`, NO
+    // control-flow keyword at depth 1, and EXACTLY ZERO top-level `;`
+    // (a single un-terminated statement). Multi-statement bodies
+    // (`else{a();b()}`) and empty bodies (`else{}`) keep their braces;
+    // a body containing a nested control-flow keyword (`else{if(y)…}`)
+    // is conservatively left for a follow-up (output stays valid).
+    // The body is dropped braces + a synthetic `;` terminator,
+    // reusing gap-067's `synth_semi`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            let is_else =
+                is_word_like(&kept[i]) && kept[i].value.as_str() == "else";
+            // `else` is reserved, so a `.else`/`?.else` member access
+            // can never legally be followed by a `{` block — but keep
+            // the look-behind for symmetry with gap-074's guard.
+            let is_property = i >= 1
+                && (is_structural_punct(&kept[i - 1], ".")
+                    || is_structural_punct(&kept[i - 1], "?."));
+            if !(is_else
+                && !is_property
+                && is_structural_punct(&kept[i + 1], "{"))
+            {
+                i += 1;
+                continue;
+            }
+            // The body `{` follows the `else` directly (no header).
+            let body_open = i + 1;
+            // Scan the body to its matching `}`, gathering the same
+            // eligibility info as gap-074.
+            let mut bdepth: i32 = 1;
+            let mut body_close: Option<usize> = None;
+            let mut has_nested_brace = false;
+            let mut has_blocking_keyword = false;
+            let mut top_semis: u32 = 0;
+            let mut k = body_open + 1;
+            while k < kept.len() {
+                let t = &kept[k];
+                if is_structural_punct(t, "{") {
+                    has_nested_brace = true;
+                    bdepth += 1;
+                } else if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                {
+                    bdepth += 1;
+                } else if is_structural_punct(t, "}") {
+                    bdepth -= 1;
+                    if bdepth == 0 {
+                        body_close = Some(k);
+                        break;
+                    }
+                } else if is_structural_punct(t, ")")
+                    || is_structural_punct(t, "]")
+                {
+                    bdepth -= 1;
+                } else if bdepth == 1 {
+                    if is_structural_punct(t, ";") {
+                        top_semis += 1;
+                    } else if is_word_like(t)
+                        && matches!(
+                            t.value.as_str(),
+                            "function"
+                                | "try"
+                                | "if"
+                                | "while"
+                                | "for"
+                                | "do"
+                                | "switch"
+                                | "class"
+                        )
+                    {
+                        has_blocking_keyword = true;
+                    }
+                }
+                k += 1;
+            }
+            if let Some(bc) = body_close {
+                let non_empty = bc > body_open + 1;
+                if non_empty
+                    && !has_nested_brace
+                    && !has_blocking_keyword
+                    && top_semis == 0
+                {
+                    if let Some(semi) = synth_semi.as_ref() {
+                        drops.push(body_open); // else-body `{`
+                        kept[bc] = semi; // `}` → synthetic `;`
+                        i = bc + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -4807,6 +4923,45 @@ mod tests {
             minify("if(a)b();else if(c){d()}"),
             "if(a)b();else if(c)d();"
         );
+    }
+
+    // ---- gap-080: else-body single-statement block flatten ----
+
+    /// gap-080: an `else` alternate that is a single un-terminated
+    /// statement drops its braces (`else`-sibling of gap-079).
+    #[test]
+    fn gap080_else_body_flattens() {
+        assert_eq!(minify("if(x)a();else{b()}"), "if(x)a();else b();");
+    }
+
+    /// gap-080 boundary: a MULTI-statement `else` body keeps braces.
+    #[test]
+    fn gap080_else_body_multi_keeps_braces() {
+        assert_eq!(
+            minify("if(x)a();else{b();c()}"),
+            "if(x)a();else{b();c()};"
+        );
+    }
+
+    /// gap-080 conservative deferral: an `else` body containing a
+    /// nested control-flow keyword keeps its braces (left for
+    /// follow-up; output stays valid). `else if(...)` is a DIFFERENT
+    /// shape — `else` is followed by `if`, not `{`, so it is not
+    /// matched here; its inner consequent flattens via gap-079.
+    #[test]
+    fn gap080_else_nested_control_flow_kept() {
+        assert_eq!(
+            minify("if(x)a();else{if(y)b()}"),
+            "if(x)a();else{if(y)b()};"
+        );
+    }
+
+    /// gap-080 SAFETY: `else` as an object-literal property KEY is
+    /// NOT an alternate block — `{else:1}` has `else` followed by
+    /// `:`, never `{`, so the anchor never fires.
+    #[test]
+    fn gap080_else_property_key_untouched() {
+        assert_eq!(minify("var o={else:1};"), "var o={else:1};");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —

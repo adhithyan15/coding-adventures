@@ -2,6 +2,37 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.90.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-080** — an `else` alternate that is a single
+  un-terminated statement block now flattens, matching upstream
+  Closure: `if(x)a();else{b()}` → `if(x)a();else b();`. The
+  `else`-arm sibling of gap-079 (if-body flatten).
+  `minify_else_body_flatten` is now enforced.
+
+### Added — gap-080 else-body single-statement block flatten
+
+A parallel `else`-anchored pre-pass, added right after the gap-074/079
+header-keyword body-flatten pass. Unlike gap-074/079, the `else`
+keyword has NO `(…)` header — its body `{` follows immediately, so the
+anchor is simply `is_word_like(kept[i]) && kept[i].value == "else" &&
+is_structural_punct(kept[i+1], "{")`.
+
+`else` is a reserved word, so `else{…}` can never be an object literal
+or a labelled block, and the only grammar that admits `else { … }` is
+the alternate of an `if`. `else if(…)` is NOT matched (the token after
+`else` is `if`, not `{`) — its inner consequent flattens via the
+gap-079 `if` arm. The same provably-safe body scan as gap-074/079 (no
+nested `{`, no control-flow keyword at depth 1, exactly zero top-level
+`;`) gates the brace-drop, reusing gap-067's `synth_semi`.
+
+**Deferred:** a nested-control `else` body (`else{if(y)b()}` →
+upstream `else if(y)b();`) keeps its braces for now (output stays
+valid); multi-statement and empty `else` bodies keep their braces. 4
+new `gap080_*` unit tests (flatten / multi-keep / nested-control-kept
+/ property-key-untouched) + the enforced byte-identity fixture.
+
 ## [0.89.0] - 2026-06-12
 
 ### Changed
