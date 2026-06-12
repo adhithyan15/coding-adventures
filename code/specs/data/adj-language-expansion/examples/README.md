@@ -19,6 +19,7 @@ cargo build -p adj-lang-cli
 | [`debt_to_income.adj`](debt_to_income.adj) | a **computed ratio** (`money / money → dimensionless`) driving a rule | `dti = 0.30 <= 0.43` fires → `mortgage_eligible` ≈ 1.0 |
 | [`proration.adj`](proration.adj) | **`let` arithmetic** (`annual_bonus * months_worked / 12`) feeding a predicate | `prorated = 9000 >= 8000` fires → `senior_tier` ≈ 1.0 |
 | [`break_even.adj`](break_even.adj) | **solving for an unknown** (`p * 1000 = 5000 + 3 * 1000`) | `solve → { p = 8 }`, cited to constraint `[0]` |
+| [`grant_allocation.adj`](grant_allocation.adj) | **linear optimization** — `maximize 3·outreach + 2·training` under a budget + capacity (an LP) | `optimize → optimal 26` at `{ outreach = 6, training = 4 }`, binding constraints `[0, 1]` |
 
 These are covered by golden tests in
 [`adj-lang-cli/tests/worked_examples.rs`](../../../../packages/rust/adj-lang-cli/tests/worked_examples.rs),
