@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `DcResult.diagnostics` with stable matrix size, solver kind, tolerance,
+  convergence aid, and final Newton delta metadata; large AC complex systems
+  now route through the sparse-row complex solver path.
 - Add `distortionFromTransientCorners`, `poleZeroCorners`,
   `formatCornerDistortionTable`, and `formatCornerPoleZeroTable` for
   named-corner distortion and pole-zero parity in the native web package.

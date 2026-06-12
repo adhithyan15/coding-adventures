@@ -5,7 +5,8 @@
 The initial slices implement:
 
 - DC operating-point analysis for linear circuits using modified nodal analysis
-  (MNA).
+  (MNA), with stable `DcResult::diagnostics` metadata for matrix size, selected
+  real solver path, tolerance, convergence aid, and final Newton delta.
 - DC operating-point sweeps across explicit analysis temperatures, including
   named corner sweeps and order-preserving parallel named corner DC sweeps.
 - DC source sweeps over independent voltage and current sources, including
@@ -65,6 +66,8 @@ The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
 current sources, optional AC source phasors, optional source waveforms, ground
 aliases, node voltages, and voltage source branch currents.
+Large real DC and complex AC matrix solves use sparse-row solver paths when the
+matrix size reaches the package threshold.
 
 ```rust
 use spice_engine::{

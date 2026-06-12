@@ -28,6 +28,7 @@ result = dc_op(circuit)
 print(result.node_voltages)        # {"vin": 10.0, "vmid": 5.0}
 print(result.branch_currents)      # {"I(V1)": -0.005}
 print(result.converged)            # True
+print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 ```
 
 ## Supported elements
@@ -65,6 +66,11 @@ print(result.converged)            # True
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
 and `circuit_at_temperature()` provide operating-temperature footholds for
 diode, BJT, and Level-1 MOSFET models before running an analysis.
+
+`DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
+size, selected real solver path, tolerance, convergence aid, and final Newton
+delta.  Large real DC and complex AC matrix solves use sparse-row solver paths
+when the matrix size reaches the package threshold.
 
 ## Controlled source examples
 

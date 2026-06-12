@@ -729,6 +729,11 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
 
     assert r.converged
     assert isclose(r.node_voltages["n34"], 10.0 / 35.0, abs_tol=1e-9)
+    assert r.diagnostics.matrix_size == 36
+    assert r.diagnostics.solver == "sparse_real"
+    assert r.diagnostics.convergence_aid == "newton"
+    assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
+    assert math.isfinite(r.diagnostics.max_delta)
 
 
 def test_current_source_into_resistor():
@@ -1793,6 +1798,23 @@ def test_solve_complex_3x3():
         assert isclose(abs(s - b[i]), 0.0, abs_tol=1e-9), (
             f"Row {i}: A·x = {s}, expected {b[i]}"
         )
+
+
+def test_solve_complex_large_sparse_path():
+    size = 36
+    A = [[0j for _ in range(size)] for _ in range(size)]
+    b = [complex(index + 1, -index) for index in range(size)]
+    for index in range(size):
+        A[index][index] = 2.0 + 1.0j
+        if index + 1 < size:
+            A[index][index + 1] = -0.25j
+            A[index + 1][index] = 0.5 + 0j
+
+    x = _solve_complex(A, b)
+
+    for row_index, row in enumerate(A):
+        actual = sum(value * x[col] for col, value in enumerate(row))
+        assert abs(actual - b[row_index]) < 1.0e-8
 
 
 # ============================================================================

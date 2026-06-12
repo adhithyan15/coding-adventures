@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Solver diagnostics and sparse complex solves** — `DcResult.diagnostics`
+  now reports stable matrix size, solver kind, tolerance, convergence aid, and
+  final Newton delta metadata; large AC complex systems now route through the
+  sparse-row complex solver path.
+
 - **Distortion and pole-zero named-corner wrappers** —
   `distortion_from_transient_corners()`, `pole_zero_corners()`,
   `format_corner_distortion_table()`, and `format_corner_pole_zero_table()` now
