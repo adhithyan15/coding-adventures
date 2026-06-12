@@ -864,6 +864,7 @@ pub struct BrowserDocument {
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
+    pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
     pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
@@ -1720,6 +1721,25 @@ pub struct BrowserAriaRelationDescriptor {
     pub unresolved_relation_targets: Vec<String>,
     pub relation_blocked: bool,
     pub relation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaNameDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub labelledby_text: Vec<String>,
+    pub name_source: String,
+    pub name_attribute_names: Vec<String>,
+    pub name_attribute_count: usize,
+    pub label_target_count: usize,
+    pub unresolved_label_targets: Vec<String>,
+    pub name_blocked: bool,
+    pub name_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -10799,6 +10819,9 @@ fn collect_browser_facts(
         if let Some(aria_live_region) = browser_aria_live_region_element(element, id_texts) {
             summary.aria_live_regions.push(aria_live_region);
         }
+        if let Some(aria_name) = browser_aria_name_descriptor(element, id_texts) {
+            summary.aria_name_descriptors.push(aria_name);
+        }
         if let Some(aria_relation) = browser_aria_relation_descriptor(element, id_texts) {
             summary.aria_relation_descriptors.push(aria_relation);
         }
@@ -17721,6 +17744,104 @@ fn browser_aria_relation_block_reasons(unresolved_targets: &[String]) -> Vec<Str
     } else {
         vec!["unresolved-idref".to_string()]
     }
+}
+
+fn browser_aria_name_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaNameDescriptor> {
+    let aria_label = browser_aria_label(element);
+    let aria_labelledby = browser_aria_idrefs(element, "aria-labelledby");
+
+    if aria_label.is_none() && aria_labelledby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let labelledby_text = browser_idref_texts(&aria_labelledby, id_texts);
+    let unresolved_label_targets = browser_unresolved_aria_idrefs(&aria_labelledby, id_texts);
+    let name_block_reasons = browser_aria_name_block_reasons(
+        aria_label.as_deref(),
+        &aria_labelledby,
+        &labelledby_text,
+        &unresolved_label_targets,
+    );
+    let name_attribute_names = browser_aria_name_attribute_names(element);
+    let name_source =
+        browser_aria_name_source(aria_label.as_deref(), &aria_labelledby, &labelledby_text);
+
+    Some(BrowserAriaNameDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label,
+        aria_labelledby,
+        labelledby_text,
+        name_source,
+        name_attribute_count: name_attribute_names.len(),
+        name_attribute_names,
+        label_target_count: browser_aria_idrefs(element, "aria-labelledby").len(),
+        unresolved_label_targets,
+        name_blocked: !name_block_reasons.is_empty(),
+        name_block_reasons,
+    })
+}
+
+fn browser_aria_name_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-label", "aria-labelledby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_idrefs(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in idrefs {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_name_source(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+) -> String {
+    if !aria_labelledby.is_empty() && !labelledby_text.is_empty() {
+        "aria-labelledby".to_string()
+    } else if aria_label.is_some_and(|label| !label.is_empty()) {
+        "aria-label".to_string()
+    } else if !aria_labelledby.is_empty() {
+        "unresolved-aria-labelledby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_name_block_reasons(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_labelledby.is_empty()
+        && labelledby_text.is_empty()
+        && aria_label.is_none_or(|label| label.is_empty())
+    {
+        reasons.push("empty-name".to_string());
+    }
+    reasons
 }
 
 fn browser_slot_assignment(element: &Element) -> Option<String> {

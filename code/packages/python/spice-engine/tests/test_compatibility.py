@@ -7,6 +7,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_sources,
 )
 
 
@@ -117,3 +118,76 @@ run
         (".control", 4, "error"),
     ]
     assert all(diag.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE" for diag in summary.diagnostics)
+
+
+def test_resolve_deck_sources_expands_include_and_library_section() -> None:
+    summary = resolve_deck_sources(
+        """
+V1 in 0 DC 1
+.include models.inc
+.lib vendor.lib TT
+.op
+.end
+Rafter out 0 1
+""",
+        {
+            "models.inc": """
+* model include
+.model D1 D
+Rshim in mid 10
+""",
+            "vendor.lib": """
+.lib FF
+Rfast out 0 1
+.endl FF
+.lib TT
+Rtyp mid out 20
+Ctyp out 0 1u
+.endl TT
+""",
+        },
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 6
+    assert summary.active_lines == (
+        "V1 in 0 DC 1",
+        ".model D1 D",
+        "Rshim in mid 10",
+        "Rtyp mid out 20",
+        "Ctyp out 0 1u",
+        ".op",
+    )
+    assert summary.included_paths == ("models.inc",)
+    assert summary.library_sections == ("vendor.lib:TT",)
+    assert summary.diagnostics == ()
+
+
+def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
+    summary = resolve_deck_sources(
+        """
+.include missing.inc
+.include a.inc
+.lib vendor.lib SS
+.control
+.end
+""",
+        {
+            "a.inc": ".include b.inc\nR1 a b 1\n",
+            "b.inc": ".include a.inc\nR2 b 0 2\n",
+            "vendor.lib": ".lib TT\nRtyp out 0 20\n.endl TT\n",
+        },
+    )
+
+    assert summary.active_lines == ("R2 b 0 2", "R1 a b 1", ".control")
+    assert [diag.code for diag in summary.diagnostics] == [
+        "SPICE_DECK_INCLUDE_NOT_FOUND",
+        "SPICE_DECK_INCLUDE_CYCLE",
+        "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+    ]
+    assert [(diag.source, diag.line_number, diag.target) for diag in summary.diagnostics[:3]] == [
+        ("<deck>", 2, "missing.inc"),
+        ("b.inc", 1, "a.inc"),
+        ("<deck>", 4, "vendor.lib:SS"),
+    ]

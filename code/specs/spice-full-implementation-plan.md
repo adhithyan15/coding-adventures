@@ -19,9 +19,9 @@ downstream tools to compare.
    - Status: next.
    - Convert parsed netlists into runnable analysis plans beyond the initial
      `.op`, `.dc`, `.ac`, and `.tran` subset.
-   - Support `.include` and `.lib` resolution, `.param`, `.func`, expressions,
-     `.ic`, and `.nodeset`; `.end` boundary detection now has a shared
-     diagnostic foothold.
+   - Support `.param`, `.func`, expressions, `.ic`, and `.nodeset`; `.end`
+     boundary detection and map-backed `.include` / `.lib` source resolution
+     now have shared diagnostic footholds.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -158,12 +158,22 @@ downstream tools to compare.
       parser/planner foothold before include/library resolution and control
       block execution are implemented.
 
+15. Include/library source resolution.
+    - Status: completed in this include/library resolution slice.
+    - Python, Rust, and TypeScript now expose matching map-backed deck source
+      resolvers that expand `.include` files into active deck lines before
+      `.end`.
+    - The resolvers also support selected `.lib path section` expansion from
+      named `.lib` / `.endl` library sections.
+    - Stable diagnostics cover missing include files, missing library files,
+      absent or unterminated sections, include/library cycles, and
+      still-unsupported `.control` directives.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Support `.include` and `.lib` resolution, `.param`, `.func`, expressions,
-     `.ic`, and `.nodeset`.
+   - Support `.param`, `.func`, expressions, `.ic`, and `.nodeset`.
    - Expand the initial `.measure`, `.save`, and `.probe` support toward full
      SPICE compatibility, including additional measure modes and richer output
      formats.

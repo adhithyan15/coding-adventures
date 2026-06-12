@@ -141,12 +141,16 @@ const PROGRAMS: &[Prog] = &[
     // `i32.load8_u`+`i64.extend_i32_u`, `store_byte`→`i32.wrap_i64`+`i32.store8`, and
     // `putchar`/`getchar`→ the `env.putchar`/`env.getchar` host imports `run_wasm`'s
     // `PutcharFunc` resolves (capturing raw bytes → stdout `A`, not the decimal `65`).
+    // On JVM (LM-J) `iir-to-jvm-class-file` lowers the tape to a static `byte[] __tape`
+    // (`getstatic … __tape : [B` + `baload`/`bastore`) and `.`/`,` to `invokestatic
+    // env/BFRuntime.putchar(I)V`/`getchar()I`; `run_jvm` compiles the `env.BFRuntime`
+    // host class with `javac` and captures its `System.out.write` bytes (→ `A`).
     Prog {
         lang: Language::Brainfuck,
         ext: "bf",
         src: "++++++++[>++++++++<-]>+.",
         expect: Expect::Stdout("A"),
-        backends: &[NativeAot, Llvm, Wasm],
+        backends: &[NativeAot, Llvm, Wasm, Jvm],
     },
     // Dartmouth BASIC — `PRINT 42` writes `42` to stdout. On LLVM the `.ll` emits
     // `call void @__print_i64(i64 42)`, so `run_llvm` links the generic print runtime
@@ -523,6 +527,19 @@ fn java_ok() -> bool {
 const BASIC_RUNTIME_JAVA: &str =
     "package env; public final class BasicRuntime { public static void println(long x){ System.out.println(x); } }";
 
+/// The `env.BFRuntime` host class for Brainfuck (LANG-MATRIX LM-J). `iir-to-jvm-class-file`
+/// lowers Brainfuck's tape to a static `byte[] __tape` field (`getstatic … __tape : [B` +
+/// `baload`/`bastore`) and its `.`/`,` to `invokestatic env/BFRuntime.putchar(I)V` /
+/// `getchar()I` — the JVM sibling of the LLVM column's libc `putchar`/`getchar` and the
+/// wasm column's `env.putchar`/`env.getchar` host imports. `putchar` writes a raw byte to
+/// stdout (so `.` of cell value 65 yields the byte `A`, not the decimal `65`); `getchar`
+/// returns `0` at EOF (the matrix supplies no stdin). The 30 000-cell tape is zero-filled
+/// by `new byte[30000]`, matching the `alloc_bytes` tape size.
+const BF_RUNTIME_JAVA: &str = "package env; public final class BFRuntime { \
+public static byte[] __tape = new byte[30000]; \
+public static void putchar(int c){ System.out.write(c & 0xFF); System.out.flush(); } \
+public static int getchar(){ try { int b = System.in.read(); return b < 0 ? 0 : b; } catch (java.io.IOException e) { return 0; } } }";
+
 /// JVM runner: source → `JvmClassFile` (`iir-to-jvm-class-file`) → real `java`, the
 /// W16 wrapper-launcher strategy generalized from McCarthy to **any** language.
 ///
@@ -678,8 +695,16 @@ fn run_jvm(p: &Prog) -> Option<(Option<i32>, String)> {
     // classpath so its `println(J)V` resolves. `javac` ships with the JDK; if it is
     // somehow absent the cell skips gracefully (`None`).
     if prints {
-        let src = dir.path().join("BasicRuntime.java");
-        std::fs::write(&src, BASIC_RUNTIME_JAVA).ok()?;
+        // Pick the host class the program's I/O lowers to: Brainfuck's `.`/`,` +
+        // tape use `env.BFRuntime`; Dartmouth BASIC's `PRINT` uses
+        // `env.BasicRuntime`. Compile it onto the classpath with `javac`.
+        let (file, source) = if p.lang == Language::Brainfuck {
+            ("BFRuntime.java", BF_RUNTIME_JAVA)
+        } else {
+            ("BasicRuntime.java", BASIC_RUNTIME_JAVA)
+        };
+        let src = dir.path().join(file);
+        std::fs::write(&src, source).ok()?;
         let built = Command::new("javac").arg("-d").arg(dir.path()).arg(&src).output().ok()?;
         if !built.status.success() {
             return None;

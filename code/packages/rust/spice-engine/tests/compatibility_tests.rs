@@ -1,7 +1,9 @@
+use std::collections::HashMap;
+
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, CompatibilityDeck,
-    CompatibilityGoldenValue, CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_sources,
+    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -161,4 +163,125 @@ run
         .diagnostics
         .iter()
         .all(|diagnostic| diagnostic.code == "SPICE_DECK_UNSUPPORTED_DIRECTIVE"));
+}
+
+#[test]
+fn resolve_deck_sources_expands_include_and_library_section() {
+    let mut sources = HashMap::new();
+    sources.insert(
+        "models.inc".to_string(),
+        "
+* model include
+.model D1 D
+Rshim in mid 10
+"
+        .to_string(),
+    );
+    sources.insert(
+        "vendor.lib".to_string(),
+        "
+.lib FF
+Rfast out 0 1
+.endl FF
+.lib TT
+Rtyp mid out 20
+Ctyp out 0 1u
+.endl TT
+"
+        .to_string(),
+    );
+
+    let summary = resolve_deck_sources(
+        "
+V1 in 0 DC 1
+.include models.inc
+.lib vendor.lib TT
+.op
+.end
+Rafter out 0 1
+",
+        &sources,
+    );
+
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(6));
+    assert_eq!(
+        summary.active_lines,
+        vec![
+            "V1 in 0 DC 1",
+            ".model D1 D",
+            "Rshim in mid 10",
+            "Rtyp mid out 20",
+            "Ctyp out 0 1u",
+            ".op",
+        ]
+    );
+    assert_eq!(summary.included_paths, vec!["models.inc"]);
+    assert_eq!(summary.library_sections, vec!["vendor.lib:TT"]);
+    assert!(summary.diagnostics.is_empty());
+}
+
+#[test]
+fn resolve_deck_sources_reports_missing_sources_and_cycles() {
+    let mut sources = HashMap::new();
+    sources.insert(
+        "a.inc".to_string(),
+        ".include b.inc\nR1 a b 1\n".to_string(),
+    );
+    sources.insert(
+        "b.inc".to_string(),
+        ".include a.inc\nR2 b 0 2\n".to_string(),
+    );
+    sources.insert(
+        "vendor.lib".to_string(),
+        ".lib TT\nRtyp out 0 20\n.endl TT\n".to_string(),
+    );
+
+    let summary = resolve_deck_sources(
+        "
+.include missing.inc
+.include a.inc
+.lib vendor.lib SS
+.control
+.end
+",
+        &sources,
+    );
+
+    assert_eq!(
+        summary.active_lines,
+        vec!["R2 b 0 2", "R1 a b 1", ".control"]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "SPICE_DECK_INCLUDE_NOT_FOUND",
+            "SPICE_DECK_INCLUDE_CYCLE",
+            "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+            "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+        ]
+    );
+    assert_eq!(
+        summary
+            .diagnostics
+            .iter()
+            .take(3)
+            .map(|diagnostic| {
+                (
+                    diagnostic.source.as_str(),
+                    diagnostic.line_number,
+                    diagnostic.target.as_deref(),
+                )
+            })
+            .collect::<Vec<_>>(),
+        vec![
+            ("<deck>", 2, Some("missing.inc")),
+            ("b.inc", 1, Some("a.inc")),
+            ("<deck>", 4, Some("vendor.lib:SS")),
+        ]
+    );
 }

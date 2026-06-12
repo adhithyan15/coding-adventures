@@ -1964,8 +1964,19 @@ fn lower_function(
             // Emits: `iload cond; ifne <label>`.
             "jmp_if_true" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // `ifne` tests an int != 0. An i64 condition (the widened
+                // Brainfuck loop guard, LANG-MATRIX LM-J) must first be reduced
+                // to an int: `lload; lconst_0; lcmp` pushes -1/0/+1, which `ifne`
+                // then branches on. `iload`ing a long would read only one of its
+                // two slots — a verify error.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFNE);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -1978,8 +1989,16 @@ fn lower_function(
             // Emits: `iload cond; ifeq <label>`.
             "jmp_if_false" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // "branch if zero" — same width handling as `jmp_if_true`: an
+                // i64 guard is reduced via `lload; lconst_0; lcmp` before `ifeq`.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFEQ);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -2167,6 +2186,115 @@ fn lower_function(
                 code.extend_from_slice(&tape_fieldref.to_be_bytes());
                 emit_iload(&mut code, addr_slot);
                 emit_iload(&mut code, val_slot);
+                code.push(BASTORE);
+            }
+
+            // ── alloc_bytes (LANG-MATRIX LM-J Brainfuck) ─────────────────────
+            //
+            // `alloc_bytes  dest  <-  size`.  The JVM tape is the host class's
+            // pre-allocated static field `env/BFRuntime.__tape : [B`, so there
+            // is nothing to allocate at runtime — this is a no-op.  `dest` (the
+            // BF tape base, `__bf_tape`) is therefore never materialised: the
+            // `load_byte`/`store_byte` ops below `getstatic` the tape directly
+            // and ignore the base operand (it is always 0 in this pipeline).
+            // This mirrors the LLVM/WASM lowering's "tape at a fixed base," just
+            // with the base implicit in the static field rather than a pointer.
+            "alloc_bytes" => {
+                // Intentionally emits no bytecode.
+            }
+
+            // ── load_byte (LANG-MATRIX LM-J Brainfuck) ───────────────────────
+            //
+            // `load_byte  dest  <-  base, idx`.  Read one tape cell, unsigned.
+            // The lowered form of the BF `load_mem` above: same `getstatic
+            // __tape; <idx>; baload; & 0xFF` shape, but the operands may be
+            // `i64` (the widened BF value model) rather than `i32` — so we
+            // narrow an `i64` index to `int` with `l2i` for `baload`, and widen
+            // the masked `int` cell back to `i64` with `i2l` for an `i64` dest.
+            // The base operand is the static tape, so it is ignored.
+            "load_byte" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte must have a dest".to_string(),
+                    }
+                })?;
+                let idx_name = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte requires Operand::Var(idx) as src[1]".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I); // baload needs an int index
+                }
+                code.push(BALOAD);
+                // Mask the sign-extended byte back into an unsigned 0..=255 int.
+                code.push(SIPUSH);
+                code.extend_from_slice(&0x00FFi16.to_be_bytes());
+                code.push(IAND);
+                if dest_ty == JvmType::Long {
+                    code.push(I2L); // widen the cell to the i64 dest register
+                }
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
+            // ── store_byte (LANG-MATRIX LM-J Brainfuck) ──────────────────────
+            //
+            // `store_byte  base, idx, val`  (no dest).  Write the low byte of
+            // `val` into `tape[idx]`.  The lowered form of `store_mem`; `bastore`
+            // stores `val & 0xFF` (so BF's 8-bit cell wrap-around is free).  An
+            // `i64` index / value is narrowed with `l2i` before the array op.
+            // The base operand is the static tape, so it is ignored.
+            "store_byte" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte must not have a dest".to_string(),
+                    });
+                }
+                if instr.srcs.len() < 3 {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte requires 3 srcs: [base, idx, val]".to_string(),
+                    });
+                }
+                let idx_name = match &instr.srcs[1] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[1] must be Operand::Var(idx)".to_string(),
+                    }),
+                };
+                let val_name = match &instr.srcs[2] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[2] must be Operand::Var(val)".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (val_slot, val_ty) = lookup_var(&val_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, val_slot, val_ty);
+                if val_ty == JvmType::Long {
+                    code.push(L2I);
+                }
                 code.push(BASTORE);
             }
 

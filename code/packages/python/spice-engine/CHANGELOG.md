@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Deck source resolution** — `resolve_deck_sources()` now expands
+  map-provided `.include` files and selected `.lib path section` library
+  sections with stable diagnostics for missing sources, bad sections, cycles,
+  and still-unsupported `.control` blocks, matching Rust and TypeScript.
+
 - **Deck boundary diagnostics** — `analyze_deck_controls()` now reports the
   active pre-`.end` deck lines and stable unsupported-feature diagnostics for
   `.include`, `.lib`, and `.control` directives, matching Rust and TypeScript.

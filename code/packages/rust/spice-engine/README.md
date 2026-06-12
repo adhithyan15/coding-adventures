@@ -125,3 +125,8 @@ provide stable tab-separated summaries for package checks.
 returns active lines before `.end` and stable diagnostics for unsupported
 `.include`, `.lib`, and `.control` directives before future include/library
 resolution and control-block execution are in scope.
+`resolve_deck_sources` is the first include/library resolution layer: callers
+provide a source-content map, `.include` directives are expanded in place, and
+`.lib path section` selects a named `.lib` / `.endl` section with stable
+diagnostics for missing files, missing sections, unterminated sections, cycles,
+and still-unsupported `.control` blocks.

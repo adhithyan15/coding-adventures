@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckSources,
 } from "../src/index.js";
 
 describe("compatibility corpus", () => {
@@ -128,5 +129,76 @@ run
     expect(summary.diagnostics.every((diagnostic) =>
       diagnostic.code === "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
     )).toBe(true);
+  });
+
+  it("expands include files and selected library sections", () => {
+    const summary = resolveDeckSources(`
+V1 in 0 DC 1
+.include models.inc
+.lib vendor.lib TT
+.op
+.end
+Rafter out 0 1
+`, {
+      "models.inc": `
+* model include
+.model D1 D
+Rshim in mid 10
+`,
+      "vendor.lib": `
+.lib FF
+Rfast out 0 1
+.endl FF
+.lib TT
+Rtyp mid out 20
+Ctyp out 0 1u
+.endl TT
+`,
+    });
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 DC 1",
+      ".model D1 D",
+      "Rshim in mid 10",
+      "Rtyp mid out 20",
+      "Ctyp out 0 1u",
+      ".op",
+    ]);
+    expect(summary.includedPaths).toStrictEqual(["models.inc"]);
+    expect(summary.librarySections).toStrictEqual(["vendor.lib:TT"]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports missing include and library sources plus include cycles", () => {
+    const summary = resolveDeckSources(`
+.include missing.inc
+.include a.inc
+.lib vendor.lib SS
+.control
+.end
+`, {
+      "a.inc": ".include b.inc\nR1 a b 1\n",
+      "b.inc": ".include a.inc\nR2 b 0 2\n",
+      "vendor.lib": ".lib TT\nRtyp out 0 20\n.endl TT\n",
+    });
+
+    expect(summary.activeLines).toStrictEqual(["R2 b 0 2", "R1 a b 1", ".control"]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_INCLUDE_NOT_FOUND",
+      "SPICE_DECK_INCLUDE_CYCLE",
+      "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+    ]);
+    expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
+      source,
+      lineNumber,
+      target,
+    ])).toStrictEqual([
+      ["<deck>", 2, "missing.inc"],
+      ["b.inc", 1, "a.inc"],
+      ["<deck>", 4, "vendor.lib:SS"],
+    ]);
   });
 });

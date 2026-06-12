@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from math import isfinite
 
@@ -59,6 +59,31 @@ class DeckControlSummary:
     terminated: bool
     end_line_number: int | None
     diagnostics: tuple[DeckControlDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class DeckResolutionDiagnostic:
+    """A stable diagnostic emitted while resolving deck source directives."""
+
+    code: str
+    directive: str
+    source: str
+    line_number: int
+    message: str
+    severity: str
+    target: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckResolutionSummary:
+    """Resolved active deck lines plus source-resolution metadata."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    diagnostics: tuple[DeckResolutionDiagnostic, ...]
+    included_paths: tuple[str, ...]
+    library_sections: tuple[str, ...]
 
 
 @dataclass(frozen=True, slots=True)
@@ -202,6 +227,7 @@ R2 out 0 10000
 _SUPPORTED_ANALYSES = frozenset({"op", "dc", "ac", "tran", "tf"})
 _REQUIRED_ANALYSES = frozenset({"op", "dc", "ac", "tran"})
 _UNSUPPORTED_DECK_CONTROL_DIRECTIVES = frozenset({".include", ".lib", ".control"})
+_UNSUPPORTED_RESOLVED_DIRECTIVES = frozenset({".control"})
 
 
 def analyze_deck_controls(netlist: str) -> DeckControlSummary:
@@ -239,6 +265,30 @@ def analyze_deck_controls(netlist: str) -> DeckControlSummary:
         terminated=end_line_number is not None,
         end_line_number=end_line_number,
         diagnostics=tuple(diagnostics),
+    )
+
+
+def resolve_deck_sources(
+    netlist: str,
+    sources: Mapping[str, str],
+) -> DeckResolutionSummary:
+    """Expand ``.include`` and selected ``.lib`` sources from a content map."""
+
+    state = _DeckResolutionState()
+    active_lines, terminated, end_line_number = _resolve_deck_lines(
+        netlist=netlist,
+        source="<deck>",
+        sources=sources,
+        state=state,
+        stack=(),
+    )
+    return DeckResolutionSummary(
+        active_lines=tuple(active_lines),
+        terminated=terminated,
+        end_line_number=end_line_number,
+        diagnostics=tuple(state.diagnostics),
+        included_paths=tuple(state.included_paths),
+        library_sections=tuple(state.library_sections),
     )
 
 
@@ -409,6 +459,299 @@ def _validate_non_empty(
     issues.append(
         ReleaseReadinessIssue(deck_id, field, "field must be documented and non-empty")
     )
+
+
+@dataclass(slots=True)
+class _DeckResolutionState:
+    diagnostics: list[DeckResolutionDiagnostic]
+    included_paths: list[str]
+    library_sections: list[str]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.included_paths = []
+        self.library_sections = []
+
+
+def _resolve_deck_lines(
+    *,
+    netlist: str,
+    source: str,
+    sources: Mapping[str, str],
+    state: _DeckResolutionState,
+    stack: tuple[str, ...],
+) -> tuple[list[str], bool, int | None]:
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive == ".include":
+            active_lines.extend(
+                _resolve_include(
+                    line=stripped,
+                    source=source,
+                    line_number=line_number,
+                    sources=sources,
+                    state=state,
+                    stack=stack,
+                )
+            )
+            continue
+        if directive == ".lib":
+            active_lines.extend(
+                _resolve_library_section(
+                    line=stripped,
+                    source=source,
+                    line_number=line_number,
+                    sources=sources,
+                    state=state,
+                    stack=stack,
+                )
+            )
+            continue
+        if directive in _UNSUPPORTED_RESOLVED_DIRECTIVES:
+            state.diagnostics.append(
+                DeckResolutionDiagnostic(
+                    code="SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+                    directive=directive,
+                    source=source,
+                    line_number=line_number,
+                    message=(
+                        f"{directive} is not supported by the deck source "
+                        "resolver yet"
+                    ),
+                    severity="error",
+                )
+            )
+        active_lines.append(stripped)
+
+    return active_lines, end_line_number is not None, end_line_number
+
+
+def _resolve_include(
+    *,
+    line: str,
+    source: str,
+    line_number: int,
+    sources: Mapping[str, str],
+    state: _DeckResolutionState,
+    stack: tuple[str, ...],
+) -> list[str]:
+    tokens = _directive_tokens(line)
+    target = _unquote_token(tokens[1]) if len(tokens) >= 2 else None
+    if not target:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_INCLUDE_ARGUMENT",
+            directive=".include",
+            source=source,
+            line_number=line_number,
+            message=".include requires a source path",
+        )
+        return []
+    if target in stack:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_INCLUDE_CYCLE",
+            directive=".include",
+            source=source,
+            line_number=line_number,
+            message=f".include cycle detected for {target}",
+            target=target,
+        )
+        return []
+    content = sources.get(target)
+    if content is None:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_INCLUDE_NOT_FOUND",
+            directive=".include",
+            source=source,
+            line_number=line_number,
+            message=f".include source {target!r} was not provided",
+            target=target,
+        )
+        return []
+
+    state.included_paths.append(target)
+    resolved, _, _ = _resolve_deck_lines(
+        netlist=content,
+        source=target,
+        sources=sources,
+        state=state,
+        stack=(*stack, target),
+    )
+    return resolved
+
+
+def _resolve_library_section(
+    *,
+    line: str,
+    source: str,
+    line_number: int,
+    sources: Mapping[str, str],
+    state: _DeckResolutionState,
+    stack: tuple[str, ...],
+) -> list[str]:
+    tokens = _directive_tokens(line)
+    path = _unquote_token(tokens[1]) if len(tokens) >= 2 else None
+    section = _unquote_token(tokens[2]) if len(tokens) >= 3 else None
+    if not path or not section:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_LIB_ARGUMENT",
+            directive=".lib",
+            source=source,
+            line_number=line_number,
+            message=".lib requires a source path and section name",
+            target=path,
+        )
+        return []
+    content = sources.get(path)
+    target = f"{path}:{section}"
+    if content is None:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_LIB_NOT_FOUND",
+            directive=".lib",
+            source=source,
+            line_number=line_number,
+            message=f".lib source {path!r} was not provided",
+            target=target,
+        )
+        return []
+    if target in stack:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_LIB_CYCLE",
+            directive=".lib",
+            source=source,
+            line_number=line_number,
+            message=f".lib cycle detected for {target}",
+            target=target,
+        )
+        return []
+
+    section_lines = _extract_library_section(
+        content=content,
+        path=path,
+        section=section,
+        call_source=source,
+        call_line_number=line_number,
+        state=state,
+    )
+    if section_lines is None:
+        return []
+
+    state.library_sections.append(target)
+    resolved, _, _ = _resolve_deck_lines(
+        netlist="\n".join(section_lines),
+        source=target,
+        sources=sources,
+        state=state,
+        stack=(*stack, target),
+    )
+    return resolved
+
+
+def _extract_library_section(
+    *,
+    content: str,
+    path: str,
+    section: str,
+    call_source: str,
+    call_line_number: int,
+    state: _DeckResolutionState,
+) -> list[str] | None:
+    in_section = False
+    section_start_line: int | None = None
+    section_lines: list[str] = []
+    wanted = section.lower()
+    target = f"{path}:{section}"
+
+    for line_number, raw_line in enumerate(content.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            if in_section:
+                section_lines.append(raw_line)
+            continue
+        directive = _deck_directive(stripped)
+        tokens = _directive_tokens(stripped)
+        if not in_section:
+            if (
+                directive == ".lib"
+                and len(tokens) >= 2
+                and _unquote_token(tokens[1]).lower() == wanted
+            ):
+                in_section = True
+                section_start_line = line_number
+            continue
+        if directive in {".endl", ".endlib"}:
+            return section_lines
+        section_lines.append(raw_line)
+
+    if not in_section:
+        _add_resolution_diagnostic(
+            state,
+            code="SPICE_DECK_LIB_SECTION_NOT_FOUND",
+            directive=".lib",
+            source=call_source,
+            line_number=call_line_number,
+            message=f".lib section {section!r} was not found in {path!r}",
+            target=target,
+        )
+        return None
+
+    _add_resolution_diagnostic(
+        state,
+        code="SPICE_DECK_LIB_SECTION_UNTERMINATED",
+        directive=".lib",
+        source=path,
+        line_number=section_start_line or 1,
+        message=f".lib section {section!r} in {path!r} is missing .endl",
+        target=target,
+    )
+    return None
+
+
+def _add_resolution_diagnostic(
+    state: _DeckResolutionState,
+    *,
+    code: str,
+    directive: str,
+    source: str,
+    line_number: int,
+    message: str,
+    target: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckResolutionDiagnostic(
+            code=code,
+            directive=directive,
+            source=source,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            target=target,
+        )
+    )
+
+
+def _directive_tokens(line: str) -> list[str]:
+    return line.split()
+
+
+def _unquote_token(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
 
 
 def _deck_directive(line: str) -> str | None:

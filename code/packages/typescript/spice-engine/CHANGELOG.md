@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `resolveDeckSources` for map-backed `.include` and selected
+  `.lib path section` expansion with stable diagnostics for missing sources,
+  missing or unterminated library sections, cycles, and still-unsupported
+  `.control` blocks, matching Python and Rust.
 - Add `analyzeDeckControls` for shared deck-control boundary diagnostics:
   active pre-`.end` lines plus stable unsupported-feature diagnostics for
   `.include`, `.lib`, and `.control`, matching Python and Rust.
