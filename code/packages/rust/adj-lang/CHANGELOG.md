@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.10.0] - 2026-06-12 — `rulebook` + `use` (MYCIN-2026 M2)
+
+### Added
+
+- **`rulebook <name> { … }`** — a named, reusable block of clauses
+  (`prior`/`contributes`/`interacts`/`uncertain`), so a body of adjudicatable
+  knowledge can be written once, checked in as code, and (M3) imported. A
+  rulebook is a *container*, not a namespace: its clauses lower into the
+  `KnowledgeBase` exactly as if written at top level (`flatten_clauses`). New
+  AST `Statement::Rulebook { name, statements }`.
+- **`use <dictionary>`** — binds a declared `dictionary` (by name) as the
+  controlled vocabulary the enclosing scope's clauses are checked against. Legal
+  at top level or inside a `rulebook`. New AST `Statement::Use(String)`.
+- **Scoped vocabulary enforcement (M2).** When any `use` appears, enforcement
+  becomes *per-scope*: a top-level `use D` checks the top-level clauses against
+  `D`; a rulebook's own `use D'` checks that rulebook against `D'` (falling back
+  to a top-level `use`). A scope with no `use` is unchecked — a rulebook opts in
+  to checking by `use`-ing a dictionary. A `use` of a dictionary the program
+  never declared is `LowerError::UndefinedDictionary`. When **no** `use` appears
+  anywhere, M1 whole-program enforcement is unchanged (fully backward-compatible).
+- **Rulebooks are flat.** A `rulebook` nested directly in another is a clean
+  `LowerError::NestedRulebook` (nesting has no defined scoping semantics; the
+  refusal also keeps clause-flattening non-recursive, so deeply-nested untrusted
+  source cannot drive unbounded recursion in the lowerer).
+- 8 tests (rulebook lowers like top-level; `use` checks/rejects terms; undefined
+  dictionary; no-`use` rulebook unchecked; top-level `use` scoping; nested
+  rulebook rejected). Grammar regenerated. Next (MYCIN-2026): M3 `import "path"`.
+
 ## [0.9.0] - 2026-06-12 — `dictionary` + `define` (MYCIN-2026 M1)
 
 ### Added

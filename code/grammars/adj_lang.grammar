@@ -33,6 +33,8 @@ statement   = prior_decl
             | optimize_decl
             | dictionary_decl
             | define_decl
+            | rulebook_decl
+            | use_decl
             ;
 
 # ----------------------------------------------------------------
@@ -130,6 +132,25 @@ define_kind    = "hypothesis"
                ;
 
 surface_clause = "surface" STRING { COMMA STRING } ;
+
+# ----------------------------------------------------------------
+# Rulebook + use (MYCIN-2026 M2 — the rulebook as a first-class, named,
+# reusable block). A `rulebook <name> { … }` groups the clauses
+# (prior/contributes/interacts/uncertain) that constitute a body of
+# adjudicatable knowledge under one name, so it can be written once,
+# checked in as code, and imported (M3). A `use <dictionary>` inside a
+# rulebook (or at top level) BINDS the controlled vocabulary the rulebook's
+# clauses are checked against: every term the rulebook names must be
+# `define`d in the `use`d dictionary, else a clean compile error. A rulebook
+# with no `use` is unchecked (backward-compatible, like a program with no
+# dictionary). `rulebook`/`use` are IDENT-matched literals — no lexer
+# keywords. The body is `{ statement }` so a rulebook may also carry its own
+# `use` (and nested structure); the lowerer flattens clauses into one KB.
+# ----------------------------------------------------------------
+
+rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE ;
+
+use_decl      = "use" IDENT ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the
