@@ -91,6 +91,9 @@ All notable changes to this package will be documented in this file.
   `IntegrationActivationSentinelSummary` for combining watchtower, risk,
   dependency, and readiness-gap rollups into blocker, dependency, policy-risk,
   review, ready, and observation alert lanes.
+- `IntegrationActivationAuditRecord` and `IntegrationActivationAuditSummary`
+  for connecting sentinel alerts to watchtower signals, decisions, evidence,
+  policy risk, dependency blockers, and readiness gaps in one audit trail.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
