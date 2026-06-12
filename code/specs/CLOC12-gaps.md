@@ -597,9 +597,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-078 — binary comparison/logical RIGHT-operand paren elision
 
-- **Status:** OPEN (discovered CLOC14.37). `minify_eq_operand_paren` ignored.
+- **Status:** RESOLVED in CLOC12.87. `minify_eq_operand_paren` enforced.
 - **Input:** `var x=a==(b);` → **Upstream:** `var x=a==b;` (also `a!=(b)` → `a!=b`, `a<(b)` → `a<b`, `a||(b)` → `a||b`, `a&&(b)` → `a&&b`).
-- **What it needs:** gap-075's right-operand pre-pass is anchored only on the SYMBOL set `-`/`+`/`!`/`~`. Upstream applies the same right-operand grouping-paren elision to the remaining binary operators — comparison (`==`/`!=`/`===`/`!==`/`<`/`>`/`<=`/`>=`), logical (`&&`/`||`/`??`), and arithmetic (`*`/`/`/`%`). Extend the anchor set (or generalise to "any binary operator token") while keeping the `is_safe_unary_paren_operand` operand guard so operator operands (`a==(b+c)`) stay parenthesised.
+- **What it needed:** gap-075's right-operand pre-pass is anchored only on the SYMBOL set `-`/`+`/`!`/`~`. Upstream applies the same right-operand grouping-paren elision to the remaining binary operators — comparison (`==`/`!=`/`===`/`!==`/`<`/`>`/`<=`/`>=`), logical (`&&`/`||`/`??`), arithmetic (`*`/`/`/`%`/`**`), and bitwise (`&`/`|`/`^`/`<<`/`>>`/`>>>`).
+- **CLOC12.87 resolution:** Extended the gap-075 pre-pass anchor (`is_sym_unary`) with an `is_binary_sym` clause covering the full comparison / logical / arithmetic / bitwise symbol-operator set, each `is_structural_punct`-gated (so a string/regex literal whose CONTENT is e.g. `"=="` never matches). The existing `is_safe_unary_paren_operand` operand guard is unchanged and is the single safety gate: it accepts ONLY a self-delimiting operand (single safe token / member-reference chain / leading prefix-symbol-unary chain). An atomic operand has NO precedence interaction with the outer operator, so the strip is sound for *every* binary operator. **DEFERRED (separate precedence-aware refinement):** the JAR also strips when the parenthesised operand's lowest-precedence operator binds at least as tightly as the outer operator (`a==(b+c)` → `a==b+c`, since `+` binds tighter than `==`, while `a*(b+c)` KEEPS its parens). That needs an operator-precedence table; here `a==(b+c)` conservatively keeps its parens (valid, just not yet byte-identical). 4 unit tests (binary set / member-chain operand / operator-operand-kept / literal+call safety) + the byte-identity fixture.
 
 ### gap-079 — `if`-body single-statement block flatten
 
