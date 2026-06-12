@@ -2,6 +2,40 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.102.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-093 (CORRECTNESS)** — a NUMBER literal that is the
+  object of a `.member` access is now paren-wrapped so the dot reads
+  as member access, never the number's decimal point:
+
+      1 .x             -> (1).x
+      255 .toString(16)-> (255).toString(16)
+      1.5.toString()   -> (1.5).toString()
+      1..toString()    -> (1).toString()   (double-dot collapses to one)
+
+  Previously closurec re-stitched `1 .x` verbatim to the INVALID
+  `1.x` (a JS parser reads `1.` as the float `1.0` then a stray `x`)
+  and emitted the double-dot `1..toString()` for the integer-method
+  case. A token-stream pre-pass in `whitespace_only.rs` rebuilds the
+  kept-token list, replacing `<number>` with `( <number> )` whenever
+  its immediate follower is a structural `.` and the post-dot token is
+  a property name. For the double-dot form (`1..x` — the lexer splits
+  the float's decimal point from the member dot) it also drops the
+  first, redundant dot so exactly one survives. The synthetic parens
+  are cloned from any source token (the source frequently has none,
+  e.g. `1 .x`), the same trick `synth_semi` uses.
+
+  Non-member numbers are untouched: index access (`1[0]`, follower
+  `[`), object keys (`{1:2}`, follower `:`), arithmetic (`1+2`), and
+  already-parenthesised numbers (`(1).x`, follower `)`). gap-082
+  number normalisation runs first, so the wrapped value is canonical
+  (`1.5e3.toFixed(2)` → `(1500).toFixed(2)`, `0xff .toString()` →
+  `(255).toString()`). Identifier member access (`(foo).x` → `foo.x`)
+  remains gap-057's job. JAR-verified across 17 cases; the three
+  `minify_num_member_*` / `minify_num_float_method` byte-identity
+  fixtures move out of the ignore list; +10 `gap093_*` unit tests.
+
 ## [0.101.0] - 2026-06-12
 
 ### Fixed

@@ -178,11 +178,103 @@ pub fn whitespace_only_minify(
         s
     });
 
+    // gap-093 needs a synthetic `(`/`)` pair to WRAP a numeric
+    // literal that is the object of a member access — `1 .x` and
+    // `1..toString()` must become `(1).x` / `(1).toString()`,
+    // because a bare `1.x` is invalid JS (the `.` binds as the
+    // number's decimal point, leaving a dangling property). Unlike
+    // gap-061's `synth_open`/`synth_close`, the source here often
+    // has NO parens at all (`1 .x`), so we can't clone one from the
+    // stream — we clone any token (the first) and re-type it, the
+    // same trick `synth_semi` uses. Only `.value`/`.type_` matter
+    // for re-stitching; the cloned line/column are irrelevant.
+    let synth_num_open: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = "(".to_string();
+        s.type_ = lexer::token::TokenType::LParen;
+        s.type_name = None;
+        s
+    });
+    let synth_num_close: Option<lexer::token::Token> = tokens.first().map(|t| {
+        let mut s = t.clone();
+        s.value = ")".to_string();
+        s.type_ = lexer::token::TokenType::RParen;
+        s.type_name = None;
+        s
+    });
+
     let mut kept: Vec<_> = tokens
         .iter()
         .filter(|t| !is_trivia(t))
         .filter(|t| !is_eof(t))
         .collect();
+
+    // gap-093: NUMERIC-LITERAL MEMBER-ACCESS paren wrap. When a
+    // number is the object of a `.member` access, upstream Closure
+    // wraps it in parentheses so the dot can't be misread as the
+    // number's decimal point:
+    //   `1 .x`           -> `(1).x`
+    //   `1.5.toString()` -> `(1.5).toString()`
+    //   `1..toString()`  -> `(1).toString()`   (NB: ONE dot survives)
+    // but an INDEX access or anything else is left alone:
+    //   `1[0]`           -> `1[0]`   (next token is `[`, not `.`)
+    //   `(1).x`          -> `(1).x`  (already parenthesised; the
+    //                                 number's follower is `)`)
+    //
+    // WHY a bare `1.x` is wrong: the lexer splits `1 .x` into
+    // NUMBER(`1`) DOT NAME(`x`); re-stitched verbatim that prints
+    // `1.x`, which a JS parser reads as the float `1.` followed by
+    // a stray `x` — a SyntaxError. The parens force `1` to be a
+    // complete primary expression, after which `.x` is plain member
+    // access. This is a CORRECTNESS fix, not just byte-parity.
+    //
+    // THE DOUBLE-DOT CASE: `1..toString()` lexes as
+    // NUMBER(`1`) DOT DOT NAME(`toString`). The FIRST dot is the
+    // (split-off) decimal point that made `1.` a float; the SECOND
+    // is the member operator. Once we parenthesise the `1`, the
+    // decimal-point dot is redundant, so we keep exactly ONE dot.
+    //
+    // We rebuild `kept` in a single forward pass, emitting
+    // `( <number> )` in place of `<number>` whenever its immediate
+    // follower is a structural `.` AND the token after the dot(s)
+    // is a property name (word-like). The synthetic parens are the
+    // `synth_num_open`/`synth_num_close` declared above.
+    if let (Some(np_open), Some(np_close)) =
+        (synth_num_open.as_ref(), synth_num_close.as_ref())
+    {
+        let mut wrapped: Vec<&lexer::token::Token> = Vec::with_capacity(kept.len() + 8);
+        let mut i = 0;
+        while i < kept.len() {
+            let tok = kept[i];
+            // A NUMBER (or BigInt) whose next token is a member `.`.
+            let followed_by_dot =
+                is_number_literal(tok) && kept.get(i + 1).is_some_and(|t| is_structural_punct(t, "."));
+            if followed_by_dot {
+                // One dot or two? Two means the first is the
+                // decimal-point dot that the lexer split off.
+                let double_dot =
+                    kept.get(i + 2).is_some_and(|t| is_structural_punct(t, "."));
+                // The property name sits after the dot(s).
+                let name_idx = if double_dot { i + 3 } else { i + 2 };
+                let is_member = kept.get(name_idx).is_some_and(|t| is_word_like(t));
+                if is_member {
+                    // Emit `( <number> )`, then resume so the
+                    // member dot is re-emitted by the normal path.
+                    wrapped.push(np_open);
+                    wrapped.push(tok);
+                    wrapped.push(np_close);
+                    // Skip the number; for the double-dot form also
+                    // skip the redundant decimal-point dot so only
+                    // the member dot survives.
+                    i += if double_dot { 2 } else { 1 };
+                    continue;
+                }
+            }
+            wrapped.push(tok);
+            i += 1;
+        }
+        kept = wrapped;
+    }
 
     // gap-088: EMPTY-STATEMENT elimination. Upstream Closure drops a
     // `;` that is an EmptyStatement — a `;` in statement-list position
@@ -6290,6 +6382,90 @@ mod tests {
         assert_eq!(minify("var x=[1,2,,];"), "var x=[1,2,,];");
         assert_eq!(minify("var x=[[1],];"), "var x=[[1]];");
         assert_eq!(minify("var x=[f(),];"), "var x=[f()];");
+    }
+
+    // ---- gap-093: number-literal `.member` paren wrap ----
+
+    /// Target case (CORRECTNESS): an integer literal followed by a
+    /// member `.` must be wrapped — bare `1.x` does not parse, so we
+    /// emit `(1).x`. The lexer splits `1 .x` into NUMBER `1` + DOT +
+    /// NAME, which re-stitched verbatim would print the invalid `1.x`.
+    #[test]
+    fn gap093_integer_member_prop_wrapped() {
+        assert_eq!(minify("a=1 .x;"), "a=(1).x;");
+    }
+
+    /// A method call on an integer wraps the receiver: `255 .toString(16)`
+    /// → `(255).toString(16)`.
+    #[test]
+    fn gap093_integer_member_method_wrapped() {
+        assert_eq!(minify("a=255 .toString(16);"), "a=(255).toString(16);");
+    }
+
+    /// A float literal whose own decimal point is internal still wraps
+    /// for member access: `1.5.toString()` → `(1.5).toString()`.
+    #[test]
+    fn gap093_float_member_method_wrapped() {
+        assert_eq!(minify("a=1.5.toString();"), "a=(1.5).toString();");
+    }
+
+    /// The DOUBLE-DOT form `1..toString()` lexes as NUMBER `1` + DOT +
+    /// DOT + NAME. The first dot is the (split-off) decimal point; the
+    /// second is the member operator. After wrapping the `1`, exactly
+    /// ONE dot survives: `(1).toString()`.
+    #[test]
+    fn gap093_double_dot_collapses_to_one() {
+        assert_eq!(minify("a=1..toString();"), "a=(1).toString();");
+        assert_eq!(minify("a=1..x;"), "a=(1).x;");
+    }
+
+    /// A member chain only wraps the head number; trailing accessors
+    /// ride along: `1 .x.y` → `(1).x.y`.
+    #[test]
+    fn gap093_member_chain_wraps_head_only() {
+        assert_eq!(minify("a=1 .x.y;"), "a=(1).x.y;");
+    }
+
+    /// gap-082 normalisation runs first, so the wrapped value is the
+    /// canonical number: `1.5e3.toFixed(2)` → `(1500).toFixed(2)` and
+    /// `0xff .toString()` → `(255).toString()`.
+    #[test]
+    fn gap093_wraps_normalised_value() {
+        assert_eq!(minify("a=1.5e3.toFixed(2);"), "a=(1500).toFixed(2);");
+        assert_eq!(minify("a=0xff .toString();"), "a=(255).toString();");
+    }
+
+    /// **Non-regression**: an INDEX access is left alone — the follower
+    /// is `[`, not `.`, so `1[0]` stays `1[0]` (no spurious parens).
+    #[test]
+    fn gap093_index_access_not_wrapped() {
+        assert_eq!(minify("a=1[0];"), "a=1[0];");
+    }
+
+    /// **Non-regression**: an already-parenthesised number is untouched
+    /// (its follower is `)`, not `.`) — `(1).x` stays `(1).x`, no
+    /// double-wrap.
+    #[test]
+    fn gap093_already_parenthesised_untouched() {
+        assert_eq!(minify("a=(1).x;"), "a=(1).x;");
+    }
+
+    /// **Non-regression**: a number as an object key (`{1:2}`, follower
+    /// `:`) or in arithmetic (`1+2`) is never wrapped.
+    #[test]
+    fn gap093_non_member_numbers_untouched() {
+        assert_eq!(minify("x={1:2};"), "x={1:2};");
+        assert_eq!(minify("a=1+2;"), "a=1+2;");
+        assert_eq!(minify("a=f(1);"), "a=f(1);");
+    }
+
+    /// **Non-regression**: identifier member access is still handled by
+    /// gap-057 (paren elision), unaffected by the number wrap: `(foo).x`
+    /// → `foo.x`, `b.c.d` → `b.c.d`.
+    #[test]
+    fn gap093_identifier_member_unaffected() {
+        assert_eq!(minify("a=(foo).x;"), "a=foo.x;");
+        assert_eq!(minify("a=b.c.d;"), "a=b.c.d;");
     }
 
     /// **Non-regression**: function-call trailing comma
