@@ -317,39 +317,95 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // gap-054: paren elision around unary operand.
-    // Pattern: `void ( SINGLE )` / `typeof ( SINGLE )` /
-    // `delete ( SINGLE )` where SINGLE is exactly one
-    // token of a "safe" kind (numeric literal, string
-    // literal, or simple identifier). Drop both parens.
+    // gap-054 + gap-070: paren elision around a unary-keyword
+    // operand. Pattern: `void (E)` / `typeof (E)` / `delete (E)`
+    // where `E` is a "safe" operand whose grouping parens are
+    // redundant. Drop both parens.
     //
-    // Multi-token contents (`void(a+b)`, `delete(o.x)`)
-    // are left alone — upstream is more aggressive on
-    // `delete(o.x)`, deferred.
+    // Two shapes of safe operand are recognised:
+    //
+    //   (gap-054) a SINGLE safe token — a numeric literal, a
+    //     string literal, or a simple identifier:
+    //       typeof(x)   -> typeof x        delete(a) -> delete a
+    //       typeof(1)   -> typeof 1        void(0)   -> void 0
+    //
+    //   (gap-070) a MEMBER-REFERENCE CHAIN — an identifier base
+    //     followed by any run of `.name` / `?.name` / `[…]`
+    //     accessors, with NO top-level operators, calls, or
+    //     commas:
+    //       delete(a.b)    -> delete a.b      delete(a[b]) -> delete a[b]
+    //       typeof(a.b.c)  -> typeof a.b.c    void(a.b)    -> void a.b
+    //
+    // Both shapes are higher-precedence than the prefix unary
+    // operator and self-delimiting, so the grouping parens carry
+    // no meaning — `OP(REF)` and `OP REF` parse identically, and
+    // whatever follows the close paren re-associates the same way
+    // (member access binds tighter than the unary op). Operands
+    // that contain a top-level binary operator (`void(a+b)`,
+    // `delete(a-1)`) are LEFT ALONE: there `OP(a+b)` ≠ `OP a+b`.
+    //
+    // PROPERTY GUARD (gap-070 correctness fix): the keyword must
+    // be the genuine unary OPERATOR, not a PROPERTY of the same
+    // name. `o.delete(a)` is a method call (Map/Set#delete), NOT
+    // a `delete` expression — stripping its call parens would
+    // corrupt it into the invalid `o.delete a`. A property is
+    // preceded by a `.`/`?.` accessor; the operator is at the
+    // statement start or preceded by anything else. (Before this
+    // guard, `o.delete(a)` mis-emitted as `o.delete a`.)
     {
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
-        while i + 3 < kept.len() {
-            let is_unary_kw = matches!(
-                kept[i].value.as_str(),
-                "void" | "typeof" | "delete"
-            );
+        while i + 1 < kept.len() {
+            // The keyword must be a real word-like token (never a
+            // string literal `"delete"` whose `.value` matches).
+            let is_unary_kw = is_word_like(kept[i])
+                && matches!(
+                    kept[i].value.as_str(),
+                    "void" | "typeof" | "delete"
+                );
+            // Property guard: skip `o.delete(`, `o?.typeof(`, …
+            let is_property = i >= 1
+                && (is_structural_punct(kept[i - 1], ".")
+                    || is_structural_punct(kept[i - 1], "?."));
             if is_unary_kw
-                && kept[i + 1].value == "("
-                && kept[i + 3].value == ")"
+                && !is_property
+                && is_structural_punct(kept[i + 1], "(")
             {
-                let operand = kept[i + 2].value.as_str();
-                let is_safe = !operand.is_empty()
-                    && (operand.starts_with(|c: char| {
-                        c.is_ascii_alphabetic() || c == '_' || c == '$'
-                    }) || operand.starts_with(|c: char| c.is_ascii_digit())
-                        || operand.starts_with('"')
-                        || operand.starts_with('\''));
-                if is_safe {
-                    drops.push(i + 1);
-                    drops.push(i + 3);
-                    i += 4;
-                    continue;
+                let open = i + 1;
+                // Find the matching close paren (structural depth
+                // scan — string/regex literals whose content holds
+                // a bracket char never perturb the count).
+                let mut depth: i32 = 1;
+                let mut close: Option<usize> = None;
+                let mut j = open + 1;
+                while j < kept.len() {
+                    let t = kept[j];
+                    if is_structural_punct(t, "(")
+                        || is_structural_punct(t, "[")
+                        || is_structural_punct(t, "{")
+                    {
+                        depth += 1;
+                    } else if is_structural_punct(t, ")") {
+                        depth -= 1;
+                        if depth == 0 {
+                            close = Some(j);
+                            break;
+                        }
+                    } else if is_structural_punct(t, "]")
+                        || is_structural_punct(t, "}")
+                    {
+                        depth -= 1;
+                    }
+                    j += 1;
+                }
+                if let Some(close) = close {
+                    let span = &kept[open + 1..close];
+                    if is_safe_unary_operand(span) {
+                        drops.push(open);
+                        drops.push(close);
+                        i = close + 1;
+                        continue;
+                    }
                 }
             }
             i += 1;
@@ -2512,6 +2568,101 @@ fn new_paren_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
     true
 }
 
+/// gap-054 + gap-070: True iff `span` (the tokens BETWEEN a unary
+/// keyword's grouping parens, exclusive of the parens) is a "safe"
+/// operand whose parens are pure grouping and can be dropped.
+///
+/// Two accepted shapes (see the call site for the full rationale):
+///
+///   1. A SINGLE safe token — an identifier, a numeric literal, or
+///      a string literal. (gap-054, the original case.)
+///   2. A MEMBER-REFERENCE CHAIN — an identifier base followed by
+///      any run of `.name` / `?.name` / `[…]` accessors and nothing
+///      else at the top level. (gap-070.)
+///
+/// Both are self-delimiting and bind tighter than a prefix unary
+/// operator, so `OP(span)` ≡ `OP span`. Anything with a top-level
+/// binary operator, comma, or call `(` is rejected — there the
+/// parens change meaning.
+fn is_safe_unary_operand(span: &[&lexer::token::Token]) -> bool {
+    if span.is_empty() {
+        return false;
+    }
+    // Shape 1: a single safe token (identifier / number / string).
+    if span.len() == 1 {
+        let t = span[0];
+        if is_string_literal(t) {
+            return true;
+        }
+        let v = t.value.as_str();
+        return !v.is_empty()
+            && v.starts_with(|c: char| {
+                c.is_ascii_alphabetic()
+                    || c == '_'
+                    || c == '$'
+                    || c.is_ascii_digit()
+            });
+    }
+    // Shape 2: a member-reference chain. The base must be a plain
+    // word-like identifier/keyword token (`a`, `this`) — never a
+    // string, number, or operator. (A number base like `1` is
+    // rejected: `1.toString` would re-lex the `.` as part of the
+    // number.)
+    let base = span[0];
+    if is_string_literal(base) || !is_word_like(base) {
+        return false;
+    }
+    if !base
+        .value
+        .starts_with(|c: char| c.is_ascii_alphabetic() || c == '_' || c == '$')
+    {
+        return false;
+    }
+    // Walk the accessors after the base.
+    let mut k = 1;
+    while k < span.len() {
+        let t = span[k];
+        if is_structural_punct(t, ".") || is_structural_punct(t, "?.") {
+            // A `.`/`?.` must be followed by a property name — a
+            // word-like identifier or keyword (`a.if` is legal).
+            let Some(name) = span.get(k + 1) else {
+                return false;
+            };
+            if is_string_literal(name) || !is_word_like(name) {
+                return false;
+            }
+            k += 2;
+        } else if is_structural_punct(t, "[") {
+            // Balanced computed-member subscript `[ … ]`. The
+            // contents are a complete sub-expression; we only
+            // require the brackets balance and are non-empty.
+            let mut depth: i32 = 1;
+            let mut j = k + 1;
+            while j < span.len() {
+                let u = span[j];
+                if is_structural_punct(u, "[") {
+                    depth += 1;
+                } else if is_structural_punct(u, "]") {
+                    depth -= 1;
+                    if depth == 0 {
+                        break;
+                    }
+                }
+                j += 1;
+            }
+            if depth != 0 || j == k + 1 {
+                return false; // unbalanced or empty `[]`
+            }
+            k = j + 1;
+        } else {
+            // Top-level operator, call `(`, comma, etc. → not a
+            // pure reference chain; the parens are meaningful.
+            return false;
+        }
+    }
+    true
+}
+
 /// True iff a token is "word-like" — its value would merge with
 /// an adjacent word-like value if no separator were inserted.
 ///
@@ -4007,6 +4158,48 @@ mod tests {
     #[test]
     fn gap069_new_ident_unaffected() {
         assert_eq!(minify("new X();"), "new X;");
+    }
+
+    // ---- gap-070: unary-keyword operand member-chain paren elision ----
+
+    /// gap-070: `delete`/`typeof`/`void` followed by a parenthesised
+    /// MEMBER-REFERENCE CHAIN drops the redundant parens.
+    #[test]
+    fn gap070_member_chain_paren_elided() {
+        assert_eq!(minify("delete(a.b);"), "delete a.b;");
+        assert_eq!(minify("delete(a.b.c);"), "delete a.b.c;");
+        assert_eq!(minify("delete(a[b]);"), "delete a[b];");
+        assert_eq!(minify("typeof(a.b);"), "typeof a.b;");
+        assert_eq!(minify("void(a.b);"), "void a.b;");
+    }
+
+    /// gap-070 SAFETY (correctness fix): a PROPERTY named
+    /// `delete`/`typeof`/`void` is a method call, NOT a unary
+    /// operator — its call parens must be preserved. Before the
+    /// property guard, `o.delete(a)` mis-emitted as the invalid
+    /// `o.delete a`.
+    #[test]
+    fn gap070_property_keyword_not_elided() {
+        assert_eq!(minify("o.delete(a);"), "o.delete(a);");
+        assert_eq!(minify("o.typeof(x);"), "o.typeof(x);");
+        assert_eq!(minify("o?.delete(a);"), "o?.delete(a);");
+    }
+
+    /// gap-070 boundary: an operand containing a top-level binary
+    /// operator is NOT a pure reference chain — `delete(a+b)` must
+    /// keep its parens (`delete a+b` ≠ `delete(a+b)`).
+    #[test]
+    fn gap070_operator_operand_kept() {
+        assert_eq!(minify("delete(a+b);"), "delete(a+b);");
+        assert_eq!(minify("typeof(a||b);"), "typeof(a||b);");
+    }
+
+    /// gap-054 non-regression: the single-token cases still elide.
+    #[test]
+    fn gap070_single_token_still_elided() {
+        assert_eq!(minify("delete(a);"), "delete a;");
+        assert_eq!(minify("typeof(x);"), "typeof x;");
+        assert_eq!(minify("void(0);"), "void 0;");
     }
 
     // ---- gap-067: labeled single-statement block flatten ----

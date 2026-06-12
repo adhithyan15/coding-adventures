@@ -540,11 +540,19 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **What it needed:** When the `new` keyword is directly followed by a `(` GROUPING paren (a parenthesized callee expression that gap-068 keeps), the re-stitcher inserts a single space: `new (…)`. Both forms keep the parens; this is an emit-adjacency rule for `new` + `(`. (Noted as the gap-069 candidate during CLOC12.76.)
 - **CLOC12.78 resolution:** A two-token look-behind, `new_paren_needs_space(kept, idx)`, consulted at the main emit site (NOT in `needs_separator`, which sees only the adjacent pair). Distinguishing the genuine NewExpression keyword `new` from a PROPERTY named `new` (`o.new(f)` — a method call) requires the token *before* `new`: the JS lexer is context-free and types `new` identically in both, so only a preceding `.`/`?.` member accessor tells them apart. The helper fires only when (a) `kept[idx]` is a structural `(`, (b) `kept[idx-1]` is the word-like `new` keyword, and (c) `kept[idx-2]` (if any) is not a `.`/`?.` accessor. The companion `new(f)()` simple-reference form never reaches here — gap-068's pre-pass has already elided those parens to `new f`. 3 unit tests + the byte-identity fixture.
 
-### gap-070 / gap-071 / gap-072 — prefix-operator operand paren elision
+### gap-070 — `delete` operand member-chain paren elision
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_delete_paren_elide` / `minify_instanceof_paren` / `minify_await_paren_elide` ignored.
-- **Inputs:** `delete(a.b)` → `delete a.b`; `a instanceof(B)` → `a instanceof B`; `await(x)` → `await x`.
-- **What it needs:** Strip the redundant grouping parens around the OPERAND of these prefix/binary-RHS operators when the operand is a simple reference (identifier or member chain), exactly as `typeof`/`void` already do (those round-trip correctly). The operator keyword + a keyword-space + the bare operand re-lex correctly. Same simple-reference / precedence caveat as gap-054/065.
+- **Status:** RESOLVED in CLOC12.79. `minify_delete_paren_elide` enforced.
+- **Input:** `delete(a.b)` → `delete a.b` (also `delete(a.b.c)`, `delete(a[b])`).
+- **What it needed:** Strip the redundant grouping parens around the OPERAND of the `delete` prefix operator when the operand is a member-reference chain — exactly the shape `typeof`/`void` already handled for single tokens.
+- **CLOC12.79 resolution:** The existing gap-054 pre-pass (which handled `void`/`typeof`/`delete` for a single safe token) was generalised. The operand check now accepts a **member-reference chain** — an identifier base followed by any run of `.name` / `?.name` / `[…]` accessors with no top-level operator, call, or comma — via the new `is_safe_unary_operand` helper. Both shapes are higher-precedence than the unary operator and self-delimiting, so the parens are pure grouping (`OP(REF)` ≡ `OP REF`). The matching close paren is found by a structural depth scan rather than the old fixed `i+3` offset.
+- **Correctness fix bundled in:** the pre-pass previously lacked a PROPERTY GUARD, so `o.delete(a)` (a Map/Set `.delete()` method call) mis-emitted as the **invalid** `o.delete a`. A `.`/`?.` look-behind now skips property-named keywords (`o.delete(`, `o.typeof(`, …). The same generalisation also closes `typeof(a.b)` / `void(a.b)` against the JAR. 4 unit tests + the byte-identity fixture.
+
+### gap-071 / gap-072 — instanceof / await operand paren elision
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_instanceof_paren` / `minify_await_paren_elide` ignored.
+- **Inputs:** `a instanceof(B)` → `a instanceof B`; `await(x)` → `await x`.
+- **What it needs:** Same simple-reference operand paren elision as gap-070, but for the binary-RHS `instanceof` operator and the `await` unary operator. Deferred to follow-up PRs (different anchor positions — `instanceof` has a left operand; `await` is async-context-only).
 
 ### gap-073 — `get`/`set` before a computed key needs a space
 
