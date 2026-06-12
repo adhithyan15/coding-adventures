@@ -2,6 +2,30 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.86.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-071** — the binary `instanceof` operator now drops
+  the redundant grouping parens around a simple-reference RIGHT
+  operand, matching upstream Closure: `a instanceof(B)` →
+  `a instanceof B` (also `a instanceof(b.c)`, `a instanceof(b[c])`).
+  `minify_instanceof_paren` is now enforced.
+
+### Added — gap-071 instanceof operand elision
+
+`instanceof` was added to the gap-054/070 unary-keyword paren-elision
+pre-pass keyword set (`void`/`typeof`/`delete`/`instanceof`). Although
+`instanceof` is a binary operator, the right-operand elision is
+mechanically identical to the prefix-unary cases — the left operand
+sits at `kept[i-1]` and is irrelevant to the right operand's parens.
+`instanceof` binds looser than member access, so `a instanceof(B.c)`
+≡ `a instanceof B.c` and whatever follows the close paren
+re-associates identically. The existing `is_safe_unary_operand`
+check and property guard apply unchanged: operator operands
+(`a instanceof(B||C)`) keep their parens, and `o.instanceof(x)` (a
+property method call) is skipped. 3 new gap071_* unit tests + the
+`minify_instanceof_paren` byte-identity fixture.
+
 ## [0.85.0] - 2026-06-12
 
 ### Changed
