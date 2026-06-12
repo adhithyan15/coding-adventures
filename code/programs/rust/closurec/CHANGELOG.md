@@ -2,6 +2,28 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.87.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-076** — a `with` statement whose body is a single
+  un-terminated statement now drops its braces, matching upstream
+  Closure: `with(o){a()}` → `with(o)a();`. `minify_with_body_flatten`
+  is now enforced.
+
+### Added — gap-076 with-body single-statement flatten
+
+`with` was added to the gap-074 header-keyword body-flatten pre-pass
+anchor set (`for`/`while`/`with`). A `with(o){…}` statement has the
+same `keyword (…) {body}` shape as a loop, and a `{` immediately
+after the `with(…)` header is unambiguously the with-body — so the
+identical single-statement / property-guard (`o.with(x){…}` left
+alone) / synthetic-`;` machinery applies unchanged. Multi-statement
+bodies (`with(o){a();b()}`) keep their braces. A `with` body that
+already ends in `;` (`with(o){a();}`) is not yet flattened (the
+gap-032 emit-time flatten does not set body-position after a
+`with(…)` header) — deferred. 2 new gap076_* unit tests + the
+`minify_with_body_flatten` byte-identity fixture.
+
 ## [0.86.0] - 2026-06-12
 
 ### Changed

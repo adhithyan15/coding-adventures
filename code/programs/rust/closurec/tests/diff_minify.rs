@@ -103,10 +103,10 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // operand machinery as gap-070/071 but anchored on the
     // PUNCTUATION operators `-`/`+`/`!`/`~` rather than a keyword.
     ("unary_minus_paren", "gap-075: prefix-unary symbol operand paren elision"),
-    // gap-076 (CLOC14.36): `with`-body single-statement block
-    // flatten — `with(o){a()}` → `with(o)a();`. The `with`-body
-    // sibling of gap-074 (for/while loop-body flatten).
-    ("with_body_flatten", "gap-076: with-body single-statement block flatten"),
+    // gap-076 RESOLVED in CLOC12.83 — a `with`-body single-statement
+    // block (`with(o){a()}` → `with(o)a();`) now flattens via the
+    // gap-074 pre-pass (`with` added to the anchor keyword set);
+    // `minify_with_body_flatten` enforced.
     // gap-074 RESOLVED in CLOC12.81 — a loop body that is a
     // single-statement block (`for(;;){continue l}` →
     // `for(;;)continue l;`) now flattens; `minify_loop_body_flatten`

@@ -1240,25 +1240,29 @@ pub fn whitespace_only_minify(
         }
     }
 
-    // ---- gap-074: loop-body single-statement block flatten ------
-    // `for(...){S}` / `while(...){S}` whose body `{S}` is a SINGLE
-    // statement with NO trailing `;` → `for(...)S;`. Loop-body
-    // sibling of gap-067 (which flattens a *labeled* block).
+    // ---- gap-074 + gap-076: header-keyword body flatten ----------
+    // `for(...){S}` / `while(...){S}` / `with(...){S}` whose body
+    // `{S}` is a SINGLE statement with NO trailing `;` →
+    // `for(...)S;`. Sibling of gap-067 (which flattens a *labeled*
+    // block).
     //
-    //   l:for(;;){continue l}  →  l:for(;;)continue l;
-    //   for(;;){break}         →  for(;;)break;
-    //   while(x){g()}          →  while(x)g();
-    //   for(a in o){h(a)}      →  for(a in o)h(a);
+    //   l:for(;;){continue l}  →  l:for(;;)continue l;   (gap-074)
+    //   for(;;){break}         →  for(;;)break;          (gap-074)
+    //   while(x){g()}          →  while(x)g();           (gap-074)
+    //   for(a in o){h(a)}      →  for(a in o)h(a);       (gap-074)
+    //   with(o){a()}           →  with(o)a();            (gap-076)
     //
-    // The `{` immediately following a `for(...)`/`while(...)` header
-    // is UNAMBIGUOUSLY a loop body — never an object literal — so
-    // (unlike gap-067) no completion-keyword guard is needed. The
-    // body is dropped braces + a synthetic `;` terminator.
+    // The `{` immediately following a `for(...)`/`while(...)`/
+    // `with(...)` header is UNAMBIGUOUSLY the statement body — never
+    // an object literal — so (unlike gap-067) no completion-keyword
+    // guard is needed. The body is dropped braces + a synthetic `;`
+    // terminator.
     //
-    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`):
-    //   - anchor on a `for`/`while` STATEMENT keyword (word-like,
-    //     and NOT a property — `o.while(x){…}` is a method call, so
-    //     a `.`/`?.` look-behind disqualifies it);
+    // PROVABLY-SAFE minimal slice (matches `minify_loop_body_flatten`
+    // and `minify_with_body_flatten`):
+    //   - anchor on a `for`/`while`/`with` STATEMENT keyword
+    //     (word-like, and NOT a property — `o.while(x){…}` is a
+    //     method call, so a `.`/`?.` look-behind disqualifies it);
     //   - the keyword's `(`…`)` header is matched by a structural
     //     depth scan, and the token AFTER `)` must be a `{`;
     //   - the body has NO nested `{` and NO control-flow keyword at
@@ -1273,8 +1277,14 @@ pub fn whitespace_only_minify(
         let mut drops: Vec<usize> = Vec::new();
         let mut i = 0;
         while i + 1 < kept.len() {
+            // gap-076: `with` joins the anchor set. A `with(o){…}`
+            // statement has the same `keyword (…) {body}` shape as a
+            // loop, and a `{` immediately after the `with(…)` header
+            // is unambiguously the with-body — so the identical
+            // single-statement flatten applies (`with(o){a()}` →
+            // `with(o)a();`).
             let is_loop_kw = is_word_like(&kept[i])
-                && matches!(kept[i].value.as_str(), "for" | "while");
+                && matches!(kept[i].value.as_str(), "for" | "while" | "with");
             let is_property = i >= 1
                 && (is_structural_punct(&kept[i - 1], ".")
                     || is_structural_punct(&kept[i - 1], "?."));
@@ -4581,6 +4591,23 @@ mod tests {
     #[test]
     fn gap074_nested_control_flow_kept() {
         assert_eq!(minify("for(;;){if(x)a()}"), "for(;;){if(x)a()};");
+    }
+
+    // ---- gap-076: with-body single-statement block flatten ----
+
+    /// gap-076: a `with` body that is a single un-terminated
+    /// statement drops its braces (`with`-sibling of gap-074).
+    #[test]
+    fn gap076_with_body_flattens() {
+        assert_eq!(minify("with(o){a()}"), "with(o)a();");
+    }
+
+    /// gap-076 boundary: a MULTI-statement `with` body keeps braces;
+    /// a PROPERTY method named `with` (`o.with(x){…}`) is untouched.
+    #[test]
+    fn gap076_with_body_guards() {
+        assert_eq!(minify("with(o){a();b()}"), "with(o){a();b()};");
+        assert_eq!(minify("o.with(x){f()}"), "o.with(x){f()};");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
