@@ -1919,6 +1919,75 @@
       }
     },
     {
+      "id": "aria-name-descriptor-page",
+      "description": "Browser document summaries expose ARIA naming sources, resolved label text, and unresolved labelledby blockers.",
+      "input": "<body><h2 id=dialog-title>Preferences</h2><p id=hint>Choose defaults</p><span id=open aria-label=\"Open preferences\">Open</span><div id=panel aria-labelledby=\"dialog-title hint\" aria-label=\"Fallback panel\">Panel</div><div id=missing-name aria-labelledby=\"missing\">Hidden</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Preferences Choose defaults Open Panel Hidden",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "dialog-title", "name": null, "text": "Preferences" },
+          { "id": "hint", "name": null, "text": "Choose defaults" },
+          { "id": "open", "name": null, "text": "Open" },
+          { "id": "panel", "name": null, "text": "Panel" },
+          { "id": "missing-name", "name": null, "text": "Hidden" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Preferences" }
+        ],
+        "aria_name_descriptors": [
+          {
+            "element": "span",
+            "id": "open",
+            "role": "inline",
+            "text": "Open",
+            "accessible_name": "Open preferences",
+            "aria_label": "Open preferences",
+            "name_source": "aria-label",
+            "name_attribute_names": ["aria-label"],
+            "name_attribute_count": 1
+          },
+          {
+            "element": "div",
+            "id": "panel",
+            "role": "block",
+            "text": "Panel",
+            "accessible_name": "Preferences Choose defaults",
+            "aria_label": "Fallback panel",
+            "aria_labelledby": ["dialog-title", "hint"],
+            "labelledby_text": ["Preferences", "Choose defaults"],
+            "name_source": "aria-labelledby",
+            "name_attribute_names": ["aria-label", "aria-labelledby"],
+            "name_attribute_count": 2,
+            "label_target_count": 2
+          },
+          {
+            "element": "div",
+            "id": "missing-name",
+            "role": "block",
+            "text": "Hidden",
+            "aria_labelledby": ["missing"],
+            "name_source": "unresolved-aria-labelledby",
+            "name_attribute_names": ["aria-labelledby"],
+            "name_attribute_count": 1,
+            "label_target_count": 1,
+            "unresolved_label_targets": ["missing"],
+            "name_blocked": true,
+            "name_block_reasons": ["unresolved-idref", "empty-name"]
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "aria-relation-descriptor-page",
       "description": "Browser document summaries expose ARIA details, error-message, and flow relationships with resolved target text.",
       "input": "<body><div id=source aria-details=\"details extra\" aria-errormessage=error aria-flowto=next>Source</div><p id=details>Detailed help</p><p id=extra>Extra notes</p><p id=error>Required value</p><p id=next>Next step</p></body>",
