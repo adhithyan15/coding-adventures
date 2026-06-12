@@ -178,6 +178,13 @@ pub enum Statement {
     /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
     /// M2). Legal at top level or inside a `rulebook`.
     Use(String),
+    /// `import "<relative path>"` — splice another `.adj` file's declarations
+    /// into this program (MYCIN-2026 M3). The literal string is carried verbatim;
+    /// resolution (relative path, idempotency, cycle + bound checks) happens in
+    /// [`crate::resolve`] before lowering. A program that still contains an
+    /// `Import` at lowering time was compiled without the resolver — a
+    /// [`crate::LowerError::UnresolvedImport`].
+    Import(String),
 }
 
 /// A single dictionary entry (MYCIN-2026).

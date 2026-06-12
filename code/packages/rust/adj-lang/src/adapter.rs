@@ -119,8 +119,9 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "define_decl" => adapt_define(child).map(Statement::Define),
         "rulebook_decl" => adapt_rulebook(child),
         "use_decl" => adapt_use(child),
+        "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
             actual: other.to_string(),
         }),
     }
@@ -548,6 +549,24 @@ fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         })?
         .to_string();
     Ok(Statement::Use(name))
+}
+
+fn adapt_import(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // import_decl = "import" STRING
+    let path = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                Some(unquote_string(&t.value))
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "import_decl".into(),
+            position: "import path string",
+        })?;
+    Ok(Statement::Import(path))
 }
 
 /// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the

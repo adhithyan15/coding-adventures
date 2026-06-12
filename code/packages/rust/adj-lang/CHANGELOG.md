@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.11.0] - 2026-06-12 — `import "path"` (MYCIN-2026 M3)
+
+### Added
+
+- **`import "<relative path>"`** — compose a program across files: a dictionary,
+  a rulebook that imports + `use`s it, and a case that imports the rulebook can
+  each be their own checked-in `.adj`. New `Statement::Import(String)`; grammar
+  `import_decl`.
+- **`resolve` module** — the import-graph policy, with **no filesystem I/O** (it
+  drives an injected `ImportProvider`, so the graph logic is unit-testable
+  without a disk and the FS trust boundary lives in the caller):
+  - **relative** — `provider.resolve(importer, literal)` → canonical id.
+  - **idempotent** — a `visited` set keyed by canonical id; a file merges once
+    (diamond imports don't duplicate clauses).
+  - **acyclic** — a DFS stack; re-entering a stacked id is `ImportError::Cycle`
+    (cycle check precedes the idempotency check, so a cycle never masquerades as
+    a harmless repeat). Self-import included.
+  - **bounded** — `ImportLimits { max_depth, max_files }` (default 32 / 256);
+    past either, `DepthExceeded` / `TooManyFiles`. Depth is checked on every
+    descent, so the graph walk can't exceed `max_depth` frames on hostile input.
+  - Merge order is depth-first **post-order** — an imported file's declarations
+    precede the importer's, so a dictionary is in scope by the time the rulebook
+    that `use`s it is merged.
+- **`compile_with_imports(root_id, provider, limits)`** — resolve then lower, with
+  a combined `CompileWithImportsError`. `lower` now rejects a stray unresolved
+  `import` as `LowerError::UnresolvedImport` (never silently dropped).
+- 8 resolver tests (3-file chain, diamond, direct + self cycle, depth + fan-out
+  bounds, unresolvable path, importer-relative). Grammar regenerated. **M3
+  completes the MYCIN-2026 language foundation (M0–M3).**
+
 ## [0.10.0] - 2026-06-12 — `rulebook` + `use` (MYCIN-2026 M2)
 
 ### Added

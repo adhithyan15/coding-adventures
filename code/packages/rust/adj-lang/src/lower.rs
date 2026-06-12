@@ -132,6 +132,14 @@ pub enum LowerError {
         outer: String,
         inner: String,
     },
+    /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
+    /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
+    /// the caller used `compile` directly on a program that still has imports,
+    /// instead of the import-resolving entry point. Rejected so an `import` is
+    /// never silently dropped.
+    UnresolvedImport {
+        path: String,
+    },
 }
 
 /// The result of lowering — a populated KB, any queries to run, and the
@@ -302,6 +310,12 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             // — `flatten_clauses` expanded it into its inner clauses already.
             Statement::Use(_) => {}
             Statement::Rulebook { .. } => {}
+            // ---- import (MYCIN-2026 M3) ----
+            // Imports are resolved away by `crate::resolve` before lowering; one
+            // reaching here means `compile` was called on an unresolved program.
+            Statement::Import(path) => {
+                return Err(LowerError::UnresolvedImport { path: path.clone() })
+            }
         }
     }
 
