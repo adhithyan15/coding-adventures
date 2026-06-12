@@ -532,3 +532,27 @@ historical context with status `RESOLVED` and a link to the fix PR.
 - **Input:** `new(f)();` → **Upstream:** `new f;` (also `new(a.b);` → `new a.b;`)
 - **What it needs:** Strip the grouping parens around the CALLEE of a `NewExpression` when the callee is a simple reference (identifier or member chain). For the call form `new(f)()` this composes with the gap-050 empty-paren drop (`new f()` → `new f`). The simple-reference / precedence caveat from gap-065 applies — an operator inner (`new(a+b)`) must keep its parens.
 - **CLOC12.76:** strips `new ( <identifier-dot chain> )`, anchored on the `new` KEYWORD (guarded against a property named `new` — `o.new(f)` is a method call). The trailing empty `()` of the call form is dropped by gap-050 in the emit loop. Operator inner `new(a+b)` keeps its parens (would parse as `(new a)+b`). **Note — separate pre-existing divergence (gap-069 candidate):** when the parens are KEPT, upstream emits a space `new (a+b)` while closurec emits `new(a+b)`; both are valid and equivalent, but not byte-identical. Deferred. 5 unit tests.
+
+### gap-069 — `new(` emit-adjacency space
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_new_paren_space` ignored.
+- **Input:** `new(a+b);` → **Upstream:** `new (a+b);` (also `new(a,b)` → `new (a,b)`)
+- **What it needs:** When the `new` keyword is directly followed by a `(` GROUPING paren (a parenthesized callee expression that gap-068 keeps), the re-stitcher must insert a single space: `new (…)`. Both forms keep the parens; this is purely an emit-adjacency rule (`needs_separator`-style) for `new` + `(`. (Noted as the gap-069 candidate during CLOC12.76.)
+
+### gap-070 / gap-071 / gap-072 — prefix-operator operand paren elision
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_delete_paren_elide` / `minify_instanceof_paren` / `minify_await_paren_elide` ignored.
+- **Inputs:** `delete(a.b)` → `delete a.b`; `a instanceof(B)` → `a instanceof B`; `await(x)` → `await x`.
+- **What it needs:** Strip the redundant grouping parens around the OPERAND of these prefix/binary-RHS operators when the operand is a simple reference (identifier or member chain), exactly as `typeof`/`void` already do (those round-trip correctly). The operator keyword + a keyword-space + the bare operand re-lex correctly. Same simple-reference / precedence caveat as gap-054/065.
+
+### gap-073 — `get`/`set` before a computed key needs a space
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_get_computed_space` ignored.
+- **Input:** `var o={get[k](){return 1}};` → **Upstream:** `var o={get [k](){return 1}};`
+- **What it needs:** When a `get`/`set` accessor keyword is directly followed by a COMPUTED key `[`, the re-stitcher must insert a space — `get [k]` — otherwise `get[k]` re-lexes as a member access on `get` rather than a getter with a computed name. An emit-adjacency (`needs_separator`) rule.
+
+### gap-074 — loop-body single-statement block flatten
+
+- **Status:** OPEN — discovered by CLOC14.35. `minify_loop_body_flatten` ignored.
+- **Input:** `l:for(;;){continue l}` → **Upstream:** `l:for(;;)continue l;`
+- **What it needs:** When a loop body (`for`/`while`/`for-in`/`for-of`) is a single-statement block, flatten `for(…){S}` → `for(…)S`. Sibling of gap-067 (labeled-block flatten) but in a loop-body context — same single-statement + declaration-guard + synthetic-`;` machinery applies.
