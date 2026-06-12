@@ -6,6 +6,7 @@ import {
   formatCompatibilityCorpusTable,
   formatReleaseReadinessReport,
   releaseReadinessGates,
+  resolveDeckParameters,
   resolveDeckSources,
 } from "../src/index.js";
 
@@ -200,5 +201,58 @@ Ctyp out 0 1u
       ["b.inc", 1, "a.inc"],
       ["<deck>", 4, "vendor.lib:SS"],
     ]);
+  });
+
+  it("rewrites braced and quoted parameter expressions", () => {
+    const summary = resolveDeckParameters(`
+.param RLOAD=2k SCALE=3 TOTAL=RLOAD*SCALE
+V1 in 0 DC {scale+1}
+R1 in out {total}
+C1 out 0 '2u*scale'
+.op
+.end
+Rafter out 0 {total}
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["RLOAD", 2000],
+      ["SCALE", 3],
+      ["TOTAL", 6000],
+    ]);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 DC 4",
+      "R1 in out 6000",
+      "C1 out 0 0.000006",
+      ".op",
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports unresolved parameters and unsupported functions", () => {
+    const summary = resolveDeckParameters(`
+.param GOOD=1k BAD=missing+1
+.func gain(x) {x*2}
+R1 in out {bad}
+R2 out 0 {good}
+.end
+`);
+
+    expect(summary.activeLines).toStrictEqual([
+      ".func gain(x) {x*2}",
+      "R1 in out {bad}",
+      "R2 out 0 1000",
+    ]);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["GOOD", 1000],
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_PARAM_EXPRESSION",
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+      "SPICE_DECK_PARAM_UNRESOLVED",
+    ]);
+    expect(summary.diagnostics[0].parameter).toBe("BAD");
+    expect(summary.diagnostics[2].expression).toBe("bad");
   });
 });

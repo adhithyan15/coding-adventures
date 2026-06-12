@@ -7,6 +7,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_parameters,
     resolve_deck_sources,
 )
 
@@ -191,3 +192,58 @@ def test_resolve_deck_sources_reports_missing_sources_and_cycles() -> None:
         ("b.inc", 1, "a.inc"),
         ("<deck>", 4, "vendor.lib:SS"),
     ]
+
+
+def test_resolve_deck_parameters_rewrites_braced_and_quoted_expressions() -> None:
+    summary = resolve_deck_parameters(
+        """
+.param RLOAD=2k SCALE=3 TOTAL=RLOAD*SCALE
+V1 in 0 DC {scale+1}
+R1 in out {total}
+C1 out 0 '2u*scale'
+.op
+.end
+Rafter out 0 {total}
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 7
+    assert [(param.name, param.value) for param in summary.parameters] == [
+        ("RLOAD", 2000.0),
+        ("SCALE", 3.0),
+        ("TOTAL", 6000.0),
+    ]
+    assert summary.active_lines == (
+        "V1 in 0 DC 4",
+        "R1 in out 6000",
+        "C1 out 0 0.000006",
+        ".op",
+    )
+    assert summary.diagnostics == ()
+
+
+def test_resolve_deck_parameters_reports_unresolved_and_unsupported_func() -> None:
+    summary = resolve_deck_parameters(
+        """
+.param GOOD=1k BAD=missing+1
+.func gain(x) {x*2}
+R1 in out {bad}
+R2 out 0 {good}
+.end
+"""
+    )
+
+    assert summary.active_lines == (
+        ".func gain(x) {x*2}",
+        "R1 in out {bad}",
+        "R2 out 0 1000",
+    )
+    assert [(param.name, param.value) for param in summary.parameters] == [("GOOD", 1000.0)]
+    assert [diag.code for diag in summary.diagnostics] == [
+        "SPICE_DECK_PARAM_EXPRESSION",
+        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_PARAM_UNRESOLVED",
+    ]
+    assert summary.diagnostics[0].parameter == "BAD"
+    assert summary.diagnostics[2].expression == "bad"

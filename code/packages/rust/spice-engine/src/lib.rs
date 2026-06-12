@@ -3174,6 +3174,32 @@ pub struct DeckResolutionSummary {
     pub library_sections: Vec<String>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckParameterValue {
+    pub name: String,
+    pub value: f64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckParameterDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub parameter: Option<String>,
+    pub expression: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckParameterSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub parameters: Vec<DeckParameterValue>,
+    pub diagnostics: Vec<DeckParameterDiagnostic>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReleaseReadinessIssue {
     pub deck_id: String,
@@ -3352,6 +3378,57 @@ pub fn resolve_deck_sources(
         diagnostics: state.diagnostics,
         included_paths: state.included_paths,
         library_sections: state.library_sections,
+    }
+}
+
+pub fn resolve_deck_parameters(netlist: &str) -> DeckParameterSummary {
+    let mut state = DeckParameterState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".param") {
+            resolve_param_line(stripped, line_number, &mut state);
+            continue;
+        }
+        if let Some(directive) = directive {
+            if is_unsupported_parameter_directive(&directive) {
+                add_parameter_diagnostic(
+                    &mut state,
+                    "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+                    &directive,
+                    line_number,
+                    &format!("{directive} is not supported by the parameter resolver yet"),
+                    None,
+                    None,
+                );
+                active_lines.push(stripped.to_string());
+                continue;
+            }
+        }
+        active_lines.push(rewrite_parameter_expressions(
+            stripped,
+            line_number,
+            &mut state,
+        ));
+    }
+
+    DeckParameterSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        parameters: state.parameter_values(),
+        diagnostics: state.diagnostics,
     }
 }
 
@@ -3586,6 +3663,47 @@ impl DeckResolutionState {
             included_paths: Vec::new(),
             library_sections: Vec::new(),
         }
+    }
+}
+
+struct DeckParameterState {
+    diagnostics: Vec<DeckParameterDiagnostic>,
+    parameters: HashMap<String, DeckParameterValue>,
+    order: Vec<String>,
+}
+
+impl DeckParameterState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            parameters: HashMap::new(),
+            order: Vec::new(),
+        }
+    }
+
+    fn set_parameter(&mut self, name: &str, value: f64) {
+        let key = name.to_ascii_lowercase();
+        if !self.parameters.contains_key(&key) {
+            self.order.push(key.clone());
+        }
+        self.parameters.insert(
+            key,
+            DeckParameterValue {
+                name: name.to_string(),
+                value,
+            },
+        );
+    }
+
+    fn get_parameter(&self, name: &str) -> Option<&DeckParameterValue> {
+        self.parameters.get(&name.to_ascii_lowercase())
+    }
+
+    fn parameter_values(&self) -> Vec<DeckParameterValue> {
+        self.order
+            .iter()
+            .filter_map(|key| self.parameters.get(key).cloned())
+            .collect()
     }
 }
 
@@ -3869,6 +3987,453 @@ fn add_resolution_diagnostic(
         severity: "error".to_string(),
         target,
     });
+}
+
+fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterState) {
+    let tokens = directive_tokens(line);
+    if tokens.len() == 1 {
+        add_parameter_diagnostic(
+            state,
+            "SPICE_DECK_PARAM_ARGUMENT",
+            ".param",
+            line_number,
+            ".param requires at least one name=value assignment",
+            None,
+            None,
+        );
+        return;
+    }
+
+    for token in tokens.iter().skip(1) {
+        let Some((name, expression)) = token.split_once('=') else {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_ARGUMENT",
+                ".param",
+                line_number,
+                &format!(".param assignment {token:?} must use name=value syntax"),
+                Some((*token).to_string()),
+                None,
+            );
+            continue;
+        };
+        let name = name.trim();
+        let expression = strip_expression_delimiters(expression.trim());
+        if !is_parameter_name(name) {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_NAME",
+                ".param",
+                line_number,
+                &format!(".param name {name:?} is not a valid identifier"),
+                Some(name.to_string()),
+                Some(expression.clone()),
+            );
+            continue;
+        }
+        match evaluate_parameter_expression(&expression, state) {
+            Ok(value) => state.set_parameter(name, value),
+            Err(message) => add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_EXPRESSION",
+                ".param",
+                line_number,
+                &message,
+                Some(name.to_string()),
+                Some(expression),
+            ),
+        }
+    }
+}
+
+fn rewrite_parameter_expressions(
+    line: &str,
+    line_number: usize,
+    state: &mut DeckParameterState,
+) -> String {
+    let braced = replace_delimited_parameter_expressions(line, '{', '}', line_number, state);
+    replace_delimited_parameter_expressions(&braced, '\'', '\'', line_number, state)
+}
+
+fn replace_delimited_parameter_expressions(
+    line: &str,
+    open_token: char,
+    close_token: char,
+    line_number: usize,
+    state: &mut DeckParameterState,
+) -> String {
+    let mut result = String::new();
+    let mut index = 0;
+    while index < line.len() {
+        let rest = &line[index..];
+        if !rest.starts_with(open_token) {
+            let Some(ch) = rest.chars().next() else {
+                break;
+            };
+            result.push(ch);
+            index += ch.len_utf8();
+            continue;
+        }
+
+        let expression_start = index + open_token.len_utf8();
+        let Some(close_offset) = line[expression_start..].find(close_token) else {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_UNTERMINATED",
+                ".param",
+                line_number,
+                &format!(
+                    "unterminated parameter expression starting at column {}",
+                    index + 1
+                ),
+                None,
+                None,
+            );
+            result.push_str(&line[index..]);
+            break;
+        };
+        let close_index = expression_start + close_offset;
+        let expression = line[expression_start..close_index].trim();
+        match evaluate_parameter_expression(expression, state) {
+            Ok(value) => result.push_str(&format_parameter_number(value)),
+            Err(message) => {
+                add_parameter_diagnostic(
+                    state,
+                    "SPICE_DECK_PARAM_UNRESOLVED",
+                    ".param",
+                    line_number,
+                    &message,
+                    None,
+                    Some(expression.to_string()),
+                );
+                result.push_str(&line[index..close_index + close_token.len_utf8()]);
+            }
+        }
+        index = close_index + close_token.len_utf8();
+    }
+    result
+}
+
+fn evaluate_parameter_expression(
+    expression: &str,
+    state: &DeckParameterState,
+) -> Result<f64, String> {
+    let value = ParameterExpressionParser::new(expression, state).parse()?;
+    if !value.is_finite() {
+        return Err(format!(
+            "parameter expression {expression:?} did not evaluate to a finite value"
+        ));
+    }
+    Ok(value)
+}
+
+struct ParameterExpressionParser<'a> {
+    expression: &'a str,
+    state: &'a DeckParameterState,
+    index: usize,
+}
+
+impl<'a> ParameterExpressionParser<'a> {
+    fn new(expression: &'a str, state: &'a DeckParameterState) -> Self {
+        Self {
+            expression,
+            state,
+            index: 0,
+        }
+    }
+
+    fn parse(mut self) -> Result<f64, String> {
+        if self.expression.is_empty() {
+            return Err("parameter expression must not be empty".to_string());
+        }
+        let value = self.parse_expression()?;
+        self.skip_whitespace();
+        if self.index != self.expression.len() {
+            let token = self.current_char().unwrap_or('\0');
+            return Err(format!(
+                "unexpected token {token:?} in parameter expression"
+            ));
+        }
+        Ok(value)
+    }
+
+    fn parse_expression(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_term()?;
+        loop {
+            self.skip_whitespace();
+            if self.match_token("+") {
+                value += self.parse_term()?;
+            } else if self.match_token("-") {
+                value -= self.parse_term()?;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_term(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_power()?;
+        loop {
+            self.skip_whitespace();
+            if self.match_token("*") {
+                value *= self.parse_power()?;
+            } else if self.match_token("/") {
+                let denominator = self.parse_power()?;
+                if denominator == 0.0 {
+                    return Err("division by zero in parameter expression".to_string());
+                }
+                value /= denominator;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_power(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_unary()?;
+        self.skip_whitespace();
+        if self.match_token("^") {
+            value = value.powf(self.parse_power()?);
+        }
+        Ok(value)
+    }
+
+    fn parse_unary(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        if self.match_token("+") {
+            return self.parse_unary();
+        }
+        if self.match_token("-") {
+            return Ok(-self.parse_unary()?);
+        }
+        self.parse_primary()
+    }
+
+    fn parse_primary(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        if self.match_token("(") {
+            let value = self.parse_expression()?;
+            self.skip_whitespace();
+            if !self.match_token(")") {
+                return Err("missing ')' in parameter expression".to_string());
+            }
+            return Ok(value);
+        }
+        let Some(ch) = self.current_char() else {
+            return Err("unexpected end of parameter expression".to_string());
+        };
+        if ch.is_ascii_digit() || ch == '.' {
+            return self.parse_number();
+        }
+        if ch.is_ascii_alphabetic() || ch == '_' {
+            return self.parse_identifier();
+        }
+        Err(format!("unexpected token {ch:?} in parameter expression"))
+    }
+
+    fn parse_number(&mut self) -> Result<f64, String> {
+        let start = self.index;
+        let mut saw_digit = false;
+        while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+            saw_digit = true;
+            self.advance_char();
+        }
+        if self.current_char() == Some('.') {
+            self.advance_char();
+            while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                saw_digit = true;
+                self.advance_char();
+            }
+        }
+        if !saw_digit {
+            return Err("expected digit in numeric parameter expression".to_string());
+        }
+        if self
+            .current_char()
+            .is_some_and(|ch| matches!(ch, 'e' | 'E'))
+        {
+            let exponent_index = self.index;
+            self.advance_char();
+            if self
+                .current_char()
+                .is_some_and(|ch| matches!(ch, '+' | '-'))
+            {
+                self.advance_char();
+            }
+            let exponent_start = self.index;
+            while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                self.advance_char();
+            }
+            if exponent_start == self.index {
+                self.index = exponent_index;
+            }
+        }
+
+        let numeric = self.expression[start..self.index]
+            .parse::<f64>()
+            .map_err(|_| "invalid numeric parameter expression".to_string())?;
+        let suffix_start = self.index;
+        while self
+            .current_char()
+            .is_some_and(|ch| ch.is_ascii_alphabetic())
+        {
+            self.advance_char();
+        }
+        let suffix = self.expression[suffix_start..self.index].to_ascii_lowercase();
+        if suffix.is_empty() {
+            return Ok(numeric);
+        }
+        let Some(factor) = spice_suffix_factor(&suffix) else {
+            return Err(format!("unsupported numeric suffix {suffix:?}"));
+        };
+        Ok(numeric * factor)
+    }
+
+    fn parse_identifier(&mut self) -> Result<f64, String> {
+        let start = self.index;
+        while self
+            .current_char()
+            .is_some_and(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+        {
+            self.advance_char();
+        }
+        let name = &self.expression[start..self.index];
+        self.skip_whitespace();
+        if self.current_char() == Some('(') {
+            return Err(format!(
+                "function calls are not supported in parameter expression {name:?}"
+            ));
+        }
+        if name.eq_ignore_ascii_case("pi") {
+            return Ok(std::f64::consts::PI);
+        }
+        let Some(parameter) = self.state.get_parameter(name) else {
+            return Err(format!("unknown parameter {name:?}"));
+        };
+        Ok(parameter.value)
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.current_char().is_some_and(|ch| ch.is_whitespace()) {
+            self.advance_char();
+        }
+    }
+
+    fn match_token(&mut self, token: &str) -> bool {
+        if self.expression[self.index..].starts_with(token) {
+            self.index += token.len();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn current_char(&self) -> Option<char> {
+        self.expression[self.index..].chars().next()
+    }
+
+    fn advance_char(&mut self) {
+        if let Some(ch) = self.current_char() {
+            self.index += ch.len_utf8();
+        }
+    }
+}
+
+fn add_parameter_diagnostic(
+    state: &mut DeckParameterState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    parameter: Option<String>,
+    expression: Option<String>,
+) {
+    state.diagnostics.push(DeckParameterDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        parameter,
+        expression,
+    });
+}
+
+fn is_unsupported_parameter_directive(directive: &str) -> bool {
+    matches!(directive, ".func")
+}
+
+fn is_parameter_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() && first != '_' {
+        return false;
+    }
+    chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+}
+
+fn strip_expression_delimiters(expression: &str) -> String {
+    if expression.len() >= 2 {
+        let first = expression.as_bytes()[0] as char;
+        let last = expression.as_bytes()[expression.len() - 1] as char;
+        if (first == '{' && last == '}') || (first == '\'' && last == '\'') {
+            return expression[1..expression.len() - 1].trim().to_string();
+        }
+    }
+    expression.to_string()
+}
+
+fn spice_suffix_factor(suffix: &str) -> Option<f64> {
+    match suffix {
+        "t" => Some(1.0e12),
+        "g" => Some(1.0e9),
+        "meg" => Some(1.0e6),
+        "k" => Some(1.0e3),
+        "m" => Some(1.0e-3),
+        "mil" => Some(25.4e-6),
+        "u" => Some(1.0e-6),
+        "n" => Some(1.0e-9),
+        "p" => Some(1.0e-12),
+        "f" => Some(1.0e-15),
+        _ => None,
+    }
+}
+
+fn format_parameter_number(value: f64) -> String {
+    if value == 0.0 {
+        return "0".to_string();
+    }
+    let abs_value = value.abs();
+    if (1.0e-12..1.0e12).contains(&abs_value) {
+        let mut formatted = format!("{value:.12}");
+        if formatted.contains('.') {
+            while formatted.ends_with('0') {
+                formatted.pop();
+            }
+            if formatted.ends_with('.') {
+                formatted.pop();
+            }
+        }
+        if formatted == "-0" {
+            "0".to_string()
+        } else {
+            formatted
+        }
+    } else {
+        let raw = format!("{value:.12e}");
+        let (mantissa, exponent) = raw.split_once('e').unwrap_or((raw.as_str(), "0"));
+        let mut mantissa = mantissa.to_string();
+        while mantissa.ends_with('0') {
+            mantissa.pop();
+        }
+        if mantissa.ends_with('.') {
+            mantissa.pop();
+        }
+        let exponent_value = exponent.parse::<i32>().unwrap_or(0);
+        format!("{mantissa}e{exponent_value:+}")
+    }
 }
 
 fn directive_tokens(line: &str) -> Vec<&str> {
