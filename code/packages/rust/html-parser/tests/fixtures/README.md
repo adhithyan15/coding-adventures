@@ -25,15 +25,15 @@ Global-state descriptor cases pin document/body shell state plus non-form
 inert/hidden, editing, drag, spellcheck, translate, accesskey, autofocus, and
 related focus metadata.
 Document-policy descriptor cases pin charset, viewport, referrer/robots/color
-scheme, CSP/Permissions/Origin-Trial/Accept-CH hints, theme colors, refresh,
-canonical, and manifest metadata.
+scheme, CSP/Permissions/Origin-Trial/Accept-CH hints, normalized permissions
+policy features, theme colors, refresh, canonical, and manifest metadata.
 ARIA descriptor cases pin collection/range/live-region semantics plus details,
 error-message, and flow relationship target text.
 Loading-hint descriptor cases pin scheduling hints across lazy/eager loading,
 decoding, fetch priority, blocking, and media preload metadata.
 Fetch-policy descriptor cases pin integrity, CORS, nonce, referrer policy,
-iframe CSP/sandbox/permissions, fullscreen, credentialless metadata, and
-flattened embedded-policy descriptors.
+iframe CSP/sandbox/permissions, normalized allow features, fullscreen,
+credentialless metadata, and flattened embedded-policy descriptors.
 Resource-endpoint descriptor cases pin refresh redirects plus resolved document
 resources as a flat endpoint inventory for fetch/navigation planning.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel

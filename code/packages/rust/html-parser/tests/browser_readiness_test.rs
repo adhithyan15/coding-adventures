@@ -501,6 +501,10 @@ struct ExpectedDocumentPolicyDescriptor {
     #[serde(default)]
     permissions_policy: Option<String>,
     #[serde(default)]
+    permissions_policy_features: Vec<String>,
+    #[serde(default)]
+    permissions_policy_feature_count: usize,
+    #[serde(default)]
     origin_trials: Vec<String>,
     #[serde(default)]
     accept_ch: Option<String>,
@@ -2431,7 +2435,13 @@ struct ExpectedEmbeddedPolicyDescriptor {
     #[serde(default)]
     allow: Option<String>,
     #[serde(default)]
+    allow_tokens: Vec<String>,
+    #[serde(default)]
+    allow_token_count: usize,
+    #[serde(default)]
     allowfullscreen: bool,
+    #[serde(default)]
+    fullscreen_allowed: bool,
     #[serde(default)]
     referrerpolicy: Option<String>,
     #[serde(default)]
@@ -4068,6 +4078,69 @@ fn browser_script_module_graph_descriptors_track_flat_import_maps_and_preloads()
         actual.script_module_graph_descriptors, expected.script_module_graph_descriptors,
         "script module graph descriptors should preserve imports, preloads, and blockers",
     );
+}
+
+#[test]
+fn browser_document_policy_descriptors_track_permissions_policy_features() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "document-metadata-policy-page")
+        .expect("document metadata policy fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("document metadata policy fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.document_policy_descriptors, expected.document_policy_descriptors,
+        "document policy descriptors should preserve raw and normalized permissions policy metadata",
+    );
+    assert_eq!(
+        actual.document_policy_descriptors[0].permissions_policy_features,
+        vec!["geolocation".to_string(), "camera".to_string()],
+        "document permissions policy features should be normalized for planner consumption",
+    );
+    assert_eq!(
+        actual.document_policy_descriptors[0].permissions_policy_feature_count, 2,
+        "document permissions policy feature count should match normalized features",
+    );
+}
+
+#[test]
+fn browser_embedded_policy_descriptors_track_allow_policy_features() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "embedded-resource-page")
+        .expect("embedded resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("embedded resource fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.embedded_policy_descriptors, expected.embedded_policy_descriptors,
+        "embedded policy descriptors should preserve raw and normalized allow policy metadata",
+    );
+
+    let frame = &actual.embedded_policy_descriptors[0];
+    assert_eq!(
+        frame.allow_tokens,
+        vec!["fullscreen".to_string(), "geolocation".to_string()],
+        "iframe allow features should be normalized from semicolon-delimited directives",
+    );
+    assert_eq!(frame.allow_token_count, 2);
+    assert!(frame.fullscreen_allowed);
+
+    let inline = &actual.embedded_policy_descriptors[3];
+    assert_eq!(inline.allow_tokens, vec!["payment".to_string()]);
+    assert_eq!(inline.allow_token_count, 1);
+    assert!(!inline.fullscreen_allowed);
 }
 
 #[test]
@@ -7150,7 +7223,11 @@ fn expected_embedded_policy_descriptor(
         sandbox: context.sandbox.clone(),
         sandbox_token_count: context.sandbox.len(),
         allow: context.allow.clone(),
+        allow_tokens: expected_permission_policy_tokens(context.allow.as_deref()),
+        allow_token_count: expected_permission_policy_tokens(context.allow.as_deref()).len(),
         allowfullscreen: context.allowfullscreen,
+        fullscreen_allowed: context.allowfullscreen
+            || expected_allow_fullscreen_policy(context.allow.as_deref()),
         referrerpolicy: context.referrerpolicy.clone(),
         srcdoc: context.srcdoc.clone(),
         has_srcdoc: context.srcdoc.is_some(),
@@ -11622,6 +11699,8 @@ impl ExpectedDocumentPolicyDescriptor {
             color_scheme: self.color_scheme,
             content_security_policy: self.content_security_policy,
             permissions_policy: self.permissions_policy,
+            permissions_policy_features: self.permissions_policy_features,
+            permissions_policy_feature_count: self.permissions_policy_feature_count,
             origin_trials: self.origin_trials,
             accept_ch: self.accept_ch,
             accept_ch_tokens: self.accept_ch_tokens,
@@ -13380,7 +13459,10 @@ impl ExpectedEmbeddedPolicyDescriptor {
             sandbox: self.sandbox,
             sandbox_token_count: self.sandbox_token_count,
             allow: self.allow,
+            allow_tokens: self.allow_tokens,
+            allow_token_count: self.allow_token_count,
             allowfullscreen: self.allowfullscreen,
+            fullscreen_allowed: self.fullscreen_allowed,
             referrerpolicy: self.referrerpolicy,
             srcdoc: self.srcdoc,
             has_srcdoc: self.has_srcdoc,
