@@ -96,9 +96,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // `instanceof` (gap-071, CLOC12.82) do this; `await` does not
     // yet (async-context-only anchor — deferred).
     ("await_paren_elide",  "gap-072: await operand paren elision"),
-    // gap-077 (CLOC14.37): LEFT-operand grouping paren elision —
-    // `(a)+b` → `a+b`. The mirror of gap-075's right-operand pass.
-    ("left_operand_paren", "gap-077: binary left-operand paren elision"),
+    // gap-077 RESOLVED in CLOC12.88 — a binary operator's
+    // parenthesised ATOMIC LEFT operand (`(a)+b` → `a+b`, `(a)*b` →
+    // `a*b`) now elides via a new left-operand pre-pass — the mirror
+    // of gap-075/078. Guards: the `(` must START an expression (not a
+    // call paren), the `)` must be followed by a binary operator, and
+    // the span must pass the atomic-operand guard (so `(a+b)*c` keeps
+    // its parens). `minify_left_operand_paren` enforced.
     // gap-078 RESOLVED in CLOC12.87 — the right-operand paren-elision
     // pre-pass (gap-075) now also anchors on the binary comparison /
     // logical / arithmetic / bitwise symbol operators (`a==(b)` →

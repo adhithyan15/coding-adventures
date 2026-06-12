@@ -550,6 +550,150 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // gap-077: paren elision around a binary operator's parenthesised
+    // LEFT operand. `(a)+b` → `a+b`, `(a)*b` → `a*b`, `(a.b)+c` →
+    // `a.b+c`, `(a)||b` → `a||b`. The LEFT-hand mirror of gap-075/078
+    // (which strip the RIGHT operand `a-(b)` → `a-b`, `a==(b)` →
+    // `a==b`).
+    //
+    // A `(` is a GROUPING paren (eligible) only when it STARTS a
+    // sub-expression — i.e. the token before it does NOT produce a
+    // value. A CALL / member paren (`f(a)`, `x[i](a)`, `(g)(a)`) is
+    // preceded by a value-producing token (a word-like name/literal,
+    // a string literal, or a `)`/`]`/`}` close) and must NEVER be
+    // stripped — dropping it would corrupt `f(a)+b` into `fa+b`.
+    //
+    // The eligible `(`'s matching `)` must be IMMEDIATELY followed by
+    // a BINARY operator (so the parenthesised span is that operator's
+    // LEFT operand — `)` followed by `.`/`?.`/`(`/`[` is a member /
+    // call and is left to gap-057 / the callee passes). The span
+    // itself must pass `is_safe_unary_paren_operand` (a
+    // self-delimiting atomic operand). An operand with a top-level
+    // binary operator (`(a+b)*c`) or comma (`(a,b)+c`) is rejected and
+    // keeps its parens — the precedence / comma-operator safety,
+    // identical to gap-075/078.
+    //
+    // Every bracket / operator test routes through `is_structural_punct`
+    // so a string/regex literal whose CONTENT is a bracket or operator
+    // can never corrupt the depth scan or the anchor.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i < kept.len() {
+            // The `(` must START an expression: it is either the first
+            // token, or the preceding token does not produce a value.
+            let starts_expr = i == 0 || {
+                let p = kept[i - 1];
+                !(is_word_like(p)
+                    || is_string_literal(p)
+                    || is_structural_punct(p, ")")
+                    || is_structural_punct(p, "]")
+                    || is_structural_punct(p, "}"))
+            };
+            if !(starts_expr && is_structural_punct(kept[i], "(")) {
+                i += 1;
+                continue;
+            }
+            // Match the `(` … `)` (structural depth scan).
+            let open = i;
+            let mut depth: i32 = 1;
+            let mut close: Option<usize> = None;
+            let mut j = open + 1;
+            while j < kept.len() {
+                let t = kept[j];
+                if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                    || is_structural_punct(t, "{")
+                {
+                    depth += 1;
+                } else if is_structural_punct(t, ")") {
+                    depth -= 1;
+                    if depth == 0 {
+                        close = Some(j);
+                        break;
+                    }
+                } else if is_structural_punct(t, "]")
+                    || is_structural_punct(t, "}")
+                {
+                    depth -= 1;
+                }
+                j += 1;
+            }
+            let Some(close) = close else {
+                i += 1;
+                continue;
+            };
+            // The token after `)` must be a BINARY operator — then the
+            // parenthesised span is that operator's LEFT operand.
+            let after = close + 1;
+            let is_binary_after = after < kept.len() && {
+                let t = kept[after];
+                is_structural_punct(t, "+")
+                    || is_structural_punct(t, "-")
+                    || is_structural_punct(t, "*")
+                    || is_structural_punct(t, "/")
+                    || is_structural_punct(t, "%")
+                    || is_structural_punct(t, "**")
+                    || is_structural_punct(t, "==")
+                    || is_structural_punct(t, "!=")
+                    || is_structural_punct(t, "===")
+                    || is_structural_punct(t, "!==")
+                    || is_structural_punct(t, "<")
+                    || is_structural_punct(t, ">")
+                    || is_structural_punct(t, "<=")
+                    || is_structural_punct(t, ">=")
+                    || is_structural_punct(t, "&&")
+                    || is_structural_punct(t, "||")
+                    || is_structural_punct(t, "??")
+                    || is_structural_punct(t, "&")
+                    || is_structural_punct(t, "|")
+                    || is_structural_punct(t, "^")
+                    || is_structural_punct(t, "<<")
+                    || is_structural_punct(t, ">>")
+                    || is_structural_punct(t, ">>>")
+            };
+            if is_binary_after {
+                let span = &kept[open + 1..close];
+                // EXPONENTIATION HAZARD: `**` forbids an
+                // UNPARENTHESISED unary LEFT operand — `-a**b` is a
+                // SyntaxError (ECMAScript: the left side of `**` must
+                // be an `UpdateExpression`, not a `UnaryExpression`).
+                // So `(-a)**b`, `(!a)**b`, `(typeof a)**b`, … must
+                // KEEP their parens even though the operand is
+                // otherwise "safe". Only the `**` case is affected;
+                // every other binary operator accepts a unary left
+                // operand unparenthesised.
+                let exp_unary_hazard = is_structural_punct(
+                    kept[after],
+                    "**",
+                ) && span.first().is_some_and(|t| {
+                    is_structural_punct(t, "-")
+                        || is_structural_punct(t, "+")
+                        || is_structural_punct(t, "!")
+                        || is_structural_punct(t, "~")
+                        || (is_word_like(t)
+                            && matches!(
+                                t.value.as_str(),
+                                "typeof" | "void" | "delete" | "await"
+                            ))
+                });
+                if !exp_unary_hazard
+                    && is_safe_unary_paren_operand(span)
+                {
+                    drops.push(open);
+                    drops.push(close);
+                    i = close + 1;
+                    continue;
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // gap-055: paren elision around a *whole-arm* sub-
     // expression that follows `?` or `:`. Upstream Closure
     // strips redundant grouping parens around:
@@ -4861,6 +5005,59 @@ mod tests {
         assert_eq!(minify("var x=a==f(b);"), "var x=a==f(b);");
     }
 
+    // ---- gap-077: binary LEFT-operand paren elision -----------
+
+    /// gap-077: a binary operator's parenthesised ATOMIC LEFT operand
+    /// drops the parens (`(a)+b` → `a+b`, the mirror of gap-075/078).
+    #[test]
+    fn gap077_left_operand_paren_stripped() {
+        assert_eq!(minify("var x=(a)+b;"), "var x=a+b;");
+        assert_eq!(minify("var x=(a)*b;"), "var x=a*b;");
+        assert_eq!(minify("var x=(a)==b;"), "var x=a==b;");
+        assert_eq!(minify("var x=(a)||b;"), "var x=a||b;");
+        assert_eq!(minify("var x=(a.b)+c;"), "var x=a.b+c;");
+    }
+
+    /// gap-077 PRECEDENCE SAFETY: a LEFT operand containing a
+    /// top-level binary operator keeps its parens — `(a+b)*c` must
+    /// NOT become `a+b*c`.
+    #[test]
+    fn gap077_operator_left_operand_kept() {
+        assert_eq!(minify("var x=(a+b)*c;"), "var x=(a+b)*c;");
+        assert_eq!(minify("var x=(a||b)&&c;"), "var x=(a||b)&&c;");
+    }
+
+    /// gap-077 SAFETY: a CALL paren is NOT a grouping paren — `f(a)+b`
+    /// must stay (dropping it would corrupt to `fa+b`). Likewise a
+    /// comma-operator group `(a,b)+c` keeps its parens.
+    #[test]
+    fn gap077_call_and_comma_kept() {
+        assert_eq!(minify("var x=f(a)+b;"), "var x=f(a)+b;");
+        assert_eq!(minify("var x=(a,b)+c;"), "var x=(a,b)+c;");
+    }
+
+    /// gap-077 EXPONENTIATION HAZARD: `**` forbids an unparenthesised
+    /// unary LEFT operand — `-a**b` is a SyntaxError. So `(-a)**b`
+    /// MUST keep its parens (matches the JAR), even though `(-a)` is
+    /// otherwise a "safe" operand. A plain `(a)**b` still strips.
+    #[test]
+    fn gap077_exponent_unary_left_kept() {
+        assert_eq!(minify("var x=(-a)**b;"), "var x=(-a)**b;");
+        assert_eq!(minify("var x=(!a)**b;"), "var x=(!a)**b;");
+        assert_eq!(minify("var x=(a)**b;"), "var x=a**b;");
+    }
+
+    /// gap-077: a `)` followed by a NON-binary token is not a
+    /// left-operand position, so gap-077 does not fire. A ternary
+    /// CONDITION paren (`(a)?b:c`) is left untouched here — `?` is not
+    /// in the binary set, and condition-paren elision is a separate
+    /// deferred gap (upstream emits `a?b:c`; closurec keeps the
+    /// parens — valid, just not yet byte-identical).
+    #[test]
+    fn gap077_non_binary_after_not_stripped_here() {
+        assert_eq!(minify("var x=(a)?b:c;"), "var x=(a)?b:c;");
+    }
+
     // ---- gap-073: get/set computed-key separating space ----
 
     /// gap-073: a `get`/`set` accessor before a COMPUTED key `[k]`
@@ -5534,15 +5731,15 @@ mod tests {
         assert_eq!(minify("f((a,b));"), "f((a,b));");
     }
 
-    /// gap-062 / gap-075 interaction: in `g((a)+(b))` the gap-075
-    /// symbol-operand pass strips the RIGHT `+` operand's grouping
-    /// parens (`+(b)` → `+b`), giving `g((a)+b)`. The LEFT `(a)`
-    /// grouping is a separate left-operand elision (upstream emits
-    /// `g(a+b)`) and is still deferred. The intermediate output is
-    /// valid and equivalent.
+    /// gap-062 / gap-075 / gap-077 interaction: in `g((a)+(b))` the
+    /// gap-075 symbol-operand pass strips the RIGHT `+` operand's
+    /// grouping parens (`+(b)` → `+b`) and the gap-077 left-operand
+    /// pass strips the LEFT `(a)` (its `)` is followed by the binary
+    /// `+`), so BOTH grouping layers now go — matching upstream
+    /// (`g(a+b)`). Verified against the JAR.
     #[test]
     fn gap062_call_arg_grouping_preserved() {
-        assert_eq!(minify("g((a)+(b));"), "g((a)+b);");
+        assert_eq!(minify("g((a)+(b));"), "g(a+b);");
     }
 
     /// gap-062 non-regression: a single grouping layer is NOT
