@@ -25,10 +25,11 @@ use coding_adventures_html_parser::{
     BrowserMetadataDirective, BrowserNavigationGroup, BrowserNavigationTargetDescriptor,
     BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
     BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
-    BrowserScriptExecutionDescriptor, BrowserScrollInteractionDescriptor, BrowserSectionLandmark,
-    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
+    BrowserScriptExecutionDescriptor, BrowserScriptStorageAccessDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSelectOption,
+    BrowserSelectionInteractionDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTemplate, BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -88,6 +89,8 @@ struct ExpectedBrowserDocument {
     scripts: Vec<ExpectedScript>,
     #[serde(default)]
     script_execution_descriptors: Option<Vec<ExpectedScriptExecutionDescriptor>>,
+    #[serde(default)]
+    script_storage_access_descriptors: Option<Vec<ExpectedScriptStorageAccessDescriptor>>,
     #[serde(default)]
     stylesheets: Vec<ExpectedStylesheet>,
     #[serde(default)]
@@ -1394,6 +1397,48 @@ struct ExpectedScriptExecutionDescriptor {
     has_text: bool,
     #[serde(default)]
     text_length: usize,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedScriptStorageAccessDescriptor {
+    script_kind: String,
+    access_kind: String,
+    #[serde(default)]
+    src: Option<String>,
+    #[serde(default)]
+    resolved_src: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    execution_kind: String,
+    #[serde(default)]
+    has_text: bool,
+    #[serde(default)]
+    text_length: usize,
+    #[serde(default)]
+    storage_targets: Vec<String>,
+    #[serde(default)]
+    storage_target_count: usize,
+    #[serde(default)]
+    uses_local_storage: bool,
+    #[serde(default)]
+    uses_session_storage: bool,
+    #[serde(default)]
+    uses_cookies: bool,
+    #[serde(default)]
+    uses_indexed_db: bool,
+    #[serde(default)]
+    uses_cache_storage: bool,
+    #[serde(default)]
+    uses_service_worker: bool,
+    #[serde(default)]
+    uses_storage_manager: bool,
+    #[serde(default)]
+    listens_storage_events: bool,
+    #[serde(default)]
+    storage_blocked: bool,
+    #[serde(default)]
+    storage_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -3863,6 +3908,30 @@ fn browser_script_style_security_metadata_tracks_nonces_and_fetch_policy() {
 }
 
 #[test]
+fn browser_script_storage_access_descriptors_track_flat_storage_api_hints() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "script-storage-access-page")
+        .expect("script storage access fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("script storage access fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.scripts, expected.scripts,
+        "scripts should preserve storage-relevant inline text and module state",
+    );
+    assert_eq!(
+        actual.script_storage_access_descriptors, expected.script_storage_access_descriptors,
+        "script storage access descriptors should preserve storage API targets and blockers",
+    );
+}
+
+#[test]
 fn browser_resource_priority_metadata_tracks_rel_and_blocking_tokens() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5790,6 +5859,17 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_script_execution_descriptors(&scripts));
+        let script_storage_access_descriptors = self
+            .script_storage_access_descriptors
+            .map(|descriptors| {
+                descriptors
+                    .into_iter()
+                    .map(
+                        ExpectedScriptStorageAccessDescriptor::into_browser_script_storage_access_descriptor,
+                    )
+                    .collect()
+            })
+            .unwrap_or_else(|| expected_script_storage_access_descriptors(&scripts));
         let stylesheet_planning_descriptors = self
             .stylesheet_planning_descriptors
             .map(|descriptors| {
@@ -6083,6 +6163,7 @@ impl ExpectedBrowserDocument {
             resources,
             scripts,
             script_execution_descriptors,
+            script_storage_access_descriptors,
             stylesheets,
             stylesheet_planning_descriptors,
             document_policy_descriptors: self
@@ -10542,6 +10623,163 @@ fn expected_script_execution_descriptor(
     }
 }
 
+fn expected_script_storage_access_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptStorageAccessDescriptor> {
+    scripts
+        .iter()
+        .filter_map(expected_script_storage_access_descriptor)
+        .collect()
+}
+
+fn expected_script_storage_access_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptStorageAccessDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let uses_local_storage = normalized_text.contains("localstorage");
+    let uses_session_storage = normalized_text.contains("sessionstorage");
+    let uses_cookies =
+        normalized_text.contains("document.cookie") || normalized_text.contains("cookie=");
+    let uses_indexed_db = normalized_text.contains("indexeddb");
+    let uses_cache_storage = normalized_text.contains("caches.")
+        || normalized_text.contains("caches.open")
+        || normalized_text.contains("cachestorage");
+    let uses_service_worker = normalized_text.contains("serviceworker")
+        || normalized_text.contains("service-worker")
+        || normalized_text.contains("navigator.serviceworker");
+    let uses_storage_manager = normalized_text.contains("navigator.storage")
+        || normalized_text.contains(".persist(")
+        || normalized_text.contains(".estimate(");
+    let listens_storage_events = normalized_text.contains("addeventlistener('storage'")
+        || normalized_text.contains("addeventlistener(\"storage\"")
+        || normalized_text.contains("onstorage");
+    let storage_targets = expected_script_storage_targets(
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+    );
+    if storage_targets.is_empty() {
+        return None;
+    }
+
+    let storage_block_reasons = expected_script_storage_block_reasons(script);
+    Some(BrowserScriptStorageAccessDescriptor {
+        script_kind: script.script_kind.clone(),
+        access_kind: expected_script_storage_access_kind(
+            uses_local_storage,
+            uses_session_storage,
+            uses_cookies,
+            uses_indexed_db,
+            uses_cache_storage,
+            uses_service_worker,
+            uses_storage_manager,
+            listens_storage_events,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        storage_target_count: storage_targets.len(),
+        storage_targets,
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+        storage_blocked: !storage_block_reasons.is_empty(),
+        storage_block_reasons,
+    })
+}
+
+fn expected_script_storage_targets(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if uses_local_storage {
+        targets.push("localStorage".to_string());
+    }
+    if uses_session_storage {
+        targets.push("sessionStorage".to_string());
+    }
+    if uses_cookies {
+        targets.push("cookies".to_string());
+    }
+    if uses_indexed_db {
+        targets.push("indexedDB".to_string());
+    }
+    if uses_cache_storage {
+        targets.push("CacheStorage".to_string());
+    }
+    if uses_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_storage_manager {
+        targets.push("StorageManager".to_string());
+    }
+    if listens_storage_events {
+        targets.push("storage-event".to_string());
+    }
+    targets
+}
+
+fn expected_script_storage_access_kind(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> String {
+    if uses_service_worker || uses_cache_storage {
+        "worker-cache-storage".to_string()
+    } else if uses_indexed_db {
+        "database-storage".to_string()
+    } else if uses_storage_manager {
+        "storage-manager".to_string()
+    } else if uses_local_storage || uses_session_storage || uses_cookies {
+        "client-key-value-storage".to_string()
+    } else if listens_storage_events {
+        "storage-event-listener".to_string()
+    } else {
+        "storage-metadata".to_string()
+    }
+}
+
+fn expected_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
 fn expected_stylesheet_planning_descriptors(
     stylesheets: &[BrowserStylesheet],
 ) -> Vec<BrowserStylesheetPlanningDescriptor> {
@@ -10692,6 +10930,33 @@ impl ExpectedScriptExecutionDescriptor {
             render_blocking: self.render_blocking,
             has_text: self.has_text,
             text_length: self.text_length,
+        }
+    }
+}
+
+impl ExpectedScriptStorageAccessDescriptor {
+    fn into_browser_script_storage_access_descriptor(self) -> BrowserScriptStorageAccessDescriptor {
+        BrowserScriptStorageAccessDescriptor {
+            script_kind: self.script_kind,
+            access_kind: self.access_kind,
+            src: self.src,
+            resolved_src: self.resolved_src,
+            type_hint: self.type_hint,
+            execution_kind: self.execution_kind,
+            has_text: self.has_text,
+            text_length: self.text_length,
+            storage_targets: self.storage_targets,
+            storage_target_count: self.storage_target_count,
+            uses_local_storage: self.uses_local_storage,
+            uses_session_storage: self.uses_session_storage,
+            uses_cookies: self.uses_cookies,
+            uses_indexed_db: self.uses_indexed_db,
+            uses_cache_storage: self.uses_cache_storage,
+            uses_service_worker: self.uses_service_worker,
+            uses_storage_manager: self.uses_storage_manager,
+            listens_storage_events: self.listens_storage_events,
+            storage_blocked: self.storage_blocked,
+            storage_block_reasons: self.storage_block_reasons,
         }
     }
 }
