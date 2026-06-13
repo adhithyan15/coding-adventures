@@ -12,12 +12,12 @@ use spice_engine::{
     format_digital_event_table, format_distortion_table, format_fourier_table,
     format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
     fourier, fourier_corners, measure_transient_deck, measure_transient_find_at_probe,
-    measure_transient_probe, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
-    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
-    pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
-    pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
-    pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
-    pss_with_tolerance, sample_transient_probe_as_digital_events,
+    measure_transient_probe, measure_transient_when_probe, pole_zero_rc_highpass,
+    pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass, pole_zero_rlc_lowpass,
+    pole_zero_rlc_notch, pss_corners_with_tolerance, pss_newton_candidate_with_tolerance,
+    pss_newton_iteration_with_tolerance, pss_newton_solve_with_tolerance, pss_newton_update,
+    pss_newton_update_with_tolerance, pss_residual, pss_residual_jacobian_with_tolerance,
+    pss_residual_with_tolerance, pss_with_tolerance, sample_transient_probe_as_digital_events,
     sample_transient_probes_as_digital_event_streams, transient, transient_adaptive,
     transient_adaptive_corners, transient_adaptive_with_digital_event_streams,
     transient_adaptive_with_digital_event_streams_corners, transient_corners,
@@ -1658,6 +1658,15 @@ fn transient_probe_measurements_are_stable() {
     let final_value =
         measure_transient_probe(&points, "settled", "V(out)", "final", None, None).unwrap();
     let midpoint = measure_transient_find_at_probe(&points, "midpoint", "V(out)", 1.5e-3).unwrap();
+    let crossing = measure_transient_when_probe(
+        &points,
+        "crossing",
+        "V(out)",
+        0.5,
+        Some(1.0e-3),
+        Some(3.0e-3),
+    )
+    .unwrap();
 
     assert_close(peak_to_peak.value, 1.5);
     assert_eq!(peak_to_peak.mode, "pp");
@@ -1665,9 +1674,11 @@ fn transient_probe_measurements_are_stable() {
     assert_eq!(final_value.mode, "last");
     assert_close(midpoint.value, 0.5);
     assert_eq!(midpoint.mode, "find");
+    assert_close(crossing.value, 1.5e-3);
+    assert_eq!(crossing.mode, "when");
     assert_eq!(
-        format_measurement_table(&[peak_to_peak, final_value, midpoint]),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
+        format_measurement_table(&[peak_to_peak, final_value, midpoint, crossing]),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\n"
     );
 }
 
@@ -1702,6 +1713,7 @@ fn transient_deck_measurements_execute_parsed_cards() {
 V1 in 0 DC 1
 .measure tran swing PP V(out) FROM=1m TO=3m
 .measure tran midpoint FIND V(out) AT=1.5m
+.measure tran crossing WHEN V(out)=0.5 FROM=1m TO=3m
 .meas tran settled LAST V(out)
 .end
 ",
@@ -1710,7 +1722,7 @@ V1 in 0 DC 1
 
     assert_eq!(
         format_measurement_table(&measurements),
-        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nmidpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\ncrossing\ttran\tV(out)\twhen\t1.000000e-03\t3.000000e-03\t1.500000e-03\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     );
 }
 

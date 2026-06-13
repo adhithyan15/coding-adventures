@@ -4,6 +4,11 @@
 
 ### Added
 
+- **Transient WHEN measurement routing** —
+  `measure_transient_when_probe()` and parsed transient
+  `.measure ... WHEN probe=target` cards now report the first crossing time
+  over optional `FROM=` / `TO=` windows, matching Rust and TypeScript.
+
 - **Transient FIND/AT measurement routing** —
   `measure_transient_find_at_probe()` and parsed transient
   `.measure ... FIND ... AT=` cards now sample or linearly interpolate a probe
