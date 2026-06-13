@@ -44,7 +44,7 @@ use smart_home_integration_catalog::{
     activation_deployment_records_from_delivery_manifests, activation_dossiers_from_candidates,
     activation_escalation_cases_from_rollups, activation_evidence_from_candidates,
     activation_execution_packets_from_handoff_packages,
-    activation_forecasts_from_timeline_milestones,
+    activation_forecasts_from_timeline_milestones, activation_guardrail_checks_from_rollups,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
     activation_incident_briefs_from_observability_probes, activation_maintenance_from_candidates,
     activation_observability_probes_from_rollups, activation_operator_tasks_from_playbook_steps,
@@ -95,7 +95,9 @@ use smart_home_integration_catalog::{
     IntegrationActivationEvidenceSummary, IntegrationActivationExecutionPacket,
     IntegrationActivationExecutionStatus, IntegrationActivationExecutionSummary,
     IntegrationActivationForecastAction, IntegrationActivationForecastItem,
-    IntegrationActivationForecastSummary, IntegrationActivationHandoffPackage,
+    IntegrationActivationForecastSummary, IntegrationActivationGuardrailCheck,
+    IntegrationActivationGuardrailKind, IntegrationActivationGuardrailSummary,
+    IntegrationActivationGuardrailVerdict, IntegrationActivationHandoffPackage,
     IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
     IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
     IntegrationActivationHealthSummary, IntegrationActivationIncidentAction,
@@ -391,6 +393,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID: &str =
     "smart_home.list_integration_activation_incidents";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_incident_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_guardrails";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_guardrail_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -897,6 +903,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID => {
                     let query = integration_activation_incident_query(&arguments)?;
                     Ok(get_integration_activation_incident_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID => {
+                    let query = integration_activation_guardrail_query(&arguments)?;
+                    Ok(list_integration_activation_guardrails_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_guardrail_query(&arguments)?;
+                    Ok(get_integration_activation_guardrail_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2900,6 +2914,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation incident summary",
             "Return compact D23A activation incident counts by severity, response action, observability status, blockers, watchtower signal coverage, verification, rollback, and readiness.",
             integration_activation_incident_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID,
+            "List smart-home integration activation guardrails",
+            "List Chief-facing D23A activation guardrail checks that normalize incidents, policy risk, dependencies, and readiness gaps into pass, monitor, review, or blocked verdicts.",
+            integration_activation_guardrail_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_guardrails", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_guardrails", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation guardrail summary",
+            "Return compact D23A activation guardrail counts by verdict, guardrail kind, policy surface, blocker, and review posture.",
+            integration_activation_guardrail_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5872,6 +5915,19 @@ struct IntegrationActivationIncidentQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationGuardrailQuery {
+    incident: IntegrationActivationIncidentQuery,
+    risk: IntegrationActivationRiskQuery,
+    dependency: IntegrationActivationDependencyQuery,
+    gaps: IntegrationReadinessGapQuery,
+    kind: Option<IntegrationActivationGuardrailKind>,
+    verdict: Option<IntegrationActivationGuardrailVerdict>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    guardrail_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6849,6 +6905,35 @@ fn integration_activation_incident_query(
     })
 }
 
+fn integration_activation_guardrail_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationGuardrailQuery, ToolCallError> {
+    let kind = optional_string(arguments, "guardrail_kind")?
+        .or(optional_string(arguments, "kind")?)
+        .map(|label| parse_activation_guardrail_kind(&label))
+        .transpose()?;
+    let verdict = optional_string(arguments, "guardrail_verdict")?
+        .or(optional_string(arguments, "verdict")?)
+        .map(|label| parse_activation_guardrail_verdict(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationGuardrailQuery {
+        incident: integration_activation_incident_query(arguments)?,
+        risk: integration_activation_risk_query(arguments)?,
+        dependency: integration_activation_dependency_query(arguments)?,
+        gaps: integration_readiness_gap_query(arguments)?,
+        kind,
+        verdict,
+        requires_attention: optional_bool(arguments, "guardrail_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "guardrail_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        guardrail_limit: optional_u64(arguments, "guardrail_limit")?
+            .or(optional_u64(arguments, "check_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
 fn integration_activation_risk_query(
     arguments: &JsonValue,
 ) -> Result<IntegrationActivationRiskQuery, ToolCallError> {
@@ -7515,7 +7600,13 @@ fn integration_activation_handoff_packages_for_query(
     let (entries, catalog_count) = integration_activation_runbook_entries_for_query(&query.runbook);
     let (risks, _) = integration_activation_risk_for_query(&query.risk);
     let (graph, _) = integration_activation_dependency_graph_for_query(&query.dependency);
-    let (gap_inventory, _) = integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    let (mut gap_inventory, _) =
+        integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    if let Some(limit) = query.gaps.limit_per_kind {
+        gap_inventory.primitive_gaps.truncate(limit);
+        gap_inventory.capability_gaps.truncate(limit);
+        gap_inventory.dependency_gaps.truncate(limit);
+    }
     let mut packages = activation_handoff_packages_from_runbook_entries(
         entries.iter(),
         &risks,
@@ -8274,6 +8365,36 @@ fn integration_activation_incident_briefs_for_query(
     }
 
     (briefs, catalog_count)
+}
+
+fn integration_activation_guardrail_checks_for_query(
+    query: &IntegrationActivationGuardrailQuery,
+) -> (Vec<IntegrationActivationGuardrailCheck>, usize) {
+    let (incidents, catalog_count) =
+        integration_activation_incident_briefs_for_query(&query.incident);
+    let (risks, _) = integration_activation_risk_for_query(&query.risk);
+    let (graph, _) = integration_activation_dependency_graph_for_query(&query.dependency);
+    let (gap_inventory, _) = integration_readiness_gap_inventory_for_query(&query.gaps.readiness);
+    let mut checks =
+        activation_guardrail_checks_from_rollups(&incidents, &risks, &graph, &gap_inventory);
+
+    if let Some(kind) = query.kind {
+        checks.retain(|check| check.kind == kind);
+    }
+    if let Some(verdict) = query.verdict {
+        checks.retain(|check| check.verdict == verdict);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        checks.retain(|check| check.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        checks.retain(|check| check.blocks_activation() == blocked);
+    }
+    if let Some(limit) = query.guardrail_limit {
+        checks.truncate(limit);
+    }
+
+    (checks, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -11658,6 +11779,71 @@ fn get_integration_activation_incident_summary_output_handler_output(
                 "briefs_incident_ready",
                 integer(summary.briefs_incident_ready as i64),
             ),
+        ]),
+    )
+}
+
+fn list_integration_activation_guardrails_output_handler_output(
+    query: IntegrationActivationGuardrailQuery,
+) -> ToolHandlerOutput {
+    let (checks, catalog_count) = integration_activation_guardrail_checks_for_query(&query);
+    let summary = IntegrationActivationGuardrailSummary::from_checks(checks.iter());
+    let count = checks.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_guardrails",
+            JsonValue::Array(checks.iter().map(activation_guardrail_check_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_guardrail_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_guardrails"),
+            ),
+            ("checks", integer(count as i64)),
+            ("blocked_checks", integer(summary.blocked_checks as i64)),
+            (
+                "checks_requiring_attention",
+                integer(summary.checks_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_guardrail_summary_output_handler_output(
+    query: IntegrationActivationGuardrailQuery,
+) -> ToolHandlerOutput {
+    let (checks, _) = integration_activation_guardrail_checks_for_query(&query);
+    let summary = IntegrationActivationGuardrailSummary::from_checks(checks.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_guardrail_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_guardrail_summary"),
+            ),
+            ("total_checks", integer(summary.total_checks as i64)),
+            ("blocked_checks", integer(summary.blocked_checks as i64)),
+            (
+                "checks_requiring_attention",
+                integer(summary.checks_requiring_attention as i64),
+            ),
+            ("overall_status", string(summary.overall_status.as_str())),
         ]),
     )
 }
@@ -23152,6 +23338,168 @@ fn integration_activation_incident_summary_json(
     ])
 }
 
+fn activation_guardrail_check_json(check: &IntegrationActivationGuardrailCheck) -> JsonValue {
+    object([
+        ("sequence", integer(check.sequence as i64)),
+        ("guardrail_id", string(&check.guardrail_id)),
+        ("kind", string(check.kind.as_str())),
+        ("verdict", string(check.verdict.as_str())),
+        ("title", string(&check.title)),
+        ("summary", string(&check.summary)),
+        ("priority", integer(check.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                check
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(check.integration_count() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(check.required_tier)),
+        ),
+        (
+            "policy_surface",
+            check
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_severity",
+            check
+                .incident_severity
+                .map(|severity| string(severity.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_action",
+            check
+                .incident_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "risk_kind",
+            check
+                .risk_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependency_integration_id",
+            check
+                .dependency_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_integration_id",
+            check
+                .dependent_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "readiness_gap_kind",
+            check
+                .readiness_gap_kind
+                .as_deref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(check.blocks_activation()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(check.requires_attention()),
+        ),
+    ])
+}
+
+fn integration_activation_guardrail_summary_json(
+    summary: &IntegrationActivationGuardrailSummary,
+) -> JsonValue {
+    object([
+        ("total_checks", integer(summary.total_checks as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "checks_requiring_attention",
+            integer(summary.checks_requiring_attention as i64),
+        ),
+        ("blocked_checks", integer(summary.blocked_checks as i64)),
+        (
+            "needs_review_checks",
+            integer(summary.needs_review_checks as i64),
+        ),
+        ("monitor_checks", integer(summary.monitor_checks as i64)),
+        ("pass_checks", integer(summary.pass_checks as i64)),
+        ("incident_checks", integer(summary.incident_checks as i64)),
+        (
+            "policy_risk_checks",
+            integer(summary.policy_risk_checks as i64),
+        ),
+        (
+            "dependency_checks",
+            integer(summary.dependency_checks as i64),
+        ),
+        (
+            "readiness_gap_checks",
+            integer(summary.readiness_gap_checks as i64),
+        ),
+        (
+            "checks_with_policy_surface",
+            integer(summary.checks_with_policy_surface as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_review_priority",
+            summary
+                .first_review_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -26376,6 +26724,38 @@ fn parse_activation_incident_action(
     }
 }
 
+fn parse_activation_guardrail_kind(
+    label: &str,
+) -> Result<IntegrationActivationGuardrailKind, ToolCallError> {
+    match label {
+        "incident" | "incidents" => Ok(IntegrationActivationGuardrailKind::Incident),
+        "policy_risk" | "risk" | "policy" => Ok(IntegrationActivationGuardrailKind::PolicyRisk),
+        "dependency" | "dependencies" => Ok(IntegrationActivationGuardrailKind::Dependency),
+        "readiness_gap" | "readiness_gaps" | "gap" | "gaps" => {
+            Ok(IntegrationActivationGuardrailKind::ReadinessGap)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation guardrail kind `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_guardrail_verdict(
+    label: &str,
+) -> Result<IntegrationActivationGuardrailVerdict, ToolCallError> {
+    match label {
+        "pass" | "passed" | "ok" => Ok(IntegrationActivationGuardrailVerdict::Pass),
+        "monitor" | "watch" | "observe" => Ok(IntegrationActivationGuardrailVerdict::Monitor),
+        "needs_review" | "review" | "attention" => {
+            Ok(IntegrationActivationGuardrailVerdict::NeedsReview)
+        }
+        "blocked" | "blocker" | "hold" => Ok(IntegrationActivationGuardrailVerdict::Blocked),
+        _ => Err(validation_error(format!(
+            "unknown activation guardrail verdict `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -28311,6 +28691,47 @@ fn integration_activation_incident_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_guardrail_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_incident_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new("guardrail_kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("guardrail_verdict", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("verdict", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "guardrail_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "guardrail_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("guardrail_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("check_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("risk_kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("required_tier", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("policy_surface", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("blocking_only", JsonSchema::Boolean));
+        push_if_absent(SchemaProperty::new("node_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("edge_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("limit_per_kind", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -28455,7 +28876,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 139);
+        assert_eq!(definitions.len(), 141);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -28844,9 +29265,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            131
+            133
         );
         assert_eq!(
             export
@@ -29022,6 +29449,14 @@ mod tests {
         );
         assert!(smart_home_tool_definition(
             SMART_HOME_GET_INTEGRATION_ACTIVATION_REVIEW_SUMMARY_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID
+        )
+        .is_some());
+        assert!(smart_home_tool_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID
         )
         .is_some());
         assert!(
@@ -29372,11 +29807,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(139))
+            Some(&integer(141))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(131))
+            Some(&integer(133))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -35010,6 +35445,145 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_guardrails_request = request(
+            "call-list-integration-activation-guardrails",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_GUARDRAILS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("guardrail_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_065,
+        );
+        let list_activation_guardrails_trace =
+            tool_runtime.invoke_with_events(&list_activation_guardrails_request);
+        assert!(list_activation_guardrails_trace.result.ok);
+        assert_eq!(
+            list_activation_guardrails_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_guardrails_output = list_activation_guardrails_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_guardrail_count =
+            integer_value(field(list_activation_guardrails_output, "count").unwrap()).unwrap();
+        assert!(activation_guardrail_count >= 4);
+        let activation_guardrail_summary =
+            field(list_activation_guardrails_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_guardrail_summary, "total_checks"),
+            Some(&integer(activation_guardrail_count))
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "incident_checks").unwrap()).unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "policy_risk_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "dependency_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(field(activation_guardrail_summary, "readiness_gap_checks").unwrap())
+                .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_guardrail_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_guardrail_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_guardrail = array_item(
+            field(list_activation_guardrails_output, "activation_guardrails").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_guardrail, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_guardrail_summary_request = request(
+            "call-integration-activation-guardrail-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_GUARDRAIL_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("guardrail_blocked", JsonValue::Bool(true)),
+            ]),
+            5_066,
+        );
+        let activation_guardrail_summary_trace =
+            tool_runtime.invoke_with_events(&activation_guardrail_summary_request);
+        assert!(activation_guardrail_summary_trace.result.ok);
+        assert_eq!(
+            activation_guardrail_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_guardrail_summary_output = activation_guardrail_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_guardrail_rollup =
+            field(activation_guardrail_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_guardrail_rollup, "blocked_checks").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_guardrail_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -36938,6 +37512,14 @@ mod tests {
             activation_incident_summary_request,
             activation_incident_summary_trace,
         );
+        journal.record_trace(
+            list_activation_guardrails_request,
+            list_activation_guardrails_trace,
+        );
+        journal.record_trace(
+            activation_guardrail_summary_request,
+            activation_guardrail_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -37011,9 +37593,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 139);
-        assert_eq!(journal_summary.completed_count, 139);
-        assert_eq!(journal.audit_records().len(), 139);
+        assert_eq!(journal_summary.invocation_count, 141);
+        assert_eq!(journal_summary.completed_count, 141);
+        assert_eq!(journal.audit_records().len(), 141);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);

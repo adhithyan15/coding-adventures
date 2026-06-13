@@ -4196,6 +4196,52 @@ impl IntegrationActivationIncidentAction {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationGuardrailKind {
+    Incident,
+    PolicyRisk,
+    Dependency,
+    ReadinessGap,
+}
+
+impl IntegrationActivationGuardrailKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Incident => "incident",
+            Self::PolicyRisk => "policy_risk",
+            Self::Dependency => "dependency",
+            Self::ReadinessGap => "readiness_gap",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationGuardrailVerdict {
+    Pass,
+    Monitor,
+    NeedsReview,
+    Blocked,
+}
+
+impl IntegrationActivationGuardrailVerdict {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Pass => "pass",
+            Self::Monitor => "monitor",
+            Self::NeedsReview => "needs_review",
+            Self::Blocked => "blocked",
+        }
+    }
+
+    pub fn blocks_activation(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(self, Self::NeedsReview | Self::Blocked)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationActivationIncidentBrief {
     pub sequence: usize,
@@ -4261,6 +4307,49 @@ pub struct IntegrationActivationIncidentSummary {
     pub next_brief_sequence: Option<usize>,
     pub next_brief_priority: Option<u8>,
     pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationGuardrailCheck {
+    pub sequence: usize,
+    pub guardrail_id: String,
+    pub kind: IntegrationActivationGuardrailKind,
+    pub verdict: IntegrationActivationGuardrailVerdict,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub incident_severity: Option<IntegrationActivationIncidentSeverity>,
+    pub incident_action: Option<IntegrationActivationIncidentAction>,
+    pub risk_kind: Option<IntegrationActivationRiskKind>,
+    pub dependency_integration_id: Option<IntegrationId>,
+    pub dependent_integration_id: Option<IntegrationId>,
+    pub readiness_gap_kind: Option<String>,
+    pub blocks_activation: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationGuardrailSummary {
+    pub total_checks: usize,
+    pub unique_integrations: usize,
+    pub checks_requiring_attention: usize,
+    pub blocked_checks: usize,
+    pub needs_review_checks: usize,
+    pub monitor_checks: usize,
+    pub pass_checks: usize,
+    pub incident_checks: usize,
+    pub policy_risk_checks: usize,
+    pub dependency_checks: usize,
+    pub readiness_gap_checks: usize,
+    pub checks_with_policy_surface: usize,
+    pub first_attention_priority: Option<u8>,
+    pub first_blocked_priority: Option<u8>,
+    pub first_review_priority: Option<u8>,
     pub highest_policy_tier: PrivilegeTier,
     pub overall_status: IntegrationActivationHealthStatus,
 }
@@ -12164,6 +12253,321 @@ impl IntegrationActivationIncidentSummary {
     }
 }
 
+impl IntegrationActivationGuardrailCheck {
+    fn from_incident(brief: &IntegrationActivationIncidentBrief) -> Self {
+        let verdict = if brief.blocks_activation() {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else if brief.requires_attention() {
+            IntegrationActivationGuardrailVerdict::NeedsReview
+        } else if brief.incident_ready() {
+            IntegrationActivationGuardrailVerdict::Monitor
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("incident:{}", brief.source_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::Incident,
+            verdict,
+            title: brief.title.clone(),
+            summary: brief.summary.clone(),
+            priority: brief.priority,
+            integration_ids: brief.integration_ids.clone(),
+            required_tier: brief.required_tier,
+            policy_surface: brief.policy_surface,
+            incident_severity: Some(brief.severity),
+            incident_action: Some(brief.action),
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: None,
+            blocks_activation: verdict.blocks_activation() || brief.blocks_activation(),
+            requires_attention: verdict.requires_attention() || brief.requires_attention(),
+        }
+    }
+
+    fn from_risk(risk: &IntegrationActivationRiskItem) -> Self {
+        let verdict = if risk.has_blockers() {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else if risk.requires_attention()
+            || matches!(
+                risk.required_tier,
+                PrivilegeTier::HumanApproval | PrivilegeTier::HighRisk
+            )
+        {
+            IntegrationActivationGuardrailVerdict::NeedsReview
+        } else if risk.has_ready_work() {
+            IntegrationActivationGuardrailVerdict::Monitor
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("risk:{}", risk.risk_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::PolicyRisk,
+            verdict,
+            title: format!("Policy risk: {}", risk.display_name),
+            summary: format!(
+                "{} integration(s) share this activation policy risk",
+                risk.integration_count()
+            ),
+            priority: risk.highest_priority,
+            integration_ids: risk.integration_ids.clone(),
+            required_tier: risk.required_tier,
+            policy_surface: risk.policy_surface,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: Some(risk.kind),
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: None,
+            blocks_activation: verdict.blocks_activation(),
+            requires_attention: verdict.requires_attention() || risk.requires_attention(),
+        }
+    }
+
+    fn from_dependency_edge(edge: &IntegrationActivationDependencyEdge) -> Self {
+        let verdict = if edge.blocks_activation {
+            IntegrationActivationGuardrailVerdict::Blocked
+        } else {
+            IntegrationActivationGuardrailVerdict::Pass
+        };
+        let dependency_name = edge
+            .dependency_display_name
+            .as_deref()
+            .unwrap_or(edge.dependency_integration_id.as_str());
+        let integration_ids = if edge.dependency_integration_id == edge.dependent_integration_id {
+            vec![edge.dependent_integration_id.clone()]
+        } else {
+            vec![
+                edge.dependency_integration_id.clone(),
+                edge.dependent_integration_id.clone(),
+            ]
+        };
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!(
+                "dependency:{}->{}",
+                edge.dependency_integration_id.as_str(),
+                edge.dependent_integration_id.as_str()
+            ),
+            kind: IntegrationActivationGuardrailKind::Dependency,
+            verdict,
+            title: format!(
+                "Dependency guardrail: {} requires {}",
+                edge.dependent_display_name, dependency_name
+            ),
+            summary: if edge.satisfied {
+                "Required integration dependency is enabled".to_string()
+            } else {
+                "Required integration dependency is not enabled".to_string()
+            },
+            priority: edge.dependent_priority,
+            integration_ids,
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: Some(edge.dependency_integration_id.clone()),
+            dependent_integration_id: Some(edge.dependent_integration_id.clone()),
+            readiness_gap_kind: None,
+            blocks_activation: edge.blocks_activation,
+            requires_attention: edge.blocks_activation,
+        }
+    }
+
+    fn from_primitive_gap(gap: &IntegrationReadinessPrimitiveGap) -> Self {
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:primitive:{}", gap.primitive.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.primitive.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this primitive gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids: gap.integration_ids.clone(),
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("primitive".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    fn from_capability_gap(gap: &IntegrationReadinessCapabilityGap) -> Self {
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:capability:{}", gap.capability_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.capability_id.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this capability gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids: gap.integration_ids.clone(),
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: None,
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("capability".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    fn from_dependency_gap(gap: &IntegrationReadinessDependencyGap) -> Self {
+        let mut integration_ids = gap.requested_integration_ids.clone();
+        if !integration_ids
+            .iter()
+            .any(|integration_id| integration_id == &gap.integration_id)
+        {
+            integration_ids.push(gap.integration_id.clone());
+        }
+
+        Self {
+            sequence: 0,
+            guardrail_id: format!("readiness_gap:dependency:{}", gap.integration_id.as_str()),
+            kind: IntegrationActivationGuardrailKind::ReadinessGap,
+            verdict: IntegrationActivationGuardrailVerdict::Blocked,
+            title: format!("Readiness gap: missing {}", gap.integration_id.as_str()),
+            summary: format!(
+                "{} integration report(s) are blocked by this dependency gap",
+                gap.blocked_report_count
+            ),
+            priority: gap.highest_priority,
+            integration_ids,
+            required_tier: PrivilegeTier::ReadOnly,
+            policy_surface: None,
+            incident_severity: None,
+            incident_action: None,
+            risk_kind: None,
+            dependency_integration_id: Some(gap.integration_id.clone()),
+            dependent_integration_id: None,
+            readiness_gap_kind: Some("dependency".to_string()),
+            blocks_activation: true,
+            requires_attention: true,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation || self.verdict.blocks_activation()
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention || self.verdict.requires_attention()
+    }
+}
+
+impl IntegrationActivationGuardrailSummary {
+    pub fn from_checks<'a>(
+        checks: impl IntoIterator<Item = &'a IntegrationActivationGuardrailCheck>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_checks: 0,
+            unique_integrations: 0,
+            checks_requiring_attention: 0,
+            blocked_checks: 0,
+            needs_review_checks: 0,
+            monitor_checks: 0,
+            pass_checks: 0,
+            incident_checks: 0,
+            policy_risk_checks: 0,
+            dependency_checks: 0,
+            readiness_gap_checks: 0,
+            checks_with_policy_surface: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_review_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for check in checks {
+            summary.total_checks += 1;
+            for integration_id in &check.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            match check.kind {
+                IntegrationActivationGuardrailKind::Incident => summary.incident_checks += 1,
+                IntegrationActivationGuardrailKind::PolicyRisk => summary.policy_risk_checks += 1,
+                IntegrationActivationGuardrailKind::Dependency => summary.dependency_checks += 1,
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_checks += 1;
+                }
+            }
+            match check.verdict {
+                IntegrationActivationGuardrailVerdict::Pass => summary.pass_checks += 1,
+                IntegrationActivationGuardrailVerdict::Monitor => summary.monitor_checks += 1,
+                IntegrationActivationGuardrailVerdict::NeedsReview => {
+                    summary.needs_review_checks += 1;
+                    summary.first_review_priority =
+                        min_optional_priority(summary.first_review_priority, Some(check.priority));
+                }
+                IntegrationActivationGuardrailVerdict::Blocked => {
+                    summary.blocked_checks += 1;
+                    summary.first_blocked_priority =
+                        min_optional_priority(summary.first_blocked_priority, Some(check.priority));
+                }
+            }
+            if check.requires_attention() {
+                summary.checks_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(check.priority));
+            }
+            if check.policy_surface.is_some() {
+                summary.checks_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(check.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_checks > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.needs_review_checks > 0 || summary.checks_requiring_attention > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.monitor_checks > 0 || summary.pass_checks > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_checks == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_checks > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.checks_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -17529,6 +17933,85 @@ pub fn activation_incident_briefs_at_or_before_priority(
     activation_incident_briefs_from_observability_probes(&probes)
 }
 
+pub fn activation_guardrail_checks_from_rollups(
+    incidents: &[IntegrationActivationIncidentBrief],
+    risks: &[IntegrationActivationRiskItem],
+    graph: &IntegrationActivationDependencyGraph,
+    gap_inventory: &IntegrationReadinessGapInventory,
+) -> Vec<IntegrationActivationGuardrailCheck> {
+    let mut checks = Vec::new();
+    checks.extend(
+        incidents
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_incident),
+    );
+    checks.extend(
+        risks
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_risk),
+    );
+    checks.extend(
+        graph
+            .edges
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_dependency_edge),
+    );
+    checks.extend(
+        gap_inventory
+            .primitive_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_primitive_gap),
+    );
+    checks.extend(
+        gap_inventory
+            .capability_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_capability_gap),
+    );
+    checks.extend(
+        gap_inventory
+            .dependency_gaps
+            .iter()
+            .map(IntegrationActivationGuardrailCheck::from_dependency_gap),
+    );
+
+    checks.sort_by(compare_activation_guardrail_checks);
+    for (index, check) in checks.iter_mut().enumerate() {
+        check.sequence = index + 1;
+    }
+    checks
+}
+
+pub fn activation_guardrail_checks_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationGuardrailCheck> {
+    let reports = readiness_reports_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    let candidates = activation_candidates_from_reports(reports.iter());
+    let risks = activation_risk_from_candidates(catalog, candidates.iter());
+    let graph =
+        activation_dependency_graph_from_reports(catalog, reports.iter(), enabled_integrations);
+    let gap_inventory = readiness_gap_inventory_from_reports(reports.iter());
+    let incidents = activation_incident_briefs_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+
+    activation_guardrail_checks_from_rollups(&incidents, &risks, &graph, &gap_inventory)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -19345,6 +19828,31 @@ fn compare_activation_incident_briefs(
         .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_guardrail_checks(
+    left: &IntegrationActivationGuardrailCheck,
+    right: &IntegrationActivationGuardrailCheck,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| {
+            guardrail_verdict_rank(right.verdict).cmp(&guardrail_verdict_rank(left.verdict))
+        })
+        .then_with(|| left.kind.cmp(&right.kind))
+        .then_with(|| left.guardrail_id.cmp(&right.guardrail_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn guardrail_verdict_rank(verdict: IntegrationActivationGuardrailVerdict) -> u8 {
+    match verdict {
+        IntegrationActivationGuardrailVerdict::Pass => 0,
+        IntegrationActivationGuardrailVerdict::Monitor => 1,
+        IntegrationActivationGuardrailVerdict::NeedsReview => 2,
+        IntegrationActivationGuardrailVerdict::Blocked => 3,
+    }
 }
 
 fn push_activation_sentinel_alert(
@@ -23288,6 +23796,47 @@ mod tests {
         assert!(catalog_incident_briefs
             .iter()
             .any(IntegrationActivationIncidentBrief::blocks_activation));
+        let catalog_guardrail_checks = activation_guardrail_checks_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::Incident));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::PolicyRisk));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::Dependency));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(|check| check.kind == IntegrationActivationGuardrailKind::ReadinessGap));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(IntegrationActivationGuardrailCheck::requires_attention));
+        assert!(catalog_guardrail_checks
+            .iter()
+            .any(IntegrationActivationGuardrailCheck::blocks_activation));
+        let catalog_guardrail_summary =
+            IntegrationActivationGuardrailSummary::from_checks(catalog_guardrail_checks.iter());
+        assert_eq!(
+            catalog_guardrail_summary.total_checks,
+            catalog_guardrail_checks.len()
+        );
+        assert!(catalog_guardrail_summary.has_blockers());
+        assert!(catalog_guardrail_summary.requires_attention());
+        assert!(catalog_guardrail_summary.incident_checks >= 1);
+        assert!(catalog_guardrail_summary.policy_risk_checks >= 1);
+        assert!(catalog_guardrail_summary.dependency_checks >= 1);
+        assert!(catalog_guardrail_summary.readiness_gap_checks >= 1);
+        assert_eq!(
+            catalog_guardrail_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
     }
 
     #[test]
