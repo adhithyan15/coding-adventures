@@ -3839,6 +3839,106 @@ pub struct IntegrationActivationDeploymentSummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationSafetyGateStatus {
+    Blocked,
+    NeedsVerification,
+    NeedsOwnerApproval,
+    ReadyToDeploy,
+    Monitoring,
+}
+
+impl IntegrationActivationSafetyGateStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Blocked => "blocked",
+            Self::NeedsVerification => "needs_verification",
+            Self::NeedsOwnerApproval => "needs_owner_approval",
+            Self::ReadyToDeploy => "ready_to_deploy",
+            Self::Monitoring => "monitoring",
+        }
+    }
+
+    pub fn from_deployment_status(status: IntegrationActivationDeploymentStatus) -> Self {
+        match status {
+            IntegrationActivationDeploymentStatus::Blocked => Self::Blocked,
+            IntegrationActivationDeploymentStatus::AwaitingVerification => Self::NeedsVerification,
+            IntegrationActivationDeploymentStatus::AwaitingOwner => Self::NeedsOwnerApproval,
+            IntegrationActivationDeploymentStatus::ReadyToDeploy => Self::ReadyToDeploy,
+            IntegrationActivationDeploymentStatus::Monitoring => Self::Monitoring,
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::Blocked | Self::NeedsVerification | Self::NeedsOwnerApproval
+        )
+    }
+
+    pub fn blocks_activation(self) -> bool {
+        matches!(self, Self::Blocked)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationSafetyGate {
+    pub sequence: usize,
+    pub gate_status: IntegrationActivationSafetyGateStatus,
+    pub deployment_status: IntegrationActivationDeploymentStatus,
+    pub deployment_ring: IntegrationActivationDeploymentRing,
+    pub delivery_channel: IntegrationActivationDeliveryChannel,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_deployment_sequence: usize,
+    pub source_delivery_sequence: usize,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub dependency_work: bool,
+    pub policy_risk: bool,
+    pub verification_required: bool,
+    pub deployment_ready: bool,
+    pub blocks_activation: bool,
+    pub requires_attention: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationSafetySummary {
+    pub total_gates: usize,
+    pub unique_integrations: usize,
+    pub gates_requiring_attention: usize,
+    pub blocked_gates: usize,
+    pub verification_gates: usize,
+    pub owner_approval_gates: usize,
+    pub ready_to_deploy_gates: usize,
+    pub monitoring_gates: usize,
+    pub platform_ring_gates: usize,
+    pub integration_ring_gates: usize,
+    pub security_ring_gates: usize,
+    pub verification_ring_gates: usize,
+    pub audit_ring_gates: usize,
+    pub monitoring_ring_gates: usize,
+    pub gates_with_dependency_work: usize,
+    pub gates_with_policy_risk: usize,
+    pub gates_requiring_verification: usize,
+    pub gates_ready_to_deploy: usize,
+    pub gates_with_policy_surface: usize,
+    pub next_gate_status: Option<IntegrationActivationSafetyGateStatus>,
+    pub next_deployment_ring: Option<IntegrationActivationDeploymentRing>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_gate_sequence: Option<usize>,
+    pub next_gate_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -10775,6 +10875,220 @@ impl IntegrationActivationDeploymentSummary {
     }
 }
 
+impl IntegrationActivationSafetyGate {
+    fn from_deployment_record(record: &IntegrationActivationDeploymentRecord) -> Self {
+        let gate_status =
+            IntegrationActivationSafetyGateStatus::from_deployment_status(record.deployment_status);
+        let blocks_activation = gate_status.blocks_activation() || record.deployment_blocked();
+        let requires_attention =
+            gate_status.requires_attention() || record.requires_attention() || blocks_activation;
+
+        Self {
+            sequence: 0,
+            gate_status,
+            deployment_status: record.deployment_status,
+            deployment_ring: record.deployment_ring,
+            delivery_channel: record.delivery_channel,
+            owner_lane: record.owner_lane,
+            source_deployment_sequence: record.sequence,
+            source_delivery_sequence: record.source_delivery_sequence,
+            source_id: record.source_id.clone(),
+            title: format!("{} safety gate: {}", gate_status.as_str(), record.title),
+            summary: record.summary.clone(),
+            priority: record.priority,
+            integration_ids: record.integration_ids.clone(),
+            recommended_view: record.recommended_view,
+            required_tier: record.required_tier,
+            policy_surface: record.policy_surface,
+            dependency_work: record.dependency_work,
+            policy_risk: record.policy_risk,
+            verification_required: record.verification_required
+                || gate_status == IntegrationActivationSafetyGateStatus::NeedsVerification,
+            deployment_ready: record.deployment_ready(),
+            blocks_activation,
+            requires_attention,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_dependency_work(&self) -> bool {
+        self.dependency_work
+    }
+
+    pub fn has_policy_risk(&self) -> bool {
+        self.policy_risk
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_required
+    }
+
+    pub fn deployment_ready(&self) -> bool {
+        self.deployment_ready
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+}
+
+impl IntegrationActivationSafetySummary {
+    pub fn from_gates<'a>(
+        gates: impl IntoIterator<Item = &'a IntegrationActivationSafetyGate>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_gates: 0,
+            unique_integrations: 0,
+            gates_requiring_attention: 0,
+            blocked_gates: 0,
+            verification_gates: 0,
+            owner_approval_gates: 0,
+            ready_to_deploy_gates: 0,
+            monitoring_gates: 0,
+            platform_ring_gates: 0,
+            integration_ring_gates: 0,
+            security_ring_gates: 0,
+            verification_ring_gates: 0,
+            audit_ring_gates: 0,
+            monitoring_ring_gates: 0,
+            gates_with_dependency_work: 0,
+            gates_with_policy_risk: 0,
+            gates_requiring_verification: 0,
+            gates_ready_to_deploy: 0,
+            gates_with_policy_surface: 0,
+            next_gate_status: None,
+            next_deployment_ring: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_gate_sequence: None,
+            next_gate_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for gate in gates {
+            summary.total_gates += 1;
+            for integration_id in &gate.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_gate_status.is_none()
+                && (gate.requires_attention() || gate.deployment_ready())
+            {
+                summary.next_gate_status = Some(gate.gate_status);
+                summary.next_deployment_ring = Some(gate.deployment_ring);
+                summary.next_owner_lane = Some(gate.owner_lane);
+                summary.next_recommended_view = Some(gate.recommended_view);
+                summary.next_gate_sequence = Some(gate.sequence);
+                summary.next_gate_priority = Some(gate.priority);
+            }
+
+            match gate.gate_status {
+                IntegrationActivationSafetyGateStatus::Blocked => summary.blocked_gates += 1,
+                IntegrationActivationSafetyGateStatus::NeedsVerification => {
+                    summary.verification_gates += 1;
+                }
+                IntegrationActivationSafetyGateStatus::NeedsOwnerApproval => {
+                    summary.owner_approval_gates += 1;
+                }
+                IntegrationActivationSafetyGateStatus::ReadyToDeploy => {
+                    summary.ready_to_deploy_gates += 1;
+                }
+                IntegrationActivationSafetyGateStatus::Monitoring => summary.monitoring_gates += 1,
+            }
+
+            match gate.deployment_ring {
+                IntegrationActivationDeploymentRing::Platform => summary.platform_ring_gates += 1,
+                IntegrationActivationDeploymentRing::Integration => {
+                    summary.integration_ring_gates += 1;
+                }
+                IntegrationActivationDeploymentRing::Security => summary.security_ring_gates += 1,
+                IntegrationActivationDeploymentRing::Verification => {
+                    summary.verification_ring_gates += 1;
+                }
+                IntegrationActivationDeploymentRing::Audit => summary.audit_ring_gates += 1,
+                IntegrationActivationDeploymentRing::Monitoring => {
+                    summary.monitoring_ring_gates += 1;
+                }
+            }
+
+            if gate.requires_attention() {
+                summary.gates_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(gate.priority));
+            }
+            if gate.has_dependency_work() {
+                summary.gates_with_dependency_work += 1;
+            }
+            if gate.has_policy_risk() {
+                summary.gates_with_policy_risk += 1;
+            }
+            if gate.needs_verification() {
+                summary.gates_requiring_verification += 1;
+            }
+            if gate.deployment_ready() {
+                summary.gates_ready_to_deploy += 1;
+            }
+            if gate.has_policy_surface() {
+                summary.gates_with_policy_surface += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(gate.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.blocked_gates > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.gates_requiring_attention > 0
+            || summary.verification_gates > 0
+            || summary.owner_approval_gates > 0
+        {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else if summary.ready_to_deploy_gates > 0 {
+            IntegrationActivationHealthStatus::Ready
+        } else {
+            IntegrationActivationHealthStatus::Empty
+        };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_gates == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.blocked_gates > 0
+    }
+
+    pub fn has_owner_action(&self) -> bool {
+        self.owner_approval_gates > 0
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.verification_gates > 0 || self.gates_requiring_verification > 0
+    }
+
+    pub fn deployment_ready(&self) -> bool {
+        self.ready_to_deploy_gates > 0 || self.gates_ready_to_deploy > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.gates_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -15996,6 +16310,38 @@ pub fn activation_deployment_records_at_or_before_priority(
     activation_deployment_records_from_delivery_manifests(&manifests)
 }
 
+pub fn activation_safety_gates_from_deployment_records(
+    records: &[IntegrationActivationDeploymentRecord],
+) -> Vec<IntegrationActivationSafetyGate> {
+    let mut gates: Vec<_> = records
+        .iter()
+        .map(IntegrationActivationSafetyGate::from_deployment_record)
+        .collect();
+
+    gates.sort_by(compare_activation_safety_gates);
+    for (index, gate) in gates.iter_mut().enumerate() {
+        gate.sequence = index + 1;
+    }
+    gates
+}
+
+pub fn activation_safety_gates_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationSafetyGate> {
+    let records = activation_deployment_records_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_safety_gates_from_deployment_records(&records)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -17727,6 +18073,25 @@ fn compare_activation_deployment_records(
             left.source_remediation_kind
                 .cmp(&right.source_remediation_kind)
         })
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_safety_gates(
+    left: &IntegrationActivationSafetyGate,
+    right: &IntegrationActivationSafetyGate,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.gate_status.cmp(&right.gate_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
+        .then_with(|| right.has_dependency_work().cmp(&left.has_dependency_work()))
+        .then_with(|| right.has_policy_risk().cmp(&left.has_policy_risk()))
+        .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
         .then_with(|| left.owner_lane.cmp(&right.owner_lane))
         .then_with(|| left.source_id.cmp(&right.source_id))
         .then_with(|| right.integration_count().cmp(&left.integration_count()))
@@ -21423,6 +21788,39 @@ mod tests {
         );
         assert_eq!(
             deployment_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
+        let safety_gates = activation_safety_gates_from_deployment_records(&deployment_records);
+        assert_eq!(safety_gates.len(), deployment_records.len());
+        assert!(safety_gates
+            .iter()
+            .any(|gate| gate.gate_status == IntegrationActivationSafetyGateStatus::Blocked));
+        assert!(safety_gates.iter().any(
+            |gate| gate.gate_status == IntegrationActivationSafetyGateStatus::NeedsVerification
+        ));
+        assert!(safety_gates
+            .iter()
+            .any(IntegrationActivationSafetyGate::requires_attention));
+        assert!(safety_gates
+            .iter()
+            .any(IntegrationActivationSafetyGate::blocks_activation));
+
+        let safety_summary = IntegrationActivationSafetySummary::from_gates(safety_gates.iter());
+        assert_eq!(safety_summary.total_gates, safety_gates.len());
+        assert!(safety_summary.has_blockers());
+        assert!(safety_summary.needs_verification());
+        assert!(safety_summary.requires_attention());
+        assert_eq!(
+            safety_summary.next_gate_status,
+            Some(IntegrationActivationSafetyGateStatus::Blocked)
+        );
+        assert_eq!(
+            safety_summary.next_owner_lane,
+            Some(IntegrationActivationResponseOwnerLane::Platform)
+        );
+        assert_eq!(
+            safety_summary.overall_status,
             IntegrationActivationHealthStatus::Blocked
         );
 
