@@ -12,7 +12,10 @@ boundary:
 - cluster/profile ids
 - cluster/profile classification helpers
 - binding table records for device and group destinations
-- body-free frame and binding-table summaries for read-side supervision
+- body-free frame, frame-batch, and binding-table summaries for read-side
+  supervision
+- frame-batch summary counts for delivery modes, profile/cluster families,
+  security, ack requests, and payload volume
 - binding summary counts for source endpoint shape and cluster coverage
 - APS command identifiers and payload preservation for key-management commands
 - APS counters
