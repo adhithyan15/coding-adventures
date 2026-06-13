@@ -2,6 +2,35 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.117.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-110** — a string method KEY preceded by a method MODIFIER
+  (`*` generator and/or `async`) is now ALSO normalised to a COMPUTED
+  key, matching upstream:
+
+      x={*"m"(){}};            ->  x={*["m"](){}};
+      class A{async"m"(){}}    ->  class A{async["m"](){}};
+      x={async*"m"(){}};       ->  x={async*["m"](){}};
+
+  This extends the gap-109 pre-pass: gap-109 only fired when the string's
+  immediate predecessor was a property boundary (`{`/`,`/`}`/`static`),
+  so a `*`/`async`-prefixed key was missed. The fix walks BACK over the
+  contiguous run of method modifiers (`*`, `async`, `static`) to the
+  ANCHOR — the token opening the member position — and requires that
+  anchor to be a property-start (`{`/`,`/`}`). This proves a leading
+  `*`/`async` is a method modifier and NOT a multiply/identifier in an
+  expression: for `a=async*b` the string guard never matches (`b` is not
+  a string), and for `a*"m"(){}` the anchor walk lands on the identifier
+  `a` (not a property-start), so the generator/multiply ambiguity is
+  correctly rejected — no spurious `[...]` wrap. The same method-body
+  guard as gap-109 applies (the `)` matching the key's `(` must be
+  followed by `{`). Seven `gap110_*` unit tests cover the generator,
+  async, async-generator, and class-member wrap cases plus the
+  `{*m(){}}`, `a=async*b`, and `a*"m"(x)` non-regressions. The three
+  `*_string_method` diff fixtures (added in CLOC14.53) are now ENFORCED.
+  Verified byte-identical to upstream Closure v20240317.
+
 ## [0.116.0] - 2026-06-12
 
 ### Fixed

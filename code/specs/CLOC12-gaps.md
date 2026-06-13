@@ -816,9 +816,9 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-110 — modifier-prefixed string method key not normalised to computed (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.53). `minify_gen_string_method` / `minify_async_string_method` / `minify_async_gen_string_method` ignored.
+- **Status:** RESOLVED in CLOC12.113 (v0.117.0). `minify_gen_string_method` / `minify_async_string_method` / `minify_async_gen_string_method` now ENFORCED.
 - **Input:** `x={*"m"(){}};` → **Upstream:** `x={*["m"](){}};` but **closurec:** `x={*"m"(){}};`. A string method KEY preceded by a method MODIFIER (`*` generator or `async`) is normalised to a COMPUTED key just like the plain case (gap-109), but gap-109's pre-pass only fired when the string's predecessor was a property boundary (`{`/`,`/`}`/`static`), so a `*`/`async`-prefixed key was missed: `{*"m"(){}}` → `{*["m"](){}}`, `class A{async"m"(){}}` → `class A{async["m"](){}}`, `{async*"m"(){}}` → `{async*["m"](){}}`. (`static"m"` already works — gap-109 covered `static`.)
-- **What it needs:** extend gap-109's property-start before-set to include `*` and `async` (keeping the same method-body guard: the `)` matching the key's `(` must be followed by `{`). Low risk — the method-body guard already prevents matching non-method forms.
+- **Fix:** the gap-109 pre-pass now walks BACK over the contiguous run of method modifiers (`*`, `async`, `static`) from the string's predecessor to the ANCHOR — the token opening the member position — and accepts the key when that anchor is a property-start (`{`/`,`/`}`). This proves the leading `*`/`async` is a method modifier and not a multiply/identifier in an expression: `a=async*b` never matches (`b` is not a string) and `a*"m"(){}` is rejected because the anchor walk lands on the identifier `a` (not a property-start), so the generator/multiply ambiguity is resolved without a spurious `[...]` wrap. The same method-body guard as gap-109 applies (the `)` matching the key's `(` must be followed by `{`). Seven `gap110_*` unit tests cover the generator/async/async-generator/class-member wrap cases plus the `{*m(){}}`, `a=async*b`, and `a*"m"(x)` non-regressions. Verified byte-identical to upstream Closure v20240317.
 
 ### gap-111 — reserved keyword before string literal missing separating space (WHITESPACE_ONLY)
 

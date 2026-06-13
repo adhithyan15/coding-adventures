@@ -2184,12 +2184,46 @@ pub fn whitespace_only_minify(
                 continue;
             }
             // Property-start context.
+            //
+            // gap-110 extension: a method KEY may be preceded by method
+            // MODIFIERS — `*` (generator), `async`, and `static`:
+            //   {*"m"(){}}       -> {*["m"](){}}        (generator)
+            //   {async"m"(){}}   -> {async["m"](){}}    (async)
+            //   {async*"m"(){}}  -> {async*["m"](){}}   (async-generator)
+            // To prove a leading `*`/`async` is a method modifier and
+            // NOT a multiply/identifier in an expression (`a=async*b`,
+            // `a*"m"`), walk back over the contiguous run of modifier
+            // tokens to the ANCHOR — the token that opens the member
+            // position — and require that anchor to be a property-start
+            // (`{` / `,` / `}`). For `a*"m"(){}` the anchor walk lands on
+            // the identifier `a`, which is not a property-start, so the
+            // generator/multiply ambiguity is correctly rejected.
             let before = kept[i - 1];
+            let is_method_modifier = |t: &lexer::token::Token| {
+                is_structural_punct(t, "*")
+                    || (is_word_like(t)
+                        && (t.value == "async" || t.value == "static"))
+            };
+            // Walk back over the modifier run starting at `i - 1`.
+            let mut anchor_idx = i;
+            while anchor_idx > 0 && is_method_modifier(kept[anchor_idx - 1]) {
+                anchor_idx -= 1;
+            }
+            let had_modifier = anchor_idx < i;
+            let anchor_is_prop_start = anchor_idx > 0 && {
+                let a = kept[anchor_idx - 1];
+                is_structural_punct(a, "{")
+                    || is_structural_punct(a, ",")
+                    || is_structural_punct(a, "}")
+            };
+            // Direct (no-modifier) property-start — the gap-109 base case.
             let static_ctx = is_word_like(before) && before.value == "static";
-            let prop_start = is_structural_punct(before, "{")
+            let direct_prop_start = is_structural_punct(before, "{")
                 || is_structural_punct(before, ",")
                 || is_structural_punct(before, "}")
                 || static_ctx;
+            let prop_start =
+                direct_prop_start || (had_modifier && anchor_is_prop_start);
             // Never a member access (`.`/`?.` before the string is
             // impossible for a string but keep the guard for symmetry).
             let is_member = is_structural_punct(before, ".")
@@ -7834,6 +7868,67 @@ mod tests {
     fn gap109_string_call_untouched() {
         assert_eq!(minify("f(\"m\");"), "f(\"m\");");
         assert_eq!(minify("\"m\"(x);"), "\"m\"(x);");
+    }
+
+    /// gap-110 — GENERATOR string method: the `*` modifier precedes the
+    /// string key. `{*"m"(){}}` -> `{*["m"](){}}`.
+    #[test]
+    fn gap110_generator_string_method() {
+        assert_eq!(minify("x={*\"m\"(){}};"), "x={*[\"m\"](){}};");
+    }
+
+    /// gap-110 — ASYNC string method: the `async` modifier precedes the
+    /// string key. `class A{async"m"(){}}` -> `class A{async["m"](){}}`.
+    #[test]
+    fn gap110_async_string_method() {
+        assert_eq!(
+            minify("class A{async\"m\"(){}}"),
+            "class A{async[\"m\"](){}};"
+        );
+    }
+
+    /// gap-110 — ASYNC-GENERATOR string method: both `async` and `*`
+    /// precede the key. `{async*"m"(){}}` -> `{async*["m"](){}}`.
+    #[test]
+    fn gap110_async_generator_string_method() {
+        assert_eq!(
+            minify("x={async*\"m\"(){}};"),
+            "x={async*[\"m\"](){}};"
+        );
+    }
+
+    /// gap-110 — generator string method as a CLASS member.
+    #[test]
+    fn gap110_class_generator_string_method() {
+        assert_eq!(
+            minify("class A{*\"m\"(){}}"),
+            "class A{*[\"m\"](){}};"
+        );
+    }
+
+    /// **Non-regression**: an IDENTIFIER generator method (`{*m(){}}`)
+    /// is NOT wrapped — the key is not a string literal.
+    #[test]
+    fn gap110_identifier_generator_method_untouched() {
+        assert_eq!(minify("x={*m(){}};"), "x={*m(){}};");
+    }
+
+    /// **Non-regression**: `a=async*b` is a multiply of `async` by `b`,
+    /// NOT an async-generator method. `b` is not a string, and the
+    /// modifier-anchor walk lands on `=` (not a property-start), so the
+    /// expression is left untouched (no spurious `[...]` wrap).
+    #[test]
+    fn gap110_async_multiply_untouched() {
+        assert_eq!(minify("a=async*b;"), "a=async*b;");
+    }
+
+    /// **Non-regression**: `a*"m"(){}` — a `*` preceded by an
+    /// IDENTIFIER `a` is a multiply, not a generator modifier. The
+    /// anchor walk lands on `a` (not a property-start), so the string
+    /// is NOT wrapped even though the method-body guard would match.
+    #[test]
+    fn gap110_multiply_string_call_untouched() {
+        assert_eq!(minify("a*\"m\"(x);"), "a*\"m\"(x);");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
