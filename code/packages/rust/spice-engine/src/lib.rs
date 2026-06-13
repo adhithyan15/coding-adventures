@@ -3266,6 +3266,7 @@ pub struct DeckMeasurementCard {
     pub line_number: usize,
     pub from_value: Option<f64>,
     pub to_value: Option<f64>,
+    pub at_value: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -4586,6 +4587,7 @@ fn resolve_measurement_line(
     let empty_parameter_state = DeckParameterState::new();
     let mut from_value = None;
     let mut to_value = None;
+    let mut at_value = None;
     let mut seen_window_tokens = Vec::new();
     let diagnostic_count = state.diagnostics.len();
     for token in tokens.iter().skip(5) {
@@ -4601,7 +4603,7 @@ fn resolve_measurement_line(
             continue;
         };
         let key = key.trim().to_ascii_lowercase();
-        if key != "from" && key != "to" {
+        if key != "from" && key != "to" && key != "at" {
             add_measurement_diagnostic(
                 state,
                 "SPICE_DECK_MEASURE_ARGUMENT",
@@ -4629,7 +4631,8 @@ fn resolve_measurement_line(
             &empty_parameter_state,
         ) {
             Ok(value) if key == "from" => from_value = Some(value),
-            Ok(value) => to_value = Some(value),
+            Ok(value) if key == "to" => to_value = Some(value),
+            Ok(value) => at_value = Some(value),
             Err(message) => add_measurement_diagnostic(
                 state,
                 "SPICE_DECK_MEASURE_EXPRESSION",
@@ -4639,6 +4642,37 @@ fn resolve_measurement_line(
                 Some((*token).to_string()),
             ),
         }
+    }
+
+    if mode == "find" && at_value.is_none() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "FIND measurements require an AT value",
+            None,
+        );
+    }
+    if mode != "find" && at_value.is_some() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "measurement AT value is only supported with FIND mode",
+            None,
+        );
+    }
+    if at_value.is_some() && (from_value.is_some() || to_value.is_some()) {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            "measurement AT value cannot be combined with FROM or TO",
+            None,
+        );
     }
 
     if let (Some(from), Some(to)) = (from_value, to_value) {
@@ -4667,6 +4701,7 @@ fn resolve_measurement_line(
         line_number,
         from_value,
         to_value,
+        at_value,
     });
 }
 
@@ -5344,6 +5379,7 @@ fn normalize_measurement_mode_token(mode: &str) -> Option<&'static str> {
         "rms" | "root-mean-square" => Some("rms"),
         "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Some("pp"),
         "last" | "final" => Some("last"),
+        "find" => Some("find"),
         _ => None,
     }
 }
@@ -8679,6 +8715,68 @@ pub fn measure_transient_probe(
     })
 }
 
+pub fn measure_transient_find_at_probe(
+    points: &[TransientPoint],
+    name: &str,
+    probe: &str,
+    at_time: f64,
+) -> Result<ProbeMeasurement, SpiceError> {
+    if !at_time.is_finite() {
+        return Err(table_error(
+            "measure_transient_find_at_probe",
+            "at_time must be finite",
+        ));
+    }
+    let value =
+        transient_probe_value_at(points, probe, at_time, "measure_transient_find_at_probe")?;
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: probe.to_string(),
+        mode: "find".to_string(),
+        value,
+        from_value: Some(at_time),
+        to_value: Some(at_time),
+    })
+}
+
+fn transient_probe_value_at(
+    points: &[TransientPoint],
+    probe: &str,
+    at_time: f64,
+    context: &str,
+) -> Result<f64, SpiceError> {
+    let mut previous: Option<(f64, f64)> = None;
+    for point in points {
+        let value =
+            table_probe_value(&point.node_voltages, &point.branch_currents, probe, context)?;
+        if point.time == at_time {
+            return Ok(value);
+        }
+        if point.time > at_time {
+            let Some((previous_time, previous_value)) = previous else {
+                return Err(table_error(
+                    context,
+                    "at_time is outside transient sample range",
+                ));
+            };
+            if point.time == previous_time {
+                return Err(table_error(
+                    context,
+                    "duplicate transient sample times around AT value",
+                ));
+            }
+            let fraction = (at_time - previous_time) / (point.time - previous_time);
+            return Ok(previous_value + (value - previous_value) * fraction);
+        }
+        previous = Some((point.time, value));
+    }
+    Err(table_error(
+        context,
+        "at_time is outside transient sample range",
+    ))
+}
+
 pub fn measure_transient_cards(
     points: &[TransientPoint],
     measurements: &[DeckMeasurementCard],
@@ -8691,14 +8789,29 @@ pub fn measure_transient_cards(
                 "only transient measurement cards are supported",
             ));
         }
-        results.push(measure_transient_probe(
-            points,
-            &measurement.name,
-            &measurement.probe,
-            &measurement.mode,
-            measurement.from_value,
-            measurement.to_value,
-        )?);
+        if measurement.mode == "find" {
+            let Some(at_time) = measurement.at_value else {
+                return Err(table_error(
+                    "measure_transient_cards",
+                    "FIND measurement cards require an AT value",
+                ));
+            };
+            results.push(measure_transient_find_at_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                at_time,
+            )?);
+        } else {
+            results.push(measure_transient_probe(
+                points,
+                &measurement.name,
+                &measurement.probe,
+                &measurement.mode,
+                measurement.from_value,
+                measurement.to_value,
+            )?);
+        }
     }
     Ok(results)
 }

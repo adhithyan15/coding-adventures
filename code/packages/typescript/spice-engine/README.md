@@ -72,9 +72,11 @@ sweep/corner text surfaces.
 `formatMeasurementTable`
 provide the shared `.MEASURE`-style scalar output surface for MAX, MIN, AVG,
 RMS, peak-to-peak, and final-value probe measurements. The AC helper measures
-complex probe magnitudes over optional frequency windows. The deck helpers
-route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
-those stable measurement rows.
+complex probe magnitudes over optional frequency windows.
+`measureTransientFindAtProbe` and parsed transient `FIND ... AT=` cards sample
+or linearly interpolate one probe value at a scalar time. The deck helpers route
+parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those
+stable measurement rows.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
@@ -121,6 +123,7 @@ or quoted expression delimiters, and reports stable diagnostics for malformed
 signatures, arguments, or empty expressions.
 `resolveDeckMeasurements` extracts transient, DC sweep, and AC sweep `.measure` / `.meas`
 cards before `.end`, keeps non-measure active lines, evaluates optional
-`FROM=` / `TO=` scalar time, source-value, or frequency windows, and reports stable
+`FROM=` / `TO=` scalar time, source-value, or frequency windows plus transient
+`FIND ... AT=` sample points, and reports stable
 diagnostics for unsupported analyses, modes, options, expressions, and invalid
 windows.

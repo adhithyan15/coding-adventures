@@ -230,6 +230,7 @@ from spice_engine import (
     measure_dc_sweep_deck,
     measure_dc_sweep_probe,
     measure_transient_deck,
+    measure_transient_find_at_probe,
     measure_transient_probe,
     mosfet_from_model_card,
     noise_ac,
@@ -6668,15 +6669,24 @@ def test_transient_probe_measurements_are_stable() -> None:
         "V(out)",
         "final",
     )
+    midpoint = measure_transient_find_at_probe(
+        transient_points,
+        "midpoint",
+        "V(out)",
+        1.5e-3,
+    )
 
     assert peak_to_peak.value == pytest.approx(1.5)
     assert peak_to_peak.mode == "pp"
     assert final_value.value == pytest.approx(0.75)
     assert final_value.mode == "last"
-    assert format_measurement_table([peak_to_peak, final_value]) == (
+    assert midpoint.value == pytest.approx(0.5)
+    assert midpoint.mode == "find"
+    assert format_measurement_table([peak_to_peak, final_value, midpoint]) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
     )
 
 
@@ -6693,6 +6703,7 @@ def test_transient_deck_measurements_execute_parsed_cards() -> None:
         """
 V1 in 0 DC 1
 .measure tran swing PP V(out) FROM=1m TO=3m
+.measure tran midpoint FIND V(out) AT=1.5m
 .meas tran settled LAST V(out)
 .end
 """,
@@ -6701,6 +6712,7 @@ V1 in 0 DC 1
     assert format_measurement_table(measurements) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 

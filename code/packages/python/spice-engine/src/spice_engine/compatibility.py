@@ -198,6 +198,7 @@ class DeckMeasurementCard:
     line_number: int
     from_value: float | None = None
     to_value: float | None = None
+    at_value: float | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -1466,6 +1467,7 @@ def _resolve_measurement_line(
     empty_parameter_state = _DeckParameterState()
     from_value: float | None = None
     to_value: float | None = None
+    at_value: float | None = None
     seen_window_tokens: set[str] = set()
     diagnostic_count = len(state.diagnostics)
     for token in tokens[5:]:
@@ -1481,7 +1483,7 @@ def _resolve_measurement_line(
             continue
         key, expression = token.split("=", 1)
         key = key.strip().lower()
-        if key not in {"from", "to"}:
+        if key not in {"from", "to", "at"}:
             _add_measurement_diagnostic(
                 state,
                 code="SPICE_DECK_MEASURE_ARGUMENT",
@@ -1519,8 +1521,35 @@ def _resolve_measurement_line(
             continue
         if key == "from":
             from_value = value
-        else:
+        elif key == "to":
             to_value = value
+        else:
+            at_value = value
+
+    if mode == "find" and at_value is None:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="FIND measurements require an AT value",
+        )
+    if mode != "find" and at_value is not None:
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="measurement AT value is only supported with FIND mode",
+        )
+    if at_value is not None and (from_value is not None or to_value is not None):
+        _add_measurement_diagnostic(
+            state,
+            code="SPICE_DECK_MEASURE_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message="measurement AT value cannot be combined with FROM or TO",
+        )
 
     if from_value is not None and to_value is not None and from_value > to_value:
         _add_measurement_diagnostic(
@@ -1544,6 +1573,7 @@ def _resolve_measurement_line(
             line_number=line_number,
             from_value=from_value,
             to_value=to_value,
+            at_value=at_value,
         )
     )
 
@@ -1559,9 +1589,14 @@ def _normalize_measurement_mode_token(mode: str) -> str | None:
         "peak-to-peak": "pp",
         "peak2peak": "pp",
         "final": "last",
+        "find": "find",
     }
     normalized = aliases.get(normalized, normalized)
-    return normalized if normalized in {"max", "min", "avg", "rms", "pp", "last"} else None
+    return (
+        normalized
+        if normalized in {"max", "min", "avg", "rms", "pp", "last", "find"}
+        else None
+    )
 
 
 def _strip_expression_delimiters(expression: str) -> str:

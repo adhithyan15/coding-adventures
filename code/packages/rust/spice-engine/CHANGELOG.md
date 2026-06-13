@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measure_transient_find_at_probe` and parsed transient
+  `.measure ... FIND ... AT=` routing so deck measurements can sample or
+  linearly interpolate a probe value at one scalar time, matching Python and
+  TypeScript.
 - Add `measure_ac_sweep_probe`, `measure_ac_sweep_cards`, and
   `measure_ac_sweep_deck` so parsed `.measure ac` / `.meas ac` cards can route
   AC sweep probe magnitudes into the shared scalar measurement table surface,
