@@ -20,6 +20,8 @@ runtime and Chief of Staff tools a typed catalog for:
   privilege-tier planning
 - catalog entry summaries that compact integration package shape, local/cloud
   boundaries, policy tier, and metadata counts, including a Hue trial-run helper
+- activation package summaries that join catalog entry metadata with activation
+  plan prerequisites and target shape, including a Hue trial-run helper
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
