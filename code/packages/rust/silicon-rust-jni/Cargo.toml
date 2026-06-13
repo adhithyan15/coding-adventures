@@ -1,0 +1,19 @@
+[package]
+name = "silicon-rust-jni"
+version = "0.1.0"
+edition = "2021"
+description = "JNI native library for the silicon simulation stack: device-physics, mosfet-models, fab-process-simulation"
+publish = false
+
+[lib]
+# cdylib → the .so / .dylib / .dll that the JVM loads via System.loadLibrary.
+# `cargo test --lib` builds a separate test binary (no cdylib output) so the
+# test suite can exercise pure-Rust helpers without a running JVM.
+crate-type = ["cdylib"]
+name = "silicon_rust_jni"
+
+[dependencies]
+device-physics          = { path = "../device-physics" }
+mosfet-models           = { path = "../mosfet-models" }
+fab-process-simulation  = { path = "../fab-process-simulation" }
+jni-bridge              = { path = "../jni-bridge" }
