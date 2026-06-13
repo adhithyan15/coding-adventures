@@ -10,6 +10,22 @@
 //! map to the core's clean names (`add`, `sub`, …); `_sir_print` maps to the
 //! core's `sir_print`.
 
+/// The OOP-runtime import header, appended **only** when a module uses an
+/// object-orientation feature (classes/modules/instance vars/class vars/
+/// constants or reflective `is_a?`-style dispatch).  Pure non-OOP modules
+/// never gain a dependency on this package.  Each helper is aliased to a
+/// `_sir_oop_*` name the emitter uses; see `code/specs/sir-runtime.md`.
+pub const RUNTIME_OOP: &str = r##"# ── SIR OOP runtime (imported from coding-adventures-sir-runtime-oop) ──
+from coding_adventures_sir_runtime_oop import (
+    define_class as _sir_oop_define_class,
+    ivar_get as _sir_oop_ivar_get,
+    ivar_set as _sir_oop_ivar_set,
+    cvar_get as _sir_oop_cvar_get,
+    cvar_set as _sir_oop_cvar_set,
+    call_method as _sir_oop_call_method,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,

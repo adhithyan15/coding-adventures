@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.1.7 — SIR17 OOP & scopes (native + sir-runtime-oop)
+
+Accepts and emits the SIR17 object-orientation statements and scopes, per
+`code/specs/sir-runtime.md`. Because the Ruby→SIR frontend **hoists methods to
+detached, receiver-less top-level functions**, there is no native `self` to hang
+members on; the object model is supplied by the new
+`coding-adventures-sir-runtime-oop` package, imported (aliased `_sir_oop_*`)
+**only** when a module uses an OOP feature.
+
+- `Stmt::ClassDef{name, superclass, body}` → `_sir_oop_define_class(name, super)`
+  (registers ancestry) followed by the body statements (constant / class-var
+  assigns). `Stmt::ModuleDef` → `_sir_oop_define_class(name, None)`.
+  `Stmt::SingletonClassDef` → its (non-`def`) body statements.
+- `Scope::Instance` (`@x`) → `_sir_oop_ivar_get`/`ivar_set` against the
+  current-self stack; `Scope::ClassVar` (`@@x`) → `_sir_oop_cvar_get`/`cvar_set`;
+  `Scope::Const` → an ordinary module-level `NAME = value` (reads emit the bare
+  identifier). All four are also handled in the walrus (block-as-expr) path.
+- `BuiltinCall("__method__", [recv, "meth", args…])` → `_sir_oop_call_method(
+  recv, "meth", …)`; for the class predicates a `Const`-scoped class operand is
+  passed as its **name string** so it works without a binding for the built-in
+  class name.
+- `ACCEPTED_FEATURES += Classes, Modules, InstanceVars, ClassVars, Constants`.
+
+**v0 limitation (documented):** since the frontend does not thread receivers,
+the current-self is a process-global stack and class variables share one
+namespace — single-instance / single-class programs are faithful and never
+raise; full multi-object semantics await frontend receiver threading. New
+Ruby→Python and direct-SIR tests; a non-OOP module is asserted to omit the OOP
+import; emitted output verified to execute on CPython against the real
+`coding-adventures-sir-runtime-oop` (`is_a?` ancestry/exact/primitive, ivar
+round-trip, cvar, `class`, const). Mirrors the TS backend's Q6a.
+
 ## 0.1.6 — SIR16 mutation & loops (native)
 
 Accepts and emits the SIR16 mutation and loop statements as **native** Python
