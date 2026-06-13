@@ -235,13 +235,19 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
-    // gap-108 (CLOC14.51): a single-statement DO-body block is
-    // flattened — `do{x()}while(a)` -> `do x();while(a)` — the same
+    // gap-108 RESOLVED in CLOC12.111 — a single-statement DO-body block
+    // is flattened — `do{x()}while(a)` -> `do x();while(a)` — the same
     // single-statement-block-flatten family as gap-074 (loop body),
     // gap-079 (if body), gap-080 (else body), gap-076 (with body).
-    // A MULTI-statement do-body (`do{x();y()}while(a)`) is correctly
-    // left braced.
-    ("do_body_flatten", "gap-108: do-body single-statement block flatten"),
+    // Fixed by a gap-108 token-re-stitcher block in `whitespace_only.rs`
+    // mirroring the gap-080 else-flatten: anchor on a `do` keyword
+    // (reserved -> `do{…}` is unambiguously the loop body), scan the
+    // body to its `}`, and if it holds exactly one statement (no nested
+    // `{`, no control-flow keyword at depth 1, zero top-level `;`), drop
+    // the braces + swap `}` for a synthetic `;`. The trailing
+    // `while(cond)` is untouched. A MULTI-statement do-body
+    // (`do{x();y()}while(a)`) is correctly left braced.
+    // `minify_do_body_flatten` now ENFORCED.
     // gap-109 (CLOC14.51): a STRING-literal method KEY is normalised to
     // a COMPUTED key by upstream — `{"m"(){}}` -> `{["m"](){}}` — in
     // both class and object bodies (and after `static`:

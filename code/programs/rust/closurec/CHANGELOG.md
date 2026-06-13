@@ -2,6 +2,34 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.115.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-108** — a do-while loop whose body is a single
+  un-terminated statement now has its braces removed, matching the
+  flattening upstream already applies to other single-statement
+  bodies:
+
+      do{x()}while(a);  ->  do x();while(a);
+
+  The fix adds a gap-108 token-re-stitcher block in `whitespace_only.rs`,
+  a direct sibling of the gap-080 else-body flatten: anchor on a `do`
+  keyword (reserved, so `do{…}` is unambiguously the loop body — never
+  an object literal), scan the body `{…}` to its matching `}`, and if it
+  holds exactly one statement (no nested `{`, no control-flow keyword at
+  depth 1, zero top-level `;`), drop the braces and replace the `}` with
+  a synthetic `;`. The trailing `while(cond)` is untouched. A
+  multi-statement body (`do{x();y()}while(a)`) keeps its braces; an empty
+  body (`do{}while(a)`) is left for a follow-up (a `do;while` spacing
+  nit). Six `gap108_*` unit tests cover the flatten, the multi-statement
+  and nested-keyword guards, consecutive loops, and the
+  already-flat/sibling non-regression cases. Two existing
+  property-key-safety tests (`gap033_try_as_object_property_does_not_arm`,
+  `gap034_class_as_property_does_not_arm`) had their expected output
+  updated to the now-flattened do-body — the property-literal safety
+  they guard is unchanged. Verified byte-identical to upstream Closure
+  v20240317.
+
 ## [0.114.0] - 2026-06-12
 
 ### Fixed

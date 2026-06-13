@@ -2544,6 +2544,124 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-108: do-body single-statement block flatten --------
+    // `do{S}while(cond)` whose body `{S}` is a SINGLE un-terminated
+    // statement → `do S;while(cond)`. The do-while sibling of
+    // gap-074 (loop body), gap-079 (if body), gap-080 (else body),
+    // gap-076 (with body).
+    //
+    //   do{x()}while(a);  →  do x();while(a);
+    //
+    // Like `else` (gap-080) the `do` keyword has NO `(…)` header —
+    // its body `{` follows IMMEDIATELY, and `do` directly followed by
+    // `{` is UNAMBIGUOUSLY the loop body: `do` is a reserved word, so
+    // `do{…}` can never be an object literal or a labelled block, and
+    // the only grammar that admits `do { … }` is the do-while
+    // statement. The trailing `while(cond)` is left untouched — the
+    // synthetic `;` that replaces the body `}` sits directly before
+    // it (`do x();while(a)`, valid).
+    //
+    // Same provably-safe minimal slice as gap-074/079/080 (matches
+    // `minify_do_body_flatten`): the body has NO nested `{`, NO
+    // control-flow keyword at depth 1, and EXACTLY ZERO top-level `;`
+    // (a single un-terminated statement). A MULTI-statement body
+    // (`do{x();y()}while(a)`) has `top_semis >= 1` and keeps its
+    // braces; an empty body (`do{}while(a)`) is `non_empty == false`
+    // and is left for a follow-up (the `do;while` spacing nit). The
+    // body is dropped braces + a synthetic `;` terminator, reusing
+    // gap-067's `synth_semi`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            let is_do =
+                is_word_like(&kept[i]) && kept[i].value.as_str() == "do";
+            // `do` is reserved, so a `.do`/`?.do` member access can
+            // never legally be followed by a `{` block — but keep the
+            // look-behind for symmetry with gap-074/080's guard.
+            let is_property = i >= 1
+                && (is_structural_punct(&kept[i - 1], ".")
+                    || is_structural_punct(&kept[i - 1], "?."));
+            if !(is_do
+                && !is_property
+                && is_structural_punct(&kept[i + 1], "{"))
+            {
+                i += 1;
+                continue;
+            }
+            // The body `{` follows the `do` directly (no header).
+            let body_open = i + 1;
+            // Scan the body to its matching `}`, gathering the same
+            // eligibility info as gap-074/080.
+            let mut bdepth: i32 = 1;
+            let mut body_close: Option<usize> = None;
+            let mut has_nested_brace = false;
+            let mut has_blocking_keyword = false;
+            let mut top_semis: u32 = 0;
+            let mut k = body_open + 1;
+            while k < kept.len() {
+                let t = &kept[k];
+                if is_structural_punct(t, "{") {
+                    has_nested_brace = true;
+                    bdepth += 1;
+                } else if is_structural_punct(t, "(")
+                    || is_structural_punct(t, "[")
+                {
+                    bdepth += 1;
+                } else if is_structural_punct(t, "}") {
+                    bdepth -= 1;
+                    if bdepth == 0 {
+                        body_close = Some(k);
+                        break;
+                    }
+                } else if is_structural_punct(t, ")")
+                    || is_structural_punct(t, "]")
+                {
+                    bdepth -= 1;
+                } else if bdepth == 1 {
+                    if is_structural_punct(t, ";") {
+                        top_semis += 1;
+                    } else if is_word_like(t)
+                        && matches!(
+                            t.value.as_str(),
+                            "function"
+                                | "try"
+                                | "if"
+                                | "while"
+                                | "for"
+                                | "do"
+                                | "switch"
+                                | "class"
+                        )
+                    {
+                        has_blocking_keyword = true;
+                    }
+                }
+                k += 1;
+            }
+            if let Some(bc) = body_close {
+                let non_empty = bc > body_open + 1;
+                if non_empty
+                    && !has_nested_brace
+                    && !has_blocking_keyword
+                    && top_semis == 0
+                {
+                    if let Some(semi) = synth_semi.as_ref() {
+                        drops.push(body_open); // do-body `{`
+                        kept[bc] = semi; // `}` → synthetic `;`
+                        i = bc + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     let kept = kept;
 
     // Re-stitch: insert a single space between two adjacent
@@ -5306,9 +5424,14 @@ mod tests {
     fn gap033_try_as_object_property_does_not_arm() {
         // The original failing input the security review
         // identified.
+        // The `{try:1}` property literal must stay intact and not
+        // contaminate the following `do{...}`. As of gap-108 the
+        // single-statement do-body now flattens (`do{y}` -> `do y;`),
+        // matching upstream — the property-key safety this test
+        // guards is unchanged (the `{try:1}` is preserved verbatim).
         assert_eq!(
             minify("var t={try:1};do{y}while(x);"),
-            "var t={try:1};do{y}while(x);"
+            "var t={try:1};do y;while(x);"
         );
     }
 
@@ -5713,9 +5836,13 @@ mod tests {
     /// Same defect family as gap-033's `try`-as-property bug.
     #[test]
     fn gap034_class_as_property_does_not_arm() {
+        // gap-108: the single-statement do-body now flattens
+        // (`do{y}` -> `do y;`); the `{class:1}` property literal
+        // stays intact — the contamination this test guards against
+        // is still prevented.
         assert_eq!(
             minify("var o={class:1};do{y}while(x);"),
-            "var o={class:1};do{y}while(x);"
+            "var o={class:1};do y;while(x);"
         );
     }
 
@@ -7472,6 +7599,62 @@ mod tests {
     #[test]
     fn gap080_else_property_key_untouched() {
         assert_eq!(minify("var o={else:1};"), "var o={else:1};");
+    }
+
+    // ---- gap-108: do-body single-statement block flatten ----
+    //
+    // `do{S}while(cond)` with a single un-terminated body statement
+    // flattens to `do S;while(cond)`. The do-while sibling of
+    // gap-074/079/080/076.
+
+    /// The target case: `do{x()}while(a);` -> `do x();while(a);`.
+    #[test]
+    fn gap108_do_body_flattens() {
+        assert_eq!(minify("do{x()}while(a);"), "do x();while(a);");
+    }
+
+    /// Boundary: a MULTI-statement do-body keeps its braces.
+    #[test]
+    fn gap108_do_body_multi_keeps_braces() {
+        assert_eq!(
+            minify("do{x();y()}while(a);"),
+            "do{x();y()}while(a);"
+        );
+    }
+
+    /// Conservative deferral: a do-body containing a nested
+    /// control-flow keyword keeps its braces (left for follow-up;
+    /// output stays valid — distinct from the `if`-body dangling-else
+    /// hazard, but the same conservative guard).
+    #[test]
+    fn gap108_do_body_nested_control_flow_kept() {
+        assert_eq!(
+            minify("do{if(b)c()}while(a);"),
+            "do{if(b)c()}while(a);"
+        );
+    }
+
+    /// Two consecutive do-while loops each flatten independently.
+    #[test]
+    fn gap108_consecutive_do_loops_both_flatten() {
+        assert_eq!(
+            minify("do{x()}while(a);do{y()}while(b);"),
+            "do x();while(a);do y();while(b);"
+        );
+    }
+
+    /// **Non-regression**: an already-flat do-while is unchanged.
+    #[test]
+    fn gap108_already_flat_unchanged() {
+        assert_eq!(minify("do x();while(a);"), "do x();while(a);");
+    }
+
+    /// **Non-regression**: the sibling loop/if/else flattens still
+    /// fire alongside the new do arm.
+    #[test]
+    fn gap108_sibling_flattens_unaffected() {
+        assert_eq!(minify("while(x){g()}"), "while(x)g();");
+        assert_eq!(minify("if(x){y()}else{z()}"), "if(x)y();else z();");
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
