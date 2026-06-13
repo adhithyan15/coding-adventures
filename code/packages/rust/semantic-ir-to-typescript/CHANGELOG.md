@@ -1,5 +1,35 @@
 # Changelog
 
+## 0.1.7 — SIR17 exceptions (native try/catch + sir-runtime-exceptions)
+
+Accepts and emits the SIR17 `Exceptions` feature, per
+`code/specs/sir-runtime.md`. `begin/rescue/ensure` translates to a **native**
+`try { … } catch (__exc) { … } finally { … }`; the two pieces with no faithful
+native equivalent come from the new `@coding-adventures/sir-runtime-exceptions`
+package, imported (as `__SirExc`) **only** when a module throws or rescues.
+
+- `Stmt::TryCatch{body, rescues, ensure_body}` → `try { body }`. Because a
+  native `catch` binds one variable and catches everything while Ruby has an
+  ordered list of typed `rescue` clauses, the `catch (__exc)` body is an
+  if/else-if chain calling `__SirExc.rescueMatches(__exc, [class names])` per
+  clause in source order; a `rescue Foo => e` binds `const e = __exc`; if no
+  clause matches the original exception is re-`throw`n (Ruby's "propagate when
+  unrescued"). `ensure_body` → a `finally` block (omitted when absent).
+- `BuiltinCall("raise", …)` → `__SirExc.raiseError(…)`: a `Const` class operand
+  (`raise Foo` / `raise Foo, "m"`) is passed as its *name string* with the
+  optional message; a non-`Const` first arg (`raise "m"`) becomes an implicit
+  `RuntimeError` carrying that message; bare `raise` → a generic re-raise.
+- `collect_assigned_locals` now descends into try/rescue/ensure bodies so an
+  outer local reassigned inside a `begin` still emits `let`.
+- `ACCEPTED_FEATURES += Exceptions`.
+
+New Ruby→TS and direct-SIR tests (begin/rescue/ensure shape, message-only
+`raise`, bare-rescue catch-all + rethrow, non-throwing module omits the import).
+Emitted output verified to execute on Node against the real
+`@coding-adventures/sir-runtime-exceptions` (ancestor-matched rescue with bound
+message, `ensure` runs, unmatched exception propagates). Mirrors the Python
+backend's Q7b.
+
 ## 0.1.6 — SIR17 OOP & scopes (native + sir-runtime-oop)
 
 Accepts and emits the SIR17 object-orientation statements and scopes, per
