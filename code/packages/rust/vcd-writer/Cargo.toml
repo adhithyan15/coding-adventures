@@ -1,0 +1,5 @@
+[package]
+name = "vcd-writer"
+version = "0.1.0"
+edition = "2021"
+description = "VCD (Value Change Dump) streaming writer — IEEE 1364-2005 §18; waveform output for the silicon-stack simulation pipeline"

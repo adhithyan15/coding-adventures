@@ -763,4 +763,7 @@ members = [
     "gdsii-writer",
     "drc-lvs",
     "tape-out",
+    "hardware-vm",
+    "vcd-writer",
+    "hdl-elaboration",
 ]
