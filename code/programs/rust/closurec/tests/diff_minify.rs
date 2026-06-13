@@ -210,6 +210,26 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // same deferred gap.
     ("num_neg_exp_frac", "gap-085: negative-exp scientific -> fractional shortest-form"),
     ("num_small_frac",   "gap-085: small decimal fraction -> exponential (0.0001 -> 1E-4)"),
+    // gap-107 (CLOC14.50): a FRACTIONAL float literal (non-integer
+    // value) with trailing zeros in its fractional part keeps them
+    // verbatim, but upstream strips them to the shortest exact form:
+    //   `1.50`     -> `1.5`     (trailing zero)
+    //   `123.4500` -> `123.45`  (multiple trailing zeros)
+    //   `0.50`     -> `.5`      (trailing-zero strip + leading-`0`
+    //                            elision; the leading-zero half is the
+    //                            gap-085 fractional family)
+    // Distinct from gap-082 (which already canonicalises
+    // INTEGER-valued floats like `2.0`/`100.00` — those go through the
+    // u128 path). gap-107 is the NON-integer fractional case. It is
+    // tractable WITHOUT Grisu/Ryu because the value is exactly
+    // representable: strip trailing `0`s after the `.` (and a bare
+    // trailing `.`), then apply the leading-`0` elision. The genuinely
+    // Grisu-needing cases (f64 precision loss like
+    // `12345678901234567890` -> `1.2345678901234567E19`, and
+    // scientific<->fractional like `0.0001` -> `1E-4`) remain gap-085.
+    ("num_frac_trail_zero",  "gap-107: fractional trailing zero 1.50 -> 1.5"),
+    ("num_frac_trail_zeros", "gap-107: multiple fractional trailing zeros -> 123.45"),
+    ("num_frac_lead_zero",   "gap-107: lead+trail zero 0.50 -> .5"),
     // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
     // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
