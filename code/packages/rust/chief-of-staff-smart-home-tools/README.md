@@ -70,6 +70,7 @@ Chief of Staff job/session/agent
   -> activation-escalation list and summary reads for Chief-facing cases
   -> activation-response list and summary reads for owner-lane next actions
   -> activation-remediation list and summary reads for owner-lane work orders
+  -> activation-closure list and summary reads for verification/close gates
   -> activation-risk list and summary reads for policy-tier/surface rollout risk
   -> activation dependency graph list and summary reads for prerequisite edges
   -> runtime snapshot, desired-state, and pairing-session inventory reads
@@ -161,6 +162,8 @@ Chief of Staff job/session/agent
 - `smart_home.get_integration_activation_response_summary`
 - `smart_home.list_integration_activation_remediation`
 - `smart_home.get_integration_activation_remediation_summary`
+- `smart_home.list_integration_activation_closure`
+- `smart_home.get_integration_activation_closure_summary`
 - `smart_home.list_integration_activation_risk`
 - `smart_home.get_integration_activation_risk_summary`
 - `smart_home.list_integration_activation_dependencies`

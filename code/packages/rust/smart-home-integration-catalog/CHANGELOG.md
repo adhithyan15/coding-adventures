@@ -112,6 +112,8 @@ All notable changes to this package will be documented in this file.
 - `IntegrationActivationRemediationItem` and
   `IntegrationActivationRemediationSummary` for turning response items into
   executable owner-lane remediation queues.
+- `IntegrationActivationClosureGate` and `IntegrationActivationClosureSummary`
+  for turning remediation work orders into release closure gates.
 - `IntegrationActivationRiskItem` and `IntegrationActivationRiskSummary` for
   grouping rollout candidates by policy tier and policy surface after applying
   host-specific readiness context.
