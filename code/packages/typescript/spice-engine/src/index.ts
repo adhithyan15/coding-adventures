@@ -5619,7 +5619,54 @@ export function dcOp(
   options: DcOpOptions = {},
 ): DcResult {
   const solveOptions = validatedDcOpOptions(options);
-  const solution = solveDcNewton(circuit, solveOptions);
+  return dcOpFromInitialVector(circuit, solveOptions);
+}
+
+export function dcOpWithInitialVector(
+  circuit: Circuit,
+  initialVector: readonly number[],
+  options: DcOpOptions = {},
+): DcResult {
+  const solveOptions = validatedDcOpOptions(options);
+  validateDcInitialVector(circuit, initialVector);
+  return dcOpFromInitialVector(circuit, solveOptions, initialVector);
+}
+
+export function dcOpWithInitialConditions(
+  circuit: Circuit,
+  summary: DeckInitialConditionSummary,
+  options: DcOpOptions = {},
+): DcResult {
+  return dcOpWithInitialVector(
+    circuit,
+    dcInitialVectorFromConditions(circuit, summary.initialConditions, summary.nodesets),
+    options,
+  );
+}
+
+export function dcInitialVectorFromConditions(
+  circuit: Circuit,
+  initialConditions: readonly DeckNodeCondition[],
+  nodesets: readonly DeckNodeCondition[] = [],
+): number[] {
+  const nodeIndices = collectNodeIndices(circuit);
+  const voltageSources = collectVoltageSources(circuit, []);
+  const vector = Array.from({ length: nodeIndices.size + voltageSources.size }, () => 0.0);
+  for (const condition of nodesets) {
+    applyNodeConditionToInitialVector(condition, nodeIndices, vector);
+  }
+  for (const condition of initialConditions) {
+    applyNodeConditionToInitialVector(condition, nodeIndices, vector);
+  }
+  return vector;
+}
+
+function dcOpFromInitialVector(
+  circuit: Circuit,
+  solveOptions: ResolvedDcOpOptions,
+  initialVector?: readonly number[],
+): DcResult {
+  const solution = solveDcNewton(circuit, solveOptions, initialVector);
   if (solution.converged) {
     return makeDcResult(
       solution.nodeVoltages,
@@ -8328,6 +8375,45 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
     pseudoTransientConductance,
     pseudoTransientMaxIterations,
   };
+}
+
+function validateDcInitialVector(circuit: Circuit, initialVector: readonly number[]): void {
+  const nodeIndices = collectNodeIndices(circuit);
+  const voltageSources = collectVoltageSources(circuit, []);
+  const expectedLength = nodeIndices.size + voltageSources.size;
+  if (initialVector.length !== expectedLength) {
+    throw invalidElement(
+      "dcInitialVector",
+      `expected ${expectedLength} entries for circuit MNA ordering, got ${initialVector.length}`,
+    );
+  }
+  if (initialVector.some((value) => !Number.isFinite(value))) {
+    throw invalidElement("dcInitialVector", "all entries must be finite");
+  }
+}
+
+function applyNodeConditionToInitialVector(
+  condition: DeckNodeCondition,
+  nodeIndices: ReadonlyMap<string, number>,
+  vector: number[],
+): void {
+  if (!Number.isFinite(condition.value)) {
+    throw invalidElement(condition.directive, `V(${condition.node}) must be finite`);
+  }
+  if (isGround(condition.node)) {
+    if (condition.value !== 0.0) {
+      throw invalidElement(condition.directive, `V(${condition.node}) conflicts with ground`);
+    }
+    return;
+  }
+  const index = nodeIndices.get(condition.node);
+  if (index === undefined) {
+    throw invalidElement(
+      condition.directive,
+      `references unknown node ${JSON.stringify(condition.node)}`,
+    );
+  }
+  vector[index] = condition.value;
 }
 
 function solveDcWithGminStepping(

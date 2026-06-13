@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Initial-condition execution aids** — `dc_initial_vector_from_conditions()`
+  maps parsed `.ic` / `.nodeset` node-voltage hints into the DC solver's MNA
+  warm-start vector, and `dc_op_with_initial_conditions()` applies those hints
+  to operating-point solves with `.ic` values taking precedence over
+  `.nodeset`, matching Rust and TypeScript.
+
 - **Deck function-call expression resolution** — `resolve_deck_parameters()`
   now collects scalar `.func` definitions before `.end` and evaluates scalar
   function calls in `.param` assignments plus braced or quoted active-line

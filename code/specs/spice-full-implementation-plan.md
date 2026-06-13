@@ -24,7 +24,8 @@ downstream tools to compare.
      map-backed `.include` / `.lib` source resolution, scalar `.param`
      evaluation, active-line expression rewriting, function-definition
      extraction, scalar function-call evaluation, and initial-condition /
-     nodeset extraction now have shared diagnostic footholds.
+     nodeset extraction plus DC warm-start execution aids now have shared
+     diagnostic and solver footholds.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -214,17 +215,24 @@ downstream tools to compare.
     - Function names are case-insensitive, arguments are scalar expressions,
       local arguments shadow deck parameters inside function bodies, and stable
       diagnostics cover unknown functions, bad arity, and recursive calls.
-    - The slice deliberately keeps `.ic` / `.nodeset` hints as parsed metadata;
-      execution-layer wiring for initial guesses remains future deck execution
-      work.
+    - The slice deliberately kept `.ic` / `.nodeset` hints as parsed metadata;
+      execution-layer wiring for initial guesses is covered by the follow-up
+      initial-condition execution-aid slice.
+
+20. Initial-condition execution aids.
+    - Status: completed in this initial-condition execution-aid slice.
+    - Python, Rust, and TypeScript now map parsed `.nodeset` and `.ic`
+      node-voltage hints into DC solver MNA warm-start vectors.
+    - The DC operating-point wrappers apply those vectors to Newton solves,
+      keeping branch-current guesses at zero and letting `.ic` values override
+      `.nodeset` values for the same node.
+    - Stable errors reject non-finite hint values, non-zero ground hints,
+      unknown nodes, and malformed low-level initial-vector lengths.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Wire parsed `.ic` / `.nodeset` hints into analysis execution as initial
-     guesses or solver aids now that scalar `.param` and `.func` expression
-     surfaces have shared cross-language resolution.
    - Expand the initial `.measure`, `.save`, and `.probe` support toward full
      SPICE compatibility, including additional measure modes and richer output
      formats.
