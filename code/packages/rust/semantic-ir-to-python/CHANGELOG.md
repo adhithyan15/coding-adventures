@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.4 — import runtime from `coding-adventures-sir-runtime-core`
+
+The Python runtime is no longer inlined into every artifact.  Emitted modules
+now `import` it from the published `coding-adventures-sir-runtime-core` package
+(per `code/specs/sir-runtime.md`), so nothing language-specific is pasted into
+the generated file.
+
+- `runtime.rs` `RUNTIME` is now an import header (`from
+  coding_adventures_sir_runtime_core import (… as _sir_*)`) instead of a ~170-line
+  class/function prelude.  The aliases keep the emitter's historical `_sir_*`
+  call names, so `emit.rs` and the emitted user-code shapes are unchanged
+  (behaviour-preserving).
+- Tests updated to assert the import header rather than the inlined `class Symbol`.
+
 ## 0.1.3 — Ruby → Python end-to-end tests (tests only)
 
 Adds end-to-end tests that drive the **Ruby** frontend
