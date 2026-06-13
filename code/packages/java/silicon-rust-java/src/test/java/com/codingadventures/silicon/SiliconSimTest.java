@@ -105,7 +105,8 @@ class SiliconSimTest {
     @Test
     void testFermiPotentialN() {
         double phi = SiliconSim.fermiPotential(1e23, "n", 300.0);
-        assertTrue(phi > 0.0, "φ_F for n-type should be positive");
+        // Rust device-physics convention: φ_F for n-type = −V_T·ln(N/nᵢ) < 0
+        assertTrue(phi < 0.0, "φ_F for n-type should be negative");
     }
 
     @Test
@@ -147,9 +148,10 @@ class SiliconSimTest {
     void testMosfetThresholdVoltageNmos() {
         double vt = SiliconSim.mosfetThresholdVoltage(
                 "NMOS", 130e-9, 1e-6, 2e-9, 1e24, -0.05, 0.0, 300.0, 0.0);
-        // For a 130 nm NMOS, V_t should be in the range 0.2–0.8 V
-        assertTrue(vt > 0.1 && vt < 1.0,
-                "V_t(NMOS) should be ~0.4 V, got " + vt);
+        // N_body = 1e24 m⁻³ (1e18 cm⁻³) is a heavily-doped body, yielding
+        // phi_f ≈ 0.476 V, gamma ≈ 0.334 V^½, and V_t ≈ 1.228 V.
+        assertTrue(vt > 1.0 && vt < 1.5,
+                "V_t(NMOS) should be ~1.228 V for N_body=1e24 m⁻³, got " + vt);
     }
 
     @Test
@@ -306,9 +308,10 @@ class SiliconSimTest {
 
     @Test
     void testDiffusivityUnknownSpecies() {
-        // Unknown species → 0.0 (infallible, no exception)
+        // Unknown species → conservative fallback of 1e-14 cm²/s (same as Boron at 1000 °C).
+        // The function is infallible; it never throws even for unknown species.
         double d = SiliconSim.diffusivityCm2PerS("Xe", 1000.0);
-        assertEquals(0.0, d, 1e-30);
+        assertEquals(1e-14, d, 1e-16);
     }
 
     // ------------------------------------------------------- full process flow
