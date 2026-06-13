@@ -1,6 +1,7 @@
-# minify_nullish_assign — ES2021 nullish assignment
+# minify_nullish_assign — nullish coalescing assignment
 
-See `input/a.js` for input and `expected.stdout` for the
-upstream Closure v20240317 WHITESPACE_ONLY output.
+Input: `a??=b;`
 
-Captured by CLOC14.10. Verdict: PASS
+Upstream Closure v20240317 (WHITESPACE_ONLY): `a??=b;`
+
+Captured by CLOC14.33 byte-identity exploration.

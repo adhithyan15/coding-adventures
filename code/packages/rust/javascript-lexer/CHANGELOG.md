@@ -2,6 +2,20 @@
 
 All notable changes to the `coding-adventures-javascript-lexer` crate will be documented in this file.
 
+## [0.5.1] - 2026-06-12
+
+### Fixed
+- **REGEX flag class (CORRECTNESS, ES2024/ES2025)** — the `REGEX` token
+  pattern in `es2024.tokens` and `es2025.tokens` had the flag character
+  class `[dgimsvy]`, which accidentally omitted the ES2015 `u` (unicode)
+  flag — a typo introduced when `v` (unicodeSets, ES2024) was added. As
+  a result a regex such as `/x/gimsuy` lexed as the truncated regex
+  `/x/gims` followed by a stray identifier `uy`. Corrected the class to
+  the full ES2024 set `[dgimsuvy]` (d, g, i, m, s, u, v, y) in both
+  source grammars and regenerated the compiled lexer pattern. New tests
+  `es2025_regex_accepts_all_modern_flags_as_one_token` and
+  `es2024_regex_accepts_u_flag`. Unblocks closurec gap-096.
+
 ## [0.5.0] - 2026-05-21
 
 ### Added

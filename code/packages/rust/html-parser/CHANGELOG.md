@@ -6,6 +6,44 @@ documented in this file.
 ## Unreleased
 
 ### Added
+- Browser-readiness form-association descriptors now expose form owners, labels,
+  fieldset membership, datalist links, and output calculation relationships as a
+  flat browser-planning inventory.
+- Browser-readiness form-reset descriptors now expose resettable controls,
+  resetter controls, default reset values, selection/checked reset state, and
+  form-level `onreset` hooks as a flat browser-planning inventory.
+- Browser-readiness form-submission descriptors now expose successful controls,
+  submission values, form action/method/target defaults, and submitter routing
+  overrides as a flat browser-planning inventory.
+- Browser-readiness form-validation descriptors now expose validation
+  candidates, constraint attributes, barred controls, form-level `novalidate`,
+  and submitter-level validation bypass hints as a flat browser-planning
+  inventory.
+- Browser-readiness context-menu interaction descriptors now expose
+  `oncontextmenu` hooks, ARIA menu-popup invokers, menu/menuitem roles, popover
+  menu surfaces, and hidden/inert/disabled blockers as a flat browser-planning
+  inventory.
+- Browser-readiness fullscreen-interaction descriptors now expose embedded
+  fullscreen permission hints, `allowfullscreen` state, fullscreen event hooks,
+  and document/body fullscreen callbacks as a flat browser-planning inventory.
+- Browser-readiness animation-interaction descriptors now expose CSS animation
+  and transition event hooks, timeline phase grouping, document/body scope, and
+  cancellation paths as a flat browser-planning inventory.
+- Browser-readiness lifecycle-event descriptors now expose document/body load
+  and unload hooks, visibility/history/network lifecycle handlers, and
+  element-level error recovery as a flat browser-planning inventory.
+- Browser-readiness composition-interaction descriptors now expose IME
+  composition events, beforeinput/input hooks, text controls, editing hosts, and
+  blocked composition paths as a flat browser-planning inventory.
+- Browser-readiness scroll-interaction descriptors now expose `onscroll`,
+  `onscrollend`, wheel/touch routing, ARIA scrollbar value state, and blocked
+  scroll paths as a flat browser-planning inventory.
+- Browser-readiness pointer-interaction descriptors now expose click, mouse,
+  touch, pointer, wheel, and drag/drop handler routing plus command/editing
+  context and blocked pointer paths as a flat browser-planning inventory.
+- Browser-readiness selection-interaction descriptors now expose `onselect` and
+  selection-change handlers, input hooks, editing hosts, text controls, and
+  blocked selection paths as a flat browser-planning inventory.
 - Browser-readiness clipboard-interaction descriptors now expose copy/cut/paste
   handlers, input hooks, editing hosts, text controls, and blocked clipboard
   paths as a flat browser-planning inventory.
@@ -44,6 +82,9 @@ documented in this file.
 - Browser-readiness form-policy descriptors now expose form submission targets,
   accept/autocomplete/rel policy tokens, validation bypass state, and submitter
   overrides as a flat browser-planning inventory.
+- Browser-readiness form-autofill descriptors now expose autocomplete tokens,
+  section/address/contact field hints, webauthn markers, and disabled/readonly/
+  hidden/off blockers as a flat browser-planning inventory.
 - Browser-readiness fetch-policy descriptors now expose subresource integrity,
   CORS, nonce, referrer policy, iframe CSP/sandbox/permissions, fullscreen, and
   credentialless metadata as a flat browser-planning inventory.

@@ -194,6 +194,16 @@ fn llvm_type_for(type_hint: &str, function: &str) -> Result<&'static str, IIRLlv
         "i64" | "u64" => Ok("i64"),
         "f32" => Ok("float"),
         "f64" => Ok("double"),
+        // McCarthy W12b (tagged-word lisp): a lisp value is a tagged 64-bit word
+        // (the C runtime's `LispyValue`), and the polymorphic `any` flows as the
+        // same word. A lisp heap reference (`ref<LispyPair>`, and any future
+        // `ref<Lispy…>`) is likewise carried as a tagged `i64` — the runtime owns
+        // the cell layout, the backend only moves words and calls `__twig_lispy_*`.
+        // NON-lisp references (`ref<Foo>`) remain unsupported (no value model).
+        "any" => Ok("i64"),
+        t if t.starts_with("ref<Lispy") => Ok("i64"),
+        // McCarthy W13 (F6): an interned symbol is a tagged 64-bit immediate.
+        "symbol" => Ok("i64"),
         other => Err(IIRLlvmError::UnsupportedType {
             function: function.to_string(),
             type_hint: other.to_string(),
@@ -228,6 +238,12 @@ const SUPPORTED_OPS: &[&str] = &[
     "label", "jmp", "jmp_if_true", "jmp_if_false",
     // LLVM04 — calls
     "call", "call_builtin",
+    // LLVM05 — byte-tape memory (LANG-MATRIX LM-L Brainfuck). `alloc_bytes`
+    // mallocs a zero-filled tape, `load_byte`/`store_byte` index it at byte
+    // width (zero-extend on load, truncate on store). The same op trio the
+    // x86_64 / native AOT backend already supports (LANG76); we add the LLVM
+    // lowering so Brainfuck — which builds an implicit byte tape — compiles.
+    "alloc_bytes", "load_byte", "store_byte",
 ];
 
 /// Builtins the LLVM backend knows how to lower.
@@ -243,7 +259,50 @@ const SUPPORTED_OPS: &[&str] = &[
 /// We pick that name (rather than `@env.__print_i64` etc.) because LLVM
 /// global names commonly use `__` for runtime / launcher symbols, and the
 /// downstream linker resolves the host implementation.
-const SUPPORTED_BUILTINS: &[&str] = &["print_i64"];
+///
+/// LLVM05 (LANG-MATRIX LM-L Brainfuck) adds `putchar` / `getchar` — Brainfuck's
+/// `.` and `,`. These lower directly to the libc `@putchar(i32)` / `@getchar()`
+/// the C standard library already provides, so no host-runtime shim is needed
+/// (unlike `print_i64`); `clang` links libc by default.
+const SUPPORTED_BUILTINS: &[&str] = &["print_i64", "putchar", "getchar"];
+
+/// McCarthy W12b — the **tagged-word lisp** builtins the LLVM backend lowers to
+/// `call`s into the shared C runtime (`twig-aot/runtime/lispy_runtime.c`), the
+/// same runtime the native AOT backend links. Each entry is
+/// `(iir_name, runtime_symbol, arity)`; every lisp value is a tagged 64-bit word
+/// so the signature is always `i64 (i64 × arity)`. The `lispy_*` IIR names are
+/// produced by `iir_builtin_lowering::lower_heap_builtins_runtime` /
+/// `lower_lisp_repr`; they map to the runtime's `__twig_lispy_*` symbols.
+///
+/// | iir name         | runtime symbol            | McCarthy primitive            |
+/// |------------------|---------------------------|-------------------------------|
+/// | `lispy_cons`     | `__twig_lispy_cons`       | `CONS` — build a pair `[a|b]`  |
+/// | `lispy_car`/`cdr`| `__twig_lispy_car`/`cdr`  | `CAR`/`CDR`                    |
+/// | `lispy_pair_p`   | `__twig_lispy_pair_p`     | `pair?` (→ `ATOM`)            |
+/// | `lispy_equal`    | `__twig_lispy_equal`      | `EQ`                          |
+/// | `lispy_not`      | `__twig_lispy_not`        | logical `not`                 |
+/// | `lispy_truthy`   | `__twig_lispy_truthy`     | `COND` clause test            |
+/// | `lispy_box_int`  | `__twig_lispy_box_int`    | int → tagged word             |
+/// | `lispy_unbox_int`| `__twig_lispy_unbox_int`  | tagged word → int (result)    |
+/// | `lispy_nil`      | `__twig_lispy_nil`        | `()` / nil                    |
+const LISPY_BUILTINS: &[(&str, &str, usize)] = &[
+    ("lispy_cons", "__twig_lispy_cons", 2),
+    ("lispy_car", "__twig_lispy_car", 1),
+    ("lispy_cdr", "__twig_lispy_cdr", 1),
+    ("lispy_pair_p", "__twig_lispy_pair_p", 1),
+    ("lispy_equal", "__twig_lispy_equal", 2),
+    ("lispy_not", "__twig_lispy_not", 1),
+    ("lispy_truthy", "__twig_lispy_truthy", 1),
+    ("lispy_box_int", "__twig_lispy_box_int", 1),
+    ("lispy_unbox_int", "__twig_lispy_unbox_int", 1),
+    ("lispy_to_exit_code", "__twig_lispy_to_exit_code", 1),
+    ("lispy_nil", "__twig_lispy_nil", 0),
+];
+
+/// Look up a `lispy_*` builtin by its IIR name.
+fn lispy_builtin(name: &str) -> Option<&'static (&'static str, &'static str, usize)> {
+    LISPY_BUILTINS.iter().find(|(n, _, _)| *n == name)
+}
 
 /// Pre-flight validation for IIR → LLVM lowering.
 ///
@@ -363,12 +422,32 @@ pub fn lower_iir_to_llvm(
     // Currently the only supported builtin is `print_i64` (LLVM convention
     // chosen for BASIC's PRINT — see `SUPPORTED_BUILTINS` doc above).
     let mut used_print_i64 = false;
+    // LLVM05 — Brainfuck I/O + tape: libc `putchar`/`getchar` and the
+    // allocator behind `alloc_bytes`. Declared once each, when used.
+    let mut used_putchar = false;
+    let mut used_getchar = false;
+    let mut used_alloc_bytes = false;
+    // McCarthy W12b: collect the tagged-word lisp builtins actually used, in
+    // first-seen order, so each gets exactly one `declare i64 @__twig_lispy_*`.
+    let mut used_lispy: Vec<&'static (&'static str, &'static str, usize)> = Vec::new();
     for f in &module.functions {
         for i in &f.instructions {
+            if i.op == "alloc_bytes" {
+                used_alloc_bytes = true;
+            }
             if i.op == "call_builtin" {
                 if let Some(Operand::Var(name)) = i.srcs.first() {
-                    if name == "print_i64" {
-                        used_print_i64 = true;
+                    match name.as_str() {
+                        "print_i64" => used_print_i64 = true,
+                        "putchar" => used_putchar = true,
+                        "getchar" => used_getchar = true,
+                        _ => {
+                            if let Some(b) = lispy_builtin(name) {
+                                if !used_lispy.iter().any(|(n, _, _)| n == &b.0) {
+                                    used_lispy.push(b);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -377,6 +456,28 @@ pub fn lower_iir_to_llvm(
     if used_print_i64 {
         out.push('\n');
         out.push_str("declare void @__print_i64(i64)\n");
+    }
+    // LLVM05 — libc / allocator declarations for the Brainfuck tape & I/O.
+    // `calloc(nmemb, size)` returns a zero-filled buffer (BF cells start at 0);
+    // `putchar`/`getchar` are the libc character I/O the BF `.`/`,` map to.
+    if used_alloc_bytes || used_putchar || used_getchar {
+        out.push('\n');
+        if used_alloc_bytes {
+            out.push_str("declare ptr @calloc(i64, i64)\n");
+        }
+        if used_putchar {
+            out.push_str("declare i32 @putchar(i32)\n");
+        }
+        if used_getchar {
+            out.push_str("declare i32 @getchar()\n");
+        }
+    }
+    if !used_lispy.is_empty() {
+        out.push('\n');
+        for (_iir_name, symbol, arity) in &used_lispy {
+            let params = vec!["i64"; *arity].join(", ");
+            out.push_str(&format!("declare i64 @{symbol}({params})\n"));
+        }
     }
 
     // ── Function bodies ───────────────────────────────────────────────────
@@ -421,12 +522,38 @@ struct FnState<'a> {
     /// Module-wide map of every user-defined function's signature.  Built
     /// up-front by `lower_iir_to_llvm` before any function body is lowered.
     callee_sigs: &'a HashMap<String, FnSig>,
+    /// Is the current LLVM basic block still **open** (no terminator yet)?
+    /// LLVM requires every block to end in a terminator (`br`/`ret`/…). IIR
+    /// blocks fall through to the next `label` implicitly, and a block whose
+    /// body is all tracked-not-emitted `const`/`mov` emits nothing — so two
+    /// `label`s can land back-to-back. Before emitting a `label` while a block
+    /// is open we synthesize an explicit `br` fallthrough. `false` after
+    /// `jmp`/`ret`; `true` at entry and after every `label`/`jmp_if_*`.
+    /// (McCarthy W12b-3 — needed once `COND`'s clause blocks appeared.)
+    block_open: bool,
+    /// Variables that are assigned in **more than one place** (e.g. a `COND`
+    /// result var written in each clause block). The `const`/`mov` side-map
+    /// trick only models straight-line SSA, so a cross-block variable collapses
+    /// to its last assignment. We instead give each such variable a stack slot
+    /// (`alloca`): every assignment becomes a `store`, every read a `load`. This
+    /// is the naive-frontend / `opt -mem2reg` pattern (McCarthy W12b-3, F5).
+    slots: std::collections::HashSet<String>,
 }
 
 impl FnState<'_> {
     fn fresh(&mut self, hint: &str) -> String {
         self.counter += 1;
         format!("%__{}{}", hint, self.counter)
+    }
+
+    /// Like [`fresh`](Self::fresh) but without the leading `%` — a *bare* SSA
+    /// name suitable for use as an `IIRInstr::dest` (the lowering helpers add
+    /// the `%` themselves). Used to give a promoted stack-slot's assignment a
+    /// unique SSA name so a variable written more than once does not emit
+    /// `%v = …` twice (LLVM rejects "multiple definition of local value").
+    fn fresh_bare(&mut self, hint: &str) -> String {
+        self.counter += 1;
+        format!("__{}{}", hint, self.counter)
     }
 }
 
@@ -464,12 +591,22 @@ fn lower_function(
     // This side-map trick (rather than emitting `%dest = add 0, x` no-ops
     // for const/mov) keeps output close to what `opt -mem2reg` would
     // produce — short, idiomatic, easy to eyeball-verify.
+    // McCarthy W12b-3: any variable assigned in 2+ instructions is promoted to a
+    // stack slot (an `alloca` in the entry block). All slots are `i64` — every
+    // tagged-word / scalar lisp value is an i64 in this backend.
+    let slots = collect_slot_vars(func);
+    for slot in &slots {
+        out.push_str(&format!("  %{slot}.slot = alloca i64\n"));
+    }
+
     let mut state = FnState {
         env: HashMap::new(),
         env_i1: HashMap::new(),
         counter: 0,
         fn_name: &func.name,
         callee_sigs,
+        block_open: true, // the entry block is open until its first terminator.
+        slots,
     };
     for (pname, _) in &func.params {
         state.env.insert(pname.clone(), format!("%{pname}"));
@@ -477,10 +614,114 @@ fn lower_function(
 
     // ── Body ──────────────────────────────────────────────────────────────
     for instr in &func.instructions {
-        lower_instr(instr, &mut state, out)?;
+        lower_instr_with_slots(instr, &mut state, out)?;
     }
 
     out.push_str("}\n");
+    Ok(())
+}
+
+/// Collect the variables that are the `dest` of **two or more** instructions in
+/// `func`. Such a variable cannot be modelled by the `const`/`mov` compile-time
+/// side-map (which keeps only the latest binding and so is valid only within a
+/// single straight-line block); it needs a stack slot so each assignment is a
+/// real `store` and each read a real `load` (McCarthy W12b-3, F5 — `COND`).
+fn collect_slot_vars(func: &IIRFunction) -> std::collections::HashSet<String> {
+    use std::collections::HashMap as Map;
+    let mut counts: Map<&str, usize> = Map::new();
+    for instr in &func.instructions {
+        if let Some(dest) = &instr.dest {
+            *counts.entry(dest.as_str()).or_insert(0) += 1;
+        }
+    }
+    counts
+        .into_iter()
+        .filter(|&(_, n)| n >= 2)
+        .map(|(name, _)| name.to_string())
+        .collect()
+}
+
+/// Wrap [`lower_instr`] with the slot (`alloca`/`load`/`store`) protocol:
+///
+/// 1. **Pre-load:** for every `Var` source operand that is a slot, emit
+///    `%t = load i64, ptr %v.slot` and temporarily rebind it in `env` so the
+///    instruction reads the loaded value.
+/// 2. Lower the instruction normally.
+/// 3. **Post-store:** if `dest` is a slot, emit `store i64 <value>, ptr %v.slot`
+///    (the value the instruction left in `env[dest]` — a literal for `const`/`mov`
+///    or an SSA name for an emitted op) and then drop `env[dest]` so the variable
+///    is only ever read back through its slot.
+/// 4. Restore the env bindings overridden in step 1.
+///
+/// Redundant loads/stores are fine: `opt -mem2reg` collapses them, and an
+/// un-optimized `clang -O0` build runs them correctly.
+fn lower_instr_with_slots(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if state.slots.is_empty() {
+        return lower_instr(instr, state, out); // fast path — no promoted vars.
+    }
+
+    // 1. Pre-load slot source operands.
+    let mut saved: Vec<(String, Option<String>)> = Vec::new();
+    for op in &instr.srcs {
+        if let Operand::Var(name) = op {
+            if state.slots.contains(name) {
+                let fresh = state.fresh("ld");
+                out.push_str(&format!("  {fresh} = load i64, ptr %{name}.slot\n"));
+                let old = state.env.insert(name.clone(), fresh);
+                saved.push((name.clone(), old));
+            }
+        }
+    }
+
+    // 2. Lower the instruction.
+    //
+    // If `dest` is a slot, rename it to a *fresh* SSA name first. A
+    // value-producing op (`add`/`zext`/`load_byte`/…) emits `%<dest> = …`
+    // using the dest name verbatim; a slot variable is by definition assigned
+    // 2+ times, so reusing its name would emit `%v = …` twice — which LLVM
+    // rejects ("multiple definition of local value named 'v'"). Lowering a
+    // clone with a unique dest name sidesteps that; the post-store below then
+    // writes the produced value into the *original* variable's slot. (`const`
+    // and `mov` slot-dests emit no `%dest = …` line, so they were always fine —
+    // but routing them through the same rename is harmless and keeps the code
+    // uniform.) This is the LANG-MATRIX LM-L-Brainfuck trigger: BF's `ptr`/`v`
+    // are the first slot variables to be the dest of real arithmetic.
+    let slot_dest = instr
+        .dest
+        .as_ref()
+        .filter(|d| state.slots.contains(*d))
+        .cloned();
+    if let Some(orig) = &slot_dest {
+        let fresh = state.fresh_bare("slot");
+        let mut renamed = instr.clone();
+        renamed.dest = Some(fresh.clone());
+        lower_instr(&renamed, state, out)?;
+
+        // 3a. Post-store the produced value into the original slot.
+        if let Some(val) = state.env.get(&fresh).cloned() {
+            out.push_str(&format!("  store i64 {val}, ptr %{orig}.slot\n"));
+        }
+        state.env.remove(&fresh); // the fresh temp is not referenced again.
+        state.env.remove(orig); // future reads of `orig` go through its slot load.
+    } else {
+        lower_instr(instr, state, out)?;
+    }
+
+    // 4. Restore the env bindings we overrode for the pre-loads.
+    for (name, old) in saved {
+        match old {
+            Some(v) => {
+                state.env.insert(name, v);
+            }
+            None => {
+                state.env.remove(&name);
+            }
+        }
+    }
     Ok(())
 }
 
@@ -512,6 +753,7 @@ fn lower_instr(
         // ── ret_void ────────────────────────────────────────────────────
         "ret_void" => {
             out.push_str("  ret void\n");
+            state.block_open = false; // `ret` terminates the block.
             Ok(())
         }
 
@@ -521,6 +763,7 @@ fn lower_instr(
             let operand =
                 resolve_operand(instr.srcs.first(), &state.env, &instr.type_hint, fn_name)?;
             out.push_str(&format!("  ret {ty} {operand}\n"));
+            state.block_open = false; // `ret` terminates the block.
             Ok(())
         }
 
@@ -570,7 +813,15 @@ fn lower_instr(
                     detail: "label requires srcs[0] = Operand::Var(name)".into(),
                 }),
             };
+            // If the current block never got a terminator (its body was all
+            // tracked-not-emitted `const`/`mov`), LLVM would see two labels
+            // back-to-back — an invalid empty block. Synthesize the implicit
+            // fallthrough as an explicit `br` to this label (McCarthy W12b-3).
+            if state.block_open {
+                out.push_str(&format!("  br label %{name}\n"));
+            }
             out.push_str(&format!("{name}:\n"));
+            state.block_open = true;
             Ok(())
         }
 
@@ -584,6 +835,7 @@ fn lower_instr(
                 }),
             };
             out.push_str(&format!("  br label %{target}\n"));
+            state.block_open = false; // unconditional branch terminates the block.
             Ok(())
         }
 
@@ -616,11 +868,111 @@ fn lower_instr(
         // is emitted once at the module top by `lower_iir_to_llvm`.
         "call_builtin" => lower_call_builtin(instr, state, out),
 
+        // ── byte-tape memory (LLVM05 — LANG-MATRIX LM-L Brainfuck) ───────
+        "alloc_bytes" => lower_alloc_bytes(instr, state, out),
+        "load_byte" => lower_load_byte(instr, state, out),
+        "store_byte" => lower_store_byte(instr, state, out),
+
         other => Err(IIRLlvmError::UnsupportedOp {
             function: fn_name.into(),
             op: other.into(),
         }),
     }
+}
+
+// ---------------------------------------------------------------------------
+// LLVM05 — byte-tape memory ops (Brainfuck's implicit tape)
+// ---------------------------------------------------------------------------
+
+/// Lower `alloc_bytes dest <- size` — allocate a `size`-byte, zero-filled tape.
+///
+/// ```llvm
+/// %dest = call ptr @calloc(i64 <size>, i64 1)
+/// ```
+///
+/// `calloc` zero-initialises (Brainfuck cells start at 0). `dest` (the tape
+/// base) is bound in `env` as an LLVM `ptr`; it is written exactly once by the
+/// `lower_brainfuck_for_aot` preamble, so it is never a promoted stack slot —
+/// later `load_byte`/`store_byte` read it straight from `env`.
+///
+/// The `size` operand is a compile-time constant from `lower_brainfuck_for_aot`
+/// (30000); we emit it verbatim. A hostile hand-built IIR could pass a huge or
+/// negative literal, but that only makes `calloc` return null at runtime (a
+/// crash on first store, not a compile-time or memory-safety defect in this
+/// emitter), so no extra guard is warranted here — exactly the contract the
+/// native `alloc_bytes` lowering already relies on.
+fn lower_alloc_bytes(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "alloc_bytes", state.fn_name)?.to_string();
+    let size = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    out.push_str(&format!("  %{dest} = call ptr @calloc(i64 {size}, i64 1)\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `load_byte dest <- base, idx` — read one tape cell, zero-extended.
+///
+/// ```llvm
+/// %p = getelementptr i8, ptr <base>, i64 <idx>
+/// %b = load i8, ptr %p
+/// %dest = zext i8 %b to i64
+/// ```
+///
+/// The 8-bit cell becomes an `i64` register (the uniform BF value width); the
+/// `zext` is the load half of the "byte width only at the tape boundary"
+/// contract. `dest` may be a promoted slot — the slot wrapper stores the
+/// `i64` value we leave in `env[dest]`.
+fn lower_load_byte(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    let dest = require_dest(instr, "load_byte", state.fn_name)?.to_string();
+    let base = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("gep");
+    let b = state.fresh("byte");
+    out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
+    out.push_str(&format!("  {b} = load i8, ptr {p}\n"));
+    out.push_str(&format!("  %{dest} = zext i8 {b} to i64\n"));
+    state.env.insert(dest.clone(), format!("%{dest}"));
+    Ok(())
+}
+
+/// Lower `store_byte base, idx, val` (no dest) — write the low byte of `val`.
+///
+/// ```llvm
+/// %p = getelementptr i8, ptr <base>, i64 <idx>
+/// %t = trunc i64 <val> to i8
+/// store i8 %t, ptr %p
+/// ```
+///
+/// The `trunc` is the store half of the tape-boundary contract; it is exactly
+/// what makes Brainfuck's 8-bit cell wrap-around (`255 + 1 == 0`) fall out
+/// even though the arithmetic ran at `i64` width.
+fn lower_store_byte(
+    instr: &IIRInstr,
+    state: &mut FnState,
+    out: &mut String,
+) -> Result<(), IIRLlvmError> {
+    if instr.dest.is_some() {
+        return Err(IIRLlvmError::InvalidOperand {
+            function: state.fn_name.into(),
+            detail: "store_byte must not have a dest".into(),
+        });
+    }
+    let base = resolve_operand(instr.srcs.first(), &state.env, "i64", state.fn_name)?;
+    let idx = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+    let val = resolve_operand(instr.srcs.get(2), &state.env, "i64", state.fn_name)?;
+    let p = state.fresh("gep");
+    let t = state.fresh("trunc");
+    out.push_str(&format!("  {p} = getelementptr i8, ptr {base}, i64 {idx}\n"));
+    out.push_str(&format!("  {t} = trunc i64 {val} to i8\n"));
+    out.push_str(&format!("  store i8 {t}, ptr {p}\n"));
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
@@ -805,6 +1157,14 @@ fn lower_jmp_if(
         let cond_ty = llvm_type_for(&instr.type_hint, state.fn_name)?;
         if cond_ty == "i1" {
             cond_op
+        } else if cond_ty == "void" {
+            // McCarthy W12b-3: a `COND` whose clause test is a tagged-word lisp
+            // predicate carries NO operand type on `jmp_if_*` (type_hint "void");
+            // the condition is the `i64` 0/1 from `lispy_truthy`. Compare it
+            // against zero to get the `i1` — `trunc void …` would be invalid.
+            let i1 = state.fresh("tobool");
+            out.push_str(&format!("  {i1} = icmp ne i64 {cond_op}, 0\n"));
+            i1
         } else {
             let i1 = state.fresh("trunc");
             out.push_str(&format!("  {i1} = trunc {cond_ty} {cond_op} to i1\n"));
@@ -825,6 +1185,9 @@ fn lower_jmp_if(
         "  br i1 {cond_i1}, label %{t_label}, label %{f_label}\n"
     ));
     out.push_str(&format!("{fallthrough}:\n"));
+    // The conditional branch terminated the prior block; we are now in the
+    // freshly-opened fallthrough block (needs its own terminator later).
+    state.block_open = true;
     Ok(())
 }
 
@@ -1004,6 +1367,21 @@ fn lower_call_builtin(
             detail: "call_builtin requires srcs[0] = Operand::Var(builtin_name)".into(),
         }),
     };
+    // McCarthy W12b: a tagged-word lisp builtin lowers to a `call` into the C
+    // runtime. Every arg + the result is an `i64` (tagged word); the dest gets a
+    // fresh SSA name registered in the env so later instructions can use it.
+    if let Some((_iir_name, symbol, arity)) = lispy_builtin(&name) {
+        let dest = require_dest(instr, &name, state.fn_name)?.to_string();
+        let mut args = Vec::with_capacity(*arity);
+        for k in 0..*arity {
+            // srcs[0] is the builtin name; the operands start at srcs[1].
+            let a = resolve_operand(instr.srcs.get(1 + k), &state.env, "i64", state.fn_name)?;
+            args.push(format!("i64 {a}"));
+        }
+        out.push_str(&format!("  %{dest} = call i64 @{symbol}({})\n", args.join(", ")));
+        state.env.insert(dest.clone(), format!("%{dest}"));
+        return Ok(());
+    }
     if !SUPPORTED_BUILTINS.contains(&name.as_str()) {
         return Err(IIRLlvmError::UnsupportedOp {
             function: state.fn_name.into(),
@@ -1026,6 +1404,36 @@ fn lower_call_builtin(
                 }),
             };
             out.push_str(&format!("  call void @__print_i64(i64 {val})\n"));
+            Ok(())
+        }
+        // ── putchar(v) — Brainfuck `.` (LLVM05) ─────────────────────────
+        //
+        // BF's value register is i64; libc `putchar` takes an `int` (i32), so
+        // truncate to the low 32 bits (the cell already lives in the low 8).
+        // The returned int is discarded.
+        //
+        //   srcs = [Var("putchar"), Var(v: i64)]  →  call i32 @putchar(i32 %t)
+        "putchar" => {
+            let val = resolve_operand(instr.srcs.get(1), &state.env, "i64", state.fn_name)?;
+            let t = state.fresh("pc");
+            out.push_str(&format!("  {t} = trunc i64 {val} to i32\n"));
+            out.push_str(&format!("  call i32 @putchar(i32 {t})\n"));
+            Ok(())
+        }
+        // ── getchar() -> v — Brainfuck `,` (LLVM05) ─────────────────────
+        //
+        // libc `getchar` returns an `int` (the byte, or -1 at EOF). We
+        // sign-extend to the i64 cell register; a subsequent `store_byte`
+        // truncates to the 8-bit cell, so EOF (-1) lands as 0xFF — the
+        // conventional Brainfuck "leave 255 on EOF" behaviour.
+        //
+        //   srcs = [Var("getchar")], dest = v  →  %g = call i32 @getchar()
+        "getchar" => {
+            let dest = require_dest(instr, "getchar", state.fn_name)?.to_string();
+            let g = state.fresh("gc");
+            out.push_str(&format!("  {g} = call i32 @getchar()\n"));
+            out.push_str(&format!("  %{dest} = sext i32 {g} to i64\n"));
+            state.env.insert(dest.clone(), format!("%{dest}"));
             Ok(())
         }
         _ => unreachable!("SUPPORTED_BUILTINS guard above prevents this"),

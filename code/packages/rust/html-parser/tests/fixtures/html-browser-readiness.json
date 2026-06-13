@@ -547,6 +547,8 @@
             "color_scheme": "light dark",
             "content_security_policy": "default-src 'self'; img-src https:",
             "permissions_policy": "geolocation=(), camera=()",
+            "permissions_policy_features": ["geolocation", "camera"],
+            "permissions_policy_feature_count": 2,
             "origin_trials": ["trial-token"],
             "accept_ch": "Sec-CH-UA-Platform, DPR",
             "accept_ch_tokens": ["Sec-CH-UA-Platform", "DPR"],
@@ -716,10 +718,10 @@
           { "element": "iframe", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "allow": "payment", "srcdoc": "<h1>Inline</h1>", "fallback_text": "" }
         ],
         "embedded_policy_descriptors": [
-          { "element": "iframe", "resource_kind": "document", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "browsing_context_name": "preview", "title": "Frame", "width": "320", "height": "200", "loading": "lazy", "fetchpriority": "high", "csp": "script-src 'self'", "sandbox": ["allow-scripts", "allow-same-origin"], "sandbox_token_count": 2, "allow": "fullscreen; geolocation", "allowfullscreen": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "has_srcdoc": true, "credentialless": true, "fallback_text": "" },
+          { "element": "iframe", "resource_kind": "document", "url": "frame.html", "resolved_url": "https://example.test/media/frame.html", "browsing_context_name": "preview", "title": "Frame", "width": "320", "height": "200", "loading": "lazy", "fetchpriority": "high", "csp": "script-src 'self'", "sandbox": ["allow-scripts", "allow-same-origin"], "sandbox_token_count": 2, "allow": "fullscreen; geolocation", "allow_tokens": ["fullscreen", "geolocation"], "allow_token_count": 2, "allowfullscreen": true, "fullscreen_allowed": true, "referrerpolicy": "no-referrer", "srcdoc": "<p>Fallback</p>", "has_srcdoc": true, "credentialless": true, "fallback_text": "" },
           { "element": "object", "resource_kind": "object", "url": "movie.swf", "resolved_url": "https://example.test/media/movie.swf", "type_hint": "application/x-shockwave-flash", "width": "400", "height": "300", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "" },
           { "element": "embed", "resource_kind": "embed", "url": "legacy.mov", "resolved_url": "https://example.test/media/legacy.mov", "type_hint": "video/quicktime", "width": "160", "height": "120", "sandbox_token_count": 0, "has_srcdoc": false, "fallback_text": "" },
-          { "element": "iframe", "resource_kind": "document", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "sandbox_token_count": 0, "allow": "payment", "srcdoc": "<h1>Inline</h1>", "has_srcdoc": true, "fallback_text": "" }
+          { "element": "iframe", "resource_kind": "document", "url": null, "resolved_url": null, "browsing_context_name": "inline", "title": "Inline", "width": "240", "height": "120", "sandbox_token_count": 0, "allow": "payment", "allow_tokens": ["payment"], "allow_token_count": 1, "srcdoc": "<h1>Inline</h1>", "has_srcdoc": true, "fallback_text": "" }
         ],
         "forms": [],
         "tables": []
@@ -973,6 +975,233 @@
       }
     },
     {
+      "id": "script-storage-access-page",
+      "description": "Browser document summaries expose inline script storage API targets, broad storage groups, and fallback blockers.",
+      "input": "<script>localStorage.setItem('theme','dark'); sessionStorage.getItem('draft'); document.cookie='seen=1'; indexedDB.open('app'); window.addEventListener('storage', syncTabs);</script><script type=module>navigator.serviceWorker.register('/sw.js'); caches.open('assets'); navigator.storage.persist();</script><script nomodule>localStorage.getItem('legacy');</script>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [],
+        "scripts": [
+          { "script_kind": "classic", "text": "localStorage.setItem('theme','dark'); sessionStorage.getItem('draft'); document.cookie='seen=1'; indexedDB.open('app'); window.addEventListener('storage', syncTabs);" },
+          { "script_kind": "module", "type_hint": "module", "text": "navigator.serviceWorker.register('/sw.js'); caches.open('assets'); navigator.storage.persist();" },
+          { "script_kind": "classic", "nomodule": true, "text": "localStorage.getItem('legacy');" }
+        ],
+        "script_storage_access_descriptors": [
+          {
+            "script_kind": "classic",
+            "access_kind": "database-storage",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 165,
+            "storage_targets": ["localStorage", "sessionStorage", "cookies", "indexedDB", "storage-event"],
+            "storage_target_count": 5,
+            "uses_local_storage": true,
+            "uses_session_storage": true,
+            "uses_cookies": true,
+            "uses_indexed_db": true,
+            "listens_storage_events": true
+          },
+          {
+            "script_kind": "module",
+            "access_kind": "worker-cache-storage",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 95,
+            "storage_targets": ["CacheStorage", "serviceWorker", "StorageManager"],
+            "storage_target_count": 3,
+            "uses_cache_storage": true,
+            "uses_service_worker": true,
+            "uses_storage_manager": true
+          },
+          {
+            "script_kind": "classic",
+            "access_kind": "client-key-value-storage",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 31,
+            "storage_targets": ["localStorage"],
+            "storage_target_count": 1,
+            "uses_local_storage": true,
+            "storage_blocked": true,
+            "storage_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "script-worker-messaging-page",
+      "description": "Browser document summaries expose inline worker construction, worker messaging channels, and fallback blockers.",
+      "input": "<script>const worker = new Worker('/worker.js', { type: 'module' }); worker.postMessage({ready:true}); window.addEventListener('message', receive); const channel = new MessageChannel();</script><script type=module>navigator.serviceWorker.register('/sw.js'); const updates = new BroadcastChannel('updates');</script><script nomodule>const shared = new SharedWorker('/shared.js'); shared.port.postMessage('legacy');</script>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "",
+        "metas": [],
+        "resources": [],
+        "scripts": [
+          { "script_kind": "classic", "text": "const worker = new Worker('/worker.js', { type: 'module' }); worker.postMessage({ready:true}); window.addEventListener('message', receive); const channel = new MessageChannel();" },
+          { "script_kind": "module", "type_hint": "module", "text": "navigator.serviceWorker.register('/sw.js'); const updates = new BroadcastChannel('updates');" },
+          { "script_kind": "classic", "nomodule": true, "text": "const shared = new SharedWorker('/shared.js'); shared.port.postMessage('legacy');" }
+        ],
+        "script_worker_messaging_descriptors": [
+          {
+            "script_kind": "classic",
+            "messaging_kind": "module-worker",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 177,
+            "messaging_targets": ["Worker", "postMessage", "message-event", "MessageChannel", "module-worker"],
+            "messaging_target_count": 5,
+            "creates_worker": true,
+            "uses_post_message": true,
+            "listens_message_events": true,
+            "uses_message_channel": true,
+            "module_worker_hint": true
+          },
+          {
+            "script_kind": "module",
+            "messaging_kind": "service-worker-registration",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 92,
+            "messaging_targets": ["serviceWorker", "BroadcastChannel"],
+            "messaging_target_count": 2,
+            "registers_service_worker": true,
+            "uses_broadcast_channel": true
+          },
+          {
+            "script_kind": "classic",
+            "messaging_kind": "shared-worker",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 81,
+            "messaging_targets": ["SharedWorker", "postMessage"],
+            "messaging_target_count": 2,
+            "creates_shared_worker": true,
+            "uses_post_message": true,
+            "messaging_blocked": true,
+            "messaging_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "script-module-graph-page",
+      "description": "Browser document summaries expose import maps, module graph entrypoints, preload hints, and fallback blockers.",
+      "input": "<base href=\"https://example.test/app/index.html\"><link rel=modulepreload href=chunks/vendor.mjs integrity=sha384-vendor><script type=importmap>{\"imports\":{\"app\":\"/app.mjs\"}}</script><script type=module src=app.mjs></script><script type=module>import { ready } from './ready.mjs'; export const boot = ready(); import('./lazy.mjs');</script><script nomodule>import('./legacy.js');</script>",
+      "expected": {
+        "title": null,
+        "base_href": "https://example.test/app/index.html",
+        "base_target": null,
+        "metadata": {
+          "resource_hints": [
+            { "kind": "modulepreload", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "rel": "modulepreload", "rel_tokens": ["modulepreload"], "integrity": "sha384-vendor" }
+          ]
+        },
+        "body_text": "",
+        "metas": [],
+        "resources": [
+          { "kind": "modulepreload", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "rel": "modulepreload", "rel_tokens": ["modulepreload"], "integrity": "sha384-vendor", "async_script": false, "defer_script": false },
+          { "kind": "script", "url": "app.mjs", "resolved_url": "https://example.test/app/app.mjs", "rel": null, "type_hint": "module", "async_script": false, "defer_script": false }
+        ],
+        "scripts": [
+          { "script_kind": "importmap", "type_hint": "importmap", "text": "{\"imports\":{\"app\":\"/app.mjs\"}}" },
+          { "script_kind": "module", "src": "app.mjs", "resolved_src": "https://example.test/app/app.mjs", "type_hint": "module" },
+          { "script_kind": "module", "type_hint": "module", "text": "import { ready } from './ready.mjs'; export const boot = ready(); import('./lazy.mjs');" },
+          { "script_kind": "classic", "nomodule": true, "text": "import('./legacy.js');" }
+        ],
+        "script_module_graph_descriptors": [
+          {
+            "script_kind": "importmap",
+            "module_graph_kind": "import-map",
+            "type_hint": "importmap",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 30,
+            "module_targets": ["importmap", "modulepreload"],
+            "module_target_count": 2,
+            "declares_import_map": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "module",
+            "module_graph_kind": "module-entry",
+            "src": "app.mjs",
+            "resolved_src": "https://example.test/app/app.mjs",
+            "type_hint": "module",
+            "execution_kind": "external",
+            "module_targets": ["external-module-entry", "modulepreload"],
+            "module_target_count": 2,
+            "external_module_entry": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "module",
+            "module_graph_kind": "mixed-module-imports",
+            "type_hint": "module",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 87,
+            "module_targets": ["inline-module-entry", "static-import", "dynamic-import", "modulepreload"],
+            "module_target_count": 4,
+            "inline_module_entry": true,
+            "uses_static_imports": true,
+            "uses_dynamic_imports": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"]
+          },
+          {
+            "script_kind": "classic",
+            "module_graph_kind": "dynamic-module-import",
+            "execution_kind": "inline",
+            "has_text": true,
+            "text_length": 22,
+            "module_targets": ["dynamic-import", "modulepreload"],
+            "module_target_count": 2,
+            "uses_dynamic_imports": true,
+            "has_modulepreload": true,
+            "modulepreload_urls": ["chunks/vendor.mjs"],
+            "resolved_modulepreload_urls": ["https://example.test/app/chunks/vendor.mjs"],
+            "module_graph_blocked": true,
+            "module_graph_block_reasons": ["nomodule-fallback"]
+          }
+        ],
+        "fetch_policy_descriptors": [
+          { "element": "link", "url": "chunks/vendor.mjs", "resolved_url": "https://example.test/app/chunks/vendor.mjs", "integrity": "sha384-vendor" }
+        ],
+        "anchors": [],
+        "headings": [],
+        "links": [],
+        "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
       "id": "table-layout-metadata-page",
       "description": "Table summaries expose effective row, column, column hint, cell, and header counts for early layout planning.",
       "input": "<body><table><caption>Prices</caption><colgroup><col span=2 width=80><col width=120><thead><tr><th id=item scope=col abbr=Item>Name<th id=price scope=col>Price<tbody><tr><th scope=row headers=item>Basic<td colspan=2 headers=\"item price\">$1</table>",
@@ -1039,6 +1268,9 @@
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 1, "element": "th", "text": "Totals", "header": true, "scope": "row" },
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 2, "element": "td", "text": "3", "headers": ["morning"] },
           { "table_index": 1, "table_id": "matrix", "table_caption": "Schedule", "section_kind": "tfoot", "row_index": 4, "column_index": 3, "element": "td", "text": "2", "headers": ["evening"] }
+        ],
+        "table_structure_descriptors": [
+          { "table_index": 1, "table_id": "matrix", "caption": "Schedule", "row_count": 4, "column_count": 4, "column_hint_count": 0, "cell_count": 11, "header_cell_count": 5, "section_kinds": ["thead", "tbody", "tfoot"], "header_scopes": ["col", "row"], "header_ids": ["day", "morning", "evening", "mon"], "cells_with_headers_count": 7, "spanning_cell_count": 2 }
         ]
       }
     },
@@ -1185,6 +1417,10 @@
             ]
           }
         ],
+        "structured_data_descriptors": [
+          { "id": "product", "item_type": ["https://schema.org/Product"], "item_type_count": 1, "item_id": "items/widget", "resolved_item_id": "https://example.test/catalog/items/widget", "item_ref": ["external-rating"], "item_ref_count": 1, "property_names": ["name", "image", "url", "sameAs", "sku", "releaseDate", "category", "offers", "aggregateRating"], "property_count": 9, "url_property_count": 3 },
+          { "item_type": ["https://schema.org/Offer"], "item_type_count": 1, "item_id": "offers/widget", "resolved_item_id": "https://example.test/catalog/offers/widget", "property_names": ["price", "availability"], "property_count": 2, "url_property_count": 1 }
+        ],
         "forms": [],
         "tables": []
       }
@@ -1277,17 +1513,17 @@
     {
       "id": "event-handler-page",
       "description": "Browser document summaries expose inline event handler attributes without evaluating script text.",
-      "input": "<html onreadystatechange=ready><body onload=boot onunload=teardown><main id=app onclick=delegate><button onclick=save onkeydown=shortcut>Save</button><video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback><input value=Draft oninput=edit onchange=commit></main></body></html>",
+      "input": "<html onreadystatechange=ready><body onload=boot onunload=teardown ontransitionend=bodyTransition><main id=app onclick=delegate onanimationstart=animate ontransitionend=transitioned><button onclick=save onkeydown=shortcut>Save</button><video controls onplay=play onpause=pause></video><img src=hero.jpg alt=Hero onerror=fallback><input value=Draft oninput=edit onchange=commit></main></body></html>",
       "expected": {
         "title": null,
         "base_href": null,
         "base_target": null,
         "document_event_handlers": ["onreadystatechange"],
-        "body_event_handlers": ["onload", "onunload"],
+        "body_event_handlers": ["onload", "onunload", "ontransitionend"],
         "event_handler_descriptors": [
           { "element": "html", "role": "block", "source": "document", "event_handlers": ["onreadystatechange"], "handler_count": 1, "lifecycle_handlers": ["onreadystatechange"], "text": "Save" },
-          { "element": "body", "role": "block", "source": "body", "event_handlers": ["onload", "onunload"], "handler_count": 2, "lifecycle_handlers": ["onload", "onunload"], "text": "Save" },
-          { "element": "main", "id": "app", "role": "main", "source": "element", "event_handlers": ["onclick"], "handler_count": 1, "activation_handlers": ["onclick"], "text": "Save" },
+          { "element": "body", "role": "block", "source": "body", "event_handlers": ["onload", "onunload", "ontransitionend"], "handler_count": 3, "lifecycle_handlers": ["onload", "onunload"], "text": "Save" },
+          { "element": "main", "id": "app", "role": "main", "source": "element", "event_handlers": ["onclick", "onanimationstart", "ontransitionend"], "handler_count": 3, "activation_handlers": ["onclick"], "text": "Save" },
           { "element": "button", "role": "control", "source": "element", "event_handlers": ["onclick", "onkeydown"], "handler_count": 2, "activation_handlers": ["onclick"], "keyboard_handlers": ["onkeydown"], "text": "Save" },
           { "element": "video", "role": "media", "source": "element", "event_handlers": ["onplay", "onpause"], "handler_count": 2, "media_handlers": ["onplay", "onpause"] },
           { "element": "img", "role": "image", "source": "element", "event_handlers": ["onerror"], "handler_count": 1, "error_handlers": ["onerror"] },
@@ -1313,7 +1549,7 @@
           { "kind": "video", "src": null, "resolved_src": null, "controls": true }
         ],
         "interactive_elements": [
-          { "element": "main", "id": "app", "role": "main", "text": "Save", "event_handlers": ["onclick"] },
+          { "element": "main", "id": "app", "role": "main", "text": "Save", "event_handlers": ["onclick", "onanimationstart", "ontransitionend"] },
           { "element": "button", "role": "control", "text": "Save", "accessible_name": "Save", "event_handlers": ["onclick", "onkeydown"] },
           { "element": "video", "role": "media", "text": "", "event_handlers": ["onplay", "onpause"] },
           { "element": "img", "role": "image", "text": "", "event_handlers": ["onerror"] },
@@ -1326,7 +1562,7 @@
     {
       "id": "interactive-element-state-page",
       "description": "Browser document summaries expose focus, editing, popover, command, hidden, inert, ARIA relation/state, and inline handler metadata as a flat interactive inventory.",
-      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel aria-owns=\"panel menu-popup\" aria-activedescendant=action aria-haspopup=menu aria-disabled=false tabindex=0 accesskey=\"m /\" aria-keyshortcuts=\"Alt+M /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog onclick=showMenu()>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help aria-live=polite aria-busy=true inert ondragover=allowDrop() ondrop=dropPanel()><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div id=action role=button tabindex=-1 aria-keyshortcuts=\"Enter Space\" aria-pressed=mixed aria-current=page aria-selected=false aria-invalid=spelling aria-required=true contenteditable=plaintext-only draggable=auto spellcheck=false translate=no popover=manual onkeydown=keyAction() ondragstart=startAction() ondragend=endAction() oncopy=copyAction() oncut=cutAction() onpaste=pasteAction() onbeforeinput=beforeAction()>Inline action</div><p id=editable contenteditable spellcheck=true translate=yes onpaste=pasteEditable() oninput=editEditable()>Editable copy</p></section><dialog id=dialog open aria-label=\"Dialog\" aria-modal=true accesskey=\"d x\"><p>Dialog copy</p></dialog><details id=more open><summary>More</summary><p>Extra</p></details><p id=secret hidden aria-keyshortcuts=H draggable=true onpaste=pasteSecret()>Hidden copy</p><span id=decorative aria-hidden=true>Decorative</span><input id=disabled disabled value=no></main>",
+      "input": "<body><main id=app aria-label=\"App shell\"><button id=menu aria-expanded=false aria-controls=panel aria-owns=\"panel menu-popup\" aria-activedescendant=action aria-haspopup=menu aria-disabled=false tabindex=0 accesskey=\"m /\" aria-keyshortcuts=\"Alt+M /\" popovertarget=panel-pop popovertargetaction=toggle command=show-modal commandfor=dialog onclick=showMenu()>Menu</button><section id=panel role=region aria-labelledby=panel-title aria-describedby=panel-help aria-live=polite aria-busy=true inert ondragover=allowDrop() ondrop=dropPanel()><h2 id=panel-title>Settings</h2><p id=panel-help>Choose options</p><div id=action role=button tabindex=-1 aria-keyshortcuts=\"Enter Space\" aria-pressed=mixed aria-current=page aria-selected=false aria-invalid=spelling aria-required=true contenteditable=plaintext-only draggable=auto spellcheck=false translate=no popover=manual onkeydown=keyAction() ondragstart=startAction() ondragend=endAction() oncopy=copyAction() oncut=cutAction() onpaste=pasteAction() onbeforeinput=beforeAction() onselect=selectAction()>Inline action</div><p id=editable contenteditable spellcheck=true translate=yes onpaste=pasteEditable() oninput=editEditable() onselect=selectEditable()>Editable copy</p></section><dialog id=dialog open aria-label=\"Dialog\" aria-modal=true accesskey=\"d x\"><p>Dialog copy</p></dialog><details id=more open><summary>More</summary><p>Extra</p></details><p id=secret hidden aria-keyshortcuts=H draggable=true onpaste=pasteSecret() onselect=selectSecret()>Hidden copy</p><span id=decorative aria-hidden=true>Decorative</span><input id=disabled disabled value=no></main>",
       "expected": {
         "title": null,
         "base_href": null,
@@ -1337,9 +1573,9 @@
         "event_handler_descriptors": [
           { "element": "button", "id": "menu", "role": "control", "source": "element", "event_handlers": ["onclick"], "handler_count": 1, "activation_handlers": ["onclick"], "text": "Menu" },
           { "element": "section", "id": "panel", "role": "section", "source": "element", "event_handlers": ["ondragover", "ondrop"], "handler_count": 2, "pointer_handlers": ["ondragover", "ondrop"], "text": "Settings Choose options Inline action Editable copy" },
-          { "element": "div", "id": "action", "role": "block", "source": "element", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput"], "handler_count": 7, "keyboard_handlers": ["onkeydown"], "pointer_handlers": ["ondragstart", "ondragend"], "text": "Inline action" },
-          { "element": "p", "id": "editable", "role": "paragraph", "source": "element", "event_handlers": ["onpaste", "oninput"], "handler_count": 2, "form_handlers": ["oninput"], "text": "Editable copy" },
-          { "element": "p", "id": "secret", "role": "paragraph", "source": "element", "event_handlers": ["onpaste"], "handler_count": 1, "text": "Hidden copy" }
+          { "element": "div", "id": "action", "role": "block", "source": "element", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput", "onselect"], "handler_count": 8, "keyboard_handlers": ["onkeydown"], "pointer_handlers": ["ondragstart", "ondragend"], "form_handlers": ["onselect"], "text": "Inline action" },
+          { "element": "p", "id": "editable", "role": "paragraph", "source": "element", "event_handlers": ["onpaste", "oninput", "onselect"], "handler_count": 3, "form_handlers": ["oninput", "onselect"], "text": "Editable copy" },
+          { "element": "p", "id": "secret", "role": "paragraph", "source": "element", "event_handlers": ["onpaste", "onselect"], "handler_count": 2, "form_handlers": ["onselect"], "text": "Hidden copy" }
         ],
         "anchors": [
           { "id": "app", "name": null, "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative" },
@@ -1364,40 +1600,40 @@
         ],
         "command_elements": [
           { "element": "button", "id": "menu", "role": "control", "command_kind": "command", "text": "Menu", "accessible_name": "Menu", "control_type": "submit", "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "focusable": true },
-          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput"] },
+          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "text": "Inline action", "accessible_name": "Inline action", "aria_pressed": "mixed", "aria_current": "page", "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput", "onselect"] },
           { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
         ],
         "activation_descriptors": [
           { "element": "button", "id": "menu", "role": "control", "command_kind": "command", "activation_kind": "show-modal", "target_id": "dialog", "target_kind": "dialog", "text": "Menu", "accessible_name": "Menu", "focusable": true, "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "handler_count": 1, "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "control_type": "submit" },
-          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "activation_kind": "button", "target_kind": "command", "text": "Inline action", "accessible_name": "Inline action", "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput"], "handler_count": 7, "aria_pressed": "mixed", "aria_current": "page" },
+          { "element": "div", "id": "action", "role": "button", "authored_role": "button", "command_kind": "button", "activation_kind": "button", "target_kind": "command", "text": "Inline action", "accessible_name": "Inline action", "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput", "onselect"], "handler_count": 8, "aria_pressed": "mixed", "aria_current": "page" },
           { "element": "summary", "role": "disclosure_summary", "command_kind": "disclosure", "activation_kind": "disclosure", "target_kind": "disclosure", "text": "More", "accessible_name": "More", "focusable": true }
         ],
         "popovers": [
           { "element": "div", "id": "action", "role": "block", "text": "Inline action", "popover": "manual" }
         ],
         "aria_live_regions": [
-          { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite" }
+          { "element": "section", "id": "panel", "role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "update_kind": "polite", "live_attribute_names": ["aria-live", "aria-busy"], "live_attribute_count": 2 }
         ],
         "links": [],
         "images": [],
         "interactive_elements": [
           { "element": "button", "id": "menu", "role": "control", "text": "Menu", "accessible_name": "Menu", "aria_controls": ["panel"], "aria_owns": ["panel", "menu-popup"], "aria_activedescendant": "action", "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "aria_keyshortcuts": ["Alt+M", "/"], "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "focusable": true, "popover_target": "panel-pop", "popover_target_action": "toggle", "command": "show-modal", "command_for": "dialog" },
           { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "accessible_description": "Choose options", "aria_labelledby": ["panel-title"], "aria_describedby": ["panel-help"], "aria_live": "polite", "aria_busy": "true", "event_handlers": ["ondragover", "ondrop"], "inert": true },
-          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "text": "Inline action", "aria_current": "page", "aria_pressed": "mixed", "aria_selected": "false", "aria_invalid": "spelling", "aria_required": "true", "aria_keyshortcuts": ["Enter", "Space"], "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput"], "focusable": false, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "popover": "manual" },
-          { "element": "p", "id": "editable", "role": "paragraph", "text": "Editable copy", "event_handlers": ["onpaste", "oninput"], "focusable": true, "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes" },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "text": "Inline action", "aria_current": "page", "aria_pressed": "mixed", "aria_selected": "false", "aria_invalid": "spelling", "aria_required": "true", "aria_keyshortcuts": ["Enter", "Space"], "tabindex": "-1", "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput", "onselect"], "focusable": false, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "popover": "manual" },
+          { "element": "p", "id": "editable", "role": "paragraph", "text": "Editable copy", "event_handlers": ["onpaste", "oninput", "onselect"], "focusable": true, "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes" },
           { "element": "dialog", "id": "dialog", "role": "dialog", "text": "Dialog copy", "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true", "open": true, "accesskey": ["d", "x"] },
           { "element": "details", "id": "more", "role": "disclosure", "text": "More Extra", "open": true },
           { "element": "summary", "role": "disclosure_summary", "text": "More" },
-          { "element": "p", "id": "secret", "role": "paragraph", "text": "Hidden copy", "aria_keyshortcuts": ["H"], "event_handlers": ["onpaste"], "draggable": "true", "draggable_state": "true", "hidden": true },
+          { "element": "p", "id": "secret", "role": "paragraph", "text": "Hidden copy", "aria_keyshortcuts": ["H"], "event_handlers": ["onpaste", "onselect"], "draggable": "true", "draggable_state": "true", "hidden": true },
           { "element": "span", "id": "decorative", "role": "inline", "text": "Decorative", "aria_hidden": true }
         ],
         "focus_navigation_descriptors": [
           { "element": "button", "id": "menu", "role": "control", "focus_kind": "sequential", "focusable": true, "sequential_focus": true, "programmatic_focus": true, "tabindex": "0", "tabindex_order": 0, "accesskey": ["m", "/"], "event_handlers": ["onclick"], "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_activedescendant": "action", "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "text": "Menu" },
           { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["inert"], "event_handlers": ["ondragover", "ondrop"], "inert": true, "text": "Settings Choose options Inline action Editable copy" },
-          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "focus_kind": "editing-host", "programmatic_focus": true, "tabindex": "-1", "tabindex_order": -1, "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput"], "contenteditable": "plaintext-only", "editing_mode": "plaintext", "text": "Inline action" },
-          { "element": "p", "id": "editable", "role": "paragraph", "focus_kind": "editing-host", "focusable": true, "sequential_focus": true, "programmatic_focus": true, "event_handlers": ["onpaste", "oninput"], "contenteditable": "", "editing_mode": "richtext", "text": "Editable copy" },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "focus_kind": "editing-host", "programmatic_focus": true, "tabindex": "-1", "tabindex_order": -1, "event_handlers": ["onkeydown", "ondragstart", "ondragend", "oncopy", "oncut", "onpaste", "onbeforeinput", "onselect"], "contenteditable": "plaintext-only", "editing_mode": "plaintext", "text": "Inline action" },
+          { "element": "p", "id": "editable", "role": "paragraph", "focus_kind": "editing-host", "focusable": true, "sequential_focus": true, "programmatic_focus": true, "event_handlers": ["onpaste", "oninput", "onselect"], "contenteditable": "", "editing_mode": "richtext", "text": "Editable copy" },
           { "element": "dialog", "id": "dialog", "role": "dialog", "focus_kind": "accesskey", "accesskey": ["d", "x"], "text": "Dialog copy" },
-          { "element": "p", "id": "secret", "role": "paragraph", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["hidden"], "event_handlers": ["onpaste"], "hidden": true, "text": "Hidden copy" },
+          { "element": "p", "id": "secret", "role": "paragraph", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["hidden"], "event_handlers": ["onpaste", "onselect"], "hidden": true, "text": "Hidden copy" },
           { "element": "span", "id": "decorative", "role": "inline", "focus_kind": "blocked", "focus_blocked": true, "focus_block_reasons": ["aria-hidden"], "aria_hidden": true, "text": "Decorative" }
         ],
         "keyboard_interaction_descriptors": [
@@ -1415,9 +1651,20 @@
           { "element": "p", "id": "secret", "role": "paragraph", "drag_kind": "blocked", "text": "Hidden copy", "draggable": "true", "draggable_state": "true", "drag_source": true, "hidden": true, "drag_blocked": true, "drag_block_reasons": ["hidden"] }
         ],
         "clipboard_interaction_descriptors": [
-          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "clipboard_kind": "paste-target", "text": "Inline action", "value": "Inline action", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "spellcheck": "false", "clipboard_handlers": ["oncopy", "oncut", "onpaste"], "copy_handlers": ["oncopy"], "cut_handlers": ["oncut"], "paste_handlers": ["onpaste"], "input_handlers": ["onbeforeinput"], "handler_count": 4 },
-          { "element": "p", "id": "editable", "role": "paragraph", "clipboard_kind": "paste-target", "text": "Editable copy", "value": "Editable copy", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "clipboard_handlers": ["onpaste"], "paste_handlers": ["onpaste"], "input_handlers": ["oninput"], "handler_count": 2, "focusable": true },
-          { "element": "p", "id": "secret", "role": "paragraph", "clipboard_kind": "blocked", "text": "Hidden copy", "clipboard_handlers": ["onpaste"], "paste_handlers": ["onpaste"], "handler_count": 1, "hidden": true, "clipboard_blocked": true, "clipboard_block_reasons": ["hidden"] }
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "clipboard_kind": "paste-target", "text": "Inline action", "value": "Inline action", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "spellcheck": "false", "clipboard_handlers": ["oncopy", "oncut", "onpaste"], "copy_handlers": ["oncopy"], "cut_handlers": ["oncut"], "paste_handlers": ["onpaste"], "input_handlers": ["onbeforeinput", "onselect"], "handler_count": 5 },
+          { "element": "p", "id": "editable", "role": "paragraph", "clipboard_kind": "paste-target", "text": "Editable copy", "value": "Editable copy", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "clipboard_handlers": ["onpaste"], "paste_handlers": ["onpaste"], "input_handlers": ["oninput", "onselect"], "handler_count": 3, "focusable": true },
+          { "element": "p", "id": "secret", "role": "paragraph", "clipboard_kind": "blocked", "text": "Hidden copy", "clipboard_handlers": ["onpaste"], "paste_handlers": ["onpaste"], "input_handlers": ["onselect"], "handler_count": 2, "hidden": true, "clipboard_blocked": true, "clipboard_block_reasons": ["hidden"] }
+        ],
+        "selection_interaction_descriptors": [
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "selection_kind": "select-handler", "text": "Inline action", "value": "Inline action", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "spellcheck": "false", "selection_handlers": ["onselect"], "select_handlers": ["onselect"], "input_handlers": ["onbeforeinput"], "handler_count": 2 },
+          { "element": "p", "id": "editable", "role": "paragraph", "selection_kind": "select-handler", "text": "Editable copy", "value": "Editable copy", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "selection_handlers": ["onselect"], "select_handlers": ["onselect"], "input_handlers": ["oninput"], "handler_count": 2, "focusable": true },
+          { "element": "p", "id": "secret", "role": "paragraph", "selection_kind": "blocked", "text": "Hidden copy", "selection_handlers": ["onselect"], "select_handlers": ["onselect"], "handler_count": 1, "hidden": true, "selection_blocked": true, "selection_block_reasons": ["hidden"] }
+        ],
+        "pointer_interaction_descriptors": [
+          { "element": "button", "id": "menu", "role": "control", "pointer_kind": "click-target", "text": "Menu", "accessible_name": "Menu", "control_type": "submit", "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "pointer_handlers": ["onclick"], "click_handlers": ["onclick"], "handler_count": 1, "focusable": true },
+          { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "pointer_kind": "blocked", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "pointer_handlers": ["ondragover", "ondrop"], "drop_handlers": ["ondragover", "ondrop"], "handler_count": 2, "inert": true, "pointer_blocked": true, "pointer_block_reasons": ["inert"] },
+          { "element": "div", "id": "action", "role": "block", "authored_role": "button", "pointer_kind": "drag-source", "text": "Inline action", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "pointer_handlers": ["ondragstart", "ondragend"], "drag_handlers": ["ondragstart", "ondragend"], "handler_count": 2 },
+          { "element": "p", "id": "secret", "role": "paragraph", "pointer_kind": "blocked", "text": "Hidden copy", "draggable": "true", "draggable_state": "true", "hidden": true, "pointer_blocked": true, "pointer_block_reasons": ["hidden"] }
         ],
         "disclosures": [
           { "element": "dialog", "id": "dialog", "text": "Dialog copy", "open": true, "accessible_name": "Dialog", "aria_label": "Dialog", "aria_modal": "true" },
@@ -1428,11 +1675,11 @@
           { "element": "details", "id": "more", "disclosure_kind": "details", "text": "More Extra", "text_length": 10, "summary_text": "More", "has_summary": true, "open": true, "accessible_name": "More" }
         ],
         "global_state_descriptors": [
-          { "element": "section", "id": "panel", "inert": true, "text": "Settings Choose options Inline action Editable copy" },
-          { "element": "div", "id": "action", "tabindex": "-1", "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "text": "Inline action" },
-          { "element": "p", "id": "editable", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes", "text": "Editable copy" },
-          { "element": "dialog", "id": "dialog", "accesskey": ["d", "x"], "text": "Dialog copy" },
-          { "element": "p", "id": "secret", "hidden": true, "draggable": "true", "draggable_state": "true", "text": "Hidden copy" }
+          { "element": "section", "id": "panel", "inert": true, "global_attribute_names": ["inert"], "global_attribute_count": 1, "global_state_blocked": true, "global_state_block_reasons": ["inert"], "text": "Settings Choose options Inline action Editable copy" },
+          { "element": "div", "id": "action", "tabindex": "-1", "focus_navigation_hint": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "auto", "draggable_state": "auto", "spellcheck": "false", "translate": "no", "global_attribute_names": ["tabindex", "contenteditable", "draggable", "spellcheck", "translate"], "global_attribute_count": 5, "text": "Inline action" },
+          { "element": "p", "id": "editable", "contenteditable": "", "editing_mode": "richtext", "spellcheck": "true", "translate": "yes", "global_attribute_names": ["contenteditable", "spellcheck", "translate"], "global_attribute_count": 3, "text": "Editable copy" },
+          { "element": "dialog", "id": "dialog", "accesskey": ["d", "x"], "global_attribute_names": ["accesskey"], "global_attribute_count": 1, "focus_navigation_hint": true, "text": "Dialog copy" },
+          { "element": "p", "id": "secret", "hidden": true, "draggable": "true", "draggable_state": "true", "global_attribute_names": ["hidden", "draggable"], "global_attribute_count": 2, "global_state_blocked": true, "global_state_block_reasons": ["hidden"], "text": "Hidden copy" }
         ],
         "forms": [],
         "tables": []
@@ -1461,8 +1708,8 @@
         "links": [],
         "images": [],
         "global_state_descriptors": [
-          { "element": "html", "lang": "en", "dir": "ltr", "hidden": true, "accesskey": ["h", "?"], "spellcheck": "false", "translate": "no", "text": "Ready" },
-          { "element": "body", "id": "app-shell", "classes": ["app", "hydrated"], "title": "App shell", "inert": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "true", "draggable_state": "true", "spellcheck": "true", "translate": "yes", "text": "Ready" }
+          { "element": "html", "lang": "en", "dir": "ltr", "hidden": true, "accesskey": ["h", "?"], "focus_navigation_hint": true, "spellcheck": "false", "translate": "no", "global_attribute_names": ["lang", "dir", "hidden", "accesskey", "spellcheck", "translate"], "global_attribute_count": 6, "global_state_blocked": true, "global_state_block_reasons": ["hidden"], "text": "Ready" },
+          { "element": "body", "id": "app-shell", "classes": ["app", "hydrated"], "title": "App shell", "inert": true, "contenteditable": "plaintext-only", "editing_mode": "plaintext", "draggable": "true", "draggable_state": "true", "spellcheck": "true", "translate": "yes", "global_attribute_names": ["title", "inert", "contenteditable", "draggable", "spellcheck", "translate"], "global_attribute_count": 6, "global_state_blocked": true, "global_state_block_reasons": ["inert"], "text": "Ready" }
         ],
         "forms": [],
         "tables": []
@@ -1569,6 +1816,9 @@
             "item_count": 2,
             "selected_item_count": 1,
             "disabled_item_count": 1,
+            "item_roles": ["tab"],
+            "selection_mode": "single",
+            "active_descendant_matches_item": true,
             "items": [
               { "element": "button", "id": "tab-home", "role": "tab", "text": "Home", "accessible_name": "Home", "aria_selected": "true", "aria_controls": ["panel-home"] },
               { "element": "button", "id": "tab-settings", "role": "tab", "text": "Settings", "accessible_name": "Settings", "aria_selected": "false", "aria_disabled": "true", "aria_controls": ["panel-settings"] }
@@ -1609,10 +1859,10 @@
           { "level": 2, "text": "Settings" }
         ],
         "aria_ranges": [
-          { "element": "div", "id": "volume", "role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "aria_valuenow": "7", "aria_valuemin": "0", "aria_valuemax": "10", "aria_valuetext": "7 of 10", "aria_orientation": "vertical", "tabindex": "0" },
-          { "element": "div", "id": "stepper", "role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_valuenow": "2", "aria_valuemin": "1", "aria_valuemax": "5", "aria_required": "true", "tabindex": "0" },
-          { "element": "div", "id": "load", "role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress", "aria_valuenow": "40", "aria_valuemin": "0", "aria_valuemax": "100", "text_value": "Loading" },
-          { "element": "div", "id": "scroll", "role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_valuenow": "120", "aria_valuemin": "0", "aria_valuemax": "300", "aria_disabled": "true", "aria_readonly": "true", "text_value": "Scroll" }
+          { "element": "div", "id": "volume", "role": "slider", "text": "", "accessible_name": "Settings", "accessible_description": "Loud", "aria_labelledby": ["range-title"], "aria_describedby": ["volume-help"], "aria_valuenow": "7", "aria_valuemin": "0", "aria_valuemax": "10", "aria_valuetext": "7 of 10", "aria_orientation": "vertical", "tabindex": "0", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow", "aria-valuetext"], "value_attribute_count": 4, "range_value_complete": true, "focusable": true },
+          { "element": "div", "id": "stepper", "role": "spinbutton", "text": "", "accessible_name": "Retries", "aria_label": "Retries", "aria_valuenow": "2", "aria_valuemin": "1", "aria_valuemax": "5", "aria_required": "true", "tabindex": "0", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true, "focusable": true },
+          { "element": "div", "id": "load", "role": "progressbar", "text": "Loading", "accessible_name": "Load progress", "aria_label": "Load progress", "aria_valuenow": "40", "aria_valuemin": "0", "aria_valuemax": "100", "text_value": "Loading", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true },
+          { "element": "div", "id": "scroll", "role": "scrollbar", "text": "Scroll", "accessible_name": "Timeline", "aria_label": "Timeline", "aria_valuenow": "120", "aria_valuemin": "0", "aria_valuemax": "300", "aria_disabled": "true", "aria_readonly": "true", "text_value": "Scroll", "value_attribute_names": ["aria-valuemin", "aria-valuemax", "aria-valuenow"], "value_attribute_count": 3, "range_value_complete": true, "range_blocked": true, "range_block_reasons": ["aria-disabled", "aria-readonly"] }
         ],
         "links": [],
         "images": [],
@@ -1652,13 +1902,13 @@
           { "level": 2, "text": "Updates" }
         ],
         "aria_live_regions": [
-          { "element": "div", "id": "toast", "role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"], "aria_atomic": "true", "aria_relevant": ["additions", "text"], "update_kind": "polite" },
-          { "element": "div", "id": "alert", "role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true", "update_kind": "assertive" },
-          { "element": "div", "id": "feed", "role": "log", "text": "First Second", "accessible_name": "First Second", "aria_live": "polite", "aria_relevant": ["additions"], "update_kind": "polite" },
-          { "element": "div", "id": "ticker", "role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker", "update_kind": "off" },
-          { "element": "div", "id": "clock", "role": "timer", "text": "12:00", "accessible_name": "12:00", "aria_live": "off", "update_kind": "off" },
-          { "element": "div", "id": "custom", "role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false", "aria_atomic": "false", "aria_relevant": ["removals", "all"], "update_kind": "assertive" },
-          { "element": "p", "id": "hidden", "role": "status", "text": "Muted", "accessible_name": "Muted", "aria_hidden": true, "update_kind": "polite" }
+          { "element": "div", "id": "toast", "role": "status", "text": "Saved", "accessible_name": "Updates", "accessible_description": "Sync status", "aria_labelledby": ["live-title"], "aria_describedby": ["status-help"], "aria_atomic": "true", "aria_relevant": ["additions", "text"], "update_kind": "polite", "live_attribute_names": ["aria-atomic", "aria-relevant"], "live_attribute_count": 2 },
+          { "element": "div", "id": "alert", "role": "alert", "text": "Network down", "accessible_name": "Error alert", "aria_label": "Error alert", "aria_busy": "true", "update_kind": "assertive", "live_attribute_names": ["aria-busy"], "live_attribute_count": 1, "assertive_update": true },
+          { "element": "div", "id": "feed", "role": "log", "text": "First Second", "accessible_name": "First Second", "aria_live": "polite", "aria_relevant": ["additions"], "update_kind": "polite", "live_attribute_names": ["aria-live", "aria-relevant"], "live_attribute_count": 2 },
+          { "element": "div", "id": "ticker", "role": "marquee", "text": "Stocks", "accessible_name": "Ticker", "aria_label": "Ticker", "update_kind": "off", "live_region_blocked": true, "live_region_block_reasons": ["live-off"] },
+          { "element": "div", "id": "clock", "role": "timer", "text": "12:00", "accessible_name": "12:00", "aria_live": "off", "update_kind": "off", "live_attribute_names": ["aria-live"], "live_attribute_count": 1, "live_region_blocked": true, "live_region_block_reasons": ["live-off"] },
+          { "element": "div", "id": "custom", "role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false", "aria_atomic": "false", "aria_relevant": ["removals", "all"], "update_kind": "assertive", "live_attribute_names": ["aria-live", "aria-busy", "aria-atomic", "aria-relevant"], "live_attribute_count": 4, "assertive_update": true },
+          { "element": "p", "id": "hidden", "role": "status", "text": "Muted", "accessible_name": "Muted", "aria_hidden": true, "update_kind": "polite", "live_attribute_names": ["aria-hidden"], "live_attribute_count": 1, "live_region_blocked": true, "live_region_block_reasons": ["aria-hidden"] }
         ],
         "links": [],
         "images": [],
@@ -1671,6 +1921,75 @@
           { "element": "div", "id": "custom", "role": "block", "authored_role": "region", "text": "Custom", "accessible_name": "Notifications", "aria_label": "Notifications", "aria_live": "assertive", "aria_busy": "false" },
           { "element": "p", "id": "hidden", "role": "paragraph", "authored_role": "status", "text": "Muted", "aria_hidden": true }
         ],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "aria-name-descriptor-page",
+      "description": "Browser document summaries expose ARIA naming sources, resolved label text, and unresolved labelledby blockers.",
+      "input": "<body><h2 id=dialog-title>Preferences</h2><p id=hint>Choose defaults</p><span id=open aria-label=\"Open preferences\">Open</span><div id=panel aria-labelledby=\"dialog-title hint\" aria-label=\"Fallback panel\">Panel</div><div id=missing-name aria-labelledby=\"missing\">Hidden</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Preferences Choose defaults Open Panel Hidden",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "dialog-title", "name": null, "text": "Preferences" },
+          { "id": "hint", "name": null, "text": "Choose defaults" },
+          { "id": "open", "name": null, "text": "Open" },
+          { "id": "panel", "name": null, "text": "Panel" },
+          { "id": "missing-name", "name": null, "text": "Hidden" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Preferences" }
+        ],
+        "aria_name_descriptors": [
+          {
+            "element": "span",
+            "id": "open",
+            "role": "inline",
+            "text": "Open",
+            "accessible_name": "Open preferences",
+            "aria_label": "Open preferences",
+            "name_source": "aria-label",
+            "name_attribute_names": ["aria-label"],
+            "name_attribute_count": 1
+          },
+          {
+            "element": "div",
+            "id": "panel",
+            "role": "block",
+            "text": "Panel",
+            "accessible_name": "Preferences Choose defaults",
+            "aria_label": "Fallback panel",
+            "aria_labelledby": ["dialog-title", "hint"],
+            "labelledby_text": ["Preferences", "Choose defaults"],
+            "name_source": "aria-labelledby",
+            "name_attribute_names": ["aria-label", "aria-labelledby"],
+            "name_attribute_count": 2,
+            "label_target_count": 2
+          },
+          {
+            "element": "div",
+            "id": "missing-name",
+            "role": "block",
+            "text": "Hidden",
+            "aria_labelledby": ["missing"],
+            "name_source": "unresolved-aria-labelledby",
+            "name_attribute_names": ["aria-labelledby"],
+            "name_attribute_count": 1,
+            "label_target_count": 1,
+            "unresolved_label_targets": ["missing"],
+            "name_blocked": true,
+            "name_block_reasons": ["unresolved-idref", "empty-name"]
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [],
         "forms": [],
         "tables": []
       }
@@ -1704,11 +2023,87 @@
             "aria_errormessage": ["error"],
             "errormessage_text": ["Required value"],
             "aria_flowto": ["next"],
-            "flowto_text": ["Next step"]
+            "flowto_text": ["Next step"],
+            "relation_attribute_names": ["aria-details", "aria-errormessage", "aria-flowto"],
+            "relation_attribute_count": 3,
+            "relation_target_count": 4
           }
         ],
         "links": [],
         "images": [],
+        "forms": [],
+        "tables": []
+      }
+    },
+    {
+      "id": "aria-description-descriptor-page",
+      "description": "Browser document summaries expose ARIA description sources, resolved describedby text, and unresolved describedby blockers.",
+      "input": "<body><h2 id=dialog-title>Preferences</h2><p id=hint>Choose defaults</p><p id=extra>Extra guidance</p><span id=open aria-label=\"Open preferences\" aria-description=\"Opens the settings panel\">Open</span><div id=panel aria-labelledby=dialog-title aria-describedby=\"hint extra\" aria-description=\"Fallback panel help\">Panel</div><div id=missing-desc aria-label=\"Hidden help\" aria-describedby=\"missing\">Hidden</div></body>",
+      "expected": {
+        "title": null,
+        "base_href": null,
+        "base_target": null,
+        "body_text": "Preferences Choose defaults Extra guidance Open Panel Hidden",
+        "metas": [],
+        "resources": [],
+        "anchors": [
+          { "id": "dialog-title", "name": null, "text": "Preferences" },
+          { "id": "hint", "name": null, "text": "Choose defaults" },
+          { "id": "extra", "name": null, "text": "Extra guidance" },
+          { "id": "open", "name": null, "text": "Open" },
+          { "id": "panel", "name": null, "text": "Panel" },
+          { "id": "missing-desc", "name": null, "text": "Hidden" }
+        ],
+        "headings": [
+          { "level": 2, "text": "Preferences" }
+        ],
+        "aria_description_descriptors": [
+          {
+            "element": "span",
+            "id": "open",
+            "role": "inline",
+            "text": "Open",
+            "accessible_name": "Open preferences",
+            "accessible_description": "Opens the settings panel",
+            "aria_description": "Opens the settings panel",
+            "description_source": "aria-description",
+            "description_attribute_names": ["aria-description"],
+            "description_attribute_count": 1
+          },
+          {
+            "element": "div",
+            "id": "panel",
+            "role": "block",
+            "text": "Panel",
+            "accessible_name": "Preferences",
+            "accessible_description": "Choose defaults Extra guidance",
+            "aria_description": "Fallback panel help",
+            "aria_describedby": ["hint", "extra"],
+            "describedby_text": ["Choose defaults", "Extra guidance"],
+            "description_source": "aria-describedby",
+            "description_attribute_names": ["aria-description", "aria-describedby"],
+            "description_attribute_count": 2,
+            "description_target_count": 2
+          },
+          {
+            "element": "div",
+            "id": "missing-desc",
+            "role": "block",
+            "text": "Hidden",
+            "accessible_name": "Hidden help",
+            "aria_describedby": ["missing"],
+            "description_source": "unresolved-aria-describedby",
+            "description_attribute_names": ["aria-describedby"],
+            "description_attribute_count": 1,
+            "description_target_count": 1,
+            "unresolved_description_targets": ["missing"],
+            "description_blocked": true,
+            "description_block_reasons": ["unresolved-idref", "empty-description"]
+          }
+        ],
+        "links": [],
+        "images": [],
+        "interactive_elements": [],
         "forms": [],
         "tables": []
       }
@@ -1945,6 +2340,35 @@
             "content_text": "Untitled Body"
           }
         ],
+        "template_descriptors": [
+          {
+            "id": "card-template",
+            "template_kind": "declarative-shadow-root",
+            "shadowrootmode": "open",
+            "shadowroot_attribute_names": ["shadowrootmode", "shadowrootdelegatesfocus", "shadowrootclonable", "shadowrootserializable"],
+            "shadowroot_attribute_count": 4,
+            "declarative_shadow_root": true,
+            "shadowroot_mode_valid": true,
+            "shadowrootdelegatesfocus": true,
+            "shadowrootclonable": true,
+            "shadowrootserializable": true,
+            "content_text": "Untitled Body",
+            "content_word_count": 2
+          }
+        ],
+        "slot_descriptors": [
+          { "element": "slot", "slot_kind": "slot-element", "slot_name": "title", "named_slot": true, "fallback_text": "Untitled", "fallback_word_count": 1 },
+          { "element": "slot", "slot_kind": "slot-element", "default_slot": true, "fallback_text": "Body", "fallback_word_count": 1 },
+          { "element": "span", "slot_kind": "slotted-element", "slot": "title", "named_slot": true, "part": ["title"] },
+          { "element": "slot", "slot_kind": "slot-element", "slot_name": "footer", "named_slot": true, "fallback_text": "Fallback footer", "fallback_word_count": 2, "part": ["footer"] }
+        ],
+        "custom_element_descriptors": [
+          { "element": "product-card", "id": "card", "custom_element_kind": "autonomous-custom-element", "definition_name": "product-card", "custom_element_name": "product-card", "autonomous_custom_element": true, "custom_element_name_valid": true, "part": ["host"], "exportparts": "header:title, chart", "data_attribute_names": ["data-controller", "data-state"], "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "button", "custom_element_kind": "customized-built-in", "definition_name": "fancy-button", "custom_element_is": "fancy-button", "customized_builtin": true, "extends_element": "button", "custom_element_name_valid": true, "part": ["action"], "data_attribute_names": ["data-action"], "text": "Save" }
+        ],
+        "canvas_descriptors": [
+          { "id": "chart", "width": "300", "height": "150", "has_width": true, "has_height": true, "fallback_text": "Chart fallback", "fallback_word_count": 2, "part": ["chart"], "data_attribute_names": ["data-renderer"] }
+        ],
         "component_hydration_targets": [
           { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
           { "element": "article", "part": ["frame"], "text": "Untitled Body" },
@@ -1956,12 +2380,23 @@
           { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" },
           { "element": "slot", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
         ],
+        "component_hydration_descriptors": [
+          { "element": "template", "id": "card-template", "hydration_kind": "declarative-shadow-template", "shadowrootmode": "open", "data_attribute_names": ["data-template"], "data_attribute_count": 1, "text": "Untitled Body" },
+          { "element": "article", "hydration_kind": "part-target", "part": ["frame"], "text": "Untitled Body" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "slot_name": "title", "text": "Untitled" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "text": "Body" },
+          { "element": "product-card", "id": "card", "hydration_kind": "autonomous-custom-element", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "exportparts": "header:title, chart", "data_attribute_names": ["data-controller", "data-state"], "data_attribute_count": 2, "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "hydration_kind": "slotted-element", "slot": "title", "part": ["title"], "data_attribute_names": ["data-field"], "data_attribute_count": 1, "text": "Widget" },
+          { "element": "canvas", "id": "chart", "hydration_kind": "canvas-fallback", "part": ["chart"], "data_attribute_names": ["data-renderer"], "data_attribute_count": 1, "canvas_fallback_text": "Chart fallback", "text": "Chart fallback" },
+          { "element": "button", "hydration_kind": "customized-built-in", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attribute_names": ["data-action"], "data_attribute_count": 1, "text": "Save" },
+          { "element": "slot", "hydration_kind": "slot-outlet", "slot_name": "footer", "part": ["footer"], "text": "Fallback footer" }
+        ],
         "data_attribute_descriptors": [
-          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "text": "Untitled Body" },
-          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "text": "Widget Chart fallback Save Fallback footer" },
-          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "text": "Widget" },
-          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "text": "Chart fallback" },
-          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "text": "Save" }
+          { "element": "template", "id": "card-template", "data_attributes": [{ "name": "data-template", "value": "card" }], "data_attribute_names": ["data-template"], "data_attribute_count": 1, "text": "Untitled Body" },
+          { "element": "product-card", "id": "card", "custom_element": true, "custom_element_name": "product-card", "part": ["host"], "data_attributes": [{ "name": "data-controller", "value": "product" }, { "name": "data-state", "value": "ready" }], "data_attribute_names": ["data-controller", "data-state"], "data_attribute_count": 2, "text": "Widget Chart fallback Save Fallback footer" },
+          { "element": "span", "slot": "title", "part": ["title"], "data_attributes": [{ "name": "data-field", "value": "name" }], "data_attribute_names": ["data-field"], "data_attribute_count": 1, "text": "Widget" },
+          { "element": "canvas", "id": "chart", "part": ["chart"], "data_attributes": [{ "name": "data-renderer", "value": "canvas" }], "data_attribute_names": ["data-renderer"], "data_attribute_count": 1, "text": "Chart fallback" },
+          { "element": "button", "custom_element": true, "custom_element_is": "fancy-button", "part": ["action"], "data_attributes": [{ "name": "data-action", "value": "save" }], "data_attribute_names": ["data-action"], "data_attribute_count": 1, "text": "Save" }
         ],
         "forms": [],
         "tables": []

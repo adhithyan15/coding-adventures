@@ -1,0 +1,8 @@
+{
+ "check_id": 116,
+ "idx": 48,
+ "slot": "bodily_injury_to_guest",
+ "claimed_value": true,
+ "scenario": "During an argument at a party, the insured deliberately shoved a guest down the stairs, causing the guest to break an arm. The guest filed a bodily-injury claim against the insured's homeowner's liability coverage.",
+ "cited_span": "causing the guest to break an arm"
+}

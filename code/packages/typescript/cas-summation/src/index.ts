@@ -19,6 +19,13 @@ import {
 
 export const GAMMA_FUNC = sym("GammaFunc");
 
+// Re-exported from ``gosper.ts``.  Track H2 — see PR #5366 (H1, Python).
+export { tryGosperSum, MAX_POLY_DEGREE } from "./gosper";
+import { tryGosperSum } from "./gosper";
+// Re-exported from ``seriesClosedForms.ts``.  Track I2 — see PR #5382 (I1, Python).
+export { tryClosedFormSeries, bernoulliRational } from "./seriesClosedForms";
+import { tryClosedFormSeries } from "./seriesClosedForms";
+
 export interface RationalValue {
   readonly numer: bigint;
   readonly denom: bigint;
@@ -204,6 +211,19 @@ function evaluateSumInner(
     if (raw !== undefined) return evalFn(raw);
   }
 
+  // Track I2 — closed-form transcendental infinite sums.  Recognises the
+  // canonical zeta(2m), eta(2m), eta(1) = log(2), e_series, exp/cos/sin/
+  // cosh/sinh Taylor series.  Mirrors the Python dispatch insertion
+  // point (step 5a): placed after ``trySpecialInfinite`` so its
+  // pre-existing patterns (Basel zeta(2)/zeta(4), Leibniz π/4) keep
+  // their IR shapes and tests; ``tryClosedFormSeries`` only fires on
+  // patterns the legacy handler refuses (e.g. ``Σ 1/k⁶``, the eta
+  // family, sin/cos/sinh/cosh).
+  if (infUpper) {
+    const raw = tryClosedFormSeries(f, k, lo, hi);
+    if (raw !== undefined) return evalFn(raw);
+  }
+
   if (lo.kind === "integer" && hi.kind === "integer" && hi.value - lo.value >= 0n && hi.value - lo.value <= 999n) {
     let total = makeRational(0n, 1n);
     let ok = true;
@@ -217,6 +237,23 @@ function evaluateSumInner(
       total = addR(total, r);
     }
     if (ok) return rationalToIr(total);
+  }
+
+  // Track H2 — Gosper hypergeometric closed-form attempt.  Runs after
+  // all narrow recognisers (constant, geometric, Faulhaber, telescoping,
+  // small-range numeric, special infinite series) but before the
+  // Apart-retry telescope chain and the unevaluated fallthrough.
+  //
+  // Mirrors the Python dispatch insertion point in
+  // ``cas_summation.summation`` (step 5b): Gosper only runs for *finite*
+  // upper bounds because the algorithm returns ``T(hi+1) − T(lo)`` which
+  // is only meaningful when ``hi+1`` is a real value.  Infinite upper
+  // bounds belong to the dedicated limit-aware paths above (telescope at
+  // ∞, classic series).  This guard also preserves the Phase 41 fall-
+  // through contract for non-vanishing telescopes.
+  if (!infUpper) {
+    const gosper = tryGosperSum(f, k, lo, hi);
+    if (gosper !== undefined) return evalFn(gosper);
   }
 
   // Track B2 — Apart-retry telescope chain.  Mirrors the Python

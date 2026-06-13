@@ -1,0 +1,1573 @@
+{
+ "aggregate": {
+  "n_items": 100,
+  "extracted": "100/100",
+  "engine_errors": 0,
+  "byte_accounting_clean": "98/100",
+  "no_hallucinated_rules": "100/100",
+  "verdict_family_match_overall": "86/100",
+  "underdetermined -> INDETERMINATE (abstain, not fabricate)": "23/30",
+  "determinate strata -> DETERMINATE": "59/70"
+ },
+ "per_domain": {
+  "consumer-warranty": {
+   "n": 10,
+   "byte_clean": 9,
+   "verdict_match": 9
+  },
+  "customs-import": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 9
+  },
+  "data-privacy": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 7
+  },
+  "environmental-permitting": {
+   "n": 10,
+   "byte_clean": 9,
+   "verdict_match": 8
+  },
+  "food-safety": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 8
+  },
+  "healthcare-billing": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 10
+  },
+  "professional-licensing": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 8
+  },
+  "rental-housing": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 9
+  },
+  "securities-compliance": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 9
+  },
+  "workers-compensation": {
+   "n": 10,
+   "byte_clean": 10,
+   "verdict_match": 9
+  }
+ },
+ "rows": [
+  {
+   "idx": 0,
+   "id": "HEA-1",
+   "domain": "healthcare-billing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 1,
+   "id": "HEA-2",
+   "domain": "healthcare-billing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "within_age_band"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 2,
+   "id": "HEA-3",
+   "domain": "healthcare-billing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 3,
+   "id": "HEA-4",
+   "domain": "healthcare-billing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "deductible_met"
+   ]
+  },
+  {
+   "idx": 4,
+   "id": "HEA-5",
+   "domain": "healthcare-billing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "non_emergency_determination"
+   ]
+  },
+  {
+   "idx": 5,
+   "id": "HEA-6",
+   "domain": "healthcare-billing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "dispensed",
+    "medical_necessity_override"
+   ]
+  },
+  {
+   "idx": 6,
+   "id": "HEA-7",
+   "domain": "healthcare-billing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 7,
+   "id": "HEA-8",
+   "domain": "healthcare-billing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 8,
+   "id": "HEA-9",
+   "domain": "healthcare-billing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "same_hospital"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 9,
+   "id": "HEA-10",
+   "domain": "healthcare-billing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 10,
+   "id": "ENV-1",
+   "domain": "environmental-permitting",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 11,
+   "id": "ENV-2",
+   "domain": "environmental-permitting",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "CONFLICT",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "days_between_filing_and_discharge"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 12,
+   "id": "ENV-3",
+   "domain": "environmental-permitting",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "loss_of_waters_acres"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 13,
+   "id": "ENV-4",
+   "domain": "environmental-permitting",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "part_of_common_plan_disturbing_one_or_more_acres"
+   ]
+  },
+  {
+   "idx": 14,
+   "id": "ENV-5",
+   "domain": "environmental-permitting",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 15,
+   "id": "ENV-6",
+   "domain": "environmental-permitting",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "is_major_source"
+   ]
+  },
+  {
+   "idx": 16,
+   "id": "ENV-7",
+   "domain": "environmental-permitting",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 17,
+   "id": "ENV-8",
+   "domain": "environmental-permitting",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 18,
+   "id": "ENV-9",
+   "domain": "environmental-permitting",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": false,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "discharges_fill_into_us_waters",
+    "is_normal_farming_silviculture_ranching",
+    "part_of_established_ongoing_operation"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 19,
+   "id": "ENV-10",
+   "domain": "environmental-permitting",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 20,
+   "id": "CON-1",
+   "domain": "consumer-warranty",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "months_since_purchase"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 21,
+   "id": "CON-2",
+   "domain": "consumer-warranty",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "days_since_delivery"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 22,
+   "id": "CON-3",
+   "domain": "consumer-warranty",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 23,
+   "id": "CON-4",
+   "domain": "consumer-warranty",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "registered_within_90_days"
+   ]
+  },
+  {
+   "idx": 24,
+   "id": "CON-5",
+   "domain": "consumer-warranty",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "product_unused_resalable"
+   ]
+  },
+  {
+   "idx": 25,
+   "id": "CON-6",
+   "domain": "consumer-warranty",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "serviced_by_unauthorized_shop"
+   ]
+  },
+  {
+   "idx": 26,
+   "id": "CON-7",
+   "domain": "consumer-warranty",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": false,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 27,
+   "id": "CON-8",
+   "domain": "consumer-warranty",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 28,
+   "id": "CON-9",
+   "domain": "consumer-warranty",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 29,
+   "id": "CON-10",
+   "domain": "consumer-warranty",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 30,
+   "id": "SEC-1",
+   "domain": "securities-compliance",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 31,
+   "id": "SEC-2",
+   "domain": "securities-compliance",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "matched_purchase_and_sale",
+    "profit_realized",
+    "within_six_months"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 32,
+   "id": "SEC-3",
+   "domain": "securities-compliance",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 33,
+   "id": "SEC-4",
+   "domain": "securities-compliance",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 34,
+   "id": "SEC-5",
+   "domain": "securities-compliance",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "fifteen_pct_outstanding_securities"
+   ]
+  },
+  {
+   "idx": 35,
+   "id": "SEC-6",
+   "domain": "securities-compliance",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "day_trades_exceed_6pct_of_total_trades"
+   ]
+  },
+  {
+   "idx": 36,
+   "id": "SEC-7",
+   "domain": "securities-compliance",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 37,
+   "id": "SEC-8",
+   "domain": "securities-compliance",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 38,
+   "id": "SEC-9",
+   "domain": "securities-compliance",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 39,
+   "id": "SEC-10",
+   "domain": "securities-compliance",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 40,
+   "id": "FOO-1",
+   "domain": "food-safety",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 41,
+   "id": "FOO-2",
+   "domain": "food-safety",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 42,
+   "id": "FOO-3",
+   "domain": "food-safety",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 43,
+   "id": "FOO-4",
+   "domain": "food-safety",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "window2_minutes"
+   ]
+  },
+  {
+   "idx": 44,
+   "id": "FOO-5",
+   "domain": "food-safety",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "container_tagged"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 45,
+   "id": "FOO-6",
+   "domain": "food-safety",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "cfpm_present_all_hours"
+   ]
+  },
+  {
+   "idx": 46,
+   "id": "FOO-7",
+   "domain": "food-safety",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "counted_refrigerated_days",
+    "frozen_before_7_days_elapsed"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 47,
+   "id": "FOO-8",
+   "domain": "food-safety",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "is_ready_to_eat"
+   ]
+  },
+  {
+   "idx": 48,
+   "id": "FOO-9",
+   "domain": "food-safety",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "food_type",
+    "is_tcs_food"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 49,
+   "id": "FOO-10",
+   "domain": "food-safety",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 50,
+   "id": "REN-1",
+   "domain": "rental-housing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 51,
+   "id": "REN-2",
+   "domain": "rental-housing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 52,
+   "id": "REN-3",
+   "domain": "rental-housing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 53,
+   "id": "REN-4",
+   "domain": "rental-housing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "fee_authorized_in_lease"
+   ]
+  },
+  {
+   "idx": 54,
+   "id": "REN-5",
+   "domain": "rental-housing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "landlord_made_reasonable_efforts"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 55,
+   "id": "REN-6",
+   "domain": "rental-housing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "season_is_winter"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 56,
+   "id": "REN-7",
+   "domain": "rental-housing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "within_6_months_of_complaint"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 57,
+   "id": "REN-8",
+   "domain": "rental-housing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "beyond_normal_wear_and_tear"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 58,
+   "id": "REN-9",
+   "domain": "rental-housing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 59,
+   "id": "REN-10",
+   "domain": "rental-housing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 60,
+   "id": "PRO-1",
+   "domain": "professional-licensing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 61,
+   "id": "PRO-2",
+   "domain": "professional-licensing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "additional_disciplines"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 62,
+   "id": "PRO-3",
+   "domain": "professional-licensing",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 63,
+   "id": "PRO-4",
+   "domain": "professional-licensing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "lapse_months"
+   ]
+  },
+  {
+   "idx": 64,
+   "id": "PRO-5",
+   "domain": "professional-licensing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "home_jurisdiction_grants_reciprocity"
+   ]
+  },
+  {
+   "idx": 65,
+   "id": "PRO-6",
+   "domain": "professional-licensing",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "hours_at_board_approved_site"
+   ]
+  },
+  {
+   "idx": 66,
+   "id": "PRO-7",
+   "domain": "professional-licensing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 67,
+   "id": "PRO-8",
+   "domain": "professional-licensing",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "CONFLICT",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 68,
+   "id": "PRO-9",
+   "domain": "professional-licensing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 69,
+   "id": "PRO-10",
+   "domain": "professional-licensing",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "license_reactivated"
+   ]
+  },
+  {
+   "idx": 70,
+   "id": "CUS-1",
+   "domain": "customs-import",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "customs_value"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 71,
+   "id": "CUS-2",
+   "domain": "customs-import",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 72,
+   "id": "CUS-3",
+   "domain": "customs-import",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 73,
+   "id": "CUS-4",
+   "domain": "customs-import",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "valid_certificate_of_origin"
+   ]
+  },
+  {
+   "idx": 74,
+   "id": "CUS-5",
+   "domain": "customs-import",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "hours_outside_country"
+   ]
+  },
+  {
+   "idx": 75,
+   "id": "CUS-6",
+   "domain": "customs-import",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "within_three_years"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 76,
+   "id": "CUS-7",
+   "domain": "customs-import",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "CONFLICT",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 77,
+   "id": "CUS-8",
+   "domain": "customs-import",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 78,
+   "id": "CUS-9",
+   "domain": "customs-import",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 79,
+   "id": "CUS-10",
+   "domain": "customs-import",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 80,
+   "id": "DAT-1",
+   "domain": "data-privacy",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "hours_to_notify"
+   ],
+   "missing_slots": [
+    "breach_unlikely_to_result_in_risk"
+   ]
+  },
+  {
+   "idx": 81,
+   "id": "DAT-2",
+   "domain": "data-privacy",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "erasure_right_applies"
+   ]
+  },
+  {
+   "idx": 82,
+   "id": "DAT-3",
+   "domain": "data-privacy",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 83,
+   "id": "DAT-4",
+   "domain": "data-privacy",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "received_consideration",
+    "transfer_is_sale"
+   ]
+  },
+  {
+   "idx": 84,
+   "id": "DAT-5",
+   "domain": "data-privacy",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "has_general_written_authorization",
+    "has_prior_written_authorization"
+   ]
+  },
+  {
+   "idx": 85,
+   "id": "DAT-6",
+   "domain": "data-privacy",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "independent_lawful_basis"
+   ]
+  },
+  {
+   "idx": 86,
+   "id": "DAT-7",
+   "domain": "data-privacy",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [
+    "request_excessive"
+   ],
+   "missing_slots": []
+  },
+  {
+   "idx": 87,
+   "id": "DAT-8",
+   "domain": "data-privacy",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 88,
+   "id": "DAT-9",
+   "domain": "data-privacy",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 89,
+   "id": "DAT-10",
+   "domain": "data-privacy",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "processing_high_risk"
+   ]
+  },
+  {
+   "idx": 90,
+   "id": "WOR-1",
+   "domain": "workers-compensation",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": false,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "arises_out_of_and_in_course_of_employment"
+   ]
+  },
+  {
+   "idx": 91,
+   "id": "WOR-2",
+   "domain": "workers-compensation",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 92,
+   "id": "WOR-3",
+   "domain": "workers-compensation",
+   "stratum": "clean-determinate",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 93,
+   "id": "WOR-4",
+   "domain": "workers-compensation",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "intoxication_proximate_cause"
+   ]
+  },
+  {
+   "idx": 94,
+   "id": "WOR-5",
+   "domain": "workers-compensation",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "INDETERMINATE",
+   "gold_family": "INDETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": [
+    "remarried"
+   ]
+  },
+  {
+   "idx": 95,
+   "id": "WOR-6",
+   "domain": "workers-compensation",
+   "stratum": "underdetermined-baited",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 96,
+   "id": "WOR-7",
+   "domain": "workers-compensation",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 97,
+   "id": "WOR-8",
+   "domain": "workers-compensation",
+   "stratum": "override-precedence",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 98,
+   "id": "WOR-9",
+   "domain": "workers-compensation",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  },
+  {
+   "idx": 99,
+   "id": "WOR-10",
+   "domain": "workers-compensation",
+   "stratum": "exception-encoding",
+   "extracted": true,
+   "engine_family": "DETERMINATE",
+   "gold_family": "DETERMINATE",
+   "verdict_match": true,
+   "byte_accounting_ok": true,
+   "hallucinated_rules": [],
+   "assumptions": [],
+   "missing_slots": []
+  }
+ ]
+}

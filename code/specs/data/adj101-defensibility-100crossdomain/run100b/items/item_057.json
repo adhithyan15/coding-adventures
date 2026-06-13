@@ -1,0 +1,7 @@
+{
+ "idx": 57,
+ "id": "REN-8",
+ "scenario": "Water stains and warped flooring appeared in Carla's living room. An inspector determined the cause was a leak in the building's main roof, which the landlord had neglected to maintain. The landlord wants to bill Carla for the floor replacement.",
+ "policy": "A tenant is responsible for the cost of repairing damage to the unit beyond normal wear and tear. However, if the damage was caused by the landlord's failure to maintain the building's structure or systems, the landlord bears the cost regardless of the tenant's conduct.",
+ "question": "Who bears the cost of the floor repair?"
+}

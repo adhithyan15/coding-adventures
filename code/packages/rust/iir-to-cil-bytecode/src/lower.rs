@@ -60,7 +60,7 @@ use std::collections::{BTreeMap, HashMap};
 use interpreter_ir::{IIRModule, Operand};
 use ir_to_cil_bytecode::backend::{CILMethodArtifact, CILProgramArtifact};
 use ir_to_cil_bytecode::builder::{CILBranchKind, CILBytecodeBuilder, CILOpcode};
-use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN};
+use ir_to_cil_bytecode::{OBJECT_ARRAY_TYPE_TOKEN, INT32_ARRAY_TYPE_TOKEN, INT32_TYPE_TOKEN};
 
 /// Sentinel token for `System.Console.WriteLine(int64)`.
 ///
@@ -1361,6 +1361,41 @@ pub fn lower_iir_to_cil(
                     builder.emit_stelem_ref();                   // array[idx] = value
                 }
 
+                // ── box dest src ; unbox.any dest src (McCarthy W6b) ──────────
+                //
+                // The uniform-reference value model's atom boxing — the CLR
+                // counterpart of the wasm `i31ref` and the JVM `Integer`. The
+                // shared structural pass emits these `box`/`unbox` ops; on the CLR
+                // a boxed `int32` lives in an `object[]` cons cell.
+                //   box      → ldloc src ; box [int32] ; stloc dest
+                //   unbox.any→ ldloc src ; unbox.any [int32] ; stloc dest
+                "box" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "box instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_box(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+                "unbox" => {
+                    let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                        IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: "unbox instruction must have a dest".into(),
+                        }
+                    })?;
+                    let dest = reg_info!(dest_name).clone();
+                    let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
+                    emit_load(&mut builder, &src, fn_name)?;
+                    builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                    emit_store(&mut builder, &dest, fn_name)?;
+                }
+
                 // ── is_null dest x ────────────────────────────────────────────
                 //
                 // Test whether `x` is a null reference (the IIR nil value).
@@ -1767,6 +1802,80 @@ pub fn lower_iir_to_cil(
                             let val_info = reg_info!(val_name).clone();
                             emit_load(&mut builder, &val_info, fn_name)?;
                             builder.emit_call(BASIC_PRINT_I64_TOKEN);
+                        }
+
+                        // ── McCarthy W7 predicates (F3–F5) ────────────────────
+                        //
+                        // The CLR twins of the JVM `instanceof`/`ixor`/`if_icmpeq`
+                        // and the wasm `ref.test`/`i32.eqz`/`i32.eq`. The shared
+                        // structural pass decomposes `ATOM x` → `not (pair? x)`
+                        // and `EQ a b` → `equal? a b`; `COND` lowers to the
+                        // already-supported `jmp_if_true`/`jmp_if_false`.
+                        //
+                        // | builtin | layout                         | CIL |
+                        // |---------|--------------------------------|-----|
+                        // | `pair?` | [Var("pair?"), Var(x)]; dest   | `ldloc x; isinst object[]; ldnull; ceq; ldc.i4.0; ceq` |
+                        // | `not`   | [Var("not"), Var(x)]; dest     | `ldloc x; ldc.i4.1; xor` |
+                        // | `equal?`| [Var("equal?"), Var(a), Var(b)]; dest | `ldloc a; unbox.any int32; ldloc b; unbox.any int32; ceq` |
+                        "pair?" => {
+                            // Is the (boxed) lisp value a cons cell? A cons is an
+                            // `object[]` (heap ref); an atom is a boxed int; nil is
+                            // null. `isinst` leaves the ref or null; the two `ceq`s
+                            // turn that into a clean 1 (pair) / 0 (not) — the first
+                            // `ceq ldnull` answers "is it null (≠ pair)?", the
+                            // second flips it (`== 0` ⇒ "was a pair").
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"pair?\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let arg = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &arg, fn_name)?;
+                            builder.emit_isinst(OBJECT_ARRAY_TYPE_TOKEN);
+                            builder.emit_ldnull();
+                            builder.emit_ceq();        // 1 if null (not a pair)
+                            builder.emit_ldc_i4(0);
+                            builder.emit_ceq();        // flip → 1 if it was a pair
+                            emit_store(&mut builder, &dest, fn_name)?;
+                        }
+                        "not" => {
+                            // Logical not of a 0/1 bool: `x ^ 1`. (Distinct from the
+                            // top-level Twig `not` op, which is bitwise complement.)
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"not\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let arg = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &arg, fn_name)?;
+                            builder.emit_ldc_i4(1);
+                            builder.emit_xor();
+                            emit_store(&mut builder, &dest, fn_name)?;
+                        }
+                        "equal?" => {
+                            // `EQ` on atoms: unbox both and compare. The structural
+                            // pass guarantees both args are boxed atoms (symbols
+                            // interned to ints, integers as ints), so identity
+                            // reduces to integer equality.
+                            let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                                IIRClrError::InvalidOperand {
+                                    function: fn_name.clone(),
+                                    detail: "call_builtin \"equal?\" requires a dest".into(),
+                                }
+                            })?;
+                            let dest = reg_info!(dest_name).clone();
+                            let a = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
+                            let b = get_operand_reg(&instr.srcs, 2, &reg_map, fn_name)?;
+                            emit_load(&mut builder, &a, fn_name)?;
+                            builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                            emit_load(&mut builder, &b, fn_name)?;
+                            builder.emit_unbox_any(INT32_TYPE_TOKEN);
+                            builder.emit_ceq();
+                            emit_store(&mut builder, &dest, fn_name)?;
                         }
                         _ => {
                             // Validator should have rejected this; defense in depth.

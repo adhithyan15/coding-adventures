@@ -1,0 +1,7 @@
+{
+ "idx": 60,
+ "id": "EMP-1",
+ "scenario": "Maria's hourly rate is $20. During the workweek she clocked a total of 47 hours of work, which excludes her unpaid meal breaks. Compute her overtime pay for the week (the overtime portion only).",
+ "policy": "An employee qualifies for overtime pay at 1.5x their hourly rate for every hour worked beyond 40 hours in a single workweek. Hours worked is the sum of all clocked time, excluding unpaid meal breaks.",
+ "question": "How much overtime pay is Maria owed for the week?"
+}

@@ -6,8 +6,8 @@
 //!
 //! The first slice is intentionally conservative: it supports scalar
 //! `integer` and `boolean` programs only. ALGOL features that need a richer
-//! runtime model, such as arrays, procedures, strings, reals, switches, nested
-//! declaration scopes, and by-name calls, fail with explicit errors instead of
+//! runtime model, such as arrays, procedures, strings, reals, switches, and
+//! by-name calls, fail with explicit errors instead of
 //! silently producing partial IR.
 
 #![warn(missing_docs)]
@@ -141,6 +141,12 @@ struct ExprValue {
     ty: ScalarType,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct VarBinding {
+    slot: String,
+    ty: ScalarType,
+}
+
 #[derive(Debug, Clone)]
 enum Piece<'a> {
     Node(&'a GrammarASTNode),
@@ -151,7 +157,8 @@ struct Compiler {
     instrs: Vec<IIRInstr>,
     source_map: Vec<SourceLoc>,
     current_loc: Cell<SourceLoc>,
-    vars: HashMap<String, ScalarType>,
+    scopes: Vec<HashMap<String, VarBinding>>,
+    scope_counter: usize,
     temp_counter: usize,
     label_counter: usize,
     register_names: HashSet<String>,
@@ -165,7 +172,8 @@ impl Default for Compiler {
             instrs: Vec::new(),
             source_map: Vec::new(),
             current_loc: Cell::new(SourceLoc::SYNTHETIC),
-            vars: HashMap::new(),
+            scopes: vec![HashMap::new()],
+            scope_counter: 0,
             temp_counter: 0,
             label_counter: 0,
             register_names: HashSet::new(),
@@ -185,8 +193,13 @@ impl Compiler {
             }
         }
 
-        let (return_type, return_src) = match self.vars.get("result").copied() {
-            Some(ty) => (ty.iir(), Operand::Var("result".to_string())),
+        let (return_type, return_src) = match self
+            .scopes
+            .first()
+            .and_then(|scope| scope.get("result"))
+            .cloned()
+        {
+            Some(binding) => (binding.ty.iir(), Operand::Var(binding.slot)),
             None => {
                 self.emit(IIRInstr::new(
                     "const",
@@ -228,14 +241,8 @@ impl Compiler {
     fn emit_block(&mut self, node: &GrammarASTNode, is_root: bool) -> Result<(), CompileError> {
         self.set_loc(node);
 
-        if !is_root
-            && direct_nodes(node)
-                .iter()
-                .any(|n| n.rule_name == "declaration")
-        {
-            return Err(CompileError::Unsupported(
-                "nested block declarations and lexical scope".into(),
-            ));
+        if !is_root {
+            self.push_scope();
         }
 
         for child in direct_nodes(node) {
@@ -247,6 +254,9 @@ impl Compiler {
             if child.rule_name == "statement" {
                 self.emit_statement(child)?;
             }
+        }
+        if !is_root {
+            self.pop_scope();
         }
         Ok(())
     }
@@ -273,15 +283,10 @@ impl Compiler {
             .filter(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
         {
-            if self.vars.insert(name.clone(), ty).is_some() {
-                return Err(CompileError::Type(format!(
-                    "duplicate declaration for {name:?}"
-                )));
-            }
-            self.register_names.insert(name.clone());
+            let slot = self.declare_var(&name, ty)?;
             self.emit(IIRInstr::new(
                 "const",
-                Some(name),
+                Some(slot),
                 vec![ty.default_operand()],
                 ty.iir(),
             ));
@@ -378,19 +383,19 @@ impl Compiler {
             let var_node = first_direct_node(left, "variable")
                 .ok_or_else(|| CompileError::Malformed("left_part has no variable".into()))?;
             let name = self.simple_variable_name(var_node)?;
-            let expected = self.require_var(&name)?;
-            if expected != rhs.ty {
+            let binding = self.require_var(&name)?;
+            if binding.ty != rhs.ty {
                 return Err(CompileError::Type(format!(
                     "cannot assign {} expression to {} variable {name:?}",
                     rhs.ty.name(),
-                    expected.name()
+                    binding.ty.name()
                 )));
             }
             self.emit(IIRInstr::new(
                 "mov",
-                Some(name),
+                Some(binding.slot),
                 vec![Operand::Var(rhs.slot.clone())],
-                expected.iir(),
+                binding.ty.iir(),
             ));
         }
         Ok(())
@@ -475,8 +480,8 @@ impl Compiler {
             .find(|t| t.effective_type_name() == "NAME")
             .map(|t| t.value.clone())
             .ok_or_else(|| CompileError::Malformed("for_stmt missing loop variable".into()))?;
-        let var_ty = self.require_var(&var_name)?;
-        if var_ty != ScalarType::Integer {
+        let var_binding = self.require_var(&var_name)?;
+        if var_binding.ty != ScalarType::Integer {
             return Err(CompileError::Type(format!(
                 "for variable {var_name:?} must be integer"
             )));
@@ -488,20 +493,72 @@ impl Compiler {
             .into_iter()
             .filter(|n| n.rule_name == "for_elem")
             .collect();
-        if elems.len() != 1 {
-            return Err(CompileError::Unsupported(
-                "multi-element ALGOL for lists".into(),
-            ));
+        if elems.is_empty() {
+            return Err(CompileError::Malformed("for_list has no elements".into()));
         }
-        let elem = elems[0];
+        let body = direct_nodes(node)
+            .into_iter()
+            .find(|n| n.rule_name == "statement")
+            .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
+
+        for elem in elems {
+            self.emit_for_element(&var_binding.slot, elem, body)?;
+        }
+        Ok(())
+    }
+
+    fn emit_for_element(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
         if direct_tokens(elem).iter().any(|t| t.value == "while") {
-            return Err(CompileError::Unsupported("for while elements".into()));
+            return self.emit_for_while(var_name, elem, body);
         }
-        if !direct_tokens(elem).iter().any(|t| t.value == "step") {
-            return Err(CompileError::Unsupported(
-                "single-value for elements outside step/until form".into(),
+        if direct_tokens(elem).iter().any(|t| t.value == "step") {
+            return self.emit_for_step_until(var_name, elem, body);
+        }
+        self.emit_for_once(var_name, elem, body)
+    }
+
+    fn emit_for_once(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let arith_nodes: Vec<&GrammarASTNode> = direct_nodes(elem)
+            .into_iter()
+            .filter(|n| n.rule_name == "arith_expr")
+            .collect();
+        if arith_nodes.len() != 1 {
+            return Err(CompileError::Malformed(
+                "single-value for element should have one value".into(),
             ));
         }
+
+        let value = self.emit_expr(arith_nodes[0])?;
+        if value.ty != ScalarType::Integer {
+            return Err(CompileError::Type(
+                "single-value for element must be integer".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(var_name.to_string()),
+            vec![Operand::Var(value.slot)],
+            "i64",
+        ));
+        self.emit_statement(body)
+    }
+
+    fn emit_for_step_until(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
         let arith_nodes: Vec<&GrammarASTNode> = direct_nodes(elem)
             .into_iter()
             .filter(|n| n.rule_name == "arith_expr")
@@ -523,52 +580,146 @@ impl Compiler {
                 "for bounds and step must be integer".into(),
             ));
         }
-        let step_const = const_i64_from_node(arith_nodes[1])
-            .ok_or_else(|| CompileError::Unsupported("non-constant for step values".into()))?;
-        let cmp_op = if step_const >= 0 { "cmp_le" } else { "cmp_ge" };
-
-        let body = direct_nodes(node)
-            .into_iter()
-            .find(|n| n.rule_name == "statement")
-            .ok_or_else(|| CompileError::Malformed("for_stmt missing body statement".into()))?;
-
         self.emit(IIRInstr::new(
             "mov",
-            Some(var_name.clone()),
+            Some(var_name.to_string()),
             vec![Operand::Var(start.slot)],
             "i64",
         ));
 
+        let zero = self.emit_const(ScalarType::Integer, Operand::Int(0));
         let loop_label = self.fresh_label("for_loop");
+        let negative_check_label = self.fresh_label("for_negative_check");
+        let body_label = self.fresh_label("for_body");
         let end_label = self.fresh_label("for_end");
         self.emit_label(&loop_label);
-        let cond = self.fresh_temp();
+
+        let step_non_negative = self.fresh_temp();
         self.emit(IIRInstr::new(
-            cmp_op,
-            Some(cond.clone()),
-            vec![Operand::Var(var_name.clone()), Operand::Var(limit.slot)],
+            "cmp_ge",
+            Some(step_non_negative.clone()),
+            vec![Operand::Var(step.slot.clone()), Operand::Var(zero)],
             "bool",
         ));
         self.emit(IIRInstr::new(
             "jmp_if_false",
             None,
-            vec![Operand::Var(cond), Operand::Var(end_label.clone())],
+            vec![
+                Operand::Var(step_non_negative),
+                Operand::Var(negative_check_label.clone()),
+            ],
             "void",
         ));
+
+        let positive_cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_le",
+            Some(positive_cond.clone()),
+            vec![
+                Operand::Var(var_name.to_string()),
+                Operand::Var(limit.slot.clone()),
+            ],
+            "bool",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(positive_cond), Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(body_label.clone())],
+            "void",
+        ));
+
+        self.emit_label(&negative_check_label);
+        let negative_cond = self.fresh_temp();
+        self.emit(IIRInstr::new(
+            "cmp_ge",
+            Some(negative_cond.clone()),
+            vec![
+                Operand::Var(var_name.to_string()),
+                Operand::Var(limit.slot.clone()),
+            ],
+            "bool",
+        ));
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(negative_cond), Operand::Var(end_label.clone())],
+            "void",
+        ));
+
+        self.emit_label(&body_label);
         self.emit_statement(body)?;
         let next = self.fresh_temp();
         self.emit(IIRInstr::new(
             "add",
             Some(next.clone()),
-            vec![Operand::Var(var_name.clone()), Operand::Var(step.slot)],
+            vec![Operand::Var(var_name.to_string()), Operand::Var(step.slot)],
             "i64",
         ));
         self.emit(IIRInstr::new(
             "mov",
-            Some(var_name),
+            Some(var_name.to_string()),
             vec![Operand::Var(next)],
             "i64",
         ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(loop_label)],
+            "void",
+        ));
+        self.emit_label(&end_label);
+        Ok(())
+    }
+
+    fn emit_for_while(
+        &mut self,
+        var_name: &str,
+        elem: &GrammarASTNode,
+        body: &GrammarASTNode,
+    ) -> Result<(), CompileError> {
+        let arith_node = direct_nodes(elem)
+            .into_iter()
+            .find(|n| n.rule_name == "arith_expr")
+            .ok_or_else(|| CompileError::Malformed("while for element missing value".into()))?;
+        let cond_node = first_direct_node(elem, "bool_expr")
+            .ok_or_else(|| CompileError::Malformed("while for element missing condition".into()))?;
+
+        let loop_label = self.fresh_label("for_while_loop");
+        let end_label = self.fresh_label("for_while_end");
+        self.emit_label(&loop_label);
+
+        let value = self.emit_expr(arith_node)?;
+        if value.ty != ScalarType::Integer {
+            return Err(CompileError::Type(
+                "for while value expression must be integer".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(var_name.to_string()),
+            vec![Operand::Var(value.slot)],
+            "i64",
+        ));
+
+        let cond = self.emit_expr(cond_node)?;
+        if cond.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "for while condition must be boolean".into(),
+            ));
+        }
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.slot), Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_statement(body)?;
         self.emit(IIRInstr::new(
             "jmp",
             None,
@@ -583,14 +734,17 @@ impl Compiler {
         self.set_loc(node);
 
         if direct_tokens(node).iter().any(|t| t.value == "if") {
-            return Err(CompileError::Unsupported("conditional expressions".into()));
+            return self.emit_conditional_expr(node);
         }
 
         match node.rule_name.as_str() {
             "variable" => {
                 let name = self.simple_variable_name(node)?;
-                let ty = self.require_var(&name)?;
-                Ok(ExprValue { slot: name, ty })
+                let binding = self.require_var(&name)?;
+                Ok(ExprValue {
+                    slot: binding.slot,
+                    ty: binding.ty,
+                })
             }
             "proc_call" => Err(CompileError::Unsupported(
                 "procedure calls in expressions".into(),
@@ -622,6 +776,105 @@ impl Compiler {
                 }
             }
         }
+    }
+
+    fn emit_conditional_expr(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
+        match node.rule_name.as_str() {
+            "arith_expr" => {
+                let cond_node = first_direct_node(node, "bool_expr").ok_or_else(|| {
+                    CompileError::Malformed("arithmetic conditional missing condition".into())
+                })?;
+                let then_node = first_direct_node(node, "simple_arith").ok_or_else(|| {
+                    CompileError::Malformed("arithmetic conditional missing then branch".into())
+                })?;
+                let else_node = direct_nodes(node)
+                    .into_iter()
+                    .find(|n| n.rule_name == "arith_expr")
+                    .ok_or_else(|| {
+                        CompileError::Malformed(
+                            "arithmetic conditional missing else branch".into(),
+                        )
+                    })?;
+                self.emit_conditional_branches(cond_node, then_node, else_node)
+            }
+            "bool_expr" => {
+                let bool_nodes: Vec<&GrammarASTNode> = direct_nodes(node)
+                    .into_iter()
+                    .filter(|n| n.rule_name == "bool_expr")
+                    .collect();
+                if bool_nodes.len() != 2 {
+                    return Err(CompileError::Malformed(
+                        "boolean conditional should have condition and else bool_expr".into(),
+                    ));
+                }
+                let then_node = first_direct_node(node, "simple_bool").ok_or_else(|| {
+                    CompileError::Malformed("boolean conditional missing then branch".into())
+                })?;
+                self.emit_conditional_branches(bool_nodes[0], then_node, bool_nodes[1])
+            }
+            other => Err(CompileError::Unsupported(format!(
+                "conditional expressions in {other}"
+            ))),
+        }
+    }
+
+    fn emit_conditional_branches(
+        &mut self,
+        cond_node: &GrammarASTNode,
+        then_node: &GrammarASTNode,
+        else_node: &GrammarASTNode,
+    ) -> Result<ExprValue, CompileError> {
+        let cond = self.emit_expr(cond_node)?;
+        if cond.ty != ScalarType::Boolean {
+            return Err(CompileError::Type(
+                "conditional expression condition must be boolean".into(),
+            ));
+        }
+
+        let else_label = self.fresh_label("expr_else");
+        let end_label = self.fresh_label("expr_end");
+        let dest = self.fresh_temp();
+
+        self.emit(IIRInstr::new(
+            "jmp_if_false",
+            None,
+            vec![Operand::Var(cond.slot), Operand::Var(else_label.clone())],
+            "void",
+        ));
+        let then_value = self.emit_expr(then_node)?;
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(then_value.slot)],
+            then_value.ty.iir(),
+        ));
+        self.emit(IIRInstr::new(
+            "jmp",
+            None,
+            vec![Operand::Var(end_label.clone())],
+            "void",
+        ));
+        self.emit_label(&else_label);
+        let else_value = self.emit_expr(else_node)?;
+        if then_value.ty != else_value.ty {
+            return Err(CompileError::Type(format!(
+                "conditional expression branches have types {} and {}",
+                then_value.ty.name(),
+                else_value.ty.name()
+            )));
+        }
+        self.emit(IIRInstr::new(
+            "mov",
+            Some(dest.clone()),
+            vec![Operand::Var(else_value.slot)],
+            else_value.ty.iir(),
+        ));
+        self.emit_label(&end_label);
+
+        Ok(ExprValue {
+            slot: dest,
+            ty: then_value.ty,
+        })
     }
 
     fn emit_bool_wrapper(&mut self, node: &GrammarASTNode) -> Result<ExprValue, CompileError> {
@@ -711,8 +964,11 @@ impl Compiler {
             }
             ("NAME", _) => {
                 let name = token.value.clone();
-                let ty = self.require_var(&name)?;
-                Ok(ExprValue { slot: name, ty })
+                let binding = self.require_var(&name)?;
+                Ok(ExprValue {
+                    slot: binding.slot,
+                    ty: binding.ty,
+                })
             }
             _ => Err(CompileError::Malformed(format!(
                 "unexpected atom token {} {:?}",
@@ -990,10 +1246,49 @@ impl Compiler {
         name
     }
 
-    fn require_var(&self, name: &str) -> Result<ScalarType, CompileError> {
-        self.vars
-            .get(name)
-            .copied()
+    fn push_scope(&mut self) {
+        self.scope_counter += 1;
+        self.scopes.push(HashMap::new());
+    }
+
+    fn pop_scope(&mut self) {
+        if self.scopes.len() > 1 {
+            self.scopes.pop();
+        }
+    }
+
+    fn declare_var(&mut self, name: &str, ty: ScalarType) -> Result<String, CompileError> {
+        let slot = if self.scopes.len() == 1 {
+            name.to_string()
+        } else {
+            format!("__algol_s{}_{}", self.scope_counter, name)
+        };
+        let current = self
+            .scopes
+            .last_mut()
+            .expect("compiler always keeps a root scope");
+        if current.contains_key(name) {
+            return Err(CompileError::Type(format!(
+                "duplicate declaration for {name:?}"
+            )));
+        }
+        current.insert(
+            name.to_string(),
+            VarBinding {
+                slot: slot.clone(),
+                ty,
+            },
+        );
+        self.register_names.insert(slot.clone());
+        Ok(slot)
+    }
+
+    fn require_var(&self, name: &str) -> Result<VarBinding, CompileError> {
+        self.scopes
+            .iter()
+            .rev()
+            .find_map(|scope| scope.get(name))
+            .cloned()
             .ok_or_else(|| CompileError::Type(format!("use of undeclared variable {name:?}")))
     }
 
@@ -1207,23 +1502,6 @@ fn operator_from_token(token: &Token) -> Option<&'static str> {
     }
 }
 
-fn const_i64_from_node(node: &GrammarASTNode) -> Option<i64> {
-    let mut sign = 1i64;
-    let mut literal: Option<i64> = None;
-    for token in recursive_tokens(node) {
-        match (token.effective_type_name(), token.value.as_str()) {
-            ("PLUS", _) => {}
-            ("MINUS", _) if literal.is_none() => sign = -sign,
-            ("INTEGER_LIT", _) if literal.is_none() => {
-                literal = token.value.parse::<i64>().ok();
-            }
-            ("LPAREN", _) | ("RPAREN", _) => {}
-            _ => return None,
-        }
-    }
-    literal.map(|n| sign * n)
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1257,6 +1535,48 @@ mod tests {
     fn compiles_and_runs_for_step_until_sum() {
         let src = "begin integer i, result; result := 0; for i := 1 step 1 until 10 do result := result + i end";
         assert_eq!(run_i64(src), 55);
+    }
+
+    #[test]
+    fn compiles_and_runs_dynamic_for_step_until() {
+        let src = "begin integer i, stepvalue, result; result := 0; stepvalue := 2; for i := 1 step stepvalue until 5 do result := result + i; stepvalue := 0 - stepvalue; for i := 5 step stepvalue until 1 do result := result + i end";
+        assert_eq!(run_i64(src), 18);
+    }
+
+    #[test]
+    fn compiles_and_runs_for_while_sum() {
+        let src = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
+        assert_eq!(run_i64(src), 15);
+    }
+
+    #[test]
+    fn compiles_and_runs_single_value_for_element() {
+        let src = "begin integer i, result; for i := 2 do result := 40 + i end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_multi_element_for_list() {
+        let src = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
+        assert_eq!(run_i64(src), 39);
+    }
+
+    #[test]
+    fn compiles_and_runs_arithmetic_conditional_expression() {
+        let src = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i end";
+        assert_eq!(run_i64(src), 6);
+    }
+
+    #[test]
+    fn compiles_and_runs_boolean_conditional_expression() {
+        let src = "begin boolean flag; integer result; flag := true; if if flag then true else false then result := 42 else result := 1 end";
+        assert_eq!(run_i64(src), 42);
+    }
+
+    #[test]
+    fn compiles_and_runs_nested_block_shadowing() {
+        let src = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
+        assert_eq!(run_i64(src), 42);
     }
 
     #[test]

@@ -3,22 +3,41 @@ import {
   Circuit,
   SinWaveform,
   SpiceError,
+  analyzeCustomModelSource,
   bSourceCurrent,
   bSourceVoltage,
   bjt,
+  bjtFromModelCard,
   circuitAtTemperature,
   cccs,
   ccvs,
+  customLinearConductanceModel,
   currentSource,
   dcCorners,
+  dcInitialVectorFromConditions,
   dcOp,
+  dcOpWithInitialConditions,
   dcSweep,
   dcSweepCorners,
+  dcTemperatureSweep,
+  dcTemperatureSweepCorners,
+  deviceModelAuditFixtures,
   diode,
+  diodeFromModelCard,
+  formatCornerDcSweepTable,
+  formatCornerDcTable,
+  formatCornerTemperatureDcTable,
+  formatDcSweepTable,
+  formatTemperatureDcTable,
   inductor,
   jfet,
+  jfetFromModelCard,
   mosfet,
+  mosfetFromModelCard,
+  normalizeModelCard,
+  normalizeModelCardType,
   resistor,
+  resolveDeckInitialConditions,
   subcircuitDefinition,
   vccs,
   vcvs,
@@ -33,6 +52,129 @@ function expectClose(actual: number | undefined, expected: number): void {
 }
 
 describe("dcOp", () => {
+  it("normalizes model-card type aliases", () => {
+    expect(normalizeModelCardType("diode")).toBe("D");
+    expect(normalizeModelCardType("n-jfet")).toBe("NJF");
+    expect(normalizeModelCardType("pch")).toBe("PMOS");
+  });
+
+  it("normalizes model-card aliases into device instances", () => {
+    const diodeCard = normalizeModelCard("Dfast", "diode", {
+      JS: 2.0e-14,
+      CJ: 1.5e-12,
+      TT: 4.0e-9,
+      RS: 10.0,
+    });
+    const diodeModel = diodeFromModelCard("D1", "a", "k", diodeCard);
+    expect(diodeCard.parameters).toStrictEqual({ IS: 2.0e-14, CJO: 1.5e-12, TT: 4.0e-9 });
+    expect(diodeCard.unsupportedParameters).toStrictEqual(["RS"]);
+    expectClose(diodeModel.saturationCurrent, 2.0e-14);
+    expectClose(diodeModel.junctionCapacitance, 1.5e-12);
+    expectClose(diodeModel.transitTime, 4.0e-9);
+
+    const bjtCard = normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12 });
+    const bjtModel = bjtFromModelCard("Q1", "c", "b", "e", bjtCard);
+    expect(bjtCard.parameters).toStrictEqual({ BF: 125.0, CJE: 2.0e-12 });
+    expect(bjtModel.polarity).toBe("NPN");
+    expectClose(bjtModel.forwardBeta, 125.0);
+    expectClose(bjtModel.baseEmitterCapacitance, 2.0e-12);
+
+    const jfetCard = normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 });
+    const jfetModel = jfetFromModelCard("J1", "d", "g", "s", jfetCard);
+    expect(jfetCard.parameters).toStrictEqual({ BETA: 9.0e-4, VTO: -1.8, LAMBDA: 0.02 });
+    expect(jfetModel.polarity).toBe("NJF");
+    expectClose(jfetModel.beta, 9.0e-4);
+    expectClose(jfetModel.thresholdVoltage, -1.8);
+    expectClose(jfetModel.channelLengthModulation, 0.02);
+
+    const mosCard = normalizeModelCard("Mn", "nmos", {
+      LEVEL: 1.0,
+      VTO: 0.55,
+      LAM: 0.04,
+      NSUB: 1.6,
+      CJD: 3.0e-13,
+    });
+    const mosModel = mosfetFromModelCard("M1", "d", "g", "s", "b", mosCard);
+    expect(mosCard.parameters).toStrictEqual({
+      LEVEL: 1.0,
+      VT0: 0.55,
+      LAMBDA: 0.04,
+      N_SUB: 1.6,
+      CBD: 3.0e-13,
+    });
+    expect(mosModel.type).toBe("NMOS");
+    expectClose(mosModel.params.VT0, 0.55);
+    expectClose(mosModel.params.LAMBDA, 0.04);
+    expectClose(mosModel.params.N_SUB, 1.6);
+    expectClose(mosModel.params.CBD, 3.0e-13);
+  });
+
+  it("provides cross-language device model audit fixtures", () => {
+    const fixtures = deviceModelAuditFixtures();
+    expect(fixtures.map((fixture) => fixture.kind)).toStrictEqual(["D", "NPN", "NJF", "NMOS"]);
+    expectClose(fixtures[0]!.parameters.IS, 2.0e-14);
+    expectClose(fixtures[1]!.parameters.BF, 125.0);
+    expectClose(fixtures[2]!.parameters.VTO, -1.8);
+    expectClose(fixtures[3]!.parameters.VT0, 0.55);
+  });
+
+  it("rejects non-Level-1 MOS model cards explicitly", () => {
+    expect(() => normalizeModelCard("Mbad", "nmos", { LEVEL: 2.0 })).toThrowError(
+      "only MOS LEVEL=1",
+    );
+  });
+
+  it("stamps a custom-model evaluator hook as a DC current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add({
+      kind: "custom-model",
+      name: "XG",
+      positive: "in",
+      negative: "0",
+      modelName: "hook",
+      parameters: { g: 2.0e-3 },
+      currentOffsetAmps: 0.0,
+      evaluator: (context) => ({
+        currentAmps: context.parameters.g * context.voltage,
+        conductanceSiemens: context.parameters.g,
+      }),
+    });
+
+    const result = dcOp(circuit);
+
+    expectClose(result.voltage("in"), 1.0);
+    expectClose(result.branchCurrent("I(V1)"), -2.0e-3);
+  });
+
+  it("stamps the custom-model linear conductance fast path as a DC current", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "in", "0", 1.0));
+    circuit.add(customLinearConductanceModel("XG", "in", "0", 2.0e-3));
+
+    const result = dcOp(circuit);
+
+    expectClose(result.branchCurrent("I(V1)"), -2.0e-3);
+  });
+
+  it("accepts the custom-model source subset and rejects dynamic constructs", () => {
+    const accepted = analyzeCustomModelSource(
+      "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule",
+    );
+    const rejected = analyzeCustomModelSource(
+      "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule",
+    );
+
+    expect(accepted.accepted).toBe(true);
+    expect(accepted.moduleName).toBe("rlim");
+    expect(accepted.terminals).toStrictEqual(["p", "n"]);
+    expect(accepted.contribution).toStrictEqual(["p", "n"]);
+    expect(rejected.accepted).toBe(false);
+    expect(rejected.diagnostics.map((diagnostic) => diagnostic.code)).toContain(
+      "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+    );
+  });
+
   it("solves a resistor divider midpoint voltage", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 10.0));
@@ -49,6 +191,31 @@ describe("dcOp", () => {
     expect(result.iterations).toBe(1);
   });
 
+  it("seeds a DC operating point vector from parsed initial conditions", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+    const summary = resolveDeckInitialConditions(`
+.nodeset V(vin)=10 V(mid)=1
+.ic V(mid)=4
+.end
+`);
+
+    const vector = dcInitialVectorFromConditions(
+      circuit,
+      summary.initialConditions,
+      summary.nodesets,
+    );
+    expect(vector).toStrictEqual([4.0, 10.0, 0.0]);
+
+    const result = dcOpWithInitialConditions(circuit, summary, { convergenceAids: false });
+
+    expect(result.converged).toBe(true);
+    expectClose(result.voltage("vin"), 10.0);
+    expectClose(result.voltage("mid"), 5.0);
+  });
+
   it("solves a large resistor ladder through the sparse real solver path", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "n0", "0", 10.0));
@@ -61,6 +228,11 @@ describe("dcOp", () => {
 
     expect(result.converged).toBe(true);
     expectClose(result.voltage("n34"), 10.0 / 35.0);
+    expect(result.diagnostics.matrixSize).toBe(36);
+    expect(result.diagnostics.solver).toBe("sparse_real");
+    expect(result.diagnostics.convergenceAid).toBe("newton");
+    expectClose(result.diagnostics.tolerance, 1.0e-9);
+    expect(Number.isFinite(result.diagnostics.maxDelta)).toBe(true);
   });
 
   it("expands subcircuit instances into namespaced primitive elements", () => {
@@ -285,6 +457,62 @@ describe("dcOp", () => {
 
     expect(coldResult.voltage("a")).toBeGreaterThan(nominalResult.voltage("a")!);
     expect(hotResult.voltage("a")).toBeLessThan(nominalResult.voltage("a")!);
+  });
+
+  it("runs DC temperature sweeps and formats stable table output", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vcc", "0", 5.0));
+    circuit.add(resistor("Rbias", "vcc", "a", 4_300.0));
+    circuit.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const result = dcTemperatureSweep(circuit, [275.0, 300.15, 350.0]);
+
+    expect(result.points[0].result.voltage("a")).toBeGreaterThan(
+      result.points[1].result.voltage("a")!,
+    );
+    expect(result.points[2].result.voltage("a")).toBeLessThan(
+      result.points[1].result.voltage("a")!,
+    );
+    expect(formatTemperatureDcTable(result, ["V(a)", "I(V1)"])).toBe(
+      "Index\tTemperatureKelvin\tV(a)\tI(V1)\n" +
+      "0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\n" +
+      "1\t3.001500e+02\t3.613836e+00\t-3.223638e-04\n" +
+      "2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n",
+    );
+  });
+
+  it("runs named-corner DC temperature sweeps and formats stable table output", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vcc", "0", 5.0));
+    circuit.add(resistor("Rbias", "vcc", "a", 4_300.0));
+    circuit.add(diode("D1", "a", "0", 1.0e-15, 0.02585));
+
+    const result = dcTemperatureSweepCorners(
+      circuit,
+      [275.0, 350.0],
+      [
+        { name: "nominal", overrides: [] },
+        {
+          name: "rbias-high",
+          overrides: [{ elementName: "Rbias", parameter: "resistance", value: 8_600.0 }],
+        },
+      ],
+    );
+
+    expect(result.points.map((point) => point.cornerName)).toStrictEqual([
+      "nominal",
+      "rbias-high",
+    ]);
+    expect(result.points[0].points[0].result.voltage("a")).toBeGreaterThan(
+      result.points[0].points[1].result.voltage("a")!,
+    );
+    expect(formatCornerTemperatureDcTable(result, ["V(a)", "I(V1)"])).toBe(
+      "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\n" +
+      "nominal\t0\t2.750000e+02\t4.560039e+00\t-1.023164e-04\n" +
+      "nominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n" +
+      "rbias-high\t0\t2.750000e+02\t4.218594e+00\t-9.086118e-05\n" +
+      "rbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n",
+    );
   });
 
   it("uses BJT temperature scaling in fixed-base emitter voltage", () => {
@@ -532,6 +760,12 @@ describe("dcOp", () => {
     expectClose(points[1].result.voltage("mid"), 0.5);
     expectClose(points[2].value, 2.0);
     expectClose(points[2].result.voltage("mid"), 1.0);
+    expect(formatDcSweepTable("V1", points, ["V(mid)", "I(V1)"])).toBe(
+      "Index\tSource\tValue\tV(mid)\tI(V1)\n" +
+      "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n" +
+      "2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n",
+    );
   });
 
   it("sweeps current sources and collects operating points", () => {
@@ -631,6 +865,13 @@ describe("dcCorners", () => {
     expect(result.points[1].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
     expect(result.points[2].result.voltage("out")).toBeCloseTo(6.0, 9);
     expect(result.points[3].result.voltage("out")).toBeCloseTo(-5.0, 9);
+    expect(formatCornerDcTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tV(out)\tI(Vin)\n" +
+      "nominal\t0\t5.000000e+00\t-5.000000e-03\n" +
+      "rbot-fast\t1\t3.333333e+00\t-6.666667e-03\n" +
+      "vin-high\t2\t6.000000e+00\t-6.000000e-03\n" +
+      "vin-inverted\t3\t-5.000000e+00\t5.000000e-03\n",
+    );
   });
 });
 
@@ -660,5 +901,14 @@ describe("dcSweepCorners", () => {
     expect(result.points[1].points[0].result.voltage("out")).toBeCloseTo(0.0, 9);
     expect(result.points[1].points[1].result.voltage("out")).toBeCloseTo(5.0 / 3.0, 9);
     expect(result.points[1].points[2].result.voltage("out")).toBeCloseTo(10.0 / 3.0, 9);
+    expect(formatCornerDcSweepTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\n" +
+      "nominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "nominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n" +
+      "nominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+      "rbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
+      "rbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\n" +
+      "rbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n",
+    );
   });
 });

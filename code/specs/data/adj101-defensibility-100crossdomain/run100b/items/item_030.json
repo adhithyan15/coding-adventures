@@ -1,0 +1,7 @@
+{
+ "idx": 30,
+ "id": "SEC-1",
+ "scenario": "Dana is an affiliate (officer) of Acme Corp, a fully reporting SEC company that has filed all required periodic reports on time. Dana acquired restricted shares of Acme in a private placement and has held them for nine months before proposing to sell a quantity within the applicable volume limits.",
+ "policy": "Under Rule 144, an affiliate of a reporting company may sell restricted securities only if a current public information requirement is met AND the securities have been held for at least six months. If both conditions are satisfied, the sale is permitted (subject to volume limits not at issue here).",
+ "question": "Is Dana's proposed sale permitted under the stated Rule 144 conditions?"
+}

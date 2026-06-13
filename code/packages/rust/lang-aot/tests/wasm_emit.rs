@@ -108,6 +108,76 @@ fn algol_for_loop_emits_and_runs_on_wasm() {
     assert_eq!(result, vec![21], "ALGOL loop should sum 1..6");
 }
 
+#[test]
+fn algol_for_while_emits_and_runs_on_wasm() {
+    let source = "begin integer x, result; x := 6; result := 0; for x := x - 1 while x > 0 do result := result + x end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_for_while")
+        .expect("ALGOL for-while loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL for-while sum)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL for-while wasm must run");
+    assert_eq!(result, vec![15], "ALGOL for-while should sum 5..1");
+}
+
+#[test]
+fn algol_for_list_emits_and_runs_on_wasm() {
+    let source = "begin integer i, result; i := 0; result := 0; for i := 1 step 1 until 3, 10, i + 1 while i < 13 do result := result + i end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_for_list")
+        .expect("ALGOL for-list loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL for-list sum)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL for-list wasm must run");
+    assert_eq!(result, vec![39], "ALGOL for-list should sum mixed elements");
+}
+
+#[test]
+fn algol_dynamic_step_emits_and_runs_on_wasm() {
+    let source = "begin integer i, stepvalue, result; result := 0; stepvalue := 2; for i := 1 step stepvalue until 5 do result := result + i; stepvalue := 0 - stepvalue; for i := 5 step stepvalue until 1 do result := result + i end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_dynamic_step")
+        .expect("ALGOL dynamic-step loop should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL dynamic step)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL dynamic-step wasm must run");
+    assert_eq!(result, vec![18], "ALGOL dynamic step should sum both directions");
+}
+
+#[test]
+fn algol_conditional_expressions_emit_and_run_on_wasm() {
+    let source = "begin boolean flag; integer i, result; flag := true; result := 0; for i := if flag then 1 else 4 step 1 until if flag then 3 else 4 do result := result + i; if if result = 6 then flag else false then result := 42 else result := result end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_cond_expr")
+        .expect("ALGOL conditional expressions should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL conditional expressions)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL conditional-expression wasm must run");
+    assert_eq!(result, vec![42], "ALGOL conditional expressions should return 42");
+}
+
+#[test]
+fn algol_nested_blocks_emit_and_run_on_wasm() {
+    let source = "begin integer x, result; boolean flag; x := 1; flag := true; result := 0; begin integer x; boolean flag; x := 10; flag := false; begin integer x; x := 31; if not flag then result := x else result := 1 end; result := result + x end; if flag then result := result + x else result := 0 end";
+    let bytes = compile_source_to_wasm(Language::Algol60, source, "algol_nested_blocks")
+        .expect("ALGOL nested blocks should emit wasm");
+    assert_wellformed(&bytes, "(ALGOL nested blocks)");
+
+    let rt = WasmRuntime::new();
+    let result = rt
+        .load_and_run(&bytes, "main", &[])
+        .expect("ALGOL nested-block wasm must run");
+    assert_eq!(result, vec![42], "ALGOL nested blocks should return 42");
+}
+
 /// The L3b-3a-3c capstone: a **cons** program compiles to WasmGC and runs
 /// end-to-end on the in-repo runtime. The uniform-anyref value model boxes the
 /// integer atoms as `i31ref`, allocates a `$LispyPair`, and unboxes the result
@@ -192,4 +262,83 @@ fn mccarthy_eq_atom_equality_runs_on_wasm() {
         vec![1],
         "(CAR (CONS 3 4)) = 3"
     );
+}
+
+/// `COND` runs on wasm (LANG77 L3b-3a-4d): the clause guards branch with lisp
+/// truthiness — a predicate result tests directly, while a lisp value is wrapped
+/// `not(is_null(...))`, so an integer atom (even `0`) is true and only `nil` is
+/// false. The control flow (`jmp_if_false`/`label`/`jmp`/`mov`) already lowered.
+#[test]
+fn mccarthy_cond_runs_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "cond").expect("emit COND");
+        rt.load_and_run(&bytes, "main", &[]).expect("run COND")
+    };
+
+    // First clause true (a predicate guard): 5 is an atom → 7.
+    assert_eq!(go("(COND ((ATOM 5) 7) (5 9))"), vec![7]);
+    // First clause false → second clause's atom guard `5` is truthy → 9.
+    assert_eq!(go("(COND ((ATOM (CONS 1 2)) 7) (5 9))"), vec![9]);
+    // The atom `0` is TRUE in lisp (only `nil` is false) → first clause fires.
+    assert_eq!(go("(COND (0 7) (5 9))"), vec![7], "0 is truthy in lisp");
+    // No clause matches (the only guard is false) → nil result (exit 0).
+    assert_eq!(go("(COND ((ATOM (CONS 1 2)) 7))"), vec![0], "no clause → nil");
+    // An `EQ` guard: true and false branches.
+    assert_eq!(go("(COND ((EQ 1 1) 7) (5 9))"), vec![7]);
+    assert_eq!(go("(COND ((EQ 1 2) 7) (5 9))"), vec![9]);
+}
+
+/// Symbols run on wasm (LANG77 W1 / F6): `QUOTE`/symbol literals are interned to
+/// distinct integers in a reserved range (boxed as `i31ref`), so `EQ` tells
+/// symbols apart — `(EQ 'A 'A)` → T, `(EQ 'A 'B)` → nil — disjoint from integers.
+#[test]
+fn mccarthy_symbols_run_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "sym").expect("emit symbol");
+        rt.load_and_run(&bytes, "main", &[]).expect("run symbol")
+    };
+
+    // Same symbol is EQ; different symbols are not.
+    assert_eq!(go("(EQ 'A 'A)"), vec![1], "'A = 'A");
+    assert_eq!(go("(EQ 'A 'B)"), vec![0], "'A != 'B");
+    assert_eq!(go("(EQ 'FOO 'FOO)"), vec![1], "multi-char symbol");
+    // A symbol is an atom (not a cons).
+    assert_eq!(go("(ATOM 'A)"), vec![1], "'A is an atom");
+    // Symbols flow through cons cells.
+    assert_eq!(go("(EQ (CAR (CONS 'A 'B)) 'A)"), vec![1], "car of a cons of symbols");
+    // A symbol guard in COND.
+    assert_eq!(go("(COND ((EQ 'A 'B) 7) ((EQ 'X 'X) 9) (5 1))"), vec![9]);
+    // Symbol ids are disjoint from integer atoms.
+    assert_eq!(go("(EQ 'A 5)"), vec![0], "a symbol never equals an integer");
+}
+
+/// `LAMBDA`/`LABEL` + user calls + recursion run on wasm (LANG77 W2 / F7). The
+/// frontend lifts each `LAMBDA`/`LABEL` to its own function; the structural pass
+/// makes the call boundary uniform-anyref (params anyref, args boxed, returns
+/// anyref), so a lambda can be applied and a `LABEL` can recurse.
+#[test]
+fn mccarthy_lambda_and_recursion_run_on_wasm() {
+    let rt = WasmRuntime::new();
+    let go = |src: &str| {
+        let bytes = compile_source_to_wasm(Language::McCarthyLisp, src, "lam").expect("emit lambda");
+        rt.load_and_run(&bytes, "main", &[]).expect("run lambda")
+    };
+
+    // Identity lambda returns its argument.
+    assert_eq!(go("((LAMBDA (X) X) 5)"), vec![5], "id lambda");
+    // A lambda that conses its argument; CAR reads it back.
+    assert_eq!(go("(CAR ((LAMBDA (X) (CONS X X)) 7))"), vec![7], "lambda body builds a cons");
+    // Two parameters, bound positionally.
+    assert_eq!(go("(CDR ((LAMBDA (X Y) (CONS X Y)) 3 4))"), vec![4], "two-arg lambda");
+    // A predicate inside a lambda.
+    assert_eq!(go("((LAMBDA (X) (EQ X X)) 5)"), vec![1], "EQ inside a lambda");
+    // A lambda returning a bare atom.
+    assert_eq!(go("((LAMBDA (X) 9) 5)"), vec![9], "lambda returns an atom");
+
+    // A recursive LABEL: walk down a list to its atom tail (no arithmetic in
+    // McCarthy 1.0). f(L) = if (ATOM L) then 99 else f(CDR L).
+    let rec = "((LABEL F (LAMBDA (L) (COND ((ATOM L) 99) ((EQ 1 1) (F (CDR L)))))) (CONS 1 (CONS 2 3)))";
+    assert_eq!(go(rec), vec![99], "recursive LABEL walks to the atom");
 }

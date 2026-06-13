@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0] — 2026-06-10 — `isinst` opcode (McCarthy W7 `pair?`)
+
+Added the `IsInst` (0x75) `CILOpcode` + `emit_isinst(token)` builder method — the
+CLR type test backing McCarthy `pair?` (is the boxed value an `object[]` cons cell?).
+
+## [0.3.0] — 2026-06-10 — `box`/`unbox.any` opcodes (McCarthy W6b)
+
+Added the `Box` (0x8C) and `UnboxAny` (0xA5) CIL opcodes + `emit_box`/`emit_unbox_any`
+builder methods and an `INT32_TYPE_TOKEN` (the `System.Object[]` cons-cell atom
+boxing). These let the CLR backend box an `int32` McCarthy atom into an `object`
+(the CLR counterpart of the wasm `i31ref` / JVM `Integer`).
+
 ## [0.2.0] — 2026-05-11
 
 ### Added — Bitwise OR, XOR, NOT lowering

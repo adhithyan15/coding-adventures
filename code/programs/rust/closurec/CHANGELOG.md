@@ -2,6 +2,1850 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.124.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-113** — a FRACTIONAL number literal whose value is in the
+  open interval (0, 1) — written in plain decimal (`.0001`) or scientific
+  (`1e-5`, `1.5e-3`) form — is now canonicalised to the SHORTER of its
+  leading-zero-stripped decimal and uppercase-`E` scientific forms,
+  matching upstream Closure v20240317:
+
+      1e-5    ->  1E-5       .0001   ->  1E-4       .000012 ->  1.2E-5
+      1e-3    ->  .001       5e-1    ->  .5         1.5e-3  ->  .0015
+      120e-3  ->  .12        2.5e-8  ->  2.5E-8     12e-5   ->  1.2E-4
+
+  On a length TIE the form Java's `Double.toString` natively produces
+  wins — DECIMAL for magnitudes `>= 1e-3`, SCIENTIFIC below — so `1e-3`
+  keeps `.001` (tie at magnitude `1e-3`) but `1.2e-4` switches to
+  `1.2E-4` (tie at magnitude `1e-4`). This is the negative-exponent
+  counterpart of the existing positive-side shortest-form (gap-040/082).
+
+  New `small_fraction_shortest_form` helper in `whitespace_only.rs`,
+  wired into `normalize_number_value` before the gap-107 decimal-strip
+  branch (which it subsumes for value < 1; values `>= 1` fall through
+  unchanged). The coefficient and base-10 exponent are taken EXACTLY from
+  the source digit string, so no Grisu/Ryu rounding is performed — the
+  helper is a pure string transform.
+
+  SECURITY: a magnitude guard (`-324..=308`, f64's finite range) rejects
+  pathological exponents BEFORE building the decimal form, so a crafted
+  literal like `1e-2147483648` can no longer make the printer allocate
+  billions of zero bytes (DoS); it is left verbatim instead.
+
+  Non-regression: integers, integer-valued floats, values `>= 1`, hex,
+  and positive-exponent scientific are all untouched (gap-113 fires only
+  for sub-1 fractions); already-shortest fractions (`.5`, `.001`) are
+  idempotent. `minify_num_neg_exp` + `minify_num_frac_4dp` un-ignored;
+  five `gap113_*` unit tests added. The value-`>= 1` scientific-fractional
+  case (`1.23e1` -> `12.3`) and sub-normal-boundary f64 rounding remain
+  the deferred true-Ryu residual.
+
+## [0.123.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-116** — a STRING property key that is a CANONICAL
+  non-negative integer (`< 2^53`) is now UNQUOTED to a numeric key and
+  printed in shortest numeric form, matching upstream Closure v20240317:
+
+      {"123":1}              ->  {123:1}
+      {"0":1}                ->  {0:1}
+      {"1000":1}             ->  {1E3:1}
+      {"123456789012345":1}  ->  {0x7048860ddf79:1}
+      {"9007199254740991":1} ->  {9007199254740991:1}   (MAX_SAFE_INTEGER)
+
+  The unquoted digits flow through the ordinary number printer
+  (`normalize_number_value`), so the emitted key composes with the
+  scientific (gap-040/gap-082) and hex (gap-114) shortest-forms — exactly
+  what a bare numeric key (`{1000:1}` -> `{1E3:1}`) produces.
+
+  New `numeric_string_key_unquoted(kept, idx)` helper in
+  `whitespace_only.rs`, wired into the string-emit branch. Discriminator
+  verified against the JAR:
+  - **position**: previous emitted token is `{` or `,` and next is `:`.
+    This excludes the ternary confound (`a?"1":"2"` — the string is
+    preceded by `?`, not `{`/`,`), string VALUES, `case "1":`, and
+    computed/method keys.
+  - **canonical integer**: non-empty, all ASCII digits, `"0"` or no
+    leading zero (`"00"`/`"01"` stay quoted).
+  - **`< 2^53`**: `9007199254740991` unquotes but `9007199254740992`
+    (= 2^53) stays quoted, because `String(Number(s))` no longer
+    round-trips once the value is not exactly representable as an
+    IEEE-754 double. Non-integer (`"1.5"`), signed (`"-1"`), and
+    non-numeric (`"123abc"`) keys stay quoted.
+
+  Float-key counterpart gap-120 (non-integer key -> quoted canonical
+  string) remains OPEN. Two `gap116_*` unit tests + diff_minify
+  (`minify_num_str_key` un-ignored) stay green.
+
+## [0.122.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-118** — an UPPERCASE hex literal that is RETAINED in hex
+  form (because hex is the shortest representation, so it is not
+  decimalised) is now emitted with LOWERCASE digits, matching upstream
+  Closure v20240317:
+
+      0xFFFFFFFFFFFFF  ->  0xfffffffffffff
+      0xFFFFFFFFFF     ->  0xffffffffff
+      0XA0000000000    ->  0xa0000000000
+
+  Inverse/sibling of gap-114 (decimal → lowercase hex when shorter). The
+  `cleaned` shortest-form candidate in `normalize_number_value` is the
+  separator-stripped SOURCE, so for a hex literal it kept the author's
+  case; when it tied the synthesised lowercase-`hex` candidate on length
+  (both 15 chars for `0xFFFFFFFFFFFFF`) the `decimal > cleaned >
+  scientific > hex` tie-break preferred the verbatim uppercase `cleaned`,
+  so the uppercase form survived. The fix lowercases the `cleaned` HEX
+  form (`cleaned.to_lowercase()` when it starts with `0x`/`0X`) so both
+  candidates are byte-identical and either wins the tie correctly. Scoped
+  to hex: decimal/octal/binary cleaned forms have no case-significant
+  letters (a scientific `e`/`E` goes through the gap-082 path, and small
+  octal/binary never stay in radix form).
+
+  Non-regression verified against the JAR: short hex still decimalises
+  regardless of case (`0xFF` → `255`, `0xAbC` → `2748`), already-
+  lowercase retained hex is unchanged (`0xffffffffffff`), and the
+  gap-114 large-non-round-integer decimal→hex emission stays lowercase
+  (`123456789012345678` → `0x1b69b4ba630f350`).
+
+## [0.121.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-117** — a `case` clause whose operand begins with a UNARY
+  operator (`-`, `+`, `!`, `~`) now gets the separating space upstream
+  Closure v20240317 emits, which closurec used to omit:
+
+      case-1:   ->  case -1:
+      case+1:   ->  case +1:
+      case!a:   ->  case !a:
+      case~a:   ->  case ~a:
+      case-a.b: ->  case -a.b:
+
+  Like the `case`/`get`/`set`/`new` keyword + string-literal rule
+  (gap-111), `case` followed by a word-like keyword needs whitespace to
+  stay a distinct token from its operand. A plain-number operand
+  (`case 1:`) already round-trips because the number is not adjacent to
+  the keyword in a way that would glue; the unary PUNCTUATOR is what
+  closurec's separator OR-chain previously skipped over.
+
+  New `case_unary_needs_space(kept, idx)` helper in `whitespace_only.rs`
+  returns true exactly when `kept[idx]` is a structural `-`/`+`/`!`/`~`
+  punctuator and `kept[idx-1]` is the word-like keyword `case`; wired
+  into the emit-loop separator OR-chain. Scoped strictly to `case`:
+  `return-1`, `throw-1`, `typeof-1` stay glued (they match the JAR), and
+  binary `x=a-1;` is untouched.
+
+## [0.120.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-114** — a large integer literal whose lowercase
+  hexadecimal form is STRICTLY shorter than its decimal form is now
+  emitted as `0x…`, matching upstream Closure v20240317:
+
+      123456789012345678  ->  0x1b69b4ba630f350   (18 digits -> 17)
+
+  `normalize_number_value` gains a `hex` candidate (`format!("0x{n:x}")`)
+  in the integer shortest-form comparison, slotted at the LOWEST
+  tie-break priority (decimal > cleaned > scientific > hex) so it is
+  chosen only when strictly shortest — verified against the JAR:
+  `4294967295` (decimal 10 == hex 10) stays decimal, round powers of ten
+  still prefer scientific (`1000000000` -> `1E9`).
+
+  f64 ROUNDING (hex candidate only): JS numbers are IEEE-754 f64, so an
+  integer above 2^53 prints its NEAREST-f64 hex bits, not the exact
+  source digits (`123456789012345678` denotes the double
+  `123456789012345680` -> `…350`, not the exact `…34e`). The hex
+  candidate is therefore computed over `(n as f64) as u128`. The
+  decimal/scientific forms are deliberately left over the EXACT integer:
+  upstream uses shortest-round-trip (Ryu) decimal there, which for a
+  clean power of ten reproduces `1×10^e` (`100000000000000000000000` ->
+  `1E23`) — rounding `n` globally would corrupt `scientific_form_of` (the
+  rounded 10^23 is no longer a clean power). The exact-vs-double decimal
+  mismatch for >2^53 integers that PRINT as decimal is the separate
+  deferred Grisu/Ryu gap, unchanged here. For n ≤ 2^53 the rounding is
+  the identity. Full unit suite (625) + diff_minify walk-test + all
+  gap-038/040/082/091 number tests stay green.
+
+  Six `gap114_*` unit assertions cover the hex wins, the tie/shorter-form
+  non-regressions, and the f64-rounded hex value. The
+  `minify_num_bigint_hex` fixture (added CLOC14.55) is now ENFORCED. The
+  fractional/negative-exponent scientific cases (gap-113) remain OPEN.
+
+## [0.119.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-112** — a `for await(...)` async-iteration loop header no
+  longer emits a spurious space between the `await` keyword and the `(`:
+
+      async function f(){for await(const x of y)z()}
+        ->  async function f(){for await(const x of y)z()};   (adjacent)
+
+  Previously `await_operator_needs_space` (gap-072) — which forces a
+  separating space before the `await` UNARY OPERATOR's operand
+  (`await (a+b)`) — wrongly fired for the `for await` header, whose `(`
+  is the loop HEAD, not an operand, producing `for await (const x of y)`.
+  The fix adds a one-line FOR-AWAIT guard to that helper: when the token
+  two before the `(` (i.e. the token before `await`) is the `for`
+  keyword, the space is suppressed. EXACT and SAFE — a genuine unary
+  `await(...)` is never preceded by `for`; the only `for await` form is
+  this loop header. The empty-block body `for await(x of y){}` (which
+  formerly passed only by coincidence via the method-name guard, since
+  its `)` is followed by `{`) is subsumed by the new guard. Five
+  `gap112_*` unit assertions cover the const/bare headers plus the
+  unary-await-keeps-space and empty-block non-regressions. The
+  `minify_for_await_bare_stmt` fixture (added CLOC14.54) is now ENFORCED.
+  Verified byte-identical to upstream Closure v20240317. (The separate
+  for-await loop-body single-statement block flatten — `for await(let x
+  of y){z()}` → `for await(let x of y)z()`, a sibling of gap-074 — is NOT
+  part of this gap and remains future work.)
+
+## [0.118.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-111** — a keyword that grammatically takes a STRING
+  LITERAL as its immediately-following operand now gets the separating
+  space upstream emits:
+
+      switch(x){case"a":…}  ->  switch(x){case "a":…}   (case clause)
+      x={get"a"(){}}        ->  x={get "a"(){}}          (string getter key)
+      x={set"a"(v){}}       ->  x={set "a"(v){}}         (string setter key)
+      x=new"s"              ->  x=new "s"                (new on a string)
+
+  The fix adds a `keyword_string_needs_space` helper to the emit-time
+  separator OR-chain in `whitespace_only.rs`: when the current token is a
+  string literal and the previous token is a word-like keyword in the set
+  `{case, get, set, new}`, a single space is inserted. The keyword set is
+  EXACT — `typeof"s"`, `void"s"`, `throw"e"`, `a in"s"`, and
+  `a instanceof"s"` are already byte-identical with NO space and are
+  deliberately excluded (verified against the JAR). SAFE: in valid JS a
+  bare `KEYWORD"string"` adjacency only occurs in these grammatical
+  positions — two adjacent primary expressions are a syntax error, and
+  these words as property keys/values are always separated from a string
+  by `:`/`(`/etc. — so there is no alternative reading to corrupt. Nine
+  `gap111_*` unit assertions cover the four wrap cases plus the
+  excluded-keyword and keyword-as-key/identifier non-regressions. The
+  three diff fixtures (`minify_case_string_space` /
+  `minify_accessor_string_key` / `minify_new_string_callee`, added in
+  CLOC14.53) are now ENFORCED. Verified byte-identical to upstream
+  Closure v20240317.
+
+## [0.117.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-110** — a string method KEY preceded by a method MODIFIER
+  (`*` generator and/or `async`) is now ALSO normalised to a COMPUTED
+  key, matching upstream:
+
+      x={*"m"(){}};            ->  x={*["m"](){}};
+      class A{async"m"(){}}    ->  class A{async["m"](){}};
+      x={async*"m"(){}};       ->  x={async*["m"](){}};
+
+  This extends the gap-109 pre-pass: gap-109 only fired when the string's
+  immediate predecessor was a property boundary (`{`/`,`/`}`/`static`),
+  so a `*`/`async`-prefixed key was missed. The fix walks BACK over the
+  contiguous run of method modifiers (`*`, `async`, `static`) to the
+  ANCHOR — the token opening the member position — and requires that
+  anchor to be a property-start (`{`/`,`/`}`). This proves a leading
+  `*`/`async` is a method modifier and NOT a multiply/identifier in an
+  expression: for `a=async*b` the string guard never matches (`b` is not
+  a string), and for `a*"m"(){}` the anchor walk lands on the identifier
+  `a` (not a property-start), so the generator/multiply ambiguity is
+  correctly rejected — no spurious `[...]` wrap. The same method-body
+  guard as gap-109 applies (the `)` matching the key's `(` must be
+  followed by `{`). Seven `gap110_*` unit tests cover the generator,
+  async, async-generator, and class-member wrap cases plus the
+  `{*m(){}}`, `a=async*b`, and `a*"m"(x)` non-regressions. The three
+  `*_string_method` diff fixtures (added in CLOC14.53) are now ENFORCED.
+  Verified byte-identical to upstream Closure v20240317.
+
+## [0.116.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-109** — a method whose KEY is a STRING LITERAL is now
+  normalised to a COMPUTED key, matching upstream:
+
+      x={"m"(){}};        ->  x={["m"](){}};
+      class A{"m"(){}}    ->  class A{["m"](){}};
+
+  The fix adds a gap-109 pre-pass in `whitespace_only.rs` that wraps the
+  string key in a synthetic `[`…`]` pair. Detection mirrors
+  `get_set_computed_needs_space`'s property-start + method-body guards:
+  the string sits at a property-start position (preceded by
+  `{`/`,`/`}`/`static`, not a `.`/`?.` member access), is immediately
+  followed by `(` (the parameter list), AND the `)` matching that `(` is
+  immediately followed by `{` (the method body). The method-body guard
+  is the decisive disambiguator — a string CALLED as a function
+  (`"m"(x);`) has its `)` followed by `;`/operator/EOF, never `{`, so it
+  is rejected; a string property VALUE (`{"a":1}`) has `:` after the
+  string, not `(`. Identifier methods (`{m(){}}`), already-computed keys
+  (`{["m"](){}}`), and call arguments (`f("m")`) are all untouched. Eight
+  `gap109_*` unit tests cover the wrap cases and every non-regression
+  guard. Verified byte-identical to upstream Closure v20240317. NOTE: a
+  string-keyed ACCESSOR (`get"a"(){}` → `get "a"(){}`) is a SEPARATE
+  space-insertion gap (upstream inserts a space, does not wrap), left
+  for follow-up.
+
+## [0.115.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-108** — a do-while loop whose body is a single
+  un-terminated statement now has its braces removed, matching the
+  flattening upstream already applies to other single-statement
+  bodies:
+
+      do{x()}while(a);  ->  do x();while(a);
+
+  The fix adds a gap-108 token-re-stitcher block in `whitespace_only.rs`,
+  a direct sibling of the gap-080 else-body flatten: anchor on a `do`
+  keyword (reserved, so `do{…}` is unambiguously the loop body — never
+  an object literal), scan the body `{…}` to its matching `}`, and if it
+  holds exactly one statement (no nested `{`, no control-flow keyword at
+  depth 1, zero top-level `;`), drop the braces and replace the `}` with
+  a synthetic `;`. The trailing `while(cond)` is untouched. A
+  multi-statement body (`do{x();y()}while(a)`) keeps its braces; an empty
+  body (`do{}while(a)`) is left for a follow-up (a `do;while` spacing
+  nit). Six `gap108_*` unit tests cover the flatten, the multi-statement
+  and nested-keyword guards, consecutive loops, and the
+  already-flat/sibling non-regression cases. Two existing
+  property-key-safety tests (`gap033_try_as_object_property_does_not_arm`,
+  `gap034_class_as_property_does_not_arm`) had their expected output
+  updated to the now-flattened do-body — the property-literal safety
+  they guard is unchanged. Verified byte-identical to upstream Closure
+  v20240317.
+
+## [0.114.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-107** — a FRACTIONAL (non-integer-valued) float literal
+  with trailing zeros in its fractional part now has them stripped to
+  the shortest exact decimal, plus a lone leading `0` before the `.`
+  elided, matching upstream Closure v20240317:
+
+      x=1.50;     ->  x=1.5;
+      x=1.500;    ->  x=1.5;
+      x=123.4500; ->  x=123.45;
+      x=0.50;     ->  x=.5;     (trailing strip then leading-`0` drop)
+      x=.50;      ->  x=.5;
+      x=10.20;    ->  x=10.2;   (multi-digit int part kept)
+
+  Previously these fell through `normalize_number_value`'s fractional
+  fallback and were emitted verbatim. The fix adds a gap-107 arm in
+  that fallback: for a literal that has a `.`, a non-integer value (so
+  the gap-082 u128/integer path did not apply), and NO exponent, strip
+  trailing `0`s from the fractional part (and a now-bare trailing `.`)
+  then elide a lone `0` integer part. This is pure decimal-string
+  normalisation — the value is exactly representable as written, so NO
+  Grisu/Ryu is needed. As a bonus the long-standing `0.5` -> `.5`
+  (gap-082's deferred "fractional left verbatim") now also resolves.
+  The genuinely Grisu-needing residuals stay untouched and remain
+  gap-085: anything with an exponent (`5e-3`, `1e-5`) is excluded by
+  the no-`e`/`E` guard, and f64-precision cases like
+  `12345678901234567890` -> `1.2345678901234567E19` never reach this
+  arm (all-digits, no `.`). Eight `gap107_*` unit tests plus the
+  updated `gap082_fractional_leading_zero_elided` cover the strip
+  cases and every non-regression guard (`1.5`/`1.05`/`2.0`/`2.00`).
+
+## [0.113.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-105 (CORRECTNESS)** — LEGACY OCTAL number literals are
+  now decoded as base-8 instead of being re-emitted as decimal. A
+  number of the shape `0` followed by octal digits (`0`–`7`) is a
+  sloppy-mode legacy octal and denotes its OCTAL value:
+
+      var x=010;    ->  var x=8;     (was: var x=10;  — WRONG VALUE)
+      var x=017;    ->  var x=15;    (was: var x=17;)
+      var x=0123;   ->  var x=83;    (was: var x=123;)
+      a=[010,020];  ->  a=[8,16];    (was: a=[10,20];)
+
+  Previously such a token fell into the bare-decimal arm of
+  `normalize_number_value` and was parsed as decimal, **changing the
+  numeric value** — a real corruption, not a byte-only difference. The
+  fix adds a legacy-octal arm (reached only after the `0x`/`0o`/`0b`
+  prefix arms): when the separator-stripped literal has `len() > 1`,
+  starts with `0`, and every byte is an octal digit, it is decoded with
+  `u128::from_str_radix(.., 8)`. The decoded value flows through the
+  same shortest-form selection as the other radix arms (decimal always
+  wins for octal). Guards verified vs upstream Closure v20240317:
+  - `00` → `0` (octal 0; unchanged),
+  - lone `0` → `0` (excluded by `len() > 1`),
+  - modern `0o17` → `15` (handled by the earlier `0o` arm),
+  - `08`/`09` are not legacy octal (non-octal digit) and upstream
+    rejects them, so they are never byte-identity inputs.
+
+  Nine `gap105_*` unit tests cover the decode cases and every guard.
+
+## [0.112.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-104 (CORRECTNESS)** — the trailing-`;`-after-`}` rule
+  (gap-030/041 family) no longer injects a stray `;` after a `}` that
+  closes a destructuring pattern or object-default VALUE inside a
+  function's PARAMETER LIST. Previously this produced **invalid JS**:
+
+      function f({a=1}={}){}  ->  function f({a=1};={}){}   (was corrupt)
+      function f({a=1}){}     ->  function f({a=1};){}      (was corrupt)
+      function f(a={}){}      ->  function f(a={};){}       (was corrupt)
+
+  The `}` in those positions closes a pattern/default value, not a
+  statement block or function body, so no synthetic `;` is due. The
+  fix suppresses the `;` whenever the `}`'s immediate follower is `=`,
+  `,`, or `)` — a param-list/expression *continuation* token, never a
+  statement boundary. A genuine function-DECLARATION body `}` (the only
+  `}` that owes a `;` at this site) can never be followed by those
+  tokens (declarations are statements, never lvalues, comma operands,
+  or parenthesised), so the FINAL body `}` still receives its `;`:
+
+      function f({a=1}={}){}  ->  function f({a=1}={}){};   (now correct)
+
+  Verified byte-identical to upstream Closure v20240317. The three
+  `param_*` byte-identity fixtures (added in CLOC14.48) are now
+  enforced, and six `gap104_*` unit tests guard both the corruption
+  cases and the genuine-body cases that MUST still terminate.
+
+  NOTE: this is distinct from the separate `function f(){}a;` →
+  `function f(){};a;` issue (a body `}` followed by an *identifier*),
+  which is outside this `=`/`,`/`)` follower set and remains open.
+
+## [0.111.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-103** — a CLASS-BODY computed `get`/`set` accessor now
+  gets the same separating space gap-073 gives object-literal accessors:
+
+      class A{get[x](){}set[x](v){}}  -> class A{get [x](){}set [x](v){}}
+      class A{m(){}get[x](){}}        -> class A{m(){}get [x](){}}
+      class A{static get[x](){}}      -> class A{static get [x](){}}
+
+  gap-073's `get_set_computed_needs_space` only fired when the accessor
+  was preceded by `{` or `,` (object-literal property starts), so a
+  class member preceded by a previous member's `}` (consecutive
+  methods/accessors) or the `static` modifier lost the space. The fix
+  adds `}` and `static` to that before-context set. Because a bare `}`
+  is ambiguous (a statement-block close, e.g. `if(x){}get[k](x)` where
+  `get` is a variable index + call, would be a false positive), a new
+  **method-body guard** makes it safe: a real accessor's parameter list
+  `)` is followed by a `{` body, whereas a variable-index-call's `)` is
+  followed by `;`/an operator. The guard is applied uniformly (an
+  accessor always has a body), so it also strengthens the existing
+  `{`/`,` cases. JAR-verified across class accessor pairs, after-method,
+  and `static` forms, plus the `if/for/while`-block-then-`get[k](x)`
+  false-positive cases; +2 `gap103_*` unit tests; the three
+  `minify_class_accessor_*` fixtures are un-ignored and enforced.
+
+## [0.110.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-072** — an `await` operator's grouping parens are now
+  elided, and the operator is always emitted with a separating space:
+
+      async function f(){await(x)}     -> async function f(){await x};
+      async function f(){await(a.b)}   -> async function f(){await a.b};
+      async function f(){a=await(b)}   -> async function f(){a=await b};
+      async function f(){await(-b)}    -> async function f(){await -b};
+      async function f(){await(a+b)}   -> async function f(){await (a+b)};
+
+  `await` binds at UNARY precedence — exactly like `typeof`/`void`/
+  `delete` — so it was added to gap-101's `is_safe_unary_kw_operand`
+  keyword block (NOT the gap-056 return/throw block, which is for the
+  looser-binding `yield`). A safe operand (identifier / literal /
+  member-chain / call / leading unary) drops its parens; a parenthesised
+  BINARY operand keeps them (`await` binds tighter than the binary op).
+  Two extra concerns are handled:
+  1. **Always-space.** Upstream emits the `await` operator with a space
+     before its operand even when the operand is non-word-like
+     (`await -b`, `await (a+b)`), to keep it distinct from `await(...)`
+     call syntax. A new `await_operator_needs_space` emit predicate
+     forces that space.
+  2. **Contextual-keyword safety.** `await` can be a function/method
+     NAME or a property. `function await(x){}` / `{await(x){}}` (the
+     matched `)` is followed by `{`) and `o.await(x)` (preceded by
+     `.`/`?.`) are guarded out of BOTH the paren-drop and the space, so
+     they are emitted unchanged. (`await` as a plain value is a parse
+     error in the upstream compiler, so it never appears in a
+     byte-identity input — only the operator form needs handling.)
+
+  Verified byte-identical against the upstream Closure JAR (v20240317)
+  across identifier / member / call / unary / binary / comma operands
+  plus the name and property guards. +3 `gap072_*` unit tests; the
+  `minify_await_paren_elide` and `minify_await_binary_kept` fixtures are
+  un-ignored and enforced. Known residual: a deeply-nested
+  `await(await(x))` keeps the inner parens (the keyword block does not
+  recurse into a dropped span — a pre-existing pattern shared with the
+  other keywords; still valid JS, just not byte-identical).
+
+## [0.109.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-102** — a `yield` operand's grouping parens are
+  redundant and are now dropped, matching the upstream Closure JAR:
+
+      function*g(){yield(a);}     -> function*g(){yield a};
+      function*g(){yield(a.b);}   -> function*g(){yield a.b};
+      function*g(){yield(a+b);}   -> function*g(){yield a+b};
+      function*g(){a=yield(b);}   -> function*g(){a=yield b};
+
+  `yield` takes an `AssignmentExpression`, which binds looser than every
+  binary operator, so a grouping paren around the operand never carries
+  meaning — exactly like `return`/`throw` (gap-056, CLOC12.65). The fix
+  adds `yield` to the gap-055/056 prefix-classification block in
+  `whitespace_only.rs` (a new `is_yield_prefix`), reusing that pass's
+  structural matching-`)` scan and its two guards verbatim:
+  the top-level-comma guard keeps `yield(a,b)` wrapped (`yield a,b` ≡
+  `(yield a),b`), and the property guard keeps `o.yield(x)` a method
+  call (a `yield` preceded by `.`/`?.` is a property, not the keyword).
+  The `yield*` delegate form is excluded for free — the token after
+  `yield` is then `*`, not `(`, so the pass never fires. Verified
+  byte-identical against the upstream Closure JAR (v20240317) across
+  ident / member-chain / binary / call / unary / assignment-RHS
+  operands plus the comma, delegate, and property cases; +3 `gap102_*`
+  unit tests; the three `minify_yield_paren_*` fixtures from CLOC14.45
+  are now enforced. (The `yield(a).b` member-follower case stays wrapped
+  — a shared conservative limitation with `return`/`throw`, tracked
+  separately.)
+
+## [0.108.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-101** — a prefix unary operator (`typeof`/`void`/
+  `delete`/`!`/`-`/`+`/`~`) — and the binary `instanceof` — with a
+  PARENTHESISED higher-arity operand now drops the grouping parens:
+
+      a=typeof(void 0)       -> a=typeof void 0
+      a=typeof(typeof b)     -> a=typeof typeof b
+      a=typeof(-b)           -> a=typeof-b
+      a=typeof(!b)           -> a=typeof!b
+      a=typeof(b())          -> a=typeof b()
+      a=typeof(a.b())        -> a=typeof a.b()
+      a=void(void 0)         -> a=void void 0
+      a=b instanceof(C())    -> a=b instanceof C()
+
+  Every prefix unary operator (and `instanceof`) binds LOOSER than
+  member access, call, and any prefix unary, so a parenthesised
+  operand that is itself a UnaryExpression or a CallExpression
+  re-associates identically with or without the grouping parens.
+  Before this, gap-054's safe-operand set (CLOC12.63) only covered a
+  single identifier/literal token or a member-reference chain, so
+  these higher-arity operands kept their parens. The gap-054 keyword
+  block's operand predicate was widened from `is_safe_unary_operand`
+  to the new `is_safe_unary_kw_operand`, which additionally accepts a
+  leading symbol/keyword unary chain (`is_safe_unary_paren_operand` +
+  a `typeof`/`void`/`delete` recursion) and a call/member chain
+  (`is_call_ref_chain`). A parenthesised BINARY / comma / assignment /
+  ternary operand (`typeof(b+c)`, `typeof(a,b)`, `typeof(a=b)`,
+  `typeof(b?c:d)`) is still REJECTED and keeps its parens; the
+  property guard (`o.delete(a)` stays a method call) is unchanged.
+  Separator nuance preserved: a word-like inner operator keeps the
+  space (`typeof void 0`), a symbol inner operator collapses it
+  (`typeof-b`). Verified byte-identical against the upstream Closure
+  JAR (v20240317) across 26 operand shapes. +3 `gap101_*` unit tests;
+  the three `minify_unary_*` fixtures from CLOC14.44 are now enforced.
+
+## [0.107.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-100** — grouping parens around a `function`/`class`
+  EXPRESSION are elided in expression position:
+
+      a=(function(){})()       -> a=function(){}()
+      a=(class{})()            -> a=class{}()
+      a=(async function(){})() -> a=async function(){}()
+      b=1,(function(){})()     -> b=1,function(){}()
+
+  Those parens are only needed at STATEMENT position, where the
+  leading `function`/`class` keyword would otherwise start a
+  *declaration*. A new pass (after gap-099) finds a `(` immediately
+  followed by `function`/`class`/`async function`, locates the
+  matching `)` by a structural paren-depth scan, and drops the pair.
+
+  MINIMAL SAFE SLICE — fires only when the `(` is preceded by a
+  statement-level assignment `IDENT=` (the target is a plain
+  identifier at a `;`/`{`/`}`/start boundary) or by `,`. This
+  deliberately preserves two load-bearing cases:
+    - the statement-position IIFE `(function(){})();` (preceded by
+      `;`/`{`/`}`/start, never `=`/`,`) — unwrapping it would reparse
+      the function as a declaration;
+    - a DEFAULT-PARAMETER default value `function g(a=(function(){})())`
+      (the `=`'s target sits after `(`, not a statement boundary) —
+      unwrapping there exposes the body `}` to the function-decl
+      trailing-`;` rule and corrupts the output.
+  Broader expression contexts (after `(`/`[`/`return`/`=>`/operators,
+  member-target or `var`-target assignments) are left to a follow-up.
+  +3 `gap100_*` unit tests; JAR-verified. The funcexpr_iife_assign /
+  classexpr_call fixtures leave the ignore list.
+
+  (Note: a PRE-EXISTING corruption surfaced while testing —
+  `function g(a=(function(){})()){}` already mis-emits a stray `;`
+  inside the default value on origin/main, from the function-decl
+  trailing-`;` rule mis-firing on a nested function expression in a
+  param list. gap-100 does NOT touch that case; tracked separately.)
+
+## [0.106.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-099** — grouping parens around the OBJECT of a
+  computed-member `[…]` access are now elided when the object is a
+  simple reference:
+
+      a=(b)[c]    -> a=b[c]      a=(b.c)[d]  -> a=b.c[d]
+      a=(b)[c][d] -> a=b[c][d]   (a)[b]=c    -> a[b]=c
+
+  This is the `[index]` sibling of gap-065 (callee `(f)(x)` -> `f(x)`)
+  and gap-057 (`.member` `(a).b` -> `a.b`); `[` binds tighter than any
+  operator a grouping paren could protect around a bare reference. The
+  new pass mirrors gap-065's guards exactly — GROUPING (not a call/index
+  paren), SIMPLE REFERENCE inside (identifier + `.IDENT` chain, no
+  operators/commas/computed members), and a `[` FOLLOWER — only the
+  follower differs. Non-trivial operands keep their parens (`(a+b)[c]`,
+  `(b||c)[d]`), and a call paren is never grouping (`f(b)[c]` stays).
+  Distinct from gap-087, which elided parens INSIDE the index
+  (`a[(b)]` -> `a[b]`); gap-099 is the object side.
+
+  Behaviour change: `(a)[")"]` now minifies to `a[")"]` (was left as
+  `(a)[")"]` before gap-099 — the parens were previously kept because
+  gap-057 only handled `.member`). JAR-verified. The stale gap-057
+  `string_content_not_bracket` test (which asserted the pre-gap-099
+  form, while still verifying the string `")"` isn't mistaken for a
+  bracket) was updated and renamed to `gap099_string_content_not_bracket`.
+  +4 new `gap099_*` unit tests. The `computed_member_paren` /
+  `computed_member_chain` byte-identity fixtures leave the ignore list.
+
+## [0.105.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-097** — an async generator method now gets the
+  separating space between `async` and `*` that upstream emits:
+
+      o={async*m(){}}      -> o={async *m(){}}
+      class A{async*m(){}} -> class A{async *m(){}}
+      class A{static async*m(){}} -> class A{static async *m(){}}
+
+  `async` is only a *contextual* keyword, so `async*x` is equally
+  valid as MULTIPLICATION (`a=async*b` means `async * b`). Upstream
+  adds the space only for the method form, and the trap is that
+  `a=async*f()` (multiply) and `o={async*m(){}}` (method) share the
+  prefix `async * NAME (`. The new `async_gen_method_needs_space`
+  helper (a `needs_separator`-style lookahead in the emit loop)
+  distinguishes them by the FULL method signature: `async * NAME (
+  <params> ) {` — a named method (identifier name, not `[computed]`)
+  with a parameter list AND a body `{`. It mirrors
+  `get_set_computed_needs_space`'s structural depth-scan to find the
+  param list's matching `)`, then requires a `{` body to follow — the
+  exact thing the arithmetic forms lack. Multiplication (`a=async*b`,
+  `a=async*f()`, `a=b,async*c`), computed methods (`async*[x](){}` —
+  `*[` can't merge), and `async function*f(){}` are all left
+  untouched. +6 `gap097_*` unit tests; JAR-verified across 15 forms.
+  The `async_gen_method_class` / `async_gen_method_obj` fixtures leave
+  the ignore list.
+
+## [0.104.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-098** — a trailing bare decimal point on an integer
+  literal is now dropped, matching upstream:
+
+      a=5.;    -> a=5;       a=5.+1;  -> a=5+1;
+      a=50.;   -> a=50;      a=b=5.;  -> a=b=5;
+      f(5.);   -> f(5);      a=[5.];  -> a=[5];
+
+  The lexer splits `5.` (the float `5.0`) into NUMBER `5` + DOT `.`, so
+  the redundant decimal point survived into the output as `5.`. This is
+  the exact complement of gap-093: that pre-pass fires when a NUMBER is
+  followed by a `.member` access (post-dot token is a property name)
+  and parenthesises the number; gap-098 reuses the same pre-pass and
+  fires on the *other* branch — when the dot's follower is NOT a
+  property name (`;`, an operator, `)`, `,`, `]`, EOF), the dot cannot
+  be member access, so it is a pure decimal-point remnant and is
+  removed. A genuine float like `5.5` is a single NUMBER token (no
+  separate DOT) and is never touched; `5.[0]` collapses to the bare
+  index `5[0]`. +6 `gap098_*` unit tests; JAR-verified. The
+  `num_trailing_dot` / `num_trailing_dot_arith` fixtures leave the
+  ignore list.
+
+  Known limitation surfaced while testing: `5.e3` (scientific notation
+  = 5000) is mis-lexed into NUMBER `5` + DOT + NAME `e3`, which gap-093
+  wraps to the invalid `(5).e3`. That is a separate, pre-existing
+  lexer/NUMBER-pattern issue (the spacing that would disambiguate
+  `5.e3` from `5 .e3` is lost at lex time) tracked separately — out of
+  scope here.
+
+## [0.103.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-096 (CORRECTNESS)** — regexes carrying the `u` (unicode)
+  flag are no longer corrupted under the default ES2025 mode. The bug
+  lived in the shared `javascript-lexer`: the ES2024/ES2025 `REGEX`
+  token's flag character class read `[dgimsvy]`, accidentally dropping
+  the ES2015 `u` flag (a typo when `v`/unicodeSets was added for
+  ES2024). So `/x/gimsuy` lexed as the truncated regex `/x/gims` plus a
+  stray identifier `uy`, emitted as the invalid `/x/gims uy`. Fixed the
+  flag class to the full ES2024 set `[dgimsuvy]` in `es2024.tokens` and
+  `es2025.tokens` and regenerated the compiled lexer pattern; closurec
+  picks up the fix through its `javascript-lexer` dependency (bumped to
+  0.5.1). The `minify_regex_flags_all` byte-identity fixture leaves the
+  ignore list. (Lexer-level fix — no closurec source change beyond the
+  version bump; regression tests live in `javascript-lexer`.)
+
+## [0.102.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-093 (CORRECTNESS)** — a NUMBER literal that is the
+  object of a `.member` access is now paren-wrapped so the dot reads
+  as member access, never the number's decimal point:
+
+      1 .x             -> (1).x
+      255 .toString(16)-> (255).toString(16)
+      1.5.toString()   -> (1.5).toString()
+      1..toString()    -> (1).toString()   (double-dot collapses to one)
+
+  Previously closurec re-stitched `1 .x` verbatim to the INVALID
+  `1.x` (a JS parser reads `1.` as the float `1.0` then a stray `x`)
+  and emitted the double-dot `1..toString()` for the integer-method
+  case. A token-stream pre-pass in `whitespace_only.rs` rebuilds the
+  kept-token list, replacing `<number>` with `( <number> )` whenever
+  its immediate follower is a structural `.` and the post-dot token is
+  a property name. For the double-dot form (`1..x` — the lexer splits
+  the float's decimal point from the member dot) it also drops the
+  first, redundant dot so exactly one survives. The synthetic parens
+  are cloned from any source token (the source frequently has none,
+  e.g. `1 .x`), the same trick `synth_semi` uses.
+
+  Non-member numbers are untouched: index access (`1[0]`, follower
+  `[`), object keys (`{1:2}`, follower `:`), arithmetic (`1+2`), and
+  already-parenthesised numbers (`(1).x`, follower `)`). gap-082
+  number normalisation runs first, so the wrapped value is canonical
+  (`1.5e3.toFixed(2)` → `(1500).toFixed(2)`, `0xff .toString()` →
+  `(255).toString()`). Identifier member access (`(foo).x` → `foo.x`)
+  remains gap-057's job. JAR-verified across 17 cases; the three
+  `minify_num_member_*` / `minify_num_float_method` byte-identity
+  fixtures move out of the ignore list; +10 `gap093_*` unit tests.
+
+## [0.101.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-094 (CORRECTNESS)** — the array trailing-comma drop
+  (gap-046) no longer corrupts arrays with a trailing HOLE. `[1,,]` is
+  `[1, <hole>]` (length 2); the old rule dropped the comma before `]`
+  to `[1,]` (length 1), silently shrinking the array. The drop is now
+  guarded so it only fires when the comma follows a REAL element —
+  the token before it must be neither a structural `,` (a preceding
+  hole) nor a structural `[` (a leading hole):
+
+      [1,,]    -> [1,,]    (kept — length 2)
+      [,]      -> [,]      (kept)
+      [,,]     -> [,,]     (kept)
+      [1,2,,]  -> [1,2,,]  (kept)
+      [1,2,]   -> [1,2]    (still drops — real element)
+      [[1],]   -> [[1]]    (still drops)
+      [f(),]   -> [f()]    (still drops)
+
+  `minify_array_hole_trail` enforced. A stale gap-046 test that
+  asserted the buggy `[1,,]` -> `[1,]` (and noted the rule was
+  "technically WRONG") was corrected; +1 dedicated test.
+
+## [0.100.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-091** — a BigInt RADIX literal is now canonicalised to
+  its shortest decimal form under WHITESPACE_ONLY, matching upstream
+  Closure (mirrors gap-038 for non-BigInt numbers):
+
+      0xFFn   -> 255n
+      0o17n   -> 15n
+      0b101n  -> 5n
+      0x1_FFn -> 511n   (separator + radix combined)
+
+  The BigInt branch of `normalize_number_value` now, after stripping
+  `_` separators (gap-048), parses a `0x`/`0o`/`0b` body into `u128`
+  (`from_str_radix`) and re-emits `{decimal}n`. A decimal BigInt body
+  (no radix prefix) is already shortest and passes through unchanged
+  (`255n` stays `255n`); a magnitude beyond `u128::MAX` (e.g. a 140-bit
+  `0xFF…FFn`) is left verbatim — real bigint arithmetic is a residual.
+  `minify_bigint_hex` / `minify_bigint_bin` are now enforced.
+
+  Three pre-existing gap-038/048 unit tests that asserted the deferred
+  radix-BigInt behaviour (`0xfn` unchanged, `0x1FFFn` unchanged) were
+  updated to the now-correct decimal forms (`15n`, `8191n`).
+
+## [0.99.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-089** — the empty `()` of a `new` with a
+  MEMBER-expression callee now drops under WHITESPACE_ONLY, matching
+  upstream Closure:
+
+      new a.b()    -> new a.b
+      new a.b.c()  -> new a.b.c
+      new a[x]()   -> new a[x]
+
+  A new forward pre-pass anchors on each `new` keyword, parses the
+  member callee (base identifier + `.IDENT` / balanced `[ … ]`
+  accessors), and drops a trailing empty `( )`. It EXTENDS gap-050
+  (which only handled bare-identifier callees, `new A()` -> `new A`) to
+  member-expression callees. `minify_new_member_empty` is now enforced.
+
+  Gated by the same follower test as gap-050: a following `(`, `.`,
+  `[`, or template `` ` `` re-binds the result (`new a.b().c` ≠
+  `new a.b.c`), so those blocked cases are left to the new-expr
+  member-wrap pass (`new a.b().c` -> `(new a.b).c`). The callee must
+  contain at least one accessor, so a bare `new IDENT()` stays gap-050's
+  job — the two passes never both fire on the same `()`. Non-empty args
+  are kept (`new a.b(1)`); a benign operator follower strips
+  (`new a.b()+1` -> `new a.b+1`).
+
+## [0.98.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-088** — EMPTY-STATEMENT (`;`) elimination under
+  WHITESPACE_ONLY, matching upstream Closure:
+
+      ;;var x=1;          -> var x=1;
+      var x=1;;;          -> var x=1;
+      var a=1;;var b=2;   -> var a=1;var b=2;
+      ;;;                 -> (empty)
+      ;x();               -> x();
+      function f(){;;x();} -> function f(){x()};
+
+  A new FIRST pre-pass drops a `;` whose immediate predecessor is `{`,
+  `;`, or start-of-input — exactly the statement-list positions with no
+  statement before them. `minify_empty_stmt` is now enforced.
+
+  Every other `;` is preserved automatically: a real terminator (`a;` —
+  predecessor is a value) or a control-flow BODY (`while(a);`,
+  `if(a);`, `for(;;);`, `do;while(a);` — predecessor `)`/`do`, not in
+  the droppable set). The one hazard — the second separator in a
+  `for(;;)` header (preceded by the first `;`) — is handled by a
+  bracket stack that marks `for(` parens (detected via the preceding
+  `for` keyword, excluding a `.for(` property call) and refuses to drop
+  a `;` inside a for-header.
+
+## [0.97.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-086** — a paren wrapping a whole CALL ARGUMENT now
+  elides under WHITESPACE_ONLY, matching upstream Closure:
+
+      f((a))      -> f(a)
+      f((a+b))    -> f(a+b)      (any expression — no precedence guard)
+      f((a||b))   -> f(a||b)
+      f((a),(b))  -> f(a,b)      (each argument independently)
+      f((a),b)    -> f(a,b)
+      f(g((a)))   -> f(g(a))     (nested calls)
+      a.b((c))    -> a.b(c)      (member / computed / new calls)
+      new C((a))  -> new C(a)
+
+  A new pre-pass anchors on the CALL-open paren (a `(` preceded by a
+  value-producing token), walks the argument list, and via
+  `maybe_strip_arg_paren` drops a wrapping `(`/`)` when the argument is
+  entirely parenthesised and the inner span has no top-level comma.
+  `minify_call_arg_paren` is now enforced.
+
+  **The one load-bearing case is preserved:** a single comma-operator
+  argument `f((a,b))` keeps its parens (dropping them would resplit one
+  argument into two), guarded by `minify_call_arg_comma_keep`. A
+  parenthesised arrow param list (`f((a,b)=>a)`) is also left alone (its
+  `)` is followed by `=>`, not an argument boundary). Anchoring on the
+  call open keeps array literals out of scope entirely.
+
+## [0.96.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-087** — a paren wrapping the WHOLE index of a
+  computed-member subscript now elides under WHITESPACE_ONLY, matching
+  upstream Closure:
+
+      a[(b)]      -> a[b]
+      a[(b+c)]    -> a[b+c]
+      a[(b,c)]    -> a[b,c]      (comma operator, single index — safe)
+      a[(b=c)]    -> a[b=c]
+      x()[(b)]    -> x()[b]      (value object ending in `)`)
+      a[b[(c)]]   -> a[b[c]]     (nested subscripts)
+
+  `minify_index_paren` is now enforced. A new subscript-anchored
+  pre-pass fires when a `[` is preceded by a value-producing token (so
+  it is a subscript, not an array literal) and immediately followed by
+  `(`, whose structural-depth-matched `)` is immediately followed by
+  the matching `]`. No comma / atomic guard is needed — the `[ … ]`
+  already delimits a single expression.
+
+  Array-literal element parens are NOT affected: `[(a,b)]` keeps its
+  parens (the value-preceded requirement excludes array-literal `[`),
+  since there a top-level comma is an element separator. That
+  element-paren case is the comma-guarded gap-086 family.
+
+## [0.95.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-082 (integer-valued subset)** — a decimal float /
+  scientific NUMBER literal that denotes a non-negative INTEGER fitting
+  in `u128` is now canonicalised to the same shortest form as a bare
+  integer in WHITESPACE_ONLY, matching upstream Closure:
+
+      1e3     -> 1E3      (lowercase e -> uppercase E; sci beats 1000)
+      1.0     -> 1        (trailing .0 dropped)
+      1.5e10  -> 15E9     (mantissa digit folds into the exponent)
+      1.23e2  -> 123
+      100.00  -> 100      (trailing fractional zeros)
+      1.5e3   -> 1500     (decimal vs 15E2 tie -> decimal)
+      12e3    -> 12E3
+      1e21    -> 1E21     (10^21 < u128::MAX)
+
+  `minify_num_exp_case` is now enforced. New helper
+  `decimal_float_as_u128` parses `INT[.FRAC][eEXP]` to its exact value
+  `digits × 10^(EXP − len(FRAC))` and returns the integer only when it
+  is non-negative and fits in `u128` (all arithmetic via
+  `checked_pow`/`checked_mul`/`parse::<u128>()`, so out-of-range inputs
+  fall through to verbatim rather than panicking). Recovered integers
+  reuse the existing decimal-vs-`scientific_form_of` shortest-form pick.
+
+### Deferred → gap-085
+- The V8 **fractional** shortest-form (`0.5` -> `.5`, `1e-5` -> `1E-5`,
+  `0.0001` -> `1E-4`, `1.50` -> `1.5`) and over-`u128` magnitudes
+  (`1e100` -> `1E100`) are left verbatim (valid, not byte-identical) —
+  they need a Grisu/Ryū-style `f64` formatter, tracked as gap-085.
+- The stale `gap058_scientific_mantissa_separator_stripped` unit test
+  was corrected: `1_0e3` (= 10000) now canonicalises to `1E4`
+  (JAR-verified). Its previous `10e3` assertion only stripped the
+  separator and was never checked against the JAR — it was wrong.
+
+## [0.94.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-084** — a nested double- (or deeper) paren around a
+  var-init RHS now fully strips, matching upstream Closure: `((a))` →
+  `a`, `(((a)))` → `a`, `((a+b))` → `a+b`.
+  `minify_double_paren_varinit` is now enforced.
+
+### Changed — gap-053 var-init paren elision now runs to a fixpoint
+
+The gap-053 elision strips only the OUTERMOST `=(…)` layer per pass
+and then advances past it, so `((a))` peeled to `(a)` and stopped —
+one layer short of upstream. Wrapping the whole pass in a **fixpoint
+loop** (repeat until an iteration drops nothing) peels every redundant
+layer while the existing top-level-comma guard still halts at the
+load-bearing layer:
+
+  ((a))   -> (a)   -> a
+  (((a))) -> ((a)) -> (a) -> a
+  ((a+b)) -> (a+b) -> a+b          (each layer is the whole RHS)
+  ((a,b)) -> (a,b)                 (inner comma operator — kept)
+
+Termination is guaranteed: each iteration removes ≥2 tokens or makes
+no change and breaks. **Deferred (valid, not byte-identical):**
+`((a))+b` → upstream `a+b` (gap-053 never fires when the RHS is not
+*just* the parens) and `if((a))b();` → `if(a)b();` (different anchor).
+2 new `gap084_*` unit tests + the enforced byte-identity fixture.
+
+## [0.93.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-081** — a grouping paren around a ternary `?:`
+  CONDITION now elides, matching upstream Closure: `(a)?b:c` →
+  `a?b:c`, `(a.b)?c:d` → `a.b?c:d`. The condition-side mirror of
+  gap-055 (ternary ARMS). `minify_ternary_cond_paren` is now enforced.
+
+### Added — gap-081 ternary condition paren elision
+
+The parenthesised condition sits to the LEFT of the `?`, so it is
+exactly the gap-077 LEFT-operand shape (a `(` that STARTS an
+expression whose matching `)` is followed by an operator). Resolved by
+adding a structural `?` to the gap-077 after-set
+(`is_binary_or_cond_after`). All the existing machinery applies
+unchanged:
+
+- the starts-an-expression guard keeps a CALL condition
+  (`f(a)?b:c` stays — dropping would corrupt to `fa?b:c`);
+- the `is_safe_unary_paren_operand` atomic guard keeps a comma
+  condition (`(a,b)?c:d`) and an operator condition (`(a||b)?c:d` —
+  the precedence-aware strip is the deferred gap-083; closurec keeps
+  it, which is valid);
+- `?.` lexes as a single `"?."` token, so `is_structural_punct(t,
+  "?")` matches ONLY the bare ternary and never `(a)?.b`.
+
+3 new `gap081_*` unit tests + the enforced byte-identity fixture; the
+now-stale `gap077_non_binary_after_not_stripped_here` test (which
+asserted `(a)?b:c` unchanged) was replaced.
+
+## [0.92.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-077** — a binary operator's parenthesised ATOMIC LEFT
+  operand now elides, matching upstream Closure: `(a)+b` → `a+b`,
+  `(a)*b` → `a*b`, `(a.b)+c` → `a.b+c`. The LEFT-hand mirror of
+  gap-075/078 (RIGHT operand). `minify_left_operand_paren` is now
+  enforced. With this, all four CLOC14.37 binary-operand /
+  block-flatten gaps (077–080) are closed.
+
+### Added — gap-077 binary LEFT-operand paren elision
+
+A new pre-pass that fires on a structural `(` which (1) STARTS an
+expression (the preceding token does NOT produce a value — a
+call/member paren `f(a)+b` is preceded by a value-producing
+word-like / string / `)`/`]`/`}` and is never stripped, else
+`f(a)+b` would corrupt to `fa+b`), (2) has a matching `)` immediately
+followed by a BINARY operator (so the span is that operator's LEFT
+operand — `)` followed by `.`/`?.`/`(`/`[` is a member/call, left to
+gap-057 / the callee passes), and (3) the span passes
+`is_safe_unary_paren_operand`. An operand with a top-level binary
+operator (`(a+b)*c`) or comma (`(a,b)+c`) is rejected → parens kept
+(precedence / comma-operator safety).
+
+**Exponentiation hazard (correctness).** `**` forbids an
+*unparenthesised* unary LEFT operand — `-a**b` is a `SyntaxError`
+(ECMAScript: the left side of `**` must be an `UpdateExpression`, not
+a `UnaryExpression`). So `(-a)**b`, `(!a)**b`, `(typeof a)**b`, …
+KEEP their parens; the pre-pass detects a unary-starting span before
+a `**` and skips it. The byte-identity fixture `minify_exp_of_unary`
+(`(-a)**b`) caught this and now guards it.
+
+5 new `gap077_*` unit tests (strip / precedence-kept / call+comma-kept
+/ `**`-unary-hazard / ternary-condition-untouched) + the enforced
+fixture. `gap062_call_arg_grouping_preserved` updated to
+`g((a)+(b))` → `g(a+b)` (both grouping layers now elide).
+
+## [0.91.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-078** — the right-operand paren-elision pre-pass
+  (gap-075) now also anchors on the binary comparison / logical /
+  arithmetic / bitwise symbol operators, matching upstream Closure:
+  `a==(b)` → `a==b`, `a||(b)` → `a||b`, `a*(b)` → `a*b`, `a<<(b)` →
+  `a<<b`, … `minify_eq_operand_paren` is now enforced.
+
+### Added — gap-078 binary symbol-operator right-operand elision
+
+Extended the gap-075 pre-pass anchor (`is_sym_unary`, the prefix
+symbols `-`/`+`/`!`/`~`) with an `is_binary_sym` clause covering the
+full binary symbol-operator set — comparison (`==` `!=` `===` `!==`
+`<` `>` `<=` `>=`), logical (`&&` `||` `??`), arithmetic (`*` `/` `%`
+`**`), and bitwise (`&` `|` `^` `<<` `>>` `>>>`) — each
+`is_structural_punct`-gated so a string/regex literal whose CONTENT is
+an operator (e.g. `"=="`) never matches.
+
+The existing `is_safe_unary_paren_operand` operand guard is unchanged
+and remains the single safety gate: it accepts ONLY a self-delimiting
+operand (a single safe token, a member-reference chain, or a leading
+prefix-symbol-unary chain). An atomic operand has no precedence
+interaction with the outer operator, so the strip is sound for *every*
+binary operator.
+
+**Deferred (precedence-aware refinement):** the JAR also strips when
+the parenthesised operand's lowest-precedence operator binds at least
+as tightly as the outer operator (`a==(b+c)` → `a==b+c`, since `+`
+binds tighter than `==`, while `a*(b+c)` KEEPS its parens). That needs
+an operator-precedence table; here `a==(b+c)` conservatively keeps its
+parens (valid, just not yet byte-identical). 4 new `gap078_*` unit
+tests (binary set / member-chain operand / operator-operand-kept /
+literal+call safety) + the enforced byte-identity fixture.
+
+## [0.90.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-080** — an `else` alternate that is a single
+  un-terminated statement block now flattens, matching upstream
+  Closure: `if(x)a();else{b()}` → `if(x)a();else b();`. The
+  `else`-arm sibling of gap-079 (if-body flatten).
+  `minify_else_body_flatten` is now enforced.
+
+### Added — gap-080 else-body single-statement block flatten
+
+A parallel `else`-anchored pre-pass, added right after the gap-074/079
+header-keyword body-flatten pass. Unlike gap-074/079, the `else`
+keyword has NO `(…)` header — its body `{` follows immediately, so the
+anchor is simply `is_word_like(kept[i]) && kept[i].value == "else" &&
+is_structural_punct(kept[i+1], "{")`.
+
+`else` is a reserved word, so `else{…}` can never be an object literal
+or a labelled block, and the only grammar that admits `else { … }` is
+the alternate of an `if`. `else if(…)` is NOT matched (the token after
+`else` is `if`, not `{`) — its inner consequent flattens via the
+gap-079 `if` arm. The same provably-safe body scan as gap-074/079 (no
+nested `{`, no control-flow keyword at depth 1, exactly zero top-level
+`;`) gates the brace-drop, reusing gap-067's `synth_semi`.
+
+**Deferred:** a nested-control `else` body (`else{if(y)b()}` →
+upstream `else if(y)b();`) keeps its braces for now (output stays
+valid); multi-statement and empty `else` bodies keep their braces. 4
+new `gap080_*` unit tests (flatten / multi-keep / nested-control-kept
+/ property-key-untouched) + the enforced byte-identity fixture.
+
+## [0.89.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-079** — an `if` consequent that is a single
+  un-terminated statement block now flattens, matching upstream
+  Closure: `if(x){y()}` → `if(x)y();`. The `if`-sibling of gap-074
+  (for/while loop-body flatten) and gap-076 (with-body flatten).
+  `minify_if_body_flatten` is now enforced.
+
+### Added — gap-079 if-body single-statement block flatten
+
+`if` joins the gap-074 header-keyword body-flatten pre-pass anchor
+set (`for`/`while`/`with`/`if`). A `{` immediately after an `if(…)`
+header is unambiguously the consequent (never an object literal), so
+the identical single-statement / property-guard / synthetic-`;`
+machinery applies unchanged.
+
+**Dangling-else safety came for free.** Stripping the braces around
+an `if` consequent is unsound exactly when the body contains a nested
+un-`else`-d `if` AND the outer `if` has an `else`:
+`if(a){if(b)c()}else d()` must KEEP its braces — flattening to
+`if(a)if(b)c();else d()` would re-bind the `else` to the inner
+`if(b)` (the JAR keeps the braces too, verified). The existing
+no-control-flow-keyword guard (`has_blocking_keyword`, which lists
+`if`) already prevents the brace-drop for any body containing a
+nested `if`, so the dangling-else case can never reach the drop. A
+single non-control consequent (`{y()}`) has no such hazard.
+
+`else`-arm flatten (`else{z()}` → `else z()`) remains the separate
+open gap-080. 4 new `gap079_*` unit tests (flatten / multi-keep /
+dangling-else-kept / else-if-chain) + the enforced byte-identity
+fixture.
+
+## [0.88.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-075** — a SYMBOL `-`/`+`/`!`/`~` operator now drops
+  the redundant grouping parens around a simple-reference operand,
+  matching upstream Closure: `-(a)` → `-a`, `!(a)` → `!a`, `~(a)` →
+  `~a`, and the same-sign `-(-a)` → `- -a`, `+(+a)` → `+ +a` (a
+  separating space, from gap-063, prevents the `--`/`++` glue).
+  `minify_unary_minus_paren` is now enforced.
+
+### Added — gap-075 prefix-unary symbol operand elision
+
+A new pre-pass anchored on `is_structural_punct(kept[i],
+"-"|"+"|"!"|"~")` with `kept[i+1]` a `(`. Prefix-vs-binary is
+irrelevant: stripping a grouping paren around a self-delimiting
+operand is sound whether the operator is a prefix unary (`-(a)`) or
+a binary operator whose RIGHT operand is parenthesised (`a-(b)` →
+`a-b`, which the JAR also does). The operand check is the new
+`is_safe_unary_paren_operand`, which accepts everything
+`is_safe_unary_operand` does PLUS a leading chain of prefix symbol
+unaries applied to such an operand (`-a`, `!a`, `~a.b`) — this is
+what makes `-(-a)`'s operand (itself a UnaryExpression) strippable.
+Operator operands (`-(a+b)`, `a-(b+c)`) keep their parens. `--`/`++`
+are single tokens whose `.value` is `"--"`/`"++"`, so they never
+match the bare-`-`/`+` anchor (`-(--a)` left alone). The matching
+LEFT-operand elision, predecrement operand (`a-(--b)`), and binary
+comparison operands (`a!=(b)`) remain deferred. 3 new gap075_* unit
+tests + the `minify_unary_minus_paren` byte-identity fixture.
+
+## [0.87.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-076** — a `with` statement whose body is a single
+  un-terminated statement now drops its braces, matching upstream
+  Closure: `with(o){a()}` → `with(o)a();`. `minify_with_body_flatten`
+  is now enforced.
+
+### Added — gap-076 with-body single-statement flatten
+
+`with` was added to the gap-074 header-keyword body-flatten pre-pass
+anchor set (`for`/`while`/`with`). A `with(o){…}` statement has the
+same `keyword (…) {body}` shape as a loop, and a `{` immediately
+after the `with(…)` header is unambiguously the with-body — so the
+identical single-statement / property-guard (`o.with(x){…}` left
+alone) / synthetic-`;` machinery applies unchanged. Multi-statement
+bodies (`with(o){a();b()}`) keep their braces. A `with` body that
+already ends in `;` (`with(o){a();}`) is not yet flattened (the
+gap-032 emit-time flatten does not set body-position after a
+`with(…)` header) — deferred. 2 new gap076_* unit tests + the
+`minify_with_body_flatten` byte-identity fixture.
+
+## [0.86.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-071** — the binary `instanceof` operator now drops
+  the redundant grouping parens around a simple-reference RIGHT
+  operand, matching upstream Closure: `a instanceof(B)` →
+  `a instanceof B` (also `a instanceof(b.c)`, `a instanceof(b[c])`).
+  `minify_instanceof_paren` is now enforced.
+
+### Added — gap-071 instanceof operand elision
+
+`instanceof` was added to the gap-054/070 unary-keyword paren-elision
+pre-pass keyword set (`void`/`typeof`/`delete`/`instanceof`). Although
+`instanceof` is a binary operator, the right-operand elision is
+mechanically identical to the prefix-unary cases — the left operand
+sits at `kept[i-1]` and is irrelevant to the right operand's parens.
+`instanceof` binds looser than member access, so `a instanceof(B.c)`
+≡ `a instanceof B.c` and whatever follows the close paren
+re-associates identically. The existing `is_safe_unary_operand`
+check and property guard apply unchanged: operator operands
+(`a instanceof(B||C)`) keep their parens, and `o.instanceof(x)` (a
+property method call) is skipped. 3 new gap071_* unit tests + the
+`minify_instanceof_paren` byte-identity fixture.
+
+## [0.85.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-074** — a `for`/`while` loop body that is a SINGLE
+  un-terminated statement drops its braces, matching upstream
+  Closure: `l:for(;;){continue l}` → `l:for(;;)continue l;` (also
+  `for(;;){break}`, `while(x){g()}`, `for(a in o){h(a)}`,
+  `for(a of o){h(a)}`). `minify_loop_body_flatten` is now enforced.
+
+### Added — gap-074 loop-body single-statement block flatten
+
+A pre-pass (loop-body sibling of gap-067's labeled-block flatten)
+anchored on a `for`/`while` STATEMENT keyword — word-like and NOT a
+property (a `.`/`?.` look-behind disqualifies `o.while(x){…}`
+method calls). The header `(…)` is matched by a structural depth
+scan; the token after `)` must be a `{`. A `{` immediately
+following a loop header is UNAMBIGUOUSLY a loop body (never an
+object literal), so no completion-keyword guard is needed. The body
+braces are dropped and a synthetic `;` (reusing gap-067's
+`synth_semi`) terminates the flattened statement. Scoped to the
+provably-safe slice: the body has no nested `{`, no control-flow
+keyword at depth 1, and exactly zero top-level `;`. Bodies ending
+in `;` are left to the gap-032 emit-time flatten; multi-statement,
+empty, and nested-control-flow bodies keep their braces. `if`-body
+and `do…while`-body flatten are deferred. 5 new gap074_* unit tests
++ the `minify_loop_body_flatten` byte-identity fixture.
+
+## [0.84.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-073** — a `get`/`set` accessor in an object literal
+  whose key is COMPUTED gains a separating space before the `[`,
+  matching upstream Closure: `var o={get[k](){return 1}}` →
+  `var o={get [k](){return 1}}` (also `set[k](v){}`).
+  `minify_get_computed_space` is now enforced.
+
+### Added — gap-073 `get`/`set` computed-key space
+
+A two-token look-behind + forward-check helper
+`get_set_computed_needs_space(kept, idx)`, consulted at the main
+emit site (NOT in `needs_separator`, which sees only the adjacent
+pair). `get`/`set` are *contextual* keywords — accessors only
+inside an object/class body, plain identifiers elsewhere — and the
+JS lexer types them identically, so distinguishing a real accessor
+from member access (`o.get[k]`) or variable indexing (`get[k](x)`)
+needs context. The helper fires only when (a) `kept[idx]` is a
+structural `[`, (b) `kept[idx-1]` is the word-like `get`/`set`
+keyword, (c) `kept[idx-2]` is an object-literal property-start
+`{`/`,` (excludes member access and statement-level indexing), and
+(d) the token after the matching `]` is a structural `(` (the
+accessor parameter list). Class-body accessors after a previous
+member (`}`-/`static`-preceded) are deferred. 2 new gap073_* unit
+tests + the `minify_get_computed_space` byte-identity fixture.
+
+## [0.83.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-070** — `delete`/`typeof`/`void` followed by a
+  parenthesised MEMBER-REFERENCE CHAIN now drops the redundant
+  grouping parens: `delete(a.b)` → `delete a.b`, `delete(a[b])` →
+  `delete a[b]`, `typeof(a.b)` → `typeof a.b`. `minify_delete_paren_elide`
+  is now enforced.
+
+### Fixed
+- **Correctness (property guard)** — `o.delete(a)` (a Map/Set
+  `.delete()` method call) previously mis-emitted as the INVALID
+  `o.delete a` because the unary-operand paren-elision pass lacked
+  a property guard. The keyword is now skipped when preceded by a
+  `.`/`?.` member accessor, so `o.delete(a)`, `o.typeof(x)`, and
+  `o?.delete(a)` keep their call parens.
+
+### Added — gap-070 member-chain operand elision
+
+The gap-054 unary-keyword paren-elision pre-pass (previously
+single-token only) was generalised. The operand validator
+`is_safe_unary_operand` now accepts either a single safe token
+(identifier / number / string — the original gap-054 case) OR a
+member-reference chain: an identifier base followed by any run of
+`.name` / `?.name` / `[…]` accessors with no top-level operator,
+call, or comma. Both shapes bind tighter than a prefix unary
+operator and are self-delimiting, so `OP(REF)` ≡ `OP REF`.
+Operands with a top-level binary operator (`delete(a+b)`) are
+left alone. The matching close paren is located by a structural
+depth scan instead of the old fixed `i+3` offset. 4 new gap070_*
+unit tests + the `minify_delete_paren_elide` byte-identity fixture.
+
+## [0.82.0] - 2026-06-12
+
+### Changed
+- **CLOSES gap-069** — a `new` keyword followed by a KEPT grouping
+  paren (compound callee) now gets a separating space, matching
+  upstream Closure: `new(a+b)` → `new (a+b)`, `new(a,b)` →
+  `new (a,b)`. `minify_new_paren_space` is now enforced.
+
+### Added — gap-069 `new (` emit-adjacency space
+
+A two-token look-behind helper, `new_paren_needs_space(kept, idx)`,
+consulted at the main emit site (NOT in `needs_separator`, which
+sees only the adjacent pair). Distinguishing the genuine
+NewExpression keyword `new` from a PROPERTY named `new` (`o.new(f)`
+— a method call) requires the token *before* `new`: the JavaScript
+lexer is context-free and types `new` identically in both, so only
+a preceding `.`/`?.` member accessor tells them apart. The helper
+fires only when (a) `kept[idx]` is a structural `(`, (b)
+`kept[idx-1]` is the word-like `new` keyword, and (c) `kept[idx-2]`
+(if any) is not a `.`/`?.` accessor. The companion `new(f)()`
+simple-reference form never reaches here — gap-068's pre-pass has
+already elided those parens to `new f`. 3 new gap069_* unit tests
++ the `minify_new_paren_space` byte-identity fixture.
+
+## [0.81.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-067** (provably-safe minimal slice) — a labeled
+  single-statement block flattens: `label:{break label}` →
+  `label:break label;`.
+
+### Added — gap-067 token pre-pass + synthetic `;`
+
+Flattens `IDENT : { <completion-keyword> … }` (body starting
+with `break`/`continue`/`return`/`throw`) when the label sits at
+a hard statement boundary. CRITICAL SAFETY: the boundary set is
+`;`/`}`/start and DELIBERATELY EXCLUDES `{`, so an object-literal
+value `{x:{break:1}}` (whose inner `IDENT:{…}` is preceded by the
+object's `{`) and a ternary `a?b:{c}` are never touched. The
+completion-keyword body guard proves the `{` is a block, not an
+object. The opening `{` is dropped; the closing `}` becomes the
+statement terminator — a synthetic `;` token (cloned from the
+stream and re-typed) is injected when the body had no trailing
+`;`. Multi-statement bodies keep their braces; nested labels
+flatten only the innermost (conservative). 5 new gap067_* unit
+tests (incl. object-literal + ternary safety).
+
+## [0.80.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-068** — redundant parens around a `new` callee:
+  `new(f)()` → `new f`, `new(a.b)` → `new a.b`. Sibling of
+  gap-065/066.
+
+### Added — gap-068 token pre-pass
+
+Strips the grouping parens around a `new` callee when the callee
+is a simple reference (identifier + `.IDENT` chain), anchored on
+the `new` KEYWORD. The trailing empty `()` of the call form
+(`new(f)()`) is then dropped by the existing gap-050 empty-paren
+elision in the emit loop. Guards: operator `new` only (not a
+property named `new` — `o.new(f)` is a method call), not a
+string literal whose content is `new`; all bracket checks via
+`is_structural_punct`. Operator inner `new(a+b)` keeps its
+parens (`new a+b` would parse as `(new a)+b`). 5 new gap068_*
+unit tests.
+
+## [0.79.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-066** (minimal safe slice) — redundant parens
+  after `extends`: `class A extends(B){}` → `class A extends B{}`
+  (also `extends(a.b)` → `extends a.b`, class expressions).
+
+### Added — gap-066 token pre-pass
+
+Strips the grouping parens after the `extends` KEYWORD when the
+superclass is a simple reference (identifier + `.IDENT` chain).
+Guards: anchored on the `extends` keyword, not a string literal
+whose content is `extends`, and not a PROPERTY named `extends`
+(`o.extends(x)` is a method call — prev-prev must not be
+`.`/`?.`); all bracket checks via `is_structural_punct`.
+
+DELIBERATELY CONSERVATIVE vs upstream: `extends(B||C)` keeps its
+parens because `B||C` is not a LeftHandSideExpression, so
+`extends B||C` would be INVALID JS (upstream strips it anyway,
+producing arguably-invalid output). Call-chain inners
+(`extends(f())`) are deferred. 5 new gap066_* unit tests.
+
+## [0.78.0] - 2026-06-11
+
+### Changed
+- **CLOSES gap-065** — callee paren elision: `(f)(x)` → `f(x)`,
+  `(a.b)(x)` → `a.b(x)`, `` (f)`t` `` → `` f`t` ``. Sibling of
+  gap-057 (member-object paren elision).
+
+### Added — gap-065 token pre-pass
+
+A pre-pass (mirroring gap-057's structure) strips the grouping
+parens around the CALLEE of a call / tagged template when the
+callee is a *simple reference* — a plain identifier plus
+zero-or-more `.IDENT` accessors. Guards: GROUPING-not-CALL (the
+`(` must follow punctuation other than `)`/`]`/`?.`, or start —
+so `f(g)(x)` keeps `(g)`); the inner must be a bare
+identifier-dot chain (the scan stops at the first non-`.IDENT`
+token, so `(a,b)(x)` and `(a+b)(x)` keep their parens); the
+follower must be a real `(` call paren or a template literal
+(tagged template, gated on `is_word_like`). All bracket checks
+via `is_structural_punct`. 6 new gap065_* unit tests.
+
+## [0.77.0] - 2026-06-11
+
+### Fixed
+- **CLOSES gap-064 (CORRECTNESS)** — string `)` argument misread
+  as empty-paren close. The gap-050 `new X()` → `new X`
+  empty-paren-drop pass checked `kept[idx+1].value == ")"`
+  WITHOUT the `is_structural_punct` guard, so a string argument
+  whose content is `)` (stored `.value == ")"` after the lexer
+  strips delimiters) was mistaken for the empty-arg close paren.
+  `new A(")")` was mangled to `new A);` (invalid JS — dropped the
+  string arg and left a stray `)`); `new A(")").b` to
+  `(new A)).b`. Discovered by the CLOC14.32 byte-identity
+  harness.
+
+### Changed — gap-064 fix
+
+Line 976 now gates the close-paren check on
+`is_structural_punct(t, ")")`, so only a genuine `)` punctuator
+token triggers the empty-paren elision — a string/regex/template
+argument never can. The sibling `next2_blocks_drop` checks were
+left as-is: they only ever BLOCK a drop (fail-safe — at worst a
+missed optimization on malformed input, never wrong output). The
+genuine empty-paren drop (`new A()` → `new A`) and real args
+(`new A(x)`) are preserved. `minify_new_str_paren_arg` +
+`minify_new_str_paren_member` flip IGNORED → PASS. 3 new
+gap064_* unit tests.
+
+## [0.76.0] - 2026-06-11
+
+### Fixed
+- **CLOSES gap-063 (CORRECTNESS)** — same-sign `+`/`-` token
+  adjacency. The WHITESPACE_ONLY re-stitcher joined two adjacent
+  operator tokens that both begin with `+` (or both `-`) into a
+  spurious compound operator, CORRUPTING semantics: `- -a`
+  (double negation) became `--a` (pre-decrement); likewise
+  `+ +a`→`++a`, `a- -b`→`a--b`, `- --a`→`---a`. Discovered by
+  the CLOC14.31 byte-identity harness (`minify_neg_neg`).
+
+### Added — gap-063 same-sign space rule
+
+`needs_separator()` now inserts a single space when the previous
+token's last char and the next token's first char are both `+`,
+or both `-`. Different signs (`a+ -b` → `a+-b`) stay joined —
+`+-` is unambiguous. CRITICAL GUARD: the rule gates on
+`is_punct(a) && is_punct(b)`, so a string/regex/template literal
+whose `.value` ends/starts with a sign char (e.g. `"a-"`, whose
+stored value is `a-`) can never trigger a spurious space — the
+emitted char there is the delimiter, not the sign. Verified
+`"a-"-1` and `"a-"- -b` against the upstream JAR. `minify_neg_neg`
+flips IGNORED → PASS. 6 new gap063_* unit tests.
+
+## [0.75.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-061** — arg-bearing new-expression member wrap:
+  `new A(y).b` → `(new A(y)).b`. Completes the new-expr-member
+  family (gap-059 single-ident, gap-060 member-callee, gap-061
+  arg-bearing).
+
+### Added — gap-061 synthetic-paren pre-pass
+
+Unlike gap-059/060 (which REORDER the empty arg-list parens),
+the arg-bearing wrap has no spare parens, so this pass INSERTS
+synthetic ones. Two grouping tokens — one `(` and one `)` —
+are cloned from the source's own parens and declared before
+`kept` so they outlive it; the pass inserts `&`-references (a
+`(` before `new`, a `)` after the arg-list's depth-balanced
+close). Reuses the gap-060 callee scan, so member-chain callees
+(`new a.b.C(y,z).d`), multiple args, and nested-call args
+(`new A(f(x)).b`) all wrap correctly. Guards: operator `new`
+only; non-empty args; follower ∈ `.`/`[`/`(`; all checks via
+`is_structural_punct`. 5 new gap061_* unit tests; the former
+gap059_arg_bearing_new_deferred test is updated to assert the
+wrapped form.
+
+## [0.74.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-060** — member-callee new-expression wrap:
+  `new a.b.C().d` → `(new a.b.C).d`. Generalizes gap-059 from a
+  single-identifier callee to a member-chain callee.
+
+### Changed — gap-059 pre-pass generalized
+
+The new-expr wrap pre-pass (gap-059) now scans a CALLEE EXTENT
+— the leading identifier plus zero-or-more `.IDENT` accessors —
+before the empty `()`, instead of requiring exactly one
+identifier. The single-identifier case (gap-059) is the
+zero-accessor special case, so both are handled by one unified
+pass that reorders the `(` to before `new` (no synthetic
+tokens). Computed `[...]` callees and arg-bearing forms
+(gap-061) stay deferred. 3 new gap060_* unit tests.
+
+## [0.73.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-062** (minimal slice) — redundant double-paren
+  collapse: `((a+b))*c` → `(a+b)*c`. One directly-nested
+  grouping-paren layer is stripped.
+
+### Added — gap-062 token pre-pass
+
+When a GROUPING `(` is directly followed by another `(` and the
+inner group's matching `)` is directly followed by the outer
+`)` (purely-nested `(( ... ))`), the outer pair is dropped.
+Guards: the outer `(` must be a grouping paren (so a CALL paren
+like `f((a,b))` is never collapsed to `f(a,b)` — a different
+program); no top-level comma inside; all bracket checks via
+`is_structural_punct`.
+
+Upstream eliminates parens more aggressively (`((a))` → `a`,
+`(a)+(b)` → `a+b`, `f((a))` → `f(a)`); this slice strips only
+one directly-nested grouping layer — the broader pass is a
+follow-up. Four guard unit tests added.
+
+## [0.72.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-059** (minimal slice) — member/call on a `new`
+  expression now wraps in parens: `new A().b` → `(new A).b`.
+  Upstream wraps because `new A.b` parses as `new (A.b)` (a
+  different program), and drops the empty `()` arg list.
+
+### Added — gap-059 token pre-pass
+
+A new pre-pass wraps the new-expression WITHOUT synthesising
+tokens: the empty arg-list `()` already contributes a `(` and a
+`)`, so the pass just REORDERS them — moving the `(` to before
+`new` (`new A ( ) .` → `( new A ) .`). Minimal safe slice:
+single plain-identifier callee, empty arg list, followed by
+`.`/`[`/`(`. Guards: operator `new` only (a property `.new` is
+left alone), all bracket checks via `is_structural_punct`.
+Complements gap-050 (which drops `new A()` → `new A` only when
+NO member/call follows — exactly the cases this pass handles).
+
+Verified against the upstream JAR: `new A().b` → `(new A).b`,
+`.b.c`/`[i]`/`()` chains likewise wrap, standalone `new A()` →
+`new A` (unchanged), and `a.new()` (property) is untouched.
+Member-callee (`new a.b.C().d`) and arg-bearing (`new A(y).b`)
+shapes are deferred follow-ups.
+
+Updated three former gap-050 "keeps_parens" unit tests — they
+asserted the pre-gap-059 (upstream-divergent) output and now
+assert the wrapped form.
+
+## [0.71.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-058** — the ES2021 `_` numeric separator is now
+  stripped from FLOAT and scientific literals, not just integers:
+  - `1_000.5` → `1000.5`
+  - `1_0e3`   → `10e3`
+
+  `normalize_number_value`'s float/scientific branch previously
+  returned the literal verbatim (separators intact). It now
+  returns `cleaned` — the value with every `_` already removed —
+  so separators are stripped while the float/scientific *shape*
+  is otherwise untouched. Full float shortest-form (`0.5` → `.5`,
+  `1000e3` → `1E6`) remains a separate deferred gap. The
+  separator is purely lexical sugar, so its removal needs no
+  numeric reasoning and is always safe.
+
+## [0.70.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-057** — member-object paren elision:
+  `(a).b` → `a.b`. Upstream Closure (WHITESPACE_ONLY) strips
+  the redundant grouping parens around a member-expression's
+  object when that object is a single identifier.
+
+### Added — gap-057 pre-pass + safety guards
+
+A new token-stream pre-pass (separate from the gap-055/056
+arm-elision block) drops the grouping parens in the shape
+`GROUPING_PREFIX ( IDENT ) .`. Three guards make it
+provably safe:
+
+- **grouping-not-call guard** — the token before `(` must be
+  a punctuation/operator other than `)`, `]`, or `?.`. This
+  keeps CALL and index parens intact: `f(a).b` stays
+  `f(a).b`, `x?.(a).b` (optional call) stays untouched.
+- **single-identifier guard** — the parens must wrap exactly
+  one plain-identifier token. Numbers are excluded
+  (`(1).toString()` must keep its parens — `1.` mis-lexes);
+  so are keywords, strings, regex, and templates.
+- **member-position guard** — the token after `)` must be
+  `.`. (`(a)[i]` and `(a)(x)` are also safe for a lone
+  identifier but are left to a follow-up.)
+
+All bracket/operator comparisons route through the existing
+`is_structural_punct` guard, so a string literal whose
+content looks like punctuation (e.g. `")"`) can never
+corrupt the depth scan.
+
+Helpers added: `is_punct` (operator-vs-value category test)
+and `is_plain_identifier` (NAME/IDENT only).
+
+## [0.69.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-056** — paren elision after the `return` /
+  `throw` statement keywords and the concise-arrow `=>`
+  prefix. Extends the gap-055 whole-arm peephole:
+  - `return (a+b);`            → `return a+b;`
+  - `throw (new Error("x"));`  → `throw new Error("x");`
+  - `x => (x+1)`               → `x=>x+1`
+
+### Added — prefix set + two new guards
+
+The gap-055 pre-pass now also fires when the token before
+`(` is `=>`, `return`, or `throw`. Two prefix-specific
+safety guards:
+
+- **property-name guard** — `return`/`throw` are stripped
+  only as STATEMENT keywords, never as property names:
+  `gen.throw((e))` / `it.return((b))` (preceded by `.`/`?.`)
+  are left untouched.
+- **arrow-brace guard** — a concise arrow body that starts
+  with `{` is ambiguous (`x=>{...}` is a function BLOCK), so
+  `()=>({a:1})` keeps its parens. After `?`/`:`/`return`/
+  `throw` the operand is unambiguously an expression, so `{`
+  is fine there (`return ({a:1})` → `return{a:1}`).
+
+All comparisons continue to route through `is_structural_punct`
+(the gap-055 literal-content guard).
+
+## [0.68.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-055** — paren elision around a whole-arm
+  sub-expression following `?` or `:`. Matches upstream on
+  ternary arms (`x?(a=1):(b=2)` → `x?a=1:b=2`), object-literal
+  values (`{a:(b+c)}` → `{a:b+c}`), and label/case bodies
+  (`foo:(x);` → `foo:x;`).
+
+### Added
+
+Token-stream pre-pass: when prev is `?` or `:` and next is
+`(`, scan to the matching `)`. Drop both parens iff:
+- the token after `)` is an arm-terminator (`:`/`;`/`,`/`)`/
+  `]`/`}`/EOF) — so the parens span the COMPLETE arm; and
+- no top-level `,` inside (preserves the comma operator).
+
+Whole-arm guard prevents precedence-shift bugs:
+`x?(a=1)+2:c` stays (next-after-`)` is `+`). `?.` lexes as a
+single OPTIONAL_CHAIN token so optional calls (`a?.(b)`) are
+never matched. 9 edge cases verified against upstream.
+
+(Skipping no versions — 0.68.0 follows 0.67.0.)
+
+## [0.67.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-054** — paren elision around unary operand.
+  `void(0);` → `void 0;` matches upstream. Also handles
+  `typeof(x);` → `typeof x;`, `delete(o);` → `delete o;`.
+
+Token-stream pre-pass for `KW ( SINGLE )` where KW is
+`void`/`typeof`/`delete` and SINGLE is one safe token.
+Conservative: multi-token operands left alone.
+
+## [0.66.0] - 2026-06-10
+
+### Changed
+- **CLOSES gap-053** — paren elision around var-init RHS.
+  `var t = (x == null);` → `var t=x==null;` matches upstream.
+
+Token-stream pre-pass that scans for `= ( ... )` where the
+contents have no `,` at depth 0, don't start with `function`,
+and are followed by `;`/`,`/EOF.
+
+## [0.65.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-052** — trailing `;` after `}` at EOF for
+  `BlockKind::Other` (control-flow body, labeled block,
+  bare block). `if(x){a;b;}` at EOF → `if(x){a;b};` matches
+  upstream Closure.
+
+## [0.64.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-051** — IIFE paren normalisation.
+  `(function(){...}())` → `(function(){...})()` — the call
+  `()` moves outside the wrapping parens. Same byte count;
+  matches upstream Closure's preferred normalisation.
+
+### Added
+
+Token-stream pre-pass right after `kept` is built: scan for
+`} ( ) )` 4-token sequence and rotate `[i+1..=i+3]` right by
+1 to reorder to `} ) ( )`. Safe-by-construction — this
+token sequence can ONLY appear in IIFE contexts in valid JS.
+
+6 inline `gap051_*` tests covering target case + 4 explicit
+non-regression cases (already-outer-call form, plain
+function call, arrow IIFE, IIFE-with-args).
+
+## [0.63.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-046b** — object literal / object destructuring
+  trailing-comma elision. `{a:1,b:2,}` → `{a:1,b:2}`,
+  `var {a,b,}=o` → `var {a,b}=o`.
+
+### Added
+
+Token-level peephole right after gap-046's `,`-before-`]`
+drop: same shape, but for `,` before `}`. The drop is
+unconditional — in valid ECMAScript, `,` immediately before
+`}` can ONLY appear in object-literal / object-destructuring
+contexts (block bodies, class bodies, switch bodies don't
+allow `,` between members).
+
+7 inline `gap046b_*` tests covering target case + 5 explicit
+non-regression cases (no-comma forms, empty obj, call
+trailing comma, nested objects).
+
+## [0.62.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-050** — empty constructor arg-list elision.
+  `new Foo()` → `new Foo` when followed by anything OTHER than
+  member-access (`.`, `[`), chained call (`(`), or tagged
+  template (`` ` ``). Those four cases would change parse
+  precedence and are kept verbatim.
+
+### Added
+
+Token-level peephole right before the existing arrow-fn
+parens-drop optimisation in `whitespace_only.rs`. Triggers when
+`kept[idx-2] == "new"` AND `kept[idx-1]` is a simple identifier
+AND the bracket pair is empty AND the follower is safe.
+
+8 inline `gap050_*` tests including 5 explicit non-regression
+cases (with-args, member-access, bracket-access, chained call,
+paren-expr-constructor).
+
+## [0.61.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-049** — gap-032's single-statement flatten now
+  peeks the token after the closing `}`. When the next token
+  is another `}`, the trailing `;` is suppressed from the
+  inline emission.
+- `function f(){for(var v of a){a;}}` → `function f(){for(var v of a)a};`
+  (was: `function f(){for(var v of a)a;};`)
+- Affects all loop/conditional flattening: `for`, `for-of`,
+  `for-in`, `for-await-of`, `while`, `if` (and the inner arm
+  of `if-else`). All produce one byte less when wrapped in a
+  function body or another block.
+
+### Fixed
+
+`gap032_nested_if_does_not_flatten` expectation tightened —
+`if(x){if(y){a();}}` now produces `if(x){if(y)a()}` (15 bytes)
+instead of `if(x){if(y)a();}` (17 bytes). Both are valid JS;
+the new form is one byte closer to upstream's
+`if(x)if(y)a();` (16 bytes, requires also flattening through
+the outer `if` keyword — a separate future improvement).
+
+### Added
+
+6 inline `gap049_*` tests covering for-of/for-in/while
+flattening + 3 explicit non-regression cases (top-level
+flatten preserves `;`, if-else inside function suppresses
+correctly).
+
+## [0.60.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-048** — BigInt literals with ES2021 `_`
+  numeric separators now normalize: `1_000_000n` →
+  `1000000n`, `0x1_FFFn` → `0x1FFFn`. The separator is
+  pure lexical sugar; stripping it doesn't require
+  bigint arithmetic (which keeps gap-038's bigint
+  shortest-form deferred).
+
+### Fixed
+
+Two-line fix:
+1. `is_number_literal` now recognizes `BIGINT` /
+   `BIGINT_LITERAL` token-names. Without this gate,
+   BigInt tokens never reached the normalize path.
+2. `normalize_number_value`'s BigInt early-return now
+   strips `_` from the body before re-appending `n`.
+
+### Added
+
+5 inline `gap048_*` tests + 1 byte-identity fixture
+(`minify_bigint_separator`, flipped IGNORED → PASS).
+
+## [0.59.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-047** — synthetic `;` after a `}` is now
+  suppressed when the next non-trivia token is a
+  statement-starting keyword. ASI cleanly covers that
+  boundary; the `;` is wasted bytes. Harness now **87/89**
+  — **only gap-044 (lexer-level template substitution)
+  remains open**.
+- Added a 5th branch to the `}` 4-way decision machine
+  (gap-030/033/041): when `next_is_stmt_keyword`, neither
+  emit nor defer.
+- Keyword set: `var`, `let`, `const`, `function`, `class`,
+  `if`, `for`, `while`, `do`, `switch`, `try`, `return`,
+  `throw`, `break`, `continue`, `import`, `export`.
+- **EOF (None)** is NOT in the set — the gap-030 trailing
+  `;` after a final function-decl is preserved.
+
+### Added
+
+7 inline `gap047_*` tests including 5 explicit non-
+regression cases (EOF still emits, close-brace defer
+preserved, Other-block unaffected, return keyword,
+trychain continuation).
+
+## [0.58.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-046** (array case) — trailing comma in array
+  literal is now suppressed. Harness 86/89. Only gap-044
+  (lexer-level template substitution) and gap-047 (suppress
+  synthetic `;` before stmt-keyword) remain.
+- Top-of-loop check: when current is `,` AND next non-trivia
+  is `]`, skip the comma. Handles `[1,2,]` → `[1,2]` and
+  degenerate elision `[1,,]` → `[1,]` (matches upstream's
+  lossy normalisation under WHITESPACE_ONLY).
+- Object-literal case deferred to gap-046b.
+
+### Added
+- 6 inline `gap046_*` tests covering target, single-
+  element, inner-comma non-regression, elision
+  normalisation, call-expr non-regression, empty array.
+
+## [0.57.0] - 2026-06-09
+
+### Changed
+- **CLOSES gap-045** — single-argument arrow function drops
+  its enclosing parens. Harness now 79/81; only gap-044
+  (template substitution, lexer-level) remains open.
+- Added a top-of-loop pattern detector: when the current
+  token is `(` AND `kept[idx+1]` is a Name AND
+  `kept[idx+2]` is `)` AND `kept[idx+3]` is `=>`, emit just
+  the IDENT and `=>`, advancing idx by 4. Both parens are
+  skipped — the `(` push and `)` pop both bypassed, leaving
+  paren_stack net-zero.
+- Composes with `async` keyword: `var f=async(x)=>x+1;` →
+  `var f=async x=>x+1;`. The `async` keyword + Name IDENT
+  pair triggers `needs_separator` (both word-like → space).
+- Added `is_simple_identifier_token` helper that returns
+  true only for `TokenType::Name` — keywords, punctuation,
+  strings, and numbers all fail. This filters out
+  destructuring (`{`), rest (`...`), and reserved-word
+  param names.
+
+### Added
+
+8 inline `gap045_*` tests:
+- target single-arg arrow + async composition
+- 6 non-regression cases: zero-arg, multi-arg, default,
+  rest, destructuring, `(x).y` member access (not arrow)
+
+### Pre-push security review
+
+Verdict PASS. Traced 6 concerns: paren_stack balance,
+other stack non-interaction, false-positive on `(x).y`,
+async composition + needs_separator interaction, future
+template-substitution composition, prev_emitted_tok stored
+as the `=>` token (PUNCT) to avoid spurious space after
+IDENT body.
+
 ## [0.56.0] - 2026-06-09
 
 ### Changed

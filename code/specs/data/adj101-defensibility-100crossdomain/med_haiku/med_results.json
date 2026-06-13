@@ -1,0 +1,56 @@
+{
+ "MED-CRCL": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": []
+ },
+ "MED-FLUID": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": []
+ },
+ "MED-DOSE": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": []
+ },
+ "MED-BMI": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": []
+ },
+ "MED-ANION": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": [
+   "anion_gap_formula"
+  ]
+ },
+ "MED-CACORR": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": [
+   "albumin_deficit"
+  ]
+ },
+ "MED-HEPARIN": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": [
+   "concentration_ratio"
+  ]
+ },
+ "MED-REIMB": {
+  "auditable": true,
+  "correct": true,
+  "magic": [],
+  "assumes": []
+ }
+}

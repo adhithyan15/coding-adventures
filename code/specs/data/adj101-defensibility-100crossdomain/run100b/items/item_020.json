@@ -1,0 +1,7 @@
+{
+ "idx": 20,
+ "id": "CON-1",
+ "scenario": "Maria purchased a blender on March 1, 2025. On August 10, 2025, the motor failed due to a defect in workmanship confirmed by the manufacturer's inspection. She submitted a warranty claim on August 15, 2025.",
+ "policy": "Under this manufacturer's limited warranty, a product defect in materials or workmanship is covered for repair at no charge if the claim is submitted within 12 months of the purchase date. Claims submitted after 12 months from purchase are not covered.",
+ "question": "Is the repair covered at no charge under the limited warranty?"
+}

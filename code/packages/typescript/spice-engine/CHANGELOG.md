@@ -2,6 +2,76 @@
 
 ## Unreleased
 
+- Add `resolveDeckMeasurements`, `measureTransientCards`, and
+  `measureTransientDeck` for parsed transient `.measure` / `.meas` card
+  routing into stable scalar measurement rows, matching Python and Rust.
+- Add `measureTransientProbe` and `formatMeasurementTable` for a shared
+  `.MEASURE`-style scalar transient output surface with MAX, MIN, AVG, RMS,
+  peak-to-peak, and final-value probe measurements, matching Python and Rust.
+- Add `dcInitialVectorFromConditions`, `dcOpWithInitialConditions`, and
+  `dcOpWithInitialVector` so parsed `.ic` / `.nodeset` node-voltage hints can
+  seed DC operating-point Newton solves as MNA warm-start vectors, with `.ic`
+  values taking precedence over `.nodeset`, matching Python and Rust.
+- Add scalar `.func` call evaluation to `resolveDeckParameters`: definitions
+  are collected before `.end`, calls can appear in `.param` assignments and
+  braced or quoted active-line expressions, and unknown functions, bad arity,
+  and recursive calls produce stable diagnostics, matching Python and Rust.
+- Add `resolveDeckFunctions` for scalar `.func name(args) expression`
+  definition extraction before `.end`, braced or quoted expression delimiter
+  stripping, and stable diagnostics for malformed signatures, arguments,
+  duplicate arguments, and empty expressions, matching Python and Rust.
+- Add `resolveDeckInitialConditions` for scalar `.ic` and `.nodeset`
+  `V(node)=value` hint extraction before `.end`, numeric SPICE
+  suffix/arithmetic expression evaluation, and stable diagnostics for malformed
+  targets and unresolved values, matching Python and Rust.
+- Add `resolveDeckParameters` for scalar whitespace-tokenized `.param`
+  assignment evaluation, braced and quoted active-line expression rewriting,
+  and stable diagnostics for unresolved expressions, matching Python and Rust.
+- Add `resolveDeckSources` for map-backed `.include` and selected
+  `.lib path section` expansion with stable diagnostics for missing sources,
+  missing or unterminated library sections, cycles, and still-unsupported
+  `.control` blocks, matching Python and Rust.
+- Add `analyzeDeckControls` for shared deck-control boundary diagnostics:
+  active pre-`.end` lines plus stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control`, matching Python and Rust.
+- Add `formatDcSweepTable`, `formatCornerDcSweepTable`,
+  `formatCornerAcTable`, and `formatCornerTfTable` to close the remaining
+  Rust-first `.DC`, `.AC`, and `.TF` named-corner table helper gaps in the
+  native web package.
+- Add `formatCornerDcTable`, `dcTemperatureSweep`,
+  `dcTemperatureSweepCorners`, `formatTemperatureDcTable`, and
+  `formatCornerTemperatureDcTable` for Rust-matching named-corner and
+  `.temp`-style DC operating-point snapshots with stable table columns in the
+  native web package.
+- Add `compatibilityCorpus`, `releaseReadinessGates`,
+  `formatCompatibilityCorpusTable`, and `formatReleaseReadinessReport` for the
+  first oracle-backed compatibility deck corpus with golden tolerances and
+  known incompatibility notes shared with Python and Rust.
+- Add `CustomModel`, `CustomModelEvaluation`, `customLinearConductanceModel`,
+  and `analyzeCustomModelSource` for the first sandbox-friendly two-terminal
+  residual/Jacobian custom-model foothold shared with Python and Rust.
+- Add `DigitalEventStream`, `DigitalLogicLevels`, `DigitalThresholds`, digital
+  stream PWL voltage source conversion, fixed/adaptive digital transient bridge
+  runners, named-corner bridge wrappers, stable event/schedule tables, and
+  deterministic VCD output for native web mixed-signal SPICE/VM fixtures.
+- Add `normalizeModelCard`, typed model-card builders, and
+  `deviceModelAuditFixtures` for cross-language diode, BJT, JFET, and Level-1
+  MOS `.model` alias compatibility fixtures.
+- Add `DcResult.diagnostics` with stable matrix size, solver kind, tolerance,
+  convergence aid, and final Newton delta metadata; large AC complex systems
+  now route through the sparse-row complex solver path.
+- Add `distortionFromTransientCorners`, `poleZeroCorners`,
+  `formatCornerDistortionTable`, and `formatCornerPoleZeroTable` for
+  named-corner distortion and pole-zero parity in the native web package.
+- Add `fourierCorners` and `formatCornerFourierTable` for named-corner
+  `.FOUR`-style harmonic analysis parity in the native web package.
+- Add `formatPssTable`, `pssCorners`, and `formatCornerPssTable` for stable
+  periodic-steady-state output and named-corner PSS parity in the native web
+  package.
+- Add `transientCorners` and `transientAdaptiveCorners` for named-corner
+  fixed-step and LTE-adaptive transient analysis, plus
+  `formatCornerTransientTable` and `formatCornerAdaptiveTransientTable` for
+  stable tab-separated corner waveform output.
 - Add multi-corner advanced analysis wrappers with `mcDcCorners`,
   `sensDcCorners`, `noiseAcCorners`, and `sParametersCorners`, matching the
   Rust engine surface for these SPICE outputs in the native web package.

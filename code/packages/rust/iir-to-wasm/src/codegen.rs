@@ -114,6 +114,13 @@ pub const I32_CONST: u8 = 0x41;
 /// `i32.eqz` (0x45) — test if i32 == 0; push i32 result.
 pub const I32_EQZ: u8 = 0x45;
 
+/// `i64.eqz` (0x50) — test if i64 == 0; push **i32** result (1 if zero, else 0).
+///
+/// Used by the control-flow lowering to test an i64 branch condition (the
+/// Brainfuck loop guard is an i64 cell value after `lower_brainfuck_for_aot`
+/// widening) and produce the i32 boolean that `if`/`br_if` require.
+pub const I64_EQZ: u8 = 0x50;
+
 /// `i32.eq` (0x46) — i32 == i32; push i32 (1 or 0).
 pub const I32_EQ: u8 = 0x46;
 

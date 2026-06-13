@@ -1,0 +1,7 @@
+{
+ "idx": 1,
+ "key": "bacterial_meningitis::csf_gram_stain(positive)",
+ "lr": 85,
+ "computed": "LR+ = sens/(1-spec) = 0.85/(1-0.99) = 85",
+ "byte_quote": "CSF Gram stain likely has moderate to high sensitivity (85%, 95% confidence interval [CI] 55-96%; 6 studies; high-certainty evidence) and very high specificity (99%; 1 study; moderate-certainty evidence) for the diagnosis of acute bacterial meningitis."
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 74,
+ "id": "CUS-5",
+ "scenario": "Maria returns from an overseas trip carrying souvenirs and gifts with a total value of $650. At customs she presents the items for inspection. Her boarding passes and itinerary are in her bag.",
+ "policy": "Personal-use goods carried by an arriving traveler are exempt from duty up to a personal exemption of $800 in total value. The personal exemption may be claimed only if the traveler has been outside the country for at least 48 hours. Travelers who have been away for less than 48 hours receive a reduced exemption of $200.",
+ "question": "Are all of Maria's goods covered by her personal exemption?"
+}

@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Hue command-plan projection summaries for generated-command and ignored-delta
+  reconciliation telemetry.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
@@ -21,7 +23,10 @@ All notable changes to this package will be documented in this file.
   Hue success and link-button error responses, produce Vault secret payloads,
   and hand off only non-secret completion metadata.
 - Hue command summaries and command-plan rollups for payload-free write-surface
-  telemetry.
+  telemetry, including light-surface, surface-breadth, and capability-breadth
+  helper predicates.
+- Hue scene-set summaries for payload-free recall/read-model telemetry across
+  scene batches.
 - Grouped-light color-temperature command projection from normalized D23 state
   deltas.
 - Hue command planning from normalized D23 `StateDelta` records for direct and
@@ -33,7 +38,8 @@ All notable changes to this package will be documented in this file.
 - Hue state update summaries for read models and event-stream telemetry across
   light, grouped-light, motion, and button updates.
 - `HueStateUpdate` and `HueStateUpdateSetSummary` for unified state update
-  streams across light, grouped-light, motion, and button resources.
+  streams across light, grouped-light, motion, and button resources, including
+  mixed-surface, owner-coverage, and partial-state helper predicates.
 
 ## [0.1.0] - 2026-05-06
 

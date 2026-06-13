@@ -1650,3 +1650,109 @@ fn box_without_dest_is_rejected() {
     );
     assert!(lower_iir_to_wasm(&m, &IIRWasmConfig::default()).is_err());
 }
+
+// ---------------------------------------------------------------------------
+// ── Group N: byte-tape ops + i64 conversions (LANG-MATRIX LM-W Brainfuck) ──
+// ---------------------------------------------------------------------------
+//
+// `lower_brainfuck_for_aot` widens Brainfuck's cell/pointer registers to i64
+// and rewrites the tape into `alloc_bytes` / `load_byte` / `store_byte`. These
+// tests cover the wasm lowering of those ops + the i64↔i32 conversions they and
+// the i64 loop guard need. Opcode bytes asserted: i32.load8_u=0x2D,
+// i32.store8=0x3A, i32.wrap_i64=0xA7, i64.extend_i32_u=0xAD, i64.eqz=0x50.
+
+/// `alloc_bytes`/`load_byte`/`store_byte` lower (the module validates, lowers,
+/// and encodes) and pull in a linear memory + the byte/conversion opcodes.
+#[test]
+fn byte_tape_ops_lower_with_memory_and_conversions() {
+    // A tape round-trip with i64 registers (the widened BF value model):
+    //   const tape_size = 8 (i64)
+    //   alloc_bytes tape <- tape_size       ; base offset 0
+    //   const idx = 0 (i64)
+    //   const val = 65 (i64)
+    //   store_byte tape, idx, val           ; mem[0] = 65
+    //   load_byte got <- tape, idx          ; got = 65 (zero-extended to i64)
+    //   ret got
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("tape_size".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("tape_size".into())], "i64"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i64"),
+        IIRInstr::new("store_byte", None, vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+        ], "i64"),
+        IIRInstr::new("load_byte", Some("got".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+    ]);
+
+    // Validates (no UnsupportedOp for the new ops).
+    let errs = validate_for_wasm(&m);
+    assert!(
+        errs.iter().all(|e| !e.contains("UnsupportedOp")),
+        "byte-tape ops must not be UnsupportedOp; errs: {:?}", errs
+    );
+
+    // Lowers, and the module carries a linear memory for the tape.
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    assert!(!wm.memories.is_empty(), "byte-tape ops must add a linear memory");
+
+    // Encodes; the byte stream carries the memory ops + i64↔i32 conversions.
+    let bytes = encode_module(&wm).expect("encoding failed");
+    assert!(bytes.contains(&0x2Du8), "expected i32.load8_u (0x2D) for load_byte");
+    assert!(bytes.contains(&0x3Au8), "expected i32.store8 (0x3A) for store_byte");
+    assert!(bytes.contains(&0xA7u8), "expected i32.wrap_i64 (0xA7) narrowing an i64 addr/val");
+    assert!(bytes.contains(&0xADu8), "expected i64.extend_i32_u (0xAD) widening the loaded byte");
+}
+
+/// `store_byte` with a dest is rejected — it produces no value.
+#[test]
+fn store_byte_with_dest_is_rejected() {
+    let m = module_one("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("t".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("t".into())], "i64"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i64"),
+        IIRInstr::new("store_byte", Some("oops".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("i".into()), Operand::Var("v".into()),
+        ], "i64"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(
+        lower_iir_to_wasm(&m, &IIRWasmConfig::default()).is_err(),
+        "store_byte must not carry a dest"
+    );
+}
+
+/// An i64 comparison result is widened to i64 (so it matches its i64-declared
+/// local), and an i64 loop guard branches via `i64.eqz` — the dual fix that
+/// keeps the module well-typed once Brainfuck's cells became i64.
+#[test]
+fn i64_condition_uses_i64_eqz_and_widened_cmp() {
+    // c = (a == b)  with i64 operands → i64-declared `c`; then loop on it.
+    //   label L
+    //   c = cmp_eq a, b        ; i32 result widened to i64 (c is i64)
+    //   jmp_if_false c, End     ; i64.eqz (not i32.eqz)
+    //   jmp L
+    //   label End
+    //   ret a
+    let m = module_one("main", vec![("a", "i64"), ("b", "i64")], "i64", vec![
+        IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("cmp_eq", Some("c".into()), vec![
+            Operand::Var("a".into()), Operand::Var("b".into()),
+        ], "i64"),
+        IIRInstr::new("jmp_if_false", None, vec![
+            Operand::Var("c".into()), Operand::Var("End".into()),
+        ], "void"),
+        IIRInstr::new("jmp", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("End".into())], "void"),
+        IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "i64"),
+    ]);
+    let wm = lower_iir_to_wasm(&m, &IIRWasmConfig::default()).expect("lowering failed");
+    let bytes = encode_module(&wm).expect("encoding failed");
+    // i64.eqz (0x50) for the i64 guard; i64.extend_i32_u (0xAD) widening the
+    // i32 comparison boolean to the i64-declared `c`.
+    assert!(bytes.contains(&0x50u8), "expected i64.eqz (0x50) for an i64 loop guard");
+    assert!(bytes.contains(&0xADu8), "expected i64.extend_i32_u (0xAD) widening the i64 cmp result");
+}

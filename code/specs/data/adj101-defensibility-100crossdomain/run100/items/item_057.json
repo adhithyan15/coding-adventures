@@ -1,0 +1,7 @@
+{
+ "idx": 57,
+ "id": "BUI-8",
+ "scenario": "A proposed single-family home measures 32 feet in height. The lot lies entirely within a mapped Hillside Overlay District.",
+ "policy": "General rule: The maximum allowed height for a single-family residential structure in the zone is 35 feet. Override: For lots within a designated Hillside Overlay District, the maximum height is reduced to 28 feet and this reduced limit supersedes the base zone height for any conflicting measurement.",
+ "question": "Does the proposed structure's height comply with the applicable height limit?"
+}

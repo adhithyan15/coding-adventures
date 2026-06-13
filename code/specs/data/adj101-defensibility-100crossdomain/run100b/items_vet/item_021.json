@@ -1,0 +1,8 @@
+{
+ "idx": 21,
+ "policy": "The retailer's return policy states that a customer is entitled to a full refund of the purchase price if a defective item is returned within 30 days of delivery with the original receipt. Without the original receipt, only store credit is issued.",
+ "scenario": "Devon received a defective desk lamp on June 1. He returned it on June 12 along with the original paper receipt from the purchase. The store confirmed the lamp was defective.",
+ "question": "What remedy is Devon entitled to?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "full refund"
+}

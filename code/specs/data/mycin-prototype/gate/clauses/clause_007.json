@@ -1,0 +1,7 @@
+{
+ "idx": 7,
+ "key": "bacterial_meningitis::seizure(present)",
+ "lr": 5.84,
+ "computed": "LR+ = sens/(1-spec) = (19/86)/(14/370) = 0.2209/0.0378 = 5.84",
+ "byte_quote": "Seizure at or before presentation, n (%): Bacterial Meningitis N=86 = 19 (22%); Aseptic Meningitis N=370 = 14 (4%)"
+}

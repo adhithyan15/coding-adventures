@@ -3,6 +3,103 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.0] — 2026-06-12 (LANG-MATRIX LM-J Brainfuck — byte-tape ops on the JVM)
+
+Adds the lowering Brainfuck needs to run on the JVM backend — the last code-gen
+gap in Brainfuck's row after LLVM (LM-L) and WASM (LM-W). Verified by RUNNING
+`++++++++[>++++++++<-]>+.` on real `java` in `lang-aot/tests/lang_matrix.rs`: it
+prints `A`.
+
+The backend already had the *raw* BF-frontend tape ops (`load_mem`/`store_mem` →
+`baload`/`bastore` over a static `env/BFRuntime.__tape : [B`) and the
+`putchar`/`getchar` host calls, but `lower_brainfuck_for_aot` rewrites the tape
+into the *lowered* `alloc_bytes`/`load_byte`/`store_byte` form (the same ops the
+LLVM/WASM/native backends consume) and widens the value model — which the JVM
+backend didn't yet handle.
+
+### Added
+
+- **`alloc_bytes dest <- size`** → no bytecode. The JVM tape is the host class's
+  pre-allocated static `byte[] __tape`, so there is nothing to allocate at
+  runtime; `dest` (the BF tape base) is never materialised because the byte ops
+  `getstatic` the tape directly.
+- **`load_byte dest <- base, idx`** → `getstatic __tape`, load the index
+  (`l2i`-narrowed if it is an `i64`), `baload`, `& 0xFF` (mask the sign-extended
+  byte back to an unsigned cell), then `i2l`-widen if `dest` is `i64`. The base
+  operand is the static tape, so it is ignored.
+- **`store_byte base, idx, val`** → `getstatic __tape`, load index + value
+  (`l2i`-narrowed if `i64`), `bastore` (stores `val & 0xFF`, giving BF's 8-bit
+  cell wrap-around for free). Rejected if it carries a `dest`.
+
+### Fixed (i64-widening ripple)
+
+- **i64 branch conditions**: `jmp_if_true`/`jmp_if_false` hardcoded `iload` +
+  `ifne`/`ifeq`, which assume a 32-bit condition. An `i64` guard (the widened
+  Brainfuck loop guard — when the value model is *not* concretised back to i32)
+  now reduces to an int with `lload; lconst_0; lcmp` before the branch; `iload`ing
+  a long would read only one of its two local slots — a verify error. The width is
+  taken from the condition register's declared `JvmType`.
+
+Four new tests in `tests/test_backend.rs` cover the i32 + i64 tape lowerings, the
+`store_byte`-with-dest rejection, and the i64-guard `lcmp` path.
+
+## [0.10.0] — 2026-06-09 — large-`int` constants via the constant pool (McCarthy W5a / F6)
+
+### Fixed
+
+- **`int` literals beyond ±32767 now lower correctly.** `emit_iconst`'s
+  out-of-`sipush`-range path emitted `ldc 0` — a reference to the *reserved*
+  constant-pool slot 0 — which crashed real JVMs at class load
+  (`constantTag.cpp ShouldNotReachHere`). Added `emit_iconst_cp`, which appends a
+  `CONSTANT_Integer` entry (`ConstantPoolBuilder::add_integer`) and emits
+  `ldc`/`ldc_w` (the `LDC_W` 0x13 opcode for a CP index > 255). Every
+  *user-constant* call site (a `const`, a `mov`/`ret` immediate, a `call`
+  argument) now routes through it; the old invalid path is `debug_assert`-guarded.
+  Structural indices (field numbers, slot/arg counts) stay on `emit_iconst` — they
+  are always small.
+
+### Enabled
+
+- **McCarthy symbols (F6) on the JVM.** A symbol interns to an id in a high
+  reserved range (`SYMBOL_ID_BASE = 2²⁹`), exactly the large-`int` const this
+  fixes — so `(EQ 'X 'X)` → T, `(EQ 'X 'Y)` → nil, `(QUOTE X)` → its id now run on
+  a real JVM.
+
+## [0.9.0] — 2026-06-09 — lisp predicates `pair?`/`not`/`equal?` (McCarthy W4)
+
+### Added
+
+- **`call_builtin` lowering for the McCarthy predicates** (F3–F5), the JVM
+  counterparts of the wasm `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`:
+  - `pair?`  → `aload ; instanceof [Ljava/lang/Object; ; istore` — a cons is an
+    `Object[]`, an atom an `Integer`, nil `null` (so `instanceof` is 0/1).
+  - `not`    → `iload ; iconst_1 ; ixor ; istore` (logical not of a 0/1 bool).
+  - `equal?` → unbox both `Integer`s (`checkcast` + `intValue`) then
+    `if_icmpne`-synthesised 0/1 — `EQ` on atoms is integer equality.
+  Added `pair?`/`not`/`equal?` to `CALL_BUILTIN_SUPPORTED_NAMES`, the `INSTANCEOF`
+  (0xC1) opcode, and `builtin_dest`/`builtin_arg` operand helpers. With the
+  already-lowered `jmp_if_false`/`is_null`, McCarthy `ATOM`/`EQ`/`COND` now run on
+  a real JVM: `(ATOM 5)`→1, `(ATOM (CONS 1 2))`→0, `(EQ 5 5)`→1, `(COND …)`.
+
+## [0.8.0] — 2026-06-09 — `box`/`unbox` + `ref<any>` (McCarthy W3b)
+
+### Added
+
+- **`box` / `unbox` lowering** — the managed uniform-reference value model's
+  atom boxing, the JVM counterpart of the wasm backend's `i31ref`:
+  - `box`  → `iload ; invokestatic java/lang/Integer.valueOf(I)Ljava/lang/Integer; ; astore`
+  - `unbox`→ `aload ; checkcast java/lang/Integer ; invokevirtual Integer.intValue()I ; istore`
+  These are the *same* backend-agnostic IIR ops the wasm path consumes — the
+  structural representation pass emits them, each backend lowers them — so a
+  McCarthy cons program (`(CAR (CONS 7 9))` → 7) now runs on a real JVM. Removed
+  `box`/`unbox` from `UNSUPPORTED_OPS`.
+- **`ref<any>` type** — maps to `JvmType::Ref` (descriptor `Ljava/lang/Object;`):
+  a boxed lisp value is an `Integer` (atom) or `Object[]` (cons cell).
+
+(cons cells were already `Object[]` allocations via `alloc`/`field_*` for
+`ref<LispyPair>`; this release adds the atom boxing that lets integers live in
+those cells and be read back out.)
+
 ## [0.7.0] — 2026-06-01 (G3 — `print_i64` host import → `env/BasicRuntime.println(J)V`)
 
 ### Added — `call_builtin "print_i64"` whitelisted and lowered

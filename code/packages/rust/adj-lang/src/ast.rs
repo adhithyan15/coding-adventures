@@ -18,7 +18,79 @@
 #[derive(Debug, Clone, PartialEq)]
 pub enum Term {
     Atom(String),
-    Compound { functor: String, args: Vec<Term> },
+    /// A numeric literal — appears as a compound argument in a *valued*
+    /// fact, e.g. `gross_income(18000)`. Carried as `f64`; the lowerer
+    /// converts it to `logic_core::Term::Num`. Valued facts are what
+    /// predicate-gated contributions read on the CPU.
+    Num(f64),
+    Compound {
+        functor: String,
+        args: Vec<Term>,
+    },
+}
+
+/// The evidence side of a `contributes` clause — either an ordinary
+/// term or a numeric **predicate** over a valued slot.
+///
+/// `from pmh(hypertension) to acs`  →  [`Evidence::Term`]
+/// `from gross_income >= 14600 to required_to_file`  →  [`Evidence::Predicate`]
+///
+/// The predicate form is the surface syntax for a deterministic rule:
+/// it lowers to a predicate-gated contribution whose likelihood ratio
+/// is large enough to saturate. The comparison itself runs on the CPU
+/// at decision time — the model that authored the rulebook never
+/// evaluated it.
+#[derive(Debug, Clone, PartialEq)]
+pub enum Evidence {
+    Term(Term),
+    Predicate { slot: String, op: CmpOp, value: f64 },
+}
+
+/// A numeric comparison operator in a predicate. Mirrors
+/// [`logic_engine::CmpOp`]; kept as a separate surface type so the AST
+/// has no engine dependency.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CmpOp {
+    Ge,
+    Le,
+    Gt,
+    Lt,
+    Eq,
+}
+
+/// A binary arithmetic operator in a `let` formula.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArithOp {
+    Add,
+    Sub,
+    Mul,
+    Div,
+}
+
+/// An aggregation operator in a `let` formula — reduces every
+/// observation of a slot.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AggOp {
+    Sum,
+    Count,
+    Min,
+    Max,
+    Avg,
+}
+
+/// The formula of a `let <name> = <expr>` binding. Mirrors
+/// `logic_engine::ComputeExpr`; kept as a separate surface type so the
+/// AST has no engine dependency (the lowerer converts it).
+#[derive(Debug, Clone, PartialEq)]
+pub enum ExprAst {
+    /// A reference to a slot (observed fact or a previously-bound `let`).
+    Ref(String),
+    /// A numeric literal written into the formula.
+    Lit(f64),
+    /// A binary arithmetic operation.
+    Bin(ArithOp, Box<ExprAst>, Box<ExprAst>),
+    /// An aggregation over every observation of a slot.
+    Agg(AggOp, String),
 }
 
 /// One source line in an Adj-Lang program.
@@ -31,9 +103,10 @@ pub enum Statement {
         annotations: Vec<Annotation>,
     },
     /// `contributes <lr> from <evidence> to <conclusion>` (+ annotations).
+    /// `evidence` is either a term or a numeric predicate (see [`Evidence`]).
     Contributes {
         lr: f64,
-        evidence: Term,
+        evidence: Evidence,
         conclusion: Term,
         annotations: Vec<Annotation>,
     },
@@ -49,6 +122,11 @@ pub enum Statement {
     Observe { term: Term },
     /// `? <conclusion>` — query the engine for the posterior.
     Query { conclusion: Term },
+    /// `let <name> = <expr>` — bind a **computed** value (ADJ expansion
+    /// step 3). The model writes only the formula; the engine evaluates
+    /// `expr` on the CPU into a derivation tree and binds it to `name`,
+    /// after which a predicate can fire over it like an observed slot.
+    Let { name: String, expr: ExprAst },
     /// `uncertain { <e1>, <e2>, ... } for <conclusion>` — annotate
     /// the conclusion with a domain of candidate evidence terms,
     /// none of which has been observed. The LR aggregator surfaces
@@ -59,6 +137,95 @@ pub enum Statement {
         conclusion: Term,
         annotations: Vec<Annotation>,
     },
+    /// `symbol <name> : <sort>` — declare an **unknown** the engine will
+    /// solve for (ADJ constraints, track B). `sort` is a dimensional sort
+    /// term (`scalar`, `money(usd)`, …).
+    Symbol { name: String, sort: Term },
+    /// `constrain <lhs> <relop> <rhs>` — assert an (in)equality the solver
+    /// must satisfy. Operands reuse the `let` arithmetic [`ExprAst`], so a
+    /// constraint may mention observed slots, earlier `let`s, and symbols.
+    Constrain {
+        lhs: ExprAst,
+        op: RelOp,
+        rhs: ExprAst,
+    },
+    /// `solve for { a, b, … }` — drive the solver to find values for the
+    /// named unknowns satisfying the accumulated constraints.
+    SolveFor { names: Vec<String> },
+    /// `check` — ask whether the accumulated constraint set is satisfiable
+    /// (feasibility / contradiction).
+    Check,
+    /// `minimize <expr>` / `maximize <expr>` — a linear-programming objective
+    /// over the declared symbols (ADJ constraints track C2). The solver finds
+    /// the optimal value subject to the accumulated `constrain` half-planes.
+    Optimize { dir: OptDir, objective: ExprAst },
+    /// `define <name> : hypothesis | finding values [v…] [surface "…"]` — a
+    /// dictionary entry (MYCIN-2026). Registers a finding/hypothesis term in the
+    /// controlled vocabulary; valid bare or inside a `dictionary` block.
+    Define(Define),
+    /// `dictionary <name> { define … }` — a named controlled vocabulary, a
+    /// first-class language construct a rulebook `use`s (M2).
+    Dictionary { name: String, defines: Vec<Define> },
+    /// `rulebook <name> { … }` — a named, reusable block of clauses (MYCIN-2026
+    /// M2). The clauses lower into the KB exactly as if written at top level;
+    /// the name lets a rulebook be written once and `import`ed (M3). An inner
+    /// `use` binds the dictionary its clauses are vocabulary-checked against.
+    Rulebook {
+        name: String,
+        statements: Vec<Statement>,
+    },
+    /// `use <dictionary>` — bind a `dictionary` (by name) as the controlled
+    /// vocabulary the enclosing scope's clauses are checked against (MYCIN-2026
+    /// M2). Legal at top level or inside a `rulebook`.
+    Use(String),
+    /// `import "<relative path>"` — splice another `.adj` file's declarations
+    /// into this program (MYCIN-2026 M3). The literal string is carried verbatim;
+    /// resolution (relative path, idempotency, cycle + bound checks) happens in
+    /// [`crate::resolve`] before lowering. A program that still contains an
+    /// `Import` at lowering time was compiled without the resolver — a
+    /// [`crate::LowerError::UnresolvedImport`].
+    Import(String),
+}
+
+/// A single dictionary entry (MYCIN-2026).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Define {
+    /// The canonical term (a finding functor like `csf_glucose`, or a
+    /// hypothesis like `bacterial_meningitis`).
+    pub name: String,
+    pub kind: DefineKind,
+    /// Surface forms used to constrain the decomposer — *not* engine-semantic.
+    pub surfaces: Vec<String>,
+}
+
+/// What a `define` registers: a hypothesis, or a finding with a closed value
+/// domain (so "observed normal" is distinguishable from "not yet observed").
+#[derive(Debug, Clone, PartialEq)]
+pub enum DefineKind {
+    Hypothesis,
+    Finding { values: Vec<String> },
+}
+
+/// The direction of an `optimize` (LP) objective.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OptDir {
+    /// `minimize <expr>` — find the smallest feasible objective value.
+    Minimize,
+    /// `maximize <expr>` — find the largest feasible objective value.
+    Maximize,
+}
+
+/// A relational operator in a `constrain` clause.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RelOp {
+    Ge,
+    Le,
+    Gt,
+    Lt,
+    /// Equality — surface `=` or `==`.
+    Eq,
+    /// Inequality — surface `!=`.
+    Ne,
 }
 
 /// Per-statement annotation. Multiple annotations per statement

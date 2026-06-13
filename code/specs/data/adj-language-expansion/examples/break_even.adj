@@ -1,0 +1,19 @@
+% Worked example — break-even unit price (solve for an unknown).
+%
+% Find the unit price `p` at which revenue equals total cost, for a run of
+% 1,000 units with $5,000 fixed cost and $3/unit variable cost:
+%
+%     revenue = p * 1000
+%     cost    = 5000 + 3 * 1000 = 8000
+%     break-even: p * 1000 = 8000  →  p = 8
+%
+% The model wrote the equation; the engine SOLVES it (exact rational Gaussian
+% elimination), and the answer is cited to the constraint that determined it.
+%
+% Expected: solve → { p = 8 }, from_constraints [0].
+
+symbol p : money(usd)
+
+constrain p * 1000 = 5000 + 3 * 1000
+
+solve for { p }

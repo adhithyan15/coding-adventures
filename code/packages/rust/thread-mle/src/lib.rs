@@ -694,6 +694,37 @@ impl Connectivity {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MleStatus {
+    pub code: u8,
+}
+
+impl MleStatus {
+    pub const ENCODED_LEN: usize = 1;
+
+    pub fn parse(value: &[u8]) -> Result<Self, MleError> {
+        if value.len() != Self::ENCODED_LEN {
+            return Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: Self::ENCODED_LEN,
+                actual: value.len(),
+            });
+        }
+        Ok(Self { code: value[0] })
+    }
+
+    pub fn encode(self) -> [u8; Self::ENCODED_LEN] {
+        [self.code]
+    }
+
+    pub fn to_tlv(self) -> Tlv {
+        Tlv {
+            tlv_type: TlvType::Status,
+            value: self.encode().to_vec(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MleMessage {
     pub command: MleCommand,
@@ -733,6 +764,80 @@ impl MleMessage {
 
     pub fn find_tlv(&self, tlv_type: TlvType) -> Option<&Tlv> {
         self.tlvs.iter().find(|tlv| tlv.tlv_type == tlv_type)
+    }
+
+    pub fn summary(&self) -> MleMessageSummary {
+        MleMessageSummary::from_message(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MleMessageSummary {
+    pub command: MleCommand,
+    pub tlv_count: usize,
+    pub has_scan_mask: bool,
+    pub has_mode: bool,
+    pub has_timeout: bool,
+    pub has_leader_data: bool,
+    pub has_network_data: bool,
+    pub has_connectivity: bool,
+    pub has_status: bool,
+    pub has_version: bool,
+}
+
+impl MleMessageSummary {
+    pub fn from_message(message: &MleMessage) -> Self {
+        let mut summary = Self {
+            command: message.command,
+            tlv_count: message.tlvs.len(),
+            has_scan_mask: false,
+            has_mode: false,
+            has_timeout: false,
+            has_leader_data: false,
+            has_network_data: false,
+            has_connectivity: false,
+            has_status: false,
+            has_version: false,
+        };
+
+        for tlv in &message.tlvs {
+            match tlv.tlv_type {
+                TlvType::ScanMask => summary.has_scan_mask = true,
+                TlvType::Mode => summary.has_mode = true,
+                TlvType::Timeout => summary.has_timeout = true,
+                TlvType::LeaderData => summary.has_leader_data = true,
+                TlvType::NetworkData => summary.has_network_data = true,
+                TlvType::Connectivity => summary.has_connectivity = true,
+                TlvType::Status => summary.has_status = true,
+                TlvType::Version => summary.has_version = true,
+                _ => {}
+            }
+        }
+
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.tlv_count == 0
+    }
+
+    pub fn has_parent_selection_request_context(&self) -> bool {
+        self.command == MleCommand::ParentRequest && self.has_scan_mask && self.has_version
+    }
+
+    pub fn has_attach_response_context(&self) -> bool {
+        matches!(
+            self.command,
+            MleCommand::ParentResponse | MleCommand::ChildIdResponse
+        ) && self.has_mode
+    }
+
+    pub fn has_diagnostic_context(&self) -> bool {
+        self.has_leader_data || self.has_network_data || self.has_connectivity
+    }
+
+    pub fn has_thread_data_versions(&self) -> bool {
+        self.has_leader_data && self.has_network_data
     }
 }
 
@@ -1341,6 +1446,13 @@ pub fn connectivity_from_message(message: &MleMessage) -> Result<Option<Connecti
         .transpose()
 }
 
+pub fn status_from_message(message: &MleMessage) -> Result<Option<MleStatus>, MleError> {
+    message
+        .find_tlv(TlvType::Status)
+        .map(|tlv| MleStatus::parse(&tlv.value))
+        .transpose()
+}
+
 pub fn version_is_newer(candidate: u8, current: u8) -> bool {
     let distance = candidate.wrapping_sub(current);
     distance != 0 && distance < 128
@@ -1466,6 +1578,88 @@ mod tests {
             MleMessage::parse(&message.encode().unwrap()).unwrap(),
             message
         );
+
+        let summary = message.summary();
+        assert_eq!(
+            summary,
+            MleMessageSummary {
+                command: MleCommand::ParentRequest,
+                tlv_count: 2,
+                has_scan_mask: true,
+                has_mode: false,
+                has_timeout: false,
+                has_leader_data: false,
+                has_network_data: false,
+                has_connectivity: false,
+                has_status: false,
+                has_version: true,
+            }
+        );
+        assert!(!summary.is_empty());
+        assert!(summary.has_parent_selection_request_context());
+        assert!(!summary.has_attach_response_context());
+        assert!(!summary.has_diagnostic_context());
+        assert!(!summary.has_thread_data_versions());
+    }
+
+    #[test]
+    fn mle_message_summary_reports_attach_and_diagnostic_context() {
+        let attach = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::Mode,
+                    vec![Mode {
+                        receiver_on_when_idle: true,
+                        secure_data_requests: true,
+                        full_thread_device: true,
+                        full_network_data: true,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::Timeout, 30_u32.to_be_bytes().to_vec()).unwrap(),
+            ],
+        };
+
+        let attach_summary = attach.summary();
+        assert!(attach_summary.has_attach_response_context());
+        assert!(!attach_summary.has_parent_selection_request_context());
+        assert!(!attach_summary.has_diagnostic_context());
+        assert!(!attach_summary.has_thread_data_versions());
+
+        let diagnostic = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![
+                LeaderData {
+                    partition_id: 0x0102_0304,
+                    weighting: 64,
+                    data_version: 2,
+                    stable_data_version: 1,
+                    leader_router_id: 7,
+                }
+                .to_tlv(),
+                ThreadNetworkData::new(vec![NetworkDataTlvType::Prefix.as_byte(), 0])
+                    .unwrap()
+                    .to_tlv(),
+                Tlv::new(TlvType::Connectivity, vec![1, 3, 2, 1, 5, 8, 12]).unwrap(),
+            ],
+        };
+
+        let diagnostic_summary = diagnostic.summary();
+        assert_eq!(diagnostic_summary.command, MleCommand::Advertisement);
+        assert_eq!(diagnostic_summary.tlv_count, 3);
+        assert!(diagnostic_summary.has_diagnostic_context());
+        assert!(diagnostic_summary.has_thread_data_versions());
+        assert!(!diagnostic_summary.has_parent_selection_request_context());
+        assert!(!diagnostic_summary.has_attach_response_context());
+
+        let empty = MleMessage {
+            command: MleCommand::LinkRequest,
+            tlvs: Vec::new(),
+        }
+        .summary();
+        assert!(empty.is_empty());
     }
 
     #[test]
@@ -1483,6 +1677,43 @@ mod tests {
 
         assert_eq!(ScanMask::parse(scan.encode()), scan);
         assert_eq!(Mode::parse(mode.encode()), mode);
+    }
+
+    #[test]
+    fn status_tlv_round_trips_and_extracts_from_message() {
+        let status = MleStatus { code: 0x01 };
+        let message = MleMessage {
+            command: MleCommand::ChildIdResponse,
+            tlvs: vec![status.to_tlv()],
+        };
+
+        assert_eq!(MleStatus::parse(&status.encode()).unwrap(), status);
+        assert_eq!(status.to_tlv().tlv_type, TlvType::Status);
+        assert_eq!(status_from_message(&message).unwrap(), Some(status));
+        assert_eq!(
+            MleMessage::parse(&message.encode().unwrap()).unwrap(),
+            message
+        );
+    }
+
+    #[test]
+    fn status_tlv_rejects_wrong_length() {
+        assert_eq!(
+            MleStatus::parse(&[]),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: MleStatus::ENCODED_LEN,
+                actual: 0,
+            })
+        );
+        assert_eq!(
+            MleStatus::parse(&[0x01, 0x02]),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Status,
+                expected: MleStatus::ENCODED_LEN,
+                actual: 2,
+            })
+        );
     }
 
     #[test]

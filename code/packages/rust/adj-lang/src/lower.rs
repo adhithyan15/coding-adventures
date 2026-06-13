@@ -19,49 +19,180 @@
 //! - `source` may appear at most once per statement; multiple
 //!   `source` annotations are a [`LowerError::DuplicateAnnotation`].
 
-use logic_core::{atom as core_atom, compound, Term as CoreTerm};
+use logic_core::{atom as core_atom, compound, float as core_float, Term as CoreTerm};
 use logic_engine::{
-    ContributionClause, Fact, JointContributionClause, KbError, KnowledgeBase, PriorClause,
+    compute, CmpOp as EngineCmpOp, ComputeExpr, ComputeOp, ContributionClause, Fact,
+    JointContributionClause, KbError, KnowledgeBase, PredicateContributionClause, PriorClause,
     Provenance, TrustTier, UncertaintyMarker,
 };
 
-use crate::ast::{Annotation, Program, Statement, Term as AstTerm, TrustTierName};
+use crate::ast::{
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
+    RelOp, Statement, Term as AstTerm, TrustTierName,
+};
+
+/// One lowered constraint: `lhs <op> rhs`, with both sides kept as
+/// **unevaluated** [`ComputeExpr`] trees (they reference symbols the solver
+/// will assign, so they cannot be computed yet — that is the solver's job in
+/// track B2).
+#[derive(Debug, Clone, PartialEq)]
+pub struct LoweredConstraint {
+    pub lhs: ComputeExpr,
+    pub op: RelOp,
+    pub rhs: ComputeExpr,
+}
+
+/// The typed constraint system a program builds from its `symbol` /
+/// `constrain` / `solve for` / `check` statements (ADJ constraints track B).
+/// Track B1 builds and exposes it; the solver backends are wired in B2.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ConstraintSystem {
+    /// Declared unknowns: `(name, sort)`, where `sort` is a dimensional sort
+    /// term (`scalar`, `money(usd)`, …).
+    pub symbols: Vec<(String, CoreTerm)>,
+    /// The asserted (in)equalities.
+    pub constraints: Vec<LoweredConstraint>,
+    /// The unknowns a `solve for { … }` asked to solve.
+    pub solve_for: Vec<String>,
+    /// Whether a `check` (feasibility query) was requested.
+    pub check: bool,
+    /// An optional `minimize`/`maximize` objective (ADJ constraints track C2):
+    /// `(direction, objective expression)`. The expression is kept unevaluated
+    /// (it mentions the symbols the LP solver will assign).
+    pub objective: Option<(OptDir, ComputeExpr)>,
+}
+
+impl ConstraintSystem {
+    /// `true` iff the program declared no constraint machinery at all (the
+    /// common case for a pure prior/contributes rulebook).
+    pub fn is_empty(&self) -> bool {
+        self.symbols.is_empty()
+            && self.constraints.is_empty()
+            && self.solve_for.is_empty()
+            && !self.check
+            && self.objective.is_none()
+    }
+}
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum LowerError {
-    DuplicatePrior { conclusion_name: String },
-    DuplicateAnnotation { name: &'static str },
-    EngineRejected { detail: String },
+    DuplicatePrior {
+        conclusion_name: String,
+    },
+    DuplicateAnnotation {
+        name: &'static str,
+    },
+    EngineRejected {
+        detail: String,
+    },
+    /// A `prior <p>` whose probability is not in the open interval
+    /// `(0.0, 1.0)`. The engine's `PriorClause::from_probability`
+    /// asserts this; we catch it at lowering time so a malformed
+    /// rulebook produces a clean diagnostic instead of a process panic.
+    InvalidProbability {
+        value: f64,
+    },
+    /// A `contributes <lr>` / `interacts <lr>` whose likelihood ratio is
+    /// not strictly positive and finite. LR is a ratio of probabilities,
+    /// so `lr <= 0` (or non-finite) is a modeller error — rejected here
+    /// rather than panicking in `from_lr`.
+    InvalidLikelihoodRatio {
+        value: f64,
+    },
+    /// A `let <name> = <expr>` whose formula could not be evaluated (an
+    /// unknown slot, division by zero, an empty aggregation, …). Carries
+    /// the engine's [`logic_engine::ComputeError`] rendered for the audit.
+    ComputationFailed {
+        name: String,
+        detail: String,
+    },
+    /// A finding / hypothesis term used in a clause is not `define`d in the
+    /// program's dictionary (MYCIN-2026 closed-vocabulary enforcement).
+    /// `expected` is the role the term was used in (`"finding"`/`"hypothesis"`).
+    UndefinedTerm {
+        name: String,
+        expected: &'static str,
+    },
+    /// A finding term used a value outside its declared `values [...]` domain.
+    ValueNotInDomain {
+        functor: String,
+        value: String,
+        domain: Vec<String>,
+    },
+    /// A `use <name>` (M2) named a dictionary that the program never declared.
+    UndefinedDictionary {
+        name: String,
+    },
+    /// A `rulebook` nested inside another `rulebook` (MYCIN-2026 M2). A rulebook
+    /// is a *flat* container; nested rulebooks have no defined
+    /// vocabulary-scoping semantics, so they are rejected cleanly rather than
+    /// silently mis-scoped. (Also caps `flatten_clauses` recursion at one level,
+    /// closing an unbounded-recursion DoS on untrusted source.)
+    NestedRulebook {
+        outer: String,
+        inner: String,
+    },
+    /// An `import "<path>"` survived to lowering (MYCIN-2026 M3). Imports must be
+    /// resolved by [`crate::resolve`] *before* `lower` runs — reaching here means
+    /// the caller used `compile` directly on a program that still has imports,
+    /// instead of the import-resolving entry point. Rejected so an `import` is
+    /// never silently dropped.
+    UnresolvedImport {
+        path: String,
+    },
 }
 
-/// The result of lowering — a populated KB and any queries to run.
+/// The result of lowering — a populated KB, any queries to run, and the
+/// (possibly empty) constraint system the program declared.
 #[derive(Debug)]
 pub struct LoweredProgram {
     pub kb: KnowledgeBase,
     pub queries: Vec<CoreTerm>,
+    pub constraints: ConstraintSystem,
+    /// The controlled vocabulary the program declared (MYCIN-2026): the
+    /// `define`d findings + hypotheses, with their surface forms. Empty for a
+    /// program with no dictionary. Used by the decomposer (surface forms) and
+    /// enforced at compile time.
+    pub dictionary: Vec<Define>,
 }
 
-/// Lower an [`ast::Program`] to a populated KB + queries.
+/// Lower an [`ast::Program`] to a populated KB + queries + constraint system.
 pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
     let mut kb = KnowledgeBase::new();
     let mut queries = Vec::new();
+    let mut constraints = ConstraintSystem::default();
+    let mut dictionary: Vec<Define> = Vec::new();
 
-    for stmt in &program.statements {
+    // Flatten rulebooks (MYCIN-2026 M2): a `rulebook <name> { … }` is a named
+    // container whose clauses lower into the KB exactly as if written at top
+    // level — the name is metadata for import/addressing (M3), not a separate
+    // namespace. The flat list drives KB building; the original nested
+    // structure is used afterward to scope vocabulary enforcement per `use`.
+    let mut flat: Vec<&Statement> = Vec::new();
+    flatten_clauses(&program.statements, &mut flat)?;
+
+    for stmt in flat.iter().copied() {
         match stmt {
             Statement::Prior {
                 probability,
                 conclusion,
                 annotations,
             } => {
+                // Guard the engine's `from_probability` assertion: a
+                // probability outside (0, 1) would panic. Reject it as a
+                // clean lowering error instead.
+                if !(probability.is_finite() && *probability > 0.0 && *probability < 1.0) {
+                    return Err(LowerError::InvalidProbability {
+                        value: *probability,
+                    });
+                }
                 let prov = annotations_to_provenance(annotations)?;
                 let clause = PriorClause::from_probability(lower_term(conclusion), *probability)
                     .with_provenance(prov);
                 kb.add_prior(clause).map_err(|e| match e {
-                    KbError::ConflictingPriors { conclusion, .. } => {
-                        LowerError::DuplicatePrior {
-                            conclusion_name: format!("{conclusion:?}"),
-                        }
-                    }
+                    KbError::ConflictingPriors { conclusion, .. } => LowerError::DuplicatePrior {
+                        conclusion_name: format!("{conclusion:?}"),
+                    },
                 })?;
             }
             Statement::Contributes {
@@ -70,14 +201,31 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 conclusion,
                 annotations,
             } => {
+                check_lr(*lr)?;
                 let prov = annotations_to_provenance(annotations)?;
-                let clause = ContributionClause::from_lr(
-                    lower_term(conclusion),
-                    lower_term(evidence),
-                    *lr,
-                )
-                .with_provenance(prov);
-                kb.add_contribution(clause);
+                match evidence {
+                    // Ordinary term evidence → single-source LR contribution.
+                    Evidence::Term(t) => {
+                        let clause =
+                            ContributionClause::from_lr(lower_term(conclusion), lower_term(t), *lr)
+                                .with_provenance(prov);
+                        kb.add_contribution(clause);
+                    }
+                    // Numeric predicate evidence → predicate-gated contribution.
+                    // The comparison is evaluated on the CPU at decision time;
+                    // a saturating `lr` makes the rule deterministic.
+                    Evidence::Predicate { slot, op, value } => {
+                        let clause = PredicateContributionClause::from_lr(
+                            lower_term(conclusion),
+                            slot.clone(),
+                            lower_cmp_op(*op),
+                            *value,
+                            *lr,
+                        )
+                        .with_provenance(prov);
+                        kb.add_predicate_contribution(clause);
+                    }
+                }
             }
             Statement::Interacts {
                 lr,
@@ -85,6 +233,7 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 conclusion,
                 annotations,
             } => {
+                check_lr(*lr)?;
                 let prov = annotations_to_provenance(annotations)?;
                 let clause = JointContributionClause::from_lr(
                     lower_term(conclusion),
@@ -100,6 +249,20 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
             Statement::Query { conclusion } => {
                 queries.push(lower_term(conclusion));
             }
+            Statement::Let { name, expr } => {
+                // Evaluate the formula against the facts (and any earlier
+                // `let`s) seen so far — statements lower in source order, so a
+                // `let` sees every `observe` above it. The engine builds the
+                // derivation tree; the model never computed anything.
+                let cexpr = lower_expr(expr);
+                let derived = compute(name.clone(), &cexpr, &kb).map_err(|e| {
+                    LowerError::ComputationFailed {
+                        name: name.clone(),
+                        detail: format!("{e:?}"),
+                    }
+                })?;
+                kb.add_derived(derived);
+            }
             Statement::Uncertain {
                 domain,
                 conclusion,
@@ -113,18 +276,341 @@ pub fn lower(program: &Program) -> Result<LoweredProgram, LowerError> {
                 .with_provenance(prov);
                 kb.add_uncertainty_marker(marker);
             }
+            // ---- constraint sublanguage (track B) ----
+            Statement::Symbol { name, sort } => {
+                constraints.symbols.push((name.clone(), lower_term(sort)));
+            }
+            Statement::Constrain { lhs, op, rhs } => {
+                // Keep both sides unevaluated — they mention symbols the solver
+                // will assign. lower_expr is a pure ExprAst → ComputeExpr map.
+                constraints.constraints.push(LoweredConstraint {
+                    lhs: lower_expr(lhs),
+                    op: *op,
+                    rhs: lower_expr(rhs),
+                });
+            }
+            Statement::SolveFor { names } => {
+                constraints.solve_for.extend(names.iter().cloned());
+            }
+            Statement::Check => {
+                constraints.check = true;
+            }
+            Statement::Optimize { dir, objective } => {
+                // Keep the objective unevaluated — it mentions the symbols the
+                // LP solver assigns. A second `minimize`/`maximize` overwrites
+                // the first (a program declares one objective).
+                constraints.objective = Some((*dir, lower_expr(objective)));
+            }
+            // ---- dictionary (MYCIN-2026) ----
+            Statement::Define(def) => dictionary.push(def.clone()),
+            Statement::Dictionary { defines, .. } => dictionary.extend(defines.iter().cloned()),
+            // ---- rulebook + use (MYCIN-2026 M2) ----
+            // `use` is purely a vocabulary binding (handled in enforcement
+            // below); it adds nothing to the KB. `Rulebook` never reaches here
+            // — `flatten_clauses` expanded it into its inner clauses already.
+            Statement::Use(_) => {}
+            Statement::Rulebook { .. } => {}
+            // ---- import (MYCIN-2026 M3) ----
+            // Imports are resolved away by `crate::resolve` before lowering; one
+            // reaching here means `compile` was called on an unresolved program.
+            Statement::Import(path) => {
+                return Err(LowerError::UnresolvedImport { path: path.clone() })
+            }
         }
     }
 
-    Ok(LoweredProgram { kb, queries })
+    // Compile-time vocabulary enforcement (MYCIN-2026 M1 + M2). Two modes:
+    //
+    //   M2 (a `use` appears anywhere): enforcement is SCOPED by `use`. A
+    //   top-level `use D` checks the top-level clauses against dictionary `D`;
+    //   a rulebook's own `use D'` checks that rulebook against `D'` (falling
+    //   back to a top-level `use`). A scope with no `use` is unchecked, and a
+    //   `use` naming an undeclared dictionary is `UndefinedDictionary`. This is
+    //   how a rulebook "written once" binds the vocabulary it reasons in.
+    //
+    //   M1 (no `use` anywhere): a declared dictionary (≥1 `define`) checks the
+    //   WHOLE program against the union of all defines. Backward-compatible —
+    //   programs with neither `use` nor `define` are entirely unchecked.
+    if program_contains_use(&program.statements) {
+        let named_dicts: std::collections::HashMap<&str, &[Define]> = program
+            .statements
+            .iter()
+            .filter_map(|s| match s {
+                Statement::Dictionary { name, defines } => {
+                    Some((name.as_str(), defines.as_slice()))
+                }
+                _ => None,
+            })
+            .collect();
+        let resolve = |name: &str| -> Result<&[Define], LowerError> {
+            named_dicts
+                .get(name)
+                .copied()
+                .ok_or_else(|| LowerError::UndefinedDictionary {
+                    name: name.to_string(),
+                })
+        };
+
+        let top_use = first_use(&program.statements);
+        // Top-level group: every top-level statement that isn't a rulebook.
+        if let Some(d) = top_use {
+            let defs = resolve(d)?;
+            let top_clauses = program
+                .statements
+                .iter()
+                .filter(|s| !matches!(s, Statement::Rulebook { .. }));
+            enforce_vocabulary(top_clauses, defs)?;
+        }
+        // Each rulebook is its own scope (its `use`, else the top-level `use`).
+        for s in &program.statements {
+            if let Statement::Rulebook { statements, .. } = s {
+                if let Some(d) = first_use(statements).or(top_use) {
+                    let defs = resolve(d)?;
+                    let mut clauses: Vec<&Statement> = Vec::new();
+                    flatten_clauses(statements, &mut clauses)?;
+                    enforce_vocabulary(clauses.into_iter(), defs)?;
+                }
+            }
+        }
+    } else if !dictionary.is_empty() {
+        enforce_vocabulary(flat.iter().copied(), &dictionary)?;
+    }
+
+    Ok(LoweredProgram {
+        kb,
+        queries,
+        constraints,
+        dictionary,
+    })
+}
+
+/// Expand `rulebook` blocks into their constituent clause statements, in source
+/// order. A rulebook is a *flat* named container, not a separate namespace — its
+/// clauses lower into the KB as if written at top level (MYCIN-2026 M2).
+///
+/// Rulebooks may NOT nest: a `rulebook` directly inside another is a
+/// [`LowerError::NestedRulebook`]. This keeps the expansion non-recursive (one
+/// level only), so deeply-nested untrusted source cannot drive unbounded
+/// recursion here, and it avoids ambiguous nested-`use` scoping (a nested
+/// rulebook's own `use` would otherwise be silently dropped). The parser still
+/// *parses* nesting; we reject it semantically at this single, well-defined
+/// point.
+fn flatten_clauses<'a>(
+    statements: &'a [Statement],
+    out: &mut Vec<&'a Statement>,
+) -> Result<(), LowerError> {
+    for s in statements {
+        match s {
+            Statement::Rulebook {
+                name: outer,
+                statements: inner,
+            } => {
+                for c in inner {
+                    if let Statement::Rulebook {
+                        name: inner_name, ..
+                    } = c
+                    {
+                        return Err(LowerError::NestedRulebook {
+                            outer: outer.clone(),
+                            inner: inner_name.clone(),
+                        });
+                    }
+                    out.push(c);
+                }
+            }
+            other => out.push(other),
+        }
+    }
+    Ok(())
+}
+
+/// Does any statement (at top level or inside a rulebook) `use` a dictionary?
+/// Selects M2 scoped enforcement over M1 whole-program enforcement. Rulebooks
+/// are flat (see [`flatten_clauses`]), so one level of descent suffices.
+fn program_contains_use(statements: &[Statement]) -> bool {
+    statements.iter().any(|s| match s {
+        Statement::Use(_) => true,
+        Statement::Rulebook { statements, .. } => {
+            statements.iter().any(|i| matches!(i, Statement::Use(_)))
+        }
+        _ => false,
+    })
+}
+
+/// The first `use <name>` directly in this statement list (does not descend into
+/// rulebooks — a rulebook's own `use` is found by calling this on its body).
+fn first_use(statements: &[Statement]) -> Option<&str> {
+    statements.iter().find_map(|s| match s {
+        Statement::Use(name) => Some(name.as_str()),
+        _ => None,
+    })
+}
+
+/// Verify every hypothesis/finding term used by `statements` is `define`d in
+/// `dictionary` and any finding value is in its declared domain. See [`lower`]
+/// for the M1 (whole-program) vs M2 (per-`use`-scope) call sites.
+fn enforce_vocabulary<'a>(
+    statements: impl IntoIterator<Item = &'a Statement>,
+    dictionary: &[Define],
+) -> Result<(), LowerError> {
+    use std::collections::HashMap;
+    let dict: HashMap<&str, &DefineKind> = dictionary
+        .iter()
+        .map(|d| (d.name.as_str(), &d.kind))
+        .collect();
+
+    let check_hypothesis = |t: &AstTerm| -> Result<(), LowerError> {
+        let (functor, _) = term_functor_value(t);
+        match dict.get(functor) {
+            Some(DefineKind::Hypothesis) => Ok(()),
+            _ => Err(LowerError::UndefinedTerm {
+                name: functor.to_string(),
+                expected: "hypothesis",
+            }),
+        }
+    };
+    let check_finding = |t: &AstTerm| -> Result<(), LowerError> {
+        let (functor, value) = term_functor_value(t);
+        match dict.get(functor) {
+            Some(DefineKind::Finding { values }) => {
+                if let Some(v) = value {
+                    if !values.iter().any(|d| d == v) {
+                        return Err(LowerError::ValueNotInDomain {
+                            functor: functor.to_string(),
+                            value: v.to_string(),
+                            domain: values.clone(),
+                        });
+                    }
+                }
+                Ok(())
+            }
+            _ => Err(LowerError::UndefinedTerm {
+                name: functor.to_string(),
+                expected: "finding",
+            }),
+        }
+    };
+
+    for stmt in statements {
+        match stmt {
+            Statement::Prior { conclusion, .. } => check_hypothesis(conclusion)?,
+            Statement::Query { conclusion } => check_hypothesis(conclusion)?,
+            Statement::Contributes {
+                evidence,
+                conclusion,
+                ..
+            } => {
+                check_hypothesis(conclusion)?;
+                // Only term-evidence is a dictionary finding; a numeric
+                // predicate references a valued slot, not a finding.
+                if let Evidence::Term(t) = evidence {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Interacts {
+                evidence_set,
+                conclusion,
+                ..
+            } => {
+                check_hypothesis(conclusion)?;
+                for t in evidence_set {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Uncertain {
+                domain, conclusion, ..
+            } => {
+                check_hypothesis(conclusion)?;
+                for t in domain {
+                    check_finding(t)?;
+                }
+            }
+            Statement::Observe { term } => check_finding(term)?,
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
+/// The functor name and (if present) the single atom-argument value of a term:
+/// `csf_glucose(low)` → (`csf_glucose`, Some(`low`)); `bacterial` → (`bacterial`,
+/// None). A non-atom argument (number / nested) yields no value.
+fn term_functor_value(t: &AstTerm) -> (&str, Option<&str>) {
+    match t {
+        AstTerm::Atom(s) => (s.as_str(), None),
+        AstTerm::Compound { functor, args } => {
+            let value = match args.first() {
+                Some(AstTerm::Atom(v)) => Some(v.as_str()),
+                _ => None,
+            };
+            (functor.as_str(), value)
+        }
+        AstTerm::Num(_) => ("", None),
+    }
+}
+
+/// Reject a likelihood ratio that the engine's `from_lr` constructors
+/// would panic on (`lr <= 0`) or that is non-finite. Centralised so the
+/// `contributes` and `interacts` paths share one guard.
+fn check_lr(lr: f64) -> Result<(), LowerError> {
+    if lr.is_finite() && lr > 0.0 {
+        Ok(())
+    } else {
+        Err(LowerError::InvalidLikelihoodRatio { value: lr })
+    }
 }
 
 fn lower_term(t: &AstTerm) -> CoreTerm {
     match t {
         AstTerm::Atom(name) => core_atom(name),
+        AstTerm::Num(x) => core_float(*x),
         AstTerm::Compound { functor, args } => {
             compound(functor, args.iter().map(lower_term).collect())
         }
+    }
+}
+
+/// Lower a surface `let` formula to the engine's [`ComputeExpr`].
+fn lower_expr(expr: &ExprAst) -> ComputeExpr {
+    match expr {
+        ExprAst::Ref(slot) => ComputeExpr::Ref(slot.clone()),
+        ExprAst::Lit(x) => ComputeExpr::Lit(*x),
+        ExprAst::Bin(op, a, b) => ComputeExpr::Bin(
+            lower_arith_op(*op),
+            Box::new(lower_expr(a)),
+            Box::new(lower_expr(b)),
+        ),
+        ExprAst::Agg(op, slot) => ComputeExpr::Agg(lower_agg_op(*op), slot.clone()),
+    }
+}
+
+fn lower_arith_op(op: ArithOp) -> ComputeOp {
+    match op {
+        ArithOp::Add => ComputeOp::Add,
+        ArithOp::Sub => ComputeOp::Sub,
+        ArithOp::Mul => ComputeOp::Mul,
+        ArithOp::Div => ComputeOp::Div,
+    }
+}
+
+fn lower_agg_op(op: AggOp) -> ComputeOp {
+    match op {
+        AggOp::Sum => ComputeOp::Sum,
+        AggOp::Count => ComputeOp::Count,
+        AggOp::Min => ComputeOp::Min,
+        AggOp::Max => ComputeOp::Max,
+        AggOp::Avg => ComputeOp::Avg,
+    }
+}
+
+/// Map the surface comparison operator to the engine's [`EngineCmpOp`].
+fn lower_cmp_op(op: CmpOp) -> EngineCmpOp {
+    match op {
+        CmpOp::Ge => EngineCmpOp::Ge,
+        CmpOp::Le => EngineCmpOp::Le,
+        CmpOp::Gt => EngineCmpOp::Gt,
+        CmpOp::Lt => EngineCmpOp::Lt,
+        CmpOp::Eq => EngineCmpOp::Eq,
     }
 }
 
@@ -344,6 +830,123 @@ mod tests {
     }
 
     #[test]
+    fn negative_contributes_lr_is_a_clean_error_not_a_panic() {
+        // Regression: a malformed rulebook must not panic the process.
+        // `contributes -5 ...` would hit the engine's `assert!(lr > 0.0)`.
+        for src in [
+            "contributes -5 from x to y",
+            "contributes 0 from x to y",
+            "interacts -1 when a and b for y",
+        ] {
+            let err = compile(src).unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    crate::CompileError::Lower(LowerError::InvalidLikelihoodRatio { .. })
+                ),
+                "expected InvalidLikelihoodRatio for {src:?}, got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn out_of_range_prior_is_a_clean_error_not_a_panic() {
+        for src in ["prior 2 for x", "prior 0 for x", "prior -0.5 for x"] {
+            let err = compile(src).unwrap_err();
+            assert!(
+                matches!(
+                    err,
+                    crate::CompileError::Lower(LowerError::InvalidProbability { .. })
+                ),
+                "expected InvalidProbability for {src:?}, got {err:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn non_finite_number_literal_is_rejected_at_parse() {
+        // 1e400 overflows f64 to +inf; reject it rather than flow inf on.
+        let err = compile("observe gross_income(1e400)").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Adapt(_)),
+            "expected an adapter BadToken error, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn predicate_gated_contribution_fires_end_to_end() {
+        // A DETERMINISTIC rule as a saturating LR: "income at/above the
+        // filing threshold ⇒ required to file." The model authored the
+        // rulebook; the comparison runs in the engine at decision time.
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+              source "IRS Pub 501 (2024), filing threshold single < 65"
+              trust authoritative
+            observe gross_income(18000)
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        let result = search(query, &lowered.kb, SearchMode::LRAggregate);
+        match result {
+            SearchResult::LRAggregateResult { posterior, dag, .. } => {
+                assert!(posterior > 0.9999, "should saturate, got {posterior}");
+                // The proof carries the literal comparison that fired.
+                let fired = dag.proofs[0].steps.iter().any(|s| {
+                    matches!(
+                        s.origin,
+                        logic_engine::DerivationOrigin::FromPredicateContribution { .. }
+                    )
+                });
+                assert!(fired, "expected a predicate-contribution step");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn predicate_fires_over_typed_value_literal_end_to_end() {
+        // Step 2: typed value literals. `quantity(18000, usd)` already
+        // parses as a nested compound under the predicate grammar; the
+        // engine reads its leading magnitude (18000) for the predicate
+        // while the `usd` unit travels with the fact. No grammar change.
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+              source "IRS Pub 501 (2024)" trust authoritative
+            observe gross_income(quantity(18000, usd))
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(posterior > 0.9999, "should saturate, got {posterior}");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn predicate_below_threshold_stays_at_prior() {
+        let src = r#"
+            prior 0.10 for required_to_file
+            contributes 1000000 from gross_income >= 14600 to required_to_file
+            observe gross_income(9000)
+            ? required_to_file
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!((posterior - 0.10).abs() < 1e-9, "got {posterior}");
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
     fn locator_annotation_is_carried_through() {
         let src = r#"
             contributes 1.5 from x to y
@@ -352,9 +955,388 @@ mod tests {
         "#;
         let lowered = compile(src).unwrap();
         let contribs = lowered.kb.contributions_for(&core_atom("y"));
-        assert_eq!(
-            contribs[0].provenance.locator.as_deref(),
-            Some("§3.2")
+        assert_eq!(contribs[0].provenance.locator.as_deref(), Some("§3.2"));
+    }
+
+    // ---- `let` + arithmetic (ADJ expansion step 3b) ----
+
+    #[test]
+    fn let_arithmetic_computes_a_ratio_with_a_cited_tree() {
+        let src = r#"
+            observe csf_glucose(quantity(40, mg_dl))
+            observe serum_glucose(quantity(100, mg_dl))
+            let csf_ratio = csf_glucose / serum_glucose
+        "#;
+        let lowered = compile(src).unwrap();
+        let d = lowered
+            .kb
+            .derived_for("csf_ratio")
+            .expect("csf_ratio should be bound");
+        assert!((d.value - 0.4).abs() < 1e-12, "got {}", d.value);
+    }
+
+    #[test]
+    fn let_derived_value_fires_a_predicate_end_to_end() {
+        // The whole point: a predicate fires over a COMPUTED value exactly
+        // as over an observed one. Low CSF:serum ratio ⇒ bacterial.
+        let src = r#"
+            prior 0.30 for bacterial
+            observe csf_glucose(40)
+            observe serum_glucose(100)
+            let csf_ratio = csf_glucose / serum_glucose
+            contributes 1000000 from csf_ratio <= 0.5 to bacterial
+              source "Spanos 1989" trust authoritative
+            ? bacterial
+        "#;
+        let lowered = compile(src).unwrap();
+        let query = &lowered.queries[0];
+        match search(query, &lowered.kb, SearchMode::LRAggregate) {
+            SearchResult::LRAggregateResult { posterior, .. } => {
+                assert!(
+                    posterior > 0.9999,
+                    "predicate over derived value should fire; got {posterior}"
+                );
+            }
+            other => panic!("expected LRAggregateResult, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn let_sum_aggregates_repeated_observations() {
+        let src = r#"
+            observe line_item(12000)
+            observe line_item(6000)
+            observe line_item(2000)
+            let total = sum(line_item)
+        "#;
+        let lowered = compile(src).unwrap();
+        assert!((lowered.kb.derived_for("total").unwrap().value - 20000.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn let_respects_operator_precedence_and_parens() {
+        // a + b * c  ==  a + (b*c);  (a + b) * c  forces the other grouping.
+        let src = r#"
+            observe a(2)
+            observe b(3)
+            observe c(4)
+            let unparen = a + b * c
+            let paren = (a + b) * c
+        "#;
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.kb.derived_for("unparen").unwrap().value, 14.0); // 2 + 12
+        assert_eq!(lowered.kb.derived_for("paren").unwrap().value, 20.0); //  5 * 4
+    }
+
+    #[test]
+    fn let_can_reference_an_earlier_let() {
+        let src = r#"
+            observe a(3)
+            observe b(4)
+            let s = a + b
+            let d = s * 2
+        "#;
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.kb.derived_for("d").unwrap().value, 14.0);
+    }
+
+    #[test]
+    fn let_over_unknown_slot_is_a_clean_error() {
+        let err = compile("let x = nope / 2").unwrap_err();
+        assert!(
+            matches!(
+                err,
+                crate::CompileError::Lower(LowerError::ComputationFailed { .. })
+            ),
+            "got {err:?}"
         );
+    }
+
+    // ---- constraint sublanguage (ADJ constraints track B1) ----
+
+    #[test]
+    fn symbol_constrain_solve_check_build_a_constraint_system() {
+        // A small eligibility set: premium is unknown, bounded above by 2000
+        // and below by the observed base_rate; solve for it.
+        let src = r#"
+            symbol premium : money(usd)
+            symbol months  : scalar
+            observe base_rate(1200)
+            constrain premium <= 2000
+            constrain premium >= base_rate
+            constrain months >= 6
+            solve for { premium, months }
+        "#;
+        let lowered = compile(src).unwrap();
+        let cs = &lowered.constraints;
+        assert!(!cs.is_empty());
+        assert_eq!(cs.symbols.len(), 2);
+        assert_eq!(cs.symbols[0].0, "premium");
+        assert!(matches!(
+            &cs.symbols[0].1,
+            core_compound_money @ _ if format!("{core_compound_money:?}").contains("money")
+        ));
+        assert_eq!(cs.symbols[1].0, "months");
+        assert_eq!(cs.constraints.len(), 3);
+        assert_eq!(cs.constraints[0].op, crate::ast::RelOp::Le);
+        assert_eq!(cs.constraints[1].op, crate::ast::RelOp::Ge);
+        assert_eq!(
+            cs.solve_for,
+            vec!["premium".to_string(), "months".to_string()]
+        );
+        assert!(!cs.check);
+    }
+
+    #[test]
+    fn check_sets_the_feasibility_flag() {
+        let lowered = compile("constrain x >= 1\ncheck").unwrap();
+        assert!(lowered.constraints.check);
+        assert_eq!(lowered.constraints.constraints.len(), 1);
+    }
+
+    // ---- dictionary + define (MYCIN-2026 M1) ----
+
+    #[test]
+    fn a_dictionary_compiles_and_defined_terms_are_accepted() {
+        let src = "dictionary v {\n\
+                   define dx : hypothesis surface \"the diagnosis\"\n\
+                   define f : finding values [a, b] surface \"finding f\"\n\
+                   }\n\
+                   prior 0.10 for dx\n  source \"x\" trust empirical\n\
+                   contributes 2 from f(a) to dx\n  source \"y\" trust empirical\n\
+                   observe f(a)\n? dx\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 2);
+        // surface forms are captured
+        let f = lowered.dictionary.iter().find(|d| d.name == "f").unwrap();
+        assert_eq!(f.surfaces, vec!["finding f".to_string()]);
+        assert!(
+            matches!(&f.kind, crate::ast::DefineKind::Finding { values } if values == &["a", "b"])
+        );
+    }
+
+    #[test]
+    fn a_bare_define_outside_a_block_also_registers() {
+        let lowered = compile("define dx : hypothesis\n? dx\n").unwrap();
+        assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn an_undefined_hypothesis_is_a_clean_error() {
+        let err =
+            compile("define f : finding values [a]\nobserve f(a)\n? undefined_dx\n").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "hypothesis" }) if name == "undefined_dx"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn an_undefined_finding_is_a_clean_error() {
+        let err = compile("define dx : hypothesis\nobserve mystery(x)\n? dx\n").unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "finding" }) if name == "mystery"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_value_outside_the_domain_is_rejected() {
+        let err = compile(
+            "dictionary v { define dx : hypothesis  define f : finding values [a, b] }\n\
+             observe f(c)\n? dx\n",
+        )
+        .unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::ValueNotInDomain { ref functor, ref value, .. }) if functor == "f" && value == "c"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn no_dictionary_means_no_enforcement() {
+        // Backward-compatible: a program with no `define` is unchecked.
+        let lowered =
+            compile("prior 0.10 for anything\n  source \"x\" trust empirical\n? anything\n")
+                .unwrap();
+        assert!(lowered.dictionary.is_empty());
+    }
+
+    // ---- rulebook + use (MYCIN-2026 M2) ----
+
+    #[test]
+    fn a_rulebook_lowers_its_clauses_into_the_kb_like_top_level() {
+        // The `rulebook { … }` wrapper is metadata; its clauses populate the KB
+        // exactly as if written at top level, so the query still decides.
+        let src = "rulebook meningitis {\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   }\n\
+                   observe csf(low)\n? bacterial\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.queries.len(), 1);
+        let d = crate::decide(&lowered);
+        // one contribution fired over the prior → posterior above the 0.10 base.
+        assert!(d.ranked[0].posterior > 0.10, "{d:?}");
+    }
+
+    #[test]
+    fn a_rulebook_that_uses_a_dictionary_is_checked_against_it() {
+        // Every term the rulebook names is defined in the `use`d dictionary.
+        let src = "dictionary vocab {\n\
+                   define bacterial : hypothesis\n\
+                   define csf : finding values [low, normal]\n\
+                   }\n\
+                   rulebook meningitis {\n\
+                   use vocab\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   }\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 2);
+    }
+
+    #[test]
+    fn a_rulebook_naming_an_undefined_term_is_rejected() {
+        // `meningococcal` is not in the `use`d dictionary → clean error, scoped
+        // to the rulebook by its `use`.
+        let src = "dictionary vocab {\n\
+                   define bacterial : hypothesis\n\
+                   define csf : finding values [low, normal]\n\
+                   }\n\
+                   rulebook meningitis {\n\
+                   use vocab\n\
+                   contributes 3 from csf(low) to meningococcal\n  source \"y\" trust empirical\n\
+                   }\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "hypothesis" }) if name == "meningococcal"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn use_of_an_undeclared_dictionary_is_a_clean_error() {
+        let src = "rulebook meningitis {\n\
+                   use nonexistent\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   }\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedDictionary { ref name }) if name == "nonexistent"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_rulebook_without_use_is_unchecked_even_when_a_dictionary_exists() {
+        // A `use` elsewhere flips the program to M2 scoped mode; a rulebook that
+        // declines to `use` is then unchecked — it may name terms the dictionary
+        // never declared. (Backward-compatible "opt in to checking" semantics.)
+        let src = "dictionary vocab { define bacterial : hypothesis }\n\
+                   rulebook checked { use vocab\n prior 0.10 for bacterial\n  source \"a\" trust empirical\n }\n\
+                   rulebook freeform {\n contributes 2 from whatever(x) to anything\n  source \"b\" trust empirical\n }\n";
+        // Compiles despite `freeform` naming undefined terms, because it has no `use`.
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.dictionary.len(), 1);
+    }
+
+    #[test]
+    fn a_nested_rulebook_is_rejected() {
+        // Rulebooks are flat containers — nesting has no defined scoping
+        // semantics and is refused cleanly (also bounds flatten recursion).
+        let src = "rulebook outer {\n\
+                   rulebook inner {\n\
+                   prior 0.10 for bacterial\n  source \"x\" trust empirical\n\
+                   }\n\
+                   }\n? bacterial\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::NestedRulebook { ref outer, ref inner }) if outer == "outer" && inner == "inner"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn a_top_level_use_scopes_the_top_level_clauses() {
+        let src = "dictionary vocab { define bacterial : hypothesis  define csf : finding values [low] }\n\
+                   use vocab\n\
+                   contributes 3 from csf(low) to bacterial\n  source \"y\" trust empirical\n\
+                   observe csf(low)\n? bacterial\n";
+        let lowered = compile(src).unwrap();
+        assert_eq!(lowered.queries.len(), 1);
+    }
+
+    #[test]
+    fn a_top_level_use_rejects_an_undefined_top_level_term() {
+        let src = "dictionary vocab { define bacterial : hypothesis }\n\
+                   use vocab\n\
+                   observe mystery(x)\n? bacterial\n";
+        let err = compile(src).unwrap_err();
+        assert!(
+            matches!(err, crate::CompileError::Lower(LowerError::UndefinedTerm { ref name, expected: "finding" }) if name == "mystery"),
+            "{err:?}"
+        );
+    }
+
+    #[test]
+    fn maximize_sets_an_lp_objective() {
+        // `maximize` lowers to an Optimize objective kept as an unevaluated
+        // ComputeExpr (it mentions the symbols the LP solver assigns).
+        let lowered = compile("symbol x : scalar\nconstrain x <= 5\nmaximize x + 1").unwrap();
+        let cs = &lowered.constraints;
+        assert!(!cs.is_empty());
+        let (dir, obj) = cs.objective.as_ref().expect("an objective");
+        assert_eq!(*dir, crate::ast::OptDir::Maximize);
+        // x + 1 is a Bin(Add, Ref(x), Lit(1)) — unevaluated.
+        assert!(format!("{obj:?}").contains("Add"), "{obj:?}");
+    }
+
+    #[test]
+    fn minimize_sets_the_direction() {
+        let lowered = compile("symbol x : scalar\nconstrain x >= 3\nminimize x").unwrap();
+        let (dir, _) = lowered
+            .constraints
+            .objective
+            .as_ref()
+            .expect("an objective");
+        assert_eq!(*dir, crate::ast::OptDir::Minimize);
+    }
+
+    #[test]
+    fn constraint_operands_lower_to_unevaluated_compute_exprs() {
+        // `constrain total = a + b * c` — the rhs stays a ComputeExpr tree
+        // (not evaluated; it mentions symbols the solver will assign).
+        let lowered = compile("constrain total = a + b * 2").unwrap();
+        let c = &lowered.constraints.constraints[0];
+        assert_eq!(c.op, crate::ast::RelOp::Eq);
+        assert!(matches!(c.lhs, logic_engine::ComputeExpr::Ref(_)));
+        // rhs is a + (b * 2): an Add whose right operand is a Mul.
+        assert!(matches!(
+            c.rhs,
+            logic_engine::ComputeExpr::Bin(logic_engine::ComputeOp::Add, _, _)
+        ));
+    }
+
+    #[test]
+    fn all_relational_operators_parse() {
+        for (src, want) in [
+            ("constrain a >= 1", crate::ast::RelOp::Ge),
+            ("constrain a <= 1", crate::ast::RelOp::Le),
+            ("constrain a > 1", crate::ast::RelOp::Gt),
+            ("constrain a < 1", crate::ast::RelOp::Lt),
+            ("constrain a == 1", crate::ast::RelOp::Eq),
+            ("constrain a = 1", crate::ast::RelOp::Eq),
+            ("constrain a != 1", crate::ast::RelOp::Ne),
+        ] {
+            let lowered = compile(src).unwrap();
+            assert_eq!(lowered.constraints.constraints[0].op, want, "for {src:?}");
+        }
+    }
+
+    #[test]
+    fn a_pure_rulebook_has_an_empty_constraint_system() {
+        let lowered = compile("prior 0.10 for acs\n? acs").unwrap();
+        assert!(lowered.constraints.is_empty());
     }
 }

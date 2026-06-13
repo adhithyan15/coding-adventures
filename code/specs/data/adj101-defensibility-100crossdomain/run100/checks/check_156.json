@@ -1,0 +1,8 @@
+{
+ "check_id": 156,
+ "idx": 62,
+ "slot": "employee_classification",
+ "claimed_value": "non-exempt",
+ "scenario": "Priya, a non-exempt employee, was scheduled for and worked a single continuous shift of 5 hours and 45 minutes with no break.",
+ "cited_span": "Priya, a non-exempt employee"
+}

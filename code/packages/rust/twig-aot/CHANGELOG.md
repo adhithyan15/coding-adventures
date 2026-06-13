@@ -1,5 +1,17 @@
 # Changelog — `twig-aot`
 
+## 0.14.0 — 2026-06-10 — `lispy_runtime.c`: universal exit coercion (LANG77 / McCarthy W13b)
+
+Adds `__twig_lispy_to_exit_code(uint64_t)` to the shared tagged-word C runtime: it
+coerces ANY `LispyValue` to a raw exit code by dispatching on its runtime tag
+(integer → `>> 3`; `#t`/`#f`/nil → `1`/`0`/`0`; symbol/pair → the tagged word
+verbatim). This is the program-exit boundary for a value whose tag the compiler
+cannot know statically — a **lambda** result (F7), typed `any`. It is a safe
+superset of the static `unbox_int`/`truthy` helpers (they agree on every tag they
+each cover). Reusable by every tagged-word backend that links this runtime (LLVM
+today; native AOT W14 and JIT W15 inherit it). No Rust source change; this is a
+runtime-asset addition compiled into the AOT executable.
+
 ## 0.13.0 — 2026-06-04 — native symbols (LANG77 / McCarthy L3b-2c-3)
 
 `prepare_module_for_aot` now runs `iir_builtin_lowering::intern_symbols`

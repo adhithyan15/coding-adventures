@@ -110,6 +110,7 @@ const DCONST_1: u8 = 0x0F;  // push double 1.0
 const BIPUSH: u8 = 0x10;    // push byte (sign-extended to int)
 const SIPUSH: u8 = 0x11;    // push short (sign-extended to int)
 const LDC: u8 = 0x12;       // push constant from CP (1-byte index)
+const LDC_W: u8 = 0x13;     // push int/float constant from CP (2-byte index)
 const LDC2_W: u8 = 0x14;    // push long/double constant from CP (2-byte index)
 
 // ── Local variable loads ───────────────────────────────────────────────────
@@ -176,6 +177,8 @@ const RETURN: u8 = 0xB1;  // return void
 // ── Method invocation ──────────────────────────────────────────────────────
 const INVOKESTATIC: u8 = 0xB8;   // invoke static method (2-byte CP index)
 const INVOKEVIRTUAL: u8 = 0xB6;  // invoke instance method (2-byte CP index)
+const CHECKCAST: u8 = 0xC0;      // checkcast (2-byte CP class index)
+const INSTANCEOF: u8 = 0xC1;     // instanceof (2-byte CP class index) → push 0/1
 
 // ── Field access ────────────────────────────────────────────────────────────
 const GETSTATIC: u8 = 0xB2; // get value of static field (2-byte CP index)
@@ -605,6 +608,10 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         // Any variable holding a pair (or nil) gets a Ref slot, which uses
         // aload/astore rather than iload/istore.
         "ref<LispyPair>" => Some(JvmType::Ref),
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) is a `java.lang.Object`
+        // — an `Integer` for an atom, an `Object[]` for a cons cell. Uses
+        // aload/astore like any other reference.
+        "ref<any>" => Some(JvmType::Ref),
         // LANG36: A closure is a `long[]` array reference.
         // Variables holding closures use aload/astore (Ref = reference type).
         "closure" => Some(JvmType::Ref),
@@ -651,6 +658,8 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         // The JVM method descriptor for a reference parameter/return is
         // "Ljava/lang/Object;" (the erasure of the actual Object[] type).
         "ref<LispyPair>" => "Ljava/lang/Object;",
+        // McCarthy W3b: a boxed lisp value (`ref<any>`) erases to Object.
+        "ref<any>" => "Ljava/lang/Object;",
         // LANG36: A closure is a `long[]` — descriptor is "[J".
         "closure" => "[J",
         _ => "I", // default for unknown — validator should have caught this
@@ -870,11 +879,42 @@ fn emit_iconst(code: &mut Vec<u8>, value: i32) {
             code.extend_from_slice(&(v as i16).to_be_bytes());
         }
         _ => {
-            // Out of sipush range.  In v1 we emit ldc with a placeholder index.
-            // Tests that use large constants would need a proper CP builder.
-            code.push(LDC);
-            code.push(0); // placeholder CP index
+            // Out of sipush range: this path requires a constant-pool entry, so
+            // callers with an `int` literal beyond ±32767 MUST use
+            // `emit_iconst_cp` instead. Reaching here would emit an invalid `ldc`
+            // (placeholder index 0 → a JVM `constantTag` crash), so we refuse:
+            // a 0-byte no-op leaves the stack short, which the verifier/test
+            // catches loudly rather than corrupting a class. (McCarthy W5a fixed
+            // every user-constant call site to route large values through the CP.)
+            debug_assert!(
+                false,
+                "emit_iconst called with out-of-sipush-range value {value}; \
+                 use emit_iconst_cp (constant-pool ldc) instead"
+            );
         }
+    }
+}
+
+/// Push an `int` constant, using the **constant pool** (`ldc`/`ldc_w`) for values
+/// outside the `bipush`/`sipush` range. The constant-pool-aware companion of
+/// [`emit_iconst`]: every call site that emits a *user-controlled* integer
+/// literal (a `const`, a `mov`/`ret` immediate, a `call` argument) must use this,
+/// since an interned symbol id or any literal ≥ 2¹⁵ would otherwise hit the
+/// (now-`debug_assert`-guarded) invalid-`ldc` path. Structural indices (field
+/// numbers, slot counts, arg counts) stay on [`emit_iconst`] — they are always
+/// small (McCarthy W5a).
+fn emit_iconst_cp(code: &mut Vec<u8>, cp: &mut ConstantPoolBuilder, value: i32) {
+    if (-32768..=32767).contains(&value) {
+        emit_iconst(code, value);
+        return;
+    }
+    let idx = cp.add_integer(value);
+    if idx <= 0xFF {
+        code.push(LDC);
+        code.push(idx as u8);
+    } else {
+        code.push(LDC_W);
+        code.extend_from_slice(&idx.to_be_bytes());
     }
 }
 
@@ -1015,6 +1055,36 @@ fn emit_dconst(code: &mut Vec<u8>, value: f64) {
 ///
 /// Stack state on entry: `[…, int1, int2]`
 /// Stack state on exit:  `[…, 0_or_1]`
+/// Extract a `call_builtin`'s dest register name, or a descriptive error
+/// (McCarthy W4 predicate lowering).
+fn builtin_dest<'a>(
+    instr: &'a interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+) -> Result<&'a str, IIRJvmError> {
+    instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+        function: fname.to_string(),
+        detail: format!("call_builtin {name:?} requires a dest register"),
+    })
+}
+
+/// Extract a `call_builtin`'s `srcs[idx]` as a variable name (the builtin name
+/// is `srcs[0]`, so arguments start at `idx == 1`).
+fn builtin_arg(
+    instr: &interpreter_ir::IIRInstr,
+    fname: &str,
+    name: &str,
+    idx: usize,
+) -> Result<String, IIRJvmError> {
+    match instr.srcs.get(idx) {
+        Some(Operand::Var(s)) => Ok(s.clone()),
+        _ => Err(IIRJvmError::InvalidOperand {
+            function: fname.to_string(),
+            detail: format!("call_builtin {name:?} requires srcs[{idx}] = Operand::Var"),
+        }),
+    }
+}
+
 fn emit_int_compare(code: &mut Vec<u8>, cmp_opcode: u8) {
     // if_icmpXX at current PC, offset to iconst_0 (7 bytes forward)
     code.push(cmp_opcode);
@@ -1257,6 +1327,14 @@ impl ConstantPoolBuilder {
     fn add_utf8(&mut self, s: &str) -> u16 {
         let key = format!("Utf8:{}", s);
         self.add_entry(key, JvmConstantPoolEntry::Utf8(s.to_string()))
+    }
+
+    /// Add a `CONSTANT_Integer` entry (deduplicated) and return its 1-based
+    /// index, for an `int` literal too large for `bipush`/`sipush` and so loaded
+    /// with `ldc`/`ldc_w` (McCarthy W5a — e.g. an interned symbol id ≥ 2²⁹).
+    fn add_integer(&mut self, value: i32) -> u16 {
+        let key = format!("Integer:{}", value);
+        self.add_entry(key, JvmConstantPoolEntry::Integer(value))
     }
 
     /// Add a Class entry referencing a UTF8 name.
@@ -1563,7 +1641,7 @@ fn lower_function(
                             JvmType::Long => emit_lconst(&mut code, *v),
                             JvmType::Float => emit_fconst(&mut code, *v as f32),
                             JvmType::Double => emit_dconst(&mut code, *v as f64),
-                            _ => emit_iconst(&mut code, *v as i32),
+                            _ => emit_iconst_cp(&mut code, cp, *v as i32),
                         }
                     }
                     Operand::Bool(b) => {
@@ -1577,7 +1655,7 @@ fn lower_function(
                             _ => {
                                 // Integer destination with float source — unusual
                                 // but not necessarily wrong (e.g. casting).
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                             }
                         }
                     }
@@ -1844,7 +1922,7 @@ fn lower_function(
                     }
                     Some(Operand::Int(v)) => {
                         // Constant mov — unusual but valid; emit iconst.
-                        emit_iconst(&mut code, *v as i32);
+                        emit_iconst_cp(&mut code, cp, *v as i32);
                         emit_istore(&mut code, dest_slot);
                     }
                     Some(Operand::Bool(b)) => {
@@ -1886,8 +1964,19 @@ fn lower_function(
             // Emits: `iload cond; ifne <label>`.
             "jmp_if_true" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // `ifne` tests an int != 0. An i64 condition (the widened
+                // Brainfuck loop guard, LANG-MATRIX LM-J) must first be reduced
+                // to an int: `lload; lconst_0; lcmp` pushes -1/0/+1, which `ifne`
+                // then branches on. `iload`ing a long would read only one of its
+                // two slots — a verify error.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFNE);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -1900,8 +1989,16 @@ fn lower_function(
             // Emits: `iload cond; ifeq <label>`.
             "jmp_if_false" => {
                 let (cond_src, label) = cond_and_label(fname, instr)?;
-                let (cond_slot, _) = lookup_var(cond_src)?;
-                emit_iload(&mut code, cond_slot);
+                let (cond_slot, cond_ty) = lookup_var(cond_src)?;
+                // "branch if zero" — same width handling as `jmp_if_true`: an
+                // i64 guard is reduced via `lload; lconst_0; lcmp` before `ifeq`.
+                if cond_ty == JvmType::Long {
+                    emit_lload(&mut code, cond_slot);
+                    code.push(LCONST_0);
+                    code.push(LCMP);
+                } else {
+                    emit_iload(&mut code, cond_slot);
+                }
                 let opcode_pos = code.len();
                 code.push(IFEQ);
                 code.extend_from_slice(&0i16.to_be_bytes()); // placeholder
@@ -1944,7 +2041,7 @@ fn lower_function(
                                 code.push(LRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *v as i32);
+                                emit_iconst_cp(&mut code, cp, *v as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -1965,7 +2062,7 @@ fn lower_function(
                                 code.push(DRETURN);
                             }
                             _ => {
-                                emit_iconst(&mut code, *f as i32);
+                                emit_iconst_cp(&mut code, cp, *f as i32);
                                 code.push(IRETURN);
                             }
                         }
@@ -2092,6 +2189,115 @@ fn lower_function(
                 code.push(BASTORE);
             }
 
+            // ── alloc_bytes (LANG-MATRIX LM-J Brainfuck) ─────────────────────
+            //
+            // `alloc_bytes  dest  <-  size`.  The JVM tape is the host class's
+            // pre-allocated static field `env/BFRuntime.__tape : [B`, so there
+            // is nothing to allocate at runtime — this is a no-op.  `dest` (the
+            // BF tape base, `__bf_tape`) is therefore never materialised: the
+            // `load_byte`/`store_byte` ops below `getstatic` the tape directly
+            // and ignore the base operand (it is always 0 in this pipeline).
+            // This mirrors the LLVM/WASM lowering's "tape at a fixed base," just
+            // with the base implicit in the static field rather than a pointer.
+            "alloc_bytes" => {
+                // Intentionally emits no bytecode.
+            }
+
+            // ── load_byte (LANG-MATRIX LM-J Brainfuck) ───────────────────────
+            //
+            // `load_byte  dest  <-  base, idx`.  Read one tape cell, unsigned.
+            // The lowered form of the BF `load_mem` above: same `getstatic
+            // __tape; <idx>; baload; & 0xFF` shape, but the operands may be
+            // `i64` (the widened BF value model) rather than `i32` — so we
+            // narrow an `i64` index to `int` with `l2i` for `baload`, and widen
+            // the masked `int` cell back to `i64` with `i2l` for an `i64` dest.
+            // The base operand is the static tape, so it is ignored.
+            "load_byte" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| {
+                    IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte must have a dest".to_string(),
+                    }
+                })?;
+                let idx_name = match instr.srcs.get(1) {
+                    Some(Operand::Var(s)) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "load_byte requires Operand::Var(idx) as src[1]".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (dest_slot, dest_ty) = lookup_var(dest_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I); // baload needs an int index
+                }
+                code.push(BALOAD);
+                // Mask the sign-extended byte back into an unsigned 0..=255 int.
+                code.push(SIPUSH);
+                code.extend_from_slice(&0x00FFi16.to_be_bytes());
+                code.push(IAND);
+                if dest_ty == JvmType::Long {
+                    code.push(I2L); // widen the cell to the i64 dest register
+                }
+                emit_typed_store(&mut code, dest_slot, dest_ty);
+            }
+
+            // ── store_byte (LANG-MATRIX LM-J Brainfuck) ──────────────────────
+            //
+            // `store_byte  base, idx, val`  (no dest).  Write the low byte of
+            // `val` into `tape[idx]`.  The lowered form of `store_mem`; `bastore`
+            // stores `val & 0xFF` (so BF's 8-bit cell wrap-around is free).  An
+            // `i64` index / value is narrowed with `l2i` before the array op.
+            // The base operand is the static tape, so it is ignored.
+            "store_byte" => {
+                if instr.dest.is_some() {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte must not have a dest".to_string(),
+                    });
+                }
+                if instr.srcs.len() < 3 {
+                    return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte requires 3 srcs: [base, idx, val]".to_string(),
+                    });
+                }
+                let idx_name = match &instr.srcs[1] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[1] must be Operand::Var(idx)".to_string(),
+                    }),
+                };
+                let val_name = match &instr.srcs[2] {
+                    Operand::Var(s) => s.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "store_byte src[2] must be Operand::Var(val)".to_string(),
+                    }),
+                };
+                let (idx_slot, idx_ty) = lookup_var(&idx_name)?;
+                let (val_slot, val_ty) = lookup_var(&val_name)?;
+
+                let tape_fieldref = cp.add_fieldref(BF_RUNTIME_CLASS, "__tape", "[B");
+                code.push(GETSTATIC);
+                code.extend_from_slice(&tape_fieldref.to_be_bytes());
+                emit_typed_load(&mut code, idx_slot, idx_ty);
+                if idx_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                emit_typed_load(&mut code, val_slot, val_ty);
+                if val_ty == JvmType::Long {
+                    code.push(L2I);
+                }
+                code.push(BASTORE);
+            }
+
             // ── call_builtin (Brainfuck putchar / getchar) ───────────────────
             //
             // The validator (validate.rs) enforces that `srcs[0]` is in
@@ -2167,6 +2373,68 @@ fn lower_function(
                         code.push(INVOKESTATIC);
                         code.extend_from_slice(&mref.to_be_bytes());
                     }
+                    // ── McCarthy W4: the lisp predicates (F3–F5). ──
+                    //
+                    // The structural pass emits these as the *same* backend-agnostic
+                    // `call_builtin`s the wasm path uses (where they lower to
+                    // `ref.test`/`i32.eqz`/`i31.get_s`+`i32.eq`). On the JVM the
+                    // uniform-`Object` model makes them:
+                    //   pair?   → `instanceof Object[]`   (a cons is an Object[])
+                    //   not     → logical not of a 0/1 bool
+                    //   equal?  → unbox both Integers and `if_icmpeq`
+                    "pair?" => {
+                        // Is the (boxed) lisp value a cons cell? A cons is an
+                        // `Object[]`; an atom is an `Integer`; nil is `null`.
+                        let dest_name = builtin_dest(instr, fname, "pair?")?;
+                        let arg = builtin_arg(instr, fname, "pair?", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_aload(&mut code, arg_slot);
+                        let cidx = cp.add_class("[Ljava/lang/Object;");
+                        code.push(INSTANCEOF);
+                        code.extend_from_slice(&cidx.to_be_bytes());
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "not" => {
+                        // Logical not of a 0/1 machine boolean: `arg ^ 1`.
+                        let dest_name = builtin_dest(instr, fname, "not")?;
+                        let arg = builtin_arg(instr, fname, "not", 1)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (arg_slot, _) = lookup_var(&arg)?;
+                        emit_iload(&mut code, arg_slot);
+                        code.push(ICONST_1);
+                        code.push(IXOR);
+                        emit_istore(&mut code, dest_slot);
+                    }
+                    "equal?" => {
+                        // `EQ` on atoms: unbox both `Integer`s and compare. The
+                        // structural pass guarantees both args are boxed atoms
+                        // (symbols interned to ints, integers as ints), so the
+                        // identity test reduces to integer equality.
+                        let dest_name = builtin_dest(instr, fname, "equal?")?;
+                        let a = builtin_arg(instr, fname, "equal?", 1)?;
+                        let b = builtin_arg(instr, fname, "equal?", 2)?;
+                        let (dest_slot, _) = lookup_var(dest_name)?;
+                        let (a_slot, _) = lookup_var(&a)?;
+                        let (b_slot, _) = lookup_var(&b)?;
+                        let int_cidx = cp.add_class("java/lang/Integer");
+                        let intval = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                        // unbox a
+                        emit_aload(&mut code, a_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // unbox b
+                        emit_aload(&mut code, b_slot);
+                        code.push(CHECKCAST);
+                        code.extend_from_slice(&int_cidx.to_be_bytes());
+                        code.push(INVOKEVIRTUAL);
+                        code.extend_from_slice(&intval.to_be_bytes());
+                        // a == b ? 1 : 0  (IF_ICMPNE skips the true arm when a≠b)
+                        emit_int_compare(&mut code, IF_ICMPNE);
+                        emit_istore(&mut code, dest_slot);
+                    }
                     _ => {
                         // Validator should have rejected this; defense in depth.
                         return Err(IIRJvmError::UnsupportedOp {
@@ -2205,7 +2473,7 @@ fn lower_function(
                             let (slot, jtype) = lookup_var(n)?;
                             emit_typed_load(&mut code, slot, jtype);
                         }
-                        Operand::Int(v) => emit_iconst(&mut code, *v as i32),
+                        Operand::Int(v) => emit_iconst_cp(&mut code, cp, *v as i32),
                         Operand::Bool(b) => emit_iconst(&mut code, if *b { 1 } else { 0 }),
                         Operand::Float(f) => emit_fconst(&mut code, *f as f32),
                         // LANG32: Str is a compile-time string literal — not
@@ -2785,6 +3053,68 @@ fn lower_function(
             //   `goto`  offset  = (P+8) - (P+4) = 4.           ✓ (lands on istore)
             //
             // This is 8 bytes of code (before istore), analogous to emit_int_compare.
+            // ── box — wrap an i32 atom as a `java.lang.Integer` (McCarthy W3b) ──
+            //
+            // The managed value model is uniform-reference: an atom stored in a
+            // cons cell (`Object[]`) or passed where a lisp value is expected is
+            // boxed. The wasm backend lowers `box` to `ref.i31`; the JVM lowers it
+            // to `Integer.valueOf(I)` — the same shared IIR op, a per-backend
+            // boxing. Bytecode:  iload src ; invokestatic Integer.valueOf ; astore dest.
+            "box" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "box has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "box srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_iload(&mut code, src_slot);
+                let mref = cp.add_methodref(
+                    "java/lang/Integer",
+                    "valueOf",
+                    "(I)Ljava/lang/Integer;",
+                );
+                code.push(INVOKESTATIC);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── unbox — unwrap a `java.lang.Integer` reference to its i32 value ──
+            //
+            // The dual of `box`: `checkcast Integer ; Integer.intValue()`. Used at
+            // the entry/return boundary (the wasm backend lowers `unbox` to
+            // `i31.get_s`). Bytecode:  aload src ; checkcast Integer ; invokevirtual
+            // Integer.intValue ; istore dest.
+            "unbox" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "unbox has no dest".to_string(),
+                })?;
+                let src_name = match instr.srcs.first() {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "unbox srcs[0] must be a Var".to_string(),
+                    }),
+                };
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (src_slot, _) = lookup_var(&src_name)?;
+                emit_aload(&mut code, src_slot);
+                let cidx = cp.add_class("java/lang/Integer");
+                code.push(CHECKCAST);
+                code.extend_from_slice(&cidx.to_be_bytes());
+                let mref = cp.add_methodref("java/lang/Integer", "intValue", "()I");
+                code.push(INVOKEVIRTUAL);
+                code.extend_from_slice(&mref.to_be_bytes());
+                emit_istore(&mut code, dest_slot);
+            }
+
             "is_null" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),

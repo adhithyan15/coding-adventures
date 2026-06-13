@@ -62,7 +62,10 @@ integer classification (`0–255 → "u8"`, `0–65535 → "u16"`, etc.).
 
 One frame per active function call.  Holds a flat `registers: Vec<Value>` and a
 `name_to_reg: HashMap<String, usize>` that maps variable names to register
-indices.  `assign()` grows the register file on demand.
+indices.  `assign()` grows the register file on demand, and `for_function()`
+sizes it to at least the parameter count (`max(register_count, params.len())`) so
+the dispatcher can place call arguments at indices `0..params.len()` even when a
+frontend under-reports `register_count` (e.g. a hoisted McCarthy `LAMBDA` body).
 
 ### `VMCore` — the execution API
 

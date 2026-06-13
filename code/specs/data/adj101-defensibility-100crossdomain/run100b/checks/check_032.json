@@ -1,0 +1,8 @@
+{
+ "check_id": 32,
+ "idx": 14,
+ "slot": "hazardous_waste_kg_per_month",
+ "claimed_value": 1240,
+ "scenario": "Apex Finishing reported generating 1,240 kg of spent solvent in March. The facility manager notes that a large portion of that solvent was sent off-site for reclamation and recycling rather than disposal.",
+ "cited_span": "Apex Finishing reported generating 1,240 kg of spent solvent in March"
+}

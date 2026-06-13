@@ -1,0 +1,8 @@
+{
+ "check_id": 113,
+ "idx": 47,
+ "slot": "prior_authorization_obtained",
+ "claimed_value": false,
+ "scenario": "A member went to the emergency room with sudden crushing chest pain and shortness of breath and was treated for a suspected heart attack. No prior authorization had been obtained before the visit.",
+ "cited_span": "No prior authorization had been obtained before the visit."
+}

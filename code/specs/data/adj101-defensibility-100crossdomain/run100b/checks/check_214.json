@@ -1,0 +1,8 @@
+{
+ "check_id": 214,
+ "idx": 82,
+ "slot": "explicit_consent_given",
+ "claimed_value": true,
+ "scenario": "Cardio-Track, a wellness app, processes users' resting heart-rate and blood-pressure readings to generate health reports. During signup, user Priya was shown a checkbox reading 'I explicitly consent to processing of my health data to generate my health reports,' which she actively ticked before continuing.",
+ "cited_span": "shown a checkbox reading 'I explicitly consent to processing of my health data to generate my health reports,' which she actively ticked before continuing"
+}

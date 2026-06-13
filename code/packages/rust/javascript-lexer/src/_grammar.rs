@@ -6870,7 +6870,7 @@ mod v_es2024 {
                 },
                 TokenDefinition {
                     name: r#"REGEX"#.to_string(),
-                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsvy]*"#.to_string(),
+                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsuvy]*"#.to_string(),
                     is_regex: true,
                     line_number: 85,
                     alias: None,
@@ -7507,7 +7507,7 @@ mod v_es2025 {
                 },
                 TokenDefinition {
                     name: r#"REGEX"#.to_string(),
-                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsvy]*"#.to_string(),
+                    pattern: r#"\/([^\/\\\n]|\\.)+\/[dgimsuvy]*"#.to_string(),
                     is_regex: true,
                     line_number: 112,
                     alias: None,

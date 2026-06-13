@@ -1,0 +1,8 @@
+{
+ "idx": 13,
+ "policy": "A construction project disturbing 1 or more acres of land must obtain a Construction General Permit (CGP) before earth-disturbing activity begins. Projects disturbing less than 1 acre need a CGP only if they are part of a larger common plan of development that, in total, disturbs 1 or more acres.",
+ "scenario": "Pinewood Builders is grading a 0.7-acre parcel for a single duplex. The site sits within the Pinewood Estates subdivision, a tract that was historically marketed under one brand name. The grading begins next week.",
+ "question": "Must Pinewood Builders obtain a Construction General Permit before grading?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the parcel is part of a larger common plan of development disturbing 1 or more acres is not stated"
+}

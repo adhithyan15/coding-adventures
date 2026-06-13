@@ -8,7 +8,10 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
 - MLE command ids
 - common MLE TLV ids
 - MLE message/TLV parsing and encoding
+- payload-free MLE message summaries for attach, parent-selection, and
+  diagnostic TLV context
 - scan-mask and mode bit helpers
+- typed Status TLV helpers
 - typed Leader Data TLV helpers and opaque Network Data extraction
 - Thread Network Data TLV parsing/encoding with stable-bit preservation
 - typed Prefix TLV projection with nested Network Data sub-TLVs

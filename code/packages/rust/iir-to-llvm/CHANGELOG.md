@@ -3,6 +3,104 @@
 All notable changes to this crate are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.9.0] — 2026-06-12 (LLVM05 — byte-tape ops + Brainfuck I/O; LANG-MATRIX LM-L Brainfuck)
+
+Adds the byte-tape memory ops and character I/O that Brainfuck needs, so the
+LLVM column now covers Brainfuck — the last code-gen gap in that language's row.
+Verified by RUNNING the Brainfuck cell `++++++++[>++++++++<-]>+.` on real `clang`
+in `lang-aot/tests/lang_matrix.rs`: it prints `A`.
+
+**New IIR opcodes** (added to `SUPPORTED_OPS` and `lower_instr`):
+
+- `alloc_bytes dest <- size` → `%dest = call ptr @calloc(i64 size, i64 1)` — a
+  zero-filled tape (Brainfuck cells start at 0). Declared once as
+  `declare ptr @calloc(i64, i64)`. The tape base is a single-assignment value,
+  so it is never a promoted stack slot.
+- `load_byte dest <- base, idx` → `getelementptr i8` + `load i8` + `zext i8…i64`.
+  The 8-bit cell becomes the uniform `i64` register width.
+- `store_byte base, idx, val` (no dest) → `getelementptr i8` + `trunc i64…i8` +
+  `store i8`. The `trunc` is what makes Brainfuck's 8-bit cell wrap-around fall
+  out even though the surrounding arithmetic runs at `i64` width — "byte width
+  only at the tape boundary."
+
+**New `call_builtin`s** (added to `SUPPORTED_BUILTINS`):
+
+- `putchar` (Brainfuck `.`) → `trunc i64…i32` + `call i32 @putchar(i32)`. Maps
+  to libc directly (no host-runtime shim like `print_i64`'s `@__print_i64`).
+- `getchar` (Brainfuck `,`) → `call i32 @getchar()` + `sext i32…i64`. EOF (`-1`)
+  lands as `0xFF` after a subsequent `store_byte` truncation — the conventional
+  Brainfuck behaviour. Declared as `declare i32 @putchar(i32)` / `@getchar()`.
+
+**Bug fix — slot-dest SSA rename.** A variable assigned in 2+ instructions is
+promoted to an `alloca i64` stack slot. Previously a value-producing op wrote
+`%<var> = …` using the variable's name verbatim, so a slot variable that is the
+dest of a real op (rather than only `const`/`mov`) emitted `%v = …` twice — which
+LLVM rejects (*"multiple definition of local value named 'v'"*). Brainfuck's
+`ptr`/`v` (incremented every command) are the first such case. `lower_instr_with_slots`
+now lowers a clone of the instruction with a fresh SSA dest name and stores the
+result into the original variable's slot. `const`/`mov` slot-dests (which emit no
+`%dest =` line) are unaffected.
+
+Six new tests in `tests/test_backend.rs` cover each emit case and the rename
+regression.
+
+## [0.8.0] — 2026-06-10 (McCarthy W13b — lisp lambda (F7) — LLVM COMPLETE)
+
+Registers the universal exit-coercion runtime helper so the LLVM backend can
+declare + call it: `LISPY_BUILTINS` gains `("lispy_to_exit_code",
+"__twig_lispy_to_exit_code", 1)`. A lambda result is a `call` typed `any` whose
+runtime tag is unknown at compile time; the shared `lower_lisp_repr` now emits
+`lispy_to_exit_code` for it, and this entry lets the backend lower that to a
+`call i64 @__twig_lispy_to_exit_code(i64)`. With it, **LLVM is McCarthy-complete
+(F1–F7)** — verified by RUNNING in `lang-aot` (`lang-aot/tests/llvm_lambda.rs`).
+
+## [0.7.0] — 2026-06-10 (McCarthy W13a — lisp symbols (F6))
+
+`llvm_type_for("symbol")` now maps to `i64` — an interned McCarthy symbol is a
+tagged 64-bit immediate (from `iir_builtin_lowering::intern_symbols`), so it flows
+as a tagged word like `any`/`ref<Lispy…>`. With this, `(QUOTE A)`, symbol `EQ`, and
+symbols inside `COND` all validate and lower. Verified by RUNNING in `lang-aot`
+(clang + `lispy_runtime.c`): `(EQ (QUOTE A) (QUOTE A))`→1, `(EQ (QUOTE A) (QUOTE B))`→0.
+
+## [0.6.0] — 2026-06-10 (McCarthy W12b-3 — `COND` via alloca SSA-merge — LLVM core F1–F5)
+
+Lowers McCarthy `COND` (a cross-block value merge) and completes the LLVM core
+(F1–F5).
+
+- **Stack-slot promotion (`collect_slot_vars` + `lower_instr_with_slots`):** a
+  variable assigned in 2+ instructions (a `COND` result written per clause) gets an
+  entry `alloca`; each assignment becomes a `store i64 …, ptr %v.slot`, each read a
+  `load i64, ptr %v.slot`. Single-assignment vars keep the `const`/`mov` side-map
+  (fast path, no slot). This is the naive-frontend / `opt -mem2reg` pattern, so no
+  PHI-predecessor analysis is needed.
+- **Block-terminator hygiene (`FnState::block_open`):** a `label` reached while the
+  current block is still open (its body was all tracked-not-emitted `const`/`mov`)
+  emits an explicit fallthrough `br` first — no two labels back-to-back.
+- **`jmp_if` void-cond:** when the `jmp_if_*` carries no operand type (`void`) — its
+  condition is the `i64` 0/1 from `lispy_truthy` — it lowers to `icmp ne i64 %c, 0`
+  instead of an invalid `trunc void`.
+- Verified by RUNNING in `lang-aot` (clang + `lispy_runtime.c`):
+  `(COND ((ATOM 7) 11) ((ATOM 8) 22))`→11, second-clause→22, nested `COND`→44.
+
+## [0.5.0] — 2026-06-10 (McCarthy W12b-1 — tagged-word lisp `cons`/`car`/`cdr` → `__twig_lispy_*`)
+
+Lowers the **tagged-word lisp** builtins to `call`s into the shared C runtime
+(`twig-aot/runtime/lispy_runtime.c`) — the SAME runtime the native AOT path links,
+so any lisp-family frontend inherits it.
+
+- `LISPY_BUILTINS` table maps the `lispy_*` IIR names (from
+  `iir_builtin_lowering::lower_heap_builtins_runtime`/`lower_lisp_repr`) to the
+  runtime's `__twig_lispy_*` symbols: `cons`/`car`/`cdr`/`pair_p`/`equal`/`not`/
+  `truthy`/`box_int`/`unbox_int`/`nil`. Each is `i64 (i64 × arity)` — a lisp value
+  is a tagged 64-bit word.
+- `call_builtin "lispy_*"` lowers to `%d = call i64 @__twig_lispy_*(i64 …)`; one
+  `declare` per used builtin is emitted in the module header (first-seen order, deduped).
+- `llvm_type_for`: `any` and a lisp reference (`ref<Lispy…>`) map to `i64` (the
+  tagged word). A NON-lisp `ref<Foo>` stays `UnsupportedType`.
+- **Verified by RUNNING** end-to-end in `lang-aot` (clang links `lispy_runtime.c`):
+  `(CAR (CONS 7 9))`→7, `(CDR …)`→9, nested→2. Predicates (pair?/equal?/not, COND)
+  are emitted but their tagged-boolean result handling is W12b-2.
+
 ## [0.4.0] — 2026-06-01 (LLVM04 — `call` + `call_builtin print_i64` + `lang-aot --emit=llvm-ir`)
 
 ### Added — user-defined `call`

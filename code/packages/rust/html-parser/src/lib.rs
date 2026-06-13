@@ -828,11 +828,18 @@ pub struct BrowserDocument {
     pub document_event_handlers: Vec<String>,
     pub body_event_handlers: Vec<String>,
     pub event_handler_descriptors: Vec<BrowserEventHandlerDescriptor>,
+    pub lifecycle_event_descriptors: Vec<BrowserLifecycleEventDescriptor>,
+    pub animation_interaction_descriptors: Vec<BrowserAnimationInteractionDescriptor>,
+    pub fullscreen_interaction_descriptors: Vec<BrowserFullscreenInteractionDescriptor>,
+    pub context_menu_interaction_descriptors: Vec<BrowserContextMenuInteractionDescriptor>,
     pub body_text: String,
     pub metas: Vec<BrowserMeta>,
     pub resources: Vec<BrowserResource>,
     pub scripts: Vec<BrowserScript>,
     pub script_execution_descriptors: Vec<BrowserScriptExecutionDescriptor>,
+    pub script_storage_access_descriptors: Vec<BrowserScriptStorageAccessDescriptor>,
+    pub script_worker_messaging_descriptors: Vec<BrowserScriptWorkerMessagingDescriptor>,
+    pub script_module_graph_descriptors: Vec<BrowserScriptModuleGraphDescriptor>,
     pub stylesheets: Vec<BrowserStylesheet>,
     pub stylesheet_planning_descriptors: Vec<BrowserStylesheetPlanningDescriptor>,
     pub document_policy_descriptors: Vec<BrowserDocumentPolicyDescriptor>,
@@ -840,6 +847,11 @@ pub struct BrowserDocument {
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
+    pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
+    pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
+    pub form_reset_descriptors: Vec<BrowserFormResetDescriptor>,
+    pub form_validation_descriptors: Vec<BrowserFormValidationDescriptor>,
     pub anchors: Vec<BrowserAnchor>,
     pub headings: Vec<BrowserHeading>,
     pub text_semantics: Vec<BrowserTextSemantic>,
@@ -852,6 +864,8 @@ pub struct BrowserDocument {
     pub aria_collections: Vec<BrowserAriaCollection>,
     pub aria_ranges: Vec<BrowserAriaRange>,
     pub aria_live_regions: Vec<BrowserAriaLiveRegion>,
+    pub aria_name_descriptors: Vec<BrowserAriaNameDescriptor>,
+    pub aria_description_descriptors: Vec<BrowserAriaDescriptionDescriptor>,
     pub aria_relation_descriptors: Vec<BrowserAriaRelationDescriptor>,
     pub links: Vec<BrowserLink>,
     pub images: Vec<BrowserImage>,
@@ -867,16 +881,27 @@ pub struct BrowserDocument {
     pub input_planning_descriptors: Vec<BrowserInputPlanningDescriptor>,
     pub drag_drop_descriptors: Vec<BrowserDragDropDescriptor>,
     pub clipboard_interaction_descriptors: Vec<BrowserClipboardInteractionDescriptor>,
+    pub selection_interaction_descriptors: Vec<BrowserSelectionInteractionDescriptor>,
+    pub composition_interaction_descriptors: Vec<BrowserCompositionInteractionDescriptor>,
+    pub pointer_interaction_descriptors: Vec<BrowserPointerInteractionDescriptor>,
+    pub scroll_interaction_descriptors: Vec<BrowserScrollInteractionDescriptor>,
     pub disclosures: Vec<BrowserDisclosure>,
     pub disclosure_state_descriptors: Vec<BrowserDisclosureStateDescriptor>,
+    pub template_descriptors: Vec<BrowserTemplateDescriptor>,
+    pub slot_descriptors: Vec<BrowserSlotDescriptor>,
+    pub custom_element_descriptors: Vec<BrowserCustomElementDescriptor>,
+    pub canvas_descriptors: Vec<BrowserCanvasDescriptor>,
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
+    pub component_hydration_descriptors: Vec<BrowserComponentHydrationDescriptor>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
+    pub structured_data_descriptors: Vec<BrowserStructuredDataDescriptor>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
     pub tables: Vec<BrowserTable>,
     pub table_cells: Vec<BrowserTableCell>,
+    pub table_structure_descriptors: Vec<BrowserTableStructureDescriptor>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -1085,6 +1110,79 @@ pub struct BrowserScriptExecutionDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptStorageAccessDescriptor {
+    pub script_kind: String,
+    pub access_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub storage_targets: Vec<String>,
+    pub storage_target_count: usize,
+    pub uses_local_storage: bool,
+    pub uses_session_storage: bool,
+    pub uses_cookies: bool,
+    pub uses_indexed_db: bool,
+    pub uses_cache_storage: bool,
+    pub uses_service_worker: bool,
+    pub uses_storage_manager: bool,
+    pub listens_storage_events: bool,
+    pub storage_blocked: bool,
+    pub storage_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptWorkerMessagingDescriptor {
+    pub script_kind: String,
+    pub messaging_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub messaging_targets: Vec<String>,
+    pub messaging_target_count: usize,
+    pub creates_worker: bool,
+    pub creates_shared_worker: bool,
+    pub registers_service_worker: bool,
+    pub uses_post_message: bool,
+    pub listens_message_events: bool,
+    pub uses_message_channel: bool,
+    pub uses_broadcast_channel: bool,
+    pub uses_import_scripts: bool,
+    pub module_worker_hint: bool,
+    pub messaging_blocked: bool,
+    pub messaging_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScriptModuleGraphDescriptor {
+    pub script_kind: String,
+    pub module_graph_kind: String,
+    pub src: Option<String>,
+    pub resolved_src: Option<String>,
+    pub type_hint: Option<String>,
+    pub execution_kind: String,
+    pub has_text: bool,
+    pub text_length: usize,
+    pub module_targets: Vec<String>,
+    pub module_target_count: usize,
+    pub external_module_entry: bool,
+    pub inline_module_entry: bool,
+    pub declares_import_map: bool,
+    pub uses_static_imports: bool,
+    pub uses_dynamic_imports: bool,
+    pub has_modulepreload: bool,
+    pub modulepreload_urls: Vec<String>,
+    pub resolved_modulepreload_urls: Vec<String>,
+    pub module_graph_blocked: bool,
+    pub module_graph_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserStylesheet {
     pub source: String,
     pub href: Option<String>,
@@ -1147,6 +1245,8 @@ pub struct BrowserDocumentPolicyDescriptor {
     pub color_scheme: Option<String>,
     pub content_security_policy: Option<String>,
     pub permissions_policy: Option<String>,
+    pub permissions_policy_features: Vec<String>,
+    pub permissions_policy_feature_count: usize,
     pub origin_trials: Vec<String>,
     pub accept_ch: Option<String>,
     pub accept_ch_tokens: Vec<String>,
@@ -1233,6 +1333,66 @@ pub struct BrowserFormPolicySubmitterDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAssociationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub association_kind: String,
+    pub explicit_form_owner: bool,
+    pub labels: Vec<String>,
+    pub label_count: usize,
+    pub fieldset_ids: Vec<String>,
+    pub fieldset_legends: Vec<String>,
+    pub datalist_id: Option<String>,
+    pub datalist_option_count: usize,
+    pub output_for_tokens: Vec<String>,
+    pub output_target_ids: Vec<String>,
+    pub output_target_names: Vec<String>,
+    pub output_target_types: Vec<String>,
+    pub referenced_by_output_ids: Vec<String>,
+    pub successful: bool,
+    pub will_validate: bool,
+    pub disabled: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormAutofillDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_autocomplete_tokens: Vec<String>,
+    pub form_autocomplete_enabled: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub autofill_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub autocomplete: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub autocomplete_token_count: usize,
+    pub section_token: Option<String>,
+    pub address_type_token: Option<String>,
+    pub contact_type_token: Option<String>,
+    pub field_token: Option<String>,
+    pub webauthn: bool,
+    pub autofill_enabled: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub hidden: bool,
+    pub required: bool,
+    pub autofill_blocked: bool,
+    pub autofill_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserAnchor {
     pub id: Option<String>,
     pub name: Option<String>,
@@ -1258,6 +1418,23 @@ pub struct BrowserStructuredProperty {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredDataDescriptor {
+    pub id: Option<String>,
+    pub item_type: Vec<String>,
+    pub item_type_count: usize,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub item_ref_count: usize,
+    pub unresolved_item_refs: Vec<String>,
+    pub property_names: Vec<String>,
+    pub property_count: usize,
+    pub url_property_count: usize,
+    pub structured_data_blocked: bool,
+    pub structured_data_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserTemplate {
     pub id: Option<String>,
     pub shadowrootmode: Option<String>,
@@ -1265,6 +1442,84 @@ pub struct BrowserTemplate {
     pub shadowrootclonable: bool,
     pub shadowrootserializable: bool,
     pub content_text: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTemplateDescriptor {
+    pub id: Option<String>,
+    pub template_kind: String,
+    pub shadowrootmode: Option<String>,
+    pub shadowroot_attribute_names: Vec<String>,
+    pub shadowroot_attribute_count: usize,
+    pub declarative_shadow_root: bool,
+    pub shadowroot_mode_valid: bool,
+    pub shadowrootdelegatesfocus: bool,
+    pub shadowrootclonable: bool,
+    pub shadowrootserializable: bool,
+    pub content_text: String,
+    pub content_word_count: usize,
+    pub template_blocked: bool,
+    pub template_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSlotDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub slot_kind: String,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub default_slot: bool,
+    pub named_slot: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub slot_blocked: bool,
+    pub slot_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCustomElementDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub custom_element_kind: String,
+    pub definition_name: Option<String>,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub autonomous_custom_element: bool,
+    pub customized_builtin: bool,
+    pub extends_element: Option<String>,
+    pub custom_element_name_valid: bool,
+    pub slot: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub text: String,
+    pub custom_element_blocked: bool,
+    pub custom_element_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCanvasDescriptor {
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub width: Option<String>,
+    pub height: Option<String>,
+    pub has_width: bool,
+    pub has_height: bool,
+    pub fallback_text: String,
+    pub fallback_word_count: usize,
+    pub part: Vec<String>,
+    pub data_attribute_names: Vec<String>,
+    pub event_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub canvas_blocked: bool,
+    pub canvas_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1285,9 +1540,125 @@ pub struct BrowserComponentHydrationTarget {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserComponentHydrationDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub hydration_kind: String,
+    pub custom_element: bool,
+    pub custom_element_name: Option<String>,
+    pub custom_element_is: Option<String>,
+    pub shadowrootmode: Option<String>,
+    pub slot: Option<String>,
+    pub slot_name: Option<String>,
+    pub part: Vec<String>,
+    pub exportparts: Option<String>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub canvas_fallback_text: Option<String>,
+    pub text: String,
+    pub hydration_blocked: bool,
+    pub hydration_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserDataAttribute {
     pub name: String,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormSubmissionDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_action: Option<String>,
+    pub resolved_form_action: Option<String>,
+    pub form_method: String,
+    pub form_enctype: Option<String>,
+    pub form_target: Option<String>,
+    pub effective_form_target: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub submission_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub submission_values: Vec<String>,
+    pub submission_value_count: usize,
+    pub successful: bool,
+    pub checked: bool,
+    pub disabled: bool,
+    pub submitter: bool,
+    pub submitter_action: Option<String>,
+    pub resolved_submitter_action: Option<String>,
+    pub submitter_method: Option<String>,
+    pub submitter_enctype: Option<String>,
+    pub submitter_target: Option<String>,
+    pub effective_submitter_target: Option<String>,
+    pub submitter_novalidate: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormResetDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_autocomplete: Option<String>,
+    pub form_event_handlers: Vec<String>,
+    pub form_reset_handlers: Vec<String>,
+    pub form_has_reset_handler: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub reset_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub value: Option<String>,
+    pub reset_values: Vec<String>,
+    pub reset_value_count: usize,
+    pub selected_options: Vec<String>,
+    pub option_count: usize,
+    pub checked: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub resettable: bool,
+    pub resetter: bool,
+    pub reset_blocked: bool,
+    pub reset_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormValidationDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub form_novalidate: bool,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub validation_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub value: Option<String>,
+    pub checked: bool,
+    pub required: bool,
+    pub disabled: bool,
+    pub readonly: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_attribute_count: usize,
+    pub validation_barred_reason: Option<String>,
+    pub validation_blocked: bool,
+    pub validation_block_reasons: Vec<String>,
+    pub submitter_ids: Vec<String>,
+    pub submitter_novalidate_ids: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1302,6 +1673,9 @@ pub struct BrowserDataAttributeDescriptor {
     pub slot_name: Option<String>,
     pub part: Vec<String>,
     pub data_attributes: Vec<BrowserDataAttribute>,
+    pub data_attribute_names: Vec<String>,
+    pub data_attribute_count: usize,
+    pub json_data_attribute_names: Vec<String>,
     pub text: String,
 }
 
@@ -1324,6 +1698,11 @@ pub struct BrowserGlobalStateDescriptor {
     pub draggable_state: Option<String>,
     pub spellcheck: Option<String>,
     pub translate: Option<String>,
+    pub global_attribute_names: Vec<String>,
+    pub global_attribute_count: usize,
+    pub focus_navigation_hint: bool,
+    pub global_state_blocked: bool,
+    pub global_state_block_reasons: Vec<String>,
     pub text: String,
 }
 
@@ -1347,6 +1726,110 @@ pub struct BrowserEventHandlerDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLifecycleEventDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub lifecycle_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub lifecycle_handlers: Vec<String>,
+    pub load_handlers: Vec<String>,
+    pub unload_handlers: Vec<String>,
+    pub visibility_handlers: Vec<String>,
+    pub history_handlers: Vec<String>,
+    pub network_handlers: Vec<String>,
+    pub error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+    pub error_recovery: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAnimationInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub animation_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub animation_handlers: Vec<String>,
+    pub animation_start_handlers: Vec<String>,
+    pub animation_iteration_handlers: Vec<String>,
+    pub animation_end_handlers: Vec<String>,
+    pub animation_cancel_handlers: Vec<String>,
+    pub transition_handlers: Vec<String>,
+    pub transition_run_handlers: Vec<String>,
+    pub transition_start_handlers: Vec<String>,
+    pub transition_end_handlers: Vec<String>,
+    pub transition_cancel_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub document_scope: bool,
+    pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFullscreenInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub classes: Vec<String>,
+    pub role: Option<String>,
+    pub source: String,
+    pub fullscreen_kind: String,
+    pub text: String,
+    pub event_handlers: Vec<String>,
+    pub fullscreen_handlers: Vec<String>,
+    pub fullscreen_change_handlers: Vec<String>,
+    pub fullscreen_error_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
+    pub embedded_context: bool,
+    pub document_scope: bool,
+    pub body_scope: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserContextMenuInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub context_menu_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_haspopup: Option<String>,
+    pub aria_controls: Vec<String>,
+    pub aria_expanded: Option<String>,
+    pub popover: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub event_handlers: Vec<String>,
+    pub contextmenu_handlers: Vec<String>,
+    pub pointer_handlers: Vec<String>,
+    pub keyboard_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub context_menu_blocked: bool,
+    pub context_menu_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserAriaRelationDescriptor {
     pub element: String,
     pub id: Option<String>,
@@ -1357,6 +1840,51 @@ pub struct BrowserAriaRelationDescriptor {
     pub errormessage_text: Vec<String>,
     pub aria_flowto: Vec<String>,
     pub flowto_text: Vec<String>,
+    pub relation_attribute_names: Vec<String>,
+    pub relation_attribute_count: usize,
+    pub relation_target_count: usize,
+    pub unresolved_relation_targets: Vec<String>,
+    pub relation_blocked: bool,
+    pub relation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaNameDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub labelledby_text: Vec<String>,
+    pub name_source: String,
+    pub name_attribute_names: Vec<String>,
+    pub name_attribute_count: usize,
+    pub label_target_count: usize,
+    pub unresolved_label_targets: Vec<String>,
+    pub name_blocked: bool,
+    pub name_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserAriaDescriptionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_description: Option<String>,
+    pub aria_describedby: Vec<String>,
+    pub describedby_text: Vec<String>,
+    pub description_source: String,
+    pub description_attribute_names: Vec<String>,
+    pub description_attribute_count: usize,
+    pub description_target_count: usize,
+    pub unresolved_description_targets: Vec<String>,
+    pub description_blocked: bool,
+    pub description_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -1916,6 +2444,9 @@ pub struct BrowserAriaCollection {
     pub checked_item_count: usize,
     pub current_item_count: usize,
     pub disabled_item_count: usize,
+    pub item_roles: Vec<String>,
+    pub selection_mode: String,
+    pub active_descendant_matches_item: bool,
     pub items: Vec<BrowserAriaCollectionItem>,
 }
 
@@ -1960,6 +2491,12 @@ pub struct BrowserAriaRange {
     pub aria_required: Option<String>,
     pub tabindex: Option<String>,
     pub text_value: Option<String>,
+    pub value_attribute_names: Vec<String>,
+    pub value_attribute_count: usize,
+    pub range_value_complete: bool,
+    pub focusable: bool,
+    pub range_blocked: bool,
+    pub range_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1979,6 +2516,11 @@ pub struct BrowserAriaLiveRegion {
     pub aria_relevant: Vec<String>,
     pub aria_hidden: bool,
     pub update_kind: String,
+    pub live_attribute_names: Vec<String>,
+    pub live_attribute_count: usize,
+    pub assertive_update: bool,
+    pub live_region_blocked: bool,
+    pub live_region_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2203,7 +2745,10 @@ pub struct BrowserEmbeddedPolicyDescriptor {
     pub sandbox: Vec<String>,
     pub sandbox_token_count: usize,
     pub allow: Option<String>,
+    pub allow_tokens: Vec<String>,
+    pub allow_token_count: usize,
     pub allowfullscreen: bool,
+    pub fullscreen_allowed: bool,
     pub referrerpolicy: Option<String>,
     pub srcdoc: Option<String>,
     pub has_srcdoc: bool,
@@ -2439,6 +2984,140 @@ pub struct BrowserClipboardInteractionDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSelectionInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub selection_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub selection_handlers: Vec<String>,
+    pub select_handlers: Vec<String>,
+    pub selection_change_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub selection_blocked: bool,
+    pub selection_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserCompositionInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub composition_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub value: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub spellcheck: Option<String>,
+    pub inputmode: Option<String>,
+    pub enterkeyhint: Option<String>,
+    pub composition_handlers: Vec<String>,
+    pub composition_start_handlers: Vec<String>,
+    pub composition_update_handlers: Vec<String>,
+    pub composition_end_handlers: Vec<String>,
+    pub beforeinput_handlers: Vec<String>,
+    pub input_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub readonly: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub composition_blocked: bool,
+    pub composition_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserPointerInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub pointer_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub control_type: Option<String>,
+    pub command: Option<String>,
+    pub command_for: Option<String>,
+    pub popover_target: Option<String>,
+    pub popover_target_action: Option<String>,
+    pub contenteditable: Option<String>,
+    pub editing_mode: Option<String>,
+    pub draggable: Option<String>,
+    pub draggable_state: Option<String>,
+    pub pointer_handlers: Vec<String>,
+    pub mouse_handlers: Vec<String>,
+    pub touch_handlers: Vec<String>,
+    pub wheel_handlers: Vec<String>,
+    pub click_handlers: Vec<String>,
+    pub drag_handlers: Vec<String>,
+    pub drop_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub pointer_blocked: bool,
+    pub pointer_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserScrollInteractionDescriptor {
+    pub element: String,
+    pub id: Option<String>,
+    pub role: Option<String>,
+    pub authored_role: Option<String>,
+    pub source: String,
+    pub scroll_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub aria_valuenow: Option<String>,
+    pub aria_valuemin: Option<String>,
+    pub aria_valuemax: Option<String>,
+    pub aria_valuetext: Option<String>,
+    pub aria_orientation: Option<String>,
+    pub aria_disabled: Option<String>,
+    pub aria_readonly: Option<String>,
+    pub tabindex: Option<String>,
+    pub scroll_handlers: Vec<String>,
+    pub wheel_handlers: Vec<String>,
+    pub touch_handlers: Vec<String>,
+    pub handler_count: usize,
+    pub focusable: bool,
+    pub disabled: bool,
+    pub hidden: bool,
+    pub inert: bool,
+    pub aria_hidden: bool,
+    pub scroll_blocked: bool,
+    pub scroll_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserPopover {
     pub element: String,
     pub id: Option<String>,
@@ -2530,6 +3209,7 @@ pub struct BrowserForm {
     pub rel_noopener: bool,
     pub rel_noreferrer: bool,
     pub novalidate: bool,
+    pub event_handlers: Vec<String>,
     pub fieldsets: Vec<BrowserFormFieldset>,
     pub labels: Vec<BrowserFormLabel>,
     pub datalists: Vec<BrowserFormDatalist>,
@@ -2954,6 +3634,25 @@ pub struct BrowserTableCell {
     pub colspan: Option<String>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserTableStructureDescriptor {
+    pub table_index: usize,
+    pub table_id: Option<String>,
+    pub caption: Option<String>,
+    pub row_count: usize,
+    pub column_count: usize,
+    pub column_hint_count: usize,
+    pub cell_count: usize,
+    pub header_cell_count: usize,
+    pub section_kinds: Vec<String>,
+    pub header_scopes: Vec<String>,
+    pub header_ids: Vec<String>,
+    pub cells_with_headers_count: usize,
+    pub spanning_cell_count: usize,
+    pub table_blocked: bool,
+    pub table_block_reasons: Vec<String>,
+}
+
 impl BrowserDocument {
     pub fn from_document(document: &Document) -> Self {
         let html = find_first_element_in_nodes(&document.children, "html");
@@ -3029,6 +3728,12 @@ impl BrowserDocument {
         );
         summary.script_execution_descriptors =
             browser_script_execution_descriptors(&summary.scripts);
+        summary.script_storage_access_descriptors =
+            browser_script_storage_access_descriptors(&summary.scripts);
+        summary.script_worker_messaging_descriptors =
+            browser_script_worker_messaging_descriptors(&summary.scripts);
+        summary.script_module_graph_descriptors =
+            browser_script_module_graph_descriptors(&summary.scripts, &summary.resources);
         summary.stylesheet_planning_descriptors =
             browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
@@ -3051,6 +3756,24 @@ impl BrowserDocument {
         summary.drag_drop_descriptors = browser_drag_drop_descriptors(&summary);
         summary.clipboard_interaction_descriptors =
             browser_clipboard_interaction_descriptors(&summary);
+        summary.selection_interaction_descriptors =
+            browser_selection_interaction_descriptors(&summary);
+        summary.composition_interaction_descriptors =
+            browser_composition_interaction_descriptors(&summary);
+        summary.pointer_interaction_descriptors = browser_pointer_interaction_descriptors(&summary);
+        summary.scroll_interaction_descriptors = browser_scroll_interaction_descriptors(&summary);
+        summary.lifecycle_event_descriptors = browser_lifecycle_event_descriptors(&summary);
+        summary.animation_interaction_descriptors =
+            browser_animation_interaction_descriptors(&summary);
+        summary.fullscreen_interaction_descriptors =
+            browser_fullscreen_interaction_descriptors(&summary);
+        summary.context_menu_interaction_descriptors =
+            browser_context_menu_interaction_descriptors(&summary);
+        summary.form_association_descriptors = browser_form_association_descriptors(&summary.forms);
+        summary.form_autofill_descriptors = browser_form_autofill_descriptors(&summary.forms);
+        summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
+        summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
+        summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
         summary
     }
@@ -10260,11 +10983,29 @@ fn collect_browser_facts(
         if let Some(aria_live_region) = browser_aria_live_region_element(element, id_texts) {
             summary.aria_live_regions.push(aria_live_region);
         }
+        if let Some(aria_name) = browser_aria_name_descriptor(element, id_texts) {
+            summary.aria_name_descriptors.push(aria_name);
+        }
+        if let Some(aria_description) = browser_aria_description_descriptor(element, id_texts) {
+            summary.aria_description_descriptors.push(aria_description);
+        }
         if let Some(aria_relation) = browser_aria_relation_descriptor(element, id_texts) {
             summary.aria_relation_descriptors.push(aria_relation);
         }
         if let Some(target) = browser_component_hydration_target(element) {
             summary.component_hydration_targets.push(target);
+        }
+        if let Some(descriptor) = browser_component_hydration_descriptor(element) {
+            summary.component_hydration_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
         }
         if let Some(descriptor) = browser_data_attribute_descriptor(element) {
             summary.data_attribute_descriptors.push(descriptor);
@@ -10273,14 +11014,21 @@ fn collect_browser_facts(
             summary.global_state_descriptors.push(descriptor);
         }
         if element.name == "template" {
+            summary
+                .template_descriptors
+                .push(browser_template_descriptor(element));
             summary.templates.push(browser_template(element));
         }
         if browser_item_scope(element) {
-            summary.structured_items.push(browser_structured_item(
-                element,
-                summary.base_href.as_deref(),
-                body_root,
-            ));
+            let structured_item =
+                browser_structured_item(element, summary.base_href.as_deref(), body_root);
+            summary
+                .structured_data_descriptors
+                .push(browser_structured_data_descriptor(
+                    &structured_item,
+                    body_root,
+                ));
+            summary.structured_items.push(structured_item);
         }
 
         if is_browser_document_link(element) {
@@ -10351,7 +11099,7 @@ fn collect_browser_facts(
             }
             "table" => {
                 let table_index = summary.tables.len() + 1;
-                summary.tables.push(BrowserTable {
+                let table = BrowserTable {
                     caption: find_first_element_in_nodes(&element.children, "caption")
                         .map(element_text),
                     row_count: browser_table_rows(element).len(),
@@ -10359,10 +11107,25 @@ fn collect_browser_facts(
                     column_hint_count: browser_table_column_hint_count(element),
                     cell_count: browser_table_cell_count(element),
                     header_cell_count: browser_table_header_cell_count(element),
-                });
+                };
+                let table_cells = browser_table_cells(element, table_index, id_texts);
                 summary
-                    .table_cells
-                    .extend(browser_table_cells(element, table_index, id_texts));
+                    .table_structure_descriptors
+                    .push(browser_table_structure_descriptor(
+                        element,
+                        table_index,
+                        &table,
+                        &table_cells,
+                    ));
+                summary.table_cells.extend(table_cells);
+                summary.tables.push(BrowserTable {
+                    caption: table.caption,
+                    row_count: table.row_count,
+                    column_count: table.column_count,
+                    column_hint_count: table.column_hint_count,
+                    cell_count: table.cell_count,
+                    header_cell_count: table.header_cell_count,
+                });
             }
             name if heading_level(name).is_some() => summary.headings.push(BrowserHeading {
                 level: heading_level(name).expect("heading level was checked above"),
@@ -10400,6 +11163,15 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             browser_fetch_policy_descriptor(element, summary.base_href.as_deref())
         {
             summary.fetch_policy_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_slot_descriptor(element) {
+            summary.slot_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_custom_element_descriptor(element) {
+            summary.custom_element_descriptors.push(descriptor);
+        }
+        if let Some(descriptor) = browser_canvas_descriptor(element) {
+            summary.canvas_descriptors.push(descriptor);
         }
 
         match element.name.as_str() {
@@ -10475,7 +11247,12 @@ fn collect_head_browser_facts(nodes: &[Node], summary: &mut BrowserDocument) {
             "style" => summary
                 .stylesheets
                 .push(browser_style_element(element, summary.base_href.as_deref())),
-            "template" => summary.templates.push(browser_template(element)),
+            "template" => {
+                summary
+                    .template_descriptors
+                    .push(browser_template_descriptor(element));
+                summary.templates.push(browser_template(element));
+            }
             _ => {}
         }
 
@@ -10747,6 +11524,10 @@ fn browser_embedded_policy_descriptors(
 fn browser_embedded_policy_descriptor(
     context: &BrowserEmbeddedContext,
 ) -> BrowserEmbeddedPolicyDescriptor {
+    let allow_tokens = browser_allow_policy_features(context.allow.as_deref());
+    let fullscreen_allowed =
+        context.allowfullscreen || allow_tokens.iter().any(|token| token == "fullscreen");
+
     BrowserEmbeddedPolicyDescriptor {
         element: context.element.clone(),
         resource_kind: browser_embedded_resource_kind(&context.element).to_string(),
@@ -10763,7 +11544,10 @@ fn browser_embedded_policy_descriptor(
         sandbox: context.sandbox.clone(),
         sandbox_token_count: context.sandbox.len(),
         allow: context.allow.clone(),
+        allow_token_count: allow_tokens.len(),
+        allow_tokens,
         allowfullscreen: context.allowfullscreen,
+        fullscreen_allowed,
         referrerpolicy: context.referrerpolicy.clone(),
         srcdoc: context.srcdoc.clone(),
         has_srcdoc: context.srcdoc.is_some(),
@@ -10824,6 +11608,484 @@ fn browser_script_execution_descriptor(script: &BrowserScript) -> BrowserScriptE
         has_text: script.text.is_some(),
         text_length,
     }
+}
+
+fn browser_script_storage_access_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptStorageAccessDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_storage_access_descriptor)
+        .collect()
+}
+
+fn browser_script_storage_access_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptStorageAccessDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let uses_local_storage = normalized_text.contains("localstorage");
+    let uses_session_storage = normalized_text.contains("sessionstorage");
+    let uses_cookies =
+        normalized_text.contains("document.cookie") || normalized_text.contains("cookie=");
+    let uses_indexed_db = normalized_text.contains("indexeddb");
+    let uses_cache_storage = normalized_text.contains("caches.")
+        || normalized_text.contains("caches.open")
+        || normalized_text.contains("cachestorage");
+    let uses_service_worker = normalized_text.contains("serviceworker")
+        || normalized_text.contains("service-worker")
+        || normalized_text.contains("navigator.serviceworker");
+    let uses_storage_manager = normalized_text.contains("navigator.storage")
+        || normalized_text.contains(".persist(")
+        || normalized_text.contains(".estimate(");
+    let listens_storage_events = normalized_text.contains("addeventlistener('storage'")
+        || normalized_text.contains("addeventlistener(\"storage\"")
+        || normalized_text.contains("onstorage");
+    let storage_targets = browser_script_storage_targets(
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+    );
+    if storage_targets.is_empty() {
+        return None;
+    }
+
+    let storage_block_reasons = browser_script_storage_block_reasons(script);
+    let text_length = text.chars().count();
+    Some(BrowserScriptStorageAccessDescriptor {
+        script_kind: script.script_kind.clone(),
+        access_kind: browser_script_storage_access_kind(
+            uses_local_storage,
+            uses_session_storage,
+            uses_cookies,
+            uses_indexed_db,
+            uses_cache_storage,
+            uses_service_worker,
+            uses_storage_manager,
+            listens_storage_events,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length,
+        storage_target_count: storage_targets.len(),
+        storage_targets,
+        uses_local_storage,
+        uses_session_storage,
+        uses_cookies,
+        uses_indexed_db,
+        uses_cache_storage,
+        uses_service_worker,
+        uses_storage_manager,
+        listens_storage_events,
+        storage_blocked: !storage_block_reasons.is_empty(),
+        storage_block_reasons,
+    })
+}
+
+fn browser_script_storage_targets(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if uses_local_storage {
+        targets.push("localStorage".to_string());
+    }
+    if uses_session_storage {
+        targets.push("sessionStorage".to_string());
+    }
+    if uses_cookies {
+        targets.push("cookies".to_string());
+    }
+    if uses_indexed_db {
+        targets.push("indexedDB".to_string());
+    }
+    if uses_cache_storage {
+        targets.push("CacheStorage".to_string());
+    }
+    if uses_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_storage_manager {
+        targets.push("StorageManager".to_string());
+    }
+    if listens_storage_events {
+        targets.push("storage-event".to_string());
+    }
+    targets
+}
+
+fn browser_script_storage_access_kind(
+    uses_local_storage: bool,
+    uses_session_storage: bool,
+    uses_cookies: bool,
+    uses_indexed_db: bool,
+    uses_cache_storage: bool,
+    uses_service_worker: bool,
+    uses_storage_manager: bool,
+    listens_storage_events: bool,
+) -> String {
+    if uses_service_worker || uses_cache_storage {
+        "worker-cache-storage".to_string()
+    } else if uses_indexed_db {
+        "database-storage".to_string()
+    } else if uses_storage_manager {
+        "storage-manager".to_string()
+    } else if uses_local_storage || uses_session_storage || uses_cookies {
+        "client-key-value-storage".to_string()
+    } else if listens_storage_events {
+        "storage-event-listener".to_string()
+    } else {
+        "storage-metadata".to_string()
+    }
+}
+
+fn browser_script_storage_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_worker_messaging_descriptors(
+    scripts: &[BrowserScript],
+) -> Vec<BrowserScriptWorkerMessagingDescriptor> {
+    scripts
+        .iter()
+        .filter_map(browser_script_worker_messaging_descriptor)
+        .collect()
+}
+
+fn browser_script_worker_messaging_descriptor(
+    script: &BrowserScript,
+) -> Option<BrowserScriptWorkerMessagingDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let creates_shared_worker = normalized_text.contains("new sharedworker");
+    let creates_worker =
+        normalized_text.contains("new worker") && !normalized_text.contains("new sharedworker");
+    let registers_service_worker = normalized_text.contains("serviceworker.register")
+        || normalized_text.contains("service-worker.register")
+        || normalized_text.contains("navigator.serviceworker.register");
+    let uses_post_message =
+        normalized_text.contains("postmessage(") || normalized_text.contains(".postmessage(");
+    let listens_message_events = normalized_text.contains("addeventlistener('message'")
+        || normalized_text.contains("addeventlistener(\"message\"")
+        || normalized_text.contains("onmessage");
+    let uses_message_channel = normalized_text.contains("messagechannel");
+    let uses_broadcast_channel = normalized_text.contains("broadcastchannel");
+    let uses_import_scripts = normalized_text.contains("importscripts(");
+    let module_worker_hint = normalized_text.contains("type:'module'")
+        || normalized_text.contains("type: 'module'")
+        || normalized_text.contains("type:\"module\"")
+        || normalized_text.contains("type: \"module\"");
+    let messaging_targets = browser_script_worker_messaging_targets(
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+    );
+    if messaging_targets.is_empty() {
+        return None;
+    }
+
+    let messaging_block_reasons = browser_script_worker_messaging_block_reasons(script);
+    Some(BrowserScriptWorkerMessagingDescriptor {
+        script_kind: script.script_kind.clone(),
+        messaging_kind: browser_script_worker_messaging_kind(
+            creates_worker,
+            creates_shared_worker,
+            registers_service_worker,
+            uses_post_message,
+            listens_message_events,
+            uses_message_channel,
+            uses_broadcast_channel,
+            uses_import_scripts,
+            module_worker_hint,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        messaging_target_count: messaging_targets.len(),
+        messaging_targets,
+        creates_worker,
+        creates_shared_worker,
+        registers_service_worker,
+        uses_post_message,
+        listens_message_events,
+        uses_message_channel,
+        uses_broadcast_channel,
+        uses_import_scripts,
+        module_worker_hint,
+        messaging_blocked: !messaging_block_reasons.is_empty(),
+        messaging_block_reasons,
+    })
+}
+
+fn browser_script_worker_messaging_targets(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if creates_worker {
+        targets.push("Worker".to_string());
+    }
+    if creates_shared_worker {
+        targets.push("SharedWorker".to_string());
+    }
+    if registers_service_worker {
+        targets.push("serviceWorker".to_string());
+    }
+    if uses_post_message {
+        targets.push("postMessage".to_string());
+    }
+    if listens_message_events {
+        targets.push("message-event".to_string());
+    }
+    if uses_message_channel {
+        targets.push("MessageChannel".to_string());
+    }
+    if uses_broadcast_channel {
+        targets.push("BroadcastChannel".to_string());
+    }
+    if uses_import_scripts {
+        targets.push("importScripts".to_string());
+    }
+    if module_worker_hint {
+        targets.push("module-worker".to_string());
+    }
+    targets
+}
+
+fn browser_script_worker_messaging_kind(
+    creates_worker: bool,
+    creates_shared_worker: bool,
+    registers_service_worker: bool,
+    uses_post_message: bool,
+    listens_message_events: bool,
+    uses_message_channel: bool,
+    uses_broadcast_channel: bool,
+    uses_import_scripts: bool,
+    module_worker_hint: bool,
+) -> String {
+    if registers_service_worker {
+        "service-worker-registration".to_string()
+    } else if creates_shared_worker {
+        "shared-worker".to_string()
+    } else if creates_worker && module_worker_hint {
+        "module-worker".to_string()
+    } else if creates_worker || uses_import_scripts {
+        "dedicated-worker".to_string()
+    } else if uses_message_channel || uses_broadcast_channel {
+        "channel-messaging".to_string()
+    } else if uses_post_message || listens_message_events {
+        "post-message".to_string()
+    } else {
+        "worker-messaging-metadata".to_string()
+    }
+}
+
+fn browser_script_worker_messaging_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
+}
+
+fn browser_script_module_graph_descriptors(
+    scripts: &[BrowserScript],
+    resources: &[BrowserResource],
+) -> Vec<BrowserScriptModuleGraphDescriptor> {
+    let modulepreloads: Vec<_> = resources
+        .iter()
+        .filter(|resource| resource.kind == "modulepreload")
+        .collect();
+    scripts
+        .iter()
+        .filter_map(|script| browser_script_module_graph_descriptor(script, &modulepreloads))
+        .collect()
+}
+
+fn browser_script_module_graph_descriptor(
+    script: &BrowserScript,
+    modulepreloads: &[&BrowserResource],
+) -> Option<BrowserScriptModuleGraphDescriptor> {
+    let text = script.text.as_deref().unwrap_or_default();
+    let normalized_text = text.to_ascii_lowercase();
+    let external_module_entry = script.script_kind == "module" && script.src.is_some();
+    let inline_module_entry = script.script_kind == "module" && script.src.is_none();
+    let declares_import_map = script.script_kind == "importmap";
+    let uses_static_imports = browser_script_uses_static_module_imports(&normalized_text);
+    let uses_dynamic_imports = normalized_text.contains("import(");
+    let has_modulepreload = !modulepreloads.is_empty();
+    let module_targets = browser_script_module_graph_targets(
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+    );
+    if module_targets.is_empty() {
+        return None;
+    }
+
+    let modulepreload_urls = modulepreloads
+        .iter()
+        .map(|resource| resource.url.clone())
+        .collect();
+    let resolved_modulepreload_urls = modulepreloads
+        .iter()
+        .filter_map(|resource| resource.resolved_url.clone())
+        .collect();
+    let module_graph_block_reasons = browser_script_module_graph_block_reasons(script);
+    Some(BrowserScriptModuleGraphDescriptor {
+        script_kind: script.script_kind.clone(),
+        module_graph_kind: browser_script_module_graph_kind(
+            external_module_entry,
+            inline_module_entry,
+            declares_import_map,
+            uses_static_imports,
+            uses_dynamic_imports,
+        ),
+        src: script.src.clone(),
+        resolved_src: script.resolved_src.clone(),
+        type_hint: script.type_hint.clone(),
+        execution_kind: if script.src.is_some() {
+            "external".to_string()
+        } else {
+            "inline".to_string()
+        },
+        has_text: script.text.is_some(),
+        text_length: text.chars().count(),
+        module_target_count: module_targets.len(),
+        module_targets,
+        external_module_entry,
+        inline_module_entry,
+        declares_import_map,
+        uses_static_imports,
+        uses_dynamic_imports,
+        has_modulepreload,
+        modulepreload_urls,
+        resolved_modulepreload_urls,
+        module_graph_blocked: !module_graph_block_reasons.is_empty(),
+        module_graph_block_reasons,
+    })
+}
+
+fn browser_script_uses_static_module_imports(normalized_text: &str) -> bool {
+    normalized_text.contains("import ")
+        || normalized_text.contains("import{")
+        || normalized_text.contains("export ")
+        || normalized_text.contains(" from '")
+        || normalized_text.contains(" from \"")
+}
+
+fn browser_script_module_graph_targets(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+    has_modulepreload: bool,
+) -> Vec<String> {
+    let mut targets = Vec::new();
+    if external_module_entry {
+        targets.push("external-module-entry".to_string());
+    }
+    if inline_module_entry {
+        targets.push("inline-module-entry".to_string());
+    }
+    if declares_import_map {
+        targets.push("importmap".to_string());
+    }
+    if uses_static_imports {
+        targets.push("static-import".to_string());
+    }
+    if uses_dynamic_imports {
+        targets.push("dynamic-import".to_string());
+    }
+    if has_modulepreload {
+        targets.push("modulepreload".to_string());
+    }
+    targets
+}
+
+fn browser_script_module_graph_kind(
+    external_module_entry: bool,
+    inline_module_entry: bool,
+    declares_import_map: bool,
+    uses_static_imports: bool,
+    uses_dynamic_imports: bool,
+) -> String {
+    if declares_import_map {
+        "import-map".to_string()
+    } else if uses_static_imports && uses_dynamic_imports {
+        "mixed-module-imports".to_string()
+    } else if uses_static_imports {
+        "static-module-graph".to_string()
+    } else if uses_dynamic_imports {
+        "dynamic-module-import".to_string()
+    } else if external_module_entry || inline_module_entry {
+        "module-entry".to_string()
+    } else {
+        "module-graph-metadata".to_string()
+    }
+}
+
+fn browser_script_module_graph_block_reasons(script: &BrowserScript) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if script.script_kind == "data" {
+        reasons.push("non-executable-script-type".to_string());
+    }
+    if script.nomodule {
+        reasons.push("nomodule-fallback".to_string());
+    }
+    reasons
 }
 
 fn browser_stylesheet_planning_descriptors(
@@ -10943,6 +12205,8 @@ fn browser_document_policy_descriptor(
     let content_security_policy =
         browser_http_equiv_hint_content(metadata, "content-security-policy");
     let permissions_policy = browser_http_equiv_hint_content(metadata, "permissions-policy");
+    let permissions_policy_features =
+        browser_permissions_policy_features(permissions_policy.as_deref());
     let origin_trials = browser_http_equiv_hint_contents(metadata, "origin-trial");
     let accept_ch = browser_http_equiv_hint_content(metadata, "accept-ch");
     let accept_ch_tokens = accept_ch
@@ -10980,6 +12244,8 @@ fn browser_document_policy_descriptor(
         color_scheme: metadata.color_scheme.clone(),
         content_security_policy,
         permissions_policy,
+        permissions_policy_feature_count: permissions_policy_features.len(),
+        permissions_policy_features,
         origin_trials,
         accept_ch,
         accept_ch_tokens,
@@ -11120,6 +12386,32 @@ fn browser_metadata_list(content: &str) -> Vec<String> {
         .map(trim_browser_metadata_token)
         .filter(|part| !part.is_empty())
         .collect()
+}
+
+fn browser_permissions_policy_features(policy: Option<&str>) -> Vec<String> {
+    policy
+        .into_iter()
+        .flat_map(|policy| policy.split(','))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_allow_policy_features(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_policy_feature)
+        .collect()
+}
+
+fn browser_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .trim()
+        .split(|ch: char| ch == '=' || ch.is_whitespace())
+        .next()
+        .map(str::trim)
+        .filter(|feature| !feature.is_empty())
+        .map(str::to_ascii_lowercase)
 }
 
 fn split_browser_comma_tokens(value: &str) -> Vec<String> {
@@ -13880,6 +15172,1882 @@ fn browser_clipboard_kind(
     }
 }
 
+fn browser_selection_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserSelectionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_selection_state(text_entry, matching_interactive) {
+                descriptors.push(browser_selection_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_selection_state(element) {
+            descriptors.push(browser_selection_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_selection_state(event_descriptor) {
+            descriptors.push(browser_selection_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_selection_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(
+                        &element.event_handlers,
+                        browser_selection_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_selection_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_selection_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event)
+        .is_empty()
+}
+
+fn browser_selection_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserSelectionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let selection_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_event);
+    let select_handlers = browser_event_handlers_by_kind(event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_selection_input_event);
+    let selection_block_reasons =
+        browser_selection_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserSelectionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        selection_kind: browser_selection_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_select_event);
+    let selection_change_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_change_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_selection_input_event);
+    let selection_block_reasons = browser_selection_block_reasons_for_interactive(element);
+
+    BrowserSelectionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        handler_count: selection_handlers.len() + input_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        selection_blocked: !selection_block_reasons.is_empty(),
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserSelectionInteractionDescriptor {
+    let selection_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_selection_event);
+    let select_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_select_event);
+    let selection_change_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_selection_change_event,
+    );
+    let input_handlers = Vec::new();
+    let selection_block_reasons = Vec::new();
+
+    BrowserSelectionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        selection_kind: browser_selection_kind(
+            false,
+            false,
+            false,
+            &select_handlers,
+            &selection_change_handlers,
+            &input_handlers,
+            &selection_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        handler_count: selection_handlers.len(),
+        selection_handlers,
+        select_handlers,
+        selection_change_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        selection_blocked: false,
+        selection_block_reasons,
+    }
+}
+
+fn browser_selection_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_selection_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_selection_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_selection_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    select_handlers: &[String],
+    selection_change_handlers: &[String],
+    input_handlers: &[String],
+    selection_block_reasons: &[String],
+) -> String {
+    if !selection_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !selection_change_handlers.is_empty() {
+        "selection-change".to_string()
+    } else if !select_handlers.is_empty() {
+        "select-handler".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-selection".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
+fn browser_composition_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserCompositionInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for form in &document.forms {
+        for text_entry in &form.text_entries {
+            let matching_interactive = text_entry.id.as_deref().and_then(|id| {
+                document
+                    .interactive_elements
+                    .iter()
+                    .find(|element| element.id.as_deref() == Some(id))
+            });
+            if browser_text_entry_has_composition_state(text_entry, matching_interactive) {
+                descriptors.push(browser_composition_descriptor_from_text_entry(
+                    text_entry,
+                    matching_interactive,
+                ));
+            }
+        }
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_composition_state(element) {
+            descriptors.push(browser_composition_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_composition_state(event_descriptor) {
+            descriptors.push(browser_composition_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_text_entry_has_composition_state(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> bool {
+    text_entry.disabled
+        || text_entry.readonly
+        || matching_interactive
+            .map(|element| {
+                !browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event)
+                    .is_empty()
+                    || !browser_event_handlers_by_kind(
+                        &element.event_handlers,
+                        browser_text_input_event,
+                    )
+                    .is_empty()
+                    || element.hidden
+                    || element.inert
+                    || element.aria_hidden
+            })
+            .unwrap_or(false)
+}
+
+fn browser_interactive_has_composition_state(element: &BrowserInteractiveElement) -> bool {
+    element.contenteditable.is_some()
+        || element.editing_mode.is_some()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event)
+            .is_empty()
+        || !browser_event_handlers_by_kind(&element.event_handlers, browser_text_input_event)
+            .is_empty()
+}
+
+fn browser_event_descriptor_has_composition_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_composition_event)
+        .is_empty()
+        || !browser_event_handlers_by_kind(
+            &event_descriptor.event_handlers,
+            browser_text_input_event,
+        )
+        .is_empty()
+}
+
+fn browser_composition_descriptor_from_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> BrowserCompositionInteractionDescriptor {
+    let event_handlers = matching_interactive
+        .map(|element| element.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let composition_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_event);
+    let composition_start_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_start_event);
+    let composition_update_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_update_event);
+    let composition_end_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_composition_end_event);
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(event_handlers, browser_beforeinput_event);
+    let input_handlers = browser_event_handlers_by_kind(event_handlers, browser_text_input_event);
+    let composition_block_reasons =
+        browser_composition_block_reasons_for_text_entry(text_entry, matching_interactive);
+
+    BrowserCompositionInteractionDescriptor {
+        element: if text_entry.control_type == "textarea" {
+            "textarea".to_string()
+        } else {
+            "input".to_string()
+        },
+        id: text_entry.id.clone(),
+        role: Some("control".to_string()),
+        authored_role: matching_interactive.and_then(|element| element.authored_role.clone()),
+        source: "text-entry".to_string(),
+        composition_kind: browser_composition_kind(
+            text_entry.readonly,
+            text_entry.control_type == "textarea",
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: text_entry.text.clone(),
+        accessible_name: text_entry.accessible_name.clone(),
+        control_type: Some(text_entry.control_type.clone()),
+        name: text_entry.name.clone(),
+        form_owner: text_entry.form_owner.clone(),
+        value: text_entry.value.clone(),
+        contenteditable: None,
+        editing_mode: (text_entry.control_type == "textarea").then(|| "plaintext".to_string()),
+        spellcheck: text_entry.spellcheck.clone(),
+        inputmode: text_entry.inputmode.clone(),
+        enterkeyhint: text_entry.enterkeyhint.clone(),
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(!text_entry.disabled),
+        readonly: text_entry.readonly,
+        disabled: text_entry.disabled,
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_event);
+    let composition_start_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_start_event);
+    let composition_update_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_update_event);
+    let composition_end_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_composition_end_event);
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_beforeinput_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_text_input_event);
+    let composition_block_reasons = browser_composition_block_reasons_for_interactive(element);
+
+    BrowserCompositionInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        composition_kind: browser_composition_kind(
+            false,
+            false,
+            element.editing_mode.is_some(),
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: element.editing_mode.is_some().then(|| element.text.clone()),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        spellcheck: element.spellcheck.clone(),
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        readonly: false,
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        composition_blocked: !composition_block_reasons.is_empty(),
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserCompositionInteractionDescriptor {
+    let composition_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_composition_event);
+    let composition_start_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_start_event,
+    );
+    let composition_update_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_update_event,
+    );
+    let composition_end_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_composition_end_event,
+    );
+    let beforeinput_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_beforeinput_event);
+    let input_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_text_input_event);
+    let composition_block_reasons = Vec::new();
+
+    BrowserCompositionInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        composition_kind: browser_composition_kind(
+            false,
+            false,
+            false,
+            &composition_handlers,
+            &beforeinput_handlers,
+            &input_handlers,
+            &composition_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        name: None,
+        form_owner: None,
+        value: None,
+        contenteditable: None,
+        editing_mode: None,
+        spellcheck: None,
+        inputmode: None,
+        enterkeyhint: None,
+        handler_count: composition_handlers.len() + beforeinput_handlers.len(),
+        composition_handlers,
+        composition_start_handlers,
+        composition_update_handlers,
+        composition_end_handlers,
+        beforeinput_handlers,
+        input_handlers,
+        focusable: false,
+        readonly: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        composition_blocked: false,
+        composition_block_reasons,
+    }
+}
+
+fn browser_composition_block_reasons_for_text_entry(
+    text_entry: &BrowserFormTextEntry,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if text_entry.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if text_entry.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_composition_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_composition_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_composition_kind(
+    readonly: bool,
+    multiline: bool,
+    editing_host: bool,
+    composition_handlers: &[String],
+    beforeinput_handlers: &[String],
+    input_handlers: &[String],
+    composition_block_reasons: &[String],
+) -> String {
+    if !composition_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionstart")
+    {
+        "ime-session".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionupdate")
+    {
+        "ime-update".to_string()
+    } else if composition_handlers
+        .iter()
+        .any(|handler| handler == "oncompositionend")
+    {
+        "ime-commit".to_string()
+    } else if !beforeinput_handlers.is_empty() {
+        "beforeinput-target".to_string()
+    } else if editing_host {
+        "editing-host".to_string()
+    } else if readonly {
+        "readonly-text".to_string()
+    } else if multiline {
+        "multiline-text".to_string()
+    } else if !input_handlers.is_empty() {
+        "input-target".to_string()
+    } else {
+        "text-control".to_string()
+    }
+}
+
+fn browser_pointer_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserPointerInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        if browser_interactive_has_pointer_state(element) {
+            descriptors.push(browser_pointer_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_pointer_state(event_descriptor) {
+            descriptors.push(browser_pointer_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_pointer_state(element: &BrowserInteractiveElement) -> bool {
+    element.draggable.is_some()
+        || element.command.is_some()
+        || element.command_for.is_some()
+        || element.popover_target.is_some()
+        || element.popover_target_action.is_some()
+        || !browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_pointer_interaction_event,
+        )
+        .is_empty()
+}
+
+fn browser_event_descriptor_has_pointer_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_pointer_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_pointer_interaction_event);
+    let mouse_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_mouse_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_touch_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_wheel_event);
+    let click_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_click_event);
+    let drag_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_drag_event);
+    let drop_handlers = browser_event_handlers_by_kind(&element.event_handlers, browser_drop_event);
+    let pointer_block_reasons = browser_pointer_block_reasons_for_interactive(element);
+
+    BrowserPointerInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        pointer_kind: browser_pointer_kind(
+            element.draggable_state.as_deref(),
+            element.command.is_some()
+                || element.command_for.is_some()
+                || element.popover_target.is_some()
+                || element.popover_target_action.is_some(),
+            element.editing_mode.is_some(),
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        control_type: (element.element == "button").then(|| "submit".to_string()),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        contenteditable: element.contenteditable.clone(),
+        editing_mode: element.editing_mode.clone(),
+        draggable: element.draggable.clone(),
+        draggable_state: element.draggable_state.clone(),
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        pointer_blocked: !pointer_block_reasons.is_empty(),
+        pointer_block_reasons,
+    }
+}
+
+fn browser_pointer_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserPointerInteractionDescriptor {
+    let pointer_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    );
+    let mouse_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_mouse_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_touch_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_wheel_event);
+    let click_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_click_event);
+    let drag_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drag_event);
+    let drop_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_drop_event);
+    let pointer_block_reasons = Vec::new();
+
+    BrowserPointerInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        pointer_kind: browser_pointer_kind(
+            None,
+            false,
+            false,
+            &pointer_handlers,
+            &mouse_handlers,
+            &touch_handlers,
+            &wheel_handlers,
+            &click_handlers,
+            &drag_handlers,
+            &drop_handlers,
+            &pointer_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        control_type: None,
+        command: None,
+        command_for: None,
+        popover_target: None,
+        popover_target_action: None,
+        contenteditable: None,
+        editing_mode: None,
+        draggable: None,
+        draggable_state: None,
+        handler_count: pointer_handlers.len(),
+        pointer_handlers,
+        mouse_handlers,
+        touch_handlers,
+        wheel_handlers,
+        click_handlers,
+        drag_handlers,
+        drop_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        pointer_blocked: false,
+        pointer_block_reasons,
+    }
+}
+
+fn browser_pointer_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_pointer_kind(
+    draggable_state: Option<&str>,
+    command_target: bool,
+    editing_host: bool,
+    pointer_handlers: &[String],
+    mouse_handlers: &[String],
+    touch_handlers: &[String],
+    wheel_handlers: &[String],
+    click_handlers: &[String],
+    drag_handlers: &[String],
+    drop_handlers: &[String],
+    pointer_block_reasons: &[String],
+) -> String {
+    if !pointer_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if browser_draggable_source(draggable_state) && !drop_handlers.is_empty() {
+        "drag-source-and-drop-target".to_string()
+    } else if browser_draggable_source(draggable_state) || !drag_handlers.is_empty() {
+        "drag-source".to_string()
+    } else if !drop_handlers.is_empty() {
+        "drop-target".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-target".to_string()
+    } else if pointer_handlers
+        .iter()
+        .any(|handler| handler.starts_with("onpointer"))
+    {
+        "pointer-target".to_string()
+    } else if !mouse_handlers.is_empty() {
+        "mouse-target".to_string()
+    } else if !click_handlers.is_empty() {
+        "click-target".to_string()
+    } else if command_target {
+        "command-target".to_string()
+    } else if editing_host {
+        "editing-target".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
+fn browser_scroll_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserScrollInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for range in &document.aria_ranges {
+        if range.role != "scrollbar" {
+            continue;
+        }
+        let matching_interactive = range.id.as_deref().and_then(|id| {
+            document
+                .interactive_elements
+                .iter()
+                .find(|element| element.id.as_deref() == Some(id))
+        });
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &range.element,
+            range.id.as_deref(),
+        );
+        descriptors.push(browser_scroll_descriptor_from_aria_range(
+            range,
+            matching_interactive,
+            event_descriptor,
+        ));
+    }
+
+    for element in &document.interactive_elements {
+        if descriptors
+            .iter()
+            .any(|descriptor| descriptor.element == element.element && descriptor.id == element.id)
+        {
+            continue;
+        }
+        if browser_interactive_has_scroll_state(element) {
+            descriptors.push(browser_scroll_descriptor_from_interactive(element));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element
+                && descriptor.id == event_descriptor.id
+                && (event_descriptor.source == "element"
+                    || descriptor.source == event_descriptor.source)
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_scroll_state(event_descriptor) {
+            descriptors.push(browser_scroll_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_scroll_state(element: &BrowserInteractiveElement) -> bool {
+    element.authored_role.as_deref() == Some("scrollbar")
+        || !browser_event_handlers_by_kind(
+            &element.event_handlers,
+            browser_scroll_interaction_event,
+        )
+        .is_empty()
+}
+
+fn browser_event_descriptor_has_scroll_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_scroll_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_scroll_descriptor_from_aria_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserScrollInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.as_slice())
+        .unwrap_or(&[]);
+    let scroll_handlers = browser_event_handlers_by_kind(event_handlers, browser_scroll_event);
+    let wheel_handlers = browser_event_handlers_by_kind(event_handlers, browser_wheel_event);
+    let touch_handlers = browser_event_handlers_by_kind(event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_range(range, matching_interactive);
+
+    BrowserScrollInteractionDescriptor {
+        element: range.element.clone(),
+        id: range.id.clone(),
+        role: Some(range.role.clone()),
+        authored_role: Some(range.role.clone()),
+        source: "aria-range".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "aria-range",
+            Some(range.role.as_str()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: range.text.clone(),
+        accessible_name: range.accessible_name.clone(),
+        accessible_description: range.accessible_description.clone(),
+        aria_valuenow: range.aria_valuenow.clone(),
+        aria_valuemin: range.aria_valuemin.clone(),
+        aria_valuemax: range.aria_valuemax.clone(),
+        aria_valuetext: range.aria_valuetext.clone(),
+        aria_orientation: range.aria_orientation.clone(),
+        aria_disabled: range.aria_disabled.clone(),
+        aria_readonly: range.aria_readonly.clone(),
+        tabindex: range.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: matching_interactive
+            .and_then(|element| element.focusable)
+            .unwrap_or(false),
+        disabled: matching_interactive
+            .map(|element| element.disabled)
+            .unwrap_or(false),
+        hidden: matching_interactive
+            .map(|element| element.hidden)
+            .unwrap_or(false),
+        inert: matching_interactive
+            .map(|element| element.inert)
+            .unwrap_or(false),
+        aria_hidden: matching_interactive
+            .map(|element| element.aria_hidden)
+            .unwrap_or(false),
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&element.event_handlers, browser_touch_event);
+    let scroll_block_reasons = browser_scroll_block_reasons_for_interactive(element);
+
+    BrowserScrollInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        scroll_kind: browser_scroll_kind(
+            "interactive",
+            element.authored_role.as_deref().or(element.role.as_deref()),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: element.aria_disabled.clone(),
+        aria_readonly: None,
+        tabindex: element.tabindex.clone(),
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        scroll_blocked: !scroll_block_reasons.is_empty(),
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserScrollInteractionDescriptor {
+    let scroll_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_scroll_event);
+    let wheel_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_wheel_event);
+    let touch_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_touch_event);
+    let scroll_block_reasons = Vec::new();
+
+    BrowserScrollInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: event_descriptor.source.clone(),
+        scroll_kind: browser_scroll_kind(
+            event_descriptor.source.as_str(),
+            event_descriptor.role.as_deref(),
+            &scroll_handlers,
+            &wheel_handlers,
+            &touch_handlers,
+            &scroll_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_valuenow: None,
+        aria_valuemin: None,
+        aria_valuemax: None,
+        aria_valuetext: None,
+        aria_orientation: None,
+        aria_disabled: None,
+        aria_readonly: None,
+        tabindex: None,
+        handler_count: scroll_handlers.len() + wheel_handlers.len() + touch_handlers.len(),
+        scroll_handlers,
+        wheel_handlers,
+        touch_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        scroll_blocked: false,
+        scroll_block_reasons,
+    }
+}
+
+fn browser_scroll_block_reasons_for_range(
+    range: &BrowserAriaRange,
+    matching_interactive: Option<&BrowserInteractiveElement>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if range.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    if let Some(element) = matching_interactive {
+        reasons.extend(browser_scroll_block_reasons_for_interactive(element));
+    }
+    reasons.sort();
+    reasons.dedup();
+    reasons
+}
+
+fn browser_scroll_block_reasons_for_interactive(
+    element: &BrowserInteractiveElement,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if element.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if element.hidden {
+        reasons.push("hidden".to_string());
+    }
+    if element.inert {
+        reasons.push("inert".to_string());
+    }
+    if element.aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if element.aria_disabled.as_deref() == Some("true") {
+        reasons.push("aria-disabled".to_string());
+    }
+    reasons
+}
+
+fn browser_scroll_kind(
+    source: &str,
+    role: Option<&str>,
+    scroll_handlers: &[String],
+    wheel_handlers: &[String],
+    touch_handlers: &[String],
+    scroll_block_reasons: &[String],
+) -> String {
+    if !scroll_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if role == Some("scrollbar") {
+        "scrollbar".to_string()
+    } else if !scroll_handlers.is_empty() {
+        "scroll-handler".to_string()
+    } else if !wheel_handlers.is_empty() {
+        "wheel-target".to_string()
+    } else if !touch_handlers.is_empty() {
+        "touch-scroll-target".to_string()
+    } else if source == "document" {
+        "document-scroll".to_string()
+    } else if source == "body" {
+        "body-scroll".to_string()
+    } else {
+        "metadata".to_string()
+    }
+}
+
+fn browser_lifecycle_event_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserLifecycleEventDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_lifecycle_state(descriptor))
+        .map(browser_lifecycle_event_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_lifecycle_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !descriptor.lifecycle_handlers.is_empty() || !descriptor.error_handlers.is_empty()
+}
+
+fn browser_lifecycle_event_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserLifecycleEventDescriptor {
+    let load_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_load_lifecycle_event);
+    let unload_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_unload_lifecycle_event);
+    let visibility_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_visibility_lifecycle_event,
+    );
+    let history_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_history_lifecycle_event);
+    let network_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_network_lifecycle_event);
+
+    BrowserLifecycleEventDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        lifecycle_kind: browser_lifecycle_kind(
+            &load_handlers,
+            &unload_handlers,
+            &visibility_handlers,
+            &history_handlers,
+            &network_handlers,
+            &descriptor.error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        lifecycle_handlers: descriptor.lifecycle_handlers.clone(),
+        load_handlers,
+        unload_handlers,
+        visibility_handlers,
+        history_handlers,
+        network_handlers,
+        error_handlers: descriptor.error_handlers.clone(),
+        handler_count: descriptor.lifecycle_handlers.len() + descriptor.error_handlers.len(),
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+        error_recovery: !descriptor.error_handlers.is_empty(),
+    }
+}
+
+fn browser_lifecycle_kind(
+    load_handlers: &[String],
+    unload_handlers: &[String],
+    visibility_handlers: &[String],
+    history_handlers: &[String],
+    network_handlers: &[String],
+    error_handlers: &[String],
+) -> String {
+    if !error_handlers.is_empty()
+        && (!load_handlers.is_empty()
+            || !unload_handlers.is_empty()
+            || !visibility_handlers.is_empty()
+            || !history_handlers.is_empty()
+            || !network_handlers.is_empty())
+    {
+        "lifecycle-error".to_string()
+    } else if !error_handlers.is_empty() {
+        "error-recovery".to_string()
+    } else if !unload_handlers.is_empty() {
+        "unload".to_string()
+    } else if !load_handlers.is_empty() {
+        "load".to_string()
+    } else if !visibility_handlers.is_empty() {
+        "visibility".to_string()
+    } else if !history_handlers.is_empty() {
+        "history".to_string()
+    } else if !network_handlers.is_empty() {
+        "network".to_string()
+    } else {
+        "lifecycle".to_string()
+    }
+}
+
+fn browser_animation_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserAnimationInteractionDescriptor> {
+    document
+        .event_handler_descriptors
+        .iter()
+        .filter(|descriptor| browser_event_descriptor_has_animation_interaction_state(descriptor))
+        .map(browser_animation_interaction_descriptor)
+        .collect()
+}
+
+fn browser_event_descriptor_has_animation_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_interaction_event,
+    )
+    .is_empty()
+}
+
+fn browser_animation_interaction_descriptor(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserAnimationInteractionDescriptor {
+    let animation_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_event);
+    let animation_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_start_event);
+    let animation_iteration_handlers = browser_event_handlers_by_kind(
+        &descriptor.event_handlers,
+        browser_animation_iteration_event,
+    );
+    let animation_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_end_event);
+    let animation_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_animation_cancel_event);
+    let transition_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_event);
+    let transition_run_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_run_event);
+    let transition_start_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_start_event);
+    let transition_end_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_end_event);
+    let transition_cancel_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_transition_cancel_event);
+
+    BrowserAnimationInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        animation_kind: browser_animation_interaction_kind(
+            &animation_handlers,
+            &animation_start_handlers,
+            &animation_iteration_handlers,
+            &animation_end_handlers,
+            &animation_cancel_handlers,
+            &transition_handlers,
+            &transition_run_handlers,
+            &transition_start_handlers,
+            &transition_end_handlers,
+            &transition_cancel_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: animation_handlers.len() + transition_handlers.len(),
+        animation_handlers,
+        animation_start_handlers,
+        animation_iteration_handlers,
+        animation_end_handlers,
+        animation_cancel_handlers,
+        transition_handlers,
+        transition_run_handlers,
+        transition_start_handlers,
+        transition_end_handlers,
+        transition_cancel_handlers,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_animation_interaction_kind(
+    animation_handlers: &[String],
+    animation_start_handlers: &[String],
+    animation_iteration_handlers: &[String],
+    animation_end_handlers: &[String],
+    animation_cancel_handlers: &[String],
+    transition_handlers: &[String],
+    transition_run_handlers: &[String],
+    transition_start_handlers: &[String],
+    transition_end_handlers: &[String],
+    transition_cancel_handlers: &[String],
+) -> String {
+    if !animation_cancel_handlers.is_empty() || !transition_cancel_handlers.is_empty() {
+        "animation-cancel".to_string()
+    } else if !animation_handlers.is_empty() && !transition_handlers.is_empty() {
+        "animation-transition".to_string()
+    } else if !animation_iteration_handlers.is_empty() {
+        "animation-iteration".to_string()
+    } else if !animation_end_handlers.is_empty() {
+        "animation-end".to_string()
+    } else if !animation_start_handlers.is_empty() {
+        "animation-start".to_string()
+    } else if !transition_end_handlers.is_empty() {
+        "transition-end".to_string()
+    } else if !transition_start_handlers.is_empty() {
+        "transition-start".to_string()
+    } else if !transition_run_handlers.is_empty() {
+        "transition-run".to_string()
+    } else if !animation_handlers.is_empty() {
+        "animation".to_string()
+    } else {
+        "transition".to_string()
+    }
+}
+
+fn browser_fullscreen_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserFullscreenInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for policy in &document.embedded_policy_descriptors {
+        if !policy.allowfullscreen && !browser_allow_fullscreen_policy(policy.allow.as_deref()) {
+            continue;
+        }
+
+        let matching_event_descriptor =
+            document
+                .event_handler_descriptors
+                .iter()
+                .find(|event_descriptor| {
+                    browser_fullscreen_descriptor_matches_policy(event_descriptor, policy)
+                });
+        descriptors.push(browser_fullscreen_descriptor_from_embedded_policy(
+            policy,
+            matching_event_descriptor,
+        ));
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if !browser_event_descriptor_has_fullscreen_interaction_state(event_descriptor) {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            browser_fullscreen_descriptor_matches_event(descriptor, event_descriptor)
+        }) {
+            continue;
+        }
+        descriptors.push(browser_fullscreen_descriptor_from_event(event_descriptor));
+    }
+
+    descriptors
+}
+
+fn browser_fullscreen_descriptor_matches_policy(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+    policy: &BrowserEmbeddedPolicyDescriptor,
+) -> bool {
+    event_descriptor.element == policy.element
+        && event_descriptor.id.as_deref() == policy.browsing_context_name.as_deref()
+}
+
+fn browser_fullscreen_descriptor_matches_event(
+    descriptor: &BrowserFullscreenInteractionDescriptor,
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+}
+
+fn browser_event_descriptor_has_fullscreen_interaction_state(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event).is_empty()
+}
+
+fn browser_fullscreen_descriptor_from_embedded_policy(
+    policy: &BrowserEmbeddedPolicyDescriptor,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserFullscreenInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_default();
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_fullscreen_error_event);
+    let allow_tokens = browser_permission_policy_tokens(policy.allow.as_deref());
+    let fullscreen_allowed =
+        policy.allowfullscreen || browser_allow_fullscreen_policy(policy.allow.as_deref());
+
+    BrowserFullscreenInteractionDescriptor {
+        element: policy.element.clone(),
+        id: policy.browsing_context_name.clone(),
+        classes: event_descriptor
+            .map(|descriptor| descriptor.classes.clone())
+            .unwrap_or_default(),
+        role: event_descriptor.and_then(|descriptor| descriptor.role.clone()),
+        source: "embedded-policy".to_string(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            fullscreen_allowed,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: policy.fallback_text.clone(),
+        event_handlers,
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: policy.allow.clone(),
+        allow_tokens,
+        allowfullscreen: policy.allowfullscreen,
+        fullscreen_allowed,
+        embedded_context: true,
+        document_scope: false,
+        body_scope: false,
+    }
+}
+
+fn browser_fullscreen_descriptor_from_event(
+    descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserFullscreenInteractionDescriptor {
+    let fullscreen_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_event);
+    let fullscreen_change_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_change_event);
+    let fullscreen_error_handlers =
+        browser_event_handlers_by_kind(&descriptor.event_handlers, browser_fullscreen_error_event);
+
+    BrowserFullscreenInteractionDescriptor {
+        element: descriptor.element.clone(),
+        id: descriptor.id.clone(),
+        classes: descriptor.classes.clone(),
+        role: descriptor.role.clone(),
+        source: descriptor.source.clone(),
+        fullscreen_kind: browser_fullscreen_interaction_kind(
+            false,
+            &fullscreen_change_handlers,
+            &fullscreen_error_handlers,
+        ),
+        text: descriptor.text.clone(),
+        event_handlers: descriptor.event_handlers.clone(),
+        handler_count: fullscreen_handlers.len(),
+        fullscreen_handlers,
+        fullscreen_change_handlers,
+        fullscreen_error_handlers,
+        allow: None,
+        allow_tokens: Vec::new(),
+        allowfullscreen: false,
+        fullscreen_allowed: false,
+        embedded_context: false,
+        document_scope: descriptor.source == "document",
+        body_scope: descriptor.source == "body",
+    }
+}
+
+fn browser_fullscreen_interaction_kind(
+    fullscreen_allowed: bool,
+    fullscreen_change_handlers: &[String],
+    fullscreen_error_handlers: &[String],
+) -> String {
+    if fullscreen_allowed && !fullscreen_error_handlers.is_empty() {
+        "fullscreen-policy-error".to_string()
+    } else if fullscreen_allowed && !fullscreen_change_handlers.is_empty() {
+        "fullscreen-policy-change".to_string()
+    } else if fullscreen_allowed {
+        "fullscreen-enabled".to_string()
+    } else if !fullscreen_error_handlers.is_empty() {
+        "fullscreen-error".to_string()
+    } else {
+        "fullscreen-change".to_string()
+    }
+}
+
+fn browser_allow_fullscreen_policy(allow: Option<&str>) -> bool {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .any(|feature| feature == "fullscreen")
+}
+
+fn browser_permission_policy_tokens(allow: Option<&str>) -> Vec<String> {
+    allow
+        .into_iter()
+        .flat_map(|allow| allow.split(';'))
+        .filter_map(browser_permission_policy_feature)
+        .collect()
+}
+
+fn browser_permission_policy_feature(directive: &str) -> Option<String> {
+    directive
+        .split_whitespace()
+        .next()
+        .map(str::to_ascii_lowercase)
+        .filter(|feature| !feature.is_empty())
+}
+
+fn browser_context_menu_interaction_descriptors(
+    document: &BrowserDocument,
+) -> Vec<BrowserContextMenuInteractionDescriptor> {
+    let mut descriptors = Vec::new();
+
+    for element in &document.interactive_elements {
+        let event_descriptor = browser_matching_event_descriptor(
+            &document.event_handler_descriptors,
+            &element.element,
+            element.id.as_deref(),
+        );
+        if browser_interactive_has_context_menu_state(element, event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_interactive(
+                element,
+                event_descriptor,
+            ));
+        }
+    }
+
+    for event_descriptor in &document.event_handler_descriptors {
+        if event_descriptor.source != "element" {
+            continue;
+        }
+        if descriptors.iter().any(|descriptor| {
+            descriptor.element == event_descriptor.element && descriptor.id == event_descriptor.id
+        }) {
+            continue;
+        }
+        if browser_event_descriptor_has_context_menu_state(event_descriptor) {
+            descriptors.push(browser_context_menu_descriptor_from_event(event_descriptor));
+        }
+    }
+
+    descriptors
+}
+
+fn browser_interactive_has_context_menu_state(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> bool {
+    browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || element
+            .authored_role
+            .as_deref()
+            .is_some_and(browser_menu_role)
+        || (element.popover.is_some()
+            && element
+                .authored_role
+                .as_deref()
+                .is_some_and(browser_menu_role))
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()))
+        || event_descriptor
+            .map(browser_event_descriptor_has_context_menu_state)
+            .unwrap_or(false)
+}
+
+fn browser_event_descriptor_has_context_menu_state(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> bool {
+    !browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_context_menu_event)
+        .is_empty()
+}
+
+fn browser_context_menu_descriptor_from_interactive(
+    element: &BrowserInteractiveElement,
+    event_descriptor: Option<&BrowserEventHandlerDescriptor>,
+) -> BrowserContextMenuInteractionDescriptor {
+    let event_handlers = event_descriptor
+        .map(|descriptor| descriptor.event_handlers.clone())
+        .unwrap_or_else(|| element.event_handlers.clone());
+    let contextmenu_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_context_menu_event);
+    let pointer_handlers =
+        browser_event_handlers_by_kind(&event_handlers, browser_pointer_interaction_event);
+    let keyboard_handlers = browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = browser_pointer_block_reasons_for_interactive(element);
+    let menu_role = element
+        .authored_role
+        .as_deref()
+        .is_some_and(browser_menu_role);
+    let menu_invoker = browser_aria_haspopup_menu(element.aria_haspopup.as_deref())
+        || (element.popover_target.is_some()
+            && browser_aria_haspopup_menu(element.aria_haspopup.as_deref()));
+
+    BrowserContextMenuInteractionDescriptor {
+        element: element.element.clone(),
+        id: element.id.clone(),
+        role: element.role.clone(),
+        authored_role: element.authored_role.clone(),
+        source: "interactive".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            menu_invoker,
+            menu_role,
+            element.popover.is_some() && menu_role,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: element.text.clone(),
+        accessible_name: element.accessible_name.clone(),
+        accessible_description: element.accessible_description.clone(),
+        aria_haspopup: element.aria_haspopup.clone(),
+        aria_controls: element.aria_controls.clone(),
+        aria_expanded: element.aria_expanded.clone(),
+        popover: element.popover.clone(),
+        popover_target: element.popover_target.clone(),
+        popover_target_action: element.popover_target_action.clone(),
+        command: element.command.clone(),
+        command_for: element.command_for.clone(),
+        event_handlers,
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: element.focusable.unwrap_or(false),
+        disabled: element.disabled,
+        hidden: element.hidden,
+        inert: element.inert,
+        aria_hidden: element.aria_hidden,
+        context_menu_blocked: !context_menu_block_reasons.is_empty(),
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_descriptor_from_event(
+    event_descriptor: &BrowserEventHandlerDescriptor,
+) -> BrowserContextMenuInteractionDescriptor {
+    let contextmenu_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_context_menu_event,
+    );
+    let pointer_handlers = browser_event_handlers_by_kind(
+        &event_descriptor.event_handlers,
+        browser_pointer_interaction_event,
+    );
+    let keyboard_handlers =
+        browser_event_handlers_by_kind(&event_descriptor.event_handlers, browser_keyboard_event);
+    let context_menu_block_reasons = Vec::new();
+
+    BrowserContextMenuInteractionDescriptor {
+        element: event_descriptor.element.clone(),
+        id: event_descriptor.id.clone(),
+        role: event_descriptor.role.clone(),
+        authored_role: None,
+        source: "event-handler".to_string(),
+        context_menu_kind: browser_context_menu_kind(
+            false,
+            false,
+            false,
+            &contextmenu_handlers,
+            &keyboard_handlers,
+            &context_menu_block_reasons,
+        ),
+        text: event_descriptor.text.clone(),
+        accessible_name: None,
+        accessible_description: None,
+        aria_haspopup: None,
+        aria_controls: Vec::new(),
+        aria_expanded: None,
+        popover: None,
+        popover_target: None,
+        popover_target_action: None,
+        command: None,
+        command_for: None,
+        event_handlers: event_descriptor.event_handlers.clone(),
+        handler_count: contextmenu_handlers.len() + keyboard_handlers.len(),
+        contextmenu_handlers,
+        pointer_handlers,
+        keyboard_handlers,
+        focusable: false,
+        disabled: false,
+        hidden: false,
+        inert: false,
+        aria_hidden: false,
+        context_menu_blocked: false,
+        context_menu_block_reasons,
+    }
+}
+
+fn browser_context_menu_kind(
+    menu_invoker: bool,
+    menu_role: bool,
+    popover_surface: bool,
+    contextmenu_handlers: &[String],
+    keyboard_handlers: &[String],
+    context_menu_block_reasons: &[String],
+) -> String {
+    if !context_menu_block_reasons.is_empty() {
+        "blocked".to_string()
+    } else if !contextmenu_handlers.is_empty() && menu_invoker {
+        "custom-menu-handler".to_string()
+    } else if !contextmenu_handlers.is_empty() {
+        "context-menu-handler".to_string()
+    } else if menu_invoker {
+        "menu-invoker".to_string()
+    } else if popover_surface {
+        "menu-surface".to_string()
+    } else if menu_role {
+        "menu-item".to_string()
+    } else if !keyboard_handlers.is_empty() {
+        "keyboard-menu".to_string()
+    } else {
+        "context-menu".to_string()
+    }
+}
+
+fn browser_aria_haspopup_menu(value: Option<&str>) -> bool {
+    matches!(value, Some("true" | "menu"))
+}
+
+fn browser_menu_role(role: &str) -> bool {
+    matches!(
+        role,
+        "menu" | "menubar" | "menuitem" | "menuitemcheckbox" | "menuitemradio"
+    )
+}
+
 fn browser_command_role(element: &Element) -> String {
     browser_authored_role(element).unwrap_or_else(|| {
         browser_content_role(&element.name)
@@ -14102,6 +17270,18 @@ fn browser_aria_collection_element(
         .iter()
         .filter(|item| item.aria_disabled.as_deref() == Some("true"))
         .count();
+    let aria_multiselectable = browser_aria_state(element, "aria-multiselectable");
+    let aria_activedescendant = browser_aria_idref(element, "aria-activedescendant");
+    let item_roles = browser_aria_collection_item_roles(&items);
+    let selection_mode = browser_aria_collection_selection_mode(
+        aria_multiselectable.as_deref(),
+        selected_item_count,
+        checked_item_count,
+        current_item_count,
+    );
+    let active_descendant_matches_item = aria_activedescendant
+        .as_deref()
+        .is_some_and(|id| items.iter().any(|item| item.id.as_deref() == Some(id)));
 
     Some(BrowserAriaCollection {
         element: element.name.clone(),
@@ -14113,17 +17293,49 @@ fn browser_aria_collection_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_orientation: browser_aria_state(element, "aria-orientation"),
-        aria_multiselectable: browser_aria_state(element, "aria-multiselectable"),
-        aria_activedescendant: browser_aria_idref(element, "aria-activedescendant"),
+        aria_multiselectable,
+        aria_activedescendant,
         aria_owns: browser_aria_idrefs(element, "aria-owns"),
         item_count: items.len(),
         selected_item_count,
         checked_item_count,
         current_item_count,
         disabled_item_count,
+        item_roles,
+        selection_mode,
+        active_descendant_matches_item,
         role,
         items,
     })
+}
+
+fn browser_aria_collection_item_roles(items: &[BrowserAriaCollectionItem]) -> Vec<String> {
+    let mut roles = Vec::new();
+    for item in items {
+        if !roles.contains(&item.role) {
+            roles.push(item.role.clone());
+        }
+    }
+    roles
+}
+
+fn browser_aria_collection_selection_mode(
+    aria_multiselectable: Option<&str>,
+    selected_item_count: usize,
+    checked_item_count: usize,
+    current_item_count: usize,
+) -> String {
+    if aria_multiselectable.is_some_and(|value| value.eq_ignore_ascii_case("true"))
+        || selected_item_count > 1
+        || checked_item_count > 1
+    {
+        "multiple"
+    } else if selected_item_count + checked_item_count + current_item_count > 0 {
+        "single"
+    } else {
+        "none"
+    }
+    .to_string()
 }
 
 fn browser_authored_collection_role(element: &Element) -> Option<String> {
@@ -14214,6 +17426,16 @@ fn browser_aria_range_element(
 ) -> Option<BrowserAriaRange> {
     let role = browser_authored_range_role(element)?;
     let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_valuenow = browser_aria_state(element, "aria-valuenow");
+    let aria_valuemin = browser_aria_state(element, "aria-valuemin");
+    let aria_valuemax = browser_aria_state(element, "aria-valuemax");
+    let aria_valuetext = browser_aria_state(element, "aria-valuetext");
+    let aria_disabled = browser_aria_state(element, "aria-disabled");
+    let aria_readonly = browser_aria_state(element, "aria-readonly");
+    let value_attribute_names =
+        browser_aria_range_value_attribute_names(element, aria_valuetext.is_some());
+    let range_block_reasons =
+        browser_aria_range_block_reasons(aria_disabled.as_deref(), aria_readonly.as_deref());
     Some(BrowserAriaRange {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -14223,19 +17445,57 @@ fn browser_aria_range_element(
         aria_label: browser_aria_label(element),
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
-        aria_valuenow: browser_aria_state(element, "aria-valuenow"),
-        aria_valuemin: browser_aria_state(element, "aria-valuemin"),
-        aria_valuemax: browser_aria_state(element, "aria-valuemax"),
-        aria_valuetext: browser_aria_state(element, "aria-valuetext"),
+        aria_valuenow: aria_valuenow.clone(),
+        aria_valuemin: aria_valuemin.clone(),
+        aria_valuemax: aria_valuemax.clone(),
+        aria_valuetext,
         aria_orientation: browser_aria_state(element, "aria-orientation"),
-        aria_disabled: browser_aria_state(element, "aria-disabled"),
-        aria_readonly: browser_aria_state(element, "aria-readonly"),
+        aria_disabled,
+        aria_readonly,
         aria_required: browser_aria_state(element, "aria-required"),
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
         text_value: (!text.is_empty()).then(|| text.clone()),
+        value_attribute_count: value_attribute_names.len(),
+        value_attribute_names,
+        range_value_complete: aria_valuenow.is_some()
+            && aria_valuemin.is_some()
+            && aria_valuemax.is_some(),
+        focusable: element.attribute("tabindex").is_some(),
+        range_blocked: !range_block_reasons.is_empty(),
+        range_block_reasons,
         role,
         text,
     })
+}
+
+fn browser_aria_range_value_attribute_names(
+    element: &Element,
+    has_aria_valuetext: bool,
+) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-valuemin", "aria-valuemax", "aria-valuenow"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if has_aria_valuetext {
+        attributes.push("aria-valuetext".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_range_block_reasons(
+    aria_disabled: Option<&str>,
+    aria_readonly: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_disabled.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-disabled".to_string());
+    }
+    if aria_readonly.is_some_and(|value| value.eq_ignore_ascii_case("true")) {
+        reasons.push("aria-readonly".to_string());
+    }
+    reasons
 }
 
 fn browser_authored_range_role(element: &Element) -> Option<String> {
@@ -14254,6 +17514,14 @@ fn browser_aria_live_region_element(
     let role = browser_aria_live_region_role(element)?;
     let aria_live = browser_aria_state(element, "aria-live");
     let text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let aria_busy = browser_aria_state(element, "aria-busy");
+    let aria_atomic = browser_aria_state(element, "aria-atomic");
+    let aria_relevant = browser_aria_tokens(element, "aria-relevant");
+    let aria_hidden = browser_aria_hidden(element);
+    let update_kind = browser_aria_live_update_kind(&role, aria_live.as_deref());
+    let live_attribute_names = browser_aria_live_attribute_names(element, aria_hidden);
+    let live_region_block_reasons =
+        browser_aria_live_region_block_reasons(aria_hidden, &update_kind);
     Some(BrowserAriaLiveRegion {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -14264,14 +17532,43 @@ fn browser_aria_live_region_element(
         aria_labelledby: browser_aria_idrefs(element, "aria-labelledby"),
         aria_describedby: browser_aria_idrefs(element, "aria-describedby"),
         aria_live: aria_live.clone(),
-        aria_busy: browser_aria_state(element, "aria-busy"),
-        aria_atomic: browser_aria_state(element, "aria-atomic"),
-        aria_relevant: browser_aria_tokens(element, "aria-relevant"),
-        aria_hidden: browser_aria_hidden(element),
-        update_kind: browser_aria_live_update_kind(&role, aria_live.as_deref()),
+        aria_busy,
+        aria_atomic,
+        aria_relevant,
+        aria_hidden,
+        assertive_update: update_kind == "assertive",
+        live_attribute_count: live_attribute_names.len(),
+        live_attribute_names,
+        live_region_blocked: !live_region_block_reasons.is_empty(),
+        live_region_block_reasons,
+        update_kind,
         role,
         text,
     })
+}
+
+fn browser_aria_live_attribute_names(element: &Element, aria_hidden: bool) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-live", "aria-busy", "aria-atomic", "aria-relevant"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    if aria_hidden {
+        attributes.push("aria-hidden".to_string());
+    }
+    attributes
+}
+
+fn browser_aria_live_region_block_reasons(aria_hidden: bool, update_kind: &str) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if aria_hidden {
+        reasons.push("aria-hidden".to_string());
+    }
+    if update_kind == "off" {
+        reasons.push("live-off".to_string());
+    }
+    reasons
 }
 
 fn browser_aria_live_region_role(element: &Element) -> Option<String> {
@@ -14397,6 +17694,257 @@ fn browser_template(element: &Element) -> BrowserTemplate {
     }
 }
 
+fn browser_template_descriptor(element: &Element) -> BrowserTemplateDescriptor {
+    let shadowrootmode = element.attribute("shadowrootmode").map(ToOwned::to_owned);
+    let shadowroot_attribute_names = browser_template_shadowroot_attribute_names(element);
+    let template_block_reasons =
+        browser_template_block_reasons(shadowrootmode.as_deref(), &shadowroot_attribute_names);
+    let content_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+
+    BrowserTemplateDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        template_kind: if shadowrootmode.is_some() {
+            "declarative-shadow-root".to_string()
+        } else {
+            "inert-template".to_string()
+        },
+        shadowrootmode,
+        shadowroot_attribute_count: shadowroot_attribute_names.len(),
+        shadowroot_attribute_names,
+        declarative_shadow_root: element.attribute("shadowrootmode").is_some(),
+        shadowroot_mode_valid: element
+            .attribute("shadowrootmode")
+            .is_some_and(|mode| matches!(mode, "open" | "closed")),
+        shadowrootdelegatesfocus: element.attribute("shadowrootdelegatesfocus").is_some(),
+        shadowrootclonable: element.attribute("shadowrootclonable").is_some(),
+        shadowrootserializable: element.attribute("shadowrootserializable").is_some(),
+        content_word_count: content_text.split_whitespace().count(),
+        content_text,
+        template_blocked: !template_block_reasons.is_empty(),
+        template_block_reasons,
+    }
+}
+
+fn browser_template_shadowroot_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "shadowrootmode",
+        "shadowrootdelegatesfocus",
+        "shadowrootclonable",
+        "shadowrootserializable",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_template_block_reasons(
+    shadowrootmode: Option<&str>,
+    shadowroot_attribute_names: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if shadowrootmode.is_none() && !shadowroot_attribute_names.is_empty() {
+        reasons.push("shadowroot-flags-without-mode".to_string());
+    }
+    reasons
+}
+
+fn browser_slot_descriptor(element: &Element) -> Option<BrowserSlotDescriptor> {
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    if element.name != "slot" && slot.is_none() {
+        return None;
+    }
+
+    let fallback_text = if element.name == "slot" {
+        visible_text_for_nodes(&element.children)
+    } else {
+        String::new()
+    };
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let slot_block_reasons = browser_slot_block_reasons(slot.as_deref(), slot_name.as_deref());
+    let default_slot = if element.name == "slot" {
+        slot_name.as_deref().is_none_or(str::is_empty)
+    } else {
+        slot.as_deref().is_some_and(str::is_empty)
+    };
+    let named_slot = if element.name == "slot" {
+        slot_name
+            .as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    } else {
+        slot.as_deref()
+            .is_some_and(|slot_name| !slot_name.is_empty())
+    };
+
+    Some(BrowserSlotDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        slot_kind: if element.name == "slot" {
+            "slot-element".to_string()
+        } else {
+            "slotted-element".to_string()
+        },
+        slot,
+        slot_name,
+        default_slot,
+        named_slot,
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        slot_blocked: !slot_block_reasons.is_empty(),
+        slot_block_reasons,
+    })
+}
+
+fn browser_slot_block_reasons(slot: Option<&str>, slot_name: Option<&str>) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
+    }
+    reasons
+}
+
+fn browser_custom_element_descriptor(element: &Element) -> Option<BrowserCustomElementDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    if custom_element_name.is_none() && custom_element_is.is_none() {
+        return None;
+    }
+
+    let autonomous_custom_element = custom_element_name.is_some();
+    let customized_builtin = custom_element_name.is_none() && custom_element_is.is_some();
+    let definition_name = custom_element_is
+        .clone()
+        .or_else(|| custom_element_name.clone());
+    let custom_element_name_valid = definition_name
+        .as_deref()
+        .is_some_and(is_browser_custom_element_name);
+    let custom_element_block_reasons = browser_custom_element_block_reasons(
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        custom_element_name_valid,
+    );
+    let data_attributes = browser_data_attributes(element);
+
+    Some(BrowserCustomElementDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        custom_element_kind: if custom_element_name.is_some() && custom_element_is.is_some() {
+            "autonomous-with-is".to_string()
+        } else if autonomous_custom_element {
+            "autonomous-custom-element".to_string()
+        } else {
+            "customized-built-in".to_string()
+        },
+        definition_name,
+        custom_element_name,
+        custom_element_is,
+        autonomous_custom_element,
+        customized_builtin,
+        extends_element: customized_builtin.then(|| element.name.clone()),
+        custom_element_name_valid,
+        slot: browser_slot_assignment(element),
+        part: browser_part_tokens(element),
+        exportparts: browser_exportparts(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        text: visible_text_for_nodes(&element.children),
+        custom_element_blocked: !custom_element_block_reasons.is_empty(),
+        custom_element_block_reasons,
+    })
+}
+
+fn browser_custom_element_block_reasons(
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    custom_element_name_valid: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if custom_element_is == Some("") {
+        reasons.push("empty-is-value".to_string());
+    } else if custom_element_is.is_some() && !custom_element_name_valid {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    reasons
+}
+
+fn browser_canvas_descriptor(element: &Element) -> Option<BrowserCanvasDescriptor> {
+    if element.name != "canvas" {
+        return None;
+    }
+
+    let fallback_text = collapse_html_whitespace(&visible_text_for_nodes(&element.children));
+    let data_attributes = browser_data_attributes(element);
+    let event_handlers = browser_event_handlers(element);
+    let canvas_block_reasons = browser_canvas_block_reasons(
+        element.attribute("width"),
+        element.attribute("height"),
+        &fallback_text,
+    );
+
+    Some(BrowserCanvasDescriptor {
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        width: element.attribute("width").map(ToOwned::to_owned),
+        height: element.attribute("height").map(ToOwned::to_owned),
+        has_width: element.attribute("width").is_some(),
+        has_height: element.attribute("height").is_some(),
+        fallback_word_count: fallback_text.split_whitespace().count(),
+        fallback_text,
+        part: browser_part_tokens(element),
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        pointer_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_pointer_interaction_event,
+        ),
+        keyboard_handlers: browser_event_handlers_by_kind(&event_handlers, browser_keyboard_event),
+        lifecycle_handlers: browser_event_handlers_by_kind(
+            &event_handlers,
+            browser_load_lifecycle_event,
+        ),
+        event_handlers,
+        canvas_blocked: !canvas_block_reasons.is_empty(),
+        canvas_block_reasons,
+    })
+}
+
+fn browser_canvas_block_reasons(
+    width: Option<&str>,
+    height: Option<&str>,
+    fallback_text: &str,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if width.is_none() {
+        reasons.push("missing-width".to_string());
+    }
+    if height.is_none() {
+        reasons.push("missing-height".to_string());
+    }
+    if fallback_text.is_empty() {
+        reasons.push("missing-fallback-text".to_string());
+    }
+    reasons
+}
+
 fn browser_component_hydration_target(
     element: &Element,
 ) -> Option<BrowserComponentHydrationTarget> {
@@ -14446,12 +17994,142 @@ fn browser_component_hydration_target(
     })
 }
 
+fn browser_component_hydration_descriptor(
+    element: &Element,
+) -> Option<BrowserComponentHydrationDescriptor> {
+    let custom_element_name = browser_custom_element_name(element);
+    let custom_element_is = browser_custom_element_is(element);
+    let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
+    let shadowrootmode = (element.name == "template")
+        .then(|| element.attribute("shadowrootmode").map(ToOwned::to_owned))
+        .flatten();
+    let slot = browser_slot_assignment(element);
+    let slot_name = browser_slot_name(element);
+    let part = browser_part_tokens(element);
+    let exportparts = browser_exportparts(element);
+    let data_attributes = browser_data_attributes(element);
+    let canvas_fallback_text = (element.name == "canvas")
+        .then(|| collapse_html_whitespace(&visible_text_for_nodes(&element.children)));
+    let hydration_kind = browser_component_hydration_kind(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        &part,
+        exportparts.as_deref(),
+        &data_attributes,
+    )?;
+    let hydration_block_reasons = browser_component_hydration_block_reasons(
+        element,
+        custom_element_name.as_deref(),
+        custom_element_is.as_deref(),
+        shadowrootmode.as_deref(),
+        slot.as_deref(),
+        slot_name.as_deref(),
+        canvas_fallback_text.as_deref(),
+    );
+
+    Some(BrowserComponentHydrationDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        classes: element
+            .attribute("class")
+            .map(split_html_classes)
+            .unwrap_or_default(),
+        hydration_kind,
+        custom_element,
+        custom_element_name,
+        custom_element_is,
+        shadowrootmode,
+        slot,
+        slot_name,
+        part,
+        exportparts,
+        data_attribute_names: browser_data_attribute_names(&data_attributes),
+        data_attribute_count: data_attributes.len(),
+        canvas_fallback_text,
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        hydration_blocked: !hydration_block_reasons.is_empty(),
+        hydration_block_reasons,
+    })
+}
+
+fn browser_component_hydration_kind(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    part: &[String],
+    exportparts: Option<&str>,
+    data_attributes: &[BrowserDataAttribute],
+) -> Option<String> {
+    if custom_element_name.is_some() {
+        Some("autonomous-custom-element".to_string())
+    } else if custom_element_is.is_some() {
+        Some("customized-built-in".to_string())
+    } else if shadowrootmode.is_some() {
+        Some("declarative-shadow-template".to_string())
+    } else if element.name == "slot" || slot_name.is_some() {
+        Some("slot-outlet".to_string())
+    } else if slot.is_some() {
+        Some("slotted-element".to_string())
+    } else if element.name == "canvas" {
+        Some("canvas-fallback".to_string())
+    } else if exportparts.is_some() {
+        Some("exported-parts".to_string())
+    } else if !part.is_empty() {
+        Some("part-target".to_string())
+    } else if !data_attributes.is_empty() {
+        Some("data-hydration-marker".to_string())
+    } else {
+        None
+    }
+}
+
+fn browser_component_hydration_block_reasons(
+    element: &Element,
+    custom_element_name: Option<&str>,
+    custom_element_is: Option<&str>,
+    shadowrootmode: Option<&str>,
+    slot: Option<&str>,
+    slot_name: Option<&str>,
+    canvas_fallback_text: Option<&str>,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    let definition_name = custom_element_is.or(custom_element_name);
+    if definition_name.is_some_and(|name| !is_browser_custom_element_name(name)) {
+        reasons.push("invalid-custom-element-name".to_string());
+    }
+    if custom_element_name.is_some() && custom_element_is.is_some() {
+        reasons.push("is-on-autonomous-custom-element".to_string());
+    }
+    if shadowrootmode.is_some_and(|mode| !matches!(mode, "open" | "closed")) {
+        reasons.push("invalid-shadowrootmode".to_string());
+    }
+    if slot.is_some_and(|slot| !slot.is_empty() && slot.trim().is_empty()) {
+        reasons.push("blank-slot-assignment".to_string());
+    }
+    if slot_name.is_some_and(|slot_name| !slot_name.is_empty() && slot_name.trim().is_empty()) {
+        reasons.push("blank-slot-name".to_string());
+    }
+    if element.name == "canvas" && canvas_fallback_text.is_some_and(str::is_empty) {
+        reasons.push("missing-canvas-fallback-text".to_string());
+    }
+    reasons
+}
+
 fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAttributeDescriptor> {
     let data_attributes = browser_data_attributes(element);
     if data_attributes.is_empty() {
         return None;
     }
 
+    let data_attribute_names = browser_data_attribute_names(&data_attributes);
+    let json_data_attribute_names = browser_json_data_attribute_names(&data_attributes);
     let custom_element_name = browser_custom_element_name(element);
     let custom_element_is = browser_custom_element_is(element);
     let custom_element = custom_element_name.is_some() || custom_element_is.is_some();
@@ -14469,7 +18147,10 @@ fn browser_data_attribute_descriptor(element: &Element) -> Option<BrowserDataAtt
         slot: browser_slot_assignment(element),
         slot_name: browser_slot_name(element),
         part: browser_part_tokens(element),
+        data_attribute_count: data_attributes.len(),
         data_attributes,
+        data_attribute_names,
+        json_data_attribute_names,
         text: visible_text_for_nodes(&element.children),
     })
 }
@@ -14494,10 +18175,15 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
     }
 
     let accesskey = browser_accesskey(element);
-    let has_global_state = browser_hidden(element)
-        || browser_inert(element)
+    let hidden = browser_hidden(element);
+    let inert = browser_inert(element);
+    let autofocus = browser_autofocus(element);
+    let global_attribute_names = browser_global_attribute_names(element);
+    let global_state_block_reasons = browser_global_state_block_reasons(hidden, inert);
+    let has_global_state = hidden
+        || inert
         || !accesskey.is_empty()
-        || browser_autofocus(element)
+        || autofocus
         || element.attribute("contenteditable").is_some()
         || element.attribute("draggable").is_some()
         || element.attribute("spellcheck").is_some()
@@ -14517,17 +18203,24 @@ fn browser_global_state_descriptor(element: &Element) -> Option<BrowserGlobalSta
         title: element.attribute("title").map(ToOwned::to_owned),
         lang: element.attribute("lang").map(ToOwned::to_owned),
         dir: element.attribute("dir").map(ToOwned::to_owned),
-        hidden: browser_hidden(element),
-        inert: browser_inert(element),
+        hidden,
+        inert,
         tabindex: element.attribute("tabindex").map(ToOwned::to_owned),
+        focus_navigation_hint: element.attribute("tabindex").is_some()
+            || !accesskey.is_empty()
+            || autofocus,
         accesskey,
-        autofocus: browser_autofocus(element),
+        autofocus,
         contenteditable: element.attribute("contenteditable").map(ToOwned::to_owned),
         editing_mode: browser_editing_mode(element),
         draggable: element.attribute("draggable").map(ToOwned::to_owned),
         draggable_state: browser_draggable_state(element),
         spellcheck: browser_spellcheck_state(element),
         translate: browser_translate_state(element),
+        global_attribute_count: global_attribute_names.len(),
+        global_attribute_names,
+        global_state_blocked: !global_state_block_reasons.is_empty(),
+        global_state_block_reasons,
         text: visible_text_for_nodes(&element.children),
     })
 }
@@ -14581,6 +18274,16 @@ fn browser_aria_relation_descriptor(
         return None;
     }
 
+    let relation_attribute_names = browser_aria_relation_attribute_names(element);
+    let unresolved_relation_targets = browser_unresolved_aria_relation_targets(
+        &aria_details,
+        &aria_errormessage,
+        &aria_flowto,
+        id_texts,
+    );
+    let relation_block_reasons = browser_aria_relation_block_reasons(&unresolved_relation_targets);
+    let relation_target_count = aria_details.len() + aria_errormessage.len() + aria_flowto.len();
+
     Some(BrowserAriaRelationDescriptor {
         element: element.name.clone(),
         id: element.attribute("id").map(ToOwned::to_owned),
@@ -14591,7 +18294,248 @@ fn browser_aria_relation_descriptor(
         aria_errormessage,
         flowto_text: browser_idref_texts(&aria_flowto, id_texts),
         aria_flowto,
+        relation_attribute_count: relation_attribute_names.len(),
+        relation_attribute_names,
+        relation_target_count,
+        relation_blocked: !relation_block_reasons.is_empty(),
+        relation_block_reasons,
+        unresolved_relation_targets,
     })
+}
+
+fn browser_aria_relation_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-details", "aria-errormessage", "aria-flowto"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_relation_targets(
+    aria_details: &[String],
+    aria_errormessage: &[String],
+    aria_flowto: &[String],
+    id_texts: &[(String, String)],
+) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in aria_details
+        .iter()
+        .chain(aria_errormessage.iter())
+        .chain(aria_flowto.iter())
+    {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_relation_block_reasons(unresolved_targets: &[String]) -> Vec<String> {
+    if unresolved_targets.is_empty() {
+        Vec::new()
+    } else {
+        vec!["unresolved-idref".to_string()]
+    }
+}
+
+fn browser_aria_name_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaNameDescriptor> {
+    let aria_label = browser_aria_label(element);
+    let aria_labelledby = browser_aria_idrefs(element, "aria-labelledby");
+
+    if aria_label.is_none() && aria_labelledby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let labelledby_text = browser_idref_texts(&aria_labelledby, id_texts);
+    let unresolved_label_targets = browser_unresolved_aria_idrefs(&aria_labelledby, id_texts);
+    let name_block_reasons = browser_aria_name_block_reasons(
+        aria_label.as_deref(),
+        &aria_labelledby,
+        &labelledby_text,
+        &unresolved_label_targets,
+    );
+    let name_attribute_names = browser_aria_name_attribute_names(element);
+    let name_source =
+        browser_aria_name_source(aria_label.as_deref(), &aria_labelledby, &labelledby_text);
+
+    Some(BrowserAriaNameDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        aria_label,
+        aria_labelledby,
+        labelledby_text,
+        name_source,
+        name_attribute_count: name_attribute_names.len(),
+        name_attribute_names,
+        label_target_count: browser_aria_idrefs(element, "aria-labelledby").len(),
+        unresolved_label_targets,
+        name_blocked: !name_block_reasons.is_empty(),
+        name_block_reasons,
+    })
+}
+
+fn browser_aria_name_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-label", "aria-labelledby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_unresolved_aria_idrefs(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
+    let mut unresolved = Vec::new();
+    for target in idrefs {
+        if !id_texts.iter().any(|(id, _)| id == target) && !unresolved.contains(target) {
+            unresolved.push(target.clone());
+        }
+    }
+    unresolved
+}
+
+fn browser_aria_name_source(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+) -> String {
+    if !aria_labelledby.is_empty() && !labelledby_text.is_empty() {
+        "aria-labelledby".to_string()
+    } else if aria_label.is_some_and(|label| !label.is_empty()) {
+        "aria-label".to_string()
+    } else if !aria_labelledby.is_empty() {
+        "unresolved-aria-labelledby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_name_block_reasons(
+    aria_label: Option<&str>,
+    aria_labelledby: &[String],
+    labelledby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_labelledby.is_empty()
+        && labelledby_text.is_empty()
+        && aria_label.is_none_or(|label| label.is_empty())
+    {
+        reasons.push("empty-name".to_string());
+    }
+    reasons
+}
+
+fn browser_aria_description_descriptor(
+    element: &Element,
+    id_texts: &[(String, String)],
+) -> Option<BrowserAriaDescriptionDescriptor> {
+    let aria_description = browser_aria_description(element);
+    let aria_describedby = browser_aria_idrefs(element, "aria-describedby");
+
+    if aria_description.is_none() && aria_describedby.is_empty() {
+        return None;
+    }
+
+    let role = browser_content_role(&element.name).unwrap_or(element.name.as_str());
+    let describedby_text = browser_idref_texts(&aria_describedby, id_texts);
+    let unresolved_description_targets =
+        browser_unresolved_aria_idrefs(&aria_describedby, id_texts);
+    let description_block_reasons = browser_aria_description_block_reasons(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+        &unresolved_description_targets,
+    );
+    let description_attribute_names = browser_aria_description_attribute_names(element);
+    let description_source = browser_aria_description_source(
+        aria_description.as_deref(),
+        &aria_describedby,
+        &describedby_text,
+    );
+
+    Some(BrowserAriaDescriptionDescriptor {
+        element: element.name.clone(),
+        id: element.attribute("id").map(ToOwned::to_owned),
+        role: role.to_string(),
+        text: collapse_html_whitespace(&visible_text_for_nodes(&element.children)),
+        accessible_name: browser_accessible_name(element, role, &[], id_texts),
+        accessible_description: browser_accessible_description(element, id_texts),
+        aria_description,
+        aria_describedby,
+        describedby_text,
+        description_source,
+        description_attribute_count: description_attribute_names.len(),
+        description_attribute_names,
+        description_target_count: browser_aria_idrefs(element, "aria-describedby").len(),
+        unresolved_description_targets,
+        description_blocked: !description_block_reasons.is_empty(),
+        description_block_reasons,
+    })
+}
+
+fn browser_aria_description(element: &Element) -> Option<String> {
+    element
+        .attribute("aria-description")
+        .map(collapse_html_whitespace)
+        .filter(|description| !description.is_empty())
+}
+
+fn browser_aria_description_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in ["aria-description", "aria-describedby"] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_aria_description_source(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+) -> String {
+    if !aria_describedby.is_empty() && !describedby_text.is_empty() {
+        "aria-describedby".to_string()
+    } else if aria_description.is_some_and(|description| !description.is_empty()) {
+        "aria-description".to_string()
+    } else if !aria_describedby.is_empty() {
+        "unresolved-aria-describedby".to_string()
+    } else {
+        "none".to_string()
+    }
+}
+
+fn browser_aria_description_block_reasons(
+    aria_description: Option<&str>,
+    aria_describedby: &[String],
+    describedby_text: &[String],
+    unresolved_targets: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if !unresolved_targets.is_empty() {
+        reasons.push("unresolved-idref".to_string());
+    }
+    if !aria_describedby.is_empty()
+        && describedby_text.is_empty()
+        && aria_description.is_none_or(|description| description.is_empty())
+    {
+        reasons.push("empty-description".to_string());
+    }
+    reasons
 }
 
 fn browser_slot_assignment(element: &Element) -> Option<String> {
@@ -14644,6 +18588,61 @@ fn browser_data_attributes(element: &Element) -> Vec<BrowserDataAttribute> {
             value: Some(attribute.value.clone()),
         })
         .collect()
+}
+
+fn browser_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_json_data_attribute_names(data_attributes: &[BrowserDataAttribute]) -> Vec<String> {
+    data_attributes
+        .iter()
+        .filter(|attribute| {
+            attribute.value.as_deref().is_some_and(|value| {
+                let value = value.trim();
+                (value.starts_with('{') && value.ends_with('}'))
+                    || (value.starts_with('[') && value.ends_with(']'))
+            })
+        })
+        .map(|attribute| attribute.name.clone())
+        .collect()
+}
+
+fn browser_global_attribute_names(element: &Element) -> Vec<String> {
+    let mut attributes = Vec::new();
+    for name in [
+        "title",
+        "lang",
+        "dir",
+        "hidden",
+        "inert",
+        "tabindex",
+        "accesskey",
+        "autofocus",
+        "contenteditable",
+        "draggable",
+        "spellcheck",
+        "translate",
+    ] {
+        if element.attribute(name).is_some() {
+            attributes.push(name.to_string());
+        }
+    }
+    attributes
+}
+
+fn browser_global_state_block_reasons(hidden: bool, inert: bool) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if hidden {
+        reasons.push("hidden".to_string());
+    }
+    if inert {
+        reasons.push("inert".to_string());
+    }
+    reasons
 }
 
 fn is_browser_custom_element_name(name: &str) -> bool {
@@ -15726,6 +19725,50 @@ fn browser_pointer_event(handler: &str) -> bool {
     )
 }
 
+fn browser_pointer_interaction_event(handler: &str) -> bool {
+    browser_pointer_event(handler) || browser_click_event(handler)
+}
+
+fn browser_mouse_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onmousedown"
+            | "onmousemove"
+            | "onmouseup"
+            | "onmouseenter"
+            | "onmouseleave"
+            | "onmouseover"
+            | "onmouseout"
+    )
+}
+
+fn browser_touch_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontouchstart" | "ontouchmove" | "ontouchend" | "ontouchcancel"
+    )
+}
+
+fn browser_wheel_event(handler: &str) -> bool {
+    handler == "onwheel"
+}
+
+fn browser_scroll_event(handler: &str) -> bool {
+    matches!(handler, "onscroll" | "onscrollend")
+}
+
+fn browser_scroll_interaction_event(handler: &str) -> bool {
+    browser_scroll_event(handler) || browser_wheel_event(handler) || browser_touch_event(handler)
+}
+
+fn browser_click_event(handler: &str) -> bool {
+    matches!(handler, "onclick" | "ondblclick" | "oncontextmenu")
+}
+
+fn browser_context_menu_event(handler: &str) -> bool {
+    handler == "oncontextmenu"
+}
+
 fn browser_drag_event(handler: &str) -> bool {
     matches!(handler, "ondrag" | "ondragstart" | "ondragend")
 }
@@ -15753,6 +19796,57 @@ fn browser_paste_event(handler: &str) -> bool {
     handler == "onpaste"
 }
 
+fn browser_selection_event(handler: &str) -> bool {
+    matches!(handler, "onselect" | "onselectionchange")
+}
+
+fn browser_select_event(handler: &str) -> bool {
+    handler == "onselect"
+}
+
+fn browser_selection_change_event(handler: &str) -> bool {
+    handler == "onselectionchange"
+}
+
+fn browser_selection_input_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onbeforeinput"
+            | "oninput"
+            | "onchange"
+            | "oncompositionstart"
+            | "oncompositionupdate"
+            | "oncompositionend"
+    )
+}
+
+fn browser_composition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "oncompositionstart" | "oncompositionupdate" | "oncompositionend"
+    )
+}
+
+fn browser_composition_start_event(handler: &str) -> bool {
+    handler == "oncompositionstart"
+}
+
+fn browser_composition_update_event(handler: &str) -> bool {
+    handler == "oncompositionupdate"
+}
+
+fn browser_composition_end_event(handler: &str) -> bool {
+    handler == "oncompositionend"
+}
+
+fn browser_beforeinput_event(handler: &str) -> bool {
+    handler == "onbeforeinput"
+}
+
+fn browser_text_input_event(handler: &str) -> bool {
+    matches!(handler, "onbeforeinput" | "oninput")
+}
+
 fn browser_input_event(handler: &str) -> bool {
     matches!(
         handler,
@@ -15764,6 +19858,68 @@ fn browser_input_event(handler: &str) -> bool {
             | "oncompositionupdate"
             | "oncompositionend"
     )
+}
+
+fn browser_animation_interaction_event(handler: &str) -> bool {
+    browser_animation_event(handler) || browser_transition_event(handler)
+}
+
+fn browser_animation_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onanimationstart" | "onanimationiteration" | "onanimationend" | "onanimationcancel"
+    )
+}
+
+fn browser_animation_start_event(handler: &str) -> bool {
+    handler == "onanimationstart"
+}
+
+fn browser_animation_iteration_event(handler: &str) -> bool {
+    handler == "onanimationiteration"
+}
+
+fn browser_animation_end_event(handler: &str) -> bool {
+    handler == "onanimationend"
+}
+
+fn browser_animation_cancel_event(handler: &str) -> bool {
+    handler == "onanimationcancel"
+}
+
+fn browser_transition_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "ontransitionrun" | "ontransitionstart" | "ontransitionend" | "ontransitioncancel"
+    )
+}
+
+fn browser_transition_run_event(handler: &str) -> bool {
+    handler == "ontransitionrun"
+}
+
+fn browser_transition_start_event(handler: &str) -> bool {
+    handler == "ontransitionstart"
+}
+
+fn browser_transition_end_event(handler: &str) -> bool {
+    handler == "ontransitionend"
+}
+
+fn browser_transition_cancel_event(handler: &str) -> bool {
+    handler == "ontransitioncancel"
+}
+
+fn browser_fullscreen_event(handler: &str) -> bool {
+    matches!(handler, "onfullscreenchange" | "onfullscreenerror")
+}
+
+fn browser_fullscreen_change_event(handler: &str) -> bool {
+    handler == "onfullscreenchange"
+}
+
+fn browser_fullscreen_error_event(handler: &str) -> bool {
+    handler == "onfullscreenerror"
 }
 
 fn browser_form_event(handler: &str) -> bool {
@@ -15809,7 +19965,35 @@ fn browser_lifecycle_event(handler: &str) -> bool {
             | "onpagehide"
             | "onreadystatechange"
             | "ondomcontentloaded"
+            | "onvisibilitychange"
+            | "onhashchange"
+            | "onpopstate"
+            | "ononline"
+            | "onoffline"
     )
+}
+
+fn browser_load_lifecycle_event(handler: &str) -> bool {
+    matches!(
+        handler,
+        "onload" | "onpageshow" | "onreadystatechange" | "ondomcontentloaded"
+    )
+}
+
+fn browser_unload_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onunload" | "onbeforeunload" | "onpagehide")
+}
+
+fn browser_visibility_lifecycle_event(handler: &str) -> bool {
+    handler == "onvisibilitychange"
+}
+
+fn browser_history_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "onhashchange" | "onpopstate")
+}
+
+fn browser_network_lifecycle_event(handler: &str) -> bool {
+    matches!(handler, "ononline" | "onoffline")
 }
 
 fn browser_error_event(handler: &str) -> bool {
@@ -16101,7 +20285,11 @@ fn browser_accessible_description(
 ) -> Option<String> {
     let describedby = browser_aria_idrefs(element, "aria-describedby");
     let parts = browser_idref_texts(&describedby, id_texts);
-    (!parts.is_empty()).then(|| parts.join(" "))
+    if !parts.is_empty() {
+        Some(parts.join(" "))
+    } else {
+        browser_aria_description(element)
+    }
 }
 
 fn browser_idref_texts(idrefs: &[String], id_texts: &[(String, String)]) -> Vec<String> {
@@ -16595,6 +20783,63 @@ fn browser_structured_item(
         item_ref: item_ref.clone(),
         properties: browser_structured_properties(element, &item_ref, base_href, body_root),
     }
+}
+
+fn browser_structured_data_descriptor(
+    item: &BrowserStructuredItem,
+    body_root: &[Node],
+) -> BrowserStructuredDataDescriptor {
+    let unresolved_item_refs: Vec<String> = item
+        .item_ref
+        .iter()
+        .filter(|id| find_element_by_id(body_root, id).is_none())
+        .cloned()
+        .collect();
+    let property_names: Vec<String> = item
+        .properties
+        .iter()
+        .map(|property| property.name.clone())
+        .collect();
+    let url_property_count = item
+        .properties
+        .iter()
+        .filter(|property| property.value_url.is_some())
+        .count();
+    let structured_data_block_reasons =
+        browser_structured_data_block_reasons(item, &unresolved_item_refs);
+
+    BrowserStructuredDataDescriptor {
+        id: item.id.clone(),
+        item_type: item.item_type.clone(),
+        item_type_count: item.item_type.len(),
+        item_id: item.item_id.clone(),
+        resolved_item_id: item.resolved_item_id.clone(),
+        item_ref: item.item_ref.clone(),
+        item_ref_count: item.item_ref.len(),
+        unresolved_item_refs,
+        property_count: item.properties.len(),
+        property_names,
+        url_property_count,
+        structured_data_blocked: !structured_data_block_reasons.is_empty(),
+        structured_data_block_reasons,
+    }
+}
+
+fn browser_structured_data_block_reasons(
+    item: &BrowserStructuredItem,
+    unresolved_item_refs: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if item.item_type.is_empty() {
+        reasons.push("missing-itemtype".to_string());
+    }
+    if item.properties.is_empty() {
+        reasons.push("missing-properties".to_string());
+    }
+    if !unresolved_item_refs.is_empty() {
+        reasons.push("unresolved-itemref".to_string());
+    }
+    reasons
 }
 
 fn browser_structured_properties(
@@ -17333,6 +21578,7 @@ fn browser_form(
         rel_noreferrer: browser_rel_tokens_contain(&rel_tokens, "noreferrer"),
         rel_tokens,
         novalidate,
+        event_handlers: browser_event_handlers(element),
         fieldsets,
         labels: form_labels,
         datalists,
@@ -17399,6 +21645,837 @@ fn browser_form_policy_submitter_descriptor(
         novalidate: submitter.novalidate,
         value: submitter.value.clone(),
     }
+}
+
+fn browser_form_association_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormAssociationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| browser_form_association_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_association_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormAssociationDescriptor {
+    let fieldset_ids = browser_form_association_fieldset_ids(form, control);
+    let fieldset_legends = browser_form_association_fieldset_legends(form, control);
+    let datalist_option_count = browser_form_association_datalist_option_count(form, control);
+    let output_targets = browser_output_for_controls(&form.controls, control);
+    let output_target_ids = output_targets
+        .iter()
+        .filter_map(|target| target.id.clone())
+        .collect();
+    let output_target_names = output_targets
+        .iter()
+        .filter_map(|target| target.name.clone())
+        .collect();
+    let output_target_types = output_targets
+        .iter()
+        .map(|target| target.control_type.clone())
+        .collect();
+    let referenced_by_output_ids = browser_form_association_referenced_by_output_ids(form, control);
+
+    BrowserFormAssociationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: browser_form_association_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        association_kind: browser_form_association_kind(
+            form,
+            control,
+            &fieldset_ids,
+            datalist_option_count,
+            &referenced_by_output_ids,
+        ),
+        explicit_form_owner: browser_form_association_explicit_owner(form, control),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        datalist_id: control.list.clone(),
+        datalist_option_count,
+        output_for_tokens: control.output_for.clone(),
+        output_target_ids,
+        output_target_names,
+        output_target_types,
+        referenced_by_output_ids,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        disabled: control.disabled,
+    }
+}
+
+fn browser_form_association_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    fieldset_ids: &[String],
+    datalist_option_count: usize,
+    referenced_by_output_ids: &[String],
+) -> String {
+    if browser_form_association_explicit_owner(form, control) {
+        "explicit-form-owner".to_string()
+    } else if !control.output_for.is_empty() {
+        "output-calculation".to_string()
+    } else if !referenced_by_output_ids.is_empty() {
+        "output-source".to_string()
+    } else if datalist_option_count > 0 {
+        "datalist-backed-control".to_string()
+    } else if !control.labels.is_empty() {
+        "labelled-control".to_string()
+    } else if !fieldset_ids.is_empty() {
+        "fieldset-member".to_string()
+    } else {
+        "form-associated-control".to_string()
+    }
+}
+
+fn browser_form_association_explicit_owner(
+    _form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> bool {
+    control.form_owner.is_some()
+}
+
+fn browser_form_association_fieldset_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.id.clone())
+        .collect()
+}
+
+fn browser_form_association_fieldset_legends(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.fieldsets
+        .iter()
+        .filter(|fieldset| browser_fieldset_contains_control(fieldset, control))
+        .filter_map(|fieldset| fieldset.legend.clone())
+        .collect()
+}
+
+fn browser_fieldset_contains_control(
+    fieldset: &BrowserFormFieldset,
+    control: &BrowserFormControl,
+) -> bool {
+    control.id.as_deref().is_some_and(|id| {
+        fieldset
+            .control_ids
+            .iter()
+            .any(|control_id| control_id == id)
+    }) || control.name.as_deref().is_some_and(|name| {
+        fieldset
+            .control_names
+            .iter()
+            .any(|control_name| control_name == name)
+    })
+}
+
+fn browser_form_association_datalist_option_count(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> usize {
+    control
+        .list
+        .as_deref()
+        .and_then(|list| {
+            form.datalists
+                .iter()
+                .find(|datalist| datalist.id.as_deref() == Some(list))
+        })
+        .map(|datalist| datalist.options.len())
+        .unwrap_or_default()
+}
+
+fn browser_form_association_referenced_by_output_ids(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    form.outputs
+        .iter()
+        .filter(|output| {
+            control
+                .id
+                .as_deref()
+                .is_some_and(|id| output.for_control_ids.iter().any(|target| target == id))
+                || control.name.as_deref().is_some_and(|name| {
+                    output.for_control_names.iter().any(|target| target == name)
+                })
+        })
+        .filter_map(|output| output.id.clone())
+        .collect()
+}
+
+fn browser_form_association_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_autofill_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormAutofillDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_autofill_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_autofill_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormAutofillDescriptor> {
+    if !browser_form_autofill_candidate(form, control) {
+        return None;
+    }
+
+    let section_token = browser_autofill_section_token(&control.autocomplete_tokens);
+    let address_type_token = browser_autofill_address_type_token(&control.autocomplete_tokens);
+    let contact_type_token = browser_autofill_contact_type_token(&control.autocomplete_tokens);
+    let field_token = browser_autofill_field_token(&control.autocomplete_tokens);
+    let webauthn = browser_autofill_has_webauthn_token(&control.autocomplete_tokens);
+    let autofill_block_reasons = browser_form_autofill_block_reasons(form, control);
+    Some(BrowserFormAutofillDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_autocomplete_tokens: form.autocomplete_tokens.clone(),
+        form_autocomplete_enabled: !browser_autofill_tokens_are_off(&form.autocomplete_tokens),
+        element: browser_form_autofill_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        autofill_kind: browser_form_autofill_kind(
+            form,
+            control,
+            field_token.as_deref(),
+            webauthn,
+            &autofill_block_reasons,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        autocomplete: control.autocomplete.clone(),
+        autocomplete_token_count: control.autocomplete_tokens.len(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        section_token,
+        address_type_token,
+        contact_type_token,
+        field_token,
+        webauthn,
+        autofill_enabled: autofill_block_reasons.is_empty(),
+        disabled: control.disabled,
+        readonly: control.readonly,
+        hidden: control.control_type == "hidden",
+        required: control.required,
+        autofill_blocked: !autofill_block_reasons.is_empty(),
+        autofill_block_reasons,
+    })
+}
+
+fn browser_form_autofill_candidate(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    !control.autocomplete_tokens.is_empty()
+        || !form.autocomplete_tokens.is_empty()
+        || browser_form_autofill_control_type(control)
+        || browser_form_common_autofill_name(control)
+}
+
+fn browser_form_autofill_control_type(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "hidden"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_common_autofill_name(control: &BrowserFormControl) -> bool {
+    let Some(name) = control.name.as_deref() else {
+        return false;
+    };
+    let name = name.to_ascii_lowercase();
+    [
+        "address",
+        "address1",
+        "address2",
+        "city",
+        "country",
+        "email",
+        "family-name",
+        "given-name",
+        "name",
+        "organization",
+        "postal-code",
+        "state",
+        "street-address",
+        "tel",
+        "username",
+        "zip",
+    ]
+    .iter()
+    .any(|candidate| name == *candidate || name.contains(candidate))
+}
+
+fn browser_form_autofill_kind(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+    field_token: Option<&str>,
+    webauthn: bool,
+    autofill_block_reasons: &[String],
+) -> String {
+    if !autofill_block_reasons.is_empty() {
+        "blocked-autofill".to_string()
+    } else if webauthn {
+        "webauthn-field".to_string()
+    } else if field_token.is_some() {
+        "autocomplete-field".to_string()
+    } else if browser_autofill_tokens_are_off(&control.autocomplete_tokens) {
+        "autocomplete-off".to_string()
+    } else if !form.autocomplete_tokens.is_empty() {
+        "form-autocomplete".to_string()
+    } else if browser_form_text_autofill_control(control) {
+        "text-entry-autofill".to_string()
+    } else if control.control_type == "select" {
+        "choice-autofill".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-autofill-metadata".to_string()
+    } else {
+        "autofill-metadata".to_string()
+    }
+}
+
+fn browser_form_text_autofill_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "month"
+            | "number"
+            | "password"
+            | "search"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+    )
+}
+
+fn browser_form_autofill_block_reasons(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly && browser_form_text_autofill_control(control) {
+        reasons.push("readonly".to_string());
+    }
+    if control.control_type == "hidden" {
+        reasons.push("hidden".to_string());
+    }
+    if browser_form_autofill_effective_off(form, control) {
+        reasons.push("autocomplete-off".to_string());
+    }
+    reasons
+}
+
+fn browser_form_autofill_effective_off(form: &BrowserForm, control: &BrowserFormControl) -> bool {
+    if !control.autocomplete_tokens.is_empty() {
+        return browser_autofill_tokens_are_off(&control.autocomplete_tokens);
+    }
+    browser_autofill_tokens_are_off(&form.autocomplete_tokens)
+}
+
+fn browser_autofill_tokens_are_off(tokens: &[String]) -> bool {
+    tokens.len() == 1 && tokens[0].eq_ignore_ascii_case("off")
+}
+
+fn browser_autofill_section_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| token.to_ascii_lowercase().starts_with("section-"))
+        .cloned()
+}
+
+fn browser_autofill_address_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| matches!(token.to_ascii_lowercase().as_str(), "shipping" | "billing"))
+        .cloned()
+}
+
+fn browser_autofill_contact_type_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .find(|token| {
+            matches!(
+                token.to_ascii_lowercase().as_str(),
+                "home" | "work" | "mobile" | "fax" | "pager"
+            )
+        })
+        .cloned()
+}
+
+fn browser_autofill_field_token(tokens: &[String]) -> Option<String> {
+    tokens
+        .iter()
+        .rev()
+        .find(|token| browser_autofill_token_is_field(token))
+        .cloned()
+}
+
+fn browser_autofill_has_webauthn_token(tokens: &[String]) -> bool {
+    tokens
+        .iter()
+        .any(|token| token.eq_ignore_ascii_case("webauthn"))
+}
+
+fn browser_autofill_token_is_field(token: &str) -> bool {
+    let lower = token.to_ascii_lowercase();
+    if lower.starts_with("section-")
+        || matches!(
+            lower.as_str(),
+            "on" | "off"
+                | "shipping"
+                | "billing"
+                | "home"
+                | "work"
+                | "mobile"
+                | "fax"
+                | "pager"
+                | "webauthn"
+        )
+    {
+        return false;
+    }
+    true
+}
+
+fn browser_form_autofill_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_submission_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormSubmissionDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_submission_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_submission_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormSubmissionDescriptor> {
+    if !control.successful && !is_browser_form_submitter(control) {
+        return None;
+    }
+
+    Some(BrowserFormSubmissionDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_action: form.action.clone(),
+        resolved_form_action: form.resolved_action.clone(),
+        form_method: form.method.clone(),
+        form_enctype: form.enctype.clone(),
+        form_target: form.target.clone(),
+        effective_form_target: form.effective_target.clone(),
+        element: browser_form_submission_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        submission_kind: browser_form_submission_kind(control),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        successful: control.successful,
+        checked: control.checked,
+        disabled: control.disabled,
+        submitter: is_browser_form_submitter(control),
+        submitter_action: control.form_action.clone(),
+        resolved_submitter_action: control.resolved_form_action.clone(),
+        submitter_method: control.form_method.clone(),
+        submitter_enctype: control.form_enctype.clone(),
+        submitter_target: control.form_target.clone(),
+        effective_submitter_target: control
+            .form_target
+            .clone()
+            .or_else(|| form.target.clone())
+            .or_else(|| form.effective_target.clone()),
+        submitter_novalidate: form.novalidate || control.form_novalidate,
+    })
+}
+
+fn browser_form_submission_kind(control: &BrowserFormControl) -> String {
+    if is_browser_form_submitter(control) && control.successful {
+        "successful-submitter".to_string()
+    } else if is_browser_form_submitter(control) {
+        "submitter".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "submission-metadata".to_string()
+    }
+}
+
+fn browser_form_submission_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_reset_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormResetDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_reset_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_reset_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormResetDescriptor> {
+    let resettable = browser_form_resettable_control(control);
+    let resetter = browser_form_resetter(control);
+    if !resettable && !resetter {
+        return None;
+    }
+
+    let reset_block_reasons = browser_form_reset_block_reasons(control, resettable, resetter);
+    Some(BrowserFormResetDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_autocomplete: form.autocomplete.clone(),
+        form_event_handlers: form.event_handlers.clone(),
+        form_reset_handlers: browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        ),
+        form_has_reset_handler: !browser_event_handlers_by_kind(
+            &form.event_handlers,
+            browser_reset_event,
+        )
+        .is_empty(),
+        element: browser_form_reset_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        reset_kind: browser_form_reset_kind(control, resettable, resetter, &reset_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        value: control.value.clone(),
+        reset_value_count: browser_form_reset_values(control).len(),
+        reset_values: browser_form_reset_values(control),
+        selected_options: control.selected_options.clone(),
+        option_count: control.option_items.len(),
+        checked: control.checked,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        resettable,
+        resetter,
+        reset_blocked: !reset_block_reasons.is_empty(),
+        reset_block_reasons,
+    })
+}
+
+fn browser_form_reset_kind(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+    reset_block_reasons: &[String],
+) -> String {
+    if !reset_block_reasons.is_empty() && resetter {
+        "blocked-resetter".to_string()
+    } else if resetter {
+        "resetter".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "checked-reset-state".to_string()
+    } else if control.control_type == "select" {
+        "selection-reset-state".to_string()
+    } else if control.control_type == "file" {
+        "file-reset-state".to_string()
+    } else if control.control_type == "output" {
+        "output-reset-value".to_string()
+    } else if resettable {
+        "value-reset-state".to_string()
+    } else {
+        "reset-metadata".to_string()
+    }
+}
+
+fn browser_form_resettable_control(control: &BrowserFormControl) -> bool {
+    matches!(
+        control.control_type.as_str(),
+        "checkbox"
+            | "color"
+            | "date"
+            | "datetime-local"
+            | "email"
+            | "file"
+            | "month"
+            | "number"
+            | "password"
+            | "radio"
+            | "range"
+            | "search"
+            | "select"
+            | "tel"
+            | "text"
+            | "textarea"
+            | "time"
+            | "url"
+            | "week"
+            | "output"
+    )
+}
+
+fn browser_form_resetter(control: &BrowserFormControl) -> bool {
+    control.control_type == "reset"
+}
+
+fn browser_form_reset_block_reasons(
+    control: &BrowserFormControl,
+    resettable: bool,
+    resetter: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if !resettable && !resetter {
+        reasons.push("not-resettable".to_string());
+    }
+    reasons
+}
+
+fn browser_form_reset_values(control: &BrowserFormControl) -> Vec<String> {
+    if !control.selected_options.is_empty() {
+        return control.selected_options.clone();
+    }
+    if let Some(value) = &control.value {
+        return vec![value.clone()];
+    }
+    if !control.text.is_empty() {
+        return vec![control.text.clone()];
+    }
+    Vec::new()
+}
+
+fn browser_form_reset_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_reset_event(handler: &str) -> bool {
+    handler.eq_ignore_ascii_case("onreset")
+}
+
+fn browser_form_validation_descriptors(
+    forms: &[BrowserForm],
+) -> Vec<BrowserFormValidationDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .filter_map(|control| browser_form_validation_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_validation_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> Option<BrowserFormValidationDescriptor> {
+    if !browser_form_control_has_validation_state(control) {
+        return None;
+    }
+
+    let validation_block_reasons = browser_form_validation_block_reasons(control);
+    let submitter_ids = browser_form_submitter_ids(form);
+    let submitter_novalidate_ids = browser_form_submitter_novalidate_ids(form);
+    Some(BrowserFormValidationDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        form_novalidate: form.novalidate,
+        element: browser_form_validation_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        validation_kind: browser_form_validation_kind(
+            control,
+            form.novalidate,
+            &submitter_novalidate_ids,
+        ),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        checked: control.checked,
+        required: control.required,
+        disabled: control.disabled,
+        readonly: control.readonly,
+        will_validate: control.will_validate,
+        validation_attribute_count: control.validation_attributes.len(),
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        validation_blocked: !validation_block_reasons.is_empty(),
+        validation_block_reasons,
+        submitter_ids,
+        submitter_novalidate_ids,
+    })
+}
+
+fn browser_form_control_has_validation_state(control: &BrowserFormControl) -> bool {
+    control.will_validate
+        || control.required
+        || !control.validation_attributes.is_empty()
+        || control.validation_barred_reason.is_some()
+}
+
+fn browser_form_validation_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if let Some(reason) = &control.validation_barred_reason {
+        reasons.push(format!("validation-barred:{reason}"));
+    }
+    if control.disabled
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:disabled")
+    {
+        reasons.push("disabled".to_string());
+    }
+    if control.readonly
+        && !reasons
+            .iter()
+            .any(|reason| reason == "validation-barred:readonly")
+    {
+        reasons.push("readonly".to_string());
+    }
+    reasons
+}
+
+fn browser_form_validation_kind(
+    control: &BrowserFormControl,
+    form_novalidate: bool,
+    submitter_novalidate_ids: &[String],
+) -> String {
+    if control.validation_barred_reason.is_some() {
+        "barred-control".to_string()
+    } else if form_novalidate {
+        "form-novalidate-candidate".to_string()
+    } else if !submitter_novalidate_ids.is_empty() {
+        "submitter-novalidate-candidate".to_string()
+    } else if control.required {
+        "required-candidate".to_string()
+    } else if !control.validation_attributes.is_empty() {
+        "constraint-candidate".to_string()
+    } else if control.will_validate {
+        "validation-candidate".to_string()
+    } else {
+        "validation-metadata".to_string()
+    }
+}
+
+fn browser_form_validation_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
+    }
+}
+
+fn browser_form_submitter_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
+}
+
+fn browser_form_submitter_novalidate_ids(form: &BrowserForm) -> Vec<String> {
+    form.submitters
+        .iter()
+        .filter(|submitter| submitter.novalidate)
+        .filter_map(|submitter| submitter.id.clone())
+        .collect()
 }
 
 fn collect_form_labels_for_form(
@@ -18694,6 +23771,94 @@ fn browser_table_cells(
     }
 
     cells
+}
+
+fn browser_table_structure_descriptor(
+    table_element: &Element,
+    table_index: usize,
+    table: &BrowserTable,
+    cells: &[BrowserTableCell],
+) -> BrowserTableStructureDescriptor {
+    let table_block_reasons = browser_table_block_reasons(table, cells);
+
+    BrowserTableStructureDescriptor {
+        table_index,
+        table_id: table_element.attribute("id").map(ToOwned::to_owned),
+        caption: table.caption.clone(),
+        row_count: table.row_count,
+        column_count: table.column_count,
+        column_hint_count: table.column_hint_count,
+        cell_count: table.cell_count,
+        header_cell_count: table.header_cell_count,
+        section_kinds: browser_table_section_kinds(cells),
+        header_scopes: browser_table_header_scopes(cells),
+        header_ids: browser_table_header_ids(cells),
+        cells_with_headers_count: cells.iter().filter(|cell| !cell.headers.is_empty()).count(),
+        spanning_cell_count: cells
+            .iter()
+            .filter(|cell| cell.rowspan.is_some() || cell.colspan.is_some())
+            .count(),
+        table_blocked: !table_block_reasons.is_empty(),
+        table_block_reasons,
+    }
+}
+
+fn browser_table_section_kinds(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut section_kinds = Vec::new();
+    for cell in cells {
+        let Some(section_kind) = &cell.section_kind else {
+            continue;
+        };
+        if !section_kinds.contains(section_kind) {
+            section_kinds.push(section_kind.clone());
+        }
+    }
+    section_kinds
+}
+
+fn browser_table_header_scopes(cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut scopes = Vec::new();
+    for cell in cells.iter().filter(|cell| cell.header) {
+        let Some(scope) = &cell.scope else {
+            continue;
+        };
+        if !scopes.contains(scope) {
+            scopes.push(scope.clone());
+        }
+    }
+    scopes
+}
+
+fn browser_table_header_ids(cells: &[BrowserTableCell]) -> Vec<String> {
+    cells
+        .iter()
+        .filter(|cell| cell.header)
+        .filter_map(|cell| cell.id.clone())
+        .collect()
+}
+
+fn browser_table_block_reasons(table: &BrowserTable, cells: &[BrowserTableCell]) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if table.row_count == 0 {
+        reasons.push("missing-rows".to_string());
+    }
+    if table.caption.as_deref().map_or(true, str::is_empty) {
+        reasons.push("missing-caption".to_string());
+    }
+    if table.header_cell_count == 0 {
+        reasons.push("missing-header-cells".to_string());
+    }
+    if table.column_hint_count > 0 && table.column_hint_count != table.column_count {
+        reasons.push("column-hint-count-mismatch".to_string());
+    }
+    if table.header_cell_count > 0
+        && cells
+            .iter()
+            .any(|cell| !cell.header && cell.headers.is_empty())
+    {
+        reasons.push("data-cells-without-header-references".to_string());
+    }
+    reasons
 }
 
 fn collect_browser_table_rows<'a>(nodes: &'a [Node], rows: &mut Vec<&'a Element>) {
@@ -21185,6 +26350,429 @@ mod tests {
     }
 
     #[test]
+    fn browser_form_submission_descriptors_track_successful_controls_and_submitters() {
+        let document = parse_browser_document(
+            "<base href=https://example.test/app/>\
+             <form id=checkout name=checkout action=pay method=post target=receipt>\
+             <input id=item name=item value=book>\
+             <input id=gift name=gift type=checkbox value=yes checked>\
+             <input id=off name=off type=checkbox value=no>\
+             <select id=ship name=ship><option value=ground selected>Ground</option><option value=air>Air</option></select>\
+             <textarea id=note name=note>Leave at door</textarea>\
+             <input id=upload name=upload type=file>\
+             <button id=pay name=pay value=now formaction=pay-now formtarget=fast formnovalidate>Pay</button>\
+             <input id=imagePay type=image name=spot src=pay.png alt=Pay image>\
+             <input id=disabled name=disabled value=no disabled>\
+             </form>\
+             <input id=external form=checkout name=outside value=extra>",
+        )
+        .expect("form submission descriptor document should parse");
+
+        let descriptors = &document.form_submission_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["item", "gift", "ship", "note", "upload", "pay", "imagePay", "external"]
+        );
+
+        let item = &descriptors[0];
+        assert_eq!(item.form_id.as_deref(), Some("checkout"));
+        assert_eq!(item.form_name.as_deref(), Some("checkout"));
+        assert_eq!(item.form_action.as_deref(), Some("pay"));
+        assert_eq!(
+            item.resolved_form_action.as_deref(),
+            Some("https://example.test/app/pay")
+        );
+        assert_eq!(item.form_method, "post");
+        assert_eq!(item.effective_form_target.as_deref(), Some("receipt"));
+        assert_eq!(item.element, "input");
+        assert_eq!(item.control_type, "text");
+        assert_eq!(item.submission_kind, "successful-control");
+        assert_eq!(item.value.as_deref(), Some("book"));
+        assert_eq!(item.submission_values, vec!["book"]);
+        assert_eq!(item.submission_value_count, 1);
+        assert!(item.successful);
+        assert!(!item.submitter);
+
+        let gift = &descriptors[1];
+        assert_eq!(gift.control_type, "checkbox");
+        assert!(gift.checked);
+        assert_eq!(gift.submission_values, vec!["yes"]);
+
+        let ship = &descriptors[2];
+        assert_eq!(ship.element, "select");
+        assert_eq!(ship.submission_values, vec!["ground"]);
+
+        let upload = &descriptors[4];
+        assert_eq!(upload.control_type, "file");
+        assert!(upload.submission_values.is_empty());
+        assert_eq!(upload.submission_value_count, 0);
+
+        let pay = &descriptors[5];
+        assert_eq!(pay.submission_kind, "submitter");
+        assert!(pay.submitter);
+        assert_eq!(pay.submitter_action.as_deref(), Some("pay-now"));
+        assert_eq!(
+            pay.resolved_submitter_action.as_deref(),
+            Some("https://example.test/app/pay-now")
+        );
+        assert_eq!(pay.submitter_target.as_deref(), Some("fast"));
+        assert_eq!(pay.effective_submitter_target.as_deref(), Some("fast"));
+        assert!(pay.submitter_novalidate);
+
+        let image = &descriptors[6];
+        assert_eq!(image.control_type, "image");
+        assert_eq!(image.accessible_name.as_deref(), Some("Pay"));
+        assert_eq!(image.submission_kind, "submitter");
+        assert!(image.submitter);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("checkout"));
+        assert_eq!(external.submission_values, vec!["extra"]);
+    }
+
+    #[test]
+    fn browser_form_association_descriptors_track_owners_labels_fieldsets_and_outputs() {
+        let document = parse_browser_document(
+            "<form id=calc name=calculator>\
+             <fieldset id=inputs><legend>Inputs</legend>\
+             <label for=a>First</label><input id=a name=a list=numbers value=4>\
+             <label>Second <input id=b name=b value=6></label>\
+             <output id=sum name=sum for=\"a b\">10</output>\
+             </fieldset></form>\
+             <datalist id=numbers><option value=4><option value=8></datalist>\
+             <input id=external name=token form=calc value=xyz>",
+        )
+        .expect("form association descriptor document should parse");
+
+        let descriptors = &document.form_association_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(ids, vec!["a", "b", "sum", "external"]);
+
+        let first = &descriptors[0];
+        assert_eq!(first.form_id.as_deref(), Some("calc"));
+        assert_eq!(first.form_name.as_deref(), Some("calculator"));
+        assert_eq!(first.element, "input");
+        assert_eq!(first.control_type, "text");
+        assert_eq!(first.association_kind, "output-source");
+        assert_eq!(first.labels, vec!["First"]);
+        assert_eq!(first.label_count, 1);
+        assert_eq!(first.fieldset_ids, vec!["inputs"]);
+        assert_eq!(first.fieldset_legends, vec!["Inputs"]);
+        assert_eq!(first.datalist_id.as_deref(), Some("numbers"));
+        assert_eq!(first.datalist_option_count, 2);
+        assert_eq!(first.referenced_by_output_ids, vec!["sum"]);
+        assert!(first.successful);
+        assert!(first.will_validate);
+
+        let second = &descriptors[1];
+        assert_eq!(second.labels, vec!["Second"]);
+        assert_eq!(second.association_kind, "output-source");
+        assert_eq!(second.referenced_by_output_ids, vec!["sum"]);
+
+        let sum = &descriptors[2];
+        assert_eq!(sum.element, "output");
+        assert_eq!(sum.association_kind, "output-calculation");
+        assert_eq!(sum.output_for_tokens, vec!["a", "b"]);
+        assert_eq!(sum.output_target_ids, vec!["a", "b"]);
+        assert_eq!(sum.output_target_names, vec!["a", "b"]);
+        assert_eq!(sum.output_target_types, vec!["text", "text"]);
+        assert_eq!(sum.fieldset_ids, vec!["inputs"]);
+        assert_eq!(sum.fieldset_legends, vec!["Inputs"]);
+
+        let external = &descriptors[3];
+        assert_eq!(external.form_owner.as_deref(), Some("calc"));
+        assert_eq!(external.association_kind, "explicit-form-owner");
+        assert!(external.explicit_form_owner);
+        assert!(external.successful);
+    }
+
+    #[test]
+    fn browser_form_autofill_descriptors_track_autocomplete_tokens_and_blockers() {
+        let document = parse_browser_document(
+            "<form id=profile name=profile autocomplete=off>\
+             <label for=email>Email</label>\
+             <input id=email name=email type=email autocomplete=\"section-contact shipping email webauthn\" required>\
+             <input id=given name=given-name autocomplete=given-name value=Ada>\
+             <input id=street name=street autocomplete=\"billing street-address\" readonly>\
+             <input id=card name=cc type=text autocomplete=cc-number disabled>\
+             <input id=hidden type=hidden name=token autocomplete=one-time-code value=123>\
+             <select id=country name=country autocomplete=country-name><option selected>US</option></select>\
+             <textarea id=notes name=notes autocomplete=off>Memo</textarea>\
+             </form>\
+             <input id=external form=profile name=outside autocomplete=organization>",
+        )
+        .expect("form autofill descriptor document should parse");
+
+        let descriptors = &document.form_autofill_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "given", "street", "card", "hidden", "country", "notes", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("profile"));
+        assert_eq!(email.form_name.as_deref(), Some("profile"));
+        assert_eq!(email.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(email.form_autocomplete_tokens, vec!["off"]);
+        assert!(!email.form_autocomplete_enabled);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.autofill_kind, "webauthn-field");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(
+            email.autocomplete_tokens,
+            vec!["section-contact", "shipping", "email", "webauthn"]
+        );
+        assert_eq!(email.autocomplete_token_count, 4);
+        assert_eq!(email.section_token.as_deref(), Some("section-contact"));
+        assert_eq!(email.address_type_token.as_deref(), Some("shipping"));
+        assert_eq!(email.field_token.as_deref(), Some("email"));
+        assert!(email.webauthn);
+        assert!(email.required);
+        assert!(email.autofill_enabled);
+        assert!(!email.autofill_blocked);
+
+        let given = &descriptors[1];
+        assert_eq!(given.field_token.as_deref(), Some("given-name"));
+        assert_eq!(given.value.as_deref(), Some("Ada"));
+        assert_eq!(given.autofill_kind, "autocomplete-field");
+
+        let street = &descriptors[2];
+        assert_eq!(street.address_type_token.as_deref(), Some("billing"));
+        assert_eq!(street.field_token.as_deref(), Some("street-address"));
+        assert!(street.readonly);
+        assert!(street.autofill_blocked);
+        assert_eq!(street.autofill_block_reasons, vec!["readonly"]);
+
+        let card = &descriptors[3];
+        assert_eq!(card.field_token.as_deref(), Some("cc-number"));
+        assert!(card.disabled);
+        assert_eq!(card.autofill_kind, "blocked-autofill");
+        assert_eq!(card.autofill_block_reasons, vec!["disabled"]);
+
+        let hidden = &descriptors[4];
+        assert_eq!(hidden.field_token.as_deref(), Some("one-time-code"));
+        assert!(hidden.hidden);
+        assert_eq!(hidden.value.as_deref(), Some("123"));
+        assert_eq!(hidden.autofill_block_reasons, vec!["hidden"]);
+
+        let country = &descriptors[5];
+        assert_eq!(country.element, "select");
+        assert_eq!(country.field_token.as_deref(), Some("country-name"));
+        assert_eq!(country.autofill_kind, "autocomplete-field");
+
+        let notes = &descriptors[6];
+        assert_eq!(notes.element, "textarea");
+        assert_eq!(notes.autocomplete.as_deref(), Some("off"));
+        assert_eq!(notes.autofill_block_reasons, vec!["autocomplete-off"]);
+
+        let external = &descriptors[7];
+        assert_eq!(external.form_owner.as_deref(), Some("profile"));
+        assert_eq!(external.field_token.as_deref(), Some("organization"));
+        assert!(external.autofill_enabled);
+    }
+
+    #[test]
+    fn browser_form_reset_descriptors_track_resetters_controls_and_handlers() {
+        let document = parse_browser_document(
+            "<form id=settings name=settings autocomplete=off onreset=restore()>\
+             <label for=title>Title</label><input id=title name=title value=Draft>\
+             <textarea id=body name=body readonly>Copy</textarea>\
+             <input id=enabled name=enabled type=checkbox value=yes checked>\
+             <input id=mode-a name=mode type=radio value=a>\
+             <input id=mode-b name=mode type=radio value=b checked>\
+             <select id=theme name=theme><option value=light selected>Light</option><option value=dark>Dark</option></select>\
+             <input id=upload name=upload type=file>\
+             <output id=preview name=preview>Preview</output>\
+             <button id=reset name=reset type=reset value=clear>Reset</button>\
+             <input id=disabled-reset type=reset value=disabled disabled>\
+             <input id=hidden name=hidden type=hidden value=keep>\
+             <button id=submit>Submit</button>\
+             </form>\
+             <input id=external form=settings name=outside value=outer>",
+        )
+        .expect("form reset descriptor document should parse");
+
+        let descriptors = &document.form_reset_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec![
+                "title",
+                "body",
+                "enabled",
+                "mode-a",
+                "mode-b",
+                "theme",
+                "upload",
+                "preview",
+                "reset",
+                "disabled-reset",
+                "external"
+            ]
+        );
+
+        let title = &descriptors[0];
+        assert_eq!(title.form_id.as_deref(), Some("settings"));
+        assert_eq!(title.form_name.as_deref(), Some("settings"));
+        assert_eq!(title.form_autocomplete.as_deref(), Some("off"));
+        assert_eq!(title.form_event_handlers, vec!["onreset"]);
+        assert_eq!(title.form_reset_handlers, vec!["onreset"]);
+        assert!(title.form_has_reset_handler);
+        assert_eq!(title.element, "input");
+        assert_eq!(title.control_type, "text");
+        assert_eq!(title.reset_kind, "value-reset-state");
+        assert_eq!(title.accessible_name.as_deref(), Some("Title"));
+        assert_eq!(title.reset_values, vec!["Draft"]);
+        assert_eq!(title.reset_value_count, 1);
+        assert!(title.resettable);
+        assert!(!title.resetter);
+        assert!(!title.reset_blocked);
+
+        let body = &descriptors[1];
+        assert_eq!(body.element, "textarea");
+        assert_eq!(body.reset_values, vec!["Copy"]);
+        assert!(body.readonly);
+
+        let enabled = &descriptors[2];
+        assert_eq!(enabled.reset_kind, "checked-reset-state");
+        assert!(enabled.checked);
+        assert_eq!(enabled.reset_values, vec!["yes"]);
+
+        let unchecked_radio = &descriptors[3];
+        assert_eq!(unchecked_radio.reset_kind, "checked-reset-state");
+        assert!(!unchecked_radio.checked);
+        assert_eq!(unchecked_radio.reset_values, vec!["a"]);
+
+        let theme = &descriptors[5];
+        assert_eq!(theme.element, "select");
+        assert_eq!(theme.reset_kind, "selection-reset-state");
+        assert_eq!(theme.selected_options, vec!["light"]);
+        assert_eq!(theme.reset_values, vec!["light"]);
+        assert_eq!(theme.option_count, 2);
+
+        let upload = &descriptors[6];
+        assert_eq!(upload.control_type, "file");
+        assert_eq!(upload.reset_kind, "file-reset-state");
+        assert!(upload.reset_values.is_empty());
+
+        let output = &descriptors[7];
+        assert_eq!(output.element, "output");
+        assert_eq!(output.reset_kind, "output-reset-value");
+        assert_eq!(output.reset_values, vec!["Preview"]);
+
+        let reset = &descriptors[8];
+        assert_eq!(reset.reset_kind, "resetter");
+        assert!(reset.resetter);
+        assert!(!reset.resettable);
+        assert_eq!(reset.value.as_deref(), Some("clear"));
+
+        let disabled_reset = &descriptors[9];
+        assert_eq!(disabled_reset.reset_kind, "blocked-resetter");
+        assert!(disabled_reset.resetter);
+        assert!(disabled_reset.disabled);
+        assert!(disabled_reset.reset_blocked);
+        assert_eq!(disabled_reset.reset_block_reasons, vec!["disabled"]);
+
+        let external = &descriptors[10];
+        assert_eq!(external.form_owner.as_deref(), Some("settings"));
+        assert_eq!(external.reset_values, vec!["outer"]);
+    }
+
+    #[test]
+    fn browser_form_validation_descriptors_track_candidates_bypass_and_barred_controls() {
+        let document = parse_browser_document(
+            "<form id=signup name=signup novalidate>\
+             <label for=email>Email</label><input id=email name=email type=email required minlength=3 maxlength=80>\
+             <input id=age name=age type=number min=18 max=120 step=1>\
+             <textarea id=bio name=bio readonly maxlength=200>About me</textarea>\
+             <input id=token type=hidden name=token value=abc>\
+             <button id=save>Save</button><button id=draft formnovalidate>Draft</button>\
+             </form>\
+             <input id=external form=signup name=outside required>",
+        )
+        .expect("form validation descriptor document should parse");
+
+        let descriptors = &document.form_validation_descriptors;
+        let ids: Vec<&str> = descriptors
+            .iter()
+            .filter_map(|descriptor| descriptor.id.as_deref())
+            .collect();
+        assert_eq!(
+            ids,
+            vec!["email", "age", "bio", "token", "save", "draft", "external"]
+        );
+
+        let email = &descriptors[0];
+        assert_eq!(email.form_id.as_deref(), Some("signup"));
+        assert_eq!(email.form_name.as_deref(), Some("signup"));
+        assert!(email.form_novalidate);
+        assert_eq!(email.element, "input");
+        assert_eq!(email.control_type, "email");
+        assert_eq!(email.validation_kind, "form-novalidate-candidate");
+        assert_eq!(email.accessible_name.as_deref(), Some("Email"));
+        assert_eq!(email.labels, vec!["Email"]);
+        assert!(email.will_validate);
+        assert!(email.required);
+        assert_eq!(
+            email.validation_attributes,
+            vec!["required", "minlength", "maxlength"]
+        );
+        assert_eq!(email.validation_attribute_count, 3);
+        assert!(!email.validation_blocked);
+        assert_eq!(email.submitter_ids, vec!["save", "draft"]);
+        assert_eq!(email.submitter_novalidate_ids, vec!["save", "draft"]);
+
+        let age = &descriptors[1];
+        assert_eq!(age.validation_kind, "form-novalidate-candidate");
+        assert_eq!(age.validation_attributes, vec!["min", "max", "step"]);
+
+        let bio = &descriptors[2];
+        assert_eq!(bio.element, "textarea");
+        assert_eq!(bio.validation_kind, "barred-control");
+        assert_eq!(bio.validation_barred_reason.as_deref(), Some("readonly"));
+        assert!(bio.validation_blocked);
+        assert_eq!(
+            bio.validation_block_reasons,
+            vec!["validation-barred:readonly"]
+        );
+
+        let token = &descriptors[3];
+        assert_eq!(token.validation_kind, "barred-control");
+        assert_eq!(
+            token.validation_barred_reason.as_deref(),
+            Some("input-type-hidden")
+        );
+
+        let save = &descriptors[4];
+        assert_eq!(save.validation_kind, "form-novalidate-candidate");
+        assert!(save.will_validate);
+
+        let draft = &descriptors[5];
+        assert_eq!(draft.validation_kind, "form-novalidate-candidate");
+        assert!(draft.will_validate);
+
+        let external = &descriptors[6];
+        assert_eq!(external.form_owner.as_deref(), Some("signup"));
+        assert_eq!(external.validation_kind, "form-novalidate-candidate");
+        assert_eq!(external.validation_attributes, vec!["required"]);
+    }
+
+    #[test]
     fn browser_focus_navigation_descriptors_track_order_editing_and_blockers() {
         let document = parse_html(
             "<body>\
@@ -21481,6 +27069,360 @@ mod tests {
     }
 
     #[test]
+    fn browser_selection_interaction_descriptors_track_text_editing_and_blockers() {
+        let document = parse_html(
+            "<body><form id=profile>\
+             <input id=q name=q value=Draft onselect=selectQuery() oninput=filter()>\
+             <textarea id=notes readonly onselect=selectNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only onselectionchange=selectEdit() \
+             onbeforeinput=beforeEdit()>Draft</div>\
+             <p id=secret hidden contenteditable onselect=selectSecret()>Secret</p>\
+             <main id=surface onselect=selectSurface()>Surface</main></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.selection_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query selection descriptor");
+        assert_eq!(query.selection_kind, "select-handler");
+        assert_eq!(query.select_handlers, vec!["onselect"]);
+        assert_eq!(query.input_handlers, vec!["oninput"]);
+        assert_eq!(query.handler_count, 2);
+        assert!(!query.selection_blocked);
+
+        let notes = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes selection descriptor");
+        assert_eq!(notes.selection_kind, "blocked");
+        assert_eq!(notes.select_handlers, vec!["onselect"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.selection_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor selection descriptor");
+        assert_eq!(editor.selection_kind, "selection-change");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.selection_change_handlers, vec!["onselectionchange"]);
+        assert_eq!(editor.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(editor.handler_count, 2);
+
+        let secret = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret selection descriptor");
+        assert_eq!(secret.selection_kind, "blocked");
+        assert_eq!(secret.select_handlers, vec!["onselect"]);
+        assert_eq!(secret.selection_block_reasons, vec!["hidden"]);
+
+        let surface = summary
+            .selection_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("surface"))
+            .expect("surface event-only selection descriptor");
+        assert_eq!(surface.selection_kind, "select-handler");
+        assert_eq!(surface.select_handlers, vec!["onselect"]);
+    }
+
+    #[test]
+    fn browser_composition_interaction_descriptors_track_ime_handlers_and_blockers() {
+        let document = parse_html(
+            "<html oncompositionstart=docIme()><body><form id=profile>\
+             <input id=q name=q value=Draft inputmode=search enterkeyhint=search \
+             oncompositionstart=startIme() oncompositionupdate=updateIme() onbeforeinput=beforeText()>\
+             <textarea id=notes readonly oncompositionend=endNote()>Keep me</textarea>\
+             </form><div id=editor contenteditable=plaintext-only spellcheck=true \
+             oncompositionend=endEdit() oninput=inputEdit()>Draft</div>\
+             <p id=secret hidden contenteditable oncompositionstart=secretIme()>Secret</p></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.composition_interaction_descriptors.len(), 5);
+
+        let query = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("q"))
+            .expect("query composition descriptor");
+        assert_eq!(query.source, "text-entry");
+        assert_eq!(query.composition_kind, "ime-session");
+        assert_eq!(
+            query.composition_handlers,
+            vec!["oncompositionstart", "oncompositionupdate"]
+        );
+        assert_eq!(query.composition_start_handlers, vec!["oncompositionstart"]);
+        assert_eq!(
+            query.composition_update_handlers,
+            vec!["oncompositionupdate"]
+        );
+        assert_eq!(query.beforeinput_handlers, vec!["onbeforeinput"]);
+        assert_eq!(query.input_handlers, vec!["onbeforeinput"]);
+        assert_eq!(query.handler_count, 3);
+        assert_eq!(query.inputmode.as_deref(), Some("search"));
+        assert_eq!(query.enterkeyhint.as_deref(), Some("search"));
+        assert!(!query.composition_blocked);
+
+        let notes = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("notes"))
+            .expect("notes composition descriptor");
+        assert_eq!(notes.composition_kind, "blocked");
+        assert_eq!(notes.composition_end_handlers, vec!["oncompositionend"]);
+        assert!(notes.readonly);
+        assert_eq!(notes.composition_block_reasons, vec!["readonly"]);
+
+        let editor = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("editor"))
+            .expect("editor composition descriptor");
+        assert_eq!(editor.composition_kind, "ime-commit");
+        assert_eq!(editor.contenteditable.as_deref(), Some("plaintext-only"));
+        assert_eq!(editor.editing_mode.as_deref(), Some("plaintext"));
+        assert_eq!(editor.composition_end_handlers, vec!["oncompositionend"]);
+        assert_eq!(editor.input_handlers, vec!["oninput"]);
+        assert_eq!(editor.handler_count, 1);
+
+        let secret = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret composition descriptor");
+        assert_eq!(secret.composition_kind, "blocked");
+        assert_eq!(
+            secret.composition_start_handlers,
+            vec!["oncompositionstart"]
+        );
+        assert_eq!(secret.composition_block_reasons, vec!["hidden"]);
+
+        let document_ime = summary
+            .composition_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document composition descriptor");
+        assert_eq!(document_ime.element, "html");
+        assert_eq!(document_ime.composition_kind, "ime-session");
+        assert_eq!(
+            document_ime.composition_handlers,
+            vec!["oncompositionstart"]
+        );
+    }
+
+    #[test]
+    fn browser_pointer_interaction_descriptors_track_handlers_and_blockers() {
+        let document = parse_html(
+            "<body><button id=save tabindex=0 onclick=save() onmousedown=press()>Save</button>\
+             <main id=canvas onpointerdown=start() onpointermove=move() onwheel=zoom()>Canvas</main>\
+             <div id=card draggable=true ondragstart=drag() ondragend=end()>Card</div>\
+             <section id=dropzone ondragover=over() ondrop=drop()>Drop</section>\
+             <p id=secret hidden onpointerdown=secret()>Secret</p></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.pointer_interaction_descriptors.len(), 5);
+
+        let save = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("save"))
+            .expect("save pointer descriptor");
+        assert_eq!(save.pointer_kind, "mouse-target");
+        assert_eq!(save.mouse_handlers, vec!["onmousedown"]);
+        assert_eq!(save.click_handlers, vec!["onclick"]);
+        assert_eq!(save.handler_count, 2);
+        assert!(save.focusable);
+
+        let canvas = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("canvas"))
+            .expect("canvas pointer descriptor");
+        assert_eq!(canvas.pointer_kind, "wheel-target");
+        assert_eq!(
+            canvas.pointer_handlers,
+            vec!["onpointerdown", "onpointermove", "onwheel"]
+        );
+        assert_eq!(canvas.wheel_handlers, vec!["onwheel"]);
+
+        let card = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("card"))
+            .expect("card pointer descriptor");
+        assert_eq!(card.pointer_kind, "drag-source");
+        assert_eq!(card.draggable_state.as_deref(), Some("true"));
+        assert_eq!(card.drag_handlers, vec!["ondragstart", "ondragend"]);
+
+        let dropzone = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("dropzone"))
+            .expect("dropzone pointer descriptor");
+        assert_eq!(dropzone.pointer_kind, "drop-target");
+        assert_eq!(dropzone.drop_handlers, vec!["ondragover", "ondrop"]);
+
+        let secret = summary
+            .pointer_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret pointer descriptor");
+        assert_eq!(secret.pointer_kind, "blocked");
+        assert_eq!(secret.pointer_handlers, vec!["onpointerdown"]);
+        assert_eq!(secret.pointer_block_reasons, vec!["hidden"]);
+    }
+
+    #[test]
+    fn browser_context_menu_interaction_descriptors_track_menu_hooks_and_blockers() {
+        let document = parse_html(
+            "<body><button id=menu tabindex=0 aria-haspopup=menu aria-expanded=false aria-controls=commands \
+                popovertarget=commands popovertargetaction=toggle oncontextmenu=openMenu()>Menu</button>\
+             <div id=commands role=menu popover=manual><button id=cut role=menuitem onkeydown=cutKey()>Cut</button></div>\
+             <main id=canvas oncontextmenu=canvasMenu() onpointerdown=start()>Canvas</main>\
+             <button id=secret hidden aria-haspopup=menu oncontextmenu=secretMenu()>Secret</button></body>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.context_menu_interaction_descriptors.len(), 5);
+
+        let menu = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("menu"))
+            .expect("menu context descriptor");
+        assert_eq!(menu.context_menu_kind, "custom-menu-handler");
+        assert_eq!(menu.aria_haspopup.as_deref(), Some("menu"));
+        assert_eq!(menu.aria_controls, vec!["commands"]);
+        assert_eq!(menu.popover_target.as_deref(), Some("commands"));
+        assert_eq!(menu.popover_target_action.as_deref(), Some("toggle"));
+        assert_eq!(menu.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(menu.handler_count, 1);
+        assert!(menu.focusable);
+
+        let commands = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("commands"))
+            .expect("commands menu surface descriptor");
+        assert_eq!(commands.context_menu_kind, "menu-surface");
+        assert_eq!(commands.authored_role.as_deref(), Some("menu"));
+        assert_eq!(commands.popover.as_deref(), Some("manual"));
+
+        let cut = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cut"))
+            .expect("cut menuitem descriptor");
+        assert_eq!(cut.context_menu_kind, "menu-item");
+        assert_eq!(cut.authored_role.as_deref(), Some("menuitem"));
+        assert_eq!(cut.keyboard_handlers, vec!["onkeydown"]);
+
+        let canvas = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("canvas"))
+            .expect("canvas context descriptor");
+        assert_eq!(canvas.context_menu_kind, "context-menu-handler");
+        assert_eq!(canvas.contextmenu_handlers, vec!["oncontextmenu"]);
+        assert_eq!(
+            canvas.pointer_handlers,
+            vec!["oncontextmenu", "onpointerdown"]
+        );
+
+        let secret = summary
+            .context_menu_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("secret"))
+            .expect("secret context descriptor");
+        assert_eq!(secret.context_menu_kind, "blocked");
+        assert!(secret.context_menu_blocked);
+        assert_eq!(secret.context_menu_block_reasons, vec!["hidden"]);
+        assert_eq!(secret.contextmenu_handlers, vec!["oncontextmenu"]);
+    }
+
+    #[test]
+    fn browser_scroll_interaction_descriptors_track_handlers_scrollbars_and_blockers() {
+        let document = parse_html(
+            "<html onscroll=docScroll()><body onscrollend=bodyDone()>\
+             <main id=feed tabindex=0 onscroll=scrollFeed() onwheel=wheelFeed()>Feed</main>\
+             <div id=timeline role=scrollbar aria-label=Timeline aria-valuemin=0 aria-valuemax=300 \
+             aria-valuenow=120 aria-orientation=vertical tabindex=0>Timeline</div>\
+             <section id=touch ontouchmove=touchScroll()>Touch</section>\
+             <aside id=hidden hidden onscroll=hiddenScroll()>Hidden</aside></body></html>",
+        )
+        .unwrap();
+
+        let summary = BrowserDocument::from_document(&document);
+        assert_eq!(summary.scroll_interaction_descriptors.len(), 6);
+
+        let timeline = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("timeline"))
+            .expect("timeline scrollbar descriptor");
+        assert_eq!(timeline.scroll_kind, "scrollbar");
+        assert_eq!(timeline.source, "aria-range");
+        assert_eq!(timeline.aria_valuenow.as_deref(), Some("120"));
+        assert_eq!(timeline.aria_orientation.as_deref(), Some("vertical"));
+        assert_eq!(timeline.tabindex.as_deref(), Some("0"));
+
+        let feed = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("feed"))
+            .expect("feed scroll descriptor");
+        assert_eq!(feed.scroll_kind, "scroll-handler");
+        assert_eq!(feed.scroll_handlers, vec!["onscroll"]);
+        assert_eq!(feed.wheel_handlers, vec!["onwheel"]);
+        assert_eq!(feed.handler_count, 2);
+        assert!(feed.focusable);
+
+        let touch = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("touch"))
+            .expect("touch scroll descriptor");
+        assert_eq!(touch.scroll_kind, "touch-scroll-target");
+        assert_eq!(touch.touch_handlers, vec!["ontouchmove"]);
+
+        let hidden = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hidden"))
+            .expect("hidden scroll descriptor");
+        assert_eq!(hidden.scroll_kind, "blocked");
+        assert_eq!(hidden.scroll_block_reasons, vec!["hidden"]);
+
+        let document_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document scroll descriptor");
+        assert_eq!(document_scroll.scroll_handlers, vec!["onscroll"]);
+
+        let body_scroll = summary
+            .scroll_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body scroll descriptor");
+        assert_eq!(body_scroll.scroll_handlers, vec!["onscrollend"]);
+    }
+
+    #[test]
     fn browser_shell_global_state_metadata_tracks_document_and_body_attributes() {
         let document = parse_html(
             "<html lang=en dir=ltr hidden accesskey=\"h ?\" spellcheck=false translate=no>\
@@ -21542,6 +27484,15 @@ mod tests {
         assert_eq!(relation.errormessage_text, vec!["Required value"]);
         assert_eq!(relation.aria_flowto, vec!["next"]);
         assert_eq!(relation.flowto_text, vec!["Next step"]);
+        assert_eq!(
+            relation.relation_attribute_names,
+            vec!["aria-details", "aria-errormessage", "aria-flowto"]
+        );
+        assert_eq!(relation.relation_attribute_count, 3);
+        assert_eq!(relation.relation_target_count, 4);
+        assert!(relation.unresolved_relation_targets.is_empty());
+        assert!(!relation.relation_blocked);
+        assert!(relation.relation_block_reasons.is_empty());
     }
 
     #[test]
@@ -21649,6 +27600,191 @@ mod tests {
         let input = &summary.event_handler_descriptors[6];
         assert_eq!(input.role.as_deref(), Some("control"));
         assert_eq!(input.form_handlers, vec!["oninput", "onchange"]);
+    }
+
+    #[test]
+    fn browser_lifecycle_event_descriptors_track_load_history_visibility_and_errors() {
+        let html = "<html onreadystatechange=ready onvisibilitychange=visible>\
+             <body onload=boot onbeforeunload=confirmExit onpagehide=hide ononline=online>\
+             <main id=app onhashchange=route onpopstate=state>App</main>\
+             <img id=hero src=hero.jpg alt=Hero onerror=fallback onabort=abortLoad>\
+             <dialog id=modal oncancel=cancelDialog>Dialog</dialog></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.lifecycle_event_descriptors.len(), 5);
+
+        let document = &summary.lifecycle_event_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.lifecycle_kind, "load");
+        assert_eq!(
+            document.lifecycle_handlers,
+            vec!["onreadystatechange", "onvisibilitychange"]
+        );
+        assert_eq!(document.load_handlers, vec!["onreadystatechange"]);
+        assert_eq!(document.visibility_handlers, vec!["onvisibilitychange"]);
+        assert_eq!(document.handler_count, 2);
+        assert!(document.document_scope);
+
+        let body = &summary.lifecycle_event_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.lifecycle_kind, "unload");
+        assert_eq!(body.unload_handlers, vec!["onbeforeunload", "onpagehide"]);
+        assert_eq!(body.network_handlers, vec!["ononline"]);
+        assert!(body.body_scope);
+
+        let main = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("app"))
+            .expect("main lifecycle descriptor");
+        assert_eq!(main.lifecycle_kind, "history");
+        assert_eq!(main.history_handlers, vec!["onhashchange", "onpopstate"]);
+        assert!(!main.error_recovery);
+
+        let image = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("image lifecycle descriptor");
+        assert_eq!(image.lifecycle_kind, "error-recovery");
+        assert_eq!(image.error_handlers, vec!["onerror", "onabort"]);
+        assert!(image.error_recovery);
+
+        let dialog = summary
+            .lifecycle_event_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("modal"))
+            .expect("dialog lifecycle descriptor");
+        assert_eq!(dialog.lifecycle_kind, "error-recovery");
+        assert_eq!(dialog.error_handlers, vec!["oncancel"]);
+    }
+
+    #[test]
+    fn browser_animation_interaction_descriptors_track_css_animation_and_transition_hooks() {
+        let html = "<html onanimationstart=docIntro>\
+             <body ontransitionend=bodyDone>\
+             <section id=hero onanimationstart=start onanimationiteration=loop onanimationend=end>Hero</section>\
+             <aside id=panel ontransitionrun=run ontransitionstart=startTransition ontransitionend=endTransition>Panel</aside>\
+             <div id=mixed onanimationend=endAnimation ontransitioncancel=cancelTransition>Mixed</div>\
+             <p id=cancelled onanimationcancel=cancelAnimation>Cancelled</p></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.animation_interaction_descriptors.len(), 6);
+
+        let document = &summary.animation_interaction_descriptors[0];
+        assert_eq!(document.element, "html");
+        assert_eq!(document.source, "document");
+        assert_eq!(document.animation_kind, "animation-start");
+        assert_eq!(document.animation_start_handlers, vec!["onanimationstart"]);
+        assert!(document.document_scope);
+
+        let body = &summary.animation_interaction_descriptors[1];
+        assert_eq!(body.element, "body");
+        assert_eq!(body.animation_kind, "transition-end");
+        assert_eq!(body.transition_end_handlers, vec!["ontransitionend"]);
+        assert!(body.body_scope);
+
+        let hero = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("hero"))
+            .expect("hero animation descriptor");
+        assert_eq!(hero.animation_kind, "animation-iteration");
+        assert_eq!(
+            hero.animation_handlers,
+            vec!["onanimationstart", "onanimationiteration", "onanimationend"]
+        );
+        assert_eq!(hero.handler_count, 3);
+
+        let panel = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("panel"))
+            .expect("panel transition descriptor");
+        assert_eq!(panel.animation_kind, "transition-end");
+        assert_eq!(panel.transition_run_handlers, vec!["ontransitionrun"]);
+        assert_eq!(panel.transition_start_handlers, vec!["ontransitionstart"]);
+        assert_eq!(panel.transition_end_handlers, vec!["ontransitionend"]);
+
+        let mixed = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("mixed"))
+            .expect("mixed animation descriptor");
+        assert_eq!(mixed.animation_kind, "animation-cancel");
+        assert_eq!(mixed.animation_end_handlers, vec!["onanimationend"]);
+        assert_eq!(mixed.transition_cancel_handlers, vec!["ontransitioncancel"]);
+
+        let cancelled = summary
+            .animation_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("cancelled"))
+            .expect("cancelled animation descriptor");
+        assert_eq!(cancelled.animation_kind, "animation-cancel");
+        assert_eq!(
+            cancelled.animation_cancel_handlers,
+            vec!["onanimationcancel"]
+        );
+    }
+
+    #[test]
+    fn browser_fullscreen_interaction_descriptors_track_policy_and_event_hooks() {
+        let html = "<html onfullscreenchange=docFullscreen>\
+             <body onfullscreenerror=bodyFullscreenError>\
+             <iframe id=player name=player src=player.html allow=\"fullscreen; geolocation\" allowfullscreen \
+                 onfullscreenchange=frameFullscreen onfullscreenerror=frameFullscreenError>Fallback</iframe>\
+             <div id=viewer onfullscreenchange=viewerFullscreen>Viewer</div></body></html>";
+        let summary = parse_browser_document(html).expect("browser document should parse");
+
+        assert_eq!(summary.fullscreen_interaction_descriptors.len(), 4);
+
+        let frame = &summary.fullscreen_interaction_descriptors[0];
+        assert_eq!(frame.element, "iframe");
+        assert_eq!(frame.id.as_deref(), Some("player"));
+        assert_eq!(frame.source, "embedded-policy");
+        assert_eq!(frame.fullscreen_kind, "fullscreen-policy-error");
+        assert_eq!(frame.allow.as_deref(), Some("fullscreen; geolocation"));
+        assert_eq!(frame.allow_tokens, vec!["fullscreen", "geolocation"]);
+        assert!(frame.allowfullscreen);
+        assert!(frame.fullscreen_allowed);
+        assert!(frame.embedded_context);
+        assert_eq!(
+            frame.fullscreen_handlers,
+            vec!["onfullscreenchange", "onfullscreenerror"]
+        );
+        assert_eq!(frame.fullscreen_change_handlers, vec!["onfullscreenchange"]);
+        assert_eq!(frame.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert_eq!(frame.handler_count, 2);
+
+        let document = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "document")
+            .expect("document fullscreen descriptor");
+        assert_eq!(document.fullscreen_kind, "fullscreen-change");
+        assert!(document.document_scope);
+
+        let body = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.source == "body")
+            .expect("body fullscreen descriptor");
+        assert_eq!(body.fullscreen_kind, "fullscreen-error");
+        assert_eq!(body.fullscreen_error_handlers, vec!["onfullscreenerror"]);
+        assert!(body.body_scope);
+
+        let viewer = summary
+            .fullscreen_interaction_descriptors
+            .iter()
+            .find(|descriptor| descriptor.id.as_deref() == Some("viewer"))
+            .expect("viewer fullscreen descriptor");
+        assert_eq!(viewer.fullscreen_kind, "fullscreen-change");
+        assert_eq!(
+            viewer.fullscreen_change_handlers,
+            vec!["onfullscreenchange"]
+        );
+        assert!(!viewer.fullscreen_allowed);
     }
 
     #[test]
@@ -21864,6 +28000,202 @@ mod tests {
         assert!(legacy.defer_script);
         assert_eq!(legacy.nonce.as_deref(), Some("legacyNonce"));
         assert_eq!(legacy.text_length, "legacy();".chars().count());
+    }
+
+    #[test]
+    fn browser_script_storage_access_descriptors_track_storage_api_hints() {
+        let summary = parse_browser_document(
+            "<script>\
+             localStorage.setItem('theme', 'dark');\
+             sessionStorage.getItem('draft');\
+             document.cookie = 'seen=1';\
+             indexedDB.open('app');\
+             window.addEventListener('storage', syncTabs);\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             caches.open('assets');\
+             navigator.storage.persist();\
+             </script>\
+             <script nomodule>localStorage.getItem('legacy');</script>",
+        )
+        .expect("storage access descriptor document should parse");
+
+        let descriptors = &summary.script_storage_access_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let client = &descriptors[0];
+        assert_eq!(client.script_kind, "classic");
+        assert_eq!(client.execution_kind, "inline");
+        assert_eq!(client.access_kind, "database-storage");
+        assert_eq!(
+            client.storage_targets,
+            vec![
+                "localStorage",
+                "sessionStorage",
+                "cookies",
+                "indexedDB",
+                "storage-event",
+            ]
+        );
+        assert_eq!(client.storage_target_count, 5);
+        assert!(client.uses_local_storage);
+        assert!(client.uses_session_storage);
+        assert!(client.uses_cookies);
+        assert!(client.uses_indexed_db);
+        assert!(client.listens_storage_events);
+        assert!(!client.storage_blocked);
+
+        let worker = &descriptors[1];
+        assert_eq!(worker.script_kind, "module");
+        assert_eq!(worker.access_kind, "worker-cache-storage");
+        assert_eq!(
+            worker.storage_targets,
+            vec!["CacheStorage", "serviceWorker", "StorageManager"]
+        );
+        assert!(worker.uses_cache_storage);
+        assert!(worker.uses_service_worker);
+        assert!(worker.uses_storage_manager);
+        assert_eq!(worker.storage_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.access_kind, "client-key-value-storage");
+        assert!(legacy.uses_local_storage);
+        assert!(legacy.storage_blocked);
+        assert_eq!(legacy.storage_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_worker_messaging_descriptors_track_workers_and_channels() {
+        let summary = parse_browser_document(
+            "<script>\
+             const worker = new Worker('/worker.js', { type: 'module' });\
+             worker.postMessage({ready:true});\
+             window.addEventListener('message', receive);\
+             const channel = new MessageChannel();\
+             </script>\
+             <script type=module>\
+             navigator.serviceWorker.register('/sw.js');\
+             const updates = new BroadcastChannel('updates');\
+             </script>\
+             <script nomodule>\
+             const shared = new SharedWorker('/shared.js');\
+             shared.port.postMessage('legacy');\
+             </script>",
+        )
+        .expect("worker messaging descriptor document should parse");
+
+        let descriptors = &summary.script_worker_messaging_descriptors;
+        assert_eq!(descriptors.len(), 3);
+
+        let worker = &descriptors[0];
+        assert_eq!(worker.script_kind, "classic");
+        assert_eq!(worker.execution_kind, "inline");
+        assert_eq!(worker.messaging_kind, "module-worker");
+        assert_eq!(
+            worker.messaging_targets,
+            vec![
+                "Worker",
+                "postMessage",
+                "message-event",
+                "MessageChannel",
+                "module-worker"
+            ]
+        );
+        assert_eq!(worker.messaging_target_count, 5);
+        assert!(worker.creates_worker);
+        assert!(worker.uses_post_message);
+        assert!(worker.listens_message_events);
+        assert!(worker.uses_message_channel);
+        assert!(worker.module_worker_hint);
+        assert!(!worker.messaging_blocked);
+
+        let service = &descriptors[1];
+        assert_eq!(service.script_kind, "module");
+        assert_eq!(service.type_hint.as_deref(), Some("module"));
+        assert_eq!(service.messaging_kind, "service-worker-registration");
+        assert_eq!(
+            service.messaging_targets,
+            vec!["serviceWorker", "BroadcastChannel"]
+        );
+        assert!(service.registers_service_worker);
+        assert!(service.uses_broadcast_channel);
+        assert_eq!(service.messaging_block_reasons, Vec::<String>::new());
+
+        let legacy = &descriptors[2];
+        assert_eq!(legacy.messaging_kind, "shared-worker");
+        assert_eq!(
+            legacy.messaging_targets,
+            vec!["SharedWorker", "postMessage"]
+        );
+        assert!(legacy.creates_shared_worker);
+        assert!(legacy.messaging_blocked);
+        assert_eq!(legacy.messaging_block_reasons, vec!["nomodule-fallback"]);
+    }
+
+    #[test]
+    fn browser_script_module_graph_descriptors_track_imports_and_preloads() {
+        let summary = parse_browser_document(
+            "<base href=\"https://example.test/app/index.html\">\
+             <link rel=modulepreload href=chunks/vendor.mjs integrity=sha384-vendor>\
+             <script type=importmap>{\"imports\":{\"app\":\"/app.mjs\"}}</script>\
+             <script type=module src=app.mjs></script>\
+             <script type=module>\
+             import { ready } from './ready.mjs';\
+             export const boot = ready();\
+             import('./lazy.mjs');\
+             </script>\
+             <script nomodule>import('./legacy.js');</script>",
+        )
+        .expect("script module graph descriptor document should parse");
+
+        let descriptors = &summary.script_module_graph_descriptors;
+        assert_eq!(descriptors.len(), 4);
+
+        let importmap = &descriptors[0];
+        assert_eq!(importmap.script_kind, "importmap");
+        assert_eq!(importmap.module_graph_kind, "import-map");
+        assert!(importmap.declares_import_map);
+        assert!(importmap.has_modulepreload);
+        assert_eq!(
+            importmap.modulepreload_urls,
+            vec!["chunks/vendor.mjs".to_string()]
+        );
+        assert_eq!(
+            importmap.resolved_modulepreload_urls,
+            vec!["https://example.test/app/chunks/vendor.mjs".to_string()]
+        );
+
+        let external = &descriptors[1];
+        assert_eq!(external.module_graph_kind, "module-entry");
+        assert!(external.external_module_entry);
+        assert_eq!(external.src.as_deref(), Some("app.mjs"));
+        assert_eq!(
+            external.resolved_src.as_deref(),
+            Some("https://example.test/app/app.mjs")
+        );
+
+        let inline = &descriptors[2];
+        assert_eq!(inline.module_graph_kind, "mixed-module-imports");
+        assert!(inline.inline_module_entry);
+        assert!(inline.uses_static_imports);
+        assert!(inline.uses_dynamic_imports);
+        assert_eq!(
+            inline.module_targets,
+            vec![
+                "inline-module-entry",
+                "static-import",
+                "dynamic-import",
+                "modulepreload"
+            ]
+        );
+
+        let legacy = &descriptors[3];
+        assert_eq!(legacy.script_kind, "classic");
+        assert_eq!(legacy.module_graph_kind, "dynamic-module-import");
+        assert!(legacy.uses_dynamic_imports);
+        assert!(legacy.module_graph_blocked);
+        assert_eq!(legacy.module_graph_block_reasons, vec!["nomodule-fallback"]);
     }
 
     #[test]

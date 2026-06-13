@@ -1,5 +1,65 @@
 # Changelog
 
+## Unreleased
+
+- Add `resolve_deck_outputs`, `select_deck_output_probes`, and
+  `format_deck_*_table` helpers so parsed `.save` and `.probe` deck cards can
+  drive stable operating-point, DC sweep, AC sweep, and transient table output
+  in the live Rust package.
+- Add `resolve_deck_measurements`, `measure_transient_cards`, and
+  `measure_transient_deck` for parsed transient `.measure` / `.meas` card
+  routing into stable scalar measurement rows, matching Python and TypeScript.
+- Add `measure_transient_probe` and `format_measurement_table` for a shared
+  `.MEASURE`-style scalar transient output surface with MAX, MIN, AVG, RMS,
+  peak-to-peak, and final-value probe measurements, matching Python and
+  TypeScript.
+- Add `dc_initial_vector_from_conditions`,
+  `dc_op_with_initial_conditions`, and `dc_op_with_initial_vector` so parsed
+  `.ic` / `.nodeset` node-voltage hints can seed DC operating-point Newton
+  solves as MNA warm-start vectors, with `.ic` values taking precedence over
+  `.nodeset`, matching Python and TypeScript.
+- Add scalar `.func` call evaluation to `resolve_deck_parameters`: definitions
+  are collected before `.end`, calls can appear in `.param` assignments and
+  braced or quoted active-line expressions, and unknown functions, bad arity,
+  and recursive calls produce stable diagnostics, matching Python and
+  TypeScript.
+- Add `resolve_deck_functions` for scalar `.func name(args) expression`
+  definition extraction before `.end`, braced or quoted expression delimiter
+  stripping, and stable diagnostics for malformed signatures, arguments,
+  duplicate arguments, and empty expressions, matching Python and TypeScript.
+- Add `resolve_deck_initial_conditions` for scalar `.ic` and `.nodeset`
+  `V(node)=value` hint extraction before `.end`, numeric SPICE
+  suffix/arithmetic expression evaluation, and stable diagnostics for malformed
+  targets and unresolved values, matching Python and TypeScript.
+- Add `resolve_deck_parameters` for scalar whitespace-tokenized `.param`
+  assignment evaluation, braced and quoted active-line expression rewriting,
+  and stable diagnostics for unresolved expressions, matching Python and
+  TypeScript.
+- Add `resolve_deck_sources` for map-backed `.include` and selected
+  `.lib path section` expansion with stable diagnostics for missing sources,
+  missing or unterminated library sections, cycles, and still-unsupported
+  `.control` blocks, matching Python and TypeScript.
+- Add `analyze_deck_controls` for shared deck-control boundary diagnostics:
+  active pre-`.end` lines plus stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control`, matching Python and TypeScript.
+- Add `compatibility_corpus`, `release_readiness_gates`,
+  `format_compatibility_corpus_table`, and `format_release_readiness_report`
+  for the first oracle-backed compatibility deck corpus with golden tolerances
+  and known incompatibility notes shared with Python and TypeScript.
+- Add `CustomModel`, `CustomModelKind`, `CustomModelEvaluation`, and
+  `analyze_custom_model_source` for the first Rust-native two-terminal
+  residual/Jacobian custom-model fast path and Verilog-A subset diagnostics
+  shared with Python and TypeScript.
+- Add `format_digital_event_stream_vcd` and
+  `format_digital_event_stream_vcd_with_options` for deterministic VCD
+  correlation output from SPICE-side mixed-signal digital event streams.
+- Add `normalize_model_card`, typed model-card builders, and
+  `device_model_audit_fixtures` for cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias compatibility fixtures.
+- Add `DcResult::diagnostics` with stable matrix size, solver kind, tolerance,
+  convergence aid, and final Newton delta metadata; large AC complex systems
+  now route through the sparse-row complex solver path.
+
 ## 0.14.0 — 2026-06-05
 
 - Add `s_parameters_corners_parallel` for order-preserving parallel Rust

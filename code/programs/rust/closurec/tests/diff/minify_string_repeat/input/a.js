@@ -1,0 +1,1 @@
+var x="ab".repeat(3);

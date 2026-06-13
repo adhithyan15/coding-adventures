@@ -4,6 +4,19 @@ const TWO_PI = Math.PI * 2.0;
 const BOLTZMANN = 1.380_649e-23;
 const ELECTRON_CHARGE = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA = 2.0 / 3.0;
+const DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18;
+const SPICE_SUFFIX_FACTORS: Readonly<Record<string, number>> = Object.freeze({
+  t: 1.0e12,
+  g: 1.0e9,
+  meg: 1.0e6,
+  k: 1.0e3,
+  m: 1.0e-3,
+  mil: 25.4e-6,
+  u: 1.0e-6,
+  n: 1.0e-9,
+  p: 1.0e-12,
+  f: 1.0e-15,
+});
 
 export type Element =
   | Resistor
@@ -14,6 +27,7 @@ export type Element =
   | VoltageSource
   | CurrentSource
   | BSource
+  | CustomModel
   | Diode
   | Jfet
   | Bjt
@@ -337,6 +351,220 @@ export interface BSource {
   readonly currentExpr?: string;
 }
 
+export interface CustomModelContext {
+  readonly voltage: number;
+  readonly temperatureKelvin: number;
+  readonly parameters: Readonly<Record<string, number>>;
+}
+
+export interface CustomModelEvaluation {
+  readonly currentAmps: number;
+  readonly conductanceSiemens: number;
+}
+
+export type CustomModelEvaluator = (
+  context: CustomModelContext,
+) => CustomModelEvaluation;
+
+export interface CustomModel {
+  readonly kind: "custom-model";
+  readonly name: string;
+  readonly positive: string;
+  readonly negative: string;
+  readonly modelName: string;
+  readonly parameters: Readonly<Record<string, number>>;
+  readonly evaluator?: CustomModelEvaluator;
+  readonly conductanceSiemens?: number;
+  readonly currentOffsetAmps: number;
+}
+
+export interface CustomModelDiagnostic {
+  readonly code: string;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+}
+
+export interface CustomModelSourceAnalysis {
+  readonly accepted: boolean;
+  readonly subset: string;
+  readonly moduleName?: string;
+  readonly terminals: readonly string[];
+  readonly contribution?: readonly [string, string];
+  readonly diagnostics: readonly CustomModelDiagnostic[];
+}
+
+export interface CompatibilityOracle {
+  readonly reference: string;
+  readonly version: string;
+  readonly source: string;
+}
+
+export interface CompatibilityGoldenValue {
+  readonly name: string;
+  readonly value: number;
+  readonly unit: string;
+  readonly absoluteTolerance: number;
+  readonly relativeTolerance: number;
+}
+
+export interface CompatibilityDeck {
+  readonly id: string;
+  readonly title: string;
+  readonly analysis: string;
+  readonly netlist: string;
+  readonly oracle: CompatibilityOracle;
+  readonly goldenValues: readonly CompatibilityGoldenValue[];
+  readonly knownIncompatibilities: readonly string[];
+}
+
+export interface DeckControlDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+}
+
+export interface DeckControlSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly diagnostics: readonly DeckControlDiagnostic[];
+}
+
+export interface DeckResolutionDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly source: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly target?: string;
+}
+
+export interface DeckResolutionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly diagnostics: readonly DeckResolutionDiagnostic[];
+  readonly includedPaths: readonly string[];
+  readonly librarySections: readonly string[];
+}
+
+export interface DeckParameterValue {
+  readonly name: string;
+  readonly value: number;
+}
+
+export interface DeckParameterDiagnostic {
+  readonly code: string;
+  readonly directive: string;
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly parameter?: string;
+  readonly expression?: string;
+}
+
+export interface DeckParameterSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly parameters: readonly DeckParameterValue[];
+  readonly diagnostics: readonly DeckParameterDiagnostic[];
+}
+
+export interface DeckNodeCondition {
+  readonly directive: ".ic" | ".nodeset";
+  readonly node: string;
+  readonly value: number;
+  readonly lineNumber: number;
+}
+
+export interface DeckInitialConditionDiagnostic {
+  readonly code: string;
+  readonly directive: ".ic" | ".nodeset";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckInitialConditionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly initialConditions: readonly DeckNodeCondition[];
+  readonly nodesets: readonly DeckNodeCondition[];
+  readonly diagnostics: readonly DeckInitialConditionDiagnostic[];
+}
+
+export interface DeckFunctionDefinition {
+  readonly name: string;
+  readonly arguments: readonly string[];
+  readonly expression: string;
+  readonly lineNumber: number;
+}
+
+export interface DeckFunctionDiagnostic {
+  readonly code: string;
+  readonly directive: ".func";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly functionName?: string;
+  readonly expression?: string;
+}
+
+export interface DeckFunctionSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly functions: readonly DeckFunctionDefinition[];
+  readonly diagnostics: readonly DeckFunctionDiagnostic[];
+}
+
+export interface DeckMeasurementCard {
+  readonly directive: ".measure" | ".meas";
+  readonly analysis: "tran" | "transient";
+  readonly name: string;
+  readonly mode: string;
+  readonly probe: string;
+  readonly lineNumber: number;
+  readonly fromValue?: number;
+  readonly toValue?: number;
+}
+
+export interface DeckMeasurementDiagnostic {
+  readonly code: string;
+  readonly directive: ".measure" | ".meas";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckMeasurementSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly measurements: readonly DeckMeasurementCard[];
+  readonly diagnostics: readonly DeckMeasurementDiagnostic[];
+}
+
+export interface ReleaseReadinessIssue {
+  readonly deckId: string;
+  readonly field: string;
+  readonly message: string;
+}
+
+export interface ReleaseReadinessReport {
+  readonly passed: boolean;
+  readonly deckCount: number;
+  readonly analyses: readonly string[];
+  readonly issues: readonly ReleaseReadinessIssue[];
+}
+
 export type SubcircuitElement = Element | XInstance;
 
 export interface SubcircuitDefinition {
@@ -432,6 +660,15 @@ export interface Mosfet {
   readonly params: MosfetLevel1Params;
 }
 
+export type ModelCardKind = "D" | "NPN" | "PNP" | "NJF" | "PJF" | "NMOS" | "PMOS";
+
+export interface NormalizedModelCard {
+  readonly name: string;
+  readonly kind: ModelCardKind;
+  readonly parameters: Readonly<Record<string, number>>;
+  readonly unsupportedParameters: readonly string[];
+}
+
 export interface Vccs {
   readonly kind: "vccs";
   readonly name: string;
@@ -476,11 +713,22 @@ export interface DcResult {
   readonly iterations: number;
   readonly converged: boolean;
   readonly convergenceAid: DcConvergenceAid;
+  readonly diagnostics: DcSolverDiagnostics;
   voltage(node: string): number | undefined;
   branchCurrent(sourceName: string): number | undefined;
 }
 
 export type DcConvergenceAid = "newton" | "gmin" | "source" | "pseudo_transient" | "none";
+
+export type LinearSolverKind = "none" | "dense_real" | "sparse_real" | "dense_complex" | "sparse_complex";
+
+export interface DcSolverDiagnostics {
+  readonly matrixSize: number;
+  readonly solver: LinearSolverKind;
+  readonly tolerance: number;
+  readonly maxDelta: number;
+  readonly convergenceAid: DcConvergenceAid;
+}
 
 export interface DcOpOptions {
   readonly maxIterations?: number;
@@ -493,7 +741,13 @@ export interface DcOpOptions {
 
 export interface CornerOverride {
   readonly elementName: string;
-  readonly parameter: "resistance" | "capacitance" | "inductance" | "voltage" | "current";
+  readonly parameter:
+    | "resistance"
+    | "capacitance"
+    | "inductance"
+    | "voltage"
+    | "current"
+    | "conductance";
   readonly value: number;
 }
 
@@ -509,6 +763,24 @@ export interface CornerPoint {
 
 export interface CornerSweepResult {
   readonly points: readonly CornerPoint[];
+}
+
+export interface TemperatureDcPoint {
+  readonly temperatureKelvin: number;
+  readonly result: DcResult;
+}
+
+export interface TemperatureDcResult {
+  readonly points: readonly TemperatureDcPoint[];
+}
+
+export interface CornerTemperatureDcPoint {
+  readonly cornerName: string;
+  readonly points: readonly TemperatureDcPoint[];
+}
+
+export interface CornerTemperatureDcResult {
+  readonly points: readonly CornerTemperatureDcPoint[];
 }
 
 export interface DcSweepPoint {
@@ -695,6 +967,116 @@ export interface TransientPoint {
   branchCurrent(sourceName: string): number | undefined;
 }
 
+export interface ProbeMeasurement {
+  readonly name: string;
+  readonly analysis: string;
+  readonly probe: string;
+  readonly mode: string;
+  readonly value: number;
+  readonly fromValue?: number;
+  readonly toValue?: number;
+}
+
+export interface CornerTransientPoint {
+  readonly cornerName: string;
+  readonly points: readonly TransientPoint[];
+}
+
+export interface CornerTransientResult {
+  readonly points: readonly CornerTransientPoint[];
+}
+
+export interface CornerAdaptiveTransientPoint {
+  readonly cornerName: string;
+  readonly result: AdaptiveTransientResult;
+}
+
+export interface CornerAdaptiveTransientResult {
+  readonly points: readonly CornerAdaptiveTransientPoint[];
+}
+
+export type DigitalState = "low" | "high";
+
+export interface DigitalEvent {
+  readonly timeSeconds: number;
+  readonly state: DigitalState;
+}
+
+export interface DigitalEventStream {
+  readonly signalName: string;
+  readonly events: readonly DigitalEvent[];
+}
+
+export interface DigitalTransientBridgeResult {
+  readonly points: readonly TransientPoint[];
+  readonly outputStreams: readonly DigitalEventStream[];
+}
+
+export interface CornerDigitalTransientBridgePoint {
+  readonly cornerName: string;
+  readonly result: DigitalTransientBridgeResult;
+}
+
+export interface CornerDigitalTransientBridgeResult {
+  readonly points: readonly CornerDigitalTransientBridgePoint[];
+}
+
+export interface AdaptiveDigitalTransientBridgeResult {
+  readonly result: AdaptiveTransientResult;
+  readonly outputStreams: readonly DigitalEventStream[];
+}
+
+export interface CornerAdaptiveDigitalTransientBridgePoint {
+  readonly cornerName: string;
+  readonly result: AdaptiveDigitalTransientBridgeResult;
+}
+
+export interface CornerAdaptiveDigitalTransientBridgeResult {
+  readonly points: readonly CornerAdaptiveDigitalTransientBridgePoint[];
+}
+
+export interface DigitalBridgeSchedule {
+  readonly stopTime: number;
+  readonly breakpoints: readonly number[];
+}
+
+export class DigitalLogicLevels {
+  constructor(
+    readonly lowVoltage: number,
+    readonly highVoltage: number,
+    readonly transitionSeconds: number,
+  ) {}
+
+  static cmos1v8(transitionSeconds: number): DigitalLogicLevels {
+    return new DigitalLogicLevels(0.0, 1.8, transitionSeconds);
+  }
+
+  voltageFor(state: DigitalState): number {
+    return normalizeDigitalState(state) === "low" ? this.lowVoltage : this.highVoltage;
+  }
+}
+
+export class DigitalThresholds {
+  constructor(
+    readonly lowMaxVoltage: number,
+    readonly highMinVoltage: number,
+  ) {}
+
+  static cmos1v8(): DigitalThresholds {
+    return new DigitalThresholds(0.6, 1.2);
+  }
+
+  classify(voltage: number): DigitalState | undefined {
+    if (voltage <= this.lowMaxVoltage) {
+      return "low";
+    }
+    if (voltage >= this.highMinVoltage) {
+      return "high";
+    }
+    return undefined;
+  }
+}
+
 export interface FourierHarmonic {
   readonly harmonic: number;
   readonly frequencyHz: number;
@@ -718,6 +1100,16 @@ export interface FourierResult {
   readonly probes: readonly FourierProbeResult[];
 }
 
+export interface CornerFourierPoint {
+  readonly cornerName: string;
+  readonly result: FourierResult;
+}
+
+export interface CornerFourierResult {
+  readonly fundamentalFrequencyHz: number;
+  readonly points: readonly CornerFourierPoint[];
+}
+
 export interface DistortionHarmonic {
   readonly harmonic: number;
   readonly frequencyHz: number;
@@ -738,6 +1130,17 @@ export interface DistortionResult {
   readonly points: readonly DistortionPoint[];
 }
 
+export interface CornerDistortionPoint {
+  readonly cornerName: string;
+  readonly result: DistortionResult;
+}
+
+export interface CornerDistortionResult {
+  readonly inputSource: string;
+  readonly outputProbe: string;
+  readonly points: readonly CornerDistortionPoint[];
+}
+
 export interface PoleZeroEntry {
   readonly kind: "pole" | "zero";
   readonly real: number;
@@ -750,6 +1153,26 @@ export interface PoleZeroResult {
   readonly inputSource: string;
   readonly outputNode: string;
   readonly entries: readonly PoleZeroEntry[];
+}
+
+export type PoleZeroTopology =
+  | "rc-lowpass"
+  | "rc-highpass"
+  | "rlc-lowpass"
+  | "rlc-highpass"
+  | "rlc-bandpass"
+  | "rlc-notch";
+
+export interface CornerPoleZeroPoint {
+  readonly cornerName: string;
+  readonly result: PoleZeroResult;
+}
+
+export interface CornerPoleZeroResult {
+  readonly inputSource: string;
+  readonly outputNode: string;
+  readonly topology: PoleZeroTopology;
+  readonly points: readonly CornerPoleZeroPoint[];
 }
 
 export function poleZeroRcLowpass(
@@ -1363,6 +1786,51 @@ export function poleZeroRlcNotch(
   };
 }
 
+export function poleZeroCorners(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+  topology: PoleZeroTopology,
+  corners: readonly CornerSpec[],
+): CornerPoleZeroResult {
+  return {
+    inputSource,
+    outputNode,
+    topology,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: poleZeroForTopology(
+        circuitWithCorner(circuit, corner),
+        inputSource,
+        outputNode,
+        topology,
+      ),
+    })),
+  };
+}
+
+function poleZeroForTopology(
+  circuit: Circuit,
+  inputSource: string,
+  outputNode: string,
+  topology: PoleZeroTopology,
+): PoleZeroResult {
+  switch (topology) {
+    case "rc-lowpass":
+      return poleZeroRcLowpass(circuit, inputSource, outputNode);
+    case "rc-highpass":
+      return poleZeroRcHighpass(circuit, inputSource, outputNode);
+    case "rlc-lowpass":
+      return poleZeroRlcLowpass(circuit, inputSource, outputNode);
+    case "rlc-highpass":
+      return poleZeroRlcHighpass(circuit, inputSource, outputNode);
+    case "rlc-bandpass":
+      return poleZeroRlcBandpass(circuit, inputSource, outputNode);
+    case "rlc-notch":
+      return poleZeroRlcNotch(circuit, inputSource, outputNode);
+  }
+}
+
 export function distortionFromFourier(
   result: FourierResult,
   inputSource: string,
@@ -1408,6 +1876,35 @@ export function distortionFromTransient(
     inputSource,
     outputProbe,
   );
+}
+
+export function distortionFromTransientCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  fundamentalFrequencyHz: number,
+  inputSource: string,
+  outputProbe: string,
+  corners: readonly CornerSpec[],
+  harmonics = 9,
+  startTime?: number,
+  method: TransientMethod = "euler",
+): CornerDistortionResult {
+  return {
+    inputSource,
+    outputProbe,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: distortionFromTransient(
+        transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+        fundamentalFrequencyHz,
+        inputSource,
+        outputProbe,
+        harmonics,
+        startTime,
+      ),
+    })),
+  };
 }
 
 export interface AdaptiveTransientOptions {
@@ -1503,6 +2000,15 @@ export interface PssResult {
   readonly periodSeconds: number;
   readonly timeStepSeconds: number;
   readonly converged: boolean;
+}
+
+export interface CornerPssPoint {
+  readonly cornerName: string;
+  readonly result: PssResult;
+}
+
+export interface CornerPssResult {
+  readonly points: readonly CornerPssPoint[];
 }
 
 export class SpiceError extends Error {
@@ -1722,6 +2228,8 @@ function cloneSubcktElement(
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "b-source":
       return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap), voltageExpr: mapBSourceExprNodes(element.voltageExpr, instanceName, nodeMap), currentExpr: mapBSourceExprNodes(element.currentExpr, instanceName, nodeMap) };
+    case "custom-model":
+      return { ...element, name, positive: mapSubcktNode(element.positive, instanceName, nodeMap), negative: mapSubcktNode(element.negative, instanceName, nodeMap) };
     case "diode":
       return diode(name, mapSubcktNode(element.anode, instanceName, nodeMap), mapSubcktNode(element.cathode, instanceName, nodeMap), element.saturationCurrent, element.thermalVoltage, element.emissionCoefficient, element.breakdownVoltage, element.breakdownCurrent, element.junctionCapacitance, element.transitTime);
     case "jfet":
@@ -1946,6 +2454,1755 @@ export function bSourceVoltage(
   voltageExpr: string,
 ): BSource {
   return { kind: "b-source", name, positive, negative, voltageExpr };
+}
+
+export function customLinearConductanceModel(
+  name: string,
+  positive: string,
+  negative: string,
+  conductanceSiemens: number,
+  options: {
+    readonly currentOffsetAmps?: number;
+    readonly modelName?: string;
+    readonly parameters?: Readonly<Record<string, number>>;
+  } = {},
+): CustomModel {
+  return {
+    kind: "custom-model",
+    name,
+    positive,
+    negative,
+    modelName: options.modelName ?? "linear_conductance",
+    parameters: options.parameters ?? {},
+    conductanceSiemens,
+    currentOffsetAmps: options.currentOffsetAmps ?? 0.0,
+  };
+}
+
+const CUSTOM_MODEL_SUBSET = "two-terminal-current-contribution-v0";
+const CUSTOM_MODEL_FORBIDDEN_PATTERNS: readonly (readonly [string, string])[] = [
+  ["ddt", "dynamic charge operators are not accepted in this custom-model subset"],
+  ["idt", "dynamic integration operators are not accepted in this custom-model subset"],
+  ["laplace", "Laplace-domain operators are not accepted in this custom-model subset"],
+  ["cross", "event crossing operators are not accepted in this custom-model subset"],
+  ["timer", "timer events are not accepted in this custom-model subset"],
+  ["@(", "event controls are not accepted in this custom-model subset"],
+  ["$finish", "system tasks are not accepted in this custom-model subset"],
+  ["$stop", "system tasks are not accepted in this custom-model subset"],
+  ["$display", "system tasks are not accepted in this custom-model subset"],
+  ["initial", "procedural initial blocks are not accepted in this custom-model subset"],
+  ["always", "procedural always blocks are not accepted in this custom-model subset"],
+  ["analog function", "analog functions are not accepted in this custom-model subset"],
+  ["discipline", "discipline declarations are not accepted in this custom-model subset"],
+  ["branch ", "named branch declarations are not accepted in this custom-model subset"],
+];
+
+export function analyzeCustomModelSource(source: string): CustomModelSourceAnalysis {
+  const diagnostics: CustomModelDiagnostic[] = [];
+  const trimmed = source.trim();
+  if (trimmed.length === 0) {
+    return {
+      accepted: false,
+      subset: CUSTOM_MODEL_SUBSET,
+      terminals: [],
+      diagnostics: [{
+        code: "CUSTOM_MODEL_EMPTY_SOURCE",
+        message: "custom model source is empty",
+        severity: "error",
+      }],
+    };
+  }
+
+  const lowered = trimmed.toLowerCase();
+  for (const [token, message] of CUSTOM_MODEL_FORBIDDEN_PATTERNS) {
+    if (lowered.includes(token)) {
+      diagnostics.push({
+        code: "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+        message,
+        severity: "error",
+      });
+    }
+  }
+
+  const moduleMatch = /\bmodule\s+([A-Za-z_][A-Za-z0-9_$]*)\s*\(([^)]*)\)\s*;/i.exec(trimmed);
+  const moduleName = moduleMatch?.[1];
+  const terminals = moduleMatch === null
+    ? []
+    : moduleMatch[2]
+        .split(",")
+        .map((port) => port.trim())
+        .filter((port) => port.length > 0);
+  if (moduleMatch === null) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_MISSING_MODULE",
+      message: "custom model source must declare a module with a port list",
+      severity: "error",
+    });
+  } else if (terminals.length < 2) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_PORT_COUNT",
+      message: "custom model module must expose at least two terminals",
+      severity: "error",
+    });
+  }
+
+  const contributionMatch = /\bI\s*\(\s*([A-Za-z_][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_][A-Za-z0-9_$]*)\s*\)\s*<\+/i.exec(trimmed);
+  const contribution = contributionMatch === null
+    ? undefined
+    : [contributionMatch[1], contributionMatch[2]] as const;
+  if (contribution === undefined) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_MISSING_CONTRIBUTION",
+      message: "custom model source must contain a two-terminal I(p,n) <+ contribution",
+      severity: "error",
+    });
+  } else if (
+    terminals.length > 0 &&
+    contribution.some((terminal) => !terminals.includes(terminal))
+  ) {
+    diagnostics.push({
+      code: "CUSTOM_MODEL_UNKNOWN_TERMINAL",
+      message: "current contribution terminals must be declared module ports",
+      severity: "error",
+    });
+  }
+
+  return {
+    accepted: !diagnostics.some((diagnostic) => diagnostic.severity === "error"),
+    subset: CUSTOM_MODEL_SUBSET,
+    moduleName,
+    terminals,
+    contribution,
+    diagnostics,
+  };
+}
+
+const COMMON_KNOWN_INCOMPATIBILITIES = Object.freeze([
+  "binary rawfile output is not part of this release gate",
+  ".control blocks and vendor-specific directives are intentionally excluded",
+  "golden values cover named probes, not byte-for-byte waveform dumps",
+]);
+
+const COMPATIBILITY_CORPUS: readonly CompatibilityDeck[] = Object.freeze([
+  {
+    id: "dc-op-resistive-divider",
+    title: "DC operating point resistive divider",
+    analysis: "op",
+    netlist: `* dc-op-resistive-divider
+V1 in 0 DC 10
+R1 in out 10000
+R2 out 0 10000
+.op
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-v1",
+      source: "V(out)=V1*R2/(R1+R2); I(V1)=-V1/(R1+R2)",
+    },
+    goldenValues: [
+      { name: "V(out)", value: 5.0, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "I(V1)", value: -5.0e-4, unit: "A", absoluteTolerance: 1.0e-12, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "dc-sweep-resistive-divider",
+    title: "DC source sweep resistive divider",
+    analysis: "dc",
+    netlist: `* dc-sweep-resistive-divider
+V1 in 0 DC 0
+R1 in out 10000
+R2 out 0 10000
+.dc V1 0 10 5
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-sweep-v1",
+      source: "V(out)=V1*0.5 at each sweep point",
+    },
+    goldenValues: [
+      { name: "points", value: 3.0, unit: "count", absoluteTolerance: 0.0, relativeTolerance: 0.0 },
+      { name: "V(out)@V1=10", value: 5.0, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "ac-rc-lowpass",
+    title: "AC RC low-pass cutoff",
+    analysis: "ac",
+    netlist: `* ac-rc-lowpass
+V1 in 0 DC 0 AC 1
+R1 in out 1000
+C1 out 0 1u
+.ac dec 1 1 1k
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "rc-lowpass-v1",
+      source: "|V(out)|=1/sqrt(1+(2*pi*f*R*C)^2)",
+    },
+    goldenValues: [
+      { name: "f_c", value: 159.15494309189535, unit: "Hz", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "|V(out)|@f_c", value: 0.7071067811865475, unit: "V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+  {
+    id: "tran-rc-step",
+    title: "Transient RC step response",
+    analysis: "tran",
+    netlist: `* tran-rc-step
+V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
+R1 in out 1000
+C1 out 0 1u
+.tran 0.0001 0.001
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "rc-step-v1",
+      source: "V(out,t)=1-exp(-t/(R*C)) after an ideal 1 V step",
+    },
+    goldenValues: [
+      { name: "V(out)@1ms", value: 0.6321205588285577, unit: "V", absoluteTolerance: 1.0e-6, relativeTolerance: 1.0e-6 },
+    ],
+    knownIncompatibilities: [
+      ...COMMON_KNOWN_INCOMPATIBILITIES,
+      "finite-edge pulse decks compare at the idealized step oracle point",
+    ],
+  },
+  {
+    id: "tf-resistive-divider",
+    title: "Transfer-function resistive divider",
+    analysis: "tf",
+    netlist: `* tf-resistive-divider
+V1 in 0 DC 10
+R1 in out 10000
+R2 out 0 10000
+.tf V(out) V1
+.end
+`,
+    oracle: {
+      reference: "closed-form",
+      version: "divider-tf-v1",
+      source: "gain=R2/(R1+R2); input resistance=R1+R2",
+    },
+    goldenValues: [
+      { name: "gain", value: 0.5, unit: "V/V", absoluteTolerance: 1.0e-9, relativeTolerance: 1.0e-9 },
+      { name: "input_resistance", value: 20000.0, unit: "ohm", absoluteTolerance: 1.0e-6, relativeTolerance: 1.0e-9 },
+    ],
+    knownIncompatibilities: COMMON_KNOWN_INCOMPATIBILITIES,
+  },
+]);
+
+const SUPPORTED_COMPATIBILITY_ANALYSES = new Set(["op", "dc", "ac", "tran", "tf"]);
+const REQUIRED_COMPATIBILITY_ANALYSES = ["op", "dc", "ac", "tran"];
+const UNSUPPORTED_DECK_CONTROL_DIRECTIVES = new Set([".include", ".lib", ".control"]);
+const UNSUPPORTED_RESOLVED_DIRECTIVES = new Set([".control"]);
+const UNSUPPORTED_PARAMETER_DIRECTIVES = new Set<string>();
+
+export function compatibilityCorpus(): readonly CompatibilityDeck[] {
+  return COMPATIBILITY_CORPUS;
+}
+
+export function analyzeDeckControls(netlist: string): DeckControlSummary {
+  const activeLines: string[] = [];
+  const diagnostics: DeckControlDiagnostic[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive !== undefined && UNSUPPORTED_DECK_CONTROL_DIRECTIVES.has(directive)) {
+      diagnostics.push({
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        lineNumber,
+        message: `${directive} is not supported by the deck execution foothold yet`,
+        severity: "error",
+      });
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    diagnostics,
+  };
+}
+
+export function resolveDeckSources(
+  netlist: string,
+  sources: Readonly<Record<string, string>>,
+): DeckResolutionSummary {
+  const state: DeckResolutionState = {
+    diagnostics: [],
+    includedPaths: [],
+    librarySections: [],
+  };
+  const resolved = resolveDeckLines(netlist, "<deck>", sources, state, []);
+
+  return {
+    activeLines: resolved.activeLines,
+    terminated: resolved.terminated,
+    endLineNumber: resolved.endLineNumber,
+    diagnostics: state.diagnostics,
+    includedPaths: state.includedPaths,
+    librarySections: state.librarySections,
+  };
+}
+
+export function resolveDeckParameters(netlist: string): DeckParameterSummary {
+  const state = new DeckParameterState();
+  collectParameterFunctions(netlist, state);
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".param") {
+      resolveParamLine(stripped, lineNumber, state);
+      continue;
+    }
+    if (directive === ".func") {
+      continue;
+    }
+    if (directive !== undefined && UNSUPPORTED_PARAMETER_DIRECTIVES.has(directive)) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        lineNumber,
+        message: `${directive} is not supported by the parameter resolver yet`,
+      });
+      activeLines.push(stripped);
+      continue;
+    }
+    activeLines.push(rewriteParameterExpressions(stripped, lineNumber, state));
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    parameters: state.parameterValues(),
+    diagnostics: state.diagnostics,
+  };
+}
+
+export function resolveDeckInitialConditions(netlist: string): DeckInitialConditionSummary {
+  const state = new DeckInitialConditionState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".ic" || directive === ".nodeset") {
+      resolveNodeConditionLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    initialConditions: state.initialConditions,
+    nodesets: state.nodesets,
+    diagnostics: state.diagnostics,
+  };
+}
+
+export function resolveDeckFunctions(netlist: string): DeckFunctionSummary {
+  const state = new DeckFunctionState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".func") {
+      resolveFunctionLine(stripped, lineNumber, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    functions: state.functions,
+    diagnostics: state.diagnostics,
+  };
+}
+
+export function resolveDeckMeasurements(netlist: string): DeckMeasurementSummary {
+  const state = new DeckMeasurementState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".measure" || directive === ".meas") {
+      resolveMeasurementLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    measurements: state.measurements,
+    diagnostics: state.diagnostics,
+  };
+}
+
+export function releaseReadinessGates(
+  corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
+): ReleaseReadinessReport {
+  const issues: ReleaseReadinessIssue[] = [];
+  const seenIds = new Set<string>();
+  const analyses: string[] = [];
+
+  if (corpus.length === 0) {
+    issues.push({
+      deckId: "corpus",
+      field: "deck_count",
+      message: "compatibility corpus must contain at least one deck",
+    });
+  }
+
+  for (const deck of corpus) {
+    const deckId = deck.id || "<missing>";
+    validateCompatibilityNonEmpty(deckId, "id", deck.id, issues);
+    validateCompatibilityNonEmpty(deckId, "title", deck.title, issues);
+    validateCompatibilityNonEmpty(deckId, "netlist", deck.netlist, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.reference", deck.oracle.reference, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.version", deck.oracle.version, issues);
+    validateCompatibilityNonEmpty(deckId, "oracle.source", deck.oracle.source, issues);
+    if (seenIds.has(deck.id)) {
+      issues.push({ deckId, field: "id", message: "deck ids must be unique" });
+    }
+    seenIds.add(deck.id);
+    if (!SUPPORTED_COMPATIBILITY_ANALYSES.has(deck.analysis)) {
+      issues.push({
+        deckId,
+        field: "analysis",
+        message: `unsupported analysis ${JSON.stringify(deck.analysis)}`,
+      });
+    } else if (!analyses.includes(deck.analysis)) {
+      analyses.push(deck.analysis);
+    }
+    if (!deck.netlist.toLowerCase().includes(".end")) {
+      issues.push({ deckId, field: "netlist", message: "deck must include .end" });
+    }
+    if (deck.goldenValues.length === 0) {
+      issues.push({
+        deckId,
+        field: "goldenValues",
+        message: "deck must include at least one golden value",
+      });
+    }
+    deck.goldenValues.forEach((golden, index) => {
+      const fieldPrefix = `goldenValues[${index}]`;
+      validateCompatibilityNonEmpty(deckId, `${fieldPrefix}.name`, golden.name, issues);
+      validateCompatibilityNonEmpty(deckId, `${fieldPrefix}.unit`, golden.unit, issues);
+      if (!Number.isFinite(golden.value)) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.value`,
+          message: "golden value must be finite",
+        });
+      }
+      if (
+        !Number.isFinite(golden.absoluteTolerance) ||
+        !Number.isFinite(golden.relativeTolerance) ||
+        golden.absoluteTolerance < 0.0 ||
+        golden.relativeTolerance < 0.0
+      ) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.tolerance`,
+          message: "tolerances must be finite and non-negative",
+        });
+      }
+      if (
+        golden.absoluteTolerance === 0.0 &&
+        golden.relativeTolerance === 0.0 &&
+        golden.unit !== "count"
+      ) {
+        issues.push({
+          deckId,
+          field: `${fieldPrefix}.tolerance`,
+          message: "non-count golden values need an absolute or relative tolerance",
+        });
+      }
+    });
+    if (deck.knownIncompatibilities.length === 0) {
+      issues.push({
+        deckId,
+        field: "knownIncompatibilities",
+        message: "deck must document known incompatibility boundaries",
+      });
+    }
+  }
+
+  for (const analysis of REQUIRED_COMPATIBILITY_ANALYSES) {
+    if (!analyses.includes(analysis)) {
+      issues.push({
+        deckId: "corpus",
+        field: "analysisCoverage",
+        message: `missing required ${JSON.stringify(analysis)} compatibility deck`,
+      });
+    }
+  }
+
+  return {
+    passed: issues.length === 0,
+    deckCount: corpus.length,
+    analyses,
+    issues,
+  };
+}
+
+export function formatCompatibilityCorpusTable(
+  corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
+): string {
+  const lines = ["id\tanalysis\toracle\tgolden_values\tknown_incompatibilities"];
+  for (const deck of corpus) {
+    const goldenValues = deck.goldenValues
+      .map((entry) => `${entry.name}=${formatTableNumber(entry.value)}${entry.unit}`)
+      .join(",");
+    lines.push([
+      deck.id,
+      deck.analysis,
+      `${deck.oracle.reference}@${deck.oracle.version}`,
+      goldenValues,
+      deck.knownIncompatibilities.length.toString(),
+    ].join("\t"));
+  }
+  return lines.join("\n");
+}
+
+export function formatReleaseReadinessReport(report: ReleaseReadinessReport): string {
+  const lines = [
+    "passed\tdeck_count\tanalyses\tissue_count",
+    `${String(report.passed)}\t${report.deckCount}\t${report.analyses.join(",")}\t${report.issues.length}`,
+  ];
+  if (report.issues.length > 0) {
+    lines.push("deck_id\tfield\tmessage");
+    for (const issue of report.issues) {
+      lines.push(`${issue.deckId}\t${issue.field}\t${issue.message}`);
+    }
+  }
+  return lines.join("\n");
+}
+
+interface DeckResolutionState {
+  readonly diagnostics: DeckResolutionDiagnostic[];
+  readonly includedPaths: string[];
+  readonly librarySections: string[];
+}
+
+interface ResolvedDeckLines {
+  readonly activeLines: string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+}
+
+function resolveDeckLines(
+  netlist: string,
+  source: string,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): ResolvedDeckLines {
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".include") {
+      activeLines.push(
+        ...resolveIncludeDirective(stripped, source, lineNumber, sources, state, stack),
+      );
+      continue;
+    }
+    if (directive === ".lib") {
+      activeLines.push(
+        ...resolveLibraryDirective(stripped, source, lineNumber, sources, state, stack),
+      );
+      continue;
+    }
+    if (directive !== undefined && UNSUPPORTED_RESOLVED_DIRECTIVES.has(directive)) {
+      state.diagnostics.push({
+        code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        directive,
+        source,
+        lineNumber,
+        message: `${directive} is not supported by the deck source resolver yet`,
+        severity: "error",
+      });
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+  };
+}
+
+function resolveIncludeDirective(
+  line: string,
+  source: string,
+  lineNumber: number,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): string[] {
+  const tokens = directiveTokens(line);
+  const target = tokens.length >= 2 ? unquoteToken(tokens[1]) : undefined;
+  if (target === undefined || target.length === 0) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_ARGUMENT",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: ".include requires a source path",
+    });
+    return [];
+  }
+  if (stack.includes(target)) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_CYCLE",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: `.include cycle detected for ${target}`,
+      target,
+    });
+    return [];
+  }
+  const content = sources[target];
+  if (content === undefined) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_INCLUDE_NOT_FOUND",
+      directive: ".include",
+      source,
+      lineNumber,
+      message: `.include source ${JSON.stringify(target)} was not provided`,
+      target,
+    });
+    return [];
+  }
+
+  state.includedPaths.push(target);
+  return resolveDeckLines(content, target, sources, state, [...stack, target]).activeLines;
+}
+
+function resolveLibraryDirective(
+  line: string,
+  source: string,
+  lineNumber: number,
+  sources: Readonly<Record<string, string>>,
+  state: DeckResolutionState,
+  stack: readonly string[],
+): string[] {
+  const tokens = directiveTokens(line);
+  const path = tokens.length >= 2 ? unquoteToken(tokens[1]) : undefined;
+  const section = tokens.length >= 3 ? unquoteToken(tokens[2]) : undefined;
+  if (path === undefined || path.length === 0 || section === undefined || section.length === 0) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_ARGUMENT",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: ".lib requires a source path and section name",
+      target: path,
+    });
+    return [];
+  }
+
+  const target = `${path}:${section}`;
+  const content = sources[path];
+  if (content === undefined) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_NOT_FOUND",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: `.lib source ${JSON.stringify(path)} was not provided`,
+      target,
+    });
+    return [];
+  }
+  if (stack.includes(target)) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_CYCLE",
+      directive: ".lib",
+      source,
+      lineNumber,
+      message: `.lib cycle detected for ${target}`,
+      target,
+    });
+    return [];
+  }
+
+  const sectionLines = extractLibrarySection(content, path, section, source, lineNumber, state);
+  if (sectionLines === undefined) {
+    return [];
+  }
+
+  state.librarySections.push(target);
+  return resolveDeckLines(sectionLines.join("\n"), target, sources, state, [...stack, target]).activeLines;
+}
+
+function extractLibrarySection(
+  content: string,
+  path: string,
+  section: string,
+  callSource: string,
+  callLineNumber: number,
+  state: DeckResolutionState,
+): string[] | undefined {
+  let inSection = false;
+  let sectionStartLine: number | undefined;
+  const sectionLines: string[] = [];
+  const wanted = section.toLowerCase();
+  const target = `${path}:${section}`;
+  const lines = content.split(/\r?\n/);
+
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const rawLine = lines[index];
+    const stripped = rawLine.trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      if (inSection) {
+        sectionLines.push(rawLine);
+      }
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    const tokens = directiveTokens(stripped);
+    if (!inSection) {
+      if (
+        directive === ".lib" &&
+        tokens.length >= 2 &&
+        unquoteToken(tokens[1]).toLowerCase() === wanted
+      ) {
+        inSection = true;
+        sectionStartLine = lineNumber;
+      }
+      continue;
+    }
+    if (directive === ".endl" || directive === ".endlib") {
+      return sectionLines;
+    }
+    sectionLines.push(rawLine);
+  }
+
+  if (!inSection) {
+    addResolutionDiagnostic(state, {
+      code: "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+      directive: ".lib",
+      source: callSource,
+      lineNumber: callLineNumber,
+      message: `.lib section ${JSON.stringify(section)} was not found in ${JSON.stringify(path)}`,
+      target,
+    });
+    return undefined;
+  }
+
+  addResolutionDiagnostic(state, {
+    code: "SPICE_DECK_LIB_SECTION_UNTERMINATED",
+    directive: ".lib",
+    source: path,
+    lineNumber: sectionStartLine ?? 1,
+    message: `.lib section ${JSON.stringify(section)} in ${JSON.stringify(path)} is missing .endl`,
+    target,
+  });
+  return undefined;
+}
+
+function addResolutionDiagnostic(
+  state: DeckResolutionState,
+  diagnostic: Omit<DeckResolutionDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+class DeckParameterState {
+  readonly diagnostics: DeckParameterDiagnostic[] = [];
+  private readonly parametersByName = new Map<string, DeckParameterValue>();
+  private readonly functionsByName = new Map<string, DeckFunctionDefinition>();
+  private readonly order: string[] = [];
+
+  setParameter(name: string, value: number): void {
+    const key = name.toLowerCase();
+    if (!this.parametersByName.has(key)) {
+      this.order.push(key);
+    }
+    this.parametersByName.set(key, { name, value });
+  }
+
+  getParameter(name: string): DeckParameterValue | undefined {
+    return this.parametersByName.get(name.toLowerCase());
+  }
+
+  setFunction(definition: DeckFunctionDefinition): void {
+    this.functionsByName.set(definition.name.toLowerCase(), definition);
+  }
+
+  getFunction(name: string): DeckFunctionDefinition | undefined {
+    return this.functionsByName.get(name.toLowerCase());
+  }
+
+  parameterValues(): DeckParameterValue[] {
+    return this.order.map((key) => this.parametersByName.get(key)!);
+  }
+}
+
+class DeckInitialConditionState {
+  readonly diagnostics: DeckInitialConditionDiagnostic[] = [];
+  readonly initialConditions: DeckNodeCondition[] = [];
+  readonly nodesets: DeckNodeCondition[] = [];
+}
+
+class DeckFunctionState {
+  readonly diagnostics: DeckFunctionDiagnostic[] = [];
+  readonly functions: DeckFunctionDefinition[] = [];
+}
+
+class DeckMeasurementState {
+  readonly diagnostics: DeckMeasurementDiagnostic[] = [];
+  readonly measurements: DeckMeasurementCard[] = [];
+}
+
+function resolveNodeConditionLine(
+  line: string,
+  lineNumber: number,
+  directive: ".ic" | ".nodeset",
+  state: DeckInitialConditionState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length === 1) {
+    addInitialConditionDiagnostic(state, {
+      code: "SPICE_DECK_CONDITION_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires at least one V(node)=value assignment`,
+    });
+    return;
+  }
+
+  const emptyParameterState = new DeckParameterState();
+  for (const token of tokens.slice(1)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `${directive} assignment ${JSON.stringify(token)} must use V(node)=value syntax`,
+        token,
+      });
+      continue;
+    }
+    const target = token.slice(0, equalsIndex).trim();
+    const expression = stripExpressionDelimiters(token.slice(equalsIndex + 1).trim());
+    const node = parseNodeConditionTarget(target);
+    if (node === undefined) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_TARGET",
+        directive,
+        lineNumber,
+        message: `${directive} target ${JSON.stringify(target)} must use V(node) syntax`,
+        token,
+      });
+      continue;
+    }
+    try {
+      const condition = {
+        directive,
+        node,
+        value: evaluateParameterExpression(expression, emptyParameterState),
+        lineNumber,
+      };
+      if (directive === ".ic") {
+        state.initialConditions.push(condition);
+      } else {
+        state.nodesets.push(condition);
+      }
+    } catch (error) {
+      addInitialConditionDiagnostic(state, {
+        code: "SPICE_DECK_CONDITION_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+    }
+  }
+}
+
+function resolveFunctionLine(line: string, lineNumber: number, state: DeckFunctionState): void {
+  let restStart = 0;
+  while (restStart < line.length && !isDirectiveWhitespace(line[restStart])) {
+    restStart += 1;
+  }
+  while (restStart < line.length && isDirectiveWhitespace(line[restStart])) {
+    restStart += 1;
+  }
+  const rest = line.slice(restStart).trim();
+  if (rest.length === 0) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: ".func requires a name(args) expression definition",
+    });
+    return;
+  }
+
+  const parsed = parseFunctionSignature(rest);
+  if (parsed === undefined) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_SIGNATURE",
+      lineNumber,
+      message: ".func definition must use name(args) expression syntax",
+    });
+    return;
+  }
+  const { name, argumentList, expression: rawExpression } = parsed;
+  if (!isParameterName(name)) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_SIGNATURE",
+      lineNumber,
+      message: `.func name ${JSON.stringify(name)} is not a valid identifier`,
+      functionName: name,
+    });
+    return;
+  }
+  const invalidArgument = argumentList.find((argument) => !isParameterName(argument));
+  if (invalidArgument !== undefined) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: `.func argument ${JSON.stringify(invalidArgument)} is not a valid identifier`,
+      functionName: name,
+    });
+    return;
+  }
+  if (new Set(argumentList.map((argument) => argument.toLowerCase())).size !== argumentList.length) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_ARGUMENT",
+      lineNumber,
+      message: `.func ${JSON.stringify(name)} has duplicate argument names`,
+      functionName: name,
+    });
+    return;
+  }
+  const expression = stripExpressionDelimiters(rawExpression.trim());
+  if (expression.length === 0) {
+    addFunctionDiagnostic(state, {
+      code: "SPICE_DECK_FUNC_EXPRESSION",
+      lineNumber,
+      message: `.func ${JSON.stringify(name)} requires a non-empty expression`,
+      functionName: name,
+    });
+    return;
+  }
+  state.functions.push({
+    name,
+    arguments: argumentList,
+    expression,
+    lineNumber,
+  });
+}
+
+function resolveMeasurementLine(
+  line: string,
+  lineNumber: number,
+  directive: ".measure" | ".meas",
+  state: DeckMeasurementState,
+): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length < 5) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} requires analysis, name, mode, and probe tokens`,
+    });
+    return;
+  }
+
+  const analysis = tokens[1].trim().toLowerCase();
+  if (analysis !== "tran" && analysis !== "transient") {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_ANALYSIS",
+      directive,
+      lineNumber,
+      message: `only transient .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const analysisName = analysis === "tran" ? "tran" : "transient";
+
+  const name = tokens[2].trim();
+  if (!isParameterName(name)) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_NAME",
+      directive,
+      lineNumber,
+      message: `measurement name ${JSON.stringify(name)} is not a valid identifier`,
+      token: name,
+    });
+    return;
+  }
+
+  const mode = normalizeMeasurementModeToken(tokens[3]);
+  if (mode === undefined) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_MODE",
+      directive,
+      lineNumber,
+      message: `unsupported transient measurement mode ${JSON.stringify(tokens[3])}`,
+      token: tokens[3],
+    });
+    return;
+  }
+
+  const probe = unquoteToken(tokens[4].trim());
+  if (probe.length === 0) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_PROBE",
+      directive,
+      lineNumber,
+      message: "measurement probe must not be empty",
+      token: tokens[4],
+    });
+    return;
+  }
+
+  const emptyParameterState = new DeckParameterState();
+  let fromValue: number | undefined;
+  let toValue: number | undefined;
+  const seenWindowTokens = new Set<string>();
+  const diagnosticCount = state.diagnostics.length;
+  for (const token of tokens.slice(5)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `measurement option ${JSON.stringify(token)} must use name=value syntax`,
+        token,
+      });
+      continue;
+    }
+    const key = token.slice(0, equalsIndex).trim().toLowerCase();
+    const expression = token.slice(equalsIndex + 1);
+    if (key !== "from" && key !== "to") {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `unsupported measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      continue;
+    }
+    if (seenWindowTokens.has(key)) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_ARGUMENT",
+        directive,
+        lineNumber,
+        message: `duplicate measurement option ${JSON.stringify(key)}`,
+        token,
+      });
+      continue;
+    }
+    seenWindowTokens.add(key);
+    try {
+      const value = evaluateParameterExpression(
+        stripExpressionDelimiters(expression.trim()),
+        emptyParameterState,
+      );
+      if (key === "from") {
+        fromValue = value;
+      } else {
+        toValue = value;
+      }
+    } catch (error) {
+      addMeasurementDiagnostic(state, {
+        code: "SPICE_DECK_MEASURE_EXPRESSION",
+        directive,
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        token,
+      });
+    }
+  }
+
+  if (fromValue !== undefined && toValue !== undefined && fromValue > toValue) {
+    addMeasurementDiagnostic(state, {
+      code: "SPICE_DECK_MEASURE_WINDOW",
+      directive,
+      lineNumber,
+      message: "measurement FROM value must be <= TO value",
+    });
+  }
+
+  if (state.diagnostics.length !== diagnosticCount) {
+    return;
+  }
+
+  state.measurements.push({
+    directive,
+    analysis: analysisName,
+    name,
+    mode,
+    probe,
+    lineNumber,
+    fromValue,
+    toValue,
+  });
+}
+
+function resolveParamLine(line: string, lineNumber: number, state: DeckParameterState): void {
+  const tokens = directiveTokens(line);
+  if (tokens.length === 1) {
+    addParameterDiagnostic(state, {
+      code: "SPICE_DECK_PARAM_ARGUMENT",
+      directive: ".param",
+      lineNumber,
+      message: ".param requires at least one name=value assignment",
+    });
+    return;
+  }
+
+  for (const token of tokens.slice(1)) {
+    const equalsIndex = token.indexOf("=");
+    if (equalsIndex < 0) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_ARGUMENT",
+        directive: ".param",
+        lineNumber,
+        message: `.param assignment ${JSON.stringify(token)} must use name=value syntax`,
+        parameter: token,
+      });
+      continue;
+    }
+    const name = token.slice(0, equalsIndex).trim();
+    const expression = stripExpressionDelimiters(token.slice(equalsIndex + 1).trim());
+    if (!isParameterName(name)) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_NAME",
+        directive: ".param",
+        lineNumber,
+        message: `.param name ${JSON.stringify(name)} is not a valid identifier`,
+        parameter: name,
+        expression,
+      });
+      continue;
+    }
+    try {
+      const value = evaluateParameterExpression(expression, state);
+      state.setParameter(name, value);
+    } catch (error) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_EXPRESSION",
+        directive: ".param",
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        parameter: name,
+        expression,
+      });
+    }
+  }
+}
+
+function collectParameterFunctions(netlist: string, state: DeckParameterState): void {
+  const functionState = new DeckFunctionState();
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      break;
+    }
+    if (directive === ".func") {
+      resolveFunctionLine(stripped, lineNumber, functionState);
+    }
+  }
+
+  for (const definition of functionState.functions) {
+    state.setFunction(definition);
+  }
+  for (const diagnostic of functionState.diagnostics) {
+    addParameterDiagnostic(state, {
+      code: diagnostic.code,
+      directive: diagnostic.directive,
+      lineNumber: diagnostic.lineNumber,
+      message: diagnostic.message,
+      parameter: diagnostic.functionName,
+      expression: diagnostic.expression,
+    });
+  }
+}
+
+function rewriteParameterExpressions(
+  line: string,
+  lineNumber: number,
+  state: DeckParameterState,
+): string {
+  const braced = replaceDelimitedParameterExpressions(line, "{", "}", lineNumber, state);
+  return replaceDelimitedParameterExpressions(braced, "'", "'", lineNumber, state);
+}
+
+function replaceDelimitedParameterExpressions(
+  line: string,
+  openToken: string,
+  closeToken: string,
+  lineNumber: number,
+  state: DeckParameterState,
+): string {
+  let result = "";
+  let index = 0;
+  while (index < line.length) {
+    if (line[index] !== openToken) {
+      result += line[index];
+      index += 1;
+      continue;
+    }
+    const closeIndex = line.indexOf(closeToken, index + 1);
+    if (closeIndex < 0) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_UNTERMINATED",
+        directive: ".param",
+        lineNumber,
+        message: `unterminated parameter expression starting at column ${index + 1}`,
+      });
+      result += line.slice(index);
+      break;
+    }
+    const expression = line.slice(index + 1, closeIndex).trim();
+    try {
+      result += formatParameterNumber(evaluateParameterExpression(expression, state));
+    } catch (error) {
+      addParameterDiagnostic(state, {
+        code: "SPICE_DECK_PARAM_UNRESOLVED",
+        directive: ".param",
+        lineNumber,
+        message: error instanceof Error ? error.message : String(error),
+        expression,
+      });
+      result += line.slice(index, closeIndex + 1);
+    }
+    index = closeIndex + 1;
+  }
+  return result;
+}
+
+function evaluateParameterExpression(expression: string, state: DeckParameterState): number {
+  const value = new ParameterExpressionParser(expression, state).parse();
+  if (!Number.isFinite(value)) {
+    throw new Error(`parameter expression ${JSON.stringify(expression)} did not evaluate to a finite value`);
+  }
+  return value;
+}
+
+class ParameterExpressionParser {
+  private index = 0;
+
+  constructor(
+    private readonly expression: string,
+    private readonly state: DeckParameterState,
+    private readonly localValues: ReadonlyMap<string, number> = new Map<string, number>(),
+    private readonly callStack: readonly string[] = [],
+  ) {}
+
+  parse(): number {
+    if (this.expression.length === 0) {
+      throw new Error("parameter expression must not be empty");
+    }
+    const value = this.parseExpression();
+    this.skipWhitespace();
+    if (this.index !== this.expression.length) {
+      throw new Error(`unexpected token ${JSON.stringify(this.expression[this.index])} in parameter expression`);
+    }
+    return value;
+  }
+
+  private parseExpression(): number {
+    let value = this.parseTerm();
+    while (true) {
+      this.skipWhitespace();
+      if (this.match("+")) {
+        value += this.parseTerm();
+      } else if (this.match("-")) {
+        value -= this.parseTerm();
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parseTerm(): number {
+    let value = this.parsePower();
+    while (true) {
+      this.skipWhitespace();
+      if (this.match("*")) {
+        value *= this.parsePower();
+      } else if (this.match("/")) {
+        const denominator = this.parsePower();
+        if (denominator === 0.0) {
+          throw new Error("division by zero in parameter expression");
+        }
+        value /= denominator;
+      } else {
+        return value;
+      }
+    }
+  }
+
+  private parsePower(): number {
+    let value = this.parseUnary();
+    this.skipWhitespace();
+    if (this.match("^")) {
+      value = value ** this.parsePower();
+    }
+    return value;
+  }
+
+  private parseUnary(): number {
+    this.skipWhitespace();
+    if (this.match("+")) {
+      return this.parseUnary();
+    }
+    if (this.match("-")) {
+      return -this.parseUnary();
+    }
+    return this.parsePrimary();
+  }
+
+  private parsePrimary(): number {
+    this.skipWhitespace();
+    if (this.match("(")) {
+      const value = this.parseExpression();
+      this.skipWhitespace();
+      if (!this.match(")")) {
+        throw new Error("missing ')' in parameter expression");
+      }
+      return value;
+    }
+    if (this.index >= this.expression.length) {
+      throw new Error("unexpected end of parameter expression");
+    }
+    const char = this.expression[this.index];
+    if (isDigit(char) || char === ".") {
+      return this.parseNumber();
+    }
+    if (isAlpha(char) || char === "_") {
+      return this.parseIdentifier();
+    }
+    throw new Error(`unexpected token ${JSON.stringify(char)} in parameter expression`);
+  }
+
+  private parseNumber(): number {
+    const start = this.index;
+    let sawDigit = false;
+    while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+      sawDigit = true;
+      this.index += 1;
+    }
+    if (this.index < this.expression.length && this.expression[this.index] === ".") {
+      this.index += 1;
+      while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+        sawDigit = true;
+        this.index += 1;
+      }
+    }
+    if (!sawDigit) {
+      throw new Error("expected digit in numeric parameter expression");
+    }
+    if (
+      this.index < this.expression.length &&
+      (this.expression[this.index] === "e" || this.expression[this.index] === "E")
+    ) {
+      const exponentIndex = this.index;
+      this.index += 1;
+      if (
+        this.index < this.expression.length &&
+        (this.expression[this.index] === "+" || this.expression[this.index] === "-")
+      ) {
+        this.index += 1;
+      }
+      const exponentStart = this.index;
+      while (this.index < this.expression.length && isDigit(this.expression[this.index])) {
+        this.index += 1;
+      }
+      if (exponentStart === this.index) {
+        this.index = exponentIndex;
+      }
+    }
+    const numeric = Number.parseFloat(this.expression.slice(start, this.index));
+    const suffixStart = this.index;
+    while (this.index < this.expression.length && isAlpha(this.expression[this.index])) {
+      this.index += 1;
+    }
+    const suffix = this.expression.slice(suffixStart, this.index).toLowerCase();
+    if (suffix.length === 0) {
+      return numeric;
+    }
+    const factor = SPICE_SUFFIX_FACTORS[suffix];
+    if (factor === undefined) {
+      throw new Error(`unsupported numeric suffix ${JSON.stringify(suffix)}`);
+    }
+    return numeric * factor;
+  }
+
+  private parseIdentifier(): number {
+    const start = this.index;
+    while (
+      this.index < this.expression.length &&
+      (isAlpha(this.expression[this.index]) ||
+        isDigit(this.expression[this.index]) ||
+        this.expression[this.index] === "_")
+    ) {
+      this.index += 1;
+    }
+    const name = this.expression.slice(start, this.index);
+    this.skipWhitespace();
+    if (this.index < this.expression.length && this.expression[this.index] === "(") {
+      return this.evaluateFunctionCall(name, this.parseCallArguments());
+    }
+    const local = this.localValues.get(name.toLowerCase());
+    if (local !== undefined) {
+      return local;
+    }
+    if (name.toLowerCase() === "pi") {
+      return Math.PI;
+    }
+    const parameter = this.state.getParameter(name);
+    if (parameter === undefined) {
+      throw new Error(`unknown parameter ${JSON.stringify(name)}`);
+    }
+    return parameter.value;
+  }
+
+  private parseCallArguments(): number[] {
+    if (!this.match("(")) {
+      throw new Error("expected '(' in function call");
+    }
+    this.skipWhitespace();
+    if (this.match(")")) {
+      return [];
+    }
+    const values: number[] = [];
+    while (true) {
+      values.push(this.parseExpression());
+      this.skipWhitespace();
+      if (this.match(",")) {
+        continue;
+      }
+      if (this.match(")")) {
+        return values;
+      }
+      throw new Error("missing ')' in function call");
+    }
+  }
+
+  private evaluateFunctionCall(name: string, values: readonly number[]): number {
+    const definition = this.state.getFunction(name);
+    if (definition === undefined) {
+      throw new Error(`unknown function ${JSON.stringify(name)}`);
+    }
+    if (values.length !== definition.arguments.length) {
+      throw new Error(
+        `function ${JSON.stringify(name)} expected ${definition.arguments.length} arguments but got ${values.length}`,
+      );
+    }
+    const key = definition.name.toLowerCase();
+    if (this.callStack.includes(key)) {
+      throw new Error(`recursive function call ${JSON.stringify(name)}`);
+    }
+    const localValues = new Map(this.localValues);
+    definition.arguments.forEach((argument, index) => {
+      localValues.set(argument.toLowerCase(), values[index]);
+    });
+    return new ParameterExpressionParser(definition.expression, this.state, localValues, [
+      ...this.callStack,
+      key,
+    ]).parse();
+  }
+
+  private skipWhitespace(): void {
+    while (this.index < this.expression.length && /\s/.test(this.expression[this.index])) {
+      this.index += 1;
+    }
+  }
+
+  private match(token: string): boolean {
+    if (this.expression.startsWith(token, this.index)) {
+      this.index += token.length;
+      return true;
+    }
+    return false;
+  }
+}
+
+function addParameterDiagnostic(
+  state: DeckParameterState,
+  diagnostic: Omit<DeckParameterDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function addInitialConditionDiagnostic(
+  state: DeckInitialConditionState,
+  diagnostic: Omit<DeckInitialConditionDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function addFunctionDiagnostic(
+  state: DeckFunctionState,
+  diagnostic: Omit<DeckFunctionDiagnostic, "directive" | "severity"> & {
+    readonly severity?: "error" | "warning";
+  },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    directive: ".func",
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function addMeasurementDiagnostic(
+  state: DeckMeasurementState,
+  diagnostic: Omit<DeckMeasurementDiagnostic, "severity"> & { readonly severity?: "error" | "warning" },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
+function parseNodeConditionTarget(target: string): string | undefined {
+  if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
+    return undefined;
+  }
+  const node = target.slice(2, -1).trim();
+  return node.length > 0 ? node : undefined;
+}
+
+function isDirectiveWhitespace(char: string): boolean {
+  return char === " " || char === "\t" || char === "\r" || char === "\n" || char === "\f";
+}
+
+function parseFunctionSignature(
+  rest: string,
+): { readonly name: string; readonly argumentList: readonly string[]; readonly expression: string } | undefined {
+  const openIndex = rest.indexOf("(");
+  if (openIndex < 0) {
+    return undefined;
+  }
+  const closeIndex = rest.indexOf(")", openIndex + 1);
+  if (closeIndex < 0) {
+    return undefined;
+  }
+  const name = rest.slice(0, openIndex).trim();
+  const argumentsRaw = rest.slice(openIndex + 1, closeIndex).trim();
+  const expression = rest.slice(closeIndex + 1).trim();
+  const argumentList = argumentsRaw.length === 0 ? [] : argumentsRaw.split(",").map((argument) => argument.trim());
+  return { name, argumentList, expression };
+}
+
+function isParameterName(name: string): boolean {
+  return /^[A-Za-z_][A-Za-z0-9_]*$/.test(name);
+}
+
+function normalizeMeasurementModeToken(mode: string): string | undefined {
+  const normalized = mode.trim().toLowerCase().replace(/_/g, "-");
+  switch (normalized) {
+    case "max":
+    case "min":
+      return normalized;
+    case "avg":
+    case "average":
+    case "mean":
+      return "avg";
+    case "rms":
+    case "root-mean-square":
+      return "rms";
+    case "pp":
+    case "p-p":
+    case "p2p":
+    case "peak-to-peak":
+    case "peak2peak":
+      return "pp";
+    case "last":
+    case "final":
+      return "last";
+    default:
+      return undefined;
+  }
+}
+
+function stripExpressionDelimiters(expression: string): string {
+  if (
+    expression.length >= 2 &&
+    ((expression[0] === "{" && expression[expression.length - 1] === "}") ||
+      (expression[0] === "'" && expression[expression.length - 1] === "'"))
+  ) {
+    return expression.slice(1, -1).trim();
+  }
+  return expression;
+}
+
+function formatParameterNumber(value: number): string {
+  if (value === 0.0) {
+    return "0";
+  }
+  const absValue = Math.abs(value);
+  if (absValue >= 1.0e-12 && absValue < 1.0e12) {
+    const formatted = value.toFixed(12).replace(/0+$/, "").replace(/\.$/, "");
+    return formatted === "-0" ? "0" : formatted;
+  }
+  const [mantissaRaw, exponentRaw] = value.toExponential(12).split("e");
+  const mantissa = mantissaRaw.replace(/0+$/, "").replace(/\.$/, "");
+  const exponent = Number.parseInt(exponentRaw, 10);
+  return `${mantissa}e${exponent >= 0 ? "+" : ""}${exponent}`;
+}
+
+function isAlpha(char: string): boolean {
+  return /^[A-Za-z]$/.test(char);
+}
+
+function isDigit(char: string): boolean {
+  return /^[0-9]$/.test(char);
+}
+
+function directiveTokens(line: string): string[] {
+  return line.split(/\s+/);
+}
+
+function unquoteToken(token: string): string {
+  if (
+    token.length >= 2 &&
+    token[0] === token[token.length - 1] &&
+    (token[0] === "'" || token[0] === '"')
+  ) {
+    return token.slice(1, -1);
+  }
+  return token;
+}
+
+function validateCompatibilityNonEmpty(
+  deckId: string,
+  field: string,
+  value: string,
+  issues: ReleaseReadinessIssue[],
+): void {
+  if (value.trim().length > 0) {
+    return;
+  }
+  issues.push({
+    deckId,
+    field,
+    message: "field must be documented and non-empty",
+  });
+}
+
+function deckDirective(line: string): string | undefined {
+  if (!line.startsWith(".")) {
+    return undefined;
+  }
+  return line.split(/\s+/, 1)[0].toLowerCase();
 }
 
 export function subcircuitDefinition(
@@ -2212,6 +4469,272 @@ export function mosfet(
   };
 }
 
+const MODEL_TYPE_ALIASES: Readonly<Record<string, ModelCardKind>> = {
+  D: "D",
+  DIODE: "D",
+  NPN: "NPN",
+  PNP: "PNP",
+  NJF: "NJF",
+  NJFET: "NJF",
+  NJ: "NJF",
+  PJF: "PJF",
+  PJFET: "PJF",
+  PJ: "PJF",
+  NMOS: "NMOS",
+  NCH: "NMOS",
+  PMOS: "PMOS",
+  PCH: "PMOS",
+};
+
+const DIODE_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  IS: "IS",
+  JS: "IS",
+  VT: "VT",
+  V_T: "VT",
+  N: "N",
+  BV: "BV",
+  IBV: "IBV",
+  CJO: "CJO",
+  CJ: "CJO",
+  CJ0: "CJO",
+  TT: "TT",
+};
+
+const BJT_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  IS: "IS",
+  BF: "BF",
+  BETA: "BF",
+  BETA_F: "BF",
+  HFE: "BF",
+  VT: "VT",
+  V_T: "VT",
+  CJE: "CJE",
+  CJE0: "CJE",
+  CBE: "CJE",
+  CJC: "CJC",
+  CJC0: "CJC",
+  CBC: "CJC",
+  TF: "TF",
+  TR: "TR",
+};
+
+const JFET_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  BETA: "BETA",
+  BET: "BETA",
+  VTO: "VTO",
+  VT0: "VTO",
+  VTH: "VTO",
+  LAMBDA: "LAMBDA",
+  LAM: "LAMBDA",
+};
+
+const MOS_LEVEL1_PARAMETER_ALIASES: Readonly<Record<string, string>> = {
+  LEVEL: "LEVEL",
+  VT0: "VT0",
+  VTO: "VT0",
+  VTH: "VT0",
+  KP: "KP",
+  LAMBDA: "LAMBDA",
+  LAM: "LAMBDA",
+  GAMMA: "GAMMA",
+  PHI: "PHI",
+  W: "W",
+  L: "L",
+  IS: "IS",
+  NSUB: "N_SUB",
+  N_SUB: "N_SUB",
+  TNOM: "T_NOM",
+  T_NOM: "T_NOM",
+  CGSO: "CGSO",
+  CGDO: "CGDO",
+  CGBO: "CGBO",
+  CBS: "CBS",
+  CJS: "CBS",
+  CBD: "CBD",
+  CJD: "CBD",
+};
+
+function modelTypeKey(text: string): string {
+  return text.trim().toUpperCase().replace(/[-_]/g, "");
+}
+
+function parameterKey(text: string): string {
+  return text.trim().toUpperCase().replace(/-/g, "_");
+}
+
+export function normalizeModelCardType(modelType: string): ModelCardKind {
+  const kind = MODEL_TYPE_ALIASES[modelTypeKey(modelType)];
+  if (kind === undefined) {
+    throw invalidElement(modelType, "unsupported SPICE model type");
+  }
+  return kind;
+}
+
+function parameterAliases(kind: ModelCardKind): Readonly<Record<string, string>> {
+  if (kind === "D") {
+    return DIODE_PARAMETER_ALIASES;
+  }
+  if (kind === "NPN" || kind === "PNP") {
+    return BJT_PARAMETER_ALIASES;
+  }
+  if (kind === "NJF" || kind === "PJF") {
+    return JFET_PARAMETER_ALIASES;
+  }
+  return MOS_LEVEL1_PARAMETER_ALIASES;
+}
+
+export function normalizeModelCard(
+  name: string,
+  modelType: string,
+  parameters: Readonly<Record<string, number>> = {},
+): NormalizedModelCard {
+  const kind = normalizeModelCardType(modelType);
+  const aliases = parameterAliases(kind);
+  const normalized: Record<string, number> = {};
+  const unsupported: string[] = [];
+  for (const [rawName, rawValue] of Object.entries(parameters)) {
+    const key = parameterKey(rawName);
+    const canonical = aliases[key];
+    if (canonical === undefined) {
+      if (!unsupported.includes(key)) {
+        unsupported.push(key);
+      }
+      continue;
+    }
+    const value = Number(rawValue);
+    if (canonical === "LEVEL") {
+      if (Math.abs(value - 1.0) > 1.0e-12) {
+        throw invalidElement(name, "only MOS LEVEL=1 model cards are supported");
+      }
+      normalized[canonical] = 1.0;
+    } else {
+      normalized[canonical] = value;
+    }
+  }
+  return { name, kind, parameters: normalized, unsupportedParameters: unsupported };
+}
+
+export function diodeFromModelCard(
+  name: string,
+  anode: string,
+  cathode: string,
+  model: NormalizedModelCard,
+): Diode {
+  if (model.kind !== "D") {
+    throw invalidElement(name, `expected diode model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return diode(
+    name,
+    anode,
+    cathode,
+    p.IS ?? 1.0e-15,
+    p.VT ?? 0.02585,
+    p.N ?? 1.0,
+    p.BV,
+    p.IBV ?? 1.0e-3,
+    p.CJO ?? 0.0,
+    p.TT ?? 0.0,
+  );
+}
+
+export function bjtFromModelCard(
+  name: string,
+  collector: string,
+  base: string,
+  emitter: string,
+  model: NormalizedModelCard,
+): Bjt {
+  if (model.kind !== "NPN" && model.kind !== "PNP") {
+    throw invalidElement(name, `expected BJT model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return bjt(
+    name,
+    collector,
+    base,
+    emitter,
+    model.kind,
+    p.IS ?? 1.0e-14,
+    p.BF ?? 100.0,
+    p.VT ?? 0.02585,
+    p.CJE ?? 0.0,
+    p.CJC ?? 0.0,
+    p.TF ?? 0.0,
+    p.TR ?? 0.0,
+  );
+}
+
+export function jfetFromModelCard(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  model: NormalizedModelCard,
+): Jfet {
+  if (model.kind !== "NJF" && model.kind !== "PJF") {
+    throw invalidElement(name, `expected JFET model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  return jfet(
+    name,
+    drain,
+    gate,
+    source,
+    model.kind,
+    p.BETA ?? 1.0e-4,
+    p.VTO ?? (model.kind === "NJF" ? -2.0 : 2.0),
+    p.LAMBDA ?? 0.0,
+  );
+}
+
+export function mosfetFromModelCard(
+  name: string,
+  drain: string,
+  gate: string,
+  source: string,
+  body: string,
+  model: NormalizedModelCard,
+): Mosfet {
+  if (model.kind !== "NMOS" && model.kind !== "PMOS") {
+    throw invalidElement(name, `expected MOSFET model card, got ${model.kind}`);
+  }
+  const p = model.parameters;
+  const params: Partial<MosfetLevel1Params> = {
+    ...(p.VT0 !== undefined ? { VT0: p.VT0 } : {}),
+    ...(p.KP !== undefined ? { KP: p.KP } : {}),
+    ...(p.LAMBDA !== undefined ? { LAMBDA: p.LAMBDA } : {}),
+    ...(p.GAMMA !== undefined ? { GAMMA: p.GAMMA } : {}),
+    ...(p.PHI !== undefined ? { PHI: p.PHI } : {}),
+    ...(p.W !== undefined ? { W: p.W } : {}),
+    ...(p.L !== undefined ? { L: p.L } : {}),
+    ...(p.IS !== undefined ? { IS: p.IS } : {}),
+    ...(p.N_SUB !== undefined ? { N_SUB: p.N_SUB } : {}),
+    ...(p.T_NOM !== undefined ? { T_NOM: p.T_NOM } : {}),
+    ...(p.CGSO !== undefined ? { CGSO: p.CGSO } : {}),
+    ...(p.CGDO !== undefined ? { CGDO: p.CGDO } : {}),
+    ...(p.CGBO !== undefined ? { CGBO: p.CGBO } : {}),
+    ...(p.CBS !== undefined ? { CBS: p.CBS } : {}),
+    ...(p.CBD !== undefined ? { CBD: p.CBD } : {}),
+  };
+  return mosfet(name, drain, gate, source, body, model.kind, params);
+}
+
+export function deviceModelAuditFixtures(): readonly NormalizedModelCard[] {
+  return [
+    normalizeModelCard("Dfast", "diode", { JS: 2.0e-14, CJ: 1.5e-12, TT: 4.0e-9 }),
+    normalizeModelCard("Qsmall", "npn", { BETA: 125.0, CBE: 2.0e-12, TF: 1.0e-10 }),
+    normalizeModelCard("Jn", "njfet", { BET: 9.0e-4, VT0: -1.8, LAM: 0.02 }),
+    normalizeModelCard("Mn", "nmos", {
+      LEVEL: 1.0,
+      VTO: 0.55,
+      LAM: 0.04,
+      NSUB: 1.6,
+      CJD: 3.0e-13,
+    }),
+  ];
+}
+
 export function vccs(
   name: string,
   positive: string,
@@ -2317,6 +4840,320 @@ export function formatDcTable(
   ].join("\n");
 }
 
+export function measureTransientProbe(
+  points: readonly TransientPoint[],
+  name: string,
+  probe: string,
+  mode: string,
+  fromTime?: number,
+  toTime?: number,
+): ProbeMeasurement {
+  const normalizedMode = normalizeMeasurementMode(mode);
+  if (fromTime !== undefined && !Number.isFinite(fromTime)) {
+    throw invalidElement("measureTransientProbe", "fromTime must be finite");
+  }
+  if (toTime !== undefined && !Number.isFinite(toTime)) {
+    throw invalidElement("measureTransientProbe", "toTime must be finite");
+  }
+  if (fromTime !== undefined && toTime !== undefined && fromTime > toTime) {
+    throw invalidElement("measureTransientProbe", "fromTime must be <= toTime");
+  }
+
+  const selected = points.filter((point) =>
+    (fromTime === undefined || point.time >= fromTime) &&
+    (toTime === undefined || point.time <= toTime)
+  );
+  if (selected.length === 0) {
+    throw invalidElement("measureTransientProbe", "no transient samples in window");
+  }
+  const values = selected.map((point) =>
+    tableProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      "measureTransientProbe",
+    )
+  );
+
+  return {
+    name,
+    analysis: "tran",
+    probe,
+    mode: normalizedMode,
+    value: measureValues(values, normalizedMode),
+    fromValue: fromTime,
+    toValue: toTime,
+  };
+}
+
+export function measureTransientCards(
+  points: readonly TransientPoint[],
+  measurements: readonly DeckMeasurementCard[],
+): ProbeMeasurement[] {
+  return measurements.map((measurement) =>
+    measureTransientProbe(
+      points,
+      measurement.name,
+      measurement.probe,
+      measurement.mode,
+      measurement.fromValue,
+      measurement.toValue,
+    ),
+  );
+}
+
+export function measureTransientDeck(
+  points: readonly TransientPoint[],
+  netlist: string,
+): ProbeMeasurement[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "measureTransientDeck",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return measureTransientCards(points, summary.measurements);
+}
+
+export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]): string {
+  const rows = [["Name", "Analysis", "Probe", "Mode", "From", "To", "Value"].join("\t")];
+  measurements.forEach((measurement) => {
+    rows.push([
+      measurement.name,
+      measurement.analysis,
+      measurement.probe,
+      measurement.mode,
+      formatOptionalTableNumber(measurement.fromValue),
+      formatOptionalTableNumber(measurement.toValue),
+      formatTableNumber(measurement.value),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+function normalizeMeasurementMode(mode: string): string {
+  const normalized = mode.trim().toLowerCase().replace(/_/g, "-");
+  switch (normalized) {
+    case "max":
+    case "min":
+      return normalized;
+    case "avg":
+    case "average":
+    case "mean":
+      return "avg";
+    case "rms":
+    case "root-mean-square":
+      return "rms";
+    case "pp":
+    case "p-p":
+    case "p2p":
+    case "peak-to-peak":
+    case "peak2peak":
+      return "pp";
+    case "last":
+    case "final":
+      return "last";
+    default:
+      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+  }
+}
+
+function measureValues(values: readonly number[], mode: string): number {
+  switch (mode) {
+    case "max":
+      return values.reduce((max, value) => Math.max(max, value), Number.NEGATIVE_INFINITY);
+    case "min":
+      return values.reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY);
+    case "avg":
+      return values.reduce((sum, value) => sum + value, 0.0) / values.length;
+    case "rms":
+      return Math.sqrt(
+        values.reduce((sum, value) => sum + value * value, 0.0) / values.length,
+      );
+    case "pp":
+      return values.reduce((max, value) => Math.max(max, value), Number.NEGATIVE_INFINITY) -
+        values.reduce((min, value) => Math.min(min, value), Number.POSITIVE_INFINITY);
+    case "last":
+      return values[values.length - 1]!;
+    default:
+      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+  }
+}
+
+function formatOptionalTableNumber(value: number | undefined): string {
+  return value === undefined ? "" : formatTableNumber(value);
+}
+
+export function formatCornerDcTable(
+  result: CornerSweepResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    result.points.length === 0 ? [] : defaultOutputProbes(
+      result.points[0].result.nodeVoltages,
+      result.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", ...selectedProbes].join("\t")];
+  result.points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatCornerDcTable",
+        ),
+      ),
+    );
+    rows.push([point.cornerName, String(index), ...values].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatTemperatureDcTable(
+  result: TemperatureDcResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    result.points.length === 0 ? [] : defaultOutputProbes(
+      result.points[0].result.nodeVoltages,
+      result.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Index", "TemperatureKelvin", ...selectedProbes].join("\t")];
+  result.points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatTemperatureDcTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      formatTableNumber(point.temperatureKelvin),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerTemperatureDcTable(
+  result: CornerTemperatureDcResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((corner) => corner.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultOutputProbes(
+      firstNonEmpty.points[0].result.nodeVoltages,
+      firstNonEmpty.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", "TemperatureKelvin", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.result.nodeVoltages,
+            point.result.branchCurrents,
+            probe,
+            "formatCornerTemperatureDcTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        formatTableNumber(point.temperatureKelvin),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDcSweepTable(
+  sourceName: string,
+  points: readonly DcSweepPoint[],
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    points.length === 0 ? [] : defaultOutputProbes(
+      points[0].result.nodeVoltages,
+      points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Index", "Source", "Value", ...selectedProbes].join("\t")];
+  points.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.result.nodeVoltages,
+          point.result.branchCurrents,
+          probe,
+          "formatDcSweepTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      sourceName,
+      formatTableNumber(point.value),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDcSweepTable(
+  result: CornerDcSweepResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((corner) => corner.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultOutputProbes(
+      firstNonEmpty.points[0].result.nodeVoltages,
+      firstNonEmpty.points[0].result.branchCurrents,
+    )
+  ) : probes;
+  const rows = [["Corner", "Index", "Source", "Value", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.result.nodeVoltages,
+            point.result.branchCurrents,
+            probe,
+            "formatCornerDcSweepTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        result.sourceName,
+        formatTableNumber(point.value),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatTransientTable(
   points: readonly TransientPoint[],
   probes?: readonly string[],
@@ -2335,6 +5172,167 @@ export function formatTransientTable(
       ),
     );
     rows.push([String(index), formatTableNumber(point.time), ...values].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerTransientTable(
+  result: CornerTransientResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.points.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.points)
+  );
+  const rows = [["Corner", "Index", "Time", ...selectedProbes].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerTransientTable",
+          ),
+        ),
+      );
+      rows.push([corner.cornerName, String(index), formatTableNumber(point.time), ...values].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerAdaptiveTransientTable(
+  result: CornerAdaptiveTransientResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.result.points.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.result.points)
+  );
+  const rows = [[
+    "Corner",
+    "Method",
+    "StepsRejected",
+    "Converged",
+    "Index",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerAdaptiveTransientTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        corner.result.method,
+        String(corner.result.stepsRejected),
+        String(corner.result.converged),
+        String(index),
+        formatTableNumber(point.time),
+        ...values,
+      ].join("\t"));
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatPssTable(
+  result: PssResult,
+  probes?: readonly string[],
+): string {
+  const selectedProbes = probes ?? defaultTransientOutputProbes(result.steadyState);
+  const rows = [[
+    "Index",
+    "Period",
+    "TimeStep",
+    "Converged",
+    "Iterations",
+    "ResidualL2",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.steadyState.forEach((point, index) => {
+    const values = selectedProbes.map((probe) =>
+      formatTableNumber(
+        tableProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatPssTable",
+        ),
+      ),
+    );
+    rows.push([
+      String(index),
+      formatTableNumber(result.periodSeconds),
+      formatTableNumber(result.timeStepSeconds),
+      String(result.converged),
+      String(result.solve.iterationCount),
+      formatTableNumber(result.solve.finalResidual.residualL2Norm),
+      formatTableNumber(point.time),
+      ...values,
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerPssTable(
+  result: CornerPssResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.result.steadyState.length > 0);
+  const selectedProbes = probes ?? (
+    firstNonEmpty === undefined ? [] : defaultTransientOutputProbes(firstNonEmpty.result.steadyState)
+  );
+  const rows = [[
+    "Corner",
+    "Index",
+    "Period",
+    "TimeStep",
+    "Converged",
+    "Iterations",
+    "ResidualL2",
+    "Time",
+    ...selectedProbes,
+  ].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.steadyState.forEach((point, index) => {
+      const values = selectedProbes.map((probe) =>
+        formatTableNumber(
+          tableProbeValue(
+            point.nodeVoltages,
+            point.branchCurrents,
+            probe,
+            "formatCornerPssTable",
+          ),
+        ),
+      );
+      rows.push([
+        corner.cornerName,
+        String(index),
+        formatTableNumber(corner.result.periodSeconds),
+        formatTableNumber(corner.result.timeStepSeconds),
+        String(corner.result.converged),
+        String(corner.result.solve.iterationCount),
+        formatTableNumber(corner.result.solve.finalResidual.residualL2Norm),
+        formatTableNumber(point.time),
+        ...values,
+      ].join("\t"));
+    });
   });
   rows.push("");
   return rows.join("\n");
@@ -2371,6 +5369,41 @@ export function formatAcTable(
   return rows.join("\n");
 }
 
+export function formatCornerAcTable(
+  result: CornerAcSweepResult,
+  probes?: readonly string[],
+): string {
+  const firstNonEmpty = result.points.find((point) => point.points.length > 0);
+  const selectedProbes = probes === undefined || probes.length === 0 ? (
+    firstNonEmpty === undefined ? [] : defaultAcOutputProbes(firstNonEmpty.points)
+  ) : probes;
+  const rows = [["Corner", "Index", "Frequency", "Probe", "Real", "Imaginary", "Magnitude", "Phase"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.points.forEach((point, index) => {
+      selectedProbes.forEach((probe) => {
+        const value = tableComplexProbeValue(
+          point.nodeVoltages,
+          point.branchCurrents,
+          probe,
+          "formatCornerAcTable",
+        );
+        rows.push([
+          corner.cornerName,
+          String(index),
+          formatTableNumber(point.frequencyHz),
+          probe,
+          formatTableNumber(value.real),
+          formatTableNumber(value.imag),
+          formatTableNumber(complexAbs(value)),
+          formatTableNumber(complexPhase(value) * 180.0 / Math.PI),
+        ].join("\t"));
+      });
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatTfTable(result: TfResult): string {
   return [
     ["TransferRatio", "InputImpedance", "OutputImpedance"].join("\t"),
@@ -2381,6 +5414,20 @@ export function formatTfTable(result: TfResult): string {
     ].join("\t"),
     "",
   ].join("\n");
+}
+
+export function formatCornerTfTable(result: CornerTfResult): string {
+  const rows = [["Corner", "TransferRatio", "InputImpedance", "OutputImpedance"].join("\t")];
+  result.points.forEach((point) => {
+    rows.push([
+      point.cornerName,
+      formatTableNumber(point.result.transferRatio),
+      formatTableNumber(point.result.inputImpedanceOhms),
+      formatTableNumber(point.result.outputImpedanceOhms),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
 }
 
 export function formatMcTable(result: McResult): string {
@@ -2688,6 +5735,27 @@ export function formatPoleZeroTable(result: PoleZeroResult): string {
   return rows.join("\n");
 }
 
+export function formatCornerPoleZeroTable(result: CornerPoleZeroResult): string {
+  const rows = [["Corner", "Index", "Kind", "Real", "Imaginary", "Frequency", "Damping"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.entries.forEach((entry, index) => {
+      rows.push(
+        [
+          corner.cornerName,
+          String(index),
+          entry.kind,
+          formatTableNumber(entry.real),
+          formatTableNumber(entry.imaginary),
+          formatTableNumber(entry.frequencyHz),
+          formatTableNumber(entry.damping),
+        ].join("\t"),
+      );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
 export function formatDistortionTable(result: DistortionResult): string {
   const rows = [["Frequency", "Input", "Output", "Harmonic", "Magnitude", "Phase", "THD"].join("\t")];
   result.points.forEach((point) => {
@@ -2703,6 +5771,30 @@ export function formatDistortionTable(result: DistortionResult): string {
           formatTableNumber(point.totalHarmonicDistortion),
         ].join("\t"),
       );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDistortionTable(result: CornerDistortionResult): string {
+  const rows = [["Corner", "Frequency", "Input", "Output", "Harmonic", "Magnitude", "Phase", "THD"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.points.forEach((point) => {
+      point.harmonics.forEach((harmonic) => {
+        rows.push(
+          [
+            corner.cornerName,
+            formatTableNumber(point.frequencyHz),
+            result.inputSource,
+            result.outputProbe,
+            String(harmonic.harmonic),
+            formatTableNumber(harmonic.magnitude),
+            formatTableNumber(harmonic.phaseDegrees),
+            formatTableNumber(point.totalHarmonicDistortion),
+          ].join("\t"),
+        );
+      });
     });
   });
   rows.push("");
@@ -2726,6 +5818,32 @@ export function formatFourierTable(result: FourierResult): string {
           formatTableNumber(probe.totalHarmonicDistortion),
         ].join("\t"),
       );
+    });
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerFourierTable(result: CornerFourierResult): string {
+  const rows = [["Corner", "Probe", "Harmonic", "Frequency", "Cosine", "Sine", "Magnitude", "Phase", "DC", "THD"].join("\t")];
+  result.points.forEach((corner) => {
+    corner.result.probes.forEach((probe) => {
+      probe.harmonics.forEach((harmonic) => {
+        rows.push(
+          [
+            corner.cornerName,
+            probe.probe,
+            String(harmonic.harmonic),
+            formatTableNumber(harmonic.frequencyHz),
+            formatTableNumber(harmonic.cosine),
+            formatTableNumber(harmonic.sine),
+            formatTableNumber(harmonic.magnitude),
+            formatTableNumber(harmonic.phaseDegrees),
+            formatTableNumber(probe.dc),
+            formatTableNumber(probe.totalHarmonicDistortion),
+          ].join("\t"),
+        );
+      });
     });
   });
   rows.push("");
@@ -2879,12 +5997,88 @@ function tableVoltage(
   return value;
 }
 
+function realSolverKind(matrixSize: number): LinearSolverKind {
+  if (matrixSize === 0) {
+    return "none";
+  }
+  return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_real" : "dense_real";
+}
+
+function complexSolverKind(matrixSize: number): LinearSolverKind {
+  if (matrixSize === 0) {
+    return "none";
+  }
+  return matrixSize >= SPARSE_SOLVER_THRESHOLD ? "sparse_complex" : "dense_complex";
+}
+
+function dcDiagnosticsFromLinearSolution(
+  solution: LinearSolution,
+  convergenceAid: DcConvergenceAid,
+  tolerance: number,
+): DcSolverDiagnostics {
+  const matrixSize = solution.vector.length;
+  return {
+    matrixSize,
+    solver: realSolverKind(matrixSize),
+    tolerance,
+    maxDelta: solution.maxDelta,
+    convergenceAid,
+  };
+}
+
 export function dcOp(
   circuit: Circuit,
   options: DcOpOptions = {},
 ): DcResult {
   const solveOptions = validatedDcOpOptions(options);
-  const solution = solveDcNewton(circuit, solveOptions);
+  return dcOpFromInitialVector(circuit, solveOptions);
+}
+
+export function dcOpWithInitialVector(
+  circuit: Circuit,
+  initialVector: readonly number[],
+  options: DcOpOptions = {},
+): DcResult {
+  const solveOptions = validatedDcOpOptions(options);
+  validateDcInitialVector(circuit, initialVector);
+  return dcOpFromInitialVector(circuit, solveOptions, initialVector);
+}
+
+export function dcOpWithInitialConditions(
+  circuit: Circuit,
+  summary: DeckInitialConditionSummary,
+  options: DcOpOptions = {},
+): DcResult {
+  return dcOpWithInitialVector(
+    circuit,
+    dcInitialVectorFromConditions(circuit, summary.initialConditions, summary.nodesets),
+    options,
+  );
+}
+
+export function dcInitialVectorFromConditions(
+  circuit: Circuit,
+  initialConditions: readonly DeckNodeCondition[],
+  nodesets: readonly DeckNodeCondition[] = [],
+): number[] {
+  const nodeIndices = collectNodeIndices(circuit);
+  const voltageSources = collectVoltageSources(circuit, []);
+  const vector = Array.from({ length: nodeIndices.size + voltageSources.size }, () => 0.0);
+  for (const condition of nodesets) {
+    applyNodeConditionToInitialVector(condition, nodeIndices, vector);
+  }
+  for (const condition of initialConditions) {
+    applyNodeConditionToInitialVector(condition, nodeIndices, vector);
+  }
+  return vector;
+}
+
+function dcOpFromInitialVector(
+  circuit: Circuit,
+  solveOptions: ResolvedDcOpOptions,
+  initialVector?: readonly number[],
+): DcResult {
+  const solution = solveDcNewton(circuit, solveOptions, initialVector);
   if (solution.converged) {
     return makeDcResult(
       solution.nodeVoltages,
@@ -2892,6 +6086,7 @@ export function dcOp(
       solution.iterations,
       solution.converged,
       "newton",
+      dcDiagnosticsFromLinearSolution(solution, "newton", solveOptions.tolerance),
     );
   }
   if (!solveOptions.convergenceAids) {
@@ -2901,6 +6096,7 @@ export function dcOp(
       solution.iterations,
       false,
       "none",
+      dcDiagnosticsFromLinearSolution(solution, "none", solveOptions.tolerance),
     );
   }
 
@@ -2926,6 +6122,7 @@ export function dcOp(
     finalSolution.iterations,
     finalSolution.converged,
     convergenceAid,
+    dcDiagnosticsFromLinearSolution(finalSolution, convergenceAid, solveOptions.tolerance),
   );
 }
 
@@ -2938,6 +6135,51 @@ export function dcCorners(
     points: corners.map((corner) => ({
       cornerName: corner.name,
       result: dcOp(circuitWithCorner(circuit, corner), options),
+    })),
+  };
+}
+
+export function dcTemperatureSweep(
+  circuit: Circuit,
+  temperaturesKelvin: readonly number[],
+  options: DcOpOptions = {},
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): TemperatureDcResult {
+  return {
+    points: temperaturesKelvin.map((temperatureKelvin) => ({
+      temperatureKelvin,
+      result: dcOp(
+        circuitAtTemperature(
+          circuit,
+          temperatureKelvin,
+          nominalTemperatureKelvin,
+          energyGapElectronVolts,
+        ),
+        options,
+      ),
+    })),
+  };
+}
+
+export function dcTemperatureSweepCorners(
+  circuit: Circuit,
+  temperaturesKelvin: readonly number[],
+  corners: readonly CornerSpec[],
+  options: DcOpOptions = {},
+  nominalTemperatureKelvin = 300.15,
+  energyGapElectronVolts = 1.11,
+): CornerTemperatureDcResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      points: dcTemperatureSweep(
+        circuitWithCorner(circuit, corner),
+        temperaturesKelvin,
+        options,
+        nominalTemperatureKelvin,
+        energyGapElectronVolts,
+      ).points,
     })),
   };
 }
@@ -3536,6 +6778,21 @@ export function transient(
   return points;
 }
 
+export function transientCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  corners: readonly CornerSpec[],
+  method: TransientMethod = "euler",
+): CornerTransientResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      points: transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+    })),
+  };
+}
+
 export function fourier(
   points: readonly TransientPoint[],
   fundamentalFrequencyHz: number,
@@ -3573,6 +6830,32 @@ export function fourier(
     probes: probes.map((probe) =>
       fourierProbe(sortedPoints, probe, fundamentalFrequencyHz, harmonics, windowStart, endTime),
     ),
+  };
+}
+
+export function fourierCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  fundamentalFrequencyHz: number,
+  probes: readonly string[],
+  corners: readonly CornerSpec[],
+  harmonics = 9,
+  startTime?: number,
+  method: TransientMethod = "euler",
+): CornerFourierResult {
+  return {
+    fundamentalFrequencyHz,
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: fourier(
+        transient(circuitWithCorner(circuit, corner), timeStep, stopTime, method),
+        fundamentalFrequencyHz,
+        probes,
+        harmonics,
+        startTime,
+      ),
+    })),
   };
 }
 
@@ -3802,6 +7085,508 @@ export function transientAdaptive(
   }
 
   return { points, method, stepsRejected, converged: true };
+}
+
+export function transientAdaptiveCorners(
+  circuit: Circuit,
+  timeStep: number,
+  stopTime: number,
+  corners: readonly CornerSpec[],
+  options: AdaptiveTransientOptions = {},
+): CornerAdaptiveTransientResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientAdaptive(
+        circuitWithCorner(circuit, corner),
+        timeStep,
+        stopTime,
+        options,
+      ),
+    })),
+  };
+}
+
+export function digitalEventsToPwlWaveform(
+  events: readonly DigitalEvent[],
+  levels: DigitalLogicLevels,
+): PwlWaveform {
+  validateDigitalLogicLevels(levels, "digitalEvents");
+  if (events.length === 0) {
+    throw invalidElement("digitalEvents", "at least one digital event is required");
+  }
+
+  let previousTime = Number.NEGATIVE_INFINITY;
+  for (const event of events) {
+    validateDigitalEventTime(event.timeSeconds, previousTime, "digitalEvents");
+    normalizeDigitalState(event.state);
+    previousTime = event.timeSeconds;
+  }
+
+  const points: [number, number][] = [];
+  let currentState = normalizeDigitalState(events[0].state);
+  points.push([events[0].timeSeconds, levels.voltageFor(currentState)]);
+
+  for (const event of events.slice(1)) {
+    const eventState = normalizeDigitalState(event.state);
+    if (eventState === currentState) {
+      continue;
+    }
+    const startTime = event.timeSeconds;
+    const endTime = startTime + levels.transitionSeconds;
+    const lastTime = points[points.length - 1][0];
+    if (startTime <= lastTime) {
+      throw invalidElement("digitalEvents", "digital transition overlaps the previous transition");
+    }
+    points.push([startTime, levels.voltageFor(currentState)]);
+    points.push([endTime, levels.voltageFor(eventState)]);
+    currentState = eventState;
+  }
+
+  if (points.length === 1) {
+    points.push([points[0][0] + levels.transitionSeconds, levels.voltageFor(currentState)]);
+  }
+
+  return new PwlWaveform(points);
+}
+
+export function digitalEventsToVoltageSource(
+  name: string,
+  positive: string,
+  negative: string,
+  events: readonly DigitalEvent[],
+  levels: DigitalLogicLevels,
+): VoltageSource {
+  if (events.length === 0) {
+    throw invalidElement("digitalEvents", "at least one digital event is required");
+  }
+  return voltageSourceWithWaveform(
+    name,
+    positive,
+    negative,
+    levels.voltageFor(events[0].state),
+    digitalEventsToPwlWaveform(events, levels),
+  );
+}
+
+export function digitalEventStreamsToVoltageSources(
+  streams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+): VoltageSource[] {
+  const negativeNode = negative.trim();
+  if (negativeNode.length === 0) {
+    throw invalidElement("digitalEventStreams", "digital event stream negative node must not be empty");
+  }
+  const seenSignalNames = new Set<string>();
+  return streams.map((stream) => {
+    const signalName = validateDigitalEventStreamName(stream, seenSignalNames);
+    return digitalEventsToVoltageSource(
+      `V${signalName}`,
+      signalName,
+      negativeNode,
+      stream.events,
+      levels,
+    );
+  });
+}
+
+export function digitalEventStreamsToBridgeSchedule(
+  streams: readonly DigitalEventStream[],
+  levels: DigitalLogicLevels,
+): DigitalBridgeSchedule {
+  validateDigitalLogicLevels(levels, "digitalBridgeSchedule");
+  const seenSignalNames = new Set<string>();
+  const breakpoints: number[] = [];
+  let stopTime = 0.0;
+  for (const stream of streams) {
+    validateDigitalEventStreamName(stream, seenSignalNames);
+    digitalEventsToPwlWaveform(stream.events, levels);
+    let currentState = normalizeDigitalState(stream.events[0].state);
+    stream.events.forEach((event, index) => {
+      const eventState = normalizeDigitalState(event.state);
+      breakpoints.push(event.timeSeconds);
+      stopTime = Math.max(stopTime, event.timeSeconds);
+      if (index > 0 && eventState !== currentState) {
+        const transitionEnd = event.timeSeconds + levels.transitionSeconds;
+        breakpoints.push(transitionEnd);
+        stopTime = Math.max(stopTime, transitionEnd);
+        currentState = eventState;
+      }
+    });
+  }
+
+  breakpoints.sort((left, right) => left - right);
+  const deduped: number[] = [];
+  for (const breakpoint of breakpoints) {
+    if (deduped.length === 0 || Math.abs(breakpoint - deduped[deduped.length - 1]) > DIGITAL_BRIDGE_TIME_EPSILON) {
+      deduped.push(breakpoint);
+    }
+  }
+  return { stopTime, breakpoints: deduped };
+}
+
+export function transientWithDigitalEventStreams(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  method: TransientMethod = "euler",
+): DigitalTransientBridgeResult {
+  const bridged = circuitWithExtraVoltageSources(
+    circuit,
+    digitalEventStreamsToVoltageSources(inputStreams, negative, levels),
+  );
+  const points = transient(bridged, timeStep, stopTime, method);
+  return {
+    points,
+    outputStreams: sampleTransientProbesAsDigitalEventStreams(points, outputProbes, thresholds),
+  };
+}
+
+export function transientWithDigitalEventStreamsCorners(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  corners: readonly CornerSpec[],
+  method: TransientMethod = "euler",
+): CornerDigitalTransientBridgeResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientWithDigitalEventStreams(
+        circuitWithCorner(circuit, corner),
+        inputStreams,
+        negative,
+        levels,
+        timeStep,
+        stopTime,
+        outputProbes,
+        thresholds,
+        method,
+      ),
+    })),
+  };
+}
+
+export function transientAdaptiveWithDigitalEventStreams(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  options: AdaptiveTransientOptions,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+): AdaptiveDigitalTransientBridgeResult {
+  const bridged = circuitWithExtraVoltageSources(
+    circuit,
+    digitalEventStreamsToVoltageSources(inputStreams, negative, levels),
+  );
+  const result = transientAdaptive(bridged, timeStep, stopTime, options);
+  return {
+    result,
+    outputStreams: sampleTransientProbesAsDigitalEventStreams(result.points, outputProbes, thresholds),
+  };
+}
+
+export function transientAdaptiveWithDigitalEventStreamsCorners(
+  circuit: Circuit,
+  inputStreams: readonly DigitalEventStream[],
+  negative: string,
+  levels: DigitalLogicLevels,
+  timeStep: number,
+  stopTime: number,
+  options: AdaptiveTransientOptions,
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+  corners: readonly CornerSpec[],
+): CornerAdaptiveDigitalTransientBridgeResult {
+  return {
+    points: corners.map((corner) => ({
+      cornerName: corner.name,
+      result: transientAdaptiveWithDigitalEventStreams(
+        circuitWithCorner(circuit, corner),
+        inputStreams,
+        negative,
+        levels,
+        timeStep,
+        stopTime,
+        options,
+        outputProbes,
+        thresholds,
+      ),
+    })),
+  };
+}
+
+export function sampleTransientProbeAsDigitalEvents(
+  points: readonly TransientPoint[],
+  probe: string,
+  thresholds: DigitalThresholds,
+): DigitalEvent[] {
+  validateDigitalThresholds(thresholds);
+  const events: DigitalEvent[] = [];
+  let currentState: DigitalState | undefined;
+  for (const point of points) {
+    if (point.time <= DIGITAL_BRIDGE_TIME_EPSILON) {
+      continue;
+    }
+    const voltage = tableProbeValue(
+      point.nodeVoltages,
+      point.branchCurrents,
+      probe,
+      "sampleTransientProbeAsDigitalEvents",
+    );
+    const state = thresholds.classify(voltage);
+    if (state === undefined) {
+      continue;
+    }
+    if (currentState !== state) {
+      events.push({ timeSeconds: point.time, state });
+      currentState = state;
+    }
+  }
+  return events;
+}
+
+export function sampleTransientProbesAsDigitalEventStreams(
+  points: readonly TransientPoint[],
+  outputProbes: readonly (readonly [string, string])[],
+  thresholds: DigitalThresholds,
+): DigitalEventStream[] {
+  const seenSignalNames = new Set<string>();
+  return outputProbes.map(([signalName, probe]) => {
+    const streamName = signalName.trim();
+    if (streamName.length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    if (seenSignalNames.has(streamName)) {
+      throw invalidElement(streamName, "digital event stream signal names must be unique");
+    }
+    seenSignalNames.add(streamName);
+    return {
+      signalName: streamName,
+      events: sampleTransientProbeAsDigitalEvents(points, probe, thresholds),
+    };
+  });
+}
+
+export function formatDigitalEventTable(events: readonly DigitalEvent[]): string {
+  const rows = [["Index", "Time", "State"].join("\t")];
+  let previousTime = Number.NEGATIVE_INFINITY;
+  events.forEach((event, index) => {
+    validateDigitalEventTime(event.timeSeconds, previousTime, "digitalEvent");
+    previousTime = event.timeSeconds;
+    rows.push([
+      String(index),
+      formatTableNumber(event.timeSeconds),
+      normalizeDigitalState(event.state),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalEventStreamTable(streams: readonly DigitalEventStream[]): string {
+  const rows = [["Signal", "Index", "Time", "State"].join("\t")];
+  for (const stream of streams) {
+    if (stream.signalName.trim().length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    let previousTime = Number.NEGATIVE_INFINITY;
+    stream.events.forEach((event, index) => {
+      validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+      previousTime = event.timeSeconds;
+      rows.push([
+        stream.signalName,
+        String(index),
+        formatTableNumber(event.timeSeconds),
+        normalizeDigitalState(event.state),
+      ].join("\t"));
+    });
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerDigitalEventStreamTable(
+  result: CornerDigitalTransientBridgeResult,
+): string {
+  const rows = [["Corner", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const corner of result.points) {
+    for (const stream of corner.result.outputStreams) {
+      if (stream.signalName.trim().length === 0) {
+        throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+      }
+      let previousTime = Number.NEGATIVE_INFINITY;
+      stream.events.forEach((event, index) => {
+        validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+        previousTime = event.timeSeconds;
+        rows.push([
+          corner.cornerName,
+          stream.signalName,
+          String(index),
+          formatTableNumber(event.timeSeconds),
+          normalizeDigitalState(event.state),
+        ].join("\t"));
+      });
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatAdaptiveDigitalEventStreamTable(
+  result: AdaptiveDigitalTransientBridgeResult,
+): string {
+  const rows = [["Method", "StepsRejected", "Converged", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const stream of result.outputStreams) {
+    if (stream.signalName.trim().length === 0) {
+      throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+    }
+    let previousTime = Number.NEGATIVE_INFINITY;
+    stream.events.forEach((event, index) => {
+      validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+      previousTime = event.timeSeconds;
+      rows.push([
+        result.result.method,
+        String(result.result.stepsRejected),
+        String(result.result.converged),
+        stream.signalName,
+        String(index),
+        formatTableNumber(event.timeSeconds),
+        normalizeDigitalState(event.state),
+      ].join("\t"));
+    });
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatCornerAdaptiveDigitalEventStreamTable(
+  result: CornerAdaptiveDigitalTransientBridgeResult,
+): string {
+  const rows = [["Corner", "Method", "StepsRejected", "Converged", "Signal", "Index", "Time", "State"].join("\t")];
+  for (const corner of result.points) {
+    for (const stream of corner.result.outputStreams) {
+      if (stream.signalName.trim().length === 0) {
+        throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+      }
+      let previousTime = Number.NEGATIVE_INFINITY;
+      stream.events.forEach((event, index) => {
+        validateDigitalEventTime(event.timeSeconds, previousTime, stream.signalName);
+        previousTime = event.timeSeconds;
+        rows.push([
+          corner.cornerName,
+          corner.result.result.method,
+          String(corner.result.result.stepsRejected),
+          String(corner.result.result.converged),
+          stream.signalName,
+          String(index),
+          formatTableNumber(event.timeSeconds),
+          normalizeDigitalState(event.state),
+        ].join("\t"));
+      });
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalBridgeScheduleTable(schedule: DigitalBridgeSchedule): string {
+  if (!Number.isFinite(schedule.stopTime) || schedule.stopTime < 0.0) {
+    throw invalidElement("digitalBridgeSchedule", "digital bridge stop time must be finite and non-negative");
+  }
+  const rows = [["Index", "Time", "StopTime"].join("\t")];
+  let previousTime = Number.NEGATIVE_INFINITY;
+  schedule.breakpoints.forEach((timeSeconds, index) => {
+    validateDigitalEventTime(timeSeconds, previousTime, "digitalBridgeSchedule");
+    if (timeSeconds > schedule.stopTime) {
+      throw invalidElement("digitalBridgeSchedule", "digital bridge breakpoint must not exceed stop time");
+    }
+    previousTime = timeSeconds;
+    rows.push([
+      String(index),
+      formatTableNumber(timeSeconds),
+      formatTableNumber(schedule.stopTime),
+    ].join("\t"));
+  });
+  rows.push("");
+  return rows.join("\n");
+}
+
+export function formatDigitalEventStreamVcd(
+  streams: readonly DigitalEventStream[],
+  options: { readonly moduleName?: string; readonly timescale?: string } = {},
+): string {
+  const moduleName = (options.moduleName ?? "spice_bridge").trim();
+  const timescale = options.timescale ?? "1ps";
+  if (timescale !== "1ps") {
+    throw invalidElement("digitalEventStreamVcd", "only 1ps timescale is supported");
+  }
+  if (moduleName.length === 0) {
+    throw invalidElement("digitalEventStreamVcd", "module name must not be empty");
+  }
+
+  const seenSignalNames = new Set<string>();
+  const signalIds = new Map<string, string>();
+  streams.forEach((stream, index) => {
+    const signalName = validateDigitalEventStreamName(stream, seenSignalNames);
+    signalIds.set(signalName, vcdIdentifier(index));
+    let previousTime = Number.NEGATIVE_INFINITY;
+    for (const event of stream.events) {
+      validateDigitalEventTime(event.timeSeconds, previousTime, signalName);
+      normalizeDigitalState(event.state);
+      previousTime = event.timeSeconds;
+    }
+  });
+
+  const rows = [
+    "$version coding-adventures spice-engine mixed-signal bridge $end",
+    `$timescale ${timescale} $end`,
+    `$scope module ${moduleName} $end`,
+  ];
+  for (const stream of streams) {
+    const signalName = stream.signalName.trim();
+    rows.push(`$var wire 1 ${signalIds.get(signalName)!} ${signalName} $end`);
+  }
+  rows.push("$upscope $end", "$enddefinitions $end", "$dumpvars");
+  for (const stream of streams) {
+    if (stream.events.length > 0) {
+      rows.push(`${vcdStateValue(stream.events[0].state)}${signalIds.get(stream.signalName.trim())!}`);
+    }
+  }
+  rows.push("$end");
+
+  const eventsByTick = new Map<number, [string, DigitalState][]>();
+  for (const stream of streams) {
+    const signalId = signalIds.get(stream.signalName.trim())!;
+    for (const event of stream.events) {
+      const tick = vcdTick(event.timeSeconds);
+      const existing = eventsByTick.get(tick) ?? [];
+      existing.push([signalId, event.state]);
+      eventsByTick.set(tick, existing);
+    }
+  }
+  for (const tick of Array.from(eventsByTick.keys()).sort((left, right) => left - right)) {
+    rows.push(`#${tick}`);
+    for (const [signalId, state] of eventsByTick.get(tick)!) {
+      rows.push(`${vcdStateValue(state)}${signalId}`);
+    }
+  }
+  rows.push("");
+  return rows.join("\n");
 }
 
 export function pssResidual(
@@ -4267,6 +8052,31 @@ export function pss(
   };
 }
 
+export function pssCorners(
+  circuit: Circuit,
+  corners: readonly CornerSpec[],
+  stepsPerPeriod = 64,
+  residualTolerance = 1.0e-6,
+  perturbation = 1.0e-6,
+  maxNewtonIterations = 8,
+): CornerPssResult | undefined {
+  const points: CornerPssPoint[] = [];
+  for (const corner of corners) {
+    const result = pss(
+      circuitWithCorner(circuit, corner),
+      stepsPerPeriod,
+      residualTolerance,
+      perturbation,
+      maxNewtonIterations,
+    );
+    if (result === undefined) {
+      return undefined;
+    }
+    points.push({ cornerName: corner.name, result });
+  }
+  return { points };
+}
+
 function validateSweep(
   sourceName: string,
   start: number,
@@ -4357,6 +8167,15 @@ function elementParameter(element: Element): ElementParameter | undefined {
         parameter: "current",
         nominalValue: element.current,
       };
+    case "custom-model":
+      if (element.conductanceSiemens === undefined) {
+        return undefined;
+      }
+      return {
+        elementName: element.name,
+        parameter: "conductanceSiemens",
+        nominalValue: element.conductanceSiemens,
+      };
     case "diode":
       return {
         elementName: element.name,
@@ -4409,6 +8228,7 @@ function elementParameter(element: Element): ElementParameter | undefined {
     case "inductor":
     case "mutual-inductor":
     case "transmission-line":
+    case "b-source":
       return undefined;
   }
 }
@@ -4441,6 +8261,11 @@ function circuitWithPerturbedElement(
         break;
       case "current-source":
         perturbed.add({ ...element, current: element.current + delta });
+        break;
+      case "custom-model":
+        perturbed.add(element.conductanceSiemens === undefined
+          ? element
+          : { ...element, conductanceSiemens: element.conductanceSiemens + delta });
         break;
       case "diode":
         perturbed.add({
@@ -4485,6 +8310,7 @@ function circuitWithPerturbedElement(
       case "inductor":
       case "mutual-inductor":
       case "transmission-line":
+      case "b-source":
         perturbed.add(element);
         break;
     }
@@ -4569,6 +8395,18 @@ function randomizedElement(
         ...element,
         current: randomizedValue(element.current, tolerance, distribution, rng),
       };
+    case "custom-model":
+      return element.conductanceSiemens === undefined
+        ? element
+        : {
+            ...element,
+            conductanceSiemens: randomizedValue(
+              element.conductanceSiemens,
+              tolerance,
+              distribution,
+              rng,
+            ),
+          };
     case "diode":
       return {
         ...element,
@@ -4632,12 +8470,11 @@ function randomizedElement(
           rng,
         ),
       };
-    case "b-source":
-      return element;
     case "capacitor":
     case "inductor":
     case "mutual-inductor":
     case "transmission-line":
+    case "b-source":
       return element;
   }
 }
@@ -4695,6 +8532,7 @@ interface LinearSolution {
   readonly vector: readonly number[];
   readonly iterations: number;
   readonly converged: boolean;
+  readonly maxDelta: number;
 }
 
 interface LinearSolveOptions {
@@ -4793,7 +8631,8 @@ function isNonlinearElement(element: Element): boolean {
     element.kind === "jfet" ||
     element.kind === "bjt" ||
     element.kind === "mosfet" ||
-    element.kind === "b-source"
+    element.kind === "b-source" ||
+    element.kind === "custom-model"
   );
 }
 
@@ -4817,6 +8656,7 @@ function solveLinearCircuitWithOptions(
       vector: [],
       iterations: 0,
       converged: true,
+      maxDelta: 0.0,
     };
   }
 
@@ -4846,12 +8686,12 @@ function solveLinearCircuitWithOptions(
   let iterations = 1;
   while (iterations < options.maxIterations) {
     if (!solution.converged) {
-      return { ...solution, iterations, converged: false };
+      return { ...solution, iterations, converged: false, maxDelta: Number.POSITIVE_INFINITY };
     }
     const delta = maxVectorDelta(solution.vector, operatingPoint);
     operatingPoint = [...solution.vector];
     if (delta < options.tolerance) {
-      return { ...solution, iterations, converged: true };
+      return { ...solution, iterations, converged: true, maxDelta: delta };
     }
     solution = solveLinearCircuitAtOperatingPointOrFailure(
       circuit,
@@ -4869,7 +8709,7 @@ function solveLinearCircuitWithOptions(
   }
 
   const delta = maxVectorDelta(solution.vector, operatingPoint);
-  return { ...solution, iterations, converged: delta < options.tolerance };
+  return { ...solution, iterations, converged: delta < options.tolerance, maxDelta: delta };
 }
 
 function solveLinearCircuitAtOperatingPointOrFailure(
@@ -4896,7 +8736,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
       matrixSize,
       operatingPoint,
     );
-    return { ...solution, iterations: 1, converged: true };
+    return { ...solution, iterations: 1, converged: true, maxDelta: 0.0 };
   } catch (error) {
     if (
       returnSingularAsUnconverged &&
@@ -4911,6 +8751,7 @@ function solveLinearCircuitAtOperatingPointOrFailure(
         nodeCount,
         operatingPoint,
         false,
+        Number.POSITIVE_INFINITY,
       );
     }
     throw error;
@@ -4946,6 +8787,45 @@ function validatedDcOpOptions(options: DcOpOptions): ResolvedDcOpOptions {
     pseudoTransientConductance,
     pseudoTransientMaxIterations,
   };
+}
+
+function validateDcInitialVector(circuit: Circuit, initialVector: readonly number[]): void {
+  const nodeIndices = collectNodeIndices(circuit);
+  const voltageSources = collectVoltageSources(circuit, []);
+  const expectedLength = nodeIndices.size + voltageSources.size;
+  if (initialVector.length !== expectedLength) {
+    throw invalidElement(
+      "dcInitialVector",
+      `expected ${expectedLength} entries for circuit MNA ordering, got ${initialVector.length}`,
+    );
+  }
+  if (initialVector.some((value) => !Number.isFinite(value))) {
+    throw invalidElement("dcInitialVector", "all entries must be finite");
+  }
+}
+
+function applyNodeConditionToInitialVector(
+  condition: DeckNodeCondition,
+  nodeIndices: ReadonlyMap<string, number>,
+  vector: number[],
+): void {
+  if (!Number.isFinite(condition.value)) {
+    throw invalidElement(condition.directive, `V(${condition.node}) must be finite`);
+  }
+  if (isGround(condition.node)) {
+    if (condition.value !== 0.0) {
+      throw invalidElement(condition.directive, `V(${condition.node}) conflicts with ground`);
+    }
+    return;
+  }
+  const index = nodeIndices.get(condition.node);
+  if (index === undefined) {
+    throw invalidElement(
+      condition.directive,
+      `references unknown node ${JSON.stringify(condition.node)}`,
+    );
+  }
+  vector[index] = condition.value;
 }
 
 function solveDcWithGminStepping(
@@ -5106,6 +8986,20 @@ function circuitWithScaledIndependentSources(
   return scaled;
 }
 
+function circuitWithExtraVoltageSources(
+  circuit: Circuit,
+  sources: readonly VoltageSource[],
+): Circuit {
+  const bridged = new Circuit();
+  for (const element of circuit.elements()) {
+    bridged.add(element);
+  }
+  for (const source of sources) {
+    bridged.add(source);
+  }
+  return bridged;
+}
+
 function circuitFromElements(elements: readonly Element[]): Circuit {
   const circuit = new Circuit();
   for (const element of elements) {
@@ -5139,6 +9033,88 @@ function circuitWithCorner(circuit: Circuit, corner: CornerSpec): Circuit {
   }
 
   return circuitFromElements(elements);
+}
+
+function normalizeDigitalState(state: DigitalState | string): DigitalState {
+  const text = state.trim().toLowerCase();
+  if (text === "low") {
+    return "low";
+  }
+  if (text === "high") {
+    return "high";
+  }
+  throw invalidElement("digitalEvent", `unsupported digital state ${state}`);
+}
+
+function validateDigitalLogicLevels(levels: DigitalLogicLevels, context: string): void {
+  if (
+    !Number.isFinite(levels.lowVoltage) ||
+    !Number.isFinite(levels.highVoltage) ||
+    !Number.isFinite(levels.transitionSeconds)
+  ) {
+    throw invalidElement(context, "digital logic levels must be finite");
+  }
+  if (levels.highVoltage <= levels.lowVoltage) {
+    throw invalidElement(context, "digital high voltage must be greater than low voltage");
+  }
+  if (levels.transitionSeconds <= 0.0) {
+    throw invalidElement(context, "digital transition time must be finite and positive");
+  }
+}
+
+function validateDigitalThresholds(thresholds: DigitalThresholds): void {
+  if (
+    !Number.isFinite(thresholds.lowMaxVoltage) ||
+    !Number.isFinite(thresholds.highMinVoltage)
+  ) {
+    throw invalidElement("digitalThresholds", "digital thresholds must be finite");
+  }
+  if (thresholds.highMinVoltage <= thresholds.lowMaxVoltage) {
+    throw invalidElement("digitalThresholds", "digital high threshold must be greater than low threshold");
+  }
+}
+
+function validateDigitalEventStreamName(
+  stream: DigitalEventStream,
+  seenSignalNames: Set<string>,
+): string {
+  const signalName = stream.signalName.trim();
+  if (signalName.length === 0) {
+    throw invalidElement("digitalEventStream", "digital event stream signal name must not be empty");
+  }
+  if (seenSignalNames.has(signalName)) {
+    throw invalidElement(signalName, "digital event stream signal names must be unique");
+  }
+  seenSignalNames.add(signalName);
+  return signalName;
+}
+
+function validateDigitalEventTime(
+  timeSeconds: number,
+  previousTime: number,
+  context: string,
+): void {
+  if (!Number.isFinite(timeSeconds) || timeSeconds < 0.0) {
+    throw invalidElement(context, "digital event times must be finite and non-negative");
+  }
+  if (timeSeconds <= previousTime) {
+    throw invalidElement(context, "digital event times must be strictly increasing");
+  }
+}
+
+function vcdIdentifier(index: number): string {
+  return `s${index}`;
+}
+
+function vcdTick(timeSeconds: number): number {
+  if (!Number.isFinite(timeSeconds) || timeSeconds < 0.0) {
+    throw invalidElement("digitalEventStreamVcd", "event times must be finite and non-negative");
+  }
+  return Math.round(timeSeconds / 1.0e-12);
+}
+
+function vcdStateValue(state: DigitalState): string {
+  return normalizeDigitalState(state) === "low" ? "0" : "1";
 }
 
 function applyCornerOverride(element: Element, override: CornerOverride): Element {
@@ -5178,6 +9154,11 @@ function applyCornerOverride(element: Element, override: CornerOverride): Elemen
     case "current-source":
       if (override.parameter === "current") {
         return { ...element, current: override.value };
+      }
+      break;
+    case "custom-model":
+      if (override.parameter === "conductance") {
+        return { ...element, conductanceSiemens: override.value };
       }
       break;
   }
@@ -5342,6 +9323,9 @@ function solveLinearCircuitAtOperatingPoint(
           operatingPoint,
         );
         break;
+      case "custom-model":
+        stampCustomModel(element, nodeIndices, matrix, rhs, operatingPoint);
+        break;
       case "diode":
         stampDiode(element, nodeIndices, matrix, rhs, operatingPoint);
         break;
@@ -5390,6 +9374,7 @@ function solveLinearCircuitAtOperatingPoint(
     nodeCount,
     solution,
     true,
+    0.0,
   );
 }
 
@@ -5401,6 +9386,7 @@ function linearSolutionFromVector(
   nodeCount: number,
   solution: readonly number[],
   converged: boolean,
+  maxDelta: number,
 ): LinearSolution {
   const nodeVoltages = new Map<string, number>();
   const nodesByIndex = Array.from(nodeIndices.entries()).sort(
@@ -5427,6 +9413,7 @@ function linearSolutionFromVector(
     vector: [...solution],
     iterations: 1,
     converged,
+    maxDelta,
   };
 }
 
@@ -5483,6 +9470,14 @@ function buildSmallSignalMatrix(
         if (!Number.isFinite(element.current)) {
           throw invalidElement(element.name, "current must be finite");
         }
+        break;
+      case "custom-model":
+        stampConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.positive),
+          nodeIndex(nodeIndices, element.negative),
+          customModelConductance(element, nodeIndices, operatingPoint),
+        );
         break;
       case "diode":
         validateDiode(element);
@@ -5580,6 +9575,7 @@ function solveAcCircuit(circuit: Circuit, omega: number): AcSolution {
       case "inductor":
       case "mutual-inductor":
       case "transmission-line":
+      case "custom-model":
       case "diode":
       case "jfet":
       case "bjt":
@@ -5657,6 +9653,14 @@ function buildAcMatrix(
           throw invalidElement(element.name, "current must be finite");
         }
         break;
+      case "custom-model":
+        stampComplexConductance(
+          matrix,
+          nodeIndex(nodeIndices, element.positive),
+          nodeIndex(nodeIndices, element.negative),
+          complex(customModelConductance(element, nodeIndices, operatingPoint), 0.0),
+        );
+        break;
       case "diode":
         validateDiode(element);
         const diodeVoltage = vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.anode)) -
@@ -5715,6 +9719,13 @@ function makeDcResult(
   iterations = 1,
   converged = true,
   convergenceAid: DcConvergenceAid = converged ? "newton" : "none",
+  diagnostics: DcSolverDiagnostics = {
+    matrixSize: 0,
+    solver: "none",
+    tolerance: 0.0,
+    maxDelta: 0.0,
+    convergenceAid,
+  },
 ): DcResult {
   return {
     nodeVoltages,
@@ -5722,6 +9733,7 @@ function makeDcResult(
     iterations,
     converged,
     convergenceAid,
+    diagnostics,
     voltage(node: string): number | undefined {
       return isGround(node) ? 0.0 : nodeVoltages.get(node);
     },
@@ -5895,6 +9907,10 @@ function collectNodeIndices(circuit: Circuit): Map<string, number> {
           insertNode(names, node);
         }
         break;
+      case "custom-model":
+        insertNode(names, element.positive);
+        insertNode(names, element.negative);
+        break;
       case "diode":
         insertNode(names, element.anode);
         insertNode(names, element.cathode);
@@ -6013,6 +10029,7 @@ function findInputSource(circuit: Circuit, inputSource: string): InputSource {
         element.kind === "vcvs" ||
         element.kind === "cccs" ||
         element.kind === "ccvs" ||
+        element.kind === "custom-model" ||
         element.kind === "b-source") &&
       element.name === inputSource
     ) {
@@ -6295,6 +10312,103 @@ function stampConductance(
     matrix[n1][n2] -= conductance;
     matrix[n2][n1] -= conductance;
   }
+}
+
+function validateCustomModel(element: CustomModel): void {
+  if (!Number.isFinite(element.currentOffsetAmps)) {
+    throw invalidElement(element.name, "custom-model current offset must be finite");
+  }
+  for (const [name, value] of Object.entries(element.parameters)) {
+    if (!Number.isFinite(value)) {
+      throw invalidElement(element.name, `custom-model parameter ${name} must be finite`);
+    }
+  }
+  if (element.evaluator === undefined) {
+    if (
+      element.conductanceSiemens === undefined ||
+      !Number.isFinite(element.conductanceSiemens)
+    ) {
+      throw invalidElement(
+        element.name,
+        "custom-model conductance must be finite when no evaluator is supplied",
+      );
+    }
+  } else if (
+    element.conductanceSiemens !== undefined &&
+    !Number.isFinite(element.conductanceSiemens)
+  ) {
+    throw invalidElement(element.name, "custom-model conductance must be finite");
+  }
+}
+
+function customModelVoltage(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): number {
+  return (
+    vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.positive)) -
+    vectorVoltage(operatingPoint, nodeIndex(nodeIndices, element.negative))
+  );
+}
+
+function evaluateCustomModel(
+  element: CustomModel,
+  voltage: number,
+): CustomModelEvaluation {
+  validateCustomModel(element);
+  const evaluation = element.evaluator === undefined
+    ? {
+        currentAmps:
+          element.conductanceSiemens! * voltage + element.currentOffsetAmps,
+        conductanceSiemens: element.conductanceSiemens!,
+      }
+    : element.evaluator({
+        voltage,
+        temperatureKelvin: 300.15,
+        parameters: element.parameters,
+      });
+  if (!Number.isFinite(evaluation.currentAmps)) {
+    throw invalidElement(element.name, "custom-model current must be finite");
+  }
+  if (!Number.isFinite(evaluation.conductanceSiemens)) {
+    throw invalidElement(element.name, "custom-model conductance must be finite");
+  }
+  return evaluation;
+}
+
+function stampCustomModel(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  matrix: number[][],
+  rhs: number[],
+  operatingPoint: readonly number[],
+): void {
+  const positive = nodeIndex(nodeIndices, element.positive);
+  const negative = nodeIndex(nodeIndices, element.negative);
+  const voltage = customModelVoltage(element, nodeIndices, operatingPoint);
+  const evaluation = evaluateCustomModel(element, voltage);
+  const equivalentCurrent =
+    evaluation.currentAmps - evaluation.conductanceSiemens * voltage;
+
+  stampConductance(matrix, positive, negative, evaluation.conductanceSiemens);
+  if (positive !== undefined) {
+    rhs[positive] -= equivalentCurrent;
+  }
+  if (negative !== undefined) {
+    rhs[negative] += equivalentCurrent;
+  }
+}
+
+function customModelConductance(
+  element: CustomModel,
+  nodeIndices: ReadonlyMap<string, number>,
+  operatingPoint: readonly number[],
+): number {
+  return evaluateCustomModel(
+    element,
+    customModelVoltage(element, nodeIndices, operatingPoint),
+  ).conductanceSiemens;
 }
 
 function stampDiode(
@@ -8589,6 +12703,13 @@ function transposeComplexMatrix(matrix: readonly (readonly Complex[])[]): Comple
 }
 
 function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
+  if (complexSolverKind(rhs.length) === "sparse_complex") {
+    return solveSparseComplexLinearSystem(matrix, rhs);
+  }
+  return solveDenseComplexLinearSystem(matrix, rhs);
+}
+
+function solveDenseComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
   const n = rhs.length;
   for (let pivotCol = 0; pivotCol < n; pivotCol++) {
     let pivotRow = pivotCol;
@@ -8643,6 +12764,86 @@ function solveComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[
         "circuit matrix is singular",
         "SINGULAR_MATRIX",
       );
+    }
+  }
+  return solution;
+}
+
+function solveSparseComplexLinearSystem(matrix: Complex[][], rhs: Complex[]): Complex[] {
+  const n = rhs.length;
+  const rows = matrix.map((row) => {
+    const entries = new Map<number, Complex>();
+    row.forEach((value, col) => {
+      if (value.real !== 0.0 || value.imag !== 0.0) {
+        entries.set(col, value);
+      }
+    });
+    return entries;
+  });
+  const sparseRhs = [...rhs];
+
+  for (let pivotCol = 0; pivotCol < n; pivotCol++) {
+    let pivotRow = pivotCol;
+    let pivotAbs = complexAbs(rows[pivotCol].get(pivotCol) ?? complex(0.0, 0.0));
+    for (let row = pivotCol + 1; row < n; row++) {
+      const candidateAbs = complexAbs(rows[row].get(pivotCol) ?? complex(0.0, 0.0));
+      if (candidateAbs > pivotAbs) {
+        pivotAbs = candidateAbs;
+        pivotRow = row;
+      }
+    }
+
+    if (pivotAbs < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+
+    [rows[pivotCol], rows[pivotRow]] = [rows[pivotRow], rows[pivotCol]];
+    [sparseRhs[pivotCol], sparseRhs[pivotRow]] = [
+      sparseRhs[pivotRow],
+      sparseRhs[pivotCol],
+    ];
+
+    const pivot = rows[pivotCol].get(pivotCol)!;
+    const pivotEntries = [...rows[pivotCol].entries()].filter(
+      ([col]) => col > pivotCol,
+    );
+    for (let row = pivotCol + 1; row < n; row++) {
+      const value = rows[row].get(pivotCol) ?? complex(0.0, 0.0);
+      if (value.real === 0.0 && value.imag === 0.0) {
+        continue;
+      }
+      const factor = complexDiv(value, pivot);
+      rows[row].delete(pivotCol);
+      for (const [col, pivotValue] of pivotEntries) {
+        const nextValue = complexSub(
+          rows[row].get(col) ?? complex(0.0, 0.0),
+          complexMul(factor, pivotValue),
+        );
+        if (complexAbs(nextValue) < PIVOT_EPSILON) {
+          rows[row].delete(col);
+        } else {
+          rows[row].set(col, nextValue);
+        }
+      }
+      sparseRhs[row] = complexSub(sparseRhs[row], complexMul(factor, sparseRhs[pivotCol]));
+    }
+  }
+
+  const solution = Array.from({ length: n }, () => complex(0.0, 0.0));
+  for (let row = n - 1; row >= 0; row--) {
+    const diagonal = rows[row].get(row) ?? complex(0.0, 0.0);
+    if (complexAbs(diagonal) < PIVOT_EPSILON) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
+    }
+    let value = sparseRhs[row];
+    for (const [col, entry] of rows[row].entries()) {
+      if (col > row) {
+        value = complexSub(value, complexMul(entry, solution[col]));
+      }
+    }
+    solution[row] = complexDiv(value, diagonal);
+    if (!Number.isFinite(solution[row].real) || !Number.isFinite(solution[row].imag)) {
+      throw new SpiceError("circuit matrix is singular", "SINGULAR_MATRIX");
     }
   }
   return solution;

@@ -1451,10 +1451,90 @@ pub enum SmartHomeTool {
     DescribePrimitive,
     GetIntegrationCatalogSummary,
     GetToolCatalogSummary,
+    ListIntegrationPolicySurfaces,
+    GetIntegrationPolicySurfaceSummary,
+    ListIntegrationPlatformCoverage,
+    GetIntegrationPlatformCoverageSummary,
+    ListIntegrationPrimitiveCoverage,
+    GetIntegrationPrimitiveCoverageSummary,
     ListIntegrationActivationPlans,
     GetIntegrationActivationPlanSummary,
     ListIntegrationActivationCandidates,
     GetIntegrationActivationCandidateSummary,
+    ListIntegrationActivationActions,
+    GetIntegrationActivationActionSummary,
+    ListIntegrationActivationAgenda,
+    GetIntegrationActivationAgendaSummary,
+    ListIntegrationActivationRunway,
+    GetIntegrationActivationRunwaySummary,
+    ListIntegrationActivationHealth,
+    GetIntegrationActivationHealthSummary,
+    ListIntegrationActivationMaintenance,
+    GetIntegrationActivationMaintenanceSummary,
+    ListIntegrationActivationConstraints,
+    GetIntegrationActivationConstraintSummary,
+    ListIntegrationActivationReviews,
+    GetIntegrationActivationReviewSummary,
+    ListIntegrationActivationApprovals,
+    GetIntegrationActivationApprovalSummary,
+    ListIntegrationActivationDecisions,
+    GetIntegrationActivationDecisionSummary,
+    ListIntegrationActivationEvidence,
+    GetIntegrationActivationEvidenceSummary,
+    ListIntegrationActivationDossiers,
+    GetIntegrationActivationDossierSummary,
+    ListIntegrationActivationReadouts,
+    GetIntegrationActivationReadoutSummary,
+    ListIntegrationActivationBriefingItems,
+    GetIntegrationActivationBriefingSummary,
+    ListIntegrationActivationDashboard,
+    GetIntegrationActivationDashboardSummary,
+    ListIntegrationActivationTimeline,
+    GetIntegrationActivationTimelineSummary,
+    ListIntegrationActivationForecast,
+    GetIntegrationActivationForecastSummary,
+    ListIntegrationActivationPlaybook,
+    GetIntegrationActivationPlaybookSummary,
+    ListIntegrationActivationRunbook,
+    GetIntegrationActivationRunbookSummary,
+    ListIntegrationActivationHandoff,
+    GetIntegrationActivationHandoffSummary,
+    ListIntegrationActivationExecution,
+    GetIntegrationActivationExecutionSummary,
+    ListIntegrationActivationVerification,
+    GetIntegrationActivationVerificationSummary,
+    ListIntegrationActivationOperatorQueue,
+    GetIntegrationActivationOperatorQueueSummary,
+    ListIntegrationActivationControlRoom,
+    GetIntegrationActivationControlRoomSummary,
+    ListIntegrationActivationCommandCenter,
+    GetIntegrationActivationCommandCenterSummary,
+    ListIntegrationActivationWatchtower,
+    GetIntegrationActivationWatchtowerSummary,
+    ListIntegrationActivationSentinel,
+    GetIntegrationActivationSentinelSummary,
+    ListIntegrationActivationAudit,
+    GetIntegrationActivationAuditSummary,
+    ListIntegrationActivationEscalations,
+    GetIntegrationActivationEscalationSummary,
+    ListIntegrationActivationResponses,
+    GetIntegrationActivationResponseSummary,
+    ListIntegrationActivationRemediation,
+    GetIntegrationActivationRemediationSummary,
+    ListIntegrationActivationClosure,
+    GetIntegrationActivationClosureSummary,
+    ListIntegrationActivationRelease,
+    GetIntegrationActivationReleaseSummary,
+    ListIntegrationActivationDelivery,
+    GetIntegrationActivationDeliverySummary,
+    ListIntegrationActivationDeployment,
+    GetIntegrationActivationDeploymentSummary,
+    ListIntegrationActivationSafetyGates,
+    GetIntegrationActivationSafetySummary,
+    ListIntegrationActivationRisk,
+    GetIntegrationActivationRiskSummary,
+    ListIntegrationActivationDependencies,
+    GetIntegrationActivationDependencySummary,
     ListIntegrationReadiness,
     GetIntegrationReadinessSummary,
     ListIntegrationReadinessGaps,
@@ -1511,6 +1591,24 @@ impl SmartHomeTool {
                 read_tool("smart_home.get_integration_catalog_summary")
             }
             Self::GetToolCatalogSummary => read_tool("smart_home.get_tool_catalog_summary"),
+            Self::ListIntegrationPolicySurfaces => {
+                read_tool("smart_home.list_integration_policy_surfaces")
+            }
+            Self::GetIntegrationPolicySurfaceSummary => {
+                read_tool("smart_home.get_integration_policy_surface_summary")
+            }
+            Self::ListIntegrationPlatformCoverage => {
+                read_tool("smart_home.list_integration_platform_coverage")
+            }
+            Self::GetIntegrationPlatformCoverageSummary => {
+                read_tool("smart_home.get_integration_platform_coverage_summary")
+            }
+            Self::ListIntegrationPrimitiveCoverage => {
+                read_tool("smart_home.list_integration_primitive_coverage")
+            }
+            Self::GetIntegrationPrimitiveCoverageSummary => {
+                read_tool("smart_home.get_integration_primitive_coverage_summary")
+            }
             Self::ListIntegrationActivationPlans => {
                 read_tool("smart_home.list_integration_activation_plans")
             }
@@ -1522,6 +1620,228 @@ impl SmartHomeTool {
             }
             Self::GetIntegrationActivationCandidateSummary => {
                 read_tool("smart_home.get_integration_activation_candidate_summary")
+            }
+            Self::ListIntegrationActivationActions => {
+                read_tool("smart_home.list_integration_activation_actions")
+            }
+            Self::GetIntegrationActivationActionSummary => {
+                read_tool("smart_home.get_integration_activation_action_summary")
+            }
+            Self::ListIntegrationActivationAgenda => {
+                read_tool("smart_home.list_integration_activation_agenda")
+            }
+            Self::GetIntegrationActivationAgendaSummary => {
+                read_tool("smart_home.get_integration_activation_agenda_summary")
+            }
+            Self::ListIntegrationActivationRunway => {
+                read_tool("smart_home.list_integration_activation_runway")
+            }
+            Self::GetIntegrationActivationRunwaySummary => {
+                read_tool("smart_home.get_integration_activation_runway_summary")
+            }
+            Self::ListIntegrationActivationHealth => {
+                read_tool("smart_home.list_integration_activation_health")
+            }
+            Self::GetIntegrationActivationHealthSummary => {
+                read_tool("smart_home.get_integration_activation_health_summary")
+            }
+            Self::ListIntegrationActivationMaintenance => {
+                read_tool("smart_home.list_integration_activation_maintenance")
+            }
+            Self::GetIntegrationActivationMaintenanceSummary => {
+                read_tool("smart_home.get_integration_activation_maintenance_summary")
+            }
+            Self::ListIntegrationActivationConstraints => {
+                read_tool("smart_home.list_integration_activation_constraints")
+            }
+            Self::GetIntegrationActivationConstraintSummary => {
+                read_tool("smart_home.get_integration_activation_constraint_summary")
+            }
+            Self::ListIntegrationActivationReviews => {
+                read_tool("smart_home.list_integration_activation_reviews")
+            }
+            Self::GetIntegrationActivationReviewSummary => {
+                read_tool("smart_home.get_integration_activation_review_summary")
+            }
+            Self::ListIntegrationActivationApprovals => {
+                read_tool("smart_home.list_integration_activation_approvals")
+            }
+            Self::GetIntegrationActivationApprovalSummary => {
+                read_tool("smart_home.get_integration_activation_approval_summary")
+            }
+            Self::ListIntegrationActivationDecisions => {
+                read_tool("smart_home.list_integration_activation_decisions")
+            }
+            Self::GetIntegrationActivationDecisionSummary => {
+                read_tool("smart_home.get_integration_activation_decision_summary")
+            }
+            Self::ListIntegrationActivationEvidence => {
+                read_tool("smart_home.list_integration_activation_evidence")
+            }
+            Self::GetIntegrationActivationEvidenceSummary => {
+                read_tool("smart_home.get_integration_activation_evidence_summary")
+            }
+            Self::ListIntegrationActivationDossiers => {
+                read_tool("smart_home.list_integration_activation_dossiers")
+            }
+            Self::GetIntegrationActivationDossierSummary => {
+                read_tool("smart_home.get_integration_activation_dossier_summary")
+            }
+            Self::ListIntegrationActivationReadouts => {
+                read_tool("smart_home.list_integration_activation_readouts")
+            }
+            Self::GetIntegrationActivationReadoutSummary => {
+                read_tool("smart_home.get_integration_activation_readout_summary")
+            }
+            Self::ListIntegrationActivationBriefingItems => {
+                read_tool("smart_home.list_integration_activation_briefing_items")
+            }
+            Self::GetIntegrationActivationBriefingSummary => {
+                read_tool("smart_home.get_integration_activation_briefing_summary")
+            }
+            Self::ListIntegrationActivationDashboard => {
+                read_tool("smart_home.list_integration_activation_dashboard")
+            }
+            Self::GetIntegrationActivationDashboardSummary => {
+                read_tool("smart_home.get_integration_activation_dashboard_summary")
+            }
+            Self::ListIntegrationActivationTimeline => {
+                read_tool("smart_home.list_integration_activation_timeline")
+            }
+            Self::GetIntegrationActivationTimelineSummary => {
+                read_tool("smart_home.get_integration_activation_timeline_summary")
+            }
+            Self::ListIntegrationActivationForecast => {
+                read_tool("smart_home.list_integration_activation_forecasts")
+            }
+            Self::GetIntegrationActivationForecastSummary => {
+                read_tool("smart_home.get_integration_activation_forecast_summary")
+            }
+            Self::ListIntegrationActivationPlaybook => {
+                read_tool("smart_home.list_integration_activation_playbook")
+            }
+            Self::GetIntegrationActivationPlaybookSummary => {
+                read_tool("smart_home.get_integration_activation_playbook_summary")
+            }
+            Self::ListIntegrationActivationRunbook => {
+                read_tool("smart_home.list_integration_activation_runbook")
+            }
+            Self::GetIntegrationActivationRunbookSummary => {
+                read_tool("smart_home.get_integration_activation_runbook_summary")
+            }
+            Self::ListIntegrationActivationHandoff => {
+                read_tool("smart_home.list_integration_activation_handoff")
+            }
+            Self::GetIntegrationActivationHandoffSummary => {
+                read_tool("smart_home.get_integration_activation_handoff_summary")
+            }
+            Self::ListIntegrationActivationExecution => {
+                read_tool("smart_home.list_integration_activation_execution")
+            }
+            Self::GetIntegrationActivationExecutionSummary => {
+                read_tool("smart_home.get_integration_activation_execution_summary")
+            }
+            Self::ListIntegrationActivationVerification => {
+                read_tool("smart_home.list_integration_activation_verification")
+            }
+            Self::GetIntegrationActivationVerificationSummary => {
+                read_tool("smart_home.get_integration_activation_verification_summary")
+            }
+            Self::ListIntegrationActivationOperatorQueue => {
+                read_tool("smart_home.list_integration_activation_operator_queue")
+            }
+            Self::GetIntegrationActivationOperatorQueueSummary => {
+                read_tool("smart_home.get_integration_activation_operator_queue_summary")
+            }
+            Self::ListIntegrationActivationControlRoom => {
+                read_tool("smart_home.list_integration_activation_control_room")
+            }
+            Self::GetIntegrationActivationControlRoomSummary => {
+                read_tool("smart_home.get_integration_activation_control_room_summary")
+            }
+            Self::ListIntegrationActivationCommandCenter => {
+                read_tool("smart_home.list_integration_activation_command_center")
+            }
+            Self::GetIntegrationActivationCommandCenterSummary => {
+                read_tool("smart_home.get_integration_activation_command_center_summary")
+            }
+            Self::ListIntegrationActivationWatchtower => {
+                read_tool("smart_home.list_integration_activation_watchtower")
+            }
+            Self::GetIntegrationActivationWatchtowerSummary => {
+                read_tool("smart_home.get_integration_activation_watchtower_summary")
+            }
+            Self::ListIntegrationActivationSentinel => {
+                read_tool("smart_home.list_integration_activation_sentinel")
+            }
+            Self::GetIntegrationActivationSentinelSummary => {
+                read_tool("smart_home.get_integration_activation_sentinel_summary")
+            }
+            Self::ListIntegrationActivationAudit => {
+                read_tool("smart_home.list_integration_activation_audit")
+            }
+            Self::GetIntegrationActivationAuditSummary => {
+                read_tool("smart_home.get_integration_activation_audit_summary")
+            }
+            Self::ListIntegrationActivationEscalations => {
+                read_tool("smart_home.list_integration_activation_escalations")
+            }
+            Self::GetIntegrationActivationEscalationSummary => {
+                read_tool("smart_home.get_integration_activation_escalation_summary")
+            }
+            Self::ListIntegrationActivationResponses => {
+                read_tool("smart_home.list_integration_activation_responses")
+            }
+            Self::GetIntegrationActivationResponseSummary => {
+                read_tool("smart_home.get_integration_activation_response_summary")
+            }
+            Self::ListIntegrationActivationRemediation => {
+                read_tool("smart_home.list_integration_activation_remediation")
+            }
+            Self::GetIntegrationActivationRemediationSummary => {
+                read_tool("smart_home.get_integration_activation_remediation_summary")
+            }
+            Self::ListIntegrationActivationClosure => {
+                read_tool("smart_home.list_integration_activation_closure")
+            }
+            Self::GetIntegrationActivationClosureSummary => {
+                read_tool("smart_home.get_integration_activation_closure_summary")
+            }
+            Self::ListIntegrationActivationRelease => {
+                read_tool("smart_home.list_integration_activation_release")
+            }
+            Self::GetIntegrationActivationReleaseSummary => {
+                read_tool("smart_home.get_integration_activation_release_summary")
+            }
+            Self::ListIntegrationActivationDelivery => {
+                read_tool("smart_home.list_integration_activation_delivery")
+            }
+            Self::GetIntegrationActivationDeliverySummary => {
+                read_tool("smart_home.get_integration_activation_delivery_summary")
+            }
+            Self::ListIntegrationActivationDeployment => {
+                read_tool("smart_home.list_integration_activation_deployment")
+            }
+            Self::GetIntegrationActivationDeploymentSummary => {
+                read_tool("smart_home.get_integration_activation_deployment_summary")
+            }
+            Self::ListIntegrationActivationSafetyGates => {
+                read_tool("smart_home.list_integration_activation_safety_gates")
+            }
+            Self::GetIntegrationActivationSafetySummary => {
+                read_tool("smart_home.get_integration_activation_safety_summary")
+            }
+            Self::ListIntegrationActivationRisk => {
+                read_tool("smart_home.list_integration_activation_risk")
+            }
+            Self::GetIntegrationActivationRiskSummary => {
+                read_tool("smart_home.get_integration_activation_risk_summary")
+            }
+            Self::ListIntegrationActivationDependencies => {
+                read_tool("smart_home.list_integration_activation_dependencies")
+            }
+            Self::GetIntegrationActivationDependencySummary => {
+                read_tool("smart_home.get_integration_activation_dependency_summary")
             }
             Self::ListIntegrationReadiness => read_tool("smart_home.list_integration_readiness"),
             Self::GetIntegrationReadinessSummary => {
@@ -2144,10 +2464,90 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::DescribePrimitive,
         SmartHomeTool::GetIntegrationCatalogSummary,
         SmartHomeTool::GetToolCatalogSummary,
+        SmartHomeTool::ListIntegrationPolicySurfaces,
+        SmartHomeTool::GetIntegrationPolicySurfaceSummary,
+        SmartHomeTool::ListIntegrationPlatformCoverage,
+        SmartHomeTool::GetIntegrationPlatformCoverageSummary,
+        SmartHomeTool::ListIntegrationPrimitiveCoverage,
+        SmartHomeTool::GetIntegrationPrimitiveCoverageSummary,
         SmartHomeTool::ListIntegrationActivationPlans,
         SmartHomeTool::GetIntegrationActivationPlanSummary,
         SmartHomeTool::ListIntegrationActivationCandidates,
         SmartHomeTool::GetIntegrationActivationCandidateSummary,
+        SmartHomeTool::ListIntegrationActivationActions,
+        SmartHomeTool::GetIntegrationActivationActionSummary,
+        SmartHomeTool::ListIntegrationActivationAgenda,
+        SmartHomeTool::GetIntegrationActivationAgendaSummary,
+        SmartHomeTool::ListIntegrationActivationRunway,
+        SmartHomeTool::GetIntegrationActivationRunwaySummary,
+        SmartHomeTool::ListIntegrationActivationHealth,
+        SmartHomeTool::GetIntegrationActivationHealthSummary,
+        SmartHomeTool::ListIntegrationActivationMaintenance,
+        SmartHomeTool::GetIntegrationActivationMaintenanceSummary,
+        SmartHomeTool::ListIntegrationActivationConstraints,
+        SmartHomeTool::GetIntegrationActivationConstraintSummary,
+        SmartHomeTool::ListIntegrationActivationReviews,
+        SmartHomeTool::GetIntegrationActivationReviewSummary,
+        SmartHomeTool::ListIntegrationActivationApprovals,
+        SmartHomeTool::GetIntegrationActivationApprovalSummary,
+        SmartHomeTool::ListIntegrationActivationDecisions,
+        SmartHomeTool::GetIntegrationActivationDecisionSummary,
+        SmartHomeTool::ListIntegrationActivationEvidence,
+        SmartHomeTool::GetIntegrationActivationEvidenceSummary,
+        SmartHomeTool::ListIntegrationActivationDossiers,
+        SmartHomeTool::GetIntegrationActivationDossierSummary,
+        SmartHomeTool::ListIntegrationActivationReadouts,
+        SmartHomeTool::GetIntegrationActivationReadoutSummary,
+        SmartHomeTool::ListIntegrationActivationBriefingItems,
+        SmartHomeTool::GetIntegrationActivationBriefingSummary,
+        SmartHomeTool::ListIntegrationActivationDashboard,
+        SmartHomeTool::GetIntegrationActivationDashboardSummary,
+        SmartHomeTool::ListIntegrationActivationTimeline,
+        SmartHomeTool::GetIntegrationActivationTimelineSummary,
+        SmartHomeTool::ListIntegrationActivationForecast,
+        SmartHomeTool::GetIntegrationActivationForecastSummary,
+        SmartHomeTool::ListIntegrationActivationPlaybook,
+        SmartHomeTool::GetIntegrationActivationPlaybookSummary,
+        SmartHomeTool::ListIntegrationActivationRunbook,
+        SmartHomeTool::GetIntegrationActivationRunbookSummary,
+        SmartHomeTool::ListIntegrationActivationHandoff,
+        SmartHomeTool::GetIntegrationActivationHandoffSummary,
+        SmartHomeTool::ListIntegrationActivationExecution,
+        SmartHomeTool::GetIntegrationActivationExecutionSummary,
+        SmartHomeTool::ListIntegrationActivationVerification,
+        SmartHomeTool::GetIntegrationActivationVerificationSummary,
+        SmartHomeTool::ListIntegrationActivationOperatorQueue,
+        SmartHomeTool::GetIntegrationActivationOperatorQueueSummary,
+        SmartHomeTool::ListIntegrationActivationControlRoom,
+        SmartHomeTool::GetIntegrationActivationControlRoomSummary,
+        SmartHomeTool::ListIntegrationActivationCommandCenter,
+        SmartHomeTool::GetIntegrationActivationCommandCenterSummary,
+        SmartHomeTool::ListIntegrationActivationWatchtower,
+        SmartHomeTool::GetIntegrationActivationWatchtowerSummary,
+        SmartHomeTool::ListIntegrationActivationSentinel,
+        SmartHomeTool::GetIntegrationActivationSentinelSummary,
+        SmartHomeTool::ListIntegrationActivationAudit,
+        SmartHomeTool::GetIntegrationActivationAuditSummary,
+        SmartHomeTool::ListIntegrationActivationEscalations,
+        SmartHomeTool::GetIntegrationActivationEscalationSummary,
+        SmartHomeTool::ListIntegrationActivationResponses,
+        SmartHomeTool::GetIntegrationActivationResponseSummary,
+        SmartHomeTool::ListIntegrationActivationRemediation,
+        SmartHomeTool::GetIntegrationActivationRemediationSummary,
+        SmartHomeTool::ListIntegrationActivationClosure,
+        SmartHomeTool::GetIntegrationActivationClosureSummary,
+        SmartHomeTool::ListIntegrationActivationRelease,
+        SmartHomeTool::GetIntegrationActivationReleaseSummary,
+        SmartHomeTool::ListIntegrationActivationDelivery,
+        SmartHomeTool::GetIntegrationActivationDeliverySummary,
+        SmartHomeTool::ListIntegrationActivationDeployment,
+        SmartHomeTool::GetIntegrationActivationDeploymentSummary,
+        SmartHomeTool::ListIntegrationActivationSafetyGates,
+        SmartHomeTool::GetIntegrationActivationSafetySummary,
+        SmartHomeTool::ListIntegrationActivationRisk,
+        SmartHomeTool::GetIntegrationActivationRiskSummary,
+        SmartHomeTool::ListIntegrationActivationDependencies,
+        SmartHomeTool::GetIntegrationActivationDependencySummary,
         SmartHomeTool::ListIntegrationReadiness,
         SmartHomeTool::GetIntegrationReadinessSummary,
         SmartHomeTool::ListIntegrationReadinessGaps,
@@ -2986,7 +3386,7 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 53);
+        assert_eq!(catalog.len(), 133);
         assert!(catalog
             .iter()
             .any(|tool| tool.tool_id == "smart_home.list_integrations"
@@ -3017,6 +3417,38 @@ mod tests {
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_policy_surfaces"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_policy_surface_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_platform_coverage"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_risk"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_risk_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_platform_coverage_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_primitive_coverage"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_primitive_coverage_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.list_integration_activation_plans"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
@@ -3030,6 +3462,126 @@ mod tests {
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(|tool| tool.tool_id
             == "smart_home.get_integration_activation_candidate_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_actions"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_action_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_agenda"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_agenda_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_runway"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_runway_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_health"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_health_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_maintenance"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_maintenance_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_constraints"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_constraint_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_reviews"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_review_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_approvals"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_approval_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_decisions"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_decision_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_evidence"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_evidence_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_dossiers"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_dossier_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_readouts"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_readout_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_briefing_items"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_briefing_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_dashboard"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_dashboard_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_timeline"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_timeline_summary"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
         assert!(catalog.iter().any(
@@ -3205,6 +3757,174 @@ mod tests {
             == "smart_home.get_worker_heartbeat_schedule"
             && tool.side_effects == ToolSideEffects::Read
             && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_dependencies"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_dependency_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_forecasts"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_forecast_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_playbook"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_playbook_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_runbook"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_runbook_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_handoff"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_handoff_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_execution"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_execution_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_verification"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_verification_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_operator_queue"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_operator_queue_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_control_room"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_control_room_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_command_center"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_command_center_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_watchtower"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_watchtower_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_sentinel"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_sentinel_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_audit"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_audit_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_escalations"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_escalation_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_responses"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_response_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_remediation"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_remediation_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_closure"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_closure_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_release"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_release_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_delivery"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_delivery_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_deployment"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_deployment_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.list_integration_activation_safety_gates"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+        assert!(catalog.iter().any(|tool| tool.tool_id
+            == "smart_home.get_integration_activation_safety_summary"
+            && tool.side_effects == ToolSideEffects::Read
+            && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
     }
 
     #[test]
@@ -3212,15 +3932,15 @@ mod tests {
         let summary = smart_home_tool_catalog_summary();
         let pair_bridge = SmartHomeTool::PairBridge.descriptor();
 
-        assert_eq!(summary.total_tools, 53);
-        assert_eq!(summary.read_tools, 45);
+        assert_eq!(summary.total_tools, 133);
+        assert_eq!(summary.read_tools, 125);
         assert_eq!(summary.write_tools, 2);
         assert_eq!(summary.external_tools, 6);
-        assert_eq!(summary.read_only_tier_tools, 45);
+        assert_eq!(summary.read_only_tier_tools, 125);
         assert_eq!(summary.low_risk_tier_tools, 6);
         assert_eq!(summary.high_risk_tier_tools, 0);
         assert_eq!(summary.human_approval_tier_tools, 2);
-        assert_eq!(summary.total_required_capabilities, 53);
+        assert_eq!(summary.total_required_capabilities, 133);
         assert_eq!(summary.risky_tool_count(), 8);
         assert_eq!(summary.approval_gated_tool_count(), 2);
         assert!(pair_bridge.requires_human_approval());

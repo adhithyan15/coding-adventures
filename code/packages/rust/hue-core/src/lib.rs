@@ -547,6 +547,10 @@ impl HueCommandPlan {
         HueCommandPlanSummary::from_commands(&self.commands)
     }
 
+    pub fn projection_summary(&self) -> HueCommandPlanProjectionSummary {
+        HueCommandPlanProjectionSummary::from_plan(self)
+    }
+
     pub fn requests(&self) -> Vec<HueRequest> {
         self.commands.iter().map(HueCommand::to_request).collect()
     }
@@ -561,6 +565,59 @@ impl HueCommandPlan {
 
     pub fn ignored_delta_count(&self) -> usize {
         self.ignored_capability_ids.len()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueCommandPlanProjectionSummary {
+    pub target_resource_type: HueResourceType,
+    pub requested_delta_count: usize,
+    pub generated_command_count: usize,
+    pub ignored_delta_count: usize,
+    pub command_summary: HueCommandPlanSummary,
+}
+
+impl HueCommandPlanProjectionSummary {
+    pub fn from_plan(plan: &HueCommandPlan) -> Self {
+        let command_summary = plan.summary();
+        Self {
+            target_resource_type: plan.target.resource_type.clone(),
+            requested_delta_count: command_summary.total_commands + plan.ignored_delta_count(),
+            generated_command_count: command_summary.total_commands,
+            ignored_delta_count: plan.ignored_delta_count(),
+            command_summary,
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.requested_delta_count == 0
+    }
+
+    pub fn has_generated_commands(&self) -> bool {
+        self.generated_command_count > 0
+    }
+
+    pub fn has_ignored_deltas(&self) -> bool {
+        self.ignored_delta_count > 0
+    }
+
+    pub fn projected_all_requested_deltas(&self) -> bool {
+        self.requested_delta_count > 0 && self.ignored_delta_count == 0
+    }
+
+    pub fn has_partial_projection(&self) -> bool {
+        self.generated_command_count > 0 && self.ignored_delta_count > 0
+    }
+
+    pub fn target_is_light_surface(&self) -> bool {
+        matches!(
+            self.target_resource_type,
+            HueResourceType::Light | HueResourceType::GroupedLight
+        )
+    }
+
+    pub fn target_is_scene_surface(&self) -> bool {
+        self.target_resource_type == HueResourceType::Scene
     }
 }
 
@@ -715,19 +772,60 @@ impl HueCommandPlanSummary {
         self.light_commands > 0 || self.grouped_light_commands > 0
     }
 
+    pub fn lighting_write_count(&self) -> usize {
+        self.light_commands + self.grouped_light_commands
+    }
+
+    pub fn target_surface_count(&self) -> usize {
+        usize::from(self.light_commands > 0)
+            + usize::from(self.grouped_light_commands > 0)
+            + usize::from(self.scene_commands > 0)
+    }
+
+    pub fn light_capability_write_count(&self) -> usize {
+        self.on_off_commands + self.brightness_commands + self.color_temperature_commands
+    }
+
+    pub fn light_capability_kind_count(&self) -> usize {
+        usize::from(self.on_off_commands > 0)
+            + usize::from(self.brightness_commands > 0)
+            + usize::from(self.color_temperature_commands > 0)
+    }
+
+    pub fn has_direct_light_commands(&self) -> bool {
+        self.light_commands > 0
+    }
+
     pub fn has_group_commands(&self) -> bool {
         self.grouped_light_commands > 0
+    }
+
+    pub fn mixes_direct_and_grouped_light_writes(&self) -> bool {
+        self.light_commands > 0 && self.grouped_light_commands > 0
+    }
+
+    pub fn has_color_temperature_writes(&self) -> bool {
+        self.color_temperature_commands > 0
+    }
+
+    pub fn writes_multiple_light_capability_kinds(&self) -> bool {
+        self.light_capability_kind_count() > 1
     }
 
     pub fn has_scene_recalls(&self) -> bool {
         self.scene_recall_commands > 0
     }
 
+    pub fn has_only_light_surface_writes(&self) -> bool {
+        self.has_lighting_writes() && self.scene_commands == 0
+    }
+
+    pub fn has_only_scene_recalls(&self) -> bool {
+        self.scene_commands > 0 && self.scene_commands == self.total_commands
+    }
+
     pub fn touches_multiple_surfaces(&self) -> bool {
-        usize::from(self.light_commands > 0)
-            + usize::from(self.grouped_light_commands > 0)
-            + usize::from(self.scene_commands > 0)
-            > 1
+        self.target_surface_count() > 1
     }
 }
 
@@ -1745,6 +1843,100 @@ impl HueSceneSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct HueSceneSetSummary {
+    pub total_scenes: usize,
+    pub room_scoped_scenes: usize,
+    pub zone_scoped_scenes: usize,
+    pub home_scoped_scenes: usize,
+    pub bridge_scoped_scenes: usize,
+    pub custom_scoped_scenes: usize,
+    pub scenes_with_actions: usize,
+    pub scenes_projecting_actions: usize,
+    pub action_count: usize,
+    pub stateful_action_count: usize,
+    pub desired_state_field_count: usize,
+}
+
+impl HueSceneSetSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_scenes<'a>(scenes: impl IntoIterator<Item = &'a HueSceneResource>) -> Self {
+        let mut summary = Self::empty();
+        for scene in scenes {
+            summary.record_summary(&scene.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries<'a>(summaries: impl IntoIterator<Item = &'a HueSceneSummary>) -> Self {
+        let mut summary = Self::empty();
+        for scene_summary in summaries {
+            summary.record_summary(scene_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: &HueSceneSummary) {
+        self.total_scenes += 1;
+        match summary.scope {
+            SceneScope::Room => self.room_scoped_scenes += 1,
+            SceneScope::Zone => self.zone_scoped_scenes += 1,
+            SceneScope::Home => self.home_scoped_scenes += 1,
+            SceneScope::Bridge => self.bridge_scoped_scenes += 1,
+            SceneScope::Custom => self.custom_scoped_scenes += 1,
+        }
+        if summary.has_actions() {
+            self.scenes_with_actions += 1;
+        }
+        if summary.projects_actions() {
+            self.scenes_projecting_actions += 1;
+        }
+        self.action_count += summary.action_count;
+        self.stateful_action_count += summary.stateful_action_count;
+        self.desired_state_field_count += summary.desired_state_field_count;
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_scenes == 0
+    }
+
+    pub fn room_or_zone_scoped_count(&self) -> usize {
+        self.room_scoped_scenes + self.zone_scoped_scenes
+    }
+
+    pub fn has_room_or_zone_scoped_scenes(&self) -> bool {
+        self.room_or_zone_scoped_count() > 0
+    }
+
+    pub fn projects_actions(&self) -> bool {
+        self.stateful_action_count > 0
+    }
+
+    pub fn has_unprojected_actions(&self) -> bool {
+        self.action_count > self.stateful_action_count
+    }
+
+    pub fn has_partial_action_projection(&self) -> bool {
+        self.scenes_projecting_actions > 0
+            && self.scenes_projecting_actions < self.scenes_with_actions
+    }
+
+    pub fn scope_family_count(&self) -> usize {
+        usize::from(self.room_scoped_scenes > 0)
+            + usize::from(self.zone_scoped_scenes > 0)
+            + usize::from(self.home_scoped_scenes > 0)
+            + usize::from(self.bridge_scoped_scenes > 0)
+            + usize::from(self.custom_scoped_scenes > 0)
+    }
+
+    pub fn touches_multiple_scope_families(&self) -> bool {
+        self.scope_family_count() > 1
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueMotionResource {
     pub id: HueResourceId,
@@ -2009,8 +2201,35 @@ impl HueStateUpdateSetSummary {
         self.light_surface_updates > 0
     }
 
+    pub fn light_surface_update_count(&self) -> usize {
+        self.light_updates + self.grouped_light_updates
+    }
+
+    pub fn mixes_direct_and_grouped_light_updates(&self) -> bool {
+        self.light_updates > 0 && self.grouped_light_updates > 0
+    }
+
     pub fn has_sensor_or_input_updates(&self) -> bool {
         self.sensor_or_input_updates > 0
+    }
+
+    pub fn resource_family_count(&self) -> usize {
+        usize::from(self.light_updates > 0)
+            + usize::from(self.grouped_light_updates > 0)
+            + usize::from(self.motion_updates > 0)
+            + usize::from(self.button_updates > 0)
+    }
+
+    pub fn touches_multiple_resource_families(&self) -> bool {
+        self.resource_family_count() > 1
+    }
+
+    pub fn all_updates_have_owner(&self) -> bool {
+        self.total_updates > 0 && self.updates_with_owner == self.total_updates
+    }
+
+    pub fn has_partial_state_projection(&self) -> bool {
+        self.updates_with_state > 0 && self.updates_with_state < self.total_updates
     }
 
     pub fn projects_deltas(&self) -> bool {
@@ -2476,13 +2695,46 @@ mod tests {
             }
         );
         assert!(summary.has_lighting_writes());
+        assert_eq!(summary.lighting_write_count(), 6);
+        assert_eq!(summary.target_surface_count(), 3);
+        assert_eq!(summary.light_capability_write_count(), 6);
+        assert_eq!(summary.light_capability_kind_count(), 3);
+        assert!(summary.has_direct_light_commands());
         assert!(summary.has_group_commands());
+        assert!(summary.mixes_direct_and_grouped_light_writes());
+        assert!(summary.has_color_temperature_writes());
+        assert!(summary.writes_multiple_light_capability_kinds());
         assert!(summary.has_scene_recalls());
+        assert!(!summary.has_only_light_surface_writes());
+        assert!(!summary.has_only_scene_recalls());
         assert!(summary.touches_multiple_surfaces());
+
+        let light_only = HueCommandPlanSummary::from_commands(commands.iter().take(6));
+        assert!(light_only.has_only_light_surface_writes());
+        assert!(!light_only.has_only_scene_recalls());
+
+        let scene_only = HueCommandPlanSummary::from_commands(commands.iter().skip(6));
+        assert_eq!(scene_only.target_surface_count(), 1);
+        assert_eq!(scene_only.light_capability_write_count(), 0);
+        assert_eq!(scene_only.light_capability_kind_count(), 0);
+        assert!(!scene_only.has_only_light_surface_writes());
+        assert!(scene_only.has_only_scene_recalls());
 
         let empty = HueCommandPlanSummary::empty();
         assert!(empty.is_empty());
         assert!(!empty.has_lighting_writes());
+        assert_eq!(empty.lighting_write_count(), 0);
+        assert_eq!(empty.target_surface_count(), 0);
+        assert_eq!(empty.light_capability_write_count(), 0);
+        assert_eq!(empty.light_capability_kind_count(), 0);
+        assert!(!empty.has_direct_light_commands());
+        assert!(!empty.has_group_commands());
+        assert!(!empty.mixes_direct_and_grouped_light_writes());
+        assert!(!empty.has_color_temperature_writes());
+        assert!(!empty.writes_multiple_light_capability_kinds());
+        assert!(!empty.has_scene_recalls());
+        assert!(!empty.has_only_light_surface_writes());
+        assert!(!empty.has_only_scene_recalls());
         assert!(!empty.touches_multiple_surfaces());
     }
 
@@ -2619,6 +2871,24 @@ mod tests {
                 scene_recall_commands: 0,
             }
         );
+        let projection_summary = plan.projection_summary();
+        assert_eq!(
+            projection_summary,
+            HueCommandPlanProjectionSummary {
+                target_resource_type: HueResourceType::Light,
+                requested_delta_count: 3,
+                generated_command_count: 2,
+                ignored_delta_count: 1,
+                command_summary: plan.summary(),
+            }
+        );
+        assert!(!projection_summary.is_empty());
+        assert!(projection_summary.has_generated_commands());
+        assert!(projection_summary.has_ignored_deltas());
+        assert!(projection_summary.has_partial_projection());
+        assert!(!projection_summary.projected_all_requested_deltas());
+        assert!(projection_summary.target_is_light_surface());
+        assert!(!projection_summary.target_is_scene_surface());
         assert_eq!(
             plan.requests(),
             vec![
@@ -2634,6 +2904,32 @@ mod tests {
                 },
             ]
         );
+
+        let grouped_light = HueResourceRef::new(
+            HueResourceType::GroupedLight,
+            HueResourceId::trusted("grouped-light-1"),
+        );
+        let projected = HueCommandPlan::from_state_deltas(
+            &grouped_light,
+            &[StateDelta {
+                capability_id: CapabilityId::trusted("light.brightness"),
+                value: Value::Percentage(55),
+            }],
+        )
+        .unwrap()
+        .projection_summary();
+        assert_eq!(projected.requested_delta_count, 1);
+        assert_eq!(projected.generated_command_count, 1);
+        assert_eq!(projected.ignored_delta_count, 0);
+        assert!(projected.projected_all_requested_deltas());
+        assert!(projected.target_is_light_surface());
+
+        let empty_projection = HueCommandPlan::empty(light.clone()).projection_summary();
+        assert!(empty_projection.is_empty());
+        assert!(!empty_projection.has_generated_commands());
+        assert!(!empty_projection.has_ignored_deltas());
+        assert!(!empty_projection.has_partial_projection());
+        assert!(!empty_projection.projected_all_requested_deltas());
     }
 
     #[test]
@@ -3440,6 +3736,134 @@ mod tests {
     }
 
     #[test]
+    fn hue_scene_set_summary_rolls_up_scope_and_action_projection() {
+        let room_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-room"),
+            group: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Dinner".to_string(),
+            actions: vec![HueSceneAction {
+                target: HueResourceRef::new(
+                    HueResourceType::Light,
+                    HueResourceId::trusted("light-1"),
+                ),
+                on: Some(true),
+                brightness: Some(70),
+                color_temperature_mirek: None,
+            }],
+        };
+        let zone_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-zone"),
+            group: HueResourceRef::new(HueResourceType::Zone, HueResourceId::trusted("zone-1")),
+            name: "Evening".to_string(),
+            actions: vec![
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::GroupedLight,
+                        HueResourceId::trusted("grouped-1"),
+                    ),
+                    on: None,
+                    brightness: None,
+                    color_temperature_mirek: None,
+                },
+                HueSceneAction {
+                    target: HueResourceRef::new(
+                        HueResourceType::Light,
+                        HueResourceId::trusted("light-2"),
+                    ),
+                    on: None,
+                    brightness: Some(25),
+                    color_temperature_mirek: Some(370),
+                },
+            ],
+        };
+        let bridge_scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-bridge"),
+            group: HueResourceRef::new(HueResourceType::Bridge, HueResourceId::trusted("bridge-1")),
+            name: "All off".to_string(),
+            actions: Vec::new(),
+        };
+
+        let scenes = vec![room_scene, zone_scene, bridge_scene];
+        let summary = HueSceneSetSummary::from_scenes(&scenes);
+
+        assert_eq!(
+            summary,
+            HueSceneSetSummary {
+                total_scenes: 3,
+                room_scoped_scenes: 1,
+                zone_scoped_scenes: 1,
+                bridge_scoped_scenes: 1,
+                scenes_with_actions: 2,
+                scenes_projecting_actions: 2,
+                action_count: 3,
+                stateful_action_count: 2,
+                desired_state_field_count: 4,
+                ..HueSceneSetSummary::empty()
+            }
+        );
+        assert_eq!(summary.room_or_zone_scoped_count(), 2);
+        assert!(summary.has_room_or_zone_scoped_scenes());
+        assert!(summary.projects_actions());
+        assert!(summary.has_unprojected_actions());
+        assert!(!summary.has_partial_action_projection());
+        assert_eq!(summary.scope_family_count(), 3);
+        assert!(summary.touches_multiple_scope_families());
+    }
+
+    #[test]
+    fn hue_scene_set_summary_handles_precomputed_and_empty_summaries() {
+        let summaries = vec![
+            HueSceneSummary {
+                scene: HueResourceRef::new(
+                    HueResourceType::Scene,
+                    HueResourceId::trusted("home-scene"),
+                ),
+                group: HueResourceRef::new(HueResourceType::Bridge, HueResourceId::trusted("home")),
+                scope: SceneScope::Home,
+                action_count: 2,
+                stateful_action_count: 1,
+                desired_state_field_count: 1,
+            },
+            HueSceneSummary {
+                scene: HueResourceRef::new(
+                    HueResourceType::Scene,
+                    HueResourceId::trusted("custom-scene"),
+                ),
+                group: HueResourceRef::new(
+                    HueResourceType::Device,
+                    HueResourceId::trusted("device-1"),
+                ),
+                scope: SceneScope::Custom,
+                action_count: 1,
+                stateful_action_count: 0,
+                desired_state_field_count: 0,
+            },
+        ];
+
+        let summary = HueSceneSetSummary::from_summaries(&summaries);
+        assert_eq!(summary.total_scenes, 2);
+        assert_eq!(summary.home_scoped_scenes, 1);
+        assert_eq!(summary.custom_scoped_scenes, 1);
+        assert_eq!(summary.scenes_with_actions, 2);
+        assert_eq!(summary.scenes_projecting_actions, 1);
+        assert_eq!(summary.action_count, 3);
+        assert_eq!(summary.stateful_action_count, 1);
+        assert!(summary.has_partial_action_projection());
+        assert!(summary.has_unprojected_actions());
+        assert_eq!(summary.scope_family_count(), 2);
+
+        let empty = HueSceneSetSummary::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.room_or_zone_scoped_count(), 0);
+        assert!(!empty.has_room_or_zone_scoped_scenes());
+        assert!(!empty.projects_actions());
+        assert!(!empty.has_unprojected_actions());
+        assert!(!empty.has_partial_action_projection());
+        assert_eq!(empty.scope_family_count(), 0);
+        assert!(!empty.touches_multiple_scope_families());
+    }
+
+    #[test]
     fn hue_motion_resource_maps_to_occupancy_entity() {
         let bridge_id = BridgeId::trusted("hue.bridge.001788");
         let entity = hue_motion_to_entity(
@@ -3650,9 +4074,35 @@ mod tests {
             }
         );
         assert!(summary.has_light_surfaces());
+        assert_eq!(summary.light_surface_update_count(), 2);
+        assert!(summary.mixes_direct_and_grouped_light_updates());
         assert!(summary.has_sensor_or_input_updates());
+        assert_eq!(summary.resource_family_count(), 4);
+        assert!(summary.touches_multiple_resource_families());
+        assert!(!summary.all_updates_have_owner());
+        assert!(!summary.has_partial_state_projection());
         assert!(summary.projects_deltas());
-        assert!(HueStateUpdateSetSummary::empty().is_empty());
+
+        let partial = HueStateUpdateSetSummary {
+            total_updates: 3,
+            light_updates: 1,
+            updates_with_state: 1,
+            updates_with_owner: 3,
+            light_surface_updates: 1,
+            ..HueStateUpdateSetSummary::empty()
+        };
+        assert_eq!(partial.resource_family_count(), 1);
+        assert!(partial.all_updates_have_owner());
+        assert!(partial.has_partial_state_projection());
+
+        let empty = HueStateUpdateSetSummary::empty();
+        assert!(empty.is_empty());
+        assert_eq!(empty.light_surface_update_count(), 0);
+        assert!(!empty.mixes_direct_and_grouped_light_updates());
+        assert_eq!(empty.resource_family_count(), 0);
+        assert!(!empty.touches_multiple_resource_families());
+        assert!(!empty.all_updates_have_owner());
+        assert!(!empty.has_partial_state_projection());
     }
 
     #[test]

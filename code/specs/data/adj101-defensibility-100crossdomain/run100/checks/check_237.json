@@ -1,0 +1,8 @@
+{
+ "check_id": 237,
+ "idx": 99,
+ "slot": "days_before_start_date",
+ "claimed_value": 27,
+ "scenario": "A grant's official start date is June 1. The PI charged $3,000 in necessary project supply costs that were incurred on May 5 of the same year, 27 days before the start date.",
+ "cited_span": "27 days before the start date"
+}

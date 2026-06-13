@@ -1,0 +1,8 @@
+{
+ "check_id": 98,
+ "idx": 42,
+ "slot": "covered_loss",
+ "claimed_value": 15000,
+ "scenario": "A windstorm tore shingles off an insured home, and the assessed covered roof loss is $15,000. The policy is in force and windstorm is a covered peril.",
+ "cited_span": "the assessed covered roof loss is $15,000"
+}

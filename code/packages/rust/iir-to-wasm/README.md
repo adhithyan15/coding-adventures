@@ -37,7 +37,15 @@ through a deprecated intermediate.
 - **Function calls**: `call` instructions are lowered to WASM `call`
   opcodes with the correct function index.
 - **Control flow**: dispatch-loop pattern for functions with labels and jumps;
-  plain linear emission for straight-line functions.
+  plain linear emission for straight-line functions. Branch conditions are
+  width-correct: an `i32` guard tests directly / via `i32.eqz`, an `i64` guard
+  (a widened Brainfuck cell) via `i64.eqz` (v0.13.0).
+- **Byte-tape memory (v0.13.0 — Brainfuck)**: `alloc_bytes` (tape base in linear
+  memory), `load_byte` (`i32.load8_u` + `i64.extend_i32_u`), `store_byte`
+  (`i32.wrap_i64` + `i32.store8`), plus the `env.putchar`/`env.getchar` host
+  imports for `.`/`,`. Byte width lives only at the tape boundary; registers in
+  between are uniform `i64`. This is the wasm sibling of the LLVM byte-tape
+  lowering, so **Brainfuck runs on wasm** (LANG-MATRIX LM-W Brainfuck).
 - **All functions exported**: every function in the IIR module is exported by
   name so host runtimes can invoke them.
 
@@ -105,7 +113,7 @@ tests/
 | `ClosureOpcode` | op is `alloc_closure` or `call_closure` — closures require the BEAM backend |
 | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
 | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
-| `UnsupportedOp` | op is `io_in`, `cast`, or `safepoint` (and `call_builtin` with a non-whitelisted name). Note: `alloc`/`field_load`/`field_store`/`is_null` are accepted for `ref<LispyPair>`; `box`/`unbox` are accepted and lower to WasmGC `ref.i31`/`i31.get_s` (LANG77 L3b-3a); `io_out`/`global_*`/`load_mem`/`store_mem` are supported |
+| `UnsupportedOp` | op is `io_in`, `cast`, or `safepoint` (and `call_builtin` with a non-whitelisted name). Note: `alloc`/`field_load`/`field_store`/`is_null` are accepted for `ref<LispyPair>`; `box`/`unbox` are accepted and lower to WasmGC `ref.i31`/`i31.get_s` (LANG77 L3b-3a); `io_out`/`global_*`/`load_mem`/`store_mem` and the byte-tape ops `alloc_bytes`/`load_byte`/`store_byte` (v0.13.0) are supported |
 
 > **LANG35 note**: `alloc_closure` and `call_closure` (LANG34/LANG35 first-class
 > closure opcodes) are BEAM-only.  Using them in a WASM module returns a clear

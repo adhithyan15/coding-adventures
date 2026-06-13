@@ -1,0 +1,7 @@
+{
+ "idx": 41,
+ "id": "INS-2",
+ "scenario": "A traveler cancelled a booked trip because she found a cheaper flight to the same destination on a different airline and wanted to rebook. She submitted a claim for the original non-refundable booking.",
+ "policy": "A travel insurance policy reimburses trip-cancellation costs only when cancellation is due to a covered reason: the traveler's documented illness, the death of an immediate family member, or a government-issued travel advisory for the destination. Cancellation for any other reason is not reimbursable.",
+ "question": "Is the trip-cancellation claim reimbursable?"
+}

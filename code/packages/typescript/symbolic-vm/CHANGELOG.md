@@ -1,5 +1,49 @@
 # Changelog
 
+## [0.19.0] — 2026-05-29
+
+**Track G2 — symbolic-coefficient Weierstrass lift (TypeScript port).**
+
+Generalises the Phase-34/35/36/37 Weierstrass substitution
+``∫ c / (a + b·trig(α·x + β)) dx`` from concrete rational ``a, b`` to
+symbolic ones.  When the numeric pattern returns `undefined` because
+either coefficient is a free IR expression, the new helper consults
+`vm.assumptions` for the sign of the discriminant ``a² − b²`` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic
+``Sqrt(a² − b²)`` (or ``Sqrt(b² − a²)``) in the result.  When no
+assumption pins down the sign, the integral is left unevaluated.
+
+This depends on the compound-relation extension to
+`cas-simplify.AssumptionContext` shipped in cas-simplify 0.2.0 (same
+PR, Track G2).  Mirrors Python `symbolic-vm` 0.74.0.
+
+### Added
+
+- New `assumptions: AssumptionContext` field on `VM` — published to
+  Weierstrass helpers via a module-level current-assumptions mirror
+  of Python's `_CURRENT_VM` ContextVar.
+- Handlers `Assume(rel)` / `Forget(rel)` / `ForgetAll()` registered
+  on the symbolic backend, threading user-declared facts through to
+  `vm.assumptions`.  Both relational heads are added to the
+  hold-evaluate set so the relation argument reaches the handler
+  intact.
+- `tryWeierstrassSymbolicCoefficients` — symbolic dispatcher,
+  invoked after the numeric helper returns `undefined`.
+- `weierstrassParseAPlusBSincosSymbolic` — symbolic sibling of the
+  numeric parser.
+- Branch emitters `tryWeierstrass{Arctan,Log,Degenerate}Symbolic`.
+- New dependency on `@coding-adventures/cas-simplify`.
+
+### Regression
+
+The numeric Weierstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both ``a`` and ``b`` are
+numeric, so concrete-coefficient integrals continue to use the
+arithmetic-folded numeric closed forms.  All 38 existing
+Phase 34 / 35 / 36 / 37 tests still pass; 218 / 218 in the broader
+TS symbolic-vm suite.
+
 ## [0.18.0] - 2026-06-06
 
 ### Added

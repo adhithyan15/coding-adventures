@@ -1,0 +1,8 @@
+{
+ "idx": 53,
+ "policy": "A landlord may charge a late fee only if the rent is more than 5 days past due, the late fee is expressly authorized in the written lease, and the fee does not exceed $50. A late fee that meets all three conditions is enforceable.",
+ "scenario": "Rent was due on the 1st. Marcus paid on the 9th, eight days late. The landlord assessed a $40 late fee. The lease is a written, signed residential lease.",
+ "question": "Is the $40 late fee enforceable?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "whether the lease expressly authorizes a late fee"
+}

@@ -1,0 +1,1 @@
+var o = {get x(){return 1;}, set x(v){this._x = v;}};

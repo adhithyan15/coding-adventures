@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_computed_index_access/input/a.js
+--compilation_level
+WHITESPACE_ONLY

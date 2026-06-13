@@ -1,0 +1,8 @@
+{
+ "idx": 64,
+ "policy": "An out-of-state attorney may be admitted by reciprocity only if the attorney's home jurisdiction grants reciprocal admission to attorneys licensed in this state.",
+ "scenario": "An attorney licensed and in good standing in another state, having practiced there for nine years, applies for admission by reciprocity in this state.",
+ "question": "Is the attorney eligible for admission by reciprocity?",
+ "gold_verdict": "INDETERMINATE",
+ "gold_answer_substring": "home jurisdiction reciprocity not stated"
+}

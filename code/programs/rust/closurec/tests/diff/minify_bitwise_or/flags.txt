@@ -1,0 +1,4 @@
+--js
+tests/diff/minify_bitwise_or/input/a.js
+--compilation_level
+WHITESPACE_ONLY

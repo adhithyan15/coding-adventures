@@ -1,0 +1,58 @@
+{
+ "cas_object": "ff22eace640aba13",
+ "library": "rulelib_ff22eace640aba13.py",
+ "answer_time_model_calls": 0,
+ "cases": [
+  {
+   "case": "TAX-1 (original)",
+   "facts": {
+    "gross_income": 18000
+   },
+   "verdict": "DETERMINATE",
+   "answer": "REQUIRED_TO_FILE",
+   "proof": [
+    {
+     "rule": "must-file",
+     "fired_on": {
+      "gross_income": 18000
+     },
+     "cites": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600."
+    }
+   ]
+  },
+  {
+   "case": "held-out A",
+   "facts": {
+    "gross_income": 9500
+   },
+   "verdict": "DETERMINATE",
+   "answer": "NOT_REQUIRED_TO_FILE",
+   "proof": [
+    {
+     "rule": "no-return-below-threshold",
+     "fired_on": {
+      "gross_income": 9500
+     },
+     "cites": "If gross income is below the threshold, no return is required."
+    }
+   ]
+  },
+  {
+   "case": "held-out B",
+   "facts": {
+    "gross_income": 14600
+   },
+   "verdict": "DETERMINATE",
+   "answer": "REQUIRED_TO_FILE",
+   "proof": [
+    {
+     "rule": "must-file",
+     "fired_on": {
+      "gross_income": 14600
+     },
+     "cites": "An individual must file a federal income tax return for the year if their gross income equals or exceeds the filing threshold of $14,600."
+    }
+   ]
+  }
+ ]
+}

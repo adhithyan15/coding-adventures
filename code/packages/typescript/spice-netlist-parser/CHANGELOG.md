@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Parse `.save`, scoped or global `.probe`, and `.measure` / `.meas` cards,
+  and expose `selectOutputs()` / `measureResults()` helpers plus matching
+  `ParsedNetlist` methods for analysis-plan results.
+- Add a deck execution layer with `buildAnalysisPlan()`, `runAnalysisPlan()`,
+  `runNetlist()`, plus matching `ParsedNetlist` methods for runnable `.op`,
+  `.dc`, `.ac dec` / `.ac log`, and `.tran` cards.
+
 ## 0.3.0 — 2026-06-05
 
 - Resolve `.temp` cards into Kelvin engine-call temperatures and let explicit

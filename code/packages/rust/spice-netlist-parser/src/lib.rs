@@ -1,10 +1,15 @@
-use std::{collections::HashMap, fmt};
+use std::{
+    collections::{BTreeMap, HashMap, HashSet},
+    fmt,
+};
 
 use spice_engine::{
-    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, CurrentSource,
-    DcOpOptions, Diode, Element, ExpWaveform, Inductor, Jfet, JfetPolarity, Mosfet,
-    MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform, PwlWaveform, Resistor,
-    SinWaveform, TransientMethod, TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
+    ac_sweep, dc_op_with_options, dc_sweep, transient_with_method, AcPoint,
+    AdaptiveTransientOptions, Bjt, BjtPolarity, Capacitor, Cccs, Ccvs, Circuit, Complex,
+    CurrentSource, DcOpOptions, DcResult, DcSweepPoint, Diode, Element, ExpWaveform, Inductor,
+    Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, MutualInductor, PulseWaveform,
+    PwlWaveform, Resistor, SinWaveform, SpiceError, TransientMethod, TransientPoint,
+    TransmissionLine, Vccs, Vcvs, VoltageSource, Waveform,
 };
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -106,6 +111,37 @@ pub struct PlotAnalysis {
     pub probes: Vec<OutputProbe>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SaveAnalysis {
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProbeAnalysis {
+    pub analysis: Option<String>,
+    pub probes: Vec<OutputProbe>,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum MeasureOperation {
+    Find,
+    Max,
+    Min,
+    Avg,
+    Rms,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct MeasureAnalysis {
+    pub analysis: String,
+    pub name: String,
+    pub operation: MeasureOperation,
+    pub probe: OutputProbe,
+    pub at: Option<f64>,
+    pub start: Option<f64>,
+    pub stop: Option<f64>,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct FourAnalysis {
     pub frequency_hz: f64,
@@ -160,10 +196,124 @@ pub enum Analysis {
     Temp(TempAnalysis),
     Print(PrintAnalysis),
     Plot(PlotAnalysis),
+    Save(SaveAnalysis),
+    Probe(ProbeAnalysis),
+    Measure(MeasureAnalysis),
     Four(FourAnalysis),
     Distortion(DistortionAnalysis),
     PoleZero(PoleZeroAnalysis),
     Options(OptionsAnalysis),
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum AnalysisKind {
+    Op,
+    Tran,
+    Dc,
+    Ac,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RunnableAnalysis {
+    Op(OpAnalysis),
+    Tran(TranAnalysis),
+    Dc(DcAnalysis),
+    Ac(AcAnalysis),
+}
+
+impl RunnableAnalysis {
+    pub fn kind(&self) -> AnalysisKind {
+        match self {
+            Self::Op(_) => AnalysisKind::Op,
+            Self::Tran(_) => AnalysisKind::Tran,
+            Self::Dc(_) => AnalysisKind::Dc,
+            Self::Ac(_) => AnalysisKind::Ac,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AnalysisPlanStep {
+    pub index: usize,
+    pub kind: AnalysisKind,
+    pub analysis: RunnableAnalysis,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AnalysisResult {
+    Op(DcResult),
+    Tran(Vec<TransientPoint>),
+    Dc(Vec<DcSweepPoint>),
+    Ac(Vec<AcPoint>),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct AnalysisExecutionResult {
+    pub index: usize,
+    pub kind: AnalysisKind,
+    pub analysis: RunnableAnalysis,
+    pub result: AnalysisResult,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum SelectedOutputValue {
+    Real(f64),
+    Complex(Complex),
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SelectedOutputRow {
+    pub index: usize,
+    pub axis_name: Option<String>,
+    pub axis_value: Option<f64>,
+    pub values: BTreeMap<String, SelectedOutputValue>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SelectedAnalysisOutput {
+    pub index: usize,
+    pub kind: AnalysisKind,
+    pub probes: Vec<OutputProbe>,
+    pub rows: Vec<SelectedOutputRow>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct MeasureResult {
+    pub analysis_index: usize,
+    pub analysis: String,
+    pub name: String,
+    pub operation: MeasureOperation,
+    pub probe: OutputProbe,
+    pub value: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum AnalysisExecutionError {
+    Netlist(NetlistParseError),
+    Spice(SpiceError),
+}
+
+impl fmt::Display for AnalysisExecutionError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Netlist(error) => write!(f, "{error}"),
+            Self::Spice(error) => write!(f, "{error}"),
+        }
+    }
+}
+
+impl std::error::Error for AnalysisExecutionError {}
+
+impl From<NetlistParseError> for AnalysisExecutionError {
+    fn from(error: NetlistParseError) -> Self {
+        Self::Netlist(error)
+    }
+}
+
+impl From<SpiceError> for AnalysisExecutionError {
+    fn from(error: SpiceError) -> Self {
+        Self::Spice(error)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -302,6 +452,36 @@ impl ParsedNetlist {
             .collect()
     }
 
+    pub fn save_cards(&self) -> Vec<&SaveAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Save(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn probe_cards(&self) -> Vec<&ProbeAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Probe(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
+    pub fn measure_cards(&self) -> Vec<&MeasureAnalysis> {
+        self.analyses
+            .iter()
+            .filter_map(|analysis| match analysis {
+                Analysis::Measure(card) => Some(card),
+                _ => None,
+            })
+            .collect()
+    }
+
     pub fn four_cards(&self) -> Vec<&FourAnalysis> {
         self.analyses
             .iter()
@@ -426,6 +606,30 @@ impl ParsedNetlist {
             }
         }
         self.operating_temperature_kelvin(temperature_index, default_temperature_kelvin)
+    }
+
+    pub fn analysis_plan(&self) -> Vec<AnalysisPlanStep> {
+        build_analysis_plan(self)
+    }
+
+    pub fn run_analysis_plan(
+        &self,
+    ) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+        run_analysis_plan(self)
+    }
+
+    pub fn select_outputs(
+        &self,
+        results: &[AnalysisExecutionResult],
+    ) -> Result<Vec<SelectedAnalysisOutput>, NetlistParseError> {
+        select_outputs(self, results)
+    }
+
+    pub fn measure_results(
+        &self,
+        results: &[AnalysisExecutionResult],
+    ) -> Result<Vec<MeasureResult>, NetlistParseError> {
+        measure_results(self, results)
     }
 
     fn merged_options(&self) -> HashMap<String, OptionValue> {
@@ -614,6 +818,714 @@ pub fn parse_netlist(text: &str) -> Result<ParsedNetlist, NetlistParseError> {
         models,
         title,
     })
+}
+
+pub fn build_analysis_plan(parsed: &ParsedNetlist) -> Vec<AnalysisPlanStep> {
+    parsed
+        .analyses
+        .iter()
+        .enumerate()
+        .filter_map(|(index, analysis)| analysis_plan_step(index, analysis))
+        .collect()
+}
+
+pub fn run_analysis_plan(
+    parsed: &ParsedNetlist,
+) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+    build_analysis_plan(parsed)
+        .into_iter()
+        .map(|step| {
+            let result = execute_analysis_step(parsed, &step)?;
+            Ok(AnalysisExecutionResult {
+                index: step.index,
+                kind: step.kind,
+                analysis: step.analysis,
+                result,
+            })
+        })
+        .collect()
+}
+
+pub fn run_netlist(text: &str) -> Result<Vec<AnalysisExecutionResult>, AnalysisExecutionError> {
+    let parsed = parse_netlist(text)?;
+    run_analysis_plan(&parsed)
+}
+
+pub fn select_outputs(
+    parsed: &ParsedNetlist,
+    results: &[AnalysisExecutionResult],
+) -> Result<Vec<SelectedAnalysisOutput>, NetlistParseError> {
+    let mut selected = Vec::new();
+    for result in results {
+        let probes = selected_output_probes(parsed, result.kind);
+        if probes.is_empty() {
+            continue;
+        }
+        selected.push(SelectedAnalysisOutput {
+            index: result.index,
+            kind: result.kind,
+            rows: selected_output_rows(result, &probes)?,
+            probes,
+        });
+    }
+    Ok(selected)
+}
+
+pub fn measure_results(
+    parsed: &ParsedNetlist,
+    results: &[AnalysisExecutionResult],
+) -> Result<Vec<MeasureResult>, NetlistParseError> {
+    parsed
+        .measure_cards()
+        .into_iter()
+        .map(|card| {
+            let execution = find_measure_execution_result(card, results)?;
+            Ok(MeasureResult {
+                analysis_index: execution.index,
+                analysis: card.analysis.clone(),
+                name: card.name.clone(),
+                operation: card.operation,
+                probe: card.probe.clone(),
+                value: evaluate_measure(card, execution)?,
+            })
+        })
+        .collect()
+}
+
+fn analysis_plan_step(index: usize, analysis: &Analysis) -> Option<AnalysisPlanStep> {
+    let analysis = match analysis {
+        Analysis::Op(card) => RunnableAnalysis::Op(*card),
+        Analysis::Tran(card) => RunnableAnalysis::Tran(*card),
+        Analysis::Dc(card) => RunnableAnalysis::Dc(card.clone()),
+        Analysis::Ac(card) => RunnableAnalysis::Ac(card.clone()),
+        _ => return None,
+    };
+    Some(AnalysisPlanStep {
+        index,
+        kind: analysis.kind(),
+        analysis,
+    })
+}
+
+fn execute_analysis_step(
+    parsed: &ParsedNetlist,
+    step: &AnalysisPlanStep,
+) -> Result<AnalysisResult, AnalysisExecutionError> {
+    match &step.analysis {
+        RunnableAnalysis::Op(_) => Ok(AnalysisResult::Op(dc_op_with_options(
+            &parsed.circuit,
+            parsed.dc_op_options()?,
+        )?)),
+        RunnableAnalysis::Tran(card) => {
+            let method = parsed
+                .transient_method(Some(card))?
+                .unwrap_or(TransientMethod::Euler);
+            Ok(AnalysisResult::Tran(transient_with_method(
+                &parsed.circuit,
+                card.time_step,
+                card.stop_time,
+                method,
+            )?))
+        }
+        RunnableAnalysis::Dc(card) => Ok(AnalysisResult::Dc(dc_sweep(
+            &parsed.circuit,
+            &card.source_name,
+            card.start,
+            card.stop,
+            card.step,
+        )?)),
+        RunnableAnalysis::Ac(card) => Ok(AnalysisResult::Ac(ac_sweep(
+            &parsed.circuit,
+            card.start_hz,
+            card.stop_hz,
+            executable_ac_points_per_decade(card)?,
+        )?)),
+    }
+}
+
+fn executable_ac_points_per_decade(card: &AcAnalysis) -> Result<usize, NetlistParseError> {
+    if card.mode == "dec" || card.mode == "log" {
+        return Ok(card.points);
+    }
+    Err(NetlistParseError::new(format!(
+        ".ac mode {:?} is not executable; supported modes are \"dec\" and \"log\"",
+        card.mode
+    )))
+}
+
+fn selected_output_probes(parsed: &ParsedNetlist, kind: AnalysisKind) -> Vec<OutputProbe> {
+    let mut probes = Vec::new();
+    let mut seen = HashSet::new();
+    for card in &parsed.analyses {
+        let matching = match card {
+            Analysis::Save(card) => Some(card.probes.as_slice()),
+            Analysis::Probe(card)
+                if card
+                    .analysis
+                    .as_deref()
+                    .map_or(true, |name| analysis_name_matches(name, kind)) =>
+            {
+                Some(card.probes.as_slice())
+            }
+            Analysis::Print(card) if analysis_name_matches(&card.analysis, kind) => {
+                Some(card.probes.as_slice())
+            }
+            Analysis::Plot(card) if analysis_name_matches(&card.analysis, kind) => {
+                Some(card.probes.as_slice())
+            }
+            _ => None,
+        };
+        let Some(new_probes) = matching else {
+            continue;
+        };
+        for probe in new_probes {
+            let key = probe_key(probe);
+            if seen.insert(key) {
+                probes.push(probe.clone());
+            }
+        }
+    }
+    probes
+}
+
+fn analysis_name_matches(requested: &str, kind: AnalysisKind) -> bool {
+    match requested.to_ascii_lowercase().as_str() {
+        "op" | "dcop" => kind == AnalysisKind::Op,
+        "dc" => kind == AnalysisKind::Dc,
+        "ac" => kind == AnalysisKind::Ac,
+        "tran" | "transient" => kind == AnalysisKind::Tran,
+        _ => false,
+    }
+}
+
+fn selected_output_rows(
+    execution: &AnalysisExecutionResult,
+    probes: &[OutputProbe],
+) -> Result<Vec<SelectedOutputRow>, NetlistParseError> {
+    match &execution.result {
+        AnalysisResult::Op(result) => Ok(vec![SelectedOutputRow {
+            index: 0,
+            axis_name: None,
+            axis_value: None,
+            values: selected_real_output_values(
+                &result.node_voltages,
+                &result.branch_currents,
+                probes,
+                ".op output selection",
+            )?,
+        }]),
+        AnalysisResult::Dc(points) => points
+            .iter()
+            .enumerate()
+            .map(|(index, point)| {
+                Ok(SelectedOutputRow {
+                    index,
+                    axis_name: Some("source".to_string()),
+                    axis_value: Some(point.value),
+                    values: selected_real_output_values(
+                        &point.result.node_voltages,
+                        &point.result.branch_currents,
+                        probes,
+                        ".dc output selection",
+                    )?,
+                })
+            })
+            .collect(),
+        AnalysisResult::Ac(points) => points
+            .iter()
+            .enumerate()
+            .map(|(index, point)| {
+                Ok(SelectedOutputRow {
+                    index,
+                    axis_name: Some("frequency".to_string()),
+                    axis_value: Some(point.frequency_hz),
+                    values: selected_complex_output_values(
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        probes,
+                        ".ac output selection",
+                    )?,
+                })
+            })
+            .collect(),
+        AnalysisResult::Tran(points) => points
+            .iter()
+            .enumerate()
+            .map(|(index, point)| {
+                Ok(SelectedOutputRow {
+                    index,
+                    axis_name: Some("time".to_string()),
+                    axis_value: Some(point.time),
+                    values: selected_real_output_values(
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        probes,
+                        ".tran output selection",
+                    )?,
+                })
+            })
+            .collect(),
+    }
+}
+
+fn selected_real_output_values(
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+    probes: &[OutputProbe],
+    context: &str,
+) -> Result<BTreeMap<String, SelectedOutputValue>, NetlistParseError> {
+    let mut values = BTreeMap::new();
+    for probe in probes {
+        values.insert(
+            probe_label(probe),
+            probe_real_value(probe, node_voltages, branch_currents, context)?,
+        );
+    }
+    Ok(values)
+}
+
+fn selected_complex_output_values(
+    node_voltages: &BTreeMap<String, Complex>,
+    branch_currents: &BTreeMap<String, Complex>,
+    probes: &[OutputProbe],
+    context: &str,
+) -> Result<BTreeMap<String, SelectedOutputValue>, NetlistParseError> {
+    let mut values = BTreeMap::new();
+    for probe in probes {
+        values.insert(
+            probe_label(probe),
+            probe_complex_value(probe, node_voltages, branch_currents, context)?,
+        );
+    }
+    Ok(values)
+}
+
+fn find_measure_execution_result<'a>(
+    card: &MeasureAnalysis,
+    results: &'a [AnalysisExecutionResult],
+) -> Result<&'a AnalysisExecutionResult, NetlistParseError> {
+    results
+        .iter()
+        .find(|result| analysis_name_matches(&card.analysis, result.kind))
+        .ok_or_else(|| {
+            NetlistParseError::new(format!(
+                ".measure {:?} references missing {} analysis",
+                card.name, card.analysis
+            ))
+        })
+}
+
+fn evaluate_measure(
+    card: &MeasureAnalysis,
+    execution: &AnalysisExecutionResult,
+) -> Result<f64, NetlistParseError> {
+    let samples = measure_samples(card, execution)?;
+    if samples.is_empty() {
+        return Err(NetlistParseError::new(format!(
+            ".measure {:?} has no samples",
+            card.name
+        )));
+    }
+    if card.operation == MeasureOperation::Find {
+        if execution.kind == AnalysisKind::Op && card.at.is_none() {
+            return Ok(measure_numeric_value(samples[0].value));
+        }
+        let Some(at) = card.at else {
+            return Err(NetlistParseError::new(format!(
+                ".measure {:?} FIND requires AT=<value>",
+                card.name
+            )));
+        };
+        return Ok(measure_numeric_value(interpolate_measure_value(
+            &samples, at, card,
+        )?));
+    }
+
+    let ranged = range_measure_samples(&samples, card)?;
+    if ranged.is_empty() {
+        return Err(NetlistParseError::new(format!(
+            ".measure {:?} range has no samples",
+            card.name
+        )));
+    }
+    match card.operation {
+        MeasureOperation::Max => Ok(ranged
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value))
+            .fold(f64::NEG_INFINITY, f64::max)),
+        MeasureOperation::Min => Ok(ranged
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value))
+            .fold(f64::INFINITY, f64::min)),
+        MeasureOperation::Avg => Ok(average_measure_value(&ranged)),
+        MeasureOperation::Rms => Ok(rms_measure_value(&ranged)),
+        MeasureOperation::Find => unreachable!("handled above"),
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+struct MeasureSample {
+    axis: Option<f64>,
+    value: SelectedOutputValue,
+}
+
+fn measure_samples(
+    card: &MeasureAnalysis,
+    execution: &AnalysisExecutionResult,
+) -> Result<Vec<MeasureSample>, NetlistParseError> {
+    match &execution.result {
+        AnalysisResult::Op(result) => Ok(vec![MeasureSample {
+            axis: None,
+            value: probe_real_value(
+                &card.probe,
+                &result.node_voltages,
+                &result.branch_currents,
+                &format!(".measure {}", card.name),
+            )?,
+        }]),
+        AnalysisResult::Dc(points) => points
+            .iter()
+            .map(|point| {
+                Ok(MeasureSample {
+                    axis: Some(point.value),
+                    value: probe_real_value(
+                        &card.probe,
+                        &point.result.node_voltages,
+                        &point.result.branch_currents,
+                        &format!(".measure {}", card.name),
+                    )?,
+                })
+            })
+            .collect(),
+        AnalysisResult::Ac(points) => points
+            .iter()
+            .map(|point| {
+                Ok(MeasureSample {
+                    axis: Some(point.frequency_hz),
+                    value: probe_complex_value(
+                        &card.probe,
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        &format!(".measure {}", card.name),
+                    )?,
+                })
+            })
+            .collect(),
+        AnalysisResult::Tran(points) => points
+            .iter()
+            .map(|point| {
+                Ok(MeasureSample {
+                    axis: Some(point.time),
+                    value: probe_real_value(
+                        &card.probe,
+                        &point.node_voltages,
+                        &point.branch_currents,
+                        &format!(".measure {}", card.name),
+                    )?,
+                })
+            })
+            .collect(),
+    }
+}
+
+fn range_measure_samples(
+    samples: &[MeasureSample],
+    card: &MeasureAnalysis,
+) -> Result<Vec<MeasureSample>, NetlistParseError> {
+    if samples.iter().any(|sample| sample.axis.is_none()) {
+        if card.start.is_some() || card.stop.is_some() {
+            return Err(NetlistParseError::new(format!(
+                ".measure {:?} range requires swept samples",
+                card.name
+            )));
+        }
+        return Ok(samples.to_vec());
+    }
+    let mut axis_samples = samples.to_vec();
+    axis_samples.sort_by(|left, right| left.axis.unwrap().total_cmp(&right.axis.unwrap()));
+    let lower = card.start.unwrap_or(axis_samples[0].axis.unwrap());
+    let upper = card
+        .stop
+        .unwrap_or(axis_samples.last().unwrap().axis.unwrap());
+    if lower > upper {
+        return Err(NetlistParseError::new(format!(
+            ".measure {:?} FROM must be <= TO",
+            card.name
+        )));
+    }
+    let mut ranged = Vec::new();
+    if card.start.is_some() {
+        ranged.push(MeasureSample {
+            axis: Some(lower),
+            value: interpolate_measure_value(samples, lower, card)?,
+        });
+    }
+    for sample in axis_samples {
+        let axis = sample.axis.unwrap();
+        if axis >= lower && axis <= upper && !axis_already_present(&ranged, axis) {
+            ranged.push(sample);
+        }
+    }
+    if card.stop.is_some() && !axis_already_present(&ranged, upper) {
+        ranged.push(MeasureSample {
+            axis: Some(upper),
+            value: interpolate_measure_value(samples, upper, card)?,
+        });
+    }
+    ranged.sort_by(|left, right| left.axis.unwrap().total_cmp(&right.axis.unwrap()));
+    Ok(ranged)
+}
+
+fn axis_already_present(samples: &[MeasureSample], axis: f64) -> bool {
+    samples.iter().any(|sample| {
+        sample
+            .axis
+            .is_some_and(|existing| (existing - axis).abs() <= 1.0e-12)
+    })
+}
+
+fn interpolate_measure_value(
+    samples: &[MeasureSample],
+    target: f64,
+    card: &MeasureAnalysis,
+) -> Result<SelectedOutputValue, NetlistParseError> {
+    let mut axis_samples = samples
+        .iter()
+        .copied()
+        .filter(|sample| sample.axis.is_some())
+        .collect::<Vec<_>>();
+    axis_samples.sort_by(|left, right| left.axis.unwrap().total_cmp(&right.axis.unwrap()));
+    if axis_samples.is_empty() {
+        return Err(NetlistParseError::new(format!(
+            ".measure {:?} AT requires swept samples",
+            card.name
+        )));
+    }
+    if target < axis_samples[0].axis.unwrap() || target > axis_samples.last().unwrap().axis.unwrap()
+    {
+        return Err(NetlistParseError::new(format!(
+            ".measure {:?} AT is outside the analysis range",
+            card.name
+        )));
+    }
+    for sample in &axis_samples {
+        if (sample.axis.unwrap() - target).abs() <= 1.0e-12 {
+            return Ok(sample.value);
+        }
+    }
+    for window in axis_samples.windows(2) {
+        let left = window[0];
+        let right = window[1];
+        let left_axis = left.axis.unwrap();
+        let right_axis = right.axis.unwrap();
+        if left_axis <= target && target <= right_axis {
+            let fraction = (target - left_axis) / (right_axis - left_axis);
+            return Ok(interpolate_output_values(left.value, right.value, fraction));
+        }
+    }
+    Ok(axis_samples.last().unwrap().value)
+}
+
+fn interpolate_output_values(
+    left: SelectedOutputValue,
+    right: SelectedOutputValue,
+    fraction: f64,
+) -> SelectedOutputValue {
+    match (left, right) {
+        (SelectedOutputValue::Real(left), SelectedOutputValue::Real(right)) => {
+            SelectedOutputValue::Real(left + (right - left) * fraction)
+        }
+        (left, right) => {
+            let left = output_value_as_complex(left);
+            let right = output_value_as_complex(right);
+            SelectedOutputValue::Complex(Complex::new(
+                left.real + (right.real - left.real) * fraction,
+                left.imag + (right.imag - left.imag) * fraction,
+            ))
+        }
+    }
+}
+
+fn average_measure_value(samples: &[MeasureSample]) -> f64 {
+    if samples.len() < 2 || samples.iter().any(|sample| sample.axis.is_none()) {
+        return samples
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value))
+            .sum::<f64>()
+            / samples.len() as f64;
+    }
+    let span = samples.last().unwrap().axis.unwrap() - samples[0].axis.unwrap();
+    if span <= 0.0 {
+        return samples
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value))
+            .sum::<f64>()
+            / samples.len() as f64;
+    }
+    let area = samples
+        .windows(2)
+        .map(|window| {
+            let left = window[0];
+            let right = window[1];
+            0.5 * (measure_numeric_value(left.value) + measure_numeric_value(right.value))
+                * (right.axis.unwrap() - left.axis.unwrap())
+        })
+        .sum::<f64>();
+    area / span
+}
+
+fn rms_measure_value(samples: &[MeasureSample]) -> f64 {
+    if samples.len() < 2 || samples.iter().any(|sample| sample.axis.is_none()) {
+        return (samples
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value).powi(2))
+            .sum::<f64>()
+            / samples.len() as f64)
+            .sqrt();
+    }
+    let span = samples.last().unwrap().axis.unwrap() - samples[0].axis.unwrap();
+    if span <= 0.0 {
+        return (samples
+            .iter()
+            .map(|sample| measure_numeric_value(sample.value).powi(2))
+            .sum::<f64>()
+            / samples.len() as f64)
+            .sqrt();
+    }
+    let area = samples
+        .windows(2)
+        .map(|window| {
+            let left = window[0];
+            let right = window[1];
+            let left_value = measure_numeric_value(left.value);
+            let right_value = measure_numeric_value(right.value);
+            0.5 * (left_value.powi(2) + right_value.powi(2))
+                * (right.axis.unwrap() - left.axis.unwrap())
+        })
+        .sum::<f64>();
+    (area / span).sqrt()
+}
+
+fn measure_numeric_value(value: SelectedOutputValue) -> f64 {
+    match value {
+        SelectedOutputValue::Real(value) => value,
+        SelectedOutputValue::Complex(value) => value.abs(),
+    }
+}
+
+fn output_value_as_complex(value: SelectedOutputValue) -> Complex {
+    match value {
+        SelectedOutputValue::Real(value) => Complex::new(value, 0.0),
+        SelectedOutputValue::Complex(value) => value,
+    }
+}
+
+fn probe_real_value(
+    probe: &OutputProbe,
+    node_voltages: &BTreeMap<String, f64>,
+    branch_currents: &BTreeMap<String, f64>,
+    context: &str,
+) -> Result<SelectedOutputValue, NetlistParseError> {
+    match probe {
+        OutputProbe::Voltage { node } => {
+            if is_probe_ground(node) {
+                return Ok(SelectedOutputValue::Real(0.0));
+            }
+            case_insensitive_get_real(node_voltages, node)
+                .map(SelectedOutputValue::Real)
+                .ok_or_else(|| {
+                    NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
+                })
+        }
+        OutputProbe::Current { source_name } => {
+            let key = branch_current_key(source_name);
+            case_insensitive_get_real(branch_currents, &key)
+                .map(SelectedOutputValue::Real)
+                .ok_or_else(|| {
+                    NetlistParseError::new(format!(
+                        "{context}: missing branch current probe I({source_name})"
+                    ))
+                })
+        }
+    }
+}
+
+fn probe_complex_value(
+    probe: &OutputProbe,
+    node_voltages: &BTreeMap<String, Complex>,
+    branch_currents: &BTreeMap<String, Complex>,
+    context: &str,
+) -> Result<SelectedOutputValue, NetlistParseError> {
+    match probe {
+        OutputProbe::Voltage { node } => {
+            if is_probe_ground(node) {
+                return Ok(SelectedOutputValue::Complex(Complex::zero()));
+            }
+            case_insensitive_get_complex(node_voltages, node)
+                .map(SelectedOutputValue::Complex)
+                .ok_or_else(|| {
+                    NetlistParseError::new(format!("{context}: missing voltage probe V({node})"))
+                })
+        }
+        OutputProbe::Current { source_name } => {
+            let key = branch_current_key(source_name);
+            case_insensitive_get_complex(branch_currents, &key)
+                .map(SelectedOutputValue::Complex)
+                .ok_or_else(|| {
+                    NetlistParseError::new(format!(
+                        "{context}: missing branch current probe I({source_name})"
+                    ))
+                })
+        }
+    }
+}
+
+fn case_insensitive_get_real(values: &BTreeMap<String, f64>, key: &str) -> Option<f64> {
+    values.get(key).copied().or_else(|| {
+        let lower = key.to_ascii_lowercase();
+        values
+            .iter()
+            .find(|(candidate, _)| candidate.to_ascii_lowercase() == lower)
+            .map(|(_, value)| *value)
+    })
+}
+
+fn case_insensitive_get_complex(values: &BTreeMap<String, Complex>, key: &str) -> Option<Complex> {
+    values.get(key).copied().or_else(|| {
+        let lower = key.to_ascii_lowercase();
+        values
+            .iter()
+            .find(|(candidate, _)| candidate.to_ascii_lowercase() == lower)
+            .map(|(_, value)| *value)
+    })
+}
+
+fn branch_current_key(source_name: &str) -> String {
+    if source_name.to_ascii_lowercase().starts_with("i(") {
+        source_name.to_string()
+    } else {
+        format!("I({source_name})")
+    }
+}
+
+fn is_probe_ground(node: &str) -> bool {
+    matches!(node.to_ascii_lowercase().as_str(), "0" | "gnd")
+}
+
+fn probe_label(probe: &OutputProbe) -> String {
+    match probe {
+        OutputProbe::Voltage { node } => format!("V({node})"),
+        OutputProbe::Current { source_name } => format!("I({source_name})"),
+    }
+}
+
+fn probe_key(probe: &OutputProbe) -> (String, String) {
+    match probe {
+        OutputProbe::Voltage { node } => ("voltage".to_string(), node.to_ascii_lowercase()),
+        OutputProbe::Current { source_name } => {
+            ("current".to_string(), source_name.to_ascii_lowercase())
+        }
+    }
 }
 
 fn validate_mutual_inductors(circuit: &Circuit) -> Result<(), NetlistParseError> {
@@ -1611,6 +2523,14 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
                 probes: parse_output_probes(&fields[2..], ".plot")?,
             }))
         }
+        ".save" => {
+            require_min_fields(fields, 2, ".save")?;
+            Ok(Analysis::Save(SaveAnalysis {
+                probes: parse_output_probes(&fields[1..], ".save")?,
+            }))
+        }
+        ".probe" => Ok(Analysis::Probe(parse_probe_card(fields)?)),
+        ".measure" | ".meas" => Ok(Analysis::Measure(parse_measure_card(fields)?)),
         ".four" => {
             require_min_fields(fields, 3, ".four")?;
             Ok(Analysis::Four(FourAnalysis {
@@ -1653,6 +2573,116 @@ fn parse_directive(fields: &[String]) -> Result<Analysis, NetlistParseError> {
             fields[0]
         ))),
     }
+}
+
+fn parse_probe_card(fields: &[String]) -> Result<ProbeAnalysis, NetlistParseError> {
+    require_min_fields(fields, 2, ".probe")?;
+    let (analysis, probe_tokens) = if fields.len() >= 3 && is_analysis_selector(&fields[1]) {
+        (Some(fields[1].to_ascii_lowercase()), &fields[2..])
+    } else {
+        (None, &fields[1..])
+    };
+    Ok(ProbeAnalysis {
+        analysis,
+        probes: parse_output_probes(probe_tokens, ".probe")?,
+    })
+}
+
+fn parse_measure_card(fields: &[String]) -> Result<MeasureAnalysis, NetlistParseError> {
+    let directive = fields[0].to_ascii_lowercase();
+    require_min_fields(fields, 5, &directive)?;
+    let operation = parse_measure_operation(&fields[3], &directive)?;
+    let options = parse_measure_options(&fields[5..], &directive)?;
+    let analysis = fields[1].to_ascii_lowercase();
+    if operation == MeasureOperation::Find
+        && !options.contains_key("at")
+        && analysis != "op"
+        && analysis != "dcop"
+    {
+        return Err(NetlistParseError::new(format!(
+            "{directive} FIND requires AT=<value>"
+        )));
+    }
+    if operation != MeasureOperation::Find && options.contains_key("at") {
+        return Err(NetlistParseError::new(format!(
+            "{directive} {} does not support AT=<value>",
+            measure_operation_name(operation).to_ascii_uppercase()
+        )));
+    }
+    Ok(MeasureAnalysis {
+        analysis,
+        name: fields[2].clone(),
+        operation,
+        probe: parse_output_probe(&fields[4], &directive)?,
+        at: options.get("at").copied(),
+        start: options.get("from").copied(),
+        stop: options.get("to").copied(),
+    })
+}
+
+fn parse_measure_operation(
+    token: &str,
+    directive: &str,
+) -> Result<MeasureOperation, NetlistParseError> {
+    match token.to_ascii_lowercase().as_str() {
+        "find" => Ok(MeasureOperation::Find),
+        "max" => Ok(MeasureOperation::Max),
+        "min" => Ok(MeasureOperation::Min),
+        "avg" => Ok(MeasureOperation::Avg),
+        "rms" => Ok(MeasureOperation::Rms),
+        _ => Err(NetlistParseError::new(format!(
+            "{directive} operation must be FIND, MAX, MIN, AVG, or RMS, got {token:?}"
+        ))),
+    }
+}
+
+fn measure_operation_name(operation: MeasureOperation) -> &'static str {
+    match operation {
+        MeasureOperation::Find => "find",
+        MeasureOperation::Max => "max",
+        MeasureOperation::Min => "min",
+        MeasureOperation::Avg => "avg",
+        MeasureOperation::Rms => "rms",
+    }
+}
+
+fn parse_measure_options(
+    tokens: &[String],
+    directive: &str,
+) -> Result<HashMap<String, f64>, NetlistParseError> {
+    let mut options = HashMap::new();
+    for token in tokens {
+        let Some((raw_key, raw_value)) = token.split_once('=') else {
+            return Err(NetlistParseError::new(format!(
+                "{directive} option must be KEY=value, got {token:?}"
+            )));
+        };
+        let key = raw_key.trim().to_ascii_lowercase();
+        if !matches!(key.as_str(), "at" | "from" | "to") {
+            return Err(NetlistParseError::new(format!(
+                "{directive} unsupported option {key:?}"
+            )));
+        }
+        if options.contains_key(&key) {
+            return Err(NetlistParseError::new(format!(
+                "{directive} duplicate option {key:?}"
+            )));
+        }
+        if raw_value.is_empty() {
+            return Err(NetlistParseError::new(format!(
+                "{directive} option {key:?} requires a value"
+            )));
+        }
+        options.insert(key, parse_value(raw_value)?);
+    }
+    Ok(options)
+}
+
+fn is_analysis_selector(token: &str) -> bool {
+    matches!(
+        token.to_ascii_lowercase().as_str(),
+        "op" | "dcop" | "dc" | "ac" | "tran" | "transient"
+    )
 }
 
 fn parse_pole_zero_kind(raw_kind: &str) -> Result<PoleZeroKind, NetlistParseError> {

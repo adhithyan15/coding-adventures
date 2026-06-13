@@ -3,6 +3,7 @@ import {
   Circuit,
   SpiceError,
   formatAcTable,
+  formatCornerAcTable,
   formatCornerSParameterTable,
   formatSParameterTable,
   acSweep,
@@ -53,6 +54,21 @@ describe("acSweep", () => {
       expectClose(mid!.imag, 0.0);
       expectClose(complexAbs(mid!), 0.5);
     }
+  });
+
+  it("solves a large resistor ladder through the sparse complex solver path", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSourceWithAc("V1", "n0", "0", 0.0, 1.0, 0.0));
+    for (let index = 0; index < 34; index++) {
+      circuit.add(resistor(`R${index}`, `n${index}`, `n${index + 1}`, 1_000.0));
+    }
+    circuit.add(resistor("R34", "n34", "0", 1_000.0));
+
+    const points = acSweep(circuit, 1_000.0, 1_000.0, 1);
+
+    expect(points).toHaveLength(1);
+    expectClose(points[0].voltage("n34")!.real, 1.0 / 35.0);
+    expectClose(points[0].voltage("n34")!.imag, 0.0);
   });
 
   it("formats stable text output tables for AC results", () => {
@@ -154,6 +170,13 @@ describe("acSweep", () => {
     expect(complexAbs(result.points[1].points[0].voltage("out")!)).toBeCloseTo(
       1.0 / Math.sqrt(1.25),
       9,
+    );
+    expect(formatCornerAcTable(result, ["V(out)", "I(Vin)"])).toBe(
+      "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+      "nominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
+      "nominal\t0\t1.591549e+02\tI(Vin)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n" +
+      "r-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\n" +
+      "r-fast\t0\t1.591549e+02\tI(Vin)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n",
     );
   });
 

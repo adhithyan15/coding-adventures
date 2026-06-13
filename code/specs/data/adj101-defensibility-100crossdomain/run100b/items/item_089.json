@@ -1,0 +1,7 @@
+{
+ "idx": 89,
+ "id": "DAT-10",
+ "scenario": "Dr. Okafor is a sole practitioner physician who maintains and processes detailed medical records solely to treat her own patients in her single-doctor clinic. She did not perform a data protection impact assessment before setting up this records processing.",
+ "policy": "A controller must conduct a data protection impact assessment before processing that is likely to result in a high risk to individuals, such as large-scale systematic monitoring of a publicly accessible area, except where the processing is carried out by a sole practitioner physician for the treatment of their own patients, which is exempt from the assessment requirement.",
+ "question": "Did Dr. Okafor violate the requirement to conduct a data protection impact assessment?"
+}

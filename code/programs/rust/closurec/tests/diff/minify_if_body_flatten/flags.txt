@@ -1,0 +1,4 @@
+--compilation_level
+WHITESPACE_ONLY
+--js
+tests/diff/minify_if_body_flatten/input/a.js

@@ -60,6 +60,10 @@ use interpreter_ir::{IIRModule, Operand};
 // - `field_load`   — car/cdr via aaload.
 // - `field_store`  — writing pair fields via aastore.
 // - `is_null`      — null check via ifnull.
+//
+// McCarthy W3b additions — now SUPPORTED (removed from the block list):
+// - `box`          — `Integer.valueOf(I)` (wrap an atom for an Object[] cell).
+// - `unbox`        — `checkcast Integer ; Integer.intValue()` (entry boundary).
 
 const UNSUPPORTED_OPS: &[&str] = &[
     // `call_builtin` is *conditionally* unsupported — handled below.
@@ -71,8 +75,6 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     // `load_mem` / `store_mem` — Brainfuck: now supported (baload/bastore
     // over a host-provided `env/BFRuntime.__tape : [B` static byte array).
-    "box",
-    "unbox",
     "safepoint",
 ];
 
@@ -101,7 +103,10 @@ const UNSUPPORTED_OPS: &[&str] = &[
 /// dedicated host class (`env/BasicRuntime`) rather than overloading
 /// `BFRuntime` because BASIC and Brainfuck have different I/O models:
 /// BF is byte-stream oriented, BASIC's PRINT is line/value oriented.
-pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] = &["putchar", "getchar", "print_i64"];
+pub(crate) const CALL_BUILTIN_SUPPORTED_NAMES: &[&str] =
+    // McCarthy W4 (F3–F5): the lisp predicates — `pair?` (instanceof Object[]),
+    // `not` (logical not), `equal?` (unbox + if_icmpeq).
+    &["putchar", "getchar", "print_i64", "pair?", "not", "equal?"];
 
 /// Ops that are conditionally supported depending on their `type_hint`.
 ///
@@ -495,12 +500,12 @@ mod tests {
         // (baload/bastore over env/BFRuntime.__tape).  `call_builtin` is
         // conditionally accepted via CALL_BUILTIN_SUPPORTED_NAMES — see
         // the call_builtin_*_tests below.
+        // `box`/`unbox` were promoted to supported in McCarthy W3b
+        // (Integer.valueOf / checkcast+intValue) and are NOT in this list.
         for op in &[
             "io_in",
             "io_out",
             "cast",
-            "box",
-            "unbox",
             "safepoint",
         ] {
             let errs = validate_for_jvm(&single_fn_module(vec![

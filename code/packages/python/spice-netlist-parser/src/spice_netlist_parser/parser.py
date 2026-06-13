@@ -10,28 +10,36 @@ from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params, MosfetType
 from spice_engine import (
-    AcSource,
     BJT,
     CCCS,
     CCVS,
+    JFET,
     VCCS,
     VCVS,
+    AcResult,
+    AcSource,
     Capacitor,
     Circuit,
     CurrentSource,
+    DcResult,
+    DcSweepResult,
     Diode,
     ExpWaveform,
     Inductor,
-    JFET,
     Mosfet,
     MutualInductor,
     PulseWaveform,
     PwlWaveform,
     Resistor,
     SinWaveform,
+    TransientResult,
     TransmissionLine,
     VoltageSource,
     Waveform,
+    ac_sweep,
+    dc_op,
+    dc_sweep,
+    transient,
 )
 
 
@@ -142,6 +150,37 @@ class PlotAnalysis:
 
 
 @dataclass(frozen=True, slots=True)
+class SaveAnalysis:
+    """A `.save <V(node)|I(source)>...` persistent output-selection card."""
+
+    probes: tuple[OutputProbe, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class ProbeAnalysis:
+    """A `.probe [analysis] <V(node)|I(source)>...` output-selection card."""
+
+    analysis: str | None
+    probes: tuple[OutputProbe, ...]
+
+
+type MeasureOperation = Literal["find", "max", "min", "avg", "rms"]
+
+
+@dataclass(frozen=True, slots=True)
+class MeasureAnalysis:
+    """A `.measure <analysis> <name> <operation> <probe> ...` card."""
+
+    analysis: str
+    name: str
+    operation: MeasureOperation
+    probe: OutputProbe
+    at: float | None = None
+    start: float | None = None
+    stop: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class FourAnalysis:
     """A `.four <frequency> <V(node)|I(source)>...` Fourier-analysis card."""
 
@@ -192,11 +231,69 @@ type Analysis = (
     | TempAnalysis
     | PrintAnalysis
     | PlotAnalysis
+    | SaveAnalysis
+    | ProbeAnalysis
+    | MeasureAnalysis
     | FourAnalysis
     | DistortionAnalysis
     | PoleZeroAnalysis
     | OptionsAnalysis
 )
+type RunnableAnalysis = OpAnalysis | TranAnalysis | DcAnalysis | AcAnalysis
+type AnalysisKind = Literal["op", "tran", "dc", "ac"]
+type AnalysisResult = DcResult | DcSweepResult | AcResult | TransientResult
+type SelectedOutputValue = float | complex
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisPlanStep:
+    """One executable `.op`, `.dc`, `.ac`, or `.tran` card in deck order."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+
+
+@dataclass(frozen=True, slots=True)
+class AnalysisExecutionResult:
+    """Result from executing one analysis-plan step."""
+
+    index: int
+    kind: AnalysisKind
+    analysis: RunnableAnalysis
+    result: AnalysisResult
+
+
+@dataclass(frozen=True, slots=True)
+class SelectedOutputRow:
+    """One row from a selected `.print`, `.plot`, `.save`, or `.probe` output."""
+
+    index: int
+    axis_name: str | None
+    axis_value: float | None
+    values: dict[str, SelectedOutputValue]
+
+
+@dataclass(frozen=True, slots=True)
+class SelectedAnalysisOutput:
+    """Selected output rows for one executed analysis result."""
+
+    index: int
+    kind: AnalysisKind
+    probes: tuple[OutputProbe, ...]
+    rows: tuple[SelectedOutputRow, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class MeasureResult:
+    """Computed result from one `.measure` card."""
+
+    analysis_index: int
+    analysis: str
+    name: str
+    operation: MeasureOperation
+    probe: OutputProbe
+    value: float
 
 
 @dataclass(frozen=True, slots=True)
@@ -270,6 +367,15 @@ class ParsedNetlist:
 
     def plot_cards(self) -> list[PlotAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, PlotAnalysis)]
+
+    def save_cards(self) -> list[SaveAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, SaveAnalysis)]
+
+    def probe_cards(self) -> list[ProbeAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, ProbeAnalysis)]
+
+    def measure_cards(self) -> list[MeasureAnalysis]:
+        return [analysis for analysis in self.analyses if isinstance(analysis, MeasureAnalysis)]
 
     def four_cards(self) -> list[FourAnalysis]:
         return [analysis for analysis in self.analyses if isinstance(analysis, FourAnalysis)]
@@ -395,6 +501,35 @@ class ParsedNetlist:
             temperature_index=temperature_index,
             default=default,
         )
+
+    def analysis_plan(self) -> list[AnalysisPlanStep]:
+        """Return runnable `.op`, `.dc`, `.ac`, and `.tran` cards in deck order."""
+
+        return build_analysis_plan(self)
+
+    def run_analysis_plan(
+        self,
+        plan: list[AnalysisPlanStep] | None = None,
+    ) -> list[AnalysisExecutionResult]:
+        """Execute runnable analysis cards against this parsed circuit."""
+
+        return run_analysis_plan(self, plan)
+
+    def select_outputs(
+        self,
+        results: list[AnalysisExecutionResult] | None = None,
+    ) -> list[SelectedAnalysisOutput]:
+        """Apply `.print`, `.plot`, `.save`, and `.probe` cards to results."""
+
+        return select_outputs(self, results)
+
+    def measure_results(
+        self,
+        results: list[AnalysisExecutionResult] | None = None,
+    ) -> list[MeasureResult]:
+        """Evaluate supported `.measure` cards against executed results."""
+
+        return measure_results(self, results)
 
 
 _VALUE_RE = re.compile(
@@ -527,6 +662,87 @@ def parse_netlist(text: str) -> ParsedNetlist:
     return parsed
 
 
+def build_analysis_plan(parsed: ParsedNetlist) -> list[AnalysisPlanStep]:
+    """Build the executable `.op`, `.dc`, `.ac`, and `.tran` plan for a deck."""
+
+    plan: list[AnalysisPlanStep] = []
+    for index, analysis in enumerate(parsed.analyses):
+        step = _analysis_plan_step(index, analysis)
+        if step is not None:
+            plan.append(step)
+    return plan
+
+
+def run_analysis_plan(
+    parsed: ParsedNetlist,
+    plan: list[AnalysisPlanStep] | None = None,
+) -> list[AnalysisExecutionResult]:
+    """Execute the runnable plan for a parsed netlist."""
+
+    return [
+        AnalysisExecutionResult(
+            index=step.index,
+            kind=step.kind,
+            analysis=step.analysis,
+            result=_execute_analysis_step(parsed, step),
+        )
+        for step in (build_analysis_plan(parsed) if plan is None else plan)
+    ]
+
+
+def run_netlist(text: str) -> list[AnalysisExecutionResult]:
+    """Parse a deck and execute its runnable `.op`, `.dc`, `.ac`, and `.tran` cards."""
+
+    return run_analysis_plan(parse_netlist(text))
+
+
+def select_outputs(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult] | None = None,
+) -> list[SelectedAnalysisOutput]:
+    """Apply deck output-selection cards to executed analysis results."""
+
+    selected: list[SelectedAnalysisOutput] = []
+    execution_results = run_analysis_plan(parsed) if results is None else results
+    for result in execution_results:
+        probes = _selected_output_probes(parsed, result.kind)
+        if not probes:
+            continue
+        selected.append(
+            SelectedAnalysisOutput(
+                index=result.index,
+                kind=result.kind,
+                probes=tuple(probes),
+                rows=tuple(_selected_output_rows(result, probes)),
+            )
+        )
+    return selected
+
+
+def measure_results(
+    parsed: ParsedNetlist,
+    results: list[AnalysisExecutionResult] | None = None,
+) -> list[MeasureResult]:
+    """Evaluate supported `.measure` cards against executed analysis results."""
+
+    execution_results = run_analysis_plan(parsed) if results is None else results
+    measured: list[MeasureResult] = []
+    for card in parsed.measure_cards():
+        execution_result = _find_measure_execution_result(card, execution_results)
+        value = _evaluate_measure(card, execution_result)
+        measured.append(
+            MeasureResult(
+                analysis_index=execution_result.index,
+                analysis=card.analysis,
+                name=card.name,
+                operation=card.operation,
+                probe=card.probe,
+                value=value,
+            )
+        )
+    return measured
+
+
 def parse_value(token: str) -> float:
     """Parse a SPICE numeric token with an engineering suffix."""
 
@@ -537,6 +753,429 @@ def parse_value(token: str) -> float:
     if suffix not in _SUFFIXES:
         raise NetlistParseError(f"unsupported numeric suffix {match.group(2)!r}")
     return float(match.group(1)) * _SUFFIXES[suffix]
+
+
+def _analysis_plan_step(index: int, analysis: Analysis) -> AnalysisPlanStep | None:
+    if isinstance(analysis, OpAnalysis):
+        return AnalysisPlanStep(index=index, kind="op", analysis=analysis)
+    if isinstance(analysis, TranAnalysis):
+        return AnalysisPlanStep(index=index, kind="tran", analysis=analysis)
+    if isinstance(analysis, DcAnalysis):
+        return AnalysisPlanStep(index=index, kind="dc", analysis=analysis)
+    if isinstance(analysis, AcAnalysis):
+        return AnalysisPlanStep(index=index, kind="ac", analysis=analysis)
+    return None
+
+
+def _execute_analysis_step(parsed: ParsedNetlist, step: AnalysisPlanStep) -> AnalysisResult:
+    analysis = step.analysis
+    if isinstance(analysis, OpAnalysis):
+        return dc_op(parsed.circuit, **parsed.dc_op_kwargs())
+    if isinstance(analysis, DcAnalysis):
+        dc_kwargs = parsed.dc_op_kwargs()
+        sweep_kwargs = {
+            key: dc_kwargs[key] for key in ("max_iterations", "tol") if key in dc_kwargs
+        }
+        return dc_sweep(
+            parsed.circuit,
+            analysis.source_name,
+            analysis.start,
+            analysis.stop,
+            analysis.step,
+            **sweep_kwargs,
+        )
+    if isinstance(analysis, AcAnalysis):
+        return ac_sweep(
+            parsed.circuit,
+            f_start=analysis.start_hz,
+            f_stop=analysis.stop_hz,
+            n_points=analysis.points,
+            sweep=_ac_sweep_mode(analysis),
+        )
+    if isinstance(analysis, TranAnalysis):
+        transient_kwargs = parsed.transient_kwargs(analysis)
+        transient_kwargs.setdefault("method", "euler")
+        return transient(
+            parsed.circuit,
+            t_step=analysis.t_step,
+            t_stop=analysis.t_stop,
+            **transient_kwargs,
+        )
+    raise NetlistParseError(f"analysis card at index {step.index} is not executable")
+
+
+def _ac_sweep_mode(analysis: AcAnalysis) -> Literal["log", "lin"]:
+    if analysis.mode in ("dec", "log"):
+        return "log"
+    raise NetlistParseError(
+        f".ac mode {analysis.mode!r} is not executable; supported modes are 'dec' and 'log'"
+    )
+
+
+def _selected_output_probes(parsed: ParsedNetlist, kind: AnalysisKind) -> list[OutputProbe]:
+    probes: list[OutputProbe] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add(new_probes: tuple[OutputProbe, ...]) -> None:
+        for probe in new_probes:
+            key = (probe.kind, probe.target.lower())
+            if key not in seen:
+                probes.append(probe)
+                seen.add(key)
+
+    for card in parsed.analyses:
+        if isinstance(card, SaveAnalysis):
+            add(card.probes)
+        elif isinstance(card, ProbeAnalysis):
+            if card.analysis is None or _analysis_name_matches(card.analysis, kind):
+                add(card.probes)
+        elif isinstance(card, (PrintAnalysis, PlotAnalysis)) and _analysis_name_matches(
+            card.analysis,
+            kind,
+        ):
+            add(card.probes)
+    return probes
+
+
+def _analysis_name_matches(requested: str, kind: AnalysisKind) -> bool:
+    aliases = {
+        "op": "op",
+        "dcop": "op",
+        "dc": "dc",
+        "ac": "ac",
+        "tran": "tran",
+        "transient": "tran",
+    }
+    return aliases.get(requested.lower(), requested.lower()) == kind
+
+
+def _selected_output_rows(
+    execution: AnalysisExecutionResult,
+    probes: list[OutputProbe],
+) -> list[SelectedOutputRow]:
+    result = execution.result
+    if isinstance(result, DcResult):
+        return [
+            SelectedOutputRow(
+                index=0,
+                axis_name=None,
+                axis_value=None,
+                values=_selected_output_values(
+                    result.node_voltages,
+                    result.branch_currents,
+                    probes,
+                    ".op output selection",
+                ),
+            )
+        ]
+    if isinstance(result, DcSweepResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="source",
+                axis_value=point.source_value,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".dc output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    if isinstance(result, AcResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="frequency",
+                axis_value=point.freq,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".ac output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    if isinstance(result, TransientResult):
+        return [
+            SelectedOutputRow(
+                index=index,
+                axis_name="time",
+                axis_value=point.time,
+                values=_selected_output_values(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probes,
+                    ".tran output selection",
+                ),
+            )
+            for index, point in enumerate(result.points)
+        ]
+    raise NetlistParseError(f"analysis result at index {execution.index} is not selectable")
+
+
+def _selected_output_values(
+    node_voltages: dict[str, SelectedOutputValue],
+    branch_currents: dict[str, SelectedOutputValue],
+    probes: list[OutputProbe],
+    context: str,
+) -> dict[str, SelectedOutputValue]:
+    return {
+        _probe_label(probe): _probe_value(probe, node_voltages, branch_currents, context)
+        for probe in probes
+    }
+
+
+def _find_measure_execution_result(
+    card: MeasureAnalysis,
+    results: list[AnalysisExecutionResult],
+) -> AnalysisExecutionResult:
+    for result in results:
+        if _analysis_name_matches(card.analysis, result.kind):
+            return result
+    raise NetlistParseError(f".measure {card.name!r} references missing {card.analysis} analysis")
+
+
+def _evaluate_measure(card: MeasureAnalysis, result: AnalysisExecutionResult) -> float:
+    samples = _measure_samples(card, result)
+    if not samples:
+        raise NetlistParseError(f".measure {card.name!r} has no samples")
+    if card.operation == "find":
+        if result.kind == "op" and card.at is None:
+            return _measure_numeric_value(samples[0][1])
+        if card.at is None:
+            raise NetlistParseError(f".measure {card.name!r} FIND requires AT=<value>")
+        return _measure_numeric_value(_interpolate_measure_value(samples, card.at, card))
+
+    ranged = _range_measure_samples(samples, card)
+    values = [_measure_numeric_value(value) for _, value in ranged]
+    if not values:
+        raise NetlistParseError(f".measure {card.name!r} range has no samples")
+    if card.operation == "max":
+        return max(values)
+    if card.operation == "min":
+        return min(values)
+    if card.operation == "avg":
+        return _average_measure_value(ranged)
+    if card.operation == "rms":
+        return _rms_measure_value(ranged)
+    raise NetlistParseError(f"unsupported .measure operation {card.operation!r}")
+
+
+def _measure_samples(
+    card: MeasureAnalysis,
+    execution: AnalysisExecutionResult,
+) -> list[tuple[float | None, SelectedOutputValue]]:
+    result = execution.result
+    if isinstance(result, DcResult):
+        return [
+            (
+                None,
+                _probe_value(
+                    card.probe,
+                    result.node_voltages,
+                    result.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+        ]
+    if isinstance(result, DcSweepResult):
+        return [
+            (
+                point.source_value,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    if isinstance(result, AcResult):
+        return [
+            (
+                point.freq,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    if isinstance(result, TransientResult):
+        return [
+            (
+                point.time,
+                _probe_value(
+                    card.probe,
+                    point.node_voltages,
+                    point.branch_currents,
+                    f".measure {card.name}",
+                ),
+            )
+            for point in result.points
+        ]
+    return []
+
+
+def _range_measure_samples(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    card: MeasureAnalysis,
+) -> list[tuple[float | None, SelectedOutputValue]]:
+    if any(axis is None for axis, _ in samples):
+        if card.start is not None or card.stop is not None:
+            raise NetlistParseError(f".measure {card.name!r} range requires swept samples")
+        return samples
+    axis_samples = sorted((axis, value) for axis, value in samples if axis is not None)
+    lower = axis_samples[0][0] if card.start is None else card.start
+    upper = axis_samples[-1][0] if card.stop is None else card.stop
+    if lower > upper:
+        raise NetlistParseError(f".measure {card.name!r} FROM must be <= TO")
+    ranged: list[tuple[float | None, SelectedOutputValue]] = []
+    if card.start is not None:
+        ranged.append((lower, _interpolate_measure_value(samples, lower, card)))
+    ranged.extend(
+        (axis, value)
+        for axis, value in axis_samples
+        if lower <= axis <= upper and not _axis_already_present(ranged, axis)
+    )
+    if card.stop is not None and not _axis_already_present(ranged, upper):
+        ranged.append((upper, _interpolate_measure_value(samples, upper, card)))
+    return sorted(ranged, key=lambda sample: -math.inf if sample[0] is None else sample[0])
+
+
+def _axis_already_present(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    axis: float,
+) -> bool:
+    return any(
+        existing_axis is not None and math.isclose(existing_axis, axis)
+        for existing_axis, _ in samples
+    )
+
+
+def _interpolate_measure_value(
+    samples: list[tuple[float | None, SelectedOutputValue]],
+    target: float,
+    card: MeasureAnalysis,
+) -> SelectedOutputValue:
+    axis_samples = sorted((axis, value) for axis, value in samples if axis is not None)
+    if not axis_samples:
+        raise NetlistParseError(f".measure {card.name!r} AT requires swept samples")
+    if target < axis_samples[0][0] or target > axis_samples[-1][0]:
+        raise NetlistParseError(f".measure {card.name!r} AT is outside the analysis range")
+    for axis, value in axis_samples:
+        if math.isclose(axis, target):
+            return value
+    for (left_axis, left_value), (right_axis, right_value) in zip(
+        axis_samples,
+        axis_samples[1:],
+        strict=False,
+    ):
+        if left_axis <= target <= right_axis:
+            fraction = (target - left_axis) / (right_axis - left_axis)
+            return _interpolate_output_values(left_value, right_value, fraction)
+    return axis_samples[-1][1]
+
+
+def _interpolate_output_values(
+    left: SelectedOutputValue,
+    right: SelectedOutputValue,
+    fraction: float,
+) -> SelectedOutputValue:
+    if isinstance(left, complex) or isinstance(right, complex):
+        left_complex = complex(left)
+        right_complex = complex(right)
+        return left_complex + (right_complex - left_complex) * fraction
+    return float(left) + (float(right) - float(left)) * fraction
+
+
+def _average_measure_value(samples: list[tuple[float | None, SelectedOutputValue]]) -> float:
+    numeric = [(axis, _measure_numeric_value(value)) for axis, value in samples]
+    if len(numeric) < 2 or any(axis is None for axis, _ in numeric):
+        return sum(value for _, value in numeric) / len(numeric)
+    span = float(numeric[-1][0]) - float(numeric[0][0])
+    if span <= 0.0:
+        return sum(value for _, value in numeric) / len(numeric)
+    area = sum(
+        0.5 * (left_value + right_value) * (float(right_axis) - float(left_axis))
+        for (left_axis, left_value), (right_axis, right_value) in zip(
+            numeric,
+            numeric[1:],
+            strict=False,
+        )
+    )
+    return area / span
+
+
+def _rms_measure_value(samples: list[tuple[float | None, SelectedOutputValue]]) -> float:
+    numeric = [(axis, _measure_numeric_value(value)) for axis, value in samples]
+    if len(numeric) < 2 or any(axis is None for axis, _ in numeric):
+        return math.sqrt(sum(value * value for _, value in numeric) / len(numeric))
+    span = float(numeric[-1][0]) - float(numeric[0][0])
+    if span <= 0.0:
+        return math.sqrt(sum(value * value for _, value in numeric) / len(numeric))
+    area = sum(
+        0.5
+        * (left_value * left_value + right_value * right_value)
+        * (float(right_axis) - float(left_axis))
+        for (left_axis, left_value), (right_axis, right_value) in zip(
+            numeric,
+            numeric[1:],
+            strict=False,
+        )
+    )
+    return math.sqrt(area / span)
+
+
+def _measure_numeric_value(value: SelectedOutputValue) -> float:
+    return abs(value) if isinstance(value, complex) else float(value)
+
+
+def _probe_value(
+    probe: OutputProbe,
+    node_voltages: dict[str, SelectedOutputValue],
+    branch_currents: dict[str, SelectedOutputValue],
+    context: str,
+) -> SelectedOutputValue:
+    if probe.kind == "voltage":
+        if probe.target.lower() in ("0", "gnd"):
+            return 0j if _contains_complex_values(node_voltages) else 0.0
+        value = _case_insensitive_get(node_voltages, probe.target)
+        if value is None:
+            raise NetlistParseError(f"{context}: missing voltage probe V({probe.target})")
+        return value
+    key = probe.target if probe.target.lower().startswith("i(") else f"I({probe.target})"
+    value = _case_insensitive_get(branch_currents, key)
+    if value is None:
+        raise NetlistParseError(f"{context}: missing branch current probe I({probe.target})")
+    return value
+
+
+def _contains_complex_values(values: dict[str, SelectedOutputValue]) -> bool:
+    return any(isinstance(value, complex) for value in values.values())
+
+
+def _case_insensitive_get(
+    values: dict[str, SelectedOutputValue],
+    key: str,
+) -> SelectedOutputValue | None:
+    if key in values:
+        return values[key]
+    lower_key = key.lower()
+    for candidate, value in values.items():
+        if candidate.lower() == lower_key:
+            return value
+    return None
+
+
+def _probe_label(probe: OutputProbe) -> str:
+    return f"V({probe.target})" if probe.kind == "voltage" else f"I({probe.target})"
 
 
 def _parse_element(fields: list[str], models: dict[str, ModelCard]) -> object:
@@ -1045,6 +1684,15 @@ def _parse_directive(fields: list[str]) -> Analysis:
             analysis=fields[1].lower(),
             probes=tuple(_parse_output_probe(token, ".plot") for token in fields[2:]),
         )
+    if directive == ".save":
+        _require_min_fields(fields, 2, ".save")
+        return SaveAnalysis(
+            probes=tuple(_parse_output_probe(token, ".save") for token in fields[1:])
+        )
+    if directive == ".probe":
+        return _parse_probe_card(fields)
+    if directive in (".measure", ".meas"):
+        return _parse_measure_card(fields)
     if directive == ".four":
         _require_min_fields(fields, 3, ".four")
         return FourAnalysis(
@@ -1077,6 +1725,69 @@ def _parse_directive(fields: list[str]) -> Analysis:
         _require_min_fields(fields, 2, ".options")
         return OptionsAnalysis(values=_parse_options(fields[1:]))
     raise NetlistParseError(f"unsupported directive {fields[0]!r}")
+
+
+def _parse_probe_card(fields: list[str]) -> ProbeAnalysis:
+    _require_min_fields(fields, 2, ".probe")
+    analysis: str | None = None
+    probe_tokens = fields[1:]
+    if len(fields) >= 3 and _is_analysis_selector(fields[1]):
+        analysis = fields[1].lower()
+        probe_tokens = fields[2:]
+    return ProbeAnalysis(
+        analysis=analysis,
+        probes=tuple(_parse_output_probe(token, ".probe") for token in probe_tokens),
+    )
+
+
+def _parse_measure_card(fields: list[str]) -> MeasureAnalysis:
+    directive = fields[0].lower()
+    _require_min_fields(fields, 5, directive)
+    operation = _parse_measure_operation(fields[3], directive)
+    options = _parse_measure_options(fields[5:], directive)
+    if operation == "find" and "at" not in options and fields[1].lower() not in ("op", "dcop"):
+        raise NetlistParseError(f"{directive} FIND requires AT=<value>")
+    if operation != "find" and "at" in options:
+        raise NetlistParseError(f"{directive} {operation.upper()} does not support AT=<value>")
+    return MeasureAnalysis(
+        analysis=fields[1].lower(),
+        name=fields[2],
+        operation=operation,
+        probe=_parse_output_probe(fields[4], directive),
+        at=options.get("at"),
+        start=options.get("from"),
+        stop=options.get("to"),
+    )
+
+
+def _parse_measure_operation(token: str, directive: str) -> MeasureOperation:
+    operation = token.lower()
+    if operation not in ("find", "max", "min", "avg", "rms"):
+        raise NetlistParseError(
+            f"{directive} operation must be FIND, MAX, MIN, AVG, or RMS, got {token!r}"
+        )
+    return operation
+
+
+def _parse_measure_options(tokens: list[str], directive: str) -> dict[str, float]:
+    options: dict[str, float] = {}
+    for token in tokens:
+        if "=" not in token:
+            raise NetlistParseError(f"{directive} option must be KEY=value, got {token!r}")
+        key, raw_value = token.split("=", 1)
+        key = key.strip().lower()
+        if key not in ("at", "from", "to"):
+            raise NetlistParseError(f"{directive} unsupported option {key!r}")
+        if key in options:
+            raise NetlistParseError(f"{directive} duplicate option {key!r}")
+        if raw_value == "":
+            raise NetlistParseError(f"{directive} option {key!r} requires a value")
+        options[key] = parse_value(raw_value)
+    return options
+
+
+def _is_analysis_selector(token: str) -> bool:
+    return token.lower() in {"op", "dcop", "dc", "ac", "tran", "transient"}
 
 
 def _parse_options(tokens: list[str]) -> dict[str, OptionValue]:

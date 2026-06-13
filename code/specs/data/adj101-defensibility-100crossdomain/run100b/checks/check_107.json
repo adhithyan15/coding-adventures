@@ -1,0 +1,8 @@
+{
+ "check_id": 107,
+ "idx": 42,
+ "slot": "elapsed_hours",
+ "claimed_value": 3,
+ "scenario": "A deli displays tuna salad without refrigeration. It started at 40 degrees F. After 3 hours on display, a probe thermometer reads 74 degrees F.",
+ "cited_span": "After 3 hours on display"
+}

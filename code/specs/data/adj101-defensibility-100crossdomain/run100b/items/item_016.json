@@ -1,0 +1,7 @@
+{
+ "idx": 16,
+ "id": "ENV-7",
+ "scenario": "Millbrook Tannery holds an NPDES permit allowing 8 mg/L of total nitrogen. The state issued a TMDL for the receiving creek assigning Millbrook a wasteload allocation of 4 mg/L total nitrogen. Millbrook is discharging at 7 mg/L.",
+ "policy": "General rule: A facility may discharge process wastewater under its existing individual NPDES permit limits. Override: Notwithstanding any permit limit, whenever the state has issued a Total Maximum Daily Load (TMDL) for the receiving water, the facility's discharge must comply with the more stringent wasteload allocation assigned by the TMDL, which supersedes the permit's numeric limits.",
+ "question": "Is Millbrook Tannery in compliance with its applicable discharge requirement?"
+}

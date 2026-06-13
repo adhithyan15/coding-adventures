@@ -1,0 +1,8 @@
+{
+ "idx": 19,
+ "policy": "An underground storage tank (UST) owner must register the tank and comply with the leak-detection requirements, except that tanks with a capacity of 110 gallons or less are excluded from the UST program and need not be registered.",
+ "scenario": "Northgate Auto installed a new waste-oil underground tank with a maximum capacity of 95 gallons. The owner asks whether registration and leak-detection rules apply.",
+ "question": "Must Northgate Auto register the 95-gallon tank and comply with leak-detection requirements?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "excluded"
+}

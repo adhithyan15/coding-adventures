@@ -1,0 +1,8 @@
+{
+ "check_id": 238,
+ "idx": 93,
+ "slot": "intoxicated",
+ "claimed_value": true,
+ "scenario": "Glenn, a machine operator, was injured when a coworker accidentally backed a forklift into him in the loading bay. A post-incident test showed Glenn had a blood alcohol concentration of 0.09%, above the legal limit. The forklift driver's own conduct was being reviewed separately.",
+ "cited_span": "Glenn had a blood alcohol concentration of 0.09%, above the legal limit"
+}

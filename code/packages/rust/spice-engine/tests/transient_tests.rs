@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use spice_engine::{
     dc_op, digital_event_streams_to_voltage_sources, distortion_from_fourier,
     distortion_from_transient, distortion_from_transient_corners, estimate_period,
@@ -5,11 +7,13 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_digital_bridge_schedule_table,
-    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
-    format_fourier_table, format_pole_zero_table, format_pss_table, format_transient_table,
-    fourier, fourier_corners, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
-    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    format_corner_transient_table, format_dc_table, format_deck_transient_table,
+    format_digital_bridge_schedule_table, format_digital_event_stream_table,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, measure_transient_deck, measure_transient_probe,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
@@ -1618,6 +1622,135 @@ fn text_output_tables_are_stable_for_dc_and_transient_results() {
 }
 
 #[test]
+fn transient_probe_measurements_are_stable() {
+    let points = vec![
+        TransientPoint {
+            time: 0.0,
+            node_voltages: BTreeMap::from([("out".to_string(), 0.0)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 1.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), 1.25)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 2.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), -0.25)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 3.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), 0.75)]),
+            branch_currents: BTreeMap::new(),
+        },
+    ];
+
+    let peak_to_peak = measure_transient_probe(
+        &points,
+        "swing",
+        "V(out)",
+        "peak-to-peak",
+        Some(1.0e-3),
+        Some(3.0e-3),
+    )
+    .unwrap();
+    let final_value =
+        measure_transient_probe(&points, "settled", "V(out)", "final", None, None).unwrap();
+
+    assert_close(peak_to_peak.value, 1.5);
+    assert_eq!(peak_to_peak.mode, "pp");
+    assert_close(final_value.value, 0.75);
+    assert_eq!(final_value.mode, "last");
+    assert_eq!(
+        format_measurement_table(&[peak_to_peak, final_value]),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    );
+}
+
+#[test]
+fn transient_deck_measurements_execute_parsed_cards() {
+    let points = vec![
+        TransientPoint {
+            time: 0.0,
+            node_voltages: BTreeMap::from([("out".to_string(), 0.0)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 1.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), 1.25)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 2.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), -0.25)]),
+            branch_currents: BTreeMap::new(),
+        },
+        TransientPoint {
+            time: 3.0e-3,
+            node_voltages: BTreeMap::from([("out".to_string(), 0.75)]),
+            branch_currents: BTreeMap::new(),
+        },
+    ];
+
+    let measurements = measure_transient_deck(
+        &points,
+        "
+V1 in 0 DC 1
+.measure tran swing PP V(out) FROM=1m TO=3m
+.meas tran settled LAST V(out)
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_measurement_table(&measurements),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    );
+}
+
+#[test]
+fn transient_deck_output_cards_select_table_probes() {
+    let points = vec![
+        TransientPoint {
+            time: 0.0,
+            node_voltages: BTreeMap::from([
+                ("out".to_string(), 0.0),
+                ("clk".to_string(), 0.0),
+                ("ignored".to_string(), 1.0),
+            ]),
+            branch_currents: BTreeMap::from([("I(V1)".to_string(), -1.0e-3)]),
+        },
+        TransientPoint {
+            time: 1.0e-3,
+            node_voltages: BTreeMap::from([
+                ("out".to_string(), 1.0),
+                ("clk".to_string(), 5.0),
+                ("ignored".to_string(), 2.0),
+            ]),
+            branch_currents: BTreeMap::from([("I(V1)".to_string(), -2.0e-3)]),
+        },
+    ];
+
+    let table = format_deck_transient_table(
+        &points,
+        "
+.save V(out) I(V1)
+.probe tran V(clk) V(out)
+.probe ac V(ignored)
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(
+        table,
+        "Index\tTime\tV(out)\tI(V1)\tV(clk)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\n"
+    );
+}
+
+#[test]
 fn corner_transient_text_output_table_is_stable() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -2520,6 +2653,32 @@ fn named_digital_event_stream_text_output_table_is_stable() {
     assert_eq!(
         format_digital_event_stream_table(&streams).unwrap(),
         "Signal\tIndex\tTime\tState\nclk\t0\t0.000000e+00\tlow\nclk\t1\t5.000000e-10\thigh\nclk\t2\t1.000000e-09\tlow\nenable\t0\t2.500000e-10\tlow\nenable\t1\t7.500000e-10\thigh\n"
+    );
+}
+
+#[test]
+fn digital_event_stream_vcd_output_is_stable() {
+    let streams = [
+        DigitalEventStream::new(
+            "clk",
+            vec![
+                DigitalEvent::new(0.0, DigitalState::Low),
+                DigitalEvent::new(0.5e-9, DigitalState::High),
+                DigitalEvent::new(1.0e-9, DigitalState::Low),
+            ],
+        ),
+        DigitalEventStream::new(
+            "enable",
+            vec![
+                DigitalEvent::new(0.25e-9, DigitalState::Low),
+                DigitalEvent::new(0.75e-9, DigitalState::High),
+            ],
+        ),
+    ];
+
+    assert_eq!(
+        spice_engine::format_digital_event_stream_vcd(&streams).unwrap(),
+        "$version coding-adventures spice-engine mixed-signal bridge $end\n$timescale 1ps $end\n$scope module spice_bridge $end\n$var wire 1 s0 clk $end\n$var wire 1 s1 enable $end\n$upscope $end\n$enddefinitions $end\n$dumpvars\n0s0\n0s1\n$end\n#0\n0s0\n#250\n0s1\n#500\n1s0\n#750\n1s1\n#1000\n0s0\n"
     );
 }
 

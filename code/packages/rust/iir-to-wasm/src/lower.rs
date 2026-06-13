@@ -205,6 +205,32 @@ fn encode_i32_store8() -> Vec<u8> {
     vec![0x3Au8, 0x00u8, 0x00u8]
 }
 
+/// Emit `i32.add` (0x6A) — pop two i32, push their sum.
+///
+/// Used by the byte-tape ops (LANG-MATRIX LM-W Brainfuck) to compute the
+/// effective address `base + idx` before an `i32.load8_u` / `i32.store8`.
+fn encode_i32_add() -> Vec<u8> {
+    vec![0x6Au8]
+}
+
+/// Emit `i32.wrap_i64` (0xA7) — truncate an i64 to i32 (drop the high 32 bits).
+///
+/// The Brainfuck value model is uniformly `i64` after `lower_brainfuck_for_aot`
+/// widens it, but wasm linear-memory addresses and `i32.store8` values are i32.
+/// This narrows a tape pointer / cell value to the i32 the memory ops expect;
+/// the low byte (the only part a cell holds) is preserved.
+fn encode_i32_wrap_i64() -> Vec<u8> {
+    vec![0xA7u8]
+}
+
+/// Emit `i64.extend_i32_u` (0xAD) — zero-extend an i32 to i64.
+///
+/// The dual of [`encode_i32_wrap_i64`]: after `i32.load8_u` yields a
+/// zero-extended byte as i32, this widens it back to the i64 cell register.
+fn encode_i64_extend_i32_u() -> Vec<u8> {
+    vec![0xADu8]
+}
+
 fn encode_global_get(idx: u32) -> Vec<u8> {
     use wasm_leb128::encode_unsigned;
     let mut bytes = vec![0x23u8]; // global.get opcode
@@ -705,6 +731,19 @@ fn emit_instr(
         })
     };
 
+    // True when a local slot is an `i64` (vs `i32`). The Brainfuck value model
+    // is uniformly `i64` after `lower_brainfuck_for_aot` widens it, so the
+    // byte-tape ops + `putchar`/`getchar` convert between that i64 and the i32
+    // that wasm linear-memory addresses / `i32.store8` values / the libc
+    // `putchar`/`getchar` imports use. Looking the width up (rather than
+    // assuming i64) keeps the lowering correct for an un-widened i32 caller too.
+    let slot_is_i64 = |slot: u32| -> bool {
+        local_type_hints
+            .get(&slot)
+            .map(|h| matches!(h.as_str(), "i64" | "u64"))
+            .unwrap_or(false)
+    };
+
     let get_label = |label: &str| -> Result<u32, IIRWasmError> {
         label_to_block
             .get(label)
@@ -927,6 +966,19 @@ fn emit_instr(
                 _ => unreachable!(),
             };
             code.push(opcode);
+            // A wasm comparison always yields an `i32` boolean (0/1), regardless
+            // of operand width. If the dest register is an *i64*-declared local
+            // (e.g. a scalar `any` concretised to i64 by `concretize_scalar_any_
+            // for_wasm`), the i32 result must be widened so the stored value
+            // matches the local's declared type — otherwise the module is
+            // ill-typed (an i32 sitting in an i64 local), which the lenient
+            // in-repo runtime tolerated only as long as every consumer used i32
+            // ops. The widened-Brainfuck control flow (`i64.eqz` on an i64 guard,
+            // LANG-MATRIX LM-W) needs the value to actually be i64. The dual fix
+            // lives in the `jmp_if_*` arms.
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_u());
+            }
             code.extend(encode_local_set(rd));
         }
 
@@ -1240,6 +1292,14 @@ fn emit_instr(
                     1 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
+                // `if` tests an i32 != 0. An i64 condition (the Brainfuck loop
+                // guard after `lower_brainfuck_for_aot` widening) must be reduced
+                // to an i32 truth value first: `i64.eqz; i32.eqz` yields 1 iff the
+                // i64 is non-zero.
+                if slot_is_i64(cond_reg) {
+                    code.push(crate::codegen::I64_EQZ);
+                    code.push(I32_EQZ);
+                }
                 // if (empty block type, no result)
                 code.push(crate::codegen::IF);
                 code.push(BLOCK_EMPTY);
@@ -1290,7 +1350,14 @@ fn emit_instr(
                     1 // last block — should not normally conditional-jmp
                 };
                 code.extend(encode_local_get(cond_reg));
-                code.push(I32_EQZ);
+                // "branch if cond == 0" → push the i32 boolean `cond == 0`.
+                // Use the width-correct eqz: `i64.eqz` for an i64 guard (the
+                // widened Brainfuck cell), `i32.eqz` otherwise. Both yield i32.
+                if slot_is_i64(cond_reg) {
+                    code.push(crate::codegen::I64_EQZ);
+                } else {
+                    code.push(I32_EQZ);
+                }
                 code.push(crate::codegen::IF);
                 code.push(BLOCK_EMPTY);
                 code.extend(encode_i32_const(target_idx as i32));
@@ -1710,6 +1777,143 @@ fn emit_instr(
             code.extend(encode_i32_store8());
         }
 
+        // ── alloc_bytes → tape base offset (LANG-MATRIX LM-W Brainfuck) ───────
+        //
+        // `alloc_bytes  dest  <-  size`.  The wasm module's linear memory *is*
+        // the Brainfuck tape and it starts at offset 0, so `dest` (the tape
+        // base) is simply the constant address 0.  The `size` operand only
+        // determines how big the memory must be — that is handled module-wide:
+        // `collect_module_features` flags `uses_memory`, and `lower_iir_to_wasm`
+        // emits a fixed 1-page (64 KiB) memory, comfortably larger than the
+        // 30 000-cell default tape.  `dest` is an `i64` register (the widened
+        // BF value model — see `lower_brainfuck_for_aot` Step 5), so we push an
+        // i64 zero; if some caller declared it i32 we push an i32 zero instead.
+        "alloc_bytes" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "alloc_bytes must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_const(0));
+            } else {
+                code.extend(encode_i32_const(0));
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── load_byte → i32.load8_u at base+idx, widened to the cell ─────────
+        //
+        // `load_byte  dest  <-  base, idx`.  Reads one tape cell.  `base` (the
+        // tape, = 0) and `idx` are `i64` registers, but a wasm address is i32,
+        // so we wrap each to i32 and add to form the effective address, then
+        // `i32.load8_u` (which zero-extends the byte to i32).  The result is
+        // widened back to i64 with `i64.extend_i32_u` to match the i64 cell
+        // register `dest`.  This is the wasm twin of the LLVM
+        // `getelementptr i8 + load i8 + zext` lowering — "byte width only at the
+        // tape boundary."  An out-of-bounds index traps at the wasm layer.
+        "load_byte" => {
+            let dest = instr.dest.as_deref().ok_or_else(|| IIRWasmError::InvalidOperand {
+                function: fn_name.to_string(),
+                detail: "load_byte must have a dest".to_string(),
+            })?;
+            let rd = get_reg(dest)?;
+            let base_var = match instr.srcs.first() {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "load_byte requires Operand::Var(base) as src[0]".to_string(),
+                }),
+            };
+            let idx_var = match instr.srcs.get(1) {
+                Some(Operand::Var(v)) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "load_byte requires Operand::Var(idx) as src[1]".to_string(),
+                }),
+            };
+            let base_slot = get_reg(base_var)?;
+            let idx_slot = get_reg(idx_var)?;
+            // addr = wrap(base) + wrap(idx)
+            code.extend(encode_local_get(base_slot));
+            if slot_is_i64(base_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_i32_add());
+            code.extend(encode_i32_load8_u());
+            if slot_is_i64(rd) {
+                code.extend(encode_i64_extend_i32_u());
+            }
+            code.extend(encode_local_set(rd));
+        }
+
+        // ── store_byte → i32.store8 of the low byte at base+idx ──────────────
+        //
+        // `store_byte  base, idx, val`  (no dest).  Writes one tape cell.  The
+        // effective address is `wrap(base) + wrap(idx)` (i32); the value is
+        // narrowed with `i32.wrap_i64` and `i32.store8` keeps only its low 8
+        // bits — which is exactly what enforces Brainfuck's 8-bit cell
+        // wrap-around (`255 + 1 == 0`) even though the arithmetic ran at i64
+        // width.  The wasm twin of the LLVM `trunc i64…i8 + store i8`.
+        "store_byte" => {
+            if instr.dest.is_some() {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_byte must not have a dest".to_string(),
+                });
+            }
+            if instr.srcs.len() < 3 {
+                return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_byte requires 3 srcs: [base, idx, val]".to_string(),
+                });
+            }
+            let base_var = match &instr.srcs[0] {
+                Operand::Var(v) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_byte src[0] must be Operand::Var(base)".to_string(),
+                }),
+            };
+            let idx_var = match &instr.srcs[1] {
+                Operand::Var(v) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_byte src[1] must be Operand::Var(idx)".to_string(),
+                }),
+            };
+            let val_var = match &instr.srcs[2] {
+                Operand::Var(v) => v.as_str(),
+                _ => return Err(IIRWasmError::InvalidOperand {
+                    function: fn_name.to_string(),
+                    detail: "store_byte src[2] must be Operand::Var(val)".to_string(),
+                }),
+            };
+            let base_slot = get_reg(base_var)?;
+            let idx_slot = get_reg(idx_var)?;
+            let val_slot = get_reg(val_var)?;
+            // addr = wrap(base) + wrap(idx) — pushed first (store8 wants [addr, val]).
+            code.extend(encode_local_get(base_slot));
+            if slot_is_i64(base_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_local_get(idx_slot));
+            if slot_is_i64(idx_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_i32_add());
+            // value (low byte) — narrowed to i32.
+            code.extend(encode_local_get(val_slot));
+            if slot_is_i64(val_slot) {
+                code.extend(encode_i32_wrap_i64());
+            }
+            code.extend(encode_i32_store8());
+        }
+
         // ── call_builtin → call $env.<name> ──────────────────────────────────
         //
         // Dispatch on `srcs[0]` (the builtin name, carried as Var) to the
@@ -1745,7 +1949,13 @@ fn emit_instr(
                         function: fn_name.to_string(),
                         op: "call_builtin \"putchar\": no env.putchar import registered (internal error)".to_string(),
                     })?;
+                    // `env.putchar` takes an i32; the Brainfuck cell register is
+                    // i64 after `lower_brainfuck_for_aot` widening, so narrow it
+                    // (the printable byte lives in the low 8 bits regardless).
                     code.extend(encode_local_get(val_slot));
+                    if slot_is_i64(val_slot) {
+                        code.extend(encode_i32_wrap_i64());
+                    }
                     code.extend(encode_call(fn_idx));
                 }
                 "getchar" => {
@@ -1759,6 +1969,11 @@ fn emit_instr(
                         op: "call_builtin \"getchar\": no env.getchar import registered (internal error)".to_string(),
                     })?;
                     code.extend(encode_call(fn_idx));
+                    // `env.getchar` returns an i32; widen it to the i64 cell
+                    // register `dest` (the widened BF value model).
+                    if slot_is_i64(rd) {
+                        code.extend(encode_i64_extend_i32_u());
+                    }
                     code.extend(encode_local_set(rd));
                 }
                 // G2: `print_i64` reuses the same `env.__print_i64`
@@ -2202,7 +2417,11 @@ fn collect_module_features(module: &IIRModule) -> ModuleFeatures {
                 "io_out" => {
                     uses_io_out = true;
                 }
-                "load_mem" | "store_mem" => {
+                // `load_mem`/`store_mem` are the raw BF-frontend tape ops;
+                // `alloc_bytes`/`load_byte`/`store_byte` are the lowered AOT/LLVM
+                // form `lower_brainfuck_for_aot` rewrites them into. Either shape
+                // means the module needs a linear memory for the tape.
+                "load_mem" | "store_mem" | "alloc_bytes" | "load_byte" | "store_byte" => {
                     uses_memory = true;
                 }
                 "call_builtin" => {

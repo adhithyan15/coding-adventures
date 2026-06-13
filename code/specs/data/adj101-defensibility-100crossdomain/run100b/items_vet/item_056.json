@@ -1,0 +1,8 @@
+{
+ "idx": 56,
+ "policy": "A landlord may decline to renew a month-to-month tenancy for any reason with proper notice. However, a landlord may not decline to renew, raise rent, or otherwise retaliate against a tenant within 6 months after the tenant has filed a good-faith habitability complaint with a housing authority; any such non-renewal within that window is unlawful retaliation.",
+ "scenario": "On March 3, Yuki filed a good-faith habitability complaint about mold with the city housing authority. On May 10, the landlord served Yuki a notice declining to renew her month-to-month tenancy, citing a desire to rent to a relative. The notice itself was procedurally proper.",
+ "question": "Is the landlord's non-renewal lawful?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "unlawful retaliation"
+}

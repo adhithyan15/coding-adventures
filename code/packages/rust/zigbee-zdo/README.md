@@ -16,6 +16,8 @@ This crate starts the D25 device-interview layer above APS. It provides:
 - compact node/simple descriptor and interview read summaries for discovery
   tools that need endpoint and cluster coverage without carrying full payloads
 - unique cluster and profile-family counts for descriptor read-side coverage
+- read-summary helper predicates for duplicate cluster refs, lighting cluster
+  coverage, and mixed profile-family interviews
 
 ## Dependencies
 

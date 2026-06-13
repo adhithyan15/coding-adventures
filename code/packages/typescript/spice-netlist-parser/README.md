@@ -31,12 +31,34 @@ elements, `.model <name> D(...)` diode cards with `IS` and `VT` parameters,
 initial conditions,
 SPICE engineering suffixes, PWL/PULSE/SIN/EXP source forms, comments, `.end`,
 `.subckt` / `X` instance expansion, and `.op`, `.tran`, `.dc`, `.ac`, `.tf`,
-`.sens`, `.mc`, `.noise`, `.temp`, `.print`, `.plot`, `.four`, and `.options`
-analysis cards. Transient cards can carry `method=euler|trap|gear2`; when
-omitted, `netlist.transientMethod()` falls back to `.options method=<...>` if
-present.
+`.sens`, `.mc`, `.noise`, `.temp`, `.print`, `.plot`, `.save`, `.probe`,
+`.measure`, `.four`, and `.options` analysis cards. Transient cards can carry
+`method=euler|trap|gear2`; when omitted, `netlist.transientMethod()` falls back
+to `.options method=<...>` if present.
 Selected `.options` keys can also be turned into engine-call options with
 `netlist.dcOpOptions()` and `netlist.adaptiveTransientOptions()`.
+Runnable `.op`, `.dc`, `.ac dec` / `.ac log`, and `.tran` cards can be planned
+and executed directly:
+
+```ts
+import { runNetlist } from "@coding-adventures/spice-netlist-parser";
+
+const results = runNetlist(`
+V1 in 0 DC 1 AC 1
+R1 in out 1k
+R2 out 0 1k
+.op
+.ac dec 1 1k 1k
+.end
+`);
+```
+
+`.save`, `.probe`, `.print`, and `.plot` cards can be applied to executed
+analysis results with `netlist.selectOutputs(results)`. Supported `.measure`
+cards can be evaluated with `netlist.measureResults(results)`; the first
+execution subset supports `FIND ... AT=<value>` plus `MAX`, `MIN`, `AVG`, and
+`RMS` over optional `FROM=<value>` / `TO=<value>` ranges.
+
 Deck-level `.temp` cards can be resolved into Kelvin with
 `netlist.operatingTemperatureKelvin()`, and
 `netlist.noiseTemperatureKelvin(noiseCard)` applies the SPICE precedence where

@@ -407,6 +407,47 @@ impl SerialFrame {
         out.push(checksum);
         Ok(out)
     }
+
+    pub fn summary(&self) -> SerialFrameSummary {
+        SerialFrameSummary::from_frame(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SerialFrameSummary {
+    pub frame_type: SerialFrameType,
+    pub function_id: u8,
+    pub payload_len: usize,
+}
+
+impl SerialFrameSummary {
+    pub fn from_frame(frame: &SerialFrame) -> Self {
+        Self {
+            frame_type: frame.frame_type,
+            function_id: frame.function_id,
+            payload_len: frame.payload.len(),
+        }
+    }
+
+    pub fn is_request(&self) -> bool {
+        self.frame_type == SerialFrameType::Request
+    }
+
+    pub fn is_response(&self) -> bool {
+        self.frame_type == SerialFrameType::Response
+    }
+
+    pub fn has_payload(&self) -> bool {
+        self.payload_len > 0
+    }
+
+    pub fn is_function(&self, function_id: u8) -> bool {
+        self.function_id == function_id
+    }
+
+    pub fn is_empty_payload(&self) -> bool {
+        self.payload_len == 0
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -541,6 +582,21 @@ mod tests {
 
         assert_eq!(encoded[0], SOF);
         assert_eq!(SerialFrame::parse(&encoded).unwrap(), frame);
+        let summary = frame.summary();
+        assert_eq!(
+            summary,
+            SerialFrameSummary {
+                frame_type: SerialFrameType::Request,
+                function_id: 0x13,
+                payload_len: 3,
+            }
+        );
+        assert!(summary.is_request());
+        assert!(!summary.is_response());
+        assert!(summary.has_payload());
+        assert!(!summary.is_empty_payload());
+        assert!(summary.is_function(0x13));
+        assert!(!summary.is_function(0x02));
     }
 
     #[test]
@@ -563,6 +619,16 @@ mod tests {
         assert!(summary.has_requests());
         assert!(summary.has_responses());
         assert!(!summary.is_empty());
+
+        let response_summary = response.summary();
+        assert_eq!(response_summary.payload_len, 1);
+        assert!(!response_summary.is_request());
+        assert!(response_summary.is_response());
+        assert!(response_summary.is_function(0x02));
+
+        let empty_response = SerialFrame::new(SerialFrameType::Response, 0x15, Vec::new());
+        assert!(empty_response.summary().is_empty_payload());
+        assert!(!empty_response.summary().has_payload());
     }
 
     #[test]

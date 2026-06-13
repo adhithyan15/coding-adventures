@@ -126,6 +126,18 @@ impl ZWaveCommandSummary {
         self.payload_len > 0
     }
 
+    pub fn is_payload_free(self) -> bool {
+        self.payload_len == 0
+    }
+
+    pub fn is_get(self) -> bool {
+        self.command_kind == ZWaveCommandKind::Get
+    }
+
+    pub fn is_set(self) -> bool {
+        self.command_kind == ZWaveCommandKind::Set
+    }
+
     pub fn is_report(self) -> bool {
         self.command_kind == ZWaveCommandKind::Report
     }
@@ -1165,6 +1177,9 @@ mod tests {
             }
         );
         assert!(summary.has_payload());
+        assert!(!summary.is_payload_free());
+        assert!(!summary.is_get());
+        assert!(summary.is_set());
         assert!(summary.is_request());
         assert!(!summary.is_report());
     }
@@ -1207,16 +1222,22 @@ mod tests {
         let summary = command.summary();
 
         assert_eq!(summary.command_kind, ZWaveCommandKind::Report);
+        assert!(!summary.is_get());
+        assert!(!summary.is_set());
         assert!(summary.is_report());
         assert!(!summary.is_request());
     }
 
     #[test]
     fn set_builders_normalize_values() {
+        let basic_summary = basic_get().summary();
         assert_eq!(
             basic_get().encode().unwrap(),
             vec![CommandClassId::BASIC.0 as u8, BASIC_GET]
         );
+        assert!(basic_summary.is_get());
+        assert!(!basic_summary.is_set());
+        assert!(basic_summary.is_payload_free());
         assert_eq!(binary_switch_set(false).payload, vec![0x00]);
         assert_eq!(multilevel_switch_set(100).payload, vec![99]);
         assert_eq!(door_lock_operation_set(true).payload, vec![0xff]);

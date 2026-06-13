@@ -44,16 +44,19 @@
 pub mod adapter;
 pub mod ast;
 pub mod lower;
+pub mod resolve;
 
 mod _lexer_grammar;
 mod _parser_grammar;
 
 use lexer::grammar_lexer::GrammarLexer;
+use logic_engine::Differential;
 use parser::grammar_parser::{GrammarParseError, GrammarParser};
 
 pub use adapter::{adapt_program, AdapterError};
-pub use ast::{Annotation, Program, Statement, Term as AstTerm};
-pub use lower::{lower, LowerError, LoweredProgram};
+pub use ast::{Annotation, Define, DefineKind, OptDir, Program, RelOp, Statement, Term as AstTerm};
+pub use lower::{lower, ConstraintSystem, LowerError, LoweredConstraint, LoweredProgram};
+pub use resolve::{resolve_imports, ImportError, ImportLimits, ImportProvider};
 
 /// Result of compilation. Either the typed program produced by the
 /// adapter, or an error from the lexer, parser, adapter, or
@@ -85,4 +88,48 @@ pub fn parse(src: &str) -> Result<Program, CompileError> {
 pub fn compile(src: &str) -> Result<LoweredProgram, CompileError> {
     let program = parse(src)?;
     lower(&program).map_err(CompileError::Lower)
+}
+
+/// Result of compiling a program that may `import` other files: either an
+/// import-graph failure (cycle, bound, missing/unparseable file) from the
+/// [`resolve`] stage, or a lowering failure from the merged program.
+#[derive(Debug)]
+pub enum CompileWithImportsError {
+    Import(ImportError),
+    Lower(LowerError),
+}
+
+/// Import-aware compile: resolve the import graph rooted at `root_id` (driven by
+/// the injected [`ImportProvider`]), then lower the merged program (MYCIN-2026
+/// M3). The library performs **no** filesystem I/O — the provider is the only
+/// thing that reads files, so the caller controls the sandbox. See
+/// [`resolve::resolve_imports`] for the graph guarantees.
+pub fn compile_with_imports(
+    root_id: &str,
+    provider: &dyn ImportProvider,
+    limits: ImportLimits,
+) -> Result<LoweredProgram, CompileWithImportsError> {
+    let program =
+        resolve_imports(root_id, provider, limits).map_err(CompileWithImportsError::Import)?;
+    lower(&program).map_err(CompileWithImportsError::Lower)
+}
+
+/// Run a **differential** over a lowered program's `? h` query lines:
+/// treat the program's queries as the competing hypotheses, rank them by
+/// posterior, and return the comparative [`Differential`] decision (argmax
+/// + between-hypothesis margin, with a kickback when an open uncertainty
+/// could flip the ranking).
+///
+/// This is the natural reading of a multi-`?` adj-lang program: the queries
+/// *are* the differential. A program with a single `?` yields a
+/// determinate, single-hypothesis result.
+pub fn decide(lowered: &LoweredProgram) -> Differential {
+    logic_engine::differential(&lowered.queries, &lowered.kb)
+}
+
+/// Source text → differential decision in one step (`compile` then
+/// [`decide`]).
+pub fn compile_and_decide(src: &str) -> Result<Differential, CompileError> {
+    let lowered = compile(src)?;
+    Ok(decide(&lowered))
 }

@@ -1,13 +1,17 @@
 use spice_engine::{
-    circuit_at_temperature, dc_corners, dc_corners_parallel, dc_op, dc_op_with_options, dc_sweep,
-    dc_sweep_corners, dc_sweep_corners_parallel, dc_temperature_sweep,
-    dc_temperature_sweep_corners, format_corner_dc_sweep_table, format_corner_dc_table,
+    analyze_custom_model_source, bjt_from_model_card, circuit_at_temperature, dc_corners,
+    dc_corners_parallel, dc_initial_vector_from_conditions, dc_op, dc_op_with_initial_conditions,
+    dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
+    dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
+    diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
     format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
-    BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit, CornerOverride, CornerSpec,
-    CornerTemperatureDcResult, CurrentSource, DcConvergenceAid, DcOpOptions, Diode, Element,
-    Inductor, Jfet, JfetPolarity, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform,
-    SpiceError, SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs,
-    VoltageSource, Waveform, XInstance,
+    jfet_from_model_card, mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
+    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
+    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
+    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
+    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
+    Waveform, XInstance,
 };
 
 fn assert_close(actual: f64, expected: f64) {
@@ -15,6 +19,159 @@ fn assert_close(actual: f64, expected: f64) {
         (actual - expected).abs() < 1.0e-9,
         "expected {expected}, got {actual}"
     );
+}
+
+#[test]
+fn model_card_type_aliases_are_normalized() {
+    assert_eq!(
+        normalize_model_card_type("diode").unwrap(),
+        ModelCardKind::Diode
+    );
+    assert_eq!(
+        normalize_model_card_type("n-jfet").unwrap(),
+        ModelCardKind::Njf
+    );
+    assert_eq!(
+        normalize_model_card_type("pch").unwrap(),
+        ModelCardKind::Pmos
+    );
+}
+
+#[test]
+fn model_card_aliases_build_device_instances() {
+    let diode_card = normalize_model_card(
+        "Dfast",
+        "diode",
+        &[
+            ("JS", 2.0e-14),
+            ("CJ", 1.5e-12),
+            ("TT", 4.0e-9),
+            ("RS", 10.0),
+        ],
+    )
+    .unwrap();
+    let diode_model = diode_from_model_card("D1", "a", "k", &diode_card).unwrap();
+    assert_close(*diode_card.parameters.get("IS").unwrap(), 2.0e-14);
+    assert_close(*diode_card.parameters.get("CJO").unwrap(), 1.5e-12);
+    assert_eq!(diode_card.unsupported_parameters, vec!["RS".to_string()]);
+    assert_close(diode_model.saturation_current, 2.0e-14);
+    assert_close(diode_model.junction_capacitance, 1.5e-12);
+    assert_close(diode_model.transit_time, 4.0e-9);
+
+    let bjt_card =
+        normalize_model_card("Qsmall", "npn", &[("BETA", 125.0), ("CBE", 2.0e-12)]).unwrap();
+    let bjt_model = bjt_from_model_card("Q1", "c", "b", "e", &bjt_card).unwrap();
+    assert_close(*bjt_card.parameters.get("BF").unwrap(), 125.0);
+    assert_close(*bjt_card.parameters.get("CJE").unwrap(), 2.0e-12);
+    assert_eq!(bjt_model.polarity, BjtPolarity::Npn);
+    assert_close(bjt_model.forward_beta, 125.0);
+    assert_close(bjt_model.base_emitter_capacitance, 2.0e-12);
+
+    let jfet_card = normalize_model_card(
+        "Jn",
+        "njfet",
+        &[("BET", 9.0e-4), ("VT0", -1.8), ("LAM", 0.02)],
+    )
+    .unwrap();
+    let jfet_model = jfet_from_model_card("J1", "d", "g", "s", &jfet_card).unwrap();
+    assert_close(*jfet_card.parameters.get("BETA").unwrap(), 9.0e-4);
+    assert_close(*jfet_card.parameters.get("VTO").unwrap(), -1.8);
+    assert_close(*jfet_card.parameters.get("LAMBDA").unwrap(), 0.02);
+    assert_eq!(jfet_model.polarity, JfetPolarity::Njf);
+    assert_close(jfet_model.beta, 9.0e-4);
+    assert_close(jfet_model.threshold_voltage, -1.8);
+    assert_close(jfet_model.channel_length_modulation, 0.02);
+
+    let mos_card = normalize_model_card(
+        "Mn",
+        "nmos",
+        &[
+            ("LEVEL", 1.0),
+            ("VTO", 0.55),
+            ("LAM", 0.04),
+            ("NSUB", 1.6),
+            ("CJD", 3.0e-13),
+        ],
+    )
+    .unwrap();
+    let mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", &mos_card).unwrap();
+    assert_close(*mos_card.parameters.get("VT0").unwrap(), 0.55);
+    assert_close(*mos_card.parameters.get("LAMBDA").unwrap(), 0.04);
+    assert_close(*mos_card.parameters.get("N_SUB").unwrap(), 1.6);
+    assert_close(*mos_card.parameters.get("CBD").unwrap(), 3.0e-13);
+    assert_eq!(mos_model.mosfet_type, MosfetType::Nmos);
+    assert_close(mos_model.params.vt0, 0.55);
+    assert_close(mos_model.params.lambda, 0.04);
+    assert_close(mos_model.params.n_sub, 1.6);
+    assert_close(mos_model.params.drain_bulk_capacitance, 3.0e-13);
+}
+
+#[test]
+fn model_card_audit_fixtures_cover_supported_device_families() {
+    let fixtures = device_model_audit_fixtures().unwrap();
+    assert_eq!(
+        fixtures
+            .iter()
+            .map(|fixture| fixture.kind)
+            .collect::<Vec<_>>(),
+        vec![
+            ModelCardKind::Diode,
+            ModelCardKind::Npn,
+            ModelCardKind::Njf,
+            ModelCardKind::Nmos
+        ]
+    );
+    assert_close(*fixtures[0].parameters.get("IS").unwrap(), 2.0e-14);
+    assert_close(*fixtures[1].parameters.get("BF").unwrap(), 125.0);
+    assert_close(*fixtures[2].parameters.get("VTO").unwrap(), -1.8);
+    assert_close(*fixtures[3].parameters.get("VT0").unwrap(), 0.55);
+}
+
+#[test]
+fn non_level_one_mos_model_cards_are_explicitly_rejected() {
+    let error = normalize_model_card("Mbad", "nmos", &[("LEVEL", 2.0)]).unwrap_err();
+    assert!(error
+        .to_string()
+        .contains("only MOS LEVEL=1 model cards are supported"));
+}
+
+#[test]
+fn custom_model_linear_conductance_fast_path_stamps_dc_current() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "in", "0", 1.0,
+    )));
+    circuit.add(Element::CustomModel(CustomModel::linear_conductance(
+        "XG", "in", "0", 2.0e-3,
+    )));
+
+    let result = dc_op(&circuit).unwrap();
+
+    assert_close(result.voltage("in").unwrap(), 1.0);
+    assert_close(result.branch_current("I(V1)").unwrap(), -2.0e-3);
+}
+
+#[test]
+fn custom_model_source_analyzer_accepts_subset_and_rejects_dynamic_constructs() {
+    let accepted = analyze_custom_model_source(
+        "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule",
+    );
+    let rejected = analyze_custom_model_source(
+        "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule",
+    );
+
+    assert!(accepted.accepted);
+    assert_eq!(accepted.module_name.as_deref(), Some("rlim"));
+    assert_eq!(accepted.terminals, vec!["p".to_string(), "n".to_string()]);
+    assert_eq!(
+        accepted.contribution,
+        Some(("p".to_string(), "n".to_string()))
+    );
+    assert!(!rejected.accepted);
+    assert!(rejected
+        .diagnostics
+        .iter()
+        .any(|diagnostic| diagnostic.code == "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT"));
 }
 
 #[test]
@@ -39,6 +196,36 @@ fn dc_voltage_divider_solves_midpoint_voltage() {
 }
 
 #[test]
+fn dc_initial_conditions_seed_operating_point_vector() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 10.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+    let summary = resolve_deck_initial_conditions(
+        "
+.nodeset V(vin)=10 V(mid)=1
+.ic V(mid)=4
+.end
+",
+    );
+
+    let vector =
+        dc_initial_vector_from_conditions(&circuit, &summary.initial_conditions, &summary.nodesets)
+            .unwrap();
+    assert_eq!(vector, vec![4.0, 10.0, 0.0]);
+
+    let result = dc_op_with_initial_conditions(&circuit, &summary, DcOpOptions::default()).unwrap();
+
+    assert!(result.converged);
+    assert_close(result.voltage("vin").unwrap(), 10.0);
+    assert_close(result.voltage("mid").unwrap(), 5.0);
+}
+
+#[test]
 fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
     let mut circuit = Circuit::new();
     circuit.add(Element::VoltageSource(VoltageSource::new(
@@ -58,6 +245,11 @@ fn dc_large_resistor_ladder_uses_sparse_real_solver_path() {
 
     assert!(result.converged);
     assert_close(result.voltage("n34").unwrap(), 10.0 / 35.0);
+    assert_eq!(result.diagnostics.matrix_size, 36);
+    assert_eq!(result.diagnostics.solver, "sparse_real");
+    assert_eq!(result.diagnostics.convergence_aid, DcConvergenceAid::Newton);
+    assert_close(result.diagnostics.tolerance, 1.0e-9);
+    assert!(result.diagnostics.max_delta.is_finite());
 }
 
 #[test]

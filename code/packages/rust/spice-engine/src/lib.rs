@@ -10,6 +10,26 @@ const ELECTRON_CHARGE: f64 = 1.602_176_634e-19;
 const MOSFET_CHANNEL_NOISE_GAMMA: f64 = 2.0 / 3.0;
 const DIGITAL_BRIDGE_TIME_EPSILON: f64 = 1.0e-18;
 
+fn real_solver_kind(matrix_size: usize) -> &'static str {
+    if matrix_size == 0 {
+        "none"
+    } else if matrix_size >= SPARSE_SOLVER_THRESHOLD {
+        "sparse_real"
+    } else {
+        "dense_real"
+    }
+}
+
+fn complex_solver_kind(matrix_size: usize) -> &'static str {
+    if matrix_size == 0 {
+        "none"
+    } else if matrix_size >= SPARSE_SOLVER_THRESHOLD {
+        "sparse_complex"
+    } else {
+        "dense_complex"
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Circuit {
     elements: Vec<Element>,
@@ -295,6 +315,13 @@ fn clone_subckt_element(
             voltage_expr: map_bsource_expr_nodes(&element.voltage_expr, instance_name, node_map),
             current_expr: map_bsource_expr_nodes(&element.current_expr, instance_name, node_map),
         }),
+        Element::CustomModel(element) => {
+            let mut cloned = element.clone();
+            cloned.name = format!("{instance_name}.{}", element.name);
+            cloned.positive = map_subckt_node(&element.positive, instance_name, node_map);
+            cloned.negative = map_subckt_node(&element.negative, instance_name, node_map);
+            Element::CustomModel(cloned)
+        }
         Element::Diode(element) => Element::Diode(Diode::with_model_and_breakdown(
             format!("{instance_name}.{}", element.name),
             map_subckt_node(&element.anode, instance_name, node_map),
@@ -1168,6 +1195,89 @@ pub fn format_digital_bridge_schedule_table(
     Ok(rows.join("\n"))
 }
 
+pub fn format_digital_event_stream_vcd(
+    streams: &[DigitalEventStream],
+) -> Result<String, SpiceError> {
+    format_digital_event_stream_vcd_with_options(streams, "spice_bridge", "1ps")
+}
+
+pub fn format_digital_event_stream_vcd_with_options(
+    streams: &[DigitalEventStream],
+    module_name: &str,
+    timescale: &str,
+) -> Result<String, SpiceError> {
+    let module_name = module_name.trim();
+    if module_name.is_empty() {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "module name must not be empty".to_string(),
+        });
+    }
+    if timescale != "1ps" {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "only 1ps timescale is supported".to_string(),
+        });
+    }
+
+    let mut seen_signal_names = HashSet::new();
+    let mut signal_ids = HashMap::new();
+    for (index, stream) in streams.iter().enumerate() {
+        let signal_name = validate_digital_event_stream_name(stream, &mut seen_signal_names)?;
+        signal_ids.insert(signal_name.to_string(), vcd_identifier(index));
+        let mut previous_time = f64::NEG_INFINITY;
+        for event in &stream.events {
+            validate_digital_event_time(event.time_seconds, previous_time, signal_name)?;
+            previous_time = event.time_seconds;
+        }
+    }
+
+    let mut rows = vec![
+        "$version coding-adventures spice-engine mixed-signal bridge $end".to_string(),
+        format!("$timescale {timescale} $end"),
+        format!("$scope module {module_name} $end"),
+    ];
+    for stream in streams {
+        let signal_name = stream.signal_name.trim();
+        rows.push(format!(
+            "$var wire 1 {} {} $end",
+            signal_ids[signal_name], signal_name
+        ));
+    }
+    rows.push("$upscope $end".to_string());
+    rows.push("$enddefinitions $end".to_string());
+    rows.push("$dumpvars".to_string());
+    for stream in streams {
+        if let Some(event) = stream.events.first() {
+            rows.push(format!(
+                "{}{}",
+                vcd_state_value(event.state),
+                signal_ids[stream.signal_name.trim()]
+            ));
+        }
+    }
+    rows.push("$end".to_string());
+
+    let mut events_by_tick: BTreeMap<i64, Vec<(String, DigitalState)>> = BTreeMap::new();
+    for stream in streams {
+        let signal_id = signal_ids[stream.signal_name.trim()].clone();
+        for event in &stream.events {
+            events_by_tick
+                .entry(vcd_tick(event.time_seconds)?)
+                .or_default()
+                .push((signal_id.clone(), event.state));
+        }
+    }
+    for (tick, events) in events_by_tick {
+        rows.push(format!("#{tick}"));
+        for (signal_id, state) in events {
+            rows.push(format!("{}{}", vcd_state_value(state), signal_id));
+        }
+    }
+    rows.push(String::new());
+    Ok(rows.join("\n"))
+}
+
 fn validate_digital_event_stream_name<'a>(
     stream: &'a DigitalEventStream,
     seen_signal_names: &mut HashSet<String>,
@@ -1212,6 +1322,27 @@ fn format_digital_state(state: DigitalState) -> &'static str {
     match state {
         DigitalState::Low => "low",
         DigitalState::High => "high",
+    }
+}
+
+fn vcd_identifier(index: usize) -> String {
+    format!("s{index}")
+}
+
+fn vcd_tick(time_seconds: f64) -> Result<i64, SpiceError> {
+    if !time_seconds.is_finite() || time_seconds < 0.0 {
+        return Err(SpiceError::InvalidElement {
+            name: "digital_event_stream_vcd".to_string(),
+            reason: "event times must be finite and non-negative".to_string(),
+        });
+    }
+    Ok((time_seconds / 1.0e-12).round() as i64)
+}
+
+fn vcd_state_value(state: DigitalState) -> &'static str {
+    match state {
+        DigitalState::Low => "0",
+        DigitalState::High => "1",
     }
 }
 
@@ -1447,6 +1578,7 @@ pub enum Element {
     VoltageSource(VoltageSource),
     CurrentSource(CurrentSource),
     BSource(BSource),
+    CustomModel(CustomModel),
     Diode(Diode),
     Jfet(Jfet),
     Bjt(Bjt),
@@ -1812,6 +1944,309 @@ impl BSource {
             current_expr: None,
         }
     }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct CustomModelEvaluation {
+    pub current_amps: f64,
+    pub conductance_siemens: f64,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum CustomModelKind {
+    LinearConductance {
+        conductance_siemens: f64,
+        current_offset_amps: f64,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CustomModel {
+    pub name: String,
+    pub positive: String,
+    pub negative: String,
+    pub model_name: String,
+    pub parameters: BTreeMap<String, f64>,
+    pub kind: CustomModelKind,
+}
+
+impl CustomModel {
+    pub fn linear_conductance(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        conductance_siemens: f64,
+    ) -> Self {
+        Self::linear_conductance_with_offset(name, positive, negative, conductance_siemens, 0.0)
+    }
+
+    pub fn linear_conductance_with_offset(
+        name: impl Into<String>,
+        positive: impl Into<String>,
+        negative: impl Into<String>,
+        conductance_siemens: f64,
+        current_offset_amps: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            positive: positive.into(),
+            negative: negative.into(),
+            model_name: "linear_conductance".to_string(),
+            parameters: BTreeMap::new(),
+            kind: CustomModelKind::LinearConductance {
+                conductance_siemens,
+                current_offset_amps,
+            },
+        }
+    }
+
+    pub fn evaluate(&self, voltage: f64) -> Result<CustomModelEvaluation, SpiceError> {
+        validate_custom_model(self)?;
+        let evaluation = match self.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                current_offset_amps,
+            } => CustomModelEvaluation {
+                current_amps: conductance_siemens * voltage + current_offset_amps,
+                conductance_siemens,
+            },
+        };
+        if !evaluation.current_amps.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: self.name.clone(),
+                reason: "custom-model current must be finite".to_string(),
+            });
+        }
+        if !evaluation.conductance_siemens.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: self.name.clone(),
+                reason: "custom-model conductance must be finite".to_string(),
+            });
+        }
+        Ok(evaluation)
+    }
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum CustomModelDiagnosticSeverity {
+    Error,
+    Warning,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CustomModelDiagnostic {
+    pub code: String,
+    pub message: String,
+    pub severity: CustomModelDiagnosticSeverity,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CustomModelSourceAnalysis {
+    pub accepted: bool,
+    pub subset: String,
+    pub module_name: Option<String>,
+    pub terminals: Vec<String>,
+    pub contribution: Option<(String, String)>,
+    pub diagnostics: Vec<CustomModelDiagnostic>,
+}
+
+const CUSTOM_MODEL_SUBSET: &str = "two-terminal-current-contribution-v0";
+
+pub fn analyze_custom_model_source(source: &str) -> CustomModelSourceAnalysis {
+    let mut diagnostics = Vec::new();
+    let trimmed = source.trim();
+    if trimmed.is_empty() {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_EMPTY_SOURCE",
+            "custom model source is empty",
+        ));
+        return CustomModelSourceAnalysis {
+            accepted: false,
+            subset: CUSTOM_MODEL_SUBSET.to_string(),
+            module_name: None,
+            terminals: Vec::new(),
+            contribution: None,
+            diagnostics,
+        };
+    }
+
+    let lowered = trimmed.to_ascii_lowercase();
+    for &(token, message) in CUSTOM_MODEL_FORBIDDEN_PATTERNS {
+        if lowered.contains(token) {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+                message,
+            ));
+        }
+    }
+
+    let (module_name, terminals) = match parse_custom_model_module_header(trimmed) {
+        Some(parsed) => parsed,
+        None => {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_MISSING_MODULE",
+                "custom model source must declare a module with a port list",
+            ));
+            (None, Vec::new())
+        }
+    };
+    if !terminals.is_empty() && terminals.len() < 2 {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_PORT_COUNT",
+            "custom model module must expose at least two terminals",
+        ));
+    }
+
+    let contribution = parse_custom_model_contribution(trimmed);
+    if contribution.is_none() {
+        diagnostics.push(custom_model_error(
+            "CUSTOM_MODEL_MISSING_CONTRIBUTION",
+            "custom model source must contain a two-terminal I(p,n) <+ contribution",
+        ));
+    } else if let Some((positive, negative)) = &contribution {
+        if !terminals.is_empty() && (!terminals.contains(positive) || !terminals.contains(negative))
+        {
+            diagnostics.push(custom_model_error(
+                "CUSTOM_MODEL_UNKNOWN_TERMINAL",
+                "current contribution terminals must be declared module ports",
+            ));
+        }
+    }
+
+    CustomModelSourceAnalysis {
+        accepted: !diagnostics
+            .iter()
+            .any(|diagnostic| diagnostic.severity == CustomModelDiagnosticSeverity::Error),
+        subset: CUSTOM_MODEL_SUBSET.to_string(),
+        module_name,
+        terminals,
+        contribution,
+        diagnostics,
+    }
+}
+
+const CUSTOM_MODEL_FORBIDDEN_PATTERNS: &[(&str, &str)] = &[
+    (
+        "ddt",
+        "dynamic charge operators are not accepted in this custom-model subset",
+    ),
+    (
+        "idt",
+        "dynamic integration operators are not accepted in this custom-model subset",
+    ),
+    (
+        "laplace",
+        "Laplace-domain operators are not accepted in this custom-model subset",
+    ),
+    (
+        "cross",
+        "event crossing operators are not accepted in this custom-model subset",
+    ),
+    (
+        "timer",
+        "timer events are not accepted in this custom-model subset",
+    ),
+    (
+        "@(",
+        "event controls are not accepted in this custom-model subset",
+    ),
+    (
+        "$finish",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "$stop",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "$display",
+        "system tasks are not accepted in this custom-model subset",
+    ),
+    (
+        "initial",
+        "procedural initial blocks are not accepted in this custom-model subset",
+    ),
+    (
+        "always",
+        "procedural always blocks are not accepted in this custom-model subset",
+    ),
+    (
+        "analog function",
+        "analog functions are not accepted in this custom-model subset",
+    ),
+    (
+        "discipline",
+        "discipline declarations are not accepted in this custom-model subset",
+    ),
+    (
+        "branch ",
+        "named branch declarations are not accepted in this custom-model subset",
+    ),
+];
+
+fn custom_model_error(code: &str, message: &str) -> CustomModelDiagnostic {
+    CustomModelDiagnostic {
+        code: code.to_string(),
+        message: message.to_string(),
+        severity: CustomModelDiagnosticSeverity::Error,
+    }
+}
+
+fn parse_custom_model_module_header(source: &str) -> Option<(Option<String>, Vec<String>)> {
+    let lowered = source.to_ascii_lowercase();
+    let module_index = lowered.find("module")?;
+    let after_module = source[module_index + "module".len()..].trim_start();
+    let name_end = after_module
+        .char_indices()
+        .find_map(|(index, ch)| (!is_identifier_char(ch)).then_some(index))
+        .unwrap_or(after_module.len());
+    let name = after_module[..name_end].trim();
+    if name.is_empty() || !is_identifier_start(name.chars().next()?) {
+        return None;
+    }
+    let after_name = after_module[name_end..].trim_start();
+    let open = after_name.find('(')?;
+    let close = after_name[open + 1..].find(')')? + open + 1;
+    if !after_name[close + 1..].trim_start().starts_with(';') {
+        return None;
+    }
+    let ports = after_name[open + 1..close]
+        .split(',')
+        .map(str::trim)
+        .filter(|port| !port.is_empty())
+        .map(ToString::to_string)
+        .collect();
+    Some((Some(name.to_string()), ports))
+}
+
+fn parse_custom_model_contribution(source: &str) -> Option<(String, String)> {
+    let lowered = source.to_ascii_lowercase();
+    let current_index = lowered.find("i(")?;
+    let after_current = &source[current_index + 2..];
+    let close = after_current.find(')')?;
+    if !after_current[close + 1..].trim_start().starts_with("<+") {
+        return None;
+    }
+    let mut args = after_current[..close].split(',').map(str::trim);
+    let positive = args.next()?.to_string();
+    let negative = args.next()?.to_string();
+    if args.next().is_some()
+        || positive.is_empty()
+        || negative.is_empty()
+        || !positive.chars().next().is_some_and(is_identifier_start)
+        || !negative.chars().next().is_some_and(is_identifier_start)
+    {
+        return None;
+    }
+    Some((positive, negative))
+}
+
+fn is_identifier_start(ch: char) -> bool {
+    ch == '_' || ch.is_ascii_alphabetic()
+}
+
+fn is_identifier_char(ch: char) -> bool {
+    ch == '_' || ch == '$' || ch.is_ascii_alphanumeric()
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -2288,6 +2723,2767 @@ impl Mosfet {
     }
 }
 
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub enum ModelCardKind {
+    Diode,
+    Npn,
+    Pnp,
+    Njf,
+    Pjf,
+    Nmos,
+    Pmos,
+}
+
+impl ModelCardKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Diode => "D",
+            Self::Npn => "NPN",
+            Self::Pnp => "PNP",
+            Self::Njf => "NJF",
+            Self::Pjf => "PJF",
+            Self::Nmos => "NMOS",
+            Self::Pmos => "PMOS",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct NormalizedModelCard {
+    pub name: String,
+    pub kind: ModelCardKind,
+    pub parameters: BTreeMap<String, f64>,
+    pub unsupported_parameters: Vec<String>,
+}
+
+fn model_type_key(text: &str) -> String {
+    text.trim()
+        .chars()
+        .filter(|character| *character != '-' && *character != '_')
+        .flat_map(char::to_uppercase)
+        .collect()
+}
+
+fn parameter_key(text: &str) -> String {
+    text.trim()
+        .chars()
+        .map(|character| {
+            if character == '-' {
+                '_'
+            } else {
+                character.to_ascii_uppercase()
+            }
+        })
+        .collect()
+}
+
+pub fn normalize_model_card_type(model_type: &str) -> Result<ModelCardKind, SpiceError> {
+    match model_type_key(model_type).as_str() {
+        "D" | "DIODE" => Ok(ModelCardKind::Diode),
+        "NPN" => Ok(ModelCardKind::Npn),
+        "PNP" => Ok(ModelCardKind::Pnp),
+        "NJF" | "NJFET" | "NJ" => Ok(ModelCardKind::Njf),
+        "PJF" | "PJFET" | "PJ" => Ok(ModelCardKind::Pjf),
+        "NMOS" | "NCH" => Ok(ModelCardKind::Nmos),
+        "PMOS" | "PCH" => Ok(ModelCardKind::Pmos),
+        _ => Err(SpiceError::InvalidElement {
+            name: model_type.to_string(),
+            reason: "unsupported SPICE model type".to_string(),
+        }),
+    }
+}
+
+fn model_card_parameter_alias(kind: ModelCardKind, key: &str) -> Option<&'static str> {
+    match kind {
+        ModelCardKind::Diode => match key {
+            "IS" | "JS" => Some("IS"),
+            "VT" | "V_T" => Some("VT"),
+            "N" => Some("N"),
+            "BV" => Some("BV"),
+            "IBV" => Some("IBV"),
+            "CJO" | "CJ" | "CJ0" => Some("CJO"),
+            "TT" => Some("TT"),
+            _ => None,
+        },
+        ModelCardKind::Npn | ModelCardKind::Pnp => match key {
+            "IS" => Some("IS"),
+            "BF" | "BETA" | "BETA_F" | "HFE" => Some("BF"),
+            "VT" | "V_T" => Some("VT"),
+            "CJE" | "CJE0" | "CBE" => Some("CJE"),
+            "CJC" | "CJC0" | "CBC" => Some("CJC"),
+            "TF" => Some("TF"),
+            "TR" => Some("TR"),
+            _ => None,
+        },
+        ModelCardKind::Njf | ModelCardKind::Pjf => match key {
+            "BETA" | "BET" => Some("BETA"),
+            "VTO" | "VT0" | "VTH" => Some("VTO"),
+            "LAMBDA" | "LAM" => Some("LAMBDA"),
+            _ => None,
+        },
+        ModelCardKind::Nmos | ModelCardKind::Pmos => match key {
+            "LEVEL" => Some("LEVEL"),
+            "VT0" | "VTO" | "VTH" => Some("VT0"),
+            "KP" => Some("KP"),
+            "LAMBDA" | "LAM" => Some("LAMBDA"),
+            "GAMMA" => Some("GAMMA"),
+            "PHI" => Some("PHI"),
+            "W" => Some("W"),
+            "L" => Some("L"),
+            "IS" => Some("IS"),
+            "NSUB" | "N_SUB" => Some("N_SUB"),
+            "TNOM" | "T_NOM" => Some("T_NOM"),
+            "CGSO" => Some("CGSO"),
+            "CGDO" => Some("CGDO"),
+            "CGBO" => Some("CGBO"),
+            "CBS" | "CJS" => Some("CBS"),
+            "CBD" | "CJD" => Some("CBD"),
+            _ => None,
+        },
+    }
+}
+
+pub fn normalize_model_card(
+    name: impl Into<String>,
+    model_type: &str,
+    parameters: &[(&str, f64)],
+) -> Result<NormalizedModelCard, SpiceError> {
+    let name = name.into();
+    let kind = normalize_model_card_type(model_type)?;
+    let mut normalized = BTreeMap::new();
+    let mut unsupported = Vec::new();
+    for (raw_name, raw_value) in parameters {
+        let key = parameter_key(raw_name);
+        if let Some(canonical) = model_card_parameter_alias(kind, &key) {
+            if canonical == "LEVEL" {
+                if (raw_value - 1.0).abs() > 1.0e-12 {
+                    return Err(SpiceError::InvalidElement {
+                        name: name.clone(),
+                        reason: "only MOS LEVEL=1 model cards are supported".to_string(),
+                    });
+                }
+                normalized.insert(canonical.to_string(), 1.0);
+            } else {
+                normalized.insert(canonical.to_string(), *raw_value);
+            }
+        } else if !unsupported.contains(&key) {
+            unsupported.push(key);
+        }
+    }
+    Ok(NormalizedModelCard {
+        name,
+        kind,
+        parameters: normalized,
+        unsupported_parameters: unsupported,
+    })
+}
+
+fn model_card_value(model: &NormalizedModelCard, key: &str, fallback: f64) -> f64 {
+    model.parameters.get(key).copied().unwrap_or(fallback)
+}
+
+fn model_card_kind_error(instance_name: &str, expected: &str, actual: ModelCardKind) -> SpiceError {
+    SpiceError::InvalidElement {
+        name: instance_name.to_string(),
+        reason: format!("expected {expected} model card, got {}", actual.as_str()),
+    }
+}
+
+pub fn diode_from_model_card(
+    name: impl Into<String>,
+    anode: impl Into<String>,
+    cathode: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Diode, SpiceError> {
+    let name = name.into();
+    if model.kind != ModelCardKind::Diode {
+        return Err(model_card_kind_error(&name, "diode", model.kind));
+    }
+    Ok(Diode::with_model_and_breakdown(
+        name,
+        anode,
+        cathode,
+        model_card_value(model, "IS", 1.0e-15),
+        model_card_value(model, "VT", 0.02585),
+        model_card_value(model, "N", 1.0),
+        model.parameters.get("BV").copied(),
+        model_card_value(model, "IBV", 1.0e-3),
+        model_card_value(model, "CJO", 0.0),
+        model_card_value(model, "TT", 0.0),
+    ))
+}
+
+pub fn bjt_from_model_card(
+    name: impl Into<String>,
+    collector: impl Into<String>,
+    base: impl Into<String>,
+    emitter: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Bjt, SpiceError> {
+    let name = name.into();
+    let polarity = match model.kind {
+        ModelCardKind::Npn => BjtPolarity::Npn,
+        ModelCardKind::Pnp => BjtPolarity::Pnp,
+        _ => return Err(model_card_kind_error(&name, "BJT", model.kind)),
+    };
+    Ok(Bjt::with_model(
+        name,
+        collector,
+        base,
+        emitter,
+        polarity,
+        model_card_value(model, "IS", 1.0e-14),
+        model_card_value(model, "BF", 100.0),
+        model_card_value(model, "VT", 0.02585),
+        model_card_value(model, "CJE", 0.0),
+        model_card_value(model, "CJC", 0.0),
+        model_card_value(model, "TF", 0.0),
+        model_card_value(model, "TR", 0.0),
+    ))
+}
+
+pub fn jfet_from_model_card(
+    name: impl Into<String>,
+    drain: impl Into<String>,
+    gate: impl Into<String>,
+    source: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Jfet, SpiceError> {
+    let name = name.into();
+    let polarity = match model.kind {
+        ModelCardKind::Njf => JfetPolarity::Njf,
+        ModelCardKind::Pjf => JfetPolarity::Pjf,
+        _ => return Err(model_card_kind_error(&name, "JFET", model.kind)),
+    };
+    Ok(Jfet::with_model(
+        name,
+        drain,
+        gate,
+        source,
+        polarity,
+        model_card_value(model, "BETA", 1.0e-4),
+        model_card_value(
+            model,
+            "VTO",
+            if model.kind == ModelCardKind::Njf {
+                -2.0
+            } else {
+                2.0
+            },
+        ),
+        model_card_value(model, "LAMBDA", 0.0),
+    ))
+}
+
+pub fn mosfet_from_model_card(
+    name: impl Into<String>,
+    drain: impl Into<String>,
+    gate: impl Into<String>,
+    source: impl Into<String>,
+    body: impl Into<String>,
+    model: &NormalizedModelCard,
+) -> Result<Mosfet, SpiceError> {
+    let name = name.into();
+    let mosfet_type = match model.kind {
+        ModelCardKind::Nmos => MosfetType::Nmos,
+        ModelCardKind::Pmos => MosfetType::Pmos,
+        _ => return Err(model_card_kind_error(&name, "MOSFET", model.kind)),
+    };
+    let mut params = MosfetLevel1Params::default();
+    if let Some(value) = model.parameters.get("VT0") {
+        params.vt0 = *value;
+    }
+    if let Some(value) = model.parameters.get("KP") {
+        params.kp = *value;
+    }
+    if let Some(value) = model.parameters.get("LAMBDA") {
+        params.lambda = *value;
+    }
+    if let Some(value) = model.parameters.get("GAMMA") {
+        params.gamma = *value;
+    }
+    if let Some(value) = model.parameters.get("PHI") {
+        params.phi = *value;
+    }
+    if let Some(value) = model.parameters.get("W") {
+        params.w = *value;
+    }
+    if let Some(value) = model.parameters.get("L") {
+        params.l = *value;
+    }
+    if let Some(value) = model.parameters.get("IS") {
+        params.saturation_current = *value;
+    }
+    if let Some(value) = model.parameters.get("N_SUB") {
+        params.n_sub = *value;
+    }
+    if let Some(value) = model.parameters.get("T_NOM") {
+        params.t_nom = *value;
+    }
+    if let Some(value) = model.parameters.get("CGSO") {
+        params.gate_source_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CGDO") {
+        params.gate_drain_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CGBO") {
+        params.gate_bulk_overlap_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CBS") {
+        params.source_bulk_capacitance = *value;
+    }
+    if let Some(value) = model.parameters.get("CBD") {
+        params.drain_bulk_capacitance = *value;
+    }
+    Ok(Mosfet::with_model(
+        name,
+        drain,
+        gate,
+        source,
+        body,
+        mosfet_type,
+        params,
+    ))
+}
+
+pub fn device_model_audit_fixtures() -> Result<Vec<NormalizedModelCard>, SpiceError> {
+    Ok(vec![
+        normalize_model_card(
+            "Dfast",
+            "diode",
+            &[("JS", 2.0e-14), ("CJ", 1.5e-12), ("TT", 4.0e-9)],
+        )?,
+        normalize_model_card(
+            "Qsmall",
+            "npn",
+            &[("BETA", 125.0), ("CBE", 2.0e-12), ("TF", 1.0e-10)],
+        )?,
+        normalize_model_card(
+            "Jn",
+            "njfet",
+            &[("BET", 9.0e-4), ("VT0", -1.8), ("LAM", 0.02)],
+        )?,
+        normalize_model_card(
+            "Mn",
+            "nmos",
+            &[
+                ("LEVEL", 1.0),
+                ("VTO", 0.55),
+                ("LAM", 0.04),
+                ("NSUB", 1.6),
+                ("CJD", 3.0e-13),
+            ],
+        )?,
+    ])
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CompatibilityOracle {
+    pub reference: String,
+    pub version: String,
+    pub source: String,
+}
+
+impl CompatibilityOracle {
+    pub fn new(
+        reference: impl Into<String>,
+        version: impl Into<String>,
+        source: impl Into<String>,
+    ) -> Self {
+        Self {
+            reference: reference.into(),
+            version: version.into(),
+            source: source.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CompatibilityGoldenValue {
+    pub name: String,
+    pub value: f64,
+    pub unit: String,
+    pub absolute_tolerance: f64,
+    pub relative_tolerance: f64,
+}
+
+impl CompatibilityGoldenValue {
+    pub fn new(
+        name: impl Into<String>,
+        value: f64,
+        unit: impl Into<String>,
+        absolute_tolerance: f64,
+        relative_tolerance: f64,
+    ) -> Self {
+        Self {
+            name: name.into(),
+            value,
+            unit: unit.into(),
+            absolute_tolerance,
+            relative_tolerance,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CompatibilityDeck {
+    pub id: String,
+    pub title: String,
+    pub analysis: String,
+    pub netlist: String,
+    pub oracle: CompatibilityOracle,
+    pub golden_values: Vec<CompatibilityGoldenValue>,
+    pub known_incompatibilities: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckControlDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckControlSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub diagnostics: Vec<DeckControlDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckResolutionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub source: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub target: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckResolutionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub diagnostics: Vec<DeckResolutionDiagnostic>,
+    pub included_paths: Vec<String>,
+    pub library_sections: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckParameterValue {
+    pub name: String,
+    pub value: f64,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckParameterDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub parameter: Option<String>,
+    pub expression: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckParameterSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub parameters: Vec<DeckParameterValue>,
+    pub diagnostics: Vec<DeckParameterDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckNodeCondition {
+    pub directive: String,
+    pub node: String,
+    pub value: f64,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckInitialConditionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckInitialConditionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub initial_conditions: Vec<DeckNodeCondition>,
+    pub nodesets: Vec<DeckNodeCondition>,
+    pub diagnostics: Vec<DeckInitialConditionDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionDefinition {
+    pub name: String,
+    pub arguments: Vec<String>,
+    pub expression: String,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub function_name: Option<String>,
+    pub expression: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFunctionSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub functions: Vec<DeckFunctionDefinition>,
+    pub diagnostics: Vec<DeckFunctionDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckMeasurementCard {
+    pub directive: String,
+    pub analysis: String,
+    pub name: String,
+    pub mode: String,
+    pub probe: String,
+    pub line_number: usize,
+    pub from_value: Option<f64>,
+    pub to_value: Option<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckMeasurementDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckMeasurementSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub measurements: Vec<DeckMeasurementCard>,
+    pub diagnostics: Vec<DeckMeasurementDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputSelection {
+    pub directive: String,
+    pub analysis: Option<String>,
+    pub probes: Vec<String>,
+    pub line_number: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckOutputSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub selections: Vec<DeckOutputSelection>,
+    pub diagnostics: Vec<DeckOutputDiagnostic>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReleaseReadinessIssue {
+    pub deck_id: String,
+    pub field: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ReleaseReadinessReport {
+    pub passed: bool,
+    pub deck_count: usize,
+    pub analyses: Vec<String>,
+    pub issues: Vec<ReleaseReadinessIssue>,
+}
+
+pub fn compatibility_corpus() -> Vec<CompatibilityDeck> {
+    let common = common_known_incompatibilities();
+    vec![
+        CompatibilityDeck {
+            id: "dc-op-resistive-divider".to_string(),
+            title: "DC operating point resistive divider".to_string(),
+            analysis: "op".to_string(),
+            netlist: "* dc-op-resistive-divider\nV1 in 0 DC 10\nR1 in out 10000\nR2 out 0 10000\n.op\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-v1",
+                "V(out)=V1*R2/(R1+R2); I(V1)=-V1/(R1+R2)",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("V(out)", 5.0, "V", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new("I(V1)", -5.0e-4, "A", 1.0e-12, 1.0e-9),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "dc-sweep-resistive-divider".to_string(),
+            title: "DC source sweep resistive divider".to_string(),
+            analysis: "dc".to_string(),
+            netlist: "* dc-sweep-resistive-divider\nV1 in 0 DC 0\nR1 in out 10000\nR2 out 0 10000\n.dc V1 0 10 5\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-sweep-v1",
+                "V(out)=V1*0.5 at each sweep point",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("points", 3.0, "count", 0.0, 0.0),
+                CompatibilityGoldenValue::new("V(out)@V1=10", 5.0, "V", 1.0e-9, 1.0e-9),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "ac-rc-lowpass".to_string(),
+            title: "AC RC low-pass cutoff".to_string(),
+            analysis: "ac".to_string(),
+            netlist: "* ac-rc-lowpass\nV1 in 0 DC 0 AC 1\nR1 in out 1000\nC1 out 0 1u\n.ac dec 1 1 1k\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "rc-lowpass-v1",
+                "|V(out)|=1/sqrt(1+(2*pi*f*R*C)^2)",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("f_c", 159.15494309189535, "Hz", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new(
+                    "|V(out)|@f_c",
+                    0.7071067811865475,
+                    "V",
+                    1.0e-9,
+                    1.0e-9,
+                ),
+            ],
+            known_incompatibilities: common.clone(),
+        },
+        CompatibilityDeck {
+            id: "tran-rc-step".to_string(),
+            title: "Transient RC step response".to_string(),
+            analysis: "tran".to_string(),
+            netlist: "* tran-rc-step\nV1 in 0 PULSE(0 1 0 1n 1n 1m 2m)\nR1 in out 1000\nC1 out 0 1u\n.tran 0.0001 0.001\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "rc-step-v1",
+                "V(out,t)=1-exp(-t/(R*C)) after an ideal 1 V step",
+            ),
+            golden_values: vec![CompatibilityGoldenValue::new(
+                "V(out)@1ms",
+                0.6321205588285577,
+                "V",
+                1.0e-6,
+                1.0e-6,
+            )],
+            known_incompatibilities: common
+                .iter()
+                .cloned()
+                .chain(std::iter::once(
+                    "finite-edge pulse decks compare at the idealized step oracle point"
+                        .to_string(),
+                ))
+                .collect(),
+        },
+        CompatibilityDeck {
+            id: "tf-resistive-divider".to_string(),
+            title: "Transfer-function resistive divider".to_string(),
+            analysis: "tf".to_string(),
+            netlist: "* tf-resistive-divider\nV1 in 0 DC 10\nR1 in out 10000\nR2 out 0 10000\n.tf V(out) V1\n.end\n".to_string(),
+            oracle: CompatibilityOracle::new(
+                "closed-form",
+                "divider-tf-v1",
+                "gain=R2/(R1+R2); input resistance=R1+R2",
+            ),
+            golden_values: vec![
+                CompatibilityGoldenValue::new("gain", 0.5, "V/V", 1.0e-9, 1.0e-9),
+                CompatibilityGoldenValue::new(
+                    "input_resistance",
+                    20000.0,
+                    "ohm",
+                    1.0e-6,
+                    1.0e-9,
+                ),
+            ],
+            known_incompatibilities: common,
+        },
+    ]
+}
+
+pub fn analyze_deck_controls(netlist: &str) -> DeckControlSummary {
+    let mut active_lines = Vec::new();
+    let mut diagnostics = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if let Some(directive) = directive {
+            if is_unsupported_deck_control_directive(&directive) {
+                diagnostics.push(DeckControlDiagnostic {
+                    code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE".to_string(),
+                    directive: directive.clone(),
+                    line_number,
+                    message: format!(
+                        "{directive} is not supported by the deck execution foothold yet"
+                    ),
+                    severity: "error".to_string(),
+                });
+            }
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckControlSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        diagnostics,
+    }
+}
+
+pub fn resolve_deck_sources(
+    netlist: &str,
+    sources: &HashMap<String, String>,
+) -> DeckResolutionSummary {
+    let mut state = DeckResolutionState::new();
+    let (active_lines, terminated, end_line_number) =
+        resolve_deck_lines(netlist, "<deck>", sources, &mut state, &[]);
+
+    DeckResolutionSummary {
+        active_lines,
+        terminated,
+        end_line_number,
+        diagnostics: state.diagnostics,
+        included_paths: state.included_paths,
+        library_sections: state.library_sections,
+    }
+}
+
+pub fn resolve_deck_parameters(netlist: &str) -> DeckParameterSummary {
+    let mut state = DeckParameterState::new();
+    collect_parameter_functions(netlist, &mut state);
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".param") {
+            resolve_param_line(stripped, line_number, &mut state);
+            continue;
+        }
+        if directive.as_deref() == Some(".func") {
+            continue;
+        }
+        if let Some(directive) = directive {
+            if is_unsupported_parameter_directive(&directive) {
+                add_parameter_diagnostic(
+                    &mut state,
+                    "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+                    &directive,
+                    line_number,
+                    &format!("{directive} is not supported by the parameter resolver yet"),
+                    None,
+                    None,
+                );
+                active_lines.push(stripped.to_string());
+                continue;
+            }
+        }
+        active_lines.push(rewrite_parameter_expressions(
+            stripped,
+            line_number,
+            &mut state,
+        ));
+    }
+
+    DeckParameterSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        parameters: state.parameter_values(),
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_initial_conditions(netlist: &str) -> DeckInitialConditionSummary {
+    let mut state = DeckInitialConditionState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if let Some(directive) = directive.as_deref() {
+            if matches!(directive, ".ic" | ".nodeset") {
+                resolve_node_condition_line(stripped, line_number, directive, &mut state);
+                continue;
+            }
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckInitialConditionSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        initial_conditions: state.initial_conditions,
+        nodesets: state.nodesets,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_functions(netlist: &str) -> DeckFunctionSummary {
+    let mut state = DeckFunctionState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".func") {
+            resolve_function_line(stripped, line_number, &mut state);
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckFunctionSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        functions: state.functions,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_measurements(netlist: &str) -> DeckMeasurementSummary {
+    let mut state = DeckMeasurementState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if matches!(directive.as_deref(), Some(".measure" | ".meas")) {
+            resolve_measurement_line(
+                stripped,
+                line_number,
+                directive.as_deref().unwrap(),
+                &mut state,
+            );
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckMeasurementSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        measurements: state.measurements,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_outputs(netlist: &str) -> DeckOutputSummary {
+    let mut state = DeckOutputState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if matches!(directive.as_deref(), Some(".save" | ".probe")) {
+            resolve_output_line(
+                stripped,
+                line_number,
+                directive.as_deref().unwrap(),
+                &mut state,
+            );
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckOutputSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        selections: state.selections,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn select_deck_output_probes(netlist: &str, analysis: &str) -> Result<Vec<String>, SpiceError> {
+    let summary = resolve_deck_outputs(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "select_deck_output_probes",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    let mut selected = Vec::new();
+    let mut seen = HashSet::new();
+    for selection in summary.selections {
+        if !selection.analysis.as_deref().map_or(true, |requested| {
+            deck_output_analysis_matches(requested, analysis)
+        }) {
+            continue;
+        }
+        for probe in selection.probes {
+            let key = deck_output_probe_key(&probe);
+            if seen.insert(key) {
+                selected.push(probe);
+            }
+        }
+    }
+    Ok(selected)
+}
+
+pub fn release_readiness_gates(corpus: &[CompatibilityDeck]) -> ReleaseReadinessReport {
+    let mut issues = Vec::new();
+    let mut seen_ids = HashSet::new();
+    let mut analyses = Vec::new();
+
+    if corpus.is_empty() {
+        issues.push(ReleaseReadinessIssue {
+            deck_id: "corpus".to_string(),
+            field: "deck_count".to_string(),
+            message: "compatibility corpus must contain at least one deck".to_string(),
+        });
+    }
+
+    for deck in corpus {
+        let deck_id = if deck.id.is_empty() {
+            "<missing>".to_string()
+        } else {
+            deck.id.clone()
+        };
+        validate_compatibility_non_empty(&deck_id, "id", &deck.id, &mut issues);
+        validate_compatibility_non_empty(&deck_id, "title", &deck.title, &mut issues);
+        validate_compatibility_non_empty(&deck_id, "netlist", &deck.netlist, &mut issues);
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.reference",
+            &deck.oracle.reference,
+            &mut issues,
+        );
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.version",
+            &deck.oracle.version,
+            &mut issues,
+        );
+        validate_compatibility_non_empty(
+            &deck_id,
+            "oracle.source",
+            &deck.oracle.source,
+            &mut issues,
+        );
+        if !seen_ids.insert(deck.id.clone()) {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "id".to_string(),
+                message: "deck ids must be unique".to_string(),
+            });
+        }
+        if !matches!(deck.analysis.as_str(), "op" | "dc" | "ac" | "tran" | "tf") {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "analysis".to_string(),
+                message: format!("unsupported analysis {:?}", deck.analysis),
+            });
+        } else if !analyses.contains(&deck.analysis) {
+            analyses.push(deck.analysis.clone());
+        }
+        if !deck.netlist.to_ascii_lowercase().contains(".end") {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "netlist".to_string(),
+                message: "deck must include .end".to_string(),
+            });
+        }
+        if deck.golden_values.is_empty() {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: deck_id.clone(),
+                field: "golden_values".to_string(),
+                message: "deck must include at least one golden value".to_string(),
+            });
+        }
+        for (index, golden) in deck.golden_values.iter().enumerate() {
+            let field_prefix = format!("golden_values[{index}]");
+            validate_compatibility_non_empty(
+                &deck_id,
+                &format!("{field_prefix}.name"),
+                &golden.name,
+                &mut issues,
+            );
+            validate_compatibility_non_empty(
+                &deck_id,
+                &format!("{field_prefix}.unit"),
+                &golden.unit,
+                &mut issues,
+            );
+            if !golden.value.is_finite() {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.value"),
+                    message: "golden value must be finite".to_string(),
+                });
+            }
+            if !golden.absolute_tolerance.is_finite()
+                || !golden.relative_tolerance.is_finite()
+                || golden.absolute_tolerance < 0.0
+                || golden.relative_tolerance < 0.0
+            {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.tolerance"),
+                    message: "tolerances must be finite and non-negative".to_string(),
+                });
+            }
+            if golden.absolute_tolerance == 0.0
+                && golden.relative_tolerance == 0.0
+                && golden.unit != "count"
+            {
+                issues.push(ReleaseReadinessIssue {
+                    deck_id: deck_id.clone(),
+                    field: format!("{field_prefix}.tolerance"),
+                    message: "non-count golden values need an absolute or relative tolerance"
+                        .to_string(),
+                });
+            }
+        }
+        if deck.known_incompatibilities.is_empty() {
+            issues.push(ReleaseReadinessIssue {
+                deck_id,
+                field: "known_incompatibilities".to_string(),
+                message: "deck must document known incompatibility boundaries".to_string(),
+            });
+        }
+    }
+
+    for analysis in ["op", "dc", "ac", "tran"] {
+        if !analyses.iter().any(|seen| seen == analysis) {
+            issues.push(ReleaseReadinessIssue {
+                deck_id: "corpus".to_string(),
+                field: "analysis_coverage".to_string(),
+                message: format!("missing required {analysis:?} compatibility deck"),
+            });
+        }
+    }
+
+    ReleaseReadinessReport {
+        passed: issues.is_empty(),
+        deck_count: corpus.len(),
+        analyses,
+        issues,
+    }
+}
+
+pub fn format_compatibility_corpus_table(corpus: &[CompatibilityDeck]) -> String {
+    let mut lines =
+        vec!["id\tanalysis\toracle\tgolden_values\tknown_incompatibilities".to_string()];
+    for deck in corpus {
+        let golden_values = deck
+            .golden_values
+            .iter()
+            .map(|entry| {
+                format!(
+                    "{}={}{}",
+                    entry.name,
+                    format_table_number(entry.value),
+                    entry.unit
+                )
+            })
+            .collect::<Vec<_>>()
+            .join(",");
+        lines.push(format!(
+            "{}\t{}\t{}@{}\t{}\t{}",
+            deck.id,
+            deck.analysis,
+            deck.oracle.reference,
+            deck.oracle.version,
+            golden_values,
+            deck.known_incompatibilities.len()
+        ));
+    }
+    lines.join("\n")
+}
+
+pub fn format_release_readiness_report(report: &ReleaseReadinessReport) -> String {
+    let mut lines = vec![
+        "passed\tdeck_count\tanalyses\tissue_count".to_string(),
+        format!(
+            "{}\t{}\t{}\t{}",
+            report.passed,
+            report.deck_count,
+            report.analyses.join(","),
+            report.issues.len()
+        ),
+    ];
+    if !report.issues.is_empty() {
+        lines.push("deck_id\tfield\tmessage".to_string());
+        lines.extend(
+            report
+                .issues
+                .iter()
+                .map(|issue| format!("{}\t{}\t{}", issue.deck_id, issue.field, issue.message)),
+        );
+    }
+    lines.join("\n")
+}
+
+fn common_known_incompatibilities() -> Vec<String> {
+    vec![
+        "binary rawfile output is not part of this release gate".to_string(),
+        ".control blocks and vendor-specific directives are intentionally excluded".to_string(),
+        "golden values cover named probes, not byte-for-byte waveform dumps".to_string(),
+    ]
+}
+
+fn validate_compatibility_non_empty(
+    deck_id: &str,
+    field: &str,
+    value: &str,
+    issues: &mut Vec<ReleaseReadinessIssue>,
+) {
+    if !value.trim().is_empty() {
+        return;
+    }
+    issues.push(ReleaseReadinessIssue {
+        deck_id: deck_id.to_string(),
+        field: field.to_string(),
+        message: "field must be documented and non-empty".to_string(),
+    });
+}
+
+struct DeckResolutionState {
+    diagnostics: Vec<DeckResolutionDiagnostic>,
+    included_paths: Vec<String>,
+    library_sections: Vec<String>,
+}
+
+impl DeckResolutionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            included_paths: Vec::new(),
+            library_sections: Vec::new(),
+        }
+    }
+}
+
+struct DeckParameterState {
+    diagnostics: Vec<DeckParameterDiagnostic>,
+    parameters: HashMap<String, DeckParameterValue>,
+    functions: HashMap<String, DeckFunctionDefinition>,
+    order: Vec<String>,
+}
+
+impl DeckParameterState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            parameters: HashMap::new(),
+            functions: HashMap::new(),
+            order: Vec::new(),
+        }
+    }
+
+    fn set_parameter(&mut self, name: &str, value: f64) {
+        let key = name.to_ascii_lowercase();
+        if !self.parameters.contains_key(&key) {
+            self.order.push(key.clone());
+        }
+        self.parameters.insert(
+            key,
+            DeckParameterValue {
+                name: name.to_string(),
+                value,
+            },
+        );
+    }
+
+    fn get_parameter(&self, name: &str) -> Option<&DeckParameterValue> {
+        self.parameters.get(&name.to_ascii_lowercase())
+    }
+
+    fn set_function(&mut self, definition: DeckFunctionDefinition) {
+        self.functions
+            .insert(definition.name.to_ascii_lowercase(), definition);
+    }
+
+    fn get_function(&self, name: &str) -> Option<&DeckFunctionDefinition> {
+        self.functions.get(&name.to_ascii_lowercase())
+    }
+
+    fn parameter_values(&self) -> Vec<DeckParameterValue> {
+        self.order
+            .iter()
+            .filter_map(|key| self.parameters.get(key).cloned())
+            .collect()
+    }
+}
+
+struct DeckInitialConditionState {
+    diagnostics: Vec<DeckInitialConditionDiagnostic>,
+    initial_conditions: Vec<DeckNodeCondition>,
+    nodesets: Vec<DeckNodeCondition>,
+}
+
+impl DeckInitialConditionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            initial_conditions: Vec::new(),
+            nodesets: Vec::new(),
+        }
+    }
+}
+
+struct DeckFunctionState {
+    diagnostics: Vec<DeckFunctionDiagnostic>,
+    functions: Vec<DeckFunctionDefinition>,
+}
+
+impl DeckFunctionState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            functions: Vec::new(),
+        }
+    }
+}
+
+struct DeckMeasurementState {
+    diagnostics: Vec<DeckMeasurementDiagnostic>,
+    measurements: Vec<DeckMeasurementCard>,
+}
+
+impl DeckMeasurementState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            measurements: Vec::new(),
+        }
+    }
+}
+
+struct DeckOutputState {
+    diagnostics: Vec<DeckOutputDiagnostic>,
+    selections: Vec<DeckOutputSelection>,
+}
+
+impl DeckOutputState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            selections: Vec::new(),
+        }
+    }
+}
+
+fn resolve_deck_lines(
+    netlist: &str,
+    source: &str,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> (Vec<String>, bool, Option<usize>) {
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".include") {
+            active_lines.extend(resolve_include_directive(
+                stripped,
+                source,
+                line_number,
+                sources,
+                state,
+                stack,
+            ));
+            continue;
+        }
+        if directive.as_deref() == Some(".lib") {
+            active_lines.extend(resolve_library_directive(
+                stripped,
+                source,
+                line_number,
+                sources,
+                state,
+                stack,
+            ));
+            continue;
+        }
+        if directive.as_deref() == Some(".control") {
+            state.diagnostics.push(DeckResolutionDiagnostic {
+                code: "SPICE_DECK_UNSUPPORTED_DIRECTIVE".to_string(),
+                directive: ".control".to_string(),
+                source: source.to_string(),
+                line_number,
+                message: ".control is not supported by the deck source resolver yet".to_string(),
+                severity: "error".to_string(),
+                target: None,
+            });
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    (active_lines, end_line_number.is_some(), end_line_number)
+}
+
+fn resolve_include_directive(
+    line: &str,
+    source: &str,
+    line_number: usize,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> Vec<String> {
+    let tokens = directive_tokens(line);
+    let target = tokens.get(1).map(|token| unquote_token(token));
+    let Some(target) = target.filter(|target| !target.is_empty()) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_ARGUMENT",
+            ".include",
+            source,
+            line_number,
+            ".include requires a source path",
+            None,
+        );
+        return Vec::new();
+    };
+    if stack.contains(&target) {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_CYCLE",
+            ".include",
+            source,
+            line_number,
+            &format!(".include cycle detected for {target}"),
+            Some(target),
+        );
+        return Vec::new();
+    }
+    let Some(content) = sources.get(&target) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_INCLUDE_NOT_FOUND",
+            ".include",
+            source,
+            line_number,
+            &format!(".include source {target:?} was not provided"),
+            Some(target),
+        );
+        return Vec::new();
+    };
+
+    state.included_paths.push(target.clone());
+    let mut next_stack = stack.to_vec();
+    next_stack.push(target.clone());
+    let (resolved, _, _) = resolve_deck_lines(content, &target, sources, state, &next_stack);
+    resolved
+}
+
+fn resolve_library_directive(
+    line: &str,
+    source: &str,
+    line_number: usize,
+    sources: &HashMap<String, String>,
+    state: &mut DeckResolutionState,
+    stack: &[String],
+) -> Vec<String> {
+    let tokens = directive_tokens(line);
+    let path = tokens.get(1).map(|token| unquote_token(token));
+    let section = tokens.get(2).map(|token| unquote_token(token));
+    let (Some(path), Some(section)) = (path, section) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_ARGUMENT",
+            ".lib",
+            source,
+            line_number,
+            ".lib requires a source path and section name",
+            None,
+        );
+        return Vec::new();
+    };
+    if path.is_empty() || section.is_empty() {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_ARGUMENT",
+            ".lib",
+            source,
+            line_number,
+            ".lib requires a source path and section name",
+            Some(path),
+        );
+        return Vec::new();
+    }
+
+    let target = format!("{path}:{section}");
+    let Some(content) = sources.get(&path) else {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_NOT_FOUND",
+            ".lib",
+            source,
+            line_number,
+            &format!(".lib source {path:?} was not provided"),
+            Some(target),
+        );
+        return Vec::new();
+    };
+    if stack.contains(&target) {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_CYCLE",
+            ".lib",
+            source,
+            line_number,
+            &format!(".lib cycle detected for {target}"),
+            Some(target),
+        );
+        return Vec::new();
+    }
+
+    let Some(section_lines) =
+        extract_library_section(content, &path, &section, source, line_number, state)
+    else {
+        return Vec::new();
+    };
+    state.library_sections.push(target.clone());
+    let mut next_stack = stack.to_vec();
+    next_stack.push(target.clone());
+    let (resolved, _, _) = resolve_deck_lines(
+        &section_lines.join("\n"),
+        &target,
+        sources,
+        state,
+        &next_stack,
+    );
+    resolved
+}
+
+fn extract_library_section(
+    content: &str,
+    path: &str,
+    section: &str,
+    call_source: &str,
+    call_line_number: usize,
+    state: &mut DeckResolutionState,
+) -> Option<Vec<String>> {
+    let mut in_section = false;
+    let mut section_start_line = None;
+    let mut section_lines = Vec::new();
+    let wanted = section.to_ascii_lowercase();
+    let target = format!("{path}:{section}");
+
+    for (index, raw_line) in content.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            if in_section {
+                section_lines.push(raw_line.to_string());
+            }
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        let tokens = directive_tokens(stripped);
+        if !in_section {
+            if directive.as_deref() == Some(".lib")
+                && tokens
+                    .get(1)
+                    .map(|token| unquote_token(token).to_ascii_lowercase() == wanted)
+                    .unwrap_or(false)
+            {
+                in_section = true;
+                section_start_line = Some(line_number);
+            }
+            continue;
+        }
+        if matches!(directive.as_deref(), Some(".endl" | ".endlib")) {
+            return Some(section_lines);
+        }
+        section_lines.push(raw_line.to_string());
+    }
+
+    if !in_section {
+        add_resolution_diagnostic(
+            state,
+            "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+            ".lib",
+            call_source,
+            call_line_number,
+            &format!(".lib section {section:?} was not found in {path:?}"),
+            Some(target),
+        );
+        return None;
+    }
+
+    add_resolution_diagnostic(
+        state,
+        "SPICE_DECK_LIB_SECTION_UNTERMINATED",
+        ".lib",
+        path,
+        section_start_line.unwrap_or(1),
+        &format!(".lib section {section:?} in {path:?} is missing .endl"),
+        Some(target),
+    );
+    None
+}
+
+fn add_resolution_diagnostic(
+    state: &mut DeckResolutionState,
+    code: &str,
+    directive: &str,
+    source: &str,
+    line_number: usize,
+    message: &str,
+    target: Option<String>,
+) {
+    state.diagnostics.push(DeckResolutionDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        source: source.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        target,
+    });
+}
+
+fn resolve_node_condition_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckInitialConditionState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() == 1 {
+        add_initial_condition_diagnostic(
+            state,
+            "SPICE_DECK_CONDITION_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one V(node)=value assignment"),
+            None,
+        );
+        return;
+    }
+
+    let empty_parameter_state = DeckParameterState::new();
+    for token in tokens.iter().skip(1) {
+        let Some((target, expression)) = token.split_once('=') else {
+            add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_ARGUMENT",
+                directive,
+                line_number,
+                &format!("{directive} assignment {token:?} must use V(node)=value syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let target = target.trim();
+        let Some(node) = parse_node_condition_target(target) else {
+            add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_TARGET",
+                directive,
+                line_number,
+                &format!("{directive} target {target:?} must use V(node) syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let expression = strip_expression_delimiters(expression.trim());
+        match evaluate_parameter_expression(&expression, &empty_parameter_state) {
+            Ok(value) => {
+                let condition = DeckNodeCondition {
+                    directive: directive.to_string(),
+                    node,
+                    value,
+                    line_number,
+                };
+                if directive == ".ic" {
+                    state.initial_conditions.push(condition);
+                } else {
+                    state.nodesets.push(condition);
+                }
+            }
+            Err(message) => add_initial_condition_diagnostic(
+                state,
+                "SPICE_DECK_CONDITION_EXPRESSION",
+                directive,
+                line_number,
+                &message,
+                Some((*token).to_string()),
+            ),
+        }
+    }
+}
+
+fn resolve_function_line(line: &str, line_number: usize, state: &mut DeckFunctionState) {
+    let Some((_, rest)) = line.split_once(char::is_whitespace) else {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            ".func requires a name(args) expression definition",
+            None,
+            None,
+        );
+        return;
+    };
+    let rest = rest.trim();
+    if rest.is_empty() {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            ".func requires a name(args) expression definition",
+            None,
+            None,
+        );
+        return;
+    }
+
+    let Some((name, arguments, expression)) = parse_function_signature(rest) else {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_SIGNATURE",
+            line_number,
+            ".func definition must use name(args) expression syntax",
+            None,
+            None,
+        );
+        return;
+    };
+    if !is_parameter_name(&name) {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_SIGNATURE",
+            line_number,
+            &format!(".func name {name:?} is not a valid identifier"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    if let Some(invalid_argument) = arguments
+        .iter()
+        .find(|argument| !is_parameter_name(argument))
+    {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            &format!(".func argument {invalid_argument:?} is not a valid identifier"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    let mut seen = HashSet::new();
+    if arguments
+        .iter()
+        .any(|argument| !seen.insert(argument.to_ascii_lowercase()))
+    {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_ARGUMENT",
+            line_number,
+            &format!(".func {name:?} has duplicate argument names"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    let expression = strip_expression_delimiters(expression.trim());
+    if expression.is_empty() {
+        add_function_diagnostic(
+            state,
+            "SPICE_DECK_FUNC_EXPRESSION",
+            line_number,
+            &format!(".func {name:?} requires a non-empty expression"),
+            Some(name),
+            None,
+        );
+        return;
+    }
+    state.functions.push(DeckFunctionDefinition {
+        name,
+        arguments,
+        expression,
+        line_number,
+    });
+}
+
+fn resolve_measurement_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckMeasurementState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() < 5 {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires analysis, name, mode, and probe tokens"),
+            None,
+        );
+        return;
+    }
+
+    let analysis = tokens[1].trim().to_ascii_lowercase();
+    if analysis != "tran" && analysis != "transient" {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_ANALYSIS",
+            directive,
+            line_number,
+            &format!(
+                "only transient .measure cards are supported, got {:?}",
+                tokens[1]
+            ),
+            Some(tokens[1].to_string()),
+        );
+        return;
+    }
+
+    let name = tokens[2].trim();
+    if !is_parameter_name(name) {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_NAME",
+            directive,
+            line_number,
+            &format!("measurement name {name:?} is not a valid identifier"),
+            Some(name.to_string()),
+        );
+        return;
+    }
+
+    let Some(mode) = normalize_measurement_mode_token(tokens[3]) else {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_MODE",
+            directive,
+            line_number,
+            &format!("unsupported transient measurement mode {:?}", tokens[3]),
+            Some(tokens[3].to_string()),
+        );
+        return;
+    };
+
+    let probe = unquote_token(tokens[4].trim());
+    if probe.is_empty() {
+        add_measurement_diagnostic(
+            state,
+            "SPICE_DECK_MEASURE_PROBE",
+            directive,
+            line_number,
+            "measurement probe must not be empty",
+            Some(tokens[4].to_string()),
+        );
+        return;
+    }
+
+    let empty_parameter_state = DeckParameterState::new();
+    let mut from_value = None;
+    let mut to_value = None;
+    let mut seen_window_tokens = Vec::new();
+    let diagnostic_count = state.diagnostics.len();
+    for token in tokens.iter().skip(5) {
+        let Some((key, expression)) = token.split_once('=') else {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("measurement option {token:?} must use name=value syntax"),
+                Some((*token).to_string()),
+            );
+            continue;
+        };
+        let key = key.trim().to_ascii_lowercase();
+        if key != "from" && key != "to" {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("unsupported measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            continue;
+        }
+        if seen_window_tokens.iter().any(|seen| seen == &key) {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_ARGUMENT",
+                directive,
+                line_number,
+                &format!("duplicate measurement option {key:?}"),
+                Some((*token).to_string()),
+            );
+            continue;
+        }
+        seen_window_tokens.push(key.clone());
+        match evaluate_parameter_expression(
+            &strip_expression_delimiters(expression.trim()),
+            &empty_parameter_state,
+        ) {
+            Ok(value) if key == "from" => from_value = Some(value),
+            Ok(value) => to_value = Some(value),
+            Err(message) => add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_EXPRESSION",
+                directive,
+                line_number,
+                &message,
+                Some((*token).to_string()),
+            ),
+        }
+    }
+
+    if let (Some(from), Some(to)) = (from_value, to_value) {
+        if from > to {
+            add_measurement_diagnostic(
+                state,
+                "SPICE_DECK_MEASURE_WINDOW",
+                directive,
+                line_number,
+                "measurement FROM value must be <= TO value",
+                None,
+            );
+        }
+    }
+
+    if state.diagnostics.len() != diagnostic_count {
+        return;
+    }
+
+    state.measurements.push(DeckMeasurementCard {
+        directive: directive.to_string(),
+        analysis,
+        name: name.to_string(),
+        mode: mode.to_string(),
+        probe,
+        line_number,
+        from_value,
+        to_value,
+    });
+}
+
+fn resolve_output_line(
+    line: &str,
+    line_number: usize,
+    directive: &str,
+    state: &mut DeckOutputState,
+) {
+    let tokens = directive_tokens(line);
+    if tokens.len() < 2 {
+        add_output_diagnostic(
+            state,
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one probe token"),
+            None,
+        );
+        return;
+    }
+
+    let (analysis, probe_tokens) = if directive == ".probe"
+        && tokens
+            .get(1)
+            .and_then(|token| normalize_deck_output_analysis(token))
+            .is_some()
+    {
+        (
+            normalize_deck_output_analysis(tokens[1]).map(str::to_string),
+            &tokens[2..],
+        )
+    } else {
+        (None, &tokens[1..])
+    };
+    if probe_tokens.is_empty() {
+        add_output_diagnostic(
+            state,
+            "SPICE_DECK_OUTPUT_ARGUMENT",
+            directive,
+            line_number,
+            &format!("{directive} requires at least one probe token"),
+            None,
+        );
+        return;
+    }
+
+    let mut probes = Vec::new();
+    for token in probe_tokens {
+        let token = unquote_token(token);
+        match normalize_deck_output_probe(&token) {
+            Some(probe) => probes.push(probe),
+            None => add_output_diagnostic(
+                state,
+                "SPICE_DECK_OUTPUT_PROBE",
+                directive,
+                line_number,
+                &format!("{directive} probe must be V(node) or I(source), got {token:?}"),
+                Some(token),
+            ),
+        }
+    }
+    if probes.is_empty() {
+        return;
+    }
+    state.selections.push(DeckOutputSelection {
+        directive: directive.to_string(),
+        analysis,
+        probes,
+        line_number,
+    });
+}
+
+fn resolve_param_line(line: &str, line_number: usize, state: &mut DeckParameterState) {
+    let tokens = directive_tokens(line);
+    if tokens.len() == 1 {
+        add_parameter_diagnostic(
+            state,
+            "SPICE_DECK_PARAM_ARGUMENT",
+            ".param",
+            line_number,
+            ".param requires at least one name=value assignment",
+            None,
+            None,
+        );
+        return;
+    }
+
+    for token in tokens.iter().skip(1) {
+        let Some((name, expression)) = token.split_once('=') else {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_ARGUMENT",
+                ".param",
+                line_number,
+                &format!(".param assignment {token:?} must use name=value syntax"),
+                Some((*token).to_string()),
+                None,
+            );
+            continue;
+        };
+        let name = name.trim();
+        let expression = strip_expression_delimiters(expression.trim());
+        if !is_parameter_name(name) {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_NAME",
+                ".param",
+                line_number,
+                &format!(".param name {name:?} is not a valid identifier"),
+                Some(name.to_string()),
+                Some(expression.clone()),
+            );
+            continue;
+        }
+        match evaluate_parameter_expression(&expression, state) {
+            Ok(value) => state.set_parameter(name, value),
+            Err(message) => add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_EXPRESSION",
+                ".param",
+                line_number,
+                &message,
+                Some(name.to_string()),
+                Some(expression),
+            ),
+        }
+    }
+}
+
+fn collect_parameter_functions(netlist: &str, state: &mut DeckParameterState) {
+    let mut function_state = DeckFunctionState::new();
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            break;
+        }
+        if directive.as_deref() == Some(".func") {
+            resolve_function_line(stripped, line_number, &mut function_state);
+        }
+    }
+
+    for definition in function_state.functions {
+        state.set_function(definition);
+    }
+    for diagnostic in function_state.diagnostics {
+        add_parameter_diagnostic(
+            state,
+            &diagnostic.code,
+            &diagnostic.directive,
+            diagnostic.line_number,
+            &diagnostic.message,
+            diagnostic.function_name,
+            diagnostic.expression,
+        );
+    }
+}
+
+fn rewrite_parameter_expressions(
+    line: &str,
+    line_number: usize,
+    state: &mut DeckParameterState,
+) -> String {
+    let braced = replace_delimited_parameter_expressions(line, '{', '}', line_number, state);
+    replace_delimited_parameter_expressions(&braced, '\'', '\'', line_number, state)
+}
+
+fn replace_delimited_parameter_expressions(
+    line: &str,
+    open_token: char,
+    close_token: char,
+    line_number: usize,
+    state: &mut DeckParameterState,
+) -> String {
+    let mut result = String::new();
+    let mut index = 0;
+    while index < line.len() {
+        let rest = &line[index..];
+        if !rest.starts_with(open_token) {
+            let Some(ch) = rest.chars().next() else {
+                break;
+            };
+            result.push(ch);
+            index += ch.len_utf8();
+            continue;
+        }
+
+        let expression_start = index + open_token.len_utf8();
+        let Some(close_offset) = line[expression_start..].find(close_token) else {
+            add_parameter_diagnostic(
+                state,
+                "SPICE_DECK_PARAM_UNTERMINATED",
+                ".param",
+                line_number,
+                &format!(
+                    "unterminated parameter expression starting at column {}",
+                    index + 1
+                ),
+                None,
+                None,
+            );
+            result.push_str(&line[index..]);
+            break;
+        };
+        let close_index = expression_start + close_offset;
+        let expression = line[expression_start..close_index].trim();
+        match evaluate_parameter_expression(expression, state) {
+            Ok(value) => result.push_str(&format_parameter_number(value)),
+            Err(message) => {
+                add_parameter_diagnostic(
+                    state,
+                    "SPICE_DECK_PARAM_UNRESOLVED",
+                    ".param",
+                    line_number,
+                    &message,
+                    None,
+                    Some(expression.to_string()),
+                );
+                result.push_str(&line[index..close_index + close_token.len_utf8()]);
+            }
+        }
+        index = close_index + close_token.len_utf8();
+    }
+    result
+}
+
+fn evaluate_parameter_expression(
+    expression: &str,
+    state: &DeckParameterState,
+) -> Result<f64, String> {
+    let value = ParameterExpressionParser::new(expression, state).parse()?;
+    if !value.is_finite() {
+        return Err(format!(
+            "parameter expression {expression:?} did not evaluate to a finite value"
+        ));
+    }
+    Ok(value)
+}
+
+struct ParameterExpressionParser<'a> {
+    expression: &'a str,
+    state: &'a DeckParameterState,
+    local_values: HashMap<String, f64>,
+    call_stack: Vec<String>,
+    index: usize,
+}
+
+impl<'a> ParameterExpressionParser<'a> {
+    fn new(expression: &'a str, state: &'a DeckParameterState) -> Self {
+        Self {
+            expression,
+            state,
+            local_values: HashMap::new(),
+            call_stack: Vec::new(),
+            index: 0,
+        }
+    }
+
+    fn new_with_context(
+        expression: &'a str,
+        state: &'a DeckParameterState,
+        local_values: HashMap<String, f64>,
+        call_stack: Vec<String>,
+    ) -> Self {
+        Self {
+            expression,
+            state,
+            local_values,
+            call_stack,
+            index: 0,
+        }
+    }
+
+    fn parse(mut self) -> Result<f64, String> {
+        if self.expression.is_empty() {
+            return Err("parameter expression must not be empty".to_string());
+        }
+        let value = self.parse_expression()?;
+        self.skip_whitespace();
+        if self.index != self.expression.len() {
+            let token = self.current_char().unwrap_or('\0');
+            return Err(format!(
+                "unexpected token {token:?} in parameter expression"
+            ));
+        }
+        Ok(value)
+    }
+
+    fn parse_expression(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_term()?;
+        loop {
+            self.skip_whitespace();
+            if self.match_token("+") {
+                value += self.parse_term()?;
+            } else if self.match_token("-") {
+                value -= self.parse_term()?;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_term(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_power()?;
+        loop {
+            self.skip_whitespace();
+            if self.match_token("*") {
+                value *= self.parse_power()?;
+            } else if self.match_token("/") {
+                let denominator = self.parse_power()?;
+                if denominator == 0.0 {
+                    return Err("division by zero in parameter expression".to_string());
+                }
+                value /= denominator;
+            } else {
+                return Ok(value);
+            }
+        }
+    }
+
+    fn parse_power(&mut self) -> Result<f64, String> {
+        let mut value = self.parse_unary()?;
+        self.skip_whitespace();
+        if self.match_token("^") {
+            value = value.powf(self.parse_power()?);
+        }
+        Ok(value)
+    }
+
+    fn parse_unary(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        if self.match_token("+") {
+            return self.parse_unary();
+        }
+        if self.match_token("-") {
+            return Ok(-self.parse_unary()?);
+        }
+        self.parse_primary()
+    }
+
+    fn parse_primary(&mut self) -> Result<f64, String> {
+        self.skip_whitespace();
+        if self.match_token("(") {
+            let value = self.parse_expression()?;
+            self.skip_whitespace();
+            if !self.match_token(")") {
+                return Err("missing ')' in parameter expression".to_string());
+            }
+            return Ok(value);
+        }
+        let Some(ch) = self.current_char() else {
+            return Err("unexpected end of parameter expression".to_string());
+        };
+        if ch.is_ascii_digit() || ch == '.' {
+            return self.parse_number();
+        }
+        if ch.is_ascii_alphabetic() || ch == '_' {
+            return self.parse_identifier();
+        }
+        Err(format!("unexpected token {ch:?} in parameter expression"))
+    }
+
+    fn parse_number(&mut self) -> Result<f64, String> {
+        let start = self.index;
+        let mut saw_digit = false;
+        while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+            saw_digit = true;
+            self.advance_char();
+        }
+        if self.current_char() == Some('.') {
+            self.advance_char();
+            while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                saw_digit = true;
+                self.advance_char();
+            }
+        }
+        if !saw_digit {
+            return Err("expected digit in numeric parameter expression".to_string());
+        }
+        if self
+            .current_char()
+            .is_some_and(|ch| matches!(ch, 'e' | 'E'))
+        {
+            let exponent_index = self.index;
+            self.advance_char();
+            if self
+                .current_char()
+                .is_some_and(|ch| matches!(ch, '+' | '-'))
+            {
+                self.advance_char();
+            }
+            let exponent_start = self.index;
+            while self.current_char().is_some_and(|ch| ch.is_ascii_digit()) {
+                self.advance_char();
+            }
+            if exponent_start == self.index {
+                self.index = exponent_index;
+            }
+        }
+
+        let numeric = self.expression[start..self.index]
+            .parse::<f64>()
+            .map_err(|_| "invalid numeric parameter expression".to_string())?;
+        let suffix_start = self.index;
+        while self
+            .current_char()
+            .is_some_and(|ch| ch.is_ascii_alphabetic())
+        {
+            self.advance_char();
+        }
+        let suffix = self.expression[suffix_start..self.index].to_ascii_lowercase();
+        if suffix.is_empty() {
+            return Ok(numeric);
+        }
+        let Some(factor) = spice_suffix_factor(&suffix) else {
+            return Err(format!("unsupported numeric suffix {suffix:?}"));
+        };
+        Ok(numeric * factor)
+    }
+
+    fn parse_identifier(&mut self) -> Result<f64, String> {
+        let start = self.index;
+        while self
+            .current_char()
+            .is_some_and(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+        {
+            self.advance_char();
+        }
+        let name = self.expression[start..self.index].to_string();
+        self.skip_whitespace();
+        if self.current_char() == Some('(') {
+            let values = self.parse_call_arguments()?;
+            return self.evaluate_function_call(&name, &values);
+        }
+        if let Some(value) = self.local_values.get(&name.to_ascii_lowercase()) {
+            return Ok(*value);
+        }
+        if name.eq_ignore_ascii_case("pi") {
+            return Ok(std::f64::consts::PI);
+        }
+        let Some(parameter) = self.state.get_parameter(&name) else {
+            return Err(format!("unknown parameter {name:?}"));
+        };
+        Ok(parameter.value)
+    }
+
+    fn parse_call_arguments(&mut self) -> Result<Vec<f64>, String> {
+        if !self.match_token("(") {
+            return Err("expected '(' in function call".to_string());
+        }
+        self.skip_whitespace();
+        if self.match_token(")") {
+            return Ok(Vec::new());
+        }
+        let mut values = Vec::new();
+        loop {
+            values.push(self.parse_expression()?);
+            self.skip_whitespace();
+            if self.match_token(",") {
+                continue;
+            }
+            if self.match_token(")") {
+                return Ok(values);
+            }
+            return Err("missing ')' in function call".to_string());
+        }
+    }
+
+    fn evaluate_function_call(&self, name: &str, values: &[f64]) -> Result<f64, String> {
+        let Some(definition) = self.state.get_function(name) else {
+            return Err(format!("unknown function {name:?}"));
+        };
+        if values.len() != definition.arguments.len() {
+            return Err(format!(
+                "function {name:?} expected {} arguments but got {}",
+                definition.arguments.len(),
+                values.len()
+            ));
+        }
+        let key = definition.name.to_ascii_lowercase();
+        if self.call_stack.contains(&key) {
+            return Err(format!("recursive function call {name:?}"));
+        }
+        let mut local_values = self.local_values.clone();
+        for (argument, value) in definition.arguments.iter().zip(values.iter()) {
+            local_values.insert(argument.to_ascii_lowercase(), *value);
+        }
+        let mut call_stack = self.call_stack.clone();
+        call_stack.push(key);
+        ParameterExpressionParser::new_with_context(
+            &definition.expression,
+            self.state,
+            local_values,
+            call_stack,
+        )
+        .parse()
+    }
+
+    fn skip_whitespace(&mut self) {
+        while self.current_char().is_some_and(|ch| ch.is_whitespace()) {
+            self.advance_char();
+        }
+    }
+
+    fn match_token(&mut self, token: &str) -> bool {
+        if self.expression[self.index..].starts_with(token) {
+            self.index += token.len();
+            true
+        } else {
+            false
+        }
+    }
+
+    fn current_char(&self) -> Option<char> {
+        self.expression[self.index..].chars().next()
+    }
+
+    fn advance_char(&mut self) {
+        if let Some(ch) = self.current_char() {
+            self.index += ch.len_utf8();
+        }
+    }
+}
+
+fn add_parameter_diagnostic(
+    state: &mut DeckParameterState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    parameter: Option<String>,
+    expression: Option<String>,
+) {
+    state.diagnostics.push(DeckParameterDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        parameter,
+        expression,
+    });
+}
+
+fn add_initial_condition_diagnostic(
+    state: &mut DeckInitialConditionState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckInitialConditionDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
+fn add_function_diagnostic(
+    state: &mut DeckFunctionState,
+    code: &str,
+    line_number: usize,
+    message: &str,
+    function_name: Option<String>,
+    expression: Option<String>,
+) {
+    state.diagnostics.push(DeckFunctionDiagnostic {
+        code: code.to_string(),
+        directive: ".func".to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        function_name,
+        expression,
+    });
+}
+
+fn add_measurement_diagnostic(
+    state: &mut DeckMeasurementState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckMeasurementDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
+fn add_output_diagnostic(
+    state: &mut DeckOutputState,
+    code: &str,
+    directive: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckOutputDiagnostic {
+        code: code.to_string(),
+        directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
+fn parse_node_condition_target(target: &str) -> Option<String> {
+    if target.len() < 4 || !target.to_ascii_lowercase().starts_with("v(") || !target.ends_with(')')
+    {
+        return None;
+    }
+    let node = target[2..target.len() - 1].trim();
+    if node.is_empty() {
+        None
+    } else {
+        Some(node.to_string())
+    }
+}
+
+fn parse_function_signature(rest: &str) -> Option<(String, Vec<String>, String)> {
+    let open_index = rest.find('(')?;
+    let close_index = rest[open_index + 1..].find(')')? + open_index + 1;
+    let name = rest[..open_index].trim().to_string();
+    let arguments_raw = rest[open_index + 1..close_index].trim();
+    let expression = rest[close_index + 1..].trim().to_string();
+    let arguments = if arguments_raw.is_empty() {
+        Vec::new()
+    } else {
+        arguments_raw
+            .split(',')
+            .map(|argument| argument.trim().to_string())
+            .collect()
+    };
+    Some((name, arguments, expression))
+}
+
+fn is_unsupported_parameter_directive(directive: &str) -> bool {
+    let _ = directive;
+    false
+}
+
+fn is_parameter_name(name: &str) -> bool {
+    let mut chars = name.chars();
+    let Some(first) = chars.next() else {
+        return false;
+    };
+    if !first.is_ascii_alphabetic() && first != '_' {
+        return false;
+    }
+    chars.all(|ch| ch.is_ascii_alphanumeric() || ch == '_')
+}
+
+fn normalize_measurement_mode_token(mode: &str) -> Option<&'static str> {
+    let normalized = mode.trim().to_ascii_lowercase().replace('_', "-");
+    match normalized.as_str() {
+        "max" => Some("max"),
+        "min" => Some("min"),
+        "avg" | "average" | "mean" => Some("avg"),
+        "rms" | "root-mean-square" => Some("rms"),
+        "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Some("pp"),
+        "last" | "final" => Some("last"),
+        _ => None,
+    }
+}
+
+fn normalize_deck_output_analysis(analysis: &str) -> Option<&'static str> {
+    match analysis.trim().to_ascii_lowercase().as_str() {
+        "op" | "dcop" => Some("op"),
+        "dc" => Some("dc"),
+        "ac" => Some("ac"),
+        "tran" | "transient" => Some("tran"),
+        _ => None,
+    }
+}
+
+fn deck_output_analysis_matches(requested: &str, analysis: &str) -> bool {
+    normalize_deck_output_analysis(requested) == normalize_deck_output_analysis(analysis)
+}
+
+fn normalize_deck_output_probe(token: &str) -> Option<String> {
+    let text = token.trim();
+    if !text.ends_with(')') {
+        return None;
+    }
+    let lower = text.to_ascii_lowercase();
+    let prefix = if lower.starts_with("v(") {
+        "V"
+    } else if lower.starts_with("i(") {
+        "I"
+    } else {
+        return None;
+    };
+    let target = text[2..text.len() - 1].trim();
+    if target.is_empty()
+        || target.contains('(')
+        || target.contains(')')
+        || target.contains(',')
+        || target.chars().any(char::is_whitespace)
+    {
+        return None;
+    }
+    Some(format!("{prefix}({target})"))
+}
+
+fn deck_output_probe_key(probe: &str) -> String {
+    probe.to_ascii_lowercase()
+}
+
+fn strip_expression_delimiters(expression: &str) -> String {
+    if expression.len() >= 2 {
+        let first = expression.as_bytes()[0] as char;
+        let last = expression.as_bytes()[expression.len() - 1] as char;
+        if (first == '{' && last == '}') || (first == '\'' && last == '\'') {
+            return expression[1..expression.len() - 1].trim().to_string();
+        }
+    }
+    expression.to_string()
+}
+
+fn spice_suffix_factor(suffix: &str) -> Option<f64> {
+    match suffix {
+        "t" => Some(1.0e12),
+        "g" => Some(1.0e9),
+        "meg" => Some(1.0e6),
+        "k" => Some(1.0e3),
+        "m" => Some(1.0e-3),
+        "mil" => Some(25.4e-6),
+        "u" => Some(1.0e-6),
+        "n" => Some(1.0e-9),
+        "p" => Some(1.0e-12),
+        "f" => Some(1.0e-15),
+        _ => None,
+    }
+}
+
+fn format_parameter_number(value: f64) -> String {
+    if value == 0.0 {
+        return "0".to_string();
+    }
+    let abs_value = value.abs();
+    if (1.0e-12..1.0e12).contains(&abs_value) {
+        let mut formatted = format!("{value:.12}");
+        if formatted.contains('.') {
+            while formatted.ends_with('0') {
+                formatted.pop();
+            }
+            if formatted.ends_with('.') {
+                formatted.pop();
+            }
+        }
+        if formatted == "-0" {
+            "0".to_string()
+        } else {
+            formatted
+        }
+    } else {
+        let raw = format!("{value:.12e}");
+        let (mantissa, exponent) = raw.split_once('e').unwrap_or((raw.as_str(), "0"));
+        let mut mantissa = mantissa.to_string();
+        while mantissa.ends_with('0') {
+            mantissa.pop();
+        }
+        if mantissa.ends_with('.') {
+            mantissa.pop();
+        }
+        let exponent_value = exponent.parse::<i32>().unwrap_or(0);
+        format!("{mantissa}e{exponent_value:+}")
+    }
+}
+
+fn directive_tokens(line: &str) -> Vec<&str> {
+    line.split_whitespace().collect()
+}
+
+fn unquote_token(token: &str) -> String {
+    if token.len() >= 2 {
+        let first = token.as_bytes()[0] as char;
+        let last = token.as_bytes()[token.len() - 1] as char;
+        if first == last && (first == '"' || first == '\'') {
+            return token[1..token.len() - 1].to_string();
+        }
+    }
+    token.to_string()
+}
+
+fn deck_directive(line: &str) -> Option<String> {
+    if !line.starts_with('.') {
+        return None;
+    }
+    Some(
+        line.split_whitespace()
+            .next()
+            .unwrap_or(line)
+            .to_ascii_lowercase(),
+    )
+}
+
+fn is_unsupported_deck_control_directive(directive: &str) -> bool {
+    matches!(directive, ".include" | ".lib" | ".control")
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Vccs {
     pub name: String,
@@ -2412,12 +5608,22 @@ pub enum DcConvergenceAid {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct DcSolverDiagnostics {
+    pub matrix_size: usize,
+    pub solver: String,
+    pub tolerance: f64,
+    pub max_delta: f64,
+    pub convergence_aid: DcConvergenceAid,
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct DcResult {
     pub node_voltages: BTreeMap<String, f64>,
     pub branch_currents: BTreeMap<String, f64>,
     pub iterations: usize,
     pub converged: bool,
     pub convergence_aid: DcConvergenceAid,
+    pub diagnostics: DcSolverDiagnostics,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -2853,6 +6059,17 @@ pub struct TransientPoint {
     pub time: f64,
     pub node_voltages: BTreeMap<String, f64>,
     pub branch_currents: BTreeMap<String, f64>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ProbeMeasurement {
+    pub name: String,
+    pub analysis: String,
+    pub probe: String,
+    pub mode: String,
+    pub value: f64,
+    pub from_value: Option<f64>,
+    pub to_value: Option<f64>,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -4844,6 +8061,37 @@ pub fn format_ac_table(points: &[AcPoint], probes: &[&str]) -> Result<String, Sp
     Ok(rows.join("\n"))
 }
 
+pub fn format_deck_op_table(result: &DcResult, netlist: &str) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "op")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_dc_table(result, &probe_refs)
+}
+
+pub fn format_deck_dc_sweep_table(
+    source_name: &str,
+    points: &[DcSweepPoint],
+    netlist: &str,
+) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "dc")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_dc_sweep_table(source_name, points, &probe_refs)
+}
+
+pub fn format_deck_ac_table(points: &[AcPoint], netlist: &str) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "ac")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_ac_table(points, &probe_refs)
+}
+
+pub fn format_deck_transient_table(
+    points: &[TransientPoint],
+    netlist: &str,
+) -> Result<String, SpiceError> {
+    let probes = select_deck_output_probes(netlist, "tran")?;
+    let probe_refs = probes.iter().map(String::as_str).collect::<Vec<_>>();
+    format_transient_table(points, &probe_refs)
+}
+
 pub fn format_corner_ac_table(
     result: &CornerAcSweepResult,
     probes: &[&str],
@@ -5365,6 +8613,169 @@ fn format_table_number(value: f64) -> String {
     raw
 }
 
+pub fn measure_transient_probe(
+    points: &[TransientPoint],
+    name: &str,
+    probe: &str,
+    mode: &str,
+    from_time: Option<f64>,
+    to_time: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let normalized_mode = normalize_measurement_mode(mode)?;
+    if let Some(value) = from_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_probe",
+                "from_time must be finite",
+            ));
+        }
+    }
+    if let Some(value) = to_time {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_transient_probe",
+                "to_time must be finite",
+            ));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_time, to_time) {
+        if from > to {
+            return Err(table_error(
+                "measure_transient_probe",
+                "from_time must be <= to_time",
+            ));
+        }
+    }
+
+    let mut values = Vec::new();
+    for point in points {
+        if from_time.map_or(false, |from| point.time < from)
+            || to_time.map_or(false, |to| point.time > to)
+        {
+            continue;
+        }
+        values.push(table_probe_value(
+            &point.node_voltages,
+            &point.branch_currents,
+            probe,
+            "measure_transient_probe",
+        )?);
+    }
+    if values.is_empty() {
+        return Err(table_error(
+            "measure_transient_probe",
+            "no transient samples in window",
+        ));
+    }
+
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "tran".to_string(),
+        probe: probe.to_string(),
+        mode: normalized_mode.to_string(),
+        value: measure_values(&values, normalized_mode)?,
+        from_value: from_time,
+        to_value: to_time,
+    })
+}
+
+pub fn measure_transient_cards(
+    points: &[TransientPoint],
+    measurements: &[DeckMeasurementCard],
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let mut results = Vec::new();
+    for measurement in measurements {
+        if measurement.analysis != "tran" && measurement.analysis != "transient" {
+            return Err(table_error(
+                "measure_transient_cards",
+                "only transient measurement cards are supported",
+            ));
+        }
+        results.push(measure_transient_probe(
+            points,
+            &measurement.name,
+            &measurement.probe,
+            &measurement.mode,
+            measurement.from_value,
+            measurement.to_value,
+        )?);
+    }
+    Ok(results)
+}
+
+pub fn measure_transient_deck(
+    points: &[TransientPoint],
+    netlist: &str,
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "measure_transient_deck",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    measure_transient_cards(points, &summary.measurements)
+}
+
+pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
+    let mut rows = vec!["Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue".to_string()];
+    for measurement in measurements {
+        rows.push(format!(
+            "{}\t{}\t{}\t{}\t{}\t{}\t{}",
+            measurement.name,
+            measurement.analysis,
+            measurement.probe,
+            measurement.mode,
+            format_optional_table_number(measurement.from_value),
+            format_optional_table_number(measurement.to_value),
+            format_table_number(measurement.value),
+        ));
+    }
+    rows.push(String::new());
+    rows.join("\n")
+}
+
+fn normalize_measurement_mode(mode: &str) -> Result<&'static str, SpiceError> {
+    let normalized = mode.trim().to_ascii_lowercase().replace('_', "-");
+    match normalized.as_str() {
+        "max" => Ok("max"),
+        "min" => Ok("min"),
+        "avg" | "average" | "mean" => Ok("avg"),
+        "rms" | "root-mean-square" => Ok("rms"),
+        "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Ok("pp"),
+        "last" | "final" => Ok("last"),
+        _ => Err(table_error(
+            "measure_transient_probe",
+            &format!("unsupported mode {mode:?}"),
+        )),
+    }
+}
+
+fn measure_values(values: &[f64], mode: &str) -> Result<f64, SpiceError> {
+    match mode {
+        "max" => Ok(values.iter().copied().fold(f64::NEG_INFINITY, f64::max)),
+        "min" => Ok(values.iter().copied().fold(f64::INFINITY, f64::min)),
+        "avg" => Ok(values.iter().sum::<f64>() / values.len() as f64),
+        "rms" => Ok(
+            (values.iter().map(|value| value * value).sum::<f64>() / values.len() as f64).sqrt(),
+        ),
+        "pp" => {
+            let min = values.iter().copied().fold(f64::INFINITY, f64::min);
+            let max = values.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+            Ok(max - min)
+        }
+        "last" => Ok(*values.last().unwrap()),
+        _ => Err(table_error(
+            "measure_transient_probe",
+            &format!("unsupported mode {mode:?}"),
+        )),
+    }
+}
+
+fn format_optional_table_number(value: Option<f64>) -> String {
+    value.map(format_table_number).unwrap_or_default()
+}
+
 fn table_probe_value(
     node_voltages: &BTreeMap<String, f64>,
     branch_currents: &BTreeMap<String, f64>,
@@ -5490,18 +8901,67 @@ pub fn dc_op(circuit: &Circuit) -> Result<DcResult, SpiceError> {
 }
 
 pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcResult, SpiceError> {
+    dc_op_with_optional_initial_vector(circuit, options, None)
+}
+
+pub fn dc_op_with_initial_vector(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: &[f64],
+) -> Result<DcResult, SpiceError> {
+    dc_op_with_optional_initial_vector(circuit, options, Some(initial_vector))
+}
+
+pub fn dc_op_with_initial_conditions(
+    circuit: &Circuit,
+    summary: &DeckInitialConditionSummary,
+    options: DcOpOptions,
+) -> Result<DcResult, SpiceError> {
+    let initial_vector =
+        dc_initial_vector_from_conditions(circuit, &summary.initial_conditions, &summary.nodesets)?;
+    dc_op_with_initial_vector(circuit, options, &initial_vector)
+}
+
+pub fn dc_initial_vector_from_conditions(
+    circuit: &Circuit,
+    initial_conditions: &[DeckNodeCondition],
+    nodesets: &[DeckNodeCondition],
+) -> Result<Vec<f64>, SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    let voltage_sources = collect_voltage_sources(circuit, &[])?;
+    let mut vector = vec![0.0; node_indices.len() + voltage_sources.len()];
+
+    for condition in nodesets {
+        apply_node_condition_to_initial_vector(condition, &node_indices, &mut vector)?;
+    }
+    for condition in initial_conditions {
+        apply_node_condition_to_initial_vector(condition, &node_indices, &mut vector)?;
+    }
+    Ok(vector)
+}
+
+fn dc_op_with_optional_initial_vector(
+    circuit: &Circuit,
+    options: DcOpOptions,
+    initial_vector: Option<&[f64]>,
+) -> Result<DcResult, SpiceError> {
     validate_dc_op_options(options)?;
-    let solution = solve_dc_newton(circuit, options, None)?;
+    if let Some(vector) = initial_vector {
+        validate_dc_initial_vector(circuit, vector)?;
+    }
+    let solution = solve_dc_newton(circuit, options, initial_vector)?;
     if solution.converged {
         return Ok(dc_result_from_linear_solution(
             solution,
             DcConvergenceAid::Newton,
+            options.tolerance,
         ));
     }
     if !options.convergence_aids {
         return Ok(dc_result_from_linear_solution(
             solution,
             DcConvergenceAid::None,
+            options.tolerance,
         ));
     }
 
@@ -5518,6 +8978,7 @@ pub fn dc_op_with_options(circuit: &Circuit, options: DcOpOptions) -> Result<DcR
     Ok(dc_result_from_linear_solution(
         final_solution,
         convergence_aid,
+        options.tolerance,
     ))
 }
 
@@ -5663,6 +9124,7 @@ fn element_name(element: &Element) -> Option<&str> {
         Element::Inductor(element) => Some(&element.name),
         Element::VoltageSource(element) => Some(&element.name),
         Element::CurrentSource(element) => Some(&element.name),
+        Element::CustomModel(element) => Some(&element.name),
         _ => None,
     }
 }
@@ -5717,6 +9179,15 @@ fn apply_corner_override(
             element.current = override_.value;
             Ok(Element::CurrentSource(element))
         }
+        Element::CustomModel(mut element) if override_.parameter == "conductance" => {
+            match &mut element.kind {
+                CustomModelKind::LinearConductance {
+                    conductance_siemens,
+                    ..
+                } => *conductance_siemens = override_.value,
+            }
+            Ok(Element::CustomModel(element))
+        }
         _ => Err(SpiceError::InvalidElement {
             name: "dc_corners".to_string(),
             reason: format!(
@@ -5730,13 +9201,22 @@ fn apply_corner_override(
 fn dc_result_from_linear_solution(
     solution: LinearSolution,
     convergence_aid: DcConvergenceAid,
+    tolerance: f64,
 ) -> DcResult {
+    let matrix_size = solution.vector.len();
     DcResult {
         node_voltages: solution.node_voltages,
         branch_currents: solution.branch_currents,
         iterations: solution.iterations,
         converged: solution.converged,
         convergence_aid,
+        diagnostics: DcSolverDiagnostics {
+            matrix_size,
+            solver: real_solver_kind(matrix_size).to_string(),
+            tolerance,
+            max_delta: solution.max_delta,
+            convergence_aid,
+        },
     }
 }
 
@@ -5767,6 +9247,58 @@ fn validate_dc_op_options(options: DcOpOptions) -> Result<(), SpiceError> {
             reason: "pseudo_transient_max_iterations must be positive".to_string(),
         });
     }
+    Ok(())
+}
+
+fn validate_dc_initial_vector(circuit: &Circuit, initial_vector: &[f64]) -> Result<(), SpiceError> {
+    let node_indices = collect_node_indices(circuit);
+    let voltage_sources = collect_voltage_sources(circuit, &[])?;
+    let expected_len = node_indices.len() + voltage_sources.len();
+    if initial_vector.len() != expected_len {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_initial_vector".to_string(),
+            reason: format!(
+                "expected {expected_len} entries for circuit MNA ordering, got {}",
+                initial_vector.len()
+            ),
+        });
+    }
+    if initial_vector.iter().any(|value| !value.is_finite()) {
+        return Err(SpiceError::InvalidElement {
+            name: "dc_initial_vector".to_string(),
+            reason: "all entries must be finite".to_string(),
+        });
+    }
+    Ok(())
+}
+
+fn apply_node_condition_to_initial_vector(
+    condition: &DeckNodeCondition,
+    node_indices: &HashMap<String, usize>,
+    vector: &mut [f64],
+) -> Result<(), SpiceError> {
+    if !condition.value.is_finite() {
+        return Err(SpiceError::InvalidElement {
+            name: condition.directive.clone(),
+            reason: format!("V({}) must be finite", condition.node),
+        });
+    }
+    if is_ground(&condition.node) {
+        if condition.value != 0.0 {
+            return Err(SpiceError::InvalidElement {
+                name: condition.directive.clone(),
+                reason: format!("V({}) conflicts with ground", condition.node),
+            });
+        }
+        return Ok(());
+    }
+    let Some(index) = node_indices.get(&condition.node) else {
+        return Err(SpiceError::InvalidElement {
+            name: condition.directive.clone(),
+            reason: format!("references unknown node {:?}", condition.node),
+        });
+    };
+    vector[*index] = condition.value;
     Ok(())
 }
 
@@ -7963,6 +11495,16 @@ fn element_parameter(element: &Element) -> Option<(String, String, f64)> {
         Element::CurrentSource(source) => {
             Some((source.name.clone(), "current".to_string(), source.current))
         }
+        Element::CustomModel(model) => match model.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                ..
+            } => Some((
+                model.name.clone(),
+                "conductance_siemens".to_string(),
+                conductance_siemens,
+            )),
+        },
         Element::Diode(diode) => Some((
             diode.name.clone(),
             "saturation_current".to_string(),
@@ -8004,6 +11546,12 @@ fn perturb_element_parameter(element: &mut Element, delta: f64) {
         Element::Resistor(resistor) => resistor.resistance_ohms += delta,
         Element::VoltageSource(source) => source.voltage += delta,
         Element::CurrentSource(source) => source.current += delta,
+        Element::CustomModel(model) => match &mut model.kind {
+            CustomModelKind::LinearConductance {
+                conductance_siemens,
+                ..
+            } => *conductance_siemens += delta,
+        },
         Element::Diode(diode) => diode.saturation_current += delta,
         Element::Jfet(jfet) => jfet.beta += delta,
         Element::Bjt(bjt) => bjt.saturation_current += delta,
@@ -8095,6 +11643,19 @@ fn randomized_element(
             let mut varied = source.clone();
             varied.current = randomized_value(varied.current, tolerance, distribution, rng);
             Element::CurrentSource(varied)
+        }
+        Element::CustomModel(model) => {
+            let mut varied = model.clone();
+            match &mut varied.kind {
+                CustomModelKind::LinearConductance {
+                    conductance_siemens,
+                    ..
+                } => {
+                    *conductance_siemens =
+                        randomized_value(*conductance_siemens, tolerance, distribution, rng);
+                }
+            }
+            Element::CustomModel(varied)
         }
         Element::Diode(diode) => {
             let mut varied = diode.clone();
@@ -8214,6 +11775,7 @@ struct LinearSolution {
     vector: Vec<f64>,
     iterations: usize,
     converged: bool,
+    max_delta: f64,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -8304,6 +11866,7 @@ fn solve_linear_circuit_with_options(
             vector: Vec::new(),
             iterations: 0,
             converged: true,
+            max_delta: 0.0,
         });
     }
 
@@ -8315,6 +11878,7 @@ fn solve_linear_circuit_with_options(
                 | Element::Bjt(_)
                 | Element::Mosfet(_)
                 | Element::BSource(_)
+                | Element::CustomModel(_)
         )
     });
     let return_singular_as_unconverged = options.return_singular_as_unconverged && has_nonlinear;
@@ -8348,6 +11912,7 @@ fn solve_linear_circuit_with_options(
             return Ok(LinearSolution {
                 iterations,
                 converged: false,
+                max_delta: f64::INFINITY,
                 ..solution
             });
         }
@@ -8357,6 +11922,7 @@ fn solve_linear_circuit_with_options(
             return Ok(LinearSolution {
                 iterations,
                 converged: true,
+                max_delta: delta,
                 ..solution
             });
         }
@@ -8379,6 +11945,7 @@ fn solve_linear_circuit_with_options(
     Ok(LinearSolution {
         iterations,
         converged: delta < options.tolerance,
+        max_delta: delta,
         ..solution
     })
 }
@@ -8409,6 +11976,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
         Ok(solution) => Ok(LinearSolution {
             iterations: 1,
             converged: true,
+            max_delta: 0.0,
             ..solution
         }),
         Err(SpiceError::SingularMatrix) if return_singular_as_unconverged => {
@@ -8420,6 +11988,7 @@ fn solve_linear_circuit_at_operating_point_or_failure(
                 node_count,
                 operating_point,
                 false,
+                f64::INFINITY,
             ))
         }
         Err(error) => Err(error),
@@ -8500,6 +12069,9 @@ fn solve_linear_circuit_at_operating_point(
                 &mut rhs,
                 operating_point,
             )?,
+            Element::CustomModel(model) => {
+                stamp_custom_model(model, node_indices, &mut matrix, &mut rhs, operating_point)?
+            }
             Element::Diode(diode) => {
                 stamp_diode(diode, node_indices, &mut matrix, &mut rhs, operating_point)?
             }
@@ -8542,6 +12114,7 @@ fn solve_linear_circuit_at_operating_point(
         node_count,
         &solution,
         true,
+        0.0,
     ))
 }
 
@@ -8553,6 +12126,7 @@ fn linear_solution_from_vector(
     node_count: usize,
     solution: &[f64],
     converged: bool,
+    max_delta: f64,
 ) -> LinearSolution {
     let node_voltages = node_voltages_from_solution(node_indices, solution);
     let mut branch_currents = BTreeMap::new();
@@ -8575,6 +12149,7 @@ fn linear_solution_from_vector(
         vector: solution.to_vec(),
         iterations: 1,
         converged,
+        max_delta,
     }
 }
 
@@ -8632,6 +12207,7 @@ fn solve_ac_circuit(circuit: &Circuit, omega: f64) -> Result<AcSolution, SpiceEr
             | Element::Inductor(_)
             | Element::MutualInductor(_)
             | Element::TransmissionLine(_)
+            | Element::CustomModel(_)
             | Element::Diode(_)
             | Element::Jfet(_)
             | Element::Bjt(_)
@@ -8707,6 +12283,15 @@ fn build_ac_matrix(
                 &mut matrix,
                 operating_point,
             )?,
+            Element::CustomModel(model) => stamp_complex_conductance(
+                &mut matrix,
+                node_index(node_indices, &model.positive),
+                node_index(node_indices, &model.negative),
+                Complex::new(
+                    custom_model_conductance(model, node_indices, operating_point)?,
+                    0.0,
+                ),
+            ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -8816,6 +12401,12 @@ fn build_small_signal_matrix(
                 &mut matrix,
                 operating_point,
             )?,
+            Element::CustomModel(model) => stamp_conductance(
+                &mut matrix,
+                node_index(node_indices, &model.positive),
+                node_index(node_indices, &model.negative),
+                custom_model_conductance(model, node_indices, operating_point)?,
+            ),
             Element::Diode(diode) => {
                 validate_diode(diode)?;
                 let anode = node_index(node_indices, &diode.anode);
@@ -8932,6 +12523,10 @@ fn collect_node_indices(circuit: &Circuit) -> HashMap<String, usize> {
                 for node in bsource_expr_nodes(expr) {
                     insert_node(&mut names, &node);
                 }
+            }
+            Element::CustomModel(model) => {
+                insert_node(&mut names, &model.positive);
+                insert_node(&mut names, &model.negative);
             }
             Element::Diode(diode) => {
                 insert_node(&mut names, &diode.anode);
@@ -9057,6 +12652,9 @@ fn find_input_source<'a>(
             }
             Element::BSource(source) if source.name == input_source => {
                 return Err(input_source_type_error(input_source, "B-source"));
+            }
+            Element::CustomModel(model) if model.name == input_source => {
+                return Err(input_source_type_error(input_source, "custom-model"));
             }
             Element::Resistor(resistor) if resistor.name == input_source => {
                 return Err(input_source_type_error(input_source, "resistor"));
@@ -9383,6 +12981,80 @@ fn stamp_conductance(
         matrix[i][j] -= conductance;
         matrix[j][i] -= conductance;
     }
+}
+
+fn validate_custom_model(model: &CustomModel) -> Result<(), SpiceError> {
+    for (name, value) in &model.parameters {
+        if !value.is_finite() {
+            return Err(SpiceError::InvalidElement {
+                name: model.name.clone(),
+                reason: format!("custom-model parameter {name} must be finite"),
+            });
+        }
+    }
+    match model.kind {
+        CustomModelKind::LinearConductance {
+            conductance_siemens,
+            current_offset_amps,
+        } => {
+            if !conductance_siemens.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: model.name.clone(),
+                    reason: "custom-model conductance must be finite".to_string(),
+                });
+            }
+            if !current_offset_amps.is_finite() {
+                return Err(SpiceError::InvalidElement {
+                    name: model.name.clone(),
+                    reason: "custom-model current offset must be finite".to_string(),
+                });
+            }
+        }
+    }
+    Ok(())
+}
+
+fn custom_model_voltage(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> f64 {
+    let positive = node_index(node_indices, &model.positive);
+    let negative = node_index(node_indices, &model.negative);
+    vector_voltage(operating_point, positive) - vector_voltage(operating_point, negative)
+}
+
+fn custom_model_conductance(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    operating_point: &[f64],
+) -> Result<f64, SpiceError> {
+    Ok(model
+        .evaluate(custom_model_voltage(model, node_indices, operating_point))?
+        .conductance_siemens)
+}
+
+fn stamp_custom_model(
+    model: &CustomModel,
+    node_indices: &HashMap<String, usize>,
+    matrix: &mut [Vec<f64>],
+    rhs: &mut [f64],
+    operating_point: &[f64],
+) -> Result<(), SpiceError> {
+    let positive = node_index(node_indices, &model.positive);
+    let negative = node_index(node_indices, &model.negative);
+    let voltage = custom_model_voltage(model, node_indices, operating_point);
+    let evaluation = model.evaluate(voltage)?;
+    let equivalent_current = evaluation.current_amps - evaluation.conductance_siemens * voltage;
+
+    stamp_conductance(matrix, positive, negative, evaluation.conductance_siemens);
+    if let Some(index) = positive {
+        rhs[index] -= equivalent_current;
+    }
+    if let Some(index) = negative {
+        rhs[index] += equivalent_current;
+    }
+    Ok(())
 }
 
 fn stamp_diode(
@@ -12129,6 +15801,16 @@ fn solve_sparse_linear_system(
 }
 
 fn solve_complex_linear_system(
+    matrix: Vec<Vec<Complex>>,
+    rhs: Vec<Complex>,
+) -> Result<Vec<Complex>, SpiceError> {
+    if complex_solver_kind(rhs.len()) == "sparse_complex" {
+        return solve_sparse_complex_linear_system(matrix, rhs);
+    }
+    solve_dense_complex_linear_system(matrix, rhs)
+}
+
+fn solve_dense_complex_linear_system(
     mut matrix: Vec<Vec<Complex>>,
     mut rhs: Vec<Complex>,
 ) -> Result<Vec<Complex>, SpiceError> {
@@ -12170,6 +15852,102 @@ fn solve_complex_linear_system(
             .map(|col| matrix[row][col] * solution[col])
             .fold(Complex::zero(), |acc, value| acc + value);
         solution[row] = (rhs[row] - tail_sum) / matrix[row][row];
+        if !solution[row].is_finite() {
+            return Err(SpiceError::SingularMatrix);
+        }
+    }
+    Ok(solution)
+}
+
+fn solve_sparse_complex_linear_system(
+    matrix: Vec<Vec<Complex>>,
+    rhs: Vec<Complex>,
+) -> Result<Vec<Complex>, SpiceError> {
+    let n = rhs.len();
+    let mut rows: Vec<HashMap<usize, Complex>> = matrix
+        .into_iter()
+        .map(|row| {
+            row.into_iter()
+                .enumerate()
+                .filter_map(|(col, value)| (value != Complex::zero()).then_some((col, value)))
+                .collect()
+        })
+        .collect();
+    let mut rhs = rhs;
+
+    for pivot_col in 0..n {
+        let pivot_row = (pivot_col..n)
+            .max_by(|&a, &b| {
+                rows[a]
+                    .get(&pivot_col)
+                    .copied()
+                    .unwrap_or_else(Complex::zero)
+                    .abs()
+                    .partial_cmp(
+                        &rows[b]
+                            .get(&pivot_col)
+                            .copied()
+                            .unwrap_or_else(Complex::zero)
+                            .abs(),
+                    )
+                    .unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .ok_or(SpiceError::SingularMatrix)?;
+
+        if rows[pivot_row]
+            .get(&pivot_col)
+            .copied()
+            .unwrap_or_else(Complex::zero)
+            .abs()
+            < PIVOT_EPSILON
+        {
+            return Err(SpiceError::SingularMatrix);
+        }
+
+        rows.swap(pivot_col, pivot_row);
+        rhs.swap(pivot_col, pivot_row);
+
+        let pivot = rows[pivot_col][&pivot_col];
+        let pivot_entries: Vec<(usize, Complex)> = rows[pivot_col]
+            .iter()
+            .filter_map(|(&col, &value)| (col > pivot_col).then_some((col, value)))
+            .collect();
+        for row in (pivot_col + 1)..n {
+            let value = rows[row]
+                .get(&pivot_col)
+                .copied()
+                .unwrap_or_else(Complex::zero);
+            if value == Complex::zero() {
+                continue;
+            }
+            let factor = value / pivot;
+            rows[row].remove(&pivot_col);
+            for (col, pivot_value) in &pivot_entries {
+                let next_value = rows[row].get(col).copied().unwrap_or_else(Complex::zero)
+                    - factor * *pivot_value;
+                if next_value.abs() < PIVOT_EPSILON {
+                    rows[row].remove(col);
+                } else {
+                    rows[row].insert(*col, next_value);
+                }
+            }
+            rhs[row] = rhs[row] - factor * rhs[pivot_col];
+        }
+    }
+
+    let mut solution = vec![Complex::zero(); n];
+    for row in (0..n).rev() {
+        let diagonal = rows[row].get(&row).copied().unwrap_or_else(Complex::zero);
+        if diagonal.abs() < PIVOT_EPSILON {
+            return Err(SpiceError::SingularMatrix);
+        }
+        let mut value = rhs[row];
+        for (&col, &entry) in &rows[row] {
+            if col > row {
+                value = value - entry * solution[col];
+            }
+        }
+        solution[row] = value / diagonal;
         if !solution[row].is_finite() {
             return Err(SpiceError::SingularMatrix);
         }

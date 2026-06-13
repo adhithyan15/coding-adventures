@@ -1,10 +1,14 @@
 import { describe, expect, it } from "vitest";
 import {
   Circuit,
+  type CornerDistortionResult,
   type DistortionResult,
+  DigitalLogicLevels,
+  DigitalThresholds,
   ExpWaveform,
   type FourierResult,
   type PoleZeroResult,
+  type TransientPoint,
   PulseWaveform,
   PwlWaveform,
   SinWaveform,
@@ -16,24 +20,47 @@ import {
   currentSource,
   currentSourceWithWaveform,
   dcOp,
+  digitalEventStreamsToBridgeSchedule,
+  digitalEventStreamsToVoltageSources,
+  digitalEventsToPwlWaveform,
+  digitalEventsToVoltageSource,
   distortionFromFourier,
   distortionFromTransient,
+  distortionFromTransientCorners,
   estimatePeriod,
+  formatAdaptiveDigitalEventStreamTable,
+  formatCornerAdaptiveDigitalEventStreamTable,
+  formatCornerDigitalEventStreamTable,
+  formatCornerAdaptiveTransientTable,
+  formatCornerDistortionTable,
+  formatCornerFourierTable,
+  formatCornerPoleZeroTable,
+  formatCornerPssTable,
+  formatCornerTransientTable,
   formatDcTable,
+  formatDigitalBridgeScheduleTable,
+  formatDigitalEventStreamTable,
+  formatDigitalEventStreamVcd,
+  formatDigitalEventTable,
   formatDistortionTable,
   formatFourierTable,
+  formatMeasurementTable,
   formatPoleZeroTable,
+  formatPssTable,
   formatTransientTable,
   fourier,
+  fourierCorners,
   inductor,
   inductorWithInitialCurrent,
   jfet,
   mutualInductor,
   pss,
+  pssCorners,
   pssNewtonCandidate,
   pssNewtonIteration,
   pssNewtonSolve,
   pssNewtonUpdate,
+  poleZeroCorners,
   poleZeroRlcBandpass,
   poleZeroRlcHighpass,
   poleZeroRlcLowpass,
@@ -43,8 +70,18 @@ import {
   pssResidualJacobian,
   pssResidual,
   resistor,
+  sampleTransientProbeAsDigitalEvents,
+  sampleTransientProbesAsDigitalEventStreams,
+  measureTransientDeck,
+  measureTransientProbe,
   transient,
   transientAdaptive,
+  transientAdaptiveWithDigitalEventStreams,
+  transientAdaptiveWithDigitalEventStreamsCorners,
+  transientAdaptiveCorners,
+  transientCorners,
+  transientWithDigitalEventStreams,
+  transientWithDigitalEventStreamsCorners,
   transmissionLine,
   voltageSource,
   voltageSourceWithWaveform,
@@ -54,6 +91,23 @@ import {
 function expectClose(actual: number | undefined, expected: number): void {
   expect(actual).not.toBeUndefined();
   expect(actual!).toBeCloseTo(expected, 9);
+}
+
+function transientPoint(time: number, nodeVoltages: Record<string, number>): TransientPoint {
+  const voltages = new Map(Object.entries(nodeVoltages));
+  const currents = new Map<string, number>();
+  return {
+    time,
+    nodeVoltages: voltages,
+    branchCurrents: currents,
+    voltage(node: string): number | undefined {
+      return node === "0" || node.toLowerCase() === "gnd" ? 0.0 : voltages.get(node);
+    },
+    branchCurrent(sourceName: string): number | undefined {
+      const key = sourceName.startsWith("I(") ? sourceName : `I(${sourceName})`;
+      return currents.get(key);
+    },
+  };
 }
 
 describe("transient", () => {
@@ -385,6 +439,54 @@ describe("transient", () => {
     expect(
       pssResidual(result!.solve.finalCircuit, 32, 1.0e-3)!.residualL2Norm,
     ).toBeCloseTo(result!.solve.finalResidual.residualL2Norm, 12);
+  });
+
+  it("runs PSS per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "V1",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "0", 1_000.0));
+
+    const nominal = pss(circuit, 4, 1.0e-9, 1.0e-5, 2);
+    const result = pssCorners(circuit, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "rload-high",
+        overrides: [{ elementName: "R1", parameter: "resistance", value: 2_000.0 }],
+      },
+    ], 4, 1.0e-9, 1.0e-5, 2);
+
+    expect(nominal).not.toBeUndefined();
+    expect(result).not.toBeUndefined();
+    expect(result!.points.map((point) => point.cornerName)).toEqual(["nominal", "rload-high"]);
+    expect(result!.points.every((point) => point.result.converged)).toBe(true);
+    expectClose(result!.points[0].result.periodSeconds, 1.0e-3);
+    expectClose(result!.points[1].result.steadyState[0].branchCurrent("V1"), -5.0e-4);
+    expect(formatPssTable(nominal!, ["V(in)", "I(V1)"])).toBe(
+      "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n" +
+        "0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n" +
+        "1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n" +
+        "2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n" +
+        "3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n",
+    );
+    expect(formatCornerPssTable(result!, ["V(in)", "I(V1)"])).toBe(
+      "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n" +
+        "nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n" +
+        "nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n" +
+        "nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n" +
+        "nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n" +
+        "rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n" +
+        "rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n" +
+        "rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n" +
+        "rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n",
+    );
   });
 
   it("does not report a PSS residual without a periodic source period", () => {
@@ -786,6 +888,47 @@ describe("transient", () => {
     expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
   });
 
+  it("runs Fourier analysis for each named corner and formats the table", () => {
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, 1_000.0),
+      ),
+    );
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(resistor("R2", "out", "0", 1_000.0));
+
+    const result = fourierCorners(
+      circuit,
+      2.5e-4,
+      2.0e-3,
+      1_000.0,
+      ["V(out)"],
+      [
+        { name: "nominal", overrides: [] },
+        { name: "r2-high", overrides: [{ elementName: "R2", parameter: "resistance", value: 2_000.0 }] },
+      ],
+      2,
+    );
+
+    expect(result.fundamentalFrequencyHz).toBeCloseTo(1_000.0, 9);
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("r2-high");
+    expect(result.points[0].result.probes[0].harmonics[0].magnitude).toBeCloseTo(0.5, 9);
+    expect(result.points[1].result.probes[0].harmonics[0].magnitude).toBeCloseTo(2.0 / 3.0, 9);
+    expect(formatCornerFourierTable(result)).toBe(
+      "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n" +
+        "nominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\n" +
+        "nominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\n" +
+        "r2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\n" +
+        "r2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n",
+    );
+  });
+
   it("models pole-zero result shapes for a simple RC pole fixture", () => {
     const resistance = 1_000.0;
     const capacitance = 1.0e-6;
@@ -832,6 +975,31 @@ describe("transient", () => {
         },
       ],
     });
+  });
+
+  it("runs selected pole-zero topology for each named corner and formats the table", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("Vin", "in", "0", 1.0));
+    circuit.add(resistor("R1", "in", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const result = poleZeroCorners(circuit, "Vin", "out", "rc-lowpass", [
+      { name: "nominal", overrides: [] },
+      { name: "cap-high", overrides: [{ elementName: "C1", parameter: "capacitance", value: 2.0e-6 }] },
+    ]);
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputNode).toBe("out");
+    expect(result.topology).toBe("rc-lowpass");
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("cap-high");
+    expect(result.points[0].result.entries[0].real).toBeCloseTo(-1.0e3, 9);
+    expect(result.points[1].result.entries[0].real).toBeCloseTo(-5.0e2, 9);
+    expect(formatCornerPoleZeroTable(result)).toBe(
+      "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n" +
+        "nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n" +
+        "cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n",
+    );
   });
 
   it("computes the zero and pole for a simple RC high-pass fixture", () => {
@@ -1147,6 +1315,46 @@ describe("transient", () => {
     expect(result.points[0].totalHarmonicDistortion).toBeCloseTo(0.1, 3);
   });
 
+  it("projects transient distortion for each named corner", () => {
+    const freq = 1.0e3;
+    const period = 1.0 / freq;
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(0.0, 1.0, freq),
+      ),
+    );
+    circuit.add(resistor("Rtop", "in", "out", 1_000.0));
+    circuit.add(resistor("Rbot", "out", "0", 1_000.0));
+
+    const result = distortionFromTransientCorners(
+      circuit,
+      period / 64.0,
+      2.0 * period,
+      freq,
+      "Vin",
+      "V(out)",
+      [
+        { name: "nominal", overrides: [] },
+        { name: "rbot-high", overrides: [{ elementName: "Rbot", parameter: "resistance", value: 3_000.0 }] },
+      ],
+      3,
+    );
+
+    expect(result.inputSource).toBe("Vin");
+    expect(result.outputProbe).toBe("V(out)");
+    expect(result.points[0].cornerName).toBe("nominal");
+    expect(result.points[1].cornerName).toBe("rbot-high");
+    expect(result.points[0].result.points[0].fundamentalMagnitude).toBeCloseTo(0.5, 3);
+    expect(result.points[1].result.points[0].fundamentalMagnitude).toBeCloseTo(0.75, 3);
+    expect(result.points[0].result.points[0].totalHarmonicDistortion).toBeLessThan(2.0e-3);
+    expect(result.points[1].result.points[0].totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
   it("formats stable text output tables for DC and transient results", () => {
     const circuit = new Circuit();
     circuit.add(voltageSource("V1", "vin", "0", 10.0));
@@ -1168,6 +1376,327 @@ describe("transient", () => {
       "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
+  });
+
+  it("formats stable transient probe measurements", () => {
+    const points = [
+      transientPoint(0.0, { out: 0.0 }),
+      transientPoint(1.0e-3, { out: 1.25 }),
+      transientPoint(2.0e-3, { out: -0.25 }),
+      transientPoint(3.0e-3, { out: 0.75 }),
+    ];
+
+    const peakToPeak = measureTransientProbe(
+      points,
+      "swing",
+      "V(out)",
+      "peak-to-peak",
+      1.0e-3,
+      3.0e-3,
+    );
+    const finalValue = measureTransientProbe(points, "settled", "V(out)", "final");
+
+    expect(peakToPeak.value).toBeCloseTo(1.5, 9);
+    expect(peakToPeak.mode).toBe("pp");
+    expect(finalValue.value).toBeCloseTo(0.75, 9);
+    expect(finalValue.mode).toBe("last");
+    expect(formatMeasurementTable([peakToPeak, finalValue])).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n",
+    );
+  });
+
+  it("executes parsed transient .measure cards", () => {
+    const points = [
+      transientPoint(0.0, { out: 0.0 }),
+      transientPoint(1.0e-3, { out: 1.25 }),
+      transientPoint(2.0e-3, { out: -0.25 }),
+      transientPoint(3.0e-3, { out: 0.75 }),
+    ];
+
+    const measurements = measureTransientDeck(
+      points,
+      `
+.measure tran swing pp V(out) FROM=1m TO=3m
+.meas transient mean avg V(out)
+.end
+`,
+    );
+
+    expect(measurements.map(({ name, mode, value, fromValue, toValue }) => [
+      name,
+      mode,
+      value,
+      fromValue,
+      toValue,
+    ])).toStrictEqual([
+      ["swing", "pp", 1.5, 0.001, 0.003],
+      ["mean", "avg", 0.4375, undefined, undefined],
+    ]);
+    expect(formatMeasurementTable(measurements)).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
+        "mean\ttran\tV(out)\tavg\t\t\t4.375000e-01\n",
+    );
+  });
+
+  it("runs transient waveforms per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 10.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+
+    const result = transientCorners(circuit, 1.0e-3, 2.0e-3, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "r2-high",
+        overrides: [{ elementName: "R2", parameter: "resistance", value: 2_000.0 }],
+      },
+    ]);
+
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "r2-high"]);
+    expectClose(result.points[0].points.at(-1)?.voltage("mid"), 5.0);
+    expectClose(result.points[1].points.at(-1)?.voltage("mid"), 20.0 / 3.0);
+    expect(formatCornerTransientTable(result, ["V(vin)", "V(mid)", "I(V1)"])).toBe(
+      "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
+        "nominal\t0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "nominal\t1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
+        "r2-high\t0\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n" +
+        "r2-high\t1\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n",
+    );
+  });
+
+  it("runs adaptive transient waveforms per corner and formats stable text tables", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 1.0));
+    circuit.add(resistor("R1", "vin", "out", 1_000.0));
+    circuit.add(capacitor("C1", "out", "0", 1.0e-6));
+
+    const result = transientAdaptiveCorners(circuit, 1.0e-3, 2.0e-3, [
+      { name: "nominal", overrides: [] },
+      {
+        name: "r1-high",
+        overrides: [{ elementName: "R1", parameter: "resistance", value: 2_000.0 }],
+      },
+    ], { method: "trap", tolerance: 1.0, minStep: 1.0e-3, maxStep: 1.0e-3 });
+
+    expect(result.points.map((point) => point.cornerName)).toEqual(["nominal", "r1-high"]);
+    expectClose(result.points[0].result.points.at(-1)?.voltage("out"), 7.777777777777778e-1);
+    expectClose(result.points[1].result.points.at(-1)?.voltage("out"), 5.2e-1);
+    expect(formatCornerAdaptiveTransientTable(result, ["V(vin)", "V(out)", "I(V1)"])).toBe(
+      "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\tV(vin)\tV(out)\tI(V1)\n" +
+        "nominal\ttrap\t0\ttrue\t0\t1.000000e-03\t1.000000e+00\t3.333333e-01\t-6.666667e-04\n" +
+        "nominal\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t7.777778e-01\t-2.222222e-04\n" +
+        "r1-high\ttrap\t0\ttrue\t0\t1.000000e-03\t1.000000e+00\t2.000000e-01\t-4.000000e-04\n" +
+        "r1-high\ttrap\t0\ttrue\t1\t2.000000e-03\t1.000000e+00\t5.200000e-01\t-2.400000e-04\n",
+    );
+  });
+
+  it("builds digital bridge sources schedules and VCD output", () => {
+    const streams = [
+      {
+        signalName: "clk",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.0e-9, state: "low" as const },
+        ],
+      },
+      {
+        signalName: "enable",
+        events: [
+          { timeSeconds: 0.25e-9, state: "low" as const },
+          { timeSeconds: 0.75e-9, state: "high" as const },
+        ],
+      },
+    ];
+    const levels = DigitalLogicLevels.cmos1v8(0.25e-9);
+
+    const waveform = digitalEventsToPwlWaveform(streams[0].events, levels);
+    const source = digitalEventsToVoltageSource("Vclk", "clk", "0", streams[0].events, levels);
+    const sources = digitalEventStreamsToVoltageSources(streams, "0", levels);
+    const schedule = digitalEventStreamsToBridgeSchedule(streams, levels);
+
+    expect(waveform.points.length).toBe(5);
+    expect(waveform.points[2][0]).toBeCloseTo(0.75e-9, 18);
+    expect(waveform.points[2][1]).toBeCloseTo(1.8, 9);
+    expect(source.name).toBe("Vclk");
+    expect(sources.map((candidate) => candidate.name)).toEqual(["Vclk", "Venable"]);
+    expect(formatDigitalBridgeScheduleTable(schedule)).toBe(
+      "Index\tTime\tStopTime\n" +
+        "0\t0.000000e+00\t1.250000e-09\n" +
+        "1\t2.500000e-10\t1.250000e-09\n" +
+        "2\t5.000000e-10\t1.250000e-09\n" +
+        "3\t7.500000e-10\t1.250000e-09\n" +
+        "4\t1.000000e-09\t1.250000e-09\n" +
+        "5\t1.250000e-09\t1.250000e-09\n",
+    );
+    expect(formatDigitalEventStreamVcd(streams)).toBe(
+      "$version coding-adventures spice-engine mixed-signal bridge $end\n" +
+        "$timescale 1ps $end\n" +
+        "$scope module spice_bridge $end\n" +
+        "$var wire 1 s0 clk $end\n" +
+        "$var wire 1 s1 enable $end\n" +
+        "$upscope $end\n" +
+        "$enddefinitions $end\n" +
+        "$dumpvars\n" +
+        "0s0\n" +
+        "0s1\n" +
+        "$end\n" +
+        "#0\n" +
+        "0s0\n" +
+        "#250\n" +
+        "0s1\n" +
+        "#500\n" +
+        "1s0\n" +
+        "#750\n" +
+        "1s1\n" +
+        "#1000\n" +
+        "0s0\n",
+    );
+  });
+
+  it("samples transient probes back to digital streams", () => {
+    const levels = DigitalLogicLevels.cmos1v8(0.25e-9);
+    const events = [
+      { timeSeconds: 0.0, state: "low" as const },
+      { timeSeconds: 0.5e-9, state: "high" as const },
+      { timeSeconds: 1.25e-9, state: "low" as const },
+    ];
+    const circuit = new Circuit();
+    circuit.add(digitalEventsToVoltageSource("Vdin", "din", "0", events, levels));
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+
+    const points = transient(circuit, 0.25e-9, 1.5e-9);
+    const sampled = sampleTransientProbeAsDigitalEvents(points, "V(din)", DigitalThresholds.cmos1v8());
+    const streams = sampleTransientProbesAsDigitalEventStreams(
+      points,
+      [["din", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+
+    expect(formatDigitalEventTable(sampled)).toBe(
+      "Index\tTime\tState\n" +
+        "0\t2.500000e-10\tlow\n" +
+        "1\t7.500000e-10\thigh\n" +
+        "2\t1.500000e-09\tlow\n",
+    );
+    expect(formatDigitalEventStreamTable(streams)).toBe(
+      "Signal\tIndex\tTime\tState\n" +
+        "din\t0\t2.500000e-10\tlow\n" +
+        "din\t1\t7.500000e-10\thigh\n" +
+        "din\t2\t1.500000e-09\tlow\n",
+    );
+  });
+
+  it("runs digital bridge inputs through transient and corner outputs", () => {
+    const inputStreams = [
+      {
+        signalName: "din",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.25e-9, state: "low" as const },
+        ],
+      },
+    ];
+    const circuit = new Circuit();
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+
+    const result = transientWithDigitalEventStreams(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+    const cornerResult = transientWithDigitalEventStreamsCorners(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+      [
+        { name: "nominal", overrides: [] },
+        { name: "load-high", overrides: [{ elementName: "Rload", parameter: "resistance", value: 2_000.0 }] },
+      ],
+    );
+
+    expect(formatDigitalEventStreamTable(result.outputStreams)).toBe(
+      "Signal\tIndex\tTime\tState\n" +
+        "dout\t0\t2.500000e-10\tlow\n" +
+        "dout\t1\t7.500000e-10\thigh\n" +
+        "dout\t2\t1.500000e-09\tlow\n",
+    );
+    expect(formatCornerDigitalEventStreamTable(cornerResult)).toBe(
+      "Corner\tSignal\tIndex\tTime\tState\n" +
+        "nominal\tdout\t0\t2.500000e-10\tlow\n" +
+        "nominal\tdout\t1\t7.500000e-10\thigh\n" +
+        "nominal\tdout\t2\t1.500000e-09\tlow\n" +
+        "load-high\tdout\t0\t2.500000e-10\tlow\n" +
+        "load-high\tdout\t1\t7.500000e-10\thigh\n" +
+        "load-high\tdout\t2\t1.500000e-09\tlow\n",
+    );
+  });
+
+  it("runs adaptive digital bridge outputs with metadata and corners", () => {
+    const inputStreams = [
+      {
+        signalName: "din",
+        events: [
+          { timeSeconds: 0.0, state: "low" as const },
+          { timeSeconds: 0.5e-9, state: "high" as const },
+          { timeSeconds: 1.25e-9, state: "low" as const },
+        ],
+      },
+    ];
+    const circuit = new Circuit();
+    circuit.add(resistor("Rload", "din", "0", 1_000.0));
+    const options = { method: "trap" as const, tolerance: 1.0, minStep: 0.25e-9, maxStep: 0.25e-9 };
+
+    const result = transientAdaptiveWithDigitalEventStreams(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      options,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+    );
+    const cornerResult = transientAdaptiveWithDigitalEventStreamsCorners(
+      circuit,
+      inputStreams,
+      "0",
+      DigitalLogicLevels.cmos1v8(0.25e-9),
+      0.25e-9,
+      1.5e-9,
+      options,
+      [["dout", "V(din)"]],
+      DigitalThresholds.cmos1v8(),
+      [{ name: "nominal", overrides: [] }],
+    );
+
+    expect(formatAdaptiveDigitalEventStreamTable(result)).toBe(
+      "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n" +
+        "trap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n" +
+        "trap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n" +
+        "trap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n",
+    );
+    expect(formatCornerAdaptiveDigitalEventStreamTable(cornerResult)).toBe(
+      "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n" +
+        "nominal\ttrap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n",
     );
   });
 
@@ -1231,6 +1760,72 @@ describe("transient", () => {
       "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n",
+    );
+  });
+
+  it("formats stable text output tables for corner distortion results", () => {
+    const result: CornerDistortionResult = {
+      inputSource: "Vin",
+      outputProbe: "V(out)",
+      points: [
+        {
+          cornerName: "nominal",
+          result: {
+            inputSource: "Vin",
+            outputProbe: "V(out)",
+            points: [
+              {
+                frequencyHz: 1000.0,
+                fundamentalMagnitude: 1.0,
+                harmonics: [
+                  {
+                    harmonic: 1,
+                    frequencyHz: 1000.0,
+                    magnitude: 1.0,
+                    phaseDegrees: 0.0,
+                  },
+                  {
+                    harmonic: 2,
+                    frequencyHz: 2000.0,
+                    magnitude: 0.025,
+                    phaseDegrees: -1.5707963267948966,
+                  },
+                ],
+                totalHarmonicDistortion: 0.025,
+              },
+            ],
+          },
+        },
+        {
+          cornerName: "slow",
+          result: {
+            inputSource: "Vin",
+            outputProbe: "V(out)",
+            points: [
+              {
+                frequencyHz: 1000.0,
+                fundamentalMagnitude: 0.8,
+                harmonics: [
+                  {
+                    harmonic: 2,
+                    frequencyHz: 2000.0,
+                    magnitude: 0.04,
+                    phaseDegrees: 12.5,
+                  },
+                ],
+                totalHarmonicDistortion: 0.05,
+              },
+            ],
+          },
+        },
+      ],
+    };
+
+    expect(formatCornerDistortionTable(result)).toBe(
+      "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n" +
+        "nominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n" +
+        "nominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n" +
+        "slow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n",
     );
   });
 

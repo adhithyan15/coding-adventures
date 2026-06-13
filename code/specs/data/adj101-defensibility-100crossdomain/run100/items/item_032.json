@@ -1,0 +1,7 @@
+{
+ "idx": 32,
+ "id": "BEN-3",
+ "scenario": "Devon worked 30 weeks as a salaried employee during the last 52 weeks, then was laid off. None of those weeks were self-employed work. He applies for Unemployment Insurance.",
+ "policy": "An applicant is eligible for Unemployment Insurance only if they have worked at least 26 weeks in the preceding 52-week period. Weeks worked while self-employed do not count toward the 26-week requirement.",
+ "question": "Is Devon eligible for Unemployment Insurance?"
+}

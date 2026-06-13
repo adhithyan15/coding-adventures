@@ -1,0 +1,8 @@
+{
+ "check_id": 78,
+ "idx": 32,
+ "slot": "self_employed_weeks",
+ "claimed_value": 0,
+ "scenario": "Devon worked 30 weeks as a salaried employee during the last 52 weeks, then was laid off. None of those weeks were self-employed work. He applies for Unemployment Insurance.",
+ "cited_span": "None of those weeks were self-employed work."
+}

@@ -1,0 +1,8 @@
+{
+ "check_id": 180,
+ "idx": 72,
+ "slot": "experience_is_post_baccalaureate",
+ "claimed_value": true,
+ "scenario": "Priya holds only a bachelor's degree and has 6 years of progressive professional experience after earning it. Her job offer requires exactly this profile.",
+ "cited_span": "progressive professional experience after earning it"
+}

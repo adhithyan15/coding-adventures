@@ -4,6 +4,115 @@
 
 ### Added
 
+- **Parsed transient measurement card routing** —
+  `resolve_deck_measurements()`, `measure_transient_cards()`, and
+  `measure_transient_deck()` now extract transient `.measure` / `.meas` cards
+  before `.end` and route MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+  probe measurements into stable measurement rows, matching Rust and
+  TypeScript.
+
+- **Transient measurement output expansion** — `measure_transient_probe()` and
+  `format_measurement_table()` provide a shared `.MEASURE`-style scalar
+  transient output surface with MAX, MIN, AVG, RMS, peak-to-peak, and
+  final-value probe measurements, matching Rust and TypeScript.
+
+- **Initial-condition execution aids** — `dc_initial_vector_from_conditions()`
+  maps parsed `.ic` / `.nodeset` node-voltage hints into the DC solver's MNA
+  warm-start vector, and `dc_op_with_initial_conditions()` applies those hints
+  to operating-point solves with `.ic` values taking precedence over
+  `.nodeset`, matching Rust and TypeScript.
+
+- **Deck function-call expression resolution** — `resolve_deck_parameters()`
+  now collects scalar `.func` definitions before `.end` and evaluates scalar
+  function calls in `.param` assignments plus braced or quoted active-line
+  expressions, with stable diagnostics for unknown functions, bad arity, and
+  recursive calls, matching Rust and TypeScript.
+
+- **Deck function definition resolution** — `resolve_deck_functions()` now
+  extracts scalar `.func name(args) expression` definitions before `.end`,
+  strips braced or quoted expression delimiters, and reports stable diagnostics
+  for malformed signatures, arguments, duplicate arguments, and empty
+  expressions, matching Rust and TypeScript.
+
+- **Deck initial-condition resolution** — `resolve_deck_initial_conditions()`
+  now extracts scalar `.ic` and `.nodeset` `V(node)=value` hints before `.end`,
+  evaluates numeric SPICE suffix/arithmetic expressions, and reports stable
+  diagnostics for malformed targets and unresolved values, matching Rust and
+  TypeScript.
+
+- **Deck parameter resolution** — `resolve_deck_parameters()` now evaluates
+  scalar whitespace-tokenized `.param` assignments, rewrites braced and quoted
+  active-line expressions, and reports stable diagnostics for unresolved
+  expressions, matching Rust and TypeScript.
+
+- **Deck source resolution** — `resolve_deck_sources()` now expands
+  map-provided `.include` files and selected `.lib path section` library
+  sections with stable diagnostics for missing sources, bad sections, cycles,
+  and still-unsupported `.control` blocks, matching Rust and TypeScript.
+
+- **Deck boundary diagnostics** — `analyze_deck_controls()` now reports the
+  active pre-`.end` deck lines and stable unsupported-feature diagnostics for
+  `.include`, `.lib`, and `.control` directives, matching Rust and TypeScript.
+
+- **Remaining stable table parity** — `format_dc_sweep_table()`,
+  `format_corner_dc_sweep_table()`, `format_corner_ac_table()`, and
+  `format_corner_tf_table()` now close the remaining Rust-first `.DC`, `.AC`,
+  and `.TF` named-corner table helper gaps in the Python package.
+
+- **DC corner and temperature parity** — `format_corner_dc_table()`,
+  `dc_temperature_sweep()`, `dc_temperature_sweep_corners()`,
+  `format_temperature_dc_table()`, and `format_corner_temperature_dc_table()`
+  now expose Rust-matching named-corner and `.temp`-style DC operating-point
+  snapshots with stable table columns.
+
+- **Compatibility corpus release gates** — `compatibility_corpus()`,
+  `release_readiness_gates()`, `format_compatibility_corpus_table()`, and
+  `format_release_readiness_report()` expose the first oracle-backed deck
+  corpus with golden tolerances and known incompatibility notes shared with
+  Rust and TypeScript.
+
+- **Custom-model foothold** — `CustomModel`, `CustomModelEvaluation`,
+  `custom_linear_conductance_model()`, and
+  `analyze_custom_model_source()` add the first portable two-terminal
+  residual/Jacobian hook and Verilog-A subset diagnostics shared with Rust and
+  TypeScript.
+
+- **Mixed-signal bridge helpers** — `DigitalEvent`, `DigitalEventStream`,
+  `DigitalLogicLevels`, `DigitalThresholds`, digital-stream PWL voltage source
+  conversion, fixed/adaptive digital transient bridge runners, named-corner
+  bridge wrappers, stable event/schedule tables, and deterministic VCD output
+  now match the Rust and TypeScript SPICE bridge surface.
+
+- **Model-card alias normalization** — `normalize_model_card()`,
+  `diode_from_model_card()`, `bjt_from_model_card()`,
+  `jfet_from_model_card()`, `mosfet_from_model_card()`, and
+  `device_model_audit_fixtures()` provide cross-language diode, BJT, JFET, and
+  Level-1 MOS `.model` alias fixtures for future deck parsing.
+
+- **Solver diagnostics and sparse complex solves** — `DcResult.diagnostics`
+  now reports stable matrix size, solver kind, tolerance, convergence aid, and
+  final Newton delta metadata; large AC complex systems now route through the
+  sparse-row complex solver path.
+
+- **Distortion and pole-zero named-corner wrappers** —
+  `distortion_from_transient_corners()`, `pole_zero_corners()`,
+  `format_corner_distortion_table()`, and `format_corner_pole_zero_table()` now
+  expose Rust-matching named-corner analysis output for these SPICE helpers.
+
+- **Fourier named-corner wrappers** — `fourier_corners()` and
+  `format_corner_fourier_table()` now run `.FOUR`-style harmonic analysis across
+  named corner specs, matching Rust output columns for cross-language parity.
+
+- **PSS text output and named-corner wrappers** — `format_pss_table()`,
+  `pss_corners()`, and `format_corner_pss_table()` now expose stable
+  periodic-steady-state output and named-corner PSS parity with the Rust engine.
+
+- **Transient named-corner wrappers** — `transient_corners()` and
+  `transient_adaptive_corners()` now run fixed-step and LTE-adaptive transient
+  analyses across named corner specs, with matching stable
+  `format_corner_transient_table()` and
+  `format_corner_adaptive_transient_table()` output helpers.
+
 - **Multi-corner advanced analysis wrappers** — `mc_dc_corners()`,
   `sens_dc_corners()`, `noise_ac_corners()`, and `s_parameters_corners()` now
   run the corresponding analyses across named corner specs, matching the Rust

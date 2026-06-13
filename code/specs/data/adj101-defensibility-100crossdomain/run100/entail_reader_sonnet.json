@@ -1,0 +1,197 @@
+[
+ {
+  "check_id": 2,
+  "verdict": "LEAP",
+  "why": "Phrase \"has not received...in the last 12 hours\" establishes a minimum (\u226512h), not exact value. hours_since_last_dose could be 12, 13, 24, etc. Extractor conflated temporal negation-window with point-in-time specification."
+ },
+ {
+  "check_id": 6,
+  "verdict": "LEAP",
+  "why": "Scenario states \"contrast-enhanced CT scan\" but not \"iodinated.\" Word \"iodinated\" never appears. Inferring the specific contrast agent requires external medical knowledge, not scenario text."
+ },
+ {
+  "check_id": 10,
+  "verdict": "LEAP",
+  "why": "Scenario states Mr. Yi has level 1 trauma, not cardiac pathology. Absence of stated STEMI criteria doesn't entail yi_meets_stemi=false; scenario is silent on his cardiac status."
+ },
+ {
+  "check_id": 12,
+  "verdict": "LEAP",
+  "why": "\"Within the week\" does not compel \"imminent.\" The scenario establishes a serious stated threat with a 7-day window, but imminence requires urgency/immediacy the bytes do not mandate."
+ },
+ {
+  "check_id": 33,
+  "verdict": "LEAP",
+  "why": "Scenario establishes a manufacturing defect occurred, but never identifies or names a manufacturer entity. The cited span is not in the scenario text. The claim conflates \"product had manufacturing defect\" with \"manufacturer is a party/identified entity.\""
+ },
+ {
+  "check_id": 34,
+  "verdict": "LEAP",
+  "why": "Cited span establishes actual use (standing), not intended use. Scenario never states manufacturer's intended purpose. Assumes \"standing on ladder\" = intended purpose without explicit basis."
+ },
+ {
+  "check_id": 37,
+  "verdict": "LEAP",
+  "why": "Scenario describes a negligent accident (rear-ending, injury) but never states the legal categorization \"tort.\" Requires assumption that the conduct meets tort definition\u2014duty, breach, causation, damages\u2014not compelled by text alone."
+ },
+ {
+  "check_id": 38,
+  "verdict": "LEAP",
+  "why": "Cited span establishes time/place (during shift, in company van) but not WHY the collision occurred. Scope-of-employment requires purpose tied to job duties; negligent driving's cause is unstated, leaving an alternative reading where personal recklessness caused the accident outside scope."
+ },
+ {
+  "check_id": 47,
+  "verdict": "LEAP",
+  "why": "Confiscation by lawful government inspection is a legal seizure, not baggage loss. The scenario never establishes it as a loss event."
+ },
+ {
+  "check_id": 57,
+  "verdict": "LEAP",
+  "why": "Invoice issuance does not establish incurrence. Services could be performed/completed in a different year, making incurrence timing unknown."
+ },
+ {
+  "check_id": 60,
+  "verdict": "LEAP",
+  "why": "Enrollment at a university does not entail full-time status. Scenario states only \"enrolled,\" not \"full-time enrolled.\" Part-time enrollment is a consistent alternative reading."
+ },
+ {
+  "check_id": 66,
+  "verdict": "LEAP",
+  "why": "Scenario states filing occurred after deadline (temporal fact) but also cites active military deployment in combat zone, which triggers automatic extensions under tax law, negating \"late filing\" status. Extractor cited only the temporal fact, ignoring the legal excuse provided."
+ },
+ {
+  "check_id": 70,
+  "verdict": "LEAP",
+  "why": "Scenario establishes wine is \"brought in\" but not that it is imported (cross-border). Consistent with domestic wine from returning traveler's own country."
+ },
+ {
+  "check_id": 75,
+  "verdict": "LEAP",
+  "why": "Scenario states four children aged 2, 5, 9, 15 are in care. Claimed value 3 requires unstated eligibility rule excluding the 15-year-old. No age cutoff stated."
+ },
+ {
+  "check_id": 79,
+  "verdict": "LEAP",
+  "why": "Scenario says \"persist for several years\" (\u22653 years), not 2 years/24 months. Converting indefinite duration to exact month count requires unstated assumptions about what \"several\" means numerically."
+ },
+ {
+  "check_id": 81,
+  "verdict": "LEAP",
+  "why": "Scenario establishes duration in months (14), not days. Converting to 425 days requires unstated assumption about day-per-month average and rounding."
+ },
+ {
+  "check_id": 92,
+  "verdict": "LEAP",
+  "why": "The scenario never states a $500 deductible. The cited span invokes an unstated fact. Without that value, payout_before_cap is unknown from the scenario text alone."
+ },
+ {
+  "check_id": 95,
+  "verdict": "LEAP",
+  "why": "Scenario states cancellation reason (cheaper flight) but doesn't establish absence of government advisory. \"Not mentioned\" is not \"false\"\u2014scenario is silent on whether an advisory existed."
+ },
+ {
+  "check_id": 97,
+  "verdict": "LEAP",
+  "why": "Scenario does not state dwelling insured value; cited span absent from text. Value is assumed, not established."
+ },
+ {
+  "check_id": 100,
+  "verdict": "LEAP",
+  "why": "Scenario does not state deductible rate; cited span \"2% windstorm deductible\" appears external to scenario text. Requires assumption from unstated policy terms."
+ },
+ {
+  "check_id": 103,
+  "verdict": "LEAP",
+  "why": "Suicide exclusion clauses are standard in life insurance. Scenario confirms policy-active and premiums-paid but never states the exclusion period elapsed or doesn't exist. Active \u2260 covered under all conditions."
+ },
+ {
+  "check_id": 105,
+  "verdict": "LEAP",
+  "why": "Cited span says \"covered item was taken\" \u2014 establishes insurance coverage, not property type. Item could be personal or real property; scenario never explicitly states the classification."
+ },
+ {
+  "check_id": 112,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states \"went to the emergency room\" \u2014 emergency rooms are emergency services by definition. No alternative reading exists."
+ },
+ {
+  "check_id": 115,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states insured \"deliberately shoved\" guest down stairs, directly \"causing\" the injury (broken arm). The deliberate action directly produced the injury with no intervening accident\u2014the bytes compel intentional causation."
+ },
+ {
+  "check_id": 129,
+  "verdict": "LEAP",
+  "why": "The scenario states \"detached backyard shed\" but never uses the term \"accessory structure.\" The classification requires inferring jurisdictional definitions not stated in the text."
+ },
+ {
+  "check_id": 132,
+  "verdict": "LEAP",
+  "why": "\"Outside the bedrooms\" (hallway) is part of the bedroom cluster itself; not compelled that hallway is outside sleeping-area vicinity."
+ },
+ {
+  "check_id": 133,
+  "verdict": "LEAP",
+  "why": "Scenario describes existing alarms (5 total) but never states what is required. Claiming a requirement is unstated assumption about building codes."
+ },
+ {
+  "check_id": 152,
+  "verdict": "LEAP",
+  "why": "Scenario establishes bathroom location (hallway-accessed, dead-end) but not interior-wall position. Interior bathroom requires architectural placement the text never specifies."
+ },
+ {
+  "check_id": 176,
+  "verdict": "ENTAILED",
+  "why": "Continuous presence from Jan 1 to Jul 15 (inclusive) in a non-leap year = 31+28+31+30+31+30+15 = 196 days exactly. No alternative reading possible."
+ },
+ {
+  "check_id": 181,
+  "verdict": "LEAP",
+  "why": "Scenario describes \"drug offense involving marijuana\" but does not specify trafficking vs. possession. Aggravated felony status requires legal categorization not established by the text alone."
+ },
+ {
+  "check_id": 200,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states ticket opened at 09:02 and acknowledgment sent at 09:25. The 23-minute difference is a direct, unambiguous arithmetic result from stated timestamps."
+ },
+ {
+  "check_id": 202,
+  "verdict": "LEAP",
+  "why": "Scenario never defines provider's business hours. Assumes \"standard hours\" from submission time alone, but value requires explicit specification of operating hours."
+ },
+ {
+  "check_id": 205,
+  "verdict": "LEAP",
+  "why": "Scenario states backup generator failed to start. Force Majeure typically requires unavoidable events + reasonable mitigation. Provider's backup failure = preventable internal cause, creating consistent reading where this is NOT pure Force Majeure."
+ },
+ {
+  "check_id": 207,
+  "verdict": "LEAP",
+  "why": "Scenario supports 19 calendar days (July 1 to July 20), but \"days past due\" requires unstated assumptions: measurement date, definition (calendar vs. business days), and accounting context."
+ },
+ {
+  "check_id": 216,
+  "verdict": "LEAP",
+  "why": "Scenario only establishes incident unresolved at 3-hour mark (lower bound \u22653); actual resolution time unknown. Value 3 requires assuming exact match, not just minimum duration."
+ },
+ {
+  "check_id": 219,
+  "verdict": "ENTAILED",
+  "why": "Cited span explicitly states '76 days after the end of August', directly establishing the claimed value with no ambiguity or inference required."
+ },
+ {
+  "check_id": 224,
+  "verdict": "LEAP",
+  "why": "Scenario does not state the deadline. The cited reasoning assumes a 90-day-before-period-end rule that is never established in the text. Alternative: deadline is unknown."
+ },
+ {
+  "check_id": 229,
+  "verdict": "ENTAILED",
+  "why": "Scenario explicitly states replacement's name \"does not appear in the originally approved budget,\" directly establishing the slot value as false."
+ },
+ {
+  "check_id": 235,
+  "verdict": "LEAP",
+  "why": "Receiving lecture honoraria (payment to PI) does not establish financial interest in the entity. Honoraria is transactional income, not ownership/equity/holding. The scenario confuses payment flow direction with interest ownership."
+ }
+]

@@ -16,6 +16,17 @@ proof-DAG return type, full search modes, and the weighted-model-counting
 backend land in subsequent PRs. The data shapes are in place from day
 one so that adding them is purely additive.
 
+### Differential decisions (v0.7)
+
+`lr_aggregate(query, kb)` scores **one** hypothesis. `differential(hypotheses,
+kb)` scores a set of **competing** hypotheses, ranks them by posterior, picks
+the argmax, and reports the between-hypothesis margin — the operation MYCIN
+performs. The decision is `Determinate` when the leader beats the runner-up
+even under the worst-case resolution of every open uncertainty, and `Kickback`
+(with ranked markers to resolve) when an unresolved finding could flip the
+ranking. Deterministic, CPU-only, and each ranked hypothesis keeps its proof
+DAG.
+
 ## How It Fits in the Stack
 
 ```

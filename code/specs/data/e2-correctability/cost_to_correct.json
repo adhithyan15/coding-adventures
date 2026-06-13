@@ -1,0 +1,141 @@
+{
+ "thesis": "cost-to-correct should be paid ONCE and not recur over the same facts",
+ "why_the_localize_null_matters": "finding the error costs ~the same in both arms (see localize_results.json), so the ENTIRE cost-to-correct difference is fix+propagate+recurrence",
+ "cost_decomposition": {
+  "find": "\u2248 equal (localize null)",
+  "fix": {
+   "framework": "edit 1 fact",
+   "prose": "rewrite 1 answer"
+  },
+  "propagate_M_minus_1_current": {
+   "framework": 0,
+   "prose": "M-1 rewrites"
+  },
+  "recurrence_G_future": {
+   "framework": 0,
+   "prose": "G re-errors (no persistence)"
+  },
+  "total": {
+   "framework": "O(1) paid once",
+   "prose": "O(M+G) recurring"
+  }
+ },
+ "framework_arm_evidence": {
+  "meningitis_single_override": {
+   "edits": 3,
+   "target_corrected": "0.9999 -> 0.7709",
+   "regression_sibling": "1.0 -> 1.0 (unchanged)",
+   "answer_time_model_calls": 0
+  },
+  "tax_derive_once": {
+   "compiled_once": "TAX-1 rulebook (byte-verified) -> content-addressed library, no model",
+   "held_out_cases_decided": 3,
+   "answer_time_model_calls": 0
+  }
+ },
+ "cost_curves": [
+  {
+   "scenario": "TAX filing-threshold fact shared across cases",
+   "current_cases_sharing_fact_M": 3,
+   "future_cases_G": 10,
+   "framework_total_corrections": 1,
+   "framework_answer_time_model_calls": 0,
+   "prose_total_corrections": 13,
+   "prose_persists": false,
+   "asymmetry": "framework O(1) vs prose O(3+10)=13; ratio grows without bound in G"
+  },
+  {
+   "scenario": "meningitis CSF-correlation fact shared across cases",
+   "current_cases_sharing_fact_M": 2,
+   "future_cases_G": 10,
+   "framework_total_corrections": 1,
+   "framework_answer_time_model_calls": 0,
+   "prose_total_corrections": 12,
+   "prose_persists": false,
+   "asymmetry": "framework O(1) vs prose O(2+10)=12; ratio grows without bound in G"
+  }
+ ],
+ "prose_arm_recurrence": "see recurring_cost/ (empirical: plain Claude re-commits the same fact-error across fresh sibling cases; correction does not persist)",
+ "prose_arm_recurrence_empirical_haiku": {
+  "shared_fact": "destination_already_owned (the Section 2 override) is dispositive in every override case and beats the Section 1 distance rule.",
+  "n_override_cases_M": 7,
+  "control_case_HO-2_not_owned": {
+   "id": "HO-2",
+   "kind": "control_not_owned",
+   "gold": "ENTITLED",
+   "framework": "ENTITLED",
+   "framework_ok": true,
+   "prose": "ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Section 1 applies: Theo relocated 90 miles closer (exceeds 50-mile threshold). Section 2 override does not apply because destination property is not pre-owned (he signed a new lease)."
+  },
+  "framework": {
+   "policy_interpretation_cost": "paid ONCE (1 rulebook derivation; verbatim byte-verified)",
+   "answer_time_model_calls": 0,
+   "errors_on_override_cases": [],
+   "correct": "7/7"
+  },
+  "prose": {
+   "policy_interpretation_cost": "re-paid on EVERY case (stateless; no persistence layer)",
+   "model_calls": 7,
+   "errors_on_override_cases": [],
+   "miss_rate": 0.0,
+   "correct": "7/7"
+  },
+  "cost_to_correct_curve": {
+   "framework_total_corrections": 1,
+   "framework_recurrence_on_G_future": 0,
+   "prose_corrections_for_current_M": 0,
+   "prose_expected_recurrence_on_G_future": "~0.0 of 10 (miss-rate persists)",
+   "asymmetry": "framework O(1) paid once, non-recurring; prose O(miss_rate * (M+G)), recurs forever"
+  },
+  "persistence_note": "each prose call is stateless \u2014 correcting one answer cannot lower the miss-rate on the next independent case; the framework override, once written, makes the miss-rate 0 for all present and future cases."
+ },
+ "prose_arm_recurrence_empirical_weak_models": {
+  "qwen2.5:0.5b": {
+   "override_cases_M": 7,
+   "override_misses": [
+    "OV-1",
+    "OV-2",
+    "OV-5",
+    "OV-6"
+   ],
+   "override_miss_rate": 0.571,
+   "override_correct": "3/7",
+   "control_HO-2_ok": false
+  },
+  "qwen2.5:1.5b": {
+   "override_cases_M": 7,
+   "override_misses": [
+    "OV-1",
+    "OV-2",
+    "OV-3",
+    "OV-4",
+    "OV-5",
+    "OV-6",
+    "HO-1"
+   ],
+   "override_miss_rate": 1.0,
+   "override_correct": "0/7",
+   "control_HO-2_ok": true
+  },
+  "qwen2.5:3b": {
+   "override_cases_M": 7,
+   "override_misses": [],
+   "override_miss_rate": 0.0,
+   "override_correct": "7/7",
+   "control_HO-2_ok": true
+  },
+  "llama3.1:8b": {
+   "override_cases_M": 7,
+   "override_misses": [],
+   "override_miss_rate": 0.0,
+   "override_correct": "7/7",
+   "control_HO-2_ok": true
+  }
+ },
+ "recurrence_capability_graded_finding": "recurring error appears as model capability drops: a small model misses the buried override and re-misses it on every case (stateless), so the prose miss-rate persists and the cost recurs over the same fact; the framework derived the override once and is 0-error on all cases at 0 answer-time model calls."
+}

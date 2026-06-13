@@ -1,5 +1,105 @@
 # Changelog
 
+## 2.28.0 — 2026-05-29
+
+### Added — Track I2 (Closed-form transcendental infinite sums port)
+
+Ports the Python ``cas_summation.series_closed_forms`` module (Track I1,
+PR #5382) to Rust ``cas-summation``.  Pattern-matches the canonical
+convergent infinite series and emits their closed forms when
+``hi = %inf``:
+
+- ``sum(1/k^(2m), k, 1, %inf) → ζ(2m) · π^(2m)`` for ``m = 1..6``
+  (Basel through ``ζ(12) = 691·π¹²/638512875``).
+- ``sum((-1)^(k-1)/k, k, 1, %inf) → log(2)`` (Mercator).
+- ``sum((-1)^(k-1)/k^(2m), k, 1, %inf) → η(2m) · π^(2m)`` for
+  ``m = 1..3`` (Dirichlet eta).
+- ``sum(1/k!, k, 0, %inf) → %e``.
+- ``sum(x^k/k!, k, 0, %inf) → exp(x)`` (symbolic ``x ≠ k``).
+- ``sum((-1)^k · x^(2k)/(2k)!, k, 0, %inf) → cos(x)``.
+- ``sum((-1)^k · x^(2k+1)/(2k+1)!, k, 0, %inf) → sin(x)``.
+- ``sum(x^(2k)/(2k)!, k, 0, %inf) → cosh(x)``.
+- ``sum(x^(2k+1)/(2k+1)!, k, 0, %inf) → sinh(x)``.
+
+The new ``try_closed_form_series`` handler is wired into
+``evaluate_sum`` between the existing ``try_special_infinite`` (legacy
+Basel + Leibniz table) and the small-range numeric path; pre-existing
+tests stay on their original routes because the legacy table fires
+first for the overlapping ``ζ(2)`` / ``ζ(4)`` / ``π/4`` patterns.
+
+One generic ``bernoulli_rational`` helper computes ``B_n`` via the
+textbook recurrence ``B_0 = 1; Σ_{j=0}^{n} C(n+1, j) · B_j = 0``.  Six
+even-zeta exponents and three even-eta exponents share the same code —
+no per-degree tables.  The recurrence depth is bounded by ``n ≤ 12``,
+so the helper is provably terminating, and the cache is initialised
+lazily via ``OnceLock``.
+
+All numeric work is exact: intermediate ``Frac`` values are ``i128``
+to handle the binomial-recurrence products without overflow, then
+down-cast to ``i64`` for the IR literal (every emitted value sits
+comfortably inside i64 — ``638_512_875`` is the largest denominator).
+
+### Notes
+
+Falls through (returns ``None``) for: odd zeta ``ζ(2m+1)``, indices
+past ``m > 6``, wrong lower bound (zeta requires ``lo=1``, Taylor
+requires ``lo=0``), finite upper bound, and any non-table summand
+(``sin(k)``, ``log(k)``, etc.).
+
+## 2.27.0 — 2026-05-29
+
+### Added — Track H2 (Gosper hypergeometric summation port)
+
+Ports the Python ``cas_summation.gosper`` module (Track H1, PR #5366) to
+Rust ``cas-summation``.  When the summand ``a(k)`` is a hypergeometric
+term — a product of a polynomial in ``k`` with constant-base
+exponentials ``c^(αk+β)`` and ``GammaFunc(k+s)`` factors — and the
+upper bound is finite, ``evaluate_sum`` now attempts Gosper's algorithm
+to find an antidifference ``T(k)`` satisfying ``T(k+1) − T(k) = a(k)``
+and returns the closed form ``T(hi+1) − T(lo)``.
+
+This unlocks closed forms for the classical hypergeometric shapes the
+existing narrow recognisers miss, e.g.:
+
+- ``∑_{k=1}^{N} k·2^k = (N−1)·2^(N+1) + 2``
+- ``∑_{k=0}^{N} k·k! = (N+1)! − 1``
+
+### Changes
+
+- ``src/gosper.rs``: new module — full Gosper pipeline (structural
+  decomposition → ratio computation → Petkovšek shift-coprime
+  normalisation → Gosper degree bound → linear system solve via
+  Gaussian elimination over exact ``i128`` rationals).  Mirrors the
+  Python module 1:1 including the boundary-singularity cancellation
+  step that handles removable factorial denominators at ``k = lo``.
+
+  Coefficients use ``i128`` rationals so the intermediate Petkovšek
+  shift-binomial products for the polynomial degrees Gosper actually
+  sees (typically ≤ 5) stay well inside the 128-bit range — avoiding
+  a runtime dependency on ``num-bigint`` while preserving exact
+  arithmetic on the Python reference test cases.
+
+- ``src/gosper.rs``: defensive ``MAX_POLY_DEGREE = 64`` cap on
+  polynomial exponents during IR-to-poly conversion to prevent
+  adversarial inputs like ``Pow(k, i64::MAX)`` ballooning into a
+  memory-bomb.
+
+- ``src/lib.rs``: wire ``try_gosper_sum`` into the dispatch chain at
+  the same insertion point as Python (step 5b in ``summation.py``) —
+  after all narrow recognisers and before the Apart-retry telescope
+  chain and unevaluated fallthrough.  Guarded by ``if !inf_upper`` to
+  mirror Python: Gosper returns ``T(hi+1) − T(lo)`` which is only
+  meaningful for finite ``hi``; infinite upper bounds belong to the
+  limit-aware paths above.
+
+- ``tests/gosper_tests.rs``: 14 tests — 3 polynomial-helper smoke tests,
+  4 acceptance cases (``k·2^k`` concrete + symbolic, ``k·k!`` symbolic,
+  ``2^k`` regression), 2 fall-through cases (``sin(k)``, ``log(k)``),
+  2 regression cases (Faulhaber, constant), 2 structural pieces, and
+  1 DoS-cap test verifying ``Pow(k, i64::MAX)`` is refused promptly.
+
+- ``Cargo.toml``: minor bump to 2.27.0.
+
 ## 2.26.0 - 2026-06-06
 
 ### Added

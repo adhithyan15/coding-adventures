@@ -12,9 +12,10 @@ packages a typed surface for:
 - Hue command planning from normalized D23 state deltas
 - direct and grouped-light color-temperature command projection
 - Hue command plans that retain generated requests and ignored capabilities for
-  reconciliation telemetry
+  reconciliation telemetry, including projection-coverage summaries
 - Hue command summaries for payload-free command planning and read-model
-  telemetry
+  telemetry, including light-surface, surface-breadth, and capability-breadth
+  helper predicates
 - Hue application registration requests and discovered-bridge pairing plans
 - Hue application registration local-HTTP request plans, response parsing, and
   no-secret Vault handoff metadata for physical-presence pairing
@@ -27,12 +28,14 @@ packages a typed surface for:
 - Hue light/device-to-normalized-model projection
 - Hue scene-to-normalized-`Scene` projection
 - Hue motion/button-to-normalized-`Entity` projection
-- Hue scene summaries for recall planning and read-model telemetry
+- Hue scene summaries and scene-set rollups for recall planning and read-model
+  telemetry
 - Hue light, grouped-light, motion, and button state update-to-`StateDelta`
   projection
 - Hue state update summaries for read models and event-stream telemetry
 - unified Hue state update streams and rollups across light, grouped-light,
-  motion, and button resources
+  motion, and button resources, including mixed-surface, owner-coverage, and
+  partial-state helper predicates
 - Hue snapshot and scene desired-state values keyed by canonical D23 capability
   ids such as `light.on_off` and `light.brightness`
 - Hue mDNS and cloud-fallback discovery observations normalized into D23

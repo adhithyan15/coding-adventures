@@ -28,6 +28,7 @@ result = dc_op(circuit)
 print(result.node_voltages)        # {"vin": 10.0, "vmid": 5.0}
 print(result.branch_currents)      # {"I(V1)": -0.005}
 print(result.converged)            # True
+print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 ```
 
 ## Supported elements
@@ -42,6 +43,7 @@ print(result.converged)            # True
 | `Diode` | D | Shockley diode model |
 | `Mosfet` | M | MOSFET (uses `mosfet_models.MOSFET`) |
 | `BJT` | Q | Bipolar transistor (simplified Ebers-Moll) |
+| `CustomModel` | Verilog-A subset foothold | Two-terminal custom current residual/Jacobian hook |
 | `VCVS` | E | Voltage-Controlled Voltage Source |
 | `VCCS` | G | Voltage-Controlled Current Source |
 | `CCCS` | F | Current-Controlled Current Source |
@@ -61,10 +63,84 @@ print(result.converged)            # True
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
+| `measure_transient_probe`, `measure_transient_deck`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
 and `circuit_at_temperature()` provide operating-temperature footholds for
 diode, BJT, and Level-1 MOSFET models before running an analysis.
+`dc_temperature_sweep()` and `dc_temperature_sweep_corners()` run
+`.temp`-style DC operating-point snapshots across explicit analysis
+temperatures, with stable nominal and named-corner table helpers for
+cross-language comparison. `format_corner_dc_table()` also renders named-corner
+DC operating-point snapshots with the Rust-matching `Corner` / `Index` columns.
+`format_dc_sweep_table()`, `format_corner_dc_sweep_table()`,
+`format_corner_ac_table()`, and `format_corner_tf_table()` provide the matching
+stable `.DC`, `.AC`, and `.TF` sweep/corner text surfaces.
+`measure_transient_probe()`, `measure_transient_deck()`, and
+`format_measurement_table()` provide the shared `.MEASURE`-style scalar
+transient output surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+probe measurements. `measure_transient_deck()` routes parsed transient
+`.measure` / `.meas` cards into those stable measurement rows.
+
+`DcResult.diagnostics` reports stable solve metadata, including the MNA matrix
+size, selected real solver path, tolerance, convergence aid, and final Newton
+delta.  Large real DC and complex AC matrix solves use sparse-row solver paths
+when the matrix size reaches the package threshold.
+
+`normalize_model_card()`, `diode_from_model_card()`,
+`bjt_from_model_card()`, `jfet_from_model_card()`, and
+`mosfet_from_model_card()` provide the shared `.model` alias surface for diode,
+BJT, JFET, and Level-1 MOS cards. `device_model_audit_fixtures()` returns the
+canonical cross-language fixture cards used to keep the Python, Rust, and
+TypeScript ports aligned.
+
+`DigitalEventStream`, `DigitalLogicLevels`, and `DigitalThresholds` provide the
+first mixed-signal bridge surface: digital event streams can drive finite-edge
+PWL voltage sources, fixed/adaptive transient outputs can be sampled back into
+thresholded event streams, and stable event, bridge-schedule, corner, adaptive,
+and VCD text outputs let hardware-VM traces correlate with SPICE probes.
+
+`CustomModel`, `CustomModelEvaluation`, `custom_linear_conductance_model()`, and
+`analyze_custom_model_source()` provide the first custom-model foothold. The
+accepted source subset is a diagnostic-only two-terminal `I(p,n) <+ ...`
+module shape; it deliberately rejects dynamic/event/system constructs until a
+full Verilog-A compiler is in scope.
+
+`compatibility_corpus()` exposes the first release-readiness deck corpus for
+`.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage. Each fixture carries a
+documented oracle, golden values with tolerances, and known incompatibility
+notes. `release_readiness_gates()` validates the corpus metadata, while
+`format_compatibility_corpus_table()` and `format_release_readiness_report()`
+provide stable tab-separated summaries for package checks.
+`analyze_deck_controls()` provides the shared deck-control boundary foothold:
+it returns active lines before `.end` and stable diagnostics for unsupported
+`.include`, `.lib`, and `.control` directives before future include/library
+resolution and control-block execution are in scope.
+`resolve_deck_sources()` is the first include/library resolution layer: callers
+provide a source-content map, `.include` directives are expanded in place, and
+`.lib path section` selects a named `.lib` / `.endl` section with stable
+diagnostics for missing files, missing sections, unterminated sections, cycles,
+and still-unsupported `.control` blocks.
+`resolve_deck_parameters()` evaluates scalar whitespace-tokenized `.param`
+assignments, collects scalar `.func` definitions before `.end`, preserves
+parameter order, rewrites braced and quoted active-line expressions, and emits
+stable diagnostics for unresolved expressions, bad function arity, unknown
+functions, and recursive function calls.
+`resolve_deck_initial_conditions()` extracts scalar `.ic` and `.nodeset`
+`V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
+numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for
+malformed targets or unresolved values. `dc_initial_vector_from_conditions()`
+maps those parsed node-voltage hints into the DC solver's MNA warm-start vector,
+and `dc_op_with_initial_conditions()` applies that vector to the operating-point
+solve with `.ic` values taking precedence over `.nodeset` values.
+`resolve_deck_functions()` extracts scalar `.func name(args) expression`
+definitions before `.end`, preserves non-function active lines, strips braced
+or quoted expression delimiters, and reports stable diagnostics for malformed
+signatures, arguments, or empty expressions.
+`resolve_deck_measurements()` extracts transient `.measure` / `.meas` cards
+before `.end`, keeps non-measure active lines, evaluates optional `FROM=` /
+`TO=` scalar time windows, and reports stable diagnostics for unsupported
+analyses, modes, options, expressions, and invalid windows.
 
 ## Controlled source examples
 

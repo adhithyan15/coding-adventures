@@ -92,18 +92,32 @@ from spice_engine import (
     Capacitor,
     Circuit,
     CornerAcSweepResult,
+    CornerAdaptiveTransientResult,
     CornerDcSweepResult,
+    CornerDistortionPoint,
+    CornerDistortionResult,
+    CornerFourierResult,
     CornerMcResult,
     CornerNoiseResult,
     CornerOverride,
+    CornerPoleZeroResult,
+    CornerPssResult,
     CornerSensResult,
     CornerSParameterResult,
     CornerSpec,
     CornerSweepResult,
+    CornerTemperatureDcResult,
     CornerTfResult,
+    CornerTransientResult,
     CurrentSource,
+    CustomModel,
+    CustomModelEvaluation,
     DcSweepPoint,
     DcSweepResult,
+    DigitalEvent,
+    DigitalEventStream,
+    DigitalLogicLevels,
+    DigitalThresholds,
     Diode,
     DistortionHarmonic,
     DistortionPoint,
@@ -138,6 +152,7 @@ from spice_engine import (
     SParameterPoint,
     SParameterResult,
     SubcircuitDefinition,
+    TemperatureDcResult,
     TfResult,
     TransientPoint,
     TransmissionLine,
@@ -146,34 +161,78 @@ from spice_engine import (
     __version__,
     ac_sweep,
     ac_sweep_corners,
+    analyze_custom_model_source,
+    bjt_from_model_card,
     circuit_at_temperature,
+    custom_linear_conductance_model,
     dc_corners,
+    dc_initial_vector_from_conditions,
     dc_op,
+    dc_op_with_initial_conditions,
     dc_sweep,
     dc_sweep_corners,
+    dc_temperature_sweep,
+    dc_temperature_sweep_corners,
+    device_model_audit_fixtures,
+    digital_event_streams_to_bridge_schedule,
+    digital_event_streams_to_voltage_sources,
+    digital_events_to_pwl_waveform,
+    digital_events_to_voltage_source,
+    diode_from_model_card,
     distortion_from_fourier,
     distortion_from_transient,
+    distortion_from_transient_corners,
     estimate_period,
     format_ac_table,
+    format_adaptive_digital_event_stream_table,
+    format_corner_ac_table,
+    format_corner_adaptive_digital_event_stream_table,
+    format_corner_adaptive_transient_table,
+    format_corner_dc_sweep_table,
+    format_corner_dc_table,
+    format_corner_digital_event_stream_table,
+    format_corner_distortion_table,
+    format_corner_fourier_table,
     format_corner_mc_table,
     format_corner_noise_table,
+    format_corner_pole_zero_table,
+    format_corner_pss_table,
     format_corner_s_parameter_table,
     format_corner_sens_table,
+    format_corner_temperature_dc_table,
+    format_corner_tf_table,
+    format_corner_transient_table,
+    format_dc_sweep_table,
     format_dc_table,
+    format_digital_bridge_schedule_table,
+    format_digital_event_stream_table,
+    format_digital_event_stream_vcd,
+    format_digital_event_table,
     format_distortion_table,
     format_fourier_table,
     format_mc_table,
+    format_measurement_table,
     format_noise_table,
     format_pole_zero_table,
+    format_pss_table,
     format_s_parameter_table,
     format_sens_table,
+    format_temperature_dc_table,
     format_tf_table,
     format_transient_table,
     fourier,
+    fourier_corners,
+    jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    measure_transient_deck,
+    measure_transient_probe,
+    mosfet_from_model_card,
     noise_ac,
     noise_ac_corners,
+    normalize_model_card,
+    normalize_model_card_type,
+    pole_zero_corners,
     pole_zero_rc_highpass,
     pole_zero_rc_lowpass,
     pole_zero_rlc_bandpass,
@@ -181,19 +240,29 @@ from spice_engine import (
     pole_zero_rlc_lowpass,
     pole_zero_rlc_notch,
     pss,
+    pss_corners,
     pss_newton_candidate,
     pss_newton_iteration,
     pss_newton_solve,
     pss_newton_update,
     pss_residual,
     pss_residual_jacobian,
+    resolve_deck_initial_conditions,
     s_parameters,
     s_parameters_corners,
+    sample_transient_probe_as_digital_events,
+    sample_transient_probes_as_digital_event_streams,
     sens_dc,
     sens_dc_corners,
     tf,
     tf_corners,
     transient,
+    transient_adaptive_corners,
+    transient_adaptive_with_digital_event_streams,
+    transient_adaptive_with_digital_event_streams_corners,
+    transient_corners,
+    transient_with_digital_event_streams,
+    transient_with_digital_event_streams_corners,
     waveform_period,
 )
 from spice_engine.engine import (
@@ -213,6 +282,130 @@ from spice_engine.engine import (
 
 def test_package_version_matches_pyproject_release() -> None:
     assert __version__ == "0.14.0"
+
+
+def test_model_card_type_aliases_are_normalized() -> None:
+    assert normalize_model_card_type("diode") == "D"
+    assert normalize_model_card_type("n-jfet") == "NJF"
+    assert normalize_model_card_type("pch") == "PMOS"
+
+
+def test_model_card_aliases_build_device_instances() -> None:
+    diode_card = normalize_model_card(
+        "Dfast",
+        "diode",
+        {"JS": 2.0e-14, "CJ": 1.5e-12, "TT": 4.0e-9, "RS": 10.0},
+    )
+    diode_model = diode_from_model_card("D1", "a", "k", diode_card)
+    assert diode_card.parameters == {"IS": 2.0e-14, "CJO": 1.5e-12, "TT": 4.0e-9}
+    assert diode_card.unsupported_parameters == ("RS",)
+    assert diode_model.Is == pytest.approx(2.0e-14)
+    assert diode_model.Cjo == pytest.approx(1.5e-12)
+    assert diode_model.Tt == pytest.approx(4.0e-9)
+
+    bjt_card = normalize_model_card("Qsmall", "npn", {"BETA": 125.0, "CBE": 2.0e-12})
+    bjt_model = bjt_from_model_card("Q1", "c", "b", "e", bjt_card)
+    assert bjt_card.parameters == {"BF": 125.0, "CJE": 2.0e-12}
+    assert bjt_model.polarity == "NPN"
+    assert bjt_model.beta_f == pytest.approx(125.0)
+    assert bjt_model.Cje == pytest.approx(2.0e-12)
+
+    jfet_card = normalize_model_card("Jn", "njfet", {"BET": 9.0e-4, "VT0": -1.8, "LAM": 0.02})
+    jfet_model = jfet_from_model_card("J1", "d", "g", "s", jfet_card)
+    assert jfet_card.parameters == {"BETA": 9.0e-4, "VTO": -1.8, "LAMBDA": 0.02}
+    assert jfet_model.polarity == "NJF"
+    assert jfet_model.beta == pytest.approx(9.0e-4)
+    assert jfet_model.vto == pytest.approx(-1.8)
+    assert jfet_model.lambda_ == pytest.approx(0.02)
+
+    mos_card = normalize_model_card(
+        "Mn",
+        "nmos",
+        {"LEVEL": 1.0, "VTO": 0.55, "LAM": 0.04, "NSUB": 1.6, "CJD": 3.0e-13},
+    )
+    mos_model = mosfet_from_model_card("M1", "d", "g", "s", "b", mos_card)
+    assert mos_card.parameters == {
+        "LEVEL": 1.0,
+        "VT0": 0.55,
+        "LAMBDA": 0.04,
+        "N_SUB": 1.6,
+        "CBD": 3.0e-13,
+    }
+    assert isinstance(mos_model.model, MOSFET)
+    assert mos_model.model.type == MosfetType.NMOS
+    assert isinstance(mos_model.model.model, Level1Model)
+    assert pytest.approx(0.55) == mos_model.model.model.params.VT0
+    assert pytest.approx(0.04) == mos_model.model.model.params.LAMBDA
+    assert pytest.approx(1.6) == mos_model.model.model.params.N_SUB
+    assert pytest.approx(3.0e-13) == mos_model.model.model.params.CBD
+
+
+def test_model_card_audit_fixtures_cover_supported_device_families() -> None:
+    fixtures = device_model_audit_fixtures()
+    assert [fixture.kind for fixture in fixtures] == ["D", "NPN", "NJF", "NMOS"]
+    assert fixtures[0].parameters["IS"] == pytest.approx(2.0e-14)
+    assert fixtures[1].parameters["BF"] == pytest.approx(125.0)
+    assert fixtures[2].parameters["VTO"] == pytest.approx(-1.8)
+    assert fixtures[3].parameters["VT0"] == pytest.approx(0.55)
+
+
+def test_non_level_one_mos_model_cards_are_explicitly_rejected() -> None:
+    with pytest.raises(ValueError, match="only MOS LEVEL=1"):
+        normalize_model_card("Mbad", "nmos", {"LEVEL": 2.0})
+
+
+def test_custom_model_evaluator_hook_stamps_dc_current() -> None:
+    def evaluator(context) -> CustomModelEvaluation:
+        conductance = context.parameters["g"]
+        return CustomModelEvaluation(
+            current_amps=conductance * context.voltage,
+            conductance_siemens=conductance,
+        )
+
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(
+        CustomModel(
+            "XG",
+            "in",
+            "0",
+            parameters={"g": 2.0e-3},
+            evaluator=evaluator,
+        )
+    )
+
+    result = dc_op(circuit)
+
+    assert result.node_voltages["in"] == pytest.approx(1.0)
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_linear_conductance_model_fast_path_stamps_dc_current() -> None:
+    circuit = Circuit()
+    circuit.add(VoltageSource("V1", "in", "0", 1.0))
+    circuit.add(custom_linear_conductance_model("XG", "in", "0", 2.0e-3))
+
+    result = dc_op(circuit)
+
+    assert result.branch_currents["I(V1)"] == pytest.approx(-2.0e-3)
+
+
+def test_custom_model_source_analyzer_accepts_subset_and_rejects_dynamic_constructs() -> None:
+    accepted = analyze_custom_model_source(
+        "module rlim(p, n); analog begin I(p,n) <+ g * V(p,n); end endmodule"
+    )
+    rejected = analyze_custom_model_source(
+        "module cap(p, n); analog begin I(p,n) <+ ddt(C * V(p,n)); end endmodule"
+    )
+
+    assert accepted.accepted is True
+    assert accepted.module_name == "rlim"
+    assert accepted.terminals == ("p", "n")
+    assert accepted.contribution == ("p", "n")
+    assert rejected.accepted is False
+    assert "CUSTOM_MODEL_FORBIDDEN_CONSTRUCT" in {
+        diagnostic.code for diagnostic in rejected.diagnostics
+    }
 
 
 def test_waveform_period_reports_periodic_source_forms() -> None:
@@ -508,6 +701,69 @@ def test_pss_returns_solved_steady_state_period() -> None:
     )
 
 
+def test_pss_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    c = Circuit()
+    c.add(
+        VoltageSource(
+            "V1",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        )
+    )
+    c.add(Resistor("R1", "in", "0", 1_000.0))
+
+    nominal = pss(
+        c,
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+    result = pss_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rload-high", (CornerOverride("R1", "resistance", 2_000.0),)),
+        ],
+        steps_per_period=4,
+        residual_tol=1.0e-9,
+        perturbation=1.0e-5,
+        max_newton_iterations=2,
+    )
+
+    assert nominal is not None
+    assert result is not None
+    assert isinstance(result, CornerPssResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rload-high"]
+    assert result.points[0].result.converged
+    assert result.points[1].result.converged
+    assert result.points[0].result.period == pytest.approx(1.0e-3)
+    assert result.points[1].result.steady_state.points[1].branch_currents["I(V1)"] == pytest.approx(-5.0e-4)
+    assert format_pss_table(nominal, ["V(in)", "I(V1)"]) == (
+        "Index\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+    )
+    assert format_corner_pss_table(result, ["V(in)", "I(V1)"]) == (
+        "Corner\tIndex\tPeriod\tTimeStep\tConverged\tIterations\tResidualL2\tTime\tV(in)\tI(V1)\n"
+        "nominal\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t2.500000e-04\t1.000000e+00\t-1.000000e-03\n"
+        "nominal\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t5.000000e-04\t1.224647e-16\t-1.224647e-19\n"
+        "nominal\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t7.500000e-04\t-1.000000e+00\t1.000000e-03\n"
+        "nominal\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449295e-16\t1.000000e-03\t-2.449294e-16\t2.449294e-19\n"
+        "rload-high\t0\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rload-high\t1\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t2.500000e-04\t1.000000e+00\t-5.000000e-04\n"
+        "rload-high\t2\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t5.000000e-04\t1.224647e-16\t-6.123234e-20\n"
+        "rload-high\t3\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t7.500000e-04\t-1.000000e+00\t5.000000e-04\n"
+        "rload-high\t4\t1.000000e-03\t2.500000e-04\ttrue\t1\t2.449294e-16\t1.000000e-03\t-2.449294e-16\t1.224647e-19\n"
+    )
+
+
 def test_pss_residual_requires_periodic_sources() -> None:
     c = Circuit()
     c.add(
@@ -625,6 +881,33 @@ def test_resistor_voltage_divider():
     assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)
 
 
+def test_dc_initial_conditions_seed_operating_point_vector():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", voltage=10.0))
+    c.add(Resistor("R1", "vin", "vmid", 1000.0))
+    c.add(Resistor("R2", "vmid", "0", 1000.0))
+    summary = resolve_deck_initial_conditions(
+        """
+.nodeset V(vin)=10 V(vmid)=1
+.ic V(vmid)=4
+.end
+"""
+    )
+
+    vector = dc_initial_vector_from_conditions(
+        c,
+        summary.initial_conditions,
+        summary.nodesets,
+    )
+    assert vector == pytest.approx([10.0, 4.0, 0.0])
+
+    r = dc_op_with_initial_conditions(c, summary, convergence_aids=False)
+
+    assert r.converged
+    assert isclose(r.node_voltages["vin"], 10.0, abs_tol=1e-6)
+    assert isclose(r.node_voltages["vmid"], 5.0, abs_tol=1e-6)
+
+
 def test_two_resistors_in_series():
     c = Circuit()
     c.add(VoltageSource("V1", "a", "0", voltage=12.0))
@@ -646,6 +929,11 @@ def test_large_resistor_ladder_uses_sparse_real_solver_path():
 
     assert r.converged
     assert isclose(r.node_voltages["n34"], 10.0 / 35.0, abs_tol=1e-9)
+    assert r.diagnostics.matrix_size == 36
+    assert r.diagnostics.solver == "sparse_real"
+    assert r.diagnostics.convergence_aid == "newton"
+    assert r.diagnostics.tolerance == pytest.approx(1.0e-6)
+    assert math.isfinite(r.diagnostics.max_delta)
 
 
 def test_current_source_into_resistor():
@@ -802,6 +1090,52 @@ def test_diode_temperature_scaling_reduces_fixed_current_forward_drop():
     assert hot_result.converged
     assert cold_result.node_voltages["a"] > nominal_result.node_voltages["a"]
     assert hot_result.node_voltages["a"] < nominal_result.node_voltages["a"]
+
+
+def test_dc_temperature_sweep_runs_operating_points_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep(c, [275.0, 300.15, 350.0])
+
+    assert isinstance(result, TemperatureDcResult)
+    assert result.points[0].result.node_voltages["a"] > result.points[1].result.node_voltages["a"]
+    assert result.points[2].result.node_voltages["a"] < result.points[1].result.node_voltages["a"]
+    assert format_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Index\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "1\t3.001500e+02\t7.188350e-01\t-9.956198e-04\n"
+        "2\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+    )
+
+
+def test_dc_temperature_sweep_corners_runs_named_corners_and_formats_table():
+    c = Circuit()
+    c.add(VoltageSource("V1", "vcc", "0", 5.0))
+    c.add(Resistor("Rbias", "vcc", "a", 4300.0))
+    c.add(Diode("D1", anode="a", cathode="0", Is=1.0e-15, Vt=0.02585))
+
+    result = dc_temperature_sweep_corners(
+        c,
+        [275.0, 350.0],
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbias-high", (CornerOverride("Rbias", "resistance", 8600.0),)),
+        ],
+    )
+
+    assert isinstance(result, CornerTemperatureDcResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "rbias-high"]
+    assert result.points[0].points[0].result.node_voltages["a"] > result.points[0].points[1].result.node_voltages["a"]
+    assert format_corner_temperature_dc_table(result, ["V(a)", "I(V1)"]) == (
+        "Corner\tIndex\tTemperatureKelvin\tV(a)\tI(V1)\n"
+        "nominal\t0\t2.750000e+02\t8.936097e-01\t-9.549745e-04\n"
+        "nominal\t1\t3.500000e+02\t6.351989e-01\t-1.015070e-03\n"
+        "rbias-high\t0\t2.750000e+02\t7.877634e-01\t-4.897950e-04\n"
+        "rbias-high\t1\t3.500000e+02\t6.144482e-01\t-5.099479e-04\n"
+    )
 
 
 def test_bjt_temperature_scaling_reduces_emitter_follower_forward_drop():
@@ -1710,6 +2044,23 @@ def test_solve_complex_3x3():
         assert isclose(abs(s - b[i]), 0.0, abs_tol=1e-9), (
             f"Row {i}: A·x = {s}, expected {b[i]}"
         )
+
+
+def test_solve_complex_large_sparse_path():
+    size = 36
+    A = [[0j for _ in range(size)] for _ in range(size)]
+    b = [complex(index + 1, -index) for index in range(size)]
+    for index in range(size):
+        A[index][index] = 2.0 + 1.0j
+        if index + 1 < size:
+            A[index][index + 1] = -0.25j
+            A[index + 1][index] = 0.5 + 0j
+
+    x = _solve_complex(A, b)
+
+    for row_index, row in enumerate(A):
+        actual = sum(value * x[col] for col, value in enumerate(row))
+        assert abs(actual - b[row_index]) < 1.0e-8
 
 
 # ============================================================================
@@ -3030,6 +3381,15 @@ def test_dc_sweep_voltage_divider_exact() -> None:
         assert pt.converged
         expected_vout = pt.source_value / 2.0
         assert isclose(pt.node_voltages["out"], expected_vout, abs_tol=1e-9)
+    assert format_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Index\tSource\tValue\tV(out)\tI(Vin)\n"
+        "0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "1\tVin\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+        "2\tVin\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n"
+        "3\tVin\t3.000000e+00\t1.500000e+00\t-1.500000e-03\n"
+        "4\tVin\t4.000000e+00\t2.000000e+00\t-2.000000e-03\n"
+        "5\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+    )
 
 
 def test_dc_sweep_source_value_sequence() -> None:
@@ -5743,6 +6103,49 @@ def test_fourier_extracts_transient_sinusoid_components() -> None:
     assert probe.total_harmonic_distortion < 2.0e-3
 
 
+def test_fourier_corners_runs_analysis_per_corner_and_formats_tables() -> None:
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=1_000.0),
+        ),
+        Resistor("R1", "in", "out", 1_000.0),
+        Resistor("R2", "out", "0", 1_000.0),
+    ])
+
+    result = fourier_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2_000.0),)),
+        ],
+        t_stop=2.0e-3,
+        t_step=2.5e-4,
+        fundamental_frequency=1_000.0,
+        probes=["V(out)"],
+        harmonics=2,
+    )
+
+    assert isinstance(result, CornerFourierResult)
+    assert result.fundamental_frequency == pytest.approx(1_000.0)
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "r2-high"
+    assert result.points[0].result.probes[0].harmonics[0].magnitude == pytest.approx(0.5)
+    assert result.points[1].result.probes[0].harmonics[0].magnitude == pytest.approx(
+        2.0 / 3.0
+    )
+    assert format_corner_fourier_table(result) == (
+        "Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD\n"
+        "nominal\tV(out)\t1\t1.000000e+03\t6.018531e-33\t5.000000e-01\t5.000000e-01\t6.896729e-31\t0.000000e+00\t1.224647e-16\n"
+        "nominal\tV(out)\t2\t2.000000e+03\t0.000000e+00\t-6.123234e-17\t6.123234e-17\t1.800000e+02\t0.000000e+00\t1.224647e-16\n"
+        "r2-high\tV(out)\t1\t1.000000e+03\t7.523164e-33\t6.666667e-01\t6.666667e-01\t6.465683e-31\t1.355253e-17\t1.290373e-16\n"
+        "r2-high\tV(out)\t2\t2.000000e+03\t2.710505e-17\t-8.164312e-17\t8.602490e-17\t1.616341e+02\t1.355253e-17\t1.290373e-16\n"
+    )
+
+
 def test_pole_zero_result_shape_supports_simple_rc_pole_fixture() -> None:
     resistance = 1_000.0
     capacitance = 1.0e-6
@@ -5789,6 +6192,39 @@ def test_pole_zero_rc_lowpass_returns_simple_rc_pole() -> None:
                 damping=1.0,
             )
         ],
+    )
+
+
+def test_pole_zero_corners_runs_selected_topology_per_corner_and_formats_table() -> None:
+    circuit = Circuit([
+        VoltageSource("Vin", "in", "0", 1.0),
+        Resistor("R1", "in", "out", 1_000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = pole_zero_corners(
+        circuit,
+        "Vin",
+        "out",
+        "rc-lowpass",
+        [
+            CornerSpec("nominal"),
+            CornerSpec("cap-high", (CornerOverride("C1", "capacitance", 2.0e-6),)),
+        ],
+    )
+
+    assert isinstance(result, CornerPoleZeroResult)
+    assert result.input_source == "Vin"
+    assert result.output_node == "out"
+    assert result.topology == "rc-lowpass"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "cap-high"
+    assert result.points[0].result.entries[0].real == pytest.approx(-1.0e3)
+    assert result.points[1].result.entries[0].real == pytest.approx(-5.0e2)
+    assert format_corner_pole_zero_table(result) == (
+        "Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping\n"
+        "nominal\t0\tpole\t-1.000000e+03\t0.000000e+00\t1.591549e+02\t1.000000e+00\n"
+        "cap-high\t0\tpole\t-5.000000e+02\t0.000000e+00\t7.957747e+01\t1.000000e+00\n"
     )
 
 
@@ -6090,6 +6526,52 @@ def test_distortion_from_transient_extracts_harmonic_content() -> None:
     assert point.total_harmonic_distortion == pytest.approx(0.1, abs=2.0e-3)
 
 
+def test_distortion_from_transient_corners_projects_each_corner() -> None:
+    freq = 1.0e3
+    period = 1.0 / freq
+    circuit = Circuit([
+        VoltageSource(
+            "Vin",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=0.0, amplitude=1.0, frequency=freq),
+        ),
+        Resistor("Rtop", "in", "out", 1_000.0),
+        Resistor("Rbot", "out", "0", 1_000.0),
+    ])
+
+    result = distortion_from_transient_corners(
+        circuit,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("rbot-high", (CornerOverride("Rbot", "resistance", 3_000.0),)),
+        ],
+        t_stop=2.0 * period,
+        t_step=period / 64.0,
+        fundamental_frequency=freq,
+        input_source="Vin",
+        output_probe="V(out)",
+        harmonics=3,
+    )
+
+    assert isinstance(result, CornerDistortionResult)
+    assert result.input_source == "Vin"
+    assert result.output_probe == "V(out)"
+    assert result.points[0].corner_name == "nominal"
+    assert result.points[1].corner_name == "rbot-high"
+    assert result.points[0].result.points[0].fundamental_magnitude == pytest.approx(
+        0.5,
+        abs=2.0e-3,
+    )
+    assert result.points[1].result.points[0].fundamental_magnitude == pytest.approx(
+        0.75,
+        abs=2.0e-3,
+    )
+    assert result.points[0].result.points[0].total_harmonic_distortion < 2.0e-3
+    assert result.points[1].result.points[0].total_harmonic_distortion < 2.0e-3
+
+
 def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
     circuit = Circuit([
         VoltageSource("V1", "vin", "0", 10.0),
@@ -6115,6 +6597,65 @@ def test_text_output_tables_are_stable_for_dc_and_transient_results() -> None:
         "Index\tTime\tV(in)\tV(out)\tI(V1)\n"
         "0\t0.000000e+00\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
         "1\t1.000000e-03\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n"
+    )
+
+
+def test_transient_probe_measurements_are_stable() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+    ]
+
+    peak_to_peak = measure_transient_probe(
+        transient_points,
+        "swing",
+        "V(out)",
+        "peak-to-peak",
+        from_time=1.0e-3,
+        to_time=3.0e-3,
+    )
+    final_value = measure_transient_probe(
+        transient_points,
+        "settled",
+        "V(out)",
+        "final",
+    )
+
+    assert peak_to_peak.value == pytest.approx(1.5)
+    assert peak_to_peak.mode == "pp"
+    assert final_value.value == pytest.approx(0.75)
+    assert final_value.mode == "last"
+    assert format_measurement_table([peak_to_peak, final_value]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    )
+
+
+def test_transient_deck_measurements_execute_parsed_cards() -> None:
+    transient_points = [
+        TransientPoint(0.0, {"out": 0.0}, {}),
+        TransientPoint(1.0e-3, {"out": 1.25}, {}),
+        TransientPoint(2.0e-3, {"out": -0.25}, {}),
+        TransientPoint(3.0e-3, {"out": 0.75}, {}),
+    ]
+
+    measurements = measure_transient_deck(
+        transient_points,
+        """
+V1 in 0 DC 1
+.measure tran swing PP V(out) FROM=1m TO=3m
+.meas tran settled LAST V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 
 
@@ -6178,6 +6719,60 @@ def test_distortion_text_output_table_is_stable() -> None:
         "Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
         "1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
         "1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+    )
+
+
+def test_corner_distortion_text_output_table_is_stable() -> None:
+    result = CornerDistortionResult(
+        input_source="Vin",
+        output_probe="V(out)",
+        points=[
+            CornerDistortionPoint(
+                corner_name="nominal",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=1.0,
+                            harmonics=[
+                                DistortionHarmonic(1, 1000.0, 1.0, 0.0),
+                                DistortionHarmonic(
+                                    2,
+                                    2000.0,
+                                    0.025,
+                                    -1.5707963267948966,
+                                ),
+                            ],
+                            total_harmonic_distortion=0.025,
+                        )
+                    ],
+                ),
+            ),
+            CornerDistortionPoint(
+                corner_name="slow",
+                result=DistortionResult(
+                    input_source="Vin",
+                    output_probe="V(out)",
+                    points=[
+                        DistortionPoint(
+                            frequency=1000.0,
+                            fundamental_magnitude=0.8,
+                            harmonics=[DistortionHarmonic(2, 2000.0, 0.04, 12.5)],
+                            total_harmonic_distortion=0.05,
+                        )
+                    ],
+                ),
+            ),
+        ],
+    )
+
+    assert format_corner_distortion_table(result) == (
+        "Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t1\t1.000000e+00\t0.000000e+00\t2.500000e-02\n"
+        "nominal\t1.000000e+03\tVin\tV(out)\t2\t2.500000e-02\t-1.570796e+00\t2.500000e-02\n"
+        "slow\t1.000000e+03\tVin\tV(out)\t2\t4.000000e-02\t1.250000e+01\t5.000000e-02\n"
     )
 
 
@@ -6796,6 +7391,13 @@ def test_dc_corners_runs_named_parameter_overrides() -> None:
     assert isinstance(result, CornerSweepResult)
     voltages = [point.result.node_voltages["out"] for point in result.points]
     assert voltages == pytest.approx([5.0, 10.0 / 3.0, 6.0, -5.0])
+    assert format_corner_dc_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tV(out)\tI(Vin)\n"
+        "nominal\t0\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t1\t3.333333e+00\t-6.666667e-03\n"
+        "vin-high\t2\t6.000000e+00\t-6.000000e-03\n"
+        "vin-inverted\t3\t-5.000000e+00\t5.000000e-03\n"
+    )
 
 
 def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
@@ -6823,6 +7425,15 @@ def test_dc_sweep_corners_runs_source_sweeps_per_corner() -> None:
     assert [point.source_value for point in result.points[0].result.points] == pytest.approx([0.0, 5.0, 10.0])
     assert [point.node_voltages["out"] for point in result.points[0].result.points] == pytest.approx([0.0, 2.5, 5.0])
     assert [point.node_voltages["out"] for point in result.points[1].result.points] == pytest.approx([0.0, 5.0 / 3.0, 10.0 / 3.0])
+    assert format_corner_dc_sweep_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tSource\tValue\tV(out)\tI(Vin)\n"
+        "nominal\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "nominal\t1\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+        "nominal\t2\tVin\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "rbot-fast\t0\tVin\t0.000000e+00\t0.000000e+00\t0.000000e+00\n"
+        "rbot-fast\t1\tVin\t5.000000e+00\t1.666667e+00\t-3.333333e-03\n"
+        "rbot-fast\t2\tVin\t1.000000e+01\t3.333333e+00\t-6.666667e-03\n"
+    )
 
 
 def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
@@ -6853,6 +7464,13 @@ def test_ac_sweep_corners_runs_frequency_sweeps_per_corner() -> None:
     fast_out = result.points[1].result.points[0].node_voltages["out"]
     assert abs(nominal_out) == pytest.approx(1.0 / math.sqrt(2.0))
     assert abs(fast_out) == pytest.approx(1.0 / math.sqrt(1.25))
+    assert format_corner_ac_table(result, ["V(out)", "I(Vin)"]) == (
+        "Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
+        "nominal\t0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
+        "nominal\t0\t1.591549e+02\tI(Vin)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n"
+        "r-fast\t0\t1.591549e+02\tV(out)\t8.000000e-01\t-4.000000e-01\t8.944272e-01\t-2.656505e+01\n"
+        "r-fast\t0\t1.591549e+02\tI(Vin)\t-4.000000e-04\t-8.000000e-04\t8.944272e-04\t-1.165651e+02\n"
+    )
 
 
 def test_tf_corners_runs_transfer_function_per_corner() -> None:
@@ -6879,6 +7497,78 @@ def test_tf_corners_runs_transfer_function_per_corner() -> None:
     assert [point.corner_name for point in result.points] == ["nominal", "rbot-fast", "rbot-slow"]
     assert [point.result.gain for point in result.points] == pytest.approx([0.5, 1.0 / 3.0, 2.0 / 3.0])
     assert [point.result.input_impedance for point in result.points] == pytest.approx([2000.0, 1500.0, 3000.0])
+    assert format_corner_tf_table(result) == (
+        "Corner\tTransferRatio\tInputImpedance\tOutputImpedance\n"
+        "nominal\t5.000000e-01\t2.000000e+03\t5.000000e+02\n"
+        "rbot-fast\t3.333333e-01\t1.500000e+03\t3.333333e+02\n"
+        "rbot-slow\t6.666667e-01\t3.000000e+03\t6.666667e+02\n"
+    )
+
+
+def test_transient_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 10.0),
+        Resistor("R1", "vin", "mid", 1000.0),
+        Resistor("R2", "mid", "0", 1000.0),
+    ])
+
+    result = transient_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r2-high", (CornerOverride("R2", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+    )
+
+    assert isinstance(result, CornerTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r2-high"]
+    assert [point.points[-1].node_voltages["mid"] for point in result.points] == pytest.approx([5.0, 20.0 / 3.0])
+    assert format_corner_transient_table(result, ["V(vin)", "V(mid)", "I(V1)"]) == (
+        "Corner\tIndex\tTime\tV(vin)\tV(mid)\tI(V1)\n"
+        "nominal\t0\t0.000000e+00\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t1\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "nominal\t2\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n"
+        "r2-high\t0\t0.000000e+00\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t1\t1.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+        "r2-high\t2\t2.000000e-03\t1.000000e+01\t6.666667e+00\t-3.333333e-03\n"
+    )
+
+
+def test_transient_adaptive_corners_runs_waveforms_per_corner_and_formats_tables() -> None:
+    c = Circuit([
+        VoltageSource("V1", "vin", "0", 1.0),
+        Resistor("R1", "vin", "out", 1000.0),
+        Capacitor("C1", "out", "0", 1.0e-6),
+    ])
+
+    result = transient_adaptive_corners(
+        c,
+        [
+            CornerSpec("nominal"),
+            CornerSpec("r1-high", (CornerOverride("R1", "resistance", 2000.0),)),
+        ],
+        t_step=1.0e-3,
+        t_stop=2.0e-3,
+        method="trap",
+        tol_lte=1.0,
+        min_step=1.0e-3,
+        max_step=1.0e-3,
+    )
+
+    assert isinstance(result, CornerAdaptiveTransientResult)
+    assert [point.corner_name for point in result.points] == ["nominal", "r1-high"]
+    assert [point.result.points[-1].node_voltages["out"] for point in result.points] == pytest.approx([8.8888889e-1, 6.4e-1])
+    assert format_corner_adaptive_transient_table(result, ["V(vin)", "V(out)", "I(V1)"]) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tIndex\tTime\tV(vin)\tV(out)\tI(V1)\n"
+        "nominal\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-1.000000e-03\n"
+        "nominal\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t6.666667e-01\t-3.333333e-04\n"
+        "nominal\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t8.888889e-01\t-1.111111e-04\n"
+        "r1-high\ttrap\t0\ttrue\t0\t0.000000e+00\t1.000000e+00\t0.000000e+00\t-5.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t1\t1.000000e-03\t1.000000e+00\t4.000000e-01\t-3.000000e-04\n"
+        "r1-high\ttrap\t0\ttrue\t2\t2.000000e-03\t1.000000e+00\t6.400000e-01\t-1.800000e-04\n"
+    )
 
 
 def test_mc_dc_corners_runs_trials_per_corner_and_formats_tables() -> None:
@@ -7058,4 +7748,222 @@ def test_s_parameters_corners_runs_two_port_extraction_and_formats_tables() -> N
         "5.000000e-01\t0.000000e+00\n"
         "series-high\t0\t1.000000e+06\tP1\tP2\tS22\t5.000000e-01\t0.000000e+00\t"
         "5.000000e-01\t0.000000e+00\n"
+    )
+
+
+def test_digital_bridge_builds_sources_schedule_and_vcd_output() -> None:
+    streams = [
+        DigitalEventStream(
+            "clk",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.0e-9, "low"),
+            ],
+        ),
+        DigitalEventStream(
+            "enable",
+            [
+                DigitalEvent(0.25e-9, "low"),
+                DigitalEvent(0.75e-9, "high"),
+            ],
+        ),
+    ]
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+
+    waveform = digital_events_to_pwl_waveform(streams[0].events, levels)
+    source = digital_events_to_voltage_source("Vclk", "clk", "0", streams[0].events, levels)
+    sources = digital_event_streams_to_voltage_sources(streams, "0", levels)
+    schedule = digital_event_streams_to_bridge_schedule(streams, levels)
+
+    expected_points = (
+        (0.0, 0.0),
+        (0.5e-9, 0.0),
+        (0.75e-9, 1.8),
+        (1.0e-9, 1.8),
+        (1.25e-9, 0.0),
+    )
+    assert len(waveform.points) == len(expected_points)
+    for point, expected in zip(waveform.points, expected_points, strict=True):
+        assert point == pytest.approx(expected)
+    assert source.name == "Vclk"
+    assert [source.name for source in sources] == ["Vclk", "Venable"]
+    assert format_digital_bridge_schedule_table(schedule) == (
+        "Index\tTime\tStopTime\n"
+        "0\t0.000000e+00\t1.250000e-09\n"
+        "1\t2.500000e-10\t1.250000e-09\n"
+        "2\t5.000000e-10\t1.250000e-09\n"
+        "3\t7.500000e-10\t1.250000e-09\n"
+        "4\t1.000000e-09\t1.250000e-09\n"
+        "5\t1.250000e-09\t1.250000e-09\n"
+    )
+    assert format_digital_event_stream_vcd(streams) == (
+        "$version coding-adventures spice-engine mixed-signal bridge $end\n"
+        "$timescale 1ps $end\n"
+        "$scope module spice_bridge $end\n"
+        "$var wire 1 s0 clk $end\n"
+        "$var wire 1 s1 enable $end\n"
+        "$upscope $end\n"
+        "$enddefinitions $end\n"
+        "$dumpvars\n"
+        "0s0\n"
+        "0s1\n"
+        "$end\n"
+        "#0\n"
+        "0s0\n"
+        "#250\n"
+        "0s1\n"
+        "#500\n"
+        "1s0\n"
+        "#750\n"
+        "1s1\n"
+        "#1000\n"
+        "0s0\n"
+    )
+
+
+def test_transient_probe_samples_back_to_digital_streams() -> None:
+    levels = DigitalLogicLevels.cmos_1v8(0.25e-9)
+    events = [
+        DigitalEvent(0.0, "low"),
+        DigitalEvent(0.5e-9, "high"),
+        DigitalEvent(1.25e-9, "low"),
+    ]
+    c = Circuit([
+        digital_events_to_voltage_source("Vdin", "din", "0", events, levels),
+        Resistor("Rload", "din", "0", 1000.0),
+    ])
+
+    points = transient(c, t_step=0.25e-9, t_stop=1.5e-9).points
+    sampled = sample_transient_probe_as_digital_events(
+        points,
+        "V(din)",
+        DigitalThresholds.cmos_1v8(),
+    )
+    streams = sample_transient_probes_as_digital_event_streams(
+        points,
+        [("din", "V(din)")],
+        DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_table(sampled) == (
+        "Index\tTime\tState\n"
+        "0\t2.500000e-10\tlow\n"
+        "1\t7.500000e-10\thigh\n"
+        "2\t1.500000e-09\tlow\n"
+    )
+    assert format_digital_event_stream_table(streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "din\t0\t2.500000e-10\tlow\n"
+        "din\t1\t7.500000e-10\thigh\n"
+        "din\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_transient_bridge_runs_digital_input_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+    corner_result = transient_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal"), CornerSpec("load-high", (CornerOverride("Rload", "resistance", 2000.0),))],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+    )
+
+    assert format_digital_event_stream_table(result.output_streams) == (
+        "Signal\tIndex\tTime\tState\n"
+        "dout\t0\t2.500000e-10\tlow\n"
+        "dout\t1\t7.500000e-10\thigh\n"
+        "dout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_digital_event_stream_table(corner_result) == (
+        "Corner\tSignal\tIndex\tTime\tState\n"
+        "nominal\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\tdout\t2\t1.500000e-09\tlow\n"
+        "load-high\tdout\t0\t2.500000e-10\tlow\n"
+        "load-high\tdout\t1\t7.500000e-10\thigh\n"
+        "load-high\tdout\t2\t1.500000e-09\tlow\n"
+    )
+
+
+def test_adaptive_transient_bridge_formats_metadata_and_corner_outputs() -> None:
+    input_streams = [
+        DigitalEventStream(
+            "din",
+            [
+                DigitalEvent(0.0, "low"),
+                DigitalEvent(0.5e-9, "high"),
+                DigitalEvent(1.25e-9, "low"),
+            ],
+        )
+    ]
+    c = Circuit([Resistor("Rload", "din", "0", 1000.0)])
+
+    result = transient_adaptive_with_digital_event_streams(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+    corner_result = transient_adaptive_with_digital_event_streams_corners(
+        c,
+        input_streams,
+        "0",
+        DigitalLogicLevels.cmos_1v8(0.25e-9),
+        [CornerSpec("nominal")],
+        t_step=0.25e-9,
+        t_stop=1.5e-9,
+        output_probes=[("dout", "V(din)")],
+        thresholds=DigitalThresholds.cmos_1v8(),
+        method="trap",
+        tol_lte=1.0,
+        min_step=0.25e-9,
+        max_step=0.25e-9,
+    )
+
+    assert format_adaptive_digital_event_stream_table(result) == (
+        "Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "trap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "trap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "trap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
+    )
+    assert format_corner_adaptive_digital_event_stream_table(corner_result) == (
+        "Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState\n"
+        "nominal\ttrap\t0\ttrue\tdout\t0\t2.500000e-10\tlow\n"
+        "nominal\ttrap\t0\ttrue\tdout\t1\t7.500000e-10\thigh\n"
+        "nominal\ttrap\t0\ttrue\tdout\t2\t1.500000e-09\tlow\n"
     )

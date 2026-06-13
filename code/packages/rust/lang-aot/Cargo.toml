@@ -1,8 +1,8 @@
 [package]
 name = "lang-aot"
-version = "0.17.0"
+version = "0.69.0"
 edition = "2021"
-description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
+description = "Multi-language AOT driver — compile Twig, Nib, Brainfuck, Dartmouth BASIC, Oct, and McCarthy Lisp to native executables through the shared IIR pipeline.  v0.69.0 (LANG-MATRIX Phase V — generic register VM): `tests/lang_matrix.rs` adds a `Backend::Vm` runner that interprets the *shared* IIR on `vm_core::VMCore` (the general register VM, no per-language code) — Twig/Nib/Oct/ALGOL/BASIC verified by RUNNING in-process (BASIC via a registered `print_i64` builtin closure). 5/6 of the VM column; Brainfuck-on-VM needs the byte-tape ops added to vm-core next.  v0.68.0 (LANG-MATRIX LM-C Brainfuck — CODE-GEN MATRIX COMPLETE): `tests/lang_matrix.rs` proves Brainfuck on real CoreCLR (`ilasm`+`dotnet`), the last code-gen cell — every language now runs on every code-gen backend (native/LLVM/WASM/JVM/CLR). Backed by `iir-to-cil-bytecode` 0.18.0's byte-tape `.il` ops.  v0.67.0 (LANG-MATRIX LM-J Brainfuck): `tests/lang_matrix.rs` proves Brainfuck on the JVM — `run_jvm` compiles the `env.BFRuntime` host class (static `byte[] __tape`, `putchar`/`getchar`) with `javac` and captures its `System.out.write` bytes (`.` of 65 → `A`), backed by `iir-to-jvm-class-file` 0.11.0's byte-tape ops.  v0.66.0 (LANG-MATRIX LM-W Brainfuck): `tests/lang_matrix.rs` proves Brainfuck on the WASM backend — `run_wasm`'s host now resolves `env.putchar`/`env.getchar` and captures stdout bytes (`.` of 65 → `A`), backed by `iir-to-wasm` 0.13.0's byte-tape ops.  v0.65.0 (LANG-MATRIX LM-L Brainfuck): `lower_brainfuck_for_aot` now widens the Brainfuck frontend's narrow cell/pointer hints (`u8`/`u32`) to `i64` (byte width survives only at the `load_byte`/`store_byte` tape boundary), so Brainfuck runs on the LLVM backend — verified by RUNNING on real `clang` in `tests/lang_matrix.rs`.  v0.13.0 (McCarthy Lisp L3a): adds the `Language::McCarthyLisp` frontend (mccarthy-lisp-iir-compiler) — McCarthy source now produces an IIRModule and scalar programs run on every AOT target (symbol/cons backend support is L3b).  v0.12.0 (Migration Phase 7, FINAL): routed `--emit=riscv32` through the Backend trait over CIR, closing the historical-arch migration."
 
 [dependencies]
 twig-aot              = { path = "../twig-aot" }
@@ -17,6 +17,9 @@ interpreter-ir        = { path = "../interpreter-ir" }
 cli-builder           = { path = "../cli-builder" }
 iir-to-llvm           = { path = "../iir-to-llvm" }
 iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+iir-to-beam           = { path = "../iir-to-beam" }
 iir-builtin-lowering  = { path = "../iir-builtin-lowering" }
 riscv-backend         = { path = "../riscv-backend" }
 riscv-encoder         = { path = "../riscv-encoder" }
@@ -28,8 +31,15 @@ intel4004-backend     = { path = "../intel4004-backend" }
 intel4004-encoder     = { path = "../intel4004-encoder" }
 ge225-backend         = { path = "../ge225-backend" }
 ge225-encoder         = { path = "../ge225-encoder" }
+ibm704-backend        = { path = "../ibm704-backend" }
+ibm704-encoder        = { path = "../ibm704-encoder" }
 aot-core              = { path = "../aot-core" }
 jit-core              = { path = "../jit-core" }
+# JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes
+# McCarthy by dispatching its `lispy_*` builtins to the shared tagged-word value
+# runtime (`lispy-runtime`), bridged through the VM's `Value`.
+vm-core               = { path = "../vm-core" }
+lispy-runtime         = { path = "../lispy-runtime" }
 
 [[bin]]
 name = "lang-aot"
@@ -41,3 +51,20 @@ tempfile = "3"
 # the computed result (LANG77 / McCarthy L3b-3a-2). Keeps wasm verification
 # zero-external-dep.
 wasm-runtime = { path = "../wasm-runtime" }
+# The host-interface + value types the runtime resolves imports against. The
+# LANG-MATRIX harness implements a tiny `HostInterface` to satisfy the generic
+# `env.__print_i64` stdout import an I/O language (Dartmouth BASIC) emits, so
+# its `PRINT` output can be captured and asserted (LM-W BASIC).
+wasm-execution = { path = "../wasm-execution" }
+wasm-types = { path = "../wasm-types" }
+# In-repo JVM class-file parser + bytecode simulator — used to RUN the emitted
+# JVM class in tests and assert the computed result (LANG77 / McCarthy W3a),
+# mirroring how wasm-runtime verifies the wasm path. Keeps JVM verification
+# zero-external-dep (no `java` needed for the scalar path).
+jvm-class-file = { path = "../jvm-class-file" }
+jvm-simulator = { path = "../jvm-simulator" }
+# In-repo CLR (CIL) bytecode simulator — used to RUN the emitted CIL in tests and
+# assert the computed result (LANG77 / McCarthy W6a), mirroring jvm-simulator.
+clr-simulator = { path = "../clr-simulator" }
+mccarthy-lisp-vm = { path = "../mccarthy-lisp-vm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }

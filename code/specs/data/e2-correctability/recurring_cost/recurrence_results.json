@@ -1,0 +1,146 @@
+{
+ "summary": {
+  "shared_fact": "destination_already_owned (the Section 2 override) is dispositive in every override case and beats the Section 1 distance rule.",
+  "n_override_cases_M": 7,
+  "control_case_HO-2_not_owned": {
+   "id": "HO-2",
+   "kind": "control_not_owned",
+   "gold": "ENTITLED",
+   "framework": "ENTITLED",
+   "framework_ok": true,
+   "prose": "ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Section 1 applies: Theo relocated 90 miles closer (exceeds 50-mile threshold). Section 2 override does not apply because destination property is not pre-owned (he signed a new lease)."
+  },
+  "framework": {
+   "policy_interpretation_cost": "paid ONCE (1 rulebook derivation; verbatim byte-verified)",
+   "answer_time_model_calls": 0,
+   "errors_on_override_cases": [],
+   "correct": "7/7"
+  },
+  "prose": {
+   "policy_interpretation_cost": "re-paid on EVERY case (stateless; no persistence layer)",
+   "model_calls": 7,
+   "errors_on_override_cases": [],
+   "miss_rate": 0.0,
+   "correct": "7/7"
+  },
+  "cost_to_correct_curve": {
+   "framework_total_corrections": 1,
+   "framework_recurrence_on_G_future": 0,
+   "prose_corrections_for_current_M": 0,
+   "prose_expected_recurrence_on_G_future": "~0.0 of 10 (miss-rate persists)",
+   "asymmetry": "framework O(1) paid once, non-recurring; prose O(miss_rate * (M+G)), recurs forever"
+  },
+  "persistence_note": "each prose call is stateless \u2014 correcting one answer cannot lower the miss-rate on the next independent case; the framework override, once written, makes the miss-rate 0 for all present and future cases."
+ },
+ "rows": [
+  {
+   "id": "OV-1",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Dana relocated 120 miles (exceeding the 50-mile threshold), but Section 2 override disqualifies her: the destination lakeside house was already personally owned since 2019, before the role was offered."
+  },
+  {
+   "id": "OV-2",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Section 2 override applies: destination was already owned (inherited condo held 6 years), which excludes the bonus regardless of the 75-mile distance meeting Section 1's 50-mile threshold."
+  },
+  {
+   "id": "OV-3",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Priya meets Section 1's distance criterion (210 miles > 50 miles), but Section 2 override disqualifies her: the destination residence was already jointly owned by Priya and her spouse when the role was offered. The override applies regardless of distance."
+  },
+  {
+   "id": "OV-4",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Lou relocated 95 miles (exceeds 50 mi threshold), but Section 2 override disqualifies him: destination cabin was purchased in 2017, already owned when role was offered. Override beats distance rule regardless of miles."
+  },
+  {
+   "id": "OV-5",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Section 2 override disqualifies bonus when destination residence is already owned by employee/spouse, regardless of distance. Aisha owned the townhouse for a decade\u2014override beats Section 1's 140-mile threshold."
+  },
+  {
+   "id": "OV-6",
+   "kind": "override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Ben relocated 60 miles (exceeds 50-mile threshold under Section 1) but into a duplex he already owned. Section 2 explicitly overrides Section 1: the bonus does not apply when the destination is already-owned property, regardless of distance."
+  },
+  {
+   "id": "HO-1",
+   "kind": "held_out_override",
+   "gold": "NOT_ENTITLED",
+   "framework": "NOT_ENTITLED",
+   "framework_ok": true,
+   "prose": "NOT_ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE(precedence:override-marker)",
+   "fw_answer": "NOT_ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Sofia's relocation (80 mi) exceeds the 50-mile threshold in Section 1, but Section 2's override applies: she already owned the destination property at the time the role was offered. The override beats the distance rule."
+  },
+  {
+   "id": "HO-2",
+   "kind": "control_not_owned",
+   "gold": "ENTITLED",
+   "framework": "ENTITLED",
+   "framework_ok": true,
+   "prose": "ENTITLED",
+   "prose_ok": true,
+   "fw_engine_verdict": "DETERMINATE",
+   "fw_answer": "ENTITLED",
+   "fw_byte_ok": true,
+   "prose_reasoning": "Section 1 applies: Theo relocated 90 miles closer (exceeds 50-mile threshold). Section 2 override does not apply because destination property is not pre-owned (he signed a new lease)."
+  }
+ ]
+}

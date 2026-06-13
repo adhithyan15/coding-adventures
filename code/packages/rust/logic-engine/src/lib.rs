@@ -32,6 +32,11 @@
 //! Not in this slice: proof DAG construction, EnumerateAll / AutoDetect
 //! mode implementations, weighted model counting.
 
+pub mod compute;
+pub mod conversion;
+pub mod datetime;
+pub mod dimension;
+pub mod differential;
 pub mod enumerate;
 pub mod lr_aggregate;
 pub mod proof_dag;
@@ -40,14 +45,23 @@ pub mod wmc;
 
 use std::collections::HashMap;
 
-use logic_core::{LogicVar, Substitution, Term, unify};
+use logic_core::{unify, LogicVar, Number, Substitution, Term};
 
+pub use compute::{compute, ComputeError, ComputeExpr, ComputeOp, DerivationNode, Derived};
+pub use conversion::{
+    add_or_sub, convert_value, ConvError, Conversion, ConversionTable,
+};
+pub use datetime::{
+    after, before, date_add, date_ordinal, days_between, read_date, read_duration_days,
+};
+pub use dimension::{dimensioned_value, DimError, DimOp, Dimension, Dimensioned};
+pub use differential::{differential, Differential, DifferentialDecision, RankedHypothesis};
 pub use enumerate::enumerate_all;
 pub use lr_aggregate::{
     counterfactual, lr_aggregate, sigmoid, source_disagreements,
-    source_disagreements_with_threshold, ContributionClause, JointContributionClause, KbError,
-    KickbackReport, LRAggregateResult, LrAggregateWarning, PriorClause,
-    SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
+    source_disagreements_with_threshold, CmpOp, ContributionClause, JointContributionClause,
+    KbError, KickbackReport, LRAggregateResult, LrAggregateWarning, PredicateContributionClause,
+    PriorClause, SourceDisagreementReport, SourceLogitDelta, UncertaintyMarker, UncertaintyReport,
 };
 pub use proof_dag::{DerivationOrigin, Proof, ProofDAG, ProofStep};
 pub use provenance::{Provenance, TrustTier};
@@ -81,6 +95,17 @@ pub struct ContributionClauseId(pub u64);
 /// Stable identifier for a [`JointContributionClause`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct JointContributionClauseId(pub u64);
+
+/// Stable identifier for a
+/// [`PredicateContributionClause`](crate::lr_aggregate::PredicateContributionClause).
+///
+/// Predicate-gated contributions are the deterministic-as-saturating-
+/// probabilistic bridge (ADJ "deterministic = special case"): a numeric
+/// predicate over a valued slot, evaluated on CPU, gates a `logit_delta`.
+/// Its own id type keeps the proof DAG able to distinguish a fired
+/// predicate from an ordinary single-source contribution.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
+pub struct PredicateContributionClauseId(pub u64);
 
 /// Stable identifier for an
 /// [`UncertaintyMarker`](crate::lr_aggregate::UncertaintyMarker).
@@ -262,6 +287,15 @@ pub struct KnowledgeBase {
     priors: Vec<PriorClause>,
     contributions: Vec<ContributionClause>,
     joint_contributions: Vec<JointContributionClause>,
+    /// Predicate-gated contributions (deterministic = saturating
+    /// probabilistic). Each fires when the observed numeric value of its
+    /// slot satisfies a CPU-evaluated comparison.
+    predicate_contributions: Vec<PredicateContributionClause>,
+    /// Derived values bound by `let name = expr` (ADJ expansion step 3).
+    /// Each carries its [`compute::Derived`] derivation tree.
+    /// [`observed_value`](Self::observed_value) falls back to this table so a
+    /// predicate fires over a computed value exactly as over an observed one.
+    derived: Vec<crate::compute::Derived>,
     /// LP19e + ADJ47-D: uncertainty markers attached to conclusions.
     /// Each marker carries a domain of candidate evidence terms; if
     /// none of them is observed, the aggregator emits an
@@ -273,6 +307,7 @@ pub struct KnowledgeBase {
     next_prior_id: u64,
     next_contribution_id: u64,
     next_joint_contribution_id: u64,
+    next_predicate_contribution_id: u64,
     next_uncertainty_marker_id: u64,
 }
 
@@ -354,7 +389,11 @@ impl KnowledgeBase {
     /// [`PriorClauseId`]. Fails with [`KbError::ConflictingPriors`]
     /// if a prior for the same conclusion already exists.
     pub fn add_prior(&mut self, mut clause: PriorClause) -> Result<PriorClauseId, KbError> {
-        if let Some(existing) = self.priors.iter().find(|p| p.conclusion == clause.conclusion) {
+        if let Some(existing) = self
+            .priors
+            .iter()
+            .find(|p| p.conclusion == clause.conclusion)
+        {
             return Err(KbError::ConflictingPriors {
                 conclusion: clause.conclusion,
                 existing: existing.id,
@@ -370,10 +409,7 @@ impl KnowledgeBase {
     /// Insert a [`ContributionClause`], assigning a fresh id. Multiple
     /// contributions per `(conclusion, evidence_term)` are permitted
     /// and sum in log-odds at aggregation time.
-    pub fn add_contribution(
-        &mut self,
-        mut clause: ContributionClause,
-    ) -> ContributionClauseId {
+    pub fn add_contribution(&mut self, mut clause: ContributionClause) -> ContributionClauseId {
         let id = ContributionClauseId(self.next_contribution_id);
         self.next_contribution_id += 1;
         clause.id = id;
@@ -390,6 +426,22 @@ impl KnowledgeBase {
         self.next_joint_contribution_id += 1;
         clause.id = id;
         self.joint_contributions.push(clause);
+        id
+    }
+
+    /// Insert a [`PredicateContributionClause`], assigning a fresh id.
+    /// A predicate-gated contribution is the deterministic-as-saturating-
+    /// probabilistic bridge: it fires when the observed numeric value of
+    /// `slot` satisfies the clause's comparison, contributing its
+    /// `logit_delta`. Multiple per conclusion are permitted and sum.
+    pub fn add_predicate_contribution(
+        &mut self,
+        mut clause: PredicateContributionClause,
+    ) -> PredicateContributionClauseId {
+        let id = PredicateContributionClauseId(self.next_predicate_contribution_id);
+        self.next_predicate_contribution_id += 1;
+        clause.id = id;
+        self.predicate_contributions.push(clause);
         id
     }
 
@@ -417,6 +469,120 @@ impl KnowledgeBase {
             .collect()
     }
 
+    /// Iterate the predicate-gated contributions naming `conclusion`.
+    pub fn predicate_contributions_for(
+        &self,
+        conclusion: &Term,
+    ) -> Vec<&PredicateContributionClause> {
+        self.predicate_contributions
+            .iter()
+            .filter(|c| &c.conclusion == conclusion)
+            .collect()
+    }
+
+    /// Read the observed numeric value of a valued slot, if one was
+    /// observed. A valued fact has the shape `slot(V)` — for example
+    /// `observe gross_income(18000)` stores
+    /// `Compound { functor: "gross_income", args: [Num(Int(18000))] }`.
+    ///
+    /// `V` may be either a bare number **or a typed-value wrapper** that
+    /// carries the magnitude first: `quantity(18000, usd)`,
+    /// `money(18000, usd)`, `percentage(40)`, `duration(365, days)`,
+    /// `count(3)`. The magnitude is the wrapper's leading numeric
+    /// argument — this is the unit-bearing typed value the ADJ language
+    /// expansion (step 2) extracts, and it lets a predicate
+    /// `gross_income >= 14600` fire over `quantity(18000, usd)` while the
+    /// `usd` unit travels with the fact for the faithfulness gate. See
+    /// [`numeric_magnitude`].
+    ///
+    /// Only `Certain` facts gate predicates (same scope as
+    /// [`observed_evidence`](Self::observed_evidence)). Returns the value
+    /// of the most-recently-added matching fact, as `f64`.
+    pub fn observed_value(&self, slot: &str) -> Option<f64> {
+        // An observed fact wins; otherwise fall back to a `let`-bound derived
+        // value (ADJ expansion step 3) so a predicate fires over a computed
+        // value exactly as it would over an observed one.
+        self.observed_value_with_fact(slot)
+            .map(|(v, _)| v)
+            .or_else(|| self.derived_for(slot).map(|d| d.value))
+    }
+
+    /// Like [`observed_value`](Self::observed_value) but also returns the
+    /// [`FactId`] of the winning observation — used by
+    /// [`compute`](crate::compute) so a derivation-tree leaf can cite the byte-
+    /// grounded fact it came from. Does **not** consult the derived table
+    /// (a derived value has no `FactId`; the caller records a `DerivedRef`).
+    pub fn observed_value_with_fact(&self, slot: &str) -> Option<(f64, FactId)> {
+        self.facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_magnitude(&args[0]).map(|v| (f.id, v))
+                }
+                _ => None,
+            })
+            // Largest FactId wins — facts are inserted in program order,
+            // so a later `observe` of the same slot supersedes an earlier.
+            .max_by_key(|(id, _)| id.0)
+            .map(|(id, v)| (v, id))
+    }
+
+    /// The observed **dimensioned** value of a slot (magnitude + its
+    /// [`Dimension`](crate::Dimension)) with its [`FactId`]. Same
+    /// latest-observation-wins rule as [`observed_value_with_fact`], but reads
+    /// the unit/currency too, so the faithfulness gate (track A4) can reject
+    /// `usd + days`. Returns `None` for a date/time term (those have no scalar
+    /// magnitude — see [`dimensioned_value`](crate::dimensioned_value)).
+    pub fn observed_dimensioned(&self, slot: &str) -> Option<(crate::Dimensioned, FactId)> {
+        self.facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    crate::dimensioned_value(&args[0]).map(|d| (f.id, d))
+                }
+                _ => None,
+            })
+            .max_by_key(|(id, _)| id.0)
+            .map(|(id, d)| (d, id))
+    }
+
+    /// Every observed numeric value of a slot, in fact-insertion order, with
+    /// each value's [`FactId`]. This is what aggregations (`sum`/`count`/…)
+    /// reduce — each observation becomes a cited leaf in the derivation tree.
+    pub fn observed_values_all(&self, slot: &str) -> Vec<(f64, FactId)> {
+        let mut out: Vec<(f64, FactId)> = self
+            .facts
+            .values()
+            .flatten()
+            .filter(|f| f.probability == Probability::Certain)
+            .filter_map(|f| match &f.term {
+                Term::Compound { functor, args } if functor == slot && args.len() == 1 => {
+                    numeric_magnitude(&args[0]).map(|v| (v, f.id))
+                }
+                _ => None,
+            })
+            .collect();
+        out.sort_by_key(|(_, id)| id.0);
+        out
+    }
+
+    /// Bind a `let`-computed [`Derived`](crate::compute::Derived) value into the
+    /// KB. A later [`observed_value`](Self::observed_value) of its name returns
+    /// the computed value, and a formula can reference it by name.
+    pub fn add_derived(&mut self, derived: crate::compute::Derived) {
+        self.derived.push(derived);
+    }
+
+    /// Look up a bound derived value by name (most-recently-bound wins, so a
+    /// rebinding supersedes — mirroring the latest-observation rule for facts).
+    pub fn derived_for(&self, name: &str) -> Option<&crate::compute::Derived> {
+        self.derived.iter().rev().find(|d| d.name == name)
+    }
+
     /// True iff at least one contribution (single or joint) names
     /// `conclusion`. This is the discriminator that `AutoDetect` uses
     /// to route to LR aggregation rather than SLD / WMC. Uncertainty
@@ -431,14 +597,15 @@ impl KnowledgeBase {
                 .joint_contributions
                 .iter()
                 .any(|c| &c.conclusion == conclusion)
+            || self
+                .predicate_contributions
+                .iter()
+                .any(|c| &c.conclusion == conclusion)
     }
 
     /// Insert an [`UncertaintyMarker`], assigning a fresh
     /// [`UncertaintyMarkerId`].
-    pub fn add_uncertainty_marker(
-        &mut self,
-        mut marker: UncertaintyMarker,
-    ) -> UncertaintyMarkerId {
+    pub fn add_uncertainty_marker(&mut self, mut marker: UncertaintyMarker) -> UncertaintyMarkerId {
         let id = UncertaintyMarkerId(self.next_uncertainty_marker_id);
         self.next_uncertainty_marker_id += 1;
         marker.id = id;
@@ -476,6 +643,41 @@ impl KnowledgeBase {
         } else {
             Some(matched)
         }
+    }
+}
+
+/// Extract the numeric **magnitude** of a typed value term, if it has one.
+///
+/// The ADJ language expansion (step 2) models a fact's value as either a
+/// bare number or a *typed-value wrapper* that carries the magnitude as
+/// its leading argument and the unit/currency afterward:
+///
+/// | surface value           | term shape                              | magnitude |
+/// |-------------------------|-----------------------------------------|-----------|
+/// | `18000`                 | `Num(18000)`                            | `18000.0` |
+/// | `quantity(18000, usd)`  | `Compound{quantity, [Num(18000), usd]}` | `18000.0` |
+/// | `money(18000, usd)`     | `Compound{money, [Num(18000), usd]}`    | `18000.0` |
+/// | `percentage(40)`        | `Compound{percentage, [Num(40)]}`       | `40.0`    |
+/// | `duration(365, days)`   | `Compound{duration, [Num(365), days]}`  | `365.0`   |
+/// | `count(3)`              | `Compound{count, [Num(3)]}`             | `3.0`     |
+///
+/// The rule is uniform — "the leading numeric argument" — so we do not
+/// hard-code a closed set of wrapper functors; any compound that puts a
+/// number first exposes that number as its magnitude. A predicate
+/// (`gross_income >= 14600`) compares against this magnitude while the
+/// unit stays attached to the fact for the faithfulness gate. Returns
+/// `None` for symbolic terms with no leading number.
+pub fn numeric_magnitude(value: &Term) -> Option<f64> {
+    match value {
+        Term::Num(Number::Int(i)) => Some(*i as f64),
+        Term::Num(Number::Float(x)) => Some(*x),
+        // Typed wrapper: the magnitude is the leading numeric argument.
+        Term::Compound { args, .. } => match args.first() {
+            Some(Term::Num(Number::Int(i))) => Some(*i as f64),
+            Some(Term::Num(Number::Float(x))) => Some(*x),
+            _ => None,
+        },
+        _ => None,
     }
 }
 
@@ -601,9 +803,7 @@ fn rename_term(term: &Term, renames: &mut HashMap<u64, LogicVar>) -> Term {
         Term::Var(v) => {
             let fresh = renames
                 .entry(v.id)
-                .or_insert_with(|| {
-                    LogicVar::fresh(v.display_name.as_deref())
-                })
+                .or_insert_with(|| LogicVar::fresh(v.display_name.as_deref()))
                 .clone();
             Term::Var(fresh)
         }
@@ -825,7 +1025,10 @@ mod tests {
         let yy = var("Y");
         let zz = var("Z");
         kb.add_rule(Rule::certain(
-            compound("grandfather", vec![Term::Var(xx.clone()), Term::Var(zz.clone())]),
+            compound(
+                "grandfather",
+                vec![Term::Var(xx.clone()), Term::Var(zz.clone())],
+            ),
             vec![
                 BodyLiteral::Pos(compound(
                     "father",
@@ -840,10 +1043,7 @@ mod tests {
 
         // Query: grandfather(grandpa, Who).
         let who = var("Who");
-        let query = compound(
-            "grandfather",
-            vec![atom("grandpa"), Term::Var(who.clone())],
-        );
+        let query = compound("grandfather", vec![atom("grandpa"), Term::Var(who.clone())]);
         let s = find_first(&query, &kb).expect("grandfather(grandpa, Who) should succeed");
         assert_eq!(s.walk_var(&who), atom("bart"));
     }
@@ -884,14 +1084,8 @@ mod tests {
         // q(a, a).  q(b, c).
         // ?- p(W).  W should be bound to 'a' (the only X that satisfies q(X, X))
         let mut kb = empty_kb();
-        kb.add_fact(Fact::certain(compound(
-            "q",
-            vec![atom("a"), atom("a")],
-        )));
-        kb.add_fact(Fact::certain(compound(
-            "q",
-            vec![atom("b"), atom("c")],
-        )));
+        kb.add_fact(Fact::certain(compound("q", vec![atom("a"), atom("a")])));
+        kb.add_fact(Fact::certain(compound("q", vec![atom("b"), atom("c")])));
 
         let x = var("X");
         kb.add_rule(Rule::certain(

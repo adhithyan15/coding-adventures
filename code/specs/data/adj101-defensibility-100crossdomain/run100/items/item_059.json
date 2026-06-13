@@ -1,0 +1,7 @@
+{
+ "idx": 59,
+ "id": "BUI-10",
+ "scenario": "A dwelling unit has a bathroom fitted with a sliding pocket door. The bathroom opens off a central hallway; the hallway, not the bathroom, provides access to the unit's required exit, and the bathroom is a dead-end room.",
+ "policy": "A means of egress door must be side-hinged and swinging, except that the door from an individual dwelling unit's interior bathroom may be of any type, including pocket or sliding, provided the bathroom is not the only room providing access to a required exit.",
+ "question": "Does the bathroom's sliding pocket door violate the egress door requirement?"
+}

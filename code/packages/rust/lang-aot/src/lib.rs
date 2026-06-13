@@ -47,6 +47,10 @@ use std::path::Path;
 
 use interpreter_ir::module::IIRModule;
 
+/// McCarthy Lisp on the universal JIT backend (W15).
+pub mod jit_lisp;
+pub use jit_lisp::run_mccarthy_on_jit;
+
 /// Source language a `lang-aot` invocation is compiling.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Language {
@@ -54,11 +58,14 @@ pub enum Language {
     Twig,
     /// Nib — typed expression language, multi-language implementation.
     Nib,
-    /// Brainfuck — minimalist tape language.
+    /// Brainfuck — minimalist tape language; `brainfuck-iir-compiler` frontend
+    /// lowered for AOT by `lower_brainfuck_for_aot`.
     Brainfuck,
-    /// Dartmouth BASIC — placeholder; no IIR-emitting frontend yet.
+    /// Dartmouth BASIC — integer subset (PRINT/LET/FOR/GOTO/IF) via the
+    /// `dartmouth-basic-iir-compiler` Rust frontend over the shared IIR.
     DartmouthBasic,
-    /// Oct — placeholder; no Rust frontend yet (Python only).
+    /// Oct — integer subset (let/if/while/calls) via the `oct-iir-compiler`
+    /// Rust frontend over the shared IIR; `main` is void (exits 0).
     Oct,
     /// McCarthy Lisp — the 1960 Lisp 1.0, compiled via
     /// `mccarthy-lisp-iir-compiler` over the `lispy-runtime` value model.
@@ -144,6 +151,9 @@ pub enum LangAotError {
     /// Carries the human-readable string from `iir-to-llvm` (which already
     /// includes the failing function name and the unsupported op/type).
     LlvmBackendError(String),
+    /// The universal JIT (`jit-core`) rejected or trapped while running the IIR
+    /// (McCarthy W15). Carries the JIT/VM error string.
+    JitBackendError(String),
     /// The RV32I backend rejected the IIR.
     ///
     /// Carries the human-readable string from `iir-to-riscv` (which
@@ -175,6 +185,12 @@ pub enum LangAotError {
     /// unsupported op/type/operand).  The GE-225 (1959) was the
     /// mainframe where Dartmouth BASIC was designed in 1964.
     Ge225BackendError(String),
+    /// The IBM 704 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `ibm704-backend`.
+    /// L4 of the McCarthy Lisp implementation — closes the
+    /// round-trip to the silicon Lisp was born on.
+    Ibm704BackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -182,6 +198,25 @@ pub enum LangAotError {
     /// the modern *managed* targets the worked example reaches (LANG77 /
     /// McCarthy L3b-3).
     WasmBackendError(String),
+    /// The JVM (Java class-file) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-jvm-class-file` (a validation failure, or
+    /// an op/type its lowering does not yet handle).  The JVM is the second of
+    /// the modern *managed* targets, replicating the WASM uniform-reference value
+    /// model with `Object`/`Integer` boxing (LANG77 / McCarthy W3).
+    JvmBackendError(String),
+    /// The CLR (.NET CIL) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-cil-bytecode`.  The CLR is the third of
+    /// the modern *managed* targets, replicating the WASM/JVM uniform-reference
+    /// value model with `object`/boxing (LANG77 / McCarthy W6).
+    ClrBackendError(String),
+    /// The BEAM (Erlang VM) backend rejected the IIR.
+    ///
+    /// Carries the string from `iir-to-beam`.  BEAM uses the native **Erlang
+    /// terms** value model (integers, atoms, list cells) rather than the
+    /// structural uniform-reference model of WASM/JVM/CLR (LANG77 / McCarthy W9).
+    BeamBackendError(String),
 }
 
 impl fmt::Display for LangAotError {
@@ -194,12 +229,17 @@ impl fmt::Display for LangAotError {
             LangAotError::AotError(e) => write!(f, "{e}"),
             LangAotError::Io(e) => write!(f, "io: {e}"),
             LangAotError::LlvmBackendError(m) => write!(f, "llvm: {m}"),
+            LangAotError::JitBackendError(m) => write!(f, "jit: {m}"),
             LangAotError::WasmBackendError(m) => write!(f, "wasm: {m}"),
+            LangAotError::JvmBackendError(m) => write!(f, "jvm: {m}"),
+            LangAotError::ClrBackendError(m) => write!(f, "clr: {m}"),
+            LangAotError::BeamBackendError(m) => write!(f, "beam: {m}"),
             LangAotError::RiscvBackendError(m) => write!(f, "riscv32: {m}"),
             LangAotError::Intel8008BackendError(m) => write!(f, "intel8008: {m}"),
             LangAotError::Armv7BackendError(m) => write!(f, "armv7: {m}"),
             LangAotError::Intel4004BackendError(m) => write!(f, "intel4004: {m}"),
             LangAotError::Ge225BackendError(m) => write!(f, "ge225: {m}"),
+            LangAotError::Ibm704BackendError(m) => write!(f, "ibm704: {m}"),
         }
     }
 }
@@ -329,6 +369,87 @@ pub fn compile_file_to_llvm_ir(
     Ok(())
 }
 
+/// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
+/// LLVM backend (LANG77 / McCarthy W12a). The LLVM backend is a typed SSA IR, so
+/// — like wasm/JVM/CLR/BEAM — a polymorphic scalar value must be given a concrete
+/// type before lowering; for a pure-integer McCarthy program that type is `i64`.
+/// Heap/reference functions (cons/symbols/lambda — the tagged-word value model
+/// routed through `lispy_runtime.c`, W12b+) are left alone.
+fn concretize_scalar_any_for_llvm(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| {
+            t == "any" || t == "symbol" || t.starts_with("ref<")
+        }) || func.instructions.iter().any(|i| {
+            HEAP_OPS.contains(&i.op.as_str())
+                || (i.op == "call_builtin"
+                    && matches!(i.srcs.first(),
+                        Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                || i.type_hint.starts_with("ref<")
+        });
+        if uses_lisp {
+            continue; // tagged-word C-runtime value model — W12b+.
+        }
+        if func.return_type == "any" || func.return_type == "polymorphic" {
+            func.return_type = "i64".to_string();
+        }
+        for instr in &mut func.instructions {
+            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → **LLVM IR text** (`.ll`) for the default,
+/// reproducible target (`x86_64-unknown-linux-gnu`) — McCarthy W12a.
+///
+/// The fifth `--emit` value model and the first **tagged-word** target (the
+/// LLVM/AOT/JIT family that links the shared `lispy_runtime.c`, as opposed to the
+/// managed object models of wasm/JVM/CLR or BEAM's native terms). This scalar
+/// run-foundation concretises `any`→`i64` and lowers to LLVM IR; the cons /
+/// predicate / symbol / lambda lowering (`call __twig_lispy_*`) is W12b+.
+pub fn compile_source_to_llvm(
+    language: Language,
+    source: &str,
+    module_name: &str,
+) -> Result<String, LangAotError> {
+    compile_source_to_llvm_with_target(language, source, module_name, "x86_64-unknown-linux-gnu")
+}
+
+/// As [`compile_source_to_llvm`], but with a caller-chosen target triple. The
+/// **verify-by-running** harness passes the *host* triple (`clang -dumpmachine`)
+/// so `clang -x ir <out>.ll` produces a native executable that runs on the test
+/// machine — the LLVM analogue of `wasm-runtime` / the `clr-simulator` / real
+/// `erl`, but using the real `clang` already on the box.
+pub fn compile_source_to_llvm_with_target(
+    language: Language,
+    source: &str,
+    module_name: &str,
+    target_triple: &str,
+) -> Result<String, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, module_name)?;
+    // The TAGGED-WORD lisp pipeline (McCarthy W12b) — the SAME passes the native
+    // AOT path runs, NOT the managed structural pass. `lower_heap_builtins_runtime`
+    // turns cons/car/cdr/pair?/equal?/not into `call_builtin "lispy_*"`;
+    // `intern_symbols` assigns each symbol a tagged immediate; `lower_lisp_repr`
+    // boxes integer literals to tagged words and inserts the final `lispy_unbox_int`
+    // so the result is a plain `i64`. `iir-to-llvm` then lowers each `lispy_*` to a
+    // `call @__twig_lispy_*` into `lispy_runtime.c`. A no-op for a scalar program.
+    iir_builtin_lowering::lower_heap_builtins_runtime(&mut module);
+    iir_builtin_lowering::intern_symbols(&mut module);
+    iir_builtin_lowering::lower_lisp_repr(&mut module);
+    // Concretise any residual scalar `any` (a pure-integer program never enters
+    // the lisp passes above) to `i64`.
+    concretize_scalar_any_for_llvm(&mut module);
+    let cfg = iir_to_llvm::IIRLlvmConfig::new(module_name).with_target(target_triple);
+    iir_to_llvm::lower_iir_to_llvm(&module, &cfg)
+        .map_err(|e| LangAotError::LlvmBackendError(format!("{e}")))
+}
+
 /// Concretise the polymorphic `"any"`/`"polymorphic"` type hints of a **purely
 /// scalar** function to `"i64"`, so it can flow through the typed WASM backend
 /// (LANG77 / McCarthy L3b-3a-2).
@@ -347,15 +468,21 @@ fn concretize_scalar_any_for_wasm(module: &mut IIRModule) {
     ];
 
     for func in &mut module.functions {
-        // Does this function touch the lisp heap / reference model?
-        let uses_heap = func.instructions.iter().any(|i| {
+        // Does this function touch the lisp heap / reference model? A function
+        // with **lisp parameters** (a `LAMBDA`/`LABEL` — params typed `any` /
+        // `symbol` / `ref<…>`) participates in the uniform-anyref boundary and is
+        // owned by `lower_lisp_repr_structural`, so skip it here too (it has
+        // already retyped them to `ref<…>` by the time this runs).
+        let uses_lisp = func.params.iter().any(|(_, t)| {
+            t == "any" || t == "symbol" || t.starts_with("ref<")
+        }) || func.instructions.iter().any(|i| {
             HEAP_OPS.contains(&i.op.as_str())
                 || (i.op == "call_builtin"
                     && matches!(i.srcs.first(),
                         Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
                 || i.type_hint.starts_with("ref<")
         });
-        if uses_heap {
+        if uses_lisp {
             continue; // boxed-anyref value model — out of scope for the scalar slice.
         }
         // Pure scalar function: every `any`/`polymorphic` value is an i64.
@@ -399,6 +526,11 @@ pub fn compile_source_to_wasm(
     // Managed backends consume the structural cons form (not the native
     // runtime-call form). A no-op for a module without cons builtins.
     iir_builtin_lowering::lower_heap_builtins(&mut module);
+    // Intern symbol literals to distinct integers in a reserved range, so each
+    // distinct symbol is a unique value (boxed as `i31ref`) and `EQ` compares
+    // them with `i32.eq` — `(EQ 'A 'A)` true, `(EQ 'A 'B)` false (LANG77 / W1).
+    // A no-op for a module with no symbol literals. Before the repr pass.
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
     // The two representation passes partition the module's functions:
     //   • heap-using functions → the structural pass boxes their integer atoms
     //     as `i31ref` and unboxes the entry result (uniform-anyref value model);
@@ -413,6 +545,331 @@ pub fn compile_source_to_wasm(
         .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))?;
     iir_to_wasm::encode_module(&wasm)
         .map_err(|e| LangAotError::WasmBackendError(format!("{e:?}")))
+}
+
+/// Retype a **scalar** module's `any`/`polymorphic`/`i64` values to JVM `i32`,
+/// for the JVM run-foundation (LANG77 / McCarthy W3a). Like
+/// `concretize_scalar_any_for_wasm`, but the managed target here is the JVM, and
+/// the in-repo `jvm-simulator` (used to verify) is a 32-bit integer machine — so
+/// a scalar program's entry returns `int` (`ireturn`), not `long`. We leave
+/// heap/reference functions alone (cons/symbols/lambda are W3b+, where the
+/// uniform-`Object` value model lands).
+fn concretize_scalar_any_for_jvm(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || i.type_hint.starts_with("ref<")
+            });
+        if uses_lisp {
+            continue; // uniform-Object value model — JVM W3b+.
+        }
+        // A function that prints (Dartmouth BASIC's `PRINT`) needs the **wide**
+        // i64 value model: `print_i64` lowers to `lload val; invokestatic
+        // env/BasicRuntime.println(J)V`, i.e. the value is loaded as a `long`. If
+        // we concretized it to `i32` the value would be `istore`d as an `int` but
+        // `lload`ed as a `long`, and a real `java` rejects the mismatch with
+        // `VerifyError: Accessing value from uninitialized register pair`. So,
+        // exactly like the lisp/heap functions above, we leave a printing function
+        // at its native i64 width. (Concretization exists only because the in-repo
+        // `jvm-simulator` is a 32-bit machine; BASIC runs on real `java`, where
+        // `long` is fine and is never exercised on the simulator.)
+        let prints_i64 = func.instructions.iter().any(|i| {
+            i.op == "call_builtin"
+                && matches!(i.srcs.first(),
+                    Some(interpreter_ir::Operand::Var(n)) if n == "print_i64")
+        });
+        if prints_i64 {
+            continue; // wide i64 value model — println(J)V needs a `long`.
+        }
+        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        if to_i32(&func.return_type) {
+            func.return_type = "i32".to_string();
+        }
+        // Concretize the **parameters** too, not just the return type and the
+        // instruction hints. A scalar helper such as Nib's `double(x: u8)` widens
+        // its parameter to `i64`; if we retype the body to `i32` but leave the
+        // parameter `i64`, the emitted method's signature is the inconsistent
+        // `(J)I` and its body does `iadd`/`ireturn` on a `long` parameter — which
+        // a real `java` rejects with `VerifyError: Expecting to find integer on
+        // stack`. (The in-repo `jvm-simulator` is laxer and didn't catch it, so
+        // this only surfaced once a parameterized scalar program ran on real
+        // `java` in the LANG-MATRIX JVM column.) The lisp/`any`-param functions
+        // were already skipped by the `uses_lisp` guard above, so every parameter
+        // reaching here is a concrete scalar — safe to bring down to `i32`.
+        for (_, ty) in &mut func.params {
+            if to_i32(ty) {
+                *ty = "i32".to_string();
+            }
+        }
+        for instr in &mut func.instructions {
+            if to_i32(&instr.type_hint) {
+                instr.type_hint = "i32".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → **JVM class file** bytes (LANG77 / McCarthy W3).
+///
+/// The second of the modern *managed* `--emit` targets. The JVM has its own
+/// uniform-reference value model (`Object` references, `Integer` boxing) — the
+/// analogue of the WASM `anyref`/`i31ref` model. **W3a (this slice)** wires the
+/// pipeline and runs **scalar** programs: source → IIR → `concretize_scalar_any_for_jvm`
+/// → `iir-to-jvm-class-file` → a serialized `.class`. The cons/symbol/lambda value
+/// model (the uniform-`Object` replication of the WASM passes) lands in W3b+.
+///
+/// Verified end-to-end by *running* the emitted class's entry method on the
+/// in-repo `jvm-simulator` (see the `jvm_emit` tests) — no external `java`.
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `JvmBackendError` — `iir-to-jvm-class-file` rejected the (lowered) IIR.
+pub fn compile_source_to_jvm(
+    language: Language,
+    source: &str,
+    class_name: &str,
+) -> Result<Vec<u8>, LangAotError> {
+    let class = compile_source_to_jvm_class(language, source, class_name)?;
+    Ok(iir_to_jvm_class_file::serialize_jvm_class_file(&class))
+}
+
+/// Cross-platform: source → IIR → a **`JvmClassFile`** (the structured class,
+/// pre-serialization).
+///
+/// The shared core of [`compile_source_to_jvm`]; exposed so a caller can inspect
+/// or augment the class before serializing — e.g. a test that injects a
+/// `main([Ljava/lang/String;)V` launcher to run the entry method on a real JVM.
+///
+/// Runs the **managed value-model pipeline**, identical to the wasm path: the
+/// structural passes emit *backend-agnostic* `box`/`unbox`/`alloc`/`field_*`
+/// ops, and the JVM backend lowers them to `Integer.valueOf`/`intValue` +
+/// `Object[]` cons cells (where wasm uses `i31ref`/`$LispyPair`). That shared
+/// representation is exactly the reusable primitive a future lisp-family language
+/// inherits for free.
+pub fn compile_source_to_jvm_class(
+    language: Language,
+    source: &str,
+    class_name: &str,
+) -> Result<iir_to_jvm_class_file::JvmClassFile, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, class_name)?;
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    concretize_scalar_any_for_jvm(&mut module);
+
+    let config = iir_to_jvm_class_file::IIRJvmConfig::new(class_name);
+    iir_to_jvm_class_file::lower_iir_to_jvm(&module, &config)
+        .map_err(|e| LangAotError::JvmBackendError(format!("{e:?}")))
+}
+
+/// Retype a **scalar** module's `any`/`polymorphic`/`i64` values to CLR `i32`,
+/// for the CLR run-foundation (LANG77 / McCarthy W6a). The CLR twin of
+/// `concretize_scalar_any_for_jvm`: the in-repo `clr-simulator` (used to verify)
+/// is a 32-bit integer machine and `iir-to-cil-bytecode`'s entry returns
+/// `int32`, so a scalar program's result is an `int`. Heap/reference functions
+/// (cons/symbols/lambda — W6b+) are left for the uniform-`object` value model.
+fn concretize_scalar_any_for_cil(module: &mut IIRModule) {
+    const HEAP_OPS: &[&str] = &["alloc", "field_load", "field_store", "is_null"];
+    const LISP_BUILTINS: &[&str] = &[
+        "cons", "car", "cdr", "pair?", "not", "equal?", "make_symbol", "make_nil", "null?",
+    ];
+    for func in &mut module.functions {
+        let uses_lisp = func.params.iter().any(|(_, t)| t == "any" || t == "symbol")
+            || func.instructions.iter().any(|i| {
+                HEAP_OPS.contains(&i.op.as_str())
+                    || (i.op == "call_builtin"
+                        && matches!(i.srcs.first(),
+                            Some(interpreter_ir::Operand::Var(n)) if LISP_BUILTINS.contains(&n.as_str())))
+                    || i.type_hint.starts_with("ref<")
+            });
+        if uses_lisp {
+            continue; // uniform-object value model — CLR W6b+.
+        }
+        let to_i32 = |t: &str| t == "any" || t == "polymorphic" || t == "i64";
+        if to_i32(&func.return_type) {
+            func.return_type = "i32".to_string();
+        }
+        // Concretize the **parameters** too — the same fix the JVM path needed.
+        // A scalar helper such as Nib's `double(x: u8)` widens its parameter to
+        // `i64`; if the body is retyped to `i32` but the parameter is left `i64`,
+        // the emitted CIL method signature is the inconsistent `int32(int64)` and
+        // its body does `int32` arithmetic on an `int64` argument — CoreCLR's
+        // verifier rejects the mismatch. The lisp/`any`-param functions were
+        // already skipped by the `uses_lisp` guard, so every parameter reaching
+        // here is a concrete scalar — safe to bring down to `i32`.
+        for (_, ty) in &mut func.params {
+            if to_i32(ty) {
+                *ty = "i32".to_string();
+            }
+        }
+        for instr in &mut func.instructions {
+            if to_i32(&instr.type_hint) {
+                instr.type_hint = "i32".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → a **CLR CIL artifact** (LANG77 / McCarthy W6).
+///
+/// The third of the modern *managed* `--emit` targets. The CLR has its own
+/// uniform-reference value model (`object` references, value-type boxing) — the
+/// analogue of the WASM `anyref` / JVM `Object` models. **W6a (this slice)** wires
+/// the pipeline and runs **scalar** programs: source → IIR →
+/// `concretize_scalar_any_for_cil` → `iir-to-cil-bytecode`. The cons/symbol/lambda
+/// value model (the uniform-`object` replication of the shared structural passes)
+/// lands in W6b+.
+///
+/// Verified end-to-end by *running* the emitted entry method's CIL on the in-repo
+/// `clr-simulator` (see the `cil_emit` tests) — no external `dotnet`.
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `ClrBackendError` — `iir-to-cil-bytecode` rejected the (lowered) IIR.
+pub fn compile_source_to_cil_artifact(
+    language: Language,
+    source: &str,
+    name: &str,
+) -> Result<iir_to_cil_bytecode::CILProgramArtifact, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, name)?;
+    // The managed value-model pipeline — the same backend-agnostic structural
+    // passes the wasm/JVM paths use. The CLR backend lowers `box`/`unbox`/
+    // `alloc`/`field_*` to `box [int32]`/`unbox.any` + `object[]` cons cells
+    // (where wasm uses `i31ref`/`$LispyPair` and the JVM `Integer`/`Object[]`).
+    // A no-op for a module without cons/symbols (W6a scalar still flows through).
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    concretize_scalar_any_for_cil(&mut module);
+
+    let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
+    iir_to_cil_bytecode::lower_iir_to_cil(&module, &config)
+        .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
+}
+
+/// Compile `source` to **textual CIL** (`.il`) for the **real CoreCLR** path
+/// (CLR-real C1). Where [`compile_source_to_cil_artifact`] yields raw method bodies
+/// for the in-repo `clr-simulator`, this emits `.il` source that real `ilasm`
+/// assembles into a loadable PE assembly which runs on real `dotnet` — the CLR
+/// analog of [`compile_source_to_llvm`] (textual LLVM IR → real `clang`).
+///
+/// C1 covers scalar McCarthy; later slices grow the `iir-to-cil-bytecode::emit_il`
+/// op match (cons, predicates, `COND`, symbols, lambda).
+pub fn compile_source_to_cil_text(
+    language: Language,
+    source: &str,
+    name: &str,
+) -> Result<String, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, name)?;
+    // The same managed value-model pipeline the binary CIL path uses, so the
+    // textual and binary emitters lower an identical program.
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    iir_builtin_lowering::lower_lisp_repr_structural(&mut module);
+    concretize_scalar_any_for_cil(&mut module);
+
+    let config = iir_to_cil_bytecode::IIRClrConfig::new(name);
+    iir_to_cil_bytecode::emit_il(&module, &config)
+        .map_err(|e| LangAotError::ClrBackendError(format!("{e:?}")))
+}
+
+/// Concretise a **scalar** module's `any`/`polymorphic` values to `i64` for the
+/// BEAM run-foundation (LANG77 / McCarthy W9a). Unlike the WASM/JVM/CLR
+/// simulators (32-bit), the BEAM has **native arbitrary-precision integers**, so
+/// the natural concrete type is `i64` (the `iir-to-beam` backend's integer
+/// width). The `iir-to-beam` validator rejects `any`/`polymorphic`, so a scalar
+/// program must be concretised before lowering. Heap/reference functions
+/// (cons/symbols/lambda — W9+, the native Erlang-terms model) are left alone.
+fn concretize_scalar_any_for_beam(module: &mut IIRModule) {
+    // The BEAM is **dynamically typed** — every value is an Erlang *term* — so the
+    // natural concrete type for an `any`/`polymorphic` lisp value is `i64` (a
+    // native Erlang integer; the term carries its real runtime shape regardless).
+    // We concretize **per instruction**, not per function (W9b): a cons program's
+    // scalar results — e.g. the `car`/`cdr` of a cell, or the final `ret` of an
+    // integer — become `i64`, while the cons cells themselves keep their
+    // `ref<LispyPair>` type for `iir-to-beam`'s `put_list`/`get_hd`/`get_tl`
+    // lowering. We never rewrite a `ref<…>` type: those ARE the native list cells.
+    // (`get_hd` returning a sub-list is still sound — the `i64` hint is a lowering
+    // placeholder, never an unboxing op; BEAM resolves the real term at runtime.)
+    let to_i64 = |t: &str| t == "any" || t == "polymorphic";
+    for func in &mut module.functions {
+        if to_i64(&func.return_type) {
+            func.return_type = "i64".to_string();
+        }
+        for instr in &mut func.instructions {
+            if to_i64(&instr.type_hint) {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+    }
+}
+
+/// Cross-platform: source → IIR → a **BEAM module** (`.beam` bytes) (LANG77 / W9).
+///
+/// The fourth managed `--emit` target — and the first on the **Erlang VM**, whose
+/// native value model (integers, atoms, list cells) replaces the structural
+/// uniform-reference model of WASM/JVM/CLR. **W9a (this slice)** wires the
+/// pipeline and runs **scalar** programs: source → IIR →
+/// `concretize_scalar_any_for_beam` → `iir-to-beam` → `encode_beam`. The cons/
+/// symbol/lambda Erlang-terms lowering lands in W9+.
+///
+/// `module_name` must be a valid Erlang atom (lowercase, `[a-z][a-z0-9_]*`); the
+/// emitted module exports `main/0`, so a runner loads it and calls
+/// `<module_name>:main()`. Verified end-to-end by running on a real `erl` (OTP).
+///
+/// # Errors
+/// * `FrontendError` — the frontend rejected the source.
+/// * `BeamBackendError` — `iir-to-beam` rejected the (lowered) IIR.
+pub fn compile_source_to_beam(
+    language: Language,
+    source: &str,
+    module_name: &str,
+) -> Result<Vec<u8>, LangAotError> {
+    let mut module = compile_source_to_iir(language, source, module_name)?;
+    // BEAM uses the NATIVE Erlang-terms value model, not the managed structural
+    // pass: `lower_heap_builtins` turns McCarthy `cons`/`car`/`cdr` into
+    // `alloc ref<LispyPair>` + `field_store`/`field_load`, which `iir-to-beam`
+    // maps directly to BEAM list ops — `put_list` (a cons cell `[H|T]`) and
+    // `get_hd`/`get_tl` (`hd`/`tl`). Integers stay native Erlang integers; there
+    // is NO boxing (unlike wasm/JVM/CLR). A no-op for a scalar-only module.
+    iir_builtin_lowering::lower_heap_builtins(&mut module);
+    // McCarthy symbols (F6): intern each distinct symbol to a stable `i32` id
+    // (`SYMBOL_ID_BASE = 1<<29`). The BEAM carries it as a native Erlang integer,
+    // and `EQ` on symbols becomes integer equality (`is_eq_exact`). We use the
+    // SAME structural interning the wasm/JVM/CLR backends use, so a given symbol
+    // gets the SAME id on every "intern-to-integer" backend (it matters for the
+    // cross-backend conformance suite). Lambda (F7) needs nothing extra — it is
+    // already a method `call`, which `iir-to-beam` lowers natively (a BEAM fun).
+    iir_builtin_lowering::intern_symbols_structural(&mut module);
+    concretize_scalar_any_for_beam(&mut module);
+
+    let config = iir_to_beam::IIRBeamConfig::new(module_name);
+    let beam = iir_to_beam::lower_iir_to_beam(&module, &config)
+        .map_err(|e| LangAotError::BeamBackendError(format!("{e:?}")))?;
+    Ok(iir_to_beam::encode_beam(&beam))
+}
+
+/// Cross-platform: source file → IIR → JVM class file (`.class`) on disk.
+///
+/// Thin wrapper over [`compile_source_to_jvm`]. Pair with `--emit=jvm`.
+pub fn compile_file_to_jvm(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("Main");
+    let bytes = compile_source_to_jvm(language, &source, stem)?;
+    std::fs::write(out, bytes)?;
+    Ok(())
 }
 
 /// Cross-platform: source file → IIR → WebAssembly binary (`.wasm`) on disk.
@@ -854,6 +1311,94 @@ pub fn compile_file_to_ge225_bin(
     Ok(())
 }
 
+/// Cross-platform: source → IIR → IBM 704 machine code (`.bin`) on disk.
+///
+/// L4 of the McCarthy Lisp implementation.  Unlike the native-
+/// executable pipelines, this one does **not** link or run any
+/// toolchain — it just writes a flat `.bin` of 36-bit IBM 704
+/// instruction words, packed 5 bytes per word (low byte first,
+/// high 4 bits of the top byte zeroed).  Downstream consumers:
+///
+/// * A future in-tree `ibm704-simulator` (not yet shipped).
+/// * Any IBM 704 emulator that consumes 5-byte-per-word streams.
+/// * Period scholarship / replica hardware.
+///
+/// No `cfg(target_os = ...)` gating: emitting bytes is platform-
+/// agnostic.
+///
+/// # Why the IBM 704?
+///
+/// The IBM 704 is the vacuum-tube mainframe John McCarthy and his
+/// MIT students first ran Lisp on, in 1959.  `CAR` and `CDR` —
+/// the two universal Lisp accessors — were literally IBM 704
+/// instruction-word field names (**C**ontents of the
+/// **A**ddress / **D**ecrement part of **R**egister).  Compiling
+/// McCarthy Lisp source through this pipeline round-trips the
+/// language to the silicon it was born on — the symmetric
+/// counterpart of the Dartmouth BASIC → GE-225 round-trip.
+///
+/// # Wire format
+///
+/// One 36-bit word per instruction, packed as 5 bytes per word
+/// (40 bits — 4 wasted padding bits zeroed in the top nibble of
+/// the high byte), low byte first.  Same convention `ge225-encoder`
+/// uses (20-bit words → 3 bytes) extended to 36 bits.  Per-function
+/// byte streams are concatenated directly.
+///
+/// # Errors
+///
+/// * `FrontendError` — the language-specific frontend rejected the source.
+/// * `Ibm704BackendError` — the IIR contained an op or type the
+///   IBM 704 backend does not yet handle (the message names the
+///   function and op).  Per the v0.1.0 scope decision, CONS-using
+///   programs are out of scope for every historical-arch backend.
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.lisp --emit=ibm704 -o foo.bin
+/// # Each 5-byte chunk decodes to a 36-bit IBM 704 word.
+/// ```
+pub fn compile_file_to_ibm704_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // L4: route through aot_core::infer + aot_core::specialise +
+    // ibm704_backend::compile per function, same pattern as the
+    // historical-arch migration's Phases 3-7.  ibm704-backend emits
+    // 5-byte-per-word output directly, so concatenation is just
+    // `extend_from_slice`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = ibm704_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::Ibm704BackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+
+    // Empty-module guard — mirror `ibm704_backend::compile` which
+    // emits HTR 0 for empty CIR.
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&ibm704_encoder::HTR_HALT_BYTES);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
 /// Linux x86-64: source → IIR → ELF → executable (Linux host only).
 #[cfg(target_os = "linux")]
 pub fn compile_file_to_linux_executable(
@@ -920,6 +1465,23 @@ pub fn compile_file_to_macos_executable(
 //    exit code so we always return 0 from main, which the LANG VM AOT
 //    chain requires (the entry-point's return value is the process
 //    exit code).
+// 5. Widen every narrow-integer `type_hint` (`u8`/`u32` — the BF frontend's
+//    cell and pointer widths) to `i64`, so the AOT/LLVM value model is a
+//    uniform machine word. Byte width survives **only at the tape boundary**:
+//    `load_byte` zero-extends the 8-bit cell to `i64` and `store_byte`
+//    truncates back, so cell wrap-around (`255 + 1 == 0`) is still correct.
+//    This is the LANG-MATRIX LM-L-Brainfuck fix: `iir-to-llvm` promotes any
+//    reassigned variable (BF's `ptr`/`v`/`c`/`k`) to an `alloca i64` stack
+//    slot, so a narrow `add i32`/`add i8` reading an `i64` slot-load would be
+//    a type error (`'%__ld' defined with type 'i64' but expected 'i8'`).
+//    Widening here makes every register `i64`, matching the slot model
+//    without touching `iir-to-llvm`'s (McCarthy-critical) slot allocator.
+//    We do it in this BF-specific pass rather than the frontend so the
+//    frontend's `u8`/`u32` hints still reach `vm-core`/`jit-core`, whose
+//    `specialise` step keys CIR opcode widths (`add_u8`/`add_u32`) off them.
+//    Native AOT is unaffected: its byte ops already ignore the hint (they
+//    zero-extend / truncate at the asm level) and its arithmetic runs in
+//    64-bit registers regardless.
 
 fn lower_brainfuck_for_aot(module: &mut IIRModule) {
     use interpreter_ir::instr::{IIRInstr, Operand};
@@ -1001,11 +1563,29 @@ fn lower_brainfuck_for_aot(module: &mut IIRModule) {
                 _ => new_instrs.push(instr),
             }
         }
+        // Step 5 — widen narrow-integer hints to i64 (see the function-level
+        // comment). `void`/`i64`/`u64`/`bool`/floats/lisp refs are left as-is;
+        // only the BF cell/pointer widths (`u8`/`u32`, plus their signed and
+        // 16-bit cousins for completeness) become `i64`.
+        for instr in &mut new_instrs {
+            if is_narrow_int_hint(&instr.type_hint) {
+                instr.type_hint = "i64".to_string();
+            }
+        }
+
         func.instructions = new_instrs;
         // Reflect the step-4 return-type change so downstream type
         // propagation in twig-aot sees i64 instead of void.
         func.return_type = "i64".to_string();
     }
+}
+
+/// True when `hint` is a narrow (< 64-bit) machine integer type that the
+/// Brainfuck-for-AOT pass widens to `i64`. Used by [`lower_brainfuck_for_aot`]
+/// Step 5. We deliberately do **not** widen `u64`/`i64` (already a word),
+/// `void`, `bool`, floats, `any`, `symbol`, or any `ref<…>` lisp type.
+fn is_narrow_int_hint(hint: &str) -> bool {
+    matches!(hint, "i8" | "u8" | "i16" | "u16" | "i32" | "u32")
 }
 
 // ===========================================================================
@@ -1152,6 +1732,55 @@ mod tests {
         let last_two = &ops[ops.len()-2..];
         assert_eq!(last_two, &["const", "ret"],
                    "epilogue must be `const; ret`; got {last_two:?}");
+    }
+
+    /// Step 5: every narrow-integer `type_hint` the BF frontend emits (`u8` for
+    /// cells, `u32` for the pointer) must be widened to `i64` after lowering, so
+    /// the AOT/LLVM value model is a uniform machine word. Byte width survives
+    /// only inside `load_byte`/`store_byte` (the backend zero-extends/truncates).
+    /// `void` stays `void`. This is the LANG-MATRIX LM-L-Brainfuck fix that makes
+    /// `iir-to-llvm`'s i64-only slot model accept Brainfuck.
+    #[test]
+    fn brainfuck_lowering_widens_narrow_hints_to_i64() {
+        // A program that exercises cells (`+`/`-`), the pointer (`>`/`<`),
+        // a loop guard, and output (`.`).
+        let iir = compile_source_to_iir(
+            Language::Brainfuck, "+>+<[->+<].", "bf"
+        ).expect("brainfuck must compile");
+        let main = iir.functions.iter().find(|f| f.name == "main")
+            .expect("BF main must exist");
+
+        for instr in &main.instructions {
+            // No narrow integer hint may survive.
+            assert!(
+                !matches!(instr.type_hint.as_str(),
+                          "u8" | "u32" | "u16" | "i8" | "i16" | "i32"),
+                "instr {:?} kept a narrow hint {:?} — must be widened to i64",
+                instr.op, instr.type_hint,
+            );
+            // Every hint is now either i64 (registers + tape ops) or void
+            // (control flow / store_byte / putchar).
+            assert!(
+                instr.type_hint == "i64" || instr.type_hint == "void",
+                "instr {:?} has unexpected hint {:?}; expected i64 or void",
+                instr.op, instr.type_hint,
+            );
+        }
+        // The tape ops carry the widened i64 hint specifically.
+        let load_byte = main.instructions.iter().find(|i| i.op == "load_byte").unwrap();
+        assert_eq!(load_byte.type_hint, "i64", "load_byte hint widened to i64");
+    }
+
+    /// `is_narrow_int_hint` widens only sub-64-bit machine integers; it leaves
+    /// `i64`/`u64`, `void`, `bool`, floats, and lisp/`any` types alone.
+    #[test]
+    fn is_narrow_int_hint_classifies_widths() {
+        for narrow in ["i8", "u8", "i16", "u16", "i32", "u32"] {
+            assert!(is_narrow_int_hint(narrow), "{narrow} should widen");
+        }
+        for wide in ["i64", "u64", "void", "bool", "f32", "f64", "any", "symbol", "ref<LispyPair>"] {
+            assert!(!is_narrow_int_hint(wide), "{wide} must NOT widen");
+        }
     }
 
     #[test]

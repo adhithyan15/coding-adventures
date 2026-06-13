@@ -1,6 +1,8 @@
 # Paper 2 skeleton — Knowledge Compilation for Auditable Adjudication: CAS-Cached, Human-Correctable, Privacy-Local Rulebooks
 
 **Target:** TMLR (primary) or a systems venue. **Depends on:** Paper 1 preprint being out. **Status:** skeleton.
+**Worked anchor for E1+E2:** [`PAPER2-MYCIN-derive-once-proof.md`](PAPER2-MYCIN-derive-once-proof.md) —
+MYCIN-2026 as the concrete derive-once / reuse-indefinitely / CPU-offload proof.
 
 ## One-sentence claim
 Byte-grounded rulebooks compile **once** into content-addressed (CAS) executable libraries that future cases query on **CPU with zero answer-time model calls**; because every compiled rule cites verified source bytes, the cache is trustworthy, **human-correctable** (edit a rule → new CAS version, regression-gated), and **model-decoupled**; and the derive-offline / execute-local split makes the system **privacy-compliant (PHI-local) by construction.**

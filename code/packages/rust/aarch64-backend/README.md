@@ -30,5 +30,10 @@ V1: stack-spill register allocation, integer arithmetic + comparisons +
 control flow + returns.  Enough to compile typed Twig functions like
 `fib`, `fact`, `sum`.  See CHANGELOG for the full opcode list.
 
+McCarthy 1960 Lisp (LANG77) compiles end-to-end through this backend via the
+`__twig_lispy_*` runtime calls in `V1_BUILTINS` — cons/car/cdr, the ATOM/EQ
+predicates, COND truthiness, and (W14b) `LAMBDA`: cross-function `call`s plus
+`lispy_to_exit_code` (the polymorphic program-exit coercion) make native lambda run.
+
 Later passes will add: real register allocation, float operations,
 runtime-call lowering, deopt support for JIT.

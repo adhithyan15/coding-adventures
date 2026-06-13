@@ -1,0 +1,8 @@
+{
+ "check_id": 169,
+ "idx": 68,
+ "slot": "covered_by_approved_leave",
+ "claimed_value": true,
+ "scenario": "Tomas missed four scheduled shifts in the last 30 days by not clocking in. For all four shifts, an approved leave request was on file in the HR system before each shift began.",
+ "cited_span": "For all four shifts, an approved leave request was on file in the HR system before each shift began"
+}

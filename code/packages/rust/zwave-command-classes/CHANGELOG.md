@@ -7,7 +7,8 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Command-class command parse/encode primitives.
-- Body-free command summaries for logs and interview diagnostics.
+- Body-free command summaries for logs and interview diagnostics, including
+  payload-free and Get/Set/Report helper predicates.
 - Get/set builders for binary switch, multilevel switch, and door lock command
   classes.
 - Value-report parsing for common actuator and sensor command classes.

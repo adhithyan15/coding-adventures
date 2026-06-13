@@ -5,7 +5,8 @@
 The initial slices implement:
 
 - DC operating-point analysis for linear circuits using modified nodal analysis
-  (MNA).
+  (MNA), with stable `DcResult::diagnostics` metadata for matrix size, selected
+  real solver path, tolerance, convergence aid, and final Newton delta.
 - DC operating-point sweeps across explicit analysis temperatures, including
   named corner sweeps and order-preserving parallel named corner DC sweeps.
 - DC source sweeps over independent voltage and current sources, including
@@ -37,7 +38,12 @@ The initial slices implement:
   fixed-step and adaptive digital-input transient bridge fixtures, and sample
   transient probes back into thresholded digital events, including multi-probe
   named event streams and named-corner digital-input bridge runs with event
-  stream table output plus bridge breakpoint schedules.
+  stream table output plus bridge breakpoint schedules and deterministic VCD
+  correlation output.
+- A Rust-native custom-model foothold with `CustomModel`,
+  `CustomModelKind::LinearConductance`, `CustomModelEvaluation`, and
+  `analyze_custom_model_source` for the first two-terminal residual/Jacobian
+  hook and diagnostic-only Verilog-A subset.
 - Fourier post-processing for transient output, including DC, harmonic
   magnitude/phase, THD results, and named corner sweeps.
 - Transient-to-distortion projection through the Fourier extraction path,
@@ -48,6 +54,7 @@ The initial slices implement:
   sampled digital event streams and named multi-probe digital event streams,
   mixed-signal bridge breakpoint schedules, cornered and adaptive mixed-signal
   bridge output streams,
+  VCD mixed-signal bridge correlation output,
   DC operating-point temperature sweeps, cornered DC operating-point
   temperature sweeps, transient samples, adaptive transient samples, cornered
   transient samples, cornered adaptive transient samples, AC phasors, cornered DC
@@ -60,11 +67,15 @@ The initial slices implement:
   distortion harmonics, and cornered distortion harmonics, Monte Carlo trials,
   cornered Monte Carlo trials, DC source sweeps, and cornered DC source
   sweeps.
+- Parsed transient `.measure` / `.meas` card extraction and execution helpers
+  that route deck cards into stable scalar measurement rows.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
 current sources, optional AC source phasors, optional source waveforms, ground
 aliases, node voltages, and voltage source branch currents.
+Large real DC and complex AC matrix solves use sparse-row solver paths when the
+matrix size reaches the package threshold.
 
 ```rust
 use spice_engine::{
@@ -95,3 +106,61 @@ let result = transient_adaptive(
 `diode_at_temperature`, `bjt_at_temperature`, `mosfet_at_temperature`, and
 `circuit_at_temperature` provide operating-temperature footholds for diode,
 BJT, and Level-1 MOSFET models before running an analysis.
+
+`normalize_model_card`, `diode_from_model_card`, `bjt_from_model_card`,
+`jfet_from_model_card`, and `mosfet_from_model_card` provide the shared
+`.model` alias surface for diode, BJT, JFET, and Level-1 MOS cards.
+`device_model_audit_fixtures` returns the canonical cross-language fixture
+cards used to keep the Rust, Python, and TypeScript ports aligned.
+
+`analyze_custom_model_source` accepts only a two-terminal `I(p,n) <+ ...`
+module shape and rejects dynamic/event/system constructs; it is not a full
+Verilog-A compiler.
+
+`compatibility_corpus` exposes the first release-readiness deck corpus for
+`.op`, `.dc`, `.ac`, `.tran`, and `.tf` coverage. Each fixture carries a
+documented oracle, golden values with tolerances, and known incompatibility
+notes. `release_readiness_gates` validates the corpus metadata, while
+`format_compatibility_corpus_table` and `format_release_readiness_report`
+provide stable tab-separated summaries for package checks.
+`analyze_deck_controls` provides the shared deck-control boundary foothold: it
+returns active lines before `.end` and stable diagnostics for unsupported
+`.include`, `.lib`, and `.control` directives before future include/library
+resolution and control-block execution are in scope.
+`resolve_deck_sources` is the first include/library resolution layer: callers
+provide a source-content map, `.include` directives are expanded in place, and
+`.lib path section` selects a named `.lib` / `.endl` section with stable
+diagnostics for missing files, missing sections, unterminated sections, cycles,
+and still-unsupported `.control` blocks.
+`measure_transient_probe`, `measure_transient_deck`, and
+`format_measurement_table` provide the shared `.MEASURE`-style scalar
+transient output surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+probe measurements. `measure_transient_deck` routes parsed transient
+`.measure` / `.meas` cards into those stable measurement rows.
+`resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
+assignments, collects scalar `.func` definitions before `.end`, preserves
+parameter order, rewrites braced and quoted active-line expressions, and emits
+stable diagnostics for unresolved expressions, bad function arity, unknown
+functions, and recursive function calls.
+`resolve_deck_initial_conditions` extracts scalar `.ic` and `.nodeset`
+`V(node)=value` hints before `.end`, keeps non-condition active lines, evaluates
+numeric SPICE suffix/arithmetic expressions, and reports stable diagnostics for
+malformed targets or unresolved values. `dc_initial_vector_from_conditions`
+maps those parsed node-voltage hints into the DC solver's MNA warm-start vector,
+and `dc_op_with_initial_conditions` applies that vector to the operating-point
+solve with `.ic` values taking precedence over `.nodeset` values.
+`resolve_deck_functions` extracts scalar `.func name(args) expression`
+definitions before `.end`, preserves non-function active lines, strips braced
+or quoted expression delimiters, and reports stable diagnostics for malformed
+signatures, arguments, or empty expressions.
+`resolve_deck_measurements` extracts transient `.measure` / `.meas` cards
+before `.end`, keeps non-measure active lines, evaluates optional `FROM=` /
+`TO=` scalar time windows, and reports stable diagnostics for unsupported
+analyses, modes, options, expressions, and invalid windows.
+`resolve_deck_outputs` extracts `.save` and scoped or global `.probe` cards
+before `.end`, keeps non-output active lines, and reports stable diagnostics for
+malformed output probes. `select_deck_output_probes` deduplicates the selected
+probes for a requested analysis, while `format_deck_op_table`,
+`format_deck_dc_sweep_table`, `format_deck_ac_table`, and
+`format_deck_transient_table` feed those deck-card selections into the stable
+text table formatters.

@@ -1,0 +1,7 @@
+{
+ "idx": 2,
+ "key": "bacterial_meningitis::csf_neutrophilic_pleocytosis(high)",
+ "lr": 15,
+ "computed": "pooled LR+ reported directly = 15",
+ "byte_quote": "CSF white blood cell count of 500/muL or higher (LR, 15; 95% CI, 10-22)"
+}

@@ -58,11 +58,18 @@ import math
 import random
 import re
 import statistics
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field, replace
+from typing import Literal
 
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
+from spice_engine.compatibility import (
+    DeckInitialConditionSummary,
+    DeckMeasurementCard,
+    DeckNodeCondition,
+    resolve_deck_measurements,
+)
 from spice_engine.elements import (
     BJT,
     CCCS,
@@ -74,11 +81,15 @@ from spice_engine.elements import (
     BSource,
     Capacitor,
     CurrentSource,
+    CustomModel,
+    CustomModelContext,
+    CustomModelEvaluation,
     Diode,
     Element,
     Inductor,
     Mosfet,
     MutualInductor,
+    PwlWaveform,
     Resistor,
     SubcircuitDefinition,
     TransmissionLine,
@@ -113,6 +124,146 @@ class Circuit:
 
     def instantiate(self, instance: XInstance) -> None:
         self.elements.extend(_expand_xinstance(instance, self.subcircuits, ()))
+
+
+@dataclass(frozen=True)
+class CustomModelDiagnostic:
+    """Stable diagnostic emitted by the custom-model source subset analyzer."""
+
+    code: str
+    message: str
+    severity: Literal["error", "warning"] = "error"
+
+
+@dataclass(frozen=True)
+class CustomModelSourceAnalysis:
+    """Result of checking the accepted Verilog-A/custom-model source subset."""
+
+    accepted: bool
+    subset: str
+    module_name: str | None
+    terminals: tuple[str, ...]
+    contribution: tuple[str, str] | None
+    diagnostics: list[CustomModelDiagnostic]
+
+
+CUSTOM_MODEL_SUBSET = "two-terminal-current-contribution-v0"
+_CUSTOM_MODEL_FORBIDDEN_PATTERNS: tuple[tuple[str, str], ...] = (
+    ("ddt", "dynamic charge operators are not accepted in this custom-model subset"),
+    ("idt", "dynamic integration operators are not accepted in this custom-model subset"),
+    ("laplace", "Laplace-domain operators are not accepted in this custom-model subset"),
+    ("cross", "event crossing operators are not accepted in this custom-model subset"),
+    ("timer", "timer events are not accepted in this custom-model subset"),
+    ("@(", "event controls are not accepted in this custom-model subset"),
+    ("$finish", "system tasks are not accepted in this custom-model subset"),
+    ("$stop", "system tasks are not accepted in this custom-model subset"),
+    ("$display", "system tasks are not accepted in this custom-model subset"),
+    ("initial", "procedural initial blocks are not accepted in this custom-model subset"),
+    ("always", "procedural always blocks are not accepted in this custom-model subset"),
+    ("analog function", "analog functions are not accepted in this custom-model subset"),
+    ("discipline", "discipline declarations are not accepted in this custom-model subset"),
+    ("branch ", "named branch declarations are not accepted in this custom-model subset"),
+)
+
+
+def analyze_custom_model_source(source: str) -> CustomModelSourceAnalysis:
+    """Check the first portable Verilog-A/custom-model subset.
+
+    This is a diagnostic foothold, not a compiler.  Accepted sources define a
+    module with at least two ports and one current contribution shaped like
+    ``I(p,n) <+ expression``.  Dynamic/event/system constructs are rejected so
+    TypeScript/web callers can use the same subset without runtime code eval.
+    """
+
+    diagnostics: list[CustomModelDiagnostic] = []
+    stripped = source.strip()
+    if not stripped:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_EMPTY_SOURCE",
+                message="custom model source is empty",
+            )
+        )
+        return CustomModelSourceAnalysis(
+            accepted=False,
+            subset=CUSTOM_MODEL_SUBSET,
+            module_name=None,
+            terminals=(),
+            contribution=None,
+            diagnostics=diagnostics,
+        )
+
+    lowered = stripped.lower()
+    for token, message in _CUSTOM_MODEL_FORBIDDEN_PATTERNS:
+        if token in lowered:
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_FORBIDDEN_CONSTRUCT",
+                    message=message,
+                )
+            )
+
+    module_match = re.search(
+        r"\bmodule\s+([A-Za-z_][A-Za-z0-9_$]*)\s*\(([^)]*)\)\s*;",
+        stripped,
+        flags=re.IGNORECASE,
+    )
+    module_name: str | None = None
+    terminals: tuple[str, ...] = ()
+    if module_match is None:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_MISSING_MODULE",
+                message="custom model source must declare a module with a port list",
+            )
+        )
+    else:
+        module_name = module_match.group(1)
+        terminals = tuple(
+            port.strip()
+            for port in module_match.group(2).split(",")
+            if port.strip()
+        )
+        if len(terminals) < 2:
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_PORT_COUNT",
+                    message="custom model module must expose at least two terminals",
+                )
+            )
+
+    contribution_match = re.search(
+        r"\bI\s*\(\s*([A-Za-z_][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_][A-Za-z0-9_$]*)\s*\)\s*<\+",
+        stripped,
+        flags=re.IGNORECASE,
+    )
+    contribution: tuple[str, str] | None = None
+    if contribution_match is None:
+        diagnostics.append(
+            CustomModelDiagnostic(
+                code="CUSTOM_MODEL_MISSING_CONTRIBUTION",
+                message="custom model source must contain a two-terminal I(p,n) <+ contribution",
+            )
+        )
+    else:
+        contribution = (contribution_match.group(1), contribution_match.group(2))
+        terminal_set = set(terminals)
+        if terminals and any(node not in terminal_set for node in contribution):
+            diagnostics.append(
+                CustomModelDiagnostic(
+                    code="CUSTOM_MODEL_UNKNOWN_TERMINAL",
+                    message="current contribution terminals must be declared module ports",
+                )
+            )
+
+    return CustomModelSourceAnalysis(
+        accepted=not any(diagnostic.severity == "error" for diagnostic in diagnostics),
+        subset=CUSTOM_MODEL_SUBSET,
+        module_name=module_name,
+        terminals=terminals,
+        contribution=contribution,
+        diagnostics=diagnostics,
+    )
 
 
 def diode_at_temperature(
@@ -365,8 +516,8 @@ def _map_bsource_expr_nodes(expr: str | None, instance_name: str, node_map: dict
     return "".join(result)
 
 
-def _clone_subckt_element(element: object, instance_name: str, node_map: dict[str, str]) -> Element:
-    name = f"{instance_name}.{getattr(element, 'name')}"
+def _clone_subckt_element(element: Element, instance_name: str, node_map: dict[str, str]) -> Element:
+    name = f"{instance_name}.{element.name}"
     if isinstance(element, Resistor):
         return Resistor(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.resistance)
     if isinstance(element, Capacitor):
@@ -383,6 +534,17 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
         return CurrentSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), element.current, element.waveform, element.ac)
     if isinstance(element, BSource):
         return BSource(name, _map_subckt_node(element.n_plus, instance_name, node_map), _map_subckt_node(element.n_minus, instance_name, node_map), _map_bsource_expr_nodes(element.voltage_expr, instance_name, node_map), _map_bsource_expr_nodes(element.current_expr, instance_name, node_map))
+    if isinstance(element, CustomModel):
+        return CustomModel(
+            name,
+            _map_subckt_node(element.n_plus, instance_name, node_map),
+            _map_subckt_node(element.n_minus, instance_name, node_map),
+            element.model_name,
+            element.parameters,
+            element.evaluator,
+            element.conductance_siemens,
+            element.current_offset_amps,
+        )
     if isinstance(element, Diode):
         return Diode(
             name,
@@ -414,6 +576,17 @@ def _clone_subckt_element(element: object, instance_name: str, node_map: dict[st
 
 
 @dataclass
+class DcSolverDiagnostics:
+    """Stable DC solve metadata for downstream comparison."""
+
+    matrix_size: int
+    solver: str
+    tolerance: float
+    max_delta: float
+    convergence_aid: str
+
+
+@dataclass
 class DcResult:
     """Operating-point voltages by node + extra branch currents."""
 
@@ -422,6 +595,15 @@ class DcResult:
     iterations: int
     converged: bool
     convergence_aid: str = "newton"
+    diagnostics: DcSolverDiagnostics = field(
+        default_factory=lambda: DcSolverDiagnostics(
+            matrix_size=0,
+            solver="none",
+            tolerance=0.0,
+            max_delta=0.0,
+            convergence_aid="newton",
+        )
+    )
 
 
 @dataclass(frozen=True)
@@ -456,6 +638,36 @@ class CornerSweepResult:
     points: list[CornerPoint]
 
 
+@dataclass(frozen=True)
+class TemperatureDcPoint:
+    """DC operating-point result for one analysis temperature."""
+
+    temperature_kelvin: float
+    result: DcResult
+
+
+@dataclass(frozen=True)
+class TemperatureDcResult:
+    """DC operating-point sweep across explicit analysis temperatures."""
+
+    points: list[TemperatureDcPoint]
+
+
+@dataclass(frozen=True)
+class CornerTemperatureDcPoint:
+    """Temperature DC sweep result for one named corner."""
+
+    corner_name: str
+    points: list[TemperatureDcPoint]
+
+
+@dataclass(frozen=True)
+class CornerTemperatureDcResult:
+    """Named-corner DC temperature sweep result."""
+
+    points: list[CornerTemperatureDcPoint]
+
+
 @dataclass
 class TransientPoint:
     time: float
@@ -488,6 +700,157 @@ class TransientResult:
 
 
 @dataclass(frozen=True)
+class ProbeMeasurement:
+    """Stable scalar result for a SPICE-style probe measurement."""
+
+    name: str
+    analysis: str
+    probe: str
+    mode: str
+    value: float
+    from_value: float | None = None
+    to_value: float | None = None
+
+
+@dataclass(frozen=True)
+class CornerTransientPoint:
+    """Transient waveform result for one named analysis corner."""
+
+    corner_name: str
+    points: list[TransientPoint]
+
+
+@dataclass(frozen=True)
+class CornerTransientResult:
+    """Multi-corner transient waveform result."""
+
+    points: list[CornerTransientPoint]
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveTransientPoint:
+    """Adaptive transient waveform result for one named analysis corner."""
+
+    corner_name: str
+    result: TransientResult
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveTransientResult:
+    """Multi-corner adaptive transient waveform result."""
+
+    points: list[CornerAdaptiveTransientPoint]
+
+
+DigitalState = Literal["low", "high"]
+
+
+@dataclass(frozen=True)
+class DigitalEvent:
+    """One hardware-VM-facing digital value change."""
+
+    time_seconds: float
+    state: DigitalState
+
+
+@dataclass(frozen=True)
+class DigitalEventStream:
+    """Named digital event stream used at the SPICE/VM boundary."""
+
+    signal_name: str
+    events: list[DigitalEvent]
+
+
+@dataclass(frozen=True)
+class DigitalTransientBridgeResult:
+    """Transient result plus thresholded output streams."""
+
+    points: list[TransientPoint]
+    output_streams: list[DigitalEventStream]
+
+
+@dataclass(frozen=True)
+class CornerDigitalTransientBridgePoint:
+    """Digital bridge result for one named corner."""
+
+    corner_name: str
+    result: DigitalTransientBridgeResult
+
+
+@dataclass(frozen=True)
+class CornerDigitalTransientBridgeResult:
+    """Multi-corner digital bridge result."""
+
+    points: list[CornerDigitalTransientBridgePoint]
+
+
+@dataclass(frozen=True)
+class AdaptiveDigitalTransientBridgeResult:
+    """Adaptive transient result plus thresholded output streams."""
+
+    result: TransientResult
+    output_streams: list[DigitalEventStream]
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveDigitalTransientBridgePoint:
+    """Adaptive digital bridge result for one named corner."""
+
+    corner_name: str
+    result: AdaptiveDigitalTransientBridgeResult
+
+
+@dataclass(frozen=True)
+class CornerAdaptiveDigitalTransientBridgeResult:
+    """Multi-corner adaptive digital bridge result."""
+
+    points: list[CornerAdaptiveDigitalTransientBridgePoint]
+
+
+@dataclass(frozen=True)
+class DigitalBridgeSchedule:
+    """Hardware VM breakpoint schedule derived from digital event streams."""
+
+    stop_time: float
+    breakpoints: list[float]
+
+
+@dataclass(frozen=True)
+class DigitalLogicLevels:
+    """Analog voltages used when driving digital events into SPICE."""
+
+    low_voltage: float
+    high_voltage: float
+    transition_seconds: float
+
+    @classmethod
+    def cmos_1v8(cls, transition_seconds: float) -> DigitalLogicLevels:
+        return cls(0.0, 1.8, transition_seconds)
+
+    def voltage_for(self, state: DigitalState) -> float:
+        return self.low_voltage if _normalize_digital_state(state) == "low" else self.high_voltage
+
+
+@dataclass(frozen=True)
+class DigitalThresholds:
+    """Analog thresholds used when sampling SPICE probes back to logic."""
+
+    low_max_voltage: float
+    high_min_voltage: float
+
+    @classmethod
+    def cmos_1v8(cls) -> DigitalThresholds:
+        return cls(0.6, 1.2)
+
+    def classify(self, voltage: float) -> DigitalState | None:
+        if voltage <= self.low_max_voltage:
+            return "low"
+        if voltage >= self.high_min_voltage:
+            return "high"
+        return None
+
+
+@dataclass(frozen=True)
 class FourierHarmonic:
     harmonic: int
     frequency: float
@@ -514,6 +877,22 @@ class FourierResult:
 
 
 @dataclass(frozen=True)
+class CornerFourierPoint:
+    """Fourier result for one named analysis corner."""
+
+    corner_name: str
+    result: FourierResult
+
+
+@dataclass(frozen=True)
+class CornerFourierResult:
+    """Multi-corner Fourier analysis result."""
+
+    fundamental_frequency: float
+    points: list[CornerFourierPoint]
+
+
+@dataclass(frozen=True)
 class DistortionHarmonic:
     harmonic: int
     frequency: float
@@ -537,6 +916,23 @@ class DistortionResult:
 
 
 @dataclass(frozen=True)
+class CornerDistortionPoint:
+    """Distortion result for one named analysis corner."""
+
+    corner_name: str
+    result: DistortionResult
+
+
+@dataclass(frozen=True)
+class CornerDistortionResult:
+    """Multi-corner distortion analysis result."""
+
+    input_source: str
+    output_probe: str
+    points: list[CornerDistortionPoint]
+
+
+@dataclass(frozen=True)
 class PoleZeroEntry:
     kind: str
     real: float
@@ -550,6 +946,54 @@ class PoleZeroResult:
     input_source: str
     output_node: str
     entries: list[PoleZeroEntry]
+
+
+@dataclass(frozen=True)
+class CornerPoleZeroPoint:
+    """Pole-zero result for one named analysis corner."""
+
+    corner_name: str
+    result: PoleZeroResult
+
+
+@dataclass(frozen=True)
+class CornerPoleZeroResult:
+    """Multi-corner pole-zero analysis result."""
+
+    input_source: str
+    output_node: str
+    topology: str
+    points: list[CornerPoleZeroPoint]
+
+
+_POLE_ZERO_TOPOLOGIES: dict[str, Callable[[Circuit, str, str], PoleZeroResult]] = {}
+
+
+def _normalize_pole_zero_topology(topology: str) -> str:
+    text = topology.replace("_", "-").strip().lower()
+    aliases = {
+        "rc-lowpass": "rc-lowpass",
+        "rclowpass": "rc-lowpass",
+        "rclow-pass": "rc-lowpass",
+        "rc-highpass": "rc-highpass",
+        "rchighpass": "rc-highpass",
+        "rchigh-pass": "rc-highpass",
+        "rlc-lowpass": "rlc-lowpass",
+        "rlclowpass": "rlc-lowpass",
+        "rlclow-pass": "rlc-lowpass",
+        "rlc-highpass": "rlc-highpass",
+        "rlchighpass": "rlc-highpass",
+        "rlchigh-pass": "rlc-highpass",
+        "rlc-bandpass": "rlc-bandpass",
+        "rlcbandpass": "rlc-bandpass",
+        "rlcband-pass": "rlc-bandpass",
+        "rlc-notch": "rlc-notch",
+        "rlcnotch": "rlc-notch",
+    }
+    if text not in aliases:
+        supported = ", ".join(sorted(_POLE_ZERO_TOPOLOGIES))
+        raise ValueError(f"pole_zero_corners: unsupported topology {topology!r}; expected {supported}")
+    return aliases[text]
 
 
 def pole_zero_rc_lowpass(
@@ -1173,6 +1617,40 @@ def pole_zero_rlc_notch(
     )
 
 
+_POLE_ZERO_TOPOLOGIES = {
+    "rc-lowpass": pole_zero_rc_lowpass,
+    "rc-highpass": pole_zero_rc_highpass,
+    "rlc-lowpass": pole_zero_rlc_lowpass,
+    "rlc-highpass": pole_zero_rlc_highpass,
+    "rlc-bandpass": pole_zero_rlc_bandpass,
+    "rlc-notch": pole_zero_rlc_notch,
+}
+
+
+def pole_zero_corners(
+    circuit: Circuit,
+    input_source: str,
+    output_node: str,
+    topology: str,
+    corners: list[CornerSpec],
+) -> CornerPoleZeroResult:
+    """Run a selected pole-zero fixture helper at each named corner."""
+    normalized_topology = _normalize_pole_zero_topology(topology)
+    helper = _POLE_ZERO_TOPOLOGIES[normalized_topology]
+    return CornerPoleZeroResult(
+        input_source=input_source,
+        output_node=output_node,
+        topology=normalized_topology,
+        points=[
+            CornerPoleZeroPoint(
+                corner_name=corner.name,
+                result=helper(_circuit_with_corner(circuit, corner), input_source, output_node),
+            )
+            for corner in corners
+        ],
+    )
+
+
 def distortion_from_fourier(
     result: FourierResult,
     input_source: str,
@@ -1235,6 +1713,52 @@ def distortion_from_transient(
     )
 
 
+def distortion_from_transient_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    fundamental_frequency: float,
+    input_source: str,
+    output_probe: str,
+    harmonics: int = 9,
+    start_time: float | None = None,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerDistortionResult:
+    """Run transient distortion projection at each named corner."""
+    points: list[CornerDistortionPoint] = []
+    for corner in corners:
+        transient_result = transient(
+            _circuit_with_corner(circuit, corner),
+            t_stop=t_stop,
+            t_step=t_step,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.append(
+            CornerDistortionPoint(
+                corner_name=corner.name,
+                result=distortion_from_transient(
+                    transient_result,
+                    fundamental_frequency,
+                    input_source,
+                    output_probe,
+                    harmonics=harmonics,
+                    start_time=start_time,
+                ),
+            )
+        )
+    return CornerDistortionResult(
+        input_source=input_source,
+        output_probe=output_probe,
+        points=points,
+    )
+
+
 def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
     """Format a DC operating point as a stable SPICE-style text table."""
     selected_probes = probes or _default_output_probes(
@@ -1259,6 +1783,211 @@ def format_dc_table(result: DcResult, probes: list[str] | None = None) -> str:
             "",
         ]
     )
+
+
+def format_corner_dc_table(
+    result: CornerSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC operating points as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.result.node_voltages,
+                    point.result.branch_currents,
+                    probe,
+                    "format_corner_dc_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append("\t".join([point.corner_name, str(index), *values]))
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_temperature_dc_table(
+    result: TemperatureDcResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format a DC temperature sweep as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Index", "TemperatureKelvin", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.result.node_voltages,
+                    point.result.branch_currents,
+                    probe,
+                    "format_temperature_dc_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(point.temperature_kelvin),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_temperature_dc_table(
+    result: CornerTemperatureDcResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC temperature sweeps as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.result.node_voltages,
+                point.result.branch_currents,
+            )
+            for corner in result.points
+            for point in corner.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "TemperatureKelvin", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.result.node_voltages,
+                        point.result.branch_currents,
+                        probe,
+                        "format_corner_temperature_dc_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(point.temperature_kelvin),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_dc_sweep_table(
+    result: DcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format a DC source sweep as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.node_voltages,
+                point.branch_currents,
+            )
+            for point in result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Index", "Source", "Value", *selected_probes])]
+    for index, point in enumerate(result.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_dc_sweep_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    result.source_name,
+                    _format_table_number(point.source_value),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_dc_sweep_table(
+    result: CornerDcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner DC source sweeps as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_output_probes(
+                point.node_voltages,
+                point.branch_currents,
+            )
+            for corner in result.points
+            for point in corner.result.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "Source", "Value", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_dc_sweep_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        result.source_name,
+                        _format_table_number(point.source_value),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
 
 
 def format_transient_table(
@@ -1286,6 +2015,215 @@ def format_transient_table(
             for probe in selected_probes
         ]
         rows.append("\t".join([str(index), _format_table_number(point.time), *values]))
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_transient_table(
+    result: CornerTransientResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner transient samples as a stable SPICE-style table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.points)
+            for corner in result.points
+            if corner.points
+        ),
+        [],
+    )
+    rows = ["\t".join(["Corner", "Index", "Time", *selected_probes])]
+    for corner in result.points:
+        for index, point in enumerate(corner.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_transient_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_adaptive_transient_table(
+    result: CornerAdaptiveTransientResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner adaptive transient samples as a stable table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.result.points)
+            for corner in result.points
+            if corner.result.points
+        ),
+        [],
+    )
+    rows = [
+        "\t".join(
+            [
+                "Corner",
+                "Method",
+                "StepsRejected",
+                "Converged",
+                "Index",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_adaptive_transient_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        corner.result.method,
+                        str(corner.result.steps_rejected),
+                        str(corner.result.converged).lower(),
+                        str(index),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_pss_table(
+    result: PssResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format one-period PSS steady-state samples as a stable text table."""
+    selected_probes = probes or _default_transient_output_probes(result.steady_state.points)
+    rows = [
+        "\t".join(
+            [
+                "Index",
+                "Period",
+                "TimeStep",
+                "Converged",
+                "Iterations",
+                "ResidualL2",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for index, point in enumerate(result.steady_state.points):
+        values = [
+            _format_table_number(
+                _table_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_pss_table",
+                )
+            )
+            for probe in selected_probes
+        ]
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(result.period),
+                    _format_table_number(result.time_step),
+                    str(result.converged).lower(),
+                    str(result.solve.iteration_count),
+                    _format_table_number(result.solve.final_residual.residual_l2_norm),
+                    _format_table_number(point.time),
+                    *values,
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_pss_table(
+    result: CornerPssResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner PSS steady-state samples as a stable text table."""
+    selected_probes = probes or next(
+        (
+            _default_transient_output_probes(corner.result.steady_state.points)
+            for corner in result.points
+            if corner.result.steady_state.points
+        ),
+        [],
+    )
+    rows = [
+        "\t".join(
+            [
+                "Corner",
+                "Index",
+                "Period",
+                "TimeStep",
+                "Converged",
+                "Iterations",
+                "ResidualL2",
+                "Time",
+                *selected_probes,
+            ]
+        )
+    ]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.steady_state.points):
+            values = [
+                _format_table_number(
+                    _table_probe_value(
+                        point.node_voltages,
+                        point.branch_currents,
+                        probe,
+                        "format_corner_pss_table",
+                    )
+                )
+                for probe in selected_probes
+            ]
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        _format_table_number(corner.result.period),
+                        _format_table_number(corner.result.time_step),
+                        str(corner.result.converged).lower(),
+                        str(corner.result.solve.iteration_count),
+                        _format_table_number(
+                            corner.result.solve.final_residual.residual_l2_norm
+                        ),
+                        _format_table_number(point.time),
+                        *values,
+                    ]
+                )
+            )
     rows.append("")
     return "\n".join(rows)
 
@@ -1320,6 +2258,47 @@ def format_ac_table(result: AcResult | list[AcPoint], probes: list[str] | None =
     return "\n".join(rows)
 
 
+def format_corner_ac_table(
+    result: CornerAcSweepResult,
+    probes: list[str] | None = None,
+) -> str:
+    """Format named-corner AC phasors as a stable SPICE-style text table."""
+    selected_probes = probes or next(
+        (
+            _default_ac_output_probes(corner.result.points)
+            for corner in result.points
+            if corner.result.points
+        ),
+        [],
+    )
+    rows = ["Corner\tIndex\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase"]
+    for corner in result.points:
+        for index, point in enumerate(corner.result.points):
+            for probe in selected_probes:
+                value = _table_complex_probe_value(
+                    point.node_voltages,
+                    point.branch_currents,
+                    probe,
+                    "format_corner_ac_table",
+                )
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            str(index),
+                            _format_table_number(point.freq),
+                            probe,
+                            _format_table_number(value.real),
+                            _format_table_number(value.imag),
+                            _format_table_number(abs(value)),
+                            _format_table_number(math.degrees(cmath.phase(value))),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_tf_table(result: TfResult) -> str:
     """Format a transfer-function result as a stable SPICE-style text table."""
     return "\n".join(
@@ -1335,6 +2314,24 @@ def format_tf_table(result: TfResult) -> str:
             "",
         ]
     )
+
+
+def format_corner_tf_table(result: CornerTfResult) -> str:
+    """Format named-corner transfer-function results as a stable text table."""
+    rows = ["Corner\tTransferRatio\tInputImpedance\tOutputImpedance"]
+    for point in result.points:
+        rows.append(
+            "\t".join(
+                [
+                    point.corner_name,
+                    _format_table_number(point.result.transfer_ratio),
+                    _format_table_number(point.result.input_impedance),
+                    _format_table_number(point.result.output_impedance),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
 
 
 def format_mc_table(result: McResult) -> str:
@@ -1612,6 +2609,28 @@ def format_pole_zero_table(result: PoleZeroResult) -> str:
     return "\n".join(rows)
 
 
+def format_corner_pole_zero_table(result: CornerPoleZeroResult) -> str:
+    """Format named-corner pole-zero entries as a stable text table."""
+    rows = ["Corner\tIndex\tKind\tReal\tImaginary\tFrequency\tDamping"]
+    for corner in result.points:
+        for index, entry in enumerate(corner.result.entries):
+            rows.append(
+                "\t".join(
+                    [
+                        corner.corner_name,
+                        str(index),
+                        entry.kind,
+                        _format_table_number(entry.real),
+                        _format_table_number(entry.imaginary),
+                        _format_table_number(entry.frequency),
+                        _format_table_number(entry.damping),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
 def format_distortion_table(result: DistortionResult) -> str:
     """Format distortion harmonics as a stable SPICE-style text table."""
     rows = ["Frequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD"]
@@ -1630,6 +2649,30 @@ def format_distortion_table(result: DistortionResult) -> str:
                     ]
                 )
             )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_distortion_table(result: CornerDistortionResult) -> str:
+    """Format named-corner distortion harmonics as a stable text table."""
+    rows = ["Corner\tFrequency\tInput\tOutput\tHarmonic\tMagnitude\tPhase\tTHD"]
+    for corner in result.points:
+        for point in corner.result.points:
+            for harmonic in point.harmonics:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            _format_table_number(point.frequency),
+                            result.input_source,
+                            result.output_probe,
+                            str(harmonic.harmonic),
+                            _format_table_number(harmonic.magnitude),
+                            _format_table_number(harmonic.phase_degrees),
+                            _format_table_number(point.total_harmonic_distortion),
+                        ]
+                    )
+                )
     rows.append("")
     return "\n".join(rows)
 
@@ -1654,6 +2697,32 @@ def format_fourier_table(result: FourierResult) -> str:
                     ]
                 )
             )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_fourier_table(result: CornerFourierResult) -> str:
+    """Format named-corner Fourier harmonics as a stable text table."""
+    rows = ["Corner\tProbe\tHarmonic\tFrequency\tCosine\tSine\tMagnitude\tPhase\tDC\tTHD"]
+    for corner in result.points:
+        for probe in corner.result.probes:
+            for harmonic in probe.harmonics:
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            probe.probe,
+                            str(harmonic.harmonic),
+                            _format_table_number(harmonic.frequency),
+                            _format_table_number(harmonic.cosine),
+                            _format_table_number(harmonic.sine),
+                            _format_table_number(harmonic.magnitude),
+                            _format_table_number(harmonic.phase_degrees),
+                            _format_table_number(probe.dc),
+                            _format_table_number(probe.total_harmonic_distortion),
+                        ]
+                    )
+                )
     rows.append("")
     return "\n".join(rows)
 
@@ -1694,6 +2763,164 @@ def _default_ac_output_probes(points: list[AcPoint]) -> list[str]:
 
 def _format_table_number(value: float) -> str:
     return f"{value:.6e}"
+
+
+def measure_transient_probe(
+    transient_result: TransientResult | list[TransientPoint],
+    name: str,
+    probe: str,
+    mode: str,
+    *,
+    from_time: float | None = None,
+    to_time: float | None = None,
+) -> ProbeMeasurement:
+    """Measure one transient probe over an optional time window.
+
+    Supported modes are ``max``, ``min``, ``avg``, ``rms``, ``pp``/``p2p`` /
+    ``peak-to-peak``, and ``last``/``final``.
+    """
+
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    normalized_mode = _normalize_measurement_mode(mode)
+    if from_time is not None and not math.isfinite(from_time):
+        raise ValueError("measure_transient_probe: from_time must be finite")
+    if to_time is not None and not math.isfinite(to_time):
+        raise ValueError("measure_transient_probe: to_time must be finite")
+    if from_time is not None and to_time is not None and from_time > to_time:
+        raise ValueError("measure_transient_probe: from_time must be <= to_time")
+
+    selected = [
+        point
+        for point in points
+        if (from_time is None or point.time >= from_time)
+        and (to_time is None or point.time <= to_time)
+    ]
+    if not selected:
+        raise ValueError("measure_transient_probe: no transient samples in window")
+
+    values = [
+        _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            "measure_transient_probe",
+        )
+        for point in selected
+    ]
+    value = _measure_values(values, normalized_mode)
+    return ProbeMeasurement(
+        name=name,
+        analysis="tran",
+        probe=probe,
+        mode=normalized_mode,
+        value=value,
+        from_value=from_time,
+        to_value=to_time,
+    )
+
+
+def measure_transient_cards(
+    transient_result: TransientResult | list[TransientPoint],
+    measurements: Iterable[DeckMeasurementCard],
+) -> list[ProbeMeasurement]:
+    """Execute parsed transient ``.measure`` / ``.meas`` cards."""
+
+    results: list[ProbeMeasurement] = []
+    for measurement in measurements:
+        if measurement.analysis not in {"tran", "transient"}:
+            raise ValueError(
+                "measure_transient_cards: only transient measurement cards are supported"
+            )
+        results.append(
+            measure_transient_probe(
+                transient_result,
+                measurement.name,
+                measurement.probe,
+                measurement.mode,
+                from_time=measurement.from_value,
+                to_time=measurement.to_value,
+            )
+        )
+    return results
+
+
+def measure_transient_deck(
+    transient_result: TransientResult | list[TransientPoint],
+    netlist: str,
+) -> list[ProbeMeasurement]:
+    """Parse and execute supported transient measurements from a SPICE deck."""
+
+    summary = resolve_deck_measurements(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"measure_transient_deck: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return measure_transient_cards(transient_result, summary.measurements)
+
+
+def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:
+    """Format scalar probe measurements as a stable tab-separated table."""
+
+    rows = ["Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue"]
+    for measurement in measurements:
+        rows.append(
+            "\t".join(
+                [
+                    measurement.name,
+                    measurement.analysis,
+                    measurement.probe,
+                    measurement.mode,
+                    _format_optional_table_number(measurement.from_value),
+                    _format_optional_table_number(measurement.to_value),
+                    _format_table_number(measurement.value),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def _normalize_measurement_mode(mode: str) -> str:
+    normalized = mode.strip().lower().replace("_", "-")
+    aliases = {
+        "average": "avg",
+        "mean": "avg",
+        "root-mean-square": "rms",
+        "p-p": "pp",
+        "p2p": "pp",
+        "peak-to-peak": "pp",
+        "peak2peak": "pp",
+        "final": "last",
+    }
+    normalized = aliases.get(normalized, normalized)
+    if normalized not in {"max", "min", "avg", "rms", "pp", "last"}:
+        raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+    return normalized
+
+
+def _measure_values(values: list[float], mode: str) -> float:
+    if mode == "max":
+        return max(values)
+    if mode == "min":
+        return min(values)
+    if mode == "avg":
+        return sum(values) / len(values)
+    if mode == "rms":
+        return math.sqrt(sum(value * value for value in values) / len(values))
+    if mode == "pp":
+        return max(values) - min(values)
+    if mode == "last":
+        return values[-1]
+    raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+
+
+def _format_optional_table_number(value: float | None) -> str:
+    return "" if value is None else _format_table_number(value)
 
 
 def _table_probe_value(
@@ -1830,6 +3057,49 @@ def fourier(
         start_time=window_start,
         end_time=end_time,
         probes=results,
+    )
+
+
+def fourier_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    fundamental_frequency: float,
+    probes: list[str],
+    harmonics: int = 9,
+    start_time: float | None = None,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerFourierResult:
+    """Run transient Fourier analysis at each named corner."""
+    points: list[CornerFourierPoint] = []
+    for corner in corners:
+        transient_result = transient(
+            _circuit_with_corner(circuit, corner),
+            t_stop=t_stop,
+            t_step=t_step,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+        )
+        points.append(
+            CornerFourierPoint(
+                corner_name=corner.name,
+                result=fourier(
+                    transient_result,
+                    fundamental_frequency,
+                    probes,
+                    harmonics=harmonics,
+                    start_time=start_time,
+                ),
+            )
+        )
+    return CornerFourierResult(
+        fundamental_frequency=fundamental_frequency,
+        points=points,
     )
 
 
@@ -2058,6 +3328,21 @@ class PssResult:
     period: float
     time_step: float
     converged: bool
+
+
+@dataclass(frozen=True)
+class CornerPssPoint:
+    """PSS result for one named analysis corner."""
+
+    corner_name: str
+    result: PssResult
+
+
+@dataclass(frozen=True)
+class CornerPssResult:
+    """Multi-corner periodic steady-state analysis result."""
+
+    points: list[CornerPssPoint]
 
 
 @dataclass
@@ -2388,6 +3673,8 @@ def _element_nodes(el: Element) -> list[str]:
         if expr is not None:
             nodes.extend(_bsource_expr_nodes(expr))
         return nodes
+    if isinstance(el, CustomModel):
+        return [el.n_plus, el.n_minus]
     if isinstance(el, Diode):
         return [el.anode, el.cathode]
     if isinstance(el, JFET):
@@ -2453,6 +3740,38 @@ def _is_ground(name: str) -> bool:
     return name in ("0", "gnd", "GND")
 
 
+def _real_solver_kind(matrix_size: int) -> str:
+    if matrix_size == 0:
+        return "none"
+    if matrix_size >= _SPARSE_SOLVER_THRESHOLD:
+        return "sparse_real"
+    return "dense_real"
+
+
+def _complex_solver_kind(matrix_size: int) -> str:
+    if matrix_size == 0:
+        return "none"
+    if matrix_size >= _SPARSE_SOLVER_THRESHOLD:
+        return "sparse_complex"
+    return "dense_complex"
+
+
+def _dc_diagnostics(
+    matrix_size: int,
+    *,
+    tol: float,
+    max_delta: float,
+    convergence_aid: str,
+) -> DcSolverDiagnostics:
+    return DcSolverDiagnostics(
+        matrix_size=matrix_size,
+        solver=_real_solver_kind(matrix_size),
+        tolerance=tol,
+        max_delta=max_delta,
+        convergence_aid=convergence_aid,
+    )
+
+
 # ---------------------------------------------------------------------------
 # DC analysis
 # ---------------------------------------------------------------------------
@@ -2502,7 +3821,18 @@ def _dc_newton(
             x_new = _solve(G, b)
         except ZeroDivisionError:
             node_v = {nd: x[i] for nd, i in node_to_idx.items()}
-            return DcResult(node_v, {}, iterations=it, converged=False)
+            return DcResult(
+                node_v,
+                {},
+                iterations=it,
+                converged=False,
+                diagnostics=_dc_diagnostics(
+                    size,
+                    tol=tol,
+                    max_delta=float("inf"),
+                    convergence_aid="newton",
+                ),
+            )
 
         max_delta = max(abs(a - bv) for a, bv in zip(x, x_new, strict=False)) if x else 0.0
         x = x_new
@@ -2511,7 +3841,18 @@ def _dc_newton(
 
     node_v = {nd: x[i] for nd, i in node_to_idx.items()}
     branch_i = {f"I({el.name})": x[n + i] for i, el in enumerate(branch_srcs)}
-    return DcResult(node_v, branch_i, iterations=it + 1, converged=max_delta < tol)
+    return DcResult(
+        node_v,
+        branch_i,
+        iterations=it + 1,
+        converged=max_delta < tol,
+        diagnostics=_dc_diagnostics(
+            size,
+            tol=tol,
+            max_delta=max_delta,
+            convergence_aid="newton",
+        ),
+    )
 
 
 def _x_from_result(
@@ -2799,6 +4140,60 @@ def _dc_pseudo_transient(
     return final if final.converged else None
 
 
+def dc_initial_vector_from_conditions(
+    circuit: Circuit,
+    initial_conditions: Iterable[DeckNodeCondition],
+    nodesets: Iterable[DeckNodeCondition] = (),
+) -> list[float]:
+    """Build a DC Newton warm-start vector from parsed ``.ic``/``.nodeset`` hints.
+
+    The vector follows the engine's internal MNA ordering: non-ground node
+    voltages first, then branch currents initialised to zero.  ``.nodeset``
+    values are applied first, and ``.ic`` values override them when both
+    mention the same node.
+    """
+
+    node_to_idx, nodes = _node_index(circuit)
+    branch_srcs = _branch_sources(circuit)
+    vector = [0.0] * (len(nodes) + len(branch_srcs))
+
+    def apply(condition: DeckNodeCondition) -> None:
+        if not math.isfinite(condition.value):
+            msg = f"{condition.directive} V({condition.node}) must be finite"
+            raise ValueError(msg)
+        if _is_ground(condition.node):
+            if condition.value != 0.0:
+                msg = f"{condition.directive} V({condition.node}) conflicts with ground"
+                raise ValueError(msg)
+            return
+        index = node_to_idx.get(condition.node)
+        if index is None:
+            msg = f"{condition.directive} references unknown node {condition.node!r}"
+            raise ValueError(msg)
+        vector[index] = condition.value
+
+    for condition in nodesets:
+        apply(condition)
+    for condition in initial_conditions:
+        apply(condition)
+    return vector
+
+
+def _validate_dc_initial_vector(circuit: Circuit, initial_vector: list[float]) -> None:
+    _, nodes = _node_index(circuit)
+    branch_srcs = _branch_sources(circuit)
+    expected_len = len(nodes) + len(branch_srcs)
+    if len(initial_vector) != expected_len:
+        msg = (
+            "dc_initial_vector: expected "
+            f"{expected_len} entries for circuit MNA ordering, got {len(initial_vector)}"
+        )
+        raise ValueError(msg)
+    if any(not math.isfinite(value) for value in initial_vector):
+        msg = "dc_initial_vector: all entries must be finite"
+        raise ValueError(msg)
+
+
 def dc_op(
     circuit: Circuit,
     *,
@@ -2808,6 +4203,7 @@ def dc_op(
     pseudo_transient_steps: int = 20,
     pseudo_transient_shunt_conductance: float = 1e-3,
     pseudo_transient_max_iterations: int | None = None,
+    initial_vector: list[float] | None = None,
 ) -> DcResult:
     """Solve DC operating point via Newton-Raphson on a linearized MNA.
 
@@ -2850,23 +4246,50 @@ def dc_op(
     pseudo_transient_max_iterations:
         Optional Newton iteration cap for each pseudo-transient step and final
         polish solve.  Defaults to ``max_iterations``.
+    initial_vector:
+        Optional MNA warm-start vector.  Prefer
+        :func:`dc_op_with_initial_conditions` for parsed deck hints.
     """
+    if initial_vector is not None:
+        _validate_dc_initial_vector(circuit, initial_vector)
+
     # Attempt 1: plain Newton-Raphson.
-    result = _dc_newton(circuit, max_iterations=max_iterations, tol=tol)
+    result = _dc_newton(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        x_init=initial_vector,
+    )
     if result.converged:
-        return replace(result, convergence_aid="newton")
+        return replace(
+            result,
+            convergence_aid="newton",
+            diagnostics=replace(result.diagnostics, convergence_aid="newton"),
+        )
     if not convergence_aids:
-        return replace(result, convergence_aid="none")
+        return replace(
+            result,
+            convergence_aid="none",
+            diagnostics=replace(result.diagnostics, convergence_aid="none"),
+        )
 
     # Attempt 2: Gmin stepping.
     gmin_result = _dc_gmin_step(circuit, max_iterations=max_iterations, tol=tol)
     if gmin_result is not None and gmin_result.converged:
-        return replace(gmin_result, convergence_aid="gmin")
+        return replace(
+            gmin_result,
+            convergence_aid="gmin",
+            diagnostics=replace(gmin_result.diagnostics, convergence_aid="gmin"),
+        )
 
     # Attempt 3: source stepping.
     src_result = _dc_source_step(circuit, max_iterations=max_iterations, tol=tol)
     if src_result is not None and src_result.converged:
-        return replace(src_result, convergence_aid="source")
+        return replace(
+            src_result,
+            convergence_aid="source",
+            diagnostics=replace(src_result.diagnostics, convergence_aid="source"),
+        )
 
     # Attempt 4: artificial pseudo-transient continuation.
     pseudo_result = _dc_pseudo_transient(
@@ -2881,10 +4304,51 @@ def dc_op(
         shunt_conductance=pseudo_transient_shunt_conductance,
     )
     if pseudo_result is not None and pseudo_result.converged:
-        return replace(pseudo_result, convergence_aid="pseudo_transient")
+        return replace(
+            pseudo_result,
+            convergence_aid="pseudo_transient",
+            diagnostics=replace(
+                pseudo_result.diagnostics,
+                convergence_aid="pseudo_transient",
+            ),
+        )
 
     # All methods exhausted — return the plain-Newton result (converged=False).
-    return replace(result, convergence_aid="none")
+    return replace(
+        result,
+        convergence_aid="none",
+        diagnostics=replace(result.diagnostics, convergence_aid="none"),
+    )
+
+
+def dc_op_with_initial_conditions(
+    circuit: Circuit,
+    summary: DeckInitialConditionSummary,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+    pseudo_transient_steps: int = 20,
+    pseudo_transient_shunt_conductance: float = 1e-3,
+    pseudo_transient_max_iterations: int | None = None,
+) -> DcResult:
+    """Solve DC operating point using parsed ``.ic``/``.nodeset`` node hints."""
+
+    initial_vector = dc_initial_vector_from_conditions(
+        circuit,
+        summary.initial_conditions,
+        summary.nodesets,
+    )
+    return dc_op(
+        circuit,
+        max_iterations=max_iterations,
+        tol=tol,
+        convergence_aids=convergence_aids,
+        pseudo_transient_steps=pseudo_transient_steps,
+        pseudo_transient_shunt_conductance=pseudo_transient_shunt_conductance,
+        pseudo_transient_max_iterations=pseudo_transient_max_iterations,
+        initial_vector=initial_vector,
+    )
 
 
 def _apply_corner_override(element: Element, override: CornerOverride) -> Element:
@@ -2963,6 +4427,69 @@ def dc_corners(
     return CornerSweepResult(points=points)
 
 
+def dc_temperature_sweep(
+    circuit: Circuit,
+    temperatures_kelvin: list[float],
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> TemperatureDcResult:
+    """Run DC operating points at explicit semiconductor analysis temperatures."""
+    return TemperatureDcResult(
+        points=[
+            TemperatureDcPoint(
+                temperature_kelvin=temperature_kelvin,
+                result=dc_op(
+                    circuit_at_temperature(
+                        circuit,
+                        temperature_kelvin,
+                        nominal_temperature_kelvin=nominal_temperature_kelvin,
+                        energy_gap_ev=energy_gap_ev,
+                    ),
+                    max_iterations=max_iterations,
+                    tol=tol,
+                    convergence_aids=convergence_aids,
+                ),
+            )
+            for temperature_kelvin in temperatures_kelvin
+        ]
+    )
+
+
+def dc_temperature_sweep_corners(
+    circuit: Circuit,
+    temperatures_kelvin: list[float],
+    corners: list[CornerSpec],
+    *,
+    nominal_temperature_kelvin: float = 300.15,
+    energy_gap_ev: float = 1.11,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    convergence_aids: bool = True,
+) -> CornerTemperatureDcResult:
+    """Run DC temperature sweeps at each named corner."""
+    return CornerTemperatureDcResult(
+        points=[
+            CornerTemperatureDcPoint(
+                corner_name=corner.name,
+                points=dc_temperature_sweep(
+                    _circuit_with_corner(circuit, corner),
+                    temperatures_kelvin,
+                    nominal_temperature_kelvin=nominal_temperature_kelvin,
+                    energy_gap_ev=energy_gap_ev,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                    convergence_aids=convergence_aids,
+                ).points,
+            )
+            for corner in corners
+        ]
+    )
+
+
 def _stamp_dc(
     el: Element,
     G: list[list[float]],
@@ -2985,6 +4512,8 @@ def _stamp_dc(
             b[node_to_idx[el.n_minus]] += el.current
     elif isinstance(el, BSource):
         _stamp_bsource(G, b, x, node_to_idx, branch_srcs, el)
+    elif isinstance(el, CustomModel):
+        _stamp_custom_model(G, b, x, node_to_idx, el)
     elif isinstance(el, Diode):
         _stamp_diode(G, b, x, node_to_idx, el)
     elif isinstance(el, JFET):
@@ -3199,6 +4728,62 @@ def _stamp_bsource(
     for node, derivative in derivatives.items():
         G[branch_idx][node_to_idx[node]] -= derivative
     b[branch_idx] += offset
+
+
+def _custom_model_voltage(
+    el: CustomModel,
+    node_to_idx: dict[str, int],
+    x: list[float],
+) -> float:
+    v_plus = 0.0 if _is_ground(el.n_plus) else x[node_to_idx[el.n_plus]]
+    v_minus = 0.0 if _is_ground(el.n_minus) else x[node_to_idx[el.n_minus]]
+    return v_plus - v_minus
+
+
+def _evaluate_custom_model(el: CustomModel, voltage: float) -> CustomModelEvaluation:
+    if el.evaluator is not None:
+        result = el.evaluator(
+            CustomModelContext(voltage=voltage, parameters=el.parameters)
+        )
+    else:
+        if el.conductance_siemens is None:
+            raise ValueError(
+                f"CustomModel '{el.name}' must define an evaluator or conductance_siemens."
+            )
+        result = CustomModelEvaluation(
+            current_amps=el.conductance_siemens * voltage + el.current_offset_amps,
+            conductance_siemens=el.conductance_siemens,
+        )
+    if not math.isfinite(result.current_amps):
+        raise ValueError(f"CustomModel '{el.name}' produced non-finite current")
+    if not math.isfinite(result.conductance_siemens):
+        raise ValueError(f"CustomModel '{el.name}' produced non-finite conductance")
+    return result
+
+
+def _custom_model_conductance(
+    el: CustomModel,
+    node_to_idx: dict[str, int],
+    x: list[float],
+) -> float:
+    return _evaluate_custom_model(el, _custom_model_voltage(el, node_to_idx, x)).conductance_siemens
+
+
+def _stamp_custom_model(
+    G: list[list[float]],
+    b: list[float],
+    x: list[float],
+    node_to_idx: dict[str, int],
+    el: CustomModel,
+) -> None:
+    voltage = _custom_model_voltage(el, node_to_idx, x)
+    evaluation = _evaluate_custom_model(el, voltage)
+    _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, evaluation.conductance_siemens)
+    equivalent_current = evaluation.current_amps - evaluation.conductance_siemens * voltage
+    if not _is_ground(el.n_plus):
+        b[node_to_idx[el.n_plus]] -= equivalent_current
+    if not _is_ground(el.n_minus):
+        b[node_to_idx[el.n_minus]] += equivalent_current
 
 
 # ---------------------------------------------------------------------------
@@ -3824,7 +5409,7 @@ def _transmission_line_sample_at(
     if target_time <= samples[0][0]:
         _, v1, i1, v2, i2 = samples[0]
         return (v1, i1, v2, i2)
-    for left, right in zip(samples, samples[1:]):
+    for left, right in zip(samples, samples[1:], strict=False):
         if target_time <= right[0]:
             t0, v10, i10, v20, i20 = left
             t1, v11, i11, v21, i21 = right
@@ -4635,6 +6220,694 @@ def transient(
                            method=method, steps_rejected=steps_rejected)
 
 
+def transient_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerTransientResult:
+    """Run fixed-step transient analysis at each named corner."""
+    return CornerTransientResult(
+        points=[
+            CornerTransientPoint(
+                corner_name=corner.name,
+                points=transient(
+                    _circuit_with_corner(circuit, corner),
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    method=method,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ).points,
+            )
+            for corner in corners
+        ]
+    )
+
+
+def transient_adaptive_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerAdaptiveTransientResult:
+    """Run LTE-adaptive transient analysis at each named corner."""
+    return CornerAdaptiveTransientResult(
+        points=[
+            CornerAdaptiveTransientPoint(
+                corner_name=corner.name,
+                result=transient(
+                    _circuit_with_corner(circuit, corner),
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    method=method,
+                    adaptive=True,
+                    tol_lte=tol_lte,
+                    min_step=min_step,
+                    max_step=max_step,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
+
+
+_DIGITAL_BRIDGE_TIME_EPSILON = 1.0e-18
+
+
+def digital_events_to_pwl_waveform(
+    events: list[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> PwlWaveform:
+    """Convert hardware-VM digital events into a SPICE PWL waveform."""
+    _validate_digital_logic_levels(levels, "digital_events")
+    if not events:
+        raise ValueError("digital_events: at least one digital event is required")
+
+    previous_time = -math.inf
+    for event in events:
+        _validate_digital_event_time(event.time_seconds, previous_time, "digital_events")
+        _normalize_digital_state(event.state)
+        previous_time = event.time_seconds
+
+    points: list[tuple[float, float]] = []
+    current_state = _normalize_digital_state(events[0].state)
+    points.append((events[0].time_seconds, levels.voltage_for(current_state)))
+
+    for event in events[1:]:
+        event_state = _normalize_digital_state(event.state)
+        if event_state == current_state:
+            continue
+        start_time = event.time_seconds
+        end_time = start_time + levels.transition_seconds
+        last_time = points[-1][0]
+        if start_time <= last_time:
+            raise ValueError("digital_events: digital transition overlaps the previous transition")
+        points.append((start_time, levels.voltage_for(current_state)))
+        points.append((end_time, levels.voltage_for(event_state)))
+        current_state = event_state
+
+    if len(points) == 1:
+        points.append((points[0][0] + levels.transition_seconds, levels.voltage_for(current_state)))
+
+    return PwlWaveform(tuple(points))
+
+
+def digital_events_to_voltage_source(
+    name: str,
+    positive: str,
+    negative: str,
+    events: list[DigitalEvent],
+    levels: DigitalLogicLevels,
+) -> VoltageSource:
+    """Create a voltage source that drives a digital event stream into SPICE."""
+    if not events:
+        raise ValueError("digital_events: at least one digital event is required")
+    initial_voltage = levels.voltage_for(events[0].state)
+    return VoltageSource(
+        name,
+        positive,
+        negative,
+        initial_voltage,
+        digital_events_to_pwl_waveform(events, levels),
+    )
+
+
+def digital_event_streams_to_voltage_sources(
+    streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+) -> list[VoltageSource]:
+    """Convert named digital event streams into SPICE voltage sources."""
+    negative_node = negative.strip()
+    if not negative_node:
+        raise ValueError("digital_event_streams: digital event stream negative node must not be empty")
+    seen_signal_names: set[str] = set()
+    sources: list[VoltageSource] = []
+    for stream in streams:
+        signal_name = _validate_digital_event_stream_name(stream, seen_signal_names)
+        sources.append(
+            digital_events_to_voltage_source(
+                f"V{signal_name}",
+                signal_name,
+                negative_node,
+                stream.events,
+                levels,
+            )
+        )
+    return sources
+
+
+def digital_event_streams_to_bridge_schedule(
+    streams: list[DigitalEventStream],
+    levels: DigitalLogicLevels,
+) -> DigitalBridgeSchedule:
+    """Derive deterministic VM breakpoints from digital input streams."""
+    _validate_digital_logic_levels(levels, "digital_bridge_schedule")
+    seen_signal_names: set[str] = set()
+    breakpoints: list[float] = []
+    stop_time = 0.0
+    for stream in streams:
+        _validate_digital_event_stream_name(stream, seen_signal_names)
+        digital_events_to_pwl_waveform(stream.events, levels)
+        current_state = _normalize_digital_state(stream.events[0].state)
+        for index, event in enumerate(stream.events):
+            event_state = _normalize_digital_state(event.state)
+            breakpoints.append(event.time_seconds)
+            stop_time = max(stop_time, event.time_seconds)
+            if index > 0 and event_state != current_state:
+                transition_end = event.time_seconds + levels.transition_seconds
+                breakpoints.append(transition_end)
+                stop_time = max(stop_time, transition_end)
+                current_state = event_state
+
+    breakpoints.sort()
+    deduped: list[float] = []
+    for breakpoint in breakpoints:
+        if not deduped or abs(breakpoint - deduped[-1]) > _DIGITAL_BRIDGE_TIME_EPSILON:
+            deduped.append(breakpoint)
+    return DigitalBridgeSchedule(stop_time=stop_time, breakpoints=deduped)
+
+
+def transient_with_digital_event_streams(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> DigitalTransientBridgeResult:
+    """Run transient analysis with digital VM streams driving analog sources."""
+    bridged = _circuit_with_extra_voltage_sources(
+        circuit,
+        digital_event_streams_to_voltage_sources(input_streams, negative, levels),
+    )
+    result = transient(
+        bridged,
+        t_stop=t_stop,
+        t_step=t_step,
+        method=method,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    return DigitalTransientBridgeResult(
+        points=result.points,
+        output_streams=sample_transient_probes_as_digital_event_streams(
+            result.points,
+            output_probes,
+            thresholds,
+        ),
+    )
+
+
+def transient_with_digital_event_streams_corners(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerDigitalTransientBridgeResult:
+    """Run the digital bridge across named transient corners."""
+    return CornerDigitalTransientBridgeResult(
+        points=[
+            CornerDigitalTransientBridgePoint(
+                corner_name=corner.name,
+                result=transient_with_digital_event_streams(
+                    _circuit_with_corner(circuit, corner),
+                    input_streams,
+                    negative,
+                    levels,
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    output_probes=output_probes,
+                    thresholds=thresholds,
+                    method=method,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
+
+
+def transient_adaptive_with_digital_event_streams(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> AdaptiveDigitalTransientBridgeResult:
+    """Run adaptive transient analysis with digital VM streams driving SPICE."""
+    bridged = _circuit_with_extra_voltage_sources(
+        circuit,
+        digital_event_streams_to_voltage_sources(input_streams, negative, levels),
+    )
+    result = transient(
+        bridged,
+        t_stop=t_stop,
+        t_step=t_step,
+        method=method,
+        adaptive=True,
+        tol_lte=tol_lte,
+        min_step=min_step,
+        max_step=max_step,
+        max_iterations=max_iterations,
+        tol=tol,
+    )
+    return AdaptiveDigitalTransientBridgeResult(
+        result=result,
+        output_streams=sample_transient_probes_as_digital_event_streams(
+            result.points,
+            output_probes,
+            thresholds,
+        ),
+    )
+
+
+def transient_adaptive_with_digital_event_streams_corners(
+    circuit: Circuit,
+    input_streams: list[DigitalEventStream],
+    negative: str,
+    levels: DigitalLogicLevels,
+    corners: list[CornerSpec],
+    *,
+    t_stop: float,
+    t_step: float,
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+    method: str = "trap",
+    tol_lte: float = 1e-4,
+    min_step: float | None = None,
+    max_step: float | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> CornerAdaptiveDigitalTransientBridgeResult:
+    """Run the adaptive digital bridge across named transient corners."""
+    return CornerAdaptiveDigitalTransientBridgeResult(
+        points=[
+            CornerAdaptiveDigitalTransientBridgePoint(
+                corner_name=corner.name,
+                result=transient_adaptive_with_digital_event_streams(
+                    _circuit_with_corner(circuit, corner),
+                    input_streams,
+                    negative,
+                    levels,
+                    t_stop=t_stop,
+                    t_step=t_step,
+                    output_probes=output_probes,
+                    thresholds=thresholds,
+                    method=method,
+                    tol_lte=tol_lte,
+                    min_step=min_step,
+                    max_step=max_step,
+                    max_iterations=max_iterations,
+                    tol=tol,
+                ),
+            )
+            for corner in corners
+        ]
+    )
+
+
+def sample_transient_probe_as_digital_events(
+    points: list[TransientPoint],
+    probe: str,
+    thresholds: DigitalThresholds,
+) -> list[DigitalEvent]:
+    """Threshold a transient probe into a stable digital event stream."""
+    _validate_digital_thresholds(thresholds)
+    events: list[DigitalEvent] = []
+    current_state: DigitalState | None = None
+    for point in points:
+        if point.time <= _DIGITAL_BRIDGE_TIME_EPSILON:
+            continue
+        voltage = _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            "sample_transient_probe_as_digital_events",
+        )
+        state = thresholds.classify(voltage)
+        if state is None:
+            continue
+        if current_state != state:
+            events.append(DigitalEvent(point.time, state))
+            current_state = state
+    return events
+
+
+def sample_transient_probes_as_digital_event_streams(
+    points: list[TransientPoint],
+    output_probes: list[tuple[str, str]],
+    thresholds: DigitalThresholds,
+) -> list[DigitalEventStream]:
+    """Threshold multiple transient probes into named digital streams."""
+    seen_signal_names: set[str] = set()
+    streams: list[DigitalEventStream] = []
+    for signal_name, probe in output_probes:
+        trimmed = signal_name.strip()
+        if not trimmed:
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        if trimmed in seen_signal_names:
+            raise ValueError(f"{trimmed}: digital event stream signal names must be unique")
+        seen_signal_names.add(trimmed)
+        streams.append(
+            DigitalEventStream(
+                trimmed,
+                sample_transient_probe_as_digital_events(points, probe, thresholds),
+            )
+        )
+    return streams
+
+
+def format_digital_event_table(events: list[DigitalEvent]) -> str:
+    """Format digital events as stable tab-separated text."""
+    rows = ["Index\tTime\tState"]
+    previous_time = -math.inf
+    for index, event in enumerate(events):
+        _validate_digital_event_time(event.time_seconds, previous_time, "digital_event")
+        previous_time = event.time_seconds
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(event.time_seconds),
+                    _normalize_digital_state(event.state),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_event_stream_table(streams: list[DigitalEventStream]) -> str:
+    """Format named digital streams as stable tab-separated text."""
+    rows = ["Signal\tIndex\tTime\tState"]
+    for stream in streams:
+        if not stream.signal_name.strip():
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        previous_time = -math.inf
+        for index, event in enumerate(stream.events):
+            _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+            previous_time = event.time_seconds
+            rows.append(
+                "\t".join(
+                    [
+                        stream.signal_name,
+                        str(index),
+                        _format_table_number(event.time_seconds),
+                        _normalize_digital_state(event.state),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_digital_event_stream_table(
+    result: CornerDigitalTransientBridgeResult,
+) -> str:
+    """Format named-corner digital bridge streams as stable text."""
+    rows = ["Corner\tSignal\tIndex\tTime\tState"]
+    for corner in result.points:
+        for stream in corner.result.output_streams:
+            if not stream.signal_name.strip():
+                raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+            previous_time = -math.inf
+            for index, event in enumerate(stream.events):
+                _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+                previous_time = event.time_seconds
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            stream.signal_name,
+                            str(index),
+                            _format_table_number(event.time_seconds),
+                            _normalize_digital_state(event.state),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_adaptive_digital_event_stream_table(
+    result: AdaptiveDigitalTransientBridgeResult,
+) -> str:
+    """Format adaptive digital bridge streams as stable text."""
+    rows = ["Method\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState"]
+    for stream in result.output_streams:
+        if not stream.signal_name.strip():
+            raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+        previous_time = -math.inf
+        for index, event in enumerate(stream.events):
+            _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+            previous_time = event.time_seconds
+            rows.append(
+                "\t".join(
+                    [
+                        result.result.method,
+                        str(result.result.steps_rejected),
+                        str(result.result.converged).lower(),
+                        stream.signal_name,
+                        str(index),
+                        _format_table_number(event.time_seconds),
+                        _normalize_digital_state(event.state),
+                    ]
+                )
+            )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_corner_adaptive_digital_event_stream_table(
+    result: CornerAdaptiveDigitalTransientBridgeResult,
+) -> str:
+    """Format named-corner adaptive digital bridge streams as stable text."""
+    rows = ["Corner\tMethod\tStepsRejected\tConverged\tSignal\tIndex\tTime\tState"]
+    for corner in result.points:
+        for stream in corner.result.output_streams:
+            if not stream.signal_name.strip():
+                raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+            previous_time = -math.inf
+            for index, event in enumerate(stream.events):
+                _validate_digital_event_time(event.time_seconds, previous_time, stream.signal_name)
+                previous_time = event.time_seconds
+                rows.append(
+                    "\t".join(
+                        [
+                            corner.corner_name,
+                            corner.result.result.method,
+                            str(corner.result.result.steps_rejected),
+                            str(corner.result.result.converged).lower(),
+                            stream.signal_name,
+                            str(index),
+                            _format_table_number(event.time_seconds),
+                            _normalize_digital_state(event.state),
+                        ]
+                    )
+                )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_bridge_schedule_table(schedule: DigitalBridgeSchedule) -> str:
+    """Format a hardware-VM bridge schedule as stable text."""
+    if not math.isfinite(schedule.stop_time) or schedule.stop_time < 0.0:
+        raise ValueError("digital_bridge_schedule: digital bridge stop time must be finite and non-negative")
+    rows = ["Index\tTime\tStopTime"]
+    previous_time = -math.inf
+    for index, time_seconds in enumerate(schedule.breakpoints):
+        _validate_digital_event_time(time_seconds, previous_time, "digital_bridge_schedule")
+        if time_seconds > schedule.stop_time:
+            raise ValueError("digital_bridge_schedule: digital bridge breakpoint must not exceed stop time")
+        previous_time = time_seconds
+        rows.append(
+            "\t".join(
+                [
+                    str(index),
+                    _format_table_number(time_seconds),
+                    _format_table_number(schedule.stop_time),
+                ]
+            )
+        )
+    rows.append("")
+    return "\n".join(rows)
+
+
+def format_digital_event_stream_vcd(
+    streams: list[DigitalEventStream],
+    *,
+    module_name: str = "spice_bridge",
+    timescale: str = "1ps",
+) -> str:
+    """Format digital streams as deterministic VCD for VM/probe correlation."""
+    if timescale != "1ps":
+        raise ValueError("digital_event_stream_vcd: only 1ps timescale is supported")
+    if not module_name.strip():
+        raise ValueError("digital_event_stream_vcd: module name must not be empty")
+
+    seen_signal_names: set[str] = set()
+    signal_ids: dict[str, str] = {}
+    for index, stream in enumerate(streams):
+        signal_name = _validate_digital_event_stream_name(stream, seen_signal_names)
+        signal_ids[signal_name] = _vcd_identifier(index)
+        previous_time = -math.inf
+        for event in stream.events:
+            _validate_digital_event_time(event.time_seconds, previous_time, signal_name)
+            _normalize_digital_state(event.state)
+            previous_time = event.time_seconds
+
+    rows = [
+        "$version coding-adventures spice-engine mixed-signal bridge $end",
+        f"$timescale {timescale} $end",
+        f"$scope module {module_name.strip()} $end",
+    ]
+    for stream in streams:
+        signal_name = stream.signal_name.strip()
+        rows.append(f"$var wire 1 {signal_ids[signal_name]} {signal_name} $end")
+    rows.extend(["$upscope $end", "$enddefinitions $end", "$dumpvars"])
+    for stream in streams:
+        if stream.events:
+            rows.append(f"{_vcd_state_value(stream.events[0].state)}{signal_ids[stream.signal_name.strip()]}")
+    rows.append("$end")
+
+    events_by_tick: dict[int, list[tuple[str, DigitalState]]] = {}
+    for stream in streams:
+        signal_name = stream.signal_name.strip()
+        for event in stream.events:
+            tick = _vcd_tick(event.time_seconds)
+            events_by_tick.setdefault(tick, []).append((signal_ids[signal_name], event.state))
+    for tick in sorted(events_by_tick):
+        rows.append(f"#{tick}")
+        for signal_id, state in events_by_tick[tick]:
+            rows.append(f"{_vcd_state_value(state)}{signal_id}")
+    rows.append("")
+    return "\n".join(rows)
+
+
+def _circuit_with_extra_voltage_sources(
+    circuit: Circuit,
+    sources: list[VoltageSource],
+) -> Circuit:
+    bridged = Circuit(
+        elements=[*circuit.elements],
+        subcircuits=dict(circuit.subcircuits),
+    )
+    for source in sources:
+        bridged.add(source)
+    return bridged
+
+
+def _normalize_digital_state(state: DigitalState | str) -> DigitalState:
+    text = str(state).strip().lower()
+    if text == "low":
+        return "low"
+    if text == "high":
+        return "high"
+    raise ValueError(f"digital_event: unsupported digital state {state!r}")
+
+
+def _validate_digital_logic_levels(levels: DigitalLogicLevels, context: str) -> None:
+    if not (
+        math.isfinite(levels.low_voltage)
+        and math.isfinite(levels.high_voltage)
+        and math.isfinite(levels.transition_seconds)
+    ):
+        raise ValueError(f"{context}: digital logic levels must be finite")
+    if levels.high_voltage <= levels.low_voltage:
+        raise ValueError(f"{context}: digital high voltage must be greater than low voltage")
+    if levels.transition_seconds <= 0.0:
+        raise ValueError(f"{context}: digital transition time must be finite and positive")
+
+
+def _validate_digital_thresholds(thresholds: DigitalThresholds) -> None:
+    if not (
+        math.isfinite(thresholds.low_max_voltage)
+        and math.isfinite(thresholds.high_min_voltage)
+    ):
+        raise ValueError("digital_thresholds: digital thresholds must be finite")
+    if thresholds.high_min_voltage <= thresholds.low_max_voltage:
+        raise ValueError("digital_thresholds: digital high threshold must be greater than low threshold")
+
+
+def _validate_digital_event_stream_name(
+    stream: DigitalEventStream,
+    seen_signal_names: set[str],
+) -> str:
+    signal_name = stream.signal_name.strip()
+    if not signal_name:
+        raise ValueError("digital_event_stream: digital event stream signal name must not be empty")
+    if signal_name in seen_signal_names:
+        raise ValueError(f"{signal_name}: digital event stream signal names must be unique")
+    seen_signal_names.add(signal_name)
+    return signal_name
+
+
+def _validate_digital_event_time(
+    time_seconds: float,
+    previous_time: float,
+    context: str,
+) -> None:
+    if not math.isfinite(time_seconds) or time_seconds < 0.0:
+        raise ValueError(f"{context}: digital event times must be finite and non-negative")
+    if time_seconds <= previous_time:
+        raise ValueError(f"{context}: digital event times must be strictly increasing")
+
+
+def _vcd_identifier(index: int) -> str:
+    return f"s{index}"
+
+
+def _vcd_tick(time_seconds: float) -> int:
+    if not math.isfinite(time_seconds) or time_seconds < 0.0:
+        raise ValueError("digital_event_stream_vcd: event times must be finite and non-negative")
+    return int(round(time_seconds / 1.0e-12))
+
+
+def _vcd_state_value(state: DigitalState) -> str:
+    return "0" if _normalize_digital_state(state) == "low" else "1"
+
+
 def pss_residual(
     circuit: Circuit,
     *,
@@ -5128,6 +7401,37 @@ def pss(
     )
 
 
+def pss_corners(
+    circuit: Circuit,
+    corners: list[CornerSpec],
+    *,
+    steps_per_period: int = 64,
+    method: str = "trap",
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    residual_tol: float = 1e-6,
+    perturbation: float = 1e-6,
+    max_newton_iterations: int = 8,
+) -> CornerPssResult | None:
+    """Solve PSS at each named corner, returning ``None`` if any corner is non-periodic."""
+    points: list[CornerPssPoint] = []
+    for corner in corners:
+        result = pss(
+            _circuit_with_corner(circuit, corner),
+            steps_per_period=steps_per_period,
+            method=method,
+            max_iterations=max_iterations,
+            tol=tol,
+            residual_tol=residual_tol,
+            perturbation=perturbation,
+            max_newton_iterations=max_newton_iterations,
+        )
+        if result is None:
+            return None
+        points.append(CornerPssPoint(corner_name=corner.name, result=result))
+    return CornerPssResult(points=points)
+
+
 # ---------------------------------------------------------------------------
 # Section 3 — AC small-signal analysis
 # ---------------------------------------------------------------------------
@@ -5170,6 +7474,12 @@ def pss(
 
 
 def _solve_complex(A: list[list[complex]], b: list[complex]) -> list[complex]:
+    if len(A) >= _SPARSE_SOLVER_THRESHOLD:
+        return _solve_complex_sparse(A, b)
+    return _solve_complex_dense(A, b)
+
+
+def _solve_complex_dense(A: list[list[complex]], b: list[complex]) -> list[complex]:
     """Gaussian elimination with partial pivoting for complex matrices.
 
     Identical algorithm to :func:`_solve` but operates on complex-valued
@@ -5217,6 +7527,63 @@ def _solve_complex(A: list[list[complex]], b: list[complex]) -> list[complex]:
         for c in range(i + 1, n):
             s -= aug[i][c] * x[c]
         x[i] = s / aug[i][i]
+    return x
+
+
+def _solve_complex_sparse(A: list[list[complex]], b: list[complex]) -> list[complex]:
+    """Sparse-row complex Gaussian elimination with partial pivoting."""
+
+    n = len(A)
+    if n == 0:
+        return []
+    rows = [
+        {col: value for col, value in enumerate(row) if value != 0j}
+        for row in A
+    ]
+    rhs = list(b)
+
+    for pivot_col in range(n):
+        pivot_row = max(
+            range(pivot_col, n),
+            key=lambda row: abs(rows[row].get(pivot_col, 0j)),
+        )
+        pivot_abs = abs(rows[pivot_row].get(pivot_col, 0j))
+        if pivot_abs < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {pivot_col}")
+
+        rows[pivot_col], rows[pivot_row] = rows[pivot_row], rows[pivot_col]
+        rhs[pivot_col], rhs[pivot_row] = rhs[pivot_row], rhs[pivot_col]
+
+        pivot_value = rows[pivot_col][pivot_col]
+        pivot_entries = [
+            (col, value)
+            for col, value in rows[pivot_col].items()
+            if col > pivot_col
+        ]
+        for row_index in range(pivot_col + 1, n):
+            value = rows[row_index].get(pivot_col, 0j)
+            if value == 0j:
+                continue
+            factor = value / pivot_value
+            rows[row_index].pop(pivot_col, None)
+            for col, pivot_entry in pivot_entries:
+                next_value = rows[row_index].get(col, 0j) - factor * pivot_entry
+                if abs(next_value) < 1e-15:
+                    rows[row_index].pop(col, None)
+                else:
+                    rows[row_index][col] = next_value
+            rhs[row_index] -= factor * rhs[pivot_col]
+
+    x: list[complex] = [0j] * n
+    for row_index in range(n - 1, -1, -1):
+        diag = rows[row_index].get(row_index, 0j)
+        if abs(diag) < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {row_index}")
+        total = rhs[row_index]
+        for col, value in rows[row_index].items():
+            if col > row_index:
+                total -= value * x[col]
+        x[row_index] = total / diag
     return x
 
 
@@ -5508,6 +7875,10 @@ def _stamp_ac(
             b[node_to_idx[el.n_plus]] -= current
         if not _is_ground(el.n_minus):
             b[node_to_idx[el.n_minus]] += current
+
+    elif isinstance(el, CustomModel):
+        conductance = _custom_model_conductance(el, node_to_idx, dc_x)
+        _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, conductance + 0j)
 
     elif isinstance(el, VCCS):
         # Frequency-independent transconductance: same stamp as DC.
@@ -6148,6 +8519,10 @@ def _build_ss_matrix(
         elif isinstance(el, CurrentSource):
             # Independent current source → zero in small-signal analysis.
             pass
+
+        elif isinstance(el, CustomModel):
+            conductance = _custom_model_conductance(el, node_to_idx, dc_x)
+            _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, conductance)
 
         elif isinstance(el, VCCS):
             # Frequency-independent; stamp real transconductance.

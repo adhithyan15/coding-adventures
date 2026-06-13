@@ -1,0 +1,8 @@
+{
+ "check_id": 114,
+ "idx": 47,
+ "slot": "prudent_layperson_life_threatening",
+ "claimed_value": true,
+ "scenario": "A member went to the emergency room with sudden crushing chest pain and shortness of breath and was treated for a suspected heart attack. No prior authorization had been obtained before the visit.",
+ "cited_span": "sudden crushing chest pain and shortness of breath and was treated for a suspected heart attack"
+}

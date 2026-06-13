@@ -50,10 +50,87 @@ Current scope:
   reusable-primitive inspection
 - D18D catalog-summary descriptors for compact integration and tool surface
   inspection
+- D18D integration policy-surface descriptors for read-only review, cloud,
+  local, and privilege-tier planning rollups
 - D18D integration activation-plan descriptors for bulk rollout plan listing
   and compact activation-plan rollups
 - D18D integration activation-candidate descriptors for ranked ready, review,
   and blocked rollout planning
+- D18D integration activation-action descriptors for concrete activate,
+  policy-review, primitive, capability, and dependency work planning
+- D18D integration activation-agenda descriptors for grouping concrete action
+  work by rollout-priority wave
+- D18D integration activation-runway descriptors for rollout-priority wave
+  grouping and compact actionable/blocker summaries
+- D18D integration activation-health descriptors for priority-wave ready,
+  review, blocked, and missing-prerequisite status summaries
+- D18D integration activation-maintenance descriptors for combined
+  priority-wave health, action, constraint, risk, and dependency summaries
+- D18D integration activation-constraint descriptors for grouped primitive,
+  capability, dependency, and policy-review blocker summaries
+- D18D integration activation-review descriptors for read-only human-review
+  queue entries and compact review-ready/blocker summaries
+- D18D integration activation-approval descriptors for bundled human-decision
+  packets that combine review rows with actions, constraints, risk, and
+  dependency blockers
+- D18D integration activation-decision descriptors for read-only approve/block
+  queue planning derived from approval packets
+- D18D integration activation-evidence descriptors for read-only evidence rows
+  behind approval and blocker decisions
+- D18D integration activation-dossier descriptors for read-only bundled
+  decision and evidence planning
+- D18D integration activation-readout descriptors for priority-wave health,
+  dossier, evidence, risk, action, and dependency blocker rollups
+- D18D integration activation-briefing descriptors for Chief-ready activation,
+  approval, review, blocker, risk, and dependency briefing sections
+- D18D integration activation-dashboard descriptors for Chief-ready
+  priority-wave status cards derived from readouts and briefing rows
+- D18D integration activation-timeline descriptors for ordered milestone views
+  derived from dashboard cards
+- D18D integration activation-forecast descriptors for Chief-ready next-action
+  classification derived from activation timeline milestones
+- D18D integration activation-playbook descriptors for operator-ready planning
+  steps derived from forecast next actions
+- D18D integration activation-runbook descriptors for audit-context-rich
+  operator phases derived from activation playbook steps
+- D18D integration activation-handoff descriptors for execution-transfer
+  packages derived from runbooks, risk, dependencies, audit records, and gaps
+- D18D integration activation-execution descriptors for executable, approval,
+  operator, dependency, and blocker state derived from handoff packages
+- D18D integration activation-verification descriptors for post-execution
+  verification checkpoints derived from activation execution packets
+- D18D integration activation-operator queue descriptors for actionable
+  human/operator work derived from playbook steps
+- D18D integration activation-control-room descriptors for grouped
+  operator-view panels derived from the activation operator queue
+- D18D integration activation-command-center descriptors for grouped
+  operating-lane sections derived from control-room panels
+- D18D integration activation-watchtower descriptors for escalation, review,
+  ready, action, and observation signal rollups
+- D18D integration activation-sentinel descriptors for compact blocker,
+  dependency, policy-risk, review, ready, and observation alert rollups
+- D18D integration activation-audit descriptors for read-only audit trails
+  connecting sentinel alerts to watchtower, decision, evidence, risk,
+  dependency, and readiness-gap sources
+- D18D integration activation-escalation descriptors for Chief-facing
+  blocker, dependency, policy-risk, review, verification, and audit cases
+  derived from sentinel, verification, and audit rollups
+- D18D integration activation-response descriptors for owner-lane next actions
+  derived from Chief-facing escalation cases
+- D18D integration activation-remediation descriptors for owner-lane work
+  orders derived from activation response items
+- D18D integration activation-closure descriptors for release-gate views that
+  combine remediation status, owner lanes, blockers, and verification readiness
+- D18D integration activation-release descriptors for compact go/no-go packet
+  views derived from activation closure gates
+- D18D integration activation-delivery descriptors for delivery-channel
+  manifests derived from activation release packets
+- D18D integration activation-deployment descriptors for deployment-ring
+  records derived from activation delivery manifests
+- D18D integration activation-risk descriptors for policy-tier and
+  policy-surface rollout risk summaries
+- D18D integration activation-dependency descriptors for prerequisite node and
+  edge rollups
 - D18D integration-readiness descriptors for bulk activation blocker reports
   and compact readiness rollups
 - D18D integration-readiness gap descriptors for grouped primitive,

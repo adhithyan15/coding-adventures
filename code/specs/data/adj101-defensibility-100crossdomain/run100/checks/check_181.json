@@ -1,0 +1,8 @@
+{
+ "check_id": 181,
+ "idx": 73,
+ "slot": "is_aggravated_felony",
+ "claimed_value": false,
+ "scenario": "Tomas applied for naturalization. During the statutory period he was convicted once for a drug offense involving marijuana. He has no other criminal history and meets all residence requirements.",
+ "cited_span": "convicted once for a drug offense involving marijuana"
+}

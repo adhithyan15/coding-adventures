@@ -580,7 +580,7 @@ mod tests {
     /// Expected: stack result = 7, locals[0] = 7.
     #[test]
     fn clr_simulator_runs_direct_arithmetic_bytecode() {
-        use clr_simulator::{CLRSimulator, assemble_clr, encode_ldc_i4, encode_stloc, encode_ldloc, OP_ADD, OP_RET};
+        use clr_simulator::{CLRSimulator, Value, assemble_clr, encode_ldc_i4, encode_stloc, encode_ldloc, OP_ADD, OP_RET};
 
         let prog = assemble_clr(&[
             encode_ldc_i4(3),
@@ -597,7 +597,7 @@ mod tests {
 
         assert!(!traces.is_empty(), "simulator should produce trace steps");
         assert!(sim.halted, "simulator should halt on ret");
-        assert_eq!(sim.locals[0], Some(7), "3 + 4 should equal 7");
+        assert_eq!(sim.locals[0], Some(Value::Int(7)), "3 + 4 should equal 7");
     }
 
     /// An empty BF program (all comments) compiles to a trivial CIL body.

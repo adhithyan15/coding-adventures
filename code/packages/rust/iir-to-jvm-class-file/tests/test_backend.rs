@@ -2342,3 +2342,218 @@ fn g3_print_i64_class_serializes_with_cafebabe_magic() {
         &bytes[0..4]
     );
 }
+
+/// McCarthy W3b: `box` lowers to `Integer.valueOf(I)` (invokestatic 0xB8) and
+/// `unbox` to `checkcast` (0xC0) + `Integer.intValue()` (invokevirtual 0xB6).
+#[test]
+fn mccarthy_w3b_box_unbox_lower_to_integer() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(7)], "i32"),
+            IIRInstr::new("box", Some("b".into()), vec![Operand::Var("a".into())], "ref<any>"),
+            IIRInstr::new("unbox", Some("c".into()), vec![Operand::Var("b".into())], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    let code = &class
+        .methods
+        .iter()
+        .find(|m| m.name == "main")
+        .unwrap()
+        .code_attribute()
+        .unwrap()
+        .code;
+    assert!(code.contains(&0xB8u8), "box → invokestatic Integer.valueOf");
+    assert!(code.contains(&0xC0u8), "unbox → checkcast Integer");
+    assert!(code.contains(&0xB6u8), "unbox → invokevirtual intValue");
+}
+
+/// McCarthy W4: the lisp predicates lower to JVM bytecode — `pair?` →
+/// `instanceof` (0xC1), `not` → `ixor` (0x82), `equal?` → `checkcast` (0xC0) +
+/// `invokevirtual intValue` (0xB6) + `if_icmpne` (0xA0, via emit_int_compare).
+#[test]
+fn mccarthy_w4_predicates_lower() {
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("a".into()), vec![Operand::Int(5)], "i32"),
+            IIRInstr::new("box", Some("ab".into()), vec![Operand::Var("a".into())], "ref<any>"),
+            IIRInstr::new(
+                "call_builtin",
+                Some("p".into()),
+                vec![Operand::Var("pair?".into()), Operand::Var("ab".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("n".into()),
+                vec![Operand::Var("not".into()), Operand::Var("p".into())],
+                "bool",
+            ),
+            IIRInstr::new(
+                "call_builtin",
+                Some("e".into()),
+                vec![Operand::Var("equal?".into()), Operand::Var("ab".into()), Operand::Var("ab".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("e".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    let code = &class
+        .methods
+        .iter()
+        .find(|m| m.name == "main")
+        .unwrap()
+        .code_attribute()
+        .unwrap()
+        .code;
+    assert!(code.contains(&0xC1u8), "pair? → instanceof");
+    assert!(code.contains(&0x82u8), "not → ixor");
+    assert!(code.contains(&0xA0u8), "equal? → if_icmpne (compare-to-bool)");
+}
+
+/// McCarthy W5a: a large `int` const (beyond ±32767 — e.g. an interned symbol id
+/// ≥ 2²⁹) lowers via `ldc`/`ldc_w` + a `CONSTANT_Integer` pool entry, NOT the old
+/// invalid `ldc 0` placeholder (which crashed real JVMs at `constantTag`).
+#[test]
+fn mccarthy_w5a_large_int_const_uses_constant_pool() {
+    let big = 536_870_912i64; // 2^29 — a symbol id; needs ldc.
+    let f = IIRFunction::new(
+        "main",
+        vec![],
+        "i32",
+        vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Int(big)], "i32"),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ],
+    );
+    let class = lower(&module_with(f));
+    // A CONSTANT_Integer(2^29) entry must exist in the pool.
+    assert!(
+        class.constant_pool.iter().any(|e| matches!(
+            e,
+            Some(jvm_class_file::JvmConstantPoolEntry::Integer(v)) if *v == big as i32
+        )),
+        "large const must add a CONSTANT_Integer pool entry"
+    );
+    let code = &class.methods.iter().find(|m| m.name == "main").unwrap()
+        .code_attribute().unwrap().code;
+    // ldc (0x12) or ldc_w (0x13) — and never a bare `ldc 0` (index 0 reserved).
+    let ldc_pos = code.iter().position(|&b| b == 0x12 || b == 0x13).expect("ldc/ldc_w emitted");
+    assert_ne!(code[ldc_pos + 1], 0, "ldc index must not be the reserved slot 0");
+}
+
+// ---------------------------------------------------------------------------
+// Byte-tape ops + i64 conditions (LANG-MATRIX LM-J Brainfuck)
+// ---------------------------------------------------------------------------
+//
+// `lower_brainfuck_for_aot` rewrites Brainfuck's tape into `alloc_bytes` /
+// `load_byte` / `store_byte` over a static `env/BFRuntime.__tape : [B`. These
+// tests cover that lowering + the i64↔i32 conversions for the (optionally
+// widened) value model. Opcode bytes: GETSTATIC=0xB2, BALOAD=0x33,
+// BASTORE=0x54, IAND=0x7E, L2I=0x88, I2L=0x85, LCMP=0x94.
+
+fn code_bytes(class: &JvmClassFile) -> Vec<u8> {
+    class.methods.iter()
+        .find(|m| m.name == "main")
+        .and_then(|m| m.code_attribute())
+        .map(|c| c.code.clone())
+        .expect("main method code")
+}
+
+/// `alloc_bytes` emits no bytecode (the JVM tape is a pre-allocated static
+/// field), and i32 `load_byte`/`store_byte` lower to `getstatic __tape` +
+/// `baload`/`bastore` (the unsigned-byte tape access), masking the loaded byte.
+#[test]
+fn byte_tape_ops_i32_lower_to_static_tape_access() {
+    let f = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("size".into()), vec![Operand::Int(30_000)], "i32"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i32"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i32"),
+        IIRInstr::new("store_byte", None, vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+        ], "i32"),
+        IIRInstr::new("load_byte", Some("got".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()),
+        ], "i32"),
+        IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i32"),
+    ]);
+    let class = lower(&module_with(f));
+    let code = code_bytes(&class);
+    assert!(code.contains(&0xB2), "expected GETSTATIC (0xB2) for the static __tape field");
+    assert!(code.contains(&0x33), "expected BALOAD (0x33) for load_byte");
+    assert!(code.contains(&0x54), "expected BASTORE (0x54) for store_byte");
+    assert!(code.contains(&0x7E), "expected IAND (0x7E) masking the loaded byte to u8");
+    // alloc_bytes itself adds no opcodes — no allocation primitive needed.
+    assert!(!code.contains(&0xBC), "alloc_bytes must not emit a `newarray` (0xBC)");
+}
+
+/// i64 `load_byte`/`store_byte` (the widened BF value model) narrow the index /
+/// value with `l2i` for the array op and widen the loaded byte with `i2l`.
+#[test]
+fn byte_tape_ops_i64_convert_at_the_boundary() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("const", Some("size".into()), vec![Operand::Int(8)], "i64"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("size".into())], "i64"),
+        IIRInstr::new("const", Some("idx".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("const", Some("val".into()), vec![Operand::Int(65)], "i64"),
+        IIRInstr::new("store_byte", None, vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()), Operand::Var("val".into()),
+        ], "i64"),
+        IIRInstr::new("load_byte", Some("got".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("idx".into()),
+        ], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("got".into())], "i64"),
+    ]);
+    let class = lower(&module_with(f));
+    let code = code_bytes(&class);
+    assert!(code.contains(&0x88), "expected L2I (0x88) narrowing an i64 index/value for the array op");
+    assert!(code.contains(&0x85), "expected I2L (0x85) widening the loaded byte to the i64 dest");
+}
+
+/// `store_byte` with a dest is rejected — it produces no value.
+#[test]
+fn store_byte_with_dest_is_rejected() {
+    let f = IIRFunction::new("main", vec![], "i32", vec![
+        IIRInstr::new("const", Some("t".into()), vec![Operand::Int(8)], "i32"),
+        IIRInstr::new("alloc_bytes", Some("tape".into()), vec![Operand::Var("t".into())], "i32"),
+        IIRInstr::new("const", Some("i".into()), vec![Operand::Int(0)], "i32"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("store_byte", Some("oops".into()), vec![
+            Operand::Var("tape".into()), Operand::Var("i".into()), Operand::Var("v".into()),
+        ], "i32"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    assert!(
+        lower_iir_to_jvm(&module_with(f), &IIRJvmConfig::new("TestClass")).is_err(),
+        "store_byte must not carry a dest"
+    );
+}
+
+/// An i64 loop guard branches via `lcmp` (compare-to-0 → int) before `ifeq`,
+/// not a bare `iload` (which would read only one slot of the two-slot long).
+#[test]
+fn i64_loop_guard_branches_via_lcmp() {
+    let f = IIRFunction::new("main", vec![], "i64", vec![
+        IIRInstr::new("label", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("const", Some("c".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("jmp_if_false", None, vec![
+            Operand::Var("c".into()), Operand::Var("End".into()),
+        ], "void"),
+        IIRInstr::new("jmp", None, vec![Operand::Var("L".into())], "void"),
+        IIRInstr::new("label", None, vec![Operand::Var("End".into())], "void"),
+        IIRInstr::new("const", Some("r".into()), vec![Operand::Int(0)], "i64"),
+        IIRInstr::new("ret", None, vec![Operand::Var("r".into())], "i64"),
+    ]);
+    let class = lower(&module_with(f));
+    let code = code_bytes(&class);
+    assert!(code.contains(&0x94), "expected LCMP (0x94) reducing the i64 guard to an int before ifeq");
+}

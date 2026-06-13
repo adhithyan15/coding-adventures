@@ -2,6 +2,26 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.5.0] — 2026-06-10 (McCarthy W14a — Mach-O external-symbol C decoration)
+
+Fixes the macOS runtime-link gap: `pack_object_with_globals_and_externals` now
+writes each external (undefined) symbol into the Mach-O string table with the
+leading `_` C decoration — the same one `_main`/`_twig_globals` already carried.
+
+A C function `__twig_lispy_car` is `___twig_lispy_car` in a Mach-O object/archive
+(ABI underscore + the C name's two). The backend hands the packager the raw,
+platform-agnostic C name; the Mach-O packager owns the decoration (the ELF emitter
+deliberately does not). Before this, the object referenced the undecorated
+`__twig_lispy_car` while the `cc`-built runtime archive exported the decorated
+`___twig_lispy_car`, so `ld` reported "Undefined symbols for architecture arm64"
+for every `__twig_*` runtime call on macOS — blocking native McCarthy-lisp (cons /
+ATOM / EQ / COND / symbols) and `io_out` alike. ELF/Linux was unaffected (no
+decoration there), which is why the gap was macOS-only.
+
+New unit test `full_extern_symbol_is_mach_o_decorated`; the size-formula test
+updated for the +1 byte per external symbol. Verified by RUNNING native McCarthy
+end-to-end on macOS arm64 (`lang-aot/tests/macos_native_lisp.rs`).
+
 ## [0.4.0] — 2026-05-14 (LANG45 phase 2 — PE/COFF object emitter)
 
 **New `pe_object` module — Windows x86-64 PE/COFF object-file writer.**

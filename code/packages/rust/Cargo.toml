@@ -2,6 +2,8 @@
 resolver = "2"
 members = [
     "adj-lang",
+    "adj-lang-cli",
+    "adj-constraint-solver",
     "aarch64-backend",
     "aarch64-encoder",
     "x86_64-encoder",
@@ -676,6 +678,8 @@ members = [
     "iir-to-ge225",
     "ge225-encoder",
     "ge225-backend",
+    "ibm704-encoder",
+    "ibm704-backend",
     "aot-debug",
     "twig-to-beam",
     "twig-to-wasm",

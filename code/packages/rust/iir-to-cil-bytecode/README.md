@@ -24,9 +24,25 @@ IIRModule
   → validate_iir_for_clr()      — pre-flight validation
   → lower_iir_to_cil()          — emit CIL body bytes per function
   → CILProgramArtifact          — structured multi-method artifact
-       ↓ (future) CLR packager  — wrap in PE/COFF .dll/.exe
-       ↓ CLR simulator          — run directly
+       ↓ CLR simulator          — run directly (fast, zero-dep)
+  → emit_il()                   — emit TEXTUAL CIL (.il)
+       ↓ real ilasm → PE → real dotnet   — run on REAL CoreCLR
 ```
+
+Two outputs from the same lowered program: binary method bodies for the in-repo
+`clr-simulator` (fast unit checks), and **textual `.il`** (`emit_il`) for the
+**real CoreCLR** path — assembled by real `ilasm`, run on real `dotnet`. This is
+the exact analog of how `iir-to-llvm` emits textual `.ll` for real `clang`; `ilasm`
+owns the PE/metadata so we don't hand-roll ECMA-335. (The full McCarthy F1–F7 set
+runs today — scalar, cons/car/cdr, **predicates + `COND`**, **symbols**, and
+**lambda / LABEL / recursion**. A cons is a 2-element `System.Object[]`, atoms
+`box`ed `System.Int32`; `pair?` is `isinst object[]`, `not` is `xor 1`, `equal?` is
+`unbox.any int32` ×2 + `ceq`, `COND` lowers to `label`/`br`/`brfalse`. Symbols need
+no new ops — `intern_symbols_structural` makes each `(QUOTE S)` a tagged-int boxed
+atom. Lambda/LABEL make the module **multi-method**: each hoisted function is its
+own static `.method`, application is a by-name `call`, params live in `ldarg`, and a
+`field_*` on an `object`-typed param is preceded by `castclass object[]` so real
+CoreCLR's `ldelem.ref` sees an array.)
 
 ## Quick start
 
@@ -107,6 +123,26 @@ the program artifact whenever any `alloc_closure` instruction appears.
 | Heap | `alloc` (`ref<LispyPair>` only), `field_load`, `field_store`, `is_null` |
 | Register | `load_reg`, `store_reg` |
 | Coercion | `type_assert` (becomes `nop`) |
+
+As of 0.16.0 the **textual `.il`** emitter (`emit_il`, the `ilasm`/`dotnet` path) also
+covers the integer **arithmetic** (`add`/`sub`/`mul`/`div`/`mod` → `add`/`sub`/`mul`/`div`/`rem`)
+and **comparison** (`cmp_*` → `ceq`/`clt`/`cgt`, negating the other three with `ldc.i4.0; ceq`)
+rows above — previously only the binary codegen path emitted them, which is why running
+the LANG-MATRIX expression languages (Nib/Oct/ALGOL) on the real CLR first surfaced the gap.
+
+As of 0.17.0 it also emits the **`print_i64`** I/O primitive (Dartmouth BASIC's `PRINT`)
+as `call void [System.Console]System.Console::WriteLine(int32)`; for a program that
+prints, the `Run()` launcher discards the entry method's result (`pop`) instead of
+`Console.WriteLine`-ing it, so the program prints exactly once.
+
+As of 0.18.0 it emits the **Brainfuck byte-tape ops** (LANG-MATRIX LM-C Brainfuck — the
+last code-gen cell): `alloc_bytes` → `newarr [System.Runtime]System.Byte` into an
+`unsigned int8[]` local (the tape), `load_byte` → `ldelem.u1` (unsigned cell), `store_byte`
+→ `stelem.i1` (8-bit wrap-around), and `putchar`/`getchar` → `Console::Write(char)` /
+`Console::Read()`. `putchar` joins `print_i64` as a "this program prints" signal, so a
+Brainfuck program's launcher discards the entry result rather than re-printing it. CIL
+`brfalse`/`brtrue` test any integer width against zero, so the loop guard needs no
+special i64 handling (unlike the JVM's `lcmp` / wasm's `i64.eqz`).
 
 ## How CIL synthesis works for derived operations
 

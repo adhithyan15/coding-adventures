@@ -1,0 +1,8 @@
+{
+ "check_id": 74,
+ "idx": 30,
+ "slot": "has_resident_over_65",
+ "claimed_value": true,
+ "scenario": "The Okafor household has a monthly gross income of $1,750. Its two residents are aged 68 and 70. They apply for the Winter Heating Subsidy.",
+ "cited_span": "Its two residents are aged 68 and 70."
+}

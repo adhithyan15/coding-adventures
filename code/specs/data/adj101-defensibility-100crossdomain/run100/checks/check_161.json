@@ -1,0 +1,8 @@
+{
+ "check_id": 161,
+ "idx": 65,
+ "slot": "has_itemized_receipt",
+ "claimed_value": false,
+ "scenario": "Sofia submitted a $140 dinner expense from her trip to the regional conference. The conference travel was pre-approved by her director in writing. She attached a clear photo of her credit card statement showing the $140 charge at the restaurant.",
+ "cited_span": "She attached a clear photo of her credit card statement showing the $140 charge at the restaurant."
+}

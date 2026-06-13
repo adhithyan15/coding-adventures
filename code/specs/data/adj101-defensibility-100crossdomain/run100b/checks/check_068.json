@@ -1,0 +1,8 @@
+{
+ "check_id": 68,
+ "idx": 29,
+ "slot": "within_first_year",
+ "claimed_value": true,
+ "scenario": "Raj's phone battery degraded to 72% of its maximum rated capacity 8 months after purchase, confirmed by the manufacturer's diagnostic tool. He requested a free battery replacement.",
+ "cited_span": "8 months after purchase"
+}

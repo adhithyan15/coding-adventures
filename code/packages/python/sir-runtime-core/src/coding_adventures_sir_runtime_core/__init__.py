@@ -1,0 +1,76 @@
+"""coding-adventures-sir-runtime-core — core runtime for SIR-emitted Python.
+
+Semantic-IR backends translate most constructs to **native** Python (a
+sequence is a ``list``, a loop is a ``for``, a class is a ``class``).  The
+handful of SIR semantics with **no faithful native equivalent** live here
+and are imported by the emitted module:
+
+    import coding_adventures_sir_runtime_core as _sir
+    _sir.truthy(x)        # SIR truthiness: only False / nil are falsy
+    _sir.cons(a, b)       # cons pairs
+    _sir.print(v)         # SIR display + newline
+
+This library implements **SIR** semantics (not any one source language's),
+so a Ruby frontend today and a JavaScript or Python frontend tomorrow all
+reuse it.  See ``code/specs/sir-runtime.md``.
+"""
+
+from __future__ import annotations
+
+from .arithmetic import add, div, gt, lt, mul, sub
+from .pairs import Pair, car, cdr, cons, is_pair
+from .runtime import (
+    Closure,
+    apply,
+    builtin_closure,
+    call_builtin,
+    global_get,
+    global_get_static,
+    global_set,
+    make_closure,
+    sir_print,
+)
+from .symbols import Symbol, intern
+from .values import eq, is_null, is_number, is_symbol, to_display, truthy
+
+# ``print`` is exposed as an attribute alias so emitted code can call
+# ``_sir.print(v)`` (mirroring the old ``_sir_print`` name) without
+# shadowing the builtin inside this package.
+print = sir_print
+
+__all__ = [
+    # values
+    "truthy",
+    "eq",
+    "to_display",
+    "is_null",
+    "is_number",
+    "is_symbol",
+    # symbols
+    "Symbol",
+    "intern",
+    # pairs
+    "Pair",
+    "cons",
+    "car",
+    "cdr",
+    "is_pair",
+    # arithmetic
+    "add",
+    "sub",
+    "mul",
+    "div",
+    "lt",
+    "gt",
+    # closures / globals / dispatch
+    "Closure",
+    "apply",
+    "make_closure",
+    "global_set",
+    "global_get",
+    "global_get_static",
+    "sir_print",
+    "print",
+    "call_builtin",
+    "builtin_closure",
+]

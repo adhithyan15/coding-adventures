@@ -1,0 +1,1 @@
+function f(x){return x>0?"pos":"neg";}

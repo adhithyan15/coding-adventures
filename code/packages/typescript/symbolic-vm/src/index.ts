@@ -57,6 +57,7 @@ import {
 } from "@coding-adventures/symbolic-ir";
 import { BiRational, factorIntegerPolynomial, tryBivariateHensel } from "@coding-adventures/cas-factor";
 import type { BiPoly } from "@coding-adventures/cas-factor";
+import { AssumptionContext } from "@coding-adventures/cas-simplify";
 
 export type Handler = (vm: VM, expr: IRApply) => IRNode;
 export type RulePredicate = (expr: IRApply) => boolean;
@@ -87,6 +88,12 @@ class BaseBackend {
     ASSIGN.name,
     DEFINE.name,
     IF.name,
+    // Track G2: `Assume(rel)` and `Forget(rel)` must NOT pre-evaluate
+    // their relational argument — `Greater(a^2, b^2)` would otherwise be
+    // reduced (or echoed by the symbolic backend) before reaching the
+    // handler, which would then have no symbolic relation to record.
+    "Assume",
+    "Forget",
   ]);
 
   lookup(name: string): IRNode | undefined {
@@ -147,6 +154,15 @@ export class SymbolicBackend extends BaseBackend implements Backend {
 }
 
 export class VM {
+  /**
+   * Track G2 (TypeScript port): per-VM assumption store consulted by
+   * the symbolic-coefficient Weierstrass integrator (and any future
+   * sign-aware helper).  Mutated only via the `Assume(...)` /
+   * `Forget(...)` / `ForgetAll()` handlers — direct field access is
+   * supported for tests and embedders.
+   */
+  readonly assumptions: AssumptionContext = new AssumptionContext();
+
   constructor(public readonly backend: Backend) {}
 
   eval(node: IRNode): IRNode {
@@ -950,6 +966,28 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
   if (simplify) {
     table.set(D.name, differentiate());
     table.set(INTEGRATE.name, integrate());
+    // Track G2 (TS port): `Assume(rel)` records a sign / equality fact
+    // on the VM's `assumptions` store; `Forget(rel)` removes one;
+    // `ForgetAll()` clears the whole table.  Returning the relation
+    // verbatim mirrors the Python handler's behaviour and lets MACSYMA
+    // chains like `Assume(x > 0); Sqrt(x^2)` thread the assertion
+    // through without producing an extraneous result expression.
+    table.set("Assume", (vm, expr) => {
+      if (expr.args.length === 1) {
+        vm.assumptions.assumeRelation(expr.args[0]);
+      }
+      return expr;
+    });
+    table.set("Forget", (vm, expr) => {
+      if (expr.args.length === 1) {
+        vm.assumptions.forgetRelation(expr.args[0]);
+      }
+      return expr;
+    });
+    table.set("ForgetAll", (vm, expr) => {
+      vm.assumptions.forgetAll();
+      return expr;
+    });
   }
 
   return table;
@@ -2520,6 +2558,25 @@ function apartHandler(_vm: VM, expr: IRApply): IRNode {
   return result;
 }
 
+// ---------------------------------------------------------------------------
+// Track G2 — current-VM assumption store, mirror of the Python
+// ``_CURRENT_VM`` ContextVar.
+//
+// Most integrator helpers operate on pure IR and don't need the VM.
+// The symbolic-coefficient Weierstrass helper (added in Track G2)
+// needs to query ``vm.assumptions`` for the discriminant sign.
+// Threading ``vm`` through every helper signature would touch ~30
+// call sites; we instead publish the live store via a module-level
+// reference that the top-level ``Integrate`` handler sets for the
+// duration of one evaluation.  JavaScript is single-threaded so a
+// plain ``let`` is the natural mirror of Python's ``ContextVar``.
+// ---------------------------------------------------------------------------
+let CURRENT_ASSUMPTIONS: AssumptionContext | undefined;
+
+function currentAssumptions(): AssumptionContext | undefined {
+  return CURRENT_ASSUMPTIONS;
+}
+
 function integrate(): Handler {
   return (vm, expr) => {
     if (expr.args.length !== 2 && expr.args.length !== 4) {
@@ -2529,33 +2586,44 @@ function integrate(): Handler {
     if (x.kind !== "symbol") {
       return expr;
     }
-    if (expr.args.length === 4) {
-      const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
-      if (resultK !== undefined) return vm.eval(resultK);
-      const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
-      if (resultE !== undefined) return vm.eval(resultE);
-      const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
-      if (resultPi !== undefined) return vm.eval(resultPi);
-      return expr;
-    }
-    const result = integrateIndefinite(f, x);
-    if (result === undefined) {
-      // Track E2: generic tabular IBP fallback.  Fires after every
-      // shape-specific handler in integrateIndefinite returned undefined.
-      // Mirrors the Python ``try_ibp_tabular`` hook in ``integrate.py``.
-      const ibpResult = tryIbpTabular(
-        f,
-        x,
-        (g) => integrateIndefinite(g, x),
-        (g) => diff(g, x),
-        (n) => vm.eval(n),
-      );
-      if (ibpResult !== undefined) {
-        return vm.eval(ibpResult);
+    // Track G2: publish the live assumption store for helpers that
+    // consult it (currently: symbolic-coefficient Weierstrass).  The
+    // previous value is restored in `finally` so nested calls and
+    // exceptions can't strand the module-level mirror in an
+    // inconsistent state.
+    const previousAssumptions = CURRENT_ASSUMPTIONS;
+    CURRENT_ASSUMPTIONS = vm.assumptions;
+    try {
+      if (expr.args.length === 4) {
+        const resultK = completeEllipticFirstKind(f, x, expr.args[2], expr.args[3]);
+        if (resultK !== undefined) return vm.eval(resultK);
+        const resultE = completeEllipticSecondKind(f, x, expr.args[2], expr.args[3]);
+        if (resultE !== undefined) return vm.eval(resultE);
+        const resultPi = completeEllipticThirdKind(f, x, expr.args[2], expr.args[3]);
+        if (resultPi !== undefined) return vm.eval(resultPi);
+        return expr;
       }
-      return expr;
+      const result = integrateIndefinite(f, x);
+      if (result === undefined) {
+        // Track E2: generic tabular IBP fallback.  Fires after every
+        // shape-specific handler in integrateIndefinite returned undefined.
+        // Mirrors the Python ``try_ibp_tabular`` hook in ``integrate.py``.
+        const ibpResult = tryIbpTabular(
+          f,
+          x,
+          (g) => integrateIndefinite(g, x),
+          (g) => diff(g, x),
+          (n) => vm.eval(n),
+        );
+        if (ibpResult !== undefined) {
+          return vm.eval(ibpResult);
+        }
+        return expr;
+      }
+      return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
+    } finally {
+      CURRENT_ASSUMPTIONS = previousAssumptions;
     }
-    return isDeferredIntegral(result, f, x) ? result : vm.eval(result);
   };
 }
 
@@ -3055,6 +3123,314 @@ function tryWeierstrassLogForm(
   return app(MUL, [coefIR, app(LOG, [logArg])]);
 }
 
+// ---------------------------------------------------------------------------
+// Track G2 — symbolic-coefficient Weierstrass lift (TypeScript port).
+//
+// The numeric helpers above parse ``a, b`` as ``Numeric`` and bail out
+// when either is not a literal Int/Rat.  Track G2 generalises them:
+// when the numeric path can't fire because ``a`` and/or ``b`` is a
+// free IR symbol or any non-numeric IR expression, we re-parse the
+// integrand keeping ``a, b`` as IR nodes (``α, β, c`` stay rational —
+// only the outer trig coefficient pair is allowed to be symbolic),
+// then query ``vm.assumptions`` for the sign of the discriminant
+// ``a² − b²`` to decide which closed form to emit:
+//
+//   disc > 0 → arctan form with Sqrt(a²−b²)
+//   disc < 0 → log form with Sqrt(b²−a²)
+//   disc = 0 → degenerate rational-in-tan(arg/2) form
+//   no fact  → return undefined (integrator leaves it unevaluated)
+//
+// Linear-argument lifting ``α·x + β`` composes unchanged — the inner
+// substitution ``u = tan((α·x+β)/2)`` does not depend on the values
+// of the outer coefficients ``a, b``, so we still fold ``1/α`` into
+// the numerator scaling exactly as the numeric path does.  Mirrors
+// the Python helper at ``symbolic_vm/integrate.py``.
+// ---------------------------------------------------------------------------
+
+/** Match ``c·sin(α·x+β)`` / ``c·cos(α·x+β)`` returning ``c`` as an IR
+ *  node (instead of a Numeric).  ``α, β`` stay rational because the
+ *  inner linear-form is what makes the Weierstrass substitution
+ *  composable; only the outer scalar ``c`` is allowed to be symbolic,
+ *  since that's what flows into ``a, b`` for the dispatcher below. */
+function weierstrassParseConstTimesTrigLinearSymbolic(
+  node: IRNode,
+  x: IRNode,
+):
+  | { readonly c: IRNode; readonly head: IRNode; readonly alpha: Numeric; readonly beta: Numeric }
+  | undefined {
+  if (
+    node.kind === "apply" &&
+    (equals(node.head, SIN) || equals(node.head, COS)) &&
+    node.args.length === 1
+  ) {
+    const lin = weierstrassParseLinearInX(node.args[0], x);
+    if (lin !== undefined) {
+      return { c: int(1), head: node.head, alpha: lin.alpha, beta: lin.beta };
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, MUL) && node.args.length === 2) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      if (dependsOn(constSide, x)) continue;
+      if (
+        trigSide.kind === "apply" &&
+        (equals(trigSide.head, SIN) || equals(trigSide.head, COS)) &&
+        trigSide.args.length === 1
+      ) {
+        const lin = weierstrassParseLinearInX(trigSide.args[0], x);
+        if (lin !== undefined) {
+          return { c: constSide, head: trigSide.head, alpha: lin.alpha, beta: lin.beta };
+        }
+      }
+    }
+  }
+  if (node.kind === "apply" && equals(node.head, NEG) && node.args.length === 1) {
+    const inner = weierstrassParseConstTimesTrigLinearSymbolic(node.args[0], x);
+    if (inner !== undefined) {
+      return { c: app(NEG, [inner.c]), head: inner.head, alpha: inner.alpha, beta: inner.beta };
+    }
+  }
+  return undefined;
+}
+
+/** Symbolic-coefficient sibling of {@link weierstrassParseAPlusBSincos}.
+ *  Parses ``a + b·sin(α·x+β)`` / ``a + b·cos(α·x+β)`` (any operand
+ *  order, ADD or SUB) into ``(a, b, head, α, β)`` where ``a`` and
+ *  ``b`` are IR nodes free of ``x`` and ``α, β`` are rational with
+ *  ``α ≠ 0``.  Returns undefined when the shape doesn't fit. */
+function weierstrassParseAPlusBSincosSymbolic(
+  node: IRNode,
+  x: IRNode,
+):
+  | {
+      readonly a: IRNode;
+      readonly b: IRNode;
+      readonly trigHead: IRNode;
+      readonly alpha: Numeric;
+      readonly beta: Numeric;
+    }
+  | undefined {
+  const bareTrig = weierstrassParseConstTimesTrigLinearSymbolic(node, x);
+  if (bareTrig !== undefined) {
+    return { a: int(0), b: bareTrig.c, trigHead: bareTrig.head, alpha: bareTrig.alpha, beta: bareTrig.beta };
+  }
+  if (node.kind !== "apply" || node.args.length !== 2) return undefined;
+  if (equals(node.head, ADD)) {
+    const [left, right] = node.args;
+    for (const [constSide, trigSide] of [
+      [left, right],
+      [right, left],
+    ] as const) {
+      if (dependsOn(constSide, x)) continue;
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(trigSide, x);
+      if (trigParse === undefined) continue;
+      return {
+        a: constSide,
+        b: trigParse.c,
+        trigHead: trigParse.head,
+        alpha: trigParse.alpha,
+        beta: trigParse.beta,
+      };
+    }
+    return undefined;
+  }
+  if (equals(node.head, SUB)) {
+    const [left, right] = node.args;
+    // ``a − b·trig(...)`` → ``(a, −b, head, α, β)``.
+    if (!dependsOn(left, x)) {
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(right, x);
+      if (trigParse !== undefined) {
+        return {
+          a: left,
+          b: app(NEG, [trigParse.c]),
+          trigHead: trigParse.head,
+          alpha: trigParse.alpha,
+          beta: trigParse.beta,
+        };
+      }
+    }
+    // ``b·trig(...) − a`` → ``(−a, b, head, α, β)``.
+    if (!dependsOn(right, x)) {
+      const trigParse = weierstrassParseConstTimesTrigLinearSymbolic(left, x);
+      if (trigParse !== undefined) {
+        return {
+          a: app(NEG, [right]),
+          b: trigParse.c,
+          trigHead: trigParse.head,
+          alpha: trigParse.alpha,
+          beta: trigParse.beta,
+        };
+      }
+    }
+    return undefined;
+  }
+  return undefined;
+}
+
+/** Construct the discriminant ``a² − b²`` as IR.  Used as both the
+ *  query operand for ``vm.assumptions`` and the radicand of the
+ *  closed-form ``Sqrt(...)`` term. */
+function weierstrassDiscExpr(a: IRNode, b: IRNode): IRNode {
+  return app(SUB, [app(POW, [a, int(2)]), app(POW, [b, int(2)])]);
+}
+
+/** ``b² − a²`` — radicand of the log-branch ``Sqrt(b²−a²)`` for the
+ *  ``disc < 0`` case. */
+function weierstrassNegDiscExpr(a: IRNode, b: IRNode): IRNode {
+  return app(SUB, [app(POW, [b, int(2)]), app(POW, [a, int(2)])]);
+}
+
+/** Symbolic-coefficient arctan branch: emitted when the assumption
+ *  store says ``a² > b²``.  ``c_scaled`` already absorbs ``1/α`` from
+ *  the linear-arg lift; we just need to emit the closed form with
+ *  symbolic ``Sqrt(a²−b²)``. */
+function tryWeierstrassArctanSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const sqrtDisc = app(SQRT, [weierstrassDiscExpr(a, b)]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  let atanArgTop: IRNode;
+  if (equals(trigHead, SIN)) {
+    // (a·tan(arg/2) + b) / √(a²−b²)
+    atanArgTop = app(ADD, [app(MUL, [a, tanHalf]), b]);
+  } else {
+    // cos branch — same sign-clean form as the Python port:
+    // (a−b)·tan(arg/2) / √(a²−b²).  See the inline derivation in
+    // the Python helper for why this is correct on the whole disc>0
+    // region.
+    atanArgTop = app(MUL, [app(SUB, [a, b]), tanHalf]);
+  }
+  const atanArg = app(DIV, [atanArgTop, sqrtDisc]);
+  const coef = app(DIV, [app(MUL, [int(2), cScaled]), sqrtDisc]);
+  return app(MUL, [coef, app(ATAN, [atanArg])]);
+}
+
+/** Symbolic-coefficient log branch: emitted when the assumption store
+ *  says ``a² < b²``.  Mirrors the numeric :func:`tryWeierstrassLogForm`. */
+function tryWeierstrassLogSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const sqrtNegDisc = app(SQRT, [weierstrassNegDiscExpr(a, b)]);
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  const absHead = sym("Abs");
+  let numer: IRNode;
+  let denom: IRNode;
+  if (equals(trigHead, SIN)) {
+    const aTan = app(MUL, [a, tanHalf]);
+    const aTanPlusB = app(ADD, [aTan, b]);
+    numer = app(SUB, [aTanPlusB, sqrtNegDisc]);
+    denom = app(ADD, [aTanPlusB, sqrtNegDisc]);
+  } else {
+    const bma = app(SUB, [b, a]);
+    const bmaTan = app(MUL, [bma, tanHalf]);
+    numer = app(ADD, [sqrtNegDisc, bmaTan]);
+    denom = app(SUB, [sqrtNegDisc, bmaTan]);
+  }
+  const logArg = app(absHead, [app(DIV, [numer, denom])]);
+  const coef = app(DIV, [cScaled, sqrtNegDisc]);
+  return app(MUL, [coef, app(LOG, [logArg])]);
+}
+
+/** Symbolic-coefficient degenerate branch: ``a² = b²``.  See the
+ *  Python helper for the derivation; both forms reduce to the numeric
+ *  Phase-35 results when ``a, b`` happen to be concrete. */
+function tryWeierstrassDegenerateSymbolic(
+  cScaled: IRNode,
+  a: IRNode,
+  b: IRNode,
+  trigHead: IRNode,
+  argNode: IRNode,
+): IRNode {
+  const tanHalf = app(TAN, [app(DIV, [argNode, int(2)])]);
+  const aPlusB = app(ADD, [a, b]);
+  const aMinusB = app(SUB, [a, b]);
+  if (equals(trigHead, SIN)) {
+    // −2·c / ( (a+b)·tan(arg/2) + (a−b) )
+    const numer = app(MUL, [int(-2), cScaled]);
+    const denom = app(ADD, [app(MUL, [aPlusB, tanHalf]), aMinusB]);
+    return app(DIV, [numer, denom]);
+  }
+  // cos: 2·c·tan(arg/2) / ( (a−b)·tan²(arg/2) + (a+b) )
+  const tanSq = app(POW, [tanHalf, int(2)]);
+  const numer = app(MUL, [app(MUL, [int(2), cScaled]), tanHalf]);
+  const denom = app(ADD, [app(MUL, [aMinusB, tanSq]), aPlusB]);
+  return app(DIV, [numer, denom]);
+}
+
+/** Track G2 entry point.  Mirrors the numeric
+ *  {@link tryWeierstrassOneOverLinearTrig} but accepts non-numeric
+ *  ``a, b`` (IR nodes free of ``x``).  Returns undefined when:
+ *   - the integrand doesn't match the shape,
+ *   - the numerator ``c`` depends on ``x``,
+ *   - ``α, β`` aren't rational,
+ *   - no assumption context is available (called outside the handler),
+ *   - or no assumption pins down the sign of ``a² − b²``.
+ *
+ *  The numeric path is left untouched: the dispatcher tries it first
+ *  and only falls through to here if it returned undefined. */
+function tryWeierstrassSymbolicCoefficients(
+  integrand: IRNode,
+  x: IRNode,
+): IRNode | undefined {
+  if (integrand.kind !== "apply" || !equals(integrand.head, DIV)) return undefined;
+  if (integrand.args.length !== 2) return undefined;
+  const [num, den] = integrand.args;
+  if (dependsOn(num, x)) return undefined;
+  const parsed = weierstrassParseAPlusBSincosSymbolic(den, x);
+  if (parsed === undefined) return undefined;
+  const { a, b, trigHead, alpha, beta } = parsed;
+  if (isZeroNumeric(alpha)) return undefined;
+  // Numeric path is tried first; if both ``a`` and ``b`` are
+  // numeric, that path would have closed the integral already.  Bail
+  // out gracefully to avoid emitting a second (potentially uglier)
+  // result.
+  if (toNumeric(a) !== undefined && toNumeric(b) !== undefined) return undefined;
+  const assumptions = currentAssumptions();
+  if (assumptions === undefined) return undefined;
+  // Apply ``u = α·x + β`` change of variable: scale numerator by 1/α.
+  const oneOverAlpha = divNumeric({ kind: "int", value: 1n }, alpha);
+  const cScaled = isOne(fromNumeric(oneOverAlpha))
+    ? num
+    : app(MUL, [fromNumeric(oneOverAlpha), num]);
+  const argNode = weierstrassBuildLinearArgIR(alpha, beta, x);
+  // Probe both surface forms of the discriminant sign — the natural
+  // ``a² > b²`` written by the user and the canonical-against-zero
+  // form ``a² − b² > 0`` someone might write programmatically.
+  const aSq = app(POW, [a, int(2)]);
+  const bSq = app(POW, [b, int(2)]);
+  const disc = app(SUB, [aSq, bSq]);
+  if (
+    assumptions.isTrueRelation(app(GREATER, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(GREATER, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassArctanSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  if (
+    assumptions.isTrueRelation(app(LESS, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(LESS, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassLogSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  if (
+    assumptions.isTrueRelation(app(EQUAL, [aSq, bSq])) === true ||
+    assumptions.isTrueRelation(app(EQUAL, [disc, int(0)])) === true
+  ) {
+    return tryWeierstrassDegenerateSymbolic(cScaled, a, b, trigHead, argNode);
+  }
+  return undefined;
+}
+
 function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
   if (!dependsOn(f, x)) {
     return app(MUL, [f, x]);
@@ -3137,6 +3513,12 @@ function integrateIndefinite(f: IRNode, x: IRNode): IRNode | undefined {
     // c / (a + b·cos(x)) when a, b numeric and a² > b² (a > 0 for cos).
     const weier = tryWeierstrassOneOverLinearTrig(f, x);
     if (weier !== undefined) return weier;
+    // Track G2: symbolic-coefficient Weierstrass.  Fires only when the
+    // numeric path returns undefined and ``vm.assumptions`` records a
+    // sign for ``a² − b²``.  See
+    // {@link tryWeierstrassSymbolicCoefficients}.
+    const weierSym = tryWeierstrassSymbolicCoefficients(f, x);
+    if (weierSym !== undefined) return weierSym;
     return undefined;
   }
   if (equals(f.head, POW)) {

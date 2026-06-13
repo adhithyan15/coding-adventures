@@ -1,5 +1,49 @@
 # Changelog — symbolic-vm (Rust)
 
+## [0.19.0] — 2026-05-29
+
+**Track G2 — symbolic-coefficient Weierstrass lift (Rust port).**
+
+Generalises the Phase-34/35/36/37 Weierstrass substitution
+`∫ c / (a + b·trig(α·x + β)) dx` from concrete rational `a, b` to
+symbolic ones.  When the numeric pattern returns `None` because
+either coefficient is a free IR expression, the new helper consults
+`vm.assumptions` for the sign of the discriminant `a² − b²` and,
+upon finding a declared inequality / equality, emits the matching
+arctan / log / degenerate closed form with symbolic
+`Sqrt(a² − b²)` (or `Sqrt(b² − a²)`) in the result.  When no
+assumption pins down the sign, the integral is left unevaluated.
+
+This depends on the compound-relation extension to
+`cas_simplify::AssumptionContext` shipped in cas-simplify 0.2.0
+(same PR, Track G2).  Mirrors Python `symbolic-vm` 0.74.0 and
+TypeScript `@coding-adventures/symbolic-vm` 0.19.0.
+
+### Added
+
+- New `assumptions: AssumptionContext` field on `VM` — populated via
+  the `Assume(...)` / `Forget(...)` / `ForgetAll()` handlers and
+  consulted by `try_weierstrass_symbolic_coefficients` via a
+  thread-local snapshot.
+- `Assume`, `Forget`, and `ForgetAll` handlers registered on the
+  symbolic backend.  Both relational heads are added to the
+  hold-evaluate set so the relation argument reaches the handler
+  intact.
+- `try_weierstrass_symbolic_coefficients` — symbolic dispatcher,
+  invoked after the numeric helper returns `None`.
+- `weierstrass_parse_a_plus_b_sincos_symbolic` — symbolic sibling of
+  the numeric parser.
+- Branch emitters `try_weierstrass_{arctan,log,degenerate}_symbolic`.
+- New `cas-simplify` crate dependency.
+
+### Regression
+
+The numeric Weierstrass path is tried first and unchanged; the
+symbolic path explicitly bails out when both `a` and `b` are
+rational, so concrete-coefficient integrals continue to use the
+arithmetic-folded numeric closed forms.  All 225 existing tests still
+pass; 8 new tests cover the symbolic branches.
+
 ## [0.18.0] - 2026-06-06
 
 ### Added

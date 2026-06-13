@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import bisect
 import math
-from dataclasses import dataclass
+from collections.abc import Callable, Mapping
+from dataclasses import dataclass, field
 
 # ---------------------------------------------------------------------------
 # Source waveforms — SPICE3 transient source forms
@@ -244,9 +245,8 @@ def waveform_period(waveform: Waveform) -> float | None:
         ):
             return 1.0 / waveform.frequency
         return None
-    if isinstance(waveform, PulseWaveform):
-        if math.isfinite(waveform.period) and waveform.period > 0.0:
-            return waveform.period
+    if isinstance(waveform, PulseWaveform) and math.isfinite(waveform.period) and waveform.period > 0.0:
+        return waveform.period
     return None
 
 
@@ -386,6 +386,68 @@ class BSource:
     n_minus: str
     voltage_expr: str | None = None
     current_expr: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class CustomModelContext:
+    """Operating-point context passed to a custom two-terminal model."""
+
+    voltage: float
+    temperature_kelvin: float = 300.15
+    parameters: Mapping[str, float] = field(default_factory=dict)
+
+
+@dataclass(frozen=True, slots=True)
+class CustomModelEvaluation:
+    """Residual/Jacobian contribution for a two-terminal custom current model."""
+
+    current_amps: float
+    conductance_siemens: float
+
+
+CustomModelEvaluator = Callable[[CustomModelContext], CustomModelEvaluation]
+
+
+@dataclass(frozen=True, slots=True)
+class CustomModel:
+    """Sandbox-friendly two-terminal custom current model foothold.
+
+    Positive current flows from ``n_plus`` to ``n_minus``.  The first portable
+    residual/Jacobian hook returns model current and differential conductance at
+    the current operating-point voltage.
+    """
+
+    name: str
+    n_plus: str
+    n_minus: str
+    model_name: str = "custom"
+    parameters: Mapping[str, float] = field(default_factory=dict)
+    evaluator: CustomModelEvaluator | None = None
+    conductance_siemens: float | None = None
+    current_offset_amps: float = 0.0
+
+
+def custom_linear_conductance_model(
+    name: str,
+    n_plus: str,
+    n_minus: str,
+    conductance_siemens: float,
+    *,
+    current_offset_amps: float = 0.0,
+    model_name: str = "linear_conductance",
+    parameters: Mapping[str, float] | None = None,
+) -> CustomModel:
+    """Return the Rust-compatible custom-model fast path: I = g*V + I0."""
+
+    return CustomModel(
+        name=name,
+        n_plus=n_plus,
+        n_minus=n_minus,
+        model_name=model_name,
+        parameters={} if parameters is None else parameters,
+        conductance_siemens=conductance_siemens,
+        current_offset_amps=current_offset_amps,
+    )
 
 
 @dataclass(frozen=True, slots=True)
@@ -776,6 +838,7 @@ Element = (
     | VoltageSource
     | CurrentSource
     | BSource
+    | CustomModel
     | XInstance
     | Diode
     | JFET

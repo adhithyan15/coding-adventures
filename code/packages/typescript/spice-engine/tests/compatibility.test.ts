@@ -1,0 +1,473 @@
+import { describe, expect, it } from "vitest";
+import {
+  analyzeDeckControls,
+  type CompatibilityDeck,
+  compatibilityCorpus,
+  formatCompatibilityCorpusTable,
+  formatReleaseReadinessReport,
+  releaseReadinessGates,
+  resolveDeckFunctions,
+  resolveDeckInitialConditions,
+  resolveDeckMeasurements,
+  resolveDeckParameters,
+  resolveDeckSources,
+} from "../src/index.js";
+
+describe("compatibility corpus", () => {
+  it("ships a release-readiness corpus with stable deck ids", () => {
+    const corpus = compatibilityCorpus();
+
+    expect(corpus.map((deck) => deck.id)).toStrictEqual([
+      "dc-op-resistive-divider",
+      "dc-sweep-resistive-divider",
+      "ac-rc-lowpass",
+      "tran-rc-step",
+      "tf-resistive-divider",
+    ]);
+    expect(new Set(corpus.map((deck) => deck.analysis))).toEqual(
+      new Set(["op", "dc", "ac", "tran", "tf"]),
+    );
+    expect(corpus.every((deck) => deck.netlist.toLowerCase().includes(".end"))).toBe(true);
+    expect(corpus.every((deck) => deck.knownIncompatibilities.length > 0)).toBe(true);
+
+    const report = releaseReadinessGates(corpus);
+
+    expect(report.passed).toBe(true);
+    expect(report.deckCount).toBe(5);
+    expect(report.issues).toStrictEqual([]);
+    expect(formatReleaseReadinessReport(report).split("\n")[1]).toBe(
+      "true\t5\top,dc,ac,tran,tf\t0",
+    );
+  });
+
+  it("formats a stable corpus table", () => {
+    const table = formatCompatibilityCorpusTable();
+
+    expect(table.split("\n")[0]).toBe(
+      "id\tanalysis\toracle\tgolden_values\tknown_incompatibilities",
+    );
+    expect(table).toContain("dc-op-resistive-divider\top\tclosed-form@divider-v1");
+    expect(table).toContain("V(out)=5.000000e+00V");
+  });
+
+  it("reports malformed release-readiness decks", () => {
+    const malformed: CompatibilityDeck = {
+      id: "",
+      title: "Missing metadata",
+      analysis: "noise",
+      netlist: "V1 in 0 DC 1",
+      oracle: { reference: "", version: "", source: "" },
+      goldenValues: [
+        {
+          name: "V(out)",
+          value: Number.POSITIVE_INFINITY,
+          unit: "V",
+          absoluteTolerance: -1.0,
+          relativeTolerance: 0.0,
+        },
+      ],
+      knownIncompatibilities: [],
+    };
+
+    const report = releaseReadinessGates([malformed]);
+    const fields = new Set(report.issues.map((issue) => issue.field));
+
+    expect(report.passed).toBe(false);
+    expect(fields).toEqual(
+      new Set([
+        "id",
+        "analysis",
+        "netlist",
+        "oracle.reference",
+        "oracle.version",
+        "oracle.source",
+        "goldenValues[0].value",
+        "goldenValues[0].tolerance",
+        "knownIncompatibilities",
+        "analysisCoverage",
+      ]),
+    );
+  });
+
+  it("treats .end as the executable deck boundary", () => {
+    const summary = analyzeDeckControls(`
+* ignored title
+V1 in 0 DC 1
+.op
+.end
+.include after-end.lib
+.dc V1 0 1 1
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(5);
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1", ".op"]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports unsupported deck-control directives before .end", () => {
+    const summary = analyzeDeckControls(`
+.include models.inc
+.LIB vendor.lib TT
+.control
+run
+.endc
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.activeLines.slice(0, 3)).toStrictEqual([
+      ".include models.inc",
+      ".LIB vendor.lib TT",
+      ".control",
+    ]);
+    expect(summary.diagnostics.map(({ directive, lineNumber, severity }) => [
+      directive,
+      lineNumber,
+      severity,
+    ])).toStrictEqual([
+      [".include", 2, "error"],
+      [".lib", 3, "error"],
+      [".control", 4, "error"],
+    ]);
+    expect(summary.diagnostics.every((diagnostic) =>
+      diagnostic.code === "SPICE_DECK_UNSUPPORTED_DIRECTIVE"
+    )).toBe(true);
+  });
+
+  it("expands include files and selected library sections", () => {
+    const summary = resolveDeckSources(`
+V1 in 0 DC 1
+.include models.inc
+.lib vendor.lib TT
+.op
+.end
+Rafter out 0 1
+`, {
+      "models.inc": `
+* model include
+.model D1 D
+Rshim in mid 10
+`,
+      "vendor.lib": `
+.lib FF
+Rfast out 0 1
+.endl FF
+.lib TT
+Rtyp mid out 20
+Ctyp out 0 1u
+.endl TT
+`,
+    });
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 DC 1",
+      ".model D1 D",
+      "Rshim in mid 10",
+      "Rtyp mid out 20",
+      "Ctyp out 0 1u",
+      ".op",
+    ]);
+    expect(summary.includedPaths).toStrictEqual(["models.inc"]);
+    expect(summary.librarySections).toStrictEqual(["vendor.lib:TT"]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports missing include and library sources plus include cycles", () => {
+    const summary = resolveDeckSources(`
+.include missing.inc
+.include a.inc
+.lib vendor.lib SS
+.control
+.end
+`, {
+      "a.inc": ".include b.inc\nR1 a b 1\n",
+      "b.inc": ".include a.inc\nR2 b 0 2\n",
+      "vendor.lib": ".lib TT\nRtyp out 0 20\n.endl TT\n",
+    });
+
+    expect(summary.activeLines).toStrictEqual(["R2 b 0 2", "R1 a b 1", ".control"]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_INCLUDE_NOT_FOUND",
+      "SPICE_DECK_INCLUDE_CYCLE",
+      "SPICE_DECK_LIB_SECTION_NOT_FOUND",
+      "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+    ]);
+    expect(summary.diagnostics.slice(0, 3).map(({ source, lineNumber, target }) => [
+      source,
+      lineNumber,
+      target,
+    ])).toStrictEqual([
+      ["<deck>", 2, "missing.inc"],
+      ["b.inc", 1, "a.inc"],
+      ["<deck>", 4, "vendor.lib:SS"],
+    ]);
+  });
+
+  it("rewrites braced and quoted parameter expressions", () => {
+    const summary = resolveDeckParameters(`
+.param RLOAD=2k SCALE=3 TOTAL=RLOAD*SCALE
+V1 in 0 DC {scale+1}
+R1 in out {total}
+C1 out 0 '2u*scale'
+.op
+.end
+Rafter out 0 {total}
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["RLOAD", 2000],
+      ["SCALE", 3],
+      ["TOTAL", 6000],
+    ]);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 DC 4",
+      "R1 in out 6000",
+      "C1 out 0 0.000006",
+      ".op",
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("evaluates scalar .func calls in parameter expressions", () => {
+    const summary = resolveDeckParameters(`
+.func gain(x) {x*2}
+.param BASE=2 SCALE=3 SHIFT=1 TOTAL=blend(base,scale,shift)
+.func blend(a,b,c) 'gain(a)+b+c'
+R1 in out {gain(total)}
+B1 out 0 V='blend(1,2,3)'
+.op
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(8);
+    expect(summary.activeLines).toStrictEqual([
+      "R1 in out 16",
+      "B1 out 0 V=7",
+      ".op",
+    ]);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["BASE", 2],
+      ["SCALE", 3],
+      ["SHIFT", 1],
+      ["TOTAL", 8],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports bad scalar .func calls in parameter expressions", () => {
+    const summary = resolveDeckParameters(`
+.func one(x) {x+1}
+.func loop(x) {loop(x)}
+.param GOOD=one(1) BAD=unknown(1) ARITY=one(1,2) RECUR=loop(1)
+R1 in out {bad}
+R2 out 0 {good}
+.end
+`);
+
+    expect(summary.activeLines).toStrictEqual([
+      "R1 in out {bad}",
+      "R2 out 0 2",
+    ]);
+    expect(summary.parameters.map((parameter) => [parameter.name, parameter.value])).toStrictEqual([
+      ["GOOD", 2],
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_PARAM_EXPRESSION",
+      "SPICE_DECK_PARAM_EXPRESSION",
+      "SPICE_DECK_PARAM_EXPRESSION",
+      "SPICE_DECK_PARAM_UNRESOLVED",
+    ]);
+    expect(summary.diagnostics.slice(0, 3).map((diagnostic) => diagnostic.parameter)).toStrictEqual([
+      "BAD",
+      "ARITY",
+      "RECUR",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.expression)).toStrictEqual([
+      "unknown(1)",
+      "one(1,2)",
+      "loop(1)",
+      "bad",
+    ]);
+  });
+
+  it("extracts .ic and .nodeset node-voltage hints", () => {
+    const summary = resolveDeckInitialConditions(`
+V1 in 0 DC 1
+.ic V(out)=1.2 V(mid)='2.5'
+.nodeset V(bias)={700m}
+.op
+.end
+.ic V(after)=9
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual(["V1 in 0 DC 1", ".op"]);
+    expect(summary.initialConditions.map(({ directive, node, value, lineNumber }) => [
+      directive,
+      node,
+      value,
+      lineNumber,
+    ])).toStrictEqual([
+      [".ic", "out", 1.2, 3],
+      [".ic", "mid", 2.5, 3],
+    ]);
+    expect(summary.nodesets).toHaveLength(1);
+    expect(summary.nodesets[0]).toMatchObject({
+      directive: ".nodeset",
+      node: "bias",
+      lineNumber: 4,
+    });
+    expect(summary.nodesets[0].value).toBeCloseTo(0.7);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports malformed .ic and .nodeset assignments", () => {
+    const summary = resolveDeckInitialConditions(`
+.ic out=1 V()=2 V(ok)=bad V(good)=1k
+.nodeset
+.nodeset I(L1)=2
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(5);
+    expect(summary.activeLines).toStrictEqual([]);
+    expect(summary.initialConditions.map(({ directive, node, value, lineNumber }) => [
+      directive,
+      node,
+      value,
+      lineNumber,
+    ])).toStrictEqual([[".ic", "good", 1000, 2]]);
+    expect(summary.nodesets).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_CONDITION_TARGET",
+      "SPICE_DECK_CONDITION_TARGET",
+      "SPICE_DECK_CONDITION_EXPRESSION",
+      "SPICE_DECK_CONDITION_ARGUMENT",
+      "SPICE_DECK_CONDITION_TARGET",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.directive)).toStrictEqual([
+      ".ic",
+      ".ic",
+      ".ic",
+      ".nodeset",
+      ".nodeset",
+    ]);
+  });
+
+  it("extracts .func definitions", () => {
+    const summary = resolveDeckFunctions(`
+R1 in out {gain(vin)}
+.func gain(x) {x*2}
+.func blend(a,b,weight) 'a*(1-weight)+b*weight'
+.op
+.end
+.func after(x) {x}
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual(["R1 in out {gain(vin)}", ".op"]);
+    expect(summary.functions.map(({ name, arguments: args, expression, lineNumber }) => [
+      name,
+      args,
+      expression,
+      lineNumber,
+    ])).toStrictEqual([
+      ["gain", ["x"], "x*2", 3],
+      ["blend", ["a", "b", "weight"], "a*(1-weight)+b*weight", 4],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports malformed .func definitions", () => {
+    const summary = resolveDeckFunctions(`
+.func
+.func 1bad(x) {x}
+.func noexpr(x)
+.func badarg(1x,x) {x}
+.func dup(x,x) {x}
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.activeLines).toStrictEqual([]);
+    expect(summary.functions).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_FUNC_ARGUMENT",
+      "SPICE_DECK_FUNC_SIGNATURE",
+      "SPICE_DECK_FUNC_EXPRESSION",
+      "SPICE_DECK_FUNC_ARGUMENT",
+      "SPICE_DECK_FUNC_ARGUMENT",
+    ]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.functionName)).toStrictEqual([
+      undefined,
+      "1bad",
+      "noexpr",
+      "badarg",
+      "dup",
+    ]);
+  });
+
+  it("extracts transient .measure cards", () => {
+    const summary = resolveDeckMeasurements(`
+V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
+.measure tran swing pp V(out) FROM=1m TO={3m}
+.meas transient settled final 'V(out)'
+.tran 1m 4m
+.end
+.measure tran after max V(out)
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(6);
+    expect(summary.activeLines).toStrictEqual([
+      "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
+      ".tran 1m 4m",
+    ]);
+    expect(summary.measurements.map(({ directive, analysis, name, mode, probe, lineNumber, fromValue, toValue }) => [
+      directive,
+      analysis,
+      name,
+      mode,
+      probe,
+      lineNumber,
+      fromValue,
+      toValue,
+    ])).toStrictEqual([
+      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003],
+      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined],
+    ]);
+    expect(summary.diagnostics).toStrictEqual([]);
+  });
+
+  it("reports unsupported .measure subsets", () => {
+    const summary = resolveDeckMeasurements(`
+.measure ac gain max V(out)
+.measure tran badmode deriv V(out)
+.measure tran badname max V(out) FROM=2m TO=1m
+.measure tran badopt max V(out) AT=1m
+.measure tran badexpr max V(out) FROM={1+}
+.end
+`);
+
+    expect(summary.terminated).toBe(true);
+    expect(summary.endLineNumber).toBe(7);
+    expect(summary.measurements).toStrictEqual([]);
+    expect(summary.diagnostics.map((diagnostic) => diagnostic.code)).toStrictEqual([
+      "SPICE_DECK_MEASURE_ANALYSIS",
+      "SPICE_DECK_MEASURE_MODE",
+      "SPICE_DECK_MEASURE_WINDOW",
+      "SPICE_DECK_MEASURE_ARGUMENT",
+      "SPICE_DECK_MEASURE_EXPRESSION",
+    ]);
+  });
+});

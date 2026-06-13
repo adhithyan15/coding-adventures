@@ -7,9 +7,12 @@ All notable changes to this package will be documented in this file.
 ### Added
 
 - Hue snapshot summaries for compact resource-family, relationship-ref, scene
-  action, and state-projection coverage over typed CLIP v2 snapshots.
+  action, and state-projection coverage over typed CLIP v2 snapshots, plus
+  relationship, scene-state, projectable-surface, and partial-lighting
+  predicates.
 - Hue event-stream summaries for compact retry-hint, record, resource-item, and
-  resource-type coverage over parsed Server-Sent Events batches.
+  resource-type coverage over parsed Server-Sent Events batches, plus typed-item
+  and multi-type predicates.
 - `HueClient::get_grouped_light_state_updates` for room/zone aggregate-light
   state reads through the facade.
 - Unified Hue state update extraction from full snapshots and event-stream

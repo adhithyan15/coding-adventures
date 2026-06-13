@@ -1,0 +1,8 @@
+{
+ "idx": 97,
+ "policy": "General rule: an employee who is injured by the willful misconduct of a third party is barred from workers' compensation. Override: this bar does not apply, and benefits are payable, where the third party's assault was directed at the employee because of their employment duties (e.g., a robbery targeting the cash the employee was handling).",
+ "scenario": "Nadia, a convenience store cashier, was stabbed by an armed robber who demanded the register cash she was counting. The robber fled with the money. Nadia suffered serious injuries from the deliberate assault.",
+ "question": "Is Nadia entitled to workers' compensation benefits for her injuries?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "entitled"
+}

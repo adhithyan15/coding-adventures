@@ -2,6 +2,232 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.14.0] - 2026-06-11 — dimensional faithfulness gate (ADJ constraints track A4)
+
+### Changed
+
+- **`compute` is now dimension-aware.** Alongside the f64 magnitude, the
+  evaluator tracks each value's `Dimension` (read from its fact via
+  `dimensioned_value`) and checks every binary op through `Dimension::combine`,
+  so a unit-mismatched formula — `usd + days`, `usd + eur` without a conversion
+  — is a clean **`ComputeError::DimensionMismatch`** instead of a
+  silently-wrong number. This is the faithfulness gate: the engine, not the
+  model, decides a category error is a category error.
+  - `usd + usd → usd`; `money / money → scalar` (a dimensionless ratio,
+    e.g. debt-to-income); `money × scalar → money`; bare-number formulas stay
+    `Scalar` (the pre-A4 numeric behaviour is unchanged).
+- **`Derived` gains a `dim: Dimension`** field — the inferred dimension of the
+  computed value, so a predicate firing over it (`csf_ratio <= 0.4`) knows
+  `csf_ratio` is a `Scalar` and the audit shows the unit. (Additive: callers
+  that pass a `Derived` through unchanged are unaffected.)
+
+### Added
+
+- `KnowledgeBase::observed_dimensioned(slot)` — the dimensioned (`magnitude +
+  Dimension`) observation of a slot with its `FactId`, for the gate.
+- `ComputeError::DimensionMismatch { op, lhs, rhs }` carrying the two clashing
+  unit tags for the audit reader.
+
+## [0.13.0] - 2026-06-11 — date arithmetic (deadlines & durations, ADJ constraints track A3)
+
+### Added
+
+- **`datetime` module** — calendar arithmetic on the CPU for adjudication
+  deadlines ("is the claim within 365 days of purchase?"). A date is a *point
+  in time*, so it gets the new `Dimension::Date` and its arithmetic lives here,
+  not in the generic `Dimension::combine` (which now rejects any `Date`
+  operand, steering callers to these functions):
+  - `days_between(a, b)` → a `Duration("days")` dimensioned value (so a deadline
+    predicate `elapsed <= 365` fires over it).
+  - `date_add(date, days)` → the resulting `(y, m, d)` (`Date + Duration → Date`).
+  - `before(a, b)` / `after(a, b)` → a boolean ordering.
+  - `read_date` validates month (`1..=12`) and day (`1..=days_in_month`, leap-aware)
+    so `date(2025, 13, 40)` is a clean `None`; `read_duration_days` reads
+    `duration(n, days|weeks)`.
+- `days_from_civil` / `civil_from_days` — Howard Hinnant's public-domain
+  proleptic-Gregorian ↔ day-ordinal algorithm, **inlined** (not a dependency).
+  The repo's `datetime-core` is the right library but pulls `numeric-tower` /
+  `r-vector` / `wall-clock` — too heavy for the core engine; the algorithm is
+  ~25 lines of exact integer math, so we inline it and keep `logic-engine`
+  dependency-free.
+- `Dimension::Date`; `dimensioned_value` now returns `None` for `date`/`time`/
+  `datetime` terms (their leading field is a year, not a scalar magnitude).
+
+### Security (from /security-review, both LOW, fixed in-PR)
+
+- All ordinal arithmetic is overflow-safe on attacker-controlled fields: `read_date`
+  bounds the year to `±1_000_000`; `date_add` uses `checked_add` + an ordinal
+  bound; `read_duration_days` uses `checked_mul` + a bound; and the raw
+  `days_from_civil`/`civil_from_days` helpers are now `pub(crate)` (internal),
+  so the public surface (`days_between`/`date_add`/`before`/`after`) can't be
+  handed an unbounded `i64` that would overflow.
+
+Time-of-day and full datetime arithmetic are a follow-up; this slice is dates +
+durations (the deadline case). See
+`code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
+## [0.12.0] - 2026-06-11 — currency conversions (ADJ constraints track A2)
+
+### Added
+
+- **`conversion` module** — the only thing that licenses a cross-currency
+  operation (which A1 made a `DimError::Mismatch`): an **explicit, provenanced
+  conversion fact**. `Conversion::new("usd", "eur", 0.92)` = "1 usd = 0.92 eur",
+  carrying a `Provenance` citation. `ConversionTable::rate(from, to)` resolves a
+  rate via a direct fact, its inverse (`1/rate`), or the identity; no transitive
+  chaining (a missing path is a clean `None`, never a guess).
+- `convert_value(value, target, table)` converts a `Dimensioned` between
+  currencies/units (money→money, unit→unit), re-tagging the dimension;
+  `Scalar`/`Percent` are not convertible.
+- `add_or_sub(subtract, lhs, rhs, table)` — dimension-aware add/sub that resolves
+  a currency mismatch by converting `rhs` into `lhs`'s dimension via the rate
+  (so `100 usd + 92 eur` = `200 usd` given `1 usd = 0.92 eur`), and still rejects
+  genuinely incompatible kinds (`usd + days`). `ConvError::{NoRate, NotConvertible}`.
+- `Conversion::try_new` validates the rate and returns `ConvError::BadRate`
+  for a non-finite/non-positive value (the entry point a surface-`convert`
+  lowerer should call, mirroring the LR/probability guards); `new` is the
+  panicking trusted/test convenience. `convert_value`/`add_or_sub` screen for a
+  non-finite result (`ConvError::NonFinite`), matching `ComputeError::NonFinite`
+  so a converted value can't silently flow non-finite into a verdict.
+
+Engine-only; the surface `convert money(1,usd) = money(0.92,eur)` statement and
+recording the rate as a derivation-tree `Op` land with the constraint
+sublanguage (B1) and the dimensional faithfulness gate (A4). See
+`code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
+## [0.11.0] - 2026-06-11 — dimensional types (strict units, ADJ constraints track A1)
+
+### Added
+
+- **`dimension` module** — every value gets a `Dimension`
+  (`Scalar`/`Money(ccy)`/`Unit(tag)`/`Percent`/`Duration(unit)`) so the engine,
+  not the model, decides which operations are category errors. `Dimension::combine(op, l, r)`
+  encodes the strict algebra: **add/sub require matching dimensions** (`usd + eur`
+  and `usd + days` are rejected — `usd + eur` will need a conversion fact in
+  track A2); **`Money/Money → Scalar`** and `Unit(a)/Unit(a) → Scalar` (units
+  cancel — the CSF:serum/debt-to-income ratio is dimensionless); `Money × Scalar
+  → Money`, `× Percent` keeps the dimension; unlike dimensions multiply/divide to
+  a composite tag the faithfulness gate can inspect.
+- **`dimensioned_value(&Term)`** — generalises `numeric_magnitude` (step 2):
+  reads the leading magnitude **and** infers the dimension from the wrapper
+  functor (`money(18000, usd)` → `Money("usd")`, `quantity(40, mg_dl)` →
+  `Unit("mg_dl")`, …). Tags are compared by equality, never interpreted (the
+  engine knows `usd ≠ eur`, not that usd is dollars).
+- `DimOp`, `DimError::Mismatch`, `Dimensioned`. This is the foundation for
+  currency/date arithmetic (A2/A3) and the dimensional faithfulness gate (A4);
+  `compute` stays numeric until A4 wires this in. See
+  `code/specs/data/adj-language-expansion/ADJ-CONSTRAINTS-DESIGN.md`.
+
+## [0.10.0] - 2026-06-11 — derivation tree (provenance-through-math, ADJ expansion step 3a)
+
+### Added
+
+- **`compute` module — the engine half of "the model never does the math".**
+  A formula IR (`ComputeExpr`: `Ref(slot)` / `Lit(n)` / `Bin(op,a,b)` /
+  `Agg(op,slot)`) is evaluated deterministically on the CPU into a `Derived`
+  value carrying a **derivation tree** (`DerivationNode`): every operation
+  records its operands and result, and every leaf cites the `FactId` of the
+  observed fact it came from. So a derived value (`csf_ratio = csf_glucose /
+  serum_glucose = 0.4`) is fully reconstructable from the tree without the
+  model — provenance-through-math.
+- `ComputeOp` — `Add/Sub/Mul/Div` (binary) and `Sum/Count/Min/Max/Avg`
+  (aggregation over every observation of a slot). Operands read the magnitude
+  of typed values (`quantity(40, mg_dl)`) via `numeric_magnitude`.
+- `ComputeError` — clean, non-panicking errors (`UnknownSlot`,
+  `EmptyAggregation`, `DivisionByZero`, `MalformedExpr`, plus two safety
+  guards: `TooDeep` bounds recursion at `MAX_EVAL_DEPTH` so an adversarially
+  deep formula returns an error instead of overflowing the stack, and
+  `NonFinite` rejects any `NaN`/`±∞` result rather than letting it silently
+  flow into a verdict — a `NaN` compares `false` against every threshold, so
+  an unscreened non-finite would quietly make a predicate not fire).
+- `KnowledgeBase::add_derived` / `derived_for`; `observed_value(slot)` now
+  falls back to the derived table, so a **predicate-gated contribution fires
+  over a computed value exactly as over an observed one** — one engine, no new
+  verdict logic. New helpers `observed_value_with_fact` /
+  `observed_values_all` expose the `FactId`(s) the derivation-tree leaves cite.
+- A derived value can reference a previously-bound derived value (`let` over
+  `let`) via a `DerivationNode::DerivedRef`.
+
+This is engine-only (no surface syntax yet — `let name = expr` is step 3b). See
+`code/specs/data/adj-language-expansion/STEP3-let-arithmetic-PLAN.md`.
+
+## [0.9.0] - 2026-06-10 — typed-value magnitudes (ADJ language expansion, step 2)
+
+### Added
+
+- **`numeric_magnitude(&Term) -> Option<f64>`** — extract the numeric
+  magnitude of a typed value. The ADJ language expansion models a fact's
+  value as either a bare number or a *typed-value wrapper* carrying the
+  magnitude as its leading argument and the unit afterward:
+  `quantity(18000, usd)`, `money(18000, usd)`, `percentage(40)`,
+  `duration(365, days)`, `count(3)`. The rule is uniform — "the leading
+  numeric argument" — so no closed set of wrapper functors is hard-coded.
+
+### Changed
+
+- **`observed_value(slot)`** now reads through a typed-value wrapper via
+  `numeric_magnitude`, so a predicate (`gross_income >= 14600`) fires over
+  `observe gross_income(quantity(18000, usd))` while the `usd` unit stays
+  attached to the fact for the (forthcoming) faithfulness gate. Bare
+  `slot(Num)` facts behave exactly as before.
+
+## [0.8.0] - 2026-06-10 — predicate-gated contributions (deterministic = saturating probabilistic)
+
+### Added
+
+- **`PredicateContributionClause` + `CmpOp`** — a likelihood-ratio
+  contribution gated by a numeric comparison over a *valued slot*:
+  "when the observed value of `slot` satisfies `slot <op> value`,
+  multiply the conclusion's odds by `exp(logit_delta)`." This is the
+  bridge that lets the framework express a **deterministic** rule as
+  the saturating limit of a probabilistic one — a hard rule is just a
+  very large LR over a CPU-evaluated predicate. DETERMINATE /
+  INDETERMINATE / CONFLICT continue to fall out of the existing
+  `differential` (leader / insufficient-evidence / kickback); there is
+  **no second engine**.
+- `CmpOp` — `Ge` / `Le` / `Gt` / `Lt` / `Eq` with `eval(lhs, rhs)`
+  (the comparison the engine runs on the CPU) and `symbol()` (for
+  audit rendering). `Eq` uses an absolute tolerance so an integer
+  observation matches a float threshold.
+- `KnowledgeBase::add_predicate_contribution`,
+  `predicate_contributions_for`, and `observed_value(slot)` — the
+  last reads the numeric value of the latest `Certain` valued fact
+  `slot(V)` (V a `Term::Num`). Predicate clauses also count toward
+  `participates_in_lr_aggregation`.
+- `DerivationOrigin::FromPredicateContribution { clause_id, slot, op,
+  threshold, observed, logit_delta }` — the proof step records the
+  *literal* comparison that fired, so the audit trail shows the
+  numbers the engine compared. The model never computes the
+  comparison; it only authored the rule.
+
+## [0.7.0] - 2026-06-10
+
+### Added
+
+- **`differential(hypotheses, kb)` — the cross-hypothesis decision
+  primitive.** `lr_aggregate` scores one hypothesis at a time; the
+  differential ranks a set of *competing* hypotheses (bacterial vs
+  viral vs fungal meningitis, charge A vs B, deal-vs-no-deal), picks
+  the argmax, and reports the **between-hypothesis margin**. This is
+  the operation MYCIN actually performs and the engine previously
+  lacked — nothing ranked competing conclusions or measured the gap.
+- `DifferentialDecision` — `Determinate { leader, margin }` when the
+  leader out-ranks the runner-up *even under the worst-case resolution
+  of every open uncertainty* (leader's VOI band pushed down, runner-up's
+  up); `Kickback { leader, runner_up, recommended_resolutions }` when
+  the bands cross (an unresolved finding — or an exact tie — could flip
+  the ranking). This is the cross-hypothesis analogue of
+  `LRAggregateResult::suggest_kickback`, which only bounded a single
+  hypothesis. Decision = argmax + sensitivity (ADJ65), deterministic and
+  CPU-only — no softmax, no temperature.
+- `RankedHypothesis` carries each hypothesis's full `LRAggregateResult`
+  (proof DAG included) so the differential is auditable end to end, plus
+  a `normalized_share` (posterior ÷ Σ posteriors) flagged as a
+  display-only convenience that assumes the hypotheses are exhaustive and
+  mutually exclusive (the LR model does not).
+- Re-exported `differential`, `Differential`, `DifferentialDecision`,
+  `RankedHypothesis` from the crate root.
+
 ## [0.6.0] - 2026-06-02
 
 ### Added

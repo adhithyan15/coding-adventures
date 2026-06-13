@@ -1,0 +1,70 @@
+{
+  "per_arm": {
+    "plain-haiku": {
+      "n_scored": 100,
+      "old_mean_def": 2.14,
+      "new_mean_def": 1.9,
+      "old_def_ge4": 14,
+      "new_def_ge4": 2,
+      "pct_premise_named": 0.23,
+      "pct_premise_flagged_fallible": 0.02,
+      "pct_would_flip": 0.01,
+      "new_mean_def_correct": 2.0,
+      "new_mean_def_incorrect": 1.896,
+      "n_correct": 4
+    },
+    "plain-opus": {
+      "n_scored": 98,
+      "old_mean_def": 3.724,
+      "new_mean_def": 3.031,
+      "old_def_ge4": 60,
+      "new_def_ge4": 16,
+      "pct_premise_named": 0.602,
+      "pct_premise_flagged_fallible": 0.163,
+      "pct_would_flip": 0.143,
+      "new_mean_def_correct": 2.926,
+      "new_mean_def_incorrect": 3.07,
+      "n_correct": 27
+    },
+    "fw-haiku": {
+      "n_scored": 99,
+      "old_mean_def": 2.677,
+      "new_mean_def": 2.707,
+      "old_def_ge4": 25,
+      "new_def_ge4": 13,
+      "pct_premise_named": 0.475,
+      "pct_premise_flagged_fallible": 0.141,
+      "pct_would_flip": 0.071,
+      "new_mean_def_correct": 2.571,
+      "new_mean_def_incorrect": 2.717,
+      "n_correct": 7
+    },
+    "fw-opus": {
+      "n_scored": 98,
+      "old_mean_def": 3.612,
+      "new_mean_def": 3.48,
+      "old_def_ge4": 56,
+      "new_def_ge4": 33,
+      "pct_premise_named": 0.776,
+      "pct_premise_flagged_fallible": 0.337,
+      "pct_would_flip": 0.306,
+      "new_mean_def_correct": 3.259,
+      "new_mean_def_incorrect": 3.563,
+      "n_correct": 27
+    }
+  },
+  "fw_minus_plain_gap": {
+    "old_mean_def": {
+      "haiku_fw_minus_plain": 0.537,
+      "opus_fw_minus_plain": -0.112
+    },
+    "new_mean_def": {
+      "haiku_fw_minus_plain": 0.807,
+      "opus_fw_minus_plain": 0.449
+    }
+  },
+  "new_def_ge4_total": 64,
+  "new_def_ge4_wrong": 54,
+  "new_def_ge4_wrong_fraction": 0.844,
+  "n_verdicts": 395
+}

@@ -1,0 +1,7 @@
+{
+ "idx": 55,
+ "id": "BUI-6",
+ "scenario": "A raised interior walkway sits 44 inches above the floor below. Its open side is protected by a guard that measures 38 inches in height, constructed of horizontal rails.",
+ "policy": "A guard is required along any walking surface that is located more than 30 inches above the floor or grade below, measured within 36 inches horizontally to the edge of the open side. A required guard must be at least 36 inches in height and must not have openings that allow passage of a sphere 4 inches in diameter.",
+ "question": "Does the guard comply with the policy?"
+}

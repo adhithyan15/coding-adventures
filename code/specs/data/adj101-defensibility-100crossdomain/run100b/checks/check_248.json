@@ -1,0 +1,8 @@
+{
+ "check_id": 248,
+ "idx": 98,
+ "slot": "has_employees_other_than_owner",
+ "claimed_value": false,
+ "scenario": "Raj operates a one-person landscaping business as a sole proprietor. He has no employees and works alone. He carries no workers' compensation insurance. After Raj himself was injured, a state auditor questioned his lack of coverage and proposed the double-benefits penalty.",
+ "cited_span": "He has no employees and works alone."
+}

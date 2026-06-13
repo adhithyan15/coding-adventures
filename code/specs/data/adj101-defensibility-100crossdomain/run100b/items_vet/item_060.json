@@ -1,0 +1,8 @@
+{
+ "idx": 60,
+ "policy": "A licensed professional engineer must complete 30 hours of continuing-education credit during each two-year renewal cycle. At least 2 of those hours must be in professional ethics.",
+ "scenario": "An engineer's renewal cycle just closed. During the cycle she logged 34 total continuing-education hours, of which 3 hours were in professional ethics.",
+ "question": "Has the engineer met the continuing-education requirement for renewal?",
+ "gold_verdict": "DETERMINATE",
+ "gold_answer_substring": "met the requirement"
+}

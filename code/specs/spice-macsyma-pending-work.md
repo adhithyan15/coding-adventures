@@ -1,5 +1,13 @@
 # SPICE Engine & MACSYMA Pipeline — Status and Pending Work
 
+> **MACSYMA truly-finish plan open (2026-05-29).** A follow-up audit
+> after the 2026-05-28 finish-plan closure surfaced eight remaining
+> mainstream-Maxima parity gaps that the previous plan had either marked
+> as non-goals or simply not addressed.  See
+> `code/specs/macsyma-truly-finish-plan.md` for the new tracks
+> (F through N).  The 2026-05-28 closure banner below is preserved as a
+> historical marker for the previous plan.
+
 > **🎉 MACSYMA finish-plan closed (2026-05-28).** All five tracks of
 > `code/specs/macsyma-finish-plan.md` (ten sub-tracks total) have
 > shipped across all three languages.  Sub-track PR map:

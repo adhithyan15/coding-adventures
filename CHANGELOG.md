@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — HTML Parser Browser Script Storage Access
+- Browser-readiness summaries now expose script storage-access descriptors for
+  inline references to Web Storage, cookies, IndexedDB, CacheStorage/service
+  workers, StorageManager, storage-event hooks, and fallback blockers such as
+  `nomodule`.
+
 ### Added — HTML Parser DOCTYPE Fragment Contexts
 - Parser-approved initial tokenizer contexts now include seeded DOCTYPE
   continuation states for keyword, name, public/system identifier, bogus, and

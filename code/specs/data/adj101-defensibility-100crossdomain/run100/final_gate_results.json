@@ -1,0 +1,929 @@
+{
+ "summary": {
+  "verdict_match_vs_gold": {
+   "baseline": "88/100",
+   "blunt_gate": "74/100",
+   "sensitivity_only": "82/100",
+   "N-reader x sensitivity x precedence": "84/100"
+  },
+  "underdetermined -> INDETERMINATE": "26/30",
+  "clean-determinate -> DETERMINATE": "23/30",
+  "residual clean abstentions": [
+   "TAX-2",
+   "BEN-2",
+   "INS-1",
+   "INS-2",
+   "INS-3",
+   "CON-3",
+   "ACA-3"
+  ],
+  "...of which panel says the nulled slot IS unestablished (=> GOLD likely wrong, abstention correct)": [
+   [
+    "INS-2",
+    [
+     "government_travel_advisory"
+    ]
+   ],
+   [
+    "CON-3",
+    [
+     "within_business_hours"
+    ]
+   ],
+   [
+    "ACA-3",
+    [
+     "submitted_after_deadline"
+    ]
+   ]
+  ]
+ },
+ "rows": [
+  {
+   "id": "MED-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "MED-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "hours_since_last_dose"
+   ]
+  },
+  {
+   "id": "MED-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "MED-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "iodinated_contrast_procedure"
+   ]
+  },
+  {
+   "id": "MED-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "MED-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "MED-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "yi_meets_stemi"
+   ]
+  },
+  {
+   "id": "MED-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "threat_imminent"
+   ],
+   "maj_leap": [
+    "threat_imminent"
+   ]
+  },
+  {
+   "id": "MED-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "MED-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "nulled": [],
+   "maj_leap": [
+    "is_manufacturer",
+    "used_for_intended_purpose"
+   ]
+  },
+  {
+   "id": "STA-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "within_scope_of_employment"
+   ],
+   "maj_leap": [
+    "tort_committed_by_employee",
+    "within_scope_of_employment"
+   ]
+  },
+  {
+   "id": "STA-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "STA-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "checked_baggage_loss"
+   ]
+  },
+  {
+   "id": "STA-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "paid_or_incurred_current_year"
+   ],
+   "maj_leap": [
+    "paid_or_incurred_current_year"
+   ]
+  },
+  {
+   "id": "TAX-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "full_time_student"
+   ],
+   "maj_leap": [
+    "full_time_student"
+   ]
+  },
+  {
+   "id": "TAX-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "late_filing"
+   ]
+  },
+  {
+   "id": "TAX-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "TAX-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "is_imported_alcohol"
+   ],
+   "maj_leap": [
+    "is_imported_alcohol"
+   ]
+  },
+  {
+   "id": "BEN-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "nulled": [],
+   "maj_leap": [
+    "eligible_children_count"
+   ]
+  },
+  {
+   "id": "BEN-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "disability_duration_months"
+   ]
+  },
+  {
+   "id": "BEN-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "active_service_days"
+   ]
+  },
+  {
+   "id": "BEN-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BEN-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "INS-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "nulled": [],
+   "maj_leap": [
+    "payout_before_cap"
+   ]
+  },
+  {
+   "id": "INS-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "government_travel_advisory"
+   ],
+   "maj_leap": [
+    "government_travel_advisory"
+   ]
+  },
+  {
+   "id": "INS-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "nulled": [],
+   "maj_leap": [
+    "dwelling_insured_value",
+    "deductible_rate_pct"
+   ]
+  },
+  {
+   "id": "INS-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "death_is_covered"
+   ]
+  },
+  {
+   "id": "INS-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "UNSAFE(UNVERIFIED-EXTRACTION)",
+   "nulled": [],
+   "maj_leap": [
+    "is_personal_property"
+   ]
+  },
+  {
+   "id": "INS-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "INS-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "INS-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "INS-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "INS-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "is_detached_accessory_structure"
+   ]
+  },
+  {
+   "id": "BUI-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "alarm_outside_sleeping_area_vicinity"
+   ],
+   "maj_leap": [
+    "alarm_outside_sleeping_area_vicinity",
+    "more_than_one_alarm_required"
+   ]
+  },
+  {
+   "id": "BUI-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "CONFLICT",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "BUI-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ],
+   "maj_leap": [
+    "is_interior_bathroom_of_dwelling_unit"
+   ]
+  },
+  {
+   "id": "EMP-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "CONFLICT",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "EMP-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "days_in_country"
+   ]
+  },
+  {
+   "id": "IMM-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "is_aggravated_felony"
+   ]
+  },
+  {
+   "id": "IMM-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "IMM-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "within_business_hours"
+   ],
+   "maj_leap": [
+    "within_business_hours"
+   ]
+  },
+  {
+   "id": "CON-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "force_majeure_event"
+   ]
+  },
+  {
+   "id": "CON-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "invoice_days_past_due"
+   ]
+  },
+  {
+   "id": "CON-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "CON-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "hours_unresolved"
+   ]
+  },
+  {
+   "id": "CON-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "days_after_window_start"
+   ]
+  },
+  {
+   "id": "ACA-1",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-2",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-3",
+   "stratum": "clean-determinate",
+   "gold": "DETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [
+    "submitted_after_deadline"
+   ],
+   "maj_leap": [
+    "submitted_after_deadline"
+   ]
+  },
+  {
+   "id": "ACA-4",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-5",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-6",
+   "stratum": "underdetermined-baited",
+   "gold": "INDETERMINATE",
+   "final": "INDETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-7",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-8",
+   "stratum": "override-precedence",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  },
+  {
+   "id": "ACA-9",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": [
+    "financial_interest_in_relevant_entity"
+   ]
+  },
+  {
+   "id": "ACA-10",
+   "stratum": "exception-encoding",
+   "gold": "DETERMINATE",
+   "final": "DETERMINATE",
+   "nulled": [],
+   "maj_leap": []
+  }
+ ]
+}

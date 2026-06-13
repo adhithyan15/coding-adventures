@@ -1,0 +1,8 @@
+{
+ "check_id": 109,
+ "idx": 44,
+ "slot": "days_since_last_sold",
+ "claimed_value": 30,
+ "scenario": "An inspector examines a restaurant's oyster cooler. The oysters are stored in their original container. The manager sold the last oyster from this container 30 days ago and produces the corresponding shellstock tag from the file.",
+ "cited_span": "sold the last oyster from this container 30 days ago"
+}

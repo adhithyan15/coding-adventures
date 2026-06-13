@@ -1,0 +1,8 @@
+{
+ "check_id": 5,
+ "idx": 2,
+ "slot": "checker1_verified",
+ "claimed_value": true,
+ "scenario": "At the bedside, Nurse Okafor verified the patient's wristband against the blood unit label. The second checker, Nurse Lindqvist, was paged away and never independently verified the unit before the infusion line was opened.",
+ "cited_span": "Nurse Okafor verified the patient's wristband against the blood unit label"
+}

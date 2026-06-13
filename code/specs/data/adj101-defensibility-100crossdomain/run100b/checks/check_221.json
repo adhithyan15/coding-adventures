@@ -1,0 +1,8 @@
+{
+ "check_id": 221,
+ "idx": 86,
+ "slot": "request_repetitive",
+ "claimed_value": true,
+ "scenario": "Felix has sent retailer Quillmart an identical, complete data access request every single business day for the past three weeks, each demanding a fresh full copy of all his data; Quillmart has fully answered the first one and confirms nothing in his data has changed since. Quillmart refused to act on the latest in the series.",
+ "cited_span": "has sent retailer Quillmart an identical, complete data access request every single business day for the past three weeks, each demanding a fresh full copy of all his data"
+}

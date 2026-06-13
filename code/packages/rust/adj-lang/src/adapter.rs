@@ -30,7 +30,10 @@
 use lexer::token::TokenType;
 use parser::grammar_parser::{ASTNodeOrToken, GrammarASTNode};
 
-use crate::ast::{Annotation, Program, Statement, Term, TrustTierName};
+use crate::ast::{
+    AggOp, Annotation, ArithOp, CmpOp, Define, DefineKind, Evidence, ExprAst, OptDir, Program,
+    RelOp, Statement, Term, TrustTierName,
+};
 
 /// Errors raised while adapting a generic AST to the typed AST.
 ///
@@ -43,9 +46,7 @@ use crate::ast::{Annotation, Program, Statement, Term, TrustTierName};
 #[derive(Debug, Clone, PartialEq)]
 pub enum AdapterError {
     /// The parse tree's root rule was not `program`.
-    NotProgram {
-        actual: String,
-    },
+    NotProgram { actual: String },
     /// A node had a rule name the adapter did not expect at this
     /// position. Carries the expected name(s) for debugging.
     UnexpectedRule {
@@ -69,9 +70,7 @@ pub enum AdapterError {
     /// An unknown trust tier keyword reached the adapter; should be
     /// impossible if the grammar's `trust_tier` rule stays in sync
     /// with [`TrustTierName`].
-    UnknownTrustTier {
-        actual: String,
-    },
+    UnknownTrustTier { actual: String },
 }
 
 /// Adapt the root `program` node.
@@ -110,8 +109,19 @@ fn adapt_statement(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         "uncertain_decl" => adapt_uncertain(child),
         "observe_decl" => adapt_observe(child),
         "query_decl" => adapt_query(child),
+        "let_decl" => adapt_let(child),
+        "symbol_decl" => adapt_symbol(child),
+        "constrain_decl" => adapt_constrain(child),
+        "solve_decl" => adapt_solve(child),
+        "check_decl" => Ok(Statement::Check),
+        "optimize_decl" => adapt_optimize(child),
+        "dictionary_decl" => adapt_dictionary(child),
+        "define_decl" => adapt_define(child).map(Statement::Define),
+        "rulebook_decl" => adapt_rulebook(child),
+        "use_decl" => adapt_use(child),
+        "import_decl" => adapt_import(child),
         other => Err(AdapterError::UnexpectedRule {
-            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl",
+            expected: "one of prior_decl / contributes_decl / interacts_decl / uncertain_decl / observe_decl / query_decl / let_decl / symbol_decl / constrain_decl / solve_decl / check_decl / optimize_decl / dictionary_decl / define_decl / rulebook_decl / use_decl / import_decl",
             actual: other.to_string(),
         }),
     }
@@ -130,17 +140,34 @@ fn adapt_prior(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
 }
 
 fn adapt_contributes(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
-    // contributes_decl = "contributes" NUMBER "from" term "to" term { annotation }
+    // contributes_decl = "contributes" NUMBER "from" evidence "to" term { annotation }
+    //
+    // The LR is the only NUMBER token that is a *direct* child of
+    // contributes_decl: a predicate's threshold lives inside the nested
+    // `evidence`/`predicate` node, so `expect_number_at(node, 1)` is
+    // unambiguous. Likewise the conclusion is the only *direct* `term`
+    // child — term-shaped evidence is nested inside the `evidence` node.
     let lr = expect_number_at(node, 1)?;
-    let terms = collect_term_children(node);
-    let evidence = terms.first().cloned().ok_or(AdapterError::MissingChild {
-        rule: "contributes_decl".into(),
-        position: "evidence term",
-    })?;
-    let conclusion = terms.get(1).cloned().ok_or(AdapterError::MissingChild {
-        rule: "contributes_decl".into(),
-        position: "conclusion term",
-    })?;
+    let evidence_node = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "evidence" => Some(n),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "contributes_decl".into(),
+            position: "evidence",
+        })?;
+    let evidence = adapt_evidence(evidence_node)?;
+    let conclusion =
+        collect_term_children(node)
+            .into_iter()
+            .next()
+            .ok_or(AdapterError::MissingChild {
+                rule: "contributes_decl".into(),
+                position: "conclusion term",
+            })?;
     let annotations = collect_annotations(node)?;
     Ok(Statement::Contributes {
         lr,
@@ -148,6 +175,66 @@ fn adapt_contributes(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
         conclusion,
         annotations,
     })
+}
+
+fn adapt_evidence(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
+    // evidence = predicate | term
+    //
+    // The matched alternative is flattened into `evidence`'s children
+    // (grammar groups/alternations don't introduce wrapper nodes), so
+    // the first child node is either a `predicate` or a `term`.
+    let child = first_child_node(node, "evidence", "predicate or term")?;
+    match child.rule_name.as_str() {
+        "predicate" => adapt_predicate(child),
+        "term" => Ok(Evidence::Term(adapt_term(child)?)),
+        other => Err(AdapterError::UnexpectedRule {
+            expected: "predicate or term",
+            actual: other.to_string(),
+        }),
+    }
+}
+
+fn adapt_predicate(node: &GrammarASTNode) -> Result<Evidence, AdapterError> {
+    // predicate = IDENT ( GE | LE | GT | LT | EQEQ ) NUMBER
+    //
+    // The slot IDENT and the operator are both lexed as TokenType::Name
+    // (the operator carries a custom type_name like "GE"), so we
+    // distinguish by *value*: the operator's value is one of the five
+    // comparison symbols; everything else Name-typed is the slot.
+    let mut slot: Option<String> = None;
+    let mut op: Option<CmpOp> = None;
+    let mut value: Option<f64> = None;
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            match t.value.as_str() {
+                ">=" => op = Some(CmpOp::Ge),
+                "<=" => op = Some(CmpOp::Le),
+                ">" => op = Some(CmpOp::Gt),
+                "<" => op = Some(CmpOp::Lt),
+                "==" => op = Some(CmpOp::Eq),
+                _ if t.type_ == TokenType::Number => {
+                    value = Some(parse_finite(&t.value, t.type_, "predicate")?);
+                }
+                _ if t.type_ == TokenType::Name && slot.is_none() => {
+                    slot = Some(t.value.clone());
+                }
+                _ => {}
+            }
+        }
+    }
+    let slot = slot.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "slot identifier",
+    })?;
+    let op = op.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "comparison operator",
+    })?;
+    let value = value.ok_or(AdapterError::MissingChild {
+        rule: "predicate".into(),
+        position: "threshold NUMBER",
+    })?;
+    Ok(Evidence::Predicate { slot, op, value })
 }
 
 fn adapt_interacts(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
@@ -207,6 +294,436 @@ fn adapt_query(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
     Ok(Statement::Query { conclusion })
 }
 
+fn adapt_let(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // let_decl = "let" IDENT EQUALS expr
+    //
+    // Two Name tokens are direct children: the `let` keyword and the
+    // binding name. `let` is not a reserved keyword (it lexes as a plain
+    // Name), so we take the first Name token whose value isn't "let".
+    let name = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "let" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .next()
+        .ok_or(AdapterError::MissingChild {
+            rule: "let_decl".into(),
+            position: "binding name",
+        })?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "let_decl".into(),
+        position: "expr",
+    })?;
+    let expr = adapt_expr(expr_node)?;
+    Ok(Statement::Let { name, expr })
+}
+
+fn adapt_symbol(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // symbol_decl = "symbol" IDENT COLON term
+    // The name is the first Name token that isn't the `symbol` keyword; the
+    // sort is the (only) direct `term` child.
+    let name = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != "symbol" => {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "symbol_decl".into(),
+            position: "symbol name",
+        })?;
+    let sort = expect_term_child(node, "symbol_decl")?;
+    Ok(Statement::Symbol { name, sort })
+}
+
+fn adapt_constrain(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // constrain_decl = "constrain" expr relop expr
+    let exprs: Vec<&GrammarASTNode> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "expr" => Some(n),
+            _ => None,
+        })
+        .collect();
+    let lhs = adapt_expr(exprs.first().ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "left-hand expr",
+    })?)?;
+    let rhs = adapt_expr(exprs.get(1).ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "right-hand expr",
+    })?)?;
+    let relop_node = first_named_child(node, "relop").ok_or(AdapterError::MissingChild {
+        rule: "constrain_decl".into(),
+        position: "relop",
+    })?;
+    let op = rel_op_from_node(relop_node)?;
+    Ok(Statement::Constrain { lhs, op, rhs })
+}
+
+fn adapt_solve(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // solve_decl = "solve" "for" LBRACE IDENT { COMMA IDENT } RBRACE
+    // Every Name token except the `solve` / `for` keywords is a target.
+    let names: Vec<String> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t)
+                if t.type_ == TokenType::Name && t.value != "solve" && t.value != "for" =>
+            {
+                Some(t.value.clone())
+            }
+            _ => None,
+        })
+        .collect();
+    if names.is_empty() {
+        return Err(AdapterError::MissingChild {
+            rule: "solve_decl".into(),
+            position: "at least one target symbol",
+        });
+    }
+    Ok(Statement::SolveFor { names })
+}
+
+fn adapt_optimize(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // optimize_decl = ( "minimize" | "maximize" ) expr
+    // The direction is the leading Name token ("minimize"/"maximize", both
+    // IDENT-matched literals); the objective is the `expr` child.
+    let dir = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value == "minimize" => {
+                Some(OptDir::Minimize)
+            }
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value == "maximize" => {
+                Some(OptDir::Maximize)
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "optimize_decl".into(),
+            position: "minimize / maximize keyword",
+        })?;
+    let expr_node = first_named_child(node, "expr").ok_or(AdapterError::MissingChild {
+        rule: "optimize_decl".into(),
+        position: "objective expr",
+    })?;
+    let objective = adapt_expr(expr_node)?;
+    Ok(Statement::Optimize { dir, objective })
+}
+
+/// The first `TokenType::Name` token whose value isn't `keyword`. Used to pull a
+/// declaration's name out from beside its leading keyword.
+fn first_name_not<'a>(node: &'a GrammarASTNode, keyword: &str) -> Option<&'a str> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name && t.value != keyword => {
+            Some(t.value.as_str())
+        }
+        _ => None,
+    })
+}
+
+fn adapt_dictionary(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // dictionary_decl = "dictionary" IDENT LBRACE { define_decl } RBRACE
+    let name = first_name_not(node, "dictionary")
+        .ok_or(AdapterError::MissingChild {
+            rule: "dictionary_decl".into(),
+            position: "dictionary name",
+        })?
+        .to_string();
+    let defines = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "define_decl" => Some(adapt_define(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Statement::Dictionary { name, defines })
+}
+
+fn adapt_define(node: &GrammarASTNode) -> Result<Define, AdapterError> {
+    // define_decl = "define" IDENT COLON define_kind { surface_clause }
+    let name = first_name_not(node, "define")
+        .ok_or(AdapterError::MissingChild {
+            rule: "define_decl".into(),
+            position: "term name",
+        })?
+        .to_string();
+    let kind_node = first_named_child(node, "define_kind").ok_or(AdapterError::MissingChild {
+        rule: "define_decl".into(),
+        position: "define_kind",
+    })?;
+    let kind = adapt_define_kind(kind_node)?;
+    let mut surfaces = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Node(n) = c {
+            if n.rule_name == "surface_clause" {
+                for sc in &n.children {
+                    if let ASTNodeOrToken::Token(t) = sc {
+                        if t.type_ == TokenType::String {
+                            surfaces.push(unquote_string(&t.value));
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(Define {
+        name,
+        kind,
+        surfaces,
+    })
+}
+
+fn adapt_define_kind(node: &GrammarASTNode) -> Result<DefineKind, AdapterError> {
+    // define_kind = "hypothesis" | "finding" [ "values" LBRACK IDENT {COMMA IDENT} RBRACK ]
+    // hypothesis/finding/values are IDENT-matched literals; the value names are
+    // the remaining Name tokens (brackets/commas are their own token kinds).
+    let mut is_hypothesis = false;
+    let mut is_finding = false;
+    let mut values = Vec::new();
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Name {
+                match t.value.as_str() {
+                    "hypothesis" => is_hypothesis = true,
+                    "finding" => is_finding = true,
+                    // `values` and the brackets/comma are structural; the lexer
+                    // types unknown punctuation (`[`/`]`) as a Name fallback, so
+                    // exclude them by value. The remainder are the value names.
+                    "values" | "[" | "]" | "," => {}
+                    v => values.push(v.to_string()),
+                }
+            }
+        }
+    }
+    if is_hypothesis {
+        Ok(DefineKind::Hypothesis)
+    } else if is_finding {
+        Ok(DefineKind::Finding { values })
+    } else {
+        Err(AdapterError::MissingChild {
+            rule: "define_kind".into(),
+            position: "`hypothesis` or `finding`",
+        })
+    }
+}
+
+fn adapt_rulebook(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // rulebook_decl = "rulebook" IDENT LBRACE { statement } RBRACE
+    let name = first_name_not(node, "rulebook")
+        .ok_or(AdapterError::MissingChild {
+            rule: "rulebook_decl".into(),
+            position: "rulebook name",
+        })?
+        .to_string();
+    // The body is a sequence of `statement` nodes — adapt each through the
+    // same dispatcher, so a rulebook may hold any clause (and its own `use`).
+    let statements = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "statement" => Some(adapt_statement(n)),
+            _ => None,
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    Ok(Statement::Rulebook { name, statements })
+}
+
+fn adapt_use(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // use_decl = "use" IDENT
+    let name = first_name_not(node, "use")
+        .ok_or(AdapterError::MissingChild {
+            rule: "use_decl".into(),
+            position: "dictionary name",
+        })?
+        .to_string();
+    Ok(Statement::Use(name))
+}
+
+fn adapt_import(node: &GrammarASTNode) -> Result<Statement, AdapterError> {
+    // import_decl = "import" STRING
+    let path = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::String => {
+                Some(unquote_string(&t.value))
+            }
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "import_decl".into(),
+            position: "import path string",
+        })?;
+    Ok(Statement::Import(path))
+}
+
+/// `relop = GE | LE | GT | LT | EQEQ | EQUALS | NE` — distinguish by the
+/// operator's literal value.
+fn rel_op_from_node(node: &GrammarASTNode) -> Result<RelOp, AdapterError> {
+    node.children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) => match t.value.as_str() {
+                ">=" => Some(RelOp::Ge),
+                "<=" => Some(RelOp::Le),
+                ">" => Some(RelOp::Gt),
+                "<" => Some(RelOp::Lt),
+                "==" | "=" => Some(RelOp::Eq),
+                "!=" => Some(RelOp::Ne),
+                _ => None,
+            },
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "relop".into(),
+            position: "relational operator",
+        })
+}
+
+/// `expr = term_expr { ( PLUS | MINUS ) term_expr }` — left-associative
+/// fold over `+`/`-`, looser than `*`/`/`.
+fn adapt_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    fold_binary(node, "expr", "term_expr", adapt_term_expr)
+}
+
+/// `term_expr = factor { ( STAR | SLASH ) factor }` — left-associative
+/// fold over `*`/`/`.
+fn adapt_term_expr(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    fold_binary(node, "term_expr", "factor", adapt_factor)
+}
+
+/// Shared left-fold for the two binary-precedence levels: walk the
+/// node's children in source order, building `Bin(op, acc, rhs)` as each
+/// `(operator-token, operand)` pair appears. The operands are child
+/// nodes named `operand_rule`, adapted by `adapt_operand`.
+fn fold_binary(
+    node: &GrammarASTNode,
+    rule: &'static str,
+    operand_rule: &'static str,
+    adapt_operand: fn(&GrammarASTNode) -> Result<ExprAst, AdapterError>,
+) -> Result<ExprAst, AdapterError> {
+    let mut acc: Option<ExprAst> = None;
+    let mut pending_op: Option<ArithOp> = None;
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == operand_rule => {
+                let operand = adapt_operand(n)?;
+                acc = Some(match (acc.take(), pending_op.take()) {
+                    (None, _) => operand,
+                    (Some(lhs), Some(op)) => ExprAst::Bin(op, Box::new(lhs), Box::new(operand)),
+                    (Some(lhs), None) => lhs, // defensive: two operands, no op
+                });
+            }
+            ASTNodeOrToken::Token(t) => {
+                if let Some(op) = arith_op_from_value(&t.value) {
+                    pending_op = Some(op);
+                }
+            }
+            _ => {}
+        }
+    }
+    acc.ok_or(AdapterError::MissingChild {
+        rule: rule.into(),
+        position: "at least one operand",
+    })
+}
+
+/// `factor = agg | NUMBER | IDENT | LPAREN expr RPAREN`.
+fn adapt_factor(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    // A parsed `agg` or parenthesised `expr` appears as a named child node;
+    // a bare NUMBER or IDENT appears as a token. Check nodes first.
+    if let Some(agg) = first_named_child(node, "agg") {
+        return adapt_agg(agg);
+    }
+    if let Some(inner) = first_named_child(node, "expr") {
+        return adapt_expr(inner);
+    }
+    for c in &node.children {
+        if let ASTNodeOrToken::Token(t) = c {
+            if t.type_ == TokenType::Number {
+                return Ok(ExprAst::Lit(parse_finite(&t.value, t.type_, "factor")?));
+            }
+            if t.type_ == TokenType::Name {
+                return Ok(ExprAst::Ref(t.value.clone()));
+            }
+        }
+    }
+    Err(AdapterError::MissingChild {
+        rule: "factor".into(),
+        position: "agg / number / identifier / parenthesised expr",
+    })
+}
+
+/// `agg = ( "sum" | "count" | "min" | "max" | "avg" ) LPAREN IDENT RPAREN`.
+/// Two Name tokens: the aggregation keyword and the slot it reduces.
+fn adapt_agg(node: &GrammarASTNode) -> Result<ExprAst, AdapterError> {
+    let names: Vec<&str> = node
+        .children
+        .iter()
+        .filter_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.as_str()),
+            _ => None,
+        })
+        .collect();
+    let op =
+        names
+            .first()
+            .and_then(|kw| agg_op_from_keyword(kw))
+            .ok_or(AdapterError::MissingChild {
+                rule: "agg".into(),
+                position: "aggregation keyword",
+            })?;
+    let slot = names
+        .get(1)
+        .map(|s| s.to_string())
+        .ok_or(AdapterError::MissingChild {
+            rule: "agg".into(),
+            position: "slot identifier",
+        })?;
+    Ok(ExprAst::Agg(op, slot))
+}
+
+fn arith_op_from_value(v: &str) -> Option<ArithOp> {
+    match v {
+        "+" => Some(ArithOp::Add),
+        "-" => Some(ArithOp::Sub),
+        "*" => Some(ArithOp::Mul),
+        "/" => Some(ArithOp::Div),
+        _ => None,
+    }
+}
+
+fn agg_op_from_keyword(kw: &str) -> Option<AggOp> {
+    match kw {
+        "sum" => Some(AggOp::Sum),
+        "count" => Some(AggOp::Count),
+        "min" => Some(AggOp::Min),
+        "max" => Some(AggOp::Max),
+        "avg" => Some(AggOp::Avg),
+        _ => None,
+    }
+}
+
+/// Find the first direct child node with the given rule name.
+fn first_named_child<'a>(node: &'a GrammarASTNode, rule: &str) -> Option<&'a GrammarASTNode> {
+    node.children.iter().find_map(|c| match c {
+        ASTNodeOrToken::Node(n) if n.rule_name == rule => Some(n),
+        _ => None,
+    })
+}
+
 fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
     if node.rule_name != "term" {
         return Err(AdapterError::UnexpectedRule {
@@ -214,17 +731,34 @@ fn adapt_term(node: &GrammarASTNode) -> Result<Term, AdapterError> {
             actual: node.rule_name.clone(),
         });
     }
-    // term = IDENT [ LPAREN term { COMMA term } RPAREN ]
-    let mut idents = node.children.iter().filter_map(|c| match c {
-        ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
-        // grammar-tools emits IDENT-typed identifiers as TokenType::Name
-        _ => None,
-    });
-    let functor = idents.next().ok_or(AdapterError::MissingChild {
-        rule: "term".into(),
-        position: "identifier",
-    })?;
-    let args = collect_term_children(node);
+    // term = IDENT [ LPAREN ( term | NUMBER ) { COMMA ( term | NUMBER ) } RPAREN ]
+    //
+    // The functor is the first (and only) Name token that is a *direct*
+    // child — each term argument's own IDENT is nested inside that
+    // argument's `term` node. Arguments may be terms or numeric literals
+    // (valued facts like `gross_income(18000)`); we walk the children in
+    // source order so mixed argument lists keep their positions.
+    let functor = node
+        .children
+        .iter()
+        .find_map(|c| match c {
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Name => Some(t.value.clone()),
+            _ => None,
+        })
+        .ok_or(AdapterError::MissingChild {
+            rule: "term".into(),
+            position: "identifier",
+        })?;
+    let mut args = Vec::new();
+    for c in &node.children {
+        match c {
+            ASTNodeOrToken::Node(n) if n.rule_name == "term" => args.push(adapt_term(n)?),
+            ASTNodeOrToken::Token(t) if t.type_ == TokenType::Number => {
+                args.push(Term::Num(parse_finite(&t.value, t.type_, "term")?));
+            }
+            _ => {}
+        }
+    }
     if args.is_empty() {
         Ok(Term::Atom(functor))
     } else {
@@ -307,6 +841,23 @@ fn trust_tier_from_node(node: &GrammarASTNode) -> Result<TrustTierName, AdapterE
 // Helpers
 // ---------------------------------------------------------------------------
 
+/// Parse a NUMBER lexeme to `f64`, rejecting non-finite values. Rust's
+/// `f64::from_str` accepts overflowing literals like `1e400` (→ `inf`);
+/// an infinite or NaN threshold is meaningless in a rulebook, so we
+/// reject it here with an accurate diagnostic rather than letting it
+/// silently flow downstream.
+fn parse_finite(raw: &str, kind: TokenType, rule: &str) -> Result<f64, AdapterError> {
+    match raw.parse::<f64>() {
+        Ok(x) if x.is_finite() => Ok(x),
+        _ => Err(AdapterError::BadToken {
+            rule: rule.to_string(),
+            kind,
+            value: raw.to_string(),
+            reason: "not a finite f64",
+        }),
+    }
+}
+
 fn collect_term_children(node: &GrammarASTNode) -> Vec<Term> {
     node.children
         .iter()
@@ -317,9 +868,7 @@ fn collect_term_children(node: &GrammarASTNode) -> Vec<Term> {
         .collect()
 }
 
-fn collect_annotations(
-    node: &GrammarASTNode,
-) -> Result<Vec<Annotation>, AdapterError> {
+fn collect_annotations(node: &GrammarASTNode) -> Result<Vec<Annotation>, AdapterError> {
     let mut out = Vec::new();
     for c in &node.children {
         if let ASTNodeOrToken::Node(n) = c {
@@ -419,7 +968,11 @@ mod tests {
 
     fn parse_one(src: &str) -> Statement {
         let program = parse(src).expect("parse");
-        program.statements.into_iter().next().expect("at least one statement")
+        program
+            .statements
+            .into_iter()
+            .next()
+            .expect("at least one statement")
     }
 
     #[test]
@@ -451,13 +1004,85 @@ mod tests {
                 annotations,
             } => {
                 assert_eq!(lr, 1.5);
-                assert!(matches!(evidence, Term::Compound { ref functor, .. } if functor == "pmh"));
+                assert!(matches!(
+                    evidence,
+                    Evidence::Term(Term::Compound { ref functor, .. }) if functor == "pmh"
+                ));
                 assert!(matches!(conclusion, Term::Atom(n) if n == "acs"));
                 assert_eq!(annotations.len(), 2);
                 assert!(matches!(annotations[0], Annotation::Source(_)));
-                assert!(matches!(annotations[1], Annotation::Trust(TrustTierName::Empirical)));
+                assert!(matches!(
+                    annotations[1],
+                    Annotation::Trust(TrustTierName::Empirical)
+                ));
             }
             other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn round_trips_predicate_evidence() {
+        // contributes <lr> from <slot> >= <value> to <verdict>
+        let src = "contributes 1000000 from gross_income >= 14600 to required_to_file";
+        match parse_one(src) {
+            Statement::Contributes {
+                lr,
+                evidence,
+                conclusion,
+                ..
+            } => {
+                assert_eq!(lr, 1_000_000.0);
+                match evidence {
+                    Evidence::Predicate { slot, op, value } => {
+                        assert_eq!(slot, "gross_income");
+                        assert_eq!(op, CmpOp::Ge);
+                        assert_eq!(value, 14600.0);
+                    }
+                    other => panic!("expected predicate evidence, got {other:?}"),
+                }
+                assert!(matches!(conclusion, Term::Atom(n) if n == "required_to_file"));
+            }
+            other => panic!("expected Contributes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_five_comparison_operators_round_trip() {
+        for (sym, expected) in &[
+            (">=", CmpOp::Ge),
+            ("<=", CmpOp::Le),
+            (">", CmpOp::Gt),
+            ("<", CmpOp::Lt),
+            ("==", CmpOp::Eq),
+        ] {
+            let src = format!("contributes 2.0 from age {sym} 18 to adult");
+            match parse_one(&src) {
+                Statement::Contributes {
+                    evidence: Evidence::Predicate { op, value, slot },
+                    ..
+                } => {
+                    assert_eq!(op, *expected, "operator {sym}");
+                    assert_eq!(value, 18.0);
+                    assert_eq!(slot, "age");
+                }
+                other => panic!("expected predicate Contributes for {sym}, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn round_trips_valued_observation() {
+        // observe <slot>(<number>) — a valued fact the predicate reads.
+        match parse_one("observe gross_income(18000)") {
+            Statement::Observe { term } => match term {
+                Term::Compound { functor, args } => {
+                    assert_eq!(functor, "gross_income");
+                    assert_eq!(args.len(), 1);
+                    assert!(matches!(args[0], Term::Num(x) if x == 18000.0));
+                }
+                other => panic!("expected compound, got {other:?}"),
+            },
+            other => panic!("expected Observe, got {other:?}"),
         }
     }
 

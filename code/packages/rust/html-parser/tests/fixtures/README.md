@@ -25,25 +25,54 @@ Global-state descriptor cases pin document/body shell state plus non-form
 inert/hidden, editing, drag, spellcheck, translate, accesskey, autofocus, and
 related focus metadata.
 Document-policy descriptor cases pin charset, viewport, referrer/robots/color
-scheme, CSP/Permissions/Origin-Trial/Accept-CH hints, theme colors, refresh,
-canonical, and manifest metadata.
+scheme, CSP/Permissions/Origin-Trial/Accept-CH hints, normalized permissions
+policy features, theme colors, refresh, canonical, and manifest metadata.
 ARIA descriptor cases pin collection/range/live-region semantics plus details,
 error-message, and flow relationship target text.
 Loading-hint descriptor cases pin scheduling hints across lazy/eager loading,
 decoding, fetch priority, blocking, and media preload metadata.
 Fetch-policy descriptor cases pin integrity, CORS, nonce, referrer policy,
-iframe CSP/sandbox/permissions, fullscreen, credentialless metadata, and
-flattened embedded-policy descriptors.
+iframe CSP/sandbox/permissions, normalized allow features, fullscreen,
+credentialless metadata, and flattened embedded-policy descriptors.
 Resource-endpoint descriptor cases pin refresh redirects plus resolved document
 resources as a flat endpoint inventory for fetch/navigation planning.
 Form-policy descriptor cases pin submission targets, accept/autocomplete/rel
 policy tokens, validation bypass state, and submitter overrides.
+Script descriptor cases pin execution, storage access, worker construction,
+worker messaging channels, module graph hints, and fallback blockers.
+Form-association descriptor cases pin form owners, labels, fieldset membership,
+datalist links, and output calculation relationships as a flat browser-planning
+inventory.
+Form-autofill descriptor cases pin autocomplete tokens, section/address/contact
+field hints, webauthn markers, and disabled/readonly/hidden/off blockers as a
+flat browser-planning inventory.
+Form-submission descriptor cases pin successful controls, submission values,
+form action/method/target defaults, and submitter routing overrides as a flat
+browser-planning inventory.
+Form-reset descriptor cases pin resettable controls, resetter controls, default
+reset values, selection/checked reset state, and form-level `onreset` hooks as a
+flat browser-planning inventory.
+Form-validation descriptor cases pin validation candidates, constraint
+attributes, barred controls, form-level `novalidate`, and submitter-level
+validation bypass hints as a flat browser-planning inventory.
 Navigation-target descriptor cases pin policy-rich anchor and image-map area
 targets with target selection, rel policy, ping/attribution endpoints,
 language/type hints, download/referrer policy, and area geometry.
 Event-handler descriptor cases pin document, body, and element inline handler
 metadata as a flat inventory categorized by activation, keyboard, form, media,
 lifecycle, and error/event-recovery concerns without evaluating script text.
+Lifecycle-event descriptor cases pin document/body load and unload hooks,
+visibility/history/network lifecycle handlers, and element-level error recovery
+as a flat browser-planning inventory.
+Animation-interaction descriptor cases pin CSS animation and transition event
+hooks, timeline phase grouping, document/body scope, and cancellation paths as a
+flat browser-planning inventory.
+Fullscreen-interaction descriptor cases pin embedded fullscreen permission
+hints, `allowfullscreen` state, fullscreen event hooks, and document/body
+fullscreen callbacks as a flat browser-planning inventory.
+Context-menu interaction descriptor cases pin `oncontextmenu` hooks, ARIA
+menu-popup invokers, menu/menuitem roles, popover menu surfaces, and
+hidden/inert/disabled blocked context-menu paths.
 Disclosure-state descriptor cases pin details/dialog open state, grouped details
 names, summary text, dialog modal/closedby behavior, and accessible naming
 metadata as a flat browser-planning inventory.
@@ -60,6 +89,18 @@ pointer handler inventory, and hidden/inert/disabled blocked drag paths.
 Clipboard-interaction descriptor cases pin copy/cut/paste handlers, input
 hooks, editing hosts, text controls, and hidden/readonly/disabled blocked
 clipboard paths.
+Selection-interaction descriptor cases pin `onselect`/selection-change
+handlers, input hooks, editing hosts, text controls, and
+hidden/readonly/disabled blocked selection paths.
+Pointer-interaction descriptor cases pin click, mouse, touch, pointer, wheel,
+drag/drop handler routing, command/editing context, and hidden/inert/disabled
+blocked pointer paths.
+Scroll-interaction descriptor cases pin `onscroll`/`onscrollend`, wheel/touch
+routing, ARIA scrollbar value state, and hidden/inert/disabled blocked scroll
+paths.
+Composition-interaction descriptor cases pin IME composition events,
+beforeinput/input hooks, text controls, editing hosts, and hidden, readonly, or
+disabled blocked composition paths.
 Inline semantic cases pin machine-readable values, edits, quotes, phrase-level
 annotations, ruby annotation nodes, and bidi overrides.
 Media cases pin audio/video playback flags, preload/poster metadata, and
@@ -68,6 +109,11 @@ Script/style cases pin module/classic script kind, async/defer/nomodule flags,
 inline script/style text, flattened script execution and stylesheet planning
 descriptors, and loading-policy hints such as integrity, crossorigin, referrer
 policy, fetch priority, blocking, disabled state, and alternate stylesheets.
+Script storage-access cases pin inline references to Web Storage, cookies,
+IndexedDB, CacheStorage/service workers, StorageManager, storage-event hooks,
+and fallback blockers.
+Script module-graph cases pin import maps, module entrypoints, static/dynamic
+imports, modulepreload hints, and fallback blockers.
 Responsive image cases pin `srcset`/`sizes`, resolved candidate URLs, flattened image candidate
 descriptors, `picture/source` media/type hints, lazy loading, decoding, fetch
 priority, CORS/referrer policy, usemap, and server-side image-map state. Link

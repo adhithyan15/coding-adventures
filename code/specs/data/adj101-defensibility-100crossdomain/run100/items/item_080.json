@@ -1,0 +1,7 @@
+{
+ "idx": 80,
+ "id": "CON-1",
+ "scenario": "In March, the provider's measured uptime was 99.5%. The monthly fee was $4,000. The customer submitted a credit request on April 10, 18 days after the end of March.",
+ "policy": "The provider guarantees 99.9% monthly uptime. If measured uptime falls below 99.9% in a calendar month, the customer is entitled to a service credit equal to 10% of that month's fees. Service credits are the customer's sole remedy and must be requested within 30 days of the affected month.",
+ "question": "What service credit is the customer entitled to?"
+}

@@ -6,6 +6,10 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `ZclFrameSummary` for payload-free frame-shape, direction, manufacturer, and
+  default-response diagnostics.
+- `ZclStatusCode` and `default_response_frame()` for generating ZCL Default
+  Response foundation frames.
 - `ZclAttributeReportSummary` plus `attribute_report_summary()` for compact
   parsed-report shape and D23 state-delta coverage diagnostics.
 - `encode_attribute_reports()` and `report_attributes_frame()` for generating

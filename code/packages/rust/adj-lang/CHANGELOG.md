@@ -1,5 +1,196 @@
 # Changelog
 
+## [0.11.0] - 2026-06-12 — `import "path"` (MYCIN-2026 M3)
+
+### Added
+
+- **`import "<relative path>"`** — compose a program across files: a dictionary,
+  a rulebook that imports + `use`s it, and a case that imports the rulebook can
+  each be their own checked-in `.adj`. New `Statement::Import(String)`; grammar
+  `import_decl`.
+- **`resolve` module** — the import-graph policy, with **no filesystem I/O** (it
+  drives an injected `ImportProvider`, so the graph logic is unit-testable
+  without a disk and the FS trust boundary lives in the caller):
+  - **relative** — `provider.resolve(importer, literal)` → canonical id.
+  - **idempotent** — a `visited` set keyed by canonical id; a file merges once
+    (diamond imports don't duplicate clauses).
+  - **acyclic** — a DFS stack; re-entering a stacked id is `ImportError::Cycle`
+    (cycle check precedes the idempotency check, so a cycle never masquerades as
+    a harmless repeat). Self-import included.
+  - **bounded** — `ImportLimits { max_depth, max_files }` (default 32 / 256);
+    past either, `DepthExceeded` / `TooManyFiles`. Depth is checked on every
+    descent, so the graph walk can't exceed `max_depth` frames on hostile input.
+  - Merge order is depth-first **post-order** — an imported file's declarations
+    precede the importer's, so a dictionary is in scope by the time the rulebook
+    that `use`s it is merged.
+- **`compile_with_imports(root_id, provider, limits)`** — resolve then lower, with
+  a combined `CompileWithImportsError`. `lower` now rejects a stray unresolved
+  `import` as `LowerError::UnresolvedImport` (never silently dropped).
+- 8 resolver tests (3-file chain, diamond, direct + self cycle, depth + fan-out
+  bounds, unresolvable path, importer-relative). Grammar regenerated. **M3
+  completes the MYCIN-2026 language foundation (M0–M3).**
+
+## [0.10.0] - 2026-06-12 — `rulebook` + `use` (MYCIN-2026 M2)
+
+### Added
+
+- **`rulebook <name> { … }`** — a named, reusable block of clauses
+  (`prior`/`contributes`/`interacts`/`uncertain`), so a body of adjudicatable
+  knowledge can be written once, checked in as code, and (M3) imported. A
+  rulebook is a *container*, not a namespace: its clauses lower into the
+  `KnowledgeBase` exactly as if written at top level (`flatten_clauses`). New
+  AST `Statement::Rulebook { name, statements }`.
+- **`use <dictionary>`** — binds a declared `dictionary` (by name) as the
+  controlled vocabulary the enclosing scope's clauses are checked against. Legal
+  at top level or inside a `rulebook`. New AST `Statement::Use(String)`.
+- **Scoped vocabulary enforcement (M2).** When any `use` appears, enforcement
+  becomes *per-scope*: a top-level `use D` checks the top-level clauses against
+  `D`; a rulebook's own `use D'` checks that rulebook against `D'` (falling back
+  to a top-level `use`). A scope with no `use` is unchecked — a rulebook opts in
+  to checking by `use`-ing a dictionary. A `use` of a dictionary the program
+  never declared is `LowerError::UndefinedDictionary`. When **no** `use` appears
+  anywhere, M1 whole-program enforcement is unchanged (fully backward-compatible).
+- **Rulebooks are flat.** A `rulebook` nested directly in another is a clean
+  `LowerError::NestedRulebook` (nesting has no defined scoping semantics; the
+  refusal also keeps clause-flattening non-recursive, so deeply-nested untrusted
+  source cannot drive unbounded recursion in the lowerer).
+- 8 tests (rulebook lowers like top-level; `use` checks/rejects terms; undefined
+  dictionary; no-`use` rulebook unchecked; top-level `use` scoping; nested
+  rulebook rejected). Grammar regenerated. Next (MYCIN-2026): M3 `import "path"`.
+
+## [0.9.0] - 2026-06-12 — `dictionary` + `define` (MYCIN-2026 M1)
+
+### Added
+
+- **`dictionary <name> { … }` and `define`** — the controlled vocabulary as a
+  first-class, named grammar construct (MYCIN-2026). `define <name> : hypothesis`
+  registers a hypothesis; `define <name> : finding values [v…]` registers a
+  finding functor with a *closed* value domain; `surface "…", "…"` lists the
+  decomposer's surface forms. A `define` is valid bare or inside a `dictionary`
+  block. New `LBRACK`/`RBRACK` tokens; grammar regenerated.
+- AST: `Statement::Define(Define)` + `Statement::Dictionary { name, defines }`;
+  `Define { name, kind: DefineKind::{Hypothesis | Finding{values}}, surfaces }`
+  (exported). `LoweredProgram` gains `dictionary: Vec<Define>`.
+- **Compile-time vocabulary enforcement** (replaces the prototype's side-car
+  `dict_lint.py`): when a program declares a dictionary (≥1 `define`), every
+  finding / hypothesis used in `prior`/`contributes`/`interacts`/`observe`/`?`
+  must be defined, and a finding value must be in its declared domain — else
+  `LowerError::UndefinedTerm` / `ValueNotInDomain`. The IR a decomposer emits and
+  the rulebook it compiles against share one closed vocabulary by construction.
+  A program with **no** dictionary is unchecked (backward-compatible). 6 tests.
+- Next (MYCIN-2026): M2 `rulebook` + `use`, M3 `import`.
+
+## [0.8.0] - 2026-06-11 — `minimize`/`maximize` LP objective (ADJ constraints track C2)
+
+### Added
+
+- **`minimize <expr>` / `maximize <expr>`** surface syntax — a linear-programming
+  objective over the declared symbols. New grammar rule `optimize_decl` (like
+  `solve`/`check`, the keywords are IDENT-matched literals, not lexer keywords),
+  regenerated `_parser_grammar.rs`.
+- AST: `Statement::Optimize { dir, objective }` + `OptDir { Minimize, Maximize }`
+  (exported). Adapter `adapt_optimize`. The objective is kept as an unevaluated
+  `ComputeExpr` (it mentions the symbols the LP solver assigns).
+- `ConstraintSystem` gains `objective: Option<(OptDir, ComputeExpr)>`; `is_empty`
+  accounts for it. The solver (`adj-constraint-solver` 0.6.0) reads it. 2 tests.
+
+## [0.7.0] - 2026-06-11 — constraint sublanguage (symbols + constrain/solve/check, ADJ constraints B1)
+
+### Added
+
+- **`symbol <name> : <sort>`** — declare an unknown the engine will solve for
+  (`sort` is a dimensional sort term: `scalar`, `money(usd)`, …).
+- **`constrain <expr> <relop> <expr>`** — assert an (in)equality. `relop` is
+  `>= <= > < == = !=`; operands reuse the `let` arithmetic `expr`, so a
+  constraint may mention observed slots, earlier `let`s, and symbols. (Typed
+  literals like `money(2000, usd)` are referenced via an `observe`d name, since
+  constraint operands are arithmetic exprs.)
+- **`solve for { a, b, … }`** — name the unknowns to solve for; **`check`** —
+  ask whether the constraint set is satisfiable.
+- New AST: `Statement::{Symbol, Constrain, SolveFor, Check}` + `RelOp`.
+- **`ConstraintSystem`** (`symbols`, `constraints`, `solve_for`, `check`),
+  exposed on `LoweredProgram.constraints`. The lowerer builds it, keeping each
+  constraint's two sides as **unevaluated `ComputeExpr` trees** (they mention
+  symbols the solver assigns). **No solving yet** — the reuse solver backends
+  (`cas-solve` / `SatTactic` / `LiaTactic`) are wired in track B2.
+
+### Grammar
+
+- `.tokens`: added `COLON` (`:`) and `NE` (`!=`, listed before `>`/`<` for
+  maximal munch).
+- `.grammar`: `symbol_decl` / `constrain_decl` / `relop` / `solve_decl` /
+  `check_decl`. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.6.0] - 2026-06-11 — `let` + arithmetic (computed values, ADJ expansion step 3b)
+
+### Added
+
+- **`let <name> = <expr>`** — bind a value the engine **computes** on the CPU
+  from a formula the model writes. `<expr>` supports `+ - * /` with standard
+  precedence and parentheses, references to observed slots and earlier `let`s,
+  numeric literals, and aggregations `sum/count/min/max/avg(slot)` over every
+  observation of a slot. The lowerer evaluates the formula via
+  `logic_engine::compute` against the facts seen so far and binds the resulting
+  `Derived` (with its derivation tree) into the KB — so a **predicate fires
+  over a computed value exactly as over an observed one**
+  (`from csf_ratio <= 0.4 to bacterial`). The model never does the arithmetic.
+- New AST: `Statement::Let { name, expr }`, `ExprAst` (`Ref/Lit/Bin/Agg`),
+  `ArithOp`, `AggOp`. New `LowerError::ComputationFailed` (unknown slot,
+  division by zero, empty aggregation, … surfaced cleanly, never a panic).
+
+### Grammar
+
+- `.tokens`: added `PLUS - * / =` (`EQUALS`). Two ordering disciplines:
+  `EQUALS` after `EQEQ` (so `==` wins maximal munch), and the arithmetic
+  operators after `NUMBER` so a negative literal `-5` still lexes as one
+  `NUMBER(-5)` — a binary `-` only matches a `-` not glued to a digit, so a
+  `let` formula must **space its operators** (`a - 5`, `total - discount`).
+- `.grammar`: `let_decl` + the `expr` / `term_expr` / `factor` / `agg`
+  precedence cascade. Regenerated `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.5.0] - 2026-06-10 — predicate evidence + valued facts
+
+### Added
+
+- **Numeric predicate evidence in `contributes`** — first-class operator
+  syntax: `contributes <lr> from <slot> >= <value> to <verdict>`. The five
+  comparison operators `>= <= > < ==` lower to a
+  `logic_engine::PredicateContributionClause`; a saturating `lr` makes the
+  rule **deterministic** (deterministic = the saturating limit of a
+  probabilistic LR, evaluated on the CPU at decision time — the model that
+  authored the rulebook never ran the comparison).
+- **Valued facts** — `observe gross_income(18000)`: numeric literals are now
+  allowed as compound arguments (`term = IDENT [ LPAREN ( term | NUMBER )
+  { COMMA ( term | NUMBER ) } RPAREN ]`). These are the facts predicates
+  read. New `ast::Term::Num(f64)`.
+- New AST types: `ast::Evidence { Term | Predicate { slot, op, value } }`
+  (the evidence side of `contributes`) and `ast::CmpOp`. `Statement::Contributes`
+  now carries `evidence: Evidence` instead of `evidence: Term`.
+
+### Grammar
+
+- `.tokens`: added comparison-operator tokens `GE LE EQEQ GT LT`
+  (two-character operators listed before single-character ones so maximal
+  munch tokenises `>=` before `>`).
+- `.grammar`: `contributes_decl` now takes `evidence = predicate | term`;
+  the `predicate | term` alternation relies on the parser's full
+  backtracking (both start with `IDENT`). Regenerated
+  `_lexer_grammar.rs` / `_parser_grammar.rs`.
+
+## [0.4.0] - 2026-06-10 — differential decision over `?` queries
+
+### Added
+
+- **`decide(&LoweredProgram) -> Differential`** and
+  **`compile_and_decide(src) -> Differential`** — treat a program's `? h`
+  query lines as the set of *competing hypotheses* and run the new
+  `logic_engine::differential` over them: rank by posterior, pick the
+  argmax, report the between-hypothesis margin, and kick back when an open
+  uncertainty could flip the ranking. A multi-`?` adj-lang program is now
+  directly a differential (the natural reading); a single-`?` program
+  yields a determinate single-hypothesis result. No grammar change — the
+  competing set is already expressible as multiple `?` lines.
+
 ## [0.3.0] - 2026-06-02 — grammar-driven frontend
 
 ### Changed

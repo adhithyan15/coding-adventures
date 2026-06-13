@@ -1,0 +1,8 @@
+{
+ "check_id": 211,
+ "idx": 81,
+ "slot": "data_no_longer_necessary",
+ "claimed_value": true,
+ "scenario": "MeadowFit, a gym, collected member Jordan's home address solely to mail membership cards. Jordan canceled membership and the cards are no longer being sent; the address now serves no remaining purpose. Jordan submitted an erasure request on March 1, and MeadowFit deleted the address on March 20.",
+ "cited_span": "the cards are no longer being sent; the address now serves no remaining purpose"
+}

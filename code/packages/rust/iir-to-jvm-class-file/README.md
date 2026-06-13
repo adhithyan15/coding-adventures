@@ -109,8 +109,8 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `cmp_ge`       | `if_icmplt +7; iconst_1; goto +4; iconst_0`               |
 | `label`        | Backpatch target — no bytes emitted                       |
 | `jmp`          | `goto <offset>` + backpatch fixup                         |
-| `jmp_if_true`  | `iload cond; ifne <offset>` + backpatch                   |
-| `jmp_if_false` | `iload cond; ifeq <offset>` + backpatch                   |
+| `jmp_if_true`  | `iload cond; ifne <offset>` (i32) / `lload; lconst_0; lcmp; ifne` (i64) + backpatch |
+| `jmp_if_false` | `iload cond; ifeq <offset>` (i32) / `lload; lconst_0; lcmp; ifeq` (i64) + backpatch |
 | `ret`          | `iload/lload/fload/dload result; ireturn/lreturn/…`       |
 | `ret_void`     | `return`                                                  |
 | `call`         | `iload args…; invokestatic CP#; istore dest`              |
@@ -119,6 +119,15 @@ assert_eq!(class_file.this_class_name, "MyClass");
 | `type_assert`    | nop (erased at lowering time)                               |
 | `alloc_closure`  | `newarray T_LONG; lastore (×N); astore dest` — LANG36       |
 | `call_closure`   | `newarray T_LONG; lastore (×M); invokestatic __callClosure` — LANG36 |
+| `alloc_bytes`    | no bytecode — the tape is the static `env/BFRuntime.__tape : [B` (LM-J) |
+| `load_byte`      | `getstatic __tape; <idx>; baload; sipush 0xFF; iand` (+`l2i`/`i2l` for i64) — LM-J |
+| `store_byte`     | `getstatic __tape; <idx>; <val>; bastore` (+`l2i` for i64) — LM-J |
+| `call_builtin putchar`/`getchar` | `invokestatic env/BFRuntime.putchar(I)V` / `getchar()I` — Brainfuck `.`/`,` |
+
+The byte-tape ops (`alloc_bytes`/`load_byte`/`store_byte`) are how Brainfuck runs on
+the JVM (LANG-MATRIX LM-J): the tape is a host-provided static `byte[]`, `baload`/`bastore`
+index it (masking the sign-extended load back to an unsigned cell), and `.`/`,` call the
+`env.BFRuntime` host class — the JVM sibling of the LLVM libc / wasm `env.putchar` I/O.
 
 ## Closures (LANG36)
 

@@ -1,0 +1,8 @@
+{
+ "check_id": 217,
+ "idx": 84,
+ "slot": "controller_informed_of_intended_change",
+ "claimed_value": true,
+ "scenario": "CloudKeep, a processor for retailer Bryce Co., signed a data-processing agreement and began using a new sub-processor, ByteHaul, for backups. CloudKeep emailed Bryce Co. about adding ByteHaul 14 days before the change, and Bryce Co. never raised an objection.",
+ "cited_span": "CloudKeep emailed Bryce Co. about adding ByteHaul 14 days before the change"
+}
