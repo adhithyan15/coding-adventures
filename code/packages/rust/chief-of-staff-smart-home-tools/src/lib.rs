@@ -46,15 +46,16 @@ use smart_home_integration_catalog::{
     activation_execution_packets_from_handoff_packages,
     activation_forecasts_from_timeline_milestones,
     activation_handoff_packages_from_runbook_entries, activation_health_from_candidates,
-    activation_maintenance_from_candidates, activation_observability_probes_from_rollups,
-    activation_operator_tasks_from_playbook_steps, activation_plan_for_entry,
-    activation_plans_at_or_before_priority, activation_playbook_steps_from_forecasts,
-    activation_readouts_from_candidates, activation_release_packets_from_closure_gates,
-    activation_remediation_items_from_responses, activation_response_items_from_escalation_cases,
-    activation_reviews_from_candidates, activation_risk_from_candidates,
-    activation_rollback_plans_from_safety_gates, activation_runbook_entries_from_playbook_steps,
-    activation_runway_from_candidates, activation_safety_gates_from_deployment_records,
-    activation_sentinel_alerts_from_rollups, activation_timeline_milestones_from_dashboard_cards,
+    activation_incident_briefs_from_observability_probes, activation_maintenance_from_candidates,
+    activation_observability_probes_from_rollups, activation_operator_tasks_from_playbook_steps,
+    activation_plan_for_entry, activation_plans_at_or_before_priority,
+    activation_playbook_steps_from_forecasts, activation_readouts_from_candidates,
+    activation_release_packets_from_closure_gates, activation_remediation_items_from_responses,
+    activation_response_items_from_escalation_cases, activation_reviews_from_candidates,
+    activation_risk_from_candidates, activation_rollback_plans_from_safety_gates,
+    activation_runbook_entries_from_playbook_steps, activation_runway_from_candidates,
+    activation_safety_gates_from_deployment_records, activation_sentinel_alerts_from_rollups,
+    activation_timeline_milestones_from_dashboard_cards,
     activation_verification_checkpoints_from_execution_packets,
     activation_watchtower_signals_from_command_center_sections, describe_primitive_family,
     ecosystem_platform_coverage, ecosystem_platforms_requiring_primitive, ecosystem_survey_sources,
@@ -97,7 +98,9 @@ use smart_home_integration_catalog::{
     IntegrationActivationForecastSummary, IntegrationActivationHandoffPackage,
     IntegrationActivationHandoffStatus, IntegrationActivationHandoffSummary,
     IntegrationActivationHealthStage, IntegrationActivationHealthStatus,
-    IntegrationActivationHealthSummary, IntegrationActivationMaintenanceSummary,
+    IntegrationActivationHealthSummary, IntegrationActivationIncidentAction,
+    IntegrationActivationIncidentBrief, IntegrationActivationIncidentSeverity,
+    IntegrationActivationIncidentSummary, IntegrationActivationMaintenanceSummary,
     IntegrationActivationMaintenanceWindow, IntegrationActivationObservabilityProbe,
     IntegrationActivationObservabilityStatus, IntegrationActivationObservabilitySummary,
     IntegrationActivationOperatorTask, IntegrationActivationOperatorTaskKind,
@@ -384,6 +387,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_OBSERVABILITY_TOOL_ID: &str =
     "smart_home.list_integration_activation_observability";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_observability_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID: &str =
+    "smart_home.list_integration_activation_incidents";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_incident_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -880,6 +887,16 @@ impl SmartHomeToolBridge {
                             query,
                         ),
                     )
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID => {
+                    let query = integration_activation_incident_query(&arguments)?;
+                    Ok(list_integration_activation_incidents_output_handler_output(
+                        query,
+                    ))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_incident_query(&arguments)?;
+                    Ok(get_integration_activation_incident_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -2854,6 +2871,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation observability summary",
             "Return compact D23A activation observability counts by observability status, rollback action, safety gate, watchtower signal coverage, blockers, verification, and readiness.",
             integration_activation_observability_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID,
+            "List smart-home integration activation incidents",
+            "List Chief-facing D23A activation incident briefs derived from observability probes with severity, response action, blocker, verification, rollback, and deployment posture.",
+            integration_activation_incident_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_incidents", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_incidents", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation incident summary",
+            "Return compact D23A activation incident counts by severity, response action, observability status, blockers, watchtower signal coverage, verification, rollback, and readiness.",
+            integration_activation_incident_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -5806,6 +5852,26 @@ struct IntegrationActivationObservabilityQuery {
 }
 
 #[derive(Debug, Clone)]
+struct IntegrationActivationIncidentQuery {
+    observability: IntegrationActivationObservabilityQuery,
+    severity: Option<IntegrationActivationIncidentSeverity>,
+    action: Option<IntegrationActivationIncidentAction>,
+    observability_status: Option<IntegrationActivationObservabilityStatus>,
+    rollback_action: Option<IntegrationActivationRollbackAction>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    needs_verification: Option<bool>,
+    incident_ready: Option<bool>,
+    rollback_ready: Option<bool>,
+    deployment_ready: Option<bool>,
+    has_watchtower_signals: Option<bool>,
+    has_observation_signal: Option<bool>,
+    watchtower_requires_attention: Option<bool>,
+    incident_limit: Option<usize>,
+}
+
+#[derive(Debug, Clone)]
 struct IntegrationActivationRiskQuery {
     candidates: IntegrationActivationCandidateQuery,
     risk_kind: Option<IntegrationActivationRiskKind>,
@@ -6723,6 +6789,62 @@ fn integration_activation_observability_query(
         watchtower_requires_attention: optional_bool(arguments, "watchtower_requires_attention")?,
         observability_limit: optional_u64(arguments, "observability_limit")?
             .or(optional_u64(arguments, "probe_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_incident_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationIncidentQuery, ToolCallError> {
+    let severity = optional_string(arguments, "incident_severity")?
+        .or(optional_string(arguments, "severity")?)
+        .map(|label| parse_activation_incident_severity(&label))
+        .transpose()?;
+    let action = optional_string(arguments, "incident_action")?
+        .map(|label| parse_activation_incident_action(&label))
+        .transpose()?;
+    let observability_status = optional_string(arguments, "incident_observability_status")?
+        .or(optional_string(arguments, "observability_status")?)
+        .map(|label| parse_activation_observability_status(&label))
+        .transpose()?;
+    let rollback_action = optional_string(arguments, "incident_rollback_action")?
+        .or(optional_string(arguments, "rollback_action")?)
+        .map(|label| parse_activation_rollback_action(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "incident_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationIncidentQuery {
+        observability: integration_activation_observability_query(arguments)?,
+        severity,
+        action,
+        observability_status,
+        rollback_action,
+        owner_lane,
+        requires_attention: optional_bool(arguments, "incident_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "incident_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        needs_verification: optional_bool(arguments, "incident_needs_verification")?
+            .or(optional_bool(arguments, "needs_verification")?),
+        incident_ready: optional_bool(arguments, "incident_ready")?,
+        rollback_ready: optional_bool(arguments, "incident_rollback_ready")?
+            .or(optional_bool(arguments, "rollback_ready")?),
+        deployment_ready: optional_bool(arguments, "incident_deployment_ready")?
+            .or(optional_bool(arguments, "deployment_ready")?),
+        has_watchtower_signals: optional_bool(arguments, "incident_has_watchtower_signals")?
+            .or(optional_bool(arguments, "has_watchtower_signals")?),
+        has_observation_signal: optional_bool(arguments, "incident_has_observation_signal")?
+            .or(optional_bool(arguments, "has_observation_signal")?),
+        watchtower_requires_attention: optional_bool(
+            arguments,
+            "incident_watchtower_requires_attention",
+        )?
+        .or(optional_bool(arguments, "watchtower_requires_attention")?),
+        incident_limit: optional_u64(arguments, "incident_limit")?
+            .or(optional_u64(arguments, "brief_limit")?)
             .map(|value| value as usize),
     })
 }
@@ -8096,6 +8218,62 @@ fn integration_activation_observability_probes_for_query(
     }
 
     (probes, catalog_count)
+}
+
+fn integration_activation_incident_briefs_for_query(
+    query: &IntegrationActivationIncidentQuery,
+) -> (Vec<IntegrationActivationIncidentBrief>, usize) {
+    let (probes, catalog_count) =
+        integration_activation_observability_probes_for_query(&query.observability);
+    let mut briefs = activation_incident_briefs_from_observability_probes(&probes);
+
+    if let Some(severity) = query.severity {
+        briefs.retain(|brief| brief.severity == severity);
+    }
+    if let Some(action) = query.action {
+        briefs.retain(|brief| brief.action == action);
+    }
+    if let Some(observability_status) = query.observability_status {
+        briefs.retain(|brief| brief.observability_status == observability_status);
+    }
+    if let Some(rollback_action) = query.rollback_action {
+        briefs.retain(|brief| brief.rollback_action == rollback_action);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        briefs.retain(|brief| brief.owner_lane == owner_lane);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        briefs.retain(|brief| brief.requires_attention() == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        briefs.retain(|brief| brief.blocks_activation() == blocked);
+    }
+    if let Some(needs_verification) = query.needs_verification {
+        briefs.retain(|brief| brief.needs_verification() == needs_verification);
+    }
+    if let Some(incident_ready) = query.incident_ready {
+        briefs.retain(|brief| brief.incident_ready() == incident_ready);
+    }
+    if let Some(rollback_ready) = query.rollback_ready {
+        briefs.retain(|brief| brief.rollback_ready() == rollback_ready);
+    }
+    if let Some(deployment_ready) = query.deployment_ready {
+        briefs.retain(|brief| brief.deployment_ready() == deployment_ready);
+    }
+    if let Some(has_watchtower_signals) = query.has_watchtower_signals {
+        briefs.retain(|brief| brief.has_watchtower_signals() == has_watchtower_signals);
+    }
+    if let Some(has_observation_signal) = query.has_observation_signal {
+        briefs.retain(|brief| brief.has_observation_signal == has_observation_signal);
+    }
+    if let Some(watchtower_requires_attention) = query.watchtower_requires_attention {
+        briefs.retain(|brief| brief.watchtower_requires_attention == watchtower_requires_attention);
+    }
+    if let Some(limit) = query.incident_limit {
+        briefs.truncate(limit);
+    }
+
+    (briefs, catalog_count)
 }
 
 fn integration_activation_risk_for_query(
@@ -11404,6 +11582,81 @@ fn get_integration_activation_observability_summary_output_handler_output(
             (
                 "monitoring_probes",
                 integer(summary.monitoring_probes as i64),
+            ),
+        ]),
+    )
+}
+
+fn list_integration_activation_incidents_output_handler_output(
+    query: IntegrationActivationIncidentQuery,
+) -> ToolHandlerOutput {
+    let (briefs, catalog_count) = integration_activation_incident_briefs_for_query(&query);
+    let summary = IntegrationActivationIncidentSummary::from_briefs(briefs.iter());
+    let count = briefs.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_incidents",
+            JsonValue::Array(briefs.iter().map(activation_incident_brief_json).collect()),
+        ),
+        (
+            "summary",
+            integration_activation_incident_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            ("operation", string("list_integration_activation_incidents")),
+            ("briefs", integer(count as i64)),
+            (
+                "briefs_requiring_attention",
+                integer(summary.briefs_requiring_attention as i64),
+            ),
+            ("critical_briefs", integer(summary.critical_briefs as i64)),
+            (
+                "briefs_blocking_activation",
+                integer(summary.briefs_blocking_activation as i64),
+            ),
+            (
+                "next_action",
+                summary
+                    .next_action
+                    .map(|action| string(action.as_str()))
+                    .unwrap_or(JsonValue::Null),
+            ),
+        ]),
+    )
+}
+
+fn get_integration_activation_incident_summary_output_handler_output(
+    query: IntegrationActivationIncidentQuery,
+) -> ToolHandlerOutput {
+    let (briefs, _) = integration_activation_incident_briefs_for_query(&query);
+    let summary = IntegrationActivationIncidentSummary::from_briefs(briefs.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_incident_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_incident_summary"),
+            ),
+            ("total_briefs", integer(summary.total_briefs as i64)),
+            (
+                "briefs_requiring_attention",
+                integer(summary.briefs_requiring_attention as i64),
+            ),
+            ("critical_briefs", integer(summary.critical_briefs as i64)),
+            (
+                "briefs_incident_ready",
+                integer(summary.briefs_incident_ready as i64),
             ),
         ]),
     )
@@ -22644,6 +22897,261 @@ fn integration_activation_observability_summary_json(
     ])
 }
 
+fn activation_incident_brief_json(brief: &IntegrationActivationIncidentBrief) -> JsonValue {
+    object([
+        ("sequence", integer(brief.sequence as i64)),
+        ("severity", string(brief.severity.as_str())),
+        ("action", string(brief.action.as_str())),
+        (
+            "observability_status",
+            string(brief.observability_status.as_str()),
+        ),
+        ("rollback_action", string(brief.rollback_action.as_str())),
+        ("gate_status", string(brief.gate_status.as_str())),
+        ("deployment_ring", string(brief.deployment_ring.as_str())),
+        ("owner_lane", string(brief.owner_lane.as_str())),
+        (
+            "source_observability_sequence",
+            integer(brief.source_observability_sequence as i64),
+        ),
+        (
+            "source_rollback_sequence",
+            integer(brief.source_rollback_sequence as i64),
+        ),
+        (
+            "source_safety_sequence",
+            integer(brief.source_safety_sequence as i64),
+        ),
+        (
+            "source_deployment_sequence",
+            integer(brief.source_deployment_sequence as i64),
+        ),
+        ("source_id", string(&brief.source_id)),
+        ("title", string(&brief.title)),
+        ("summary", string(&brief.summary)),
+        ("priority", integer(brief.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                brief
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(brief.integration_count() as i64),
+        ),
+        ("recommended_view", string(brief.recommended_view.as_str())),
+        (
+            "required_tier",
+            string(privilege_tier_label(brief.required_tier)),
+        ),
+        (
+            "policy_surface",
+            brief
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "watchtower_signal_count",
+            integer(brief.watchtower_signal_count as i64),
+        ),
+        (
+            "has_watchtower_signals",
+            JsonValue::Bool(brief.has_watchtower_signals()),
+        ),
+        (
+            "has_observation_signal",
+            JsonValue::Bool(brief.has_observation_signal),
+        ),
+        (
+            "watchtower_requires_attention",
+            JsonValue::Bool(brief.watchtower_requires_attention),
+        ),
+        ("rollback_ready", JsonValue::Bool(brief.rollback_ready())),
+        (
+            "deployment_ready",
+            JsonValue::Bool(brief.deployment_ready()),
+        ),
+        (
+            "blocks_activation",
+            JsonValue::Bool(brief.blocks_activation()),
+        ),
+        (
+            "needs_verification",
+            JsonValue::Bool(brief.needs_verification()),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(brief.requires_attention()),
+        ),
+        ("incident_ready", JsonValue::Bool(brief.incident_ready())),
+    ])
+}
+
+fn integration_activation_incident_summary_json(
+    summary: &IntegrationActivationIncidentSummary,
+) -> JsonValue {
+    object([
+        ("total_briefs", integer(summary.total_briefs as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "briefs_requiring_attention",
+            integer(summary.briefs_requiring_attention as i64),
+        ),
+        ("critical_briefs", integer(summary.critical_briefs as i64)),
+        ("high_briefs", integer(summary.high_briefs as i64)),
+        ("medium_briefs", integer(summary.medium_briefs as i64)),
+        ("watch_briefs", integer(summary.watch_briefs as i64)),
+        (
+            "hold_activation_briefs",
+            integer(summary.hold_activation_briefs as i64),
+        ),
+        (
+            "telemetry_triage_briefs",
+            integer(summary.telemetry_triage_briefs as i64),
+        ),
+        (
+            "rollback_coverage_briefs",
+            integer(summary.rollback_coverage_briefs as i64),
+        ),
+        (
+            "arm_observation_briefs",
+            integer(summary.arm_observation_briefs as i64),
+        ),
+        (
+            "monitoring_briefs",
+            integer(summary.monitoring_briefs as i64),
+        ),
+        (
+            "briefs_with_watchtower_signals",
+            integer(summary.briefs_with_watchtower_signals as i64),
+        ),
+        (
+            "briefs_with_observation_signals",
+            integer(summary.briefs_with_observation_signals as i64),
+        ),
+        (
+            "briefs_with_watchtower_attention",
+            integer(summary.briefs_with_watchtower_attention as i64),
+        ),
+        (
+            "briefs_ready_for_rollback",
+            integer(summary.briefs_ready_for_rollback as i64),
+        ),
+        (
+            "briefs_ready_for_deployment",
+            integer(summary.briefs_ready_for_deployment as i64),
+        ),
+        (
+            "briefs_blocking_activation",
+            integer(summary.briefs_blocking_activation as i64),
+        ),
+        (
+            "briefs_needing_verification",
+            integer(summary.briefs_needing_verification as i64),
+        ),
+        (
+            "briefs_with_policy_surface",
+            integer(summary.briefs_with_policy_surface as i64),
+        ),
+        (
+            "briefs_incident_ready",
+            integer(summary.briefs_incident_ready as i64),
+        ),
+        (
+            "next_severity",
+            summary
+                .next_severity
+                .map(|severity| string(severity.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_action",
+            summary
+                .next_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_observability_status",
+            summary
+                .next_observability_status
+                .map(|status| string(status.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_rollback_action",
+            summary
+                .next_rollback_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_owner_lane",
+            summary
+                .next_owner_lane
+                .map(|lane| string(lane.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_recommended_view",
+            summary
+                .next_recommended_view
+                .map(|view| string(view.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_brief_sequence",
+            summary
+                .next_brief_sequence
+                .map(|sequence| integer(sequence as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "next_brief_priority",
+            summary
+                .next_brief_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "has_telemetry_triage",
+            JsonValue::Bool(summary.has_telemetry_triage()),
+        ),
+        (
+            "needs_rollback_coverage",
+            JsonValue::Bool(summary.needs_rollback_coverage()),
+        ),
+        ("incident_ready", JsonValue::Bool(summary.incident_ready())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -25829,6 +26337,45 @@ fn parse_activation_observability_status(
     }
 }
 
+fn parse_activation_incident_severity(
+    label: &str,
+) -> Result<IntegrationActivationIncidentSeverity, ToolCallError> {
+    match label {
+        "critical" | "blocker" | "blocked" => Ok(IntegrationActivationIncidentSeverity::Critical),
+        "high" | "attention" | "triage" => Ok(IntegrationActivationIncidentSeverity::High),
+        "medium" | "observe" | "ready" => Ok(IntegrationActivationIncidentSeverity::Medium),
+        "watch" | "monitoring" | "monitor" => Ok(IntegrationActivationIncidentSeverity::Watch),
+        _ => Err(validation_error(format!(
+            "unknown activation incident severity `{label}`"
+        ))),
+    }
+}
+
+fn parse_activation_incident_action(
+    label: &str,
+) -> Result<IntegrationActivationIncidentAction, ToolCallError> {
+    match label {
+        "hold_activation" | "hold" | "blocked" => {
+            Ok(IntegrationActivationIncidentAction::HoldActivation)
+        }
+        "triage_telemetry" | "telemetry" | "triage" => {
+            Ok(IntegrationActivationIncidentAction::TriageTelemetry)
+        }
+        "complete_rollback_coverage" | "rollback_coverage" | "coverage" => {
+            Ok(IntegrationActivationIncidentAction::CompleteRollbackCoverage)
+        }
+        "arm_observation" | "observe" | "ready_to_observe" => {
+            Ok(IntegrationActivationIncidentAction::ArmObservation)
+        }
+        "continue_monitoring" | "monitoring" | "monitor" => {
+            Ok(IntegrationActivationIncidentAction::ContinueMonitoring)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation incident action `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -27705,6 +28252,65 @@ fn integration_activation_observability_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_incident_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_observability_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        properties.push(SchemaProperty::new("incident_severity", JsonSchema::String));
+        properties.push(SchemaProperty::new("severity", JsonSchema::String));
+        properties.push(SchemaProperty::new("incident_action", JsonSchema::String));
+        properties.push(SchemaProperty::new(
+            "incident_observability_status",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_rollback_action",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_owner_lane",
+            JsonSchema::String,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("incident_blocked", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "incident_needs_verification",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("incident_ready", JsonSchema::Boolean));
+        properties.push(SchemaProperty::new(
+            "incident_rollback_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_deployment_ready",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_has_watchtower_signals",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_has_observation_signal",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new(
+            "incident_watchtower_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        properties.push(SchemaProperty::new("incident_limit", JsonSchema::Integer));
+        properties.push(SchemaProperty::new("brief_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -27849,7 +28455,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 137);
+        assert_eq!(definitions.len(), 139);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -28232,9 +28838,15 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_OBSERVABILITY_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            129
+            131
         );
         assert_eq!(
             export
@@ -28760,11 +29372,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(137))
+            Some(&integer(139))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(129))
+            Some(&integer(131))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -34244,6 +34856,160 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_incidents_request = request(
+            "call-list-integration-activation-incidents",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_INCIDENTS_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("incident_severity", string("critical")),
+                ("incident_requires_attention", JsonValue::Bool(true)),
+                ("incident_blocked", JsonValue::Bool(true)),
+                ("incident_limit", integer(3)),
+            ]),
+            5_063,
+        );
+        let list_activation_incidents_trace =
+            tool_runtime.invoke_with_events(&list_activation_incidents_request);
+        assert!(list_activation_incidents_trace.result.ok);
+        assert_eq!(
+            list_activation_incidents_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_incidents_output = list_activation_incidents_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_incident_count =
+            integer_value(field(list_activation_incidents_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_incident_count));
+        let activation_incident_summary =
+            field(list_activation_incidents_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_incident_summary, "total_briefs"),
+            Some(&integer(activation_incident_count))
+        );
+        assert_eq!(
+            field(activation_incident_summary, "next_severity"),
+            Some(&string("critical"))
+        );
+        assert_eq!(
+            field(activation_incident_summary, "next_action"),
+            Some(&string("hold_activation"))
+        );
+        assert_eq!(
+            field(activation_incident_summary, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_incident_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_incident = array_item(
+            field(list_activation_incidents_output, "activation_incidents").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_incident, "severity"),
+            Some(&string("critical"))
+        );
+        assert_eq!(
+            field(activation_incident, "action"),
+            Some(&string("hold_activation"))
+        );
+        assert_eq!(
+            field(activation_incident, "observability_status"),
+            Some(&string("blocked"))
+        );
+        assert_eq!(
+            field(activation_incident, "blocks_activation"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_incident, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
+        let activation_incident_summary_request = request(
+            "call-integration-activation-incident-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_INCIDENT_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("incident_requires_attention", JsonValue::Bool(true)),
+            ]),
+            5_064,
+        );
+        let activation_incident_summary_trace =
+            tool_runtime.invoke_with_events(&activation_incident_summary_request);
+        assert!(activation_incident_summary_trace.result.ok);
+        assert_eq!(
+            activation_incident_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_incident_summary_output = activation_incident_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_incident_rollup =
+            field(activation_incident_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_incident_rollup, "total_briefs").unwrap()).unwrap() >= 1
+        );
+        assert!(
+            integer_value(field(activation_incident_rollup, "critical_briefs").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_incident_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_incident_rollup, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -36164,6 +36930,14 @@ mod tests {
             activation_observability_summary_request,
             activation_observability_summary_trace,
         );
+        journal.record_trace(
+            list_activation_incidents_request,
+            list_activation_incidents_trace,
+        );
+        journal.record_trace(
+            activation_incident_summary_request,
+            activation_incident_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -36237,9 +37011,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 137);
-        assert_eq!(journal_summary.completed_count, 137);
-        assert_eq!(journal.audit_records().len(), 137);
+        assert_eq!(journal_summary.invocation_count, 139);
+        assert_eq!(journal_summary.completed_count, 139);
+        assert_eq!(journal.audit_records().len(), 139);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
