@@ -4137,6 +4137,134 @@ pub struct IntegrationActivationObservabilitySummary {
     pub overall_status: IntegrationActivationHealthStatus,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationIncidentSeverity {
+    Critical,
+    High,
+    Medium,
+    Watch,
+}
+
+impl IntegrationActivationIncidentSeverity {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Critical => "critical",
+            Self::High => "high",
+            Self::Medium => "medium",
+            Self::Watch => "watch",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        !matches!(self, Self::Watch)
+    }
+
+    pub fn blocks_activation(self) -> bool {
+        matches!(self, Self::Critical)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationActivationIncidentAction {
+    HoldActivation,
+    TriageTelemetry,
+    CompleteRollbackCoverage,
+    ArmObservation,
+    ContinueMonitoring,
+}
+
+impl IntegrationActivationIncidentAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::HoldActivation => "hold_activation",
+            Self::TriageTelemetry => "triage_telemetry",
+            Self::CompleteRollbackCoverage => "complete_rollback_coverage",
+            Self::ArmObservation => "arm_observation",
+            Self::ContinueMonitoring => "continue_monitoring",
+        }
+    }
+
+    pub fn requires_attention(self) -> bool {
+        matches!(
+            self,
+            Self::HoldActivation | Self::TriageTelemetry | Self::CompleteRollbackCoverage
+        )
+    }
+
+    pub fn incident_ready(self) -> bool {
+        matches!(self, Self::ArmObservation | Self::ContinueMonitoring)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationIncidentBrief {
+    pub sequence: usize,
+    pub severity: IntegrationActivationIncidentSeverity,
+    pub action: IntegrationActivationIncidentAction,
+    pub observability_status: IntegrationActivationObservabilityStatus,
+    pub rollback_action: IntegrationActivationRollbackAction,
+    pub gate_status: IntegrationActivationSafetyGateStatus,
+    pub deployment_ring: IntegrationActivationDeploymentRing,
+    pub owner_lane: IntegrationActivationResponseOwnerLane,
+    pub source_observability_sequence: usize,
+    pub source_rollback_sequence: usize,
+    pub source_safety_sequence: usize,
+    pub source_deployment_sequence: usize,
+    pub source_id: String,
+    pub title: String,
+    pub summary: String,
+    pub priority: u8,
+    pub integration_ids: Vec<IntegrationId>,
+    pub recommended_view: IntegrationActivationPlaybookView,
+    pub required_tier: PrivilegeTier,
+    pub policy_surface: Option<IntegrationPolicySurface>,
+    pub watchtower_signal_count: usize,
+    pub has_observation_signal: bool,
+    pub watchtower_requires_attention: bool,
+    pub rollback_ready: bool,
+    pub deployment_ready: bool,
+    pub blocks_activation: bool,
+    pub needs_verification: bool,
+    pub requires_attention: bool,
+    pub incident_ready: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationIncidentSummary {
+    pub total_briefs: usize,
+    pub unique_integrations: usize,
+    pub briefs_requiring_attention: usize,
+    pub critical_briefs: usize,
+    pub high_briefs: usize,
+    pub medium_briefs: usize,
+    pub watch_briefs: usize,
+    pub hold_activation_briefs: usize,
+    pub telemetry_triage_briefs: usize,
+    pub rollback_coverage_briefs: usize,
+    pub arm_observation_briefs: usize,
+    pub monitoring_briefs: usize,
+    pub briefs_with_watchtower_signals: usize,
+    pub briefs_with_observation_signals: usize,
+    pub briefs_with_watchtower_attention: usize,
+    pub briefs_ready_for_rollback: usize,
+    pub briefs_ready_for_deployment: usize,
+    pub briefs_blocking_activation: usize,
+    pub briefs_needing_verification: usize,
+    pub briefs_with_policy_surface: usize,
+    pub briefs_incident_ready: usize,
+    pub next_severity: Option<IntegrationActivationIncidentSeverity>,
+    pub next_action: Option<IntegrationActivationIncidentAction>,
+    pub next_observability_status: Option<IntegrationActivationObservabilityStatus>,
+    pub next_rollback_action: Option<IntegrationActivationRollbackAction>,
+    pub next_owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    pub next_recommended_view: Option<IntegrationActivationPlaybookView>,
+    pub next_brief_sequence: Option<usize>,
+    pub next_brief_priority: Option<u8>,
+    pub first_attention_priority: Option<u8>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub overall_status: IntegrationActivationHealthStatus,
+}
+
 impl IntegrationActivationPlanSummary {
     pub fn from_plans<'a>(plans: impl IntoIterator<Item = &'a IntegrationActivationPlan>) -> Self {
         let mut summary = Self {
@@ -11765,6 +11893,277 @@ impl IntegrationActivationObservabilitySummary {
     }
 }
 
+impl IntegrationActivationIncidentBrief {
+    fn from_observability_probe(probe: &IntegrationActivationObservabilityProbe) -> Self {
+        let (severity, action) = match probe.observability_status {
+            IntegrationActivationObservabilityStatus::Blocked => (
+                IntegrationActivationIncidentSeverity::Critical,
+                IntegrationActivationIncidentAction::HoldActivation,
+            ),
+            IntegrationActivationObservabilityStatus::NeedsTelemetryReview => (
+                IntegrationActivationIncidentSeverity::High,
+                IntegrationActivationIncidentAction::TriageTelemetry,
+            ),
+            IntegrationActivationObservabilityStatus::NeedsRollbackCoverage => (
+                IntegrationActivationIncidentSeverity::High,
+                IntegrationActivationIncidentAction::CompleteRollbackCoverage,
+            ),
+            IntegrationActivationObservabilityStatus::ReadyToObserve => (
+                IntegrationActivationIncidentSeverity::Medium,
+                IntegrationActivationIncidentAction::ArmObservation,
+            ),
+            IntegrationActivationObservabilityStatus::Monitoring => (
+                IntegrationActivationIncidentSeverity::Watch,
+                IntegrationActivationIncidentAction::ContinueMonitoring,
+            ),
+        };
+        let requires_attention = severity.requires_attention()
+            || action.requires_attention()
+            || probe.requires_attention();
+        let blocks_activation = severity.blocks_activation() || probe.blocks_activation();
+        let incident_ready = action.incident_ready() && !requires_attention && !blocks_activation;
+
+        Self {
+            sequence: 0,
+            severity,
+            action,
+            observability_status: probe.observability_status,
+            rollback_action: probe.rollback_action,
+            gate_status: probe.gate_status,
+            deployment_ring: probe.deployment_ring,
+            owner_lane: probe.owner_lane,
+            source_observability_sequence: probe.sequence,
+            source_rollback_sequence: probe.source_rollback_sequence,
+            source_safety_sequence: probe.source_safety_sequence,
+            source_deployment_sequence: probe.source_deployment_sequence,
+            source_id: probe.source_id.clone(),
+            title: format!("{} incident: {}", severity.as_str(), probe.title),
+            summary: probe.summary.clone(),
+            priority: probe.priority,
+            integration_ids: probe.integration_ids.clone(),
+            recommended_view: probe.recommended_view,
+            required_tier: probe.required_tier,
+            policy_surface: probe.policy_surface,
+            watchtower_signal_count: probe.watchtower_signal_count,
+            has_observation_signal: probe.has_observation_signal,
+            watchtower_requires_attention: probe.watchtower_requires_attention,
+            rollback_ready: probe.rollback_ready(),
+            deployment_ready: probe.deployment_ready(),
+            blocks_activation,
+            needs_verification: probe.needs_verification(),
+            requires_attention,
+            incident_ready,
+        }
+    }
+
+    pub fn integration_count(&self) -> usize {
+        self.integration_ids.len()
+    }
+
+    pub fn has_watchtower_signals(&self) -> bool {
+        self.watchtower_signal_count > 0
+    }
+
+    pub fn has_policy_surface(&self) -> bool {
+        self.policy_surface.is_some()
+    }
+
+    pub fn rollback_ready(&self) -> bool {
+        self.rollback_ready
+    }
+
+    pub fn deployment_ready(&self) -> bool {
+        self.deployment_ready
+    }
+
+    pub fn blocks_activation(&self) -> bool {
+        self.blocks_activation
+    }
+
+    pub fn needs_verification(&self) -> bool {
+        self.needs_verification
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.requires_attention
+    }
+
+    pub fn incident_ready(&self) -> bool {
+        self.incident_ready
+    }
+}
+
+impl IntegrationActivationIncidentSummary {
+    pub fn from_briefs<'a>(
+        briefs: impl IntoIterator<Item = &'a IntegrationActivationIncidentBrief>,
+    ) -> Self {
+        let mut integration_ids = BTreeSet::new();
+        let mut summary = Self {
+            total_briefs: 0,
+            unique_integrations: 0,
+            briefs_requiring_attention: 0,
+            critical_briefs: 0,
+            high_briefs: 0,
+            medium_briefs: 0,
+            watch_briefs: 0,
+            hold_activation_briefs: 0,
+            telemetry_triage_briefs: 0,
+            rollback_coverage_briefs: 0,
+            arm_observation_briefs: 0,
+            monitoring_briefs: 0,
+            briefs_with_watchtower_signals: 0,
+            briefs_with_observation_signals: 0,
+            briefs_with_watchtower_attention: 0,
+            briefs_ready_for_rollback: 0,
+            briefs_ready_for_deployment: 0,
+            briefs_blocking_activation: 0,
+            briefs_needing_verification: 0,
+            briefs_with_policy_surface: 0,
+            briefs_incident_ready: 0,
+            next_severity: None,
+            next_action: None,
+            next_observability_status: None,
+            next_rollback_action: None,
+            next_owner_lane: None,
+            next_recommended_view: None,
+            next_brief_sequence: None,
+            next_brief_priority: None,
+            first_attention_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+
+        for brief in briefs {
+            summary.total_briefs += 1;
+            for integration_id in &brief.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+
+            if summary.next_severity.is_none()
+                && (brief.requires_attention() || brief.incident_ready())
+            {
+                summary.next_severity = Some(brief.severity);
+                summary.next_action = Some(brief.action);
+                summary.next_observability_status = Some(brief.observability_status);
+                summary.next_rollback_action = Some(brief.rollback_action);
+                summary.next_owner_lane = Some(brief.owner_lane);
+                summary.next_recommended_view = Some(brief.recommended_view);
+                summary.next_brief_sequence = Some(brief.sequence);
+                summary.next_brief_priority = Some(brief.priority);
+            }
+
+            match brief.severity {
+                IntegrationActivationIncidentSeverity::Critical => {
+                    summary.critical_briefs += 1;
+                }
+                IntegrationActivationIncidentSeverity::High => {
+                    summary.high_briefs += 1;
+                }
+                IntegrationActivationIncidentSeverity::Medium => {
+                    summary.medium_briefs += 1;
+                }
+                IntegrationActivationIncidentSeverity::Watch => {
+                    summary.watch_briefs += 1;
+                }
+            }
+
+            match brief.action {
+                IntegrationActivationIncidentAction::HoldActivation => {
+                    summary.hold_activation_briefs += 1;
+                }
+                IntegrationActivationIncidentAction::TriageTelemetry => {
+                    summary.telemetry_triage_briefs += 1;
+                }
+                IntegrationActivationIncidentAction::CompleteRollbackCoverage => {
+                    summary.rollback_coverage_briefs += 1;
+                }
+                IntegrationActivationIncidentAction::ArmObservation => {
+                    summary.arm_observation_briefs += 1;
+                }
+                IntegrationActivationIncidentAction::ContinueMonitoring => {
+                    summary.monitoring_briefs += 1;
+                }
+            }
+
+            if brief.requires_attention() {
+                summary.briefs_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, Some(brief.priority));
+            }
+            if brief.has_watchtower_signals() {
+                summary.briefs_with_watchtower_signals += 1;
+            }
+            if brief.has_observation_signal {
+                summary.briefs_with_observation_signals += 1;
+            }
+            if brief.watchtower_requires_attention {
+                summary.briefs_with_watchtower_attention += 1;
+            }
+            if brief.rollback_ready() {
+                summary.briefs_ready_for_rollback += 1;
+            }
+            if brief.deployment_ready() {
+                summary.briefs_ready_for_deployment += 1;
+            }
+            if brief.blocks_activation() {
+                summary.briefs_blocking_activation += 1;
+            }
+            if brief.needs_verification() {
+                summary.briefs_needing_verification += 1;
+            }
+            if brief.has_policy_surface() {
+                summary.briefs_with_policy_surface += 1;
+            }
+            if brief.incident_ready() {
+                summary.briefs_incident_ready += 1;
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(brief.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status =
+            if summary.critical_briefs > 0 || summary.briefs_blocking_activation > 0 {
+                IntegrationActivationHealthStatus::Blocked
+            } else if summary.briefs_requiring_attention > 0 || summary.high_briefs > 0 {
+                IntegrationActivationHealthStatus::NeedsReview
+            } else if summary.medium_briefs > 0
+                || summary.watch_briefs > 0
+                || summary.briefs_incident_ready > 0
+            {
+                IntegrationActivationHealthStatus::Ready
+            } else {
+                IntegrationActivationHealthStatus::Empty
+            };
+        summary
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.total_briefs == 0
+    }
+
+    pub fn has_blockers(&self) -> bool {
+        self.critical_briefs > 0
+            || self.hold_activation_briefs > 0
+            || self.briefs_blocking_activation > 0
+    }
+
+    pub fn has_telemetry_triage(&self) -> bool {
+        self.telemetry_triage_briefs > 0 || self.briefs_with_watchtower_attention > 0
+    }
+
+    pub fn needs_rollback_coverage(&self) -> bool {
+        self.rollback_coverage_briefs > 0
+    }
+
+    pub fn incident_ready(&self) -> bool {
+        self.briefs_incident_ready > 0
+    }
+
+    pub fn requires_attention(&self) -> bool {
+        self.briefs_requiring_attention > 0 || self.overall_status.requires_attention()
+    }
+}
+
 impl IntegrationActivationConstraintKind {
     pub fn as_str(self) -> &'static str {
         match self {
@@ -17098,6 +17497,38 @@ pub fn activation_observability_probes_at_or_before_priority(
     activation_observability_probes_from_rollups(&signals, &rollback_plans)
 }
 
+pub fn activation_incident_briefs_from_observability_probes(
+    probes: &[IntegrationActivationObservabilityProbe],
+) -> Vec<IntegrationActivationIncidentBrief> {
+    let mut briefs = probes
+        .iter()
+        .map(IntegrationActivationIncidentBrief::from_observability_probe)
+        .collect::<Vec<_>>();
+
+    briefs.sort_by(compare_activation_incident_briefs);
+    for (index, brief) in briefs.iter_mut().enumerate() {
+        brief.sequence = index + 1;
+    }
+    briefs
+}
+
+pub fn activation_incident_briefs_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationActivationIncidentBrief> {
+    let probes = activation_observability_probes_at_or_before_priority(
+        catalog,
+        priority,
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    );
+    activation_incident_briefs_from_observability_probes(&probes)
+}
+
 pub fn activation_dependency_graph_from_reports<'a>(
     catalog: &[IntegrationCatalogEntry],
     reports: impl IntoIterator<Item = &'a IntegrationReadinessReport>,
@@ -18887,6 +19318,27 @@ fn compare_activation_observability_probes(
         .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
         .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
         .then_with(|| right.observability_ready().cmp(&left.observability_ready()))
+        .then_with(|| right.rollback_ready().cmp(&left.rollback_ready()))
+        .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
+        .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
+        .then_with(|| left.owner_lane.cmp(&right.owner_lane))
+        .then_with(|| left.source_id.cmp(&right.source_id))
+        .then_with(|| right.integration_count().cmp(&left.integration_count()))
+}
+
+fn compare_activation_incident_briefs(
+    left: &IntegrationActivationIncidentBrief,
+    right: &IntegrationActivationIncidentBrief,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| left.severity.cmp(&right.severity))
+        .then_with(|| left.action.cmp(&right.action))
+        .then_with(|| left.observability_status.cmp(&right.observability_status))
+        .then_with(|| right.requires_attention().cmp(&left.requires_attention()))
+        .then_with(|| right.blocks_activation().cmp(&left.blocks_activation()))
+        .then_with(|| right.needs_verification().cmp(&left.needs_verification()))
+        .then_with(|| right.incident_ready().cmp(&left.incident_ready()))
         .then_with(|| right.rollback_ready().cmp(&left.rollback_ready()))
         .then_with(|| right.deployment_ready().cmp(&left.deployment_ready()))
         .then_with(|| left.deployment_ring.cmp(&right.deployment_ring))
@@ -22695,6 +23147,41 @@ mod tests {
             IntegrationActivationHealthStatus::Blocked
         );
 
+        let incident_briefs =
+            activation_incident_briefs_from_observability_probes(&observability_probes);
+        assert_eq!(incident_briefs.len(), observability_probes.len());
+        assert!(incident_briefs
+            .iter()
+            .any(|brief| { brief.severity == IntegrationActivationIncidentSeverity::Critical }));
+        assert!(incident_briefs
+            .iter()
+            .any(IntegrationActivationIncidentBrief::requires_attention));
+        assert!(incident_briefs
+            .iter()
+            .any(IntegrationActivationIncidentBrief::blocks_activation));
+
+        let incident_summary =
+            IntegrationActivationIncidentSummary::from_briefs(incident_briefs.iter());
+        assert_eq!(incident_summary.total_briefs, incident_briefs.len());
+        assert!(incident_summary.has_blockers());
+        assert!(incident_summary.requires_attention());
+        assert_eq!(
+            incident_summary.next_severity,
+            Some(IntegrationActivationIncidentSeverity::Critical)
+        );
+        assert_eq!(
+            incident_summary.next_action,
+            Some(IntegrationActivationIncidentAction::HoldActivation)
+        );
+        assert_eq!(
+            incident_summary.next_observability_status,
+            Some(IntegrationActivationObservabilityStatus::Blocked)
+        );
+        assert_eq!(
+            incident_summary.overall_status,
+            IntegrationActivationHealthStatus::Blocked
+        );
+
         let catalog = first_party_catalog();
         let available_primitives = vec![
             PrimitiveFamily::NormalizedModel,
@@ -22788,6 +23275,19 @@ mod tests {
         assert!(catalog_observability_probes
             .iter()
             .any(IntegrationActivationObservabilityProbe::blocks_activation));
+        let catalog_incident_briefs = activation_incident_briefs_at_or_before_priority(
+            &catalog,
+            2,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        assert!(catalog_incident_briefs
+            .iter()
+            .any(IntegrationActivationIncidentBrief::requires_attention));
+        assert!(catalog_incident_briefs
+            .iter()
+            .any(IntegrationActivationIncidentBrief::blocks_activation));
     }
 
     #[test]

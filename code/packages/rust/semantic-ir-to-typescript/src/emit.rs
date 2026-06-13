@@ -16,6 +16,8 @@
 //! `MakeClosure` becomes a `new __Sir.Closure((..._a) => ...)` that
 //! prepends capture values to the call's args.
 
+use std::cell::{Cell, RefCell};
+use std::collections::HashSet;
 use std::fmt::Write;
 
 use semantic_ir::{
@@ -24,9 +26,31 @@ use semantic_ir::{
 
 use crate::runtime::RUNTIME;
 
+thread_local! {
+    /// Monotonic counter for synthesised loop temporaries (the
+    /// once-evaluated `__stop`/`__step` bounds of a `ForRange`).  Reset
+    /// at the start of every `emit_module` so output stays deterministic.
+    static LOOP_COUNTER: Cell<usize> = const { Cell::new(0) };
+
+    /// Names that are the target of an `Assign` somewhere in the current
+    /// function.  A `LetBinding` for such a name must emit `let` (not
+    /// `const`) so the later reassignment type-checks.  Populated per
+    /// function in `emit_function`; immutable bindings stay `const`.
+    static MUTABLE_NAMES: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
+}
+
+fn fresh_loop_id() -> usize {
+    LOOP_COUNTER.with(|c| {
+        let n = c.get();
+        c.set(n + 1);
+        n
+    })
+}
+
 /// Emit a SIR module as TypeScript source.  Caller is responsible
 /// for prior validation; this function assumes the module is valid.
 pub fn emit_module(m: &Module) -> String {
+    LOOP_COUNTER.with(|c| c.set(0));
     let mut out = String::new();
     emit_banner(&mut out, m);
     out.push_str(RUNTIME);
@@ -101,9 +125,136 @@ fn emit_function(out: &mut String, f: &Function) {
     }
     out.push_str("): __Sir.Val {\n");
 
+    // Pre-pass: any local that is later reassigned must bind with `let`.
+    MUTABLE_NAMES.with(|m| {
+        let mut set = m.borrow_mut();
+        set.clear();
+        collect_assigned_locals(&f.body, &mut set);
+    });
+
     emit_function_body(out, &f.body, 2);
 
+    MUTABLE_NAMES.with(|m| m.borrow_mut().clear());
     out.push_str("}\n");
+}
+
+/// Walk a block (recursing through nested blocks, loop bodies, and
+/// block-bearing expressions) collecting the names targeted by an
+/// `Assign` with `Local` scope.  These need `let` rather than `const`.
+fn collect_assigned_locals(b: &Block, out: &mut HashSet<String>) {
+    for s in &b.stmts {
+        collect_stmt_assigned(s, out);
+    }
+    collect_expr_assigned(&b.value, out);
+}
+
+fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
+    match s {
+        Stmt::Assign { name, scope: Scope::Local, value, .. } => {
+            out.insert(name.clone());
+            collect_expr_assigned(value, out);
+        }
+        Stmt::Assign { value, .. } => collect_expr_assigned(value, out),
+        Stmt::LetBinding { value, .. } | Stmt::LetStarBinding { value, .. } => {
+            collect_expr_assigned(value, out);
+        }
+        Stmt::ExprStmt { expr, .. } => collect_expr_assigned(expr, out),
+        Stmt::While { cond, body, .. } => {
+            collect_expr_assigned(cond, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::ForRange { start, stop, step, body, .. } => {
+            collect_expr_assigned(start, out);
+            collect_expr_assigned(stop, out);
+            collect_expr_assigned(step, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::ForEach { iter, body, .. } => {
+            collect_expr_assigned(iter, out);
+            collect_assigned_locals(body, out);
+        }
+        Stmt::SeqSet { seq, index, value, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+            collect_expr_assigned(value, out);
+        }
+        Stmt::MapSet { map, key, value, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+            collect_expr_assigned(value, out);
+        }
+        // Class/module/try bodies are rejected at the capability check
+        // for this backend; nothing to collect.
+        Stmt::ClassDef { .. }
+        | Stmt::ModuleDef { .. }
+        | Stmt::SingletonClassDef { .. }
+        | Stmt::TryCatch { .. } => {}
+    }
+}
+
+fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
+    match e {
+        Expr::If { cond, then_branch, else_branch, .. } => {
+            collect_expr_assigned(cond, out);
+            collect_assigned_locals(then_branch, out);
+            collect_assigned_locals(else_branch, out);
+        }
+        Expr::Block(b) => collect_assigned_locals(b, out),
+        Expr::DirectCall { args, .. } | Expr::BuiltinCall { args, .. } => {
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::IndirectCall { target, args, .. } => {
+            collect_expr_assigned(target, out);
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::MakeClosure { captures, .. } => {
+            for c in captures {
+                collect_expr_assigned(&c.value, out);
+            }
+        }
+        Expr::SeqLit { items, .. } => {
+            for i in items {
+                collect_expr_assigned(i, out);
+            }
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            collect_expr_assigned(seq, out);
+            collect_expr_assigned(index, out);
+        }
+        Expr::SeqLen { seq, .. } => collect_expr_assigned(seq, out),
+        Expr::MapLit { entries, .. } => {
+            for entry in entries {
+                collect_expr_assigned(&entry.key, out);
+                collect_expr_assigned(&entry.value, out);
+            }
+        }
+        Expr::MapGet { map, key, .. } => {
+            collect_expr_assigned(map, out);
+            collect_expr_assigned(key, out);
+        }
+        Expr::LogicalAnd { lhs, rhs, .. } | Expr::LogicalOr { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::StrConcat { parts, .. } => {
+            for p in parts {
+                collect_expr_assigned(p, out);
+            }
+        }
+        // Leaves with no nested blocks/exprs that could hold an Assign.
+        Expr::IntLit { .. }
+        | Expr::FloatLit { .. }
+        | Expr::BoolLit { .. }
+        | Expr::NilLit { .. }
+        | Expr::SymLit { .. }
+        | Expr::StrLit { .. }
+        | Expr::VarRef { .. }
+        | Expr::Intrinsic { .. } => {}
+    }
 }
 
 fn emit_function_body(out: &mut String, b: &Block, indent: usize) {
@@ -124,12 +275,17 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
     let pad = " ".repeat(indent);
     match s {
         Stmt::LetBinding { name, value, .. } | Stmt::LetStarBinding { name, value, .. } => {
-            // TypeScript `const` works for both: parallel-let
-            // semantics were already preserved by the lowerer (each
-            // RHS was evaluated in the outer scope at lowering
-            // time).  Sequential `let*` is naturally honored by
-            // top-down `const` emission.
-            let _ = write!(out, "{}const {}: __Sir.Val = ", pad, sanitize_ident(name));
+            // `const` for immutable bindings (the common case); `let`
+            // when a later `Assign` re-binds this name (otherwise the
+            // reassignment would not type-check).  Parallel-let
+            // semantics were already preserved by the lowerer, so
+            // top-down emission is faithful either way.
+            let keyword = if MUTABLE_NAMES.with(|m| m.borrow().contains(name)) {
+                "let"
+            } else {
+                "const"
+            };
+            let _ = write!(out, "{}{} {}: __Sir.Val = ", pad, keyword, sanitize_ident(name));
             emit_expr(out, value, indent);
             out.push_str(";\n");
         }
@@ -146,16 +302,117 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 out.push_str(";\n");
             }
         }
-        // SIR16 statement kinds — TS backend hasn't been extended yet.
-        // The capability declaration rejects modules that use them,
-        // so reaching this arm is a backend bug.
-        Stmt::Assign { span, .. }
-        | Stmt::While { span, .. }
-        | Stmt::ForRange { span, .. }
-        | Stmt::ForEach { span, .. }
-        | Stmt::SeqSet { span, .. }
-        | Stmt::MapSet { span, .. } => {
-            panic!("ts backend reached SIR16 statement at {} — capability check should have rejected it", span);
+        // ── SIR16 mutation ──────────────────────────────────────────
+        // `Assign` re-binds an already-declared name.  Local/Param/
+        // Capture/Global all resolve to a bare identifier in TS (globals
+        // are module-level `let`s), so a plain reassignment is faithful.
+        // Instance/ClassVar/Const are not in this backend's accepted
+        // features yet, so they fall through to the panic guard.
+        Stmt::Assign {
+            name,
+            scope: scope @ (Scope::Local | Scope::Param | Scope::Capture | Scope::Global),
+            value,
+            ..
+        } => {
+            let _ = scope; // identifier is the same for all four
+            let _ = write!(out, "{}{} = ", pad, sanitize_ident(name));
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `seq[index] = value` — cast through the array view of `Val`.
+        Stmt::SeqSet { seq, index, value, .. } => {
+            out.push_str(&pad);
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[])[(");
+            emit_expr(out, index, indent);
+            out.push_str(") as number] = ");
+            emit_expr(out, value, indent);
+            out.push_str(";\n");
+        }
+        // `map[key] = value` — `Map.set` on the map view of `Val`.
+        Stmt::MapSet { map, key, value, .. } => {
+            out.push_str(&pad);
+            out.push_str("((");
+            emit_expr(out, map, indent);
+            out.push_str(") as Map<__Sir.Val, __Sir.Val>).set(");
+            emit_expr(out, key, indent);
+            out.push_str(", ");
+            emit_expr(out, value, indent);
+            out.push_str(");\n");
+        }
+        // ── SIR16 loops ─────────────────────────────────────────────
+        // `while (truthy(cond)) { body }` — the test routes through SIR
+        // truthiness (only `false`/`nil` are falsy), never JS truthiness.
+        Stmt::While { cond, body, .. } => {
+            out.push_str(&pad);
+            out.push_str("while (__Sir.truthy(");
+            emit_expr(out, cond, indent);
+            out.push_str(")) {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // `for (var = start; …; var += step) { body }` — half-open
+        // (`stop` exclusive).  `stop`/`step` are evaluated ONCE into
+        // block-scoped temporaries (matching Python's `range`), and the
+        // loop condition is direction-aware so a negative `step` counts
+        // down correctly.
+        Stmt::ForRange { var, start, stop, step, body, .. } => {
+            let id = fresh_loop_id();
+            let v = sanitize_ident(var);
+            let inner = indent + 2;
+            let inner_pad = " ".repeat(inner);
+            // Open a block so the temporaries don't leak.
+            let _ = write!(out, "{}{{\n", pad);
+            let _ = write!(out, "{}let {}: __Sir.Val = ", inner_pad, v);
+            emit_expr(out, start, inner);
+            out.push_str(";\n");
+            let _ = write!(out, "{}const __sir_stop_{}: number = (", inner_pad, id);
+            emit_expr(out, stop, inner);
+            out.push_str(") as number;\n");
+            let _ = write!(out, "{}const __sir_step_{}: number = (", inner_pad, id);
+            emit_expr(out, step, inner);
+            out.push_str(") as number;\n");
+            let _ = write!(
+                out,
+                "{}while (__sir_step_{id} >= 0 ? ({v} as number) < __sir_stop_{id} : ({v} as number) > __sir_stop_{id}) {{\n",
+                inner_pad, id = id, v = v
+            );
+            emit_block_as_stmts(out, body, inner + 2);
+            let _ = write!(
+                out,
+                "{}{} = ({} as number) + __sir_step_{};\n",
+                " ".repeat(inner + 2),
+                v,
+                v,
+                id
+            );
+            let _ = write!(out, "{}}}\n", inner_pad);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // `for (const var of iter) { body }` — iterate a Seq.  The
+        // binding uses `let` if the body reassigns the loop variable.
+        Stmt::ForEach { var, iter, body, .. } => {
+            let kw = if MUTABLE_NAMES.with(|m| m.borrow().contains(var)) {
+                "let"
+            } else {
+                "const"
+            };
+            let _ = write!(out, "{}for ({} {} of ((", pad, kw, sanitize_ident(var));
+            emit_expr(out, iter, indent);
+            out.push_str(") as __Sir.Val[])) {\n");
+            emit_block_as_stmts(out, body, indent + 2);
+            let _ = write!(out, "{}}}\n", pad);
+        }
+        // `Assign` to an instance var / class var / constant — those
+        // scopes belong to `Feature::InstanceVars`/`ClassVars`/
+        // `Constants`, none of which this backend accepts yet, so the
+        // capability check rejects such modules before emit.
+        Stmt::Assign { scope, span, .. } => {
+            panic!(
+                "ts backend reached SIR17 assign to {:?}-scoped var at {} — capability check should have rejected it",
+                scope, span
+            );
         }
         // SIR17 (classes) — `Feature::Classes` is not accepted by
         // this backend, so a class-using module is rejected by the
@@ -419,6 +676,24 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
     out.push_str(";\n");
     let outer_pad = " ".repeat(indent);
     let _ = write!(out, "{}}})()", outer_pad);
+}
+
+/// Emit a block in **statement context** — used for loop bodies, whose
+/// trailing value is discarded rather than returned.  Each statement is
+/// emitted in order; the block's trailing `value` is emitted as an
+/// expression statement so any side effect still fires, except a bare
+/// `nil` (the common "this block yields nothing" marker), which is
+/// dropped to keep the output clean.
+fn emit_block_as_stmts(out: &mut String, b: &Block, indent: usize) {
+    for s in &b.stmts {
+        emit_stmt(out, s, indent);
+    }
+    if !matches!(b.value, Expr::NilLit { .. }) {
+        let pad = " ".repeat(indent);
+        out.push_str(&pad);
+        emit_expr(out, &b.value, indent);
+        out.push_str(";\n");
+    }
 }
 
 // ---------------------------------------------------------------------------

@@ -86,6 +86,12 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::Maps,
     Feature::ShortCircuit,
     Feature::StringInterpolation,
+    // SIR16 mutation & loops — emitted natively (assignment → `=`,
+    // indexed set → `arr[i] = v` / `map.set(k, v)`, `while` →
+    // truthy-guarded `while`, `for`-range → direction-aware C-for,
+    // `for`-each → `for…of`), per code/specs/sir-runtime.md.
+    Feature::MutableBindings,
+    Feature::Loops,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -351,5 +357,213 @@ mod tests {
             "expected interpolation via __Sir.toDisplay; got:\n{}",
             a.source
         );
+    }
+
+    // ── SIR16 mutation & loops: Ruby / direct SIR → native TS ───────
+
+    #[test]
+    fn end_to_end_ruby_while_loop_ts() {
+        // A mutated counter must bind with `let`, the condition routes
+        // through SIR truthiness, and the reassignment is a bare `=`.
+        let module = ruby_to_semantic_ir::compile_source(
+            "i = 0\nwhile i < 3\n  i = i + 1\nend\nputs(i)\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains("let i: __Sir.Val = 0;"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("while (__Sir.truthy(__Sir.lt(i, 3)))"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("i = __Sir.add(i, 1);"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn immutable_binding_stays_const() {
+        // No reassignment → the binding keeps `const`.
+        let module =
+            ruby_to_semantic_ir::compile_source("x = 7\nputs(x)\n", "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(a.source.contains("const x: __Sir.Val = 7;"), "got:\n{}", a.source);
+    }
+
+    // Direct-SIR helpers for the loop/index-set kinds the Ruby frontend
+    // does not yet construct (they arrive via other frontends / tests).
+    fn module_with_main_body(stmts: Vec<semantic_ir::Stmt>, value: Expr, feats: &[Feature]) -> Module {
+        Module {
+            name: "demo".into(),
+            manifest: FeatureManifest::from_features(feats),
+            imports: vec![],
+            exports: vec![],
+            functions: vec![Function {
+                name: "main".into(),
+                params: vec![],
+                return_type: None,
+                captures: vec![],
+                body: Block { stmts, value, span: s() },
+                effects: EffectSet::PURE,
+                metadata: Metadata::new(),
+                span: s(),
+            }],
+            globals: vec![],
+            metadata: Metadata::new()
+                .with_source_language("test")
+                .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+            span: s(),
+        }
+    }
+
+    #[test]
+    fn emit_for_range_is_direction_aware() {
+        use semantic_ir::Stmt;
+        let body = Block {
+            stmts: vec![Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "print".into(),
+                    args: vec![Expr::VarRef { name: "i".into(), scope: semantic_ir::Scope::Local, span: s() }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            }],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![Stmt::ForRange {
+                var: "i".into(),
+                start: Expr::IntLit { value: 0, span: s() },
+                stop: Expr::IntLit { value: 3, span: s() },
+                step: Expr::IntLit { value: 1, span: s() },
+                body,
+                span: s(),
+            }],
+            Expr::NilLit { span: s() },
+            &[Feature::Loops, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        // `stop`/`step` evaluated once into temporaries; condition is
+        // direction-aware so a negative step would still terminate.
+        assert!(a.source.contains("const __sir_stop_0: number = (3) as number;"), "got:\n{}", a.source);
+        assert!(a.source.contains("const __sir_step_0: number = (1) as number;"), "got:\n{}", a.source);
+        assert!(
+            a.source.contains("__sir_step_0 >= 0 ? (i as number) < __sir_stop_0 : (i as number) > __sir_stop_0"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(a.source.contains("i = (i as number) + __sir_step_0;"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn emit_for_each_and_index_set() {
+        use semantic_ir::{Scope, Stmt};
+        // for x in arr: arr[0] = x   (SeqSet inside ForEach body)
+        let body = Block {
+            stmts: vec![Stmt::SeqSet {
+                seq: Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+                index: Expr::IntLit { value: 0, span: s() },
+                value: Expr::VarRef { name: "x".into(), scope: Scope::Local, span: s() },
+                span: s(),
+            }],
+            value: Expr::NilLit { span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "arr".into(),
+                    sir_type: None,
+                    value: Expr::SeqLit {
+                        items: vec![Expr::IntLit { value: 1, span: s() }],
+                        span: s(),
+                    },
+                    span: s(),
+                },
+                Stmt::ForEach {
+                    var: "x".into(),
+                    iter: Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+                    body,
+                    span: s(),
+                },
+            ],
+            Expr::VarRef { name: "arr".into(), scope: Scope::Local, span: s() },
+            &[Feature::Loops, Feature::Sequences, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains("for (const x of ((arr) as __Sir.Val[]))"),
+            "got:\n{}",
+            a.source
+        );
+        assert!(
+            a.source.contains("((arr) as __Sir.Val[])[(0) as number] = x;"),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn emit_map_set() {
+        use semantic_ir::{Scope, Stmt};
+        let m = module_with_main_body(
+            vec![
+                Stmt::LetBinding {
+                    name: "m".into(),
+                    sir_type: None,
+                    value: Expr::MapLit { entries: vec![], span: s() },
+                    span: s(),
+                },
+                Stmt::MapSet {
+                    map: Expr::VarRef { name: "m".into(), scope: Scope::Local, span: s() },
+                    key: Expr::IntLit { value: 1, span: s() },
+                    value: Expr::IntLit { value: 2, span: s() },
+                    span: s(),
+                },
+            ],
+            Expr::VarRef { name: "m".into(), scope: Scope::Local, span: s() },
+            &[Feature::Maps, Feature::MutableBindings],
+        );
+        let a = compile(&m).expect("compile");
+        assert!(
+            a.source.contains("((m) as Map<__Sir.Val, __Sir.Val>).set(1, 2);"),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn loop_in_expression_position_nests_in_iife() {
+        use semantic_ir::{Scope, Stmt};
+        // A block holding a While in expression position becomes the
+        // then-branch of an `if`; the IIFE wraps the loop natively.
+        let loop_block = Block {
+            stmts: vec![Stmt::While {
+                cond: Expr::BoolLit { value: false, span: s() },
+                body: Block { stmts: vec![], value: Expr::NilLit { span: s() }, span: s() },
+                span: s(),
+            }],
+            value: Expr::IntLit { value: 1, span: s() },
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![],
+            Expr::If {
+                cond: Box::new(Expr::BoolLit { value: true, span: s() }),
+                then_branch: Box::new(loop_block),
+                else_branch: Box::new(Block {
+                    stmts: vec![],
+                    value: Expr::IntLit { value: 2, span: s() },
+                    span: s(),
+                }),
+                span: s(),
+            },
+            &[Feature::Loops, Feature::MutableBindings],
+        );
+        let _ = Scope::Local;
+        let a = compile(&m).expect("compile");
+        assert!(a.source.contains("(() => {"), "expected IIFE; got:\n{}", a.source);
+        assert!(a.source.contains("while (__Sir.truthy(false))"), "got:\n{}", a.source);
     }
 }
