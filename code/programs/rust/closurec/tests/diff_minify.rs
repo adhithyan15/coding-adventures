@@ -261,6 +261,36 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // unaffected. `minify_class_string_method` / `minify_obj_string_method`
     // now ENFORCED. (A string-keyed ACCESSOR `get"a"(){}` -> `get "a"(){}`
     // is a SEPARATE space-insertion gap, not this computed-wrap.)
+    // gap-110 (CLOC14.53): a string method KEY preceded by a method
+    // MODIFIER (`*` generator or `async`) is ALSO normalised to a
+    // COMPUTED key, just like the plain case (gap-109) — but gap-109's
+    // pre-pass only fired when the string's predecessor was a property
+    // boundary (`{`/`,`/`}`/`static`), so a `*`/`async`-prefixed key was
+    // missed:
+    //   {*"m"(){}}        -> {*["m"](){}}
+    //   class A{async"m"(){}} -> class A{async["m"](){}}
+    //   {async*"m"(){}}   -> {async*["m"](){}}
+    // The fix extends the gap-109 property-start set to include `*` and
+    // `async` (with the same method-body guard). `static"m"` already
+    // works (gap-109 covered `static`).
+    ("gen_string_method",       "gap-110: generator string method key -> computed"),
+    ("async_string_method",     "gap-110: async string method key -> computed"),
+    ("async_gen_string_method", "gap-110: async-gen string method key -> computed"),
+    // gap-111 (CLOC14.53): a reserved KEYWORD immediately before a
+    // STRING LITERAL that the keyword grammatically takes needs a
+    // separating SPACE that closurec omits:
+    //   switch(x){case"a":…}      -> case "a":          (case clause)
+    //   {get"a"(){}} / {set"a"…}  -> get "a" / set "a"  (accessor key)
+    //   new"s"                    -> new "s"            (new callee)
+    // NOT all keyword+string pairs need it — `typeof"s"`, `void"s"`,
+    // `throw"e"`, `a in"s"` are already byte-identical (no space). The
+    // fix is a `needs_separator`-style rule keyed on the specific
+    // keyword set (`case`/`get`/`set`/`new`) immediately followed by a
+    // string literal. (`get`/`set` here is the string-keyed-accessor
+    // case noted under gap-109.)
+    ("case_string_space",   "gap-111: case + string needs separating space"),
+    ("accessor_string_key", "gap-111: get/set + string accessor key needs space"),
+    ("new_string_callee",   "gap-111: new + string callee needs separating space"),
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
