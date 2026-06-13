@@ -102,6 +102,10 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::InstanceVars,
     Feature::ClassVars,
     Feature::Constants,
+    // SIR17 exceptions — `try/catch/finally` is native; the SIR exception
+    // object, `raise`, and ordered rescue-clause class matching come from
+    // `@coding-adventures/sir-runtime-exceptions`.  Per code/specs/sir-runtime.md.
+    Feature::Exceptions,
 ];
 
 impl Backend for TypeScriptBackend {
@@ -696,5 +700,107 @@ mod tests {
         let a = compile(&m).expect("compile");
         assert!(a.source.contains("(() => {"), "expected IIFE; got:\n{}", a.source);
         assert!(a.source.contains("while (__Sir.truthy(false))"), "got:\n{}", a.source);
+    }
+
+    // ─── SIR17 exceptions (Q7) ──────────────────────────────────────────────
+
+    #[test]
+    fn end_to_end_ruby_begin_rescue_ensure_ts() {
+        // begin … raise … rescue Type => e … ensure … end → native
+        // try/catch/finally, dispatching on the rescue class through the
+        // exception runtime and binding the caught value.
+        let module = ruby_to_semantic_ir::compile_source(
+            "begin\n  raise ArgumentError, \"bad\"\nrescue ArgumentError => e\n  puts(e)\nensure\n  puts(1)\nend\n",
+            "demo",
+        )
+        .expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        let src = &a.source;
+        assert!(src.contains("import * as __SirExc"), "got:\n{}", src);
+        assert!(src.contains("try {"), "got:\n{}", src);
+        assert!(
+            src.contains(r#"__SirExc.raiseError("ArgumentError", "bad")"#),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains("catch (__exc) {"), "got:\n{}", src);
+        assert!(
+            src.contains(r#"if (__SirExc.rescueMatches(__exc, ["ArgumentError"]))"#),
+            "got:\n{}",
+            src
+        );
+        assert!(src.contains("const e: __Sir.Val = __exc;"), "got:\n{}", src);
+        assert!(src.contains("throw __exc;"), "got:\n{}", src);
+        assert!(src.contains("finally {"), "got:\n{}", src);
+    }
+
+    #[test]
+    fn end_to_end_ruby_raise_message_only_ts() {
+        // `raise "boom"` (no class) → implicit RuntimeError carrying the
+        // message, matching Ruby.
+        let module =
+            ruby_to_semantic_ir::compile_source("raise \"boom\"\n", "demo").expect("lower ruby");
+        let a = compile(&module).expect("compile to ts");
+        assert!(
+            a.source.contains(r#"__SirExc.raiseError("RuntimeError", "boom")"#),
+            "got:\n{}",
+            a.source
+        );
+    }
+
+    #[test]
+    fn non_throwing_module_omits_exc_import() {
+        // A pure arithmetic module must not depend on the exception runtime.
+        let module = twig_to_semantic_ir::compile_source("(print (+ 1 2))", "demo").expect("lower");
+        let a = compile(&module).expect("compile");
+        assert!(!a.source.contains("sir-runtime-exceptions"), "got:\n{}", a.source);
+    }
+
+    #[test]
+    fn try_catch_bare_rescue_and_rethrow_ts() {
+        use semantic_ir::{RescueClause, Scope, Stmt};
+        // A bare `rescue` (no exception types, no binding) is a catch-all:
+        // `rescueMatches(__exc, [])` is always true.  No `ensure` → no
+        // `finally`.  Built directly because the frontend mis-parses some
+        // bare-rescue surface forms.
+        let try_stmt = Stmt::TryCatch {
+            body: vec![Stmt::ExprStmt {
+                expr: Expr::BuiltinCall {
+                    name: "raise".into(),
+                    args: vec![Expr::VarRef {
+                        name: "RuntimeError".into(),
+                        scope: Scope::Const,
+                        span: s(),
+                    }],
+                    effects: EffectSet::PURE,
+                    span: s(),
+                },
+                span: s(),
+            }],
+            rescues: vec![RescueClause {
+                exception_types: vec![],
+                binding: None,
+                body: vec![Stmt::ExprStmt {
+                    expr: Expr::IntLit { value: 7, span: s() },
+                    span: s(),
+                }],
+                span: s(),
+            }],
+            ensure_body: None,
+            span: s(),
+        };
+        let m = module_with_main_body(
+            vec![try_stmt],
+            Expr::NilLit { span: s() },
+            &[Feature::Exceptions, Feature::Constants],
+        );
+        let a = compile(&m).expect("compile");
+        let src = &a.source;
+        assert!(src.contains(r#"__SirExc.raiseError("RuntimeError")"#), "got:\n{}", src);
+        assert!(src.contains("__SirExc.rescueMatches(__exc, [])"), "got:\n{}", src);
+        assert!(src.contains("} else {"), "got:\n{}", src);
+        assert!(src.contains("throw __exc;"), "got:\n{}", src);
+        // No ensure → no finally clause.
+        assert!(!src.contains("finally {"), "got:\n{}", src);
     }
 }

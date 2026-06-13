@@ -24,6 +24,14 @@ pub const RUNTIME: &str = r##"import * as __Sir from "@coding-adventures/sir-run
 pub const RUNTIME_OOP: &str = r##"import * as __SirOop from "@coding-adventures/sir-runtime-oop";
 "##;
 
+/// The exception-runtime import, emitted **only** when a module uses the
+/// `Exceptions` feature (a `try/catch` or a `raise`).  Pure non-throwing
+/// modules never gain a dependency on this package.  Bound as `__SirExc`
+/// so the emitter's `__SirExc.*` call sites resolve; see
+/// `code/specs/sir-runtime.md`.
+pub const RUNTIME_EXC: &str = r##"import * as __SirExc from "@coding-adventures/sir-runtime-exceptions";
+"##;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -42,5 +50,17 @@ mod tests {
         // No inline runtime any more.
         assert!(!RUNTIME.contains("namespace __Sir"));
         assert!(!RUNTIME.contains("export function truthy"));
+    }
+
+    #[test]
+    fn oop_and_exc_imports_bind_their_namespaces() {
+        assert!(RUNTIME_OOP.contains(
+            r#"import * as __SirOop from "@coding-adventures/sir-runtime-oop";"#
+        ));
+        assert!(RUNTIME_EXC.contains(
+            r#"import * as __SirExc from "@coding-adventures/sir-runtime-exceptions";"#
+        ));
+        assert!(RUNTIME_OOP.ends_with('\n'));
+        assert!(RUNTIME_EXC.ends_with('\n'));
     }
 }

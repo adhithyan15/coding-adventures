@@ -40,6 +40,12 @@ fn uses_oop(m: &Module) -> bool {
     .any(|f| m.manifest.contains(*f))
 }
 
+/// True if the module uses exception handling, in which case the emitted
+/// artifact imports `@coding-adventures/sir-runtime-exceptions`.
+fn uses_exceptions(m: &Module) -> bool {
+    m.manifest.contains(Feature::Exceptions)
+}
+
 thread_local! {
     /// Monotonic counter for synthesised loop temporaries (the
     /// once-evaluated `__stop`/`__step` bounds of a `ForRange`).  Reset
@@ -72,6 +78,10 @@ pub fn emit_module(m: &Module) -> String {
     // arithmetic module gains no dependency on it.
     if uses_oop(m) {
         out.push_str(crate::runtime::RUNTIME_OOP);
+    }
+    // Only throwing/rescuing modules import the exception runtime.
+    if uses_exceptions(m) {
+        out.push_str(crate::runtime::RUNTIME_EXC);
     }
     emit_globals(&mut out, &m.globals);
     for f in &m.functions {
@@ -202,12 +212,26 @@ fn collect_stmt_assigned(s: &Stmt, out: &mut HashSet<String>) {
             collect_expr_assigned(key, out);
             collect_expr_assigned(value, out);
         }
-        // Class/module/try bodies are rejected at the capability check
-        // for this backend; nothing to collect.
-        Stmt::ClassDef { .. }
-        | Stmt::ModuleDef { .. }
-        | Stmt::SingletonClassDef { .. }
-        | Stmt::TryCatch { .. } => {}
+        // A try/rescue/ensure carries bare statement lists that may reassign
+        // an outer local, so descend into every one.
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            for st in body {
+                collect_stmt_assigned(st, out);
+            }
+            for r in rescues {
+                for st in &r.body {
+                    collect_stmt_assigned(st, out);
+                }
+            }
+            if let Some(ens) = ensure_body {
+                for st in ens {
+                    collect_stmt_assigned(st, out);
+                }
+            }
+        }
+        // Class/module bodies are rejected at the capability check for this
+        // backend; nothing to collect.
+        Stmt::ClassDef { .. } | Stmt::ModuleDef { .. } | Stmt::SingletonClassDef { .. } => {}
     }
 }
 
@@ -484,8 +508,60 @@ fn emit_stmt(out: &mut String, s: &Stmt, indent: usize) {
                 emit_stmt(out, st, indent);
             }
         }
-        Stmt::TryCatch { span, .. } => {
-            panic!("ts backend reached SIR17 try-catch statement at {} — capability check should have rejected it", span);
+        // `begin … rescue … ensure … end` → native `try { … } catch (e) {
+        // … } finally { … }`.  A native `catch` binds *one* variable and
+        // catches *everything*, while Ruby has an ordered list of typed
+        // `rescue` clauses, so the catch body is an if/else-if chain that asks
+        // the exception runtime `rescueMatches(exc, [class names])` for each
+        // clause in source order and re-`throw`s if none match (matching
+        // Ruby's "propagate when unrescued").
+        Stmt::TryCatch { body, rescues, ensure_body, .. } => {
+            let pad = " ".repeat(indent);
+            let _ = write!(out, "{}try {{\n", pad);
+            emit_stmt_block(out, body, indent + 2);
+            let _ = write!(out, "{}}}", pad);
+            if !rescues.is_empty() {
+                out.push_str(" catch (__exc) {\n");
+                let inner = indent + 2;
+                let ipad = " ".repeat(inner);
+                for (i, r) in rescues.iter().enumerate() {
+                    let mut types = String::from("[");
+                    for (j, t) in r.exception_types.iter().enumerate() {
+                        if j > 0 {
+                            types.push_str(", ");
+                        }
+                        types.push_str(&quote_ts_string(t));
+                    }
+                    types.push(']');
+                    let kw = if i == 0 { "if" } else { "} else if" };
+                    let _ = write!(
+                        out,
+                        "{}{} (__SirExc.rescueMatches(__exc, {})) {{\n",
+                        ipad, kw, types
+                    );
+                    // `rescue Foo => e` binds the caught value as a local.
+                    if let Some(bind) = &r.binding {
+                        let _ = write!(
+                            out,
+                            "{}  const {}: __Sir.Val = __exc;\n",
+                            ipad,
+                            sanitize_ident(bind)
+                        );
+                    }
+                    emit_stmt_block(out, &r.body, inner + 2);
+                }
+                // No clause matched → propagate the original exception.
+                let _ = write!(out, "{}}} else {{\n", ipad);
+                let _ = write!(out, "{}  throw __exc;\n", ipad);
+                let _ = write!(out, "{}}}\n", ipad);
+                let _ = write!(out, "{}}}", pad);
+            }
+            if let Some(ens) = ensure_body {
+                out.push_str(" finally {\n");
+                emit_stmt_block(out, ens, indent + 2);
+                let _ = write!(out, "{}}}", pad);
+            }
+            out.push('\n');
         }
     }
 }
@@ -712,6 +788,33 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
             return;
         }
     }
+    // `raise` → throw a SIR exception via the exception runtime.  The first
+    // argument decides the shape:
+    //   • a `Const` class name (`raise Foo` / `raise Foo, "msg"`) → the class
+    //     name is passed as a *string* (no binding needed for a built-in
+    //     class), with the optional message second;
+    //   • any other first arg (`raise "msg"`) → an implicit `RuntimeError`
+    //     carrying that value as the message (matching Ruby);
+    //   • no args (bare `raise`) → a generic re-raise (`RuntimeError`).
+    if name == "raise" {
+        out.push_str("__SirExc.raiseError(");
+        match args.first() {
+            None => {}
+            Some(Expr::VarRef { name: cn, scope: Scope::Const, .. }) => {
+                out.push_str(&quote_ts_string(cn));
+                if let Some(msg) = args.get(1) {
+                    out.push_str(", ");
+                    emit_expr(out, msg, indent);
+                }
+            }
+            Some(other) => {
+                out.push_str("\"RuntimeError\", ");
+                emit_expr(out, other, indent);
+            }
+        }
+        out.push(')');
+        return;
+    }
     let helper = match name {
         "+" => "__Sir.add",
         "-" => "__Sir.sub",
@@ -742,6 +845,14 @@ fn emit_builtin_call(out: &mut String, name: &str, args: &[Expr], indent: usize)
     let _ = write!(out, "{}(", helper);
     emit_args(out, args, indent);
     out.push(')');
+}
+
+/// Emit a bare statement list (a `Vec<Stmt>`, as carried by `TryCatch`
+/// bodies / rescue clauses / `ensure`) at the given indent.
+fn emit_stmt_block(out: &mut String, stmts: &[Stmt], indent: usize) {
+    for s in stmts {
+        emit_stmt(out, s, indent);
+    }
 }
 
 fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize) {
