@@ -741,9 +741,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-099 — computed-member object paren elision (WHITESPACE_ONLY)
 
-- **Status:** OPEN (discovered CLOC14.43). `minify_computed_member_paren` / `minify_computed_member_chain` ignored.
+- **Status:** RESOLVED in CLOC12.102. `minify_computed_member_paren` / `minify_computed_member_chain` enforced.
 - **Input:** `a=(b)[c];` → **Upstream:** `a=b[c];` (also `a=(b.c)[d];` → `a=b.c[d];`, `a=(b)[c][d];` → `a=b[c][d];`, `(a)[b]=c;` → `a[b]=c;`).
 - **What it needs:** the `[index]` analog of gap-057 (`(a).b` → `a.b`). When a parenthesised expression is the OBJECT of a computed-member `[…]` access and the inner expression is a SAFE operand (a bare identifier or a member-reference chain), the parens are pure grouping and upstream drops them. Reuse gap-057's safe-operand predicate (`is_safe_unary_paren_operand` / the member-reference-chain check) but trigger on a following `[` instead of `.`. Must NOT strip when the inner expression is non-trivial: `(a+b)[c]` and `(b||c)[d]` keep their parens (binary/logical operands bind looser than member access). Distinct from gap-087, which elided parens INSIDE the index (`a[(b)]` → `a[b]`); gap-099 is the object side.
+- **CLOC12.102 resolution:** Implemented as a dedicated pass right after gap-065, copying gap-065's structure verbatim and changing only the FOLLOWER check from a call `(`/template to a `[` index. Guards: GROUPING (prev token is punct other than `)`/`]`/`?.`, or start of stream — never a call/index paren, so `f(b)[c]` is left alone), SIMPLE REFERENCE inside (a `is_plain_identifier` head + zero-or-more `.IDENT` accessors; the scan stops at the first non-`.IDENT` token so `(a+b)[c]`/`(b||c)[d]` never match), and a structural `[` follower. JAR-verified across 13 forms. A stale gap-057 test (`string_content_not_bracket`) asserted the PRE-gap-099 form `(a)[")"]` (kept because gap-057 only handled `.member`); since gap-099 now correctly strips it to `a[")"]` (JAR-confirmed) while still preserving the string `")"` intact, the test was updated + renamed to `gap099_string_content_not_bracket`. +4 new `gap099_*` tests.
 
 ### gap-100 — function/class-expression paren elision in expression position (WHITESPACE_ONLY)
 

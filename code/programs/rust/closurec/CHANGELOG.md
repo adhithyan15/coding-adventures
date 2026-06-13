@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.106.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-099** — grouping parens around the OBJECT of a
+  computed-member `[…]` access are now elided when the object is a
+  simple reference:
+
+      a=(b)[c]    -> a=b[c]      a=(b.c)[d]  -> a=b.c[d]
+      a=(b)[c][d] -> a=b[c][d]   (a)[b]=c    -> a[b]=c
+
+  This is the `[index]` sibling of gap-065 (callee `(f)(x)` -> `f(x)`)
+  and gap-057 (`.member` `(a).b` -> `a.b`); `[` binds tighter than any
+  operator a grouping paren could protect around a bare reference. The
+  new pass mirrors gap-065's guards exactly — GROUPING (not a call/index
+  paren), SIMPLE REFERENCE inside (identifier + `.IDENT` chain, no
+  operators/commas/computed members), and a `[` FOLLOWER — only the
+  follower differs. Non-trivial operands keep their parens (`(a+b)[c]`,
+  `(b||c)[d]`), and a call paren is never grouping (`f(b)[c]` stays).
+  Distinct from gap-087, which elided parens INSIDE the index
+  (`a[(b)]` -> `a[b]`); gap-099 is the object side.
+
+  Behaviour change: `(a)[")"]` now minifies to `a[")"]` (was left as
+  `(a)[")"]` before gap-099 — the parens were previously kept because
+  gap-057 only handled `.member`). JAR-verified. The stale gap-057
+  `string_content_not_bracket` test (which asserted the pre-gap-099
+  form, while still verifying the string `")"` isn't mistaken for a
+  bracket) was updated and renamed to `gap099_string_content_not_bracket`.
+  +4 new `gap099_*` unit tests. The `computed_member_paren` /
+  `computed_member_chain` byte-identity fixtures leave the ignore list.
+
 ## [0.105.0] - 2026-06-12
 
 ### Fixed
