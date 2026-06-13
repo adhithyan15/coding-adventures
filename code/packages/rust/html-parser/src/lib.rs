@@ -848,6 +848,7 @@ pub struct BrowserDocument {
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
     pub link_resource_descriptors: Vec<BrowserLinkResourceDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
+    pub form_control_descriptors: Vec<BrowserFormControlDescriptor>,
     pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
     pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
     pub form_submission_descriptors: Vec<BrowserFormSubmissionDescriptor>,
@@ -1361,6 +1362,45 @@ pub struct BrowserFormPolicySubmitterDescriptor {
     pub effective_target: Option<String>,
     pub novalidate: bool,
     pub value: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserFormControlDescriptor {
+    pub form_id: Option<String>,
+    pub form_name: Option<String>,
+    pub element: String,
+    pub id: Option<String>,
+    pub control_type: String,
+    pub name: Option<String>,
+    pub form_owner: Option<String>,
+    pub control_kind: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub accessible_description: Option<String>,
+    pub labels: Vec<String>,
+    pub label_count: usize,
+    pub value: Option<String>,
+    pub submission_values: Vec<String>,
+    pub submission_value_count: usize,
+    pub placeholder: Option<String>,
+    pub autocomplete_tokens: Vec<String>,
+    pub datalist_options: Vec<String>,
+    pub option_count: usize,
+    pub selected_options: Vec<String>,
+    pub checked: bool,
+    pub multiple: bool,
+    pub autofocus: bool,
+    pub disabled: bool,
+    pub required: bool,
+    pub readonly: bool,
+    pub successful: bool,
+    pub will_validate: bool,
+    pub validation_attributes: Vec<String>,
+    pub validation_barred_reason: Option<String>,
+    pub fieldset_ids: Vec<String>,
+    pub fieldset_legends: Vec<String>,
+    pub control_blocked: bool,
+    pub control_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3912,6 +3952,7 @@ impl BrowserDocument {
             browser_fullscreen_interaction_descriptors(&summary);
         summary.context_menu_interaction_descriptors =
             browser_context_menu_interaction_descriptors(&summary);
+        summary.form_control_descriptors = browser_form_control_descriptors(&summary.forms);
         summary.form_association_descriptors = browser_form_association_descriptors(&summary.forms);
         summary.form_autofill_descriptors = browser_form_autofill_descriptors(&summary.forms);
         summary.form_submission_descriptors = browser_form_submission_descriptors(&summary.forms);
@@ -22439,6 +22480,128 @@ fn browser_form_policy_submitter_descriptor(
         effective_target: submitter.effective_target.clone(),
         novalidate: submitter.novalidate,
         value: submitter.value.clone(),
+    }
+}
+
+fn browser_form_control_descriptors(forms: &[BrowserForm]) -> Vec<BrowserFormControlDescriptor> {
+    forms
+        .iter()
+        .flat_map(|form| {
+            form.controls
+                .iter()
+                .map(|control| browser_form_control_descriptor(form, control))
+        })
+        .collect()
+}
+
+fn browser_form_control_descriptor(
+    form: &BrowserForm,
+    control: &BrowserFormControl,
+) -> BrowserFormControlDescriptor {
+    let fieldset_ids = browser_form_association_fieldset_ids(form, control);
+    let fieldset_legends = browser_form_association_fieldset_legends(form, control);
+    let control_block_reasons = browser_form_control_block_reasons(control);
+
+    BrowserFormControlDescriptor {
+        form_id: form.id.clone(),
+        form_name: form.name.clone(),
+        element: browser_form_control_descriptor_element(control),
+        id: control.id.clone(),
+        control_type: control.control_type.clone(),
+        name: control.name.clone(),
+        form_owner: control.form_owner.clone(),
+        control_kind: browser_form_control_kind(control, &control_block_reasons),
+        text: control.text.clone(),
+        accessible_name: control
+            .accessible_name
+            .clone()
+            .or_else(|| control.alt.clone()),
+        accessible_description: control.accessible_description.clone(),
+        label_count: control.labels.len(),
+        labels: control.labels.clone(),
+        value: control.value.clone(),
+        submission_value_count: control.submission_values.len(),
+        submission_values: control.submission_values.clone(),
+        placeholder: control.placeholder.clone(),
+        autocomplete_tokens: control.autocomplete_tokens.clone(),
+        datalist_options: control.datalist_options.clone(),
+        option_count: control.option_items.len(),
+        selected_options: control.selected_options.clone(),
+        checked: control.checked,
+        multiple: control.multiple,
+        autofocus: control.autofocus,
+        disabled: control.disabled,
+        required: control.required,
+        readonly: control.readonly,
+        successful: control.successful,
+        will_validate: control.will_validate,
+        validation_attributes: control.validation_attributes.clone(),
+        validation_barred_reason: control.validation_barred_reason.clone(),
+        fieldset_ids,
+        fieldset_legends,
+        control_blocked: !control_block_reasons.is_empty(),
+        control_block_reasons,
+    }
+}
+
+fn browser_form_control_kind(
+    control: &BrowserFormControl,
+    control_block_reasons: &[String],
+) -> String {
+    if !control_block_reasons.is_empty() {
+        "blocked-control".to_string()
+    } else if is_browser_form_submitter(control) {
+        "submitter-control".to_string()
+    } else if control.control_type == "select" {
+        "selection-control".to_string()
+    } else if matches!(control.control_type.as_str(), "checkbox" | "radio") {
+        "choice-control".to_string()
+    } else if control.control_type == "file" {
+        "file-control".to_string()
+    } else if control.control_type == "hidden" {
+        "hidden-control".to_string()
+    } else if control.control_type == "output" {
+        "output-control".to_string()
+    } else if control.successful {
+        "successful-control".to_string()
+    } else {
+        "form-control".to_string()
+    }
+}
+
+fn browser_form_control_block_reasons(control: &BrowserFormControl) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if control.disabled {
+        reasons.push("disabled".to_string());
+    }
+    if control.name.is_none() && browser_form_control_needs_name(control) {
+        reasons.push("missing-name".to_string());
+    }
+    if matches!(control.control_type.as_str(), "checkbox" | "radio") && !control.checked {
+        reasons.push("unchecked-choice".to_string());
+    }
+    if control.readonly {
+        reasons.push("readonly".to_string());
+    }
+    if let Some(reason) = &control.validation_barred_reason {
+        let reason = format!("validation-barred:{reason}");
+        if !reasons.iter().any(|existing| existing == &reason) {
+            reasons.push(reason);
+        }
+    }
+    reasons
+}
+
+fn browser_form_control_needs_name(control: &BrowserFormControl) -> bool {
+    !matches!(control.control_type.as_str(), "button" | "output" | "reset")
+}
+
+fn browser_form_control_descriptor_element(control: &BrowserFormControl) -> String {
+    match control.control_type.as_str() {
+        "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file"
+        | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset"
+        | "search" | "submit" | "tel" | "text" | "time" | "url" | "week" => "input".to_string(),
+        other => other.to_string(),
     }
 }
 
