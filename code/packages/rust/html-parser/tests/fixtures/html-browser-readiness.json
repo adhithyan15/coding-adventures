@@ -300,6 +300,9 @@
             ]
           }
         ],
+        "image_map_descriptors": [
+          { "map_index": 1, "name": "hero-map", "referenced_image_sources": ["hero.jpg"], "area_count": 1, "navigable_area_count": 1, "area_shapes": ["rect"], "default_shape_area_count": 1, "ping_area_count": 1, "attribution_area_count": 1 }
+        ],
         "forms": [],
         "tables": []
       }
@@ -606,6 +609,18 @@
           { "kind": "icon", "url": "favicon.ico", "resolved_url": "https://example.test/app/favicon.ico", "rel": "shortcut icon", "rel_tokens": ["shortcut", "icon"], "type_hint": "image/x-icon", "sizes": "any", "async_script": false, "defer_script": false },
           { "kind": "icon", "url": "mask.svg", "resolved_url": "https://example.test/app/mask.svg", "rel": "mask-icon", "rel_tokens": ["mask-icon"], "color": "#0055ff", "async_script": false, "defer_script": false },
           { "kind": "alternate", "url": "feed.xml", "resolved_url": "https://example.test/app/feed.xml", "rel": "alternate", "rel_tokens": ["alternate"], "type_hint": "application/rss+xml", "title": "Feed", "hreflang": "en", "async_script": false, "defer_script": false }
+        ],
+        "link_resource_descriptors": [
+          { "resource_index": 1, "resource_kind": "preconnect", "url": "https://cdn.example.test", "resolved_url": "https://cdn.example.test", "rel_tokens": ["preconnect"], "policy_hint_count": 1 },
+          { "resource_index": 2, "resource_kind": "preload", "url": "fonts/site.woff2", "resolved_url": "https://example.test/app/fonts/site.woff2", "rel_tokens": ["preload"], "as_hint": "font", "type_hint": "font/woff2", "fetchpriority": "high", "policy_hint_count": 3 },
+          { "resource_index": 3, "resource_kind": "modulepreload", "url": "scripts/app.mjs", "resolved_url": "https://example.test/app/scripts/app.mjs", "rel_tokens": ["modulepreload"], "blocking_tokens": ["render"], "policy_hint_count": 3 },
+          { "resource_index": 4, "resource_kind": "preload", "url": "hero.jpg", "resolved_url": "https://example.test/app/hero.jpg", "rel_tokens": ["preload"], "as_hint": "image", "fetchpriority": "high", "responsive_image_preload": true, "policy_hint_count": 1 },
+          { "resource_index": 5, "resource_kind": "prefetch", "url": "next.html", "resolved_url": "https://example.test/app/next.html", "rel_tokens": ["prefetch"], "as_hint": "document" },
+          { "resource_index": 6, "resource_kind": "manifest", "url": "site.webmanifest", "resolved_url": "https://example.test/app/site.webmanifest", "rel_tokens": ["manifest"], "policy_hint_count": 1 },
+          { "resource_index": 7, "resource_kind": "canonical", "url": "https://example.test/app/", "resolved_url": "https://example.test/app/", "rel_tokens": ["canonical"] },
+          { "resource_index": 8, "resource_kind": "icon", "url": "favicon.ico", "resolved_url": "https://example.test/app/favicon.ico", "rel_tokens": ["shortcut", "icon"], "type_hint": "image/x-icon", "sizes": "any", "icon_candidate": true },
+          { "resource_index": 9, "resource_kind": "icon", "url": "mask.svg", "resolved_url": "https://example.test/app/mask.svg", "rel_tokens": ["mask-icon"], "color": "#0055ff", "icon_candidate": true },
+          { "resource_index": 10, "resource_kind": "alternate", "url": "feed.xml", "resolved_url": "https://example.test/app/feed.xml", "rel_tokens": ["alternate"], "type_hint": "application/rss+xml", "title": "Feed", "hreflang": "en", "alternate_candidate": true }
         ],
         "document_policy_descriptors": [
           {

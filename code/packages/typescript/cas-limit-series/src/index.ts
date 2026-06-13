@@ -25,6 +25,9 @@ import {
   sym,
   type IRNode,
 } from "@coding-adventures/symbolic-ir";
+import { trySeriesLimit } from "./seriesLimit";
+
+export { trySeriesLimit } from "./seriesLimit";
 
 export const LIMIT = "Limit";
 export const TAYLOR = "Taylor";
@@ -242,6 +245,14 @@ function handleIndeterminateForm(
     const rewritten = rewriteIndeterminatePower(expr.args[0], expr.args[1], variable, point, exactPoint, options, depth);
     if (rewritten !== null) return rewritten;
   }
+
+  // Track J2: Taylor-series fallback. Fires after L'Hopital (or instead
+  // of it if no diff_fn was supplied) and after the product/power
+  // rewrites. Handles transcendental 0/0 forms via local series
+  // expansion. Returns null on anything outside its rational-ring
+  // domain; we then fall through to the unevaluated `Limit(...)` node.
+  const series = trySeriesLimit(expr, variable, point);
+  if (series !== null) return series;
 
   return buildUnevaluatedLimit(expr, variable, point, options.direction);
 }

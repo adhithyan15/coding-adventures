@@ -846,6 +846,7 @@ pub struct BrowserDocument {
     pub loading_hint_descriptors: Vec<BrowserLoadingHintDescriptor>,
     pub fetch_policy_descriptors: Vec<BrowserFetchPolicyDescriptor>,
     pub resource_endpoint_descriptors: Vec<BrowserResourceEndpointDescriptor>,
+    pub link_resource_descriptors: Vec<BrowserLinkResourceDescriptor>,
     pub form_policy_descriptors: Vec<BrowserFormPolicyDescriptor>,
     pub form_association_descriptors: Vec<BrowserFormAssociationDescriptor>,
     pub form_autofill_descriptors: Vec<BrowserFormAutofillDescriptor>,
@@ -871,6 +872,7 @@ pub struct BrowserDocument {
     pub images: Vec<BrowserImage>,
     pub image_candidate_descriptors: Vec<BrowserImageCandidateDescriptor>,
     pub image_maps: Vec<BrowserImageMap>,
+    pub image_map_descriptors: Vec<BrowserImageMapDescriptor>,
     pub media: Vec<BrowserMedia>,
     pub media_playback_descriptors: Vec<BrowserMediaPlaybackDescriptor>,
     pub embedded_contexts: Vec<BrowserEmbeddedContext>,
@@ -1021,6 +1023,30 @@ pub struct BrowserResource {
     pub default_track: bool,
     pub async_script: bool,
     pub defer_script: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserLinkResourceDescriptor {
+    pub resource_index: usize,
+    pub resource_kind: String,
+    pub url: String,
+    pub resolved_url: Option<String>,
+    pub rel_tokens: Vec<String>,
+    pub as_hint: Option<String>,
+    pub type_hint: Option<String>,
+    pub media: Option<String>,
+    pub title: Option<String>,
+    pub sizes: Option<String>,
+    pub hreflang: Option<String>,
+    pub color: Option<String>,
+    pub fetchpriority: Option<String>,
+    pub blocking_tokens: Vec<String>,
+    pub responsive_image_preload: bool,
+    pub icon_candidate: bool,
+    pub alternate_candidate: bool,
+    pub policy_hint_count: usize,
+    pub resource_blocked: bool,
+    pub resource_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -2613,6 +2639,25 @@ pub struct BrowserImageMap {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserImageMapDescriptor {
+    pub map_index: usize,
+    pub id: Option<String>,
+    pub name: Option<String>,
+    pub referenced_image_sources: Vec<String>,
+    pub area_count: usize,
+    pub navigable_area_count: usize,
+    pub area_shapes: Vec<String>,
+    pub missing_alt_area_count: usize,
+    pub missing_href_area_count: usize,
+    pub missing_coords_area_count: usize,
+    pub default_shape_area_count: usize,
+    pub ping_area_count: usize,
+    pub attribution_area_count: usize,
+    pub map_blocked: bool,
+    pub map_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserImageMapArea {
     pub id: Option<String>,
     pub shape: String,
@@ -3737,6 +3782,8 @@ impl BrowserDocument {
         summary.stylesheet_planning_descriptors =
             browser_stylesheet_planning_descriptors(&summary.stylesheets);
         summary.image_candidate_descriptors = browser_image_candidate_descriptors(&summary.images);
+        summary.image_map_descriptors =
+            browser_image_map_descriptors(&summary.image_maps, &summary.images);
         summary.media_playback_descriptors = browser_media_playback_descriptors(&summary.media);
         summary.embedded_policy_descriptors =
             browser_embedded_policy_descriptors(&summary.embedded_contexts);
@@ -3775,6 +3822,7 @@ impl BrowserDocument {
         summary.form_reset_descriptors = browser_form_reset_descriptors(&summary.forms);
         summary.form_validation_descriptors = browser_form_validation_descriptors(&summary.forms);
         summary.resource_endpoint_descriptors = browser_resource_endpoint_descriptors(&summary);
+        summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
         summary
     }
 }
@@ -11402,6 +11450,111 @@ fn browser_resource_endpoint_descriptors(
     descriptors
 }
 
+fn browser_link_resource_descriptors(
+    resources: &[BrowserResource],
+) -> Vec<BrowserLinkResourceDescriptor> {
+    resources
+        .iter()
+        .enumerate()
+        .filter(|(_, resource)| resource.rel.is_some())
+        .map(|(index, resource)| browser_link_resource_descriptor(index + 1, resource))
+        .collect()
+}
+
+fn browser_link_resource_descriptor(
+    resource_index: usize,
+    resource: &BrowserResource,
+) -> BrowserLinkResourceDescriptor {
+    let resource_block_reasons = browser_link_resource_block_reasons(resource);
+
+    BrowserLinkResourceDescriptor {
+        resource_index,
+        resource_kind: resource.kind.clone(),
+        url: resource.url.clone(),
+        resolved_url: resource.resolved_url.clone(),
+        rel_tokens: resource.rel_tokens.clone(),
+        as_hint: resource.as_hint.clone(),
+        type_hint: resource.type_hint.clone(),
+        media: resource.media.clone(),
+        title: resource.title.clone(),
+        sizes: resource.sizes.clone(),
+        hreflang: resource.hreflang.clone(),
+        color: resource.color.clone(),
+        fetchpriority: resource.fetchpriority.clone(),
+        blocking_tokens: resource.blocking_tokens.clone(),
+        responsive_image_preload: resource.kind == "preload"
+            && resource.as_hint.as_deref() == Some("image")
+            && (resource.imagesrcset.is_some() || resource.imagesizes.is_some()),
+        icon_candidate: resource.kind == "icon",
+        alternate_candidate: resource.kind == "alternate",
+        policy_hint_count: browser_link_resource_policy_hint_count(resource),
+        resource_blocked: !resource_block_reasons.is_empty(),
+        resource_block_reasons,
+    }
+}
+
+fn browser_link_resource_policy_hint_count(resource: &BrowserResource) -> usize {
+    [
+        resource.integrity.as_ref(),
+        resource.crossorigin.as_ref(),
+        resource.nonce.as_ref(),
+        resource.referrerpolicy.as_ref(),
+        resource.fetchpriority.as_ref(),
+        resource.blocking.as_ref(),
+    ]
+    .into_iter()
+    .filter(Option::is_some)
+    .count()
+}
+
+fn browser_link_resource_block_reasons(resource: &BrowserResource) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if resource.rel_tokens.is_empty() {
+        reasons.push("missing-rel".to_string());
+    }
+    if resource.resolved_url.is_none() {
+        reasons.push("unresolved-url".to_string());
+    }
+    if resource.kind == "preload" && resource.as_hint.is_none() {
+        reasons.push("preload-missing-as".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesrcset.is_some()
+        && resource.imagesizes.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-sizes".to_string());
+    }
+    if resource.kind == "preload"
+        && resource.as_hint.as_deref() == Some("image")
+        && resource.imagesizes.is_some()
+        && resource.imagesrcset.is_none()
+    {
+        reasons.push("responsive-image-preload-missing-srcset".to_string());
+    }
+    if resource.kind == "icon"
+        && browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.color.is_none()
+    {
+        reasons.push("mask-icon-missing-color".to_string());
+    }
+    if resource.kind == "icon"
+        && !browser_rel_tokens_contain(&resource.rel_tokens, "mask-icon")
+        && resource.sizes.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("icon-missing-size-or-type".to_string());
+    }
+    if resource.kind == "alternate"
+        && resource.title.is_none()
+        && resource.hreflang.is_none()
+        && resource.type_hint.is_none()
+    {
+        reasons.push("alternate-missing-descriptor".to_string());
+    }
+    reasons
+}
+
 fn browser_image_candidate_descriptors(
     images: &[BrowserImage],
 ) -> Vec<BrowserImageCandidateDescriptor> {
@@ -11461,6 +11614,168 @@ fn browser_image_candidate_descriptor(image: &BrowserImage) -> BrowserImageCandi
             .collect(),
         sources: image.sources.clone(),
     }
+}
+
+fn browser_image_map_descriptors(
+    maps: &[BrowserImageMap],
+    images: &[BrowserImage],
+) -> Vec<BrowserImageMapDescriptor> {
+    let mut descriptors = maps
+        .iter()
+        .enumerate()
+        .map(|(index, map)| browser_image_map_descriptor(index + 1, map, images))
+        .collect::<Vec<_>>();
+
+    for image in images {
+        let Some(map_name) = image.usemap.as_deref().and_then(browser_image_usemap_name) else {
+            continue;
+        };
+        if maps
+            .iter()
+            .any(|map| map.name.as_deref() == Some(map_name.as_str()))
+        {
+            continue;
+        }
+        let referenced_image_sources = vec![browser_image_reference_source(image)];
+        descriptors.push(BrowserImageMapDescriptor {
+            map_index: descriptors.len() + 1,
+            id: None,
+            name: Some(map_name),
+            referenced_image_sources,
+            area_count: 0,
+            navigable_area_count: 0,
+            area_shapes: Vec::new(),
+            missing_alt_area_count: 0,
+            missing_href_area_count: 0,
+            missing_coords_area_count: 0,
+            default_shape_area_count: 0,
+            ping_area_count: 0,
+            attribution_area_count: 0,
+            map_blocked: true,
+            map_block_reasons: vec!["missing-map".to_string()],
+        });
+    }
+
+    descriptors
+}
+
+fn browser_image_map_descriptor(
+    map_index: usize,
+    map: &BrowserImageMap,
+    images: &[BrowserImage],
+) -> BrowserImageMapDescriptor {
+    let referenced_image_sources = map
+        .name
+        .as_deref()
+        .map(|name| browser_image_map_referenced_image_sources(name, images))
+        .unwrap_or_default();
+    let map_block_reasons =
+        browser_image_map_block_reasons(map, referenced_image_sources.is_empty());
+
+    BrowserImageMapDescriptor {
+        map_index,
+        id: map.id.clone(),
+        name: map.name.clone(),
+        referenced_image_sources,
+        area_count: map.areas.len(),
+        navigable_area_count: map.areas.iter().filter(|area| area.href.is_some()).count(),
+        area_shapes: browser_image_map_area_shapes(&map.areas),
+        missing_alt_area_count: map
+            .areas
+            .iter()
+            .filter(|area| area.alt.as_deref().map_or(true, str::is_empty))
+            .count(),
+        missing_href_area_count: map.areas.iter().filter(|area| area.href.is_none()).count(),
+        missing_coords_area_count: map
+            .areas
+            .iter()
+            .filter(|area| area.coords.is_none())
+            .count(),
+        default_shape_area_count: map.areas.iter().filter(|area| area.shape == "rect").count(),
+        ping_area_count: map
+            .areas
+            .iter()
+            .filter(|area| !area.ping.is_empty())
+            .count(),
+        attribution_area_count: map
+            .areas
+            .iter()
+            .filter(|area| !area.attributionsrc.is_empty())
+            .count(),
+        map_blocked: !map_block_reasons.is_empty(),
+        map_block_reasons,
+    }
+}
+
+fn browser_image_map_referenced_image_sources(name: &str, images: &[BrowserImage]) -> Vec<String> {
+    images
+        .iter()
+        .filter(|image| {
+            image
+                .usemap
+                .as_deref()
+                .and_then(browser_image_usemap_name)
+                .as_deref()
+                == Some(name)
+        })
+        .map(browser_image_reference_source)
+        .collect()
+}
+
+fn browser_image_reference_source(image: &BrowserImage) -> String {
+    image
+        .src
+        .clone()
+        .or_else(|| image.srcset.clone())
+        .unwrap_or_else(|| "<inline-image>".to_string())
+}
+
+fn browser_image_usemap_name(usemap: &str) -> Option<String> {
+    usemap
+        .strip_prefix('#')
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+        .map(ToOwned::to_owned)
+}
+
+fn browser_image_map_area_shapes(areas: &[BrowserImageMapArea]) -> Vec<String> {
+    let mut shapes = Vec::new();
+    for area in areas {
+        if !shapes.contains(&area.shape) {
+            shapes.push(area.shape.clone());
+        }
+    }
+    shapes
+}
+
+fn browser_image_map_block_reasons(
+    map: &BrowserImageMap,
+    missing_image_reference: bool,
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if map.name.as_deref().map_or(true, str::is_empty) {
+        reasons.push("missing-name".to_string());
+    }
+    if map.areas.is_empty() {
+        reasons.push("missing-areas".to_string());
+    }
+    if missing_image_reference {
+        reasons.push("unreferenced-map".to_string());
+    }
+    if map.areas.iter().any(|area| area.href.is_none()) {
+        reasons.push("areas-without-href".to_string());
+    }
+    if map
+        .areas
+        .iter()
+        .any(|area| area.alt.as_deref().map_or(true, str::is_empty))
+    {
+        reasons.push("areas-without-alt".to_string());
+    }
+    if map.areas.iter().any(|area| area.coords.is_none()) {
+        reasons.push("areas-without-coords".to_string());
+    }
+    reasons
 }
 
 fn browser_srcset_candidate_count(srcset: &str) -> usize {

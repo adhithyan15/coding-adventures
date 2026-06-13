@@ -53,7 +53,12 @@ from cas_complex.handlers import (
 )
 from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import BiPoly as _BiPoly
-from cas_factor import factor_integer_polynomial, try_bivariate_hensel
+from cas_factor import NPoly as _NPoly
+from cas_factor import (
+    factor_integer_polynomial,
+    try_bivariate_hensel,
+    try_n_variate_hensel,
+)
 from cas_fourier import build_fourier_handler_table as _build_fourier
 from cas_laplace import build_laplace_handler_table as _build_laplace
 from cas_limit_series import (
@@ -2044,6 +2049,250 @@ def _bipoly_to_ir(p: _BiPoly, x: IRSymbol, y: IRSymbol) -> IRNode:
     return IRApply(ADD, tuple(terms))
 
 
+def _find_n_variables(node: IRNode, max_vars: int = 8) -> list[IRSymbol] | None:
+    """Return all distinct free variables found in ``node``, in encounter order.
+
+    This is the n-variate generalisation of :func:`_find_two_variables`.
+    The encounter order matters: the first variable becomes the *main*
+    variable for Hensel's univariate image step.  We bound the search at
+    ``max_vars`` distinct symbols so a pathological input with hundreds
+    of free symbols can't make us allocate gigantic sparse-dict keys.
+
+    Returns ``None`` when zero variables appear (constant — caller already
+    handles that) or when ``max_vars`` is exceeded.
+    """
+    seen: list[IRSymbol] = []
+
+    def walk(n: IRNode) -> bool:
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return True
+            if n not in seen:
+                seen.append(n)
+                if len(seen) > max_vars:
+                    return False
+            return True
+        if isinstance(n, IRApply):
+            for arg in n.args:
+                if not walk(arg):
+                    return False
+        return True
+
+    if not walk(node):
+        return None
+    if not seen:
+        return None
+    return seen
+
+
+def _ir_to_npoly(node: IRNode, vars: list[IRSymbol]) -> _NPoly | None:
+    """Convert an IR expression to an n-variate polynomial in ``vars``.
+
+    Structurally identical to :func:`_ir_to_bipoly` but with an ``n``-length
+    exponent tuple instead of ``(i, j)``.  Returns ``None`` for anything
+    outside ℚ[v_0, …, v_{n-1}]:
+
+    - Floats (would destroy exact arithmetic).
+    - A free symbol not in ``vars``.
+    - Transcendental functions (Sin, Log, Exp, Sqrt, …).
+    - Non-integer or non-constant exponents, negative exponents.
+    """
+    n_vars = len(vars)
+    var_index = {v: i for i, v in enumerate(vars)}
+    zero_key = (0,) * n_vars
+
+    def unit_for(v: IRSymbol) -> tuple[int, ...]:
+        i = var_index[v]
+        key = [0] * n_vars
+        key[i] = 1
+        return tuple(key)
+
+    def add_key(a: tuple[int, ...], b: tuple[int, ...]) -> tuple[int, ...]:
+        return tuple(a[i] + b[i] for i in range(n_vars))
+
+    def walk(n: IRNode) -> _NPoly | None:
+        # Numeric literals → constant monomial.
+        if isinstance(n, IRInteger):
+            return {zero_key: Fraction(n.value)} if n.value != 0 else {}
+        if isinstance(n, IRRational):
+            return {zero_key: Fraction(n.numer, n.denom)}
+        if isinstance(n, IRFloat):
+            return None  # floats are out — Q-only
+
+        # Variables.
+        if isinstance(n, IRSymbol):
+            if n.name in _CONSTANT_NAMES:
+                return None
+            if n in var_index:
+                return {unit_for(n): Fraction(1)}
+            return None  # foreign symbol
+
+        if not isinstance(n, IRApply):
+            return None
+        head = n.head
+
+        if head == ADD:
+            acc: _NPoly = {}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                for k, v in sub.items():
+                    acc[k] = acc.get(k, Fraction(0)) + v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == SUB:
+            if len(n.args) != 2:
+                return None
+            a = walk(n.args[0])
+            b = walk(n.args[1])
+            if a is None or b is None:
+                return None
+            acc = dict(a)
+            for k, v in b.items():
+                acc[k] = acc.get(k, Fraction(0)) - v
+            return {k: v for k, v in acc.items() if v != 0}
+
+        if head == NEG:
+            if len(n.args) != 1:
+                return None
+            a = walk(n.args[0])
+            if a is None:
+                return None
+            return {k: -v for k, v in a.items() if v != 0}
+
+        if head == MUL:
+            acc = {zero_key: Fraction(1)}
+            for arg in n.args:
+                sub = walk(arg)
+                if sub is None:
+                    return None
+                new_acc: _NPoly = {}
+                for k1, c1 in acc.items():
+                    for k2, c2 in sub.items():
+                        k = add_key(k1, k2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                acc = {k: v for k, v in new_acc.items() if v != 0}
+            return acc
+
+        if head == POW:
+            if len(n.args) != 2:
+                return None
+            base = walk(n.args[0])
+            if base is None:
+                return None
+            exp_node = n.args[1]
+            if not isinstance(exp_node, IRInteger):
+                return None
+            e = exp_node.value
+            if e < 0:
+                return None
+            if e == 0:
+                return {zero_key: Fraction(1)}
+            result = base
+            for _ in range(e - 1):
+                new_acc: _NPoly = {}
+                for k1, c1 in result.items():
+                    for k2, c2 in base.items():
+                        k = add_key(k1, k2)
+                        new_acc[k] = new_acc.get(k, Fraction(0)) + c1 * c2
+                result = {k: v for k, v in new_acc.items() if v != 0}
+            return result
+
+        # Any other head (Sin, Log, …) is not a polynomial term.
+        return None
+
+    return walk(node)
+
+
+def _npoly_to_ir(p: _NPoly, vars: list[IRSymbol]) -> IRNode:
+    """Convert an n-variate ℚ-polynomial back to an IR expression.
+
+    Each monomial ``c · v_0^{e_0} · … · v_{n-1}^{e_{n-1}}`` becomes a
+    left-nested binary Mul node (singleton factors elided).  The
+    polynomial is a left-nested binary Add of monomial nodes, sorted
+    by descending total degree then lex on the exponent tuple for
+    deterministic canonical form.
+
+    Binary nesting matters: the symbolic-vm primitive Add / Mul
+    handlers are strictly binary (see ``handlers.py::_binary_args``),
+    so an ``IRApply(ADD, (a, b, c))`` with three or more children
+    would crash when re-evaluated.  We mirror the cubic-identity
+    handler's nesting convention: ``Add(Add(a, b), c)`` for three
+    terms, ``Add(Add(Add(a, b), c), d)`` for four, etc.
+
+    Empty dict → ``IRInteger(0)``.  Single all-zero key → the constant.
+    """
+    if not p:
+        return IRInteger(0)
+    n_vars = len(vars)
+
+    def fold_binary(head: IRSymbol, parts: list[IRNode]) -> IRNode:
+        """Left-fold a list of children into nested binary IRApply nodes."""
+        assert parts, "fold_binary requires at least one node"
+        result = parts[0]
+        for nxt in parts[1:]:
+            result = IRApply(head, (result, nxt))
+        return result
+
+    def monomial_node(key: tuple[int, ...], c: Fraction) -> IRNode:
+        parts: list[IRNode] = []
+        all_zero = all(e == 0 for e in key)
+        if c != 1 or all_zero:
+            if c.denominator == 1:
+                parts.append(IRInteger(c.numerator))
+            else:
+                parts.append(IRRational(c.numerator, c.denominator))
+        for i in range(n_vars):
+            e = key[i]
+            if e <= 0:
+                continue
+            v = vars[i]
+            parts.append(v if e == 1 else IRApply(POW, (v, IRInteger(e))))
+        if not parts:
+            # c == 1 and all exponents zero — should be caught above,
+            # but if we somehow have a unit monomial with no factors,
+            # the value is just 1.
+            return IRInteger(1)
+        return fold_binary(MUL, parts)
+
+    keys = sorted(
+        p.keys(),
+        key=lambda k: (-sum(k), tuple(-e for e in k)),
+    )
+    terms = [monomial_node(k, p[k]) for k in keys]
+    return fold_binary(ADD, terms)
+
+
+def _try_n_variate_hensel_ir(inner: IRNode) -> IRNode | None:
+    """Top-level glue for n-variate (n ≥ 3) Hensel lifting.
+
+    Identifies all free variables, converts to an NPoly, calls
+    :func:`try_n_variate_hensel`, and converts the factor list back to
+    a ``Mul(...)`` IR node.  Returns ``None`` on any failure (foreign
+    variable, transcendental, Hensel falls through, …) so the caller
+    continues with the next fallback path.
+
+    Note: this routine is generic in ``n`` — the same code path serves
+    ``n = 3, 4, 5, …``.  The caller restricts dispatch to ``n ≥ 3``
+    only because the bivariate (``n == 2``) path is handled by the
+    dedicated bivariate bridge which has been battle-tested longer.
+    """
+    vars = _find_n_variables(inner)
+    if vars is None or len(vars) < 2:
+        return None
+    npoly = _ir_to_npoly(inner, vars)
+    if npoly is None:
+        return None
+    factors = try_n_variate_hensel(npoly, len(vars))
+    if factors is None or len(factors) < 2:
+        return None
+    factor_nodes = [_npoly_to_ir(f, vars) for f in factors]
+    if len(factor_nodes) == 1:
+        return factor_nodes[0]
+    return IRApply(MUL, tuple(factor_nodes))
+
+
 def _try_bivariate_hensel_ir(inner: IRNode) -> IRNode | None:
     """Top-level glue: identify two variables, convert to BiPoly, Hensel,
     convert factors back, return a ``Mul(...)`` IR node.
@@ -2122,6 +2371,14 @@ def factor_handler(_vm: VM, expr: IRApply) -> IRNode:
         hensel = _try_bivariate_hensel_ir(inner)
         if hensel is not None:
             return _vm.eval(hensel)
+        # n-variate (n ≥ 3) Hensel — the generalised algorithmic
+        # fallback for tri- and higher-variate polynomials.  Examples
+        # this catches: x^3 + y^3 + z^3 − 3·x·y·z = (x+y+z)·(…).
+        # Returns None for transcendentals, foreign symbols, or when
+        # the iterated lift can't pin down a factorisation.
+        n_hensel = _try_n_variate_hensel_ir(inner)
+        if n_hensel is not None:
+            return _vm.eval(n_hensel)
         return expr  # transcendental or unsupported multi-variable
     num_frac, den_frac = rational
 

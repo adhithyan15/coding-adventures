@@ -11,6 +11,7 @@ use symbolic_ir::{
     SQRT, SUB, TAN, TANH,
 };
 
+use crate::series_limit::try_series_limit_default;
 use crate::LIMIT;
 
 const EPS: f64 = 1e-300;
@@ -156,6 +157,13 @@ fn handle_form(
                 return result;
             }
         }
+    }
+
+    // Track J2: Taylor-series fallback. Fires after L'Hopital (or instead
+    // of it if no diff_fn was supplied) and the product/power rewrites.
+    // Handles transcendental 0/0 via bounded local series expansion.
+    if let Some(result) = try_series_limit_default(&expr, var, &point) {
+        return result;
     }
 
     build_unevaluated(expr, var, point, options.direction)

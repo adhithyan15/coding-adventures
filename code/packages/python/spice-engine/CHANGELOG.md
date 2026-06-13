@@ -4,6 +4,17 @@
 
 ### Added
 
+- **Transient FIND/AT measurement routing** —
+  `measure_transient_find_at_probe()` and parsed transient
+  `.measure ... FIND ... AT=` cards now sample or linearly interpolate a probe
+  value at one scalar time, matching Rust and TypeScript.
+
+- **AC sweep measurement card routing** —
+  `measure_ac_sweep_probe()`, `measure_ac_sweep_cards()`, and
+  `measure_ac_sweep_deck()` now route direct or parsed `.measure ac` /
+  `.meas ac` cards into the shared scalar measurement table surface using
+  complex probe magnitudes, matching Rust and TypeScript.
+
 - **DC sweep measurement card routing** —
   `measure_dc_sweep_probe()`, `measure_dc_sweep_cards()`, and
   `measure_dc_sweep_deck()` now route direct or parsed `.measure dc` /

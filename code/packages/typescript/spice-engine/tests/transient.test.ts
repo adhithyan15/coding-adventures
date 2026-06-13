@@ -73,6 +73,7 @@ import {
   sampleTransientProbeAsDigitalEvents,
   sampleTransientProbesAsDigitalEventStreams,
   measureTransientDeck,
+  measureTransientFindAtProbe,
   measureTransientProbe,
   transient,
   transientAdaptive,
@@ -1396,15 +1397,19 @@ describe("transient", () => {
       3.0e-3,
     );
     const finalValue = measureTransientProbe(points, "settled", "V(out)", "final");
+    const midpoint = measureTransientFindAtProbe(points, "midpoint", "V(out)", 1.5e-3);
 
     expect(peakToPeak.value).toBeCloseTo(1.5, 9);
     expect(peakToPeak.mode).toBe("pp");
     expect(finalValue.value).toBeCloseTo(0.75, 9);
     expect(finalValue.mode).toBe("last");
-    expect(formatMeasurementTable([peakToPeak, finalValue])).toBe(
+    expect(midpoint.value).toBeCloseTo(0.5, 9);
+    expect(midpoint.mode).toBe("find");
+    expect(formatMeasurementTable([peakToPeak, finalValue, midpoint])).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
-        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n",
+        "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n" +
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n",
     );
   });
 
@@ -1420,6 +1425,7 @@ describe("transient", () => {
       points,
       `
 .measure tran swing pp V(out) FROM=1m TO=3m
+.measure tran midpoint FIND V(out) AT=1.5m
 .meas transient mean avg V(out)
 .end
 `,
@@ -1433,11 +1439,13 @@ describe("transient", () => {
       toValue,
     ])).toStrictEqual([
       ["swing", "pp", 1.5, 0.001, 0.003],
+      ["midpoint", "find", 0.5, 0.0015, 0.0015],
       ["mean", "avg", 0.4375, undefined, undefined],
     ]);
     expect(formatMeasurementTable(measurements)).toBe(
       "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n" +
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n" +
         "mean\ttran\tV(out)\tavg\t\t\t4.375000e-01\n",
     );
   });

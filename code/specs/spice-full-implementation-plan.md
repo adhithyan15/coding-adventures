@@ -31,10 +31,15 @@ downstream tools to compare.
      measurement helpers from deck text; parsed `.save` and `.probe` cards now
      drive stable Rust table output for operating-point, DC sweep, AC sweep, and
      transient results; parsed `.measure dc` / `.meas dc` cards now route DC
-     sweep probe samples into the shared scalar measurement table surface.
-   - Expand richer `.measure` event/trigger modes and remaining non-DC
-     measurement analyses toward full SPICE compatibility while keeping
-     unsupported control-flow diagnostics explicit.
+     sweep probe samples into the shared scalar measurement table surface;
+     parsed `.measure ac` / `.meas ac` cards now route AC probe magnitudes over
+     optional frequency windows into the same measurement table surface; parsed
+     transient `.measure ... FIND ... AT=` cards now route single-time probe
+     samples through the shared measurement table with interpolation between
+     neighboring transient samples.
+   - Expand richer `.measure` trigger/crossing modes and remaining
+     non-DC/non-AC measurement analyses toward full SPICE compatibility while
+     keeping unsupported control-flow diagnostics explicit.
 
 ## Completed Slices
 
@@ -281,12 +286,35 @@ downstream tools to compare.
       event/trigger modes and remaining non-DC analysis-specific measurement
       semantics remain in backlog.
 
+25. Parsed AC sweep measurement routing.
+    - Status: completed in this AC sweep measurement routing slice.
+    - Python, Rust, and TypeScript now expose matching AC sweep measurement
+      helpers that compute MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+      probe measurements over complex probe magnitudes and optional frequency
+      windows.
+    - Parsed `.measure ac` and `.meas ac` cards route into the shared scalar
+      measurement table output, while mixed-analysis card lists still fail with
+      explicit helper-specific diagnostics.
+    - Richer event/trigger modes and remaining non-DC/non-AC analysis-specific
+      measurement semantics remain in backlog.
+
+26. Transient FIND/AT measurement routing.
+    - Status: completed in this transient FIND/AT measurement routing slice.
+    - Python, Rust, and TypeScript now expose matching transient FIND/AT
+      helpers that sample exact transient points or linearly interpolate between
+      neighboring samples for scalar probe values.
+    - Parsed `.measure tran ... FIND ... AT=` and `.meas transient ... FIND
+      ... AT=` cards route into the shared scalar measurement table output with
+      the AT time recorded as the point window.
+    - Richer trigger/crossing forms such as WHEN, RISE, FALL, CROSS, and
+      target-delay measurements remain in backlog.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand richer `.measure` event/trigger modes and remaining non-DC
-     measurement analyses toward full SPICE compatibility.
+   - Expand richer `.measure` trigger/crossing modes and remaining
+     non-DC/non-AC measurement analyses toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

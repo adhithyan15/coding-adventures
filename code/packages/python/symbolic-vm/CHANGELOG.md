@@ -1,5 +1,68 @@
 # Changelog
 
+## [0.75.0] — 2026-05-29
+
+**Track K1 — n-variate Hensel bridge in the ``Factor`` handler (PR #5590).**
+
+Bridges the newly-shipped ``cas_factor.try_n_variate_hensel`` (also
+PR #5590) into the symbolic-vm ``Factor`` handler so that
+``factor(x^3 + y^3 + z^3 - 3·x·y·z)`` and other tri-/higher-variate
+polynomials finally factor through the user-visible MACSYMA pipeline,
+not just from a direct cas-factor call.
+
+### What the bridge does
+
+Three new helpers in ``cas_handlers.py``:
+
+- ``_find_n_variables(node, max_vars=8)`` — generalises
+  ``_find_two_variables`` to return *all* distinct free symbols in
+  encounter order.  The first variable becomes Hensel's *main*
+  variable for the univariate-image specialisation step.  Bounded at
+  ``max_vars`` so a pathological input with hundreds of free symbols
+  can't make us allocate gigantic sparse-dict keys.
+- ``_ir_to_npoly(node, vars)`` — IR → ``NPoly`` (``dict[tuple[int, …], Fraction]``)
+  for the polynomial subset of IR (Add / Sub / Neg / Mul / Pow with
+  non-negative integer exponents, rationals, no floats, no
+  transcendentals, no foreign symbols).  Returns ``None`` on anything
+  outside ℚ[v_0, …, v_{n-1}].
+- ``_npoly_to_ir(p, vars)`` — round-trip back to IR with a stable
+  canonical monomial order (descending total degree, then lex on the
+  exponent tuple).
+
+These compose in ``_try_n_variate_hensel_ir(inner)``, which is hooked
+into ``factor_handler`` immediately after the existing bivariate path:
+
+```text
+factor(expr)
+├─ univariate over Z → rational-root + Kronecker
+├─ pattern handlers (perfect cube, cubic identity, …)
+├─ bivariate Hensel (Track D1)
+└─ NEW: n-variate Hensel (Track K1)   ← three or more free symbols
+```
+
+The bridge is ONE generic helper that serves ``n = 3, 4, 5, …`` — no
+per-arity copies.
+
+### Tests
+
+New file ``tests/test_n_variate_factor.py`` with end-to-end Factor
+pipeline tests:
+
+- ``x^3 + y^3 + z^3 - 3·x·y·z`` factors successfully; round-trip
+  verifies algebraic equality (the expanded result equals the input).
+- ``(x+y+z)·(x+2·y+3·z)`` — accepts either a successful factoring or
+  unevaluated fall-through, but if a factoring is returned it must
+  round-trip.
+- ``x^2 + y^2 + z^2 + 1`` (irreducible over Q) — must fall through
+  cleanly without producing a wrong factoring.
+- ``sin(x) + y + z`` (transcendental) — must not crash.
+
+### What this unblocks
+
+Track K2 (TS + Rust port) — the Python bridge defines the canonical
+shape the port will follow.  Track N (final spec closure) can mark
+n-variate factoring done across the matrix.
+
 ## [0.74.0] — 2026-05-29
 
 **Track G1 — symbolic-coefficient Weierzstrass lift.**

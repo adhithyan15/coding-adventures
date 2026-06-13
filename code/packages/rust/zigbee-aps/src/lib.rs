@@ -250,6 +250,116 @@ impl ApsFrameSummary {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct ApsFrameBatchSummary {
+    pub total_frames: usize,
+    pub data_frames: usize,
+    pub command_frames: usize,
+    pub ack_frames: usize,
+    pub inter_pan_frames: usize,
+    pub unicast_frames: usize,
+    pub indirect_frames: usize,
+    pub broadcast_frames: usize,
+    pub group_frames: usize,
+    pub home_automation_frames: usize,
+    pub zdo_profile_frames: usize,
+    pub manufacturer_specific_profile_frames: usize,
+    pub unknown_profile_frames: usize,
+    pub general_cluster_frames: usize,
+    pub measurement_and_sensing_frames: usize,
+    pub manufacturer_specific_cluster_frames: usize,
+    pub unknown_cluster_frames: usize,
+    pub ack_request_frames: usize,
+    pub secured_frames: usize,
+    pub payload_bytes: usize,
+}
+
+impl ApsFrameBatchSummary {
+    pub fn empty() -> Self {
+        Self::default()
+    }
+
+    pub fn from_frames<'a>(frames: impl IntoIterator<Item = &'a ApsFrame>) -> Self {
+        let mut summary = Self::empty();
+        for frame in frames {
+            summary.record_summary(frame.summary());
+        }
+        summary
+    }
+
+    pub fn from_summaries(summaries: impl IntoIterator<Item = ApsFrameSummary>) -> Self {
+        let mut summary = Self::empty();
+        for frame_summary in summaries {
+            summary.record_summary(frame_summary);
+        }
+        summary
+    }
+
+    pub fn record_summary(&mut self, summary: ApsFrameSummary) {
+        self.total_frames += 1;
+        self.payload_bytes += summary.payload_len;
+
+        match summary.frame_type {
+            ApsFrameType::Data => self.data_frames += 1,
+            ApsFrameType::Command => self.command_frames += 1,
+            ApsFrameType::Ack => self.ack_frames += 1,
+            ApsFrameType::InterPan => self.inter_pan_frames += 1,
+        }
+
+        match summary.delivery_mode {
+            DeliveryMode::Unicast => self.unicast_frames += 1,
+            DeliveryMode::Indirect => self.indirect_frames += 1,
+            DeliveryMode::Broadcast => self.broadcast_frames += 1,
+            DeliveryMode::Group => self.group_frames += 1,
+        }
+
+        match summary.profile_kind {
+            ProfileKind::ZigbeeDeviceProfile => self.zdo_profile_frames += 1,
+            ProfileKind::HomeAutomation => self.home_automation_frames += 1,
+            ProfileKind::ManufacturerSpecific => self.manufacturer_specific_profile_frames += 1,
+            ProfileKind::Unknown => self.unknown_profile_frames += 1,
+        }
+
+        match summary.cluster_kind {
+            ClusterKind::General => self.general_cluster_frames += 1,
+            ClusterKind::MeasurementAndSensing => self.measurement_and_sensing_frames += 1,
+            ClusterKind::ManufacturerSpecific => self.manufacturer_specific_cluster_frames += 1,
+            ClusterKind::Unknown => self.unknown_cluster_frames += 1,
+        }
+
+        if summary.ack_request {
+            self.ack_request_frames += 1;
+        }
+        if summary.security {
+            self.secured_frames += 1;
+        }
+    }
+
+    pub fn is_empty(self) -> bool {
+        self.total_frames == 0
+    }
+
+    pub fn has_group_delivery(self) -> bool {
+        self.group_frames > 0
+    }
+
+    pub fn has_broadcast_delivery(self) -> bool {
+        self.broadcast_frames > 0
+    }
+
+    pub fn has_ack_requests(self) -> bool {
+        self.ack_request_frames > 0
+    }
+
+    pub fn has_secured_frames(self) -> bool {
+        self.secured_frames > 0
+    }
+
+    pub fn carries_payloads(self) -> bool {
+        self.payload_bytes > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ApsCommandId(pub u8);
 
@@ -1115,6 +1225,118 @@ mod tests {
         assert!(summary.is_group_delivery());
         assert!(summary.requires_ack());
         assert!(summary.security);
+    }
+
+    #[test]
+    fn aps_frame_batch_summary_rolls_up_delivery_and_payload_context() {
+        let unicast = ApsFrame::unicast_data(
+            Endpoint(1),
+            Endpoint(2),
+            ClusterId::ON_OFF,
+            ProfileId::HOME_AUTOMATION,
+            7,
+            vec![0x01, 0x02],
+        );
+        let mut group_control = ApsFrameControl::data_unicast();
+        group_control.delivery_mode = DeliveryMode::Group;
+        group_control.ack_request = true;
+        group_control.security = true;
+        let group = ApsFrame {
+            frame_control: group_control,
+            addressing: ApsAddressing::Group {
+                group: GroupAddress(0x1234),
+                source_endpoint: Endpoint(3),
+            },
+            cluster_id: ClusterId::TEMPERATURE_MEASUREMENT,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 8,
+            payload: vec![0x03],
+        };
+        let mut command_control = ApsFrameControl::data_unicast();
+        command_control.frame_type = ApsFrameType::Command;
+        command_control.delivery_mode = DeliveryMode::Broadcast;
+        let command = ApsFrame {
+            frame_control: command_control,
+            addressing: ApsAddressing::Broadcast {
+                destination_endpoint: Endpoint(255),
+                source_endpoint: Endpoint::ZDO,
+            },
+            cluster_id: ClusterId(0xfc00),
+            profile_id: ProfileId::ZIGBEE_DEVICE_PROFILE,
+            counter: 9,
+            payload: Vec::new(),
+        };
+
+        let summary = ApsFrameBatchSummary::from_frames([&unicast, &group, &command]);
+
+        assert_eq!(summary.total_frames, 3);
+        assert_eq!(summary.data_frames, 2);
+        assert_eq!(summary.command_frames, 1);
+        assert_eq!(summary.unicast_frames, 1);
+        assert_eq!(summary.broadcast_frames, 1);
+        assert_eq!(summary.group_frames, 1);
+        assert_eq!(summary.home_automation_frames, 2);
+        assert_eq!(summary.zdo_profile_frames, 1);
+        assert_eq!(summary.general_cluster_frames, 1);
+        assert_eq!(summary.measurement_and_sensing_frames, 1);
+        assert_eq!(summary.manufacturer_specific_cluster_frames, 1);
+        assert_eq!(summary.ack_request_frames, 1);
+        assert_eq!(summary.secured_frames, 1);
+        assert_eq!(summary.payload_bytes, 3);
+        assert!(summary.has_group_delivery());
+        assert!(summary.has_broadcast_delivery());
+        assert!(summary.has_ack_requests());
+        assert!(summary.has_secured_frames());
+        assert!(summary.carries_payloads());
+    }
+
+    #[test]
+    fn aps_frame_batch_summary_handles_precomputed_and_empty_summaries() {
+        let empty = ApsFrameBatchSummary::empty();
+        assert!(empty.is_empty());
+        assert!(!empty.carries_payloads());
+
+        let summary = ApsFrameBatchSummary::from_summaries([
+            ApsFrameSummary {
+                frame_type: ApsFrameType::Ack,
+                delivery_mode: DeliveryMode::Indirect,
+                profile_kind: ProfileKind::ManufacturerSpecific,
+                cluster_kind: ClusterKind::Unknown,
+                source_endpoint: Endpoint(2),
+                destination_endpoint: None,
+                group: None,
+                counter: 1,
+                payload_len: 0,
+                ack_request: false,
+                security: false,
+            },
+            ApsFrameSummary {
+                frame_type: ApsFrameType::InterPan,
+                delivery_mode: DeliveryMode::Unicast,
+                profile_kind: ProfileKind::Unknown,
+                cluster_kind: ClusterKind::ManufacturerSpecific,
+                source_endpoint: Endpoint(3),
+                destination_endpoint: Some(Endpoint(4)),
+                group: None,
+                counter: 2,
+                payload_len: 4,
+                ack_request: true,
+                security: false,
+            },
+        ]);
+
+        assert_eq!(summary.total_frames, 2);
+        assert_eq!(summary.ack_frames, 1);
+        assert_eq!(summary.inter_pan_frames, 1);
+        assert_eq!(summary.indirect_frames, 1);
+        assert_eq!(summary.unicast_frames, 1);
+        assert_eq!(summary.manufacturer_specific_profile_frames, 1);
+        assert_eq!(summary.unknown_profile_frames, 1);
+        assert_eq!(summary.manufacturer_specific_cluster_frames, 1);
+        assert_eq!(summary.unknown_cluster_frames, 1);
+        assert_eq!(summary.payload_bytes, 4);
+        assert!(summary.has_ack_requests());
+        assert!(!summary.has_secured_frames());
     }
 
     #[test]

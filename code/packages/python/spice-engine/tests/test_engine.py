@@ -225,9 +225,12 @@ from spice_engine import (
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    measure_ac_sweep_deck,
+    measure_ac_sweep_probe,
     measure_dc_sweep_deck,
     measure_dc_sweep_probe,
     measure_transient_deck,
+    measure_transient_find_at_probe,
     measure_transient_probe,
     mosfet_from_model_card,
     noise_ac,
@@ -6666,15 +6669,24 @@ def test_transient_probe_measurements_are_stable() -> None:
         "V(out)",
         "final",
     )
+    midpoint = measure_transient_find_at_probe(
+        transient_points,
+        "midpoint",
+        "V(out)",
+        1.5e-3,
+    )
 
     assert peak_to_peak.value == pytest.approx(1.5)
     assert peak_to_peak.mode == "pp"
     assert final_value.value == pytest.approx(0.75)
     assert final_value.mode == "last"
-    assert format_measurement_table([peak_to_peak, final_value]) == (
+    assert midpoint.value == pytest.approx(0.5)
+    assert midpoint.mode == "find"
+    assert format_measurement_table([peak_to_peak, final_value, midpoint]) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
     )
 
 
@@ -6691,6 +6703,7 @@ def test_transient_deck_measurements_execute_parsed_cards() -> None:
         """
 V1 in 0 DC 1
 .measure tran swing PP V(out) FROM=1m TO=3m
+.measure tran midpoint FIND V(out) AT=1.5m
 .meas tran settled LAST V(out)
 .end
 """,
@@ -6699,6 +6712,7 @@ V1 in 0 DC 1
     assert format_measurement_table(measurements) == (
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
         "swing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\n"
+        "midpoint\ttran\tV(out)\tfind\t1.500000e-03\t1.500000e-03\t5.000000e-01\n"
         "settled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
     )
 
@@ -6874,6 +6888,50 @@ def test_ac_text_output_table_is_stable() -> None:
         "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n"
         "0\t1.000000e+03\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n"
         "0\t1.000000e+03\tI(V1)\t-1.000000e-03\t1.000000e-03\t1.414214e-03\t1.350000e+02\n"
+    )
+
+
+def test_ac_sweep_probe_measurements_execute_parsed_cards() -> None:
+    result = AcResult(
+        points=[
+            AcPoint(freq=10.0, node_voltages={"out": 1.0 + 0.0j}),
+            AcPoint(freq=100.0, node_voltages={"out": 0.0 + 2.0j}),
+            AcPoint(freq=1000.0, node_voltages={"out": 0.0 + 0.5j}),
+        ]
+    )
+
+    peak = measure_ac_sweep_probe(
+        result,
+        "out_peak",
+        "V(out)",
+        "max",
+        from_frequency=10.0,
+        to_frequency=100.0,
+    )
+    average = measure_ac_sweep_probe(result, "out_avg", "V(out)", "avg")
+
+    assert peak.value == pytest.approx(2.0)
+    assert peak.analysis == "ac"
+    assert average.value == pytest.approx(1.1666666666666667)
+    assert format_measurement_table([peak, average]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_peak\tac\tV(out)\tmax\t1.000000e+01\t1.000000e+02\t2.000000e+00\n"
+        "out_avg\tac\tV(out)\tavg\t\t\t1.166667e+00\n"
+    )
+
+    measurements = measure_ac_sweep_deck(
+        result,
+        """
+.measure ac out_swing PP V(out) FROM=10 TO=1000
+.meas ac out_final FINAL V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_swing\tac\tV(out)\tpp\t1.000000e+01\t1.000000e+03\t1.500000e+00\n"
+        "out_final\tac\tV(out)\tlast\t\t\t5.000000e-01\n"
     )
 
 

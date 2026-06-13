@@ -18,7 +18,7 @@ packages a typed surface for:
   helper predicates
 - Hue application registration requests and discovered-bridge pairing plans
 - Hue application registration local-HTTP request plans, response parsing, and
-  no-secret Vault handoff metadata for physical-presence pairing
+  no-secret Vault handoff metadata and summaries for physical-presence pairing
 - typed Hue bridge resources for paired bridge identity/health refresh
 - typed Hue device resources and service references
 - typed Hue grouped-light resources for room/zone aggregate lights

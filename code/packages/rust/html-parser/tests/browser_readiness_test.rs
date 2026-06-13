@@ -20,9 +20,10 @@ use coding_adventures_html_parser::{
     BrowserFormSuccessfulControl, BrowserFormTextEntry, BrowserFormValidationControl,
     BrowserFormValidationDescriptor, BrowserFullscreenInteractionDescriptor,
     BrowserGlobalStateDescriptor, BrowserHeading, BrowserHttpEquivHint, BrowserImage,
-    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea, BrowserImageSource,
-    BrowserInputPlanningDescriptor, BrowserInteractiveElement,
-    BrowserKeyboardInteractionDescriptor, BrowserLifecycleEventDescriptor, BrowserLink,
+    BrowserImageCandidateDescriptor, BrowserImageMap, BrowserImageMapArea,
+    BrowserImageMapDescriptor, BrowserImageSource, BrowserInputPlanningDescriptor,
+    BrowserInteractiveElement, BrowserKeyboardInteractionDescriptor,
+    BrowserLifecycleEventDescriptor, BrowserLink, BrowserLinkResourceDescriptor,
     BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
     BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
     BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
@@ -113,6 +114,8 @@ struct ExpectedBrowserDocument {
     #[serde(default)]
     resource_endpoint_descriptors: Option<Vec<ExpectedResourceEndpointDescriptor>>,
     #[serde(default)]
+    link_resource_descriptors: Option<Vec<ExpectedLinkResourceDescriptor>>,
+    #[serde(default)]
     form_policy_descriptors: Vec<ExpectedFormPolicyDescriptor>,
     #[serde(default)]
     form_association_descriptors: Option<Vec<ExpectedFormAssociationDescriptor>>,
@@ -158,6 +161,8 @@ struct ExpectedBrowserDocument {
     image_candidate_descriptors: Option<Vec<ExpectedImageCandidateDescriptor>>,
     #[serde(default)]
     image_maps: Vec<ExpectedImageMap>,
+    #[serde(default)]
+    image_map_descriptors: Option<Vec<ExpectedImageMapDescriptor>>,
     #[serde(default)]
     media: Vec<ExpectedMedia>,
     #[serde(default)]
@@ -1581,6 +1586,47 @@ struct ExpectedResource {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedLinkResourceDescriptor {
+    resource_index: usize,
+    resource_kind: String,
+    url: String,
+    #[serde(default)]
+    resolved_url: Option<String>,
+    #[serde(default)]
+    rel_tokens: Vec<String>,
+    #[serde(default)]
+    as_hint: Option<String>,
+    #[serde(default)]
+    type_hint: Option<String>,
+    #[serde(default)]
+    media: Option<String>,
+    #[serde(default)]
+    title: Option<String>,
+    #[serde(default)]
+    sizes: Option<String>,
+    #[serde(default)]
+    hreflang: Option<String>,
+    #[serde(default)]
+    color: Option<String>,
+    #[serde(default)]
+    fetchpriority: Option<String>,
+    #[serde(default)]
+    blocking_tokens: Vec<String>,
+    #[serde(default)]
+    responsive_image_preload: bool,
+    #[serde(default)]
+    icon_candidate: bool,
+    #[serde(default)]
+    alternate_candidate: bool,
+    #[serde(default)]
+    policy_hint_count: usize,
+    #[serde(default)]
+    resource_blocked: bool,
+    #[serde(default)]
+    resource_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedResourceEndpointDescriptor {
     endpoint_kind: String,
     element: String,
@@ -2596,6 +2642,39 @@ struct ExpectedImageMapArea {
     hreflang: Option<String>,
     #[serde(default)]
     referrerpolicy: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedImageMapDescriptor {
+    map_index: usize,
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    referenced_image_sources: Vec<String>,
+    #[serde(default)]
+    area_count: usize,
+    #[serde(default)]
+    navigable_area_count: usize,
+    #[serde(default)]
+    area_shapes: Vec<String>,
+    #[serde(default)]
+    missing_alt_area_count: usize,
+    #[serde(default)]
+    missing_href_area_count: usize,
+    #[serde(default)]
+    missing_coords_area_count: usize,
+    #[serde(default)]
+    default_shape_area_count: usize,
+    #[serde(default)]
+    ping_area_count: usize,
+    #[serde(default)]
+    attribution_area_count: usize,
+    #[serde(default)]
+    map_blocked: bool,
+    #[serde(default)]
+    map_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4342,6 +4421,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
             case.expected.structured_data_descriptors.is_some();
         let tracks_table_structure_descriptors =
             case.expected.table_structure_descriptors.is_some();
+        let tracks_image_map_descriptors = case.expected.image_map_descriptors.is_some();
+        let tracks_link_resource_descriptors = case.expected.link_resource_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4370,6 +4451,12 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_table_structure_descriptors {
             expected.table_structure_descriptors = actual.table_structure_descriptors.clone();
+        }
+        if !tracks_image_map_descriptors {
+            expected.image_map_descriptors = actual.image_map_descriptors.clone();
+        }
+        if !tracks_link_resource_descriptors {
+            expected.link_resource_descriptors = actual.link_resource_descriptors.clone();
         }
 
         assert_eq!(
@@ -4662,6 +4749,60 @@ fn browser_link_descriptor_metadata_tracks_icon_and_alternate_fields() {
 }
 
 #[test]
+fn browser_link_resource_descriptors_track_rel_hints_policy_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "link-resource-metadata-page")
+        .expect("link resource fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("link resource fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.link_resource_descriptors,
+        case.expected.into_browser_document().link_resource_descriptors,
+        "link resource descriptors should preserve relation kinds, scheduling hints, icon/alternate metadata, and blocker state",
+    );
+}
+
+#[test]
+fn browser_link_resource_descriptors_track_missing_and_unresolved_hints() {
+    let actual = parse_browser_document(
+        r#"<link rel=preload href=font.woff2>
+           <link rel=preload href=hero.jpg as=image imagesrcset="hero.jpg 1x">
+           <link rel=icon href=favicon.ico>
+           <link rel=mask-icon href=mask.svg>
+           <link rel=alternate href=feed.xml>"#,
+    )
+    .expect("blocked link resource descriptor fixture should parse");
+
+    assert_eq!(actual.link_resource_descriptors.len(), 5);
+    assert_eq!(
+        actual.link_resource_descriptors[0].resource_block_reasons,
+        vec!["unresolved-url", "preload-missing-as"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[1].resource_block_reasons,
+        vec!["unresolved-url", "responsive-image-preload-missing-sizes",],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[2].resource_block_reasons,
+        vec!["unresolved-url", "icon-missing-size-or-type"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[3].resource_block_reasons,
+        vec!["unresolved-url", "mask-icon-missing-color"],
+    );
+    assert_eq!(
+        actual.link_resource_descriptors[4].resource_block_reasons,
+        vec!["unresolved-url", "alternate-missing-descriptor"],
+    );
+}
+
+#[test]
 fn browser_image_map_descriptor_metadata_tracks_area_navigation() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -4678,6 +4819,83 @@ fn browser_image_map_descriptor_metadata_tracks_area_navigation() {
     assert_eq!(
         actual.image_maps, expected.image_maps,
         "image maps should preserve area geometry, link policy, and resolved navigation metadata",
+    );
+}
+
+#[test]
+fn browser_image_map_descriptors_track_map_links_area_coverage_and_navigation() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "responsive-image-metadata-page")
+        .expect("responsive image fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("responsive image fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.image_map_descriptors,
+        case.expected.into_browser_document().image_map_descriptors,
+        "image map descriptors should preserve image usemap links, area geometry coverage, navigation counts, and blocker state",
+    );
+}
+
+#[test]
+fn browser_image_map_descriptors_track_unresolved_and_blocked_maps() {
+    let actual = parse_browser_document(
+        r##"<body>
+            <img src="hero.png" usemap="#missing" alt="Hero">
+            <map id="empty"></map>
+            <map name="empty-shapes">
+              <area alt="No href">
+              <area href="details.html" coords="0,0,20,20">
+            </map>
+        </body>"##,
+    )
+    .expect("blocked image map descriptor fixture should parse");
+
+    assert_eq!(actual.image_map_descriptors.len(), 3);
+
+    let missing = actual
+        .image_map_descriptors
+        .iter()
+        .find(|descriptor| descriptor.name.as_deref() == Some("missing"))
+        .expect("missing usemap descriptor should be present");
+    assert!(missing.map_blocked);
+    assert_eq!(missing.referenced_image_sources, vec!["hero.png"]);
+    assert_eq!(missing.map_block_reasons, vec!["missing-map"]);
+
+    let unnamed = actual
+        .image_map_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("empty"))
+        .expect("empty map descriptor should be present");
+    assert!(unnamed.map_blocked);
+    assert_eq!(
+        unnamed.map_block_reasons,
+        vec!["missing-name", "missing-areas", "unreferenced-map"],
+    );
+
+    let blocked = actual
+        .image_map_descriptors
+        .iter()
+        .find(|descriptor| descriptor.name.as_deref() == Some("empty-shapes"))
+        .expect("blocked area map descriptor should be present");
+    assert_eq!(blocked.area_count, 2);
+    assert_eq!(blocked.navigable_area_count, 1);
+    assert_eq!(blocked.missing_alt_area_count, 1);
+    assert_eq!(blocked.missing_href_area_count, 1);
+    assert_eq!(blocked.missing_coords_area_count, 1);
+    assert_eq!(
+        blocked.map_block_reasons,
+        vec![
+            "unreferenced-map",
+            "areas-without-href",
+            "areas-without-alt",
+            "areas-without-coords",
+        ],
     );
 }
 
@@ -7297,6 +7515,12 @@ impl ExpectedBrowserDocument {
                     .collect()
             })
             .unwrap_or_else(|| expected_resource_endpoint_descriptors(&metadata, &resources));
+        let link_resource_descriptors = self
+            .link_resource_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedLinkResourceDescriptor::into_browser_link_resource_descriptor)
+            .collect();
         let media_playback_descriptors = self
             .media_playback_descriptors
             .map(|descriptors| {
@@ -7704,6 +7928,7 @@ impl ExpectedBrowserDocument {
                 .map(ExpectedFetchPolicyDescriptor::into_browser_fetch_policy_descriptor)
                 .collect(),
             resource_endpoint_descriptors,
+            link_resource_descriptors,
             form_policy_descriptors: self
                 .form_policy_descriptors
                 .into_iter()
@@ -7786,6 +8011,12 @@ impl ExpectedBrowserDocument {
                 .image_maps
                 .into_iter()
                 .map(ExpectedImageMap::into_browser_image_map)
+                .collect(),
+            image_map_descriptors: self
+                .image_map_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedImageMapDescriptor::into_browser_image_map_descriptor)
                 .collect(),
             media,
             media_playback_descriptors,
@@ -8440,6 +8671,33 @@ impl ExpectedResource {
             default_track: self.default_track,
             async_script: self.async_script,
             defer_script: self.defer_script,
+        }
+    }
+}
+
+impl ExpectedLinkResourceDescriptor {
+    fn into_browser_link_resource_descriptor(self) -> BrowserLinkResourceDescriptor {
+        BrowserLinkResourceDescriptor {
+            resource_index: self.resource_index,
+            resource_kind: self.resource_kind,
+            url: self.url,
+            resolved_url: self.resolved_url,
+            rel_tokens: self.rel_tokens,
+            as_hint: self.as_hint,
+            type_hint: self.type_hint,
+            media: self.media,
+            title: self.title,
+            sizes: self.sizes,
+            hreflang: self.hreflang,
+            color: self.color,
+            fetchpriority: self.fetchpriority,
+            blocking_tokens: self.blocking_tokens,
+            responsive_image_preload: self.responsive_image_preload,
+            icon_candidate: self.icon_candidate,
+            alternate_candidate: self.alternate_candidate,
+            policy_hint_count: self.policy_hint_count,
+            resource_blocked: self.resource_blocked,
+            resource_block_reasons: self.resource_block_reasons,
         }
     }
 }
@@ -14853,6 +15111,28 @@ impl ExpectedImageMapArea {
             download: self.download,
             hreflang: self.hreflang,
             referrerpolicy: self.referrerpolicy,
+        }
+    }
+}
+
+impl ExpectedImageMapDescriptor {
+    fn into_browser_image_map_descriptor(self) -> BrowserImageMapDescriptor {
+        BrowserImageMapDescriptor {
+            map_index: self.map_index,
+            id: self.id,
+            name: self.name,
+            referenced_image_sources: self.referenced_image_sources,
+            area_count: self.area_count,
+            navigable_area_count: self.navigable_area_count,
+            area_shapes: self.area_shapes,
+            missing_alt_area_count: self.missing_alt_area_count,
+            missing_href_area_count: self.missing_href_area_count,
+            missing_coords_area_count: self.missing_coords_area_count,
+            default_shape_area_count: self.default_shape_area_count,
+            ping_area_count: self.ping_area_count,
+            attribution_area_count: self.attribution_area_count,
+            map_blocked: self.map_blocked,
+            map_block_reasons: self.map_block_reasons,
         }
     }
 }
