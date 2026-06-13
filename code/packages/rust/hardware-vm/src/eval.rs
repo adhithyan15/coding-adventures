@@ -54,19 +54,22 @@ where
 
         Expr::Concat { parts, .. } => {
             // Pack parts MSB-first; each contributes `expr_width` bits.
+            // Width is clamped to [1, 62] to prevent shift overflow.
             let mut result = 0i64;
             for part in parts {
                 let part_val = evaluate(part, lookup);
-                let w = expr_width(part, lookup).max(1);
+                let w = expr_width(part, lookup).clamp(1, 62);
                 result = (result << w) | (part_val & ((1i64 << w) - 1));
             }
             result
         }
 
         Expr::Replication { count, body, .. } => {
-            let count = evaluate(count, lookup);
+            // Replication count is capped to prevent DoS via huge iteration loops.
+            const MAX_REPLICATION: i64 = 65_536;
+            let count = evaluate(count, lookup).clamp(0, MAX_REPLICATION);
             let body_val = evaluate(body, lookup);
-            let body_w = expr_width(body, lookup).max(1);
+            let body_w = expr_width(body, lookup).clamp(1, 62);
             let body_mask = (1i64 << body_w) - 1;
             let mut result = 0i64;
             for _ in 0..count {
@@ -136,8 +139,8 @@ where
         Expr::Slice { msb, lsb, .. } => (*msb as i64 - *lsb as i64).abs() + 1,
         Expr::Concat { parts, .. } => parts.iter().map(|p| expr_width(p, lookup).max(1)).sum(),
         Expr::Replication { count, body, .. } => {
-            let c = evaluate(count, lookup).max(0);
-            c * expr_width(body, lookup).max(1)
+            let c = evaluate(count, lookup).clamp(0, 65_536);
+            c.saturating_mul(expr_width(body, lookup).max(1)).min(62)
         }
         Expr::Lit { ty, .. } => {
             use hdl_ir::types::Ty;
@@ -178,15 +181,15 @@ fn apply_binary(op: &str, lhs: i64, rhs: i64) -> i64 {
         "*"   => lhs.wrapping_mul(rhs),
         "/"   => if rhs == 0 { 0 } else { lhs / rhs },
         "%"   => if rhs == 0 { 0 } else { lhs % rhs },
-        "**"  => lhs.wrapping_pow(rhs.max(0) as u32),
+        "**"  => lhs.wrapping_pow(rhs.clamp(0, 63) as u32),
         "AND" | "&"  => lhs & rhs,
         "OR"  | "|"  => lhs | rhs,
         "XOR" | "^"  => lhs ^ rhs,
         "NAND" => (!( lhs & rhs)) & 0xFFFF_FFFF,
         "NOR"  => (!(lhs | rhs)) & 0xFFFF_FFFF,
         "XNOR" => (!(lhs ^ rhs)) & 0xFFFF_FFFF,
-        "<<" | "<<<" => lhs.wrapping_shl(rhs.max(0) as u32),
-        ">>" | ">>>" => lhs.wrapping_shr(rhs.max(0) as u32),
+        "<<" | "<<<" => { let s = rhs.clamp(0, 63) as u32; lhs << s }
+        ">>" | ">>>" => { let s = rhs.clamp(0, 63) as u32; lhs >> s }
         "==" | "===" => i64::from(lhs == rhs),
         "!=" | "!==" => i64::from(lhs != rhs),
         "<"   => i64::from(lhs <  rhs),
