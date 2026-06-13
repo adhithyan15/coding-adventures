@@ -68,10 +68,11 @@ with the Rust-matching `Corner` / `Index` columns.
 `formatDcSweepTable`, `formatCornerDcSweepTable`, `formatCornerAcTable`, and
 `formatCornerTfTable` provide the matching stable `.DC`, `.AC`, and `.TF`
 sweep/corner text surfaces.
-`measureTransientProbe` and `formatMeasurementTable` provide the shared
-`.MEASURE`-style scalar transient output surface for MAX, MIN, AVG, RMS,
-peak-to-peak, and final-value probe measurements. `measureTransientDeck` routes
-parsed transient `.measure` / `.meas` cards into those stable measurement rows.
+`measureTransientProbe`, `measureDcSweepProbe`, and `formatMeasurementTable`
+provide the shared `.MEASURE`-style scalar output surface for MAX, MIN, AVG,
+RMS, peak-to-peak, and final-value probe measurements. The deck helpers route
+parsed transient and DC sweep `.measure` / `.meas` cards into those stable
+measurement rows.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
@@ -116,7 +117,8 @@ with `.ic` values taking precedence over `.nodeset` values.
 definitions before `.end`, preserves non-function active lines, strips braced
 or quoted expression delimiters, and reports stable diagnostics for malformed
 signatures, arguments, or empty expressions.
-`resolveDeckMeasurements` extracts transient `.measure` / `.meas` cards before
-`.end`, keeps non-measure active lines, evaluates optional `FROM=` / `TO=`
-scalar time windows, and reports stable diagnostics for unsupported analyses,
-modes, options, expressions, and invalid windows.
+`resolveDeckMeasurements` extracts transient and DC sweep `.measure` / `.meas`
+cards before `.end`, keeps non-measure active lines, evaluates optional
+`FROM=` / `TO=` scalar time or source-value windows, and reports stable
+diagnostics for unsupported analyses, modes, options, expressions, and invalid
+windows.

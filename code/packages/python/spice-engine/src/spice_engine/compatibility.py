@@ -188,7 +188,7 @@ class DeckFunctionSummary:
 
 @dataclass(frozen=True, slots=True)
 class DeckMeasurementCard:
-    """A parsed scalar ``.measure`` / ``.meas`` transient probe card."""
+    """A parsed scalar ``.measure`` / ``.meas`` probe card."""
 
     directive: str
     analysis: str
@@ -214,7 +214,7 @@ class DeckMeasurementDiagnostic:
 
 @dataclass(frozen=True, slots=True)
 class DeckMeasurementSummary:
-    """Resolved active deck lines plus parsed transient measurement cards."""
+    """Resolved active deck lines plus parsed measurement cards."""
 
     active_lines: tuple[str, ...]
     terminated: bool
@@ -544,7 +544,7 @@ def resolve_deck_functions(netlist: str) -> DeckFunctionSummary:
 
 
 def resolve_deck_measurements(netlist: str) -> DeckMeasurementSummary:
-    """Extract the supported transient ``.measure`` / ``.meas`` card subset."""
+    """Extract the supported scalar ``.measure`` / ``.meas`` card subset."""
 
     state = _DeckMeasurementState()
     active_lines: list[str] = []
@@ -1416,13 +1416,13 @@ def _resolve_measurement_line(
         return
 
     analysis = tokens[1].strip().lower()
-    if analysis not in {"tran", "transient"}:
+    if analysis not in {"tran", "transient", "dc"}:
         _add_measurement_diagnostic(
             state,
             code="SPICE_DECK_MEASURE_ANALYSIS",
             directive=directive,
             line_number=line_number,
-            message=f"only transient .measure cards are supported, got {tokens[1]!r}",
+            message=f"only transient and dc .measure cards are supported, got {tokens[1]!r}",
             token=tokens[1],
         )
         return
@@ -1446,7 +1446,7 @@ def _resolve_measurement_line(
             code="SPICE_DECK_MEASURE_MODE",
             directive=directive,
             line_number=line_number,
-            message=f"unsupported transient measurement mode {tokens[3]!r}",
+            message=f"unsupported measurement mode {tokens[3]!r}",
             token=tokens[3],
         )
         return

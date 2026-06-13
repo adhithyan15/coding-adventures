@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measure_dc_sweep_probe`, `measure_dc_sweep_cards`, and
+  `measure_dc_sweep_deck` so parsed `.measure dc` / `.meas dc` cards can route
+  DC sweep probe samples into the shared scalar measurement table surface,
+  matching Python and TypeScript.
 - Add `resolve_deck_outputs`, `select_deck_output_probes`, and
   `format_deck_*_table` helpers so parsed `.save` and `.probe` deck cards can
   drive stable operating-point, DC sweep, AC sweep, and transient table output

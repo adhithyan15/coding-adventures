@@ -422,13 +422,14 @@ R1 in out {gain(vin)}
 V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 .measure tran swing pp V(out) FROM=1m TO={3m}
 .meas transient settled final 'V(out)'
+.measure dc dcmax max V(out) FROM=1 TO=3
 .tran 1m 4m
 .end
 .measure tran after max V(out)
 `);
 
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(6);
+    expect(summary.endLineNumber).toBe(7);
     expect(summary.activeLines).toStrictEqual([
       "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
       ".tran 1m 4m",
@@ -445,6 +446,7 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
     ])).toStrictEqual([
       [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003],
       [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined],
+      [".measure", "dc", "dcmax", "max", "V(out)", 5, 1, 3],
     ]);
     expect(summary.diagnostics).toStrictEqual([]);
   });

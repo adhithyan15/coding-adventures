@@ -2863,6 +2863,107 @@ def measure_transient_deck(
     return measure_transient_cards(transient_result, summary.measurements)
 
 
+def measure_dc_sweep_probe(
+    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    name: str,
+    probe: str,
+    mode: str,
+    *,
+    from_value: float | None = None,
+    to_value: float | None = None,
+) -> ProbeMeasurement:
+    """Measure one DC sweep probe over an optional source-value window."""
+
+    points = (
+        dc_sweep_result.points
+        if isinstance(dc_sweep_result, DcSweepResult)
+        else dc_sweep_result
+    )
+    normalized_mode = _normalize_measurement_mode(
+        mode,
+        context="measure_dc_sweep_probe",
+    )
+    if from_value is not None and not math.isfinite(from_value):
+        raise ValueError("measure_dc_sweep_probe: from_value must be finite")
+    if to_value is not None and not math.isfinite(to_value):
+        raise ValueError("measure_dc_sweep_probe: to_value must be finite")
+    if from_value is not None and to_value is not None and from_value > to_value:
+        raise ValueError("measure_dc_sweep_probe: from_value must be <= to_value")
+
+    selected = [
+        point
+        for point in points
+        if (from_value is None or point.source_value >= from_value)
+        and (to_value is None or point.source_value <= to_value)
+    ]
+    if not selected:
+        raise ValueError("measure_dc_sweep_probe: no dc sweep samples in window")
+
+    values = [
+        _table_probe_value(
+            point.node_voltages,
+            point.branch_currents,
+            probe,
+            "measure_dc_sweep_probe",
+        )
+        for point in selected
+    ]
+    value = _measure_values(
+        values,
+        normalized_mode,
+        context="measure_dc_sweep_probe",
+    )
+    return ProbeMeasurement(
+        name=name,
+        analysis="dc",
+        probe=probe,
+        mode=normalized_mode,
+        value=value,
+        from_value=from_value,
+        to_value=to_value,
+    )
+
+
+def measure_dc_sweep_cards(
+    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    measurements: Iterable[DeckMeasurementCard],
+) -> list[ProbeMeasurement]:
+    """Execute parsed DC sweep ``.measure`` / ``.meas`` cards."""
+
+    results: list[ProbeMeasurement] = []
+    for measurement in measurements:
+        if measurement.analysis != "dc":
+            raise ValueError(
+                "measure_dc_sweep_cards: only dc measurement cards are supported"
+            )
+        results.append(
+            measure_dc_sweep_probe(
+                dc_sweep_result,
+                measurement.name,
+                measurement.probe,
+                measurement.mode,
+                from_value=measurement.from_value,
+                to_value=measurement.to_value,
+            )
+        )
+    return results
+
+
+def measure_dc_sweep_deck(
+    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    netlist: str,
+) -> list[ProbeMeasurement]:
+    """Parse and execute supported DC sweep measurements from a SPICE deck."""
+
+    summary = resolve_deck_measurements(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"measure_dc_sweep_deck: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return measure_dc_sweep_cards(dc_sweep_result, summary.measurements)
+
+
 def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:
     """Format scalar probe measurements as a stable tab-separated table."""
 
@@ -2885,7 +2986,11 @@ def format_measurement_table(measurements: Iterable[ProbeMeasurement]) -> str:
     return "\n".join(rows)
 
 
-def _normalize_measurement_mode(mode: str) -> str:
+def _normalize_measurement_mode(
+    mode: str,
+    *,
+    context: str = "measure_transient_probe",
+) -> str:
     normalized = mode.strip().lower().replace("_", "-")
     aliases = {
         "average": "avg",
@@ -2899,11 +3004,16 @@ def _normalize_measurement_mode(mode: str) -> str:
     }
     normalized = aliases.get(normalized, normalized)
     if normalized not in {"max", "min", "avg", "rms", "pp", "last"}:
-        raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+        raise ValueError(f"{context}: unsupported mode {mode!r}")
     return normalized
 
 
-def _measure_values(values: list[float], mode: str) -> float:
+def _measure_values(
+    values: list[float],
+    mode: str,
+    *,
+    context: str = "measure_transient_probe",
+) -> float:
     if mode == "max":
         return max(values)
     if mode == "min":
@@ -2916,7 +3026,7 @@ def _measure_values(values: list[float], mode: str) -> float:
         return max(values) - min(values)
     if mode == "last":
         return values[-1]
-    raise ValueError(f"measure_transient_probe: unsupported mode {mode!r}")
+    raise ValueError(f"{context}: unsupported mode {mode!r}")
 
 
 def _format_optional_table_number(value: float | None) -> str:

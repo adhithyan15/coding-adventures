@@ -526,7 +526,7 @@ export interface DeckFunctionSummary {
 
 export interface DeckMeasurementCard {
   readonly directive: ".measure" | ".meas";
-  readonly analysis: "tran" | "transient";
+  readonly analysis: "tran" | "transient" | "dc";
   readonly name: string;
   readonly mode: string;
   readonly probe: string;
@@ -3508,17 +3508,17 @@ function resolveMeasurementLine(
   }
 
   const analysis = tokens[1].trim().toLowerCase();
-  if (analysis !== "tran" && analysis !== "transient") {
+  if (analysis !== "tran" && analysis !== "transient" && analysis !== "dc") {
     addMeasurementDiagnostic(state, {
       code: "SPICE_DECK_MEASURE_ANALYSIS",
       directive,
       lineNumber,
-      message: `only transient .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
+      message: `only transient and dc .measure cards are supported, got ${JSON.stringify(tokens[1])}`,
       token: tokens[1],
     });
     return;
   }
-  const analysisName = analysis === "tran" ? "tran" : "transient";
+  const analysisName = analysis === "tran" || analysis === "dc" ? analysis : "transient";
 
   const name = tokens[2].trim();
   if (!isParameterName(name)) {
@@ -3538,7 +3538,7 @@ function resolveMeasurementLine(
       code: "SPICE_DECK_MEASURE_MODE",
       directive,
       lineNumber,
-      message: `unsupported transient measurement mode ${JSON.stringify(tokens[3])}`,
+      message: `unsupported measurement mode ${JSON.stringify(tokens[3])}`,
       token: tokens[3],
     });
     return;
@@ -4890,16 +4890,19 @@ export function measureTransientCards(
   points: readonly TransientPoint[],
   measurements: readonly DeckMeasurementCard[],
 ): ProbeMeasurement[] {
-  return measurements.map((measurement) =>
-    measureTransientProbe(
+  return measurements.map((measurement) => {
+    if (measurement.analysis !== "tran" && measurement.analysis !== "transient") {
+      throw invalidElement("measureTransientCards", "only transient measurement cards are supported");
+    }
+    return measureTransientProbe(
       points,
       measurement.name,
       measurement.probe,
       measurement.mode,
       measurement.fromValue,
       measurement.toValue,
-    ),
-  );
+    );
+  });
 }
 
 export function measureTransientDeck(
@@ -4915,6 +4918,86 @@ export function measureTransientDeck(
     );
   }
   return measureTransientCards(points, summary.measurements);
+}
+
+export function measureDcSweepProbe(
+  points: readonly DcSweepPoint[],
+  name: string,
+  probe: string,
+  mode: string,
+  fromValue?: number,
+  toValue?: number,
+): ProbeMeasurement {
+  const normalizedMode = normalizeMeasurementMode(mode, "measureDcSweepProbe");
+  if (fromValue !== undefined && !Number.isFinite(fromValue)) {
+    throw invalidElement("measureDcSweepProbe", "fromValue must be finite");
+  }
+  if (toValue !== undefined && !Number.isFinite(toValue)) {
+    throw invalidElement("measureDcSweepProbe", "toValue must be finite");
+  }
+  if (fromValue !== undefined && toValue !== undefined && fromValue > toValue) {
+    throw invalidElement("measureDcSweepProbe", "fromValue must be <= toValue");
+  }
+
+  const selected = points.filter((point) =>
+    (fromValue === undefined || point.value >= fromValue) &&
+    (toValue === undefined || point.value <= toValue)
+  );
+  if (selected.length === 0) {
+    throw invalidElement("measureDcSweepProbe", "no dc sweep samples in window");
+  }
+  const values = selected.map((point) =>
+    tableProbeValue(
+      point.result.nodeVoltages,
+      point.result.branchCurrents,
+      probe,
+      "measureDcSweepProbe",
+    )
+  );
+
+  return {
+    name,
+    analysis: "dc",
+    probe,
+    mode: normalizedMode,
+    value: measureValues(values, normalizedMode, "measureDcSweepProbe"),
+    fromValue,
+    toValue,
+  };
+}
+
+export function measureDcSweepCards(
+  points: readonly DcSweepPoint[],
+  measurements: readonly DeckMeasurementCard[],
+): ProbeMeasurement[] {
+  return measurements.map((measurement) => {
+    if (measurement.analysis !== "dc") {
+      throw invalidElement("measureDcSweepCards", "only dc measurement cards are supported");
+    }
+    return measureDcSweepProbe(
+      points,
+      measurement.name,
+      measurement.probe,
+      measurement.mode,
+      measurement.fromValue,
+      measurement.toValue,
+    );
+  });
+}
+
+export function measureDcSweepDeck(
+  points: readonly DcSweepPoint[],
+  netlist: string,
+): ProbeMeasurement[] {
+  const summary = resolveDeckMeasurements(netlist);
+  if (summary.diagnostics.length > 0) {
+    const diagnostic = summary.diagnostics[0]!;
+    throw invalidElement(
+      "measureDcSweepDeck",
+      `line ${diagnostic.lineNumber}: ${diagnostic.message}`,
+    );
+  }
+  return measureDcSweepCards(points, summary.measurements);
 }
 
 export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]): string {
@@ -4934,7 +5017,7 @@ export function formatMeasurementTable(measurements: readonly ProbeMeasurement[]
   return rows.join("\n");
 }
 
-function normalizeMeasurementMode(mode: string): string {
+function normalizeMeasurementMode(mode: string, context = "measureTransientProbe"): string {
   const normalized = mode.trim().toLowerCase().replace(/_/g, "-");
   switch (normalized) {
     case "max":
@@ -4957,11 +5040,11 @@ function normalizeMeasurementMode(mode: string): string {
     case "final":
       return "last";
     default:
-      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+      throw invalidElement(context, `unsupported mode ${JSON.stringify(mode)}`);
   }
 }
 
-function measureValues(values: readonly number[], mode: string): number {
+function measureValues(values: readonly number[], mode: string, context = "measureTransientProbe"): number {
   switch (mode) {
     case "max":
       return values.reduce((max, value) => Math.max(max, value), Number.NEGATIVE_INFINITY);
@@ -4979,7 +5062,7 @@ function measureValues(values: readonly number[], mode: string): number {
     case "last":
       return values[values.length - 1]!;
     default:
-      throw invalidElement("measureTransientProbe", `unsupported mode ${JSON.stringify(mode)}`);
+      throw invalidElement(context, `unsupported mode ${JSON.stringify(mode)}`);
   }
 }
 

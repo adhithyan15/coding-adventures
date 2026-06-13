@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Add `measureDcSweepProbe`, `measureDcSweepCards`, and
+  `measureDcSweepDeck` so parsed `.measure dc` / `.meas dc` cards can route
+  DC sweep probe samples into the shared scalar measurement table surface,
+  matching Python and Rust.
 - Add `resolveDeckMeasurements`, `measureTransientCards`, and
   `measureTransientDeck` for parsed transient `.measure` / `.meas` card
   routing into stable scalar measurement rows, matching Python and Rust.

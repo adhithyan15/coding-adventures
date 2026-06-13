@@ -28,10 +28,13 @@ import {
   formatCornerDcTable,
   formatCornerTemperatureDcTable,
   formatDcSweepTable,
+  formatMeasurementTable,
   formatTemperatureDcTable,
   inductor,
   jfet,
   jfetFromModelCard,
+  measureDcSweepDeck,
+  measureDcSweepProbe,
   mosfet,
   mosfetFromModelCard,
   normalizeModelCard,
@@ -765,6 +768,41 @@ describe("dcOp", () => {
       "0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n" +
       "1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n" +
       "2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n",
+    );
+  });
+
+  it("measures dc sweep probes and parsed .measure cards", () => {
+    const circuit = new Circuit();
+    circuit.add(voltageSource("V1", "vin", "0", 0.0));
+    circuit.add(resistor("R1", "vin", "mid", 1_000.0));
+    circuit.add(resistor("R2", "mid", "0", 1_000.0));
+
+    const points = dcSweep(circuit, "V1", 0.0, 2.0, 1.0);
+    const peak = measureDcSweepProbe(points, "midPeak", "V(mid)", "max", 1.0, 2.0);
+    const average = measureDcSweepProbe(points, "midAvg", "V(mid)", "avg");
+
+    expect(peak.value).toBeCloseTo(1.0, 9);
+    expect(peak.analysis).toBe("dc");
+    expect(average.value).toBeCloseTo(0.5, 9);
+    expect(formatMeasurementTable([peak, average])).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+      "midPeak\tdc\tV(mid)\tmax\t1.000000e+00\t2.000000e+00\t1.000000e+00\n" +
+      "midAvg\tdc\tV(mid)\tavg\t\t\t5.000000e-01\n",
+    );
+
+    const measurements = measureDcSweepDeck(
+      points,
+      `
+.measure dc midSwing PP V(mid) FROM=0 TO=2
+.meas dc midFinal FINAL V(mid)
+.end
+`,
+    );
+
+    expect(formatMeasurementTable(measurements)).toBe(
+      "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n" +
+      "midSwing\tdc\tV(mid)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\n" +
+      "midFinal\tdc\tV(mid)\tlast\t\t\t1.000000e+00\n",
     );
   });
 

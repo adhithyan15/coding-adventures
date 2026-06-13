@@ -30,10 +30,11 @@ downstream tools to compare.
      and parsed transient `.measure` / `.meas` cards can now feed those
      measurement helpers from deck text; parsed `.save` and `.probe` cards now
      drive stable Rust table output for operating-point, DC sweep, AC sweep, and
-     transient results.
-   - Expand richer `.measure` modes and non-transient measurement analyses
-     toward full SPICE compatibility while keeping unsupported control-flow
-     diagnostics explicit.
+     transient results; parsed `.measure dc` / `.meas dc` cards now route DC
+     sweep probe samples into the shared scalar measurement table surface.
+   - Expand richer `.measure` event/trigger modes and remaining non-DC
+     measurement analyses toward full SPICE compatibility while keeping
+     unsupported control-flow diagnostics explicit.
 
 ## Completed Slices
 
@@ -265,15 +266,27 @@ downstream tools to compare.
       analysis for `.probe`, and routed into stable operating-point, DC sweep,
       AC sweep, and transient text tables.
     - Stable diagnostics cover missing probe lists and malformed output probes;
-      richer `.measure` modes and non-transient measurement analyses remain in
-      the deck execution backlog.
+      richer `.measure` event/trigger modes and remaining non-DC measurement
+      analyses remain in the deck execution backlog.
+
+24. Parsed DC sweep measurement routing.
+    - Status: completed in this DC sweep measurement routing slice.
+    - Python, Rust, and TypeScript now expose matching DC sweep measurement
+      helpers that compute MAX, MIN, AVG, RMS, peak-to-peak, and final-value
+      probe measurements over optional sweep source-value windows.
+    - Parsed `.measure dc` and `.meas dc` cards route into the shared scalar
+      measurement table output, while mixed-analysis card lists still fail with
+      explicit helper-specific diagnostics.
+    - This closes the first non-transient `.measure` execution foothold; richer
+      event/trigger modes and remaining non-DC analysis-specific measurement
+      semantics remain in backlog.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand richer `.measure` modes and non-transient measurement analyses
-     toward full SPICE compatibility.
+   - Expand richer `.measure` event/trigger modes and remaining non-DC
+     measurement analyses toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

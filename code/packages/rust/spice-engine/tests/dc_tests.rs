@@ -4,12 +4,13 @@ use spice_engine::{
     dc_op_with_options, dc_sweep, dc_sweep_corners, dc_sweep_corners_parallel,
     dc_temperature_sweep, dc_temperature_sweep_corners, device_model_audit_fixtures,
     diode_from_model_card, format_corner_dc_sweep_table, format_corner_dc_table,
-    format_corner_temperature_dc_table, format_dc_sweep_table, format_temperature_dc_table,
-    jfet_from_model_card, mosfet_from_model_card, normalize_model_card, normalize_model_card_type,
-    resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs, Ccvs, Circuit,
-    CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource, CustomModel,
-    DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity, ModelCardKind,
-    Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
+    format_corner_temperature_dc_table, format_dc_sweep_table, format_measurement_table,
+    format_temperature_dc_table, jfet_from_model_card, measure_dc_sweep_deck,
+    measure_dc_sweep_probe, mosfet_from_model_card, normalize_model_card,
+    normalize_model_card_type, resolve_deck_initial_conditions, BSource, Bjt, BjtPolarity, Cccs,
+    Ccvs, Circuit, CornerOverride, CornerSpec, CornerTemperatureDcResult, CurrentSource,
+    CustomModel, DcConvergenceAid, DcOpOptions, Diode, Element, Inductor, Jfet, JfetPolarity,
+    ModelCardKind, Mosfet, MosfetLevel1Params, MosfetType, Resistor, SinWaveform, SpiceError,
     SubcircuitDefinition, SubcircuitElement, TemperatureDcResult, Vccs, Vcvs, VoltageSource,
     Waveform, XInstance,
 };
@@ -1052,6 +1053,46 @@ fn dc_sweep_text_output_table_is_stable() {
     assert_eq!(
         format_dc_sweep_table("V1", &points, &["V(mid)", "I(V1)"]).unwrap(),
         "Index\tSource\tValue\tV(mid)\tI(V1)\n0\tV1\t0.000000e+00\t0.000000e+00\t0.000000e+00\n1\tV1\t1.000000e+00\t5.000000e-01\t-5.000000e-04\n2\tV1\t2.000000e+00\t1.000000e+00\t-1.000000e-03\n"
+    );
+}
+
+#[test]
+fn dc_sweep_measurements_execute_probe_and_parsed_cards() {
+    let mut circuit = Circuit::new();
+    circuit.add(Element::VoltageSource(VoltageSource::new(
+        "V1", "vin", "0", 0.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new(
+        "R1", "vin", "mid", 1_000.0,
+    )));
+    circuit.add(Element::Resistor(Resistor::new("R2", "mid", "0", 1_000.0)));
+
+    let points = dc_sweep(&circuit, "V1", 0.0, 2.0, 1.0).unwrap();
+    let peak =
+        measure_dc_sweep_probe(&points, "mid_peak", "V(mid)", "max", Some(1.0), Some(2.0)).unwrap();
+    let average = measure_dc_sweep_probe(&points, "mid_avg", "V(mid)", "avg", None, None).unwrap();
+
+    assert_close(peak.value, 1.0);
+    assert_eq!(peak.analysis, "dc");
+    assert_close(average.value, 0.5);
+    assert_eq!(
+        format_measurement_table(&[peak, average]),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_peak\tdc\tV(mid)\tmax\t1.000000e+00\t2.000000e+00\t1.000000e+00\nmid_avg\tdc\tV(mid)\tavg\t\t\t5.000000e-01\n"
+    );
+
+    let measurements = measure_dc_sweep_deck(
+        &points,
+        "
+.measure dc mid_swing PP V(mid) FROM=0 TO=2
+.meas dc mid_final FINAL V(mid)
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(
+        format_measurement_table(&measurements),
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nmid_swing\tdc\tV(mid)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\nmid_final\tdc\tV(mid)\tlast\t\t\t1.000000e+00\n"
     );
 }
 
