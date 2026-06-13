@@ -12,7 +12,7 @@ packages a typed surface for:
 - Hue command planning from normalized D23 state deltas
 - direct and grouped-light color-temperature command projection
 - Hue command plans that retain generated requests and ignored capabilities for
-  reconciliation telemetry
+  reconciliation telemetry, including projection-coverage summaries
 - Hue command summaries for payload-free command planning and read-model
   telemetry, including light-surface, surface-breadth, and capability-breadth
   helper predicates
