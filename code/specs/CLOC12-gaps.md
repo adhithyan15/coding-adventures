@@ -557,9 +557,10 @@ historical context with status `RESOLVED` and a link to the fix PR.
 
 ### gap-072 — await operand paren elision
 
-- **Status:** OPEN — discovered by CLOC14.35. `minify_await_paren_elide` ignored.
+- **Status:** RESOLVED in CLOC12.106. `minify_await_paren_elide` / `minify_await_binary_kept` enforced.
 - **Input:** `await(x)` → `await x`.
 - **What it needs:** Same simple-reference operand paren elision as gap-070/071, but for the `await` unary operator. Deferred: `await` is async-context-only, so a naive keyword-anchored elision could mis-handle a non-async `await` used as a plain identifier (`await` is only reserved inside async functions/modules). Needs an async-context guard before it can be added to the keyword set safely.
+- **CLOC12.106 resolution:** The original async-context worry dissolved once verified against the JAR: the upstream compiler **rejects** any non-async `await` as a PARSE ERROR ("await must be inside asynchronous function"), so identifier-`await` never appears in a byte-identity input — every accepted input has `await` as the operator. `await` binds at UNARY precedence (like `typeof`/`void`/`delete`), so it was added to gap-101's `is_safe_unary_kw_operand` keyword block (NOT the gap-056 `yield` block, which is for the looser-binding `yield`). A safe operand drops its parens; a parenthesised BINARY operand keeps them (`await` binds tighter than the binary op). Two extra concerns: (1) **always-space** — upstream emits the operator with a separating space before its operand even when non-word-like (`await -b`, `await (a+b)`), handled by a new `await_operator_needs_space` emit predicate; (2) **contextual-keyword guards** — `await` as a function/method NAME (`function await(x){}`, `{await(x){}}` — matched `)` followed by `{`) or a property (`o.await(x)`) is excluded from both the drop and the space. JAR-verified across all operand kinds + the name/property guards; +3 `gap072_*` unit tests. Known residual: deeply-nested `await(await(x))` keeps the inner parens (the keyword block does not recurse into a dropped span — a pre-existing pattern shared with the other keywords).
 
 ### gap-073 — `get`/`set` before a computed key needs a space
 
