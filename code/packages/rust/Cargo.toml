@@ -262,6 +262,7 @@ members = [
     "fab-process-simulation",
     "silicon-rust-python",
     "silicon-rust-napi",
+    "silicon-rust-ruby-native",
     "system-board",
     "block-ram",
     "device-driver-framework",
