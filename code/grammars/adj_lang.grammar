@@ -31,6 +31,8 @@ statement   = prior_decl
             | solve_decl
             | check_decl
             | optimize_decl
+            | dictionary_decl
+            | define_decl
             ;
 
 # ----------------------------------------------------------------
@@ -108,6 +110,26 @@ check_decl     = "check" ;
 # the achieving assignment, and the binding constraints. Like `solve`/`check`,
 # `minimize`/`maximize` are IDENT-matched keyword literals (not lexer keywords).
 optimize_decl  = ( "minimize" | "maximize" ) expr ;
+
+# ----------------------------------------------------------------
+# Dictionary + define (MYCIN-2026 — the controlled vocabulary as a
+# first-class, named grammar construct). A `dictionary <name> { … }` groups
+# `define` clauses into a named, reusable vocabulary; a rulebook `use`s it (M2)
+# and the compiler rejects any clause naming a term not defined here. `define`
+# may also appear bare at top level. Like the other structural keywords
+# (`solve`/`check`/`symbol`/`minimize`), `dictionary`/`define`/`hypothesis`/
+# `finding`/`values`/`surface` are IDENT-matched literals — no lexer keywords.
+# ----------------------------------------------------------------
+
+dictionary_decl = "dictionary" IDENT LBRACE { define_decl } RBRACE ;
+
+define_decl    = "define" IDENT COLON define_kind { surface_clause } ;
+
+define_kind    = "hypothesis"
+               | "finding" [ "values" LBRACK IDENT { COMMA IDENT } RBRACK ]
+               ;
+
+surface_clause = "surface" STRING { COMMA STRING } ;
 
 # ----------------------------------------------------------------
 # Annotations attach a citation / locator / trust tier to the

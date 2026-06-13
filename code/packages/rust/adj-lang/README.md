@@ -93,6 +93,37 @@ solve for { premium }          % find a value satisfying the constraints
   `ConstraintSystem` (on `LoweredProgram.constraints`) with each constraint's
   sides kept as unevaluated expression trees.
 
+### Dictionary — `dictionary` / `define` (v0.9, MYCIN-2026)
+
+A **dictionary** is the controlled vocabulary the decomposer and the rulebook
+agree on, written as a first-class, named construct:
+
+```adj
+dictionary meningitis_vocab {
+  define bacterial_meningitis : hypothesis
+    surface "bacterial meningitis", "pyogenic meningitis"
+  define csf_glucose : finding values [low, normal]
+    surface "CSF glucose", "spinal fluid glucose"
+}
+```
+
+- `define <name> : hypothesis` registers a hypothesis term.
+- `define <name> : finding values [v…]` registers a finding functor whose value
+  argument is drawn from a **closed** domain (so "observed normal" is
+  distinguishable from "not yet observed").
+- `surface "…", "…"` lists the prose forms a decomposer may map onto the term —
+  documentation for the warm pipeline, *not* engine-semantic.
+- A `define` is legal bare or inside a `dictionary { … }` block.
+
+When a program declares a dictionary (at least one `define`), the lowerer
+**enforces the vocabulary at compile time**: every hypothesis used in a
+`prior`/`contributes`/`interacts`/`uncertain`/`?` and every finding used in an
+`observe`/`contributes`/`interacts`/`uncertain` must be defined, and a finding
+value must lie in its declared domain — otherwise `LowerError::UndefinedTerm` or
+`ValueNotInDomain`. The IR a decomposer emits and the rulebook it compiles
+against therefore share one closed vocabulary by construction. A program with no
+dictionary is unchecked (backward-compatible).
+
 ### Differential over the `?` queries (v0.4)
 
 A program's `? h` lines are read as the set of **competing hypotheses**.

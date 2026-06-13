@@ -159,6 +159,32 @@ pub enum Statement {
     /// over the declared symbols (ADJ constraints track C2). The solver finds
     /// the optimal value subject to the accumulated `constrain` half-planes.
     Optimize { dir: OptDir, objective: ExprAst },
+    /// `define <name> : hypothesis | finding values [v…] [surface "…"]` — a
+    /// dictionary entry (MYCIN-2026). Registers a finding/hypothesis term in the
+    /// controlled vocabulary; valid bare or inside a `dictionary` block.
+    Define(Define),
+    /// `dictionary <name> { define … }` — a named controlled vocabulary, a
+    /// first-class language construct a rulebook `use`s (M2).
+    Dictionary { name: String, defines: Vec<Define> },
+}
+
+/// A single dictionary entry (MYCIN-2026).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Define {
+    /// The canonical term (a finding functor like `csf_glucose`, or a
+    /// hypothesis like `bacterial_meningitis`).
+    pub name: String,
+    pub kind: DefineKind,
+    /// Surface forms used to constrain the decomposer — *not* engine-semantic.
+    pub surfaces: Vec<String>,
+}
+
+/// What a `define` registers: a hypothesis, or a finding with a closed value
+/// domain (so "observed normal" is distinguishable from "not yet observed").
+#[derive(Debug, Clone, PartialEq)]
+pub enum DefineKind {
+    Hypothesis,
+    Finding { values: Vec<String> },
 }
 
 /// The direction of an `optimize` (LP) objective.
