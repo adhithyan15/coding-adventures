@@ -15,6 +15,8 @@ All notable changes to this package will be documented in this file.
 - Compact interview-plan summaries for pending ZDO descriptor work.
 - Compact node/simple descriptor and interview read summaries for discovery
   tooling.
+- Descriptor-inventory summaries for payload-free node, endpoint, profile, and
+  cluster coverage reads.
 - Unique cluster coverage and profile-family endpoint counts for ZDO interview
   read summaries.
 - Read-summary helper predicates for duplicate cluster references, lighting

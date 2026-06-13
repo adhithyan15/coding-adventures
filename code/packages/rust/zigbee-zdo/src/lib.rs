@@ -323,6 +323,43 @@ pub struct ZigbeeInterviewSummary {
 }
 
 impl ZigbeeInterviewSummary {
+    pub fn descriptor_inventory_summary(&self) -> ZigbeeDescriptorInventorySummary {
+        let endpoint_summaries: Vec<_> = self
+            .simple_descriptors
+            .iter()
+            .map(SimpleDescriptor::summary)
+            .collect();
+        let mut unique_profiles = BTreeSet::new();
+        let mut unique_device_types = BTreeSet::new();
+        let mut unique_clusters = BTreeSet::new();
+        let mut total_cluster_reference_count = 0;
+        for descriptor in &self.simple_descriptors {
+            unique_profiles.insert(descriptor.profile_id);
+            unique_device_types.insert(descriptor.device_id);
+            unique_clusters.extend(descriptor.input_clusters.iter().copied());
+            unique_clusters.extend(descriptor.output_clusters.iter().copied());
+            total_cluster_reference_count +=
+                descriptor.input_clusters.len() + descriptor.output_clusters.len();
+        }
+        let home_automation_endpoint_count = self
+            .simple_descriptors
+            .iter()
+            .filter(|descriptor| descriptor.profile_id == ProfileId::HOME_AUTOMATION)
+            .count();
+        ZigbeeDescriptorInventorySummary {
+            network_address: self.network_address,
+            has_ieee_address: self.ieee_address.is_some(),
+            node_descriptor: self.node_descriptor.as_ref().map(NodeDescriptor::summary),
+            endpoint_summaries,
+            endpoint_count: self.simple_descriptors.len(),
+            home_automation_endpoint_count,
+            unique_profile_count: unique_profiles.len(),
+            unique_device_type_count: unique_device_types.len(),
+            total_cluster_reference_count,
+            unique_cluster_count: unique_clusters.len(),
+        }
+    }
+
     pub fn read_summary(&self) -> ZigbeeInterviewReadSummary {
         let mut unique_input_clusters = BTreeSet::new();
         let mut unique_output_clusters = BTreeSet::new();
@@ -380,6 +417,56 @@ impl ZigbeeInterviewSummary {
                     .contains(&ClusterId::LEVEL_CONTROL)
             }),
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ZigbeeDescriptorInventorySummary {
+    pub network_address: NetworkAddress,
+    pub has_ieee_address: bool,
+    pub node_descriptor: Option<NodeDescriptorSummary>,
+    pub endpoint_summaries: Vec<SimpleDescriptorSummary>,
+    pub endpoint_count: usize,
+    pub home_automation_endpoint_count: usize,
+    pub unique_profile_count: usize,
+    pub unique_device_type_count: usize,
+    pub total_cluster_reference_count: usize,
+    pub unique_cluster_count: usize,
+}
+
+impl ZigbeeDescriptorInventorySummary {
+    pub fn has_node_descriptor(&self) -> bool {
+        self.node_descriptor.is_some()
+    }
+
+    pub fn has_endpoints(&self) -> bool {
+        self.endpoint_count > 0
+    }
+
+    pub fn has_home_automation_profile(&self) -> bool {
+        self.home_automation_endpoint_count > 0
+    }
+
+    pub fn has_cluster_coverage(&self) -> bool {
+        self.unique_cluster_count > 0
+    }
+
+    pub fn has_profile_diversity(&self) -> bool {
+        self.unique_profile_count > 1
+    }
+
+    pub fn has_device_type_diversity(&self) -> bool {
+        self.unique_device_type_count > 1
+    }
+
+    pub fn has_duplicate_cluster_refs(&self) -> bool {
+        self.total_cluster_reference_count > self.unique_cluster_count
+    }
+
+    pub fn has_lighting_cluster_coverage(&self) -> bool {
+        self.endpoint_summaries
+            .iter()
+            .any(SimpleDescriptorSummary::has_lighting_cluster_coverage)
     }
 }
 
@@ -1004,6 +1091,81 @@ mod tests {
         assert!(simple_summary.has_on_off_cluster);
         assert!(!simple_summary.has_level_control_cluster);
         assert!(simple_summary.has_lighting_cluster_coverage());
+    }
+
+    #[test]
+    fn descriptor_inventory_summary_keeps_endpoint_shape_without_cluster_payloads() {
+        let node_descriptor = NodeDescriptor::parse(&node_descriptor_bytes()).unwrap();
+        let mut simple_descriptor = SimpleDescriptor::parse(&simple_descriptor_bytes()).unwrap();
+        simple_descriptor
+            .input_clusters
+            .push(ClusterId::LEVEL_CONTROL);
+        let mut manufacturer_descriptor = simple_descriptor.clone();
+        manufacturer_descriptor.endpoint = Endpoint(2);
+        manufacturer_descriptor.profile_id = ProfileId(0xc001);
+        manufacturer_descriptor.device_id = 0x0301;
+        manufacturer_descriptor
+            .output_clusters
+            .push(ClusterId::ON_OFF);
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
+            node_descriptor: Some(node_descriptor),
+            simple_descriptors: vec![simple_descriptor, manufacturer_descriptor],
+        }
+        .descriptor_inventory_summary();
+
+        assert_eq!(summary.network_address, NetworkAddress(0x1234));
+        assert!(summary.has_ieee_address);
+        assert_eq!(
+            summary.node_descriptor.unwrap().logical_type,
+            LogicalType::Router
+        );
+        assert_eq!(summary.endpoint_count, 2);
+        assert_eq!(summary.endpoint_summaries.len(), 2);
+        assert_eq!(summary.home_automation_endpoint_count, 1);
+        assert_eq!(summary.unique_profile_count, 2);
+        assert_eq!(summary.unique_device_type_count, 2);
+        assert_eq!(summary.total_cluster_reference_count, 9);
+        assert_eq!(summary.unique_cluster_count, 4);
+        assert!(summary.has_node_descriptor());
+        assert!(summary.has_endpoints());
+        assert!(summary.has_home_automation_profile());
+        assert!(summary.has_cluster_coverage());
+        assert!(summary.has_profile_diversity());
+        assert!(summary.has_device_type_diversity());
+        assert!(summary.has_duplicate_cluster_refs());
+        assert!(summary.has_lighting_cluster_coverage());
+    }
+
+    #[test]
+    fn descriptor_inventory_summary_handles_sparse_interviews() {
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0xabcd),
+            ieee_address: None,
+            node_descriptor: None,
+            simple_descriptors: Vec::new(),
+        }
+        .descriptor_inventory_summary();
+
+        assert_eq!(summary.network_address, NetworkAddress(0xabcd));
+        assert!(!summary.has_ieee_address);
+        assert_eq!(summary.node_descriptor, None);
+        assert_eq!(summary.endpoint_summaries, Vec::new());
+        assert_eq!(summary.endpoint_count, 0);
+        assert_eq!(summary.home_automation_endpoint_count, 0);
+        assert_eq!(summary.unique_profile_count, 0);
+        assert_eq!(summary.unique_device_type_count, 0);
+        assert_eq!(summary.total_cluster_reference_count, 0);
+        assert_eq!(summary.unique_cluster_count, 0);
+        assert!(!summary.has_node_descriptor());
+        assert!(!summary.has_endpoints());
+        assert!(!summary.has_home_automation_profile());
+        assert!(!summary.has_cluster_coverage());
+        assert!(!summary.has_profile_diversity());
+        assert!(!summary.has_device_type_diversity());
+        assert!(!summary.has_duplicate_cluster_refs());
+        assert!(!summary.has_lighting_cluster_coverage());
     }
 
     #[test]
