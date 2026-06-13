@@ -250,17 +250,84 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 name, span
             );
         }
-        // SIR16 expression kinds — TS backend hasn't been extended yet.
-        Expr::FloatLit { span, .. }
-        | Expr::SeqLit { span, .. }
-        | Expr::SeqIndex { span, .. }
-        | Expr::SeqLen { span, .. }
-        | Expr::MapLit { span, .. }
-        | Expr::MapGet { span, .. }
-        | Expr::LogicalAnd { span, .. }
-        | Expr::LogicalOr { span, .. }
-        | Expr::StrConcat { span, .. } => {
-            panic!("ts backend reached SIR16+ expression at {} — capability check should have rejected it", span);
+        // ── SIR16 expression kinds — native TypeScript ─────────────
+        Expr::FloatLit { value, .. } => {
+            let _ = write!(out, "{:?}", value);
+        }
+        Expr::SeqLit { items, .. } => {
+            out.push('[');
+            emit_args(out, items, indent);
+            out.push(']');
+        }
+        Expr::SeqIndex { seq, index, .. } => {
+            // `Val` is a union; cast to an array/number for the native
+            // index.
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[])[(");
+            emit_expr(out, index, indent);
+            out.push_str(") as number]");
+        }
+        Expr::SeqLen { seq, .. } => {
+            out.push_str("((");
+            emit_expr(out, seq, indent);
+            out.push_str(") as __Sir.Val[]).length");
+        }
+        Expr::MapLit { entries, .. } => {
+            out.push_str("new Map<__Sir.Val, __Sir.Val>([");
+            for (i, entry) in entries.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_expr(out, &entry.key, indent);
+                out.push_str(", ");
+                emit_expr(out, &entry.value, indent);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        Expr::MapGet { map, key, .. } => {
+            out.push_str("(((");
+            emit_expr(out, map, indent);
+            out.push_str(") as Map<__Sir.Val, __Sir.Val>).get(");
+            emit_expr(out, key, indent);
+            out.push_str(") ?? null)");
+        }
+        // Short-circuit: an arrow closure keeps the rhs unevaluated until
+        // the lhs decides, routing the test through SIR truthiness (only
+        // `false`/`nil` are falsy — not `0`/`""`).  The param `__l` gives
+        // each occurrence its own scope, so nested `&&`/`||` never collide.
+        Expr::LogicalAnd { lhs, rhs, .. } => {
+            out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? (");
+            emit_expr(out, rhs, indent);
+            out.push_str(") : __l)(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        Expr::LogicalOr { lhs, rhs, .. } => {
+            out.push_str("((__l: __Sir.Val) => __Sir.truthy(__l) ? __l : (");
+            emit_expr(out, rhs, indent);
+            out.push_str("))(");
+            emit_expr(out, lhs, indent);
+            out.push(')');
+        }
+        // String interpolation: each part rendered through the SIR display
+        // helper (a string part renders to itself) and joined.
+        Expr::StrConcat { parts, .. } => {
+            out.push('(');
+            if parts.is_empty() {
+                out.push_str("\"\"");
+            }
+            for (i, p) in parts.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(" + ");
+                }
+                out.push_str("__Sir.toDisplay(");
+                emit_expr(out, p, indent);
+                out.push(')');
+            }
+            out.push(')');
         }
     }
 }
