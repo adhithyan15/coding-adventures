@@ -1574,6 +1574,106 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-100: function/class-expression paren elision in
+    //      EXPRESSION position ---------------------------------
+    // `a=(function(){})()` → `a=function(){}()`. A parenthesised
+    // `function`/`class` EXPRESSION only needs its wrapping parens
+    // at STATEMENT position — there the leading `function`/`class`
+    // keyword would otherwise begin a *declaration*. In expression
+    // position the grouping parens are redundant:
+    //
+    //   `a=(function(){})()`       → `a=function(){}()`
+    //   `a=(class{})()`            → `a=class{}()`
+    //   `a=(async function(){})()` → `a=async function(){}()`
+    //   `(function(){})();`        → unchanged (statement position)
+    //
+    // MINIMAL SAFE SLICE: fire only when the `(` is preceded by `=`
+    // or `,` — the clearest expression-context delimiters, and the
+    // ones the byte-identity fixtures exercise. This conservatively
+    // EXCLUDES the load-bearing statement-position IIFE
+    // `(function(){})();` (whose `(` is preceded by `;`/`{`/`}`/
+    // start-of-stream, never `=`/`,`), which MUST keep its parens to
+    // avoid being reparsed as a function declaration. Broader
+    // expression contexts (after `(`/`[`/`return`/`=>`/operators)
+    // are left to a follow-up.
+    //
+    // The matching `)` is located by a structural paren-depth scan
+    // (the function's own param `()` nest and re-balance inside);
+    // all bracket checks route through `is_structural_punct` so a
+    // string/regex whose content looks like a paren can't fool it.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 1 < kept.len() {
+            if is_structural_punct(&kept[i], "(") {
+                // Expression-context predecessor: `=` or `,`.
+                let expr_ctx = match i.checked_sub(1).and_then(|k| kept.get(k)) {
+                    Some(p) if is_structural_punct(p, "=") => {
+                        // Assignment `=`: require the target (i-2) to be a
+                        // plain identifier at a STATEMENT boundary (i-3 is
+                        // `;`/`{`/`}` or start-of-stream). This excludes a
+                        // default-PARAMETER `=` (inside a `(...)` param
+                        // list, where i-3 is `(`/`,`) — unwrapping THERE
+                        // exposes the function body's `}` to the
+                        // function-decl trailing-`;` pass and corrupts the
+                        // output (`g(a=function(){};())`).
+                        i >= 2
+                            && is_plain_identifier(&kept[i - 2])
+                            && match i.checked_sub(3).and_then(|k| kept.get(k)) {
+                                None => true,
+                                Some(b) => {
+                                    is_structural_punct(b, ";")
+                                        || is_structural_punct(b, "{")
+                                        || is_structural_punct(b, "}")
+                                }
+                            }
+                    }
+                    Some(p) => is_structural_punct(p, ","),
+                    None => false,
+                };
+                // The inner must START a function/class expression.
+                let inner = &kept[i + 1];
+                let is_fn_or_class = is_word_like(inner)
+                    && (inner.value == "function"
+                        || inner.value == "class"
+                        || (inner.value == "async"
+                            && kept
+                                .get(i + 2)
+                                .is_some_and(|t| is_word_like(t) && t.value == "function")));
+                if expr_ctx && is_fn_or_class {
+                    // Structural paren-depth scan for the matching `)`.
+                    let mut depth: i32 = 1;
+                    let mut j = i + 1;
+                    let mut close: Option<usize> = None;
+                    while j < kept.len() {
+                        let t = &kept[j];
+                        if is_structural_punct(t, "(") {
+                            depth += 1;
+                        } else if is_structural_punct(t, ")") {
+                            depth -= 1;
+                            if depth == 0 {
+                                close = Some(j);
+                                break;
+                            }
+                        }
+                        j += 1;
+                    }
+                    if let Some(c) = close {
+                        drops.push(i); // grouping open `(`
+                        drops.push(c); // grouping close `)`
+                        i = c + 1;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // ---- gap-066: redundant parens after `extends` ------------
     // `class A extends(B){}` → `class A extends B{}`. After the
     // `extends` keyword a parenthesized simple reference is
@@ -5843,6 +5943,42 @@ mod tests {
     #[test]
     fn gap099_call_paren_not_stripped() {
         assert_eq!(minify("a=f(b)[c];"), "a=f(b)[c];");
+    }
+
+    // ---- gap-100: function/class-expr paren in expr position ----
+
+    /// gap-100: a parenthesised function/class EXPRESSION in
+    /// expression position drops its grouping parens.
+    #[test]
+    fn gap100_funcexpr_paren_stripped() {
+        assert_eq!(minify("a=(function(){})();"), "a=function(){}();");
+        assert_eq!(minify("a=(class{})();"), "a=class{}();");
+        assert_eq!(
+            minify("a=(async function(){})();"),
+            "a=async function(){}();"
+        );
+        assert_eq!(minify("b=1,(function(){})();"), "b=1,function(){}();");
+    }
+
+    /// **CRITICAL non-regression**: an IIFE at STATEMENT position
+    /// MUST keep its parens — `(function(){})();` would otherwise be
+    /// reparsed as a function *declaration*.
+    #[test]
+    fn gap100_statement_iife_keeps_parens() {
+        assert_eq!(minify("(function(){})();"), "(function(){})();");
+        assert_eq!(minify("(function(){}());"), "(function(){})();");
+    }
+
+    /// **Non-regression**: a DEFAULT-PARAMETER default value is NOT
+    /// unwrapped — the `=` there is a param default, not a statement
+    /// assignment (its target sits after a `(`, not a statement
+    /// boundary), and unwrapping would expose the body `}` to the
+    /// function-decl trailing-`;` rule.
+    #[test]
+    fn gap100_default_param_not_unwrapped() {
+        // The grouping parens around the default-value function
+        // expression are preserved (gap-100 leaves it alone).
+        assert!(minify("function g(a=(function(){})()){}").contains("(function(){}"));
     }
 
     // ---- gap-066: redundant parens after `extends` -------

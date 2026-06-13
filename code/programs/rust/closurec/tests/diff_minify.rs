@@ -90,15 +90,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // The `[index]` sibling of gap-065/gap-057; only a safe simple
     // reference is unwrapped (`(a+b)[c]`, `(b||c)[d]`, `f(b)[c]` keep
     // their parens).
-    // gap-100 (CLOC14.43): paren elision around a FUNCTION/CLASS
-    // EXPRESSION that is NOT at statement position. `a=(function(){})()`
-    // -> `a=function(){}()`, `a=(class{})()` -> `a=class{}()`. The
-    // leading `(` is only needed at STATEMENT start (to disambiguate
-    // from a declaration); in expression position (RHS of `=`, after
-    // `,`, etc.) it is droppable. `(function(){})();` at statement
-    // position KEEPS its parens.
-    ("funcexpr_iife_assign", "gap-100: a=(function(){})() -> a=function(){}()"),
-    ("classexpr_call",       "gap-100: a=(class{})() -> a=class{}()"),
+    // gap-100 RESOLVED in CLOC12.103 — paren elision around a
+    // function/class EXPRESSION in expression position:
+    // `a=(function(){})()` -> `a=function(){}()`, `a=(class{})()` ->
+    // `a=class{}()`. Minimal safe slice — fires on a statement-level
+    // assignment `IDENT=(function/class…)` or after `,`; the
+    // statement-position IIFE `(function(){})();` and default-param
+    // position keep their parens.
     // gap-097 RESOLVED in CLOC12.101 — an async generator method
     // (`async*m(){}`) now gets the separating space between `async` and
     // `*` that upstream emits (`async *m(){}`), in both class and object
