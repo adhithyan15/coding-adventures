@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "typescript/sir-runtime-core",
+  "capabilities": [],
+  "justification": "Pure in-process runtime helpers (truthiness, symbols, pairs, arithmetic, closures, an in-memory global store, and stdout printing). No filesystem, network, process, or environment access."
+}
