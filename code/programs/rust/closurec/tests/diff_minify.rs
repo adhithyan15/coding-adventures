@@ -215,22 +215,20 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
     // needs an operator-precedence table.
     ("precedence_operand", "gap-083: precedence-aware operand paren elision"),
-    // gap-105 (CLOC14.49) — CORRECTNESS: LEGACY OCTAL literals. A number
-    // token of the form `0` followed by octal digits (0-7), e.g. `010`,
-    // `017`, `0123`, is a sloppy-mode legacy octal literal and denotes
-    // its OCTAL value (`010` == 8, `0123` == 83). closurec currently
-    // treats the leading zero as insignificant and emits the digits as
-    // DECIMAL (`010` -> `10`), which CHANGES THE VALUE — a real
-    // corruption, not just a byte difference. Upstream Closure decodes
-    // the octal and emits the decimal value (`010` -> `8`,
-    // `[010,020]` -> `[8,16]`). `08`/`09` are NOT legacy octal (they
-    // contain a non-octal digit) and upstream rejects them, so they are
-    // not byte-identity inputs. The fix belongs in the number-literal
-    // canonicaliser: detect `0[0-7]+` and decode as base-8 before
-    // shortest-form re-emit. HIGH PRIORITY — value-changing.
-    ("num_legacy_octal",       "gap-105: legacy octal 010 -> 8 (emitted as decimal 10)"),
-    ("num_legacy_octal_multi", "gap-105: legacy octal 0123 -> 83"),
-    ("num_legacy_octal_array", "gap-105: legacy octal in array -> [8,16]"),
+    // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
+    // literals (`0` followed by octal digits, e.g. `010`, `017`,
+    // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
+    // (`010` == 8, `0123` == 83). closurec used to treat the leading
+    // zero as insignificant and emit the digits as DECIMAL
+    // (`010` -> `10`), CHANGING THE VALUE. Fixed by adding a
+    // legacy-octal arm to `normalize_number_value`: when the
+    // separator-stripped literal has `len() > 1`, starts with `0`, and
+    // every byte is an octal digit, it is decoded with
+    // `u128::from_str_radix(.., 8)` (placed AFTER the `0x`/`0o`/`0b`
+    // prefix arms, BEFORE the bare-decimal arm). `08`/`09` are not
+    // legacy octal and upstream rejects them; `00`/`0o17` are
+    // unaffected. `minify_num_legacy_octal` / `..._multi` /
+    // `..._array` now ENFORCED.
     // gap-106 (CLOC14.49): a NUMERIC FLOAT property key is normalised to
     // a STRING key by upstream — `{.5:1}` -> `{"0.5":1}`. The float key
     // `.5` is canonicalised to its string form `"0.5"` (the ToString of

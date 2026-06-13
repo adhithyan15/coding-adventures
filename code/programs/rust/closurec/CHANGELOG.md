@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.113.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-105 (CORRECTNESS)** — LEGACY OCTAL number literals are
+  now decoded as base-8 instead of being re-emitted as decimal. A
+  number of the shape `0` followed by octal digits (`0`–`7`) is a
+  sloppy-mode legacy octal and denotes its OCTAL value:
+
+      var x=010;    ->  var x=8;     (was: var x=10;  — WRONG VALUE)
+      var x=017;    ->  var x=15;    (was: var x=17;)
+      var x=0123;   ->  var x=83;    (was: var x=123;)
+      a=[010,020];  ->  a=[8,16];    (was: a=[10,20];)
+
+  Previously such a token fell into the bare-decimal arm of
+  `normalize_number_value` and was parsed as decimal, **changing the
+  numeric value** — a real corruption, not a byte-only difference. The
+  fix adds a legacy-octal arm (reached only after the `0x`/`0o`/`0b`
+  prefix arms): when the separator-stripped literal has `len() > 1`,
+  starts with `0`, and every byte is an octal digit, it is decoded with
+  `u128::from_str_radix(.., 8)`. The decoded value flows through the
+  same shortest-form selection as the other radix arms (decimal always
+  wins for octal). Guards verified vs upstream Closure v20240317:
+  - `00` → `0` (octal 0; unchanged),
+  - lone `0` → `0` (excluded by `len() > 1`),
+  - modern `0o17` → `15` (handled by the earlier `0o` arm),
+  - `08`/`09` are not legacy octal (non-octal digit) and upstream
+    rejects them, so they are never byte-identity inputs.
+
+  Nine `gap105_*` unit tests cover the decode cases and every guard.
+
 ## [0.112.0] - 2026-06-12
 
 ### Fixed

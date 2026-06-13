@@ -3676,6 +3676,38 @@ fn normalize_number_value(value: &str) -> String {
         .or_else(|| cleaned.strip_prefix("0B"))
     {
         u128::from_str_radix(rest, 2).ok()
+    } else if cleaned.len() > 1
+        && cleaned.starts_with('0')
+        && cleaned.bytes().all(|b| (b'0'..=b'7').contains(&b))
+    {
+        // gap-105 (CORRECTNESS): LEGACY OCTAL literal. In sloppy
+        // mode a NUMBER of the shape `0` followed by one-or-more
+        // octal digits (`0`–`7`) — e.g. `010`, `017`, `0123` —
+        // denotes its OCTAL value (`010` == 8, `0123` == 83), NOT
+        // the decimal reading of the digits. Without this branch
+        // such a token falls into the bare-decimal arm below and is
+        // re-emitted as decimal (`010` → `10`), CHANGING THE VALUE.
+        // Upstream Closure decodes the octal and emits the decimal
+        // value (`010` → `8`).
+        //
+        // Guard rationale (this arm is reached ONLY after the
+        // `0x`/`0o`/`0b` prefix arms above have been tried):
+        //   - `len() > 1` excludes a lone `0` (which is just `0`).
+        //   - `starts_with('0')` is the legacy-octal marker.
+        //   - every byte in `0`–`7` excludes `08`/`09`
+        //     (NonOctalDecimalIntegerLiteral — upstream REJECTS
+        //     these as a parse error, so they are never a
+        //     byte-identity input) and excludes floats/scientific
+        //     (`0.5`, `0e1` contain `.`/`e`) and the modern
+        //     `0o…`/`0x…`/`0b…` forms (their 2nd char is a letter).
+        //   - `00` decodes to octal 0 == 0 → emitted as `0`
+        //     (already byte-identical; no regression).
+        // The decoded value flows through the SAME shortest-form
+        // selection as the other radix arms; for octal the decimal
+        // form is always strictly shorter than the `0…`-prefixed
+        // source, so `decimal` always wins (no risk of re-emitting
+        // the octal literal).
+        u128::from_str_radix(&cleaned, 8).ok()
     } else if cleaned.chars().all(|c| c.is_ascii_digit()) {
         // Bare decimal integer.
         cleaned.parse::<u128>().ok()
@@ -5756,6 +5788,78 @@ mod tests {
     #[test]
     fn gap038_binary_short() {
         assert_eq!(minify("var x=0b1010;"), "var x=10;");
+    }
+
+    // ---- gap-105: legacy octal literals decode as base-8 ----
+    //
+    // CORRECTNESS guard. A `0`-prefixed run of octal digits is a
+    // sloppy-mode legacy octal and denotes its OCTAL value. Without
+    // the dedicated branch these fell into the bare-decimal arm and
+    // were re-emitted in decimal, changing the value.
+
+    /// `010` is octal 8, not decimal 10. Upstream: `var x=8;`.
+    #[test]
+    fn gap105_legacy_octal_basic() {
+        assert_eq!(minify("var x=010;"), "var x=8;");
+    }
+
+    /// `017` is octal 15.
+    #[test]
+    fn gap105_legacy_octal_017() {
+        assert_eq!(minify("var x=017;"), "var x=15;");
+    }
+
+    /// `0123` is octal 83 — multi-digit decode.
+    #[test]
+    fn gap105_legacy_octal_multi_digit() {
+        assert_eq!(minify("var x=0123;"), "var x=83;");
+    }
+
+    /// Legacy octal inside an array literal — each element decodes.
+    /// `[010,020]` → `[8,16]`.
+    #[test]
+    fn gap105_legacy_octal_in_array() {
+        assert_eq!(minify("a=[010,020];"), "a=[8,16];");
+    }
+
+    /// `07` (single octal digit ≤ 7 behind the leading zero) decodes
+    /// to 7 — value unchanged, but exercises the `len()>1` boundary.
+    #[test]
+    fn gap105_legacy_octal_single_digit() {
+        assert_eq!(minify("var x=07;"), "var x=7;");
+    }
+
+    /// **Non-regression**: `00` is octal 0 == 0 → `0` (already
+    /// byte-identical; the legacy-octal branch must not change it).
+    #[test]
+    fn gap105_double_zero_is_zero() {
+        assert_eq!(minify("var x=00;"), "var x=0;");
+    }
+
+    /// **Non-regression**: a lone `0` is not legacy octal (the
+    /// `len()>1` guard) — stays `0`.
+    #[test]
+    fn gap105_lone_zero_unchanged() {
+        assert_eq!(minify("var x=0;"), "var x=0;");
+    }
+
+    /// **Non-regression**: MODERN octal `0o17` is handled by the
+    /// `0o` prefix arm (which runs before the legacy branch) and is
+    /// unaffected — `0o17` → `15`.
+    #[test]
+    fn gap105_modern_octal_unaffected() {
+        assert_eq!(minify("var x=0o17;"), "var x=15;");
+    }
+
+    /// **Non-regression**: `08`/`09` are NOT legacy octal (they
+    /// contain a non-octal digit). Upstream rejects them, so they
+    /// are not byte-identity inputs; we only assert the legacy
+    /// branch does not capture them — they fall through to the
+    /// bare-decimal arm and read as 8 / 9.
+    #[test]
+    fn gap105_non_octal_digit_not_captured() {
+        assert_eq!(minify("var x=08;"), "var x=8;");
+        assert_eq!(minify("var x=09;"), "var x=9;");
     }
 
     /// Uppercase prefix `0X` is equivalent to `0x` per
