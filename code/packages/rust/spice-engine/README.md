@@ -143,9 +143,11 @@ frequency windows. `measure_transient_find_at_probe` and parsed transient
 time, while `measure_transient_when_probe`,
 `measure_transient_when_probe_counted`, and parsed transient
 `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and `CROSS`
-crossing times over optional `FROM=` / `TO=` windows. The deck helpers route
-parsed transient, DC sweep, and
-AC sweep `.measure` / `.meas` cards into those stable measurement rows.
+crossing times over optional `FROM=` / `TO=` windows.
+`measure_transient_delay_between_probes` and parsed transient `TRIG ... TARG
+...` cards report trigger-to-target crossing delays. The deck helpers route
+parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those
+stable measurement rows.
 `resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits

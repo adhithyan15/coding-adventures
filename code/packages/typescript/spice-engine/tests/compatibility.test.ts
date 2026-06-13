@@ -424,6 +424,7 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 .meas transient settled final 'V(out)'
 .measure tran sample find V(out) AT={1.5m}
 .measure tran crossing when V(out)=0.5 FROM=1m TO=3m RISE=1
+.measure tran prop_delay TRIG V(in) VAL=0.5 RISE=1 TARG V(out) VAL=0.5 FALL=1 FROM=0 TO=4m
 .measure dc dcmax max V(out) FROM=1 TO=3
 .measure ac acmax max V(out) FROM=1k TO=10k
 .tran 1m 4m
@@ -432,12 +433,12 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
 `);
 
     expect(summary.terminated).toBe(true);
-    expect(summary.endLineNumber).toBe(10);
+    expect(summary.endLineNumber).toBe(11);
     expect(summary.activeLines).toStrictEqual([
       "V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)",
       ".tran 1m 4m",
     ]);
-    expect(summary.measurements.map(({ directive, analysis, name, mode, probe, lineNumber, fromValue, toValue, atValue, targetValue, crossingKind, crossingCount }) => [
+    expect(summary.measurements.map(({
       directive,
       analysis,
       name,
@@ -450,13 +451,35 @@ V1 in 0 PULSE(0 1 0 1n 1n 1m 2m)
       targetValue,
       crossingKind,
       crossingCount,
+      triggerProbe,
+      triggerValue,
+      triggerCrossingKind,
+      triggerCrossingCount,
+    }) => [
+      directive,
+      analysis,
+      name,
+      mode,
+      probe,
+      lineNumber,
+      fromValue,
+      toValue,
+      atValue,
+      targetValue,
+      crossingKind,
+      crossingCount,
+      triggerProbe,
+      triggerValue,
+      triggerCrossingKind,
+      triggerCrossingCount,
     ])).toStrictEqual([
-      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003, undefined, undefined, undefined, undefined],
-      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined, undefined, undefined, undefined, undefined],
-      [".measure", "tran", "sample", "find", "V(out)", 5, undefined, undefined, 0.0015, undefined, undefined, undefined],
-      [".measure", "tran", "crossing", "when", "V(out)", 6, 0.001, 0.003, undefined, 0.5, "rise", 1],
-      [".measure", "dc", "dcmax", "max", "V(out)", 7, 1, 3, undefined, undefined, undefined, undefined],
-      [".measure", "ac", "acmax", "max", "V(out)", 8, 1000, 10000, undefined, undefined, undefined, undefined],
+      [".measure", "tran", "swing", "pp", "V(out)", 3, 0.001, 0.003, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+      [".meas", "transient", "settled", "last", "V(out)", 4, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+      [".measure", "tran", "sample", "find", "V(out)", 5, undefined, undefined, 0.0015, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+      [".measure", "tran", "crossing", "when", "V(out)", 6, 0.001, 0.003, undefined, 0.5, "rise", 1, undefined, undefined, undefined, undefined],
+      [".measure", "tran", "prop_delay", "delay", "V(out)", 7, 0, 0.004, undefined, 0.5, "fall", 1, "V(in)", 0.5, "rise", 1],
+      [".measure", "dc", "dcmax", "max", "V(out)", 8, 1, 3, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
+      [".measure", "ac", "acmax", "max", "V(out)", 9, 1000, 10000, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined],
     ]);
     expect(summary.diagnostics).toStrictEqual([]);
   });

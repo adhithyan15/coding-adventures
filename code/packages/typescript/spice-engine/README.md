@@ -77,9 +77,11 @@ complex probe magnitudes over optional frequency windows.
 or linearly interpolate one probe value at a scalar time, while
 `measureTransientWhenProbe`, `measureTransientWhenProbeCounted`, and parsed
 transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
-`CROSS` crossing times over optional `FROM=` / `TO=` windows. The deck helpers
-route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
-those stable measurement rows.
+`CROSS` crossing times over optional `FROM=` / `TO=` windows.
+`measureTransientDelayBetweenProbes` and parsed transient `TRIG ... TARG ...`
+cards report trigger-to-target crossing delays. The deck helpers route parsed
+transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
+measurement rows.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`
