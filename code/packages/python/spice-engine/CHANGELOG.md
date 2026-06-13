@@ -4,6 +4,12 @@
 
 ### Added
 
+- **DC sweep measurement card routing** —
+  `measure_dc_sweep_probe()`, `measure_dc_sweep_cards()`, and
+  `measure_dc_sweep_deck()` now route direct or parsed `.measure dc` /
+  `.meas dc` cards into the shared scalar measurement table surface, matching
+  Rust and TypeScript.
+
 - **Parsed transient measurement card routing** —
   `resolve_deck_measurements()`, `measure_transient_cards()`, and
   `measure_transient_deck()` now extract transient `.measure` / `.meas` cards

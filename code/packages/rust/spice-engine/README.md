@@ -67,8 +67,8 @@ The initial slices implement:
   distortion harmonics, and cornered distortion harmonics, Monte Carlo trials,
   cornered Monte Carlo trials, DC source sweeps, and cornered DC source
   sweeps.
-- Parsed transient `.measure` / `.meas` card extraction and execution helpers
-  that route deck cards into stable scalar measurement rows.
+- Parsed transient and DC sweep `.measure` / `.meas` card extraction and
+  execution helpers that route deck cards into stable scalar measurement rows.
 
 The package supports resistors, capacitors, inductors, diodes, BJTs,
 independent current sources, independent voltage sources, voltage-controlled
@@ -132,11 +132,12 @@ provide a source-content map, `.include` directives are expanded in place, and
 `.lib path section` selects a named `.lib` / `.endl` section with stable
 diagnostics for missing files, missing sections, unterminated sections, cycles,
 and still-unsupported `.control` blocks.
-`measure_transient_probe`, `measure_transient_deck`, and
-`format_measurement_table` provide the shared `.MEASURE`-style scalar
-transient output surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value
-probe measurements. `measure_transient_deck` routes parsed transient
-`.measure` / `.meas` cards into those stable measurement rows.
+`measure_transient_probe`, `measure_transient_deck`,
+`measure_dc_sweep_probe`, `measure_dc_sweep_deck`, and
+`format_measurement_table` provide the shared `.MEASURE`-style scalar output
+surface for MAX, MIN, AVG, RMS, peak-to-peak, and final-value probe
+measurements. The deck helpers route parsed transient and DC sweep `.measure`
+/ `.meas` cards into those stable measurement rows.
 `resolve_deck_parameters` evaluates scalar whitespace-tokenized `.param`
 assignments, collects scalar `.func` definitions before `.end`, preserves
 parameter order, rewrites braced and quoted active-line expressions, and emits
@@ -153,10 +154,11 @@ solve with `.ic` values taking precedence over `.nodeset` values.
 definitions before `.end`, preserves non-function active lines, strips braced
 or quoted expression delimiters, and reports stable diagnostics for malformed
 signatures, arguments, or empty expressions.
-`resolve_deck_measurements` extracts transient `.measure` / `.meas` cards
-before `.end`, keeps non-measure active lines, evaluates optional `FROM=` /
-`TO=` scalar time windows, and reports stable diagnostics for unsupported
-analyses, modes, options, expressions, and invalid windows.
+`resolve_deck_measurements` extracts transient and DC sweep `.measure` /
+`.meas` cards before `.end`, keeps non-measure active lines, evaluates optional
+`FROM=` / `TO=` scalar time or source-value windows, and reports stable
+diagnostics for unsupported analyses, modes, options, expressions, and invalid
+windows.
 `resolve_deck_outputs` extracts `.save` and scoped or global `.probe` cards
 before `.end`, keeps non-output active lines, and reports stable diagnostics for
 malformed output probes. `select_deck_output_probes` deduplicates the selected

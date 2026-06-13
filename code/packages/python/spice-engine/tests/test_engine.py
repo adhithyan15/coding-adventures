@@ -225,6 +225,8 @@ from spice_engine import (
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
+    measure_dc_sweep_deck,
+    measure_dc_sweep_probe,
     measure_transient_deck,
     measure_transient_probe,
     mosfet_from_model_card,
@@ -3389,6 +3391,48 @@ def test_dc_sweep_voltage_divider_exact() -> None:
         "3\tVin\t3.000000e+00\t1.500000e+00\t-1.500000e-03\n"
         "4\tVin\t4.000000e+00\t2.000000e+00\t-2.000000e-03\n"
         "5\tVin\t5.000000e+00\t2.500000e+00\t-2.500000e-03\n"
+    )
+
+
+def test_dc_sweep_probe_measurements_execute_parsed_cards() -> None:
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.0, 2.0, 1.0)
+    peak = measure_dc_sweep_probe(
+        result,
+        "out_peak",
+        "V(out)",
+        "max",
+        from_value=1.0,
+        to_value=2.0,
+    )
+    average = measure_dc_sweep_probe(result, "out_avg", "V(out)", "avg")
+
+    assert peak.value == pytest.approx(1.0)
+    assert peak.analysis == "dc"
+    assert average.value == pytest.approx(0.5)
+    assert format_measurement_table([peak, average]) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_peak\tdc\tV(out)\tmax\t1.000000e+00\t2.000000e+00\t1.000000e+00\n"
+        "out_avg\tdc\tV(out)\tavg\t\t\t5.000000e-01\n"
+    )
+
+    measurements = measure_dc_sweep_deck(
+        result,
+        """
+.measure dc out_swing PP V(out) FROM=0 TO=2
+.meas dc out_final FINAL V(out)
+.end
+""",
+    )
+
+    assert format_measurement_table(measurements) == (
+        "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\n"
+        "out_swing\tdc\tV(out)\tpp\t0.000000e+00\t2.000000e+00\t1.000000e+00\n"
+        "out_final\tdc\tV(out)\tlast\t\t\t1.000000e+00\n"
     )
 
 

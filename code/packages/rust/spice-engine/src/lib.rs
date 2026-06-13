@@ -4530,14 +4530,14 @@ fn resolve_measurement_line(
     }
 
     let analysis = tokens[1].trim().to_ascii_lowercase();
-    if analysis != "tran" && analysis != "transient" {
+    if analysis != "tran" && analysis != "transient" && analysis != "dc" {
         add_measurement_diagnostic(
             state,
             "SPICE_DECK_MEASURE_ANALYSIS",
             directive,
             line_number,
             &format!(
-                "only transient .measure cards are supported, got {:?}",
+                "only transient and dc .measure cards are supported, got {:?}",
                 tokens[1]
             ),
             Some(tokens[1].to_string()),
@@ -4564,7 +4564,7 @@ fn resolve_measurement_line(
             "SPICE_DECK_MEASURE_MODE",
             directive,
             line_number,
-            &format!("unsupported transient measurement mode {:?}", tokens[3]),
+            &format!("unsupported measurement mode {:?}", tokens[3]),
             Some(tokens[3].to_string()),
         );
         return;
@@ -8717,6 +8717,110 @@ pub fn measure_transient_deck(
     measure_transient_cards(points, &summary.measurements)
 }
 
+pub fn measure_dc_sweep_probe(
+    points: &[DcSweepPoint],
+    name: &str,
+    probe: &str,
+    mode: &str,
+    from_value: Option<f64>,
+    to_value: Option<f64>,
+) -> Result<ProbeMeasurement, SpiceError> {
+    let normalized_mode = normalize_measurement_mode_with_context(mode, "measure_dc_sweep_probe")?;
+    if let Some(value) = from_value {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_dc_sweep_probe",
+                "from_value must be finite",
+            ));
+        }
+    }
+    if let Some(value) = to_value {
+        if !value.is_finite() {
+            return Err(table_error(
+                "measure_dc_sweep_probe",
+                "to_value must be finite",
+            ));
+        }
+    }
+    if let (Some(from), Some(to)) = (from_value, to_value) {
+        if from > to {
+            return Err(table_error(
+                "measure_dc_sweep_probe",
+                "from_value must be <= to_value",
+            ));
+        }
+    }
+
+    let mut values = Vec::new();
+    for point in points {
+        if from_value.map_or(false, |from| point.value < from)
+            || to_value.map_or(false, |to| point.value > to)
+        {
+            continue;
+        }
+        values.push(table_probe_value(
+            &point.result.node_voltages,
+            &point.result.branch_currents,
+            probe,
+            "measure_dc_sweep_probe",
+        )?);
+    }
+    if values.is_empty() {
+        return Err(table_error(
+            "measure_dc_sweep_probe",
+            "no dc sweep samples in window",
+        ));
+    }
+
+    Ok(ProbeMeasurement {
+        name: name.to_string(),
+        analysis: "dc".to_string(),
+        probe: probe.to_string(),
+        mode: normalized_mode.to_string(),
+        value: measure_values_with_context(&values, normalized_mode, "measure_dc_sweep_probe")?,
+        from_value,
+        to_value,
+    })
+}
+
+pub fn measure_dc_sweep_cards(
+    points: &[DcSweepPoint],
+    measurements: &[DeckMeasurementCard],
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let mut results = Vec::new();
+    for measurement in measurements {
+        if measurement.analysis != "dc" {
+            return Err(table_error(
+                "measure_dc_sweep_cards",
+                "only dc measurement cards are supported",
+            ));
+        }
+        results.push(measure_dc_sweep_probe(
+            points,
+            &measurement.name,
+            &measurement.probe,
+            &measurement.mode,
+            measurement.from_value,
+            measurement.to_value,
+        )?);
+    }
+    Ok(results)
+}
+
+pub fn measure_dc_sweep_deck(
+    points: &[DcSweepPoint],
+    netlist: &str,
+) -> Result<Vec<ProbeMeasurement>, SpiceError> {
+    let summary = resolve_deck_measurements(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "measure_dc_sweep_deck",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    measure_dc_sweep_cards(points, &summary.measurements)
+}
+
 pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
     let mut rows = vec!["Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue".to_string()];
     for measurement in measurements {
@@ -8736,6 +8840,13 @@ pub fn format_measurement_table(measurements: &[ProbeMeasurement]) -> String {
 }
 
 fn normalize_measurement_mode(mode: &str) -> Result<&'static str, SpiceError> {
+    normalize_measurement_mode_with_context(mode, "measure_transient_probe")
+}
+
+fn normalize_measurement_mode_with_context(
+    mode: &str,
+    context: &str,
+) -> Result<&'static str, SpiceError> {
     let normalized = mode.trim().to_ascii_lowercase().replace('_', "-");
     match normalized.as_str() {
         "max" => Ok("max"),
@@ -8744,14 +8855,19 @@ fn normalize_measurement_mode(mode: &str) -> Result<&'static str, SpiceError> {
         "rms" | "root-mean-square" => Ok("rms"),
         "pp" | "p-p" | "p2p" | "peak-to-peak" | "peak2peak" => Ok("pp"),
         "last" | "final" => Ok("last"),
-        _ => Err(table_error(
-            "measure_transient_probe",
-            &format!("unsupported mode {mode:?}"),
-        )),
+        _ => Err(table_error(context, &format!("unsupported mode {mode:?}"))),
     }
 }
 
 fn measure_values(values: &[f64], mode: &str) -> Result<f64, SpiceError> {
+    measure_values_with_context(values, mode, "measure_transient_probe")
+}
+
+fn measure_values_with_context(
+    values: &[f64],
+    mode: &str,
+    context: &str,
+) -> Result<f64, SpiceError> {
     match mode {
         "max" => Ok(values.iter().copied().fold(f64::NEG_INFINITY, f64::max)),
         "min" => Ok(values.iter().copied().fold(f64::INFINITY, f64::min)),
@@ -8765,10 +8881,7 @@ fn measure_values(values: &[f64], mode: &str) -> Result<f64, SpiceError> {
             Ok(max - min)
         }
         "last" => Ok(*values.last().unwrap()),
-        _ => Err(table_error(
-            "measure_transient_probe",
-            &format!("unsupported mode {mode:?}"),
-        )),
+        _ => Err(table_error(context, &format!("unsupported mode {mode:?}"))),
     }
 }
 
