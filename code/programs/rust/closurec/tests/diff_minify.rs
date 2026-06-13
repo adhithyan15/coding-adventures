@@ -325,13 +325,13 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // (non-integer), `"123abc"` are kept quoted — only the canonical
     // array-index form (matches the round-trip `String(Number(s)) === s`).
     ("num_str_key", "gap-116: canonical numeric string key -> unquoted number"),
-    // gap-117 (CLOC14.56): a `case` clause whose operand begins with a
-    // UNARY operator (`-`/`+`/`!`/`~`) needs a separating space that
-    // closurec omits: `case-1:` -> `case -1:`, `case!a:` -> `case !a:`.
+    // gap-117 RESOLVED in CLOC12.117 — a `case` clause whose operand begins
+    // with a UNARY operator (`-`/`+`/`!`/`~`) needs a separating space that
+    // closurec used to omit: `case-1:` -> `case -1:`, `case!a:` -> `case !a:`.
     // Sibling of gap-111 (keyword + string space); here the operand is a
-    // unary-prefixed expression rather than a string literal. (`case 1:`
-    // with a plain number already round-trips.)
-    ("case_neg_num", "gap-117: case + unary-operator operand needs separating space"),
+    // unary-prefixed expression rather than a string literal. Fixed via
+    // `case_unary_needs_space` in whitespace_only.rs; `minify_case_neg_num`
+    // now round-trips byte-identically.
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
