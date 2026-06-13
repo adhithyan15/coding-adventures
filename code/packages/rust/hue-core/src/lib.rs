@@ -1243,6 +1243,68 @@ pub struct HuePairingVaultHandoff {
     pub metadata: Vec<Metadata>,
 }
 
+impl HuePairingVaultHandoff {
+    pub fn summary(&self) -> HuePairingVaultHandoffSummary {
+        HuePairingVaultHandoffSummary::from_handoff(self)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePairingVaultHandoffSummary {
+    pub metadata_count: usize,
+    pub stored_at_ms: u64,
+    pub has_vault_reference: bool,
+    pub uses_hue_application_key_header: bool,
+    pub uses_event_stream_path: bool,
+    pub has_credential_stored_phase: bool,
+    pub has_application_key_credential_kind: bool,
+    pub reports_client_key_presence: bool,
+}
+
+impl HuePairingVaultHandoffSummary {
+    pub fn from_handoff(handoff: &HuePairingVaultHandoff) -> Self {
+        Self {
+            metadata_count: handoff.metadata.len(),
+            stored_at_ms: handoff.stored_at_ms,
+            has_vault_reference: !handoff.vault_ref.as_str().trim().is_empty(),
+            uses_hue_application_key_header: handoff.application_key_header
+                == HUE_APPLICATION_KEY_HEADER,
+            uses_event_stream_path: handoff.event_stream_path == CLIP_V2_EVENT_STREAM_PATH,
+            has_credential_stored_phase: metadata_contains(
+                &handoff.metadata,
+                "hue.pairing.phase",
+                "credential_stored",
+            ),
+            has_application_key_credential_kind: metadata_contains(
+                &handoff.metadata,
+                "hue.pairing.credential_kind",
+                "application_key",
+            ),
+            reports_client_key_presence: metadata_has_key(
+                &handoff.metadata,
+                "hue.pairing.client_key_present",
+            ),
+        }
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.has_vault_reference
+            && self.uses_hue_application_key_header
+            && self.uses_event_stream_path
+            && self.has_credential_stored_phase
+            && self.has_application_key_credential_kind
+            && self.reports_client_key_presence
+    }
+
+    pub fn has_metadata(self) -> bool {
+        self.metadata_count > 0
+    }
+
+    pub fn was_stored(self) -> bool {
+        self.stored_at_ms > 0
+    }
+}
+
 pub fn hue_integration_descriptor() -> IntegrationDescriptor {
     IntegrationDescriptor {
         integration_id: IntegrationId::trusted(HUE_INTEGRATION_ID),
@@ -1330,6 +1392,16 @@ fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability
 
 fn descriptor_declares_role(roles: &[String], role: &str) -> bool {
     roles.iter().any(|candidate| candidate == role)
+}
+
+fn metadata_contains(metadata: &[Metadata], key: &str, value: &str) -> bool {
+    metadata
+        .iter()
+        .any(|metadata| metadata.key == key && metadata.value == value)
+}
+
+fn metadata_has_key(metadata: &[Metadata], key: &str) -> bool {
+    metadata.iter().any(|metadata| metadata.key == key)
 }
 
 pub fn hue_registration_request(
@@ -3517,6 +3589,44 @@ mod tests {
             !metadata.value.contains("raw-hue-application-key")
                 && !metadata.value.contains("client-key-1")
         }));
+
+        let summary = handoff.summary();
+        assert_eq!(summary.metadata_count, 6);
+        assert_eq!(summary.stored_at_ms, 1_300);
+        assert!(summary.has_vault_reference);
+        assert!(summary.uses_hue_application_key_header);
+        assert!(summary.uses_event_stream_path);
+        assert!(summary.has_credential_stored_phase);
+        assert!(summary.has_application_key_credential_kind);
+        assert!(summary.reports_client_key_presence);
+        assert!(summary.has_metadata());
+        assert!(summary.was_stored());
+        assert!(summary.is_complete());
+    }
+
+    #[test]
+    fn hue_pairing_vault_handoff_summary_flags_incomplete_handoffs() {
+        let handoff = HuePairingVaultHandoff {
+            bridge_id: BridgeId::trusted("hue.bridge.001788fffeabcdef"),
+            vault_ref: VaultRef::trusted(""),
+            stored_at_ms: 0,
+            application_key_header: "wrong-header".to_string(),
+            event_stream_path: "/wrong/path".to_string(),
+            metadata: vec![Metadata::new("hue.pairing.phase", "credential_stored")],
+        };
+
+        let summary = HuePairingVaultHandoffSummary::from_handoff(&handoff);
+
+        assert_eq!(summary.metadata_count, 1);
+        assert!(!summary.has_vault_reference);
+        assert!(!summary.uses_hue_application_key_header);
+        assert!(!summary.uses_event_stream_path);
+        assert!(summary.has_credential_stored_phase);
+        assert!(!summary.has_application_key_credential_kind);
+        assert!(!summary.reports_client_key_presence);
+        assert!(summary.has_metadata());
+        assert!(!summary.was_stored());
+        assert!(!summary.is_complete());
     }
 
     #[test]
