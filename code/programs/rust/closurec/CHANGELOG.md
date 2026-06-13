@@ -2,6 +2,36 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.118.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-111** — a keyword that grammatically takes a STRING
+  LITERAL as its immediately-following operand now gets the separating
+  space upstream emits:
+
+      switch(x){case"a":…}  ->  switch(x){case "a":…}   (case clause)
+      x={get"a"(){}}        ->  x={get "a"(){}}          (string getter key)
+      x={set"a"(v){}}       ->  x={set "a"(v){}}         (string setter key)
+      x=new"s"              ->  x=new "s"                (new on a string)
+
+  The fix adds a `keyword_string_needs_space` helper to the emit-time
+  separator OR-chain in `whitespace_only.rs`: when the current token is a
+  string literal and the previous token is a word-like keyword in the set
+  `{case, get, set, new}`, a single space is inserted. The keyword set is
+  EXACT — `typeof"s"`, `void"s"`, `throw"e"`, `a in"s"`, and
+  `a instanceof"s"` are already byte-identical with NO space and are
+  deliberately excluded (verified against the JAR). SAFE: in valid JS a
+  bare `KEYWORD"string"` adjacency only occurs in these grammatical
+  positions — two adjacent primary expressions are a syntax error, and
+  these words as property keys/values are always separated from a string
+  by `:`/`(`/etc. — so there is no alternative reading to corrupt. Nine
+  `gap111_*` unit assertions cover the four wrap cases plus the
+  excluded-keyword and keyword-as-key/identifier non-regressions. The
+  three diff fixtures (`minify_case_string_space` /
+  `minify_accessor_string_key` / `minify_new_string_callee`, added in
+  CLOC14.53) are now ENFORCED. Verified byte-identical to upstream
+  Closure v20240317.
+
 ## [0.117.0] - 2026-06-12
 
 ### Fixed
