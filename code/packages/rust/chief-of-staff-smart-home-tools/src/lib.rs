@@ -406,6 +406,10 @@ pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_GOVERNANCE_TOOL_ID: &str =
     "smart_home.list_integration_activation_governance";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_GOVERNANCE_SUMMARY_TOOL_ID: &str =
     "smart_home.get_integration_activation_governance_summary";
+pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMPLIANCE_TOOL_ID: &str =
+    "smart_home.list_integration_activation_compliance";
+pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID: &str =
+    "smart_home.get_integration_activation_compliance_summary";
 pub const SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID: &str =
     "smart_home.list_integration_activation_risk";
 pub const SMART_HOME_GET_INTEGRATION_ACTIVATION_RISK_SUMMARY_TOOL_ID: &str =
@@ -938,6 +942,14 @@ impl SmartHomeToolBridge {
                 SMART_HOME_GET_INTEGRATION_ACTIVATION_GOVERNANCE_SUMMARY_TOOL_ID => {
                     let query = integration_activation_governance_query(&arguments)?;
                     Ok(get_integration_activation_governance_summary_output_handler_output(query))
+                }
+                SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMPLIANCE_TOOL_ID => {
+                    let query = integration_activation_compliance_query(&arguments)?;
+                    Ok(list_integration_activation_compliance_output_handler_output(query))
+                }
+                SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID => {
+                    let query = integration_activation_compliance_query(&arguments)?;
+                    Ok(get_integration_activation_compliance_summary_output_handler_output(query))
                 }
                 SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID => {
                     let query = integration_activation_risk_query(&arguments)?;
@@ -3028,6 +3040,35 @@ pub fn smart_home_tool_definitions() -> Vec<ToolDefinition> {
             "Get smart-home integration activation governance summary",
             "Return compact D23A activation governance counts by decision, focus area, owner lane, blocker, attention, policy tier, and overall release posture.",
             integration_activation_governance_query_schema(),
+            object_schema(
+                vec![SchemaProperty::new("summary", JsonSchema::Any)],
+                vec!["summary"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMPLIANCE_TOOL_ID,
+            "List smart-home integration activation compliance",
+            "List Chief-facing D23A activation compliance records that turn governance decisions into checklist evidence, exceptions, reviewer posture, and activation compliance readiness.",
+            integration_activation_compliance_query_schema(),
+            object_schema(
+                vec![
+                    SchemaProperty::new("activation_compliance", JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    }),
+                    SchemaProperty::new("summary", JsonSchema::Any),
+                    SchemaProperty::new("count", JsonSchema::Integer),
+                    SchemaProperty::new("catalog_count", JsonSchema::Integer),
+                ],
+                vec!["activation_compliance", "summary", "count", "catalog_count"],
+                false,
+            ),
+        ),
+        read_definition(
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID,
+            "Get smart-home integration activation compliance summary",
+            "Return compact D23A activation compliance counts by verdict, evidence kind, owner lane, exception, reviewer, blocker, and compliance readiness.",
+            integration_activation_compliance_query_schema(),
             object_schema(
                 vec![SchemaProperty::new("summary", JsonSchema::Any)],
                 vec!["summary"],
@@ -6528,6 +6569,349 @@ struct IntegrationActivationGovernanceQuery {
     governance_limit: Option<usize>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum IntegrationActivationComplianceVerdict {
+    Compliant,
+    Conditional,
+    ExceptionRequired,
+    NonCompliant,
+}
+
+impl IntegrationActivationComplianceVerdict {
+    fn from_governance_decision(decision: IntegrationActivationGovernanceDecision) -> Self {
+        match decision {
+            IntegrationActivationGovernanceDecision::Approved => Self::Compliant,
+            IntegrationActivationGovernanceDecision::Conditional => Self::Conditional,
+            IntegrationActivationGovernanceDecision::Deferred => Self::ExceptionRequired,
+            IntegrationActivationGovernanceDecision::Blocked => Self::NonCompliant,
+        }
+    }
+
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Compliant => "compliant",
+            Self::Conditional => "conditional",
+            Self::ExceptionRequired => "exception_required",
+            Self::NonCompliant => "non_compliant",
+        }
+    }
+
+    fn is_ready(self) -> bool {
+        matches!(self, Self::Compliant | Self::Conditional)
+    }
+
+    fn is_blocked(self) -> bool {
+        matches!(self, Self::NonCompliant)
+    }
+
+    fn requires_attention(self) -> bool {
+        matches!(self, Self::ExceptionRequired | Self::NonCompliant)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationComplianceRecord {
+    sequence: usize,
+    compliance_id: String,
+    source_governance_id: String,
+    source_assurance_id: String,
+    source_guardrail_id: String,
+    verdict: IntegrationActivationComplianceVerdict,
+    governance_decision: IntegrationActivationGovernanceDecision,
+    assurance_status: IntegrationActivationAssuranceStatus,
+    focus: IntegrationActivationGuardrailKind,
+    owner_lane: IntegrationActivationResponseOwnerLane,
+    control_objective: String,
+    evidence_kind: String,
+    evidence_label: String,
+    recommended_view: IntegrationActivationPlaybookView,
+    title: String,
+    summary: String,
+    priority: u8,
+    integration_ids: Vec<IntegrationId>,
+    required_tier: PrivilegeTier,
+    policy_surface: Option<IntegrationPolicySurface>,
+    guardrail_verdict: IntegrationActivationGuardrailVerdict,
+    incident_severity: Option<IntegrationActivationIncidentSeverity>,
+    incident_action: Option<IntegrationActivationIncidentAction>,
+    risk_kind: Option<IntegrationActivationRiskKind>,
+    dependency_integration_id: Option<IntegrationId>,
+    dependent_integration_id: Option<IntegrationId>,
+    readiness_gap_kind: Option<String>,
+    reviewer_required: bool,
+    exception_required: bool,
+    compliance_ready: bool,
+    blocks_activation: bool,
+    requires_attention: bool,
+}
+
+impl IntegrationActivationComplianceRecord {
+    fn from_governance_record(
+        sequence: usize,
+        record: &IntegrationActivationGovernanceRecord,
+    ) -> Self {
+        let verdict =
+            IntegrationActivationComplianceVerdict::from_governance_decision(record.decision);
+        let control_objective = activation_compliance_control_objective(record.focus).to_string();
+        let evidence_kind = activation_compliance_evidence_kind(record.focus).to_string();
+        let reviewer_required = matches!(
+            record.decision,
+            IntegrationActivationGovernanceDecision::Deferred
+                | IntegrationActivationGovernanceDecision::Blocked
+        ) || record.required_tier == PrivilegeTier::HumanApproval
+            || matches!(
+                record.owner_lane,
+                IntegrationActivationResponseOwnerLane::Reviewer
+                    | IntegrationActivationResponseOwnerLane::Audit
+            );
+        let exception_required = matches!(
+            verdict,
+            IntegrationActivationComplianceVerdict::ExceptionRequired
+                | IntegrationActivationComplianceVerdict::NonCompliant
+        );
+        let blocks_activation = record.blocks_activation || verdict.is_blocked();
+        let requires_attention =
+            record.requires_attention || verdict.requires_attention() || exception_required;
+
+        Self {
+            sequence,
+            compliance_id: format!("activation-compliance-{sequence}"),
+            source_governance_id: record.governance_id.clone(),
+            source_assurance_id: record.source_assurance_id.clone(),
+            source_guardrail_id: record.source_guardrail_id.clone(),
+            verdict,
+            governance_decision: record.decision,
+            assurance_status: record.assurance_status,
+            focus: record.focus,
+            owner_lane: record.owner_lane,
+            evidence_label: format!("{control_objective}: {}", record.title),
+            control_objective,
+            evidence_kind,
+            recommended_view: record.recommended_view,
+            title: record.title.clone(),
+            summary: record.summary.clone(),
+            priority: record.priority,
+            integration_ids: record.integration_ids.clone(),
+            required_tier: record.required_tier,
+            policy_surface: record.policy_surface,
+            guardrail_verdict: record.guardrail_verdict,
+            incident_severity: record.incident_severity,
+            incident_action: record.incident_action,
+            risk_kind: record.risk_kind,
+            dependency_integration_id: record.dependency_integration_id.clone(),
+            dependent_integration_id: record.dependent_integration_id.clone(),
+            readiness_gap_kind: record.readiness_gap_kind.clone(),
+            reviewer_required,
+            exception_required,
+            compliance_ready: verdict.is_ready() && !blocks_activation,
+            blocks_activation,
+            requires_attention,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+struct IntegrationActivationComplianceSummary {
+    total_records: usize,
+    unique_integrations: usize,
+    records_requiring_attention: usize,
+    blocked_records: usize,
+    compliant_records: usize,
+    conditional_records: usize,
+    exception_records: usize,
+    non_compliant_records: usize,
+    incident_evidence_records: usize,
+    policy_risk_evidence_records: usize,
+    dependency_evidence_records: usize,
+    readiness_gap_evidence_records: usize,
+    platform_owner_records: usize,
+    integration_owner_records: usize,
+    security_owner_records: usize,
+    reviewer_owner_records: usize,
+    verification_owner_records: usize,
+    audit_owner_records: usize,
+    reviewer_required_records: usize,
+    exception_required_records: usize,
+    human_approval_records: usize,
+    compliance_ready_records: usize,
+    first_attention_priority: Option<u8>,
+    first_blocked_priority: Option<u8>,
+    first_exception_priority: Option<u8>,
+    highest_policy_tier: PrivilegeTier,
+    overall_status: IntegrationActivationHealthStatus,
+}
+
+impl IntegrationActivationComplianceSummary {
+    fn from_records<'a>(
+        records: impl IntoIterator<Item = &'a IntegrationActivationComplianceRecord>,
+    ) -> Self {
+        let mut summary = Self {
+            total_records: 0,
+            unique_integrations: 0,
+            records_requiring_attention: 0,
+            blocked_records: 0,
+            compliant_records: 0,
+            conditional_records: 0,
+            exception_records: 0,
+            non_compliant_records: 0,
+            incident_evidence_records: 0,
+            policy_risk_evidence_records: 0,
+            dependency_evidence_records: 0,
+            readiness_gap_evidence_records: 0,
+            platform_owner_records: 0,
+            integration_owner_records: 0,
+            security_owner_records: 0,
+            reviewer_owner_records: 0,
+            verification_owner_records: 0,
+            audit_owner_records: 0,
+            reviewer_required_records: 0,
+            exception_required_records: 0,
+            human_approval_records: 0,
+            compliance_ready_records: 0,
+            first_attention_priority: None,
+            first_blocked_priority: None,
+            first_exception_priority: None,
+            highest_policy_tier: PrivilegeTier::ReadOnly,
+            overall_status: IntegrationActivationHealthStatus::Empty,
+        };
+        let mut integration_ids = BTreeSet::new();
+
+        for record in records {
+            summary.total_records += 1;
+            for integration_id in &record.integration_ids {
+                integration_ids.insert(integration_id.clone());
+            }
+            if record.requires_attention {
+                summary.records_requiring_attention += 1;
+                summary.first_attention_priority =
+                    min_optional_priority(summary.first_attention_priority, record.priority);
+            }
+            if record.blocks_activation {
+                summary.blocked_records += 1;
+                summary.first_blocked_priority =
+                    min_optional_priority(summary.first_blocked_priority, record.priority);
+            }
+            if record.reviewer_required {
+                summary.reviewer_required_records += 1;
+            }
+            if record.exception_required {
+                summary.exception_required_records += 1;
+                summary.first_exception_priority =
+                    min_optional_priority(summary.first_exception_priority, record.priority);
+            }
+            if record.required_tier == PrivilegeTier::HumanApproval {
+                summary.human_approval_records += 1;
+            }
+            if record.compliance_ready {
+                summary.compliance_ready_records += 1;
+            }
+            match record.verdict {
+                IntegrationActivationComplianceVerdict::Compliant => summary.compliant_records += 1,
+                IntegrationActivationComplianceVerdict::Conditional => {
+                    summary.conditional_records += 1
+                }
+                IntegrationActivationComplianceVerdict::ExceptionRequired => {
+                    summary.exception_records += 1
+                }
+                IntegrationActivationComplianceVerdict::NonCompliant => {
+                    summary.non_compliant_records += 1
+                }
+            }
+            match record.focus {
+                IntegrationActivationGuardrailKind::Incident => {
+                    summary.incident_evidence_records += 1
+                }
+                IntegrationActivationGuardrailKind::PolicyRisk => {
+                    summary.policy_risk_evidence_records += 1
+                }
+                IntegrationActivationGuardrailKind::Dependency => {
+                    summary.dependency_evidence_records += 1
+                }
+                IntegrationActivationGuardrailKind::ReadinessGap => {
+                    summary.readiness_gap_evidence_records += 1
+                }
+            }
+            match record.owner_lane {
+                IntegrationActivationResponseOwnerLane::Platform => {
+                    summary.platform_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Integration => {
+                    summary.integration_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Security => {
+                    summary.security_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Reviewer => {
+                    summary.reviewer_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Verification => {
+                    summary.verification_owner_records += 1
+                }
+                IntegrationActivationResponseOwnerLane::Audit => summary.audit_owner_records += 1,
+            }
+            summary.highest_policy_tier = summary.highest_policy_tier.max(record.required_tier);
+        }
+
+        summary.unique_integrations = integration_ids.len();
+        summary.overall_status = if summary.total_records == 0 {
+            IntegrationActivationHealthStatus::Empty
+        } else if summary.non_compliant_records > 0 {
+            IntegrationActivationHealthStatus::Blocked
+        } else if summary.exception_required_records > 0 || summary.reviewer_required_records > 0 {
+            IntegrationActivationHealthStatus::NeedsReview
+        } else {
+            IntegrationActivationHealthStatus::Ready
+        };
+        summary
+    }
+
+    fn has_blockers(&self) -> bool {
+        self.blocked_records > 0
+    }
+
+    fn requires_attention(&self) -> bool {
+        self.records_requiring_attention > 0 || self.exception_required_records > 0
+    }
+
+    fn is_empty(&self) -> bool {
+        self.total_records == 0
+    }
+}
+
+#[derive(Debug, Clone)]
+struct IntegrationActivationComplianceQuery {
+    governance: IntegrationActivationGovernanceQuery,
+    verdict: Option<IntegrationActivationComplianceVerdict>,
+    focus: Option<IntegrationActivationGuardrailKind>,
+    owner_lane: Option<IntegrationActivationResponseOwnerLane>,
+    evidence_kind: Option<String>,
+    requires_attention: Option<bool>,
+    blocked: Option<bool>,
+    reviewer_required: Option<bool>,
+    exception_required: Option<bool>,
+    compliance_limit: Option<usize>,
+}
+
+fn activation_compliance_control_objective(
+    focus: IntegrationActivationGuardrailKind,
+) -> &'static str {
+    match focus {
+        IntegrationActivationGuardrailKind::Incident => "incident closure evidence",
+        IntegrationActivationGuardrailKind::PolicyRisk => "policy privilege attestation",
+        IntegrationActivationGuardrailKind::Dependency => "dependency prerequisite attestation",
+        IntegrationActivationGuardrailKind::ReadinessGap => "platform readiness attestation",
+    }
+}
+
+fn activation_compliance_evidence_kind(focus: IntegrationActivationGuardrailKind) -> &'static str {
+    match focus {
+        IntegrationActivationGuardrailKind::Incident => "incident_resolution",
+        IntegrationActivationGuardrailKind::PolicyRisk => "policy_surface_attestation",
+        IntegrationActivationGuardrailKind::Dependency => "dependency_attestation",
+        IntegrationActivationGuardrailKind::ReadinessGap => "readiness_gap_attestation",
+    }
+}
+
 fn min_optional_priority(current: Option<u8>, priority: u8) -> Option<u8> {
     Some(current.map_or(priority, |existing| existing.min(priority)))
 }
@@ -7634,6 +8018,40 @@ fn integration_activation_governance_query(
         blocked: optional_bool(arguments, "governance_blocked")?
             .or(optional_bool(arguments, "blocked")?),
         governance_limit: optional_u64(arguments, "governance_limit")?
+            .or(optional_u64(arguments, "record_limit")?)
+            .map(|value| value as usize),
+    })
+}
+
+fn integration_activation_compliance_query(
+    arguments: &JsonValue,
+) -> Result<IntegrationActivationComplianceQuery, ToolCallError> {
+    let verdict = optional_string(arguments, "compliance_verdict")?
+        .or(optional_string(arguments, "verdict")?)
+        .map(|label| parse_activation_compliance_verdict(&label))
+        .transpose()?;
+    let focus = optional_string(arguments, "compliance_focus")?
+        .or(optional_string(arguments, "focus")?)
+        .map(|label| parse_activation_guardrail_kind(&label))
+        .transpose()?;
+    let owner_lane = optional_string(arguments, "compliance_owner_lane")?
+        .or(optional_string(arguments, "owner_lane")?)
+        .map(|label| parse_activation_response_owner_lane(&label))
+        .transpose()?;
+
+    Ok(IntegrationActivationComplianceQuery {
+        governance: integration_activation_governance_query(arguments)?,
+        verdict,
+        focus,
+        owner_lane,
+        evidence_kind: optional_string(arguments, "evidence_kind")?,
+        requires_attention: optional_bool(arguments, "compliance_requires_attention")?
+            .or(optional_bool(arguments, "requires_attention")?),
+        blocked: optional_bool(arguments, "compliance_blocked")?
+            .or(optional_bool(arguments, "blocked")?),
+        reviewer_required: optional_bool(arguments, "reviewer_required")?,
+        exception_required: optional_bool(arguments, "exception_required")?,
+        compliance_limit: optional_u64(arguments, "compliance_limit")?
             .or(optional_u64(arguments, "record_limit")?)
             .map(|value| value as usize),
     })
@@ -9165,6 +9583,50 @@ fn integration_activation_governance_for_query(
         records.retain(|record| record.blocks_activation == blocked);
     }
     if let Some(limit) = query.governance_limit {
+        records.truncate(limit);
+    }
+
+    (records, catalog_count)
+}
+
+fn integration_activation_compliance_for_query(
+    query: &IntegrationActivationComplianceQuery,
+) -> (Vec<IntegrationActivationComplianceRecord>, usize) {
+    let (governance_records, catalog_count) =
+        integration_activation_governance_for_query(&query.governance);
+    let mut records: Vec<_> = governance_records
+        .iter()
+        .enumerate()
+        .map(|(index, record)| {
+            IntegrationActivationComplianceRecord::from_governance_record(index + 1, record)
+        })
+        .collect();
+
+    if let Some(verdict) = query.verdict {
+        records.retain(|record| record.verdict == verdict);
+    }
+    if let Some(focus) = query.focus {
+        records.retain(|record| record.focus == focus);
+    }
+    if let Some(owner_lane) = query.owner_lane {
+        records.retain(|record| record.owner_lane == owner_lane);
+    }
+    if let Some(evidence_kind) = &query.evidence_kind {
+        records.retain(|record| record.evidence_kind == *evidence_kind);
+    }
+    if let Some(requires_attention) = query.requires_attention {
+        records.retain(|record| record.requires_attention == requires_attention);
+    }
+    if let Some(blocked) = query.blocked {
+        records.retain(|record| record.blocks_activation == blocked);
+    }
+    if let Some(reviewer_required) = query.reviewer_required {
+        records.retain(|record| record.reviewer_required == reviewer_required);
+    }
+    if let Some(exception_required) = query.exception_required {
+        records.retain(|record| record.exception_required == exception_required);
+    }
+    if let Some(limit) = query.compliance_limit {
         records.truncate(limit);
     }
 
@@ -12763,6 +13225,84 @@ fn get_integration_activation_governance_summary_output_handler_output(
                 "records_requiring_attention",
                 integer(summary.records_requiring_attention as i64),
             ),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn list_integration_activation_compliance_output_handler_output(
+    query: IntegrationActivationComplianceQuery,
+) -> ToolHandlerOutput {
+    let (records, catalog_count) = integration_activation_compliance_for_query(&query);
+    let summary = IntegrationActivationComplianceSummary::from_records(records.iter());
+    let count = records.len();
+
+    ToolHandlerOutput::new(object([
+        (
+            "activation_compliance",
+            JsonValue::Array(
+                records
+                    .iter()
+                    .map(activation_compliance_record_json)
+                    .collect(),
+            ),
+        ),
+        (
+            "summary",
+            integration_activation_compliance_summary_json(&summary),
+        ),
+        ("count", integer(count as i64)),
+        ("catalog_count", integer(catalog_count as i64)),
+    ]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("list_integration_activation_compliance"),
+            ),
+            ("records", integer(count as i64)),
+            (
+                "exception_required_records",
+                integer(summary.exception_required_records as i64),
+            ),
+            (
+                "reviewer_required_records",
+                integer(summary.reviewer_required_records as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
+            ("overall_status", string(summary.overall_status.as_str())),
+        ]),
+    )
+}
+
+fn get_integration_activation_compliance_summary_output_handler_output(
+    query: IntegrationActivationComplianceQuery,
+) -> ToolHandlerOutput {
+    let (records, _) = integration_activation_compliance_for_query(&query);
+    let summary = IntegrationActivationComplianceSummary::from_records(records.iter());
+
+    ToolHandlerOutput::new(object([(
+        "summary",
+        integration_activation_compliance_summary_json(&summary),
+    )]))
+    .with_event(
+        ToolEventKind::Progress,
+        object([
+            (
+                "operation",
+                string("get_integration_activation_compliance_summary"),
+            ),
+            ("total_records", integer(summary.total_records as i64)),
+            (
+                "exception_required_records",
+                integer(summary.exception_required_records as i64),
+            ),
+            (
+                "reviewer_required_records",
+                integer(summary.reviewer_required_records as i64),
+            ),
+            ("blocked_records", integer(summary.blocked_records as i64)),
             ("overall_status", string(summary.overall_status.as_str())),
         ]),
     )
@@ -24851,6 +25391,243 @@ fn integration_activation_governance_summary_json(
     ])
 }
 
+fn activation_compliance_record_json(record: &IntegrationActivationComplianceRecord) -> JsonValue {
+    object([
+        ("sequence", integer(record.sequence as i64)),
+        ("compliance_id", string(&record.compliance_id)),
+        ("source_governance_id", string(&record.source_governance_id)),
+        ("source_assurance_id", string(&record.source_assurance_id)),
+        ("source_guardrail_id", string(&record.source_guardrail_id)),
+        ("verdict", string(record.verdict.as_str())),
+        (
+            "governance_decision",
+            string(record.governance_decision.as_str()),
+        ),
+        ("assurance_status", string(record.assurance_status.as_str())),
+        ("focus", string(record.focus.as_str())),
+        ("owner_lane", string(record.owner_lane.as_str())),
+        ("control_objective", string(&record.control_objective)),
+        ("evidence_kind", string(&record.evidence_kind)),
+        ("evidence_label", string(&record.evidence_label)),
+        ("recommended_view", string(record.recommended_view.as_str())),
+        ("title", string(&record.title)),
+        ("summary", string(&record.summary)),
+        ("priority", integer(record.priority as i64)),
+        (
+            "integration_ids",
+            JsonValue::Array(
+                record
+                    .integration_ids
+                    .iter()
+                    .map(|integration_id| string(integration_id.as_str()))
+                    .collect(),
+            ),
+        ),
+        (
+            "integration_count",
+            integer(record.integration_ids.len() as i64),
+        ),
+        (
+            "required_tier",
+            string(privilege_tier_label(record.required_tier)),
+        ),
+        (
+            "policy_surface",
+            record
+                .policy_surface
+                .map(|surface| string(surface.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "guardrail_verdict",
+            string(record.guardrail_verdict.as_str()),
+        ),
+        (
+            "incident_severity",
+            record
+                .incident_severity
+                .map(|severity| string(severity.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "incident_action",
+            record
+                .incident_action
+                .map(|action| string(action.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "risk_kind",
+            record
+                .risk_kind
+                .map(|kind| string(kind.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependency_integration_id",
+            record
+                .dependency_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "dependent_integration_id",
+            record
+                .dependent_integration_id
+                .as_ref()
+                .map(|integration_id| string(integration_id.as_str()))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "readiness_gap_kind",
+            record
+                .readiness_gap_kind
+                .as_deref()
+                .map(string)
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "reviewer_required",
+            JsonValue::Bool(record.reviewer_required),
+        ),
+        (
+            "exception_required",
+            JsonValue::Bool(record.exception_required),
+        ),
+        ("compliance_ready", JsonValue::Bool(record.compliance_ready)),
+        (
+            "blocks_activation",
+            JsonValue::Bool(record.blocks_activation),
+        ),
+        (
+            "requires_attention",
+            JsonValue::Bool(record.requires_attention),
+        ),
+    ])
+}
+
+fn integration_activation_compliance_summary_json(
+    summary: &IntegrationActivationComplianceSummary,
+) -> JsonValue {
+    object([
+        ("total_records", integer(summary.total_records as i64)),
+        (
+            "unique_integrations",
+            integer(summary.unique_integrations as i64),
+        ),
+        (
+            "records_requiring_attention",
+            integer(summary.records_requiring_attention as i64),
+        ),
+        ("blocked_records", integer(summary.blocked_records as i64)),
+        (
+            "compliant_records",
+            integer(summary.compliant_records as i64),
+        ),
+        (
+            "conditional_records",
+            integer(summary.conditional_records as i64),
+        ),
+        (
+            "exception_records",
+            integer(summary.exception_records as i64),
+        ),
+        (
+            "non_compliant_records",
+            integer(summary.non_compliant_records as i64),
+        ),
+        (
+            "incident_evidence_records",
+            integer(summary.incident_evidence_records as i64),
+        ),
+        (
+            "policy_risk_evidence_records",
+            integer(summary.policy_risk_evidence_records as i64),
+        ),
+        (
+            "dependency_evidence_records",
+            integer(summary.dependency_evidence_records as i64),
+        ),
+        (
+            "readiness_gap_evidence_records",
+            integer(summary.readiness_gap_evidence_records as i64),
+        ),
+        (
+            "platform_owner_records",
+            integer(summary.platform_owner_records as i64),
+        ),
+        (
+            "integration_owner_records",
+            integer(summary.integration_owner_records as i64),
+        ),
+        (
+            "security_owner_records",
+            integer(summary.security_owner_records as i64),
+        ),
+        (
+            "reviewer_owner_records",
+            integer(summary.reviewer_owner_records as i64),
+        ),
+        (
+            "verification_owner_records",
+            integer(summary.verification_owner_records as i64),
+        ),
+        (
+            "audit_owner_records",
+            integer(summary.audit_owner_records as i64),
+        ),
+        (
+            "reviewer_required_records",
+            integer(summary.reviewer_required_records as i64),
+        ),
+        (
+            "exception_required_records",
+            integer(summary.exception_required_records as i64),
+        ),
+        (
+            "human_approval_records",
+            integer(summary.human_approval_records as i64),
+        ),
+        (
+            "compliance_ready_records",
+            integer(summary.compliance_ready_records as i64),
+        ),
+        (
+            "first_attention_priority",
+            summary
+                .first_attention_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_blocked_priority",
+            summary
+                .first_blocked_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "first_exception_priority",
+            summary
+                .first_exception_priority
+                .map(|priority| integer(priority as i64))
+                .unwrap_or(JsonValue::Null),
+        ),
+        (
+            "highest_policy_tier",
+            string(privilege_tier_label(summary.highest_policy_tier)),
+        ),
+        ("overall_status", string(summary.overall_status.as_str())),
+        ("is_empty", JsonValue::Bool(summary.is_empty())),
+        ("has_blockers", JsonValue::Bool(summary.has_blockers())),
+        (
+            "requires_attention",
+            JsonValue::Bool(summary.requires_attention()),
+        ),
+    ])
+}
+
 fn activation_risk_json(risk: &IntegrationActivationRiskItem) -> JsonValue {
     object([
         ("risk_kind", string(risk.kind.as_str())),
@@ -28145,6 +28922,27 @@ fn parse_activation_governance_decision(
     }
 }
 
+fn parse_activation_compliance_verdict(
+    label: &str,
+) -> Result<IntegrationActivationComplianceVerdict, ToolCallError> {
+    match label {
+        "compliant" | "approved" | "approve" | "clear" | "pass" | "passed" | "ready" | "ok" => {
+            Ok(IntegrationActivationComplianceVerdict::Compliant)
+        }
+        "conditional" | "condition" | "monitor" | "watch" | "observe" => {
+            Ok(IntegrationActivationComplianceVerdict::Conditional)
+        }
+        "exception_required" | "exception" | "deferred" | "defer" | "needs_review" | "review"
+        | "attention" => Ok(IntegrationActivationComplianceVerdict::ExceptionRequired),
+        "non_compliant" | "noncompliant" | "blocked" | "blocker" | "hold" => {
+            Ok(IntegrationActivationComplianceVerdict::NonCompliant)
+        }
+        _ => Err(validation_error(format!(
+            "unknown activation compliance verdict `{label}`"
+        ))),
+    }
+}
+
 fn parse_activation_risk_kind(label: &str) -> Result<IntegrationActivationRiskKind, ToolCallError> {
     match label {
         "policy_tier" | "tier" | "required_tier" => Ok(IntegrationActivationRiskKind::PolicyTier),
@@ -30200,6 +30998,55 @@ fn integration_activation_governance_query_schema() -> JsonSchema {
     schema
 }
 
+fn integration_activation_compliance_query_schema() -> JsonSchema {
+    let mut schema = integration_activation_governance_query_schema();
+    if let JsonSchema::Object {
+        properties,
+        required: _,
+        allow_unknown_fields: _,
+    } = &mut schema
+    {
+        let mut push_if_absent = |property: SchemaProperty| {
+            if !properties
+                .iter()
+                .any(|existing| existing.name == property.name)
+            {
+                properties.push(property);
+            }
+        };
+        push_if_absent(SchemaProperty::new(
+            "compliance_verdict",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("verdict", JsonSchema::String));
+        push_if_absent(SchemaProperty::new("compliance_focus", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "compliance_owner_lane",
+            JsonSchema::String,
+        ));
+        push_if_absent(SchemaProperty::new("evidence_kind", JsonSchema::String));
+        push_if_absent(SchemaProperty::new(
+            "compliance_requires_attention",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "compliance_blocked",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "reviewer_required",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new(
+            "exception_required",
+            JsonSchema::Boolean,
+        ));
+        push_if_absent(SchemaProperty::new("compliance_limit", JsonSchema::Integer));
+        push_if_absent(SchemaProperty::new("record_limit", JsonSchema::Integer));
+    }
+    schema
+}
+
 fn integration_activation_risk_query_schema() -> JsonSchema {
     let mut schema = integration_activation_candidate_query_schema(true);
     if let JsonSchema::Object {
@@ -30344,7 +31191,7 @@ mod tests {
         let definitions = smart_home_tool_definitions();
         let export = ToolCatalogExport::from_definitions(definitions.iter());
 
-        assert_eq!(definitions.len(), 145);
+        assert_eq!(definitions.len(), 147);
         assert!(
             export.ok(),
             "tool export validation failed: {:?}",
@@ -30464,6 +31311,12 @@ mod tests {
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_GOVERNANCE_SUMMARY_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMPLIANCE_TOOL_ID));
+        assert!(export
+            .tool_ids()
+            .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID));
         assert!(export
             .tool_ids()
             .contains(&SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID));
@@ -30759,7 +31612,7 @@ mod tests {
             .contains(&SMART_HOME_GET_INTEGRATION_ACTIVATION_GOVERNANCE_SUMMARY_TOOL_ID));
         assert_eq!(
             export.summary.required_capability_count("smart_home:read"),
-            137
+            139
         );
         assert_eq!(
             export
@@ -31301,11 +32154,11 @@ mod tests {
         let tool_catalog_summary = field(tool_catalog_summary_output, "summary").unwrap();
         assert_eq!(
             field(tool_catalog_summary, "total_tools"),
-            Some(&integer(145))
+            Some(&integer(147))
         );
         assert_eq!(
             field(tool_catalog_summary, "read_tools"),
-            Some(&integer(137))
+            Some(&integer(139))
         );
         assert_eq!(
             field(tool_catalog_summary, "risky_tool_count"),
@@ -37345,6 +38198,144 @@ mod tests {
             Some(&JsonValue::Bool(true))
         );
 
+        let list_activation_compliance_request = request(
+            "call-list-integration-activation-compliance",
+            SMART_HOME_LIST_INTEGRATION_ACTIVATION_COMPLIANCE_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("exception_required", JsonValue::Bool(true)),
+                ("compliance_limit", integer(3)),
+            ]),
+            5_071,
+        );
+        let list_activation_compliance_trace =
+            tool_runtime.invoke_with_events(&list_activation_compliance_request);
+        assert!(list_activation_compliance_trace.result.ok);
+        assert_eq!(
+            list_activation_compliance_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let list_activation_compliance_output = list_activation_compliance_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_compliance_count =
+            integer_value(field(list_activation_compliance_output, "count").unwrap()).unwrap();
+        assert!((1..=3).contains(&activation_compliance_count));
+        let activation_compliance_summary =
+            field(list_activation_compliance_output, "summary").unwrap();
+        assert_eq!(
+            field(activation_compliance_summary, "total_records"),
+            Some(&integer(activation_compliance_count))
+        );
+        assert!(
+            integer_value(
+                field(activation_compliance_summary, "exception_required_records").unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert!(
+            integer_value(
+                field(activation_compliance_summary, "reviewer_required_records").unwrap()
+            )
+            .unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_compliance_summary, "requires_attention"),
+            Some(&JsonValue::Bool(true))
+        );
+        let activation_compliance = array_item(
+            field(list_activation_compliance_output, "activation_compliance").unwrap(),
+            0,
+        )
+        .unwrap();
+        assert_eq!(
+            field(activation_compliance, "exception_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert_eq!(
+            field(activation_compliance, "reviewer_required"),
+            Some(&JsonValue::Bool(true))
+        );
+        assert!(field(activation_compliance, "source_governance_id").is_some());
+        assert!(field(activation_compliance, "control_objective").is_some());
+        assert!(field(activation_compliance, "evidence_kind").is_some());
+
+        let activation_compliance_summary_request = request(
+            "call-integration-activation-compliance-summary",
+            SMART_HOME_GET_INTEGRATION_ACTIVATION_COMPLIANCE_SUMMARY_TOOL_ID,
+            object([
+                ("priority_at_or_before", integer(2)),
+                (
+                    "available_primitives",
+                    JsonValue::Array(vec![
+                        string("normalized_model"),
+                        string("discovery_index"),
+                        string("command_mapping"),
+                        string("capability_policy"),
+                        string("supervision"),
+                    ]),
+                ),
+                (
+                    "allowed_capability_ids",
+                    JsonValue::Array(vec![string("smart_home.read")]),
+                ),
+                (
+                    "enabled_integrations",
+                    JsonValue::Array(vec![string("mqtt")]),
+                ),
+                ("compliance_blocked", JsonValue::Bool(true)),
+            ]),
+            5_072,
+        );
+        let activation_compliance_summary_trace =
+            tool_runtime.invoke_with_events(&activation_compliance_summary_request);
+        assert!(activation_compliance_summary_trace.result.ok);
+        assert_eq!(
+            activation_compliance_summary_trace
+                .summary()
+                .progress_event_count,
+            1
+        );
+        let activation_compliance_summary_output = activation_compliance_summary_trace
+            .result
+            .output
+            .as_ref()
+            .unwrap();
+        let activation_compliance_rollup =
+            field(activation_compliance_summary_output, "summary").unwrap();
+        assert!(
+            integer_value(field(activation_compliance_rollup, "blocked_records").unwrap()).unwrap()
+                >= 1
+        );
+        assert_eq!(
+            field(activation_compliance_rollup, "has_blockers"),
+            Some(&JsonValue::Bool(true))
+        );
+
         let list_activation_risk_request = request(
             "call-list-integration-activation-risk",
             SMART_HOME_LIST_INTEGRATION_ACTIVATION_RISK_TOOL_ID,
@@ -39297,6 +40288,14 @@ mod tests {
             activation_governance_summary_request,
             activation_governance_summary_trace,
         );
+        journal.record_trace(
+            list_activation_compliance_request,
+            list_activation_compliance_trace,
+        );
+        journal.record_trace(
+            activation_compliance_summary_request,
+            activation_compliance_summary_trace,
+        );
         journal.record_trace(list_activation_risk_request, list_activation_risk_trace);
         journal.record_trace(
             activation_risk_summary_request,
@@ -39370,9 +40369,9 @@ mod tests {
         journal.record_trace(supervision_tick_request, supervision_tick_trace);
 
         let journal_summary = journal.summary();
-        assert_eq!(journal_summary.invocation_count, 145);
-        assert_eq!(journal_summary.completed_count, 145);
-        assert_eq!(journal.audit_records().len(), 145);
+        assert_eq!(journal_summary.invocation_count, 147);
+        assert_eq!(journal_summary.completed_count, 147);
+        assert_eq!(journal.audit_records().len(), 147);
 
         let runtime = runtime.borrow();
         assert_eq!(runtime.optimistic_state_count(), 0);
