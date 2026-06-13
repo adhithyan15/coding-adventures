@@ -512,6 +512,78 @@ impl IntegrationActivationPackageSummary {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessPackageSummary {
+    pub activation_package: IntegrationActivationPackageSummary,
+    pub activation_ready: bool,
+    pub blocked: bool,
+    pub missing_primitive_count: usize,
+    pub missing_capability_count: usize,
+    pub missing_dependency_count: usize,
+    pub missing_prerequisite_count: usize,
+    pub requires_human_review: bool,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+}
+
+impl IntegrationReadinessPackageSummary {
+    pub fn from_entry(
+        entry: &IntegrationCatalogEntry,
+        available_primitives: &[PrimitiveFamily],
+        allowed_capabilities: &[CapabilityId],
+        enabled_integrations: &[IntegrationId],
+    ) -> Self {
+        let plan = activation_plan_for_entry(entry);
+        let report = readiness_report_for_plan(
+            &plan,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        );
+        Self::from_package_and_report(
+            IntegrationActivationPackageSummary::from_plan(entry.summary(), &plan),
+            &report,
+        )
+    }
+
+    pub fn from_package_and_report(
+        activation_package: IntegrationActivationPackageSummary,
+        report: &IntegrationReadinessReport,
+    ) -> Self {
+        let activation_ready = report.activation_ready();
+        Self {
+            activation_package,
+            activation_ready,
+            blocked: !activation_ready,
+            missing_primitive_count: report.missing_primitives.len(),
+            missing_capability_count: report.missing_capabilities.len(),
+            missing_dependency_count: report.missing_dependencies.len(),
+            missing_prerequisite_count: report.missing_prerequisite_count(),
+            requires_human_review: report.requires_human_review,
+            highest_policy_tier: report.highest_policy_tier,
+            local_only: report.local_only,
+            cloud_required: report.cloud_required,
+        }
+    }
+
+    pub fn has_missing_primitives(&self) -> bool {
+        self.missing_primitive_count > 0
+    }
+
+    pub fn has_missing_capabilities(&self) -> bool {
+        self.missing_capability_count > 0
+    }
+
+    pub fn has_missing_dependencies(&self) -> bool {
+        self.missing_dependency_count > 0
+    }
+
+    pub fn has_policy_review(&self) -> bool {
+        self.requires_human_review || self.activation_package.has_policy_review()
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum IntegrationCatalogSort {
     PriorityThenName,
@@ -15463,6 +15535,19 @@ pub fn hue_activation_package_summary() -> IntegrationActivationPackageSummary {
     IntegrationActivationPackageSummary::from_entry(&hue_entry())
 }
 
+pub fn hue_readiness_package_summary(
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationReadinessPackageSummary {
+    IntegrationReadinessPackageSummary::from_entry(
+        &hue_entry(),
+        available_primitives,
+        allowed_capabilities,
+        enabled_integrations,
+    )
+}
+
 pub fn find_entry<'a>(
     catalog: &'a [IntegrationCatalogEntry],
     integration_id: &IntegrationId,
@@ -24427,6 +24512,81 @@ mod tests {
         assert!(summary.requires_human_review);
         assert!(summary.has_prerequisites());
         assert!(summary.has_policy_review());
+    }
+
+    #[test]
+    fn hue_readiness_package_summary_tracks_missing_rollout_inputs() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let available_primitives = vec![
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let report = readiness_report_for_integration(
+            &catalog,
+            &IntegrationId::trusted("hue"),
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        )
+        .unwrap();
+        let summary =
+            hue_readiness_package_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert_eq!(
+            summary,
+            IntegrationReadinessPackageSummary::from_package_and_report(
+                IntegrationActivationPackageSummary::from_entry(hue),
+                &report,
+            )
+        );
+        assert_eq!(
+            summary.activation_package.catalog_entry.integration_id,
+            IntegrationId::trusted("hue")
+        );
+        assert!(!summary.activation_ready);
+        assert!(summary.blocked);
+        assert_eq!(summary.activation_package.required_primitive_count, 12);
+        assert_eq!(summary.missing_primitive_count, 9);
+        assert_eq!(summary.missing_capability_count, 2);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert_eq!(summary.missing_prerequisite_count, 11);
+        assert!(summary.has_missing_primitives());
+        assert!(summary.has_missing_capabilities());
+        assert!(!summary.has_missing_dependencies());
+        assert!(summary.has_policy_review());
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
+    }
+
+    #[test]
+    fn hue_readiness_package_summary_marks_ready_when_rollout_inputs_exist() {
+        let available_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![
+            CapabilityId::trusted("smart_home.read"),
+            CapabilityId::trusted("smart_home.command.light"),
+            CapabilityId::trusted("smart_home.pair"),
+        ];
+        let summary =
+            hue_readiness_package_summary(&available_primitives, &allowed_capabilities, &[]);
+
+        assert!(summary.activation_ready);
+        assert!(!summary.blocked);
+        assert_eq!(summary.missing_primitive_count, 0);
+        assert_eq!(summary.missing_capability_count, 0);
+        assert_eq!(summary.missing_dependency_count, 0);
+        assert_eq!(summary.missing_prerequisite_count, 0);
+        assert!(!summary.has_missing_primitives());
+        assert!(!summary.has_missing_capabilities());
+        assert!(!summary.has_missing_dependencies());
+        assert!(summary.requires_human_review);
+        assert!(summary.has_policy_review());
+        assert_eq!(summary.highest_policy_tier, PrivilegeTier::HumanApproval);
+        assert!(summary.local_only);
+        assert!(!summary.cloud_required);
     }
 
     #[test]
