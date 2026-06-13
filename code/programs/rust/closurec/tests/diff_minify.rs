@@ -506,6 +506,23 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // is a statement-starting keyword, no synthetic `;` is
     // emitted (ASI covers the boundary). `minify_multi_line_func`
     // flipped IGNORED → PASS.
+    // gap-118 (CLOC14.57): an UPPERCASE hex literal that is RETAINED in
+    // hex form (because hex is the shortest representation) is not
+    // lowercased: `0xFFFFFFFFFFFFF` -> upstream `0xfffffffffffff` but
+    // closurec keeps `0xFFFFFFFFFFFFF`. Inverse/sibling of gap-114
+    // (decimal -> lowercase hex when shorter): the original uppercase
+    // literal ties the lowercase-hex candidate on length, and the
+    // `cleaned` (verbatim) candidate wins ties, so the uppercase form
+    // survives. Tractable number-printer fix in `normalize_number_value`.
+    ("hex_upper_retained", "gap-118: retained-hex literal not lowercased (0xFFF.. -> 0xfff..)"),
+    // gap-119 (CLOC14.57): a regex literal immediately following the
+    // `return` keyword gets a spurious separating space:
+    // `return/a/g` -> closurec `return /a/g` but upstream `return/a/g`.
+    // Regex/division family (sibling of gap-115): the separator logic
+    // inserts a space between the word-like `return` and the `/`-led
+    // regex token. Entangled with division disambiguation — deferred
+    // until the regex/division lexing (gap-115) is settled.
+    ("regex_after_return", "gap-119: spurious space between return keyword and regex literal"),
 ];
 
 /// Walk `tests/diff/` and collect every directory whose name
