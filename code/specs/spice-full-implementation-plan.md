@@ -28,9 +28,11 @@ downstream tools to compare.
      diagnostic and solver footholds; transient scalar `.measure`-style output
      helpers now cover shared peak-to-peak and final-value measurement output,
      and parsed transient `.measure` / `.meas` cards can now feed those
-     measurement helpers from deck text.
-   - Expand `.save` and `.probe` execution plus richer `.measure` modes toward
-     full SPICE compatibility while keeping unsupported control-flow
+     measurement helpers from deck text; parsed `.save` and `.probe` cards now
+     drive stable Rust table output for operating-point, DC sweep, AC sweep, and
+     transient results.
+   - Expand richer `.measure` modes and non-transient measurement analyses
+     toward full SPICE compatibility while keeping unsupported control-flow
      diagnostics explicit.
 
 ## Completed Slices
@@ -254,13 +256,24 @@ downstream tools to compare.
       measurement rows, while diagnostics keep unsupported analyses, modes,
       options, expressions, and invalid windows explicit.
 
+23. Parsed save/probe output execution routing.
+    - Status: completed in this parsed save/probe execution slice.
+    - The live Rust package now exposes `resolve_deck_outputs`,
+      `select_deck_output_probes`, and deck-aware table formatters that extract
+      `.save` plus scoped or global `.probe` cards before `.end`.
+    - Selected probes are normalized, deduplicated in deck order, scoped by
+      analysis for `.probe`, and routed into stable operating-point, DC sweep,
+      AC sweep, and transient text tables.
+    - Stable diagnostics cover missing probe lists and malformed output probes;
+      richer `.measure` modes and non-transient measurement analyses remain in
+      the deck execution backlog.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand parsed `.save` and `.probe` deck-card execution plus richer
-     `.measure` modes and non-transient measurement analyses toward full SPICE
-     compatibility.
+   - Expand richer `.measure` modes and non-transient measurement analyses
+     toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 

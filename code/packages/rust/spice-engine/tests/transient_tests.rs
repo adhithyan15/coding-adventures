@@ -7,12 +7,13 @@ use spice_engine::{
     format_corner_adaptive_digital_event_stream_table, format_corner_adaptive_transient_table,
     format_corner_digital_event_stream_table, format_corner_distortion_table,
     format_corner_fourier_table, format_corner_pole_zero_table, format_corner_pss_table,
-    format_corner_transient_table, format_dc_table, format_digital_bridge_schedule_table,
-    format_digital_event_stream_table, format_digital_event_table, format_distortion_table,
-    format_fourier_table, format_measurement_table, format_pole_zero_table, format_pss_table,
-    format_transient_table, fourier, fourier_corners, measure_transient_deck,
-    measure_transient_probe, pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass,
-    pole_zero_rlc_highpass, pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
+    format_corner_transient_table, format_dc_table, format_deck_transient_table,
+    format_digital_bridge_schedule_table, format_digital_event_stream_table,
+    format_digital_event_table, format_distortion_table, format_fourier_table,
+    format_measurement_table, format_pole_zero_table, format_pss_table, format_transient_table,
+    fourier, fourier_corners, measure_transient_deck, measure_transient_probe,
+    pole_zero_rc_highpass, pole_zero_rc_lowpass, pole_zero_rlc_bandpass, pole_zero_rlc_highpass,
+    pole_zero_rlc_lowpass, pole_zero_rlc_notch, pss_corners_with_tolerance,
     pss_newton_candidate_with_tolerance, pss_newton_iteration_with_tolerance,
     pss_newton_solve_with_tolerance, pss_newton_update, pss_newton_update_with_tolerance,
     pss_residual, pss_residual_jacobian_with_tolerance, pss_residual_with_tolerance,
@@ -1706,6 +1707,46 @@ V1 in 0 DC 1
     assert_eq!(
         format_measurement_table(&measurements),
         "Name\tAnalysis\tProbe\tMode\tFrom\tTo\tValue\nswing\ttran\tV(out)\tpp\t1.000000e-03\t3.000000e-03\t1.500000e+00\nsettled\ttran\tV(out)\tlast\t\t\t7.500000e-01\n"
+    );
+}
+
+#[test]
+fn transient_deck_output_cards_select_table_probes() {
+    let points = vec![
+        TransientPoint {
+            time: 0.0,
+            node_voltages: BTreeMap::from([
+                ("out".to_string(), 0.0),
+                ("clk".to_string(), 0.0),
+                ("ignored".to_string(), 1.0),
+            ]),
+            branch_currents: BTreeMap::from([("I(V1)".to_string(), -1.0e-3)]),
+        },
+        TransientPoint {
+            time: 1.0e-3,
+            node_voltages: BTreeMap::from([
+                ("out".to_string(), 1.0),
+                ("clk".to_string(), 5.0),
+                ("ignored".to_string(), 2.0),
+            ]),
+            branch_currents: BTreeMap::from([("I(V1)".to_string(), -2.0e-3)]),
+        },
+    ];
+
+    let table = format_deck_transient_table(
+        &points,
+        "
+.save V(out) I(V1)
+.probe tran V(clk) V(out)
+.probe ac V(ignored)
+.end
+",
+    )
+    .unwrap();
+
+    assert_eq!(
+        table,
+        "Index\tTime\tV(out)\tI(V1)\tV(clk)\n0\t0.000000e+00\t0.000000e+00\t-1.000000e-03\t0.000000e+00\n1\t1.000000e-03\t1.000000e+00\t-2.000000e-03\t5.000000e+00\n"
     );
 }
 
