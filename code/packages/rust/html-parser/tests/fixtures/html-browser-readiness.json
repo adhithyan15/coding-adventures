@@ -1414,6 +1414,10 @@
             ]
           }
         ],
+        "structured_data_descriptors": [
+          { "id": "product", "item_type": ["https://schema.org/Product"], "item_type_count": 1, "item_id": "items/widget", "resolved_item_id": "https://example.test/catalog/items/widget", "item_ref": ["external-rating"], "item_ref_count": 1, "property_names": ["name", "image", "url", "sameAs", "sku", "releaseDate", "category", "offers", "aggregateRating"], "property_count": 9, "url_property_count": 3 },
+          { "item_type": ["https://schema.org/Offer"], "item_type_count": 1, "item_id": "offers/widget", "resolved_item_id": "https://example.test/catalog/offers/widget", "property_names": ["price", "availability"], "property_count": 2, "url_property_count": 1 }
+        ],
         "forms": [],
         "tables": []
       }
