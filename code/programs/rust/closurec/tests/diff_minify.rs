@@ -309,6 +309,29 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-114 RESOLVED in CLOC12.116 — a large integer whose lowercase
     // hex form is shorter than decimal is now emitted as `0x…` (over the
     // f64-rounded value); `minify_num_bigint_hex` is now ENFORCED.
+    // gap-115 (CLOC14.56) — CORRECTNESS: regex/division disambiguation. A
+    // `/` that follows a VALUE-producing token (identifier, number, `)`,
+    // `]`) is the DIVISION operator, not the start of a regex literal.
+    // closurec's lexer greedily pairs `a/b/c` into `a` + regex `/b/` + `c`
+    // and emits `a /b/ c` — which is INVALID JS (two adjacent primaries).
+    // Affects `a/b/c`, `4/2/1`, `a/b+c/d`, `(a)/b/c`. A SINGLE division
+    // (`a/b`) already lexes correctly. Lexer-level (sibling of gap-044).
+    // HIGH PRIORITY — corrupts output to non-parseable JS.
+    ("div_chain", "gap-115: a/b/c mis-lexed as regex -> invalid `a /b/ c` (CORRECTNESS)"),
+    // gap-116 (CLOC14.56): a STRING property key that is a CANONICAL
+    // non-negative integer is unquoted to a numeric key by upstream:
+    //   {"123":1} -> {123:1}   {"0":1} -> {0:1}
+    // NOT every numeric-looking string: `"01"` (leading zero), `"1.5"`
+    // (non-integer), `"123abc"` are kept quoted — only the canonical
+    // array-index form (matches the round-trip `String(Number(s)) === s`).
+    ("num_str_key", "gap-116: canonical numeric string key -> unquoted number"),
+    // gap-117 (CLOC14.56): a `case` clause whose operand begins with a
+    // UNARY operator (`-`/`+`/`!`/`~`) needs a separating space that
+    // closurec omits: `case-1:` -> `case -1:`, `case!a:` -> `case !a:`.
+    // Sibling of gap-111 (keyword + string space); here the operand is a
+    // unary-prefixed expression rather than a string literal. (`case 1:`
+    // with a plain number already round-trips.)
+    ("case_neg_num", "gap-117: case + unary-operator operand needs separating space"),
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
