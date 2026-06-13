@@ -4710,6 +4710,20 @@ fn await_operator_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool
     if idx >= 2 && is_word_like(kept[idx - 2]) && kept[idx - 2].value == "function" {
         return false;
     }
+    // gap-112 FOR-AWAIT guard: `for await(...)` is the async-iteration
+    // loop header, NOT the `await` unary operator. Here `await` is the
+    // `for await` modifier and the `(` that follows is the loop HEAD,
+    // not an operand — upstream keeps them adjacent (`for await(x of y)`,
+    // no space). When the token TWO before `kept[idx]` (i.e. before the
+    // `await`) is the `for` keyword, suppress the operator space.
+    // (A genuine unary `await(a+b)` is never preceded by `for`; the only
+    // `for await` form IS this loop header, so the guard is exact.) NOTE
+    // the empty-block body `for await(x of y){}` already passed via the
+    // METHOD-NAME guard below — this generalises it to bare-statement /
+    // declaration bodies (`for await(const x of y)z()`) too.
+    if idx >= 2 && is_word_like(kept[idx - 2]) && kept[idx - 2].value == "for" {
+        return false;
+    }
     // METHOD-NAME guard: `kept[idx]` is a `(` whose matching `)` is
     // immediately followed by `{` (a parameter list + body).
     if is_structural_punct(kept[idx], "(") {
@@ -8025,6 +8039,53 @@ mod tests {
         assert_eq!(minify("x={set:1,new:2};"), "x={set:1,new:2};");
         assert_eq!(minify("x=new C;"), "x=new C;");
         assert_eq!(minify("switch(x){case 1:b()}"), "switch(x){case 1:b()};");
+    }
+
+    /// gap-112 — a `for await(...)` async-iteration header must NOT take
+    /// a space between `await` and `(` (it is the loop head, not the
+    /// `await` unary operator's operand). Bare-statement and declaration
+    /// bodies both round-trip adjacent.
+    #[test]
+    fn gap112_for_await_const_head_no_space() {
+        assert_eq!(
+            minify("async function f(){for await(const x of y)z()}"),
+            "async function f(){for await(const x of y)z()};"
+        );
+    }
+
+    #[test]
+    fn gap112_for_await_bare_head_no_space() {
+        assert_eq!(
+            minify("async function f(){for await(x of y)z()}"),
+            "async function f(){for await(x of y)z()};"
+        );
+    }
+
+    /// **Non-regression**: the genuine `await` UNARY OPERATOR still gets
+    /// its separating space before a parenthesised operand — only the
+    /// `for await` header is exempt.
+    #[test]
+    fn gap112_unary_await_keeps_space() {
+        assert_eq!(
+            minify("async function f(){return await(a+b)}"),
+            "async function f(){return await (a+b)};"
+        );
+        // `await(x)` folds its redundant grouping parens to `await x`.
+        assert_eq!(
+            minify("async function f(){await(x)}"),
+            "async function f(){await x};"
+        );
+    }
+
+    /// **Non-regression**: the empty-block for-await body (`{}` → `;`)
+    /// stays byte-identical (it formerly passed only via the method-name
+    /// guard; the gap-112 `for`-guard subsumes it).
+    #[test]
+    fn gap112_for_await_empty_block_unchanged() {
+        assert_eq!(
+            minify("async function f(){for await(x of y){}}"),
+            "async function f(){for await(x of y);};"
+        );
     }
 
     /// gap-057 safety: a CALL paren must never be stripped —
