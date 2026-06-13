@@ -63,6 +63,7 @@ print(result.diagnostics.solver)   # "dense_real" or "sparse_real"
 | `noise_ac` | `.NOISE` | Small-signal noise PSD (adjoint method) |
 | `fourier` | `.FOUR` | Harmonic magnitudes/phases and THD from transient output |
 | `format_dc_table`, `format_transient_table` | `.PRINT` / `.PLOT` output | Stable tabular node voltages and branch currents |
+| `resolve_deck_outputs`, `format_deck_*_table` | `.SAVE` / `.PROBE` output | Parsed deck-selected OP, DC sweep, AC, and transient tables |
 | `measure_transient_probe`, `measure_dc_sweep_probe`, `measure_ac_sweep_probe`, `format_measurement_table` | `.MEASURE` output | Stable scalar transient, DC sweep, and AC sweep probe measurements |
 
 `diode_at_temperature()`, `bjt_at_temperature()`, `mosfet_at_temperature()`,
@@ -92,6 +93,11 @@ crossing times over optional `FROM=` / `TO=` windows.
 TARG ...` cards report trigger-to-target crossing delays. The deck helpers
 route parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into
 those stable measurement rows.
+`resolve_deck_outputs()` and `select_deck_output_probes()` extract `.save` and
+scoped or global `.probe` cards before `.end`, normalize and deduplicate output
+probes in deck order, and feed `format_deck_op_table()`,
+`format_deck_dc_sweep_table()`, `format_deck_ac_table()`, and
+`format_deck_transient_table()` for stable deck-selected text output.
 `resolve_deck_fourier()`, `fourier_transient_cards()`, and
 `fourier_transient_deck()` extract parsed `.four` / `.FOUR` cards before
 `.end` and route transient samples into the existing SPICE-style Fourier result
@@ -158,6 +164,9 @@ signatures, arguments, or empty expressions.
 `FIND ... AT=` sample points and `WHEN probe=target` crossings with optional
 `RISE`, `FALL`, or `CROSS` counters, and reports stable diagnostics for
 unsupported analyses, modes, options, expressions, and invalid windows.
+`resolve_deck_outputs()` extracts `.save` and `.probe` cards before `.end`,
+preserves non-output active lines, and reports stable diagnostics for missing
+probe lists or malformed `V(node)` / `I(source)` probes.
 
 ## Controlled source examples
 

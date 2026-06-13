@@ -38,6 +38,8 @@ import {
   formatCornerPssTable,
   formatCornerTransientTable,
   formatDcTable,
+  formatDeckOpTable,
+  formatDeckTransientTable,
   formatDigitalBridgeScheduleTable,
   formatDigitalEventStreamTable,
   formatDigitalEventStreamVcd,
@@ -1413,12 +1415,21 @@ describe("transient", () => {
       "Index\tV(vin, mid)\tI(V1)\n" +
         "0\t5.000000e+00\t-5.000000e-03\n",
     );
+    expect(formatDeckOpTable(dcResult, ".save V(mid)\n.probe dc I(V1)\n.end\n")).toBe(
+      "Index\tV(mid)\n" +
+        "0\t5.000000e+00\n",
+    );
 
     const points = transient(circuit, 1.0e-3, 2.0e-3);
     expect(formatTransientTable(points, ["V(vin)", "V(mid)", "I(V1)"])).toBe(
       "Index\tTime\tV(vin)\tV(mid)\tI(V1)\n" +
         "0\t1.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n" +
         "1\t2.000000e-03\t1.000000e+01\t5.000000e+00\t-5.000000e-03\n",
+    );
+    expect(formatDeckTransientTable(points, ".save V(mid)\n.probe tran V(vin)\n.end\n")).toBe(
+      "Index\tTime\tV(mid)\tV(vin)\n" +
+        "0\t1.000000e-03\t5.000000e+00\t1.000000e+01\n" +
+        "1\t2.000000e-03\t5.000000e+00\t1.000000e+01\n",
     );
   });
 

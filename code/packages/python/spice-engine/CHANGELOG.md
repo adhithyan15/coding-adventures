@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Parsed save/probe output parity** —
+  `resolve_deck_outputs()`, `select_deck_output_probes()`, and the
+  `format_deck_*_table()` helpers now route parsed `.save` / `.probe` cards
+  into stable operating-point, DC sweep, AC sweep, and transient tables,
+  matching Rust and TypeScript.
+
 - **Transient Fourier deck-card routing** —
   `resolve_deck_fourier()`, `fourier_transient_cards()`, and
   `fourier_transient_deck()` now route parsed `.four` / `.FOUR` deck cards

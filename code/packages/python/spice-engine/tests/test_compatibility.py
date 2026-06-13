@@ -13,8 +13,10 @@ from spice_engine import (
     resolve_deck_functions,
     resolve_deck_initial_conditions,
     resolve_deck_measurements,
+    resolve_deck_outputs,
     resolve_deck_parameters,
     resolve_deck_sources,
+    select_deck_output_probes,
 )
 
 
@@ -527,3 +529,68 @@ def test_resolve_deck_fourier_reports_unsupported_subset() -> None:
         "SPICE_DECK_FOURIER_FREQUENCY",
         "SPICE_DECK_FOURIER_PROBE",
     }
+
+
+def test_resolve_deck_outputs_extracts_save_and_probe_cards() -> None:
+    summary = resolve_deck_outputs(
+        """
+V1 in 0 DC 1
+.save V(out) i(V1)
+.probe tran V(clk)
+.probe AC V(out)
+.end
+.save V(ignored)
+"""
+    )
+
+    assert summary.active_lines == ("V1 in 0 DC 1",)
+    assert summary.terminated is True
+    assert summary.end_line_number == 6
+    assert summary.diagnostics == ()
+    assert [
+        (selection.directive, selection.analysis, selection.probes)
+        for selection in summary.selections
+    ] == [
+        (".save", None, ("V(out)", "I(V1)")),
+        (".probe", "tran", ("V(clk)",)),
+        (".probe", "ac", ("V(out)",)),
+    ]
+
+    assert select_deck_output_probes(
+        """
+.save V(out) I(V1)
+.probe tran V(out) V(clk)
+.probe ac V(freq)
+.end
+""",
+        "transient",
+    ) == ["V(out)", "I(V1)", "V(clk)"]
+
+
+def test_resolve_deck_outputs_reports_invalid_cards() -> None:
+    summary = resolve_deck_outputs(
+        """
+.save
+.probe tran
+.save P(out)
+.probe dc V(out) bad-token
+.end
+"""
+    )
+
+    assert sorted(diagnostic.code for diagnostic in summary.diagnostics) == [
+        "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_ARGUMENT",
+        "SPICE_DECK_OUTPUT_PROBE",
+        "SPICE_DECK_OUTPUT_PROBE",
+    ]
+    assert summary.selections[0].probes == ("V(out)",)
+
+    with pytest.raises(ValueError, match=r"line 2: \.save requires"):
+        select_deck_output_probes(
+            """
+.save
+.end
+""",
+            "dc",
+        )

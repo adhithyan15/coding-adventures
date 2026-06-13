@@ -7,6 +7,7 @@ import {
   formatAcTable,
   formatCornerAcTable,
   formatCornerSParameterTable,
+  formatDeckAcTable,
   formatMeasurementTable,
   formatSParameterTable,
   acSweep,
@@ -104,6 +105,11 @@ describe("acSweep", () => {
     const point = acSweep(circuit, corner, corner, 10)[0];
 
     expect(formatAcTable([point], ["V(out)", "I(V1)"])).toBe(
+      "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
+        "0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
+        "0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n",
+    );
+    expect(formatDeckAcTable([point], ".save V(out)\n.probe ac I(V1)\n.end\n")).toBe(
       "Index\tFrequency\tProbe\tReal\tImaginary\tMagnitude\tPhase\n" +
         "0\t1.591549e+02\tV(out)\t5.000000e-01\t-5.000000e-01\t7.071068e-01\t-4.500000e+01\n" +
         "0\t1.591549e+02\tI(V1)\t-5.000000e-04\t-5.000000e-04\t7.071068e-04\t-1.350000e+02\n",
