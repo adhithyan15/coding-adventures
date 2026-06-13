@@ -35,6 +35,9 @@
         "navigation_groups": [
           { "element": "ul", "role": "list", "text": "One Two", "list_kind": "unordered", "item_count": 2 }
         ],
+        "navigation_group_descriptors": [
+          { "group_index": 1, "element": "ul", "role": "list", "text": "One Two", "group_kind": "list", "list_kind": "unordered", "item_count": 2 }
+        ],
         "fetch_policy_descriptors": [
           { "element": "a", "url": "intro.html", "resolved_url": "https://example.test/docs/intro.html", "referrerpolicy": "no-referrer" }
         ],
@@ -1316,8 +1319,17 @@
           { "element": "menu", "id": "actions", "role": "list", "text": "Open Save", "accessible_name": "Actions", "aria_label": "Actions", "list_kind": "menu", "item_count": 2 },
           { "element": "ol", "id": "steps", "role": "list", "text": "Review Ship", "list_kind": "ordered", "item_count": 2, "list_start": "2", "list_marker_type": "A", "list_reversed": true }
         ],
+        "navigation_group_descriptors": [
+          { "group_index": 1, "element": "nav", "id": "site-nav", "role": "navigation", "text": "Home Docs API", "accessible_name": "Site", "aria_labelledby": ["nav-title"], "group_kind": "landmark", "landmark_kind": "navigation", "item_count": 0 },
+          { "group_index": 2, "element": "ul", "id": "primary", "role": "list", "text": "Docs API", "group_kind": "list", "list_kind": "unordered", "item_count": 2 },
+          { "group_index": 3, "element": "menu", "id": "actions", "role": "list", "text": "Open Save", "accessible_name": "Actions", "aria_label": "Actions", "group_kind": "menu", "list_kind": "menu", "item_count": 2 },
+          { "group_index": 4, "element": "ol", "id": "steps", "role": "list", "text": "Review Ship", "group_kind": "list", "list_kind": "ordered", "item_count": 2, "list_start": "2", "list_marker_type": "A", "list_reversed": true }
+        ],
         "section_landmarks": [
           { "element": "nav", "id": "site-nav", "role": "navigation", "text": "Home Docs API", "accessible_name": "Site", "aria_labelledby": ["nav-title"], "section_kind": "navigation", "landmark_kind": "navigation" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "nav", "id": "site-nav", "role": "navigation", "text": "Home Docs API", "accessible_name": "Site", "aria_labelledby": ["nav-title"], "section_kind": "navigation", "landmark_kind": "navigation", "outline_kind": "landmark-section" }
         ],
         "links": [
           { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
@@ -1351,6 +1363,9 @@
         "navigation_groups": [
           { "element": "nav", "role": "navigation", "text": "Nav Home", "landmark_kind": "navigation", "item_count": 0 }
         ],
+        "navigation_group_descriptors": [
+          { "group_index": 1, "element": "nav", "role": "navigation", "text": "Nav Home", "group_kind": "landmark", "landmark_kind": "navigation", "item_count": 0, "navigation_blocked": true, "navigation_block_reasons": ["missing-navigation-label"] }
+        ],
         "section_landmarks": [
           { "element": "header", "role": "header", "text": "Site", "section_kind": "header", "landmark_kind": "header", "heading_level": 1, "heading_text": "Site" },
           { "element": "nav", "role": "navigation", "text": "Nav Home", "section_kind": "navigation", "landmark_kind": "navigation", "heading_level": 2, "heading_text": "Nav" },
@@ -1359,6 +1374,15 @@
           { "element": "section", "role": "section", "text": "Chapter", "accessible_name": "Chapter", "aria_label": "Chapter", "section_kind": "section", "heading_level": 3, "heading_text": "Chapter" },
           { "element": "aside", "role": "aside", "text": "Related", "section_kind": "aside", "landmark_kind": "complementary", "heading_level": 2, "heading_text": "Related" },
           { "element": "footer", "role": "footer", "text": "Fine print", "section_kind": "footer", "landmark_kind": "footer" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "header", "role": "header", "text": "Site", "section_kind": "header", "landmark_kind": "header", "heading_level": 1, "heading_text": "Site", "outline_kind": "landmark-section" },
+          { "landmark_index": 2, "element": "nav", "role": "navigation", "text": "Nav Home", "section_kind": "navigation", "landmark_kind": "navigation", "heading_level": 2, "heading_text": "Nav", "outline_kind": "landmark-section" },
+          { "landmark_index": 3, "element": "main", "role": "main", "text": "Post Chapter Related", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Post", "outline_kind": "landmark-section" },
+          { "landmark_index": 4, "element": "article", "id": "post", "role": "article", "text": "Post Chapter", "section_kind": "article", "heading_level": 2, "heading_text": "Post", "outline_kind": "section" },
+          { "landmark_index": 5, "element": "section", "role": "section", "text": "Chapter", "accessible_name": "Chapter", "aria_label": "Chapter", "section_kind": "section", "heading_level": 3, "heading_text": "Chapter", "outline_kind": "section" },
+          { "landmark_index": 6, "element": "aside", "role": "aside", "text": "Related", "section_kind": "aside", "landmark_kind": "complementary", "heading_level": 2, "heading_text": "Related", "outline_kind": "landmark-section" },
+          { "landmark_index": 7, "element": "footer", "role": "footer", "text": "Fine print", "section_kind": "footer", "landmark_kind": "footer", "outline_kind": "landmark-section" }
         ],
         "links": [
           { "href": "/home", "resolved_href": null, "name": null, "target": null, "rel": null, "title": null, "text": "Home" }
@@ -1394,6 +1418,9 @@
         ],
         "section_landmarks": [
           { "element": "article", "id": "product", "role": "article", "text": "Widget Pro Product page Widget SKU today 19.99", "section_kind": "article", "heading_level": 2, "heading_text": "Widget Pro" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "article", "id": "product", "role": "article", "text": "Widget Pro Product page Widget SKU today 19.99", "section_kind": "article", "heading_level": 2, "heading_text": "Widget Pro", "outline_kind": "section" }
         ],
         "links": [
           { "href": "../products/widget", "resolved_href": "https://example.test/products/widget", "name": null, "target": null, "rel": null, "title": null, "text": "Product page" }
@@ -1459,6 +1486,9 @@
         ],
         "navigation_groups": [
           { "element": "ol", "role": "list", "text": "Seven Eight", "list_kind": "ordered", "item_count": 2, "list_start": "3", "list_marker_type": "A", "list_reversed": true }
+        ],
+        "navigation_group_descriptors": [
+          { "group_index": 1, "element": "ol", "role": "list", "text": "Seven Eight", "group_kind": "list", "list_kind": "ordered", "item_count": 2, "list_start": "3", "list_marker_type": "A", "list_reversed": true }
         ],
         "links": [],
         "images": [],
@@ -1586,6 +1616,9 @@
         "section_landmarks": [
           { "element": "main", "id": "app", "role": "main", "text": "Save", "section_kind": "main", "landmark_kind": "main" }
         ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "main", "id": "app", "role": "main", "text": "Save", "section_kind": "main", "landmark_kind": "main", "outline_kind": "landmark-section" }
+        ],
         "links": [],
         "images": [
           { "src": "hero.jpg", "resolved_src": null, "alt": "Hero" }
@@ -1642,6 +1675,10 @@
         "section_landmarks": [
           { "element": "main", "id": "app", "role": "main", "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative", "accessible_name": "App shell", "aria_label": "App shell", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Settings" },
           { "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "aria_labelledby": ["panel-title"], "section_kind": "section", "heading_level": 2, "heading_text": "Settings" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "main", "id": "app", "role": "main", "text": "Menu Settings Choose options Inline action Editable copy Dialog copy More Extra Hidden copy Decorative", "accessible_name": "App shell", "aria_label": "App shell", "section_kind": "main", "landmark_kind": "main", "heading_level": 2, "heading_text": "Settings", "outline_kind": "landmark-section" },
+          { "landmark_index": 2, "element": "section", "id": "panel", "role": "section", "authored_role": "region", "text": "Settings Choose options Inline action Editable copy", "accessible_name": "Settings", "aria_labelledby": ["panel-title"], "section_kind": "section", "heading_level": 2, "heading_text": "Settings", "outline_kind": "section" }
         ],
         "command_elements": [
           { "element": "button", "id": "menu", "role": "control", "command_kind": "command", "text": "Menu", "accessible_name": "Menu", "control_type": "submit", "command": "show-modal", "command_for": "dialog", "popover_target": "panel-pop", "popover_target_action": "toggle", "aria_controls": ["panel"], "aria_expanded": "false", "aria_haspopup": "menu", "aria_disabled": "false", "tabindex": "0", "accesskey": ["m", "/"], "event_handlers": ["onclick"], "focusable": true },
@@ -1749,6 +1786,9 @@
         "headings": [],
         "section_landmarks": [
           { "element": "main", "role": "main", "text": "Ready", "section_kind": "main", "landmark_kind": "main" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "main", "role": "main", "text": "Ready", "section_kind": "main", "landmark_kind": "main", "outline_kind": "landmark-section" }
         ],
         "links": [],
         "images": [],
@@ -2372,6 +2412,9 @@
         "headings": [],
         "section_landmarks": [
           { "element": "article", "role": "article", "text": "Untitled Body", "section_kind": "article" }
+        ],
+        "section_landmark_descriptors": [
+          { "landmark_index": 1, "element": "article", "role": "article", "text": "Untitled Body", "section_kind": "article", "outline_kind": "section", "landmark_blocked": true, "landmark_block_reasons": ["section-missing-heading"] }
         ],
         "links": [],
         "images": [],

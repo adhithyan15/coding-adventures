@@ -26,17 +26,17 @@ use coding_adventures_html_parser::{
     BrowserLifecycleEventDescriptor, BrowserLink, BrowserLinkResourceDescriptor,
     BrowserLoadingHintDescriptor, BrowserMedia, BrowserMediaPlaybackDescriptor, BrowserMediaSource,
     BrowserMediaTrack, BrowserMeta, BrowserMetadataDirective, BrowserNavigationGroup,
-    BrowserNavigationTargetDescriptor, BrowserPointerInteractionDescriptor, BrowserPopover,
-    BrowserPopoverInvoker, BrowserRefresh, BrowserResource, BrowserResourceEndpointDescriptor,
-    BrowserResourceHint, BrowserScript, BrowserScriptExecutionDescriptor,
-    BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
-    BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
-    BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
-    BrowserSlotDescriptor, BrowserStructuredDataDescriptor, BrowserStructuredItem,
-    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
-    BrowserTable, BrowserTableCell, BrowserTableStructureDescriptor, BrowserTemplate,
-    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserTextSemanticDescriptor,
-    BrowserThemeColor,
+    BrowserNavigationGroupDescriptor, BrowserNavigationTargetDescriptor,
+    BrowserPointerInteractionDescriptor, BrowserPopover, BrowserPopoverInvoker, BrowserRefresh,
+    BrowserResource, BrowserResourceEndpointDescriptor, BrowserResourceHint, BrowserScript,
+    BrowserScriptExecutionDescriptor, BrowserScriptModuleGraphDescriptor,
+    BrowserScriptStorageAccessDescriptor, BrowserScriptWorkerMessagingDescriptor,
+    BrowserScrollInteractionDescriptor, BrowserSectionLandmark, BrowserSectionLandmarkDescriptor,
+    BrowserSelectOption, BrowserSelectionInteractionDescriptor, BrowserSlotDescriptor,
+    BrowserStructuredDataDescriptor, BrowserStructuredItem, BrowserStructuredProperty,
+    BrowserStylesheet, BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell,
+    BrowserTableStructureDescriptor, BrowserTemplate, BrowserTemplateDescriptor,
+    BrowserTextSemantic, BrowserTextSemanticDescriptor, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -139,7 +139,11 @@ struct ExpectedBrowserDocument {
     #[serde(default)]
     navigation_groups: Vec<ExpectedNavigationGroup>,
     #[serde(default)]
+    navigation_group_descriptors: Option<Vec<ExpectedNavigationGroupDescriptor>>,
+    #[serde(default)]
     section_landmarks: Vec<ExpectedSectionLandmark>,
+    #[serde(default)]
+    section_landmark_descriptors: Option<Vec<ExpectedSectionLandmarkDescriptor>>,
     #[serde(default)]
     command_elements: Vec<ExpectedCommandElement>,
     #[serde(default)]
@@ -2115,6 +2119,38 @@ struct ExpectedNavigationGroup {
 }
 
 #[derive(Debug, Deserialize)]
+struct ExpectedNavigationGroupDescriptor {
+    group_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    group_kind: String,
+    #[serde(default)]
+    landmark_kind: Option<String>,
+    #[serde(default)]
+    list_kind: Option<String>,
+    item_count: usize,
+    #[serde(default)]
+    list_start: Option<String>,
+    #[serde(default)]
+    list_marker_type: Option<String>,
+    #[serde(default)]
+    list_reversed: bool,
+    #[serde(default)]
+    navigation_blocked: bool,
+    #[serde(default)]
+    navigation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
 struct ExpectedSectionLandmark {
     element: String,
     #[serde(default)]
@@ -2137,6 +2173,37 @@ struct ExpectedSectionLandmark {
     heading_level: Option<u8>,
     #[serde(default)]
     heading_text: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedSectionLandmarkDescriptor {
+    landmark_index: usize,
+    element: String,
+    #[serde(default)]
+    id: Option<String>,
+    role: String,
+    #[serde(default)]
+    authored_role: Option<String>,
+    text: String,
+    #[serde(default)]
+    accessible_name: Option<String>,
+    #[serde(default)]
+    aria_label: Option<String>,
+    #[serde(default)]
+    aria_labelledby: Vec<String>,
+    #[serde(default)]
+    section_kind: Option<String>,
+    #[serde(default)]
+    landmark_kind: Option<String>,
+    #[serde(default)]
+    heading_level: Option<u8>,
+    #[serde(default)]
+    heading_text: Option<String>,
+    outline_kind: String,
+    #[serde(default)]
+    landmark_blocked: bool,
+    #[serde(default)]
+    landmark_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -5115,6 +5182,58 @@ fn browser_navigation_group_descriptor_metadata_tracks_lists_and_landmarks() {
 }
 
 #[test]
+fn browser_navigation_group_descriptors_track_kinds_counts_and_labels() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "navigation-menu-descriptor-page")
+        .expect("navigation menu fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("navigation menu fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.navigation_group_descriptors, expected.navigation_group_descriptors,
+        "navigation group descriptors should classify landmarks, lists, menus, and readiness state",
+    );
+    assert_eq!(
+        actual.navigation_group_descriptors[0].navigation_block_reasons,
+        Vec::<String>::new(),
+    );
+    assert_eq!(
+        actual.navigation_group_descriptors[3].group_kind, "list",
+        "ordered lists should remain list descriptors with marker metadata",
+    );
+}
+
+#[test]
+fn browser_navigation_group_descriptors_track_missing_landmark_labels() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "document-outline-landmark-page")
+        .expect("document outline fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("document outline fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.navigation_group_descriptors, expected.navigation_group_descriptors,
+        "navigation group descriptors should report unlabeled navigation landmarks as blocked",
+    );
+    assert_eq!(
+        actual.navigation_group_descriptors[0].navigation_block_reasons,
+        vec!["missing-navigation-label"],
+    );
+}
+
+#[test]
 fn browser_section_landmark_descriptor_metadata_tracks_outline_roles_and_names() {
     let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
         .expect("browser readiness fixture should parse");
@@ -5131,6 +5250,35 @@ fn browser_section_landmark_descriptor_metadata_tracks_outline_roles_and_names()
     assert_eq!(
         actual.section_landmarks, expected.section_landmarks,
         "section landmarks should preserve roles, accessible names, landmark kinds, and first headings",
+    );
+}
+
+#[test]
+fn browser_section_landmark_descriptors_track_outline_kinds_and_blockers() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "document-outline-landmark-page")
+        .expect("document outline fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("document outline fixture should parse into browser document facts");
+    let expected = case.expected.into_browser_document();
+
+    assert_eq!(
+        actual.section_landmark_descriptors, expected.section_landmark_descriptors,
+        "section landmark descriptors should classify outline/landmark kinds and readiness blockers",
+    );
+    assert_eq!(
+        actual.section_landmark_descriptors[1].outline_kind, "landmark-section",
+        "navigation landmarks should remain visible as sectioning landmarks",
+    );
+    assert_eq!(
+        actual.section_landmark_descriptors[3].landmark_block_reasons,
+        Vec::<String>::new(),
+        "headed articles should not be blocked",
     );
 }
 
@@ -7560,6 +7708,18 @@ impl ExpectedBrowserDocument {
             .into_iter()
             .map(ExpectedTextSemanticDescriptor::into_browser_text_semantic_descriptor)
             .collect();
+        let navigation_group_descriptors = self
+            .navigation_group_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedNavigationGroupDescriptor::into_browser_navigation_group_descriptor)
+            .collect();
+        let section_landmark_descriptors = self
+            .section_landmark_descriptors
+            .unwrap_or_default()
+            .into_iter()
+            .map(ExpectedSectionLandmarkDescriptor::into_browser_section_landmark_descriptor)
+            .collect();
         let scripts: Vec<_> = self
             .scripts
             .into_iter()
@@ -8074,11 +8234,13 @@ impl ExpectedBrowserDocument {
                 .into_iter()
                 .map(ExpectedNavigationGroup::into_browser_navigation_group)
                 .collect(),
+            navigation_group_descriptors,
             section_landmarks: self
                 .section_landmarks
                 .into_iter()
                 .map(ExpectedSectionLandmark::into_browser_section_landmark)
                 .collect(),
+            section_landmark_descriptors,
             command_elements,
             activation_descriptors,
             popovers,
@@ -14770,6 +14932,30 @@ impl ExpectedNavigationGroup {
     }
 }
 
+impl ExpectedNavigationGroupDescriptor {
+    fn into_browser_navigation_group_descriptor(self) -> BrowserNavigationGroupDescriptor {
+        BrowserNavigationGroupDescriptor {
+            group_index: self.group_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            group_kind: self.group_kind,
+            landmark_kind: self.landmark_kind,
+            list_kind: self.list_kind,
+            item_count: self.item_count,
+            list_start: self.list_start,
+            list_marker_type: self.list_marker_type,
+            list_reversed: self.list_reversed,
+            navigation_blocked: self.navigation_blocked,
+            navigation_block_reasons: self.navigation_block_reasons,
+        }
+    }
+}
+
 impl ExpectedSectionLandmark {
     fn into_browser_section_landmark(self) -> BrowserSectionLandmark {
         BrowserSectionLandmark {
@@ -14785,6 +14971,29 @@ impl ExpectedSectionLandmark {
             landmark_kind: self.landmark_kind,
             heading_level: self.heading_level,
             heading_text: self.heading_text,
+        }
+    }
+}
+
+impl ExpectedSectionLandmarkDescriptor {
+    fn into_browser_section_landmark_descriptor(self) -> BrowserSectionLandmarkDescriptor {
+        BrowserSectionLandmarkDescriptor {
+            landmark_index: self.landmark_index,
+            element: self.element,
+            id: self.id,
+            role: self.role,
+            authored_role: self.authored_role,
+            text: self.text,
+            accessible_name: self.accessible_name,
+            aria_label: self.aria_label,
+            aria_labelledby: self.aria_labelledby,
+            section_kind: self.section_kind,
+            landmark_kind: self.landmark_kind,
+            heading_level: self.heading_level,
+            heading_text: self.heading_text,
+            outline_kind: self.outline_kind,
+            landmark_blocked: self.landmark_blocked,
+            landmark_block_reasons: self.landmark_block_reasons,
         }
     }
 }

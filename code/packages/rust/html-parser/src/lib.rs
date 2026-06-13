@@ -859,7 +859,9 @@ pub struct BrowserDocument {
     pub text_semantic_descriptors: Vec<BrowserTextSemanticDescriptor>,
     pub navigation_target_descriptors: Vec<BrowserNavigationTargetDescriptor>,
     pub navigation_groups: Vec<BrowserNavigationGroup>,
+    pub navigation_group_descriptors: Vec<BrowserNavigationGroupDescriptor>,
     pub section_landmarks: Vec<BrowserSectionLandmark>,
+    pub section_landmark_descriptors: Vec<BrowserSectionLandmarkDescriptor>,
     pub command_elements: Vec<BrowserCommandElement>,
     pub activation_descriptors: Vec<BrowserActivationDescriptor>,
     pub popovers: Vec<BrowserPopover>,
@@ -2382,6 +2384,27 @@ pub struct BrowserNavigationGroup {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserNavigationGroupDescriptor {
+    pub group_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub group_kind: String,
+    pub landmark_kind: Option<String>,
+    pub list_kind: Option<String>,
+    pub item_count: usize,
+    pub list_start: Option<String>,
+    pub list_marker_type: Option<String>,
+    pub list_reversed: bool,
+    pub navigation_blocked: bool,
+    pub navigation_block_reasons: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BrowserSectionLandmark {
     pub element: String,
     pub id: Option<String>,
@@ -2395,6 +2418,26 @@ pub struct BrowserSectionLandmark {
     pub landmark_kind: Option<String>,
     pub heading_level: Option<u8>,
     pub heading_text: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserSectionLandmarkDescriptor {
+    pub landmark_index: usize,
+    pub element: String,
+    pub id: Option<String>,
+    pub role: String,
+    pub authored_role: Option<String>,
+    pub text: String,
+    pub accessible_name: Option<String>,
+    pub aria_label: Option<String>,
+    pub aria_labelledby: Vec<String>,
+    pub section_kind: Option<String>,
+    pub landmark_kind: Option<String>,
+    pub heading_level: Option<u8>,
+    pub heading_text: Option<String>,
+    pub outline_kind: String,
+    pub landmark_blocked: bool,
+    pub landmark_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -3851,6 +3894,10 @@ impl BrowserDocument {
         summary.link_resource_descriptors = browser_link_resource_descriptors(&summary.resources);
         summary.text_semantic_descriptors =
             browser_text_semantic_descriptors(&summary.text_semantics);
+        summary.navigation_group_descriptors =
+            browser_navigation_group_descriptors(&summary.navigation_groups);
+        summary.section_landmark_descriptors =
+            browser_section_landmark_descriptors(&summary.section_landmarks);
         summary
     }
 }
@@ -14268,6 +14315,69 @@ fn browser_navigation_group_element(
     })
 }
 
+fn browser_navigation_group_descriptors(
+    groups: &[BrowserNavigationGroup],
+) -> Vec<BrowserNavigationGroupDescriptor> {
+    groups
+        .iter()
+        .enumerate()
+        .map(|(index, group)| browser_navigation_group_descriptor(index + 1, group))
+        .collect()
+}
+
+fn browser_navigation_group_descriptor(
+    group_index: usize,
+    group: &BrowserNavigationGroup,
+) -> BrowserNavigationGroupDescriptor {
+    let navigation_block_reasons = browser_navigation_group_block_reasons(group);
+
+    BrowserNavigationGroupDescriptor {
+        group_index,
+        element: group.element.clone(),
+        id: group.id.clone(),
+        role: group.role.clone(),
+        text: group.text.clone(),
+        accessible_name: group.accessible_name.clone(),
+        aria_label: group.aria_label.clone(),
+        aria_labelledby: group.aria_labelledby.clone(),
+        group_kind: browser_navigation_group_kind(group).to_string(),
+        landmark_kind: group.landmark_kind.clone(),
+        list_kind: group.list_kind.clone(),
+        item_count: group.item_count,
+        list_start: group.list_start.clone(),
+        list_marker_type: group.list_marker_type.clone(),
+        list_reversed: group.list_reversed,
+        navigation_blocked: !navigation_block_reasons.is_empty(),
+        navigation_block_reasons,
+    }
+}
+
+fn browser_navigation_group_kind(group: &BrowserNavigationGroup) -> &'static str {
+    if group.landmark_kind.is_some() {
+        "landmark"
+    } else if group.list_kind.as_deref() == Some("menu") {
+        "menu"
+    } else if group.list_kind.is_some() {
+        "list"
+    } else {
+        "group"
+    }
+}
+
+fn browser_navigation_group_block_reasons(group: &BrowserNavigationGroup) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if group.text.is_empty() && group.item_count == 0 {
+        reasons.push("empty-navigation-group".to_string());
+    }
+    if group.landmark_kind.as_deref() == Some("navigation") && group.accessible_name.is_none() {
+        reasons.push("missing-navigation-label".to_string());
+    }
+    if group.list_kind.is_some() && group.item_count == 0 {
+        reasons.push("empty-list".to_string());
+    }
+    reasons
+}
+
 fn browser_direct_list_item_count(element: &Element) -> usize {
     element
         .children
@@ -14303,6 +14413,78 @@ fn browser_section_landmark_element(
         heading_level: heading.as_ref().map(|(level, _)| *level),
         heading_text: heading.map(|(_, text)| text),
     })
+}
+
+fn browser_section_landmark_descriptors(
+    landmarks: &[BrowserSectionLandmark],
+) -> Vec<BrowserSectionLandmarkDescriptor> {
+    landmarks
+        .iter()
+        .enumerate()
+        .map(|(index, landmark)| browser_section_landmark_descriptor(index + 1, landmark))
+        .collect()
+}
+
+fn browser_section_landmark_descriptor(
+    landmark_index: usize,
+    landmark: &BrowserSectionLandmark,
+) -> BrowserSectionLandmarkDescriptor {
+    let landmark_block_reasons = browser_section_landmark_block_reasons(landmark);
+
+    BrowserSectionLandmarkDescriptor {
+        landmark_index,
+        element: landmark.element.clone(),
+        id: landmark.id.clone(),
+        role: landmark.role.clone(),
+        authored_role: landmark.authored_role.clone(),
+        text: landmark.text.clone(),
+        accessible_name: landmark.accessible_name.clone(),
+        aria_label: landmark.aria_label.clone(),
+        aria_labelledby: landmark.aria_labelledby.clone(),
+        section_kind: landmark.section_kind.clone(),
+        landmark_kind: landmark.landmark_kind.clone(),
+        heading_level: landmark.heading_level,
+        heading_text: landmark.heading_text.clone(),
+        outline_kind: browser_section_landmark_outline_kind(landmark).to_string(),
+        landmark_blocked: !landmark_block_reasons.is_empty(),
+        landmark_block_reasons,
+    }
+}
+
+fn browser_section_landmark_outline_kind(landmark: &BrowserSectionLandmark) -> &'static str {
+    if landmark.landmark_kind.is_some() && landmark.section_kind.is_some() {
+        "landmark-section"
+    } else if landmark.landmark_kind.is_some() {
+        "landmark"
+    } else if landmark.section_kind.is_some() {
+        "section"
+    } else {
+        "generic"
+    }
+}
+
+fn browser_section_landmark_block_reasons(landmark: &BrowserSectionLandmark) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if landmark.text.is_empty() {
+        reasons.push("empty-section-landmark".to_string());
+    }
+    if landmark.element == "section" && landmark.accessible_name.is_none() {
+        reasons.push("section-missing-accessible-name".to_string());
+    }
+    if matches!(landmark.element.as_str(), "article" | "section")
+        && landmark.heading_level.is_none()
+    {
+        reasons.push("section-missing-heading".to_string());
+    }
+    if matches!(
+        landmark.landmark_kind.as_deref(),
+        Some("navigation" | "complementary")
+    ) && landmark.accessible_name.is_none()
+        && landmark.heading_text.is_none()
+    {
+        reasons.push("landmark-missing-label-or-heading".to_string());
+    }
+    reasons
 }
 
 fn browser_first_heading(element: &Element) -> Option<(u8, String)> {
