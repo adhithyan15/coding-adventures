@@ -3356,6 +3356,7 @@ pub fn whitespace_only_minify(
                 || async_gen_method_needs_space(&kept, idx)
                 || await_operator_needs_space(&kept, idx)
                 || keyword_string_needs_space(&kept, idx)
+                || case_unary_needs_space(&kept, idx)
             {
                 out.push(' ');
             }
@@ -4620,6 +4621,39 @@ fn keyword_string_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool
     let prev = kept[idx - 1];
     is_word_like(prev)
         && matches!(prev.value.as_str(), "case" | "get" | "set" | "new")
+}
+
+/// gap-117: a `case` clause whose operand begins with a prefix UNARY
+/// operator (`-` / `+` / `!` / `~`) needs a separating space between the
+/// `case` keyword and the operator, which closurec otherwise omits:
+///
+///   switch(x){case-1:…}  ->  switch(x){case -1:…}
+///   switch(x){case!a:…}  ->  switch(x){case !a:…}
+///
+/// Upstream Closure v20240317 emits the space. The glued form `case-1` is
+/// still valid JS — after `case` the `-` is unambiguously unary — so this
+/// is a byte-identity gap, not a correctness fix.
+///
+/// SCOPED to `case`: other keywords before a unary operator stay
+/// ADJACENT (verified against the JAR — `return-1`, `throw-1`,
+/// `typeof-1`, `void-1`, `a in-1` all keep NO space, unlike `case`). The
+/// companion `keyword_string_needs_space` (gap-111) handles the
+/// string-literal operand (`case"a":` -> `case "a":`); this helper is its
+/// unary-operand sibling.
+fn case_unary_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    if idx == 0 {
+        return false;
+    }
+    let tok = kept[idx];
+    let is_unary_punct = is_structural_punct(tok, "-")
+        || is_structural_punct(tok, "+")
+        || is_structural_punct(tok, "!")
+        || is_structural_punct(tok, "~");
+    if !is_unary_punct {
+        return false;
+    }
+    let prev = kept[idx - 1];
+    is_word_like(prev) && prev.value == "case"
 }
 
 /// gap-097: True iff the token at `idx` is the `*` of an ASYNC GENERATOR
@@ -8113,6 +8147,46 @@ mod tests {
         assert_eq!(minify("x={set:1,new:2};"), "x={set:1,new:2};");
         assert_eq!(minify("x=new C;"), "x=new C;");
         assert_eq!(minify("switch(x){case 1:b()}"), "switch(x){case 1:b()};");
+    }
+
+    /// gap-117 — a `case` clause whose operand begins with a prefix unary
+    /// operator (`-`/`+`/`!`/`~`) gets the separating space upstream emits.
+    #[test]
+    fn gap117_case_unary_operand_space() {
+        assert_eq!(
+            minify("switch(x){case-1:a()}"),
+            "switch(x){case -1:a()};"
+        );
+        assert_eq!(
+            minify("switch(x){case+1:a()}"),
+            "switch(x){case +1:a()};"
+        );
+        assert_eq!(
+            minify("switch(x){case!a:b()}"),
+            "switch(x){case !a:b()};"
+        );
+        assert_eq!(
+            minify("switch(x){case~a:b()}"),
+            "switch(x){case ~a:b()};"
+        );
+        // The space precedes the whole unary expression, not each token.
+        assert_eq!(
+            minify("switch(x){case-a.b:c()}"),
+            "switch(x){case -a.b:c()};"
+        );
+    }
+
+    /// **Non-regression**: the `case`-unary space is SCOPED to `case`.
+    /// Other keywords before a unary operator stay ADJACENT, and a plain
+    /// `case`-number / `case`-identifier / binary `a-1` are untouched.
+    #[test]
+    fn gap117_scoped_to_case() {
+        assert_eq!(minify("function f(){return-1}"), "function f(){return-1};");
+        assert_eq!(minify("throw-1;"), "throw-1;");
+        assert_eq!(minify("x=typeof-1;"), "x=typeof-1;");
+        assert_eq!(minify("switch(x){case 1:a()}"), "switch(x){case 1:a()};");
+        assert_eq!(minify("switch(x){case a:b()}"), "switch(x){case a:b()};");
+        assert_eq!(minify("x=a-1;"), "x=a-1;");
     }
 
     /// gap-112 — a `for await(...)` async-iteration header must NOT take
