@@ -225,11 +225,41 @@ Rafter out 0 {total}
     assert summary.diagnostics == ()
 
 
-def test_resolve_deck_parameters_reports_unresolved_and_unsupported_func() -> None:
+def test_resolve_deck_parameters_evaluates_func_calls() -> None:
     summary = resolve_deck_parameters(
         """
-.param GOOD=1k BAD=missing+1
 .func gain(x) {x*2}
+.param BASE=2 SCALE=3 SHIFT=1 TOTAL=blend(base,scale,shift)
+.func blend(a,b,c) 'gain(a)+b+c'
+R1 in out {gain(total)}
+B1 out 0 V='blend(1,2,3)'
+.op
+.end
+"""
+    )
+
+    assert summary.terminated is True
+    assert summary.end_line_number == 8
+    assert summary.active_lines == (
+        "R1 in out 16",
+        "B1 out 0 V=7",
+        ".op",
+    )
+    assert [(param.name, param.value) for param in summary.parameters] == [
+        ("BASE", 2.0),
+        ("SCALE", 3.0),
+        ("SHIFT", 1.0),
+        ("TOTAL", 8.0),
+    ]
+    assert summary.diagnostics == ()
+
+
+def test_resolve_deck_parameters_reports_bad_func_calls() -> None:
+    summary = resolve_deck_parameters(
+        """
+.func one(x) {x+1}
+.func loop(x) {loop(x)}
+.param GOOD=one(1) BAD=unknown(1) ARITY=one(1,2) RECUR=loop(1)
 R1 in out {bad}
 R2 out 0 {good}
 .end
@@ -237,18 +267,23 @@ R2 out 0 {good}
     )
 
     assert summary.active_lines == (
-        ".func gain(x) {x*2}",
         "R1 in out {bad}",
-        "R2 out 0 1000",
+        "R2 out 0 2",
     )
-    assert [(param.name, param.value) for param in summary.parameters] == [("GOOD", 1000.0)]
+    assert [(param.name, param.value) for param in summary.parameters] == [("GOOD", 2.0)]
     assert [diag.code for diag in summary.diagnostics] == [
         "SPICE_DECK_PARAM_EXPRESSION",
-        "SPICE_DECK_UNSUPPORTED_DIRECTIVE",
+        "SPICE_DECK_PARAM_EXPRESSION",
+        "SPICE_DECK_PARAM_EXPRESSION",
         "SPICE_DECK_PARAM_UNRESOLVED",
     ]
-    assert summary.diagnostics[0].parameter == "BAD"
-    assert summary.diagnostics[2].expression == "bad"
+    assert [diag.parameter for diag in summary.diagnostics[:3]] == ["BAD", "ARITY", "RECUR"]
+    assert [diag.expression for diag in summary.diagnostics] == [
+        "unknown(1)",
+        "one(1,2)",
+        "loop(1)",
+        "bad",
+    ]
 
 
 def test_resolve_deck_initial_conditions_extracts_ic_and_nodeset_hints() -> None:

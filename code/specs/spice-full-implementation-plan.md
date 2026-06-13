@@ -23,8 +23,8 @@ downstream tools to compare.
      parsed `.func`, `.ic`, and `.nodeset` hints; `.end` boundary detection,
      map-backed `.include` / `.lib` source resolution, scalar `.param`
      evaluation, active-line expression rewriting, function-definition
-     extraction, and initial-condition / nodeset extraction now have shared
-     diagnostic footholds.
+     extraction, scalar function-call evaluation, and initial-condition /
+     nodeset extraction now have shared diagnostic footholds.
    - Expand `.measure`, `.save`, and `.probe` execution toward full SPICE
      compatibility while keeping unsupported control-flow diagnostics explicit.
 
@@ -182,7 +182,7 @@ downstream tools to compare.
       unary signs, `pi`, and common SPICE numeric suffixes.
     - Stable diagnostics cover malformed `.param` cards, invalid parameter
       names, failed expressions, unresolved active-line expressions,
-      unterminated expression delimiters, and still-unsupported `.func` cards.
+      and unterminated expression delimiters.
 
 17. Initial condition/nodeset directive foothold.
     - Status: completed in this initial-condition/nodeset directive slice.
@@ -200,19 +200,31 @@ downstream tools to compare.
       that extract scalar `.func name(args) expression` definitions before
       `.end` while preserving non-function active lines.
     - Function bodies are stored as normalized expression strings with braced
-      or quoted expression delimiters stripped, but function-call evaluation and
-      active-line expansion remain future execution-layer work.
+      or quoted expression delimiters stripped; scalar function-call evaluation
+      and active-line expansion are covered by the follow-up expression slice.
     - Stable diagnostics cover missing definitions, malformed signatures,
       invalid function names, invalid or duplicate arguments, and empty
       expressions.
+
+19. Function-call expression resolution.
+    - Status: completed in this function-call expression slice.
+    - Python, Rust, and TypeScript now let the deck parameter resolver collect
+      scalar `.func` definitions before `.end` and evaluate function calls in
+      `.param` assignments plus braced or quoted active-line expressions.
+    - Function names are case-insensitive, arguments are scalar expressions,
+      local arguments shadow deck parameters inside function bodies, and stable
+      diagnostics cover unknown functions, bad arity, and recursive calls.
+    - The slice deliberately keeps `.ic` / `.nodeset` hints as parsed metadata;
+      execution-layer wiring for initial guesses remains future deck execution
+      work.
 
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Support richer expression/function surfaces beyond the scalar `.param`
-     and `.func` definition footholds, including function-call evaluation and
-     execution wiring for parsed `.ic` / `.nodeset` hints.
+   - Wire parsed `.ic` / `.nodeset` hints into analysis execution as initial
+     guesses or solver aids now that scalar `.param` and `.func` expression
+     surfaces have shared cross-language resolution.
    - Expand the initial `.measure`, `.save`, and `.probe` support toward full
      SPICE compatibility, including additional measure modes and richer output
      formats.
