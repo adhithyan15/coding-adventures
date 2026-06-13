@@ -2,10 +2,10 @@ use std::collections::HashMap;
 
 use spice_engine::{
     analyze_deck_controls, compatibility_corpus, format_compatibility_corpus_table,
-    format_release_readiness_report, release_readiness_gates, resolve_deck_functions,
-    resolve_deck_initial_conditions, resolve_deck_measurements, resolve_deck_outputs,
-    resolve_deck_parameters, resolve_deck_sources, select_deck_output_probes, CompatibilityDeck,
-    CompatibilityGoldenValue, CompatibilityOracle,
+    format_release_readiness_report, release_readiness_gates, resolve_deck_fourier,
+    resolve_deck_functions, resolve_deck_initial_conditions, resolve_deck_measurements,
+    resolve_deck_outputs, resolve_deck_parameters, resolve_deck_sources, select_deck_output_probes,
+    CompatibilityDeck, CompatibilityGoldenValue, CompatibilityOracle,
 };
 
 #[test]
@@ -699,6 +699,67 @@ fn resolve_deck_measurements_reports_unsupported_subset() {
             "SPICE_DECK_MEASURE_EXPRESSION",
             "SPICE_DECK_MEASURE_MODE",
             "SPICE_DECK_MEASURE_WINDOW",
+        ]
+    );
+}
+
+#[test]
+fn resolve_deck_fourier_extracts_transient_cards() {
+    let summary = resolve_deck_fourier(
+        "
+V1 in 0 SIN(0 1 1k)
+.tran 1u 2m
+.four {1k} V(in) V(out) HARMONICS=5 FROM=1m
+.four 2k \"I(V1)\"
+.end
+.four 3k V(ignored)
+",
+    );
+
+    assert_eq!(
+        summary.active_lines,
+        vec!["V1 in 0 SIN(0 1 1k)", ".tran 1u 2m"]
+    );
+    assert!(summary.terminated);
+    assert_eq!(summary.end_line_number, Some(6));
+    assert!(summary.diagnostics.is_empty());
+    assert_eq!(summary.fourier.len(), 2);
+    assert!((summary.fourier[0].fundamental_frequency_hz - 1000.0).abs() < 1.0e-12);
+    assert_eq!(summary.fourier[0].probes, vec!["V(in)", "V(out)"]);
+    assert_eq!(summary.fourier[0].harmonics, Some(5));
+    assert!((summary.fourier[0].from_value.unwrap() - 1.0e-3).abs() < 1.0e-12);
+    assert_eq!(summary.fourier[1].probes, vec!["I(V1)"]);
+    assert_eq!(summary.fourier[1].harmonics, None);
+}
+
+#[test]
+fn resolve_deck_fourier_reports_unsupported_subset() {
+    let summary = resolve_deck_fourier(
+        "
+.four 0 V(out)
+.four 1k
+.four 1k V(out) HARMONICS=1.5
+.four 1k V(out) TO=2m
+.four 1k \"\"
+.end
+",
+    );
+
+    assert!(summary.fourier.is_empty());
+    let mut codes = summary
+        .diagnostics
+        .iter()
+        .map(|diagnostic| diagnostic.code.as_str())
+        .collect::<Vec<_>>();
+    codes.sort_unstable();
+    assert_eq!(
+        codes,
+        vec![
+            "SPICE_DECK_FOURIER_ARGUMENT",
+            "SPICE_DECK_FOURIER_ARGUMENT",
+            "SPICE_DECK_FOURIER_ARGUMENT",
+            "SPICE_DECK_FOURIER_FREQUENCY",
+            "SPICE_DECK_FOURIER_PROBE",
         ]
     );
 }

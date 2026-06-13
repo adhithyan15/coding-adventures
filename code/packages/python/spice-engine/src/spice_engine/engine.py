@@ -65,9 +65,11 @@ from typing import Literal
 from mosfet_models import MOSFET, Level1Model, Level1Params
 
 from spice_engine.compatibility import (
+    DeckFourierCard,
     DeckInitialConditionSummary,
     DeckMeasurementCard,
     DeckNodeCondition,
+    resolve_deck_fourier,
     resolve_deck_measurements,
 )
 from spice_engine.elements import (
@@ -3244,7 +3246,7 @@ def measure_transient_deck(
 
 
 def measure_dc_sweep_probe(
-    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    dc_sweep_result: DcSweepResult | list[DcSweepPoint],
     name: str,
     probe: str,
     mode: str,
@@ -3305,7 +3307,7 @@ def measure_dc_sweep_probe(
 
 
 def measure_dc_sweep_cards(
-    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    dc_sweep_result: DcSweepResult | list[DcSweepPoint],
     measurements: Iterable[DeckMeasurementCard],
 ) -> list[ProbeMeasurement]:
     """Execute parsed DC sweep ``.measure`` / ``.meas`` cards."""
@@ -3330,7 +3332,7 @@ def measure_dc_sweep_cards(
 
 
 def measure_dc_sweep_deck(
-    dc_sweep_result: "DcSweepResult | list[DcSweepPoint]",
+    dc_sweep_result: DcSweepResult | list[DcSweepPoint],
     netlist: str,
 ) -> list[ProbeMeasurement]:
     """Parse and execute supported DC sweep measurements from a SPICE deck."""
@@ -3345,7 +3347,7 @@ def measure_dc_sweep_deck(
 
 
 def measure_ac_sweep_probe(
-    ac_result: "AcResult | list[AcPoint]",
+    ac_result: AcResult | list[AcPoint],
     name: str,
     probe: str,
     mode: str,
@@ -3410,7 +3412,7 @@ def measure_ac_sweep_probe(
 
 
 def measure_ac_sweep_cards(
-    ac_result: "AcResult | list[AcPoint]",
+    ac_result: AcResult | list[AcPoint],
     measurements: Iterable[DeckMeasurementCard],
 ) -> list[ProbeMeasurement]:
     """Execute parsed AC sweep ``.measure`` / ``.meas`` cards."""
@@ -3435,7 +3437,7 @@ def measure_ac_sweep_cards(
 
 
 def measure_ac_sweep_deck(
-    ac_result: "AcResult | list[AcPoint]",
+    ac_result: AcResult | list[AcPoint],
     netlist: str,
 ) -> list[ProbeMeasurement]:
     """Parse and execute supported AC sweep measurements from a SPICE deck."""
@@ -3696,6 +3698,44 @@ def fourier_corners(
         fundamental_frequency=fundamental_frequency,
         points=points,
     )
+
+
+def fourier_transient_cards(
+    transient_result: TransientResult | list[TransientPoint],
+    fourier_cards: Iterable[DeckFourierCard],
+) -> list[FourierResult]:
+    """Route parsed ``.four`` cards into Fourier transient analysis."""
+
+    points = (
+        transient_result.points
+        if isinstance(transient_result, TransientResult)
+        else transient_result
+    )
+    return [
+        fourier(
+            points,
+            card.fundamental_frequency,
+            list(card.probes),
+            harmonics=card.harmonics or 9,
+            start_time=card.from_value,
+        )
+        for card in fourier_cards
+    ]
+
+
+def fourier_transient_deck(
+    transient_result: TransientResult | list[TransientPoint],
+    netlist: str,
+) -> list[FourierResult]:
+    """Resolve transient ``.four`` cards from a deck and run Fourier analyses."""
+
+    summary = resolve_deck_fourier(netlist)
+    if summary.diagnostics:
+        diagnostic = summary.diagnostics[0]
+        raise ValueError(
+            f"fourier_transient_deck: line {diagnostic.line_number}: {diagnostic.message}"
+        )
+    return fourier_transient_cards(transient_result, summary.fourier)
 
 
 def _fourier_probe(

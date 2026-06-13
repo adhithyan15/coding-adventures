@@ -232,6 +232,41 @@ class DeckMeasurementSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckFourierCard:
+    """A parsed transient ``.four`` Fourier-analysis card."""
+
+    directive: str
+    fundamental_frequency: float
+    probes: tuple[str, ...]
+    line_number: int
+    harmonics: int | None = None
+    from_value: float | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckFourierDiagnostic:
+    """A stable diagnostic emitted while resolving deck Fourier cards."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    token: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckFourierSummary:
+    """Resolved active deck lines plus parsed ``.four`` cards."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    fourier: tuple[DeckFourierCard, ...]
+    diagnostics: tuple[DeckFourierDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -580,6 +615,35 @@ def resolve_deck_measurements(netlist: str) -> DeckMeasurementSummary:
     )
 
 
+def resolve_deck_fourier(netlist: str) -> DeckFourierSummary:
+    """Extract supported transient ``.four`` cards before ``.end``."""
+
+    state = _DeckFourierState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive == ".four":
+            _resolve_fourier_line(stripped, line_number, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckFourierSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        fourier=tuple(state.fourier),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -820,6 +884,15 @@ class _DeckMeasurementState:
     def __init__(self) -> None:
         self.diagnostics = []
         self.measurements = []
+
+
+class _DeckFourierState:
+    diagnostics: list[DeckFourierDiagnostic]
+    fourier: list[DeckFourierCard]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.fourier = []
 
 
 def _resolve_node_condition_line(
@@ -1379,6 +1452,26 @@ def _add_measurement_diagnostic(
     )
 
 
+def _add_fourier_diagnostic(
+    state: _DeckFourierState,
+    *,
+    code: str,
+    line_number: int,
+    message: str,
+    token: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckFourierDiagnostic(
+            code=code,
+            directive=".four",
+            line_number=line_number,
+            message=message,
+            severity="error",
+            token=token,
+        )
+    )
+
+
 def _parse_node_condition_target(target: str) -> str | None:
     if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
         return None
@@ -1666,6 +1759,144 @@ def _resolve_measurement_line(
             trigger_value=None,
             trigger_crossing_kind=None,
             trigger_crossing_count=None,
+        )
+    )
+
+
+def _resolve_fourier_line(
+    line: str,
+    line_number: int,
+    state: _DeckFourierState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if len(tokens) < 3:
+        _add_fourier_diagnostic(
+            state,
+            code="SPICE_DECK_FOURIER_ARGUMENT",
+            line_number=line_number,
+            message=".four requires a fundamental frequency and at least one probe",
+        )
+        return
+
+    empty_parameter_state = _DeckParameterState()
+    try:
+        fundamental_frequency = _evaluate_parameter_expression(
+            _strip_expression_delimiters(tokens[1].strip()),
+            empty_parameter_state,
+        )
+    except ValueError as error:
+        _add_fourier_diagnostic(
+            state,
+            code="SPICE_DECK_FOURIER_EXPRESSION",
+            line_number=line_number,
+            message=str(error),
+            token=tokens[1],
+        )
+        return
+    if not isfinite(fundamental_frequency) or fundamental_frequency <= 0.0:
+        _add_fourier_diagnostic(
+            state,
+            code="SPICE_DECK_FOURIER_FREQUENCY",
+            line_number=line_number,
+            message=".four fundamental frequency must be finite and positive",
+            token=tokens[1],
+        )
+        return
+
+    probes: list[str] = []
+    harmonics: int | None = None
+    from_value: float | None = None
+    seen_options: set[str] = set()
+    diagnostic_count = len(state.diagnostics)
+    for token in tokens[2:]:
+        if "=" in token:
+            key, expression = token.split("=", 1)
+            key = key.strip().lower()
+            if key not in {"harmonics", "from"}:
+                _add_fourier_diagnostic(
+                    state,
+                    code="SPICE_DECK_FOURIER_ARGUMENT",
+                    line_number=line_number,
+                    message=f"unsupported .four option {key!r}",
+                    token=token,
+                )
+                continue
+            if key in seen_options:
+                _add_fourier_diagnostic(
+                    state,
+                    code="SPICE_DECK_FOURIER_ARGUMENT",
+                    line_number=line_number,
+                    message=f"duplicate .four option {key!r}",
+                    token=token,
+                )
+                continue
+            seen_options.add(key)
+            try:
+                value = _evaluate_parameter_expression(
+                    _strip_expression_delimiters(expression.strip()),
+                    empty_parameter_state,
+                )
+            except ValueError as error:
+                _add_fourier_diagnostic(
+                    state,
+                    code="SPICE_DECK_FOURIER_EXPRESSION",
+                    line_number=line_number,
+                    message=str(error),
+                    token=token,
+                )
+                continue
+            if key == "harmonics":
+                if not isfinite(value) or value < 1.0 or not value.is_integer():
+                    _add_fourier_diagnostic(
+                        state,
+                        code="SPICE_DECK_FOURIER_ARGUMENT",
+                        line_number=line_number,
+                        message=".four HARMONICS value must be a positive integer",
+                        token=token,
+                    )
+                    continue
+                harmonics = int(value)
+            else:
+                from_value = value
+            continue
+        probe = _unquote_token(token.strip())
+        if not probe:
+            _add_fourier_diagnostic(
+                state,
+                code="SPICE_DECK_FOURIER_PROBE",
+                line_number=line_number,
+                message=".four probe must not be empty",
+                token=token,
+            )
+            continue
+        probes.append(probe)
+
+    if not probes and len(state.diagnostics) == diagnostic_count:
+        _add_fourier_diagnostic(
+            state,
+            code="SPICE_DECK_FOURIER_PROBE",
+            line_number=line_number,
+            message=".four requires at least one probe",
+        )
+    if from_value is not None and not isfinite(from_value):
+        _add_fourier_diagnostic(
+            state,
+            code="SPICE_DECK_FOURIER_WINDOW",
+            line_number=line_number,
+            message=".four FROM value must be finite",
+        )
+
+    if len(state.diagnostics) != diagnostic_count:
+        return
+
+    state.fourier.append(
+        DeckFourierCard(
+            directive=".four",
+            fundamental_frequency=fundamental_frequency,
+            probes=tuple(probes),
+            line_number=line_number,
+            harmonics=harmonics,
+            from_value=from_value,
         )
     )
 

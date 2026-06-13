@@ -43,9 +43,11 @@ downstream tools to compare.
      route counted threshold occurrences into the same stable measurement
      table; parsed transient `.measure ... TRIG ... TARG ...` cards now route
      trigger-to-target delay measurements with counted crossing controls into
-     stable scalar rows.
-   - Expand remaining non-DC/non-AC measurement analyses toward full SPICE
-     compatibility while keeping unsupported control-flow diagnostics explicit.
+     stable scalar rows; parsed transient `.four` deck cards now route harmonic
+     analyses over transient outputs with optional `HARMONICS=` and `FROM=`
+     controls.
+   - Expand remaining deck-controlled analyses toward full SPICE compatibility
+     while keeping unsupported control-flow diagnostics explicit.
 
 ## Completed Slices
 
@@ -348,12 +350,23 @@ downstream tools to compare.
     - The parser also accepts compact `probe=value` trigger and target forms
       for parity with the existing WHEN syntax.
 
+30. Transient `.FOUR` deck-card routing.
+    - Status: completed in this transient Fourier deck-routing slice.
+    - Python, Rust, and TypeScript now expose matching `.four` / `.FOUR`
+      deck-card resolvers that extract fundamental frequency, probe list,
+      optional `HARMONICS=`, and optional `FROM=` before `.end`.
+    - Matching transient deck helpers route parsed cards into the existing
+      SPICE-style Fourier harmonic result shapes, reusing the shared scalar
+      suffix/arithmetic parser and stable diagnostics for malformed cards.
+    - This closes the first parsed `.FOUR` execution foothold while leaving
+      broader output-plan integration and nested sweep execution in backlog.
+
 ## Backlog
 
 1. Deck execution layer.
    - Convert parsed netlists into runnable analysis plans.
-   - Expand remaining non-DC/non-AC `.measure` analyses toward full SPICE
-     compatibility.
+   - Expand remaining deck-controlled outputs and analysis-plan integration
+     toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature
      diagnostics are now present for the current non-executed state.
 
@@ -375,7 +388,8 @@ downstream tools to compare.
 4. Analysis completion.
    - Generalize pole-zero beyond constrained fixture helpers.
    - Expand nonlinear distortion coverage.
-   - Integrate `.FOUR` and `.MEASURE` with transient outputs.
+   - Expand parsed `.FOUR` / `.MEASURE` integration across output plans and
+     nested sweeps.
    - Support nested sweeps across temperature, parameters, corners, and Monte
      Carlo trials.
    - Stabilize raw, CSV, JSON, and browser-friendly result formats.

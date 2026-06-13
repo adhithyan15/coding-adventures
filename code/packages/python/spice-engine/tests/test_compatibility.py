@@ -1,3 +1,5 @@
+import pytest
+
 from spice_engine import (
     CompatibilityDeck,
     CompatibilityGoldenValue,
@@ -7,6 +9,7 @@ from spice_engine import (
     format_compatibility_corpus_table,
     format_release_readiness_report,
     release_readiness_gates,
+    resolve_deck_fourier,
     resolve_deck_functions,
     resolve_deck_initial_conditions,
     resolve_deck_measurements,
@@ -478,4 +481,49 @@ def test_resolve_deck_measurements_reports_unsupported_subset() -> None:
         "SPICE_DECK_MEASURE_WINDOW",
         "SPICE_DECK_MEASURE_ARGUMENT",
         "SPICE_DECK_MEASURE_EXPRESSION",
+    }
+
+
+def test_resolve_deck_fourier_extracts_transient_cards() -> None:
+    summary = resolve_deck_fourier(
+        """
+V1 in 0 SIN(0 1 1k)
+.tran 1u 2m
+.four {1k} V(in) V(out) HARMONICS=5 FROM=1m
+.four 2k "I(V1)"
+.end
+.four 3k V(ignored)
+"""
+    )
+
+    assert summary.active_lines == ("V1 in 0 SIN(0 1 1k)", ".tran 1u 2m")
+    assert summary.terminated is True
+    assert summary.end_line_number == 6
+    assert summary.diagnostics == ()
+    assert len(summary.fourier) == 2
+    assert summary.fourier[0].fundamental_frequency == pytest.approx(1000.0)
+    assert summary.fourier[0].probes == ("V(in)", "V(out)")
+    assert summary.fourier[0].harmonics == 5
+    assert summary.fourier[0].from_value == pytest.approx(1.0e-3)
+    assert summary.fourier[1].probes == ("I(V1)",)
+    assert summary.fourier[1].harmonics is None
+
+
+def test_resolve_deck_fourier_reports_unsupported_subset() -> None:
+    summary = resolve_deck_fourier(
+        """
+.four 0 V(out)
+.four 1k
+.four 1k V(out) HARMONICS=1.5
+.four 1k V(out) TO=2m
+.four 1k ""
+.end
+"""
+    )
+
+    assert summary.fourier == ()
+    assert {diagnostic.code for diagnostic in summary.diagnostics} == {
+        "SPICE_DECK_FOURIER_ARGUMENT",
+        "SPICE_DECK_FOURIER_FREQUENCY",
+        "SPICE_DECK_FOURIER_PROBE",
     }

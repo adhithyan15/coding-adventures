@@ -82,6 +82,10 @@ transient `WHEN probe=target` cards report first or counted `RISE`, `FALL`, and
 cards report trigger-to-target crossing delays. The deck helpers route parsed
 transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those stable
 measurement rows.
+`resolveDeckFourier`, `fourierTransientCards`, and `fourierTransientDeck`
+extract parsed `.four` / `.FOUR` cards before `.end` and route transient
+samples into the existing SPICE-style Fourier result shape with optional
+`HARMONICS=` and `FROM=` controls.
 
 `normalizeModelCard`, `diodeFromModelCard`, `bjtFromModelCard`,
 `jfetFromModelCard`, and `mosfetFromModelCard` provide the shared `.model`

@@ -4,6 +4,12 @@
 
 ### Added
 
+- **Transient Fourier deck-card routing** —
+  `resolve_deck_fourier()`, `fourier_transient_cards()`, and
+  `fourier_transient_deck()` now route parsed `.four` / `.FOUR` deck cards
+  into SPICE-style Fourier harmonic results with optional `HARMONICS=` and
+  `FROM=` controls, matching Rust and TypeScript.
+
 - **Transient TRIG/TARG delay measurement routing** —
   `measure_transient_delay_between_probes()` and parsed transient
   `.measure ... TRIG ... TARG ...` cards now report trigger-to-target delays

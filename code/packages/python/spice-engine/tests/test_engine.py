@@ -222,6 +222,7 @@ from spice_engine import (
     format_transient_table,
     fourier,
     fourier_corners,
+    fourier_transient_deck,
     jfet_from_model_card,
     mc_dc,
     mc_dc_corners,
@@ -6151,6 +6152,43 @@ def test_fourier_extracts_transient_sinusoid_components() -> None:
     assert fundamental.sine == pytest.approx(amp, rel=2.0e-3)
     assert abs(fundamental.cosine) < 2.0e-3
     assert probe.total_harmonic_distortion < 2.0e-3
+
+
+def test_fourier_transient_deck_routes_parsed_four_cards() -> None:
+    freq = 1_000.0
+    amp = 2.0
+    offset = 0.25
+    period = 1.0 / freq
+    c = Circuit([
+        VoltageSource(
+            "Vs",
+            "in",
+            "0",
+            0.0,
+            waveform=SinWaveform(offset=offset, amplitude=amp, frequency=freq),
+        ),
+    ])
+    result = transient(c, t_stop=2.0 * period, t_step=period / 64.0)
+
+    analyses = fourier_transient_deck(
+        result,
+        """
+.tran 15.625u 2m
+.four 1k V(in) HARMONICS=5 FROM=1m
+.end
+""",
+    )
+
+    assert len(analyses) == 1
+    analysis = analyses[0]
+    probe = analysis.probes[0]
+    fundamental = probe.harmonics[0]
+    assert probe.probe == "V(in)"
+    assert len(probe.harmonics) == 5
+    assert analysis.start_time == pytest.approx(period)
+    assert probe.dc == pytest.approx(offset, abs=2.0e-3)
+    assert fundamental.frequency == pytest.approx(freq)
+    assert fundamental.magnitude == pytest.approx(amp, rel=2.0e-3)
 
 
 def test_fourier_corners_runs_analysis_per_corner_and_formats_tables() -> None:

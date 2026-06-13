@@ -3295,6 +3295,35 @@ pub struct DeckMeasurementSummary {
     pub diagnostics: Vec<DeckMeasurementDiagnostic>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckFourierCard {
+    pub directive: String,
+    pub fundamental_frequency_hz: f64,
+    pub probes: Vec<String>,
+    pub line_number: usize,
+    pub harmonics: Option<usize>,
+    pub from_value: Option<f64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeckFourierDiagnostic {
+    pub code: String,
+    pub directive: String,
+    pub line_number: usize,
+    pub message: String,
+    pub severity: String,
+    pub token: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeckFourierSummary {
+    pub active_lines: Vec<String>,
+    pub terminated: bool,
+    pub end_line_number: Option<usize>,
+    pub fourier: Vec<DeckFourierCard>,
+    pub diagnostics: Vec<DeckFourierDiagnostic>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct DeckOutputSelection {
     pub directive: String,
@@ -3658,6 +3687,38 @@ pub fn resolve_deck_measurements(netlist: &str) -> DeckMeasurementSummary {
         terminated: end_line_number.is_some(),
         end_line_number,
         measurements: state.measurements,
+        diagnostics: state.diagnostics,
+    }
+}
+
+pub fn resolve_deck_fourier(netlist: &str) -> DeckFourierSummary {
+    let mut state = DeckFourierState::new();
+    let mut active_lines = Vec::new();
+    let mut end_line_number = None;
+
+    for (index, raw_line) in netlist.lines().enumerate() {
+        let line_number = index + 1;
+        let stripped = raw_line.trim();
+        if stripped.is_empty() || stripped.starts_with('*') || stripped.starts_with(';') {
+            continue;
+        }
+        let directive = deck_directive(stripped);
+        if directive.as_deref() == Some(".end") {
+            end_line_number = Some(line_number);
+            break;
+        }
+        if directive.as_deref() == Some(".four") {
+            resolve_fourier_line(stripped, line_number, &mut state);
+            continue;
+        }
+        active_lines.push(stripped.to_string());
+    }
+
+    DeckFourierSummary {
+        active_lines,
+        terminated: end_line_number.is_some(),
+        end_line_number,
+        fourier: state.fourier,
         diagnostics: state.diagnostics,
     }
 }
@@ -4051,6 +4112,20 @@ impl DeckMeasurementState {
         Self {
             diagnostics: Vec::new(),
             measurements: Vec::new(),
+        }
+    }
+}
+
+struct DeckFourierState {
+    diagnostics: Vec<DeckFourierDiagnostic>,
+    fourier: Vec<DeckFourierCard>,
+}
+
+impl DeckFourierState {
+    fn new() -> Self {
+        Self {
+            diagnostics: Vec::new(),
+            fourier: Vec::new(),
         }
     }
 }
@@ -4820,6 +4895,157 @@ fn resolve_measurement_line(
         trigger_value: None,
         trigger_crossing_kind: None,
         trigger_crossing_count: None,
+    });
+}
+
+fn resolve_fourier_line(line: &str, line_number: usize, state: &mut DeckFourierState) {
+    let tokens = directive_tokens(line);
+    if tokens.len() < 3 {
+        add_fourier_diagnostic(
+            state,
+            "SPICE_DECK_FOURIER_ARGUMENT",
+            line_number,
+            ".four requires a fundamental frequency and at least one probe",
+            None,
+        );
+        return;
+    }
+
+    let empty_parameter_state = DeckParameterState::new();
+    let frequency = match evaluate_parameter_expression(
+        &strip_expression_delimiters(tokens[1].trim()),
+        &empty_parameter_state,
+    ) {
+        Ok(value) if value.is_finite() && value > 0.0 => value,
+        Ok(_) => {
+            add_fourier_diagnostic(
+                state,
+                "SPICE_DECK_FOURIER_FREQUENCY",
+                line_number,
+                ".four fundamental frequency must be finite and positive",
+                Some(tokens[1].to_string()),
+            );
+            return;
+        }
+        Err(message) => {
+            add_fourier_diagnostic(
+                state,
+                "SPICE_DECK_FOURIER_EXPRESSION",
+                line_number,
+                &message,
+                Some(tokens[1].to_string()),
+            );
+            return;
+        }
+    };
+
+    let mut probes = Vec::new();
+    let mut harmonics = None;
+    let mut from_value = None;
+    let mut seen_options = Vec::new();
+    let diagnostic_count = state.diagnostics.len();
+    for token in tokens.iter().skip(2) {
+        if let Some((key, expression)) = token.split_once('=') {
+            let key = key.trim().to_ascii_lowercase();
+            if key != "harmonics" && key != "from" {
+                add_fourier_diagnostic(
+                    state,
+                    "SPICE_DECK_FOURIER_ARGUMENT",
+                    line_number,
+                    &format!("unsupported .four option {key:?}"),
+                    Some((*token).to_string()),
+                );
+                continue;
+            }
+            if seen_options.iter().any(|seen| seen == &key) {
+                add_fourier_diagnostic(
+                    state,
+                    "SPICE_DECK_FOURIER_ARGUMENT",
+                    line_number,
+                    &format!("duplicate .four option {key:?}"),
+                    Some((*token).to_string()),
+                );
+                continue;
+            }
+            seen_options.push(key.clone());
+            match evaluate_parameter_expression(
+                &strip_expression_delimiters(expression.trim()),
+                &empty_parameter_state,
+            ) {
+                Ok(value) if key == "harmonics" => {
+                    if !value.is_finite()
+                        || value < 1.0
+                        || value.fract() != 0.0
+                        || value > usize::MAX as f64
+                    {
+                        add_fourier_diagnostic(
+                            state,
+                            "SPICE_DECK_FOURIER_ARGUMENT",
+                            line_number,
+                            ".four HARMONICS value must be a positive integer",
+                            Some((*token).to_string()),
+                        );
+                        continue;
+                    }
+                    harmonics = Some(value as usize);
+                }
+                Ok(value) => from_value = Some(value),
+                Err(message) => add_fourier_diagnostic(
+                    state,
+                    "SPICE_DECK_FOURIER_EXPRESSION",
+                    line_number,
+                    &message,
+                    Some((*token).to_string()),
+                ),
+            }
+            continue;
+        }
+        let probe = unquote_token(token.trim());
+        if probe.is_empty() {
+            add_fourier_diagnostic(
+                state,
+                "SPICE_DECK_FOURIER_PROBE",
+                line_number,
+                ".four probe must not be empty",
+                Some((*token).to_string()),
+            );
+            continue;
+        }
+        probes.push(probe);
+    }
+
+    if probes.is_empty() && state.diagnostics.len() == diagnostic_count {
+        add_fourier_diagnostic(
+            state,
+            "SPICE_DECK_FOURIER_PROBE",
+            line_number,
+            ".four requires at least one probe",
+            None,
+        );
+    }
+    if let Some(value) = from_value {
+        if !value.is_finite() {
+            add_fourier_diagnostic(
+                state,
+                "SPICE_DECK_FOURIER_WINDOW",
+                line_number,
+                ".four FROM value must be finite",
+                None,
+            );
+        }
+    }
+
+    if state.diagnostics.len() != diagnostic_count {
+        return;
+    }
+
+    state.fourier.push(DeckFourierCard {
+        directive: ".four".to_string(),
+        fundamental_frequency_hz: frequency,
+        probes,
+        line_number,
+        harmonics,
+        from_value,
     });
 }
 
@@ -5741,6 +5967,23 @@ fn add_measurement_diagnostic(
     state.diagnostics.push(DeckMeasurementDiagnostic {
         code: code.to_string(),
         directive: directive.to_string(),
+        line_number,
+        message: message.to_string(),
+        severity: "error".to_string(),
+        token,
+    });
+}
+
+fn add_fourier_diagnostic(
+    state: &mut DeckFourierState,
+    code: &str,
+    line_number: usize,
+    message: &str,
+    token: Option<String>,
+) {
+    state.diagnostics.push(DeckFourierDiagnostic {
+        code: code.to_string(),
+        directive: ".four".to_string(),
         line_number,
         message: message.to_string(),
         severity: "error".to_string(),
@@ -7791,6 +8034,38 @@ pub fn fourier_with_start_time(
         end_time,
         probes: probe_results,
     })
+}
+
+pub fn fourier_transient_cards(
+    points: &[TransientPoint],
+    fourier_cards: &[DeckFourierCard],
+) -> Result<Vec<FourierResult>, SpiceError> {
+    let mut results = Vec::with_capacity(fourier_cards.len());
+    for card in fourier_cards {
+        let probe_refs: Vec<&str> = card.probes.iter().map(String::as_str).collect();
+        results.push(fourier_with_start_time(
+            points,
+            card.fundamental_frequency_hz,
+            &probe_refs,
+            card.harmonics.unwrap_or(9),
+            card.from_value,
+        )?);
+    }
+    Ok(results)
+}
+
+pub fn fourier_transient_deck(
+    points: &[TransientPoint],
+    netlist: &str,
+) -> Result<Vec<FourierResult>, SpiceError> {
+    let summary = resolve_deck_fourier(netlist);
+    if let Some(diagnostic) = summary.diagnostics.first() {
+        return Err(table_error(
+            "fourier_transient_deck",
+            &format!("line {}: {}", diagnostic.line_number, diagnostic.message),
+        ));
+    }
+    fourier_transient_cards(points, &summary.fourier)
 }
 
 fn fourier_probe(

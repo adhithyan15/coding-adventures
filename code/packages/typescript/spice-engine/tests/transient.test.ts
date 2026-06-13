@@ -50,6 +50,7 @@ import {
   formatTransientTable,
   fourier,
   fourierCorners,
+  fourierTransientDeck,
   inductor,
   inductorWithInitialCurrent,
   jfet,
@@ -890,6 +891,44 @@ describe("transient", () => {
     expect(fundamental.sine).toBeCloseTo(amp, 2);
     expect(Math.abs(fundamental.cosine)).toBeLessThan(2.0e-3);
     expect(probe.totalHarmonicDistortion).toBeLessThan(2.0e-3);
+  });
+
+  it("routes parsed .four cards into transient Fourier analyses", () => {
+    const freq = 1_000.0;
+    const amp = 2.0;
+    const offset = 0.25;
+    const period = 1.0 / freq;
+    const circuit = new Circuit();
+    circuit.add(
+      voltageSourceWithWaveform(
+        "Vin",
+        "in",
+        "0",
+        0.0,
+        new SinWaveform(offset, amp, freq),
+      ),
+    );
+
+    const points = transient(circuit, period / 64.0, 2.0 * period);
+    const analyses = fourierTransientDeck(
+      points,
+      `
+.tran 15.625u 2m
+.four 1k V(in) HARMONICS=5 FROM=1m
+.end
+`,
+    );
+    const analysis = analyses[0];
+    const probe = analysis.probes[0];
+    const fundamental = probe.harmonics[0];
+
+    expect(analyses).toHaveLength(1);
+    expect(probe.probe).toBe("V(in)");
+    expect(probe.harmonics).toHaveLength(5);
+    expect(analysis.startTime).toBeCloseTo(period, 12);
+    expect(probe.dc).toBeCloseTo(offset, 3);
+    expect(fundamental.frequencyHz).toBeCloseTo(freq, 9);
+    expect(fundamental.magnitude).toBeCloseTo(amp, 2);
   });
 
   it("runs Fourier analysis for each named corner and formats the table", () => {
