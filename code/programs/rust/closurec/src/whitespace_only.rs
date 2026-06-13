@@ -1493,6 +1493,87 @@ pub fn whitespace_only_minify(
         }
     }
 
+    // ---- gap-099: computed-member object paren elision ---------
+    // `(b)[c]` → `b[c]`. The `[index]` sibling of gap-065 (callee)
+    // and gap-057 (`.member`): upstream strips the grouping parens
+    // around the OBJECT of a computed-member `[…]` access when the
+    // object is a *simple reference* — a plain identifier plus
+    // zero-or-more `.IDENT` accessors. `[` binds tighter than any
+    // operator a grouping paren could be protecting around a bare
+    // reference, so removal is meaning-preserving:
+    //
+    //   `(b)[c]`     →  `b[c]`
+    //   `(b.c)[d]`   →  `b.c[d]`
+    //   `(a)[b]=c`   →  `a[b]=c`
+    //
+    // The guards mirror gap-065 exactly; only the FOLLOWER differs:
+    //
+    //   1. GROUPING, NOT CALL/INDEX: the `(` must be a grouping
+    //      paren (prev token is punct other than `)`/`]`/`?.`, or
+    //      start of stream) — never a call/index paren. `f(a)[b]`
+    //      keeps its parens (the `(a)` is f's call).
+    //   2. SIMPLE REFERENCE: the inner is a plain identifier plus a
+    //      `.IDENT` chain. NO operators/commas/computed members —
+    //      `(a+b)[c]` and `(b||c)[d]` keep their parens (the scan
+    //      stops at the first non-`.IDENT` token; if that isn't the
+    //      matching `)`, nothing is dropped).
+    //   3. COMPUTED INDEX FOLLOWS: the token after `)` must be a
+    //      real `[` index bracket.
+    //
+    // Distinct from gap-087, which elided parens INSIDE the index
+    // (`a[(b)]` → `a[b]`); gap-099 is the object side. All bracket
+    // checks route through `is_structural_punct`.
+    {
+        let mut drops: Vec<usize> = Vec::new();
+        let mut i = 0;
+        while i + 2 < kept.len() {
+            if is_structural_punct(&kept[i], "(")
+                && is_plain_identifier(&kept[i + 1])
+            {
+                let grouping = match i.checked_sub(1).and_then(|k| kept.get(k)) {
+                    None => true,
+                    Some(p) => {
+                        is_punct(p)
+                            && !is_structural_punct(p, ")")
+                            && !is_structural_punct(p, "]")
+                            && !is_structural_punct(p, "?.")
+                    }
+                };
+                if grouping {
+                    // Consume the `.IDENT` member chain.
+                    let mut p = i + 1;
+                    while p + 2 < kept.len()
+                        && is_structural_punct(&kept[p + 1], ".")
+                        && is_plain_identifier(&kept[p + 2])
+                    {
+                        p += 2;
+                    }
+                    // Expect the matching `)` immediately, then a
+                    // computed-index `[`.
+                    let close_ok = kept
+                        .get(p + 1)
+                        .map(|t| is_structural_punct(t, ")"))
+                        .unwrap_or(false);
+                    let index_follows = kept
+                        .get(p + 2)
+                        .map(|t| is_structural_punct(t, "["))
+                        .unwrap_or(false);
+                    if close_ok && index_follows {
+                        drops.push(i); // open `(`
+                        drops.push(p + 1); // close `)`
+                        i = p + 2;
+                        continue;
+                    }
+                }
+            }
+            i += 1;
+        }
+        drops.sort_unstable();
+        for &drop_idx in drops.iter().rev() {
+            kept.remove(drop_idx);
+        }
+    }
+
     // ---- gap-066: redundant parens after `extends` ------------
     // `class A extends(B){}` → `class A extends B{}`. After the
     // `extends` keyword a parenthesized simple reference is
@@ -5729,6 +5810,41 @@ mod tests {
         assert_eq!(minify("f(g)(x);"), "f(g)(x);");
     }
 
+    // ---- gap-099: computed-member object paren elision ----
+
+    /// gap-099: grouping parens around a computed-member OBJECT are
+    /// dropped — `(b)[c]` → `b[c]`, `(b.c)[d]` → `b.c[d]`, including
+    /// deep chains and assignment targets.
+    #[test]
+    fn gap099_computed_member_paren_stripped() {
+        assert_eq!(minify("a=(b)[c];"), "a=b[c];");
+        assert_eq!(minify("a=(b.c)[d];"), "a=b.c[d];");
+        assert_eq!(minify("a=(b.c.d)[e];"), "a=b.c.d[e];");
+        assert_eq!(minify("(a)[b]=c;"), "a[b]=c;");
+    }
+
+    /// Trailing accessors ride along after the unwrap.
+    #[test]
+    fn gap099_computed_member_then_chain() {
+        assert_eq!(minify("a=(b)[c][d];"), "a=b[c][d];");
+        assert_eq!(minify("a=(b)[c].d;"), "a=b[c].d;");
+    }
+
+    /// **Non-regression**: a non-trivial operand keeps its parens —
+    /// `(a+b)[c]` and `(b||c)[d]` are NOT simple references.
+    #[test]
+    fn gap099_operator_operand_keeps_parens() {
+        assert_eq!(minify("x=(a+b)[c];"), "x=(a+b)[c];");
+        assert_eq!(minify("a=(b||c)[d];"), "a=(b||c)[d];");
+    }
+
+    /// **Non-regression**: a CALL paren is never treated as grouping —
+    /// `f(b)[c]` keeps `(b)` (it is f's call), not stripped to `fb[c]`.
+    #[test]
+    fn gap099_call_paren_not_stripped() {
+        assert_eq!(minify("a=f(b)[c];"), "a=f(b)[c];");
+    }
+
     // ---- gap-066: redundant parens after `extends` -------
 
     /// gap-066: `class A extends(B){}` → `class A extends B{}`.
@@ -6438,11 +6554,15 @@ mod tests {
         assert_eq!(minify("var x=(a+b).c;"), "var x=(a+b).c;");
     }
 
-    /// gap-057 safety: a string-literal whose content is `)` must
-    /// not corrupt the depth scan (structural-punct guard).
+    /// gap-099 + structural-punct safety: `(a)["\")\""]` — the grouping
+    /// parens around the computed-member object `a` are now stripped by
+    /// gap-099 (`(a)[…]` → `a[…]`), while the string literal `")"` is
+    /// preserved INTACT — its content must not be mistaken for a
+    /// structural bracket by the depth scan. (Before gap-099 this stayed
+    /// `(a)[")"]`; upstream JAR confirms `a[")"]`.)
     #[test]
-    fn gap057_string_content_not_bracket() {
-        assert_eq!(minify("var x=(a)[\")\"];"), "var x=(a)[\")\"];");
+    fn gap099_string_content_not_bracket() {
+        assert_eq!(minify("var x=(a)[\")\"];"), "var x=a[\")\"];");
     }
 
     // ---- gap-046: trailing array comma drop --------------

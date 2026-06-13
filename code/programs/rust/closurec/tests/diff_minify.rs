@@ -85,13 +85,11 @@ const BINARY: &str = env!("CARGO_BIN_EXE_closurec");
 ///
 /// Format: fixture name (without the `minify_` prefix) → reason.
 const IGNORE_FIXTURES: &[(&str, &str)] = &[
-    // gap-099 (CLOC14.43): paren elision around a COMPUTED-MEMBER object.
-    // `(b)[c]` -> `b[c]`, `(b.c)[d]` -> `b.c[d]` — the `[index]` analog
-    // of gap-057 (which only did `(a).b` -> `a.b` for `.member`). Only a
-    // SAFE operand (identifier / member-reference chain) is unwrapped;
-    // `(a+b)[c]` and `(b||c)[d]` keep their parens.
-    ("computed_member_paren", "gap-099: (b)[c] -> b[c]"),
-    ("computed_member_chain", "gap-099: (b.c)[d] -> b.c[d]"),
+    // gap-099 RESOLVED in CLOC12.102 — paren elision around a
+    // COMPUTED-MEMBER object: `(b)[c]` -> `b[c]`, `(b.c)[d]` -> `b.c[d]`.
+    // The `[index]` sibling of gap-065/gap-057; only a safe simple
+    // reference is unwrapped (`(a+b)[c]`, `(b||c)[d]`, `f(b)[c]` keep
+    // their parens).
     // gap-100 (CLOC14.43): paren elision around a FUNCTION/CLASS
     // EXPRESSION that is NOT at statement position. `a=(function(){})()`
     // -> `a=function(){}()`, `a=(class{})()` -> `a=class{}()`. The
