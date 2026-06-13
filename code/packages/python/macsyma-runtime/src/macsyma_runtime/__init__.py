@@ -21,6 +21,7 @@ Maxima-flavored evaluator. See ``code/specs/macsyma-runtime.md``.
 """
 
 from macsyma_runtime.backend import MacsymaBackend
+from macsyma_runtime.handlers import MacsymaUserError
 from macsyma_runtime.heads import (
     ALL_SYMBOL,
     ASSUME,
@@ -31,12 +32,13 @@ from macsyma_runtime.heads import (
     FORGET,
     IS,
     KILL,
+    LOAD,
     PROP_VARS,
     PROPERTIES,
     SUPPRESS,
 )
-from macsyma_runtime.history import History
 from macsyma_runtime.help import help_text, parse_help_query
+from macsyma_runtime.history import History
 from macsyma_runtime.name_table import (
     MACSYMA_NAME_TABLE,
     extend_compiler_name_table,
@@ -54,8 +56,10 @@ __all__ = [
     "History",
     "IS",
     "KILL",
+    "LOAD",
     "MACSYMA_NAME_TABLE",
     "MacsymaBackend",
+    "MacsymaUserError",
     "PROPERTIES",
     "PROP_VARS",
     "SUPPRESS",
