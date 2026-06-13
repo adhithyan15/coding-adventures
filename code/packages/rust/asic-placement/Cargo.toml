@@ -1,0 +1,8 @@
+[package]
+name = "asic-placement"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lef-def = { path = "../lef-def" }
+asic-floorplan = { path = "../asic-floorplan" }

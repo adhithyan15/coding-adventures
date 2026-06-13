@@ -1,0 +1,9 @@
+[package]
+name = "tape-out"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+lef-def = { path = "../lef-def" }
+drc-lvs = { path = "../drc-lvs" }
+gdsii-writer = { path = "../gdsii-writer" }
