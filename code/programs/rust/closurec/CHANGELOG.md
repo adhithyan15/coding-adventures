@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.112.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-104 (CORRECTNESS)** — the trailing-`;`-after-`}` rule
+  (gap-030/041 family) no longer injects a stray `;` after a `}` that
+  closes a destructuring pattern or object-default VALUE inside a
+  function's PARAMETER LIST. Previously this produced **invalid JS**:
+
+      function f({a=1}={}){}  ->  function f({a=1};={}){}   (was corrupt)
+      function f({a=1}){}     ->  function f({a=1};){}      (was corrupt)
+      function f(a={}){}      ->  function f(a={};){}       (was corrupt)
+
+  The `}` in those positions closes a pattern/default value, not a
+  statement block or function body, so no synthetic `;` is due. The
+  fix suppresses the `;` whenever the `}`'s immediate follower is `=`,
+  `,`, or `)` — a param-list/expression *continuation* token, never a
+  statement boundary. A genuine function-DECLARATION body `}` (the only
+  `}` that owes a `;` at this site) can never be followed by those
+  tokens (declarations are statements, never lvalues, comma operands,
+  or parenthesised), so the FINAL body `}` still receives its `;`:
+
+      function f({a=1}={}){}  ->  function f({a=1}={}){};   (now correct)
+
+  Verified byte-identical to upstream Closure v20240317. The three
+  `param_*` byte-identity fixtures (added in CLOC14.48) are now
+  enforced, and six `gap104_*` unit tests guard both the corruption
+  cases and the genuine-body cases that MUST still terminate.
+
+  NOTE: this is distinct from the separate `function f(){}a;` →
+  `function f(){};a;` issue (a body `}` followed by an *identifier*),
+  which is outside this `=`/`,`/`)` follower set and remains open.
+
 ## [0.111.0] - 2026-06-12
 
 ### Fixed

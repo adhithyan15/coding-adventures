@@ -3145,6 +3145,34 @@ pub fn whitespace_only_minify(
                     | Some("break") | Some("continue")
                     | Some("import") | Some("export")
             );
+            // gap-104 (CORRECTNESS): a `}` whose immediate
+            // follower is `=`, `,`, or `)` is NOT a statement
+            // boundary — it is a *continuation* token inside a
+            // parameter list or expression. Concretely this is
+            // the closing brace of
+            //   - a destructuring-pattern parameter
+            //     (`function f({a=1}){}` — `}` then `)`),
+            //   - a destructuring param with a default
+            //     (`function f({a=1}={}){}` — `}` then `=`),
+            //   - an object/array default *value*
+            //     (`function f(a={}){}` — `}` then `)`),
+            //   - or a `,`-separated continuation of any of the
+            //     above (`function f({a}={},b){}`).
+            // A genuine function-DECLARATION body `}` (the only
+            // kind that owes a trailing `;` here) can NEVER be
+            // followed by `=`/`,`/`)` — declarations are
+            // statements, never lvalues, never comma operands,
+            // never parenthesised. So emitting the synthetic
+            // `;` in these positions produces INVALID JS, e.g.
+            //   `function f({a=1}={}){}` → `function f({a=1};={}){}`.
+            // The fix: suppress the `;` whenever the follower is
+            // a param-list/expression continuation. The genuine
+            // body `}` at the true end of the declaration is
+            // followed by EOF / `}` / a statement instead, so it
+            // still gets its `;` (see fixtures: the FINAL `}` of
+            // `function f({a=1}={}){}` → `…{};`).
+            let next_is_param_continuation =
+                matches!(next_val, Some("=") | Some(",") | Some(")"));
             let kind_wants_semi = match kind {
                 BlockKind::Function => true,
                 BlockKind::Class => true,    // gap-034
@@ -3205,6 +3233,21 @@ pub fn whitespace_only_minify(
                 // any deferred pending — the next statement
                 // can stand on its own without us.
                 deferred_synthetic_semi = false;
+                emit_semi = false;
+            } else if next_is_param_continuation {
+                // gap-104 (CORRECTNESS): this `}` closes a
+                // destructuring/default pattern inside a
+                // parameter list or expression (follower is
+                // `=`/`,`/`)`). Suppress the synthetic `;` —
+                // emitting it here yields invalid JS. We
+                // deliberately leave `deferred_synthetic_semi`
+                // untouched: a genuine deferred terminator can
+                // never legitimately be pending across a
+                // param-continuation `}` (a deferral only
+                // arises from an inner function-decl `}`
+                // followed by `}`), so there is nothing to
+                // flush here, but preserving the flag is
+                // strictly safer than clearing it.
                 emit_semi = false;
             } else {
                 // Emit if either we owe one OR a deferred
@@ -4913,6 +4956,84 @@ mod tests {
     #[test]
     fn gap030_empty_function_decl_gets_trailing_semi() {
         assert_eq!(minify("function f(){}"), "function f(){};");
+    }
+
+    // ---- gap-104: param-list `}` must not get a synthetic `;` ----
+    //
+    // CORRECTNESS regression guard. The trailing-`;`-after-`}`
+    // rule (gap-030/041) used to fire on a `}` that closes a
+    // destructuring pattern / object-default VALUE inside a
+    // function's PARAMETER LIST, producing invalid JS. The fix
+    // suppresses the `;` whenever the `}`'s follower is `=`,
+    // `,`, or `)` (a param-list/expression continuation). The
+    // genuine body `}` at the true end of the declaration is
+    // followed by EOF / `}` / a statement, so it still gets `;`.
+
+    /// `function f({a=1}={}){}` — the destructuring-pattern `}`
+    /// (follower `=`) and the object-default `}` (follower `)`)
+    /// must both be `;`-free; only the FINAL body `}` (EOF) gets
+    /// the trailing `;`. Upstream: `function f({a=1}={}){};`.
+    #[test]
+    fn gap104_destructure_default_param_no_stray_semi() {
+        assert_eq!(
+            minify("function f({a=1}={}){}"),
+            "function f({a=1}={}){};"
+        );
+    }
+
+    /// `function f({a=1}){}` — destructuring-pattern `}` with
+    /// follower `)`. Only the body `}` (EOF) gets `;`.
+    #[test]
+    fn gap104_destructure_nodefault_param_no_stray_semi() {
+        assert_eq!(
+            minify("function f({a=1}){}"),
+            "function f({a=1}){};"
+        );
+    }
+
+    /// `function f(a={}){}` — object-default-VALUE `}` with
+    /// follower `)`. Only the body `}` (EOF) gets `;`.
+    #[test]
+    fn gap104_object_default_param_no_stray_semi() {
+        assert_eq!(
+            minify("function f(a={}){}"),
+            "function f(a={}){};"
+        );
+    }
+
+    /// `,`-separated continuation: the first pattern `}` is
+    /// followed by `,` (param separator) — also suppressed.
+    #[test]
+    fn gap104_comma_continuation_param_no_stray_semi() {
+        assert_eq!(
+            minify("function f({a}={},b){}"),
+            "function f({a}={},b){};"
+        );
+    }
+
+    /// GENUINE body `}` (the case the suppression must NOT
+    /// touch) — a non-empty destructuring-param function body
+    /// still terminates with `;` because its `}` is followed by
+    /// EOF, not a continuation token.
+    #[test]
+    fn gap104_genuine_destructure_param_body_still_gets_semi() {
+        assert_eq!(
+            minify("function f({a,b}){return a}"),
+            "function f({a,b}){return a};"
+        );
+    }
+
+    /// GENUINE body `}` followed by another function declaration
+    /// — `}` follower is `function` (a statement keyword,
+    /// handled by gap-047 ASI), NOT a continuation token. The
+    /// suppression branch must not swallow this; the deferral /
+    /// ASI logic is unchanged.
+    #[test]
+    fn gap104_genuine_body_then_decl_unaffected() {
+        assert_eq!(
+            minify("function f(a={}){}function g(){}"),
+            "function f(a={}){}function g(){};"
+        );
     }
 
     /// Function EXPRESSION (mid-expression, e.g.
