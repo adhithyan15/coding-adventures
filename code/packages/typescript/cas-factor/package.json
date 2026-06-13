@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/cas-factor",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Pure TypeScript integer polynomial factoring for CAS packages",
   "type": "module",
   "main": "src/index.ts",
