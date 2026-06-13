@@ -293,6 +293,27 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-112 RESOLVED in CLOC12.115 — a `for await(...)` header no
     // longer emits a spurious `await`-before-`(` space; the
     // `minify_for_await_bare_stmt` fixture is now ENFORCED (un-ignored).
+    // gap-113 (CLOC14.55): NUMBER canonicalisation — a NEGATIVE-exponent
+    // scientific literal / small fraction whose shortest form is
+    // scientific must use an UPPERCASE `E`, and closurec leaves it
+    // lowercase / decimal:
+    //   1e-5   -> 1E-5    (uppercase the negative exponent)
+    //   .0001  -> 1E-4    (decimal -> scientific when STRICTLY shorter)
+    // closurec already canonicalises POSITIVE-exponent / large round
+    // integers (`1e20` -> `1E20`, `1000000000000000000` -> `1E18`), so
+    // this is the missing negative-exponent / small-fraction branch.
+    // `.001` stays decimal (`.001` and `1E-3` are equal length — upstream
+    // keeps the decimal form on ties).
+    ("num_neg_exp",  "gap-113: negative-exponent scientific must uppercase E (1e-5 -> 1E-5)"),
+    ("num_frac_4dp", "gap-113: small fraction -> uppercase-E scientific when shorter (.0001 -> 1E-4)"),
+    // gap-114 (CLOC14.55): NUMBER canonicalisation — a large INTEGER
+    // whose HEX form is shorter than its decimal form is emitted in
+    // lowercase hex by upstream:
+    //   123456789012345678 -> 0x1b69b4ba630f350   (18 digits -> 17)
+    // closurec keeps the decimal form. (Round powers of ten still go to
+    // scientific — `1E18` — which is even shorter; hex wins only for
+    // large NON-round integers where decimal and scientific are long.)
+    ("num_bigint_hex", "gap-114: large integer -> lowercase hex when shorter than decimal"),
     // gap-105 RESOLVED in CLOC12.109 — CORRECTNESS: LEGACY OCTAL
     // literals (`0` followed by octal digits, e.g. `010`, `017`,
     // `0123`) are sloppy-mode legacy octals denoting their OCTAL value
