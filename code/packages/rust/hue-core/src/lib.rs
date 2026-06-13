@@ -1497,6 +1497,67 @@ pub fn hue_integration_package_summary(
     HueIntegrationPackageSummary::from_pairing_plan(plan)
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct HuePackageReleaseReadinessSummary {
+    pub package_summary: HueIntegrationPackageSummary,
+    pub required_check_count: usize,
+    pub passed_check_count: usize,
+    pub failed_check_count: usize,
+    pub worker_process_ready: bool,
+    pub command_flow_ready: bool,
+    pub pairing_flow_ready: bool,
+    pub event_stream_ready: bool,
+    pub physical_presence_required: bool,
+    pub release_ready: bool,
+}
+
+impl HuePackageReleaseReadinessSummary {
+    pub fn from_pairing_plan(plan: &HueBridgePairingPlan) -> Self {
+        Self::from_package_summary(hue_integration_package_summary(plan))
+    }
+
+    pub fn from_package_summary(package_summary: HueIntegrationPackageSummary) -> Self {
+        let checks = [
+            package_summary.worker_process_ready,
+            package_summary.command_flow_declared,
+            package_summary.local_pairing_ready,
+            package_summary.uses_local_event_stream(),
+            package_summary.requires_physical_presence,
+        ];
+        let passed_check_count = checks.iter().filter(|ready| **ready).count();
+        let required_check_count = checks.len();
+        let failed_check_count = required_check_count - passed_check_count;
+        let release_ready = failed_check_count == 0 && package_summary.package_ready;
+
+        Self {
+            package_summary,
+            required_check_count,
+            passed_check_count,
+            failed_check_count,
+            worker_process_ready: package_summary.worker_process_ready,
+            command_flow_ready: package_summary.command_flow_declared,
+            pairing_flow_ready: package_summary.local_pairing_ready,
+            event_stream_ready: package_summary.uses_local_event_stream(),
+            physical_presence_required: package_summary.requires_physical_presence,
+            release_ready,
+        }
+    }
+
+    pub fn is_release_ready(self) -> bool {
+        self.release_ready
+    }
+
+    pub fn has_failed_checks(self) -> bool {
+        self.failed_check_count > 0
+    }
+}
+
+pub fn hue_package_release_readiness_summary(
+    plan: &HueBridgePairingPlan,
+) -> HuePackageReleaseReadinessSummary {
+    HuePackageReleaseReadinessSummary::from_pairing_plan(plan)
+}
+
 fn descriptor_declares_capability(descriptor: &IntegrationDescriptor, capability_id: &str) -> bool {
     descriptor
         .capabilities
@@ -4588,5 +4649,68 @@ mod tests {
         assert!(!summary.pairing_plan_summary.ready_for_local_registration());
         assert!(summary.has_agent_facing_capabilities());
         assert!(summary.has_bridge_roles());
+    }
+
+    #[test]
+    fn hue_package_release_readiness_summary_marks_catalog_ready_package() {
+        let plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+
+        let summary = hue_package_release_readiness_summary(&plan);
+
+        assert_eq!(
+            summary.package_summary,
+            hue_integration_package_summary(&plan)
+        );
+        assert_eq!(summary.required_check_count, 5);
+        assert_eq!(summary.passed_check_count, 5);
+        assert_eq!(summary.failed_check_count, 0);
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_ready);
+        assert!(summary.pairing_flow_ready);
+        assert!(summary.event_stream_ready);
+        assert!(summary.physical_presence_required);
+        assert!(summary.release_ready);
+        assert!(summary.is_release_ready());
+        assert!(!summary.has_failed_checks());
+    }
+
+    #[test]
+    fn hue_package_release_readiness_summary_counts_missing_pairing_checks() {
+        let mut plan = hue_pairing_plan_for_discovered_bridge(
+            DiscoveredHueBridge {
+                bridge_id: "001788fffeabcdef".to_string(),
+                address: "https://192.0.2.10".to_string(),
+                hardware_model: Some("BSB002".to_string()),
+                firmware_version: Some("1.60".to_string()),
+            },
+            "chief-of-staff",
+            "desk",
+        );
+        plan.bridge.address = None;
+        plan.event_stream_path = "/wrong/eventstream".to_string();
+        plan.requires_user_presence = false;
+
+        let summary = HuePackageReleaseReadinessSummary::from_pairing_plan(&plan);
+
+        assert_eq!(summary.required_check_count, 5);
+        assert_eq!(summary.passed_check_count, 2);
+        assert_eq!(summary.failed_check_count, 3);
+        assert!(summary.worker_process_ready);
+        assert!(summary.command_flow_ready);
+        assert!(!summary.pairing_flow_ready);
+        assert!(!summary.event_stream_ready);
+        assert!(!summary.physical_presence_required);
+        assert!(!summary.release_ready);
+        assert!(!summary.is_release_ready());
+        assert!(summary.has_failed_checks());
     }
 }

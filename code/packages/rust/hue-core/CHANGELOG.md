@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   surface checks.
 - Hue integration package summaries that join descriptor, command-flow, and
   local pairing readiness.
+- Hue package release-readiness summaries for catalog publish checks across
+  worker, command-flow, local-pairing, event-stream, and physical-presence gates.
 - Hue discovery worker-run projection from generic `MdnsScanResult` envelopes,
   preserving scan parse failures as per-source D23 worker failures.
 - Hue discovery worker-run projection from aggregate `MdnsWorkerScanReport`
