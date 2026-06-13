@@ -24,7 +24,8 @@
 use std::collections::{HashMap, HashSet};
 
 use cas_factor::{
-    factor_integer_polynomial, try_bivariate_hensel, BiPoly as HenselBiPoly, Rat as HenselRat,
+    factor_integer_polynomial, try_bivariate_hensel, try_n_variate_hensel,
+    BiPoly as HenselBiPoly, NPoly as HenselNPoly, Rat as HenselRat,
 };
 use cas_simplify::AssumptionContext;
 use symbolic_ir::{
@@ -5402,6 +5403,13 @@ fn factor_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return vm.eval(rewritten);
     }
 
+    // n-variate (n ≥ 3) Hensel — Track K2.  Generalised algorithmic
+    // fallback for tri- and higher-variate polynomials (e.g.,
+    // x³ + y³ + z³ − 3xyz = (x+y+z)(…)).
+    if let Some(rewritten) = try_n_variate_hensel_ir(input) {
+        return vm.eval(rewritten);
+    }
+
     fallback
 }
 
@@ -6518,6 +6526,284 @@ fn try_bivariate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
         return Some(factor_nodes.into_iter().next().unwrap());
     }
     Some(apply_node(MUL, factor_nodes))
+}
+
+// ---------------------------------------------------------------------------
+// n-variate (n ≥ 3) Hensel-lifting IR glue — Track K2.  Mirrors the Python
+// ``_find_n_variables``, ``_ir_to_npoly``, ``_npoly_to_ir``, and
+// ``_try_n_variate_hensel_ir`` helpers in ``cas_handlers.py``.
+//
+// Output convention: LEFT-NESTED BINARY Add/Mul.  The symbolic-vm primitive
+// Add/Mul handlers are strictly binary, so an Apply(ADD, (a, b, c)) with
+// three or more children would crash when re-evaluated.  We mirror the
+// cubic-identity handler's nesting convention: Add(Add(a, b), c) for three
+// terms, etc.
+// ---------------------------------------------------------------------------
+
+const MAX_N_VARS: usize = 8;
+
+fn find_n_variables(node: &IRNode) -> Option<Vec<String>> {
+    let mut seen: Vec<String> = Vec::new();
+    fn walk(n: &IRNode, seen: &mut Vec<String>) -> bool {
+        match n {
+            IRNode::Symbol(name) if !name.starts_with('%') => {
+                if !seen.iter().any(|s| s == name) {
+                    seen.push(name.clone());
+                    if seen.len() > MAX_N_VARS {
+                        return false;
+                    }
+                }
+                true
+            }
+            IRNode::Apply(apply) => {
+                for arg in &apply.args {
+                    if !walk(arg, seen) {
+                        return false;
+                    }
+                }
+                true
+            }
+            _ => true,
+        }
+    }
+    if !walk(node, &mut seen) {
+        return None;
+    }
+    if seen.is_empty() {
+        return None;
+    }
+    Some(seen)
+}
+
+fn ir_to_npoly(node: &IRNode, vars: &[String]) -> Option<HenselNPoly> {
+    let num_vars = vars.len();
+    let zero_key: Vec<usize> = vec![0; num_vars];
+
+    let mut var_index: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    for (i, v) in vars.iter().enumerate() {
+        var_index.insert(v.clone(), i);
+    }
+
+    fn n_one(num_vars: usize) -> HenselNPoly {
+        let mut out = std::collections::BTreeMap::new();
+        out.insert(vec![0usize; num_vars], HenselRat::ONE);
+        out
+    }
+
+    fn n_mul_local(a: &HenselNPoly, b: &HenselNPoly, num_vars: usize) -> HenselNPoly {
+        let mut out: HenselNPoly = std::collections::BTreeMap::new();
+        for (k1, c1) in a {
+            for (k2, c2) in b {
+                let key: Vec<usize> = (0..num_vars).map(|i| k1[i] + k2[i]).collect();
+                let cur = out.get(&key).copied().unwrap_or(HenselRat::ZERO);
+                out.insert(key, cur.add(&c1.mul(c2)));
+            }
+        }
+        out.retain(|_, v| !v.is_zero());
+        out
+    }
+
+    fn n_add_into(acc: &mut HenselNPoly, other: &HenselNPoly) {
+        for (k, v) in other {
+            let cur = acc.get(k).copied().unwrap_or(HenselRat::ZERO);
+            acc.insert(k.clone(), cur.add(v));
+        }
+        acc.retain(|_, v| !v.is_zero());
+    }
+
+    fn unit_for(var_idx: usize, num_vars: usize) -> Vec<usize> {
+        let mut key = vec![0usize; num_vars];
+        key[var_idx] = 1;
+        key
+    }
+
+    fn walk(
+        node: &IRNode,
+        vars_idx: &std::collections::HashMap<String, usize>,
+        num_vars: usize,
+        zero_key: &[usize],
+    ) -> Option<HenselNPoly> {
+        match node {
+            IRNode::Integer(value) => {
+                if *value == 0 {
+                    Some(std::collections::BTreeMap::new())
+                } else {
+                    let mut m = std::collections::BTreeMap::new();
+                    m.insert(zero_key.to_vec(), HenselRat::from_int(*value as i128));
+                    Some(m)
+                }
+            }
+            IRNode::Rational(n, d) => {
+                let mut m = std::collections::BTreeMap::new();
+                m.insert(zero_key.to_vec(), HenselRat::new(*n as i128, *d as i128));
+                Some(m)
+            }
+            IRNode::Float(_) | IRNode::Str(_) => None,
+            IRNode::Symbol(name) => {
+                if name.starts_with('%') {
+                    return None;
+                }
+                if let Some(&i) = vars_idx.get(name) {
+                    let mut m = std::collections::BTreeMap::new();
+                    m.insert(unit_for(i, num_vars), HenselRat::ONE);
+                    Some(m)
+                } else {
+                    None
+                }
+            }
+            IRNode::Apply(apply) => {
+                let head = match &apply.head {
+                    IRNode::Symbol(name) => name.as_str(),
+                    _ => return None,
+                };
+                if head == ADD {
+                    let mut acc: HenselNPoly = std::collections::BTreeMap::new();
+                    for arg in &apply.args {
+                        let sub = walk(arg, vars_idx, num_vars, zero_key)?;
+                        n_add_into(&mut acc, &sub);
+                    }
+                    Some(acc)
+                } else if head == SUB && apply.args.len() == 2 {
+                    let a = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    let b = walk(&apply.args[1], vars_idx, num_vars, zero_key)?;
+                    let mut neg_b: HenselNPoly = std::collections::BTreeMap::new();
+                    for (k, v) in &b {
+                        if !v.is_zero() {
+                            neg_b.insert(k.clone(), v.neg());
+                        }
+                    }
+                    let mut acc = a;
+                    n_add_into(&mut acc, &neg_b);
+                    Some(acc)
+                } else if head == NEG && apply.args.len() == 1 {
+                    let sub = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    let mut out: HenselNPoly = std::collections::BTreeMap::new();
+                    for (k, v) in sub {
+                        if !v.is_zero() {
+                            out.insert(k, v.neg());
+                        }
+                    }
+                    Some(out)
+                } else if head == MUL {
+                    let mut acc = n_one(num_vars);
+                    for arg in &apply.args {
+                        let sub = walk(arg, vars_idx, num_vars, zero_key)?;
+                        acc = n_mul_local(&acc, &sub, num_vars);
+                    }
+                    Some(acc)
+                } else if head == POW && apply.args.len() == 2 {
+                    let exp = match apply.args[1] {
+                        IRNode::Integer(e) => e,
+                        _ => return None,
+                    };
+                    if exp < 0 {
+                        return None;
+                    }
+                    let base = walk(&apply.args[0], vars_idx, num_vars, zero_key)?;
+                    if exp == 0 {
+                        return Some(n_one(num_vars));
+                    }
+                    let mut result = base.clone();
+                    for _ in 1..exp {
+                        result = n_mul_local(&result, &base, num_vars);
+                    }
+                    Some(result)
+                } else {
+                    None
+                }
+            }
+        }
+    }
+    let _ = zero_key;
+    walk(node, &var_index, num_vars, &vec![0usize; num_vars])
+}
+
+/// Left-fold a list of children into nested binary Apply nodes.
+fn fold_binary(head: &str, parts: Vec<IRNode>) -> IRNode {
+    assert!(!parts.is_empty(), "fold_binary requires at least one node");
+    let mut iter = parts.into_iter();
+    let mut result = iter.next().unwrap();
+    for nxt in iter {
+        result = apply_node(head, vec![result, nxt]);
+    }
+    result
+}
+
+fn npoly_to_ir(p: &HenselNPoly, vars: &[String]) -> IRNode {
+    if p.is_empty() {
+        return IRNode::Integer(0);
+    }
+    let num_vars = vars.len();
+
+    fn monomial_node(key: &[usize], c: HenselRat, vars: &[String]) -> IRNode {
+        let mut parts: Vec<IRNode> = Vec::new();
+        let all_zero = key.iter().all(|e| *e == 0);
+        if !c.is_one() || all_zero {
+            if c.denom == 1 {
+                parts.push(IRNode::Integer(c.numer as i64));
+            } else {
+                parts.push(IRNode::rational(c.numer as i64, c.denom as i64));
+            }
+        }
+        for (i, e) in key.iter().enumerate() {
+            if *e == 0 {
+                continue;
+            }
+            let v_node = IRNode::Symbol(vars[i].clone());
+            if *e == 1 {
+                parts.push(v_node);
+            } else {
+                parts.push(apply_node(POW, vec![v_node, IRNode::Integer(*e as i64)]));
+            }
+        }
+        if parts.is_empty() {
+            return IRNode::Integer(1);
+        }
+        fold_binary(MUL, parts)
+    }
+
+    // Sort: descending total degree, then lex on negated exponents.
+    let mut keys: Vec<Vec<usize>> = p.keys().cloned().collect();
+    keys.sort_by(|a, b| {
+        let sa: usize = a.iter().sum();
+        let sb: usize = b.iter().sum();
+        match sb.cmp(&sa) {
+            std::cmp::Ordering::Equal => {
+                for i in 0..num_vars {
+                    match b[i].cmp(&a[i]) {
+                        std::cmp::Ordering::Equal => continue,
+                        o => return o,
+                    }
+                }
+                std::cmp::Ordering::Equal
+            }
+            o => o,
+        }
+    });
+
+    let terms: Vec<IRNode> = keys
+        .iter()
+        .map(|k| monomial_node(k, *p.get(k).unwrap(), vars))
+        .collect();
+    fold_binary(ADD, terms)
+}
+
+fn try_n_variate_hensel_ir(inner: &IRNode) -> Option<IRNode> {
+    let vars = find_n_variables(inner)?;
+    if vars.len() < 2 {
+        return None;
+    }
+    let npoly = ir_to_npoly(inner, &vars)?;
+    let factors = try_n_variate_hensel(&npoly, vars.len())?;
+    if factors.len() < 2 {
+        return None;
+    }
+    let factor_nodes: Vec<IRNode> = factors.iter().map(|f| npoly_to_ir(f, &vars)).collect();
+    if factor_nodes.len() == 1 {
+        return Some(factor_nodes.into_iter().next().unwrap());
+    }
+    // Left-nested binary Mul for binary-handler compatibility.
+    Some(fold_binary(MUL, factor_nodes))
 }
 
 // ---------------------------------------------------------------------------

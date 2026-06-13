@@ -55,8 +55,8 @@ import {
   rational,
   sym,
 } from "@coding-adventures/symbolic-ir";
-import { BiRational, factorIntegerPolynomial, tryBivariateHensel } from "@coding-adventures/cas-factor";
-import type { BiPoly } from "@coding-adventures/cas-factor";
+import { BiRational, factorIntegerPolynomial, tryBivariateHensel, tryNVariateHensel } from "@coding-adventures/cas-factor";
+import type { BiPoly, NPoly } from "@coding-adventures/cas-factor";
 import { AssumptionContext } from "@coding-adventures/cas-simplify";
 
 export type Handler = (vm: VM, expr: IRApply) => IRNode;
@@ -1018,6 +1018,13 @@ function factorHandler(vm: VM, expr: IRApply): IRNode {
     // ``_try_bivariate_hensel_ir`` glue in ``symbolic-vm/cas_handlers.py``.
     const hensel = tryBivariateHenselIr(inner);
     if (hensel !== undefined) return vm.eval(hensel);
+    // n-variate (n ≥ 3) Hensel — Track K2.  Generalised algorithmic
+    // fallback for tri- and higher-variate polynomials (e.g.,
+    // x³ + y³ + z³ − 3xyz = (x+y+z)(…)).  Returns undefined for
+    // transcendentals, foreign symbols, or when the iterated lift can't
+    // pin down a factorisation.
+    const nHensel = tryNVariateHenselIr(inner);
+    if (nHensel !== undefined) return vm.eval(nHensel);
     return expr;
   }
 
@@ -1272,6 +1279,237 @@ function tryBivariateHenselIr(inner: IRNode): IRNode | undefined {
   const factorNodes = factors.map((f) => bipolyToIr(f, x, y));
   if (factorNodes.length === 1) return factorNodes[0];
   return app(MUL, factorNodes);
+}
+
+// ---------------------------------------------------------------------------
+// n-variate (n ≥ 3) Hensel-lifting IR glue — Track K2.  Mirrors the
+// Python ``_find_n_variables``, ``_ir_to_npoly``, ``_npoly_to_ir``, and
+// ``_try_n_variate_hensel_ir`` helpers in ``cas_handlers.py``.
+//
+// Output convention: LEFT-NESTED BINARY Add/Mul.  The symbolic-vm
+// primitive Add/Mul handlers are strictly binary, so an
+// ``IRApply(ADD, (a, b, c))`` with three or more children would crash
+// when re-evaluated.  We mirror the cubic-identity handler's nesting
+// convention: ``Add(Add(a, b), c)`` for three terms, etc.
+// ---------------------------------------------------------------------------
+
+const MAX_N_VARS = 8;
+
+function findNVariables(node: IRNode): IRSymbol[] | undefined {
+  const seen: IRSymbol[] = [];
+  function walk(n: IRNode): boolean {
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return true;
+      if (!seen.some((s) => s.name === n.name)) {
+        seen.push(n);
+        if (seen.length > MAX_N_VARS) return false;
+      }
+      return true;
+    }
+    if (n.kind === "apply") {
+      for (const arg of n.args) {
+        if (!walk(arg)) return false;
+      }
+    }
+    return true;
+  }
+  if (!walk(node)) return undefined;
+  if (seen.length === 0) return undefined;
+  return seen;
+}
+
+function nKeyJoin(tup: number[]): string {
+  return tup.join(",");
+}
+
+function nParseKeyJoin(k: string, numVars: number): number[] {
+  const out: number[] = [];
+  let start = 0;
+  for (let i = 0; i < numVars - 1; i += 1) {
+    const idx = k.indexOf(",", start);
+    out.push(Number(k.slice(start, idx)));
+    start = idx + 1;
+  }
+  out.push(Number(k.slice(start)));
+  return out;
+}
+
+function nAddInto(acc: NPoly, other: NPoly): void {
+  for (const [k, v] of other) {
+    const cur = acc.get(k);
+    acc.set(k, cur === undefined ? v : cur.add(v));
+  }
+  for (const [k, v] of [...acc]) {
+    if (v.isZero()) acc.delete(k);
+  }
+}
+
+function nMulMaps(a: NPoly, b: NPoly, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (const [k1, c1] of a) {
+    if (c1.isZero()) continue;
+    const t1 = nParseKeyJoin(k1, numVars);
+    for (const [k2, c2] of b) {
+      if (c2.isZero()) continue;
+      const t2 = nParseKeyJoin(k2, numVars);
+      const t: number[] = new Array<number>(numVars);
+      for (let i = 0; i < numVars; i += 1) t[i] = t1[i] + t2[i];
+      const k = nKeyJoin(t);
+      const cur = out.get(k);
+      out.set(k, cur === undefined ? c1.mul(c2) : cur.add(c1.mul(c2)));
+    }
+  }
+  for (const [k, v] of [...out]) {
+    if (v.isZero()) out.delete(k);
+  }
+  return out;
+}
+
+function irToNpoly(node: IRNode, vars: IRSymbol[]): NPoly | undefined {
+  const numVars = vars.length;
+  const zeroKey = nKeyJoin(new Array<number>(numVars).fill(0));
+  const varIndex = new Map<string, number>();
+  vars.forEach((v, i) => varIndex.set(v.name, i));
+
+  function unitFor(v: IRSymbol): string {
+    const i = varIndex.get(v.name);
+    if (i === undefined) throw new Error("unitFor on non-tracked var");
+    const tup = new Array<number>(numVars).fill(0);
+    tup[i] = 1;
+    return nKeyJoin(tup);
+  }
+
+  function walk(n: IRNode): NPoly | undefined {
+    if (n.kind === "integer") {
+      if (n.value === 0n) return new Map();
+      return new Map([[zeroKey, BiRational.fromInt(n.value)]]);
+    }
+    if (n.kind === "rational") {
+      return new Map([[zeroKey, new BiRational(n.numer, n.denom)]]);
+    }
+    if (n.kind === "float" || n.kind === "string") return undefined;
+    if (n.kind === "symbol") {
+      if (n.name.startsWith("%")) return undefined;
+      if (varIndex.has(n.name)) return new Map([[unitFor(n), BiRational.ONE]]);
+      return undefined;
+    }
+    const apply = n;
+    if (apply.head.kind !== "symbol") return undefined;
+    const head = apply.head.name;
+    if (head === ADD.name) {
+      const acc: NPoly = new Map();
+      for (const arg of apply.args) {
+        const sub = walk(arg);
+        if (sub === undefined) return undefined;
+        nAddInto(acc, sub);
+      }
+      return acc;
+    }
+    if (head === SUB.name && apply.args.length === 2) {
+      const a = walk(apply.args[0]);
+      const b = walk(apply.args[1]);
+      if (a === undefined || b === undefined) return undefined;
+      const negB: NPoly = new Map();
+      for (const [k, v] of b) negB.set(k, v.neg());
+      nAddInto(a, negB);
+      return a;
+    }
+    if (head === NEG.name && apply.args.length === 1) {
+      const sub = walk(apply.args[0]);
+      if (sub === undefined) return undefined;
+      const out: NPoly = new Map();
+      for (const [k, v] of sub) {
+        if (!v.isZero()) out.set(k, v.neg());
+      }
+      return out;
+    }
+    if (head === MUL.name) {
+      let acc: NPoly = new Map([[zeroKey, BiRational.ONE]]);
+      for (const arg of apply.args) {
+        const sub = walk(arg);
+        if (sub === undefined) return undefined;
+        acc = nMulMaps(acc, sub, numVars);
+      }
+      return acc;
+    }
+    if (head === POW.name && apply.args.length === 2) {
+      const expNode = apply.args[1];
+      if (expNode.kind !== "integer") return undefined;
+      const eBig = expNode.value;
+      if (eBig < 0n) return undefined;
+      const base = walk(apply.args[0]);
+      if (base === undefined) return undefined;
+      if (eBig === 0n) return new Map([[zeroKey, BiRational.ONE]]);
+      let result = base;
+      const e = Number(eBig);
+      for (let i = 1; i < e; i += 1) result = nMulMaps(result, base, numVars);
+      return result;
+    }
+    return undefined;
+  }
+
+  return walk(node);
+}
+
+/** Left-fold a list of children into nested binary IRApply nodes. */
+function foldBinary(head: IRSymbol, parts: IRNode[]): IRNode {
+  if (parts.length === 0) throw new Error("foldBinary requires at least one node");
+  let result = parts[0];
+  for (let i = 1; i < parts.length; i += 1) {
+    result = app(head, [result, parts[i]]);
+  }
+  return result;
+}
+
+function npolyToIr(p: NPoly, vars: IRSymbol[]): IRNode {
+  if (p.size === 0) return int(0);
+  const numVars = vars.length;
+
+  function monomialNode(tup: number[], c: BiRational): IRNode {
+    const parts: IRNode[] = [];
+    const allZero = tup.every((e) => e === 0);
+    if (!c.equals(BiRational.ONE) || allZero) {
+      if (c.denom === 1n) parts.push(int(c.numer));
+      else parts.push(rational(c.numer, c.denom));
+    }
+    for (let i = 0; i < numVars; i += 1) {
+      const e = tup[i];
+      if (e <= 0) continue;
+      const v = vars[i];
+      parts.push(e === 1 ? v : app(POW, [v, int(e)]));
+    }
+    if (parts.length === 0) return int(1);
+    return foldBinary(MUL, parts);
+  }
+
+  // Sort: descending total degree, then lex on negated exponents (matches
+  // Python ``_npoly_to_ir`` key order).
+  const keys = [...p.keys()].sort((a, b) => {
+    const ta = nParseKeyJoin(a, numVars);
+    const tb = nParseKeyJoin(b, numVars);
+    const sa = ta.reduce((x, y) => x + y, 0);
+    const sb = tb.reduce((x, y) => x + y, 0);
+    if (sa !== sb) return sb - sa;
+    for (let i = 0; i < numVars; i += 1) {
+      if (ta[i] !== tb[i]) return tb[i] - ta[i];
+    }
+    return 0;
+  });
+  const terms = keys.map((k) => monomialNode(nParseKeyJoin(k, numVars), p.get(k)!));
+  return foldBinary(ADD, terms);
+}
+
+function tryNVariateHenselIr(inner: IRNode): IRNode | undefined {
+  const vars = findNVariables(inner);
+  if (vars === undefined || vars.length < 2) return undefined;
+  const npoly = irToNpoly(inner, vars);
+  if (npoly === undefined) return undefined;
+  const factors = tryNVariateHensel(npoly, vars.length);
+  if (factors === null || factors.length < 2) return undefined;
+  const factorNodes = factors.map((f) => npolyToIr(f, vars));
+  if (factorNodes.length === 1) return factorNodes[0];
+  // Left-nested binary Mul output for binary-handler compatibility.
+  return foldBinary(MUL, factorNodes);
 }
 
 function factorResultToIr(content: bigint, factors: Array<[bigint[], number]>, variable: IRSymbol): IRNode {

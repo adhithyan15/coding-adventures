@@ -598,4 +598,574 @@ export const _internals = {
   biNormalize,
   biEquals,
   key,
+  nMul,
+  nNormalize,
+  nOne,
 };
+
+// ===========================================================================
+// n-variate Hensel lifting — Track K2 (TS port of Python Track K1, PR #5590).
+// ===========================================================================
+//
+// Strategy (one generic algorithm — NOT per-variable-count helpers):
+//
+//   1. Pick a "main" variable v_0 (always index 0 in the sparse-tuple
+//      representation).
+//   2. Substitute v_1..v_{n-1} with small integer values to reduce f to a
+//      univariate polynomial in v_0.
+//   3. Factor the univariate image via the existing factor-uni-q chain.
+//   4. Lift the univariate factors back to the full n-variate ring one
+//      variable at a time.  At step k we have factors of
+//      ``f|_{v_{k+1}=a_{k+1}, …, v_{n-1}=a_{n-1}}`` in Q[v_0, …, v_{k-1}]
+//      and lift to factors of ``f|_{v_{k+1}=a_{k+1}, …}`` in Q[v_0, …, v_k]
+//      by Hensel-style expansion in powers of ``(v_k − a_k)``.
+//   5. Each lift step solves a coefficient-ring diophantine equation
+//      ``A·u + B·v = c`` in Q[v_0, …, v_{k-1}].  Recursively: when the
+//      coefficient ring has ≥ 2 variables, specialise to reduce to Q[v_0],
+//      solve via the existing uDiophantine, then lift back.  Base case
+//      hits uDiophantine directly.
+//   6. Verify the final product equals the input; if not, return null and
+//      let the caller fall through.
+//
+// Representation:
+//   ``NPoly = Map<string, Rational>`` where the string key is the comma-
+//   joined exponent tuple ``"e_0,e_1,…,e_{n-1}"``.  Tuple length equals
+//   the number of variables; the variable count must be passed alongside
+//   this map because the empty polynomial doesn't carry it.
+//
+// Bounded resource discipline:
+//   - At most MAX_N_SPECIALISATION lucky-point tuples are tried (10).
+//   - Recursion depth bounded by n (number of variables).
+//   - Each lift loop bounded by ``deg_{v_k}(f) + 1`` iterations.
+
+/** Sparse n-variate polynomial — comma-joined exponent tuple ↦ coefficient. */
+export type NPoly = Map<string, Rational>;
+
+const MAX_N_SPECIALISATION = 10;
+
+function nKey(tuple: number[]): string {
+  return tuple.join(",");
+}
+
+function nParseKey(k: string, numVars: number): number[] {
+  const out: number[] = [];
+  let start = 0;
+  for (let i = 0; i < numVars - 1; i += 1) {
+    const idx = k.indexOf(",", start);
+    out.push(Number(k.slice(start, idx)));
+    start = idx + 1;
+  }
+  out.push(Number(k.slice(start)));
+  return out;
+}
+
+function nNormalize(p: NPoly): NPoly {
+  const out: NPoly = new Map();
+  for (const [k, v] of p) {
+    if (!v.isZero()) out.set(k, v);
+  }
+  return out;
+}
+
+function nZero(): NPoly {
+  return new Map();
+}
+
+function nOne(numVars: number): NPoly {
+  const k = nKey(new Array<number>(numVars).fill(0));
+  return new Map([[k, Rational.ONE]]);
+}
+
+function nConst(numVars: number, c: Rational): NPoly {
+  if (c.isZero()) return new Map();
+  const k = nKey(new Array<number>(numVars).fill(0));
+  return new Map([[k, c]]);
+}
+
+function nDegreeIn(p: NPoly, varIdx: number, numVars: number): number {
+  let best = -1;
+  for (const [k, v] of p) {
+    if (v.isZero()) continue;
+    const tup = nParseKey(k, numVars);
+    if (tup[varIdx] > best) best = tup[varIdx];
+  }
+  return best;
+}
+
+function nTotalDegree(p: NPoly, numVars: number): number {
+  let best = -1;
+  for (const [k, v] of p) {
+    if (v.isZero()) continue;
+    const tup = nParseKey(k, numVars);
+    let s = 0;
+    for (const e of tup) s += e;
+    if (s > best) best = s;
+  }
+  return best;
+}
+
+function nAdd(a: NPoly, b: NPoly): NPoly {
+  const out: NPoly = new Map(a);
+  for (const [k, v] of b) {
+    const cur = out.get(k) ?? Rational.ZERO;
+    out.set(k, cur.add(v));
+  }
+  return nNormalize(out);
+}
+
+function nSub(a: NPoly, b: NPoly): NPoly {
+  const out: NPoly = new Map(a);
+  for (const [k, v] of b) {
+    const cur = out.get(k) ?? Rational.ZERO;
+    out.set(k, cur.sub(v));
+  }
+  return nNormalize(out);
+}
+
+function nMul(a: NPoly, b: NPoly, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (const [k1, c1] of a) {
+    if (c1.isZero()) continue;
+    const t1 = nParseKey(k1, numVars);
+    for (const [k2, c2] of b) {
+      if (c2.isZero()) continue;
+      const t2 = nParseKey(k2, numVars);
+      const t: number[] = new Array<number>(numVars);
+      for (let i = 0; i < numVars; i += 1) t[i] = t1[i] + t2[i];
+      const k = nKey(t);
+      const cur = out.get(k) ?? Rational.ZERO;
+      out.set(k, cur.add(c1.mul(c2)));
+    }
+  }
+  return nNormalize(out);
+}
+
+function nEquals(a: NPoly, b: NPoly): boolean {
+  const na = nNormalize(a);
+  const nb = nNormalize(b);
+  if (na.size !== nb.size) return false;
+  for (const [k, v] of na) {
+    const w = nb.get(k);
+    if (w === undefined || !w.equals(v)) return false;
+  }
+  return true;
+}
+
+/** Substitute v_{varIdx} = value, keep the tuple shape (slot stays at exponent 0). */
+function nSubstituteVarKeep(p: NPoly, varIdx: number, value: Rational, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (const [k, c] of p) {
+    const tup = nParseKey(k, numVars);
+    const e = tup[varIdx];
+    const newTup = [...tup];
+    newTup[varIdx] = 0;
+    const contrib = c.mul(value.pow(e));
+    if (contrib.isZero()) continue;
+    const nk = nKey(newTup);
+    const cur = out.get(nk) ?? Rational.ZERO;
+    out.set(nk, cur.add(contrib));
+  }
+  return nNormalize(out);
+}
+
+/** Extract the (n−1)-variate-feeling coefficient at varIdx^kPow — but kept in n-variate ring with varIdx slot = 0. */
+function nCoeffAtPower(p: NPoly, varIdx: number, kPow: number, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (const [k, c] of p) {
+    const tup = nParseKey(k, numVars);
+    if (tup[varIdx] !== kPow) continue;
+    const newTup = [...tup];
+    newTup[varIdx] = 0;
+    const nk = nKey(newTup);
+    const cur = out.get(nk) ?? Rational.ZERO;
+    out.set(nk, cur.add(c));
+  }
+  return nNormalize(out);
+}
+
+/** Embed a univariate-in-varIdx polynomial into the n-variate ring. */
+function uToN(p: UniQPoly, varIdx: number, numVars: number): NPoly {
+  const out: NPoly = new Map();
+  for (let e = 0; e < p.length; e += 1) {
+    if (p[e].isZero()) continue;
+    const tup = new Array<number>(numVars).fill(0);
+    tup[varIdx] = e;
+    out.set(nKey(tup), p[e]);
+  }
+  return out;
+}
+
+/** Convert a polynomial that only uses varIdx to a UniQPoly. */
+function nToUnivariate(p: NPoly, varIdx: number, numVars: number): UniQPoly {
+  if (p.size === 0) return [];
+  let maxE = 0;
+  for (const k of p.keys()) {
+    const tup = nParseKey(k, numVars);
+    if (tup[varIdx] > maxE) maxE = tup[varIdx];
+  }
+  const out: Rational[] = Array.from({ length: maxE + 1 }, () => Rational.ZERO);
+  for (const [k, c] of p) {
+    const tup = nParseKey(k, numVars);
+    out[tup[varIdx]] = out[tup[varIdx]].add(c);
+  }
+  return uNormalize(out);
+}
+
+function nOnlyUsesVar(p: NPoly, varIdx: number, numVars: number): boolean {
+  for (const k of p.keys()) {
+    const tup = nParseKey(k, numVars);
+    for (let i = 0; i < numVars; i += 1) {
+      if (i !== varIdx && tup[i] !== 0) return false;
+    }
+  }
+  return true;
+}
+
+/** Rewrite p as polynomial in (v_{varIdx} − value) — binomial expansion. */
+function nShiftVar(p: NPoly, varIdx: number, value: Rational, numVars: number): NPoly {
+  if (value.isZero()) return new Map(p);
+  const out: NPoly = new Map();
+  for (const [k, c] of p) {
+    if (c.isZero()) continue;
+    const tup = nParseKey(k, numVars);
+    const e = tup[varIdx];
+    for (let m = 0; m <= e; m += 1) {
+      const coeff = c.mul(Rational.fromInt(binomial(e, m))).mul(value.pow(e - m));
+      const newTup = [...tup];
+      newTup[varIdx] = m;
+      const nk = nKey(newTup);
+      const cur = out.get(nk) ?? Rational.ZERO;
+      out.set(nk, cur.add(coeff));
+    }
+  }
+  return nNormalize(out);
+}
+
+// ---------------------------------------------------------------------------
+// Recursive coefficient-ring diophantine: solve u·g0 + v·h0 = c in
+// Q[active_vars] ⊂ Q[v_0, …, v_{n-1}].
+// ---------------------------------------------------------------------------
+
+function nDiophantine(
+  g0: NPoly,
+  h0: NPoly,
+  c: NPoly,
+  numVars: number,
+  mainVar: number,
+  activeVars: readonly number[],
+): [NPoly, NPoly] | null {
+  // Base case: univariate ring.
+  if (activeVars.length === 1) {
+    const only = activeVars[0];
+    if (!(nOnlyUsesVar(g0, only, numVars) && nOnlyUsesVar(h0, only, numVars) && nOnlyUsesVar(c, only, numVars))) {
+      return null;
+    }
+    const g0u = nToUnivariate(g0, only, numVars);
+    const h0u = nToUnivariate(h0, only, numVars);
+    const cu = nToUnivariate(c, only, numVars);
+    const solved = uDiophantine(g0u, h0u, cu);
+    if (solved === null) return null;
+    const [uu, vu] = solved;
+    return [uToN(uu, only, numVars), uToN(vu, only, numVars)];
+  }
+
+  // Recursive case: eliminate the last variable in activeVars.
+  const w = activeVars[activeVars.length - 1];
+  const rest = activeVars.slice(0, -1);
+
+  const maxWDeg = Math.max(
+    nDegreeIn(g0, w, numVars),
+    nDegreeIn(h0, w, numVars),
+    nDegreeIn(c, w, numVars),
+    0,
+  );
+
+  const candidates = y0Candidates().slice(0, MAX_N_SPECIALISATION);
+  for (const w0Int of candidates) {
+    const w0 = Rational.fromInt(w0Int);
+    const g0Shift = nShiftVar(g0, w, w0, numVars);
+    const h0Shift = nShiftVar(h0, w, w0, numVars);
+    const cShift = nShiftVar(c, w, w0, numVars);
+    const g0Base = nCoeffAtPower(g0Shift, w, 0, numVars);
+    const h0Base = nCoeffAtPower(h0Shift, w, 0, numVars);
+    const cBase = nCoeffAtPower(cShift, w, 0, numVars);
+
+    const solved = nDiophantine(g0Base, h0Base, cBase, numVars, mainVar, rest);
+    if (solved === null) continue;
+    let [u, v] = solved;
+
+    let success = true;
+    for (let k = 1; k <= maxWDeg; k += 1) {
+      const prod = nAdd(nMul(u, g0Shift, numVars), nMul(v, h0Shift, numVars));
+      const err = nSub(cShift, prod);
+      if (err.size === 0) break;
+      const eK = nCoeffAtPower(err, w, k, numVars);
+      if (eK.size === 0) continue;
+      const sub = nDiophantine(g0Base, h0Base, eK, numVars, mainVar, rest);
+      if (sub === null) {
+        success = false;
+        break;
+      }
+      const [du, dv] = sub;
+      const uNext: NPoly = new Map(u);
+      for (const [keyDu, coef] of du) {
+        const tup = nParseKey(keyDu, numVars);
+        const newTup = [...tup];
+        newTup[w] = k;
+        const nk = nKey(newTup);
+        const cur = uNext.get(nk) ?? Rational.ZERO;
+        uNext.set(nk, cur.add(coef));
+      }
+      const vNext: NPoly = new Map(v);
+      for (const [keyDv, coef] of dv) {
+        const tup = nParseKey(keyDv, numVars);
+        const newTup = [...tup];
+        newTup[w] = k;
+        const nk = nKey(newTup);
+        const cur = vNext.get(nk) ?? Rational.ZERO;
+        vNext.set(nk, cur.add(coef));
+      }
+      u = nNormalize(uNext);
+      v = nNormalize(vNext);
+    }
+
+    if (!success) continue;
+
+    // Verify in the shifted ring.
+    const check = nAdd(nMul(u, g0Shift, numVars), nMul(v, h0Shift, numVars));
+    if (!nEquals(check, nNormalize(cShift))) continue;
+
+    // Unshift u and v back.
+    if (!w0.isZero()) {
+      u = nShiftVar(u, w, w0.neg(), numVars);
+      v = nShiftVar(v, w, w0.neg(), numVars);
+    }
+    return [u, v];
+  }
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// n-variate two-factor lift.
+// ---------------------------------------------------------------------------
+
+function nTwoFactorLift(
+  f: NPoly,
+  g0: NPoly,
+  h0: NPoly,
+  numVars: number,
+  mainVar: number,
+  liftVar: number,
+  coeffVars: readonly number[],
+): [NPoly, NPoly] | null {
+  let g: NPoly = new Map(g0);
+  let h: NPoly = new Map(h0);
+
+  const degLift = nDegreeIn(f, liftVar, numVars);
+  const active: number[] = [mainVar, ...coeffVars];
+
+  for (let k = 1; k <= degLift; k += 1) {
+    const error = nSub(f, nMul(g, h, numVars));
+    if (error.size === 0) break;
+    const eK = nCoeffAtPower(error, liftVar, k, numVars);
+    if (eK.size === 0) continue;
+    const solved = nDiophantine(g0, h0, eK, numVars, mainVar, active);
+    if (solved === null) return null;
+    const [du, dv] = solved;
+    // du is the correction to h (matches bivariate convention).
+    const hNext: NPoly = new Map(h);
+    for (const [keyDu, coef] of du) {
+      const tup = nParseKey(keyDu, numVars);
+      const newTup = [...tup];
+      newTup[liftVar] = k;
+      const nk = nKey(newTup);
+      const cur = hNext.get(nk) ?? Rational.ZERO;
+      hNext.set(nk, cur.add(coef));
+    }
+    const gNext: NPoly = new Map(g);
+    for (const [keyDv, coef] of dv) {
+      const tup = nParseKey(keyDv, numVars);
+      const newTup = [...tup];
+      newTup[liftVar] = k;
+      const nk = nKey(newTup);
+      const cur = gNext.get(nk) ?? Rational.ZERO;
+      gNext.set(nk, cur.add(coef));
+    }
+    g = nNormalize(gNext);
+    h = nNormalize(hNext);
+  }
+
+  if (!nEquals(nMul(g, h, numVars), nNormalize(f))) return null;
+  return [g, h];
+}
+
+// ---------------------------------------------------------------------------
+// Top-level n-variate Hensel.
+// ---------------------------------------------------------------------------
+
+function nSpecialisationCandidates(numAux: number): number[][] {
+  if (numAux === 0) return [[]];
+  const primitives: number[] = [1, 2, -1, 3, -2];
+  const tuples: number[][] = [];
+  // Tier 1: constant tuples.
+  for (const v of primitives) {
+    tuples.push(new Array<number>(numAux).fill(v));
+    if (tuples.length >= MAX_N_SPECIALISATION) return tuples;
+  }
+  // Tier 2: vary one coordinate at a time off (1,1,…) base.
+  const base = new Array<number>(numAux).fill(1);
+  for (let i = 0; i < numAux; i += 1) {
+    for (let j = 1; j < primitives.length; j += 1) {
+      const cand = [...base];
+      cand[i] = primitives[j];
+      tuples.push(cand);
+      if (tuples.length >= MAX_N_SPECIALISATION) return tuples;
+    }
+  }
+  return tuples.slice(0, MAX_N_SPECIALISATION);
+}
+
+function isLuckyUni(pN: NPoly, image: UniQPoly, mainVar: number, numVars: number): boolean {
+  if (uDegree(image) !== nDegreeIn(pN, mainVar, numVars)) return false;
+  if (uDegree(image) < 1) return false;
+  const deriv: Rational[] = [];
+  for (let i = 1; i < image.length; i += 1) {
+    deriv.push(Rational.fromInt(i).mul(image[i]));
+  }
+  const dn = uNormalize(deriv);
+  if (dn.length === 0) return false;
+  const [g] = uGcdExt(image, dn);
+  return uDegree(g) === 0;
+}
+
+/**
+ * Attempt to factor an n-variate (n ≥ 2) polynomial via iterated bivariate
+ * Hensel lifting.
+ *
+ * @param fIn  Sparse n-variate polynomial in ℚ[v_0, …, v_{numVars-1}].
+ * @param numVars Number of variables; must be ≥ 2 for a non-trivial result.
+ * @returns A list of factors whose product equals `fIn`, or `null` when no
+ *          factorisation was found.
+ *
+ * Falls through (`null`) when numVars < 2, the polynomial doesn't genuinely
+ * depend on at least two variables, no lucky specialisation tuple gives a
+ * squarefree univariate image of full v_0-degree (bounded search of 10
+ * tuples), the univariate image is irreducible, or any lift/verification
+ * step fails.
+ */
+export function tryNVariateHensel(fIn: NPoly, numVars: number): NPoly[] | null {
+  const f = nNormalize(fIn);
+  if (f.size === 0) return null;
+  if (numVars < 2) return null;
+  if (nDegreeIn(f, 0, numVars) < 1) return null;
+  let anyAux = false;
+  for (let i = 1; i < numVars; i += 1) {
+    if (nDegreeIn(f, i, numVars) >= 1) {
+      anyAux = true;
+      break;
+    }
+  }
+  if (!anyAux) return null;
+
+  const mainVar = 0;
+  const auxVars: number[] = [];
+  for (let i = 1; i < numVars; i += 1) auxVars.push(i);
+
+  for (const specTuple of nSpecialisationCandidates(auxVars.length)) {
+    const spec = new Map<number, Rational>();
+    for (let i = 0; i < auxVars.length; i += 1) {
+      spec.set(auxVars[i], Rational.fromInt(specTuple[i]));
+    }
+
+    // Shift f so each auxiliary variable is recentred to 0.
+    let fShift = f;
+    for (const [vI, wI] of spec) {
+      fShift = nShiftVar(fShift, vI, wI, numVars);
+    }
+    fShift = nNormalize(fShift);
+
+    // Specialise all aux vars to 0 → univariate in main_var.
+    let fUni = fShift;
+    for (const vI of auxVars) {
+      fUni = nSubstituteVarKeep(fUni, vI, Rational.ZERO, numVars);
+    }
+    if (!nOnlyUsesVar(fUni, mainVar, numVars)) continue;
+    const image = nToUnivariate(fUni, mainVar, numVars);
+    if (!isLuckyUni(fShift, image, mainVar, numVars)) continue;
+
+    const uniFactors = factorUniQ(image);
+    if (uniFactors === null || uniFactors.length < 2) continue;
+
+    let nFactorsCurrent: NPoly[] = uniFactors.map((u) => uToN(u, mainVar, numVars));
+
+    let success = true;
+    for (let liftIdx = 0; liftIdx < auxVars.length; liftIdx += 1) {
+      const liftVar = auxVars[liftIdx];
+      let fStage = fShift;
+      for (let later = liftIdx + 1; later < auxVars.length; later += 1) {
+        fStage = nSubstituteVarKeep(fStage, auxVars[later], Rational.ZERO, numVars);
+      }
+      fStage = nNormalize(fStage);
+
+      const coeffVars = auxVars.slice(0, liftIdx);
+
+      let remaining = fStage;
+      const newFactors: NPoly[] = [];
+      let remainingFactors = [...nFactorsCurrent];
+      while (remainingFactors.length >= 2) {
+        const g0 = remainingFactors[0];
+        let h0 = nOne(numVars);
+        for (let i = 1; i < remainingFactors.length; i += 1) {
+          h0 = nMul(h0, remainingFactors[i], numVars);
+        }
+        const lifted = nTwoFactorLift(remaining, g0, h0, numVars, mainVar, liftVar, coeffVars);
+        if (lifted === null) {
+          success = false;
+          break;
+        }
+        const [gLift, hLift] = lifted;
+        newFactors.push(gLift);
+        remaining = hLift;
+        remainingFactors = remainingFactors.slice(1);
+      }
+      if (!success) break;
+      newFactors.push(remaining);
+      nFactorsCurrent = newFactors;
+    }
+    if (!success) continue;
+
+    // Unshift each factor back to original frame.
+    let result = nFactorsCurrent;
+    for (const [vI, wI] of spec) {
+      result = result.map((fac) => nShiftVar(fac, vI, wI.neg(), numVars));
+    }
+    result = result.map((fac) => nNormalize(fac));
+
+    // Verify product reconstructs f.
+    let prod: NPoly = nOne(numVars);
+    for (const fac of result) prod = nMul(prod, fac, numVars);
+    if (!nEquals(prod, nNormalize(f))) continue;
+
+    // Drop pure constants, fold scalar into factor 0.
+    const nonTrivial: NPoly[] = [];
+    let scalar = Rational.ONE;
+    for (const fac of result) {
+      if (nTotalDegree(fac, numVars) <= 0) {
+        if (fac.size > 0) {
+          for (const v of fac.values()) {
+            scalar = scalar.mul(v);
+            break;
+          }
+        }
+      } else {
+        nonTrivial.push(fac);
+      }
+    }
+    if (nonTrivial.length < 2) continue;
+    if (!scalar.equals(Rational.ONE)) {
+      nonTrivial[0] = nMul(nonTrivial[0], nConst(numVars, scalar), numVars);
+    }
+    return nonTrivial;
+  }
+  return null;
+}
