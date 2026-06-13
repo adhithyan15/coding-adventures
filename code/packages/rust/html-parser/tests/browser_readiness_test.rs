@@ -30,9 +30,10 @@ use coding_adventures_html_parser::{
     BrowserScriptModuleGraphDescriptor, BrowserScriptStorageAccessDescriptor,
     BrowserScriptWorkerMessagingDescriptor, BrowserScrollInteractionDescriptor,
     BrowserSectionLandmark, BrowserSelectOption, BrowserSelectionInteractionDescriptor,
-    BrowserSlotDescriptor, BrowserStructuredItem, BrowserStructuredProperty, BrowserStylesheet,
-    BrowserStylesheetPlanningDescriptor, BrowserTable, BrowserTableCell, BrowserTemplate,
-    BrowserTemplateDescriptor, BrowserTextSemantic, BrowserThemeColor,
+    BrowserSlotDescriptor, BrowserStructuredDataDescriptor, BrowserStructuredItem,
+    BrowserStructuredProperty, BrowserStylesheet, BrowserStylesheetPlanningDescriptor,
+    BrowserTable, BrowserTableCell, BrowserTemplate, BrowserTemplateDescriptor,
+    BrowserTextSemantic, BrowserThemeColor,
 };
 use serde::Deserialize;
 
@@ -203,6 +204,8 @@ struct ExpectedBrowserDocument {
     #[serde(default)]
     global_state_descriptors: Vec<ExpectedGlobalStateDescriptor>,
     #[serde(default)]
+    structured_data_descriptors: Option<Vec<ExpectedStructuredDataDescriptor>>,
+    #[serde(default)]
     structured_items: Vec<ExpectedStructuredItem>,
     #[serde(default)]
     templates: Vec<ExpectedTemplate>,
@@ -352,6 +355,36 @@ struct ExpectedStructuredProperty {
     value_url: Option<String>,
     #[serde(default)]
     resolved_value_url: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ExpectedStructuredDataDescriptor {
+    #[serde(default)]
+    id: Option<String>,
+    #[serde(default)]
+    item_type: Vec<String>,
+    #[serde(default)]
+    item_type_count: usize,
+    #[serde(default)]
+    item_id: Option<String>,
+    #[serde(default)]
+    resolved_item_id: Option<String>,
+    #[serde(default)]
+    item_ref: Vec<String>,
+    #[serde(default)]
+    item_ref_count: usize,
+    #[serde(default)]
+    unresolved_item_refs: Vec<String>,
+    #[serde(default)]
+    property_names: Vec<String>,
+    #[serde(default)]
+    property_count: usize,
+    #[serde(default)]
+    url_property_count: usize,
+    #[serde(default)]
+    structured_data_blocked: bool,
+    #[serde(default)]
+    structured_data_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -4229,6 +4262,8 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         let tracks_slot_descriptors = case.expected.slot_descriptors.is_some();
         let tracks_custom_element_descriptors = case.expected.custom_element_descriptors.is_some();
         let tracks_canvas_descriptors = case.expected.canvas_descriptors.is_some();
+        let tracks_structured_data_descriptors =
+            case.expected.structured_data_descriptors.is_some();
         let mut expected = case.expected.into_browser_document();
         if !tracks_aria_name_descriptors {
             expected.aria_name_descriptors = actual.aria_name_descriptors.clone();
@@ -4247,6 +4282,9 @@ fn browser_readiness_cases_extract_browser_document_facts() {
         }
         if !tracks_canvas_descriptors {
             expected.canvas_descriptors = actual.canvas_descriptors.clone();
+        }
+        if !tracks_structured_data_descriptors {
+            expected.structured_data_descriptors = actual.structured_data_descriptors.clone();
         }
 
         assert_eq!(
@@ -4514,6 +4552,79 @@ fn browser_image_map_descriptor_metadata_tracks_area_navigation() {
         actual.image_maps, expected.image_maps,
         "image maps should preserve area geometry, link policy, and resolved navigation metadata",
     );
+}
+
+#[test]
+fn browser_structured_data_descriptors_track_item_identity_refs_and_properties() {
+    let suite: BrowserReadinessSuite = serde_json::from_str(BROWSER_READINESS_FIXTURE)
+        .expect("browser readiness fixture should parse");
+    let case = suite
+        .cases
+        .into_iter()
+        .find(|case| case.id == "structured-data-microdata-page")
+        .expect("structured data fixture case should exist");
+
+    let actual = parse_browser_document(&case.input)
+        .expect("structured data fixture should parse into browser document facts");
+
+    assert_eq!(
+        actual.structured_data_descriptors,
+        case.expected
+            .into_browser_document()
+            .structured_data_descriptors,
+        "structured data descriptors should preserve item identity, itemref resolution, property names, and URL property counts",
+    );
+}
+
+#[test]
+fn browser_structured_data_descriptors_track_missing_and_unresolved_blockers() {
+    let actual = parse_browser_document(
+        r#"<body>
+            <article id=empty itemscope itemref="missing-one missing-two"></article>
+            <section id=typed itemscope itemtype="https://schema.org/Thing" itemref=extra>
+                <span itemprop=name>Named item</span>
+            </section>
+            <p id=extra itemprop=description>Extra description</p>
+        </body>"#,
+    )
+    .expect("structured data blocker fixture should parse");
+
+    let empty = actual
+        .structured_data_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("empty"))
+        .expect("empty structured data descriptor should be present");
+
+    assert!(empty.item_type.is_empty());
+    assert_eq!(empty.item_ref, vec!["missing-one", "missing-two"]);
+    assert_eq!(empty.item_ref_count, 2);
+    assert_eq!(
+        empty.unresolved_item_refs,
+        vec!["missing-one", "missing-two"]
+    );
+    assert_eq!(empty.property_count, 0);
+    assert!(empty.structured_data_blocked);
+    assert_eq!(
+        empty.structured_data_block_reasons,
+        vec![
+            "missing-itemtype",
+            "missing-properties",
+            "unresolved-itemref"
+        ]
+    );
+
+    let typed = actual
+        .structured_data_descriptors
+        .iter()
+        .find(|descriptor| descriptor.id.as_deref() == Some("typed"))
+        .expect("typed structured data descriptor should be present");
+
+    assert_eq!(typed.item_type_count, 1);
+    assert_eq!(typed.item_ref, vec!["extra"]);
+    assert!(typed.unresolved_item_refs.is_empty());
+    assert_eq!(typed.property_names, vec!["name", "description"]);
+    assert_eq!(typed.property_count, 2);
+    assert!(!typed.structured_data_blocked);
 }
 
 #[test]
@@ -7532,6 +7643,12 @@ impl ExpectedBrowserDocument {
                 .map(ExpectedDataAttributeDescriptor::into_browser_data_attribute_descriptor)
                 .collect(),
             global_state_descriptors,
+            structured_data_descriptors: self
+                .structured_data_descriptors
+                .unwrap_or_default()
+                .into_iter()
+                .map(ExpectedStructuredDataDescriptor::into_browser_structured_data_descriptor)
+                .collect(),
             structured_items: self
                 .structured_items
                 .into_iter()
@@ -7698,6 +7815,26 @@ impl ExpectedStructuredProperty {
             value: self.value,
             value_url: self.value_url,
             resolved_value_url: self.resolved_value_url,
+        }
+    }
+}
+
+impl ExpectedStructuredDataDescriptor {
+    fn into_browser_structured_data_descriptor(self) -> BrowserStructuredDataDescriptor {
+        BrowserStructuredDataDescriptor {
+            id: self.id,
+            item_type: self.item_type,
+            item_type_count: self.item_type_count,
+            item_id: self.item_id,
+            resolved_item_id: self.resolved_item_id,
+            item_ref: self.item_ref,
+            item_ref_count: self.item_ref_count,
+            unresolved_item_refs: self.unresolved_item_refs,
+            property_names: self.property_names,
+            property_count: self.property_count,
+            url_property_count: self.url_property_count,
+            structured_data_blocked: self.structured_data_blocked,
+            structured_data_block_reasons: self.structured_data_block_reasons,
         }
     }
 }

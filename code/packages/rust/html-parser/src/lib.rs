@@ -894,6 +894,7 @@ pub struct BrowserDocument {
     pub component_hydration_targets: Vec<BrowserComponentHydrationTarget>,
     pub data_attribute_descriptors: Vec<BrowserDataAttributeDescriptor>,
     pub global_state_descriptors: Vec<BrowserGlobalStateDescriptor>,
+    pub structured_data_descriptors: Vec<BrowserStructuredDataDescriptor>,
     pub structured_items: Vec<BrowserStructuredItem>,
     pub templates: Vec<BrowserTemplate>,
     pub forms: Vec<BrowserForm>,
@@ -1412,6 +1413,23 @@ pub struct BrowserStructuredProperty {
     pub value: Option<String>,
     pub value_url: Option<String>,
     pub resolved_value_url: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BrowserStructuredDataDescriptor {
+    pub id: Option<String>,
+    pub item_type: Vec<String>,
+    pub item_type_count: usize,
+    pub item_id: Option<String>,
+    pub resolved_item_id: Option<String>,
+    pub item_ref: Vec<String>,
+    pub item_ref_count: usize,
+    pub unresolved_item_refs: Vec<String>,
+    pub property_names: Vec<String>,
+    pub property_count: usize,
+    pub url_property_count: usize,
+    pub structured_data_blocked: bool,
+    pub structured_data_block_reasons: Vec<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -10956,11 +10974,15 @@ fn collect_browser_facts(
             summary.templates.push(browser_template(element));
         }
         if browser_item_scope(element) {
-            summary.structured_items.push(browser_structured_item(
-                element,
-                summary.base_href.as_deref(),
-                body_root,
-            ));
+            let structured_item =
+                browser_structured_item(element, summary.base_href.as_deref(), body_root);
+            summary
+                .structured_data_descriptors
+                .push(browser_structured_data_descriptor(
+                    &structured_item,
+                    body_root,
+                ));
+            summary.structured_items.push(structured_item);
         }
 
         if is_browser_document_link(element) {
@@ -20572,6 +20594,63 @@ fn browser_structured_item(
         item_ref: item_ref.clone(),
         properties: browser_structured_properties(element, &item_ref, base_href, body_root),
     }
+}
+
+fn browser_structured_data_descriptor(
+    item: &BrowserStructuredItem,
+    body_root: &[Node],
+) -> BrowserStructuredDataDescriptor {
+    let unresolved_item_refs: Vec<String> = item
+        .item_ref
+        .iter()
+        .filter(|id| find_element_by_id(body_root, id).is_none())
+        .cloned()
+        .collect();
+    let property_names: Vec<String> = item
+        .properties
+        .iter()
+        .map(|property| property.name.clone())
+        .collect();
+    let url_property_count = item
+        .properties
+        .iter()
+        .filter(|property| property.value_url.is_some())
+        .count();
+    let structured_data_block_reasons =
+        browser_structured_data_block_reasons(item, &unresolved_item_refs);
+
+    BrowserStructuredDataDescriptor {
+        id: item.id.clone(),
+        item_type: item.item_type.clone(),
+        item_type_count: item.item_type.len(),
+        item_id: item.item_id.clone(),
+        resolved_item_id: item.resolved_item_id.clone(),
+        item_ref: item.item_ref.clone(),
+        item_ref_count: item.item_ref.len(),
+        unresolved_item_refs,
+        property_count: item.properties.len(),
+        property_names,
+        url_property_count,
+        structured_data_blocked: !structured_data_block_reasons.is_empty(),
+        structured_data_block_reasons,
+    }
+}
+
+fn browser_structured_data_block_reasons(
+    item: &BrowserStructuredItem,
+    unresolved_item_refs: &[String],
+) -> Vec<String> {
+    let mut reasons = Vec::new();
+    if item.item_type.is_empty() {
+        reasons.push("missing-itemtype".to_string());
+    }
+    if item.properties.is_empty() {
+        reasons.push("missing-properties".to_string());
+    }
+    if !unresolved_item_refs.is_empty() {
+        reasons.push("unresolved-itemref".to_string());
+    }
+    reasons
 }
 
 fn browser_structured_properties(
