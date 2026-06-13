@@ -210,26 +210,26 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // same deferred gap.
     ("num_neg_exp_frac", "gap-085: negative-exp scientific -> fractional shortest-form"),
     ("num_small_frac",   "gap-085: small decimal fraction -> exponential (0.0001 -> 1E-4)"),
-    // gap-107 (CLOC14.50): a FRACTIONAL float literal (non-integer
-    // value) with trailing zeros in its fractional part keeps them
-    // verbatim, but upstream strips them to the shortest exact form:
+    // gap-107 RESOLVED in CLOC12.110 — a FRACTIONAL float literal
+    // (non-integer value) with trailing zeros in its fractional part
+    // now has them stripped to the shortest exact decimal, plus a lone
+    // leading `0` before the `.` elided:
     //   `1.50`     -> `1.5`     (trailing zero)
     //   `123.4500` -> `123.45`  (multiple trailing zeros)
-    //   `0.50`     -> `.5`      (trailing-zero strip + leading-`0`
-    //                            elision; the leading-zero half is the
-    //                            gap-085 fractional family)
-    // Distinct from gap-082 (which already canonicalises
-    // INTEGER-valued floats like `2.0`/`100.00` — those go through the
-    // u128 path). gap-107 is the NON-integer fractional case. It is
-    // tractable WITHOUT Grisu/Ryu because the value is exactly
-    // representable: strip trailing `0`s after the `.` (and a bare
-    // trailing `.`), then apply the leading-`0` elision. The genuinely
-    // Grisu-needing cases (f64 precision loss like
-    // `12345678901234567890` -> `1.2345678901234567E19`, and
-    // scientific<->fractional like `0.0001` -> `1E-4`) remain gap-085.
-    ("num_frac_trail_zero",  "gap-107: fractional trailing zero 1.50 -> 1.5"),
-    ("num_frac_trail_zeros", "gap-107: multiple fractional trailing zeros -> 123.45"),
-    ("num_frac_lead_zero",   "gap-107: lead+trail zero 0.50 -> .5"),
+    //   `0.50`     -> `.5`      (trailing-zero strip + leading-`0` drop)
+    // Fixed by a gap-107 arm in `normalize_number_value`'s fractional
+    // fallback (reached only after `decimal_float_as_u128` returns
+    // None, i.e. the value is genuinely non-integer): when the literal
+    // has a `.` and NO exponent, strip trailing `0`s from the
+    // fractional part (and a now-bare trailing `.`) then elide a lone
+    // `0` integer part. Pure decimal-string normalisation — no
+    // Grisu/Ryu. As a bonus the long-standing `0.5` -> `.5` now also
+    // resolves. The genuinely Grisu-needing cases stay gap-085:
+    // exponent forms (`5e-3`, `0.0001`'s `1E-4`) are excluded by the
+    // no-`e`/`E` guard, and f64 precision loss
+    // (`12345678901234567890` -> `1.2345678901234567E19`) never reaches
+    // the arm (all-digits, no `.`). `minify_num_frac_trail_zero` /
+    // `..._trail_zeros` / `..._lead_zero` now ENFORCED.
     // gap-083 (CLOC14.38): PRECEDENCE-aware operand paren elision —
     // `a==(b+c)` → `a==b+c` (the inner op binds tighter than the
     // outer). Extends gap-077/078 beyond the atomic-operand guard;
