@@ -92,7 +92,7 @@ pub fn validate_material_name(material: &str) -> Result<(), String> {
 pub fn cs_to_wire(cs: &fps::CrossSection) -> String {
     cs.layers
         .iter()
-        .map(|l| format!("{}:{}", l.material, l.thickness_nm))
+        .map(|l| format!("{}:{:?}", l.material, l.thickness_nm))
         .collect::<Vec<_>>()
         .join("|")
 }
