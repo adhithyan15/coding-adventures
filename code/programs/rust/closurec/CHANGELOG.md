@@ -2,6 +2,38 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.114.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-107** — a FRACTIONAL (non-integer-valued) float literal
+  with trailing zeros in its fractional part now has them stripped to
+  the shortest exact decimal, plus a lone leading `0` before the `.`
+  elided, matching upstream Closure v20240317:
+
+      x=1.50;     ->  x=1.5;
+      x=1.500;    ->  x=1.5;
+      x=123.4500; ->  x=123.45;
+      x=0.50;     ->  x=.5;     (trailing strip then leading-`0` drop)
+      x=.50;      ->  x=.5;
+      x=10.20;    ->  x=10.2;   (multi-digit int part kept)
+
+  Previously these fell through `normalize_number_value`'s fractional
+  fallback and were emitted verbatim. The fix adds a gap-107 arm in
+  that fallback: for a literal that has a `.`, a non-integer value (so
+  the gap-082 u128/integer path did not apply), and NO exponent, strip
+  trailing `0`s from the fractional part (and a now-bare trailing `.`)
+  then elide a lone `0` integer part. This is pure decimal-string
+  normalisation — the value is exactly representable as written, so NO
+  Grisu/Ryu is needed. As a bonus the long-standing `0.5` -> `.5`
+  (gap-082's deferred "fractional left verbatim") now also resolves.
+  The genuinely Grisu-needing residuals stay untouched and remain
+  gap-085: anything with an exponent (`5e-3`, `1e-5`) is excluded by
+  the no-`e`/`E` guard, and f64-precision cases like
+  `12345678901234567890` -> `1.2345678901234567E19` never reach this
+  arm (all-digits, no `.`). Eight `gap107_*` unit tests plus the
+  updated `gap082_fractional_leading_zero_elided` cover the strip
+  cases and every non-regression guard (`1.5`/`1.05`/`2.0`/`2.00`).
+
 ## [0.113.0] - 2026-06-12
 
 ### Fixed

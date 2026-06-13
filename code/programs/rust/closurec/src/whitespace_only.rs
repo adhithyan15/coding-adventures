@@ -3742,6 +3742,50 @@ fn normalize_number_value(value: &str) -> String {
                 scientific.unwrap()
             };
         }
+        // gap-107: a FRACTIONAL float (decimal_float_as_u128
+        // returned None, so the value is genuinely non-integer)
+        // with NO exponent has its trailing fractional zeros
+        // stripped to the shortest EXACT decimal, plus a leading
+        // lone `0` before the `.` elided:
+        //   `1.50`     → `1.5`
+        //   `123.4500` → `123.45`
+        //   `0.50`     → `.5`   (trailing strip then leading-`0` drop)
+        //   `.50`      → `.5`
+        // This is pure decimal-string normalisation — the value is
+        // exactly representable as written, so NO Grisu/Ryu is
+        // needed. The genuinely Grisu-needing residuals stay
+        // untouched: anything with an exponent (`5e-3`, `0.0001`'s
+        // upstream `1E-4` form) is excluded by the no-`e`/`E` guard,
+        // and an f64-precision case like `12345678901234567890`
+        // never reaches here (it is all-digits, no `.`). Non-
+        // regression: `1.5`/`1.05` have no trailing fractional zero
+        // and no leading `0`, so `out == cleaned` and we fall
+        // through unchanged; `2.0`/`2.00` are integer-valued and
+        // were already handled by the gap-082 path above.
+        if !cleaned.contains('e') && !cleaned.contains('E') {
+            if let Some(dot) = cleaned.find('.') {
+                let int_part = &cleaned[..dot];
+                let frac = &cleaned[dot + 1..];
+                let frac_trimmed = frac.trim_end_matches('0');
+                let mut out = String::new();
+                // Leading-`0` elision: only a LONE `0` integer part
+                // is dropped (`0.x` → `.x`); `10.x` keeps its `10`.
+                if int_part != "0" {
+                    out.push_str(int_part);
+                }
+                out.push('.');
+                out.push_str(frac_trimmed);
+                // A now-bare trailing `.` would mean an integer
+                // value, which the gap-082 path already handled;
+                // guard defensively all the same.
+                if out.ends_with('.') {
+                    out.pop();
+                }
+                if !out.is_empty() && out != cleaned {
+                    return out;
+                }
+            }
+        }
         return cleaned;
     };
 
@@ -6140,14 +6184,80 @@ mod tests {
         assert_eq!(minify("var x=1e21;"), "var x=1E21;");
     }
 
-    /// **Deferred (residual gap-085)**: a FRACTIONAL value is
-    /// left as the separator-stripped source. `0.5` is not an
-    /// integer (5 not divisible by 10), so `decimal_float_as_u128`
-    /// returns None and the literal is unchanged. (The JAR emits
-    /// `.5`; matching it needs the V8 fractional formatter.)
+    /// **Now RESOLVED by gap-107 (CLOC12.110)**: a simple
+    /// FRACTIONAL value with a lone `0` integer part has the `0`
+    /// elided — `0.5` → `.5` — matching upstream. (This used to be
+    /// a deferred gap-085 residual left verbatim; the trailing-zero
+    /// / leading-zero string normalisation needs no Grisu/Ryu.)
     #[test]
-    fn gap082_fractional_left_verbatim() {
-        assert_eq!(minify("var x=0.5;"), "var x=0.5;");
+    fn gap082_fractional_leading_zero_elided() {
+        assert_eq!(minify("var x=0.5;"), "var x=.5;");
+    }
+
+    // ---- gap-107: fractional float trailing-zero strip ----
+    //
+    // A non-integer fractional literal with NO exponent has its
+    // trailing fractional zeros stripped to the shortest exact
+    // form, plus a lone leading `0` before the `.` elided. Pure
+    // decimal-string normalisation — no Grisu/Ryu.
+
+    /// `1.50` → `1.5` (single trailing zero).
+    #[test]
+    fn gap107_trailing_zero() {
+        assert_eq!(minify("var x=1.50;"), "var x=1.5;");
+    }
+
+    /// `1.500` → `1.5` and `123.4500` → `123.45` (multiple zeros).
+    #[test]
+    fn gap107_multiple_trailing_zeros() {
+        assert_eq!(minify("var x=1.500;"), "var x=1.5;");
+        assert_eq!(minify("var x=123.4500;"), "var x=123.45;");
+    }
+
+    /// `0.50` → `.5` (trailing-zero strip THEN leading-`0` elision).
+    #[test]
+    fn gap107_lead_and_trail_zero() {
+        assert_eq!(minify("var x=0.50;"), "var x=.5;");
+    }
+
+    /// `.50` → `.5` (no integer part; just trailing strip).
+    #[test]
+    fn gap107_no_int_part_trailing_zero() {
+        assert_eq!(minify("var x=.50;"), "var x=.5;");
+    }
+
+    /// `10.20` → `10.2` — a multi-digit integer part is NOT elided
+    /// (only a lone `0` is); the trailing zero is still stripped.
+    #[test]
+    fn gap107_multidigit_int_keeps_int_part() {
+        assert_eq!(minify("var x=10.20;"), "var x=10.2;");
+    }
+
+    /// **Non-regression**: `1.5` (no trailing zero) and `1.05` (the
+    /// `0` is not trailing) are unchanged.
+    #[test]
+    fn gap107_no_change_when_no_trailing_zero() {
+        assert_eq!(minify("var x=1.5;"), "var x=1.5;");
+        assert_eq!(minify("var x=1.05;"), "var x=1.05;");
+    }
+
+    /// **Non-regression**: integer-valued floats `2.0`/`2.00` are
+    /// handled by the gap-082 path (→ `2`) before the gap-107 arm
+    /// is reached — they collapse to the bare integer, NOT a
+    /// trailing-`.`-stripped form.
+    #[test]
+    fn gap107_integer_valued_floats_unaffected() {
+        assert_eq!(minify("var x=2.0;"), "var x=2;");
+        assert_eq!(minify("var x=2.00;"), "var x=2;");
+    }
+
+    /// **Non-regression**: an EXPONENT excludes the literal from
+    /// gap-107 (those are gap-085 Grisu residuals) — `5e-3` stays
+    /// verbatim, `1e-5` stays verbatim.
+    #[test]
+    fn gap107_exponent_excluded() {
+        assert_eq!(minify("var x=5e-3;"), "var x=5e-3;");
+        assert_eq!(minify("var x=1e-5;"), "var x=1e-5;");
     }
 
     /// **Deferred (residual gap-085)**: a negative-exponent
