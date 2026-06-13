@@ -698,7 +698,7 @@ pub fn whitespace_only_minify(
             let is_unary_kw = is_word_like(kept[i])
                 && matches!(
                     kept[i].value.as_str(),
-                    "void" | "typeof" | "delete" | "instanceof"
+                    "void" | "typeof" | "delete" | "instanceof" | "await"
                 );
             // Property guard: skip `o.delete(`, `o?.typeof(`, …
             let is_property = i >= 1
@@ -737,15 +737,33 @@ pub fn whitespace_only_minify(
                 }
                 if let Some(close) = close {
                     let span = &kept[open + 1..close];
-                    // gap-054/070 + gap-101: the operand is "safe" if it
-                    // is a single token, a member-reference chain
-                    // (gap-054/070), a leading SYMBOL/KEYWORD unary chain,
-                    // or a call/member chain (gap-101). All bind tighter
-                    // than (or, for `instanceof`, are re-associated the
-                    // same by) the operator, so the grouping parens are
-                    // redundant. A parenthesised binary operand is still
-                    // rejected and keeps its parens.
-                    if is_safe_unary_kw_operand(span) {
+                    // gap-072 DEFINITION-NAME guard: `await` (and `yield`)
+                    // are CONTEXTUAL keywords — they can also be a
+                    // function/method NAME. `function await(x){…}` and
+                    // `{await(x){…}}` have their `)` immediately followed
+                    // by the body `{`; the operator form `await(x)` never
+                    // does (an `await` expression's `)` is followed by a
+                    // statement terminator / operator). So if the matched
+                    // `)` is directly followed by `{`, this `(` is a
+                    // parameter list, not a grouping paren — skip it.
+                    // (The other keywords `typeof`/`void`/`delete`/
+                    // `instanceof` are fully reserved and can never be a
+                    // name, so this guard is a no-op for them.)
+                    let is_definition_name = kept
+                        .get(close + 1)
+                        .map(|t| is_structural_punct(t, "{"))
+                        .unwrap_or(false);
+                    // gap-054/070 + gap-101 + gap-072: the operand is
+                    // "safe" if it is a single token, a member-reference
+                    // chain (gap-054/070), a leading SYMBOL/KEYWORD unary
+                    // chain, or a call/member chain (gap-101). All bind
+                    // tighter than (or, for `instanceof`, are
+                    // re-associated the same by) the operator, so the
+                    // grouping parens are redundant. A parenthesised
+                    // binary operand is still rejected and keeps its
+                    // parens. gap-072 adds `await`, which binds at unary
+                    // precedence like `typeof`/`void`/`delete`.
+                    if !is_definition_name && is_safe_unary_kw_operand(span) {
                         drops.push(open);
                         drops.push(close);
                         i = close + 1;
@@ -3066,6 +3084,7 @@ pub fn whitespace_only_minify(
                 || new_paren_needs_space(&kept, idx)
                 || get_set_computed_needs_space(&kept, idx)
                 || async_gen_method_needs_space(&kept, idx)
+                || await_operator_needs_space(&kept, idx)
             {
                 out.push(' ');
             }
@@ -4178,6 +4197,78 @@ fn async_gen_method_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bo
             .is_some_and(|t| is_structural_punct(t, "{")),
         None => false,
     }
+}
+
+/// gap-072: the `await` UNARY OPERATOR is always emitted with a
+/// separating space before its operand — `await x`, `await -b`,
+/// `await (a+b)` — to keep it visually distinct from the `await(...)`
+/// call syntax (upstream Closure always spaces it). The default
+/// `needs_separator` already spaces a *word-like* operand (`await x`),
+/// but NOT a non-word-like one (`await-b`, `await(a+b)`), so this
+/// predicate forces the space for the remaining cases.
+///
+/// Returns true iff the token BEFORE `idx` is the genuine `await`
+/// OPERATOR (so a space must precede `kept[idx]`, its operand). Guards
+/// keep it from spacing the contextual-keyword's NON-operator uses:
+///   - PROPERTY: `o.await(x)` — `await` preceded by `.`/`?.` is a
+///     method access, emitted without a space.
+///   - FUNCTION NAME: `function await(x){}` — preceded by `function`.
+///   - METHOD NAME: `{await(x){}}` — when `kept[idx]` is `(` whose
+///     matching `)` is immediately followed by `{`, the `(` is a
+///     parameter list, not an operand.
+/// (`await` as a plain value/identifier — `await(x)` at top level — is
+/// a PARSE ERROR in the upstream compiler, so it never appears in a
+/// byte-identity input; only the operator form needs handling.)
+fn await_operator_needs_space(kept: &[&lexer::token::Token], idx: usize) -> bool {
+    if idx == 0 {
+        return false;
+    }
+    let prev = kept[idx - 1];
+    if !is_word_like(prev) || prev.value != "await" {
+        return false;
+    }
+    // PROPERTY guard.
+    if idx >= 2
+        && (is_structural_punct(kept[idx - 2], ".")
+            || is_structural_punct(kept[idx - 2], "?."))
+    {
+        return false;
+    }
+    // FUNCTION-NAME guard.
+    if idx >= 2 && is_word_like(kept[idx - 2]) && kept[idx - 2].value == "function" {
+        return false;
+    }
+    // METHOD-NAME guard: `kept[idx]` is a `(` whose matching `)` is
+    // immediately followed by `{` (a parameter list + body).
+    if is_structural_punct(kept[idx], "(") {
+        let mut depth: i32 = 1;
+        let mut j = idx + 1;
+        while j < kept.len() {
+            let t = kept[j];
+            if is_structural_punct(t, "(")
+                || is_structural_punct(t, "[")
+                || is_structural_punct(t, "{")
+            {
+                depth += 1;
+            } else if is_structural_punct(t, ")") {
+                depth -= 1;
+                if depth == 0 {
+                    break;
+                }
+            } else if is_structural_punct(t, "]") || is_structural_punct(t, "}") {
+                depth -= 1;
+            }
+            j += 1;
+        }
+        if kept
+            .get(j + 1)
+            .map(|t| is_structural_punct(t, "{"))
+            .unwrap_or(false)
+        {
+            return false;
+        }
+    }
+    true
 }
 
 /// gap-054 + gap-070: True iff `span` (the tokens BETWEEN a unary
@@ -6433,6 +6524,70 @@ mod tests {
     fn gap102_property_yield_not_elided() {
         assert_eq!(minify("o.yield(a);"), "o.yield(a);");
         assert_eq!(minify("a=b.yield(c);"), "a=b.yield(c);");
+    }
+
+    // ---- gap-072: await operand paren elision + always-space -----
+
+    /// gap-072: an `await` operator's parenthesised SAFE operand drops
+    /// its parens (`await(x)` → `await x`), like the other unary
+    /// keywords. `await` binds at unary precedence.
+    #[test]
+    fn gap072_await_operand_elided() {
+        assert_eq!(
+            minify("async function f(){await(x)}"),
+            "async function f(){await x};"
+        );
+        assert_eq!(
+            minify("async function f(){await(a.b)}"),
+            "async function f(){await a.b};"
+        );
+        assert_eq!(
+            minify("async function f(){a=await(b)}"),
+            "async function f(){a=await b};"
+        );
+        assert_eq!(
+            minify("async function f(){await(a())}"),
+            "async function f(){await a()};"
+        );
+    }
+
+    /// gap-072: the `await` operator is ALWAYS emitted with a
+    /// separating space before its operand — even a non-word-like one —
+    /// to stay distinct from `await(...)` call syntax. A parenthesised
+    /// BINARY operand keeps its parens (await binds tighter than the
+    /// binary op) but still gains the space.
+    #[test]
+    fn gap072_await_always_spaced() {
+        assert_eq!(
+            minify("async function f(){await(-b)}"),
+            "async function f(){await -b};"
+        );
+        assert_eq!(
+            minify("async function f(){await(a+b)}"),
+            "async function f(){await (a+b)};"
+        );
+        assert_eq!(
+            minify("async function f(){await(a,b)}"),
+            "async function f(){await (a,b)};"
+        );
+        assert_eq!(
+            minify("async function f(){await-b}"),
+            "async function f(){await -b};"
+        );
+    }
+
+    /// gap-072 SAFETY: `await` is a CONTEXTUAL keyword — as a function /
+    /// method NAME or a property it must NOT be treated as the operator
+    /// (no paren-drop, no forced space).
+    #[test]
+    fn gap072_await_name_and_property_untouched() {
+        assert_eq!(
+            minify("function await(x){return x}"),
+            "function await(x){return x};"
+        );
+        assert_eq!(minify("x={await(x){}};"), "x={await(x){}};");
+        assert_eq!(minify("a.await(x);"), "a.await(x);");
+        assert_eq!(minify("o.await(a+b);"), "o.await(a+b);");
     }
 
     // ---- gap-078: binary symbol-operator right-operand elision --

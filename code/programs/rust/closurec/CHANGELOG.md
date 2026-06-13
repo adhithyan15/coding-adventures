@@ -2,6 +2,47 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.110.0] - 2026-06-12
+
+### Fixed
+- **CLOSES gap-072** — an `await` operator's grouping parens are now
+  elided, and the operator is always emitted with a separating space:
+
+      async function f(){await(x)}     -> async function f(){await x};
+      async function f(){await(a.b)}   -> async function f(){await a.b};
+      async function f(){a=await(b)}   -> async function f(){a=await b};
+      async function f(){await(-b)}    -> async function f(){await -b};
+      async function f(){await(a+b)}   -> async function f(){await (a+b)};
+
+  `await` binds at UNARY precedence — exactly like `typeof`/`void`/
+  `delete` — so it was added to gap-101's `is_safe_unary_kw_operand`
+  keyword block (NOT the gap-056 return/throw block, which is for the
+  looser-binding `yield`). A safe operand (identifier / literal /
+  member-chain / call / leading unary) drops its parens; a parenthesised
+  BINARY operand keeps them (`await` binds tighter than the binary op).
+  Two extra concerns are handled:
+  1. **Always-space.** Upstream emits the `await` operator with a space
+     before its operand even when the operand is non-word-like
+     (`await -b`, `await (a+b)`), to keep it distinct from `await(...)`
+     call syntax. A new `await_operator_needs_space` emit predicate
+     forces that space.
+  2. **Contextual-keyword safety.** `await` can be a function/method
+     NAME or a property. `function await(x){}` / `{await(x){}}` (the
+     matched `)` is followed by `{`) and `o.await(x)` (preceded by
+     `.`/`?.`) are guarded out of BOTH the paren-drop and the space, so
+     they are emitted unchanged. (`await` as a plain value is a parse
+     error in the upstream compiler, so it never appears in a
+     byte-identity input — only the operator form needs handling.)
+
+  Verified byte-identical against the upstream Closure JAR (v20240317)
+  across identifier / member / call / unary / binary / comma operands
+  plus the name and property guards. +3 `gap072_*` unit tests; the
+  `minify_await_paren_elide` and `minify_await_binary_kept` fixtures are
+  un-ignored and enforced. Known residual: a deeply-nested
+  `await(await(x))` keeps the inner parens (the keyword block does not
+  recurse into a dropped span — a pre-existing pattern shared with the
+  other keywords; still valid JS, just not byte-identical).
+
 ## [0.109.0] - 2026-06-12
 
 ### Fixed

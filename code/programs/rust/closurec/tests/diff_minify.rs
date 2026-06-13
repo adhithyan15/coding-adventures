@@ -160,19 +160,17 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // a backtick-delimited string). Lexer-level gap.
     ("template_subst", "gap-044: lexer does not support `${...}`"),
     ("tagged_subst",   "gap-044: lexer does not support `${...}` (tagged variant)"),
-    // gap-072 (CLOC14.35): `await` OPERAND paren elision — strip
-    // redundant parens around a simple-reference operand
-    // (`await(x)` → `await x`). `await` binds at UNARY precedence,
-    // exactly like `typeof`/`void`/`delete` (gap-101's
-    // `is_safe_unary_kw_operand`), so it is now tractable by adding
-    // `await` to that keyword block (NOT the gap-056 return/throw
-    // block — `await` binds TIGHTER than binary operators, so a binary
-    // operand keeps its parens). CLOC14.46 detail: a kept binary
-    // operand is emitted WITH a separating space — `await(a+b)` →
-    // `await (a+b)` — so the fix must add that space, not just keep the
-    // parens. `minify_await_binary_kept` pins that case.
-    ("await_paren_elide",  "gap-072: await operand paren elision"),
-    ("await_binary_kept",  "gap-072: await binary operand keeps parens with a space"),
+    // gap-072 RESOLVED in CLOC12.106 — `await` OPERAND paren elision
+    // (`await(x)` → `await x`) plus the always-separating-space rule
+    // (`await(a+b)` → `await (a+b)`). `await` binds at UNARY precedence,
+    // so it was added to gap-101's `is_safe_unary_kw_operand` keyword
+    // block; a parenthesised binary operand keeps its parens (await
+    // binds tighter) but gains the space via `await_operator_needs_space`.
+    // Contextual-keyword guards keep `function await(x){}` /
+    // `{await(x){}}` (name) and `o.await(x)` (property) untouched. The
+    // upstream compiler rejects non-async `await` as a parse error, so
+    // identifier-`await` never appears in a byte-identity input.
+    // `minify_await_paren_elide` / `minify_await_binary_kept` enforced.
     // gap-102 RESOLVED in CLOC12.105 — a `yield` operand's grouping
     // parens (`yield(a)` → `yield a`, `yield(a+b)` → `yield a+b`,
     // `a=yield(b)` → `a=yield b`) now elide via the gap-055/056
