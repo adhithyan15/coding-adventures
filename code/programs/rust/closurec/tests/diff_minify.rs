@@ -293,19 +293,16 @@ const IGNORE_FIXTURES: &[(&str, &str)] = &[
     // gap-112 RESOLVED in CLOC12.115 — a `for await(...)` header no
     // longer emits a spurious `await`-before-`(` space; the
     // `minify_for_await_bare_stmt` fixture is now ENFORCED (un-ignored).
-    // gap-113 (CLOC14.55): NUMBER canonicalisation — a NEGATIVE-exponent
-    // scientific literal / small fraction whose shortest form is
-    // scientific must use an UPPERCASE `E`, and closurec leaves it
-    // lowercase / decimal:
-    //   1e-5   -> 1E-5    (uppercase the negative exponent)
-    //   .0001  -> 1E-4    (decimal -> scientific when STRICTLY shorter)
-    // closurec already canonicalises POSITIVE-exponent / large round
-    // integers (`1e20` -> `1E20`, `1000000000000000000` -> `1E18`), so
-    // this is the missing negative-exponent / small-fraction branch.
-    // `.001` stays decimal (`.001` and `1E-3` are equal length — upstream
-    // keeps the decimal form on ties).
-    ("num_neg_exp",  "gap-113: negative-exponent scientific must uppercase E (1e-5 -> 1E-5)"),
-    ("num_frac_4dp", "gap-113: small fraction -> uppercase-E scientific when shorter (.0001 -> 1E-4)"),
+    // gap-113 RESOLVED in CLOC12.113 — a sub-1 fractional NUMBER (decimal
+    // or scientific source) is now canonicalised to the shorter of its
+    // leading-zero-stripped decimal and uppercase-`E` scientific forms
+    // (decimal wins a length tie at/above magnitude 1e-3):
+    //   1e-5  -> 1E-5    .0001 -> 1E-4    1e-3 -> .001    5e-1 -> .5
+    // via `small_fraction_shortest_form` in whitespace_only.rs.
+    // `minify_num_neg_exp` and `minify_num_frac_4dp` flipped IGNORED ->
+    // PASS. (Value>=1 scientific fractionals like `1.23e1`->`12.3` and
+    // sub-normal-boundary f64 rounding remain the deferred true-Ryu
+    // residual.)
     // gap-114 RESOLVED in CLOC12.116 — a large integer whose lowercase
     // hex form is shorter than decimal is now emitted as `0x…` (over the
     // f64-rounded value); `minify_num_bigint_hex` is now ENFORCED.

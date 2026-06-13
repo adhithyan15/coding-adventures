@@ -4022,6 +4022,15 @@ fn normalize_number_value(value: &str) -> String {
                 scientific.unwrap()
             };
         }
+        // gap-113: a FRACTIONAL value in (0, 1) — decimal (`.0001`) or
+        // scientific (`1e-5`, `1.5e-3`) — is canonicalised to the shorter
+        // of its decimal and uppercase-`E` scientific forms (decimal wins
+        // a tie at/above magnitude 1e-3). This SUBSUMES gap-107 for
+        // value < 1 (its leading-zero-stripped decimal is one candidate);
+        // values >= 1 return None and fall through to gap-107 below.
+        if let Some(out) = small_fraction_shortest_form(&cleaned) {
+            return out;
+        }
         // gap-107: a FRACTIONAL float (decimal_float_as_u128
         // returned None, so the value is genuinely non-integer)
         // with NO exponent has its trailing fractional zeros
@@ -4161,6 +4170,123 @@ fn scientific_form_of(n: u128) -> Option<String> {
         return None;
     }
     Some(format!("{}E{}", m, e))
+}
+
+/// gap-113: canonicalise a FRACTIONAL decimal literal whose value lies in
+/// the open interval (0, 1) to the SHORTER of its leading-zero-stripped
+/// decimal form and its uppercase-`E` scientific form, matching upstream
+/// Closure's number printer:
+///
+///   1e-5    -> 1E-5       .0001   -> 1E-4       .000012 -> 1.2E-5
+///   1e-3    -> .001       5e-1    -> .5         1.5e-3  -> .0015
+///   120e-3  -> .12        2.5e-8  -> 2.5E-8     12e-5   -> 1.2E-4
+///
+/// On a length TIE the form Java's `Double.toString` natively produces
+/// wins — DECIMAL for magnitudes `>= 1e-3` (i.e. scientific exponent
+/// `>= -3`), SCIENTIFIC below — so `1e-3` keeps `.001` (tie at magnitude
+/// `1e-3`) but `1.2e-4` switches to `1.2E-4` (tie at magnitude `1e-4`).
+///
+/// Returns `None` for anything NOT a finite decimal fraction in (0, 1):
+/// radix literals, integers, values `>= 1`, and zero all fall through to
+/// the integer / gap-107 / verbatim paths. The significant digits are
+/// taken EXACTLY from the source string (decomposed into a coefficient
+/// `M` and base-10 exponent `E` with `value == M × 10^E`), so no
+/// Grisu/Ryu rounding is performed — a non-canonical source that rounds
+/// to a different shortest f64 (`0.10000000000000001`) is the deferred
+/// true-Ryu residual, unaffected here.
+fn small_fraction_shortest_form(s: &str) -> Option<String> {
+    // A radix literal (`0x…`/`0o…`/`0b…`) never denotes a fraction here.
+    let b = s.as_bytes();
+    if b.len() >= 2
+        && b[0] == b'0'
+        && matches!(b[1], b'x' | b'X' | b'o' | b'O' | b'b' | b'B')
+    {
+        return None;
+    }
+    // Split off a (signed) decimal exponent.
+    let (mantissa, exp): (&str, i64) = match s.split_once(['e', 'E']) {
+        Some((m, e)) => (m, e.parse::<i64>().ok()?),
+        None => (s, 0),
+    };
+    // In scope only for NON-integer source: a plain integer (no `.`, no
+    // exponent) is handled by the integer shortest-form path.
+    if exp == 0 && !mantissa.contains('.') {
+        return None;
+    }
+    let (int_part, frac_part) = match mantissa.split_once('.') {
+        Some((i, f)) => (i, f),
+        None => (mantissa, ""),
+    };
+    if (int_part.is_empty() && frac_part.is_empty())
+        || !int_part.bytes().all(|c| c.is_ascii_digit())
+        || !frac_part.bytes().all(|c| c.is_ascii_digit())
+    {
+        return None;
+    }
+    // value == digits × 10^(exp - frac_len), where `digits` is the
+    // concatenation of every significant figure as written.
+    let mut digits = String::with_capacity(int_part.len() + frac_part.len());
+    digits.push_str(int_part);
+    digits.push_str(frac_part);
+    let mut e = exp - frac_part.len() as i64;
+    // Strip leading zeros (value-preserving) to find the coefficient.
+    let lead = digits.trim_start_matches('0');
+    if lead.is_empty() {
+        return None; // value is zero — leave to the `0` / integer path
+    }
+    // Strip trailing zeros (each raises the exponent by one).
+    let trailing = lead.len() - lead.trim_end_matches('0').len();
+    let m = &lead[..lead.len() - trailing];
+    e += trailing as i64;
+    let d = m.len() as i64;
+    // Only fractions strictly below 1: `E + d <= 0`. Values `>= 1` are
+    // someone else's job (gap-107 decimal-strip or the verbatim path).
+    if e + d > 0 {
+        return None;
+    }
+    // Magnitude (base-10 order) of the value; also the scientific
+    // exponent. SECURITY/correctness guard: a value whose magnitude is
+    // outside f64's representable range (`< ~1e-324` underflows to 0,
+    // which this string-only path cannot detect) is left verbatim — and
+    // bounding it here also caps the leading-zero count below, so a
+    // pathological literal like `1e-2147483648` can NOT make the decimal
+    // form allocate billions of zero bytes (DoS-by-crafted-input).
+    let sci_exp = e + d - 1;
+    if !(-324..=308).contains(&sci_exp) {
+        return None;
+    }
+    // Leading-zero-stripped decimal form: "." + (-E-d) zeros + M.
+    let zeros = (-e - d) as usize;
+    let mut decimal = String::with_capacity(1 + zeros + m.len());
+    decimal.push('.');
+    for _ in 0..zeros {
+        decimal.push('0');
+    }
+    decimal.push_str(m);
+    // Uppercase-`E` scientific form: M[0], optional ".M[1..]", "E", and
+    // the (always negative here) exponent — `to_string()` carries the `-`.
+    let mut scientific = String::new();
+    scientific.push_str(&m[..1]);
+    if m.len() > 1 {
+        scientific.push('.');
+        scientific.push_str(&m[1..]);
+    }
+    scientific.push('E');
+    scientific.push_str(&sci_exp.to_string());
+    // Shorter wins; on a tie the Java-natural form wins (decimal at/above
+    // magnitude 1e-3, scientific below).
+    let chosen = match scientific.len().cmp(&decimal.len()) {
+        std::cmp::Ordering::Less => scientific,
+        std::cmp::Ordering::Greater => decimal,
+        std::cmp::Ordering::Equal => {
+            if sci_exp >= -3 {
+                decimal
+            } else {
+                scientific
+            }
+        }
+    };
+    Some(chosen)
 }
 
 /// gap-082: interpret a separator-free decimal float / scientific
@@ -6648,6 +6774,65 @@ mod tests {
         assert_eq!(minify("var x=10;"), "var x=10;");
     }
 
+    /// gap-113: a sub-1 fraction is emitted in the shorter of decimal /
+    /// uppercase-E scientific; a length tie keeps the Java-natural form
+    /// (decimal at/above magnitude 1e-3, scientific below).
+    #[test]
+    fn gap113_small_fraction_shortest_form() {
+        // Scientific strictly shorter.
+        assert_eq!(minify("var x=1e-5;"), "var x=1E-5;");
+        assert_eq!(minify("var x=.0001;"), "var x=1E-4;");
+        assert_eq!(minify("var x=.00001;"), "var x=1E-5;");
+        assert_eq!(minify("var x=.0000001;"), "var x=1E-7;");
+        assert_eq!(minify("var x=.000012;"), "var x=1.2E-5;");
+        assert_eq!(minify("var x=2.5e-8;"), "var x=2.5E-8;");
+        // Decimal strictly shorter / scientific source -> decimal.
+        assert_eq!(minify("var x=5e-1;"), "var x=.5;");
+        assert_eq!(minify("var x=1.5e-3;"), "var x=.0015;");
+        assert_eq!(minify("var x=120e-3;"), "var x=.12;");
+        // Length ties: magnitude 1e-3 keeps decimal, 1e-4 takes sci.
+        assert_eq!(minify("var x=1e-3;"), "var x=.001;");
+        assert_eq!(minify("var x=1.2e-4;"), "var x=1.2E-4;");
+        assert_eq!(minify("var x=12e-5;"), "var x=1.2E-4;");
+    }
+
+    /// **Non-regression** for gap-113: it touches ONLY values in (0, 1).
+    /// Integers, integer-valued floats, values >= 1, hex, and positive
+    /// scientific are unchanged; the existing already-shortest fractions
+    /// stay byte-identical (idempotent).
+    #[test]
+    fn gap113_scoped_to_sub_one_fractions() {
+        // Already-shortest fractions are idempotent.
+        assert_eq!(minify("var x=.5;"), "var x=.5;");
+        assert_eq!(minify("var x=.25;"), "var x=.25;");
+        assert_eq!(minify("var x=.001;"), "var x=.001;");
+        assert_eq!(minify("var x=0.1;"), "var x=.1;");
+        // Values >= 1 and integers untouched by gap-113.
+        assert_eq!(minify("var x=1.5;"), "var x=1.5;");
+        assert_eq!(minify("var x=10.0;"), "var x=10;");
+        assert_eq!(minify("var x=1000;"), "var x=1E3;");
+        assert_eq!(minify("var x=1.5e10;"), "var x=15E9;");
+        assert_eq!(minify("var x=0xff;"), "var x=255;");
+        // Zero stays zero (not turned into a degenerate fraction).
+        assert_eq!(minify("var x=0;"), "var x=0;");
+        assert_eq!(minify("var x=0.0;"), "var x=0;");
+    }
+
+    /// **Security** for gap-113: a pathological tiny exponent must NOT
+    /// allocate a giant zero-run. `1e-2147483648` is below f64's range,
+    /// so the magnitude guard rejects it and it is left verbatim (no DoS,
+    /// no crash).
+    #[test]
+    fn gap113_pathological_tiny_exponent_left_verbatim() {
+        assert_eq!(
+            minify("var x=1e-2147483648;"),
+            "var x=1e-2147483648;"
+        );
+        assert_eq!(small_fraction_shortest_form("1e-2147483648"), None);
+        // i64-overflowing exponent parse also bails safely.
+        assert_eq!(small_fraction_shortest_form("1e-99999999999999999999"), None);
+    }
+
     /// `12000` → `12E3`. Mantissa not 1; verifies general
     /// scientific form. Cleaned (5), decimal (5), sci `12E3`
     /// (4) → sci wins.
@@ -6827,21 +7012,22 @@ mod tests {
         assert_eq!(minify("var x=2.00;"), "var x=2;");
     }
 
-    /// **Non-regression**: an EXPONENT excludes the literal from
-    /// gap-107 (those are gap-085 Grisu residuals) — `5e-3` stays
-    /// verbatim, `1e-5` stays verbatim.
+    /// gap-113: an exponent-bearing sub-1 fraction is now canonicalised
+    /// (previously these were left verbatim — the gap-085/gap-107
+    /// residual). `5e-3` = 0.005 prefers the (equal-length) decimal form
+    /// at magnitude 1e-3; `1e-5` switches to uppercase-E scientific.
     #[test]
-    fn gap107_exponent_excluded() {
-        assert_eq!(minify("var x=5e-3;"), "var x=5e-3;");
-        assert_eq!(minify("var x=1e-5;"), "var x=1e-5;");
+    fn gap113_exponent_fraction_canonicalised() {
+        assert_eq!(minify("var x=5e-3;"), "var x=.005;");
+        assert_eq!(minify("var x=1e-5;"), "var x=1E-5;");
     }
 
-    /// **Deferred (residual gap-085)**: a negative-exponent
-    /// (sub-1) value stays verbatim. `1e-5` = 0.00001 is not an
-    /// integer.
+    /// gap-113: a negative-exponent sub-1 value is canonicalised to its
+    /// shortest form (`1e-5` -> `1E-5`). (Was deferred as a gap-085
+    /// residual before the gap-113 fraction printer.)
     #[test]
-    fn gap082_negative_exponent_left_verbatim() {
-        assert_eq!(minify("var x=1e-5;"), "var x=1e-5;");
+    fn gap113_negative_exponent_canonicalised() {
+        assert_eq!(minify("var x=1e-5;"), "var x=1E-5;");
     }
 
     /// **Deferred**: a magnitude beyond u128 overflows the

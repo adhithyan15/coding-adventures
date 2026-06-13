@@ -2,6 +2,45 @@
 
 All notable changes to the `coding-adventures-closurec` binary will be documented in this file.
 
+## [0.124.0] - 2026-06-13
+
+### Fixed
+- **CLOSES gap-113** — a FRACTIONAL number literal whose value is in the
+  open interval (0, 1) — written in plain decimal (`.0001`) or scientific
+  (`1e-5`, `1.5e-3`) form — is now canonicalised to the SHORTER of its
+  leading-zero-stripped decimal and uppercase-`E` scientific forms,
+  matching upstream Closure v20240317:
+
+      1e-5    ->  1E-5       .0001   ->  1E-4       .000012 ->  1.2E-5
+      1e-3    ->  .001       5e-1    ->  .5         1.5e-3  ->  .0015
+      120e-3  ->  .12        2.5e-8  ->  2.5E-8     12e-5   ->  1.2E-4
+
+  On a length TIE the form Java's `Double.toString` natively produces
+  wins — DECIMAL for magnitudes `>= 1e-3`, SCIENTIFIC below — so `1e-3`
+  keeps `.001` (tie at magnitude `1e-3`) but `1.2e-4` switches to
+  `1.2E-4` (tie at magnitude `1e-4`). This is the negative-exponent
+  counterpart of the existing positive-side shortest-form (gap-040/082).
+
+  New `small_fraction_shortest_form` helper in `whitespace_only.rs`,
+  wired into `normalize_number_value` before the gap-107 decimal-strip
+  branch (which it subsumes for value < 1; values `>= 1` fall through
+  unchanged). The coefficient and base-10 exponent are taken EXACTLY from
+  the source digit string, so no Grisu/Ryu rounding is performed — the
+  helper is a pure string transform.
+
+  SECURITY: a magnitude guard (`-324..=308`, f64's finite range) rejects
+  pathological exponents BEFORE building the decimal form, so a crafted
+  literal like `1e-2147483648` can no longer make the printer allocate
+  billions of zero bytes (DoS); it is left verbatim instead.
+
+  Non-regression: integers, integer-valued floats, values `>= 1`, hex,
+  and positive-exponent scientific are all untouched (gap-113 fires only
+  for sub-1 fractions); already-shortest fractions (`.5`, `.001`) are
+  idempotent. `minify_num_neg_exp` + `minify_num_frac_4dp` un-ignored;
+  five `gap113_*` unit tests added. The value-`>= 1` scientific-fractional
+  case (`1.23e1` -> `12.3`) and sub-normal-boundary f64 rounding remain
+  the deferred true-Ryu residual.
+
 ## [0.123.0] - 2026-06-13
 
 ### Fixed
