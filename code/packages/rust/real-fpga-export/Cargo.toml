@@ -1,0 +1,8 @@
+[package]
+name = "real-fpga-export"
+version = "0.1.0"
+edition = "2021"
+description = "HIR → structural Verilog + iCE40 open-tool driver (yosys/nextpnr/icepack/iceprog)"
+
+[dependencies]
+hdl-ir = { path = "../hdl-ir" }

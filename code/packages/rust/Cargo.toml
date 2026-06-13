@@ -768,4 +768,7 @@ members = [
     "hdl-elaboration",
     "testbench-framework",
     "coverage-hdl",
+    "real-fpga-export",
+    "fpga-place-route-bridge",
+    "fpga-bitstream",
 ]
