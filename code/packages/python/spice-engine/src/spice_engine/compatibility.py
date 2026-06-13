@@ -300,6 +300,51 @@ class DeckOutputSummary:
 
 
 @dataclass(frozen=True, slots=True)
+class DeckAnalysisPlan:
+    """A parsed top-level SPICE analysis directive."""
+
+    directive: str
+    analysis: str
+    line_number: int
+    source_name: str | None = None
+    start_value: float | None = None
+    stop_value: float | None = None
+    step_value: float | None = None
+    sweep_kind: str | None = None
+    point_count: int | None = None
+    start_frequency: float | None = None
+    stop_frequency: float | None = None
+    step_time: float | None = None
+    stop_time: float | None = None
+    start_time: float | None = None
+    max_step: float | None = None
+    use_initial_conditions: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class DeckAnalysisDiagnostic:
+    """A stable diagnostic emitted while resolving deck analysis cards."""
+
+    code: str
+    directive: str
+    line_number: int
+    message: str
+    severity: str
+    token: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class DeckAnalysisSummary:
+    """Resolved active deck lines plus parsed analysis-plan cards."""
+
+    active_lines: tuple[str, ...]
+    terminated: bool
+    end_line_number: int | None
+    analyses: tuple[DeckAnalysisPlan, ...]
+    diagnostics: tuple[DeckAnalysisDiagnostic, ...]
+
+
+@dataclass(frozen=True, slots=True)
 class ReleaseReadinessIssue:
     """A release-readiness gate violation for a corpus deck."""
 
@@ -732,6 +777,35 @@ def select_deck_output_probes(netlist: str, analysis: str) -> list[str]:
     return selected
 
 
+def resolve_deck_analyses(netlist: str) -> DeckAnalysisSummary:
+    """Extract supported top-level analysis directives before ``.end``."""
+
+    state = _DeckAnalysisState()
+    active_lines: list[str] = []
+    end_line_number: int | None = None
+
+    for line_number, raw_line in enumerate(netlist.splitlines(), start=1):
+        stripped = raw_line.strip()
+        if not stripped or stripped.startswith(("*", ";")):
+            continue
+        directive = _deck_directive(stripped)
+        if directive == ".end":
+            end_line_number = line_number
+            break
+        if directive in {".op", ".dc", ".ac", ".tran"}:
+            _resolve_analysis_line(stripped, line_number, directive, state)
+            continue
+        active_lines.append(stripped)
+
+    return DeckAnalysisSummary(
+        active_lines=tuple(active_lines),
+        terminated=end_line_number is not None,
+        end_line_number=end_line_number,
+        analyses=tuple(state.analyses),
+        diagnostics=tuple(state.diagnostics),
+    )
+
+
 def compatibility_corpus() -> tuple[CompatibilityDeck, ...]:
     """Return the canonical first release-readiness compatibility corpus."""
 
@@ -990,6 +1064,15 @@ class _DeckOutputState:
     def __init__(self) -> None:
         self.diagnostics = []
         self.selections = []
+
+
+class _DeckAnalysisState:
+    diagnostics: list[DeckAnalysisDiagnostic]
+    analyses: list[DeckAnalysisPlan]
+
+    def __init__(self) -> None:
+        self.diagnostics = []
+        self.analyses = []
 
 
 def _resolve_node_condition_line(
@@ -1590,6 +1673,27 @@ def _add_output_diagnostic(
     )
 
 
+def _add_analysis_diagnostic(
+    state: _DeckAnalysisState,
+    *,
+    code: str,
+    directive: str,
+    line_number: int,
+    message: str,
+    token: str | None = None,
+) -> None:
+    state.diagnostics.append(
+        DeckAnalysisDiagnostic(
+            code=code,
+            directive=directive,
+            line_number=line_number,
+            message=message,
+            severity="error",
+            token=token,
+        )
+    )
+
+
 def _parse_node_condition_target(target: str) -> str | None:
     if len(target) < 4 or not target.lower().startswith("v(") or not target.endswith(")"):
         return None
@@ -2077,6 +2181,310 @@ def _resolve_output_line(
             line_number=line_number,
         )
     )
+
+
+def _resolve_analysis_line(
+    line: str,
+    line_number: int,
+    directive: str,
+    state: _DeckAnalysisState,
+) -> None:
+    tokens = _directive_tokens(line)
+    if directive == ".op":
+        _resolve_op_analysis(tokens, line_number, state)
+    elif directive == ".dc":
+        _resolve_dc_analysis(tokens, line_number, state)
+    elif directive == ".ac":
+        _resolve_ac_analysis(tokens, line_number, state)
+    elif directive == ".tran":
+        _resolve_tran_analysis(tokens, line_number, state)
+
+
+def _resolve_op_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 1:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".op",
+            line_number=line_number,
+            message=".op does not accept analysis arguments",
+            token=tokens[1],
+        )
+        return
+    state.analyses.append(DeckAnalysisPlan(".op", "op", line_number))
+
+
+def _resolve_dc_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 5:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".dc",
+            line_number=line_number,
+            message=".dc requires source, start, stop, and step tokens",
+        )
+        return
+    source_name = _unquote_token(tokens[1]).strip()
+    if not source_name:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".dc",
+            line_number=line_number,
+            message=".dc source name must not be empty",
+            token=tokens[1],
+        )
+        return
+    start_value = _parse_deck_analysis_value(tokens[2], ".dc", line_number, state)
+    stop_value = _parse_deck_analysis_value(tokens[3], ".dc", line_number, state)
+    step_value = _parse_deck_analysis_value(tokens[4], ".dc", line_number, state)
+    if start_value is None or stop_value is None or step_value is None:
+        return
+    if step_value == 0.0:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_SWEEP",
+            directive=".dc",
+            line_number=line_number,
+            message=".dc step value must be non-zero",
+            token=tokens[4],
+        )
+        return
+    if (start_value < stop_value and step_value < 0.0) or (
+        start_value > stop_value and step_value > 0.0
+    ):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_SWEEP",
+            directive=".dc",
+            line_number=line_number,
+            message=".dc step direction must move from start toward stop",
+            token=tokens[4],
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".dc",
+            analysis="dc",
+            line_number=line_number,
+            source_name=source_name,
+            start_value=start_value,
+            stop_value=stop_value,
+            step_value=step_value,
+        )
+    )
+
+
+def _resolve_ac_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) != 5:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".ac",
+            line_number=line_number,
+            message=".ac requires sweep kind, point count, start frequency, and stop frequency",
+        )
+        return
+    sweep_kind = _normalize_ac_sweep_kind(tokens[1])
+    if sweep_kind is None:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_MODE",
+            directive=".ac",
+            line_number=line_number,
+            message=f".ac sweep kind must be LIN, DEC, or OCT, got {tokens[1]!r}",
+            token=tokens[1],
+        )
+        return
+    point_count = _parse_deck_analysis_integer(tokens[2], ".ac", line_number, state)
+    start_frequency = _parse_deck_analysis_value(tokens[3], ".ac", line_number, state)
+    stop_frequency = _parse_deck_analysis_value(tokens[4], ".ac", line_number, state)
+    if point_count is None or start_frequency is None or stop_frequency is None:
+        return
+    if point_count < 1:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_SWEEP",
+            directive=".ac",
+            line_number=line_number,
+            message=".ac point count must be a positive integer",
+            token=tokens[2],
+        )
+        return
+    if start_frequency <= 0.0 or stop_frequency <= 0.0 or stop_frequency < start_frequency:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_SWEEP",
+            directive=".ac",
+            line_number=line_number,
+            message=".ac frequencies must be positive and stop must be >= start",
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".ac",
+            analysis="ac",
+            line_number=line_number,
+            sweep_kind=sweep_kind,
+            point_count=point_count,
+            start_frequency=start_frequency,
+            stop_frequency=stop_frequency,
+        )
+    )
+
+
+def _resolve_tran_analysis(
+    tokens: list[str],
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> None:
+    if len(tokens) < 3:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tran",
+            line_number=line_number,
+            message=".tran requires step time and stop time",
+        )
+        return
+    use_initial_conditions = False
+    numeric_tokens: list[str] = []
+    for token in tokens[3:]:
+        if token.strip().lower() == "uic":
+            use_initial_conditions = True
+            continue
+        numeric_tokens.append(token)
+    if len(numeric_tokens) > 2:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=".tran",
+            line_number=line_number,
+            message=".tran supports optional start time, max step, and UIC only",
+            token=numeric_tokens[2],
+        )
+        return
+    step_time = _parse_deck_analysis_value(tokens[1], ".tran", line_number, state)
+    stop_time = _parse_deck_analysis_value(tokens[2], ".tran", line_number, state)
+    start_time = (
+        _parse_deck_analysis_value(numeric_tokens[0], ".tran", line_number, state)
+        if len(numeric_tokens) >= 1
+        else None
+    )
+    max_step = (
+        _parse_deck_analysis_value(numeric_tokens[1], ".tran", line_number, state)
+        if len(numeric_tokens) >= 2
+        else None
+    )
+    if step_time is None or stop_time is None:
+        return
+    if (len(numeric_tokens) >= 1 and start_time is None) or (
+        len(numeric_tokens) >= 2 and max_step is None
+    ):
+        return
+    if step_time <= 0.0 or stop_time <= 0.0:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_INTERVAL",
+            directive=".tran",
+            line_number=line_number,
+            message=".tran step time and stop time must be positive",
+        )
+        return
+    if start_time is not None and (start_time < 0.0 or start_time > stop_time):
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_INTERVAL",
+            directive=".tran",
+            line_number=line_number,
+            message=".tran start time must be non-negative and <= stop time",
+        )
+        return
+    if max_step is not None and max_step <= 0.0:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_INTERVAL",
+            directive=".tran",
+            line_number=line_number,
+            message=".tran max step must be positive",
+        )
+        return
+    state.analyses.append(
+        DeckAnalysisPlan(
+            directive=".tran",
+            analysis="tran",
+            line_number=line_number,
+            step_time=step_time,
+            stop_time=stop_time,
+            start_time=start_time,
+            max_step=max_step,
+            use_initial_conditions=use_initial_conditions,
+        )
+    )
+
+
+def _parse_deck_analysis_value(
+    token: str,
+    directive: str,
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> float | None:
+    try:
+        return _evaluate_parameter_expression(
+            _strip_expression_delimiters(_unquote_token(token).strip()),
+            _DeckParameterState(),
+        )
+    except ValueError as error:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_EXPRESSION",
+            directive=directive,
+            line_number=line_number,
+            message=str(error),
+            token=token,
+        )
+        return None
+
+
+def _parse_deck_analysis_integer(
+    token: str,
+    directive: str,
+    line_number: int,
+    state: _DeckAnalysisState,
+) -> int | None:
+    value = _parse_deck_analysis_value(token, directive, line_number, state)
+    if value is None:
+        return None
+    if value < 0.0 or value % 1.0 != 0.0:
+        _add_analysis_diagnostic(
+            state,
+            code="SPICE_DECK_ANALYSIS_ARGUMENT",
+            directive=directive,
+            line_number=line_number,
+            message=f"{directive} point count must be an integer",
+            token=token,
+        )
+        return None
+    return int(value)
+
+
+def _normalize_ac_sweep_kind(token: str) -> str | None:
+    normalized = token.strip().lower()
+    if normalized in {"lin", "dec", "oct"}:
+        return normalized
+    return None
 
 
 @dataclass(frozen=True, slots=True)

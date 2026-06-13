@@ -45,7 +45,8 @@ downstream tools to compare.
      trigger-to-target delay measurements with counted crossing controls into
      stable scalar rows; parsed transient `.four` deck cards now route harmonic
      analyses over transient outputs with optional `HARMONICS=` and `FROM=`
-     controls.
+     controls; parsed `.op`, `.dc`, `.ac`, and `.tran` cards now resolve into
+     shared cross-language analysis-plan metadata before execution.
    - Expand remaining deck-controlled analyses toward full SPICE compatibility
      while keeping unsupported control-flow diagnostics explicit.
 
@@ -363,10 +364,21 @@ downstream tools to compare.
     - This closes the first parsed `.FOUR` execution foothold while leaving
       broader output-plan integration and nested sweep execution in backlog.
 
+31. Deck analysis-plan directive resolver.
+    - Status: completed in this analysis-plan resolver slice.
+    - Python, Rust, and TypeScript now expose matching helpers for extracting
+      `.op`, `.dc`, `.ac`, and `.tran` cards before `.end` into stable
+      analysis-plan metadata while preserving non-analysis active lines.
+    - The resolver evaluates scalar SPICE suffix/arithmetic values for DC
+      sweep ranges, AC sweep points and frequency limits, and transient step,
+      stop, start, max-step, and `UIC` controls.
+    - This closes the first runnable-analysis metadata foothold while leaving
+      actual deck dispatch into solver executions in backlog.
+
 ## Backlog
 
 1. Deck execution layer.
-   - Convert parsed netlists into runnable analysis plans.
+   - Convert parsed analysis-plan metadata into runnable solver executions.
    - Expand deck-controlled output-plan integration beyond stable table
      routing toward full SPICE compatibility.
    - Define a deliberate `.control` subset; explicit unsupported-feature

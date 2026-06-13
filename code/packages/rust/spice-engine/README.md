@@ -148,6 +148,10 @@ crossing times over optional `FROM=` / `TO=` windows.
 ...` cards report trigger-to-target crossing delays. The deck helpers route
 parsed transient, DC sweep, and AC sweep `.measure` / `.meas` cards into those
 stable measurement rows.
+`resolve_deck_analyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
+`.end`, keeps non-analysis active lines, and reports stable diagnostics for
+malformed arguments, unsupported AC sweep modes, invalid sweep intervals, and
+unresolved scalar expressions.
 `resolve_deck_fourier`, `fourier_transient_cards`, and
 `fourier_transient_deck` extract parsed `.four` / `.FOUR` cards before `.end`
 and route transient samples into the existing SPICE-style Fourier result shape
@@ -181,3 +185,6 @@ probes for a requested analysis, while `format_deck_op_table`,
 `format_deck_dc_sweep_table`, `format_deck_ac_table`, and
 `format_deck_transient_table` feed those deck-card selections into the stable
 text table formatters.
+`resolve_deck_analyses` extracts `.op`, `.dc`, `.ac`, and `.tran` cards before
+`.end`, preserves non-analysis active lines, and reports stable diagnostics for
+malformed deck-level analysis controls.

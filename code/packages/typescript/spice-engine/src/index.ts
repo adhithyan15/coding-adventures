@@ -612,6 +612,42 @@ export interface DeckOutputSummary {
   readonly diagnostics: readonly DeckOutputDiagnostic[];
 }
 
+export interface DeckAnalysisPlan {
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran";
+  readonly analysis: "op" | "dc" | "ac" | "tran";
+  readonly lineNumber: number;
+  readonly sourceName?: string;
+  readonly startValue?: number;
+  readonly stopValue?: number;
+  readonly stepValue?: number;
+  readonly sweepKind?: "lin" | "dec" | "oct";
+  readonly pointCount?: number;
+  readonly startFrequencyHz?: number;
+  readonly stopFrequencyHz?: number;
+  readonly stepTime?: number;
+  readonly stopTime?: number;
+  readonly startTime?: number;
+  readonly maxStep?: number;
+  readonly useInitialConditions: boolean;
+}
+
+export interface DeckAnalysisDiagnostic {
+  readonly code: string;
+  readonly directive: ".op" | ".dc" | ".ac" | ".tran";
+  readonly lineNumber: number;
+  readonly message: string;
+  readonly severity: "error" | "warning";
+  readonly token?: string;
+}
+
+export interface DeckAnalysisSummary {
+  readonly activeLines: readonly string[];
+  readonly terminated: boolean;
+  readonly endLineNumber?: number;
+  readonly analyses: readonly DeckAnalysisPlan[];
+  readonly diagnostics: readonly DeckAnalysisDiagnostic[];
+}
+
 export interface ReleaseReadinessIssue {
   readonly deckId: string;
   readonly field: string;
@@ -3066,6 +3102,39 @@ export function selectDeckOutputProbes(netlist: string, analysis: string): strin
   return selected;
 }
 
+export function resolveDeckAnalyses(netlist: string): DeckAnalysisSummary {
+  const state = new DeckAnalysisState();
+  const activeLines: string[] = [];
+  let endLineNumber: number | undefined;
+
+  const lines = netlist.split(/\r?\n/);
+  for (let index = 0; index < lines.length; index++) {
+    const lineNumber = index + 1;
+    const stripped = lines[index].trim();
+    if (stripped.length === 0 || stripped.startsWith("*") || stripped.startsWith(";")) {
+      continue;
+    }
+    const directive = deckDirective(stripped);
+    if (directive === ".end") {
+      endLineNumber = lineNumber;
+      break;
+    }
+    if (directive === ".op" || directive === ".dc" || directive === ".ac" || directive === ".tran") {
+      resolveAnalysisLine(stripped, lineNumber, directive, state);
+      continue;
+    }
+    activeLines.push(stripped);
+  }
+
+  return {
+    activeLines,
+    terminated: endLineNumber !== undefined,
+    endLineNumber,
+    analyses: state.analyses,
+    diagnostics: state.diagnostics,
+  };
+}
+
 export function releaseReadinessGates(
   corpus: readonly CompatibilityDeck[] = COMPATIBILITY_CORPUS,
 ): ReleaseReadinessReport {
@@ -3510,6 +3579,11 @@ class DeckFourierState {
 class DeckOutputState {
   readonly diagnostics: DeckOutputDiagnostic[] = [];
   readonly selections: DeckOutputSelection[] = [];
+}
+
+class DeckAnalysisState {
+  readonly diagnostics: DeckAnalysisDiagnostic[] = [];
+  readonly analyses: DeckAnalysisPlan[] = [];
 }
 
 function resolveNodeConditionLine(
@@ -4143,6 +4217,258 @@ function resolveOutputLine(
     analysis,
     probes,
     lineNumber,
+  });
+}
+
+function resolveAnalysisLine(
+  line: string,
+  lineNumber: number,
+  directive: ".op" | ".dc" | ".ac" | ".tran",
+  state: DeckAnalysisState,
+): void {
+  const tokens = directiveTokens(line);
+  switch (directive) {
+    case ".op":
+      resolveOpAnalysis(tokens, lineNumber, state);
+      break;
+    case ".dc":
+      resolveDcAnalysis(tokens, lineNumber, state);
+      break;
+    case ".ac":
+      resolveAcAnalysis(tokens, lineNumber, state);
+      break;
+    case ".tran":
+      resolveTranAnalysis(tokens, lineNumber, state);
+      break;
+  }
+}
+
+function resolveOpAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 1) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".op",
+      lineNumber,
+      message: ".op does not accept analysis arguments",
+      token: tokens[1],
+    });
+    return;
+  }
+  state.analyses.push({ directive: ".op", analysis: "op", lineNumber, useInitialConditions: false });
+}
+
+function resolveDcAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 5) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".dc",
+      lineNumber,
+      message: ".dc requires source, start, stop, and step tokens",
+    });
+    return;
+  }
+  const sourceName = unquoteToken(tokens[1]).trim();
+  if (sourceName.length === 0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".dc",
+      lineNumber,
+      message: ".dc source name must not be empty",
+      token: tokens[1],
+    });
+    return;
+  }
+  const startValue = parseDeckAnalysisValue(tokens[2], ".dc", lineNumber, state);
+  const stopValue = parseDeckAnalysisValue(tokens[3], ".dc", lineNumber, state);
+  const stepValue = parseDeckAnalysisValue(tokens[4], ".dc", lineNumber, state);
+  if (startValue === undefined || stopValue === undefined || stepValue === undefined) {
+    return;
+  }
+  if (stepValue === 0.0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_SWEEP",
+      directive: ".dc",
+      lineNumber,
+      message: ".dc step value must be non-zero",
+      token: tokens[4],
+    });
+    return;
+  }
+  if ((startValue < stopValue && stepValue < 0.0) || (startValue > stopValue && stepValue > 0.0)) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_SWEEP",
+      directive: ".dc",
+      lineNumber,
+      message: ".dc step direction must move from start toward stop",
+      token: tokens[4],
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".dc",
+    analysis: "dc",
+    lineNumber,
+    sourceName,
+    startValue,
+    stopValue,
+    stepValue,
+    useInitialConditions: false,
+  });
+}
+
+function resolveAcAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length !== 5) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".ac",
+      lineNumber,
+      message: ".ac requires sweep kind, point count, start frequency, and stop frequency",
+    });
+    return;
+  }
+  const sweepKind = normalizeAcSweepKind(tokens[1]);
+  if (sweepKind === undefined) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_MODE",
+      directive: ".ac",
+      lineNumber,
+      message: `.ac sweep kind must be LIN, DEC, or OCT, got ${JSON.stringify(tokens[1])}`,
+      token: tokens[1],
+    });
+    return;
+  }
+  const pointCount = parseDeckAnalysisInteger(tokens[2], ".ac", lineNumber, state);
+  const startFrequencyHz = parseDeckAnalysisValue(tokens[3], ".ac", lineNumber, state);
+  const stopFrequencyHz = parseDeckAnalysisValue(tokens[4], ".ac", lineNumber, state);
+  if (pointCount === undefined || startFrequencyHz === undefined || stopFrequencyHz === undefined) {
+    return;
+  }
+  if (pointCount < 1) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_SWEEP",
+      directive: ".ac",
+      lineNumber,
+      message: ".ac point count must be a positive integer",
+      token: tokens[2],
+    });
+    return;
+  }
+  if (startFrequencyHz <= 0.0 || stopFrequencyHz <= 0.0 || stopFrequencyHz < startFrequencyHz) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_SWEEP",
+      directive: ".ac",
+      lineNumber,
+      message: ".ac frequencies must be positive and stop must be >= start",
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".ac",
+    analysis: "ac",
+    lineNumber,
+    sweepKind,
+    pointCount,
+    startFrequencyHz,
+    stopFrequencyHz,
+    useInitialConditions: false,
+  });
+}
+
+function resolveTranAnalysis(
+  tokens: readonly string[],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): void {
+  if (tokens.length < 3) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".tran",
+      lineNumber,
+      message: ".tran requires step time and stop time",
+    });
+    return;
+  }
+  let useInitialConditions = false;
+  const numericTokens: string[] = [];
+  for (const token of tokens.slice(3)) {
+    if (token.trim().toLowerCase() === "uic") {
+      useInitialConditions = true;
+      continue;
+    }
+    numericTokens.push(token);
+  }
+  if (numericTokens.length > 2) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive: ".tran",
+      lineNumber,
+      message: ".tran supports optional start time, max step, and UIC only",
+      token: numericTokens[2],
+    });
+    return;
+  }
+  const stepTime = parseDeckAnalysisValue(tokens[1], ".tran", lineNumber, state);
+  const stopTime = parseDeckAnalysisValue(tokens[2], ".tran", lineNumber, state);
+  const startTime = numericTokens.length >= 1
+    ? parseDeckAnalysisValue(numericTokens[0], ".tran", lineNumber, state)
+    : undefined;
+  const maxStep = numericTokens.length >= 2
+    ? parseDeckAnalysisValue(numericTokens[1], ".tran", lineNumber, state)
+    : undefined;
+  if (stepTime === undefined || stopTime === undefined) {
+    return;
+  }
+  if ((numericTokens.length >= 1 && startTime === undefined) || (numericTokens.length >= 2 && maxStep === undefined)) {
+    return;
+  }
+  if (stepTime <= 0.0 || stopTime <= 0.0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_INTERVAL",
+      directive: ".tran",
+      lineNumber,
+      message: ".tran step time and stop time must be positive",
+    });
+    return;
+  }
+  if (startTime !== undefined && (startTime < 0.0 || startTime > stopTime)) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_INTERVAL",
+      directive: ".tran",
+      lineNumber,
+      message: ".tran start time must be non-negative and <= stop time",
+    });
+    return;
+  }
+  if (maxStep !== undefined && maxStep <= 0.0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_INTERVAL",
+      directive: ".tran",
+      lineNumber,
+      message: ".tran max step must be positive",
+    });
+    return;
+  }
+  state.analyses.push({
+    directive: ".tran",
+    analysis: "tran",
+    lineNumber,
+    stepTime,
+    stopTime,
+    startTime,
+    maxStep,
+    useInitialConditions,
   });
 }
 
@@ -4902,6 +5228,18 @@ function addOutputDiagnostic(
   });
 }
 
+function addAnalysisDiagnostic(
+  state: DeckAnalysisState,
+  diagnostic: Omit<DeckAnalysisDiagnostic, "severity"> & {
+    readonly severity?: "error" | "warning";
+  },
+): void {
+  state.diagnostics.push({
+    ...diagnostic,
+    severity: diagnostic.severity ?? "error",
+  });
+}
+
 function parseNodeConditionTarget(target: string): string | undefined {
   if (target.length < 4 || !target.toLowerCase().startsWith("v(") || !target.endsWith(")")) {
     return undefined;
@@ -5017,6 +5355,65 @@ function normalizeDeckOutputProbe(token: string): string | undefined {
 
 function deckOutputProbeKey(probe: string): string {
   return probe.toLowerCase();
+}
+
+function parseDeckAnalysisValue(
+  token: string,
+  directive: DeckAnalysisDiagnostic["directive"],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): number | undefined {
+  try {
+    return evaluateParameterExpression(
+      stripExpressionDelimiters(unquoteToken(token).trim()),
+      new DeckParameterState(),
+    );
+  } catch (error) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_EXPRESSION",
+      directive,
+      lineNumber,
+      message: error instanceof Error ? error.message : String(error),
+      token,
+    });
+    return undefined;
+  }
+}
+
+function parseDeckAnalysisInteger(
+  token: string,
+  directive: DeckAnalysisDiagnostic["directive"],
+  lineNumber: number,
+  state: DeckAnalysisState,
+): number | undefined {
+  const value = parseDeckAnalysisValue(token, directive, lineNumber, state);
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value < 0.0 || value % 1.0 !== 0.0) {
+    addAnalysisDiagnostic(state, {
+      code: "SPICE_DECK_ANALYSIS_ARGUMENT",
+      directive,
+      lineNumber,
+      message: `${directive} point count must be an integer`,
+      token,
+    });
+    return undefined;
+  }
+  return value;
+}
+
+function normalizeAcSweepKind(token: string): DeckAnalysisPlan["sweepKind"] | undefined {
+  switch (token.trim().toLowerCase()) {
+    case "lin":
+      return "lin";
+    case "dec":
+      return "dec";
+    case "oct":
+      return "oct";
+    default:
+      return undefined;
+  }
 }
 
 function stripExpressionDelimiters(expression: string): string {
